@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "plugin_form.html"
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            self['ADDFILTER'].Bind(wx.EVT_TEXT_ENTER, self.OnAddFilter)
+            self['ADD'].Bind(wx.EVT_BUTTON, self.OnAddFilter)
+            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
+            self.select = True
+            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            grid.GetTable().FilterBy(1)
+
+        def OnAddFilter(self, event):
+            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            value = self['ADDFILTER'].GetValue()
+            if self.select:
+                mask = '+'+value
+            else:
+                mask = '-'+value
+            grid.GetTable().AppendSelMask(mask)
+            self.OnExit(event)
+
+        def OnExit(self, event):
+            self.any_parent_command('Cancel', True)
+
+        def StyleSubtract(self):
+            self['TITLE'].SetLabel('Deselect: ')
+            self.select = False
+
+%% content
+    table width=100%,,,height=100%
+        tr
+            td:::CTRLSTATICTEXT NAME=TITLE,,,LABEL=   Select:
+            td:::CTRLTEXT NAME=ADDFILTER,,,STYLE=wx.TE_PROCESS_ENTER,,,WIDTH=300
+            td:::CTRLBITMAPBUTTON NAME=ADD,,,SRC=wx.ART_TICK_MARK
+            td width=99%
+            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK

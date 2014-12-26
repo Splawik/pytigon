@@ -1,0 +1,113 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "plugin_form.html" %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.btn_print.Bind(wx.EVT_BUTTON, self.OnPrint)
+            self.btn_zoom_in.Bind(wx.EVT_BUTTON, self.OnZoomIn)
+            self.btn_zoom_out.Bind(wx.EVT_BUTTON, self.OnZoomOut)
+            self.btn_down.Bind(wx.EVT_BUTTON, self.OnDown)
+            self.btn_up.Bind(wx.EVT_BUTTON, self.OnUp)
+            self.btn_save.Bind(wx.EVT_BUTTON, self.OnSave)
+            self.page_nr.Bind(wx.EVT_TEXT_ENTER, self.OnPageChange)
+            self.page_count.SetValue(self.htmlprint.canvas.page_count)
+            self.page_count.Disable()
+            self.zoom = 100
+        def OnPrint(self, event):
+            self.htmlprint.Print()
+        def OnZoomIn(self, event):
+            if self.zoom < 1000:
+                self.zoom += 10
+                self.htmlprint.preview.SetZoom(self.zoom)
+            self.zoom_value.SetLabel(str(self.zoom)+'%')
+        def OnZoomOut(self, event):
+            if self.zoom > 20:
+                self.zoom -= 10
+                self.htmlprint.preview.SetZoom(self.zoom)
+            self.zoom_value.SetLabel(str(self.zoom)+'%')
+        def OnDown(self, event):
+            page = self.htmlprint.preview.GetCurrentPage()+1
+            if page>self.htmlprint.preview.GetMaxPage():
+                page = self.htmlprint.preview.GetMaxPage()
+            self.htmlprint.preview.SetCurrentPage(page)
+            self.htmlprint.Refresh()
+            self.page_nr.SetValue(page)
+        def OnUp(self, event):
+            page = self.htmlprint.preview.GetCurrentPage()-1
+            if page<1:
+                page = 1
+            self.htmlprint.preview.SetCurrentPage(page)
+            self.htmlprint.Refresh()
+            self.page_nr.SetValue(page)
+        def OnPageChange(self, event):
+            value = self.page_nr.GetValue()
+            try:
+                nr = int(value)
+                if nr>0 and nr <= self.htmlprint.preview.GetMaxPage():
+                    self.htmlprint.preview.SetCurrentPage(nr)
+                    self.htmlprint.Refresh()
+                    self.page_nr.SetValue(nr)
+                else:
+                    self.page_nr.SetValue(self.htmlprint.preview.GetCurrentPage())
+            except:
+                self.page_nr.SetValue(self.htmlprint.preview.GetCurrentPage())
+        def OnSave(self, event):
+            self.htmlprint.save()
+</script>
+{% endblock %}
+{% block content %}
+        <table width="100%" border="0" cellpadding="0" cellmargin="0">
+                <tr>
+                        <td align="left" valign="top" width="55">
+                                <table>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_GO_UP" name="btn_up"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_PRINT" name="btn_print"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_FILE_SAVE_AS" name="btn_save"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_ADD_BOOKMARK" name="btn_zoom_in"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <CTRLSTATICTEXT name="zoom_value" label="100%"></CTRLSTATICTEXT>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_DEL_BOOKMARK" name="btn_zoom_out"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <CTRLNUM name="page_nr" value="1" width="45" param="PROCESS_ENTER"></CTRLNUM>
+                                                        <br />
+                                                        <CTRLNUM name="page_count" value="1" width="45" readonly="1"></CTRLNUM>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <ctrlbutton src="wx.ART_GO_DOWN" name="btn_down"></ctrlbutton>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                        <td>
+                                <ctrlhtmlprint id="htmlprint" width="100%-55" height="100%"></ctrlhtmlprint>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

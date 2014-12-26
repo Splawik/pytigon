@@ -1,0 +1,64 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "plugin_form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self['SEARCH'].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            self['SEARCH'].Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+            self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearch)
+            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
+            self.search_txt = ""
+            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            grid.GetTable().FilterBy(1)
+            if grid.GetTable().key:
+                self.search_txt = grid.GetTable().key
+                self['SEARCH'].SetValue(grid.GetTable().key)
+                self['SEARCH'].SetInsertionPointEnd()
+            self['SEARCH'].SetFocus()
+        def StartKey(self, key):
+            self['SEARCH'].SetValue(chr(key))
+            self['SEARCH'].SetInsertionPointEnd()
+            self.SearchText()
+        def SearchText(self):
+            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            text   = self.search_txt
+            grid.GetTable().Filter(text)
+            return True
+        def OnDoSearch(self, event):
+            self.SearchText()
+        def OnKeyDown(self, event):
+            if event.KeyCode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_HOME, wx.WXK_END):
+                grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+                grid.ProcessEvent(event)
+            elif event.KeyCode in (wx.WXK_F4, wx.WXK_RETURN):
+                grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+                self.any_parent_command('Cancel', True)
+                grid.ProcessEvent(event)
+            else:
+                event.Skip()
+        def OnKeyUp(self, event):
+            value = self['SEARCH'].GetValue()
+            if value!=self.search_txt:
+                self.search_txt=value
+                self.SearchText()
+            event.Skip()
+        def OnExit(self, event):
+            self.any_parent_command('Cancel', True)
+</script>
+{% endblock %}
+{% block content %}
+        <table width="100%" height="100%">
+                <tr>
+                        <td>
+                                <CTRLTEXT NAME="SEARCH" WIDTH="300"></CTRLTEXT>
+                        </td>
+                        <td width="99%"></td>
+                        <td>
+                                <CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

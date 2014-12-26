@@ -1,0 +1,241 @@
+body
+    font-family:sans-serif
+    font-size:120%
+    padding: 1
+    bgcolor: #f00
+
+
+small
+    font-size:90%
+
+table
+    border:0
+    vertical-align:top
+    padding:3
+
+td table
+    padding: 1
+
+th
+    border:0
+    cellpadding:3
+    font-weight:bold
+
+td
+    border:0
+    vertical-align:top
+    cellpadding:3
+
+strong,b
+    font-weight:bold
+
+em, i
+    font-style: italic
+
+p
+    cellpadding:2
+    border:0
+    width:100%
+
+a
+    color:#0000ff
+    text-decoration: underline
+    border:3
+
+strong a
+    color:#0000ff
+
+ul,ol
+    border:0
+
+li
+    padding:3
+    width:95%-60
+    border:0
+
+ul li
+    font-style: italic
+ol li
+    font-style: italic
+
+li ul
+    width: 100%
+
+li ol
+    width: 100%
+
+td:hover.test
+    bgcolor: #ff0000
+
+h1
+    font-size:300%
+    font-weight:bold
+    cellpadding:12 2 12 2
+
+h2
+    font-size:240%
+    font-weight: bold
+    cellpadding:10 2 10 2
+
+h3
+    font-size:190%
+    font-weight: bold
+    cellpadding:8 2 8 2
+
+h4
+    font-size:150%
+    font-weight: bold
+    cellpadding:6 2 6 2
+
+h5
+    font-size:120%
+    font-weight: bold
+    cellpadding:4 2 4 2
+
+h6
+    font-size:100%
+    font-weight: bold
+    cellpadding:2 2 2 2
+
+table.tabdel
+    border:1
+    width:100%
+
+table.tabdel tr th
+    bgcolor:#ccc
+    border:1
+    padding:5
+    cellpadding:5
+
+table.tabdel tr td
+    bgcolor:#eee
+    border:1
+    padding:5
+    cellpadding:5
+
+.helptext
+    font-size:120%
+    font-style:italic
+
+#id_permissions
+    padding:0 0 6 0
+
+span.form_title a,span.form_title
+    font-size:160%
+    font-weight: bold
+
+.tabsort
+    width:100%
+    height:100%-5
+
+.tabsort table-bordered
+    width:100%
+    height:100%-5
+
+.listctrl
+    width:100%
+    height:99.9%-20
+
+hr.solid
+    width:100%
+    height:0
+    border:4
+    padding: 10 0 10 0
+
+hr
+    width:100%
+    height:0
+    border:0
+    padding: 0
+
+.form_bar
+    cellpadding: 0
+    cellspacing: 0
+    padding: 0
+
+table.popup
+    border:0
+    vertical-align:top
+    padding:0
+
+td.menu_txt
+    font-size:110%
+
+body.toolbar
+    border: 0
+    padding: 0
+    margins: 0 3 0 3
+
+table.toolbar
+    cellpadding:0
+    cellspacing:0
+
+table.toolbar tr td
+    valign: top
+
+ul.errorlist
+    width:16
+    height:16
+    bgcolor: #f00
+
+pre
+    white-space: pre
+
+pre span
+    white-space: pre
+
+table.codehilitetable
+    border:1
+    width:100%
+
+td.linenos
+    cellpadding:10
+    border:0
+    vertical-align:top
+    valign: top
+    align:right
+    bgcolor: #ccc
+
+td.code
+    cellpadding:10
+    border:0
+    vertical-align:top
+    bgcolor: #eee
+
+div.codehilite
+    width: 99%
+    bgcolor: #eee
+    cellpadding:10
+
+div
+    border:0
+    width: 100%
+
+form
+    bgcolor: #f00
+    border: 2
+
+th.checkbox
+    font-weight:bold
+
+.control-label
+    font-weight:normal
+
+.filter_form
+    bgcolor: #fff
+    height: 52
+    padding:0
+    cellpadding:0
+    cellspacing:0
+
+.filter_form_frame
+    padding:0
+    margins:0
+    cellpadding:0
+    cellspacing:0
+
+.filter_form_frame tr td
+    cellpadding:0
+    cellspacing:0
+    margins:0
+    padding:0

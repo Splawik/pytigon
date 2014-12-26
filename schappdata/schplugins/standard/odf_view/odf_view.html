@@ -1,0 +1,59 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "plugin_form.html" %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            import os
+            self.os = os
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "move":"client://actions/go-up.png",
+                }
+                child.set_bitmaps(bitmaps)
+        def filter_url(self, type, url):
+            if '|edit' in url:
+                try:
+                    self.os.startfile(url.split('|')[0])
+                except:
+                    self.os.system("gnome-open " + url.split('|')[0])
+                return True
+            if '|move' in url:
+                return True
+            if '|delete' in url:
+                return True
+            return None
+</script>
+{% endblock %}
+{% block content %}
+        <table width="100%">
+                <tr>
+                        <td><CTRLSTATICTEXT LABEL="downloaded files:"></CTRLSTATICTEXT></td>
+                        <td><CTRLBITMAPBUTTON NAME="deleteall" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
+                        <td><CTRLBITMAPBUTTON NAME="goto" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
+                        <td width="99%"></td>
+                        <td><CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON></td>
+                </tr>
+        </table>
+        <table name="tabsort" class="tabsort">
+                <tr>
+                        <td >Name</td>
+                        <td >File name</td>
+                        <td >Time</td>
+                        <td >Action</td>
+                </tr>
+                {% for df in app.download_files %}
+                        <tr>
+                                <td >{{df.1}}</td>
+                                <td >{{df.0}}</td>
+                                <td >{{df.2}}</td>
+                                <td>
+                                        <a href="{{df.0}}|move" name="move" title="move">move</a>
+                                        <a href="{{df.0}}|edit" name="edit" title="update">update</a>
+                                        <a href="{{df.0}}|delete" name="delete" title="delete">delete</a>
+                                </td>
+                        </tr>
+                {% endfor %}
+        </table>
+{% endblock %}
+

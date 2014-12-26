@@ -1,0 +1,40 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "plugin_form.html"
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            self['GOHREF'].Bind(wx.EVT_TEXT_ENTER, self.OnGoTo)
+            self['GO'].Bind(wx.EVT_BUTTON, self.OnGoTo)
+            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
+            self.GOHREF.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            self['GO'].SetDefault()
+
+        def go(self):
+            web = self.get_parent_panel()['WEB']
+            value = self['GOHREF'].GetValue()
+            web.go(value)
+            web.clear_history()
+            self.any_parent_command('cancel', True)
+
+        def OnGoTo(self, event):
+            self.go()
+
+        def OnKeyDown(self, event):
+            key = event.GetKeyCode()
+            if key==wx.WXK_RETURN:
+                self.go()
+            else:
+                event.Skip()
+
+        def OnExit(self, event):
+            self.any_parent_command('cancel', True)
+
+%% content
+    table width=100%,,,height=100%
+        tr
+            td:::CTRLSTATICTEXT LABEL=Address:
+            td:::CTRLTEXT NAME=GOHREF,,,width=100%-200
+            td:::CTRLBITMAPBUTTON NAME=GO,,,SRC=client://actions/go-jump.png
+            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK

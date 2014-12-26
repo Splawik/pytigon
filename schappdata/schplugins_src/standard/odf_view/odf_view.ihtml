@@ -1,0 +1,55 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "plugin_form.html"
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            import os
+            self.os = os
+
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "move":"client://actions/go-up.png",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, type, url):
+            if '|edit' in url:
+                try:
+                    self.os.startfile(url.split('|')[0])
+                except:                    
+                    self.os.system("gnome-open " + url.split('|')[0]) 
+                return True
+            if '|move' in url:
+                return True
+            if '|delete' in url:
+                return True
+            return None
+
+%% content
+    table width=100%
+        tr
+            td:::CTRLSTATICTEXT LABEL=downloaded files:
+            td:::CTRLBITMAPBUTTON NAME=deleteall,,,SRC=wx.ART_TICK_MARK
+            td:::CTRLBITMAPBUTTON NAME=goto,,,SRC=wx.ART_TICK_MARK
+            td width=99%
+            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+        
+    table name=tabsort,,,class=tabsort
+        tr 
+            td ...Name
+            td ...File name
+            td ...Time
+            td ...Action
+        % for df in app.download_files
+            tr 
+                td ...{{df.1}}
+                td ...{{df.0}}
+                td ...{{df.2}}
+                td 
+                    a href={{df.0}}|move,,,name=move,,,title=move...move
+                    a href={{df.0}}|edit,,,name=edit,,,title=update...update
+                    a href={{df.0}}|delete,,,name=delete,,,title=delete...delete
+    

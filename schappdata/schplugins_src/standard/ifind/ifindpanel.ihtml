@@ -1,0 +1,87 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "plugin_form.html"
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            self.SEARCH.ShowSearchButton(True)
+            self.SEARCH.ShowCancelButton(True)
+            self.SEARCH.Bind(wx.EVT_TEXT, self.OnDoSearch)
+            self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearchNext)
+            self.NEXT.Bind(wx.EVT_BUTTON, self.OnNext)
+            self.PREV.Bind(wx.EVT_BUTTON, self.OnPrev)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
+            self.SEARCH.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.OnCancelBtn)
+
+            self.search_txt = ""
+            self.SEARCH.SetFocus()
+
+        def calculate_best_size(self):
+            x, y = self.base_calculate_best_size()
+            if self.TabWindow and self.TabWindow.ParentTab:
+                x = self.TabWindow.ParentTab.Body.GetSize().GetWidth()
+            return (x, y)
+
+        def SearchText(self, regex=False, back=False, corectSelection=False, next=False):
+            editor = self.get_parent_panel()['EDITOR']
+            text = self.SEARCH.GetValue()
+            flags = wx.stc.STC_FIND_MATCHCASE
+            if regex:
+                flags = flags | wx.stc.STC_FIND_REGEXP
+
+            if not back and corectSelection:
+                editor.SetSelectionStart(editor.GetSelectionEnd())
+
+            editor.SearchAnchor()
+            if not back:
+                if next:
+                    res = editor.SearchNext(flags, text)
+                else:
+                    res = editor.FindText(-1, -1, text, flags)
+                if res == -1:
+                    editor.DocumentStart()
+                    editor.SearchAnchor()
+                    res = editor.SearchNext(flags, text)
+            else:
+                res = editor.SearchPrev(flags, text)
+                if res == -1:
+                    editor.DocumentEnd()
+                    editor.SearchAnchor()
+                    res = editor.SearchPrev(flags, text)
+            editor.EnsureCaretVisible()
+            return res
+
+        def OnCancelBtn(self, event):
+            event.Skip()
+
+        def OnDoSearch(self, event):
+            self.SearchText(corectSelection=True)
+
+        def OnDoSearchNext(self, event):
+            self.SearchText(corectSelection=True, next=True)
+
+        def OnNext(self, event):
+            self.SearchText(corectSelection=True, next=True)
+
+        def OnPrev(self, event):
+            self.SearchText(back=True)
+
+        def Search(self):
+            self.SearchText()
+
+        def OnExit(self, event):
+            self.any_parent_command('cancel', True)
+
+%% content
+    table
+        tr
+            td cellpadding=0,,,width=36,,,height=36
+                ctrlnobg_button width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+            td:::CTRLSEARCH NAME=SEARCH,,,width=200
+            td cellpadding=0,,,width=36,,,height=36
+                ctrlnobg_button width=36,,,height=36,,,NAME=NEXT,,,SRC=wx.ART_GO_DOWN
+            td cellpadding=0,,,width=36,,,height=36
+                ctrlnobg_button width=36,,,height=36,,,NAME=PREV,,,SRC=wx.ART_GO_UP
+            td:::CTRLCHECKBOX label=Whole Word
+            td:::CTRLCHECKBOX label=Regular Expression
