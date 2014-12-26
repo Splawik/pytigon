@@ -1,0 +1,287 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/base.html'
+
+% load exfiltry
+% load exsyntax
+
+%% js_scripts_base
+    {% jscript_link 'jquery/js/jquery.min.js' %}
+    {% jscript_link 'jquery.mobile/jquery.mobile.min.js' %}
+    {% jscript_link 'csrf.js' %}
+    {% jscript_link 'jquery.plugins/jquery.form.js' %}
+
+
+%% jquery_ready_start
+    .$( document ).ready(function() {
+
+
+%% jquery_ready
+    %% jquery_ext{:}
+        $(document).ajaxError(
+            function(request, settings):
+                $('#popupDialog').panel("open")
+                var start,end
+                start = settings.responseText.indexOf("<body>")
+                end = settings.responseText.lastIndexOf("</body>")
+                if (start > 0 && end > 0):
+                    $("#popup_data").html(settings.responseText.substring(start+6,end-1))
+
+
+        function DialogExLoad1(responseText, status, response):
+            alert("X3")
+            $('#{{uuid}}_dialog-form').panel('open')
+
+
+        function DialogExLoadInfo(responseText, status, response):
+            $('#{{uuid}}_dialog-form-info').panel('open')
+
+
+        function DialogExLoadDelete(responseText, status, response):
+            $('#{{uuid}}_dialog-form-delete').panel('open')
+
+
+        //$('a.popup').click(on_click_edit)
+
+
+%% jquery_ready_end
+    });
+
+
+%% js_script_body{:}
+
+
+    $(document).on(
+        'pagecreate', function(event):
+            //$('#{{uuid}}_popupform').button().click(function() { $("#{{uuid}}_dialog-data").load($(this).attr("href"),null,DialogExLoad1);})
+
+            var dialog_data
+
+            $('a.popup_delete').click(
+                function():
+                    if($(this).attr("href").indexOf('127.0.0.2')>=0):
+                        $.get($(this).attr("href")+"|dialog-data",null,DialogExLoad1)
+                    else:
+                        var dialog
+                        dialog = $(this).parents("[data-role='page']").find("[name='dialog-form-delete']")
+                        $.get(
+                            $(this).attr("href")
+                            function( data ):
+                                dialog.find("[name='dialog-data-delete']").html(data)
+                        dialog.panel('open')
+                    return false
+
+            edit_page = '#'+$(event.target).attr("rel")
+            console.log("x1:")
+            console.log(edit_page)
+            edit_data = $(edit_page).find("[name='dialog_data']")
+            $('a.popup').unbind("click").click(
+                function():
+                    if($(this).attr("href").indexOf('127.0.0.2')>=0):
+                        $.get($(this).attr("href")+"|dialog-data",null,DialogExLoad1)
+                    else:
+                        edit_data2=edit_data
+                        console.log("x2:")
+                        console.log(edit_data2)
+                        $.get(
+                            $(this).attr("href")
+                            function( data ):
+                                //console.log(edit_data2)
+                                edit_data2.html(data)
+                        console.log("x3:")
+                        console.log(edit_page)
+                        $( ":mobile-pagecontainer" ).pagecontainer( "change", edit_page );
+                        //$( ":mobile-pagecontainer" ).pagecontainer( "load", edit_page );
+                    return false
+
+
+%%js_scripts
+    % if form_edit or form_delete or form_info
+        % if form_ext
+            {{ block.super }}
+    % else
+        {{ block.super }}
+
+
+%% css_start
+    {% css_link 'jquery.mobile/jquery.mobile.min.css' %}
+    {% css_link 'jquery.mobile/jquery.mobile.structure.min.css' %}
+    {% css_link 'jquery.mobile/jquery.mobile.theme.min.css' %}
+    {% css_link 'mobile.css' %}
+    {% css_link 'erw/pager.css' %}
+    <style type="text/css">
+
+
+%% css_end
+    </style>
+
+
+%% all
+    %with scroll_table=False
+        {{ block.super }}
+
+
+%% menu_start
+    <div data-role="panel" id="{{uuid}}_popupPanel" data-position="left" data-theme="b">
+
+%% topmenu_start
+
+%% topmenu
+
+%% topmenu_end
+
+%% submenu
+  % ifchanged app_name
+    % if not forloop.first
+      </ul></div>
+    <div data-role="collapsible" data-inset="false" {%if app_manager.appname == app_name %} data-collapsed="false" {% else %} data-collapsed="true" {% endif %} >
+
+    <h2>{{app_name}}</h2>
+    <ul data-role="listview">
+    
+  <li><a href="{%url 'start' %}{{url}}" data-ajax="true" data-transition="flip">{{opis}}</a></li>
+
+  % if forloop.last
+      </ul></div>
+
+%% menu_end
+    </div>
+
+
+%% list_content_start
+    <div class="ui-body ui-body-a" data-role="content">
+
+
+%% list_content_end
+    </div>
+
+
+%% tabsort_class...class="ui-responsive ui-body-d ui-bar-d" data-role="table"
+
+
+%% list_content_header_first_row
+
+%% list_content_title
+
+
+%% row_edit_form
+    %if form:
+        % if field:
+            {{form|getvalue:field|as_widget:"width:100%,height:99.9%-20" }}
+        % else:
+            % for field in form:
+                {{field.label_tag}} {{field}}
+
+
+%% dialog_start
+    % if form_edit or form_add or form_info or show_form
+        % if form_edit or form_add:
+            div class=body_header,,,data-role=header,,,data-theme=a
+                a href=#,,,data-rel=back,,,data-theme=a,,,class=ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all...Back
+                h1
+                    a href=../../../,,,data-icon=home,,,data-iconpos=notext,,,data-direction=reverse
+                        {{title}}
+
+
+%% form_ok_cancel_info
+    table width=100%,,,cellspacing=0,,,cellpadding=3
+        tr
+            td align=center
+                % ok_cancel
+
+%% content_start
+        div class=body_header,,,data-role=header,,,data-theme=a
+            a href=#{{uuid}}_popupPanel,,,data-theme=a,,,class=ui-btn ui-btn-icon-notext  ui-icon-bars ui-nodisc-icon ui-alt-icon ui-btn-left...Menu
+            h1
+                %if title
+                    {{title}}
+                %else
+                    {{app_manager.get_main_title}}
+            a href=../../../,,,data-icon=home,,,data-iconpos=notext,,,data-direction=reverse
+                .Home
+            %% list_content_actions
+
+
+%% body_header
+    % if not show_form:
+        <div data-role="page" id="{{uuid}}_page-id" class="main_page" rel="{{uuid}}_dialog_edit">
+        div id={{uuid}}_dialog-form,,,name=dialog-form,,,data-role=panel,,,data-position=right,,,title={{title}}
+            div id={{uuid}}_dialog-data
+        div id={{uuid}}_dialog-form-error,,,name=dialog-form-error,,,data-role=panel,,,data-position=right,,,title=Raport b??dów,,,class=ui-state-error ui-corner-all
+            div class=ui-state-error ui-corner-all
+                div id={{uuid}}_dialog-data-error
+        div id={{uuid}}_dialog-form-info,,,name=dialog-form-info,,,data-role=panel,,,data-position=right,,,title=Informacja,,,class=ui-corner-all
+            div class=ui-corner-all
+                div id={{uuid}}_dialog-data-info
+        div id={{uuid}}_dialog-form-delete,,,name=dialog-form-delete,,,data-role=panel,,,data-position=right,,,data-display=overlay,,,data-theme=b,,,class=ui-responsive-panel,,,title={{title}}
+            div data-role=header
+                a href=#,,,data-rel=close,,,class=ui-btn ui-btn-left ui-btn-icon-left ui-icon-delete,,,Close
+                h1...{{title}}
+            div id={{uuid}}_dialog-data-delete,,,name=dialog-data-delete
+            script{:}
+                function on_delete(obj):
+                    var page
+                    $("[name='DialogFormDelete']").ajaxSubmit();
+                    page = obj.parents('.main_page')
+                    page.find("[name='TableFiltr']").submit()
+                    $('#{{uuid}}_dialog-form-delete').panel( "close" )
+
+            table width=100%,,,cellspacing=0,,,cellpadding=3
+                tr
+                    td align=center
+                        a href=#,,,data-rel=close,,,class=ui-btn ui-shadow ui-corner-all...Cancel
+                        a href=#,,,id=DELETE_OK,,,class=ui-btn ui-shadow ui-corner-all,,,onclick=on_delete($(this));return false;...OK
+
+
+%% body_footer
+    % if not show_form:
+        <div  data-role="footer"></div>
+        </div>
+        div data-role=page,,,id={{uuid}}_dialog_edit
+            div data-role=header
+                a href=#,,,data-rel=back,,,class=ui-btn ui-btn-left ui-btn-icon-left ui-icon-delete,,,Close
+                h1...{{title}}
+            div role=main,,,class=ui-content
+                div id={{uuid}}_dialog-data,,,name=dialog_data
+            div data-role=footer
+                script{:}
+                    function on_ok(obj):
+                        $("#DialogForm").ajaxSubmit(
+                            function():
+                                $("#{{uuid}}_page-id").find("[name='TableFiltr']").submit()
+
+                    function on_cancel(obj):
+                        $( ":mobile-pagecontainer" ).pagecontainer( "change", "#{{uuid}}_page-id" );
+                        //$("#{{uuid}}_page-id").find("[name='TableFiltr']").submit()
+
+                table width=100%,,,cellspacing=0,,,cellpadding=3
+                    tr
+                        td align=centers
+                            a href=#,,,data-rel=back,,,class=ui-btn ui-shadow ui-corner-all...Cancel
+                            a href=#,,,id=OK,,,class=ui-btn ui-shadow ui-corner-all,,,onclick=on_ok($(this));return false;...OK
+
+
+
+%% page_start
+    % if not show_form:
+        {{block.super}}
+
+
+%% page_head
+    % if not show_form:
+        {{block.super}}
+
+
+%% page_end
+    % if not show_form:
+        {{block.super}}
+
+
+%% body_start
+    % if not show_form:
+        {{block.super}}
+
+
+%% body_end
+    % if not show_form:
+        {{block.super}}

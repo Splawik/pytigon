@@ -1,0 +1,8 @@
+parametry linku:
+    schtml=1        - otwórz okno w trybie prostym
+    childwin=1      - nowa strona w oknie dziecka
+    bestwidth=      - szerokość otwieranego okna
+    bestheight=     - wysokość otwieranego okna
+
+href:
+    _self

@@ -1,0 +1,16 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+%% content
+    %% form_title
+    form method=post,,,action=.,,,class=form,,,id=form
+        % csrf_token
+        ul class=form,,,id=form
+            {{ form.as_ul }}
+            li:::input type=submit,,,value=Odśwież
+    br
+    % if tabela
+        %% table
+    br
+    %% form_stopka

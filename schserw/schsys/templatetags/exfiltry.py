@@ -1,0 +1,643 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+#Pytigon - wxpython and django application framework
+
+#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+#license: "LGPL 3.0"
+#version: "0.1a"
+
+from django import template
+from django.core.urlresolvers import reverse
+from django.forms.widgets import HiddenInput, CheckboxSelectMultiple
+
+from schlib.schtools.wiki import wiki_from_str, make_href, wikify
+
+from django.template.loader import get_template
+from django.template import Context, Template
+from django.db.models.query import QuerySet
+from base64 import b64encode, b64decode
+
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
+
+register = template.Library()
+
+
+@register.filter(name='class_name')
+def class_name(value):
+    ret = ''
+    try:
+        ret = value.__class__.__name__
+    except:
+        pass
+    return ret
+
+
+@register.filter(name='class_dir')
+def class_dir(value):
+    ret = ''
+    try:
+        ret = str(dir(value)).replace('\n', '')
+    except:
+        pass
+    return ret
+
+
+@register.filter(name='is_hidden')
+def is_hidden(value):
+    if value._is_hidden():
+        return True
+    else:
+        return False
+
+
+@register.filter(name='urlencode_shash')
+def urlencode_shash(value):
+    import urllib.request, urllib.parse, urllib.error
+    return urllib.parse.quote(value, '')
+
+
+@register.filter(name='bencode')
+def bencode(value):
+    if value:
+        return b64encode(value.encode('utf-8'))
+    else:
+        return ''
+
+
+@register.filter(name='bdecode')
+def bdecode(value):
+    return b64decode(value.encode('utf-8')).decode('utf-8')
+
+
+@register.filter(name='subtract')
+def subtract(value, arg):
+    return int(value) - int(arg)
+
+
+@register.filter(name='multiply')
+def multiply(value, arg):
+    return int(value) * int(arg)
+
+@register.filter(name='fmultiply')
+def fmultiply(value, arg):
+    try:
+        ret = float(value) * float(arg)
+    except:
+        ret = ""
+    return ret
+
+
+@register.filter(name='divide')
+def divide(value, arg):
+    return int(value) / int(arg)
+
+@register.filter(name='fdivide')
+def fdivide(value, arg):
+    if float(arg) != 0:
+        return float(value) / float(arg)
+    else:
+        return ""
+
+@register.filter(name='range')
+def frange(value):
+    return list(range(int(value)))
+
+
+@register.filter(name='get')
+def get(value, argv):
+    return value[int(argv)]
+
+
+@register.filter(name='getvalue')
+def getvalue(value, argv):
+    return value[argv]
+
+
+@register.filter(name='date_inc')
+def date_inc(value, arg):
+    import datetime
+    try:
+        (date, time) = value.split()
+        (y, m, d) = date.split('-')
+        return datetime.datetime(int(y), int(m), int(d))\
+             + datetime.timedelta(int(arg))
+    except ValueError:
+        return None
+
+
+@register.filter(name='date_dec')
+def date_dec(value, arg):
+    import datetime
+    try:
+        (y, m, d) = value.split('-')
+        return (datetime.datetime(int(y), int(m), int(d))
+                 - datetime.timedelta(int(arg))).date()
+    except ValueError:
+        return None
+
+
+@register.filter(name='onlyclass')
+def onlyclass(value, arg):
+    ret = []
+    for obj in value:
+        if obj.__class__.__name__ == arg:
+            ret.append(obj)
+    if len(ret) == 0:
+        ret = None
+    return ret
+
+
+@register.filter(name='errormessage')
+def errormessage(value):
+    if value.endswith('!'):
+        return True
+    else:
+        return False
+
+
+@register.filter(name='feval')
+def template_eval(value):
+    return eval(value)
+
+
+def build_eval(parser, token):
+    bits = token.contents.split()
+    if len(bits) != 2:
+        raise template.TemplateSyntaxError('eval takes one argument')
+    (tag, val_expr) = bits
+    return EvalObject(val_expr)
+
+
+class GetContext:
+
+    def __init__(self, context):
+        self.context = context
+
+    def __getitem__(self, key):
+        if key in self.context:
+            return self.context.get(key)
+        else:
+            return None
+
+
+class EvalObject(template.Node):
+
+    def __init__(self, val_expr):
+        self.val_expr = val_expr
+
+    def render(self, context):
+        output = eval(self.val_expr, {'this': GetContext(context)})
+        context['eval'] = output
+        return ''
+
+
+register.tag('eval', build_eval)
+
+
+@register.filter(name='one_line_block')
+def one_line_block(value):
+    return value.replace('        ', ' ').replace('    ', ' ').replace('  ', ' '
+            ).replace('\n', '').replace('\t', '')
+
+
+@register.filter(name='arg')
+def arg_fun(value, arg):
+    return value.replace('%s', arg, 1)
+
+
+@register.filter(name='dir')
+def f_dir(value):
+    return dir(value)
+
+
+@register.filter(name='getfield')
+def getfield(value, attr):
+    try:
+        obj = getattr(value, attr)
+    except:
+        obj = None
+        pass
+    return obj
+
+
+@register.filter(name='getfields')
+def getfields(value):
+    ret = []
+    for f in value._meta.fields:
+        ret.append(f)
+    return ret
+
+
+@register.filter(name='getallfields')
+def getallfields(value):
+    ret = []
+    for f in value._meta.fields + value._meta.many_to_many:
+        ret.append(f)
+    return ret
+
+
+@register.filter(name='tostr')
+def tostr(value):
+    return str(value)
+
+
+@register.filter(name='as_widget')
+def as_widget_fun(value, arg):
+    d = {}
+    l = arg.split(',')
+    for x in l:
+        x2 = x.split(':')
+        d[x2[0]] = x2[1]
+    return value.as_widget(attrs=d)
+
+
+@register.filter(name='sum')
+def sum(value, arg):
+    value = value + float(arg)
+    return ''
+
+
+@register.filter(name='left')
+def left(value, arg):
+    return str(value)[:int(arg)]
+
+
+@register.filter(name='truncate')
+def truncate(value, arg):
+    try:
+        retstr = str(value)
+    except:
+        retstr = unicode(value)
+        
+    if len(retstr) > int(arg):
+        return retstr[:int(arg) - 3] + '...'
+    else:
+        return retstr
+
+
+@register.filter(name='floatformat')
+def floatformat(text):
+    arg = 2
+    try:
+        f = float(text)
+    except ValueError:
+        return ''
+    try:
+        d = int(arg)
+    except ValueError:
+        return str(f)
+    m = f - int(f)
+    if not m and d < 0:
+        return '%d' % int(f)
+    else:
+        formatstr = '%%.%df' % abs(d)
+        return formatstr % f
+
+
+@register.filter(name='floatnullformat')
+def floatnullformat(text):
+    x = floatformat(text)
+    if x =='0.00':
+        return "-"
+    else:
+        return x
+
+
+@register.filter(name='floatformat3')
+def floatformat3(text):
+    arg = 3
+    try:
+        f = float(text)
+    except ValueError:
+        return ''
+    try:
+        d = int(arg)
+    except ValueError:
+        return str(f)
+    m = f - int(f)
+    if not m and d < 0:
+        return '%d' % int(f)
+    else:
+        formatstr = '%%.%df' % abs(d)
+        return formatstr % f
+
+
+@register.filter(name='hide')
+def hide(value):
+    value.widget = HiddenInput()
+    return value
+
+
+@register.filter(name='query')
+def query(value, query):
+    tab = str(query).split('=')
+    kwargs = {}
+    kwargs[tab[0]] = eval(tab[1])
+    value.field.queryset = value.field.queryset.filter(**kwargs)
+    return value
+
+
+@register.filter(name='clean')
+def clean(value):
+    return ' '.join(value.replace('\n', '').replace('\t', '').split())
+
+
+@register.filter(name='print_info')
+def print_info(value):
+    print('PRINT_INFO:', value.__class__.__name__, dir(value), value)
+    return value
+
+@register.filter(name='wikify')
+def _wikify(value):
+    return wikify(value)
+
+
+@register.filter(name='wiki')
+def wiki(value):
+    return wiki_from_str(value)
+
+
+@register.filter(name='wiki_href')
+def wiki_href(value, section="help"):
+    return make_href(value, section=section)
+
+
+@register.filter(name='comma')
+def comma(value):
+    if value and len(value) > 0 and value != ' ':
+        return value + ', '
+    else:
+        return ''
+
+
+@register.filter(name='readonly_transform')
+def readonly_transform(value, arg):
+    if arg == '_':
+        return value
+    else:
+        return value.replace('/_', '/')
+
+
+@register.filter(name='childs')
+def childs(value):
+    set_name = value._meta.module_name
+    if hasattr(value, set_name + '_set'):
+        o = getattr(value, set_name + '_set')
+    else:
+        o = getattr(value, 'children')
+    l = o.all()
+    if len(l) > 0:
+        return True
+    else:
+        return False
+
+
+@register.filter(name='print')
+def print_fun(value):
+    print('print_fun:', value.__class__, value)
+    return value
+
+
+@register.filter(name='format')
+def format(value, id):
+    return value % id
+
+
+@register.filter(name='replace')
+def replace(value, replace_str):
+    l = replace_str.split('|')
+    if len(l) == 2:
+        value2 = value.replace(l[0], l[1])
+        return value2
+    else:
+        return value
+
+
+@register.filter(name='append_str')
+def append_str(value, s):
+    return value + str(s)
+
+
+@register.filter(name='isoformat')
+def isoformat(value):
+    if value:
+        iso = value.isoformat()[:19].replace('T', ' ')
+        return iso
+    else:
+        return ""
+
+@register.filter(name='isoformat_short')
+def isoformat(value):
+    if value:
+        iso = value.isoformat()[:16].replace('T', ' ')
+        return iso
+    else:
+        return ""
+
+
+@register.filter(name='d_isoformat')
+def d_isoformat(value):
+    if value:
+        iso = value.isoformat()[:10]
+        return iso
+    else:
+        return ""
+
+
+@register.filter(name='choices_from_field')
+def choices_from_field(obj, field):
+    return obj._meta.get_field(field).choices
+
+@register.filter(name='is_')
+def is_(value):
+    return value.startswith('_')
+
+@register.filter(name='to_int')
+def to_int(value):
+    try: 
+        ret = int(value)
+    except:
+        ret = 0
+    return ret
+
+
+@register.filter(name='minus')
+def to_int(value, arg):
+    try:
+        ret = int(value) - int(arg)
+    except:
+        ret = 0
+    return ret
+
+@register.filter(name='plus')
+def to_int(value, arg):
+    try:
+        ret = int(value) + int(arg)
+    except:
+        ret = 0
+    return ret
+
+
+@register.filter(name='addclass')
+def addclass(value, arg):
+    value.field.widget.attrs['class'] = arg
+    return value
+
+
+@register.filter(name='alternatewidget')
+def alternatewidget(value):
+    value.field.widget = CheckboxSelectMultiple(choices=value.field.choices)
+    return value
+
+@register.filter(name='reverse')
+def _reverse(value):
+    return reverse(value)
+
+
+@register.filter(name='textfiel_row_col')
+def textfiel_row_col(field, arg):
+    row, col = arg.split('x')
+    field.field.widget.attrs['rows']=int(row)
+    field.field.widget.attrs['cols']=int(col)
+    return field
+
+
+@register.filter(name='set_textfiel_row_col')
+def set_textfiel_row_col(field, arg):
+    row, col = arg.split('x')
+    field.field.widget.attrs['rows']=int(row)
+    field.field.widget.attrs['cols']=int(col)
+    return ""
+
+
+def obj_to_date(value):
+    if value:
+        return str(value)[0:10]
+    else:
+        return ""
+
+def obj_to_time(value):
+    if value:
+        return str(value)[0:16]
+    else:
+        return ""
+
+def obj_to_str(value):
+    if value:
+        return value
+    else:
+        return ""
+
+def obj_to_float(value):
+    if value:
+        return floatformat(value)
+    else:
+        return ""
+
+def obj_to_float2(value):
+    if value:
+        return floatnullformat(value)
+    else:
+        return "-"
+
+def obj_to_int(value):
+    if value:
+        return "%d" % int(value)
+    else:
+        return ""
+
+@register.filter(name='tr_format')
+def tr_format(row, format):
+    ret = "<tr>"
+    i=0
+    for f in format:
+        pos = row[i]
+        if   f=='i':
+            ret+="<td align='right'>%s</td>" % obj_to_int(pos)
+        elif f=='I':
+            ret+="<td align='right'>%s</td>" % obj_to_int(pos)
+        elif f=='f':
+            ret+="<td align='right'>%s</td>" % obj_to_float(pos)
+        elif f=='F':
+            ret+="<td align='right'>%s</td>" % obj_to_float2(pos)
+        elif f=='s':
+            ret+="<td>%s</td>" % obj_to_str(pos)
+        elif f=='S':
+            ret+="<td>%s</td>" % obj_to_str(pos)
+        elif f=='k':
+            ret+="<td align='right'>%s</td>" % obj_to_float(pos)
+        elif f=='K':
+            ret+="<td align='right'>%s</td>" % obj_to_float(pos)
+        elif f=='D':
+            ret+="<td>%s</td>" % obj_to_date(pos)
+        elif f=='d':
+            ret+="<td>%s</td>" % obj_to_date(pos)
+        elif f=='T':
+            ret+="<td>%s</td>" % obj_to_time(pos)
+        elif f=='t':
+            ret+="<td>%s</td>" % obj_to_time(pos)
+        else:
+            ret+="<td>%s</td>" % str(pos)
+        i+=1
+    ret+="</tr>"
+    return ret
+
+@register.filter(name='as_title')
+def as_title(field):
+    t = get_template('widgets/field_title.html')
+    d = { 'field': field }
+    c = Context(d)
+    return t.render(c)
+
+@register.filter(name='translate')
+def translate(s, lng):
+    return s.replace('.html', "_"+lng+".html")
+
+@register.filter(name='add_label')
+def add_label(obj, label):
+    obj['label'] = label
+    return obj
+
+@register.filter(name='split')
+def filter_split(obj, sep=';'):
+    return obj.split(sep)
+
+@register.filter(name='hasattr')
+def filter_hasattr(obj, attr_name):
+    return hasattr(obj, attr_name)
+
+
+@register.filter(name='module_obj')
+def filter_module_obj(obj, obj_name):
+    if type(obj) == QuerySet:
+        module_name = obj.model.__module__
+        return getattr(__import__(module_name).models, obj_name)
+    return None
+
+@register.filter(name='ihtml2html')
+def ihtml2html(html):
+    return ihtml_to_html(None, input_str=html)
+
+
+@register.filter(name='first_section')
+def first_section(html):
+    return html.split('$$$')[0]
+
+@register.filter(name='second_section')
+def second_section(html):
+    x = html.split('$$$')
+    if len(x)>1:
+        return x[1]
+    else:
+        return ""

@@ -1,0 +1,7 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+%% content
+    h1
+        .Brak praw do tej opcji!

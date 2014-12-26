@@ -1,0 +1,105 @@
+{# -*- coding: utf-9 -*- #}
+
+%% all
+    %% page_start
+        <!DOCTYPE html>
+        <html lang="{{LANGUAGE_CODE}}">
+    %% page_head
+        head
+            meta charset=utf-8
+            meta name=viewport,,,content=width=device-width, initial-scale=1
+
+            %if form:
+                %if form.errors
+                    meta name=target,,,content=_self
+
+            title
+                %%title
+                    {{title}}
+
+            % if standard_web_browser:
+                % if not show_form:
+                    %%js_scripts
+                        %% js_scripts_base
+                        script type=text/javascript
+                            %% jquery_init
+                            %% jquery_init_once
+                            %% jquery_ready_all
+                                %% jquery_ready_start
+                                %% jquery_ready
+                                %% jquery_ready_end
+                            %% js_script_body
+
+
+                %% js_extrascipts
+
+                % if not show_form:
+                    %% css_start
+                        <style type="text/css">
+                    %% css
+                    %% css_end
+                        </style>
+
+            % else
+                %% pythoncode
+                %% icss
+
+            %% extrahead
+            %% extrastyle
+
+    %% body_start
+        <body bgcolor="#{{color_body}}" border="1">
+    %% body_header
+
+    %% body
+
+        %% nav
+            %% menu_start
+            %% menu
+
+                %% topmenu_start
+                %for title, perms, index, app_name in app_manager.get_apps_width_perm:
+                    %% topmenu
+                %% topmenu_end
+
+                %% submenu_start
+                %for module_title, app_title, app_name, url, opis, prawo, icon in app_manager.get_app_items_width_perm:
+                    %% submenu
+                %% submenu_end
+            %% menu_end
+
+            %% menu2
+
+        %% body_body
+            %% login
+
+            %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
+                %% panel
+                %% messages
+                    % if messages:
+                        % for message in messages:
+                            % ifequal message|slice:"-1:" '!'
+                                    ul class=errorlist
+                                        li...{{message}}
+                                {% else %}
+                                    ul class=messagelist
+                                        li...{{message}}
+                %% navglobal
+                %% sidebar
+
+                %% style_content_start
+                %% content_start
+                %% no_content
+                    %% content
+                %% content_end
+                %% style_content_end
+
+
+    %% html_widgets_init
+
+    %% body_footer
+  
+    %% body_end...</body>
+
+    %% page_end...</html>
+

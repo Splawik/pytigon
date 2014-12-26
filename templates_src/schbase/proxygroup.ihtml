@@ -1,0 +1,28 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with form_width=620 form_height=360
+        {{ block.super }}
+
+%% form_header
+    p
+        % new_row "Nowa grupa"
+
+%% table_header
+    [ID | Nazwa | Action ]
+
+%% table_content
+    tr
+        td:::a {% view_row "Informacje szczegółowe" 250 300 %}...{{object.id}}
+        td...{{object.name}}
+        td
+            % edit_row "popraw"
+            % delete_row "usuń"
+
+%% table_footer
+  [ - | | {% new_row 'Nowa grupa' %}  ]

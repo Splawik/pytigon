@@ -1,0 +1,27 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% form_title
+    .Hasło: "{{page_name}}" - edycja
+
+%% form_action
+    /schwiki/{{page_name}}/save/
+
+%% table_contents_edit
+    % csrf_token
+
+    % if standard_web_browser
+        textarea name=content,,,rows=30,,,cols=80...{{content}}
+    %else
+        CTRLSTYLEDTEXT name=content,,,WIDTH=100%,,,HEIGHT=100%,,,SRC=wiki
+            data
+                {{content|bencode}}
+
+%% form_ok_cancel
+    % if not standard_web_browser
+        CTRLBUTTON NAME=Anuluj,,,label=Anuluj,,,TARGET=_parent
+        CTRLBUTTON href=/schwiki/{{page_name}}/save/,,,DEFAULTVALUE=1,,,PARAM=post,,,TARGET=_parent_refr,,,label=OK,,,FIELDS=POST:content,csrfmiddlewaretoken

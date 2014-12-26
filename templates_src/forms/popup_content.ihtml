@@ -1,0 +1,22 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% nav
+
+%% login
+
+%% body
+    %% heading
+    %% panel
+    %% style_content_start
+    %% content0
+    %% no_content
+        %% content
+    %% style_content_stop
+
+    %% footer

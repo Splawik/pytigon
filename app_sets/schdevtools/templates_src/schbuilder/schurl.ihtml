@@ -1,0 +1,29 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+
+%% all
+    %with form_width=800 form_height=600
+        {{ block.super }}
+
+
+%% scroll
+
+
+%% list_content_actions
+    % new_row _("New url")
+
+
+%% list_row_header
+    td...Url
+
+
+%% list_row
+    td...{{object.reg_expr}}
+
+
+%% row_edit
+    % form:

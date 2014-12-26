@@ -1,0 +1,4 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/default_base.html'|translate:lang
+

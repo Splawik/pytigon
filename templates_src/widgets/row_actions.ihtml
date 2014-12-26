@@ -1,0 +1,25 @@
+% if standard_web_browser:
+    % for pos in actions:
+        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,{% ifnotequal pos.target '_top' %}target={{pos.target}}{% endifnotequal %},,,{{pos.style|safe}}
+            % if browser_type == 'mobile':
+                % if not pos.icon:
+                    {{pos.title}}
+            % else:
+                % if pos.icon:
+                    <span class="glyphicon {{pos.icon.0}}"></span>
+                % else:
+                    {{pos.title}}
+
+    % if actions2:
+        div class=btn-group
+            button class=btn btn-sm btn-default dropdown-toggle,,,data-toggle=dropdown...<span class="glyphicon glyphicon-align-justify"></span>
+            ul class=dropdown-menu pull-right
+                % for pos in actions2:
+                    li style=margin:4px
+                        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style_in_menu|safe}}
+                            {{pos.title}}
+% else:
+    % for pos in actions|add:actions2:
+        a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
+            {{pos.title}}
+

@@ -1,0 +1,17 @@
+% extends "widgets/html_widgets/treeview.html"
+
+% load exfiltry
+% load exsyntax
+% load mptt_tags
+
+%% content
+    <div class='tree' style='border: 0px; background-color:transparent; padding: 20px 0px 0px 0px; max-height: 300px; overflow-y: auto;'{% if not standard_web_browser %} width='300' height='120'{% endif %}>
+        ul class=root
+            li class=show_node,,,style=left:-35px;
+                span class=root,,,style=height: 34px
+                    i class=glyphicon glyphicon-plus-sign
+                        {{title}}
+
+                ul class=children
+                    {{data}}
+    </div>

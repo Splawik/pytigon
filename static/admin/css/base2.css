@@ -1,0 +1,379 @@
+/*
+    DJANGO Admin styles
+*/
+
+
+/* MODULES */
+
+.module {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    background: #fff;
+}
+
+.module p, .module ul, .module h3, .module h4, .module dl, .module pre {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.module blockquote {
+    margin-left: 12px;
+}
+
+.module ul, .module ol {
+    margin-left: 1.5em;
+}
+
+.module h3 {
+    margin-top: .6em;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    margin: 0;
+    padding: 2px 5px 3px 5px;
+    font-size: 11px;
+    text-align: left;
+    font-weight: bold;
+    background: #7CA0C7 url(../img/default-bg.gif) top left repeat-x;
+    color: #fff;
+}
+
+.module table {
+    border-collapse: collapse;
+}
+
+/* MESSAGES & ERRORS */
+
+ul.messagelist {
+    padding: 0;
+    margin: 0;
+}
+
+ul.messagelist li {
+    font-size: 12px;
+    font-weight: bold;
+    display: block;
+    padding: 5px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    background: #dfd url(../img/icon_success.gif) 5px .3em no-repeat;
+}
+
+ul.messagelist li.warning {
+    background: #ffc url(../img/icon_alert.gif) 5px .3em no-repeat;
+}
+
+ul.messagelist li.error {
+    background: #ffefef url(../img/icon_error.gif) 5px .3em no-repeat;
+}
+
+.errornote {
+    font-size: 12px !important;
+    font-weight: bold;
+    display: block;
+    padding: 5px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border: 1px solid #c22;
+    color: #c11;
+    background: #ffefef url(../img/icon_error.gif) 5px .38em no-repeat;
+}
+
+.errornote, ul.errorlist {
+    border-radius: 1px;
+}
+
+ul.errorlist {
+    margin: 0 0 4px !important;
+    padding: 0 !important;
+    color: #fff;
+    background: #c11;
+}
+
+ul.errorlist li {
+    font-size: 12px !important;
+    display: block;
+    padding: 5px 5px 4px 7px;
+    margin: 3px 0 0 0;
+}
+
+ul.errorlist li:first-child {
+    margin-top: 0;
+}
+
+ul.errorlist li a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+td ul.errorlist {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+td ul.errorlist li {
+    margin: 0 !important;
+}
+
+.errors, .form-row.errors {
+    background: #ffefef;
+}
+
+.form-row.errors {
+    border: 1px solid #c22;
+    margin: -1px;
+}
+
+.errors input, .errors select, .errors textarea {
+    border: 1px solid #c11;
+}
+
+div.system-message {
+    background: #ffc;
+    margin: 10px;
+    padding: 6px 8px;
+    font-size: .8em;
+}
+
+div.system-message p.system-message-title {
+    padding: 4px 5px 4px 25px;
+    margin: 0;
+    color: #c11;
+    background: #ffefef url(../img/icon_error.gif) 5px .3em no-repeat;
+}
+
+.description {
+    font-size: 12px;
+    padding: 5px 0 0 12px;
+}
+
+/* BREADCRUMBS */
+
+div.breadcrumbs {
+    background: #fff url(../img/nav-bg-reverse.gif) 0 -10px repeat-x;
+    padding: 2px 8px 3px 8px;
+    font-size: 11px;
+    color: #999;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* ACTION ICONS */
+
+.addlink {
+    padding-left: 12px;
+    background: url(../img/icon_addlink.gif) 0 .2em no-repeat;
+}
+
+.changelink {
+    padding-left: 12px;
+    background: url(../img/icon_changelink.gif) 0 .2em no-repeat;
+}
+
+.deletelink {
+    padding-left: 12px;
+    background: url(../img/icon_deletelink.gif) 0 .25em no-repeat;
+}
+
+a.deletelink:link, a.deletelink:visited {
+    color: #CC3434;
+}
+
+a.deletelink:hover {
+    color: #993333;
+}
+
+/* OBJECT TOOLS */
+
+.object-tools {
+    font-size: 10px;
+    font-weight: bold;
+    font-family: Arial,Helvetica,sans-serif;
+    padding-left: 0;
+    float: right;
+    position: relative;
+    margin-top: -2.4em;
+    margin-bottom: -2em;
+}
+
+.form-row .object-tools {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    float: none;
+    height: 2em;
+    padding-left: 3.5em;
+}
+
+.object-tools li {
+    display: block;
+    float: left;
+    margin-left: 5px;
+    height: 16px;
+}
+
+.object-tools a {
+    border-radius: 15px;
+}
+
+.object-tools a:link, .object-tools a:visited {
+    display: block;
+    float: left;
+    color: #fff;
+    padding: .2em 10px;
+    background: #999;
+}
+
+.object-tools a:hover, .object-tools li:hover a {
+    background-color: #5b80b2;
+}
+
+.object-tools a.viewsitelink, .object-tools a.golink {
+    background: #999 url(../img/tooltag-arrowright.png) 95% center no-repeat;
+    padding-right: 26px;
+}
+
+.object-tools a.addlink {
+    background: #999 url(../img/tooltag-add.png) 95% center no-repeat;
+    padding-right: 26px;
+}
+
+/* OBJECT HISTORY */
+
+table#change-history {
+    width: 100%;
+}
+
+table#change-history tbody th {
+    width: 16em;
+}
+
+/* PAGE STRUCTURE */
+
+#container {
+    position: relative;
+    width: 100%;
+    min-width: 760px;
+    padding: 0;
+}
+
+#content {
+    margin: 10px 15px;
+}
+
+#content-main {
+    float: left;
+    width: 100%;
+}
+
+#content-related {
+    float: right;
+    width: 18em;
+    position: relative;
+    margin-right: -19em;
+}
+
+#footer {
+    clear: both;
+    padding: 10px;
+}
+
+/* COLUMN TYPES */
+
+.colMS {
+    margin-right: 20em !important;
+}
+
+.colSM {
+    margin-left: 20em !important;
+}
+
+.colSM #content-related {
+    float: left;
+    margin-right: 0;
+    margin-left: -19em;
+}
+
+.colSM #content-main {
+    float: right;
+}
+
+.popup .colM {
+    width: 95%;
+}
+
+.subcol {
+    float: left;
+    width: 46%;
+    margin-right: 15px;
+}
+
+.dashboard #content {
+    width: 500px;
+}
+
+/* HEADER */
+
+#header {
+    width: 100%;
+    background: #417690;
+    color: #ffc;
+    overflow: hidden;
+}
+
+#header a:link, #header a:visited {
+    color: #fff;
+}
+
+#header a:hover {
+    text-decoration: underline;
+}
+
+#branding h1 {
+    padding: 0 10px;
+    font-size: 18px;
+    margin: 8px 0;
+    font-weight: normal;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: #f4f379;
+}
+
+#branding h2 {
+    padding: 0 10px;
+    font-size: 14px;
+    margin: -8px 0 8px 0;
+    font-weight: normal;
+    color: #ffc;
+}
+
+#branding a:hover {
+    text-decoration: none;
+}
+
+#user-tools {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1.2em 10px;
+    font-size: 11px;
+    text-align: right;
+}
+
+/* SIDEBAR */
+
+#content-related h3 {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+#content-related h4 {
+    font-size: 11px;
+}
+
+#content-related .module h2 {
+    background: #eee url(../img/nav-bg.gif) bottom left repeat-x;
+    color: #666;
+}

@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with form_width=500 form_height=220
+        {{ block.super }}
+
+%% form_header
+    p
+        % new_row "New parameter"
+
+%% table_header
+    [ID | Key | Value | Action ]
+
+%% table_content
+    tr
+        td:::a {% view_row "Details" 250 300 %}...{{object.id}}
+        td...{{object.key}}
+        td...{{object.value}}
+        td
+            % edit_row "Update"
+            % delete_row "Delete"
+
+%% table_footer
+  [ - | | | {% new_row "New parameter" %}  ]

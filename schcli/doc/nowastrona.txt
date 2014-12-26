@@ -1,0 +1,39 @@
+NowaStrona:
+  Wyœwietlenie strony w aktualnie wskazanym oknie
+
+NowaStrona2:
+  Wyœwietlenie strony jako podrzêdne do wybranego panelu
+
+NowaStrona3:
+  Wyœwietlenie strony w nowym panelu
+
+SChHtmlWindow
+  def NowaStronaFromStr(self, str, parametry=None):
+  def NowaStronaFromStrInit(self):
+
+  def NowaStronaFromStr2(self, naglowek, body, stopka, panel, parametry=None):
+  def NowaStrona2(self, tytul, adres, parametry=None):
+
+//  def NowaStronaFromStr3(self, tytul, adres, parametry=None):
+//  def NowaStrona3(self, tytul, adres, parametry=None):
+
+
+HtmlPanel
+
+  def NowaStronaFromStr2(self, naglowek, body, stopka, panel, parametry=None):
+  def NowaStrona2(self, tytul, adres, parametry=None):
+
+//  def NowaStronaFromStr3(self, tytul, naglowek, body, stopka,panel, parametry=None):
+//  def NowaStrona3(self, tytul, adres, parametry=None):
+
+
+SChAppFrame
+  def NowaStronaFromStr3(self, naglowek, body, stopka, panel, parametry=None):
+  def NowaStrona3(self, tytul, adres, parametry=None):
+
+
+
+
+NewMainPage()
+NewChildPage()
+ShowPage()

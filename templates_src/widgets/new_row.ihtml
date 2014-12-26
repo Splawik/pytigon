@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+%extends "widgets/action.html"
+
+
+%% description
+    % if description:
+        <span class="glyphicon glyphicon-plus"></span> {{description}}
+    % else:
+        <span class="glyphicon glyphicon-plus"></span>

@@ -1,0 +1,57 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'base.html'
+%load exfiltry
+%load exsyntax
+
+%%init
+
+%%js_scripts
+    %%header_base
+    %%extrahead
+        %%scroll
+            meta name=NO_VSCROLLBAR,,,content=True
+
+%%jquery_ready
+
+%%extrastyle
+
+%% content
+    %% table_list
+      %%form_start
+          %if standard_web_browser
+              div id=FormErrorMsgFrame
+                div id=FormErrorMsgWindow
+                  div id=FormErrorMsg
+                table width=100%
+                  tr
+                    td align=center
+                      input type=button,,,value=Zamknij,,,onClick=$('#FormErrorMsgFrame').hide()
+              div class=jqmWindow,,,id=FormFrame
+              br
+            p
+      %%form
+          %% form_header0
+            %if standard_web_browser
+                h1...
+                  %%form_title
+                    {{title}}
+            %% form_header
+          form method=post,,,action=.,,,class=TableFiltr
+            %%form_filter
+                %if form
+                    ul class=form
+                        {{ form.as_ul }}
+                        li:::input type=submit,,,value=Odśwież
+                    br
+          %% table_start
+            <table id="tabsort" class="tabsort">
+          %% table
+            %% table_header
+            %if object_list
+                %for object in object_list
+                    %% table_content
+            %% table_footer
+          %% table_stop
+            </table><p></p>
+

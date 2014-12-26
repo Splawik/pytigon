@@ -1,0 +1,79 @@
+## -- coding: utf-8 --
+
+from django.conf.urls import patterns, url
+from schlib.schviews import generic_table_start, gen_tab_action, gen_row_action
+from django.views.generic import TemplateView
+from . import views
+
+urlpatterns = patterns('',
+    gen_row_action('SChAppSet', 'gen', views.gen),
+    gen_row_action('SChAppSet', 'prj_export', views.prj_export),
+    gen_tab_action('SChAppSet', 'prj_import', views.prj_import),
+    gen_row_action('SChAppSet', 'manage', views.manage),
+    gen_row_action('SChTable', 'template_edit', views.template_edit),
+    gen_tab_action('SChAppSet', 'prj_import/edit', views.edit),
+    gen_row_action('SChField', 'field_up', views.change_pos, {'app':'schbuilder', 'tab':'SChField', 'forward':False, 'field': 'parent'}),
+    gen_row_action('SChField', 'field_down', views.change_pos, {'app':'schbuilder', 'tab':'SChField', 'forward':True, 'field': 'parent'}),
+    gen_row_action('SChField', 'field_duplicate', views.duplicate_row, {'app':'schbuilder', 'tab':'SChField', 'field':'parent'}),
+    gen_row_action('SChTable', 'field_up', views.change_tab_pos, {'app':'schbuilder', 'tab':'SChTable', 'forward':False, 'field': 'parent'}),
+    gen_row_action('SChTable', 'field_down', views.change_tab_pos, {'app':'schbuilder', 'tab':'SChTable', 'forward':True, 'field': 'parent'}),
+    gen_row_action('SChForm', 'template_edit2', views.template_edit2),
+    gen_row_action('SChAppMenu', 'field_up', views.change_menu_pos, {'app':'schbuilder', 'tab':'SChAppMenu', 'forward':False, 'field': 'parent'}),
+    gen_row_action('SChAppMenu', 'field_down', views.change_menu_pos, {'app':'schbuilder', 'tab':'SChAppMenu', 'forward':True, 'field': 'parent'}),
+    gen_row_action('SChAppSet', 'installer', views.installer),
+    gen_tab_action('SChAppSet', 'restart_server', views.restart_server),
+    gen_row_action('SChFormField', 'field_up', views.change_pos_form_field, {'app':'schbuilder', 'tab':'SChFormField', 'forward':False, 'field': 'parent'}),
+    gen_row_action('SChFormField', 'field_down', views.change_pos_form_field, {'app':'schbuilder', 'tab':'SChFormField', 'forward':True, 'field': 'parent'}),
+    gen_row_action('SChView', 'template_edit3', views.template_edit3),
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+)
+
+gen = generic_table_start(urlpatterns, 'schbuilder', views)
+gen.for_field('SChAppSet', 'schapp_set', 'Applications', prefix="up", template_name="schbuilder/schapp2.html")
+gen.for_field('SChApp', 'schappmenu_set', 'Menu', prefix="wiki", template_name="schbuilder/schappmenu2.html")
+#gen.standard('SChAppMenu', u'SChAppMenu', prefix="wiki")
+
+gen.standard('SChAppSet', 'SChAppSet')
+gen.standard('SChApp', 'SChApp')
+gen.standard('SChChoice', 'SChChoice')
+gen.standard('SChChoiceItem', 'SChChoiceItem')
+gen.standard('SChTable', 'SChTable')
+gen.standard('SChField', 'SChField')
+gen.standard('SChView', 'SChView')
+gen.standard('SChTemplate', 'SChTemplate')
+gen.standard('SChAppMenu', 'SChAppMenu')
+gen.standard('SChUrl', 'SChUrl')
+gen.standard('SChForm', 'Form')
+gen.standard('SChFormField', 'Form field')
+
+gen.for_field('SChAppSet', "schapp_set", 'SChApp')
+gen.for_field('SChApp', "schchoice_set", 'SChChoice')
+gen.for_field('SChChoice', "schchoiceitem_set", 'SChChoiceItem')
+gen.for_field('SChApp', "schtable_set", 'SChTable')
+gen.for_field('SChTable', "schfield_set", 'SChField')
+gen.for_field('SChApp', "schview_set", 'SChView')
+gen.for_field('SChApp', "schtemplate_set", 'SChTemplate')
+gen.for_field('SChApp', "schappmenu_set", 'SChAppMenu')
+gen.for_field('SChApp', "schurl_set", 'SChUrl')
+gen.for_field('SChApp', "schform_set", 'Form')
+gen.for_field('SChForm', "schformfield_set", 'Form field')

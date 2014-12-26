@@ -1,0 +1,13 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/default.html'
+
+%% heading
+
+%% menu_start
+%% menu
+  %% topmenu_start
+  %% topmenu_end
+  %% submenu_start
+  %% submenu_end
+%% menu_end

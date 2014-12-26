@@ -1,0 +1,90 @@
+DocClass 
+    Name
+    expand_param1 {}  { 'lokalizacja1', 'lokalizacja2', 'lokalizacja3' }
+    expand_param2 {}  { '201{R}-0{M}' }
+    expand_param3 {}  { 'oddzial1', 'oddzial2' ... }
+    expand_param4 {}  { 'zaklad1', 'zaklad2' ... }
+
+DocRights
+    login
+    report_class_name
+    
+    view_key                        [ 'lokalizacja1', '*', 'oddzial1', '*' ]
+    edit_key                         [ 'lokalizacja1', '*', 'oddzial1', '*' ]
+    approval_key1                 [ 'lokalizacja1', '*', 'oddzial1', '*' ]
+    approval_key2                 [ 'lokalizacja1', '*', 'oddzial1', '*' ]
+    approval_key3                 [ 'lokalizacja1', '*', 'oddzial1', '*' ]
+
+DocPattern():
+    id    
+    doc_class_id
+    
+    parent_id 
+    parent_elem_id   - 'A23'
+
+    name               - 'przykładowy raport'
+    unique             - True
+            
+    format_template  - <html> {{dict_elem_name}} ..... </html>
+
+    def get_doc(expand_param1, expand_param2, expand_param3, expand_param4)
+    def get_value(dict_elem_name,  expand_param1, expand_param2, expand_param3, expand_param4)
+
+
+DocData:
+    id
+    doc_pattern_id
+    
+    expand_param1  - lokalizacja1
+    expand_param2  - 2013-01
+    expand_param3  - oddzial2
+    expand_param4  - zaklad1
+    
+    data:  dict
+
+
+dict_elem_name - 
+    field_type-field_sum_type-name
+    np: I-nazwa
+
+Pola w raporcie:
+    Int - I - default field_sum_type: sum
+    Float - F
+    Monay - M
+    
+    Formula - =
+    
+    String - S
+    Text- T
+    Data - D
+    List - L[a,b,c],  L(list name)    
+    Subraport - R
+    Dict - C {}
+    
+    Kalkulacja - =(A1*A2/A3)
+    
+field_sum_type:
+    max
+    min
+    sum
+    list
+    count
+    none
+    first
+    last
+    avg
+
+Field:
+    type
+    value
+    format
+    
+Field->Row
+Row->Col
+Col->Sheet
+
+
+
+Raport
+=====
+

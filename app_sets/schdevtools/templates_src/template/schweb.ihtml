@@ -1,0 +1,22 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/schweb_base.html'
+
+% load exfiltry
+
+%% indexhead
+    table style=width: 100%;,,,border=1
+        % if user.is_authenticated
+            [ login | 0 ]
+        % else
+            [ login | 1 ]
+        [ autologin | 1 ]
+        [ csrf_token | {{csrf_token}} ]
+        
+        [ gui_style | modern(toolbar(file(open,exit),clipboard)) ]
+        [ hybrid | 0 ]
+        [ title  | Developer tools ]
+        [ start_page |  ]
+        [ plugins |  ]
+
+

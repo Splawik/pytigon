@@ -1,0 +1,109 @@
+body{
+    font-family:sans-serif;
+    font-size:120%;
+    padding:2
+}
+table{
+    border:0;
+    vertical-align:top;
+    padding:3
+}
+td table{
+    padding: 1
+}
+th{
+    cellpadding:3;
+    font-weight:bold
+}
+td{
+    vertical-align:top;
+    cellpadding:3
+}
+strong,b{
+    font-weight:bold
+}
+p{
+    cellpadding:2;
+    border:0;
+    width:100%
+}
+a{
+    color:#0000ff;
+    text-decoration: underline
+}
+strong a{
+    color:#00ffff
+}
+ul{
+    border:0
+}
+li{
+    cellpadding:5;
+    width:95%-60
+}
+ul li{
+    font-style: italic
+}
+em{
+    font-style: italic
+}
+b{
+    font-weight: bold
+}
+td:hover.test{
+    bgcolor: #ff0000
+}
+h1{
+    font-size:300%;
+    font-weight:bold;
+    cellpadding:12 2 12 2
+}
+h2{
+    font-size:240%;
+    font-weight: bold;
+    cellpadding:10 2 10 2
+}
+h3{
+    font-size:190%;
+    font-weight: bold;
+    cellpadding:8 2 8 2
+}
+h4{
+    font-size:150%;
+    font-weight: bold;
+    cellpadding:6 2 6 2
+}
+h5{
+    font-size:120%;
+    font-weight: bold;
+    cellpadding:4 2 4 2
+}
+h6{
+    font-size:100%;
+    font-weight: bold;
+    cellpadding:2 2 2 2
+}
+table.tabdel{
+    border:1;
+    width:100%
+}
+table.tabdel tr th{
+    bgcolor:#ccc;
+    border:1;
+    padding:5;
+    cellpadding:5
+}
+table.tabdel tr td{
+    bgcolor:#eee;
+    border:1;
+    padding:5;
+    cellpadding:5
+}
+.helptext{
+    font-size:120%;
+    font-style:italic
+}
+#id_permissions{
+    padding:0 0 6 0
+}
+

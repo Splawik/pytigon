@@ -1,0 +1,29 @@
+% load crispy_forms_tags
+
+% if standard_web_browser:
+    % for row in field_rows:
+        % for obj in row:
+            % if obj.type == 'l':
+                {{obj.field|as_crispy_field}}
+            % if obj.type == 'f':
+                {{obj.field|as_crispy_field}}
+            % if obj.type == 'L':
+                {{obj.field|as_crispy_field}}
+            % if obj.type == 'F':
+                {{obj.field|as_crispy_field}}
+            % if obj.type == 'LF':
+                {{obj.field|as_crispy_field}}
+% else:
+    % for row in field_rows:
+        % for obj in row:
+            % if obj.type == 'l':
+                {{obj.field}}
+            % if obj.type == 'f':
+                {{obj.field}}
+            % if obj.type == 'L':
+                {{obj.field}}
+            % if obj.type == 'F':
+                {{obj.field}}
+            % if obj.type == 'LF':
+                {{obj.field}}
+

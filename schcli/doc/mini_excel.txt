@@ -1,0 +1,39 @@
+Typy pól:
+    Int - I
+    Float - F
+    String - S
+    Text- T
+    Data - D
+    List - L []
+    Tuple - T ()
+    Dict - C {}
+    Kalkulacja - K (A1*A2/A3)
+    
+    #Element listy stałej - L(nazwa_listy)    
+
+
+
+
+
+
+class Cell
+
+
+class Sheet
+    Styl
+
+class workbook
+    sheets []
+
+
+Tabela:
+    Nazwa skoroszytu
+
+        Rok
+        Miesiąc
+        Wersja
+        Klasyfikator
+        
+        Nazwa arkusza
+            col
+                row

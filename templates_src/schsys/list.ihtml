@@ -1,0 +1,74 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            from schcli.guilib.schevent import ID_RetValue
+
+            self.listclick=False
+            self.retlist = None
+            self.list1.BlockRefresh()
+            self.list1.SetFocus()
+
+            self.list1.Bind(wx.EVT_LISTBOX, self.OnListSelected)
+            self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
+            self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+
+            self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
+            aTable = [(0, wx.WXK_RETURN, ID_RetValue),]
+            self.SetAcceleratorTable(wx.AcceleratorTable(aTable))
+            self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RetValue)
+
+            self.RefrList()
+
+        def OnExit(self, event):
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+
+        def FindValueStr(self):
+            return '{{value}}'
+
+        def OnLDown(self, event):
+            self.listclick=True
+            event.Skip()
+
+        def OnLUp(self, event):
+            self.listclick=False
+
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+
+            if self.retlist:
+                self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+            else:
+                event.Skip()
+
+        def RefrList(self):
+            if hasattr(self,'choices'):
+                self.list1.Clear()
+                for item in self.choices:
+                    self['list1'].Append(item[0])
+                self.listclick=False
+                self['list1'].FindAndSelect(self.FindValueStr())
+
+        def OnNavigationKey(self, event):
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+
+        def OnListSelected(self, event):
+            if self.listclick==True:
+                id = event.GetSelection()
+                self.retlist = self.choices[id]
+            else:
+                event.Skip()
+                self.listclick=False
+
+%% form_bar
+
+%% content
+    CTRLLISTBOX name=list1,,,width=100%,,,height=100%
+

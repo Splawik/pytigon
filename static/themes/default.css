@@ -1,0 +1,98 @@
+div#tabs ul li p { margin: 3px 3px 3px 3px;  padding: 3px; color: #def; }
+
+div.content { margin: 4px 4px 0px 4px; padding: 0px; }
+
+.module td,th { padding:2px 4px; }
+
+.panel-heading { padding: 0px 3px 0px 3px; }
+
+.navbar { margin-bottom: 3px; }
+
+.radio { list-style: none; }
+
+.standard_padding td { padding: 5px; }
+
+.vert_form_panel { padding: 0px 15px; }
+
+
+.TableFiltr {
+    line-height: 32px;
+    margin-top: 0px;
+    margin-bottom: 3px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.TableFiltr input {
+    margin-right: 10px;
+}
+
+.TableFiltr .sr-only {
+    position:relative;
+    left:3px;
+    text-align:left;
+    height: auto;
+    overflow: visible;
+    border: 0;
+}
+
+.TableFiltr .form-group {
+    line-height:18px;
+}
+
+.TableFiltr ::-webkit-input-placeholder { color:transparent; }
+.TableFiltr ::-moz-placeholder { color:transparent; }
+.TableFiltr :-ms-input-placeholder { color:transparent; }
+
+.TableFiltr .form-group label {
+    display: block;
+    white-space: nowrap;
+}
+
+.TableFiltr .checkbox label {
+    margin-right: 30px;
+    font-weight: bolder;
+}
+
+.TableFiltr {
+    line-height: 55px;
+}
+
+.TableFiltr .btn {
+    margin-top: 17px;
+}
+
+.tabsort td {
+	padding: 8px;
+}
+
+.tabsort th {
+	padding: 8px;
+}
+
+.col_right {
+    text-align:right;
+}
+
+.col_center {
+    text-align:center;
+}
+
+
+.control_sel {
+    font-weight: bold;
+}
+
+.control_sel div {
+    color: #F0AD4E;
+}
+
+td.control {
+    padding:0;
+}
+
+.control_div {
+    height:100%;
+    width:100%;
+    padding:10px;
+}

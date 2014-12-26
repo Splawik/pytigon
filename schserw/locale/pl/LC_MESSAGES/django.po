@@ -1,0 +1,1342 @@
+# <!-- coding: utf-8 -->
+# Polish .po file.
+# Copyright (C) 2006 Krzysztof Kajkowski
+# This file is distributed under the same license as the django package.
+# Krzysztof Kajkowski <krzysztof.kajkowski@gmail.com>, 2006.
+# cayco <cayco@cayco.pl>, 2006.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 12:47+0200\n"
+"PO-Revision-Date: 2014-06-15 12:47+0100\n"
+"Last-Translator: Piotr Maliński <admin@rk.edu.pl>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: schbase/models.py:36 schbase/models.py:37
+msgid "Person"
+msgstr "Osoba"
+
+#: schbase/models.py:60 schbase/models.py:61
+msgid "Parameter"
+msgstr "Parametr"
+
+#: schcommander/__init__.py:22
+msgid "Tools"
+msgstr "Narzędzia"
+
+#: schcommander/__init__.py:23 schcommander/models.py:48
+#: schcommander/models.py:49
+msgid "File manager"
+msgstr "Menadżer plików"
+
+#: schcommander/views.py:29
+msgid "Name"
+msgstr "Nazwa"
+
+#: schcommander/views.py:29
+msgid "Size"
+msgstr "Rozmiar"
+
+#: schcommander/views.py:29
+msgid "Time"
+msgstr "Czas"
+
+#: schcommander/views.py:39
+msgid "Sort"
+msgstr "Sortowanie"
+
+#: schwiki/__init__.py:22 schwiki/__init__.py:23
+msgid "Wiki"
+msgstr "Wiki"
+
+#: schwiki/models.py:35 schwiki/models.py:36
+msgid "Page"
+msgstr "Strona"
+
+#: translate.py:1
+msgid "Field"
+msgstr "Pole"
+
+#: translate.py:2
+msgid "Value"
+msgstr "Wartość"
+
+#: translate.py:3
+msgid "Delete the item"
+msgstr "Skasować pozycję"
+
+#: translate.py:4
+msgid "Refresh"
+msgstr "Odśwież"
+
+#: translate.py:5
+msgid "Action"
+msgstr "Akcja"
+
+#: translate.py:6
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: translate.py:7
+msgid "Close"
+msgstr "Zamknij"
+
+#: translate.py:8
+msgid "OK"
+msgstr "OK"
+
+#~ msgid "object ID"
+#~ msgstr "ID obiektu"
+
+#~ msgid "headline"
+#~ msgstr "nagłówek"
+
+#~ msgid "comment"
+#~ msgstr "komentarz"
+
+#~ msgid "rating #1"
+#~ msgstr "ocena #1"
+
+#~ msgid "rating #2"
+#~ msgstr "ocena #2"
+
+#~ msgid "rating #3"
+#~ msgstr "ocena #3"
+
+#~ msgid "rating #4"
+#~ msgstr "ocena #4"
+
+#~ msgid "rating #5"
+#~ msgstr "ocena #5"
+
+#~ msgid "rating #6"
+#~ msgstr "ocena #6"
+
+#~ msgid "rating #7"
+#~ msgstr "ocena #7"
+
+#~ msgid "rating #8"
+#~ msgstr "ocena #8"
+
+#~ msgid "is valid rating"
+#~ msgstr "jest poprawną oceną"
+
+#~ msgid "date/time submitted"
+#~ msgstr "data/czas dodania"
+
+#~ msgid "is public"
+#~ msgstr "publicznie dostepny"
+
+#~ msgid "IP address"
+#~ msgstr "Adres IP"
+
+#~ msgid "is removed"
+#~ msgstr "usunięty"
+
+#~ msgid ""
+#~ "Check this box if the comment is inappropriate. A \"This comment has been "
+#~ "removed\" message will be displayed instead."
+#~ msgstr ""
+#~ "Zaznacz to pole jeżeli komentarz jest nieodpowiedni. Wyświetlony zostanie "
+#~ "tekst \"Ten komentarz został usunięty\". "
+
+#~ msgid "comments"
+#~ msgstr "komentarze"
+
+#~ msgid "Content object"
+#~ msgstr "Obiekt Treści"
+
+#~ msgid ""
+#~ "Posted by %(user)s at %(date)s\n"
+#~ "\n"
+#~ "%(comment)s\n"
+#~ "\n"
+#~ "http://%(domain)s%(url)s"
+#~ msgstr ""
+#~ "Dodane przez %(user)s dnia %(date)s\n"
+#~ "\n"
+#~ "%(comment)y\n"
+#~ "\n"
+#~ "http://%(domain)s%(url)s"
+
+#~ msgid "person's name"
+#~ msgstr "Nazwa osoby"
+
+#~ msgid "ip address"
+#~ msgstr "adres ip"
+
+#~ msgid "approved by staff"
+#~ msgstr "zaakceptowano"
+
+#, fuzzy
+#~ msgid "free comment"
+#~ msgstr "wolny komentarz"
+
+#, fuzzy
+#~ msgid "free comments"
+#~ msgstr "wolne komentarze"
+
+#~ msgid "score"
+#~ msgstr "ilość punktów"
+
+#~ msgid "score date"
+#~ msgstr "data przyznania punktów"
+
+#, fuzzy
+#~ msgid "karma score"
+#~ msgstr "ilość punktów"
+
+#~ msgid "karma scores"
+#~ msgstr "wyniki"
+
+#~ msgid "%(score)d rating by %(user)s"
+#~ msgstr "%(score)d ocenę przez %(user)s"
+
+#~ msgid ""
+#~ "This comment was flagged by %(user)s:\n"
+#~ "\n"
+#~ "%(text)s"
+#~ msgstr ""
+#~ "Komentarz oflagowany przez %(user)s:\n"
+#~ "\n"
+#~ "%(text)s"
+
+#~ msgid "flag date"
+#~ msgstr "data flagi"
+
+#~ msgid "user flag"
+#~ msgstr "flaga użytkownika"
+
+#~ msgid "user flags"
+#~ msgstr "flagi użytkownika"
+
+#~ msgid "Flag by %r"
+#~ msgstr "Flaga %r"
+
+#~ msgid "deletion date"
+#~ msgstr "data skasowania"
+
+#~ msgid "moderator deletion"
+#~ msgstr "usunięcie moderatora"
+
+#~ msgid "moderator deletions"
+#~ msgstr "usunięcia moderatorów"
+
+#~ msgid "Moderator deletion by %r"
+#~ msgstr "Usunięcie moderatora przez %r"
+
+#~ msgid "Anonymous users cannot vote"
+#~ msgstr "Anonimowi użytkownicy nie mogą głosować"
+
+#~ msgid "Invalid comment ID"
+#~ msgstr "Błędny ID komentarza"
+
+#~ msgid "No voting for yourself"
+#~ msgstr "Nie można głosować na siebie"
+
+#~ msgid ""
+#~ "This rating is required because you've entered at least one other rating."
+#~ msgstr "Ta ocena jest wymagana gdyż podałeś przynajmniej jedną inną ocenę."
+
+#~ msgid "Only POSTs are allowed"
+#~ msgstr "Dozwolone tylko POSTy"
+
+#~ msgid "One or more of the required fields wasn't submitted"
+#~ msgstr "Jedno lub więcej wymaganych pól nie zostało wypełnionych"
+
+#~ msgid "Username:"
+#~ msgstr "Nazwa użytkownika:"
+
+#~ msgid "Password:"
+#~ msgstr "Hasło:"
+
+#~ msgid "Forgotten your password?"
+#~ msgstr "Zapomniałeś hasło?"
+
+#~ msgid "Log out"
+#~ msgstr "Wyloguj się"
+
+#~ msgid "Ratings"
+#~ msgstr "Oceny"
+
+#~ msgid "Required"
+#~ msgstr "Wymagane"
+
+#~ msgid "Optional"
+#~ msgstr "Opcjonalne"
+
+#~ msgid "Post a photo"
+#~ msgstr "Wyślij zdjęcie"
+
+#~ msgid "Comment:"
+#~ msgstr "Komentarz:"
+
+#~ msgid "Preview comment"
+#~ msgstr "Podgląd"
+
+#~ msgid "Your name:"
+#~ msgstr "Twoje imię:"
+
+#~ msgid ""
+#~ "<h3>By %s:</h3>\n"
+#~ "<ul>\n"
+#~ msgstr ""
+#~ "<h3>Przez %s:</h3>\n"
+#~ "</ul>\n"
+
+#~ msgid "All"
+#~ msgstr "Wszystko"
+
+#~ msgid "Any date"
+#~ msgstr "Jakolwiek data"
+
+#~ msgid "Today"
+#~ msgstr "Dzisiaj"
+
+#~ msgid "Past 7 days"
+#~ msgstr "Ostatnie 7 dni"
+
+#~ msgid "This month"
+#~ msgstr "Ten miesiąc"
+
+#~ msgid "This year"
+#~ msgstr "Ten rok"
+
+#~ msgid "Yes"
+#~ msgstr "Tak"
+
+#~ msgid "No"
+#~ msgstr "Nie"
+
+#~ msgid "Unknown"
+#~ msgstr "Nieznany"
+
+#~ msgid "action time"
+#~ msgstr "czas akcji"
+
+#~ msgid "object id"
+#~ msgstr "id obiektu"
+
+#~ msgid "object repr"
+#~ msgstr "reprezentacj obiektu"
+
+#~ msgid "action flag"
+#~ msgstr "flaga akcji"
+
+#~ msgid "change message"
+#~ msgstr "zmień wiadomość"
+
+#~ msgid "log entry"
+#~ msgstr "log"
+
+#~ msgid "log entries"
+#~ msgstr "logi"
+
+#~ msgid "All dates"
+#~ msgstr "Wszystkie daty"
+
+#~ msgid ""
+#~ "Please enter a correct username and password. Note that both fields are "
+#~ "case-sensitive."
+#~ msgstr ""
+#~ "Proszę wpisać poprawną nazwę użytkownika i hasło. Uwaga: wielkość liter "
+#~ "ma znaczenie."
+
+#~ msgid "Log in"
+#~ msgstr "Zaloguj się"
+
+#~ msgid ""
+#~ "Please log in again, because your session has expired. Don't worry: Your "
+#~ "submission has been saved."
+#~ msgstr ""
+#~ "Zaloguj się ponownie. Twoja sesja wygasła lecz twoje zgłoszenie zostało "
+#~ "zapisane."
+
+#~ msgid ""
+#~ "Looks like your browser isn't configured to accept cookies. Please enable "
+#~ "cookies, reload this page, and try again."
+#~ msgstr ""
+#~ "Twoja przeglądarka nie chce akceptować ciasteczek. Zmień jej ustawienia i "
+#~ "spróbuj ponownie."
+
+#~ msgid "Usernames cannot contain the '@' character."
+#~ msgstr "Nazwy użytkowników nie mogą zawierać znaków '@'."
+
+#~ msgid "Your e-mail address is not your username. Try '%s' instead."
+#~ msgstr "Twój adres e-mail to nie jest twój login. Spróbuj '%s'."
+
+#~ msgid "Site administration"
+#~ msgstr "Administracja stroną"
+
+#~ msgid "The %(name)s \"%(obj)s\" was added successfully."
+#~ msgstr "%(name)s \"%(obj)s\" dodany pomyślnie."
+
+#~ msgid "You may edit it again below."
+#~ msgstr "Możesz ponownie edytować wpis poniżej."
+
+#~ msgid "You may add another %s below."
+#~ msgstr "Możesz dodać nowy wpis %s poniżej."
+
+#~ msgid "Add %s"
+#~ msgstr "Dodaj %s"
+
+#~ msgid "Added %s."
+#~ msgstr "Dodano %s"
+
+#~ msgid "and"
+#~ msgstr "i"
+
+#~ msgid "Changed %s."
+#~ msgstr "Zmieniono %s"
+
+#~ msgid "Deleted %s."
+#~ msgstr "Skasowano %s"
+
+#~ msgid "No fields changed."
+#~ msgstr "Żadne pole nie zmienione."
+
+#~ msgid "The %(name)s \"%(obj)s\" was changed successfully."
+#~ msgstr "%(name)s \"%(obj)s\" zostało pomyślnie zmienione."
+
+#~ msgid ""
+#~ "The %(name)s \"%(obj)s\" was added successfully. You may edit it again "
+#~ "below."
+#~ msgstr ""
+#~ "%(name)s \"%(obj)s\" dodane pomyślnie. Możesz edytować ponownie wpis "
+#~ "poniżej."
+
+#~ msgid "Change %s"
+#~ msgstr "Zmień %s"
+
+#~ msgid "One or more %(fieldname)s in %(name)s: %(obj)s"
+#~ msgstr "Jedno lub więcej %(fieldname)s w %(name)s: %(obj)s"
+
+#~ msgid "One or more %(fieldname)s in %(name)s:"
+#~ msgstr "Jedno lub więcej %(fieldname)s w %(name)s:"
+
+#~ msgid "The %(name)s \"%(obj)s\" was deleted successfully."
+#~ msgstr "%(name)s \"%(obj)s\" usunięty pomyślnie."
+
+#~ msgid "Are you sure?"
+#~ msgstr "Jesteś pewien?"
+
+#~ msgid "Change history: %s"
+#~ msgstr "Historia zmian: %s"
+
+#~ msgid "Select %s"
+#~ msgstr "Zaznacz %s"
+
+#~ msgid "Select %s to change"
+#~ msgstr "Zaznacz %s aby zmienić"
+
+#~ msgid "Integer"
+#~ msgstr "Liczba całkowita"
+
+#~ msgid "Boolean (Either True or False)"
+#~ msgstr "Wartość logiczna (True, False - prawda lub fałsz)"
+
+#~ msgid "String (up to %(maxlength)s)"
+#~ msgstr "Łańcuch (do %(maxlength)s znaków)"
+
+#~ msgid "Comma-separated integers"
+#~ msgstr "Liczby całkowite rozdzielone przecinkami"
+
+#~ msgid "Date (without time)"
+#~ msgstr "Data (bez godziny)"
+
+#~ msgid "Date (with time)"
+#~ msgstr "Data (z godziną)"
+
+#~ msgid "E-mail address"
+#~ msgstr "Adres e-mail"
+
+#~ msgid "File path"
+#~ msgstr "Ścieżka do pliku"
+
+#~ msgid "Decimal number"
+#~ msgstr "Numer dziesiętny"
+
+#~ msgid "Boolean (Either True, False or None)"
+#~ msgstr "Wartość logiczna (True, False, None - prawda, fałsz lub nic)"
+
+#~ msgid "Phone number"
+#~ msgstr "Numer telefonu"
+
+#~ msgid "Text"
+#~ msgstr "Tekst"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "U.S. state (two uppercase letters)"
+#~ msgstr "Stan USA (dwie duże litery)"
+
+#~ msgid "XML text"
+#~ msgstr "Tekst XML"
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentacja"
+
+#~ msgid "Change password"
+#~ msgstr "Zmiana hasła"
+
+#~ msgid "Home"
+#~ msgstr "Początek"
+
+#~ msgid "History"
+#~ msgstr "Historia"
+
+#~ msgid "Date/time"
+#~ msgstr "Data/czas"
+
+#~ msgid "User"
+#~ msgstr "Użytkownik"
+
+#~ msgid ""
+#~ "This object doesn't have a change history. It probably wasn't added via "
+#~ "this admin site."
+#~ msgstr ""
+#~ "Ten obiekt nie ma historii zmian. Najprawdopodobniej wpis te nie został "
+#~ "dodany poprzez panel admina"
+
+#~ msgid "Django site admin"
+#~ msgstr "Administracja stroną Django"
+
+#~ msgid "Django administration"
+#~ msgstr "Administracja Django"
+
+#~ msgid "Server error"
+#~ msgstr "Błąd serwera"
+
+#~ msgid "Server error (500)"
+#~ msgstr "Bład serwera (500)"
+
+#~ msgid "Server Error <em>(500)</em>"
+#~ msgstr "Błąd Serwera <em>(500)</em>"
+
+#~ msgid ""
+#~ "There's been an error. It's been reported to the site administrators via "
+#~ "e-mail and should be fixed shortly. Thanks for your patience."
+#~ msgstr ""
+#~ "Wystąpił niespodziewany błąd. Raport został wysłany emailem "
+#~ "administratorowi strony."
+
+#~ msgid "Page not found"
+#~ msgstr "Strona nie znaleziona"
+
+#~ msgid "We're sorry, but the requested page could not be found."
+#~ msgstr "Niestety nie można znaleźć rządanej strony."
+
+#~ msgid "Models available in the %(name)s application."
+#~ msgstr "Modele dostępne w aplikacji %(name)s."
+
+#~ msgid "Add"
+#~ msgstr "Dodaj"
+
+#~ msgid "Change"
+#~ msgstr "Zmień"
+
+#~ msgid "You don't have permission to edit anything."
+#~ msgstr "Nie masz uprawnień by edytować cokolwiek"
+
+#~ msgid "Recent Actions"
+#~ msgstr "Ostatnie akcje"
+
+#~ msgid "My Actions"
+#~ msgstr "Moje akcje"
+
+#~ msgid "None available"
+#~ msgstr "Brak"
+
+#~ msgid "Add %(name)s"
+#~ msgstr "Dodaj %(name)s"
+
+#~ msgid "Have you <a href=\"/password_reset/\">forgotten your password</a>?"
+#~ msgstr "Czy <a href=\"/password_reset/\">zapomniałeś/łaś</a> hasła?"
+
+#~ msgid "Welcome,"
+#~ msgstr "Witaj,"
+
+#~ msgid "Delete"
+#~ msgstr "Skasuj"
+
+#~ msgid "Yes, I'm sure"
+#~ msgstr "Tak, usuń"
+
+#~ msgid " By %(title)s "
+#~ msgstr "Używając %(title)s"
+
+#~ msgid "Go"
+#~ msgstr "Szukaj"
+
+#~ msgid "View on site"
+#~ msgstr "Pokaż na stronie"
+
+#, fuzzy
+#~ msgid "Please correct the error below."
+#~ msgid_plural "Please correct the errors below."
+#~ msgstr[0] "Proszę popraw poniższy błąd"
+#~ msgstr[1] "Proszę popraw poniższy błąd"
+
+#~ msgid "Ordering"
+#~ msgstr "Sortowanie"
+
+#~ msgid "Order:"
+#~ msgstr "Porządek:"
+
+#~ msgid "Save as new"
+#~ msgstr "Zapisz jako nowe"
+
+#~ msgid "Save and add another"
+#~ msgstr "Zapisz i dodaj nowe"
+
+#~ msgid "Save and continue editing"
+#~ msgstr "Zapisz i kontynuuj edycję"
+
+#~ msgid "Save"
+#~ msgstr "Zapisz"
+
+#~ msgid "Password change"
+#~ msgstr "Zmiana hasła"
+
+#~ msgid "Password change successful"
+#~ msgstr "Hasło zmienione"
+
+#~ msgid "Your password was changed."
+#~ msgstr "Twoje hasło zostało zmienione"
+
+#~ msgid "Password reset"
+#~ msgstr "Zresetuj hasło"
+
+#~ msgid ""
+#~ "Forgotten your password? Enter your e-mail address below, and we'll reset "
+#~ "your password and e-mail the new one to you."
+#~ msgstr ""
+#~ "Podaj swój adres email. Hasło zostanie zresetowane i wysłane na twój "
+#~ "adres email."
+
+#~ msgid "E-mail address:"
+#~ msgstr "Adres e-mail:"
+
+#~ msgid "Reset my password"
+#~ msgstr "Zresetuj moje hasło"
+
+#~ msgid "Thanks for spending some quality time with the Web site today."
+#~ msgstr "Dziękujemy za odwiedzenie serwisu."
+
+#~ msgid "Log in again"
+#~ msgstr "Zaloguj ponownie"
+
+#~ msgid "Password reset successful"
+#~ msgstr "Udane resetowanie hasła"
+
+#~ msgid ""
+#~ "We've e-mailed a new password to the e-mail address you submitted. You "
+#~ "should be receiving it shortly."
+#~ msgstr ""
+#~ "Nowe hasło zostało wysłane na podany adres email. Powinieneś otrzymać je "
+#~ "niebawem."
+
+#~ msgid ""
+#~ "Please enter your old password, for security's sake, and then enter your "
+#~ "new password twice so we can verify you typed it in correctly."
+#~ msgstr "Podaj swoje stare hasło i dwa razy nowe."
+
+#~ msgid "Old password:"
+#~ msgstr "Stare hasło:"
+
+#~ msgid "New password:"
+#~ msgstr "Nowe hasło:"
+
+#~ msgid "Confirm password:"
+#~ msgstr "Potwierdź hasło:"
+
+#~ msgid "Change my password"
+#~ msgstr "Zmień hasło"
+
+#~ msgid "You're receiving this e-mail because you requested a password reset"
+#~ msgstr "Otrzymałeś email gdyż zarządałeś zresetowania hasła"
+
+#~ msgid "for your user account at %(site_name)s"
+#~ msgstr "dla twojego konta użytkownika na stronie %(site_name)s"
+
+#~ msgid "Your new password is: %(new_password)s"
+#~ msgstr "Twoje nowe hasło to: %(new_password)s"
+
+#~ msgid "Feel free to change this password by going to this page:"
+#~ msgstr "Możesz zmienić je na stronie:"
+
+#~ msgid "Your username, in case you've forgotten:"
+#~ msgstr "Twój login:"
+
+#~ msgid "Thanks for using our site!"
+#~ msgstr "Dziękujemy za używanie strony!"
+
+#~ msgid "The %(site_name)s team"
+#~ msgstr "Zespół %(site_name)s"
+
+#~ msgid "Documentation for this page"
+#~ msgstr "Dokumentacja dla tej strony"
+
+#~ msgid "Show object ID"
+#~ msgstr "Pokaż ID obiektu"
+
+#~ msgid ""
+#~ "Shows the content-type and unique ID for pages that represent a single "
+#~ "object."
+#~ msgstr ""
+#~ "Pokazuje typ i unikalne ID dla stron, które reprezentują pojedynczy "
+#~ "obiekt."
+
+#~ msgid "Edit this object (current window)"
+#~ msgstr "Edytuj ten obiekt (bierzące okno)"
+
+#~ msgid "Jumps to the admin page for pages that represent a single object."
+#~ msgstr ""
+#~ "Przeskok do panelu admina dla stron reprezentujących pojedynczy obiekt"
+
+#~ msgid "Edit this object (new window)"
+#~ msgstr "Edytuj ten obiekt (nowe onko)"
+
+#~ msgid "As above, but opens the admin page in a new window."
+#~ msgstr "Jak wyżej, tyle że otwiera nowe okno."
+
+#~ msgid "Date:"
+#~ msgstr "Data:"
+
+#~ msgid "Time:"
+#~ msgstr "Czas:"
+
+#~ msgid "Currently:"
+#~ msgstr "Teraz:"
+
+#~ msgid "Change:"
+#~ msgstr "Zmień:"
+
+#~ msgid "redirect from"
+#~ msgstr "przekieruj z"
+
+#~ msgid ""
+#~ "This should be an absolute path, excluding the domain name. Example: '/"
+#~ "events/search/'."
+#~ msgstr "Podaj pełną ścieżkę bez nazwy domeny. Przykład: '/events/search/'."
+
+#~ msgid "redirect to"
+#~ msgstr "przekierowanie do"
+
+#~ msgid ""
+#~ "This can be either an absolute path (as above) or a full URL starting "
+#~ "with 'http://'."
+#~ msgstr "Ścieżka jak wyżej lub pełny URL z http://"
+
+#~ msgid "redirect"
+#~ msgstr "przekieruj"
+
+#~ msgid "redirects"
+#~ msgstr "przekierowania"
+
+#~ msgid ""
+#~ "Example: '/about/contact/'. Make sure to have leading and trailing "
+#~ "slashes."
+#~ msgstr ""
+#~ "Przykład: '/about/contact/'. Upewnij się że wpisałeś otwierający i "
+#~ "zamykający slash."
+
+#~ msgid "title"
+#~ msgstr "tytuł"
+
+#~ msgid "content"
+#~ msgstr "zawartość"
+
+#~ msgid "enable comments"
+#~ msgstr "włącz komentarze"
+
+#~ msgid "template name"
+#~ msgstr "nazwa szablonu"
+
+#~ msgid "registration required"
+#~ msgstr "wymagana rejestracja"
+
+#~ msgid ""
+#~ "If this is checked, only logged-in users will be able to view the page."
+#~ msgstr ""
+#~ "Jeżeli zaznaczone - tylko zalogowani użytkownicy będą mogli zobaczyć "
+#~ "stronę."
+
+#~ msgid "name"
+#~ msgstr "nazwa"
+
+#~ msgid "permission"
+#~ msgstr "uprawnienie"
+
+#~ msgid "permissions"
+#~ msgstr "uprawnienia"
+
+#~ msgid "group"
+#~ msgstr "grupa"
+
+#~ msgid "groups"
+#~ msgstr "grupy"
+
+#~ msgid "username"
+#~ msgstr "użytkownik"
+
+#~ msgid "first name"
+#~ msgstr "Imię"
+
+#~ msgid "last name"
+#~ msgstr "Nazwisko"
+
+#~ msgid "e-mail address"
+#~ msgstr "adres e-mail"
+
+#~ msgid "password"
+#~ msgstr "hasło"
+
+#~ msgid "Use '[algo]$[salt]$[hexdigest]'"
+#~ msgstr "Użyj '[algo]$[salt]$[hexdigest]'"
+
+#~ msgid "staff status"
+#~ msgstr "stan w zespole"
+
+#~ msgid "Designates whether the user can log into this admin site."
+#~ msgstr "Oznaczy czy użytkownik może zalogować się do panelu admina."
+
+#~ msgid "active"
+#~ msgstr "aktywny"
+
+#~ msgid "superuser status"
+#~ msgstr "Główny Administrator"
+
+#~ msgid "last login"
+#~ msgstr "ostatnio zalogowany"
+
+#~ msgid "date joined"
+#~ msgstr "data przyłączenia"
+
+#~ msgid ""
+#~ "In addition to the permissions manually assigned, this user will also get "
+#~ "all permissions granted to each group he/she is in."
+#~ msgstr ""
+#~ "Oprócz uprawnień przypisanych bezpośrednio użytkownikowi otrzyma on "
+#~ "uprawnienia grup, do których należy."
+
+#~ msgid "user permissions"
+#~ msgstr "uprawnienia użytkownika"
+
+#, fuzzy
+#~ msgid "user"
+#~ msgstr "Użytkownik"
+
+#, fuzzy
+#~ msgid "users"
+#~ msgstr "Uzytkownicy"
+
+#~ msgid "Permissions"
+#~ msgstr "Uprawnienia"
+
+#~ msgid "Important dates"
+#~ msgstr "Ważne daty"
+
+#~ msgid "Groups"
+#~ msgstr "Grupy"
+
+#, fuzzy
+#~ msgid "message"
+#~ msgstr "wiadomość"
+
+#~ msgid ""
+#~ "Your Web browser doesn't appear to have cookies enabled. Cookies are "
+#~ "required for logging in."
+#~ msgstr ""
+#~ "Twoja przeglądarka nie chce akceptować ciasteczek. Są one wymagane do "
+#~ "zalogowania się."
+
+#~ msgid "python model class name"
+#~ msgstr "nazwa pythonowa modelu klasy"
+
+#~ msgid "content type"
+#~ msgstr "typ zawartości"
+
+#~ msgid "content types"
+#~ msgstr "typy zawartości"
+
+#~ msgid "session key"
+#~ msgstr "klucz sesji"
+
+#~ msgid "session data"
+#~ msgstr "data sesji"
+
+#~ msgid "expire date"
+#~ msgstr "data wygaśnięcia sesji"
+
+#~ msgid "session"
+#~ msgstr "sesja"
+
+#~ msgid "sessions"
+#~ msgstr "sesje"
+
+#~ msgid "domain name"
+#~ msgstr "nazwa domeny"
+
+#~ msgid "display name"
+#~ msgstr "wyświetlana nazwa"
+
+#~ msgid "site"
+#~ msgstr "strona"
+
+#~ msgid "sites"
+#~ msgstr "strony"
+
+#~ msgid "DATE_FORMAT"
+#~ msgstr "Y-m-d"
+
+#~ msgid "DATETIME_FORMAT"
+#~ msgstr "Y-m-d H:i:s"
+
+#~ msgid "TIME_FORMAT"
+#~ msgstr "H:i:s"
+
+#~ msgid "Monday"
+#~ msgstr "Poniedziałek"
+
+#~ msgid "Tuesday"
+#~ msgstr "Wtorek"
+
+#~ msgid "Wednesday"
+#~ msgstr "Środa"
+
+#~ msgid "Thursday"
+#~ msgstr "Czwartek"
+
+#~ msgid "Friday"
+#~ msgstr "Piątek"
+
+#~ msgid "Saturday"
+#~ msgstr "Sobota"
+
+#~ msgid "Sunday"
+#~ msgstr "Niedziela"
+
+#~ msgid "January"
+#~ msgstr "Styczeń"
+
+#~ msgid "February"
+#~ msgstr "Luty"
+
+#~ msgid "March"
+#~ msgstr "Marzec"
+
+#~ msgid "April"
+#~ msgstr "Kwiecień"
+
+#~ msgid "May"
+#~ msgstr "Maj"
+
+#~ msgid "June"
+#~ msgstr "Czerwiec"
+
+#~ msgid "July"
+#~ msgstr "Lipiec"
+
+#~ msgid "August"
+#~ msgstr "Sierpień"
+
+#~ msgid "September"
+#~ msgstr "Wrzesień"
+
+#~ msgid "October"
+#~ msgstr "Pażdziernik"
+
+#~ msgid "November"
+#~ msgstr "Listopad"
+
+#~ msgid "December"
+#~ msgstr "Grudzień"
+
+#, fuzzy
+#~ msgid "jan"
+#~ msgstr "sty"
+
+#~ msgid "feb"
+#~ msgstr "luty"
+
+#~ msgid "mar"
+#~ msgstr "marz"
+
+#~ msgid "apr"
+#~ msgstr "kwie"
+
+#~ msgid "may"
+#~ msgstr "maj"
+
+#~ msgid "jun"
+#~ msgstr "czerw"
+
+#~ msgid "jul"
+#~ msgstr "lip"
+
+#~ msgid "aug"
+#~ msgstr "sier"
+
+#~ msgid "sep"
+#~ msgstr "wrze"
+
+#~ msgid "oct"
+#~ msgstr "paź"
+
+#~ msgid "nov"
+#~ msgstr "list"
+
+#~ msgid "dec"
+#~ msgstr "gru"
+
+#~ msgid "Jan."
+#~ msgstr "Sty."
+
+#~ msgid "Feb."
+#~ msgstr "Lut."
+
+#~ msgid "Aug."
+#~ msgstr "Sier."
+
+#~ msgid "Sept."
+#~ msgstr "Wrz."
+
+#~ msgid "Oct."
+#~ msgstr "Paź."
+
+#~ msgid "Nov."
+#~ msgstr "Lis."
+
+#~ msgid "Dec."
+#~ msgstr "Gru."
+
+#~ msgid "year"
+#~ msgid_plural "years"
+#~ msgstr[0] "rok"
+#~ msgstr[1] "lat"
+
+#~ msgid "month"
+#~ msgid_plural "months"
+#~ msgstr[0] "miesiąc"
+#~ msgstr[1] "miesięcy"
+
+#~ msgid "week"
+#~ msgid_plural "weeks"
+#~ msgstr[0] "tydzień"
+#~ msgstr[1] "tygodni"
+
+#~ msgid "day"
+#~ msgid_plural "days"
+#~ msgstr[0] "dzień"
+#~ msgstr[1] "dni"
+
+#, fuzzy
+#~ msgid "hour"
+#~ msgid_plural "hours"
+#~ msgstr[0] "godzina"
+#~ msgstr[1] "godzina"
+
+#~ msgid "minute"
+#~ msgid_plural "minutes"
+#~ msgstr[0] "minuta"
+#~ msgstr[1] "minut"
+
+#~ msgid "Bengali"
+#~ msgstr "Bengalski"
+
+#~ msgid "Czech"
+#~ msgstr "Czeski"
+
+#~ msgid "Welsh"
+#~ msgstr "Walijski"
+
+#~ msgid "Danish"
+#~ msgstr "Duński"
+
+#~ msgid "German"
+#~ msgstr "Niemiecki"
+
+#~ msgid "Greek"
+#~ msgstr "Grecki"
+
+#~ msgid "English"
+#~ msgstr "Angielski"
+
+#~ msgid "Spanish"
+#~ msgstr "Hiszpański"
+
+#~ msgid "French"
+#~ msgstr "Francuski"
+
+#~ msgid "Galician"
+#~ msgstr "Galicyjnski"
+
+#~ msgid "Hebrew"
+#~ msgstr "Hebrajski"
+
+#~ msgid "Icelandic"
+#~ msgstr "Islandzki"
+
+#~ msgid "Italian"
+#~ msgstr "Włoski"
+
+#~ msgid "Japanese"
+#~ msgstr "Japoński"
+
+#~ msgid "Dutch"
+#~ msgstr "Holenderski"
+
+#~ msgid "Norwegian"
+#~ msgstr "Norweski"
+
+#~ msgid "Brazilian"
+#~ msgstr "Brazylijski"
+
+#~ msgid "Romanian"
+#~ msgstr "Rumuński"
+
+#~ msgid "Russian"
+#~ msgstr "Rosyjski"
+
+#~ msgid "Slovak"
+#~ msgstr "Słowacki"
+
+#, fuzzy
+#~ msgid "Slovenian"
+#~ msgstr "Słowacki"
+
+#~ msgid "Serbian"
+#~ msgstr "Serbski"
+
+#~ msgid "Swedish"
+#~ msgstr "Szwedzki"
+
+#, fuzzy
+#~ msgid "Ukrainian"
+#~ msgstr "Brazylijski"
+
+#~ msgid "Simplified Chinese"
+#~ msgstr "Uproszczony Chiński"
+
+#~ msgid "Traditional Chinese"
+#~ msgstr "Chiński tradycyjny"
+
+#~ msgid "This value must contain only letters, numbers and underscores."
+#~ msgstr "To pole możei zawierać tylko litery, cyfry i podkreślenia"
+
+#~ msgid ""
+#~ "This value must contain only letters, numbers, underscores, dashes or "
+#~ "slashes."
+#~ msgstr "To pole może zawierać jedynie litery, cyfry, podkreślenia i slasze."
+
+#~ msgid "Uppercase letters are not allowed here."
+#~ msgstr "Wielkie litery nie są tutaj dozwolone"
+
+#~ msgid "Lowercase letters are not allowed here."
+#~ msgstr "Małe litery nie są tutaj dozwolone"
+
+#~ msgid "Enter only digits separated by commas."
+#~ msgstr "Wpisz tylko cyfry odddzielone przecinkami"
+
+#~ msgid "Enter valid e-mail addresses separated by commas."
+#~ msgstr "Wpisz poprawne adresy e-mai oddzielone przecinkamil"
+
+#~ msgid "Please enter a valid IP address."
+#~ msgstr "Proszę wpisać poprawny adres IP"
+
+#~ msgid "Empty values are not allowed here."
+#~ msgstr "Proszę wypełnić te pola"
+
+#~ msgid "Non-numeric characters aren't allowed here."
+#~ msgstr "Tu mogą być tylko cyfry"
+
+#~ msgid "This value can't be comprised solely of digits."
+#~ msgstr "To pole nie może zawierać jedynie cyfr."
+
+#~ msgid "Enter a whole number."
+#~ msgstr "Wpisz całą liczbę"
+
+#~ msgid "Only alphabetical characters are allowed here."
+#~ msgstr "Tutaj są dozwolone tylko litery"
+
+#~ msgid "Enter a valid date in YYYY-MM-DD format."
+#~ msgstr "Proszę wpisać poprawną datę w formacie RRRR-MM-DD."
+
+#~ msgid "Enter a valid time in HH:MM format."
+#~ msgstr "Proszę wpisać poprawny czas w formacie GG:MM"
+
+#~ msgid "Enter a valid date/time in YYYY-MM-DD HH:MM format."
+#~ msgstr "Wprowadź poprawną datę i czas w formacie RRRR-MM-DD GG:MM"
+
+#~ msgid "Enter a valid e-mail address."
+#~ msgstr "Wprowadź poprawny adres e-mail"
+
+#~ msgid ""
+#~ "Upload a valid image. The file you uploaded was either not an image or a "
+#~ "corrupted image."
+#~ msgstr ""
+#~ "Wgraj poprawny plik graficzny. Ten, który został wgrany jest niepoprawny "
+#~ "albo uszkodzony."
+
+#~ msgid "The URL %s does not point to a valid image."
+#~ msgstr "Odnośnik %s nie wskazuje na poprawny plik z obrazem."
+
+#~ msgid "Phone numbers must be in XXX-XXX-XXXX format. \"%s\" is invalid."
+#~ msgstr ""
+#~ "Numery telefoniczne muszą być w formacie XXX-XXX-XXXX. \"%s\" jest "
+#~ "niepoprawny."
+
+#~ msgid "The URL %s does not point to a valid QuickTime video."
+#~ msgstr "Odnośnik %s nie wskazuje na poprawne plik QuickTime video."
+
+#~ msgid "A valid URL is required."
+#~ msgstr "Wymagany jest poprawny URL."
+
+#~ msgid ""
+#~ "Valid HTML is required. Specific errors are:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Wymagany jest poprawny odnośnik. Błędy to:\n"
+#~ "%s"
+
+#~ msgid "Badly formed XML: %s"
+#~ msgstr "Nieprawidłowy format XML: %s"
+
+#~ msgid "Invalid URL: %s"
+#~ msgstr "Niepoprawny odnośnik: %s"
+
+#~ msgid "The URL %s is a broken link."
+#~ msgstr "Odnośnik %s jest nieprawidłowy."
+
+#~ msgid "Enter a valid U.S. state abbreviation."
+#~ msgstr "Wpisz poprawny kod stanu U.S."
+
+#, fuzzy
+#~ msgid "Watch your mouth! The word %s is not allowed here."
+#~ msgid_plural "Watch your mouth! The words %s are not allowed here."
+#~ msgstr[0] "Nie wolno przeklinać! Słowo %s jest niedozwolone."
+#~ msgstr[1] "Nie wolno przeklinać! Słowo %s jest niedozwolone."
+
+#~ msgid "This field must match the '%s' field."
+#~ msgstr "To pole musi pasować do pola '%s'."
+
+#~ msgid "Please enter something for at least one field."
+#~ msgstr "Proszę wpisać cokolwiek do chociaż jednego pola."
+
+#~ msgid "Please enter both fields or leave them both empty."
+#~ msgstr "Proszę uzupełnić oba pola lub zostawić je puste."
+
+#~ msgid "This field must be given if %(field)s is %(value)s"
+#~ msgstr "To pole musi być uzupełnione jeśli %(field)s jest %(value)s"
+
+#~ msgid "Please enter a valid decimal number."
+#~ msgstr "Proszę wpisać poprawną liczbę dziesiętną."
+
+#, fuzzy
+#~ msgid "Please enter a valid decimal number with at most %s total digit."
+#~ msgid_plural ""
+#~ "Please enter a valid decimal number with at most %s total digits."
+#~ msgstr[0] "Proszę wpisać poprawną liczbę dziesiętną."
+#~ msgstr[1] "Proszę wpisać poprawną liczbę dziesiętną."
+
+#, fuzzy
+#~ msgid "Please enter a valid decimal number with at most %s decimal place."
+#~ msgid_plural ""
+#~ "Please enter a valid decimal number with at most %s decimal places."
+#~ msgstr[0] "Proszę wpisać poprawną liczbę dziesiętną."
+#~ msgstr[1] "Proszę wpisać poprawną liczbę dziesiętną."
+
+#~ msgid "Make sure your uploaded file is at least %s bytes big."
+#~ msgstr "Upewnij się, że wgrany plik ma conajmniej %s bajtów."
+
+#~ msgid "Make sure your uploaded file is at most %s bytes big."
+#~ msgstr "Upewnij się, że wgrany plik nie zawiera więcej niż %s bajtów."
+
+#~ msgid "The format for this field is wrong."
+#~ msgstr "Format tego pola jest nieprawidłowy."
+
+#~ msgid "This field is invalid."
+#~ msgstr "To pole jest nieprawidłowe."
+
+#~ msgid "Could not retrieve anything from %s."
+#~ msgstr "Nie można otrzymać nic z %s."
+
+#~ msgid "This field is required."
+#~ msgstr "To pole jest wymagane"
+
+#, fuzzy
+#~ msgid "This value must be either True or False."
+#~ msgstr "Wartość logiczna (True, False - prawda lub fałsz)"
+
+#, fuzzy
+#~ msgid "This field cannot be null."
+#~ msgstr "To pole jest nieprawidłowe."
+
+#~ msgid "Enter a valid filename."
+#~ msgstr "Wpisz poprawną nazwę pliku."
+
+#~ msgid "Please enter a valid %s."
+#~ msgstr "Proszę wpisać poprawne %s."
+
+#, fuzzy
+#~ msgid "Separate multiple IDs with commas."
+#~ msgstr "Oddziel kilka pól ID przecinkami."
+
+#, fuzzy
+#~ msgid ""
+#~ "Hold down \"Control\", or \"Command\" on a Mac, to select more than one."
+#~ msgstr ""
+#~ " Trzymaj przyciśnięty klawisz \"Ctrl\", lub \"Command\" na Macu aby "
+#~ "zaznaczyć więcej niż jeden wybór."
+
+#, fuzzy
+#~ msgid "Ensure your text is less than %s character."
+#~ msgid_plural "Ensure your text is less than %s characters."
+#~ msgstr[0] "Upewnij się, że jest mniej niż %s znaków."
+#~ msgstr[1] "Upewnij się, że jest mniej niż %s znaków."
+
+#~ msgid "Line breaks are not allowed here."
+#~ msgstr "Znaki nowego wiersza są tutaj niedopuszczalne."
+
+#~ msgid "The submitted file is empty."
+#~ msgstr "Wgrany plik jest pusty."
+
+#~ msgid "Enter a whole number between -32,768 and 32,767."
+#~ msgstr "Proszę wpisać liczbę z zakresu od -32 768 do 32 767"
+
+#~ msgid "Enter a positive number."
+#~ msgstr "Proszę wpisać liczbę dodatnią."
+
+#~ msgid "Enter a whole number between 0 and 32,767."
+#~ msgstr "Proszę wpisać liczbę z zakresu od 0 do 32 767"
+
+#~ msgid "yes,no,maybe"
+#~ msgstr "tak,nie, może"
+
+#~ msgid "String (up to 50)"
+#~ msgstr "Ciąg znaków (do ilości 50 znaków)"
+
+#~ msgid "Comment"
+#~ msgstr "Komentarz"
+
+#~ msgid "Comments"
+#~ msgstr "Komentarze"
+
+#~ msgid "label"
+#~ msgstr "etykieta"
+
+#~ msgid "package"
+#~ msgstr "pakiet"
+
+#~ msgid "packages"
+#~ msgstr "pakiety"

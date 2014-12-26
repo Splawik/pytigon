@@ -1,0 +1,18 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "widgets/html_widgets/action_ctrl.html"
+
+{% block init %}var href = "xlink:href";{% endblock %}
+
+%% click {:}
+    if({{id}}_var):
+        {{id}}_var.attr('fill-opacity', 1)
+        {{id}}_var.find('.control').css('stroke', {{id}}_var_color).css('stroke-width', {{id}}_var_widh)
+
+    {{id}}_var = $(this)
+    {{id}}_var_widh = $(this).find('.control').css("stroke-width")
+    {{id}}_var_color = $(this).find('.control').css("stroke")
+
+    $(this).attr('fill-opacity', 0.3)
+    $(this).find('.control').css('stroke', '#F0AD4E').css('stroke-width', '4')
+

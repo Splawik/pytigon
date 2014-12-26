@@ -1,0 +1,18 @@
+% load exfiltry
+% load exsyntax
+
+%% all
+    %% js_standard
+
+    %% content
+        div id={{id}}
+
+    %% js
+        {% jscript_link 'raphael/raphael-min.js' %}
+
+    %% js2
+        script
+            .window.onload = function () {
+            .    var paper_{{id}} = Raphael("{{id}}", {{width}}, {{height}} );
+            .    {{data}}
+            .};

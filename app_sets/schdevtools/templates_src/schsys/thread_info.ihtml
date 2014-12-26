@@ -1,0 +1,134 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            from schlib.schtools import schjson
+            self.schjson = schjson
+            self.start_id = 0
+
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(250)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            self.cmd_list.readonly = False
+            self.cmd_list.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+            self.insert_cmd.Bind(wx.EVT_BUTTON, self.on_command)
+
+        def on_enter(self, event):
+            value = self.cmd_list.GetValue()
+            parm = { 'value': value + "\n" }
+            self.cmd_list.SetValue("")
+            return self.transfer(parm)
+
+        def on_command(self, event):
+            value = self.cmd_list.GetValue()
+            parm = { 'value': value + "\n" }
+            self.cmd_list.SetValue("")
+            return self.transfer(parm)
+
+        def transfer(self, parm):
+            test = False
+            http = wx.GetApp().HTTP
+            http.Get(self, "{{request.path}}../"+str(self.start_id)+"/get_messages/", parm=parm)
+            s = http.Str()
+            http.ClearPtr()
+            lines = self.schjson.loads(s)
+            for line in lines:
+                if line!="":
+                    self.cmd.AppendText(line)
+                    test = True
+                self.start_id += 1
+            if test:
+                self.cmd.ScrollToLine(self.start_id)
+
+        def on_close(self):
+            http = wx.GetApp().HTTP
+            http.Get(self, "{{request.path}}../delete/")
+            self.tuser.Stop()
+
+        def on_timer_user(self, event):
+            return self.transfer(None)
+            
+%% form_rect
+    .width: 620, height: 480
+
+%%form_title
+    {{object.title}}
+
+%% dialog
+    table width=100%
+        %if standard_web_browser
+            tr
+                td
+                    input type=text,,,id=cmd
+                td
+                    input type=button,,,id=send,,,value=send,,,onclick=onsend()
+        %else
+            tr
+
+                td..._(Choice action):
+                td
+                    select name=cmd_list,,,id=id_cmd_list,,,width=100%-150
+                        option value=help...--help
+                        option value=syncdb...syncdb
+                        option value=migrate...migrate
+                        option value=createsuperuser...createsuperuser
+
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=insert_cmd,,,label=cmd,,,SRC=client://actions/list-add.png
+
+    %if standard_web_browser
+        div id=table-scroll
+            table id=cmd_out,,,border=0
+                % for msg in object.get_messages
+                    tr
+                        td
+                            {{msg}}
+    %else
+        CTRLHTMLLISTBOX name=cmd,,,width=100%-10,,,height=100%-10
+
+    % if standard_web_browser
+        style {:}
+            #table-scroll:
+                height:300px
+                overflow:auto
+    
+        script {:}                
+            function transfer(parm):
+                var start_id
+                start_id = $('#cmd_out tr').length
+                $.post(            
+                    "{{request.path}}../"+start_id+"/get_messages/" 
+                    parm
+                    function(data):
+                        var i
+                        for(i=0; i<data.length;i++):
+                            $('#cmd_out tr:last').after('<tr><td>'+data[i]+'</td></tr>')
+                        if (data.length>0):
+                            $('#table-scroll').scrollTop(30000)
+                    "json"
+    
+            function onsend():
+                var value
+                value = $('#cmd').val()
+                if(value.length>0):
+                    parm = { 'value': value + "\n" }
+                else:
+                    parm = {}
+                $('#cmd').val("")
+                transfer(parm)                   
+    
+            function ontimer():
+                transfer({})
+    
+            $(document).ajaxError(
+                function(request, settings):
+                    alert(settings.responseText)
+    
+            window.setInterval(ontimer, 1000)
+            

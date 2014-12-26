@@ -1,0 +1,72 @@
+!!!# -*- coding: utf-8 -*-
+
+import django
+from django.db import models
+
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
+from django.utils.encoding import python_2_unicode_compatible
+
+import os, os.path
+import sys
+from schlib.schhtml.htmltools import superstrip
+{% if is_tree_table %}
+import mptt
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel, MPTTModelBase
+{% endif %}
+
+{% for app in appset.get_ext_apps %}
+from {{app}}.models import *
+{% endfor %}
+
+
+{{app.model_code_start|safe}}
+
+{% if choices %}
+{% for choice in choices %}
+{{choice.name}} = (
+    {% for item in choice.schchoiceitem_set.all %}("{{item.name|safe}}","{{item.value|safe}}"),
+    {% endfor %}
+    )
+{% endfor %}
+{% endif %}
+
+{% for table in tables %}
+@python_2_unicode_compatible
+class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}models.Model{%endif%}):
+    {% if table.doc %}"""{% for line in table.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    class Meta:
+        verbose_name = _("{{table.verbose_name|safe}}")
+        verbose_name_plural = _("{{table.verbose_name_plural|safe}}")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        {% if table.metaclass_code %}
+        {% for line in table.metaclass_code.splitlines %}{{line|safe}}
+        {% endfor %}
+        {% endif %}
+
+    {% if table.tree_tab == 2 %}
+    __metaclass__ = MPTTModelBase
+    {% endif %}
+
+    {% if table.tree_tab == 1 %}
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    {% endif %}
+
+    {% for field in table.schfield_set.all %}{{field.as_declaration|safe}}
+    {% endfor %}
+
+    {% for line in table.table_code.splitlines %}{{line|safe}}
+    {% endfor %}
+admin.site.register({{table.name}})
+
+{% if table.tree_tab == 2 %}
+TreeForeignKey({{table.name}}, blank=True, null=True, related_name='children').contribute_to_class({{table.name}}, 'parent')
+mptt.register({{table.name}}, order_insertion_by=['name'])
+{{table.name}}._tree_manager._base_manager = None
+{% endif %}
+{% endfor %}
+
+{{app.model_code_end|safe}}

@@ -1,0 +1,54 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+% load mptt_tags
+
+
+%% all
+    %with form_width=620 form_height=360  scroll_table=True no_id=True
+        {{ block.super }}
+
+
+%% list_content_actions
+    % if not readonly
+        % if parent_pk > 0
+            % button '../../%d/this/-/add'|format:parent_obj.id 'New element'
+        % else
+            % button '../../0/this/-/add' 'New element'
+    %if parent_pk > 0
+        % if standard_web_browser
+            % button "../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
+        % else
+            CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=Wstecz..
+    % else
+        % if not standard_web_browser
+            CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=Wstecz..
+
+
+%% list_content_title
+    h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}
+    ol class=breadcrumb,,,style=padding:0; margins:0; vertical-align:bottom; white-space:nowrap
+        a href=../../0/form/tree.../
+        %for pos in parent_obj.get_ancestors:
+            li
+                a href=../../{{pos.id}}/form/tree...{{pos.code}}
+        li class="active"
+            {{parent_obj.code}}
+
+
+%% list_row_header
+    th...+
+    th...Element
+
+%% list_row
+    td
+        %if object|childs
+            a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button,,,name=+:::big:::strong...+
+        %else
+            a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button,,,name=+:::small...+
+    %% list_tree_row
+        td...{{object}}
+

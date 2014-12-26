@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+
+Struktura aplikacji:
+    127.0.0.1,      inne - zwykła strona internetowa
+    127.0.0.2:80    aplikacja lokalna - emulacja serwera
+    127.0.0.3:8000  aplikacja lokalna - uruchomiony serwer cherrypy
+
+
+
+Adresy url:
+===========
+
+setup:
+  http://<base_url>/<app_name>/setup/
+
+base:
+  http://<base_url>/<app_name>/
+
+static:
+  http://<base_url>/<app_name>/site_media
+
+
+PoÅoÅ¼enie plikÃ³w:
+=================
+
+katalog gÅÃ³wny:
+  /schserw/<app_name>
+
+template:
+  /templates/<app_name>
+
+static:
+  /static/media/<app_name>
+
+
+Do zrobienia:
+wxweb
+dokoÅczyÄ schcontrols
+dokoÅczyÄ tabelÄ
+dokoÅczyÄ sÅownik
+
+
+SChApp
+  Metody
+
+
+
+FORM_TYPE: LIST, HDIALOG, VDIALOG,
+
+
+Ogólne:
+    ok_cancel
+    button
+
+    css_link
+    jscript_link
+
+    paginator
+
+Linki:
+    edit_row
+    delete_row
+    view_row
+    print_row
+    action_row
+
+    new_row
+    print_table
+    action_table
+
+
+
+gui_style:
+    modern
+    tree
+    standard
+
+
+
+login:
+    1 - próba bez hasła (hasło

@@ -1,0 +1,49 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% form_rect
+    .width: 780, height: 740
+
+%% table_start
+    % if standard_web_browser
+        table width=50%,,,cellspacing=0,,,cellpadding=5,,,bgcolor=#fff
+            tr
+                td bgcolor=#fff
+                    strong
+                        .Hasło: "{{page_name}}"
+                td align=right,,,bgcolor=#fff
+                    % if content
+                        a href=/schwiki/{{subject}}/{{page_name}}/_/edit/,,,class=popup...edytuj stronę
+                    % else
+                        a href=/schwiki/{{subject}}/{{page_name}}/W/edit/,,,class=popup...edytuj stronę wiki
+                        a href=/schwiki/{{subject}}/{{page_name}}/I/edit/,,,class=popup...edytuj stronę ihtml
+                        a href=/schwiki/{{subject}}/{{page_name}}/H/edit/,,,class=popup...edytuj stronę html
+    % else
+
+            table width=100%,,,class=form_bar
+                tr
+                    td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                        CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                    % if content
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/_/edit/,,,label=edytuj stronę,,,SRC=client://apps/accessories-text-editor.png
+                    % else
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=110,,,height=36
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/W/edit/,,,label=edytuj stronę jako wiki,,,SRC=client://apps/accessories-character-map.png
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/I/edit/,,,label=edytuj stronę jako ihtml,,,SRC=client://actions/format-indent-more.png                            
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/H/edit/,,,label=edytuj stronę jako html,,,SRC=client://apps/accessories-text-editor.png                            
+                    td width=5
+                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
+                        span class=form_title
+                            %%form_title
+                                {{title|wiki_href|safe}}
+
+%% table
+    %% wiki_content
+        .Ta strona jeszcze nie istnieje!
+
+%% table_stop

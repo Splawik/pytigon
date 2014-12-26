@@ -1,0 +1,76 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self['tabsort'].grid.default_command = 'code'
+                                
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "code":"client://mimetypes/text-x-generic-template.png",
+                        "template_edit3":"client://mimetypes/x-office-presentation.png",
+                        "doc":"client://apps/help-browser.png"
+                    }
+                    child.set_bitmaps(bitmaps)
+
+
+%% all
+    %with form_width=960 form_height=1200 show_title_bar=0 title=_("Views") vform=True
+        {{ block.super }}
+
+%% list_content_header
+    % widget class='menu' id='new_view' title=_("&New view"):
+        % for pos in object_list|module_obj:"View_CHOICES"
+            li
+                a href={{request.path}}../../../../{{pos.0}}/add...{{pos.1}}
+        
+%% list_row_header
+    th...Name
+
+%% list_row
+    td...{{object.name}}
+
+%% list_row_actions
+    {{ block.super }}
+    % if object.ret_type == 'T':
+        % row_actions:
+            .field_edit/view_code,Code,code,_top
+            .template_edit3,Template        
+            .field_edit/doc,Doc,doc,_top
+    % else:
+        % row_actions:
+            .field_edit/view_code,Code,code,_top
+            .field_edit/doc,Doc,doc,_top
+    
+%% row_edit
+    {{ form.view_type.as_hidden }}
+    strong 
+        {{object.get_view_type_display}}
+                
+    % form:
+        "ret_type", "parent", "name", "url_params"
+    
+    % if object.view_type == 'u'
+        % form:
+            "param", "url"
+    % else
+        {{form.param.as_hidden}}        
+        % form_item url:
+            select name=url,,,id=id_url,,,class=select form-control
+                %if not object.url or object.url == ""
+                    option selected=selected,,,value=...---------
+                %else
+                    option value=...---------
+                %for model in object.get_models
+                    %if model == object.url
+                        option value={{model}},,,selected=selected...{{model}}
+                    %else
+                        option value={{model}}...{{model}}

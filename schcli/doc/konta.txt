@@ -1,0 +1,687 @@
+
+
+
+
+# -*- coding: utf-8 -*-
+Struktury:
+    Konto_uogulnione:
+        Lokalizacja (StructOrg)
+        Klient (Klient)
+        Konto
+        Subkonto
+        Klasyfikator
+
+        Konto zawiera odnoĹ›nik do wierzchoĹ‚ka w drzewie klasyfikatorĂłw wskazujÄ…c
+        dozwolone klasyfikatory dla danego konta
+
+
+    Konto:
+        Parent
+        Nazwa
+        Opis
+        Klasyfikator //wierzchoĹ‚ek w drzewie klasyfikatorĂłw
+        Typ:
+            Syntetyczne,Analityczne
+            Bilansowe,Pozabilansowe/PozaksiÄ™gowe
+            Aktywne/Pasywne/Inne
+
+
+
+    Dekret:
+        Data
+        Opis
+        Rozrachunek
+        IloĹ›Ä‡
+        Element
+        WartoĹ›Ä‡
+        Konto_uogulnione_wn
+        Konto_uogulnione_ma
+
+    Stan:
+        Czas1(Rok)
+        Czas2(KwartaĹ‚â€š)
+        Czas3(MiesiÄ…c)
+
+        Lokalizacja
+        Konto
+        Subkonto
+        Klasyfikator
+
+
+
+Klient:
+    Typ:
+        Firma zewnÄ™trzna
+        Osoba fizyczna zewnÄ™trzna
+        Pracownik
+        Klient wewnÄ™trzny (firma, oddziaĹ‚, itp)
+
+Element
+    description
+    Typ:
+        Waluta
+
+        MateriaĹ‚
+
+        UrzÄ…dzenie
+            UrzÄ…dzenieIT
+            MaszynaProd
+            Pojazd
+
+        Element niematerialny
+            Program
+
+        UsĹ‚uga
+        Surowiec
+        PĂłĹ‚produkt
+
+        Produkt
+        ProduktNiematerialny
+        UsĹ‚ugaSprzedaĹĽ
+
+
+
+
+
+Konto - stan
+
+
+
+
+
+
+
+//==================================================================
+====================================================================
+TYPY DOKUMENTÄ‚â€śW:
+
+    MAGAZYNOWE:
+        PZ,  PZK
+        ZP,  ZPK #ZWROT DO PRODUCENTA
+
+        WZ,  WZK
+        ZW,  ZWK #ZWROT TOWARU OD KLIENTA
+
+        RW,  RWK
+        PW,  PWK
+
+        MM,  MMK
+
+    REJVAT:
+        FA,  FAK
+        FZ,  FZK
+
+    FK:
+        PK, PKK
+
+
+======================================================================
+TYPY RACHUNKÄ‚â€śW:
+        FIRMA,
+        FIRMA_OBCA,
+        DETALISTA,
+        ODDZIAÄąďż˝
+
+======================================================================
+TYPY MATERIAÄąďż˝Ä‚â€śW:
+        WALUTA,
+        ELEM_MAG,
+        USÄąďż˝UGA,
+        ZDARZENIE
+
+======================================================================
+TYPY POZYCJE DOKUMENTÄ‚â€śW
+        POZ_SZABLON
+        POZ_MAG
+        POZ_WARTOSC
+        POZ_VAT
+        POZ_FK
+
+======================================================================
+TYPY KONTO:
+    KONTO_KSIE
+        BILANSOWE
+        POZABILANS
+    KONTO_MAG
+        MAG_WEW
+        MAG_ZEW //Sklep fabryczny
+
+
+
+//==================================================================
+====================================================================
+INTERFEJSY
+    Rachunki:
+        Wszystkie,
+        Firmy,
+        Firmy obce,
+        DetaliĂ‚Ĺ›ci,
+        OddziaÄąâ€šy
+
+    MateriaÄąâ€šy:
+        Wszystkie,
+        Waluty,
+        MateriaÄąâ€šy,
+        UsÄąâ€šugi,
+        Zdarzenia
+
+    Konta:
+        KsiĂ„â„˘gowe
+        Magazynowe
+
+    Dokumenty:
+        Wszystkie,
+            Magazynowe
+            SprzedaÄąÄ˝y i zakupÄ‚Ĺ‚w
+            Finansowe
+
+//=================================================================
+    Dokument
+        Status = 0, tylko szablon
+        Status = 1, generowanie dokumentu magazynowego
+        Status = 2, generowanie rozliczenia wartoĂ‚Ĺ›ciowego
+        Status = 3, generowanie dokumentu VAT
+        ...
+        Status = 8, zaksiĂ„â„˘gowanie dokumentu
+        Status = 9, dokument w dzienniku
+
+
+
+API
+//=================================================================
+
+Dokumenty
+============================
+
+Funkcje
+----------------------------
+Dokument_ZSzablonu
+Dokument_RozliczMag
+Dokument_RozliczWartosc
+Dokument_RozliczVAT
+Dokument_Ksieguj
+
+Dokument_AnulujZSzablonu
+Dokument_AnulujRozliczMag
+Dokument_AnulujRozliczWartosc
+Dokument_AnulujRozliczVAT
+Dokument_AnulujKsieguj
+
+Dokument_Kasuj
+Dokument_Storno
+
+DajDokument()
+
+Klasy
+----------------------------
+DokumentBazowy
+    DokumentMag
+        DokumentPZ
+        DokumentPZK
+        DokumentZP
+        DokumentZPK
+        DokumentWZ
+        DokumentWZK
+        DokumentZW
+        DokumentZWK
+        DokumentRW
+        DokumentRWK
+        DokumentPW
+        DokumentPWK
+        DokumentMM
+        DokumentMMK
+
+    DokumentVAT
+        DokumentFA
+        DokumentFAK
+        DokumentFZ
+        DokumentFZK
+
+    DokumentFK
+        DokumentPK
+        DokumentPKK
+
+
+RACHUNKI
+============================
+Funkcje:
+----------------------------
+DajRachunek()
+
+
+
+Klasy:
+----------------------------
+    RachunekBazowy
+        RachunekFirma
+        RachunekFirmaObca
+        RachunekDetalista
+        RachunekOddzial
+
+
+MATERIAÄąďż˝Y:
+============================
+Funkcje:
+----------------------------
+    DajMaterial()
+
+
+Klasy:
+----------------------------
+    MaterialBazowy
+        MaterialWaluta
+        MaterialElemMag
+        MaterialUsluga
+        MaterialZdarzenie
+
+
+KONTA:
+============================
+Funkcje:
+----------------------------
+    DajKonto()
+
+
+Klasy:
+----------------------------
+    KotoBazowe
+        KontoBilansowe
+        KontoPozabilansowe
+        KontoMagWew
+        KontoMagZew //np: sklep fabryczny
+
+
+
+RozliczWartosc
+
+//Rozliczenie wartroĂ‚Ĺ›ciowe
+KolejkaPrzych
+  ID
+  Dokument
+  Pozycja
+  CenaZak
+  WartoscZak
+  CenaMag
+  WartoscMag
+
+
+KolejkaRozch
+  Dokument
+  Pozycja
+  ID_PRZYCH
+  CenaMag
+  WartoscMag
+  CenaSprz
+  WartoscSprz
+
+
+Cennik:
+  NrCennika
+  WersjaCennika
+
+  CennikBazowy
+
+  Rachunek
+  MateriaÄąâ€š
+  GrupaRachunek
+  GrupaKlient
+
+  Kwota
+  MnoÄąÄ˝nik
+
+
+KolejkaCennik
+  Dokument
+  Pozycja
+  ID_Cennika
+  WersjaCennika
+
+
+GrupaPozycji:
+  NazwaGrupy
+
+  Kwota1
+  Kwota2
+  Kwota3
+
+  Opis1
+  Opis2
+
+  Typ1
+  Typ2
+
+  Atrybut1
+  Atrybut2
+
+  Dokument
+  Pozycja
+
+DokVAT: GrupaPozycji
+
+
+
+
+
+
+
+
+
+Struktury:
+    Konto_uogulnione:
+        Lokalizacja (oddziaĹ‚)
+        Klient
+        Konto
+        Subkonto
+        Klasyfikator
+
+        Konto zawiera odnoĹ›nik do wierzchoĹ‚ka w drzewie klasyfikatorĂłw wskazujÄ…c
+        dozwolone klasyfikatory dla danego konta
+
+    Dekret:
+        Data
+        Opis
+        Rozrachunek
+        IloĹ›Ä‡
+        Element
+        WartoĹ›Ä‡
+        Konto_uogulnione_wn
+        Konto_uogulnione_ma
+
+    Stan:
+        Czas1(Rok)
+        Czas2(KwartaĹ‚)
+        Czas3(MiesiÄ…c)
+
+        Lokalizacja
+        Konto
+        Subkonto
+        Klasyfikator
+
+
+Element
+
+
+
+
+Konto - stan
+
+
+
+
+
+
+
+//==================================================================
+====================================================================
+TYPY DOKUMENTĂ“W:
+
+    MAGAZYNOWE:
+        PZ,  PZK
+        ZP,  ZPK #ZWROT DO PRODUCENTA
+
+        WZ,  WZK
+        ZW,  ZWK #ZWROT TOWARU OD KLIENTA
+
+        RW,  RWK
+        PW,  PWK
+
+        MM,  MMK
+
+    REJVAT:
+        FA,  FAK
+        FZ,  FZK
+
+    FK:
+        PK, PKK
+
+
+======================================================================
+TYPY RACHUNKĂ“W:
+        FIRMA,
+        FIRMA_OBCA,
+        DETALISTA,
+        ODDZIAĹ�
+
+======================================================================
+TYPY MATERIAĹ�Ă“W:
+        WALUTA,
+        ELEM_MAG,
+        USĹ�UGA,
+        ZDARZENIE
+
+======================================================================
+TYPY POZYCJE DOKUMENTĂ“W
+        POZ_SZABLON
+        POZ_MAG
+        POZ_WARTOSC
+        POZ_VAT
+        POZ_FK
+
+======================================================================
+TYPY KONTO:
+    KONTO_KSIE
+        BILANSOWE
+        POZABILANS
+    KONTO_MAG
+        MAG_WEW
+        MAG_ZEW //Sklep fabryczny
+
+
+
+//==================================================================
+====================================================================
+INTERFEJSY
+    Rachunki:
+        Wszystkie,
+        Firmy,
+        Firmy obce,
+        DetaliÂści,
+        OddziaĹ‚y
+
+    MateriaĹ‚y:
+        Wszystkie,
+        Waluty,
+        MateriaĹ‚y,
+        UsĹ‚ugi,
+        Zdarzenia
+
+    Konta:
+        KsiÄ™gowe
+        Magazynowe
+
+    Dokumenty:
+        Wszystkie,
+            Magazynowe
+            SprzedaĹĽy i zakupĂłw
+            Finansowe
+
+//=================================================================
+    Dokument
+        Status = 0, tylko szablon
+        Status = 1, generowanie dokumentu magazynowego
+        Status = 2, generowanie rozliczenia wartoÂściowego
+        Status = 3, generowanie dokumentu VAT
+        ...
+        Status = 8, zaksiÄ™gowanie dokumentu
+        Status = 9, dokument w dzienniku
+
+
+
+API
+//=================================================================
+
+Dokumenty
+============================
+
+Funkcje
+----------------------------
+Dokument_ZSzablonu
+Dokument_RozliczMag
+Dokument_RozliczWartosc
+Dokument_RozliczVAT
+Dokument_Ksieguj
+
+Dokument_AnulujZSzablonu
+Dokument_AnulujRozliczMag
+Dokument_AnulujRozliczWartosc
+Dokument_AnulujRozliczVAT
+Dokument_AnulujKsieguj
+
+Dokument_Kasuj
+Dokument_Storno
+
+DajDokument()
+
+Klasy
+----------------------------
+DokumentBazowy
+    DokumentMag
+        DokumentPZ
+        DokumentPZK
+        DokumentZP
+        DokumentZPK
+        DokumentWZ
+        DokumentWZK
+        DokumentZW
+        DokumentZWK
+        DokumentRW
+        DokumentRWK
+        DokumentPW
+        DokumentPWK
+        DokumentMM
+        DokumentMMK
+
+    DokumentVAT
+        DokumentFA
+        DokumentFAK
+        DokumentFZ
+        DokumentFZK
+
+    DokumentFK
+        DokumentPK
+        DokumentPKK
+
+
+RACHUNKI
+============================
+Funkcje:
+----------------------------
+DajRachunek()
+
+
+
+Klasy:
+----------------------------
+    RachunekBazowy
+        RachunekFirma
+        RachunekFirmaObca
+        RachunekDetalista
+        RachunekOddzial
+
+
+MATERIAĹ�Y:
+============================
+Funkcje:
+----------------------------
+    DajMaterial()
+
+
+Klasy:
+----------------------------
+    MaterialBazowy
+        MaterialWaluta
+        MaterialElemMag
+        MaterialUsluga
+        MaterialZdarzenie
+
+
+KONTA:
+============================
+Funkcje:
+----------------------------
+    DajKonto()
+
+
+Klasy:
+----------------------------
+    KotoBazowe
+        KontoBilansowe
+        KontoPozabilansowe
+        KontoMagWew
+        KontoMagZew //np: sklep fabryczny
+
+
+
+RozliczWartosc
+
+//Rozliczenie wartroÂściowe
+KolejkaPrzych
+  ID
+  Dokument
+  Pozycja
+  CenaZak
+  WartoscZak
+  CenaMag
+  WartoscMag
+
+
+KolejkaRozch
+  Dokument
+  Pozycja
+  ID_PRZYCH
+  CenaMag
+  WartoscMag
+  CenaSprz
+  WartoscSprz
+
+
+Cennik:
+  NrCennika
+  WersjaCennika
+
+  CennikBazowy
+
+  Rachunek
+  MateriaĹ‚
+  GrupaRachunek
+  GrupaKlient
+
+  Kwota
+  MnoĹĽnik
+
+
+KolejkaCennik
+  Dokument
+  Pozycja
+  ID_Cennika
+  WersjaCennika
+
+
+GrupaPozycji:
+  NazwaGrupy
+
+  Kwota1
+  Kwota2
+  Kwota3
+
+  Opis1
+  Opis2
+
+  Typ1
+  Typ2
+
+  Atrybut1
+  Atrybut2
+
+  Dokument
+  Pozycja
+
+DokVAT: GrupaPozycji
+
+
+
+
+
+
+
+

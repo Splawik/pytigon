@@ -1,0 +1,11 @@
+{# -*- coding: utf-8 -*- #}
+
+%load exfiltry
+
+% if not only_field
+    <tr><th>{{field.label_tag}}</th><td>
+div class=panel panel-default,,,style=padding:0.5em;margin:0.5em 0 0.5em 0;
+    div class=panel-body checkboxselectmultiple
+        {{field}}
+% if not only_field
+    </td></tr>

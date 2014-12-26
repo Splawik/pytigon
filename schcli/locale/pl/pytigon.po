@@ -1,0 +1,479 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pytigon\n"
+"POT-Creation-Date: 2013-12-20 09:37+0100\n"
+"PO-Revision-Date: 2013-12-20 09:38+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SearchPath-0: ..\\..\n"
+
+#: ..\../pytigon.py:326
+msgid "Program description"
+msgstr "Nazwa programu"
+
+#: ..\../pytigon.py:328
+msgid "License"
+msgstr "Licencja"
+
+#: ..\../pytigon.py:329
+msgid "Run"
+msgstr "Uruchom"
+
+#: ..\../pytigon.py:340
+msgid "Accept"
+msgstr "Akceptuj"
+
+#: ..\../pytigon.py:342
+msgid "Run the installed program or cancel"
+msgstr "Uruchom zainstalowany programu lub anuluj"
+
+#: ..\../pytigon.py:354
+msgid "You must accept the license or cancel the installation!"
+msgstr "Musisz zaakceptować licencję albo przerwać instalację!"
+
+#: ..\../pytigon.py:355 ..\../pytigon.py:362 ..\../pytigon.py:367
+#: ..\../pytigon.py:423
+msgid "Installation"
+msgstr "Instalacja"
+
+#: ..\../pytigon.py:362 ..\../pytigon.py:423
+msgid "Installation error!"
+msgstr "Błąd instalacji"
+
+#: ..\../pytigon.py:366
+msgid "Program installed, use the uninstaller!"
+msgstr "Program zainstalowany, użyj deinstalatora!"
+
+#: ..\../pytigon.py:435
+msgid "Pytigon system"
+msgstr "System Pytigon"
+
+#: ..\../pytigon.py:507
+msgid "select the application to run"
+msgstr "Wybierz aplikację do uruchomienia"
+
+#: ..\../pytigon.py:668
+msgid "Pytigon - login"
+msgstr "Pytigon - logowanie"
+
+#: ..\../pytigon.py:686
+msgid "Failed login attempt!"
+msgstr "Nieudana próba logowania"
+
+#: ..\../guilib/logindialog.py:53
+msgid "User name:"
+msgstr "Nazwa użytkownika:"
+
+#: ..\../guilib/logindialog.py:55
+msgid "Password:"
+msgstr "Hasło"
+
+#: ..\../locale/pl/pygettext.py:23
+#, python-format
+msgid ""
+"pygettext -- Python equivalent of xgettext(1)\n"
+"\n"
+"Many systems (Solaris, Linux, Gnu) provide extensive tools that ease the\n"
+"internationalization of C programs. Most of these tools are independent of\n"
+"the programming language and can be used from within Python programs.\n"
+"Martin von Loewis' work[1] helps considerably in this regard.\n"
+"\n"
+"There's one problem though; xgettext is the program that scans source code\n"
+"looking for message strings, but it groks only C (or C++). Python\n"
+"introduces a few wrinkles, such as dual quoting characters, triple quoted\n"
+"strings, and raw strings. xgettext understands none of this.\n"
+"\n"
+"Enter pygettext, which uses Python's standard tokenize module to scan\n"
+"Python source code, generating .pot files identical to what GNU xgettext[2]\n"
+"generates for C and C++ code. From there, the standard GNU tools can be\n"
+"used.\n"
+"\n"
+"A word about marking Python strings as candidates for translation. GNU\n"
+"xgettext recognizes the following keywords: gettext, dgettext, dcgettext,\n"
+"and gettext_noop. But those can be a lot of text to include all over your\n"
+"code. C and C++ have a trick: they use the C preprocessor. Most\n"
+"internationalized C source includes a #define for gettext() to _() so that\n"
+"what has to be written in the source is much less. Thus these are both\n"
+"translatable strings:\n"
+"\n"
+"    gettext(\"Translatable String\")\n"
+"    _(\"Translatable String\")\n"
+"\n"
+"Python of course has no preprocessor so this doesn't work so well.  Thus,\n"
+"pygettext searches only for _() by default, but see the -k/--keyword flag\n"
+"below for how to augment this.\n"
+"\n"
+" [1] http://www.python.org/workshops/1997-10/proceedings/loewis.html\n"
+" [2] http://www.gnu.org/software/gettext/gettext.html\n"
+"\n"
+"NOTE: pygettext attempts to be option and feature compatible with GNU\n"
+"xgettext where ever possible. However some options are still missing or are\n"
+"not fully implemented. Also, xgettext's use of command line switches with\n"
+"option arguments is broken, and in these cases, pygettext just defines\n"
+"additional switches.\n"
+"\n"
+"Usage: pygettext [options] inputfile ...\n"
+"\n"
+"Options:\n"
+"\n"
+"    -a\n"
+"    --extract-all\n"
+"        Extract all strings.\n"
+"\n"
+"    -d name\n"
+"    --default-domain=name\n"
+"        Rename the default output file from messages.pot to name.pot.\n"
+"\n"
+"    -E\n"
+"    --escape\n"
+"        Replace non-ASCII characters with octal escape sequences.\n"
+"\n"
+"    -D\n"
+"    --docstrings\n"
+"        Extract module, class, method, and function docstrings.  These do\n"
+"        not need to be wrapped in _() markers, and in fact cannot be for\n"
+"        Python to consider them docstrings. (See also the -X option).\n"
+"\n"
+"    -h\n"
+"    --help\n"
+"        Print this help message and exit.\n"
+"\n"
+"    -k word\n"
+"    --keyword=word\n"
+"        Keywords to look for in addition to the default set, which are:\n"
+"        %(DEFAULTKEYWORDS)s\n"
+"\n"
+"        You can have multiple -k flags on the command line.\n"
+"\n"
+"    -K\n"
+"    --no-default-keywords\n"
+"        Disable the default set of keywords (see above).  Any keywords\n"
+"        explicitly added with the -k/--keyword option are still recognized.\n"
+"\n"
+"    --no-location\n"
+"        Do not write filename/lineno location comments.\n"
+"\n"
+"    -n\n"
+"    --add-location\n"
+"        Write filename/lineno location comments indicating where each\n"
+"        extracted string is found in the source.  These lines appear before\n"
+"        each msgid.  The style of comments is controlled by the -S/--style\n"
+"        option.  This is the default.\n"
+"\n"
+"    -o filename\n"
+"    --output=filename\n"
+"        Rename the default output file from messages.pot to filename.  If\n"
+"        filename is `-' then the output is sent to standard out.\n"
+"\n"
+"    -p dir\n"
+"    --output-dir=dir\n"
+"        Output files will be placed in directory dir.\n"
+"\n"
+"    -S stylename\n"
+"    --style stylename\n"
+"        Specify which style to use for location comments.  Two styles are\n"
+"        supported:\n"
+"\n"
+"        Solaris  # File: filename, line: line-number\n"
+"        GNU      #: filename:line\n"
+"\n"
+"        The style name is case insensitive.  GNU style is the default.\n"
+"\n"
+"    -v\n"
+"    --verbose\n"
+"        Print the names of the files being processed.\n"
+"\n"
+"    -V\n"
+"    --version\n"
+"        Print the version of pygettext and exit.\n"
+"\n"
+"    -w columns\n"
+"    --width=columns\n"
+"        Set width of output to columns.\n"
+"\n"
+"    -x filename\n"
+"    --exclude-file=filename\n"
+"        Specify a file that contains a list of strings that are not be\n"
+"        extracted from the input files.  Each string to be excluded must\n"
+"        appear on a line by itself in the file.\n"
+"\n"
+"    -X filename\n"
+"    --no-docstrings=filename\n"
+"        Specify a file that contains a list of files (one per line) that\n"
+"        should not have their docstrings extracted.  This is only useful in\n"
+"        conjunction with the -D option above.\n"
+"\n"
+"If `inputfile' is -, standard input is read.\n"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:179
+#, python-format
+msgid ""
+"# SOME DESCRIPTIVE TITLE.\n"
+"# Copyright (C) YEAR ORGANIZATION\n"
+"# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.\n"
+"#\n"
+"msgid \"\"\n"
+"msgstr \"\"\n"
+"\"Project-Id-Version: PACKAGE VERSION\\n\"\n"
+"\"POT-Creation-Date: %(time)s\\n\"\n"
+"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
+"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
+"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
+"\"MIME-Version: 1.0\\n\"\n"
+"\"Content-Type: text/plain; charset=CHARSET\\n\"\n"
+"\"Content-Transfer-Encoding: ENCODING\\n\"\n"
+"\"Generated-By: pygettext.py %(version)s\\n\"\n"
+"\n"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:427
+#, python-format
+msgid "*** %(file)s:%(lineno)s: Seen unexpected token \"%(token)s\""
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:478
+#, python-format
+msgid "# File: %(filename)s, line: %(lineno)d"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:485
+#, python-format
+msgid " %(filename)s:%(lineno)d"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:562
+#, python-format
+msgid "Invalid value for --style: %s"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:570
+#, python-format
+msgid "pygettext.py (xgettext for Python) %s"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:576
+#, python-format
+msgid "--width argument must be an integer: %s"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:604
+#, python-format
+msgid "Can't read --exclude-file: %s"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:623
+msgid "Reading standard input"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:628
+#, python-format
+msgid "Working on %s"
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:665
+#, python-format
+msgid "*** Seen unexpected token \"%(token)s\""
+msgstr ""
+
+#: ..\../locale/pl/pygettext.py:666
+msgid "morethanonestring"
+msgstr ""
+
+#: ..\../toolbar/schmoderntoolbar.py:412 ..\../toolbar/schtreetoolbar.py:182
+msgid "Tools main"
+msgstr "Narzędzia główne"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:166
+msgid "File"
+msgstr "Plik"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:171
+msgid "Exit"
+msgstr "Wyjście"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:177
+msgid "Open"
+msgstr "Otwórz"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:183
+msgid "Save"
+msgstr "Zapisz"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:186
+msgid "Save as"
+msgstr "Zapisz jako"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:193
+#: ..\../toolbar/standardtoolbarbuttons.py:198
+#: ..\../toolbar/standardtoolbarbuttons.py:486
+msgid "Print"
+msgstr "Drukuj"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:205
+msgid "Clipboard"
+msgstr "Schowek"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:209
+msgid "Copy"
+msgstr "Kopiuj"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:211
+msgid "Cut"
+msgstr "Wytnij"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:213
+msgid "Paste"
+msgstr "Wklej"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:219
+msgid "Operations"
+msgstr "Operacje"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:222
+msgid "Undo"
+msgstr "Cofnij"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:224
+msgid "Redo"
+msgstr "Wznów"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:226
+#: ..\../toolbar/standardtoolbarbuttons.py:494
+msgid "Find"
+msgstr "Znajdź"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:230
+msgid "File manager"
+msgstr "Menadżer plików"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:232
+msgid "Editor"
+msgstr "Edytor"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:239
+msgid "Browser"
+msgstr "Przeglądarka"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:244
+msgid "Back"
+msgstr "Wstecz"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:247
+msgid "Forward"
+msgstr "Do przodu"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:249
+msgid "Stop"
+msgstr "Stop"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:252
+msgid "Refresh"
+msgstr "Odśwież"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:255
+msgid "Add bookmark"
+msgstr "Dodaj zakładkę"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:259
+msgid "New page"
+msgstr "Nowa strona"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:266
+msgid "Address"
+msgstr "Adres"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:487
+msgid "Print preview"
+msgstr "Podgląd wydruku"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:488
+msgid "Printer settings"
+msgstr "Ustawienia drukarki"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:495
+msgid "Replace"
+msgstr "Zamień"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:509
+msgid "View"
+msgstr "Widok"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:509
+msgid "Zoom"
+msgstr "Powiększenie"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:509
+msgid "Block elements"
+msgstr "Zablokowane elementy"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:510
+msgid "View elements"
+msgstr "Pokaż elementy"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:510
+msgid "View page source"
+msgstr "Pokaż źródło strony"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:511
+msgid "Edit page"
+msgstr "Edytuj stronę"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:512
+msgid "History"
+msgstr "Historia"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:512
+msgid "Show history panel"
+msgstr "Pokaż panel historii"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:513
+msgid "Clear history"
+msgstr "Wyczyść historię przeglądania"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:514
+msgid "Bookmarks"
+msgstr "Zakładki"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:514
+msgid "Add to bookmarks"
+msgstr "Dodaj zakładkę"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:515
+msgid "Show bookmarks panel"
+msgstr "Pokaż panel zakładek"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:516
+msgid "Downloads"
+msgstr "Pobieranie"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:516
+#: ..\../toolbar/standardtoolbarbuttons.py:518
+msgid "Show download panel"
+msgstr "Pokaż panel pobierania"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:516
+#: ..\../toolbar/standardtoolbarbuttons.py:518
+#: ..\../toolbar/standardtoolbarbuttons.py:520
+msgid "Options"
+msgstr "Opcje"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:518
+msgid "Tools"
+msgstr "Narzędzia"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:520
+msgid "General"
+msgstr "Główne"
+
+#: ..\../toolbar/standardtoolbarbuttons.py:520
+msgid "Black list"
+msgstr "Czarna lista"

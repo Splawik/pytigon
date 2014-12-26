@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+%extends "widgets/action.html"
+
+%% class
+    .popup_info btn btn-sm btn-default
+
+%% content
+    % with standard_web_browser=True
+        {{ block.super }}

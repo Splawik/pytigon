@@ -1,0 +1,1 @@
+!!!APPS=[{% for app in app_names %}'{{app}}',{% endfor %}{% for app in appset.get_ext_apps%}'{{app|safe }}',{% endfor %}]

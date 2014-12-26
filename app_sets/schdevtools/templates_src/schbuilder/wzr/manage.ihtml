@@ -1,0 +1,18 @@
+!!!#!/usr/bin/env python
+import os
+import sys
+
+sys.path.append("./../../ext_lib")
+sys.path.append("./../..")
+
+def cmd(arg, from_main=False):
+    if from_main:
+        argv = arg
+    else:
+        argv=['manage.py', arg]
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(argv)
+
+if __name__ == "__main__":
+    cmd(sys.argv, from_main=True)

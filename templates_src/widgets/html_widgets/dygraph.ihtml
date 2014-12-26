@@ -1,0 +1,15 @@
+% load exfiltry
+% load exsyntax
+
+%% all
+    %% js_standard
+
+    %% content
+        div id={{id}},,,style=width:{{width}}; height:{{height}};
+
+    %% js
+        {% jscript_link 'dygraph/dygraph-combined.js' %}
+
+    %% js2
+        script
+            .new Dygraph(document.getElementById("{{id}}"),{{data}}, { {{options}} })

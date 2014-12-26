@@ -1,0 +1,137 @@
+{# -*- coding: utf-8 -*- #}
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% pythoncode
+    % if form_edit
+        script language=python
+            def Init(self):
+                self.retdate = None
+                self['param'].EventObject=self
+
+            def OnBeforeButtonClick(self):
+                print('/schbuilder/field_param/edit/'+self['type'].GetValue()+'/')
+                self['param'].set_new_href('/schbuilder/field_param/edit/'+self['type'].GetValue()+'/')
+    %else
+        script language=python
+            def init_form(self):
+                #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
+                pass
+
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "field_up":"client://actions/go-up.png",
+                        "field_down":"client://actions/go-down.png",
+                        "field_duplicate":"client://actions/go-bottom.png"
+                    }
+                    child.set_bitmaps(bitmaps)
+
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in mp.get_body()[0].getvalue():
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+                    return True
+                elif 'field_duplicate' in href:
+                    if 'YES' in mp.get_body()[0].getvalue():
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        self.tabsort.grid.goto_last_row()
+                    return True
+                else:
+                    return None
+
+
+%% all
+    %with form_width=720 form_height=480 show_title_bar=1 title=_("Fields") vform=True
+        {{ block.super }}
+
+%% list_content_header2
+    table
+        tr
+            th
+                label for=id_field_list...Select field type:
+            td width=210
+                select name=field_list,,,id=id_field_list,,,width=200
+                    %for item in object_list.model|choices_from_field:"type"
+                        option value={{item.0}}
+                            {{item.0}}
+            td align=left
+                % list_action "add_field" "New field"
+
+
+%% list_content_header
+    % widget class='menu' id='add_field' title='New field':
+        %for item in object_list.model|choices_from_field:"type"
+            li
+                a class=btn btn-primary btn-sm,,,href=../../{{item.0}}/add
+                    {{item.0}}
+
+%% list_row_header
+    th...Name
+    th...Opis
+    th...Typ
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.description}}
+    td...{{object.type}}
+
+%% list_row_actions
+    {{block.super}}
+    {% if not forloop.first %}
+        % row_actions:...field_up,Move up
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...field_down,Move down
+    {% endif %}
+    
+    % row_actions:...field_duplicate,Duplicate
+
+
+%% table_header_edit
+  h2...Lista pól tabeli
+
+%% row_edit
+    %if object.is_rel or object.has_choices
+        % form:
+                "parent", "name", "description", "null", "blank", "editable", "unique", "db_index", "default",  "help_text"
+        %if object.is_rel
+            % form_item rel_to:
+                select name=rel_to,,,id=id_rel_to,,,class=select form-control
+                    %if not object.rel_to or object.rel_to == ""
+                        option selected=selected,,,value=...---------
+                    %else
+                        option value=...---------
+                    %for model in object.get_models
+                        %if model == object.rel_to
+                            option value={{model|safe}},,,selected=selected...{{model|safe}}
+                        %else
+                            option value={{model|safe}}...{{model|safe}}
+        %else
+            % form_item rel_to:
+                select name=choices,,,id=id_choices,,,class=select form-control
+                    %if not object.choices or object.choices == ""
+                        option selected=selected,,,value=...---------
+                    %else
+                        option value=...---------
+                    %for choice in object.parent.parent.schchoice_set.all
+                        %if choice.name == object.choices
+                            option value={{choice.name}},,,selected=selected...{{choice.name}}
+                        %else
+                            option value={{choice.name}}...{{choice.name}}
+        % form:
+                "param"
+    %else
+        % form:
+                "parent", "name", "description", "null", "blank", "editable", "unique", "db_index", "default",  "help_text", "param"
+    {{form.type.as_hidden}}
+

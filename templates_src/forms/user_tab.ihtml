@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% tabsort_class
+    .class="tabsort table" {% if not standard_web_browser %}param="no_actions"{% endif %}
+
+%% list_row_actions
+
+
+%% list_content_body
+    % if object_list:
+        {{ block.super }}
+
+
+%% list_row_header_end
+
+
+%% list_row_header_start
+
+
+%% list_row_header
+    %% user_header
+
+
+%% list_full_row
+    %% user_row
