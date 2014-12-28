@@ -232,10 +232,15 @@ def wait_for_result(request):
 
 def edit_task(request, id):
     
-    task_manager = get_process_manager()
-    object = task_manager.thread_info(int(id))
-    messages = task_manager.get_messages(int(id))
-    return { 'object': object, 'messages': messages }
+    if request.POST:
+        task_manager = get_process_manager()
+        task_manager.kill_thread(int(id))
+        return { 'POST': "RETURN_OK" }
+    else:
+        task_manager = get_process_manager()
+        object = task_manager.thread_info(int(id))
+        messages = task_manager.get_messages(int(id))
+        return { 'object': object, 'messages': messages }
     
 
 @dict_to_template('tasks/v_kill_task.html')

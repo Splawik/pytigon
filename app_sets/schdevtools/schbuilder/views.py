@@ -268,8 +268,10 @@ def gen(request, pk):
     
         views = app.schview_set.all()
         forms = app.schform_set.all()
+        tasks = app.schtask_set.all()
         template_to_file(base_path, "views", app.name+"/views.py",  {'views': views, 'forms': forms, 'app': app})
         template_to_file(base_path, "urls",  app.name+"/urls.py",  {'views': views, 'templates': templates, 'tables': tables, 'forms': forms, 'app': app, 'gfields': gfields})
+        template_to_file(base_path, "tasks", app.name+"/tasks.py",  {'tasks': tasks, 'app': app})
     
         for template in templates:
             str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")

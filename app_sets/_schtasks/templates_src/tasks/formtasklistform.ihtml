@@ -6,7 +6,7 @@
 
 
 %% all
-    %with form_width=800 form_height=600 show_title_bar=1 title='Task list'
+    %with form_width=800 form_height=600 show_title_bar=1 title='Task'
         {{ block.super }}
 
 
@@ -39,3 +39,7 @@
             % else:
                 % row_actions:
                     .edit2__task,Edit,edit
+
+%% content_start_ok_cancel
+    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
+    button type=button,,,class=btn btn-danger,,,onclick=javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;..._(Kill task)

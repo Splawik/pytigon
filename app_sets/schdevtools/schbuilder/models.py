@@ -268,6 +268,7 @@ class SChApp(models.Model):
     model_code = models.TextField('Model code', null=True, blank=True, editable=False, )
     view_code = models.TextField('View code', null=True, blank=True, editable=False, )
     urls_code = models.TextField('Urls code', null=True, blank=True, editable=False, )
+    tasks_code = models.TextField('Tasks code', null=True, blank=True, editable=True, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     
 
@@ -959,6 +960,35 @@ class SChFormField(models.Model):
         return ret
     
 admin.site.register(SChFormField)
+
+
+
+@python_2_unicode_compatible
+class SChTask(models.Model):
+    
+    class Meta:
+        verbose_name = _("SChTask")
+        verbose_name_plural = _("SChTask")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        
+
+    
+
+    
+
+    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
+    code = models.TextField('Code', null=True, blank=True, editable=True, )
+    doc = models.TextField('Doc', null=True, blank=True, editable=True, )
+    
+
+    def transform_template_name(self, request, template_name):
+        if '/tasks_code/py/editor' in request.path:
+            if template_name == 'schsys/db_field_edt.html':
+                return 'schbuilder/db_field_edt_task.html'
+        return template_name
+    
+admin.site.register(SChTask)
 
 
 

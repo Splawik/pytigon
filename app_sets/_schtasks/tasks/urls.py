@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     ('thread_info$', views.thread_info, {}),
     ('kill_all$', views.kill_all, {}),
     ('wait_for_result$', views.wait_for_result, {}),
-    ('form/TaskListForm/(?P<id>\d+)/edit2__task$', views.edit_task, {}),
+    ('form/TaskListForm/(?P<id>\d+)/(edit2__)*task$', views.edit_task, {}),
     ('form/TaskListForm/(?P<id>\d+)/delete2__task$', views.kill_task, {}),
     
     

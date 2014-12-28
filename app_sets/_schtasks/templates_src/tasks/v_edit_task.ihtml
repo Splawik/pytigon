@@ -16,7 +16,7 @@
             self.tuser = wx.Timer(self)
             self.tuser.Start(250)
             self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
-            self.cancel.Bind(wx.EVT_BUTTON, self.on_exit)
+            self.task_progress.SetValue(0)
                 
         def transfer(self):
             test = False
@@ -28,7 +28,17 @@
             lines = self.schjson.loads(s)
             for line in lines:
                 if line!="":
-                    self.cmd.AppendText(line)
+                    if line.startswith('$$$'):
+                        x = line[3:].split(':')
+                        fun = x[0]
+                        if len(x)>1:
+                            parm = x[1]
+                        else:
+                            parm = None
+                        if fun == 'PROGRESS':
+                            self.task_progress.SetValue(int(parm))
+                    else:
+                        self.cmd.AppendText(line)
                     self.start_id += 1
                     test = True
             if test:
@@ -63,17 +73,32 @@
     %with form_width=800 form_height=600 show_title_bar=1 title='Edit task'
         {{ block.super }}
 
+%% body_body
+
 %% body
+    % if not show_form:
+        {{ block.super }}
+        div class=content
+            div class=panel
+                div class=panel-body
+                    % with show_form=True:
+                        {{ block.super }}
+                    button type=button,,,class=btn btn-danger,,,id=kill_task...Kill task
+                    script 
+                        {:}
+                            $('#kill_task').click(
+                                function():
+                                    on_kill(
+                                        function():
+                                            window.location = "/"
+    % else:
+        {{ block.super }}
+
+
+%% row_edit_form
+    h3 class=panel-title...{{object.title}} (id={{object.id}})
+    br
     table class=table
-        tr
-            th...Property
-            th...Value
-        tr
-            th...id
-            td...{{object.id}}
-        tr
-            th...title
-            td...{{object.title}}
         tr
             th...status
             td...{{object.status}}
@@ -88,57 +113,110 @@
                 th...time_to
                 td...{{object.time_to|isoformat_short}}        
 
+        % if standard_web_browser:
+            % if object.status < 2:
+                tr:::td colspan=2
+                    div class=ext_padding            
+                        div class=form-group
+                            label class=control-label,,,for=cmd
+                                .Enter command:
+                            input type=text,,,class=form-control,,,id=cmd,,,name=cmd,,,aria-describedby=cmdStatus
+            tr:::td colspan=2
+                div id=cmd_list_{{object.id}},,,style=overflow-y:scroll;height:100px;
+                    % if object.status > 1:
+                        % for message in messages:
+                            % if not '$$$' in message:
+                                {{message}} <br />
+            % if object.status < 2:
+                tr
+                    th...Progress:
+                    td
+                        div class=progress
+                            div id=task_progress,,,class=progress-bar progress-bar-striped active,,,role=progressbar,,,style=width: 50%
 
-    %if standard_web_browser:
-        % if object.status < 2:
-            div class=form-group has-success has-feedback,,,width=100%
-                label class=control-label,,,for=cmd
-                    .Enter command:
-                input type=text,,,class=form-control,,,id=cmd,,,name=cmd,,,aria-describedby=cmdStatus
-                span class=glyphicon glyphicon-ok form-control-feedback,,,aria-hidden=true
-                span id=cmdStatus,,,class=sr-only...(success)
-     
-        div id=cmd_list_{{object.id}},,,style=overflow-y:scroll;height:100px;
-            % if object.status > 1:
-                % for message in messages:
-                    {{message}} <br />
-
-        % if object.status < 2:
-            script 
-                {:}
-                    function on_timer():
-                        var obj = $('#cmd_list_{{object.id}}')
-                        if ( obj.length ):
-                            $.post( 
-                                "/tasks/get_messages"
-                                { id: "{{object.id}}", id_start: start_id_{{object.id}} } 
-                                function(data):
-                                    start_id_{{object.id}} += data.length
-                                    for (pos in data):
-                                        obj.append(data[pos])
-                                        obj.append("<br />")
-                                        obj[0].scrollTop = obj[0].scrollHeight
-                        else:
-                            clearInterval(timer_{{object.id}})
-                
-                    var timer_{{object.id}}=setInterval( on_timer, 1000)
-                    on_timer()
-                    var start_id_{{object.id}} = 0
-
-                    $("#cmd").keyup(
-                        function (e):
-                            if (e.keyCode == 13):
+            % if object.status < 2:
+                script 
+                    {:}
+                        function on_edit_ok(form):
+                            var filter
+                            on_kill(
+                                function():
+                                    filter = form.closest('div.content').find('form.TableFiltr')
+                                    $("div.dialog-form").fadeTo( "slow", 0.5 )
+                                    if(filter.length>0):
+                                        filter.attr('action','{{request.path}}/../../')
+                                        filter.submit()
+                            
+                        function on_timer():
+                            var obj = $('#cmd_list_{{object.id}}')
+                            if ( obj.length ):
                                 $.post( 
-                                    "/tasks/put_message"
-                                    { id: "{{object.id}}", message: $('#cmd').val()+"\n" } 
+                                    "/tasks/get_messages"
+                                    { id: "{{object.id}}", id_start: start_id_{{object.id}} } 
                                     function(data):
-                                        $('#cmd').val("")                      
-    % else:
-        table
+                                        start_id_{{object.id}} += data.length
+                                        for (pos in data):
+                                            if(data[pos].substring(0,3)=='$$$'):
+                                                var x = data[pos].slice(3).split(':')
+                                                var fun = x[0]
+                                                var parm = null
+                                                if(x.length>1):
+                                                    parm = x[1]
+                                                if(fun=="PROGRESS"):
+                                                    $('#task_progress').css('width', parm+'%')
+                                            else:
+                                                obj.append(data[pos])
+                                                obj.append("<br />")
+                                                obj[0].scrollTop = obj[0].scrollHeight
+                            else:
+                                clearInterval(timer_{{object.id}})
+                    
+                        var timer_{{object.id}}=setInterval( on_timer, 1000)
+                        on_timer()
+                        var start_id_{{object.id}} = 0
+
+                        $(window).keydown(
+                            function(event):
+                                if(event.keyCode == 13):
+                                  event.preventDefault()
+                                  return false
+                                
+                                
+                        $("#cmd").keyup(
+                            function (e):
+                                if (e.keyCode == 13):
+                                    $.post( 
+                                        "/tasks/put_message"
+                                        { id: "{{object.id}}", message: $('#cmd').val()+"\n" } 
+                                        function(data):
+                                            $('#cmd').val("")                      
+                        
+                        function on_kill(fun):
+                            BootstrapDialog.confirm(
+                                'Kill task, are you sure?'
+                                function(result):
+                                    if(result):
+                                        $.post( 
+                                            "/tasks/kill_thread"
+                                            { id: "{{object.id}}", } 
+                                            fun
+                            
+        % else:
             tr
-                td width=100%-10
+                td colspan=2,,,width=100%-10
+                    CTRLGAUGE name=task_progress,,,width=100%-10
+            tr
+                td colspan=2,,,width=100%-10
                     strong...Enter command: <br />
                     CTRLTEXT name=txt,,,param=PROCESS_ENTER,,,width=100%-10
+            </table><table>
             tr
-                td
+                td width=100%
                     CTRLHTMLLISTBOX name=cmd,,,width=100%-10,,,height=100%-50
+
+%% form_ok_cancel
+    % if not standard_web_browser
+        table width=100%,,,cellspacing=0,,,cellpadding=3
+            tr
+                td align=center
+                    <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="Close"></CTRLBUTTON><input type="submit" value="Kill task" name="OKBUTTON">

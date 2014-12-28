@@ -21,6 +21,7 @@
                     "add_models":"client://mimetypes/package-x-generic.png",
                     "add_views":"client://batch/code.png",
                     "add_urls":"client://actions/format-indent-less.png",
+                    "add_tasks":"client://apps/utilities-terminal.png",
                     "urls":"client://places/start-here.png",
                     "doc":"client://apps/help-browser.png",
                     "forms":"client://mimetypes/x-office-document.png",
@@ -77,6 +78,7 @@
         field_edit/model_code,Additional models,add_models,_top2
         field_edit/view_code,Additional views,add_views,_top2
         field_edit/urls_code,Additional urls,add_urls,_top2
+        field_edit/tasks_code,Additional task code,add_tasks,_top2
         field_edit/doc,Doc,doc,_top2
         delete
 

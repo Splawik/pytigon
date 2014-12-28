@@ -12,8 +12,11 @@
     {% jscript_link 'bootstrap.plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'bootstrap.plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
+    {% jscript_link 'bootstrap.plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+
     {% jscript_link 'jquery/js/jquery-ui.min.js' %}
     {% jscript_link 'jquery.plugins/bootstrap-typeahead.js' %}
+
     {% jscript_link 'jquery.plugins/jquery.form.js' %}
 
     {% jscript_link 'jquery.plugins/ladda/spin.min.js' %}
@@ -231,6 +234,7 @@
     {% css_link 'themes/default.css' %}
 
     {% css_link 'bootstrap.plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
+    {% css_link 'bootstrap.plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
 
     {% css_link 'jquery.plugins/ladda/ladda-themeless.min.css' %}
 
@@ -311,8 +315,9 @@
                 div class=modal-body 
                     div class=dialog-data
                 div class=modal-footer
-                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
-                    button type=button,,,class=btn btn-primary,,,onclick=javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;..._(OK)
+                    %% content_start_ok_cancel
+                        button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
+                        button type=button,,,class=btn btn-primary,,,onclick=javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;..._(OK)
 
 
     div class=dialog-form-info modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelInfo

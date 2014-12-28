@@ -218,16 +218,6 @@ class CodeEditor(stc.StyledTextCtrl):
                 if hasattr(self.GetParent(), 'OnAutoCompCmd'):
                     self.GetParent().OnAutoCompCmd(self, pos)
         elif key == wx.WXK_NUMPAD_ENTER or key == wx.WXK_RETURN:
-
-# kw = (keyword.kwlist)[:] kw.append("zzzzzz?2") kw.append("aaaaa?2")
-# kw.append("this_is_a_longer_value")
-#
-# kw.sort()  # Python sorts are case sensitive self.AutoCompSetIgnoreCase(False)
-# # so this needs to match
-#
-# for i in range(len(kw)): if kw[i] in keyword.kwlist: kw[i] = kw[i] + "?1"
-#
-# self.AutoCompShow(0, (" ").join(kw))
             self._enter_key()
         elif key == wx.WXK_ESCAPE:
             wx.GetApp().GetTopWindow().OnCloseTab(event)
@@ -236,17 +226,17 @@ class CodeEditor(stc.StyledTextCtrl):
         else:
             event.Skip()
 
+
     def _enter_key(self):
-        (line, pos) = self.GetCurLine()
-        line = line.replace('\n', '').replace('\r', '')
-        line2 = line.lstrip()
-        space_len = len(line) - len(line2)
+        (line, space_len) = self.GetCurLine()
+        pos = self.GetCurrentPos()
+        indent = self.GetLineIndentation(self.GetCurrentLine())
+        if space_len > indent:
+            space_len = indent
         if line.rstrip()[-1:] == ':':
             space_len += 4
         txt = '\n' + ' ' * space_len
-        pos = self.GetCurrentPos()
         self.InsertText(pos, txt)
-# self.LineDown() self.LineEnd()
         pos += len(txt)
         self.SetCurrentPos(pos)
         self.SetSelection(pos, pos)
