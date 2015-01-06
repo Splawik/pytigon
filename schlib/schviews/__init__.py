@@ -532,7 +532,7 @@ class GenericRows(object):
         return self._append(url, fun)
 
     def add(self):
-        url = r'(?P<param>[\w=_-]*)/add$'
+        url = r'(?P<add_param>[\w=_-]*)/add$'
 
 
         class CreateView(generic.CreateView):
@@ -571,8 +571,8 @@ class GenericRows(object):
                     if ppk > 0:
                         self.object.parent = self.pmodel.objects.get(id=ppk)
                 if hasattr(self.model, 'init_new'):
-                    if kwargs['param'] and kwargs['param'] != '-':
-                        self.init_form = self.object.init_new(kwargs['param'])
+                    if kwargs['add_param'] and kwargs['add_param'] != '-':
+                        self.init_form = self.object.init_new(kwargs['add_param'])
                     else:
                         self.init_form = self.object.init_new()
 
@@ -624,17 +624,21 @@ class GenericRows(object):
                 self.object = form.save(commit=False)
 
                 if hasattr(self.object, 'init_new'):
-                    if self.kwargs['param'] and self.kwargs['param'] != '-':
-                        self.init_form = self.object.init_new(self.kwargs['param'])
+                    if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
+                        self.init_form = self.object.init_new(self.kwargs['add_param'])
                     else:
                         self.init_form = self.object.init_new()
 
                 if 'parent_pk' in self.kwargs and hasattr(self.object, 'parent_id'):
                     self.object.parent_id = int(self.kwargs['parent_pk'])
 
+                if request and request.POST:
+                    p = request.POST
+                else:
+                    p = {}
                 if self.init_form:
                     for pos in self.init_form:
-                        if hasattr(self.object, pos):
+                        if hasattr(self.object, pos) and not pos in p:
                             setattr(self.object, pos, self.init_form[pos])
 
                 if hasattr(self.object, 'post'):

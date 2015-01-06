@@ -2,8 +2,8 @@
 import os
 from ext_lib import PythonTidy
 
-#dirnames = ['./schcli', './schlib', './schserw', './app_sets', './templates_src']
-dirnames = ['./app_sets/schods', ]
+#dirnames = ['./schcli', './schlib', './schserw', './app_pack', './templates_src']
+dirnames = ['./app_pack/schods', ]
 
 signature="""#!/usr/bin/python
 # -*- coding: utf-8 -*-

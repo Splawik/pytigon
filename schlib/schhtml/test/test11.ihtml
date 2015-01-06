@@ -54,34 +54,34 @@ html
                 td ...1
                 td ...Wibracje
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/OSTRZ_-_Ogolny_znak_ostrzegawczy_(ostrzezenie,_ryzyko_niebezpieczenstwa).jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/OSTRZ_-_Ogolny_znak_ostrzegawczy_(ostrzezenie,_ryzyko_niebezpieczenstwa).jpg
                 td ...A
                 td ...Ogranicz czas pracy w narażeniu tak aby NDN...1,
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Ogolny_znak_nakazu.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Ogolny_znak_nakazu.jpg
             tr 
                 td ...2
                 td ...Hałas
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_OSTRZ_-_Ostrzezenie_przed_silnym_halasem.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_OSTRZ_-_Ostrzezenie_przed_silnym_halasem.jpg
                 td ...C
                 td ...Podczs wykonywania prac remontowych i konserwacyjnych, powodujących duży hałas używaj środków ochrony słuchu,
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Nakaz_stosowania_ochrony_sluchu.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Nakaz_stosowania_ochrony_sluchu.jpg
             tr 
                 td ...3
                 td ...Zapylenie
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/INNE_-_Zapylenie.png
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/INNE_-_Zapylenie.png
                 td ...D
                 td ...Zapylenie może występować podczas prac porządkowych lub podczas usuwania awarii, stosuj półmaski przeciwpyłowe,
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
             tr 
                 td ...4
                 td ...Zapylenie
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/INNE_-_Zapylenie.png
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/INNE_-_Zapylenie.png
                 td 
                 td 
                 td 
@@ -89,17 +89,17 @@ html
                 td ...5
                 td ...Kontakt z substancjami chemicznymi i olejami technicznymi
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/OSTRZ_-_Substancja_szkodliwa_lub_drazniaca.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/OSTRZ_-_Substancja_szkodliwa_lub_drazniaca.jpg
                 td ...C2
                 td ...Podczas prac remontowych i konserwacyjnych z użyciem środków chemicznych, zapoznaj się z oceną ryzyka i kartą charakterystyki używanych substancji, stosuj się do zawartych tam zaleceń.,\n\n                                                Dbaj o higienę osobistą,
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_NAK_-_Przeczytaj_instrukcje.jpg
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Nakaz_mycia_rak.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_NAK_-_Przeczytaj_instrukcje.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Nakaz_mycia_rak.jpg
             tr 
                 td ...6
                 td ...Hałas
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_OSTRZ_-_Ostrzezenie_przed_silnym_halasem.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_OSTRZ_-_Ostrzezenie_przed_silnym_halasem.jpg
                 td 
                 td 
                 td 
@@ -107,11 +107,11 @@ html
                 td ...7
                 td ...Zapylenie
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/INNE_-_Zapylenie.png
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/INNE_-_Zapylenie.png
                 td ...A
                 td ...Zapylenie może występować podczas prac porządkowych lub podczas usuwania awarii, stosuj półmaski przeciwpyłowe,
                 td 
-                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
+                    img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
         br 
         table border=1,,,width=100%
             tr 
@@ -152,13 +152,13 @@ html
                     table width=80%
                         tr 
                             td 
-                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Nakaz_stosowania_ochrony_sluchu.jpg
+                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Nakaz_stosowania_ochrony_sluchu.jpg
                             td 
-                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
+                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_NAK_-_Nakaz_stosowania_maski_przeciwpylowej.jpg
                             td 
-                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/UZ_NAK_-_Przeczytaj_instrukcje.jpg
+                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/UZ_NAK_-_Przeczytaj_instrukcje.jpg
                             td 
-                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Nakaz_mycia_rak.jpg
+                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Nakaz_mycia_rak.jpg
                         tr 
                             td ...Stosuj ochronę słuchu
                             td ...Stosuj ochronę dróg oddechowych
@@ -170,7 +170,7 @@ html
                     table 
                         tr 
                             td 
-                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_sets/schbhp/icons/NAKAZ_-_Ogolny_znak_nakazu.jpg
+                                img width=64,,,height=64,,,src=/home/scholaj/prj/intratrapper/program/app_pack/schbhp/icons/NAKAZ_-_Ogolny_znak_nakazu.jpg
                         tr 
                             td ...Ograniczenie czasu pracy
             tr 

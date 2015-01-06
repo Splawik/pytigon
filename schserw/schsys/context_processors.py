@@ -85,7 +85,7 @@ def browser_type(request):
                 else:
                     return 'tablet'
             else:
-                return 'default'
+                return 'tablet'
         else:
             return 'hybrid'
     else:
@@ -325,6 +325,11 @@ def sch_standard(request):
         d_template = d_template.replace('.html', '_'+lng+'.html')
 
     ret = {
+        #'application_template': 'standard',
+        #'application_template': 'traditional',
+        #'application_template': 'simple',
+        #'application_template': 'mobile',
+        'application_template': 'tablet',
         'standard_web_browser': standard,
         'app_manager': AppManager(request),
         'form_edit': form_edit,

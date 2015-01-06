@@ -4,10 +4,18 @@
 
 %% heading
 
+%% page_head
+
 %% menu_start
 %% menu
-  %% topmenu_start
-  %% topmenu_end
-  %% submenu_start
-  %% submenu_end
+    %% topmenu_start
+    %% topmenu_end
+    %% submenu_start
+    %% submenu_end
 %% menu_end
+
+%% body_init
+
+%% tabs
+    % with NO_TABS=True:
+        {{block.super}}

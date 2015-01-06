@@ -211,6 +211,7 @@ class SchTableGrid(wx.grid.Grid):
 
             ]
         self.GetParent().set_acc_key_tab(aTable)
+        #self.set_acc_key_tab(aTable)
 
 
 

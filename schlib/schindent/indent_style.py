@@ -39,9 +39,9 @@ def translate(s):
 def iter_lines(f, f_name, lang):    
     in_table = 0
     if f_name:
-        if 'app_sets' in f_name:
-            l = f_name.replace('\\','/').split('app_sets')
-            base_path = l[0]+"app_sets/" + l[1].split('/')[1]+"/"
+        if 'app_pack' in f_name:
+            l = f_name.replace('\\','/').split('app_pack')
+            base_path = l[0]+"app_pack/" + l[1].split('/')[1]+"/"
         else:
             l = f_name.replace('\\','/').split('templates_src')
             base_path = l[0]+"schserw/"

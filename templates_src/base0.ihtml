@@ -70,29 +70,31 @@
 
             %% menu2
 
-        %% body_body
-            %% login
+        %% body_init
+        %% tabs
+            %% body_body
+                %% login
 
-            %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
-                %% panel
-                %% messages
-                    % if messages:
-                        % for message in messages:
-                            % ifequal message|slice:"-1:" '!'
-                                    ul class=errorlist
-                                        li...{{message}}
-                                {% else %}
-                                    ul class=messagelist
-                                        li...{{message}}
-                %% navglobal
-                %% sidebar
+                %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
+                    %% panel
+                    %% messages
+                        % if messages:
+                            % for message in messages:
+                                % ifequal message|slice:"-1:" '!'
+                                        ul class=errorlist
+                                            li...{{message}}
+                                    {% else %}
+                                        ul class=messagelist
+                                            li...{{message}}
+                    %% navglobal
+                    %% sidebar
 
-                %% style_content_start
-                %% content_start
-                %% no_content
-                    %% content
-                %% content_end
-                %% style_content_end
+                    %% style_content_start
+                    %% content_start
+                    %% no_content
+                        %% content
+                    %% content_end
+                    %% style_content_end
 
 
     %% html_widgets_init

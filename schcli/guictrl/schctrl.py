@@ -1948,7 +1948,6 @@ class DBCHOICE_EXT(POPUPHTML):
 class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
 
     def __init__(self, *args, **kwds):
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         SchBaseCtrl.__init__(self, args, kwds)
         kwds['label'] = self.label
         kwds['style'] = wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE

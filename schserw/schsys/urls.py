@@ -28,12 +28,6 @@ urlpatterns = patterns(
     (r'tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$', 'schserw.schsys.views.tabdialog'),
     (r'table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', 'schserw.schsys.views.tbl'),
 
-    (r'thread/-/form/list$', 'schserw.schsys.views.thread_list' ),
-    (r'thread/(?P<thread_id>.+)/edit/$', 'schserw.schsys.views.thread_edit'),
-    (r'thread/(?P<thread_id>.+)/communicate/$', 'schserw.schsys.views.thread_communicate'),
-    (r'thread/(?P<thread_id>.+)/(?P<start_id>.+)/get_messages/$', 'schserw.schsys.views.thread_get_messages'),
-    (r'thread/(?P<thread_id>.+)/delete/$', 'schserw.schsys.views.thread_kill'),
-    
     (r'db/field/open/(?P<file>.*)/$', 'schlib.schtools.dbtools.open_db_field'),
     (r'db/field/save/(?P<file>.*)/$', 'schlib.schtools.dbtools.save_db_field'),
     (r'widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),

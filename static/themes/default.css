@@ -98,3 +98,24 @@ td.control {
     width:100%;
     padding:10px;
 }
+
+
+.tab-tab {
+    margin: 0px 0px -5px 0px;
+}
+
+.menu-href {
+    margin: -1px 0px 4px 0px;
+}
+
+
+#tabs2 > li > a {
+    line-height: 0.4;
+}
+
+
+#tabs2 button.close {
+  position:relative;
+  left: -4px;
+  margin: -26px 0px 0px 0px;
+}

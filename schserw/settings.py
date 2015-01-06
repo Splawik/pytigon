@@ -66,7 +66,7 @@ else:
     _STATIC_URL = '/static/'
 
 
-MEDIA_ROOT = ROOT_PATH + '/app_sets'
+MEDIA_ROOT = ROOT_PATH + '/app_pack'
 if len(URL_POSTFIX) > 0:
     MEDIA_URL = '/' + URL_POSTFIX + '/site_media/'
 else:
@@ -92,13 +92,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.doc.XViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'schserw.schmiddleware.schpost.LoginToSession',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
-    'schserw.schmiddleware.schpost.ViewPost',
-    'schserw.schmiddleware.schpost.ViewRequests',
+    'schserw.schmiddleware.schpost.LoginToSession',
+    #'schserw.schmiddleware.schpost.ViewPost',
+    #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
     )
 

@@ -236,7 +236,7 @@ def plugins(request, app, plugin_name):
                  'rb')
     except:
         try:
-            f = open(settings.ROOT_PATH + '/app_sets/' + app + '/schplugins/'
+            f = open(settings.ROOT_PATH + '/app_pack/' + app + '/schplugins/'
                       + plugin_name + '.zip', 'rb')
         except:
             raise Http404
@@ -244,44 +244,3 @@ def plugins(request, app, plugin_name):
     f.close()
     return HttpResponse(s, mimetype='application/zip')
 
-
-def thread_list(request):
-    l = get_process_manager().list_threads()
-    user_dict = { 'object_list': l }
-    c=RequestContext(request,user_dict)
-    return render_to_response('schsys/thread_list.html', context_instance=c)
-
-
-def thread_edit(request, thread_id):
-    i = get_process_manager().thread_info(thread_id)
-    if i:
-        user_dict = { 'object': i }
-    else:
-        user_dict = { 'object': { 'id': 0, 'title': 'object deleted' }}
-        
-    c=RequestContext(request,user_dict)
-    return render_to_response('schsys/thread_info.html', context_instance=c)
-
-
-def thread_communicate(request, thread_id):
-    if request.POST:
-        if 'value' in request.POST:
-            value = request.POST['value']
-            get_process_manager().put_message(thread_id, value)
-    l = get_process_manager().pop_messages(thread_id)
-    value = schjson.json_dumps(l)
-    return HttpResponse(value, mimetype="application/json")
-
-def thread_get_messages(request, thread_id, start_id=0):
-    if request.POST:
-        if 'value' in request.POST:
-            value = request.POST['value']
-            get_process_manager().put_message(thread_id, value)
-    l = get_task_manager().get_messages(thread_id, start_id)
-    value = schjson.json_dumps(l)
-    return HttpResponse(value)
-
-
-def thread_kill(request, thread_id):
-    get_process_manager().kill_thread(thread_id)
-    return HttpResponseRedirect("/schsys/thread/-/form/list")

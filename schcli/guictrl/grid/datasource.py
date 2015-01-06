@@ -37,6 +37,7 @@ class DataSource(SchGridTableBase):
         self.last_page = None
         self.max_count = self.proxy.get_max_count()
         self.rec_count = self.max_count
+        self.last_row_count = self.max_count
 
         self.default_rec = self.proxy.GetDefaultRec()
 

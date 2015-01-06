@@ -370,10 +370,10 @@ class InstallWizard(Wizard):
 
     def install(self):
         test_update = True
-        extract_to = ROOT_PATH + '/app_sets/' + self.app_name
+        extract_to = ROOT_PATH + '/app_pack/' + self.app_name
         try:
-            if not os.path.exists(ROOT_PATH + '/app_sets'):
-                os.mkdir(ROOT_PATH + '/app_sets')
+            if not os.path.exists(ROOT_PATH + '/app_pack'):
+                os.mkdir(ROOT_PATH + '/app_pack')
             if not os.path.exists(extract_to):
                 os.mkdir(extract_to)
                 test_update = False
@@ -467,7 +467,7 @@ def main_init(argv):
             _DEBUG = 1
         elif opt in ('-a', '--app_set'):
             global CWD_PATH
-            CWD_PATH = ROOT_PATH + '/app_sets/' + arg.strip()
+            CWD_PATH = ROOT_PATH + '/app_pack/' + arg.strip()
             test_app_set = True            
         elif opt == '--syncdb':
             sync = True
@@ -492,15 +492,15 @@ def main_init(argv):
                 prg_name = args[0].split('/')[-1].split('\\')[-1]
                 if '.ptig' in prg_name.lower():
                     prg_name2 = prg_name.split('.')[0]
-                    #if not os.path.exists(ROOT_PATH + '/app_sets/' + prg_name2):
+                    #if not os.path.exists(ROOT_PATH + '/app_pack/' + prg_name2):
                     if not install_pti(args[0], prg_name2):
                         return (None, None)
-                    CWD_PATH = ROOT_PATH + '/app_sets/' + prg_name2
+                    CWD_PATH = ROOT_PATH + '/app_pack/' + prg_name2
                 else:
                     usage()
                     sys.exit(2)
         else:
-            for ff in os.listdir(ROOT_PATH + '/app_sets/'):
+            for ff in os.listdir(ROOT_PATH + '/app_pack/'):
                 choices.append(ff)
             dlg = wx.SingleChoiceDialog(None,
                                         _('select the application to run')
@@ -508,7 +508,7 @@ def main_init(argv):
                                         wx.CHOICEDLG_STYLE)
             if dlg.ShowModal() == wx.ID_OK:
                 dlg.GetStringSelection()
-                CWD_PATH = ROOT_PATH + '/app_sets/' + dlg.GetStringSelection()
+                CWD_PATH = ROOT_PATH + '/app_pack/' + dlg.GetStringSelection()
                 dlg.Destroy()
             else:
                 dlg.Destroy()

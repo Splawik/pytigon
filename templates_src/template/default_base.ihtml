@@ -7,12 +7,17 @@
 % load crispy_forms_tags
 
 %% js_scripts_base
+    {% jscript_link 'pythonjs.js' %}
     {% jscript_link 'jquery/js/jquery.min.js' %}
+    {% jscript_link 'react/react.min.js' %}
+    {% jscript_link 'react/JSXTransformer.js' %}
+    {% jscript_link 'react-bootstrap/react-bootstrap.min.js' %}
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
     {% jscript_link 'bootstrap.plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'bootstrap.plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
     {% jscript_link 'bootstrap.plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+    {% jscript_link 'bootstrap.plugins/tabdrop/js/bootstrap-tabdrop.js' %}
 
     {% jscript_link 'jquery/js/jquery-ui.min.js' %}
     {% jscript_link 'jquery.plugins/bootstrap-typeahead.js' %}
@@ -33,141 +38,17 @@
         {% jscript_link 'themes/material/js/material.min.js' %}
 
 
-%% jquery_init{:}
-    if(typeof IS_POPUP === 'undefined'):
-        var IS_POPUP = false
-        var SUBWIN = false
-    else:
-        SUBWIN = true
-
-    if(!SUBWIN):
-        function can_popup():
-            if(IS_POPUP):
-                console.log("not can popup")
-                return false
-            else:
-                console.log("can popup")
-                return true
-
-        $(window).load(function() { {% if scroll_table %}stick_header();{% endif %} });
-        $(
-            function():
-                var $tabs
-                $tabs = $("#menu_tabs").tabs()
-                $('#tabs a:eq({{app_manager.get_menu_id}})').tab('show')
-
-%% jquery_init_once {:}
-    if(!SUBWIN):
-        {% block jquery_ext %}{% endblock %}
-
-        function popup_init():
-            $('div.dialog-form').on(
-                'hide.bs.modal'
-                function (e):
-                    IS_POPUP = false
-                    $(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
-                    console.log("IS_POPUP=false, dialog removed")
-
-            $('a.popup').click(
-                function():
-                    l = Ladda.create(this)
-                    if(is_hybrid()):
-                        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data")
-                        $('div.dialog-form').modal()
-                    else:
-                        if(can_popup()):
-                            $("div.dialog-data").load($(this).attr("href"),null,dialog_ex_load1)
-                        else:
-                            l.start()
-                            $(".inline_dialog").remove()
-                            $("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter($(this).parents("tr"))
-                            $("div.dialog-data-inner").load($(this).attr("href"),null,function(responseText, status, response) { dialog_ex_load2(responseText, status, response); l.stop(); } )
-                    return false
-
-            $('a.popup_info').click(
-                function():
-                    if(is_hybrid()):
-                        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-info")
-                        $('div.dialog-form-info').modal()
-                    else:
-                        if(can_popup()):
-                            $("div.dialog-data-info").load($(this).attr("href"),null,dialog_ex_load_info)
-                        else:
-                            $(".inline_dialog").remove()
-                            $("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter($(this).parents("tr"))
-                            $("div.dialog-data-inner").load($(this).attr("href"),null)
-
-                    return false
-
-            $('a.popup_delete').click(
-                function():
-                    if(is_hybrid()):
-                        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-delete")
-                        $('div.dialog-form-delete').modal()
-                    else:
-                        if(can_popup()):
-                            $("div.dialog-data-delete").load($(this).attr("href"),null,dialog_ex_load_delete)
-                        else:
-                            $(".inline_dialog").remove()
-                            $("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter($(this).parents("tr"))
-                            $("div.dialog-data-inner").load($(this).attr("href"),null)
-
-                    return false
-
-        function dialog_loaded(is_modal):
-            date_init()
-            $("div.resizable").resizable()
-            if(is_modal):
-                $('div.dialog-form').modal()
-                console.log("IS_POPUP=true")
-                IS_POPUP = true
-
-        function on_dialog_load():
-            {% block on_dialog_load %}{% endblock %}
-
-        function dialog_ex_load1(responseText, status, response):
-            if(status!='error'):
-                dialog_loaded(true)
-                on_dialog_load()
-
-        function dialog_ex_load2(responseText, status, response):
-            if(status!='error'):
-                dialog_loaded(false)
-                on_dialog_load()
-
-        function dialog_ex_load_delete(responseText, status, response):
-            $('div.dialog-form-delete').modal()
-
-        function dialog_ex_load_info(responseText, status, response):
-            $('div.dialog-form-info').modal()
-
-        function date_init():
-            $('.dateinput').datetimepicker({ pickTime: false, format: "YYYY-MM-DD", language: '{{ get_current_language }}' })
-            $('.datetimeinput').datetimepicker({format: "YYYY-MM-DD hh:mm", language: 'pl'})
+%% jquery_init
+    .jquery_init('{{application_template}}', '{{scroll_table}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}')
 
 
 %% jquery_ready_start
   $(document).ready(function() { //$.material.init();
 
 
-%% jquery_ready {:}
-    $(document).ajaxError(
-        function(request, settings):
-            console.log(settings.responseText)
-            var start,end
-            start = settings.responseText.indexOf("<body>")
-            end = settings.responseText.lastIndexOf("</body>")
-            if (start > 0 && end > 0):
-                $("div.dialog-data-error").html(settings.responseText.substring(start+6,end-1))
-                $('div.dialog-form-error').modal()
-            else:
-                $("div.dialog-data-error").html(settings.responseText)
-                $('div.dialog-form-error').modal()
-
+%% jquery_ready
+    .jquery_ready()
     {% block popup_init %}popup_init();{% endblock %}
-    date_init()
-    $("div.resizable" ).resizable()
-
 
 %% jquery_ready_end
   });
@@ -181,62 +62,22 @@
         {{ block.super }}
 
 
-%% js_script_body{:}
-    if(!SUBWIN):
-        {% block jquery_ovr %}
-        function refresh_win(responseText, form):
-            start = responseText.indexOf("RETURN_OK")
-            if(start > 0 ):
-                var subform = form.closest('div.inline_frame')
-                if(subform.length>0):
-                    subform.find("div.frame-data-inner").load(subform.attr('href'),null)
-                else:
-                    var filter = form.closest('div.content').find('form.TableFiltr')
-                    //$("div.dialog-form").modal('hide')
-                    $("div.dialog-form").fadeTo( "slow", 0.5 );
-                    if(filter.length>0):
-                        filter.attr('action','{{request.get_full_path}}')
-                        filter.submit()
-            else:
-                var data = form.closest('form.TableFiltr')
-                $("div.dialog-data").html(responseText)
-
-        var options =
-            success: refresh_win
-        {% endblock %}
-
-        function on_edit_ok(form):
-            $.ajax({
-               type: "POST"
-               url: form.attr('action')
-               data: form.serialize()
-               success: function(data) {  refresh_win(data, form)  }
-            return false;
-
-        function on_delete_ok(form):
-            $.ajax({
-               type: "POST"
-               url: form.attr('action')
-               data: form.serialize()
-               success: function(data) {  refresh_win(data, form)  }
-            return false;
-
-            $('div.DialogFormDelete').ajaxSubmit(options)
-
-        function on_cancel_inline():
-            $(".inline_dialog").remove()
+%% js_script_body
+    %% jquery_ovr
 
 
 %% css_start
     {% css_link 'themes/bootstrap/jquery-ui.css' %}
     {% css_link 'bootstrap/css/bootstrap.min.css' %}
 
-    {% css_link 'themes/default.css' %}
-
     {% css_link 'bootstrap.plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
     {% css_link 'bootstrap.plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
+    {% css_link 'bootstrap.plugins/tabdrop/css/tabdrop.css' %}
 
     {% css_link 'jquery.plugins/ladda/ladda-themeless.min.css' %}
+
+    {% css_link 'themes/default.css' %}
+
 
     % comment:
         {% css_link 'themes/metro/css/metro-bootstrap.min.css' %}
@@ -259,26 +100,41 @@
     li class=topmenu
         a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top...{{title}}
 
+
 %%topmenu_end
      </ul>
-     <div id="myTabContent" class="tab-content" style="padding:4px; background-color:#fff;">
+     <div id="myTabContent" class="tab-content" style="padding:4px; background-color:#fff; width=400px;">
 
 
 %% submenu
-  % ifchanged app_name
-    % if not forloop.first
-      </div>
-    <div id="{{app_name}}" class="tab-pane">
-  % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
-    <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm">{{opis}}</a>
-  % else
-    <a href="{%url 'start' %}{{url}}" class="btn btn-info btn-sm">{{opis}}</a>
-  % if forloop.last
-    </div>
+    % ifchanged app_name
+        % if not forloop.first
+            </div>
+        <div id="{{app_name}}" class="tab-pane tab-tab">
+    % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
+        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+    % else
+        <a href="{%url 'start' %}{{url}}" class="btn btn-info btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+    % if forloop.last
+        </div>
 
 
 %% menu_end
-    </div></div>
+    </div>
+    % comment:
+        .<div id='example'></div>
+        .<script type="text/jsx">
+        .    var Alert = ReactBootstrap.Alert;
+        .    var alertInstance = (
+        .        <Alert bsStyle="warning">
+        .            <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+        .        </Alert>
+        .    );
+        .    React.render(alertInstance, example);
+        .</script>
+    % if application_template != 'traditional':
+        script
+            $('#tabs:first').tabdrop()
 
 
 %% style_content_start...<div class="content">
@@ -300,11 +156,31 @@
 
 %% grid1
 
+
+%% tabs
+    % if NO_TABS or application_template == 'traditional':
+        {{block.super}}
+    % else
+        div class=tabbable
+            div id=tab_tabs2
+                ul class=nav nav-tabs,,,id=tabs2
+                div class=tab-content,,,id=tabs2_content
+        div id=body_body
+        script
+            $('#tabs2:first').tabdrop()
+
+
+%% body_body
+    div id=body_body
+        {{block.super}}
+
+
 %% body_end
     % if not show_form:
         </body>
 
-%% content_start
+
+%% body_init
     div class=dialog-form modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
         div class=modal-dialog {% block modal_dialog_class %}{% endblock %}
             div class=modal-content

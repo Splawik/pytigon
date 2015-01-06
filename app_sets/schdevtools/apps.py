@@ -1,1 +1,0 @@
-APPS=['schbuilder','schcommander',]

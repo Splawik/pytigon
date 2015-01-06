@@ -44,7 +44,7 @@
             <b class="caret"></b></a>
             <ul class="dropdown-menu">
 
-  <li><a href="{%url 'start' %}{{url}}">{{opis}}</a></li>
+  <li><a href="{%url 'start' %}{{url}}" class='menu-href'>{{opis}}</a></li>
 
   % if forloop.last
         </ul></li>
