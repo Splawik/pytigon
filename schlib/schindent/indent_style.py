@@ -26,6 +26,16 @@ from .indent_tools import convert_js
 import gettext
 import codecs
 
+
+from pythonjs.python_to_pythonjs import main as python_to_pythonjs
+from pythonjs.pythonjs import main as pythonjs_to_javascript
+
+try:
+    from react import jsx
+except:
+    jsx = None
+
+
 def list_with_next_generator(l):
     old = l[0]
     for pos in l[1:]:
@@ -345,8 +355,7 @@ class ConwertToHtml:
                 file.close()
                 return
             if test:
-                if (test == 3 or test == 2) and len(line.strip()) > 0\
-                     and self._space_count(line) <= indent_pos:
+                if test > 1 and len(line.strip()) > 0 and self._space_count(line) <= indent_pos:
                     cont = True
                 if cont or '<<<' in line:
                     if test == 1:
@@ -364,7 +373,7 @@ class ConwertToHtml:
                                 self.code.append((old_pos * 4, None, None, 1))
                         buf = None
                         test = 0
-                    if test == 2 or test == 3:
+                    if test > 1:
                         if not cont:
                             l = line.replace('\n', '').replace('\r', ''
                                     ).replace('\t', '        ').replace('<<<',
@@ -374,6 +383,14 @@ class ConwertToHtml:
                             buf2 = io.StringIO()
                             convert_js(buf, buf2)
                             x = self._pre_process_line(buf0 + buf2.getvalue())
+                        elif test == 3:
+                            x = self._pre_process_line(buf0 + buf.getvalue())
+                        elif test == 4:
+                            print("-----------------")
+                            print(buf.getvalue())
+                            print("+++++++++++++++++")
+                            codejs = pjsx_to_js(buf.getvalue(), None)
+                            x = self._pre_process_line(buf0 + codejs)
                         else:
                             x = self._pre_process_line(buf0 + buf.getvalue())
                         for pos in x:
@@ -431,6 +448,15 @@ class ConwertToHtml:
                     buf.write(line[pos + 22:].replace('\n', '').replace('\r', ''
                               ).replace('\t', '        ').rstrip())
                     test = 3
+                elif line.strip()=='script':
+                    print('line:', line)
+                    indent_pos = self._space_count(line)
+                    pos = line.find('script')
+                    buf0 = line + '...|||'
+                    buf = io.StringIO()
+                    buf.write(line[pos + 6:].replace('\n', '').replace('\r', ''
+                              ).replace('\t', '        ').rstrip())
+                    test = 4
                 else:
                     l = line.replace('\n', '').replace('\r', '').replace('\t',
                             '        ').rstrip()
@@ -489,3 +515,64 @@ class ConwertToHtml:
                 ret = ret.replace('|||', '\n')
                 return ret
 
+
+def ihtml_to_html_base(file_name, input_str=None, lang='en'):
+    conwert = ConwertToHtml(file_name, ['br', 'meta', 'input'], [], [], input_str, lang)
+    try:
+        conwert.process()
+        return conwert.to_str()
+    except:
+        import traceback
+        import sys
+        print(sys.exc_info())
+        print(traceback.print_exc())
+        return ""
+
+
+def py_to_js(script, module_path):
+    tab = -1
+    out_tab = []
+    for line in script.split('\n'):
+        if tab < 0:
+            if line.strip()!="":
+                tab = len(line) - len(line.lstrip())
+            else:
+                continue
+        out_tab.append(line[tab:])
+
+    script2 = "\n".join(out_tab)
+
+    a = python_to_pythonjs(script2, module_path=module_path)
+    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
+    return code
+
+
+def pjsx_to_js(script, module_path):
+    tabrepl = []
+    script2 = ""
+    if '"""' in script:
+        if jsx:
+            ret = []
+            transformer = jsx.JSXTransformer()
+            in_html = False
+            for pos in script.split('"""'):
+                if in_html:
+                    z = ihtml_to_html_base(None, pos)
+                    z=z.rstrip()
+                    if z[-1] == '\n':
+                        z = z[:-1]
+                    tabrepl.append(transformer.transform_string(z))
+                    ret.append('xxyyzz11')
+                else:
+                    if pos:
+                        ret.append(pos)
+                in_html = not in_html
+            script2 = "".join(ret)
+        else:
+            return None
+    code = py_to_js(script2, module_path)
+    for pos in tabrepl:
+        pos2 = pos
+        code = code.replace('xxyyzz11', '(\n'+pos2+')', 1)
+
+    return code.replace('"{{','{').replace('}}"', '}')

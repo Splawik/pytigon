@@ -30,7 +30,8 @@ from django.contrib.auth.views import login
 from schlib.schdjangoext.django_init import AppConfigMod
 from django.template.base import add_to_builtins
 
-from schlib.schjs.compile import compile
+#from schlib.schjs.compile import py_to_js, psjx_to_js
+from schlib.schindent.indent_style import py_to_js, pjsx_to_js
 
 
 add_to_builtins('schserw.schsys.templatetags.defexfiltry')
@@ -106,7 +107,7 @@ if settings.DEBUG:
     for dir in settings.STATICFILES_DIRS:
         for root, dirs, files in os.walk(dir+'_src'):
             for file_name in files:
-                if file_name.lower().endswith('.py'):
+                if file_name.lower().endswith('.py') or file_name.lower().endswith('.pjsx'):
                     src = os.path.join(root, file_name)
                     (base, ext) = os.path.splitext(file_name)
                     dest_base_path = root.replace('_src','')
@@ -122,7 +123,10 @@ if settings.DEBUG:
                     with open(src, "rt") as f:
                         code = f.read()
 
-                        codejs = compile(code, root)
+                        if file_name.lower().endswith('.py'):
+                            codejs = py_to_js(code, root)
+                        else:
+                            codejs = pjsx_to_js(code, root)
 
                         with open(dest, "wt") as f2:
                             f2.write(codejs)

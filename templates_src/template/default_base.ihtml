@@ -10,7 +10,6 @@
     {% jscript_link 'pythonjs.js' %}
     {% jscript_link 'jquery/js/jquery.min.js' %}
     {% jscript_link 'react/react.min.js' %}
-    {% jscript_link 'react/JSXTransformer.js' %}
     {% jscript_link 'react-bootstrap/react-bootstrap.min.js' %}
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
     {% jscript_link 'bootstrap.plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
@@ -158,6 +157,18 @@
 
 
 %% tabs
+    % if True:
+        <div id='example'></div>
+        {% jscript_link 'py_react_test.js' %}
+
+        script
+            Alert = ReactBootstrap.Alert
+            alertInstance = """
+                Alert bsStyle=warning
+                    strong...Holy guacamole!
+                    . Sławomir Chołaj!"""
+            React.render(alertInstance, example)
+
     % if NO_TABS or application_template == 'traditional':
         {{block.super}}
     % else
