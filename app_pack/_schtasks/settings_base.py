@@ -22,6 +22,8 @@ except:
 APPSET_TITLE = "Tasks"
 APPSET_NAME = "_schtasks"
 
+THEMES = ['auto', 'auto', 'auto']
+
 LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
 ROOT_PATH = _rp

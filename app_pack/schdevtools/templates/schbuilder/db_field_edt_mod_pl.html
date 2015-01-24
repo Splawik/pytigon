@@ -1,0 +1,28 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_title %}
+        Edition: {{object.get_name}} [{{title}}]
+{% endblock %}
+{% block title %}
+        V:{{object.get_name}}
+{% endblock %}
+{% block body %}
+        {{ block.super.super.super }}
+        <table width="100%">
+                <tr>
+                        <td>
+                                def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <CTRLSTYLEDTEXT NAME="EDITOR" WIDTH="100%" HEIGHT="100%" MINHEIGHT="400" SRC="{{ext}}" HREF="{{save_path}}">
+                                        <DATA>{{txt|bencode}}</DATA>
+                                </CTRLSTYLEDTEXT>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

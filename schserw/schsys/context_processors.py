@@ -77,15 +77,29 @@ def standard_web_browser(request):
 
 
 def browser_type(request):
+    if hasattr(settings, 'THEMES'):
+        themes = settings.THEMES
+    else:
+        themes = ['auto', 'auto', 'auto']
+
     if standard_web_browser(request):
         if standard_web_browser(request) == 1:
             if test_mobile(request):
                 if test_tablet(request):
-                    return 'tablet'
+                    if themes[1]=='auto' or not themes[1]:
+                        return 'tablet_standard'
+                    else:
+                        return themes[1]
                 else:
-                    return 'tablet'
+                    if themes[2]=='auto' or not themes[2]:
+                        return 'smartfon_standard'
+                    else:
+                        return themes[2]
             else:
-                return 'tablet'
+                if themes[0]=='auto' or not themes[0]:
+                    return 'desktop_standard'
+                else:
+                    return themes[0]
         else:
             return 'hybrid'
     else:
@@ -146,6 +160,10 @@ class AppManager:
                     title = module2.Title
                     perms = module2.Perms
                     index = module2.Index
+                    if hasattr(module2, 'UserParam'):
+                        user_param = module2.UserParam
+                    else:
+                        user_param = {}
                     ret.append((
                         title,
                         perms,
@@ -153,6 +171,7 @@ class AppManager:
                         appname,
                         module_title,
                         elementy[0],
+                        user_param,
                         ))
             except:
                 pass
@@ -175,6 +194,7 @@ class AppManager:
             app_title = app[0]
             module_title = app[4]
             module_name = app[5]
+            user_param = app[6]
             if app_name != None and app_name != '':
                 try:
                     module = __import__(module_name)
@@ -184,7 +204,6 @@ class AppManager:
                         module2 = module
                     if module2:
                         for pos in module2.Urls:
-                            #print("add:", app_name, app, pos)
                             ret.append((
                                 module_title,
                                 app_title,
@@ -194,6 +213,7 @@ class AppManager:
                                 pos[2],
                                 pos[3],
                                 app[1],
+                                user_param,
                                 ))
                 except:
                     pass
@@ -319,17 +339,23 @@ def sch_standard(request):
     lng = request.LANGUAGE_CODE[:2].lower()
 
     b_type = browser_type(request)
+    x = b_type.split('_')
+    b_type = x[0]
+    if len(x)>1:
+        b_type2 = x[1]
+    else:
+        b_type2 = 'standard'
+
     d_template = default_template(b_type)
 
     if lng and lng != 'en':
         d_template = d_template.replace('.html', '_'+lng+'.html')
 
     ret = {
-        #'application_template': 'standard',
         #'application_template': 'traditional',
         #'application_template': 'simple',
         #'application_template': 'mobile',
-        'application_template': 'tablet',
+        #'application_template': 'tablet',
         'standard_web_browser': standard,
         'app_manager': AppManager(request),
         'form_edit': form_edit,
@@ -345,6 +371,7 @@ def sch_standard(request):
         'URL_BASE': url_base,
         'show_form': show_form,
         'browser_type': b_type,
+        'application_type': b_type2,
         'default_template': d_template,
         'appset_name': settings.APPSET_NAME,
         'appset_title': settings.APPSET_TITLE,

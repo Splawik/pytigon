@@ -980,3 +980,74 @@ def collapse(parser, token):
     nodelist = parser.parse(('endcollapse',))
     parser.delete_first_token()
     return CollapseNode(nodelist, extra_context=extra_context)
+
+
+@register.tag('widget')
+def do_html_widget(parser, token):
+    bits = token.split_contents()
+    remaining_bits = bits[1:]
+    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    if not extra_context:
+        raise TemplateSyntaxError("%r expected at least one variable "
+                                  "assignment" % bits[0])
+    if not 'id' in extra_context or not 'class' in extra_context:
+        raise TemplateSyntaxError("id and class parameters are required")
+    if remaining_bits:
+        raise TemplateSyntaxError("%r received an invalid token: %r" %
+                                  (bits[0], remaining_bits[0]))
+    nodelist = parser.parse(('endwidget',))
+    parser.delete_first_token()
+    return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
+
+
+class ComponentNode(template.Node):
+    def __init__(self, template_name, nodelist, extra_context=None):
+        self.nodelist = nodelist
+        self.template_name = template_name
+        self.extra_context = extra_context or {}
+
+
+    def __repr__(self):
+        return "<ComponentNode>"
+
+
+    def render(self, context):
+        values = dict([(key, val.resolve(context)) for key, val in
+                       six.iteritems(self.extra_context)])
+        context.update(values)
+
+        if not 'create_div' in context:
+            context['create_div'] = True
+        if not 'param' in context:
+            context['param'] = 'null'
+        if not 'class' in context:
+            context['class'] = None
+        if context['class'] and '/' in context['class']:
+            x = context['class'].split('/')
+            context['class'] = x[1]
+            context['module'] = x[0]
+
+        data = self.nodelist.render(context)
+        t = Template(data)
+        data2 = t.render(context)
+        context['data'] = mark_safe(data2)
+        t = get_template(self.template_name)
+        return mark_safe(t.render(context))
+
+
+@register.tag('component')
+def component(parser, token):
+    bits = token.split_contents()
+    remaining_bits = bits[1:]
+    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    if not extra_context:
+        raise TemplateSyntaxError("%r expected at least one variable "
+                                  "assignment" % bits[0])
+    if not 'id' in extra_context:
+        raise TemplateSyntaxError("id and class parameters are required")
+    if remaining_bits:
+        raise TemplateSyntaxError("%r received an invalid token: %r" %
+                                  (bits[0], remaining_bits[0]))
+    nodelist = parser.parse(('endcomponent',))
+    parser.delete_first_token()
+    return ComponentNode("widgets/component.html", nodelist, extra_context=extra_context)

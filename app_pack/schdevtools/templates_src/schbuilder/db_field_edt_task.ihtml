@@ -1,0 +1,23 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends "schsys/db_field_edt.html"
+
+%load exfiltry
+%load exsyntax
+
+%%form_title
+    .Edition: {{object.name}} [{{title}}]
+
+%% title
+    .V:{{object.name}}
+
+%% body
+    {{ block.super.super.super }}
+    table width=100%
+        tr
+            td
+                .def {{object.name}}(id, input_queue, output_queue, *args, **kwargs):
+        tr
+            td
+                CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
+                    DATA...{{txt|bencode}}

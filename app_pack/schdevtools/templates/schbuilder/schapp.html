@@ -1,0 +1,97 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            pass
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "tables":"client://mimetypes/x-office-spreadsheet.png",
+                    "choices":"client://categories/applications-games.png",
+                    "views":"client://mimetypes/text-x-generic-template.png",
+                    "templates":"client://mimetypes/x-office-presentation.png",
+                    "menu":"client://actions/tab-new.png",
+                    "add_models":"client://mimetypes/package-x-generic.png",
+                    "add_views":"client://batch/code.png",
+                    "add_urls":"client://actions/format-indent-less.png",
+                    "add_tasks":"client://apps/utilities-terminal.png",
+                    "urls":"client://places/start-here.png",
+                    "doc":"client://apps/help-browser.png",
+                    "forms":"client://mimetypes/x-office-document.png",
+                }
+                child.set_bitmaps(bitmaps)
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=620 form_height=380 show_title_bar=1 title="Applications" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_bar2 %}
+            {% if form_edit or form_delete or form_info or show_title_bar %}
+                {% if not standard_web_browser %}
+                        <table width="100%" class="form_bar">
+                                <tr>
+                                        <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                <CTRLCLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRLCLOSEBUTTON>
+                                        </td>
+                                        {% if not form_edit and not form_delete and not form_info %}
+                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                        <CTRLNOBG_BUTTON width="36" height="36" NAME="UP" label="Open in toolbar" SRC="client://actions/go-top.png" href="{{request.path|replace:"/table/SChAppSet/|/table/SChAppSet_up/"}}" target="_top2_toolbar_Aplikacje__Lista_aplikacji"></CTRLNOBG_BUTTON>
+                                                </td>
+                                        {% endif %}
+                                        <td width="5"></td>
+                                        <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                                <span class="form_title">
+                                                        {% block form_title %}
+                                                                {{title|wiki_href|safe}}
+                                                        {% endblock %}
+                                                </span>
+                                        </td>
+                                </tr>
+                        </table>
+                        <hr></hr>
+                {% endif %}
+            {% endif %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New application" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+        
+        edit,
+        field_list/schtable_set,Tables,tables,_top2
+        field_list/schchoice_set,Choices,choices,_top2
+        field_list/schview_set,Views,views,_top2
+        field_list/schtemplate_set,Templates,templates,_top2
+        field_list/schappmenu_set,Menu,menu,_top2
+        field_list/schurl_set,Urls,urls,_top2
+        field_list/schform_set,Forms,forms,_top2
+        field_edit/model_code,Additional models,add_models,_top2
+        field_edit/view_code,Additional views,add_views,_top2
+        field_edit/urls_code,Additional urls,add_urls,_top2
+        field_edit/tasks_code,Additional task code,add_tasks,_top2
+        field_edit/doc,Doc,doc,_top2
+        delete
+
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>Spis aplikacji</h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                        'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
+        {% endform %}
+{% endblock %}
+

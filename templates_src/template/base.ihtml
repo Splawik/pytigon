@@ -23,6 +23,8 @@
                                 td...{{ field.verbose_name }}
                                 td...{{ object|getfield:field.name }}
                         %% form_ok_cancel_info
+                script
+                    $('#ModalLabelInfo').html('{{title}}')
             % else:
                 %% form_delete
                     form method=post,,,action={% block form_delete_action %}{{request.path}} {% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
@@ -43,6 +45,9 @@
                                                     td...{{ object|getfield:field.name| truncatechars:1024 }}
                                 br
                         %% form_ok_cancel_del
+
+                script
+                    $('#ModalLabelDelete').html('{{title}}')
 
             % if standard_browser
                 </div>
@@ -71,6 +76,9 @@
             %% row_edit_end
                 % if standard_web_browser == 1:
                     </div>
+            script
+                $('#ModalLabel').html('{{title}}')
+
         %% dialog_end
     % else
         % if form_grid:
@@ -137,8 +145,8 @@
                                                         input type=submit,,,value=_(Refresh),,,class=btn btn-info
 
             %% list_content_body
-
-                %if scroll_table and standard_web_browser == 1
+              div class=tabsort_panel
+                %if xscroll_table and standard_web_browser == 1
                     <div id="tbl_scroll" style="overflow-y: scroll;">
 
                 table id=tabsort,,,name=tabsort,,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
@@ -177,7 +185,7 @@
                         %% list_table_footer
 
                 %if standard_web_browser == 1
-                    % if scroll_table
+                    % if xscroll_table
                         </div>
                     % else
                         div style=padding:0.5em

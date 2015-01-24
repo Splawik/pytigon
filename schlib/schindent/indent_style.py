@@ -26,7 +26,6 @@ from .indent_tools import convert_js
 import gettext
 import codecs
 
-
 from pythonjs.python_to_pythonjs import main as python_to_pythonjs
 from pythonjs.pythonjs import main as pythonjs_to_javascript
 
@@ -384,12 +383,13 @@ class ConwertToHtml:
                             convert_js(buf, buf2)
                             x = self._pre_process_line(buf0 + buf2.getvalue())
                         elif test == 3:
-                            x = self._pre_process_line(buf0 + buf.getvalue())
+                            x = self._pre_process_line(buf0.replace('pscript', 'script language=python') + buf.getvalue())
                         elif test == 4:
-                            print("-----------------")
-                            print(buf.getvalue())
-                            print("+++++++++++++++++")
-                            codejs = pjsx_to_js(buf.getvalue(), None)
+                            v = buf.getvalue()
+                            codejs = pjsx_to_js(v, None)
+                            x = self._pre_process_line(buf0 + codejs)
+                        elif test == 5:
+                            codejs = pjsx_to_js('"""'+buf.getvalue()+'"""', None)
                             x = self._pre_process_line(buf0 + codejs)
                         else:
                             x = self._pre_process_line(buf0 + buf.getvalue())
@@ -448,15 +448,24 @@ class ConwertToHtml:
                     buf.write(line[pos + 22:].replace('\n', '').replace('\r', ''
                               ).replace('\t', '        ').rstrip())
                     test = 3
-                elif line.strip()=='script':
-                    print('line:', line)
+                elif 'pscript' in line:
                     indent_pos = self._space_count(line)
-                    pos = line.find('script')
                     buf0 = line + '...|||'
                     buf = io.StringIO()
-                    buf.write(line[pos + 6:].replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip())
+                    test = 3
+                elif line.strip().replace(' ','')=='script':
+                    indent_pos = self._space_count(line)
+                    buf0 = line + '...|||'
+                    buf = io.StringIO()
                     test = 4
+                elif line.strip().replace(' ','').startswith('%component'):
+                    indent_pos = self._space_count(line)
+                    pos = line.rfind(':')
+                    buf0 = line + '...|||'
+                    buf = io.StringIO()
+                    #buf.write(line[pos + 6:].replace('\n', '').replace('\r', ''
+                    #          ).replace('\t', '        ').rstrip())
+                    test = 5
                 else:
                     l = line.replace('\n', '').replace('\r', '').replace('\t',
                             '        ').rstrip()
@@ -522,11 +531,69 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
         conwert.process()
         return conwert.to_str()
     except:
-        import traceback
+        #import traceback
         import sys
         print(sys.exc_info())
-        print(traceback.print_exc())
+        #print(traceback.print_exc())
         return ""
+
+
+def __py_to_js(script, module_path):
+    tab = -1
+    out_tab = []
+    for line in script.split('\n'):
+        if tab < 0:
+            if line.strip()!="":
+                tab = len(line) - len(line.lstrip())
+            else:
+                continue
+        out_tab.append(line[tab:])
+
+    script2 = "\n".join(out_tab)
+#    try:
+    a = python_to_pythonjs(script2, module_path=module_path)
+#    except Exception as e:
+#        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+#        print(e)
+#        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
+    return code
+
+def __py2js(script, module_path):
+    a = python_to_pythonjs(script, module_path=module_path)
+    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
+    return code
+
+
+def py2js(script, module_path):
+    from sh import nodejs
+
+    def process_output(line):
+        if line.startswith('WARN:'):
+            print(line)
+            m = re.search(".*\[(.*):(.*),(.*)].*", line)
+            if m:
+                try:
+                    row = int(m.groups()[1])-1
+                    col = int(m.groups()[2])-1
+                    lines = script.split('\n')
+                    start = row-4
+                    end = row+4
+                    if start < 0:
+                        start = 0
+                    if end >= len(lines):
+                        end = len(lines)-1
+                    for i in range(start, end):
+                        if row == i:
+                            print(lines[i], " <===")
+                            print(' '*col, '^')
+                        else:
+                            print(lines[i])
+                    print()
+                except:
+                    pass
+    ret =  nodejs('/home/sch/prj/pytigon/ext_prg_lin/rapydscript/bin/rapydscript', '-p', '-b',  _in=script, _err=process_output)
+    return str(ret)
 
 
 def py_to_js(script, module_path):
@@ -541,10 +608,16 @@ def py_to_js(script, module_path):
         out_tab.append(line[tab:])
 
     script2 = "\n".join(out_tab)
+#    try:
+    code = py2js(script, module_path)
+    #a = python_to_pythonjs(script2, module_path=module_path)
+#    except Exception as e:
+#        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+#        print(e)
+#        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
-    a = python_to_pythonjs(script2, module_path=module_path)
-    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
     return code
+
 
 
 def pjsx_to_js(script, module_path):
@@ -570,9 +643,17 @@ def pjsx_to_js(script, module_path):
             script2 = "".join(ret)
         else:
             return None
+    else:
+        script2 = script
+    #print("==============================")
+    #print(script2)
+    #print("==============================")
+    script2 = script2.replace('{{', 'xxyyzz22').replace('}}', 'xxyyzz33' )
     code = py_to_js(script2, module_path)
     for pos in tabrepl:
         pos2 = pos
         code = code.replace('xxyyzz11', '(\n'+pos2+')', 1)
 
-    return code.replace('"{{','{').replace('}}"', '}')
+    code = code.replace('xxyyzz22', '{{').replace('xxyyzz33', '}}')
+    #return code.replace('"{{','{').replace('}}"', '}')
+    return code

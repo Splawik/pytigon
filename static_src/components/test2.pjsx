@@ -1,0 +1,10 @@
+converter = new Showdown.converter()
+
+def render():
+        return """
+            div className=comment
+                h2 className=commentAuthor
+                   {this.props.author}
+                {converter.makeHtml(this.props.children.toString())} """
+
+Comment = React.createClass(render=render)

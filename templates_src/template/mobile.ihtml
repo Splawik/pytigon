@@ -1,4 +1,0 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/mobile_base.html'
-

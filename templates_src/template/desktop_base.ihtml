@@ -1,0 +1,269 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/base.html'|translate:lang
+
+% load exfiltry
+% load exsyntax
+% load crispy_forms_tags
+
+%% js_scripts_base
+    {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
+
+    {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+
+    {% jscript_link 'jquery/js/jquery.min.js' %}
+    {% jscript_link 'jquery/js/jquery-ui.min.js' %}
+    {% jscript_link 'jquery_plugins/jquery.form.js' %}
+    {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
+    {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
+    {% jscript_link 'jquery_plugins/csrf.js' %}
+    {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
+    {% jscript_link 'jquery_plugins/datatables/js/dataTables.bootstrap.js' %}
+
+    {% jscript_link 'jquery_plugins/datatables/ColReorder/js/dataTables.colReorder.js' %}
+    {% jscript_link 'jquery_plugins/datatables/ColVis/js/dataTables.colVis.js' %}
+    {% jscript_link 'jquery_plugins/datatables/FixedColumns/js/dataTables.fixedColumns.js' %}
+    {% jscript_link 'jquery_plugins/datatables/Responsive/js/dataTables.responsive.js' %}
+    {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
+
+    {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+    {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
+
+    {% jscript_link 'react/react.js' %}
+    {% jscript_link 'react_plugins/react-bootstrap/react-bootstrap.min.js' %}
+
+    {% jscript_link 'sch/stick_header.js' %}
+    {% jscript_link 'sch/pytigon.js' %}
+    {% jscript_link 'sch/inline_dialog.js' %}
+
+
+%% jquery_init
+    .jquery_init('{{application_type}}', '{{scroll_table}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}')
+
+
+%% jquery_ready_start
+  $(document).ready(function() { //$.material.init();
+
+
+%% jquery_ready
+    .jquery_ready()
+    {% block popup_init %}popup_init();{% endblock %}
+
+%% jquery_ready_end
+  });
+
+
+%%js_scripts
+    % if form_edit or form_delete or form_info
+        % if form_ext
+            {{ block.super }}
+    % else
+        {{ block.super }}
+
+
+%% js_script_body
+    %% jquery_ovr
+
+
+%% css_links
+    {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
+    {% css_link 'jquery_plugins/datatables/css/jquery.dataTables.css' %}
+    {% css_link 'jquery_plugins/datatables/css/dataTables.bootstrap.css' %}
+
+    {% css_link 'jquery_plugins/datatables/ColReorder/css/dataTables.colReorder.css' %}
+    {% css_link 'jquery_plugins/datatables/ColVis/css/dataTables.colVis.css' %}
+    {% css_link 'jquery_plugins/datatables/FixedColumns/css/dataTables.fixedColumns.css' %}
+    {% css_link 'jquery_plugins/datatables/Responsive/css/dataTables.responsive.css' %}
+    {% css_link 'jquery_plugins/datatables/Scroller/css/dataTables.scroller.css' %}
+
+
+    {% css_link 'themes/bootstrap/jquery-ui.css' %}
+    {% css_link 'bootstrap/css/bootstrap.min.css' %}
+
+    {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
+    {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
+
+    {% css_link 'themes/default.css' %}
+    {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
+
+
+%% css_start
+    <style type="text/css">
+
+%% css_end
+    </style>
+
+%% menu_start
+    <div class="bs-example bs-example-tabs">
+
+%% topmenu_start
+    <ul class="nav nav-tabs" id='tabs'><li><h4 style="padding: 0px 30px;">{{appset_title}}</h4></li>
+
+%% topmenu
+    li class=topmenu
+        a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top...{{title}}
+
+
+%%topmenu_end
+     </ul>
+     <div id="myTabContent" class="tab-content" style="padding:4px; background-color:#fff; width=400px;">
+
+
+%% submenu
+    % ifchanged app_name
+        % if not forloop.first
+            </div>
+        <div id="{{app_name}}" class="tab-pane tab-tab">
+    % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
+        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+    % else
+        <a href="{%url 'start' %}{{url}}" class="btn btn-info btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+    % if forloop.last
+        </div>
+
+
+%% menu_end
+    </div>
+    % if application_type != 'traditional':
+        script
+            $('#tabs:first').tabdrop()
+
+
+%% style_content_start...<div class="content">
+
+
+%% style_content_end...</div>
+
+
+%% tabsort_class
+    .class="tabsort"
+
+
+%% body_start
+    %% body_start_0
+        % if not show_form:
+            <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}" class="skin-blue">
+    %% form_bar
+
+
+%% grid1
+
+
+%% tabs
+    % if True:
+        % component id='example2':
+            ReactBootstrap.Alert bsStyle=warning
+                strong...Holy king!
+                .Sławomir Chołaj!
+
+
+        script
+            $('#example2').text("")
+
+    % if NO_TABS or application_type != 'modern':
+        {{block.super}}
+    % else
+        div class=tabbable
+            div id=tab_tabs2
+                ul class=nav nav-tabs,,,id=tabs2
+                div class=tab-content,,,id=tabs2_content
+        div id=body_body
+        script
+            $('#tabs2:first').tabdrop()
+
+
+%% body_body
+    div id=body_body
+        {{block.super}}
+
+
+%% body_end
+    % if not show_form:
+        </body>
+
+
+%% body_init
+    div class=dialog-form modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
+        div class=modal-dialog {% block modal_dialog_class %}{% endblock %}
+            div class=modal-content
+                div class=modal-header
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
+                        .x
+                    h4 class=modal-title,,,id=ModalLabel...{{title}}
+                div class=modal-body 
+                    div class=dialog-data
+                div class=modal-footer
+                    %% content_start_ok_cancel
+                        button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
+                        button type=button,,,class=btn btn-primary,,,onclick=javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;..._(OK)
+
+
+    div class=dialog-form-info modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelInfo
+        div class=modal-dialog
+            div class=modal-content
+                div class=modal-header
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
+                        .x
+                    h4 class=modal-title,,,id=ModalLabelInfo...{{title}}
+                div class=modal-body
+                    div class=dialog-data-info
+                div class=modal-footer
+                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
+
+
+    div class=dialog-form-delete modal ,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelDelete,,,title={{title}}
+        div class=modal-dialog
+            div class=modal-content
+                div class=modal-header
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
+                        .x
+                    h4 class=modal-title,,,id=ModalLabelDelete...{{title}}
+                div class=modal-body
+                    div class=dialog-data-delete
+                div class=modal-footer
+                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
+                    button type=button,,,class=btn btn-danger,,,onclick=javascript:on_delete_ok($(this).parent().parent().find('form:first'));return false;..._(OK)
+
+
+    div id=dialog-form-error,,,class=modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelError,,,title={{title}}
+        div class=modal-dialog modal-lg
+            div class=modal-content
+                div class=modal-header
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
+                        .x
+                    h4 class=modal-title,,,id=ModalLabelDelete...{{title}}
+                div class=modal-body
+                        div class=dialog-data-error,,,class=alert alert-danger alert-dismissable
+
+                div class=modal-footer
+                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
+
+
+%% row_edit_form
+    %if form
+        % if field:
+            {{form|getvalue:field|as_widget:"width:100%,height:99.9%-20" }}
+        % else:
+            %% row_edit
+                % form:
+
+
+%% page_start
+    % if not show_form:
+        {{block.super}}
+
+
+%% page_head
+    % if not show_form:
+        {{block.super}}
+
+
+%% page_end
+    % if not show_form:
+        {{block.super}}
+

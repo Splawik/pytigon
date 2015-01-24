@@ -22,6 +22,8 @@ except:
 APPSET_TITLE = "{{appset.title}}"
 APPSET_NAME = "{{appset.name}}"
 
+THEMES = ['{{appset.desktop_gui_type}}', '{{appset.tablet_gui_type}}', '{{appset.smartfon_gui_type}}']
+
 LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
 ROOT_PATH = _rp

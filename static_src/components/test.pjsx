@@ -1,0 +1,14 @@
+def render():
+    return """
+        div className=commentBox
+            h1...Comments
+            CommentList data={{this.props.data}}
+            CommentForm"""
+
+CommentBox = React.createClass(react=render)
+
+React.render("""
+    CommentBox data={{data}}""",
+    document.getElementById('content') 
+)
+

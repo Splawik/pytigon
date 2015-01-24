@@ -277,7 +277,13 @@ def gen(request, pk):
             str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")
     
         appmenus = app.schappmenu_set.all()
-        template_to_file(base_path, "app_init", app.name+"/__init__.py",  {'appmenus': appmenus, 'app': app})
+        
+        if app.user_param:
+            user_param = str(dict([ pos.split('=') for pos in app.user_param.split('\n') if pos and '=' in pos ]))
+        else:
+            user_param = '{}'
+        
+        template_to_file(base_path, "app_init", app.name+"/__init__.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
     
     template_to_file(base_path, "apps", "apps.py",  {'appset': appset, 'app_names': app_names })
     

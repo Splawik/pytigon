@@ -326,7 +326,7 @@ class HttpClient:
                     decode = "iso-8859-2"
                 ret =  self.contents.decode(decode)
             else:
-                print("Str:", self.content_type)
+                #print("Str:", self.content_type)
                 if 'application/json' in self.content_type:
                     ret = self.contents.decode('utf-8')
                 else:
@@ -358,7 +358,7 @@ class HttpClient:
         return ret
 
     def to_python(self):
-        print("to_python:", self.str())
+        #print("to_python:", self.str())
         return json_loads(self.str())
 
 

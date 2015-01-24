@@ -36,7 +36,7 @@
         </div>
 
     %% js
-        link href={{ STATIC_URL }}bootstrap.plugins/bootstrap-tree/tree.css,,,rel=stylesheet,,,type=text/css,,,media=screen
+        link href={{ STATIC_URL }}bootstrap_plugins/bootstrap-tree/tree.css,,,rel=stylesheet,,,type=text/css,,,media=screen
 
     %% js2
         script {:}

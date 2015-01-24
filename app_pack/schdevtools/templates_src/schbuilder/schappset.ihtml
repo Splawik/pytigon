@@ -72,4 +72,4 @@
 
 %% row_edit
     % form:
-            'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page'
+        'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type', 'user_param'

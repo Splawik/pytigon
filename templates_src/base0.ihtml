@@ -34,6 +34,7 @@
                 %% js_extrascipts
 
                 % if not show_form:
+                    %% css_links
                     %% css_start
                         <style type="text/css">
                     %% css
@@ -58,23 +59,24 @@
             %% menu
 
                 %% topmenu_start
-                %for title, perms, index, app_name in app_manager.get_apps_width_perm:
+                %for title, perms, index, app_name, user_param in app_manager.get_apps_width_perm:
                     %% topmenu
                 %% topmenu_end
 
                 %% submenu_start
-                %for module_title, app_title, app_name, url, opis, prawo, icon in app_manager.get_app_items_width_perm:
+                %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager.get_app_items_width_perm:
                     %% submenu
                 %% submenu_end
             %% menu_end
 
             %% menu2
 
+        %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+            %% login
+
         %% body_init
         %% tabs
             %% body_body
-                %% login
-
                 %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
                     %% panel
                     %% messages

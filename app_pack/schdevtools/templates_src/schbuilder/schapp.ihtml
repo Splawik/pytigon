@@ -89,4 +89,4 @@
 
 %% row_edit
     % form:
-            'parent', 'name', 'module_title', 'title', 'perms', 'index'
+            'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'

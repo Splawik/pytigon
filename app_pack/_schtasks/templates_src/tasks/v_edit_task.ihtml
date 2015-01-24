@@ -85,12 +85,9 @@
                         {{ block.super }}
                     button type=button,,,class=btn btn-danger,,,id=kill_task...Kill task
                     script 
-                        {:}
-                            $('#kill_task').click(
-                                function():
-                                    on_kill(
-                                        function():
-                                            window.location = "/"
+                        def _on_kill():
+                            window.location = "/"                            
+                        $('#kill_task').click(_on_kill)
     % else:
         {{ block.super }}
 
@@ -136,70 +133,65 @@
 
             % if object.status < 2:
                 script 
-                    {:}
-                        function on_edit_ok(form):
-                            var filter
-                            on_kill(
-                                function():
-                                    filter = form.closest('div.content').find('form.TableFiltr')
-                                    $("div.dialog-form").fadeTo( "slow", 0.5 )
-                                    if(filter.length>0):
-                                        filter.attr('action','{{request.path}}/../../')
-                                        filter.submit()
-                            
-                        function on_timer():
-                            var obj = $('#cmd_list_{{object.id}}')
-                            if ( obj.length ):
-                                $.post( 
-                                    "/tasks/get_messages"
-                                    { id: "{{object.id}}", id_start: start_id_{{object.id}} } 
-                                    function(data):
-                                        start_id_{{object.id}} += data.length
-                                        for (pos in data):
-                                            if(data[pos].substring(0,3)=='$$$'):
-                                                var x = data[pos].slice(3).split(':')
-                                                var fun = x[0]
-                                                var parm = null
-                                                if(x.length>1):
-                                                    parm = x[1]
-                                                if(fun=="PROGRESS"):
-                                                    $('#task_progress').css('width', parm+'%')
-                                            else:
-                                                obj.append(data[pos])
-                                                obj.append("<br />")
-                                                obj[0].scrollTop = obj[0].scrollHeight
-                            else:
-                                clearInterval(timer_{{object.id}})
-                    
-                        var timer_{{object.id}}=setInterval( on_timer, 1000)
-                        on_timer()
-                        var start_id_{{object.id}} = 0
-
-                        $(window).keydown(
-                            function(event):
-                                if(event.keyCode == 13):
-                                  event.preventDefault()
-                                  return false
-                                
-                                
-                        $("#cmd").keyup(
-                            function (e):
-                                if (e.keyCode == 13):
-                                    $.post( 
-                                        "/tasks/put_message"
-                                        { id: "{{object.id}}", message: $('#cmd').val()+"\n" } 
-                                        function(data):
-                                            $('#cmd').val("")                      
+                    def on_edit_ok(form):
+                        def _on_kill():
+                            filter = form.closest('div.content').find('form.TableFiltr')
+                            $("div.dialog-form").fadeTo( "slow", 0.5 )
+                            if filter.length>0:
+                                filter.attr('action','{{request.path}}/../../')
+                                filter.submit()
+                        on_kill(_on_kill)
                         
-                        function on_kill(fun):
-                            BootstrapDialog.confirm(
-                                'Kill task, are you sure?'
-                                function(result):
-                                    if(result):
-                                        $.post( 
-                                            "/tasks/kill_thread"
-                                            { id: "{{object.id}}", } 
-                                            fun
+                    def on_timer():
+                        obj = $('#cmd_list_{{object.id}}')
+                        if obj.length:
+                            def _on_post(data):
+                                start_id_{{object.id}} += data.length
+                                for pos in data:
+                                    tmp = data[pos]
+                                    if tmp[:3]=='$$$':
+                                        x = tmp[3:].split(':')
+                                        fun = x[0]
+                                        parm = None
+                                        if len(x)>1:
+                                            parm = x[1]
+                                        if fun=="PROGRESS":
+                                            $('#task_progress').css('width', parm+'%')
+                                    else:
+                                        obj.append(data[pos])
+                                        obj.append("<br />")
+                                        obj[0].scrollTop = obj[0].scrollHeight
+                            $.post("/tasks/get_messages", { 'id': "{{object.id}}", 'id_start': start_id_{{object.id}} }, _on_post)
+                        else:
+                            clearInterval(timer_{{object.id}})
+                
+                    timer_{{object.id}}=setInterval( on_timer, 1000)
+                    on_timer()
+                    start_id_{{object.id}} = 0
+
+                    def _on_keydown(event):
+                        if(event.keyCode == 13):
+                            event.preventDefault()
+                            return false
+                        
+                    $(window).keydown(_on_keydown)
+                            
+                    
+                    def _on_key_up(e):
+                        def _fun(data):
+                            $('#cmd').val("")                      
+                            
+                        if (e.keyCode == 13):
+                            $.post("/tasks/put_message", { 'id': "{{object.id}}", 'message': $('#cmd').val()+"\n" }, _fun)
+                            
+                    $("#cmd").keyup(_on_key_up)
+                    
+                    def on_kill(fun):
+                        def _on_kill(result):
+                            if(result):
+                                $.post("/tasks/kill_thread", { 'id': "{{object.id}}", }, fun)
+
+                        BootstrapDialog.confirm('Kill task, are you sure?', _on_kill)
                             
         % else:
             tr

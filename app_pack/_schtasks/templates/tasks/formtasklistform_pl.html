@@ -1,0 +1,48 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with form_width=800 form_height=600 show_title_bar=1 title='Task' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block tabsort_class %}
+        class="tabsort table"
+{% endblock %}
+{% block user_header %}
+        <th>id</th>
+        <th>time_from</th>
+        <th>time_to</th>
+        <th>username</th>
+        <th>title</th>
+        <th>status</th>
+        <th>action</th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td> {{object.id}}</td>
+                <td> {{object.time_from|isoformat}}</td>
+                <td> {{object.time_to|isoformat}}</td>
+                <td> {{object.username}}</td>
+                <td> {{object.title}}</td>
+                <td> {{object.status}}</td>
+                <td>
+                        {% if object.status < 2 %}
+                                {% row_actions %}
+                                        edit2__task,Edit,edit
+                                        delete2__task,Kill,kill
+                                {% endrow_actions %}
+                          {% else %}
+                                {% row_actions %}
+                                        edit2__task,Edit,edit
+                                {% endrow_actions %}
+                        {% endif %}
+                </td>
+        </tr>
+{% endblock %}
+{% block content_start_ok_cancel %}
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;">Kill task</button>
+{% endblock %}
+

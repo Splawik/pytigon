@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-%extends 'template/default.html'
+%extends 'template/desktop.html'
 
 %% heading
 

@@ -1,0 +1,274 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            from schlib.schtools import schjson
+            self.schjson = schjson
+            self.txt.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+            self.start_id = 0
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(250)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            self.task_progress.SetValue(0)
+        def transfer(self):
+            test = False
+            http = wx.GetApp().HTTP
+            parm = { 'id': "{{object.id}}", 'id_start': self.start_id }
+            http.get(self, "/tasks/get_messages", parm=parm)
+            s = http.str()
+            http.clear_ptr()
+            lines = self.schjson.loads(s)
+            for line in lines:
+                if line!="":
+                    if line.startswith('$$$'):
+                        x = line[3:].split(':')
+                        fun = x[0]
+                        if len(x)>1:
+                            parm = x[1]
+                        else:
+                            parm = None
+                        if fun == 'PROGRESS':
+                            self.task_progress.SetValue(int(parm))
+                    else:
+                        self.cmd.AppendText(line)
+                    self.start_id += 1
+                    test = True
+            if test:
+                self.cmd.ScrollToLine(self.start_id)
+        def on_exit(self, event):
+            #http = wx.GetApp().HTTP
+            #http.get(self, "{{request.path}}../delete/")
+            pass
+        def on_close(self):
+            self.tuser.Stop()
+        def on_enter(self, event):
+            value = self.txt.GetValue()
+            parm = { 'id': '{{object.id}}', 'message': value + "\n" }
+            http = wx.GetApp().HTTP
+            http.get(self, "/tasks/put_message", parm=parm)
+            s = http.str()
+            http.clear_ptr()
+            self.txt.SetValue("")
+        def on_timer_user(self, event):
+            return self.transfer()
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 show_title_bar=1 title='Edit task' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_body %}{% endblock %}
+{% block body %}
+        {% if not show_form %}
+                {{ block.super }}
+                <div class="content">
+                        <div class="panel">
+                                <div class="panel-body">
+                                        {% with show_form=True %}
+                                                {{ block.super }}
+                                        {% endwith %}
+                                        <button type="button" class="btn btn-danger" id="kill_task">Kill task</button>
+                                        <script >
+var _on_kill = function() {
+  
+  window.location = "/";
+}
+
+$("#kill_task").click(_on_kill);</script>
+                                </div>
+                        </div>
+                </div>
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block row_edit_form %}
+        <h3 class="panel-title">{{object.title}} (id={{object.id}})</h3>
+        <br />
+        <table class="table">
+                <tr>
+                        <th>status</th>
+                        <td>{{object.status}}</td>
+                </tr>
+                <tr>
+                        <th>username</th>
+                        <td>{{object.username}}</td>
+                </tr>
+                <tr>
+                        <th>time_from</th>
+                        <td>{{object.time_from|isoformat_short}}</td>
+                </tr>
+                {% if object.status > 1 %}
+                        <tr>
+                                <th>time_to</th>
+                                <td>{{object.time_to|isoformat_short}}</td>
+                        </tr>
+                {% endif %}
+                {% if standard_web_browser %}
+                        {% if object.status < 2 %}
+                                <tr><td colspan="2">
+                                        <div class="ext_padding">
+                                                <div class="form-group">
+                                                        <label class="control-label" for="cmd">
+                                                                Enter command:
+                                                        </label>
+                                                        <input type="text" class="form-control" id="cmd" name="cmd" aria-describedby="cmdStatus" />
+                                                </div>
+                                        </div>
+                                  </td></tr>
+                        {% endif %}
+                        <tr><td colspan="2">
+                                <div id="cmd_list_{{object.id}}" style="overflow-y:scroll;height:100px;">
+                                        {% if object.status > 1 %}
+                                                {% for message in messages %}
+                                                        {% if not '$$$' in message %}
+                                                                {{message}} <br />
+                                                        {% endif %}
+                                                {% endfor %}
+                                        {% endif %}
+                                </div>
+                          </td></tr>
+                        {% if object.status < 2 %}
+                                <tr>
+                                        <th>Progress:</th>
+                                        <td>
+                                                <div class="progress">
+                                                        <div id="task_progress" class="progress-bar progress-bar-striped active" role="progressbar" style="width: 50%"></div>
+                                                </div>
+                                        </td>
+                                </tr>
+                        {% endif %}
+                        {% if object.status < 2 %}
+                                <script >
+var on_edit_ok = function(form) {
+  
+      var _on_kill = function() {
+    var filter;
+    filter = form.closest("div.content").find("form.TableFiltr");
+    $("div.dialog-form").fadeTo("slow", 0.5);
+    if (( filter.length ) > 0) {
+      filter.attr("action", "{{request.path}}/../../");
+      filter.submit();
+    }
+  }
+
+  on_kill(_on_kill);
+}
+
+var on_timer = function() {
+  var obj;
+  obj = $("#cmd_list_{{object.id}}");
+  if (__test_if_true__(obj.length)) {
+            var _on_post = function(data) {
+      var x,parm,fun,tmp;
+      start_id_{{object.id}} += data.length;
+            var __iter1 = data;
+      if (! (__iter1 instanceof Array || typeof __iter1 == "string" || __is_typed_array(__iter1) || __is_some_array(__iter1) )) { __iter1 = __object_keys__(__iter1) }
+      for (var __idx1=0; __idx1 < __iter1.length; __idx1++) {
+        var pos = __iter1[ __idx1 ];
+        tmp = data[((pos.__uid__) ? pos.__uid__ : ((pos instanceof Array) ? JSON.stringify(pos) : pos))];
+        if ((tmp.__getslice__(undefined, 3, undefined) instanceof Array ? JSON.stringify(tmp.__getslice__(undefined, 3, undefined))==JSON.stringify("$$$") : tmp.__getslice__(undefined, 3, undefined)==="$$$")) {
+          x = tmp.__getslice__(3, undefined, undefined).split(":");
+          fun = x[0];
+          parm = null;
+          if (( len(x) ) > 1) {
+            parm = x[1];
+          }
+          if ((fun instanceof Array ? JSON.stringify(fun)==JSON.stringify("PROGRESS") : fun==="PROGRESS")) {
+            var __left0,__right1;
+            __left0 = parm;
+            __right1 = "%";
+            $("#task_progress").css("width", (((typeof(__left0) instanceof Array ? JSON.stringify(typeof(__left0))==JSON.stringify("number") : typeof(__left0)==="number")) ? (__left0 + __right1) : __add_op(__left0, __right1)));
+          }
+        } else {
+          obj.append(data[((pos.__uid__) ? pos.__uid__ : ((pos instanceof Array) ? JSON.stringify(pos) : pos))]);
+          obj.append("<br />");
+          obj[0].scrollTop = obj[0].scrollHeight;
+        }
+      }
+    }
+
+    __DOLLAR__.post("/tasks/get_messages", __jsdict([["id", "{{object.id}}"], ["id_start", start_id_{{object.id}}]]), _on_post);
+  } else {
+    clearInterval(timer_{{object.id}});
+  }
+}
+
+timer_{{object.id}} = setInterval(on_timer, 1000);
+on_timer();
+start_id_{{object.id}} = 0;
+var _on_keydown = function(event) {
+  
+  if ((event.keyCode instanceof Array ? JSON.stringify(event.keyCode)==JSON.stringify(13) : event.keyCode===13)) {
+    event.preventDefault();
+    return false;
+  }
+}
+
+$(window).keydown(_on_keydown);
+var _on_key_up = function(e) {
+  
+      var _fun = function(data) {
+    
+    $("#cmd").val("");
+  }
+
+  if ((e.keyCode instanceof Array ? JSON.stringify(e.keyCode)==JSON.stringify(13) : e.keyCode===13)) {
+    var __left2,__right3;
+    __left2 = $("#cmd").val();
+    __right3 = "\n";
+    __DOLLAR__.post("/tasks/put_message", __jsdict([["id", "{{object.id}}"], ["message", (((typeof(__left2) instanceof Array ? JSON.stringify(typeof(__left2))==JSON.stringify("number") : typeof(__left2)==="number")) ? (__left2 + __right3) : __add_op(__left2, __right3))]]), _fun);
+  }
+}
+
+$("#cmd").keyup(_on_key_up);
+var on_kill = function(fun) {
+  
+      var _on_kill = function(result) {
+    
+    if (__test_if_true__(result)) {
+      __DOLLAR__.post("/tasks/kill_thread", __jsdict([["id", "{{object.id}}"]]), fun);
+    }
+  }
+
+  BootstrapDialog.confirm("Kill task, are you sure?", _on_kill);
+}
+</script>
+                        {% endif %}
+                  {% else %}
+                        <tr>
+                                <td colspan="2" width="100%-10">
+                                        <CTRLGAUGE name="task_progress" width="100%-10"></CTRLGAUGE>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td colspan="2" width="100%-10">
+                                        <strong>Enter command: <br /></strong>
+                                        <CTRLTEXT name="txt" param="PROCESS_ENTER" width="100%-10"></CTRLTEXT>
+                                </td>
+                        </tr>
+                        </table><table>
+                        <tr>
+                                <td width="100%">
+                                        <CTRLHTMLLISTBOX name="cmd" width="100%-10" height="100%-50"></CTRLHTMLLISTBOX>
+                                </td>
+                        </tr>
+                {% endif %}
+        </table>
+{% endblock %}
+{% block form_ok_cancel %}
+        {% if not standard_web_browser %}
+                <table width="100%" cellspacing="0" cellpadding="3">
+                        <tr>
+                                <td align="center">
+                                        <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="Close"></CTRLBUTTON><input type="submit" value="Kill task" name="OKBUTTON">
+                                </td>
+                        </tr>
+                </table>
+        {% endif %}
+{% endblock %}
+

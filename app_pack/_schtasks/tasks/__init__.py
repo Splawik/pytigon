@@ -8,3 +8,4 @@ Index = ''
 Urls  = (
     ('form/TaskListForm/?schtml=1',_('Task list'),None,'client://status/image-loading.png'),
 )
+UserParam = {}

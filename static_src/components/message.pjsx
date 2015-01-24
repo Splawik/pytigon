@@ -1,0 +1,5 @@
+Alert = ReactBootstrap.Alert
+message = """
+    Alert bsStyle=warning
+        strong...Holy guacamole!
+        . Sławomir Chołaj!"""

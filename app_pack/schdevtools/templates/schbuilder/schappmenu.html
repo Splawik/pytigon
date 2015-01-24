@@ -1,0 +1,160 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "field_up":"client://actions/go-up.png",
+                        "field_down":"client://actions/go-down.png",
+                    }
+                    child.set_bitmaps(bitmaps)
+</script>
+                {% else %}
+                        <script language="python">
+                def init_form(self):
+                    import os
+                    paths = wx.StandardPaths.Get()
+                    self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=0 title="Menu" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New menu item" %}
+        <a href="{{request.path|replace:"/table/SChApp/|/table/SChApp_wiki/"}}/../../../-/add" class="button" name="New wiki item" label="New wiki item" title="New wiki item" target="_blank"></a>
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+{% endblock %}
+{% block list_row_actions %}
+        {{block.super}}
+        {% if not forloop.first %}
+                {% row_actions %}
+                field_up,Move up
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>Menu item list</h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'name', 'perms'
+        {% endform %}
+        {% block url_select %}
+                <input type="hidden" name="parent" value="{{object.parent.id}}" id="id_parent" />
+                {% if not standard_web_browser %}
+                        {% form_item url %}
+                                <CTRLCHOICE name="url" value="'{{object.url}}'">
+                                        <tdata>
+                                                {% for url in object.get_urls %}
+                                                        <tr><td>{{url}}</td></tr>
+                                                {% endfor %}
+                                        </tdata>
+                                </CTRLCHOICE>
+                        {% endform_item %}
+                  {% else %}
+                        {% form_item url %}
+                                <select name="url2" id="id_url2" class="select form-control">
+                                        {% if not object.url or object.url == "" %}
+                                                <option selected="selected" value="">---------</option>
+                                          {% else %}
+                                                <option value="">---------</option>
+                                                <option value="{{object.url}}" selected="selected">{{object.url}}</option>
+                                        {% endif %}
+                                        {% for url in object.get_urls %}
+                                                {% if not url == object.url %}
+                                                        <option value="{{url}}">{{url}}</option>
+                                                {% endif %}
+                                        {% endfor %}
+                                </select>
+                        {% endform_item %}
+                {% endif %}
+        {% endblock %}
+        {% form %}
+                'url_type'
+        {% endform %}
+        {% form_item icon %}
+                <ctrlbitmapcombobox class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></ctrlbitmapcombobox>
+        {% endform_item %}
+        {% form %}
+                'icon_size'
+        {% endform %}
+{% endblock %}
+{% block old_code %}
+        {{form.fields_as_table.name__perms}}
+        {% block url_select333 %}
+                {% if not standard_web_browser %}
+                        <tr>
+                                <th align="left">
+                                        <input type="hidden" name="parent" value="{{object.parent.id}}" id="id_parent" />
+                                        <em>
+                                                <label for="id_url">Url:</label>
+                                        </em>
+                                </th>
+                                <td>
+                                        <CTRLCHOICE name="url" value="'{{object.url}}'">
+                                                <tdata>
+                                                        {% for url in object.get_urls %}
+                                                                <tr><td>{{url}}</td></tr>
+                                                        {% endfor %}
+                                                </tdata>
+                                        </CTRLCHOICE>
+                                </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                                <th align="left">
+                                        <input type="hidden" name="parent" value="{{object.parent.id}}" id="id_parent" />
+                                        <em>
+                                                <label for="id_url">Url:</label>
+                                        </em>
+                                </th>
+                                <td>
+                                        <select name="url2" id="id_url2">
+                                                {% if not object.url or object.url == "" %}
+                                                        <option selected="selected" value="">---------</option>
+                                                  {% else %}
+                                                        <option value="">---------</option>
+                                                        <option value="{{object.url}}" selected="selected">{{object.url}}</option>
+                                                {% endif %}
+                                                {% for url in object.get_urls %}
+                                                        {% if not url == object.url %}
+                                                                <option value="{{url}}">{{url}}</option>
+                                                        {% endif %}
+                                                {% endfor %}
+                                        </select>
+                                </td>
+                        </tr>
+                {% endif %}
+        {% endblock %}
+        {{form.fields_as_table.url_type}}
+        <tr>
+                <th align="left">
+                        <em>
+                                <label for="id_icon">Icon:</label>
+                        </em>
+                </th>
+                <td>
+                        <ctrlbitmapcombobox width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></ctrlbitmapcombobox>
+                </td>
+        </tr>
+        {{form.fields_as_table.icon_size}}
+{% endblock %}
+

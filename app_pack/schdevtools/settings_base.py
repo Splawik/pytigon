@@ -22,6 +22,8 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 
+THEMES = ['desktop_standard', 'tablet_standard', 'smartfon_standard']
+
 LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
 ROOT_PATH = _rp
@@ -38,8 +40,6 @@ if len(URL_POSTFIX) > 0:
 else:
     MEDIA_URL = '/site_media/'
 
-sys.path.append(LOCAL_ROOT_PATH)
-
 apps = []
 base_apps_path = os.path.join(_lp, '..')
 for ff in os.listdir(base_apps_path):
@@ -52,6 +52,8 @@ for app in apps:
         if os.path.isdir( os.path.join(base_apps_path2,ff)):
             if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
                 APPS.append(app+"."+ff)
+
+sys.path.append(LOCAL_ROOT_PATH)
 
 MEDIA_ROOT = ROOT_PATH + '/app_pack/' + APPSET_NAME +"/media"
 

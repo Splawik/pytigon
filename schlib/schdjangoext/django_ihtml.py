@@ -43,9 +43,9 @@ def ihtml_to_html(file_name, input_str=None, lang='en'):
         conwert.process()
         return conwert.to_str()
     except:
-        import traceback
+        #import traceback
         import sys
         print(sys.exc_info())
-        print(traceback.print_exc())
+        #print(traceback.print_exc())
         return ""
 

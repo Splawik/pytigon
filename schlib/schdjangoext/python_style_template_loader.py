@@ -75,21 +75,23 @@ class Loader(BaseLoader):
                             for pos in settings.LANGUAGES:
                                 langs.append(pos[0])
                             for lang in langs:
-                                ret = ihtml_to_html(filepath, lang=lang)
                                 try:
-                                    if lang=='en':
-                                        f = codecs.open(filepath2, 'w', encoding='utf-8')
-                                        f.write(ret)
-                                        f.close()
-                                    else:
-                                        f = codecs.open(filepath2.replace('.html', '_'+lang+".html"), 'w', encoding='utf-8')
-                                        f.write(ret)
-                                        f.close()
+                                    ret = ihtml_to_html(filepath, lang=lang)
+                                    if ret:
+                                        try:
+                                            if lang=='en':
+                                                with codecs.open(filepath2, 'w', encoding='utf-8') as f:
+                                                    f.write(ret)
+                                            else:
+                                                with codecs.open(filepath2.replace('.html', '_'+lang+".html"), 'w', encoding='utf-8') as f:
+                                                    f.write(ret)
+                                        except:
+                                            import traceback
+                                            import sys
+                                            print(sys.exc_info())
+                                            print(traceback.print_exc())
                                 except:
-                                    import traceback
-                                    import sys
-                                    print(sys.exc_info())
-                                    print(traceback.print_exc())
+                                    pass
                         tried.append(filepath)
                 except IOError:
                     tried.append(filepath)

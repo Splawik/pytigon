@@ -64,13 +64,13 @@ div.ext_padding { padding: 0px 14px; }
     margin-top: 17px;
 }
 
-.tabsort td {
-	padding: 8px;
-}
+//.tabsort td {
+//	padding: 8px;
+//}
 
-.tabsort th {
-	padding: 8px;
-}
+//.tabsort th {
+//	padding: 8px;
+//}
 
 .col_right {
     text-align:right;
@@ -118,4 +118,12 @@ td.control {
   position:relative;
   left: -4px;
   margin: -26px 0px 0px 0px;
+}
+
+body.fixed .menu_offset {
+  margin-top: 52px;
+}
+
+.tabsort_panel {
+    padding:5px;
 }

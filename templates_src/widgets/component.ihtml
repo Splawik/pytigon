@@ -1,0 +1,24 @@
+{# -*- coding: utf-8 -*- #}
+
+%% content
+    % if standard_web_browser
+        % if class:
+            % if module:
+                script src=/static/components/{{class}}.js
+            % else:
+                script src=/static/components/{{module}}/{{class}}.js
+
+        % if create_div:
+            div id={{id}}
+        script language=javascript
+            % if data:
+                .instance={{data}}
+                .React.render(
+                .  instance,
+                .  document.getElementById('{{id}}')
+                .);
+            % else:
+                .React.render(
+                .  React.createElement({{class}}, {{param}} ),
+                .  document.getElementById('{{id}}')
+                .);

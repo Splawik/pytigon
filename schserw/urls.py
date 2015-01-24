@@ -122,11 +122,13 @@ if settings.DEBUG:
 
                     with open(src, "rt") as f:
                         code = f.read()
+                        try:
+                            if file_name.lower().endswith('.py'):
+                                codejs = py_to_js(code, root)
+                            else:
+                                codejs = pjsx_to_js(code, root)
 
-                        if file_name.lower().endswith('.py'):
-                            codejs = py_to_js(code, root)
-                        else:
-                            codejs = pjsx_to_js(code, root)
-
-                        with open(dest, "wt") as f2:
-                            f2.write(codejs)
+                            with open(dest, "wt") as f2:
+                                f2.write(codejs)
+                        except:
+                            print("compile error - file:", src)

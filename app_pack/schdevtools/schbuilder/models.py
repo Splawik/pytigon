@@ -190,6 +190,28 @@ ViewRetType_CHOICES = (
     
     )
 
+HtmlGui_CHOICES = (
+    ("auto","auto"),
+    ("desktop_standard","desktop_standard"),
+    ("desktop_modern","desktop_modern"),
+    ("desktop_traditional","desktop_traditional"),
+    ("tablet_standard","tablet_standard"),
+    ("tablet_modern","tablet_modern"),
+    ("tablet_traditional","tablet_traditional"),
+    ("smartfon_standard","smartfon_standard"),
+    ("smartfon_modern","smartfon_modern"),
+    ("smartfon_traditional","smartfon_traditional"),
+    
+    )
+
+ContentType_CHOICES = (
+    ("pythonjs","pythonjs"),
+    ("react_pjsx","react_pjsx"),
+    ("css","css"),
+    ("js","js"),
+    
+    )
+
 
 
 
@@ -216,6 +238,10 @@ class SChAppSet(models.Model):
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
+    desktop_gui_type = models.CharField('Gui type for pc web browser', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
+    smartfon_gui_type = models.CharField('Gui type for smartfon', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
+    tablet_gui_type = models.CharField('Gui type for tablet', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
+    user_param = models.TextField('User parameter', null=True, blank=True, editable=True, )
     
 
     def get_ext_apps(self):
@@ -268,6 +294,7 @@ class SChApp(models.Model):
     urls_code = models.TextField('Urls code', null=True, blank=True, editable=False, )
     tasks_code = models.TextField('Tasks code', null=True, blank=True, editable=True, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
+    user_param = models.TextField('Urser parameter', null=True, blank=True, editable=True, )
     
 
     def get_models(self):
@@ -981,7 +1008,7 @@ class SChTask(models.Model):
     
 
     def transform_template_name(self, request, template_name):
-        if '/tasks_code/py/editor' in request.path:
+        if '/code/py/editor' in request.path:
             if template_name == 'schsys/db_field_edt.html':
                 return 'schbuilder/db_field_edt_task.html'
         return template_name

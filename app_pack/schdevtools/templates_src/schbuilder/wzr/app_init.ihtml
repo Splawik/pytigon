@@ -8,3 +8,4 @@ Index = '{{app.index}}'
 Urls  = ({% for item in app.schappmenu_set.all %}
     ('{{item.clean_url}}{{item.get_url_type_ext}}',_('{{item.name}}'),{{item.get_perms|safe}},'{{item.icon|safe}}{% if item.not_standard_icon_size %}?size={{item.icon_size}}{% endif %}'),{% endfor %}
 )
+UserParam = {{user_param|safe}}

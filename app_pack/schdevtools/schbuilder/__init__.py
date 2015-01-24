@@ -8,3 +8,4 @@ Index = 'None'
 Urls  = (
     ('table/SChAppSet/-/form/list?schtml=1',_('Applications set'),None,'client://status/folder-open.png'),
 )
+UserParam = {}
