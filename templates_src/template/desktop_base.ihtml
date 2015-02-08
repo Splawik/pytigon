@@ -30,19 +30,21 @@
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+
+    {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
+
     {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
     {% jscript_link 'react/react.js' %}
     {% jscript_link 'react_plugins/react-bootstrap/react-bootstrap.min.js' %}
 
-    {% jscript_link 'sch/stick_header.js' %}
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
 
 
 %% jquery_init
-    .jquery_init('{{application_type}}', '{{scroll_table}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}')
+    .jquery_init('{{application_type}}', '{{table_type}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}', '{{request.get_full_path}}')
 
 
 %% jquery_ready_start
@@ -79,7 +81,6 @@
     {% css_link 'jquery_plugins/datatables/FixedColumns/css/dataTables.fixedColumns.css' %}
     {% css_link 'jquery_plugins/datatables/Responsive/css/dataTables.responsive.css' %}
     {% css_link 'jquery_plugins/datatables/Scroller/css/dataTables.scroller.css' %}
-
 
     {% css_link 'themes/bootstrap/jquery-ui.css' %}
     {% css_link 'bootstrap/css/bootstrap.min.css' %}
@@ -141,7 +142,7 @@
 
 
 %% tabsort_class
-    .class="tabsort"
+    .class="tabsort table"
 
 
 %% body_start
@@ -173,6 +174,7 @@
                 ul class=nav nav-tabs,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
         div id=body_body
+            {{block.super}}
         script
             $('#tabs2:first').tabdrop()
 

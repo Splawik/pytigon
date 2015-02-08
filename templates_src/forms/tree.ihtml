@@ -8,7 +8,7 @@
 
 
 %% all
-    %with form_width=620 form_height=360  scroll_table=True no_id=True
+    %with form_width=620 form_height=360  table_type=1 no_id=True
         {{ block.super }}
 
 

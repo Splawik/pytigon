@@ -16,9 +16,21 @@ IS_POPUP = false;
 SUBWIN = false;
 LANG = "en";
 MENU = null;
-function _on_close_page(event) {
-    get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
+ACTIVE_PAGE = null;
+PUSH_STATE = true;
+BASE_PATH = null;
+function TabMenuItem() {
+    this.__init__.apply(this, arguments);
 }
+TabMenuItem.prototype.__init__ = function __init__(id, title, url, data){
+    var self = this;
+    if (typeof data === "undefined") data = null;
+    self.id = id;
+    self.title = title;
+    self.url = url;
+    self.data = data;
+};
+
 function Menu() {
     this.__init__.apply(this, arguments);
 }
@@ -35,47 +47,132 @@ Menu.prototype.is_open = function is_open(title){
         return false;
     }
 };
-Menu.prototype.activate = function activate(title){
+Menu.prototype.activate = function activate(title, push_state){
+    var self = this;
+    if (typeof push_state === "undefined") push_state = true;
+    var menu_item;
+    menu_item = self.titles[title];
+    jQuery(sprintf("#li_%s a", menu_item.id)).tab("show");
+    if (push_state && PUSH_STATE) {
+        history_push_state(menu_item.title, menu_item.url);
+    }
+};
+Menu.prototype.new_page = function new_page(title, data, href){
     var self = this;
     var _id;
-    _id = self.titles[title];
-    jQuery(sprintf("#li_%s a", _id)).tab("show");
-};
-Menu.prototype.new_pos = function new_pos(title, data){
-    var self = this;
-    var _id, options;
-    if (self.is_open()) {
-        self.activate(title);
-        return null;
-    } else {
-        _id = "tab" + self.id;
-        self.titles[title] = _id;
-        jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [ _id, _id, title, _id ]));
-        jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
-        jQuery("#" + _id).html(data);
-        options = get_datatable_options();
-        jQuery("#" + _id + " .tabsort").dataTable(get_datatable_options());
-        $("#tabs2 a:last").tab("show");
-        $(sprintf("#button_%s", _id)).click(_on_close_page);
-        self.id += 1;
-        return _id;
+    _id = "tab" + self.id;
+    self.titles[title] = new TabMenuItem(_id, title, href, data);
+    jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [ _id, _id, title, _id ]));
+    jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
+    ACTIVE_PAGE = jQuery("#" + _id);
+    jQuery("#" + _id).html(data);
+    if (PUSH_STATE) {
+        history_push_state(title, href);
     }
+    jQuery("#tabs2 a:last").tab("show");
+    jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
+        var menu, menu_item;
+        ACTIVE_PAGE = jQuery("#" + _id);
+        menu = get_menu();
+        menu_item = menu.titles[jQuery.trim(e.target.text)];
+        if (PUSH_STATE) {
+            history_push_state(menu_item.title, menu_item.url);
+        }
+    });
+    self.on_new_page(_id);
+    jQuery(sprintf("#button_%s", _id)).click(function(event) {
+        get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
+    });
+    self.id += 1;
+    return _id;
 };
 Menu.prototype.remove_page = function remove_page(id){
     var self = this;
-    var pos;
-    var _$rapyd$_Iter0 = self.titles;
-    for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
-        pos = _$rapyd$_Iter0[_$rapyd$_Index0];
-        if (self.titles[pos] === id) {
-            self.titles[pos] = null;
+    jQuery.each(self.titles, function(index, value) {
+        if (value && value.id === id) {
+            self.titles[index] = null;
         }
-    }
+    });
     jQuery(sprintf("#li_%s", id)).remove();
     jQuery(sprintf("#%s", id)).remove();
     jQuery("#tabs2 a:last").tab("show");
 };
+Menu.prototype.on_new_page = function on_new_page(id){
+    var self = this;
+    var table_type, paginator, pg, totalPages, options, paginate;
+    table_type = get_table_type(jQuery("#" + id));
+    paginator = get_page(jQuery("#" + id)).find(".pagination");
+    if (paginator.length > 0) {
+        paginate = true;
+        pg = ACTIVE_PAGE.find(".pagination");
+        totalPages = pg.attr("totalPages");
+        options = {
+            "totalPages": totalPages,
+            "visiblePages": 3,
+            "first": "<<",
+            "prev": "<",
+            "next": ">",
+            "last": ">>",
+            "onPageClick": function(event, page) {
+                var form;
+                form = pg.closest("form");
+                if (form) {
+                    function _on_new_page(data) {
+                        pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
+                    }
+                    jQuery.ajax({
+                        "type": "POST",
+                        "url": pg.attr("href").replace("[[page]]", page) + "&hybrid=1",
+                        "data": form.serialize(),
+                        "success": _on_new_page
+                    });
+                }
+            }
+        };
+        pg.twbsPagination(options);
+    } else {
+        paginate = false;
+    }
+    set_table_type(table_type, "#" + id + " .tabsort", paginate);
+};
 
+function get_datatable_dy(selector) {
+    var dy_table, dy_win, dy;
+    dy_table = ACTIVE_PAGE.find(".tabsort_panel").offset().top;
+    dy_win = jQuery(window).height();
+    dy = dy_win - dy_table;
+    if (dy < 100) {
+        dy = 100;
+    }
+    return dy;
+}
+function set_table_type(table_type, selector, paginate) {
+    var options;
+    if (table_type === "" || table_type === "simple") {
+    }
+    if (table_type === "scrolled") {
+        stick_header();
+    }
+    if (table_type === "datatable") {
+        if (paginate) {
+            options = get_datatable_options1();
+            options["scrollY"] += get_datatable_dy(selector);
+            jQuery(selector).dataTable(options);
+        } else {
+            options = get_datatable_options();
+            options["scrollY"] += get_datatable_dy(selector);
+            jQuery(selector).dataTable(options);
+        }
+    }
+    if (table_type === "server-side") {
+        options = get_datatable_options2();
+        options["scrollY"] += get_datatable_dy(selector);
+        jQuery(selector).dataTable(options);
+    }
+    jQuery(selector).on("click", "a.popup", _on_popup);
+    jQuery(selector).on("click", "a.popup_info", _on_popup_info);
+    jQuery(selector).on("click", "a.popup_delete", _on_popup_delete);
+}
 function get_menu() {
     if (!MENU) {
         MENU = new Menu();
@@ -116,6 +213,18 @@ function ajax_submit(form, func) {
         });
     }
 }
+function get_page(elem) {
+    return elem.closest(".tab-pane");
+}
+function get_table_type(elem) {
+    var tabsort;
+    tabsort = get_page(elem).find(".tabsort");
+    if (tabsort.length > 0) {
+        return tabsort.attr("table_type");
+    } else {
+        return "";
+    }
+}
 function can_popup() {
     if (IS_POPUP) {
         return false;
@@ -133,27 +242,11 @@ function _dialog_loaded(is_modal) {
 }
 function on_dialog_load() {
 }
-function _dialog_ex_load1(responseText, status, response) {
-    if (status !== "error") {
-        _dialog_loaded(true);
-        on_dialog_load();
-    }
-}
 function dialog_ex_load2(responseText, status, response) {
     if (status !== "error") {
         _dialog_loaded(false);
         on_dialog_load();
     }
-}
-function dialog_ex_load_delete(responseText, status, response) {
-    jQuery("div.dialog-form-delete").modal();
-}
-function dialog_ex_load_info(responseText, status, response) {
-    jQuery("div.dialog-form-info").modal();
-}
-function _on_hide(e) {
-    IS_POPUP = false;
-    jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
 }
 function _on_popup() {
     var l;
@@ -163,16 +256,23 @@ function _on_popup() {
         jQuery("div.dialog-form").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data").load(jQuery(this).attr("href"), null, _dialog_ex_load1);
+            jQuery("div.dialog-data").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+                if (status !== "error") {
+                    _dialog_loaded(true);
+                    on_dialog_load();
+                }
+            });
         } else {
             l.start();
             jQuery(".inline_dialog").remove();
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
-            function _on_loaded(responseText, status, response) {
-                dialog_ex_load2(responseText, status, response);
+            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+                if (status !== "error") {
+                    _dialog_loaded(false);
+                    on_dialog_load();
+                }
                 l.stop();
-            }
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null, _on_loaded);
+            });
         }
     }
     return false;
@@ -183,7 +283,9 @@ function _on_popup_info() {
         jQuery("div.dialog-form-info").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"), null, dialog_ex_load_info);
+            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+                jQuery("div.dialog-form-info").modal();
+            });
         } else {
             jQuery(".inline_dialog").remove();
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
@@ -198,7 +300,9 @@ function _on_popup_delete() {
         jQuery("div.dialog-form-delete").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"), null, dialog_ex_load_delete);
+            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+                jQuery("div.dialog-form-delete").modal();
+            });
         } else {
             jQuery(".inline_dialog").remove();
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
@@ -274,7 +378,10 @@ function date_init() {
     });
 }
 function popup_init() {
-    jQuery("div.dialog-form").on("hide.bs.modal", _on_hide);
+    jQuery("div.dialog-form").on("hide.bs.modal", function(e) {
+        IS_POPUP = false;
+        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
+    });
     jQuery("a.popup").click(_on_popup);
     jQuery("a.popup_info").click(_on_popup_info);
     jQuery("a.popup_delete").click(_on_popup_delete);
@@ -282,7 +389,34 @@ function popup_init() {
 function get_datatable_options() {
     var options;
     options = {
-        "scrollY": 400,
+        "scrollY": -120,
+        "paging": false,
+        "responsive": true,
+        "dom": "RC<\"clear\">frt",
+        "language": {
+            "url": "/static/jquery_plugins/datatables/i18n/Polish.lang"
+        }
+    };
+    return options;
+}
+function get_datatable_options1() {
+    var options;
+    options = {
+        "scrollY": -75,
+        "paging": false,
+        "responsive": true,
+        "dom": "lrt",
+        "bSort": false,
+        "language": {
+            "url": "/static/jquery_plugins/datatables/i18n/Polish.lang"
+        }
+    };
+    return options;
+}
+function get_datatable_options2() {
+    var options;
+    options = {
+        "scrollY": 0,
         "paging": false,
         "responsive": true,
         "dom": "lrt",
@@ -295,9 +429,9 @@ function get_datatable_options() {
 function _on_menu_href(event) {
     var title, menu, classname, l, href;
     if (APPLICATION_TEMPLATE !== "traditional") {
-        title = $(this).text();
+        title = jQuery.trim(jQuery(this).text());
         menu = get_menu();
-        classname = $(this).attr("class");
+        classname = jQuery(this).attr("class");
         if (_$rapyd$_in("btn", classname)) {
             l = Ladda.create(this);
         } else {
@@ -306,19 +440,11 @@ function _on_menu_href(event) {
         if (APPLICATION_TEMPLATE === "modern" && menu.is_open(title)) {
             menu.activate(title);
         } else {
+            href = jQuery(this).attr("href");
             function _on_new_win(data) {
                 var id;
                 if (APPLICATION_TEMPLATE === "modern") {
-                    id = menu.new_pos(title, data);
-                    function _on_new_page(data) {
-                        alert("X2");
-                        alert(data);
-                    }
-                    function _on_click() {
-                        alert("X1");
-                        return false;
-                    }
-                    jQuery("#" + id + " .paginator").click(_on_click);
+                    id = menu.new_page(title, data, href);
                 } else {
                     jQuery("#body_body").html(data);
                 }
@@ -327,7 +453,6 @@ function _on_menu_href(event) {
                     l.stop();
                 }
             }
-            href = jQuery(this).attr("href");
             if (_$rapyd$_in("?", href)) {
                 href = href + "&hybrid=1";
             } else {
@@ -345,26 +470,23 @@ function _on_menu_href(event) {
                 "url": href,
                 "success": _on_new_win
             });
-            $(this).closest(".dropdown-menu").dropdown("toggle");
-            $(".navbar-ex1-collapse").collapse("hide");
+            jQuery(this).closest(".dropdown-menu").dropdown("toggle");
+            jQuery(".navbar-ex1-collapse").collapse("hide");
         }
         return false;
     }
 }
-function jquery_init(application_template, scroll_table, menu_id, lang) {
+function jquery_init(application_template, menu_id, lang, base_path) {
     var SUBWIN;
-    scroll_table = false;
     APPLICATION_TEMPLATE = application_template;
     LANG = lang;
+    BASE_PATH = base_path;
     if (IS_POPUP) {
         SUBWIN = true;
     } else {
         SUBWIN = false;
     }
     if (!SUBWIN) {
-        if (scroll_table === "True") {
-            jQuery(window).load(stick_header);
-        }
         jQuery(function() {
             jQuery("#menu_tabs").tabs();
             if (APPLICATION_TEMPLATE !== "traditional") {
@@ -377,9 +499,126 @@ function jquery_init(application_template, scroll_table, menu_id, lang) {
     }
 }
 function jquery_ready() {
+    var tabsort, table_type, paginator, paginate, txt2, txt, menu;
     jQuery(document).ajaxError(_on_error);
     date_init();
     if (APPLICATION_TEMPLATE === "traditional") {
-        jQuery(".tabsort").dataTable(get_datatable_options());
+        ACTIVE_PAGE = jQuery("#body_body");
+        tabsort = JQuery(".tabsort");
+        if (tabsort.length > 0) {
+            table_type = tabsort.attr("table_type");
+        } else {
+            table_type = "";
+        }
+        paginator = JQuery(".paginator");
+        if (paginator.length > 0) {
+            paginate = true;
+        } else {
+            paginate = false;
+        }
+        set_table_type(table_type, ".tabsort", paginate);
+    } else {
+        if (APPLICATION_TEMPLATE === "modern") {
+            txt = jQuery("#body_body").text();
+            txt2 = jQuery.trim(txt);
+            if (txt2) {
+                txt = jQuery.trim(jQuery("#body_body").html());
+                jQuery("#body_body").html("");
+                menu = get_menu();
+                menu.new_page(jQuery("title").text(), txt, BASE_PATH);
+            }
+        }
     }
+}
+function stick_resize() {
+    var tbl, dy_table, dy_win, dy;
+    tbl = ACTIVE_PAGE.find(".tbl_scroll");
+    dy_table = tbl.offset().top;
+    dy_win = dy_win = jQuery(window).height();
+    dy = dy_win - dy_table;
+    if (dy < 100) dy = 100;
+    tbl.height(dy - 35);
+}
+function resize_win() {
+    var tab_width, tab2;
+    stick_resize();
+    tab2 = [];
+    tab_width = ACTIVE_PAGE.find("table[name='tabsort']").width();
+    ACTIVE_PAGE.find(".tbl_header").width(tab_width);
+    ACTIVE_PAGE.find("table[name='tabsort'] tr:first td").each(function() {
+        tab2.push(jQuery(this).width());
+    });
+    tab2 = tab2.reverse();
+    ACTIVE_PAGE.find(".tbl_header th").each(function() {
+        jQuery(this).width(tab2.pop());
+    });
+}
+function stick_header2() {
+    var table, tab2, tab;
+    tab = [];
+    tab2 = [];
+    jQuery("table.tabsort th").each(function() {
+        tab.push($(this).width());
+    });
+    table = jQuery("<table id=\"tbl_header\" class=\"tabsort\" style=\"overflow-x: hidden;\"></table>");
+    table.append(jQuery("table.tabsort thead"));
+    jQuery("#tbl_scroll").before(table);
+    jQuery("#tbl_header th").each(function() {
+        tab2.push($(this).width());
+    });
+    tab2 = tab2.reverse();
+    jQuery("table[name='tabsort'] tr:first td").each(function() {
+        var x;
+        x = tab2.pop();
+        if (x > jQuery(this).width()) {
+            jQuery(this).css("min-width", x);
+        }
+    });
+    tab = tab.reverse();
+    jQuery("#tbl_header th").each(function() {
+        jQuery(this).width(tab.pop());
+    });
+    jQuery(window).resize(resize_win);
+    resize_win();
+}
+function stick_header() {
+    var table, tab2, tab;
+    tab = [];
+    tab2 = [];
+    ACTIVE_PAGE.find("table.tabsort th").each(function() {
+        tab.push($(this).width());
+    });
+    table = jQuery("<table class=\"tabsort tbl_header\" style=\"overflow-x: hidden;\"></table>");
+    table.append(ACTIVE_PAGE.find("table.tabsort thead"));
+    ACTIVE_PAGE.find(".tbl_scroll").before(table);
+    ACTIVE_PAGE.find(".tbl_header th").each(function() {
+        tab2.push($(this).width());
+    });
+    tab2 = tab2.reverse();
+    ACTIVE_PAGE.find("table[name='tabsort'] tr:first td").each(function() {
+        var x;
+        x = tab2.pop();
+        if (x > jQuery(this).width()) {
+            jQuery(this).css("min-width", x);
+        }
+    });
+    tab = tab.reverse();
+    ACTIVE_PAGE.find(".tbl_header th").each(function() {
+        jQuery(this).width(tab.pop());
+    });
+    jQuery(window).resize(resize_win);
+    resize_win();
+}
+window.addEventListener("popstate", function(e) {
+    var menu;
+    if (e.state) {
+        PUSH_STATE = false;
+        menu = get_menu().activate(e.state, false);
+        PUSH_STATE = true;
+    }
+}, false);
+function history_push_state(title, url) {
+    var url2;
+    url2 = url.split("?")[0];
+    window.history.pushState(title, title, url2);
 }

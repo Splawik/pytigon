@@ -675,8 +675,13 @@ def link(context, href, rel, typ):
     return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ})
 
 
+
 @register.inclusion_tag('widgets/paginator.html', takes_context=True)
 def paginator(context):
+    return context
+
+@register.inclusion_tag('widgets/paginator.html', takes_context=True)
+def paginator2(context):
 
     context['page_range'] = []
 

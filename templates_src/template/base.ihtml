@@ -53,7 +53,7 @@
                 </div>
         % else
             %% row_edit_start
-                % if standard_web_browser == 1
+                % if standard_web_browser == 1 or standard_web_browser == 2:
                     <div id="Dialog">
             %% row_edit_header
                 {{form.errors|as_crispy_errors}}
@@ -74,7 +74,7 @@
                 %% form_ok_cancel
 
             %% row_edit_end
-                % if standard_web_browser == 1:
+                % if standard_web_browser == 1 or standard_web_browser == 2:
                     </div>
             script
                 $('#ModalLabel').html('{{title}}')
@@ -146,10 +146,10 @@
 
             %% list_content_body
               div class=tabsort_panel
-                %if xscroll_table and standard_web_browser == 1
-                    <div id="tbl_scroll" style="overflow-y: scroll;">
-
-                table id=tabsort,,,name=tabsort,,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
+                % if standard_web_browser == 1 or standard_web_browser == 2:
+                    %if table_type == 'scrolled':
+                        <div class="tbl_scroll" style="overflow-y: scroll;">
+                table id=tabsort,,,name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
                     %% list_full_row_header
                         thead
                             tr
@@ -184,12 +184,9 @@
 
                         %% list_table_footer
 
-                %if standard_web_browser == 1
-                    % if xscroll_table
+                %if standard_web_browser == 1  or standard_web_browser == 2:
+                    % if table_type == 'scrolled':
                         </div>
-                    % else
-                        div style=padding:0.5em
-                            {% paginator %}
 
 	        %% list_content_footer
 

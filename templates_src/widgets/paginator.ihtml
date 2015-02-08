@@ -1,42 +1,8 @@
 % load exfiltry
 % load exsyntax
 
+
 % if standard_web_browser
     % if is_paginated
-        % load i18n
-        div class=btn-group
-            % if page_obj.has_previous
-                    a href=?page={{ page_obj.previous_page_number }}{{ getvars }}{{ hashtag }},,,class=btn btn-primary btn-sm paginator
-                        &lsaquo;&lsaquo; {% trans "previous" %}
-            % else
-                    a href=#,,,class=btn btn-primary btn-sm disabled
-                        &lsaquo;&lsaquo; {% trans "previous" %}
+        ul class=pagination,,,totalPages={{paginator.num_pages}},,,href={{request.path}}?page=[[page]]{{ getvars }}{{ hashtag }},,,style=margin-top:5px;margin-bottom=0px;
 
-            % if not page_all
-                % if page_obj.number == 1
-                    a href=#,,,class=btn btn-info btn-sm...{{ 1 }}
-                % else
-                    a href=?page={{ paginator.page_range.0 }}{{ getvars }}{{ hashtag }},,,class=btn btn-primary btn-sm paginator
-                        1
-
-
-            % for page in page_range
-                % if page
-                    % if page == page_obj.number
-                            a href=#,,,class=btn btn-info btn-sm...{{ page }}
-                    % else
-                            a href=?page={{ page }}{{ getvars }}{{ hashtag }},,,class=btn btn-primary btn-sm paginator...{{ page }}
-                % else
-                    . ...
-            % if not page_all
-                % if page_obj.number == page_last
-                    a href=#,,,class=btn btn-info btn-sm...{{ page_last }}
-                % else
-                    a href=?page={{page_last}}{{ getvars }}{{ hashtag }},,,class=btn btn-primary btn-sm paginator
-                        {{ page_last }}
-
-            % if page_obj.has_next
-                    a href=?page={{ page_obj.next_page_number }}{{ getvars }}{{ hashtag }},,,class=btn btn-primary btn-sm paginator
-                        {% trans "next" %} &rsaquo;&rsaquo;
-            % else
-                    a href=#,,,class=btn btn-primary btn-sm disabled...{% trans "next" %} &rsaquo;&rsaquo;
