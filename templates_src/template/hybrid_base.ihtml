@@ -5,6 +5,8 @@
 %% heading
 
 %% page_head
+    title
+        {{title}}
 
 %% menu_start
 %% menu

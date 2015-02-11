@@ -7,8 +7,8 @@
 % load crispy_forms_tags
 
 %% js_scripts_base
+    {% jscript_link 'vanillajs_plugins/baselib.js' %}
     {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
-
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
 
     {% jscript_link 'jquery/js/jquery.min.js' %}

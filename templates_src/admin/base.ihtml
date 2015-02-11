@@ -1,4 +1,4 @@
-!!!{% extends "base.html" %}
+!!!{% extends "template/hybrid.html" %}
 
 
 {% block js_extrascipts %}
@@ -21,9 +21,6 @@
 
 
 {% block nav %}
-    {% if not no_nav %}
-        {{block.super}}
-    {% endif %}
 {% endblock %}
 
 

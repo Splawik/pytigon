@@ -1,5 +1,6 @@
 APPLICATION_TEMPLATE = 'standard'
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
+ZORRO = True
 
 RET_BUFOR = None
 RET_OBJ = None
@@ -11,6 +12,11 @@ MENU = None
 ACTIVE_PAGE = None
 PUSH_STATE = True
 BASE_PATH = None
+
+class Page:
+    def __init__(self, id, page):
+        self.id = id
+        self.page = page
 
 class TabMenuItem:
     def __init__(self, id, title, url, data=None):
@@ -45,7 +51,7 @@ class Menu:
         jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [_id, _id, title, _id]))
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
-        ACTIVE_PAGE = jQuery('#'+_id)
+        ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
 
         jQuery('#'+_id).html(data)
         if PUSH_STATE:
@@ -57,7 +63,7 @@ class Menu:
 
         jQuery('#tabs2 a:last').on('shown.bs.tab',def(e):
                 nonlocal PUSH_STATE, ACTIVE_PAGE
-                ACTIVE_PAGE = jQuery('#'+_id)
+                ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
                 menu = get_menu()
                 menu_item = menu.titles[jQuery.trim(e.target.text)]
                 if PUSH_STATE:
@@ -89,7 +95,7 @@ class Menu:
         paginator = get_page(jQuery('#'+ id)).find('.pagination')
         if paginator.length>0:
             paginate = True
-            pg = ACTIVE_PAGE.find('.pagination')
+            pg = ACTIVE_PAGE.page.find('.pagination')
             totalPages = pg.attr('totalPages')
             options = {
                 'totalPages': totalPages,
@@ -106,12 +112,18 @@ class Menu:
             paginate = False
 
         set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
+        self.activate_new_page(id)
 
-
+    def activate_new_page(self, id):
+        $('#'+ id + " a" ).on( "click", def(e):
+            if $(this).hasClass( "menu-href" ) or ($(this).attr('href') and '/admin/' in $(this).attr('href')):
+                e.preventDefault()
+                return _on_menu_href3(this)
+        )
 
 
 def get_datatable_dy(selector):
-    dy_table = ACTIVE_PAGE.find('.tabsort_panel').offset().top
+    dy_table = ACTIVE_PAGE.page.find('.tabsort_panel').offset().top
     dy_win = jQuery(window).height()
     dy = dy_win - dy_table
     if dy<100: dy = 100
@@ -366,27 +378,31 @@ def get_datatable_options2():
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(event):
-    if APPLICATION_TEMPLATE != 'traditional':
+    return _on_menu_href2(this)
 
-        title = jQuery.trim(jQuery(this).text())
+
+def _on_menu_href2(elem, title=None):
+    if APPLICATION_TEMPLATE != 'traditional':
+        if not title:
+            title = jQuery.trim(jQuery(elem).text())
         menu = get_menu()
-        classname = jQuery(this).attr("class")
-        if 'btn' in classname:
-            l = Ladda.create(this)
+        classname = jQuery(elem).attr("class")
+        if classname and 'btn' in classname:
+            l = Ladda.create(elem)
         else:
             l = None
 
         if APPLICATION_TEMPLATE == 'modern' and menu.is_open(title):
             menu.activate(title)
         else:
-            href = jQuery(this).attr("href")
+            href = jQuery(elem).attr("href")
             def _on_new_win(data):
                 nonlocal href
+
                 if APPLICATION_TEMPLATE == 'modern':
                     id = menu.new_page(title, data, href)
                 else:
                     jQuery('#body_body').html(data)
-
 
                 popup_init()
                 if l:
@@ -398,13 +414,24 @@ def _on_menu_href(event):
                 href = href + '?hybrid=1'
             if APPLICATION_TEMPLATE == 'standard' and 'btn' in classname:
                 jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
-                jQuery(this).removeClass('btn-info').addClass('btn-warning')
+                jQuery(elem).removeClass('btn-info').addClass('btn-warning')
             if l:
                 l.start()
             jQuery.ajax({'type': "GET", 'url': href, 'success': _on_new_win })
-            jQuery(this).closest('.dropdown-menu').dropdown('toggle')
+            jQuery(elem).closest('.dropdown-menu').dropdown('toggle')
             jQuery('.navbar-ex1-collapse').collapse('hide')
         return False
+
+def _on_menu_href3(elem):
+    nonlocal ACTIVE_PAGE
+    href = jQuery(elem).attr("href")
+    jQuery.ajax({'type': "GET", 'url': href, 'success': def(data):
+        if APPLICATION_TEMPLATE == 'modern':
+            ACTIVE_PAGE.page.html(data)
+            get_menu().activate_new_page(ACTIVE_PAGE.id)
+        else:
+            jQuery('#body_body').html(data)
+    })
 
 def jquery_init(application_template, menu_id, lang, base_path):
     nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH
@@ -432,7 +459,7 @@ def jquery_ready():
     jQuery(document).ajaxError(_on_error)
     date_init()
     if APPLICATION_TEMPLATE == 'traditional':
-        ACTIVE_PAGE = jQuery('#body_body')
+        ACTIVE_PAGE = Page(0, jQuery('#body_body'))
 
         tabsort = JQuery('.tabsort')
         if tabsort.length>0:
@@ -457,8 +484,9 @@ def jquery_ready():
                 menu.new_page(jQuery('title').text(), txt, BASE_PATH)
 
 
+
 def stick_resize():
-    tbl = ACTIVE_PAGE.find(".tbl_scroll")
+    tbl = ACTIVE_PAGE.page.find(".tbl_scroll")
     dy_table = tbl.offset().top
     dy_win = dy_win = jQuery(window).height()
     dy = dy_win - dy_table
@@ -469,14 +497,14 @@ def stick_resize():
 def resize_win():
     stick_resize()
     tab2 = []
-    tab_width = ACTIVE_PAGE.find("table[name='tabsort']").width()
-    ACTIVE_PAGE.find(".tbl_header").width(tab_width)
+    tab_width = ACTIVE_PAGE.page.find("table[name='tabsort']").width()
+    ACTIVE_PAGE.page.find(".tbl_header").width(tab_width)
 
-    ACTIVE_PAGE.find("table[name='tabsort'] tr:first td").each(def():
+    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(def():
         tab2.push(jQuery(this).width())
     )
     tab2 = tab2.reverse()
-    ACTIVE_PAGE.find(".tbl_header th").each(def():
+    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
         jQuery(this).width(tab2.pop())
     )
 
@@ -521,29 +549,29 @@ def stick_header():
     tab = []
     tab2 = []
 
-    ACTIVE_PAGE.find("table.tabsort th").each(def():
+    ACTIVE_PAGE.page.find("table.tabsort th").each(def():
         tab.push($(this).width())
     )
 
     table = jQuery('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>')
-    table.append( ACTIVE_PAGE.find("table.tabsort thead") )
+    table.append( ACTIVE_PAGE.page.find("table.tabsort thead") )
 
-    ACTIVE_PAGE.find('.tbl_scroll').before(table)
+    ACTIVE_PAGE.page.find('.tbl_scroll').before(table)
 
-    ACTIVE_PAGE.find(".tbl_header th").each(def():
+    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
         tab2.push($(this).width())
     )
 
     tab2 = tab2.reverse()
 
-    ACTIVE_PAGE.find("table[name='tabsort'] tr:first td").each(def():
+    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(def():
         x = tab2.pop()
         if x > jQuery(this).width():
             jQuery(this).css("min-width", x)
     )
 
     tab = tab.reverse()
-    ACTIVE_PAGE.find(".tbl_header th").each(def():
+    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
         jQuery(this).width(tab.pop())
     )
 
@@ -564,3 +592,11 @@ window.addEventListener('popstate', def(e):
 def history_push_state(title, url):
     url2 = url.split("?")[0]
     window.history.pushState(title, title, url2)
+
+#window.addEventListener('click', def(e):
+#    alert($(this).attr('href'))
+#    if $(this).hasClass( "menu-href" ) or '/admin/' in $(this).attr('href'):
+#        return _on_menu_href(e)
+#,False)
+
+

@@ -17,17 +17,19 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 
 import os
+import sys
 import io
 import re
 from .indent_tools import convert_js
 import gettext
 import codecs
+import subprocess
 
-from pythonjs.python_to_pythonjs import main as python_to_pythonjs
-from pythonjs.pythonjs import main as pythonjs_to_javascript
+#from pythonjs.python_to_pythonjs import main as python_to_pythonjs
+#from pythonjs.pythonjs import main as pythonjs_to_javascript
 
 try:
     from react import jsx
@@ -566,7 +568,7 @@ def __py2js(script, module_path):
 
 
 def py2js(script, module_path):
-    from sh import nodejs
+    #from sh import nodejs
 
     def process_output(line):
         if line.startswith('WARN:'):
@@ -592,7 +594,18 @@ def py2js(script, module_path):
                     print()
                 except:
                     pass
-    ret =  nodejs('/home/sch/prj/pytigon/ext_prg_lin/rapydscript/bin/rapydscript', '-p', '-b',  _in=script, _err=process_output)
+
+    proc = subprocess.Popen(["nodejs", "/home/sch/prj/pytigon/ext_prg/rapydscript/bin/rapydscript", "-p", "-b", "-m"],
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            universal_newlines=True
+                            )
+    ret, stderr_value = proc.communicate(script)
+
+    for line in stderr_value.split('\n'):
+        process_output(line)
+
     return str(ret)
 
 

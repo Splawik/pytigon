@@ -83,25 +83,22 @@ def browser_type(request):
         themes = ['auto', 'auto', 'auto']
 
     if standard_web_browser(request):
-        if standard_web_browser(request) == 1:
-            if test_mobile(request):
-                if test_tablet(request):
-                    if themes[1]=='auto' or not themes[1]:
-                        return 'tablet_standard'
-                    else:
-                        return themes[1]
+        if test_mobile(request):
+            if test_tablet(request):
+                if themes[1]=='auto' or not themes[1]:
+                    return 'tablet_standard'
                 else:
-                    if themes[2]=='auto' or not themes[2]:
-                        return 'smartfon_standard'
-                    else:
-                        return themes[2]
+                    return themes[1]
             else:
-                if themes[0]=='auto' or not themes[0]:
-                    return 'desktop_standard'
+                if themes[2]=='auto' or not themes[2]:
+                    return 'smartfon_standard'
                 else:
-                    return themes[0]
+                    return themes[2]
         else:
-            return 'hybrid'
+            if themes[0]=='auto' or not themes[0]:
+                return 'desktop_standard'
+            else:
+                return themes[0]
     else:
         return 'schweb'
 
@@ -346,7 +343,10 @@ def sch_standard(request):
     else:
         b_type2 = 'standard'
 
-    d_template = default_template(b_type)
+    if standard == 2:
+        d_template = default_template('hybrid')
+    else:
+        d_template = default_template(b_type)
 
     if lng and lng != 'en':
         d_template = d_template.replace('.html', '_'+lng+'.html')

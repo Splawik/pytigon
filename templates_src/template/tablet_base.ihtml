@@ -240,7 +240,7 @@
                             <!-- Menu Body -->
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
-                                    <a href="#">Change password</a>
+                                    <a href="/admin/password_change/" class="menu-href">Change password</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a href="#">abc</a>
@@ -255,7 +255,7 @@
                                     <a href="#" class="btn btn-default btn-flat">Profile</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="/schsys/do_logout/" class="btn btn-default btn-flat">Sign out</a>
                                 </div>
                             </li>
                         </ul>
