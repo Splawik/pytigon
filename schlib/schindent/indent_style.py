@@ -568,8 +568,6 @@ def __py2js(script, module_path):
 
 
 def py2js(script, module_path):
-    #from sh import nodejs
-
     def process_output(line):
         if line.startswith('WARN:'):
             print(line)
@@ -595,7 +593,8 @@ def py2js(script, module_path):
                 except:
                     pass
 
-    proc = subprocess.Popen(["nodejs", "/home/sch/prj/pytigon/ext_prg/rapydscript/bin/rapydscript", "-p", "-b", "-m"],
+    proc = subprocess.Popen(["c:\\prj\\pytigon\\ext_prg\\node.exe", "c:\\prj\\pytigon\\ext_prg\\rapydscript\\bin\\rapydscript", "-p", "-b", "-m"],
+    #proc = subprocess.Popen(["nodejs", "/home/sch/prj/pytigon/ext_prg/rapydscript/bin/rapydscript", "-p", "-b", "-m"],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
