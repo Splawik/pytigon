@@ -31,6 +31,8 @@ import subprocess
 #from pythonjs.python_to_pythonjs import main as python_to_pythonjs
 #from pythonjs.pythonjs import main as pythonjs_to_javascript
 
+PY_TO_JS = None
+
 try:
     from react import jsx
 except:
@@ -593,8 +595,7 @@ def py2js(script, module_path):
                 except:
                     pass
 
-    proc = subprocess.Popen(["c:\\prj\\pytigon\\ext_prg\\node.exe", "c:\\prj\\pytigon\\ext_prg\\rapydscript\\bin\\rapydscript", "-p", "-b", "-m"],
-    #proc = subprocess.Popen(["nodejs", "/home/sch/prj/pytigon/ext_prg/rapydscript/bin/rapydscript", "-p", "-b", "-m"],
+    proc = subprocess.Popen(PY_TO_JS,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,

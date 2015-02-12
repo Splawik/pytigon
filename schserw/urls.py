@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import platform
+
 from django.conf.urls import patterns, url, include
 from django.http import HttpResponse
 from django.conf import settings
@@ -31,8 +33,18 @@ from schlib.schdjangoext.django_init import AppConfigMod
 from django.template.base import add_to_builtins
 
 #from schlib.schjs.compile import py_to_js, psjx_to_js
-from schlib.schindent.indent_style import py_to_js, pjsx_to_js
+#from schlib.schindent.indent_style import py_to_js, pjsx_to_js
+import schlib.schindent.indent_style
 
+def get_py_to_js_compiler():
+    if platform.system() == "Linux":
+        node = 'nodejs'
+    else:
+        node  = settings.ROOT_PATH + '/ext_prg/node.exe'
+    rapyd = settings.ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
+    return [node, rapyd, "-p", "-b", "-m"]
+
+schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
 add_to_builtins('schserw.schsys.templatetags.defexfiltry')
 
@@ -124,9 +136,9 @@ if settings.DEBUG:
                         code = f.read()
                         try:
                             if file_name.lower().endswith('.py'):
-                                codejs = py_to_js(code, root)
+                                codejs = schlib.schindent.indent_style.py_to_js(code, root)
                             else:
-                                codejs = pjsx_to_js(code, root)
+                                codejs = schlib.schindent.indent_style.pjsx_to_js(code, root)
 
                             with open(dest, "wt") as f2:
                                 f2.write(codejs)

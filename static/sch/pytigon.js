@@ -1,5 +1,4 @@
 APPLICATION_TEMPLATE = "standard";
-ZORRO = true;
 RET_BUFOR = null;
 RET_OBJ = null;
 IS_POPUP = false;
@@ -16,6 +15,14 @@ Page.prototype.__init__ = function __init__(id, page){
     var self = this;
     self.id = id;
     self.page = page;
+};
+Page.prototype.set_href = function set_href(href){
+    var self = this;
+    self.page.attr("_href", href);
+};
+Page.prototype.get_href = function get_href(){
+    var self = this;
+    return self.page.attr("_href");
 };
 
 function TabMenuItem() {
@@ -243,8 +250,9 @@ function can_popup() {
 }
 function _dialog_loaded(is_modal) {
     date_init();
-    jQuery("div.resizable").resizable();
+    ACTIVE_PAGE.page.find("div.resizable").resizable();
     if (is_modal) {
+        jQuery("div.dialog-form").fadeTo("fast", 1);
         jQuery("div.dialog-form").modal();
         IS_POPUP = true;
     }
@@ -339,11 +347,17 @@ function _refresh_win(responseText, form) {
         if (subform.length > 0) {
             subform.find("div.frame-data-inner").load(subform.attr("href"), null);
         } else {
-            filter = form.closest("div.content").find("form.TableFiltr");
+            filter = ACTIVE_PAGE.page.find("form.TableFiltr");
             jQuery("div.dialog-form").fadeTo("slow", .5);
             if (filter.length > 0) {
-                filter.attr("action", window.location.href);
-                filter.submit();
+                filter.attr("action", ACTIVE_PAGE.get_href());
+                ajax_submit(filter, function(data) {
+                    ACTIVE_PAGE.page.html(data);
+                    jQuery("div.dialog-form").modal("hide");
+                    popup_init();
+                });
+            } else {
+                jQuery("div.dialog-form").modal("hide");
             }
         }
     } else {
@@ -373,15 +387,15 @@ function on_delete_ok(form) {
     return false;
 }
 function on_cancel_inline() {
-    jQuery(".inline_dialog").remove();
+    ACTIVE_PAGE.page.find(".inline_dialog").remove();
 }
 function date_init() {
-    jQuery(".dateinput").datetimepicker({
+    ACTIVE_PAGE.page.find(".dateinput").datetimepicker({
         "pickTime": false,
         "format": "YYYY-MM-DD",
         "language": LANG
     });
-    jQuery(".datetimeinput").datetimepicker({
+    ACTIVE_PAGE.page.find(".datetimeinput").datetimepicker({
         "format": "YYYY-MM-DD hh:mm",
         "language": "pl"
     });
@@ -391,9 +405,9 @@ function popup_init() {
         IS_POPUP = false;
         jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
     });
-    jQuery("a.popup").click(_on_popup);
-    jQuery("a.popup_info").click(_on_popup_info);
-    jQuery("a.popup_delete").click(_on_popup_delete);
+    ACTIVE_PAGE.page.find("a.popup").click(_on_popup);
+    ACTIVE_PAGE.page.find("a.popup_info").click(_on_popup_info);
+    ACTIVE_PAGE.page.find("a.popup_delete").click(_on_popup_delete);
 }
 function get_datatable_options() {
     var options;
@@ -440,7 +454,7 @@ function _on_menu_href(event) {
 }
 function _on_menu_href2(elem, title) {
     if (typeof title === "undefined") title = null;
-    var menu, classname, l, href;
+    var menu, classname, l, href, href2;
     if (APPLICATION_TEMPLATE !== "traditional") {
         if (!title) {
             title = jQuery.trim(jQuery(elem).text());
@@ -456,22 +470,24 @@ function _on_menu_href2(elem, title) {
             menu.activate(title);
         } else {
             href = jQuery(elem).attr("href");
+            if (_$rapyd$_in("?", href)) {
+                href2 = href + "&hybrid=1";
+            } else {
+                href2 = href + "?hybrid=1";
+            }
             function _on_new_win(data) {
-                var id;
+                var id, ACTIVE_PAGE;
                 if (APPLICATION_TEMPLATE === "modern") {
                     id = menu.new_page(title, data, href);
                 } else {
                     jQuery("#body_body").html(data);
+                    ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
+                    ACTIVE_PAGE.set_href(href2);
                 }
                 popup_init();
                 if (l) {
                     l.stop();
                 }
-            }
-            if (_$rapyd$_in("?", href)) {
-                href = href + "&hybrid=1";
-            } else {
-                href = href + "?hybrid=1";
             }
             if (APPLICATION_TEMPLATE === "standard" && _$rapyd$_in("btn", classname)) {
                 jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
@@ -482,7 +498,7 @@ function _on_menu_href2(elem, title) {
             }
             jQuery.ajax({
                 "type": "GET",
-                "url": href,
+                "url": href2,
                 "success": _on_new_win
             });
             jQuery(elem).closest(".dropdown-menu").dropdown("toggle");
@@ -500,6 +516,7 @@ function _on_menu_href3(elem) {
         "success": function(data) {
             if (APPLICATION_TEMPLATE === "modern") {
                 ACTIVE_PAGE.page.html(data);
+                ACTIVE_PAGE.set_href(href);
                 get_menu().activate_new_page(ACTIVE_PAGE.id);
             } else {
                 jQuery("#body_body").html(data);
@@ -532,7 +549,6 @@ function jquery_init(application_template, menu_id, lang, base_path) {
 function jquery_ready() {
     var tabsort, table_type, paginator, paginate, txt2, txt, menu;
     jQuery(document).ajaxError(_on_error);
-    date_init();
     if (APPLICATION_TEMPLATE === "traditional") {
         ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
         tabsort = JQuery(".tabsort");
@@ -558,7 +574,12 @@ function jquery_ready() {
                 menu = get_menu();
                 menu.new_page(jQuery("title").text(), txt, BASE_PATH);
             }
+        } else {
+            ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
         }
+    }
+    if (ACTIVE_PAGE) {
+        date_init();
     }
 }
 function stick_resize() {
