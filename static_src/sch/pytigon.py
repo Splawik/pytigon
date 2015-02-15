@@ -12,7 +12,7 @@ MENU = None
 ACTIVE_PAGE = None
 PUSH_STATE = True
 BASE_PATH = None
-
+WAIT_ICON = None
 
 class Page:
     def __init__(self, id, page):
@@ -204,7 +204,10 @@ def ajax_submit(form, func):
 
 
 def get_page(elem):
-    return elem.closest('.tab-pane')
+    if elem.hasClass('.tab-pane'):
+        return elem
+    else:
+        return elem.closest('.tab-pane')
 
 
 def get_table_type(elem):
@@ -244,7 +247,8 @@ def dialog_ex_load2(responseText, status, response):
 
 
 def _on_popup():
-    l = Ladda.create(this)
+    nonlocal WAIT_ICON
+    WAIT_ICON = Ladda.create(this)
     if is_hybrid():
         cmd_to_python("href_to_elem|"+this.href+"|#dialog-data")
         jQuery('div.dialog-form').modal()
@@ -256,14 +260,18 @@ def _on_popup():
                     on_dialog_load()
             )
         else:
-            l.start()
+            if WAIT_ICON:
+                WAIT_ICON.start()
             jQuery(".inline_dialog").remove()
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
             jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None,def(responseText, status, response):
+                nonlocal WAIT_ICON
                 if status!='error':
                     _dialog_loaded(False)
                     on_dialog_load()
-                l.stop()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+                    WAIT_ICON = None
             )
     return False
 
@@ -301,14 +309,19 @@ def _on_popup_delete():
     return False
 
 def _on_error(request, settings):
+    nonlocal WAIT_ICON
+    if WAIT_ICON:
+        WAIT_ICON.stop()
+        WAIT_ICON = None
+
     start = settings.responseText.indexOf("<body>")
     end = settings.responseText.lastIndexOf("</body>")
     if start > 0 and end > 0:
-        jQuery("div.dialog-data-error").html(settings.responseText.substring(start+6,end-1))
-        jQuery('div.dialog-form-error').modal()
+        jQuery("#dialog-data-error").html(settings.responseText.substring(start+6,end-1))
+        jQuery('#dialog-form-error').modal()
     else:
-        jQuery("div.dialog-data-error").html(settings.responseText)
-        jQuery('div.dialog-form-error').modal()
+        jQuery("#dialog-data-error").html(settings.responseText)
+        jQuery('#dialog-form-error').modal()
 
 
 def _refresh_win(responseText, form):
@@ -399,15 +412,18 @@ def _on_menu_href(event):
 
 
 def _on_menu_href2(elem, title=None):
+    nonlocal WAIT_ICON
     if APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
         menu = get_menu()
         classname = jQuery(elem).attr("class")
         if classname and 'btn' in classname:
-            l = Ladda.create(elem)
+            if WAIT_ICON:
+                WAIT_ICON.stop()
+            WAIT_ICON = Ladda.create(elem)
         else:
-            l = None
+            WAIT_ICON = None
 
         if APPLICATION_TEMPLATE == 'modern' and menu.is_open(title):
             menu.activate(title)
@@ -418,7 +434,7 @@ def _on_menu_href2(elem, title=None):
             else:
                 href2 = href + '?hybrid=1'
             def _on_new_win(data):
-                nonlocal href, href2
+                nonlocal href, href2, title, WAIT_ICON
 
                 if APPLICATION_TEMPLATE == 'modern':
                     id = menu.new_page(title, data, href)
@@ -426,16 +442,20 @@ def _on_menu_href2(elem, title=None):
                     jQuery('#body_body').html(data)
                     ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                     ACTIVE_PAGE.set_href(href2)
+                    menu.on_new_page('body_body')
+                    if PUSH_STATE:
+                        history_push_state(title, href)
 
                 popup_init()
-                if l:
-                    l.stop()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+                    WAIT_ICON = None
 
             if APPLICATION_TEMPLATE == 'standard' and 'btn' in classname:
                 jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
                 jQuery(elem).removeClass('btn-info').addClass('btn-warning')
-            if l:
-                l.start()
+            if WAIT_ICON:
+                WAIT_ICON.start()
             jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
             jQuery(elem).closest('.dropdown-menu').dropdown('toggle')
             jQuery('.navbar-ex1-collapse').collapse('hide')
@@ -606,12 +626,22 @@ window.addEventListener('popstate', def(e):
     nonlocal PUSH_STATE
     if e.state:
         PUSH_STATE = False
-        menu = get_menu().activate(e.state, False)
+        if APPLICATION_TEMPLATE == 'modern':
+            menu = get_menu().activate(e.state, False)
+        else:
+            alert("x1")
+            jQuery('#body_body').html(event.state)
+            ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+            ACTIVE_PAGE.set_href(href2)
+            menu.on_new_page('body_body')
         PUSH_STATE = True
 ,False)
 
 
-def history_push_state(title, url):
+def history_push_state(title, url, data=None):
     url2 = url.split("?")[0]
-    window.history.pushState(title, title, url2)
+    if data:
+        window.history.pushState(data, title, url2)
+    else:
+        window.history.pushState(title, title, url2)
 

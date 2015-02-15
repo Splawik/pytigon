@@ -8,6 +8,7 @@ MENU = null;
 ACTIVE_PAGE = null;
 PUSH_STATE = true;
 BASE_PATH = null;
+WAIT_ICON = null;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -230,7 +231,11 @@ function ajax_submit(form, func) {
     }
 }
 function get_page(elem) {
-    return elem.closest(".tab-pane");
+    if (elem.hasClass(".tab-pane")) {
+        return elem;
+    } else {
+        return elem.closest(".tab-pane");
+    }
 }
 function get_table_type(elem) {
     var tabsort;
@@ -266,8 +271,7 @@ function dialog_ex_load2(responseText, status, response) {
     }
 }
 function _on_popup() {
-    var l;
-    l = Ladda.create(this);
+    WAIT_ICON = Ladda.create(this);
     if (is_hybrid()) {
         cmd_to_python("href_to_elem|" + this.href + "|#dialog-data");
         jQuery("div.dialog-form").modal();
@@ -280,7 +284,9 @@ function _on_popup() {
                 }
             });
         } else {
-            l.start();
+            if (WAIT_ICON) {
+                WAIT_ICON.start();
+            }
             jQuery(".inline_dialog").remove();
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
             jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
@@ -288,7 +294,10 @@ function _on_popup() {
                     _dialog_loaded(false);
                     on_dialog_load();
                 }
-                l.stop();
+                if (WAIT_ICON) {
+                    WAIT_ICON.stop();
+                    WAIT_ICON = null;
+                }
             });
         }
     }
@@ -330,14 +339,18 @@ function _on_popup_delete() {
 }
 function _on_error(request, settings) {
     var start, end;
+    if (WAIT_ICON) {
+        WAIT_ICON.stop();
+        WAIT_ICON = null;
+    }
     start = settings.responseText.indexOf("<body>");
     end = settings.responseText.lastIndexOf("</body>");
     if (start > 0 && end > 0) {
-        jQuery("div.dialog-data-error").html(settings.responseText.substring(start + 6, end - 1));
-        jQuery("div.dialog-form-error").modal();
+        jQuery("#dialog-data-error").html(settings.responseText.substring(start + 6, end - 1));
+        jQuery("#dialog-form-error").modal();
     } else {
-        jQuery("div.dialog-data-error").html(settings.responseText);
-        jQuery("div.dialog-form-error").modal();
+        jQuery("#dialog-data-error").html(settings.responseText);
+        jQuery("#dialog-form-error").modal();
     }
 }
 function _refresh_win(responseText, form) {
@@ -454,7 +467,7 @@ function _on_menu_href(event) {
 }
 function _on_menu_href2(elem, title) {
     if (typeof title === "undefined") title = null;
-    var menu, classname, l, href, href2;
+    var menu, classname, href, href2;
     if (APPLICATION_TEMPLATE !== "traditional") {
         if (!title) {
             title = jQuery.trim(jQuery(elem).text());
@@ -462,9 +475,12 @@ function _on_menu_href2(elem, title) {
         menu = get_menu();
         classname = jQuery(elem).attr("class");
         if (classname && _$rapyd$_in("btn", classname)) {
-            l = Ladda.create(elem);
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+            }
+            WAIT_ICON = Ladda.create(elem);
         } else {
-            l = null;
+            WAIT_ICON = null;
         }
         if (APPLICATION_TEMPLATE === "modern" && menu.is_open(title)) {
             menu.activate(title);
@@ -483,18 +499,23 @@ function _on_menu_href2(elem, title) {
                     jQuery("#body_body").html(data);
                     ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
                     ACTIVE_PAGE.set_href(href2);
+                    menu.on_new_page("body_body");
+                    if (PUSH_STATE) {
+                        history_push_state(title, href);
+                    }
                 }
                 popup_init();
-                if (l) {
-                    l.stop();
+                if (WAIT_ICON) {
+                    WAIT_ICON.stop();
+                    WAIT_ICON = null;
                 }
             }
             if (APPLICATION_TEMPLATE === "standard" && _$rapyd$_in("btn", classname)) {
                 jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
                 jQuery(elem).removeClass("btn-info").addClass("btn-warning");
             }
-            if (l) {
-                l.start();
+            if (WAIT_ICON) {
+                WAIT_ICON.start();
             }
             jQuery.ajax({
                 "type": "GET",
@@ -662,15 +683,28 @@ function stick_header() {
     resize_win();
 }
 window.addEventListener("popstate", function(e) {
-    var menu;
+    var menu, ACTIVE_PAGE;
     if (e.state) {
         PUSH_STATE = false;
-        menu = get_menu().activate(e.state, false);
+        if (APPLICATION_TEMPLATE === "modern") {
+            menu = get_menu().activate(e.state, false);
+        } else {
+            alert("x1");
+            jQuery("#body_body").html(event.state);
+            ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
+            ACTIVE_PAGE.set_href(href2);
+            menu.on_new_page("body_body");
+        }
         PUSH_STATE = true;
     }
 }, false);
-function history_push_state(title, url) {
+function history_push_state(title, url, data) {
+    if (typeof data === "undefined") data = null;
     var url2;
     url2 = url.split("?")[0];
-    window.history.pushState(title, title, url2);
+    if (data) {
+        window.history.pushState(data, title, url2);
+    } else {
+        window.history.pushState(title, title, url2);
+    }
 }
