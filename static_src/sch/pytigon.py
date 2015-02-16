@@ -129,6 +129,7 @@ class Menu:
                 e.preventDefault()
                 return _on_menu_href3(this)
         )
+        date_init()
 
 
 def get_datatable_dy(selector):
@@ -227,7 +228,7 @@ def can_popup():
 
 def _dialog_loaded(is_modal):
     nonlocal IS_POPUP
-    date_init()
+    date_init(jQuery('div.dialog-form'))
     ACTIVE_PAGE.page.find("div.resizable").resizable()
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
@@ -360,9 +361,14 @@ def on_cancel_inline():
     ACTIVE_PAGE.page.find(".inline_dialog").remove()
 
 
-def date_init():
-    ACTIVE_PAGE.page.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
-    ACTIVE_PAGE.page.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+def date_init(elem=None):
+    if elem:
+        elem2 = elem
+    else:
+        elem2 = ACTIVE_PAGE.page
+
+    elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
+    elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
 
 
 def popup_init():
@@ -374,6 +380,26 @@ def popup_init():
     ACTIVE_PAGE.page.find('a.popup').click(_on_popup)
     ACTIVE_PAGE.page.find('a.popup_info').click(_on_popup_info)
     ACTIVE_PAGE.page.find('a.popup_delete').click(_on_popup_delete)
+
+    ACTIVE_PAGE.page.find('form').submit(def(e):
+        nonlocal ACTIVE_PAGE
+        e.preventDefault()
+
+        href = jQuery(this).attr("action")
+        if href:
+            if '?' in href and not hybrid in href:
+                href2 = href + '&hybrid=1'
+            else:
+                href2 = href + '?hybrid=1'
+            jQuery(this).attr('action', href2)
+
+        ajax_submit($(this), def(data):
+            nonlocal ACTIVE_PAGE
+            ACTIVE_PAGE.page.html(data)
+            popup_init()
+        )
+    )
+
 
 
 

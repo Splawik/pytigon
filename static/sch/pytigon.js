@@ -151,6 +151,7 @@ Menu.prototype.activate_new_page = function activate_new_page(id){
             return _on_menu_href3(this);
         }
     });
+    date_init();
 };
 
 function get_datatable_dy(selector) {
@@ -254,7 +255,7 @@ function can_popup() {
     }
 }
 function _dialog_loaded(is_modal) {
-    date_init();
+    date_init(jQuery("div.dialog-form"));
     ACTIVE_PAGE.page.find("div.resizable").resizable();
     if (is_modal) {
         jQuery("div.dialog-form").fadeTo("fast", 1);
@@ -402,13 +403,20 @@ function on_delete_ok(form) {
 function on_cancel_inline() {
     ACTIVE_PAGE.page.find(".inline_dialog").remove();
 }
-function date_init() {
-    ACTIVE_PAGE.page.find(".dateinput").datetimepicker({
+function date_init(elem) {
+    if (typeof elem === "undefined") elem = null;
+    var elem2;
+    if (elem) {
+        elem2 = elem;
+    } else {
+        elem2 = ACTIVE_PAGE.page;
+    }
+    elem2.find(".dateinput").datetimepicker({
         "pickTime": false,
         "format": "YYYY-MM-DD",
         "language": LANG
     });
-    ACTIVE_PAGE.page.find(".datetimeinput").datetimepicker({
+    elem2.find(".datetimeinput").datetimepicker({
         "format": "YYYY-MM-DD hh:mm",
         "language": "pl"
     });
@@ -421,6 +429,23 @@ function popup_init() {
     ACTIVE_PAGE.page.find("a.popup").click(_on_popup);
     ACTIVE_PAGE.page.find("a.popup_info").click(_on_popup_info);
     ACTIVE_PAGE.page.find("a.popup_delete").click(_on_popup_delete);
+    ACTIVE_PAGE.page.find("form").submit(function(e) {
+        var href, href2;
+        e.preventDefault();
+        href = jQuery(this).attr("action");
+        if (href) {
+            if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
+                href2 = href + "&hybrid=1";
+            } else {
+                href2 = href + "?hybrid=1";
+            }
+            jQuery(this).attr("action", href2);
+        }
+        ajax_submit($(this), function(data) {
+            ACTIVE_PAGE.page.html(data);
+            popup_init();
+        });
+    });
 }
 function get_datatable_options() {
     var options;
