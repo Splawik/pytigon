@@ -14,8 +14,6 @@
     {% jscript_link 'jquery/js/jquery.min.js' %}
     {% jscript_link 'jquery/js/jquery-ui.min.js' %}
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
-    {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
-    {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/dataTables.bootstrap.js' %}
@@ -30,6 +28,10 @@
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+
+    {% jscript_link 'bootstrap_plugins/ladda-bootstrap/dist/spin.min.js' %}
+    {% jscript_link 'bootstrap_plugins/ladda-bootstrap/dist/ladda.min.js' %}
+
 
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
 
@@ -72,7 +74,6 @@
 
 
 %% css_links
-    {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/datatables/css/jquery.dataTables.css' %}
     {% css_link 'jquery_plugins/datatables/css/dataTables.bootstrap.css' %}
 
@@ -88,6 +89,9 @@
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
     {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
+
+    {% css_link 'bootstrap_plugins/ladda-bootstrap/dist/ladda-themeless.min.css' %}
+
 
     {% css_link 'themes/default.css' %}
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}

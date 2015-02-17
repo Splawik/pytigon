@@ -142,7 +142,8 @@
                                                     %% form_content
                                                         {{ form.non_field_errors }}
                                                         % inline_form:
-                                                        input type=submit,,,value=_(Refresh),,,class=btn btn-info
+                                                        button type=submit,,,value=_(Refresh),,,class=btn btn-info ladda-button,,,data-style=slide-left
+                                                            ._(Refresh)
 
             %% list_content_body
               div class=tabsort_panel

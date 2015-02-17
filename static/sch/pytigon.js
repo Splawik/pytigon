@@ -430,8 +430,21 @@ function popup_init() {
     ACTIVE_PAGE.page.find("a.popup_info").click(_on_popup_info);
     ACTIVE_PAGE.page.find("a.popup_delete").click(_on_popup_delete);
     ACTIVE_PAGE.page.find("form").submit(function(e) {
-        var href, href2;
+        var data, submit_button, href, href2;
+        data = jQuery(this).serialize();
+        if (_$rapyd$_in("pdf", data) && data["pdf"] === "on") {
+            return true;
+        }
+        if (_$rapyd$_in("odf", data) && data["odf"] === "on") {
+            return true;
+        }
         e.preventDefault();
+        submit_button = jQuery(this).find("button[type=\"submit\"]");
+        if (len(submit_button) > 0) {
+            WAIT_ICON = Ladda.create(submit_button[0]);
+            WAIT_ICON.start();
+        }
+        jQuery(this).find("input[type=\"submit\"]");
         href = jQuery(this).attr("action");
         if (href) {
             if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
@@ -444,6 +457,9 @@ function popup_init() {
         ajax_submit($(this), function(data) {
             ACTIVE_PAGE.page.html(data);
             popup_init();
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+            }
         });
     });
 }

@@ -381,9 +381,24 @@ def popup_init():
     ACTIVE_PAGE.page.find('a.popup_info').click(_on_popup_info)
     ACTIVE_PAGE.page.find('a.popup_delete').click(_on_popup_delete)
 
-    ACTIVE_PAGE.page.find('form').submit(def(e):
-        nonlocal ACTIVE_PAGE
+    ACTIVE_PAGE.page.find('form').submit( def(e):
+        nonlocal ACTIVE_PAGE, WAIT_ICON
+
+        data = jQuery(this).serialize()
+        #console.log(data)
+        if 'pdf' in data and data['pdf'] == 'on':
+            return True
+        if 'odf' in data and data['odf'] == 'on':
+            return True
+
         e.preventDefault()
+
+        submit_button = jQuery(this).find('button[type="submit"]')
+        if len(submit_button) > 0:
+            WAIT_ICON = Ladda.create(submit_button[0])
+            WAIT_ICON.start()
+
+        jQuery(this).find('input[type="submit"]')
 
         href = jQuery(this).attr("action")
         if href:
@@ -394,9 +409,11 @@ def popup_init():
             jQuery(this).attr('action', href2)
 
         ajax_submit($(this), def(data):
-            nonlocal ACTIVE_PAGE
+            nonlocal ACTIVE_PAGE, WAIT_ICON
             ACTIVE_PAGE.page.html(data)
             popup_init()
+            if WAIT_ICON:
+                WAIT_ICON.stop()
         )
     )
 
