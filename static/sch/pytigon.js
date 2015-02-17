@@ -38,15 +38,15 @@ TabMenuItem.prototype.__init__ = function __init__(id, title, url, data){
     self.data = data;
 };
 
-function Menu() {
-    Menu.prototype.__init__.apply(this, arguments);
+function TabMenu() {
+    TabMenu.prototype.__init__.apply(this, arguments);
 }
-Menu.prototype.__init__ = function __init__(){
+TabMenu.prototype.__init__ = function __init__(){
     var self = this;
     self.id = 0;
     self.titles = {};
 };
-Menu.prototype.is_open = function is_open(title){
+TabMenu.prototype.is_open = function is_open(title){
     var self = this;
     if (_$rapyd$_in(title, self.titles) && self.titles[title]) {
         return true;
@@ -54,7 +54,7 @@ Menu.prototype.is_open = function is_open(title){
         return false;
     }
 };
-Menu.prototype.activate = function activate(title, push_state){
+TabMenu.prototype.activate = function activate(title, push_state){
     var self = this;
     if (typeof push_state === "undefined") push_state = true;
     var menu_item;
@@ -64,7 +64,7 @@ Menu.prototype.activate = function activate(title, push_state){
         history_push_state(menu_item.title, menu_item.url);
     }
 };
-Menu.prototype.new_page = function new_page(title, data, href){
+TabMenu.prototype.new_page = function new_page(title, data, href){
     var self = this;
     var _id;
     _id = "tab" + self.id;
@@ -93,7 +93,7 @@ Menu.prototype.new_page = function new_page(title, data, href){
     self.id += 1;
     return _id;
 };
-Menu.prototype.remove_page = function remove_page(id){
+TabMenu.prototype.remove_page = function remove_page(id){
     var self = this;
     jQuery.each(self.titles, function(index, value) {
         if (value && value.id === id) {
@@ -104,7 +104,7 @@ Menu.prototype.remove_page = function remove_page(id){
     jQuery(sprintf("#%s", id)).remove();
     jQuery("#tabs2 a:last").tab("show");
 };
-Menu.prototype.on_new_page = function on_new_page(id){
+TabMenu.prototype.on_new_page = function on_new_page(id){
     var self = this;
     var table_type, paginator, pg, totalPages, options, paginate;
     table_type = get_table_type(jQuery("#" + id));
@@ -143,10 +143,10 @@ Menu.prototype.on_new_page = function on_new_page(id){
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     self.activate_new_page(id);
 };
-Menu.prototype.activate_new_page = function activate_new_page(id){
+TabMenu.prototype.activate_new_page = function activate_new_page(id){
     var self = this;
-    $("#" + id + " a").on("click", function(e) {
-        if ($(this).hasClass("menu-href") || $(this).attr("href") && _$rapyd$_in("/admin/", $(this).attr("href"))) {
+    jQuery("#" + id + " a").on("click", function(e) {
+        if (jQuery(this).hasClass("menu-href") || jQuery(this).attr("href") && _$rapyd$_in("/admin/", jQuery(this).attr("href"))) {
             e.preventDefault();
             return _on_menu_href3(this);
         }
@@ -193,7 +193,7 @@ function set_table_type(table_type, selector, paginate) {
 }
 function get_menu() {
     if (!MENU) {
-        MENU = new Menu();
+        MENU = new TabMenu();
     }
     return MENU;
 }
@@ -435,7 +435,7 @@ function popup_init() {
         console.log(data);
         e.preventDefault();
         submit_button = jQuery(this).find("button[type=\"submit\"]");
-        if (len(submit_button) > 0) {
+        if (submit_button.lenght > 0) {
             WAIT_ICON = Ladda.create(submit_button[0]);
             WAIT_ICON.start();
         }
@@ -449,7 +449,7 @@ function popup_init() {
             }
             jQuery(this).attr("action", href2);
         }
-        ajax_submit($(this), function(data) {
+        ajax_submit(jQuery(this), function(data) {
             ACTIVE_PAGE.page.html(data);
             popup_init();
             if (WAIT_ICON) {
@@ -580,6 +580,7 @@ function _on_menu_href3(elem) {
             }
         }
     });
+    popup_init();
 }
 function jquery_init(application_template, menu_id, lang, base_path) {
     var SUBWIN;
@@ -667,13 +668,13 @@ function stick_header2() {
     tab = [];
     tab2 = [];
     jQuery("table.tabsort th").each(function() {
-        tab.push($(this).width());
+        tab.push(jQuery(this).width());
     });
     table = jQuery("<table id=\"tbl_header\" class=\"tabsort\" style=\"overflow-x: hidden;\"></table>");
     table.append(jQuery("table.tabsort thead"));
     jQuery("#tbl_scroll").before(table);
     jQuery("#tbl_header th").each(function() {
-        tab2.push($(this).width());
+        tab2.push(jQuery(this).width());
     });
     tab2 = tab2.reverse();
     jQuery("table[name='tabsort'] tr:first td").each(function() {
@@ -695,13 +696,13 @@ function stick_header() {
     tab = [];
     tab2 = [];
     ACTIVE_PAGE.page.find("table.tabsort th").each(function() {
-        tab.push($(this).width());
+        tab.push(jQuery(this).width());
     });
     table = jQuery("<table class=\"tabsort tbl_header\" style=\"overflow-x: hidden;\"></table>");
     table.append(ACTIVE_PAGE.page.find("table.tabsort thead"));
     ACTIVE_PAGE.page.find(".tbl_scroll").before(table);
     ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
-        tab2.push($(this).width());
+        tab2.push(jQuery(this).width());
     });
     tab2 = tab2.reverse();
     ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(function() {

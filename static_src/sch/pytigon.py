@@ -33,7 +33,7 @@ class TabMenuItem:
         self.url = url
         self.data = data
 
-class Menu:
+class TabMenu:
     def __init__(self):
         self.id = 0
         self.titles = {}
@@ -70,7 +70,8 @@ class Menu:
         jQuery('#tabs2 a:last').tab('show')
 
 
-        jQuery('#tabs2 a:last').on('shown.bs.tab',def(e):
+        jQuery('#tabs2 a:last').on('shown.bs.tab',
+            def(e):
                 nonlocal PUSH_STATE, ACTIVE_PAGE
                 ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
                 menu = get_menu()
@@ -80,8 +81,9 @@ class Menu:
         )
         self.on_new_page(_id)
 
-        jQuery(sprintf('#button_%s', _id)).click(def(event):
-            get_menu().remove_page(jQuery(this).attr('id').replace('button_',''))
+        jQuery(sprintf('#button_%s', _id)).click(
+            def(event):
+                get_menu().remove_page(jQuery(this).attr('id').replace('button_',''))
         )
         self.id += 1
 
@@ -89,9 +91,10 @@ class Menu:
 
 
     def remove_page(self, id):
-        jQuery.each(self.titles, def(index, value):
-            if value and value.id == id:
-                self.titles[index] = None
+        jQuery.each(self.titles,
+            def(index, value):
+                if value and value.id == id:
+                    self.titles[index] = None
         )
         jQuery(sprintf('#li_%s', id) ).remove()
         jQuery(sprintf('#%s', id)).remove()
@@ -109,7 +112,7 @@ class Menu:
             options = {
                 'totalPages': totalPages,
                 'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
-                'onPageClick': def(event, page):
+                'onPageClick':def(event, page):
                     form = pg.closest('form')
                     if form:
                         def _on_new_page(data):
@@ -124,10 +127,11 @@ class Menu:
         self.activate_new_page(id)
 
     def activate_new_page(self, id):
-        $('#'+ id + " a" ).on( "click", def(e):
-            if $(this).hasClass( "menu-href" ) or ($(this).attr('href') and '/admin/' in $(this).attr('href')):
-                e.preventDefault()
-                return _on_menu_href3(this)
+        jQuery('#'+ id + " a" ).on( "click",
+            def(e):
+                if jQuery(this).hasClass( "menu-href" ) or (jQuery(this).attr('href') and '/admin/' in jQuery(this).attr('href')):
+                    e.preventDefault()
+                    return _on_menu_href3(this)
         )
         date_init()
 
@@ -167,7 +171,7 @@ def set_table_type(table_type, selector, paginate):
 def get_menu():
     nonlocal MENU
     if not MENU:
-        MENU = Menu()
+        MENU = TabMenu()
     return MENU
 
 
@@ -255,24 +259,26 @@ def _on_popup():
         jQuery('div.dialog-form').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data").load(jQuery(this).attr("href"), None, def(responseText, status, response):
-                if status!='error':
-                    _dialog_loaded(True)
-                    on_dialog_load()
+            jQuery("div.dialog-data").load(jQuery(this).attr("href"), None,
+                def(responseText, status, response):
+                    if status!='error':
+                        _dialog_loaded(True)
+                        on_dialog_load()
             )
         else:
             if WAIT_ICON:
                 WAIT_ICON.start()
             jQuery(".inline_dialog").remove()
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None,def(responseText, status, response):
-                nonlocal WAIT_ICON
-                if status!='error':
-                    _dialog_loaded(False)
-                    on_dialog_load()
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                    WAIT_ICON = None
+            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    nonlocal WAIT_ICON
+                    if status!='error':
+                        _dialog_loaded(False)
+                        on_dialog_load()
+                    if WAIT_ICON:
+                        WAIT_ICON.stop()
+                        WAIT_ICON = None
             )
     return False
 
@@ -282,8 +288,9 @@ def _on_popup_info():
         jQuery('div.dialog-form-info').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"),None, def(responseText, status, response):
-                jQuery('div.dialog-form-info').modal()
+            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    jQuery('div.dialog-form-info').modal()
             )
         else:
             jQuery(".inline_dialog").remove()
@@ -299,8 +306,9 @@ def _on_popup_delete():
         jQuery('div.dialog-form-delete').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"),None, def(responseText, status, response):
-                jQuery('div.dialog-form-delete').modal()
+            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    jQuery('div.dialog-form-delete').modal()
             )
         else:
             jQuery(".inline_dialog").remove()
@@ -335,10 +343,11 @@ def _refresh_win(responseText, form):
             jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
             if filter.length>0:
                 filter.attr('action', ACTIVE_PAGE.get_href())
-                ajax_submit(filter, def(data):
-                    ACTIVE_PAGE.page.html(data)
-                    jQuery("div.dialog-form").modal('hide')
-                    popup_init()
+                ajax_submit(filter,
+                    def(data):
+                        ACTIVE_PAGE.page.html(data)
+                        jQuery("div.dialog-form").modal('hide')
+                        popup_init()
                 )
             else:
                 jQuery("div.dialog-form").modal('hide')
@@ -372,49 +381,52 @@ def date_init(elem=None):
 
 
 def popup_init():
-    jQuery('div.dialog-form').on('hide.bs.modal', def(e):
-        nonlocal IS_POPUP
-        IS_POPUP = False
-        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
+    nonlocal WAIT_ICON
+    jQuery('div.dialog-form').on('hide.bs.modal',
+        def(e):
+            nonlocal IS_POPUP
+            IS_POPUP = False
+            jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
     )
     ACTIVE_PAGE.page.find('a.popup').click(_on_popup)
     ACTIVE_PAGE.page.find('a.popup_info').click(_on_popup_info)
     ACTIVE_PAGE.page.find('a.popup_delete').click(_on_popup_delete)
 
-    ACTIVE_PAGE.page.find('form').submit( def(e):
-        nonlocal ACTIVE_PAGE, WAIT_ICON
-
-        data = jQuery(this).serialize()
-        console.log(data)
-        #if 'pdf' in data and data['pdf'] == 'on':
-        #    return True
-        #if 'odf' in data and data['odf'] == 'on':
-        #    return True
-
-        e.preventDefault()
-
-        submit_button = jQuery(this).find('button[type="submit"]')
-        if len(submit_button) > 0:
-            WAIT_ICON = Ladda.create(submit_button[0])
-            WAIT_ICON.start()
-
-        jQuery(this).find('input[type="submit"]')
-
-        href = jQuery(this).attr("action")
-        if href:
-            if '?' in href and not hybrid in href:
-                href2 = href + '&hybrid=1'
-            else:
-                href2 = href + '?hybrid=1'
-            jQuery(this).attr('action', href2)
-
-        ajax_submit($(this), def(data):
+    ACTIVE_PAGE.page.find('form').submit(
+        def(e):
             nonlocal ACTIVE_PAGE, WAIT_ICON
-            ACTIVE_PAGE.page.html(data)
-            popup_init()
-            if WAIT_ICON:
-                WAIT_ICON.stop()
-        )
+
+            data = jQuery(this).serialize()
+            console.log(data)
+            #if 'pdf' in data and data['pdf'] == 'on':
+            #    return True
+            #if 'odf' in data and data['odf'] == 'on':
+            #    return True
+
+            e.preventDefault()
+
+            submit_button = jQuery(this).find('button[type="submit"]')
+            if submit_button.lenght > 0:
+                WAIT_ICON = Ladda.create(submit_button[0])
+                WAIT_ICON.start()
+
+            jQuery(this).find('input[type="submit"]')
+
+            href = jQuery(this).attr("action")
+            if href:
+                if '?' in href and not hybrid in href:
+                    href2 = href + '&hybrid=1'
+                else:
+                    href2 = href + '?hybrid=1'
+                jQuery(this).attr('action', href2)
+
+            ajax_submit(jQuery(this), def(data):
+                nonlocal ACTIVE_PAGE, WAIT_ICON
+                ACTIVE_PAGE.page.html(data)
+                popup_init()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+            )
     )
 
 
@@ -513,6 +525,7 @@ def _on_menu_href3(elem):
         else:
             jQuery('#body_body').html(data)
     })
+    popup_init()
 
 def jquery_init(application_template, menu_id, lang, base_path):
     nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH
@@ -583,12 +596,14 @@ def resize_win():
     tab_width = ACTIVE_PAGE.page.find("table[name='tabsort']").width()
     ACTIVE_PAGE.page.find(".tbl_header").width(tab_width)
 
-    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(def():
-        tab2.push(jQuery(this).width())
+    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
+        def():
+            tab2.push(jQuery(this).width())
     )
     tab2 = tab2.reverse()
-    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
-        jQuery(this).width(tab2.pop())
+    ACTIVE_PAGE.page.find(".tbl_header th").each(
+        def():
+            jQuery(this).width(tab2.pop())
     )
 
 
@@ -596,8 +611,9 @@ def stick_header2():
     tab = []
     tab2 = []
 
-    jQuery("table.tabsort th").each(def():
-        tab.push($(this).width())
+    jQuery("table.tabsort th").each(
+        def():
+            tab.push(jQuery(this).width())
     )
 
     table = jQuery('<table id="tbl_header" class="tabsort" style="overflow-x: hidden;"></table>')
@@ -605,21 +621,24 @@ def stick_header2():
 
     jQuery('#tbl_scroll').before(table)
 
-    jQuery("#tbl_header th").each(def():
-        tab2.push($(this).width())
+    jQuery("#tbl_header th").each(
+        def():
+            tab2.push(jQuery(this).width())
     )
 
     tab2 = tab2.reverse()
 
-    jQuery("table[name='tabsort'] tr:first td").each(def():
-        x = tab2.pop()
-        if x > jQuery(this).width():
-            jQuery(this).css("min-width", x)
+    jQuery("table[name='tabsort'] tr:first td").each(
+        def():
+            x = tab2.pop()
+            if x > jQuery(this).width():
+                jQuery(this).css("min-width", x)
     )
 
     tab = tab.reverse()
-    jQuery("#tbl_header th").each(def():
-        jQuery(this).width(tab.pop())
+    jQuery("#tbl_header th").each(
+        def():
+            jQuery(this).width(tab.pop())
     )
 
     jQuery(window).resize(resize_win)
@@ -632,8 +651,9 @@ def stick_header():
     tab = []
     tab2 = []
 
-    ACTIVE_PAGE.page.find("table.tabsort th").each(def():
-        tab.push($(this).width())
+    ACTIVE_PAGE.page.find("table.tabsort th").each(
+        def():
+            tab.push(jQuery(this).width())
     )
 
     table = jQuery('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>')
@@ -641,21 +661,24 @@ def stick_header():
 
     ACTIVE_PAGE.page.find('.tbl_scroll').before(table)
 
-    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
-        tab2.push($(this).width())
+    ACTIVE_PAGE.page.find(".tbl_header th").each(
+        def():
+            tab2.push(jQuery(this).width())
     )
 
     tab2 = tab2.reverse()
 
-    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(def():
-        x = tab2.pop()
-        if x > jQuery(this).width():
-            jQuery(this).css("min-width", x)
+    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
+        def():
+            x = tab2.pop()
+            if x > jQuery(this).width():
+                jQuery(this).css("min-width", x)
     )
 
     tab = tab.reverse()
-    ACTIVE_PAGE.page.find(".tbl_header th").each(def():
-        jQuery(this).width(tab.pop())
+    ACTIVE_PAGE.page.find(".tbl_header th").each(
+        def():
+            jQuery(this).width(tab.pop())
     )
 
     jQuery(window).resize(resize_win)
@@ -663,19 +686,20 @@ def stick_header():
     resize_win()
 
 
-window.addEventListener('popstate', def(e):
-    nonlocal PUSH_STATE
-    if e.state:
-        PUSH_STATE = False
-        if APPLICATION_TEMPLATE == 'modern':
-            menu = get_menu().activate(e.state, False)
-        else:
-            alert("x1")
-            jQuery('#body_body').html(event.state)
-            ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-            ACTIVE_PAGE.set_href(href2)
-            menu.on_new_page('body_body')
-        PUSH_STATE = True
+window.addEventListener('popstate',
+    def(e):
+        nonlocal PUSH_STATE
+        if e.state:
+            PUSH_STATE = False
+            if APPLICATION_TEMPLATE == 'modern':
+                menu = get_menu().activate(e.state, False)
+            else:
+                alert("x1")
+                jQuery('#body_body').html(event.state)
+                ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+                ACTIVE_PAGE.set_href(href2)
+                menu.on_new_page('body_body')
+            PUSH_STATE = True
 ,False)
 
 
