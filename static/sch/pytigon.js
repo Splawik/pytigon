@@ -432,12 +432,7 @@ function popup_init() {
     ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href, href2;
         data = jQuery(this).serialize();
-        if (_$rapyd$_in("pdf", data) && data["pdf"] === "on") {
-            return true;
-        }
-        if (_$rapyd$_in("odf", data) && data["odf"] === "on") {
-            return true;
-        }
+        console.log(data);
         e.preventDefault();
         submit_button = jQuery(this).find("button[type=\"submit\"]");
         if (len(submit_button) > 0) {

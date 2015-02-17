@@ -385,11 +385,11 @@ def popup_init():
         nonlocal ACTIVE_PAGE, WAIT_ICON
 
         data = jQuery(this).serialize()
-        #console.log(data)
-        if 'pdf' in data and data['pdf'] == 'on':
-            return True
-        if 'odf' in data and data['odf'] == 'on':
-            return True
+        console.log(data)
+        #if 'pdf' in data and data['pdf'] == 'on':
+        #    return True
+        #if 'odf' in data and data['odf'] == 'on':
+        #    return True
 
         e.preventDefault()
 
@@ -416,8 +416,6 @@ def popup_init():
                 WAIT_ICON.stop()
         )
     )
-
-
 
 
 def get_datatable_options():
