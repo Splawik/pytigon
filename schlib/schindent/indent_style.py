@@ -542,34 +542,8 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
         return ""
 
 
-def __py_to_js(script, module_path):
-    tab = -1
-    out_tab = []
-    for line in script.split('\n'):
-        if tab < 0:
-            if line.strip()!="":
-                tab = len(line) - len(line.lstrip())
-            else:
-                continue
-        out_tab.append(line[tab:])
-
-    script2 = "\n".join(out_tab)
-#    try:
-    a = python_to_pythonjs(script2, module_path=module_path)
-#    except Exception as e:
-#        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-#        print(e)
-#        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
-    return code
-
-def __py2js(script, module_path):
-    a = python_to_pythonjs(script, module_path=module_path)
-    code = pythonjs_to_javascript( a, requirejs=False, insert_runtime=False)
-    return code
-
-
 def py2js(script, module_path):
+    #print("module_path:", module_path)
     def process_output(line):
         if line.startswith('WARN:'):
             print(line)
@@ -594,7 +568,13 @@ def py2js(script, module_path):
                     print()
                 except:
                     pass
-
+        else:
+            print(line)
+    if module_path:
+        old_path = os.getcwd()
+        os.chdir(module_path)
+    else:
+        old_path = None
     proc = subprocess.Popen(PY_TO_JS,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
@@ -605,6 +585,9 @@ def py2js(script, module_path):
 
     for line in stderr_value.split('\n'):
         process_output(line)
+
+    if old_path:
+        os.chdir(old_path)
 
     return str(ret)
 

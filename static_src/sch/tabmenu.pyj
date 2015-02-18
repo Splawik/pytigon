@@ -1,0 +1,77 @@
+import page
+
+class TabMenu:
+    def __init__(self):
+        self.id = 0
+        self.titles = {}
+
+    def is_open(self, title):
+        if title in self.titles and self.titles[title]:
+            return True
+        else:
+            return False
+
+    def activate(self, title, push_state=True):
+        nonlocal PUSH_STATE
+        menu_item = self.titles[title]
+        jQuery(sprintf('#li_%s a', menu_item.id)).tab('show')
+        if push_state and PUSH_STATE:
+            history_push_state(menu_item.title, menu_item.url)
+
+    def new_page(self, title, data, href):
+        nonlocal ACTIVE_PAGE, PUSH_STATE
+        _id = "tab" + self.id
+        self.titles[title] = new TabMenuItem(_id, title, href, data)
+
+        jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [_id, _id, title, _id]))
+        jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
+
+        ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
+
+        jQuery('#'+_id).html(data)
+
+        if PUSH_STATE:
+            history_push_state(title, href)
+
+
+        jQuery('#tabs2 a:last').tab('show')
+
+
+        jQuery('#tabs2 a:last').on('shown.bs.tab',
+            def(e):
+                nonlocal PUSH_STATE, ACTIVE_PAGE
+                ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
+                menu = get_menu()
+                menu_item = menu.titles[jQuery.trim(e.target.text)]
+                if PUSH_STATE:
+                    history_push_state(menu_item.title, menu_item.url)
+        )
+        #self.on_new_page(_id)
+
+        page_init(_id)
+
+        jQuery(sprintf('#button_%s', _id)).click(
+            def(event):
+                get_menu().remove_page(jQuery(this).attr('id').replace('button_',''))
+        )
+        self.id += 1
+
+        return _id
+
+
+    def remove_page(self, id):
+        jQuery.each(self.titles,
+            def(index, value):
+                if value and value.id == id:
+                    self.titles[index] = None
+        )
+        jQuery(sprintf('#li_%s', id) ).remove()
+        jQuery(sprintf('#%s', id)).remove()
+        jQuery('#tabs2 a:last').tab('show')
+
+
+def get_menu():
+    nonlocal MENU
+    if not MENU:
+        MENU = TabMenu()
+    return MENU

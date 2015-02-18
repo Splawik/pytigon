@@ -50,12 +50,11 @@
 
 
 %% jquery_ready_start
-  $(document).ready(function() { //$.material.init();
+  $(document).ready(function() {
 
 
 %% jquery_ready
     .jquery_ready()
-    {% block popup_init %}popup_init();{% endblock %}
 
 %% jquery_ready_end
   });

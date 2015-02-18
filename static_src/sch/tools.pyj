@@ -1,0 +1,27 @@
+def ajax_submit(form, func):
+    if is_hybrid():
+        queryString = form.formSerialize()
+        cmd_to_python('href_to_var|'+to_absolute_url(form.attr('action'))+'?'+queryString+'|RET_BUFOR')
+        RET_OBJ = func
+        cmd_to_python('run_js|ret_submit();')
+    else:
+        form.ajaxSubmit( { success: func } )
+
+def get_page(elem):
+    if elem.hasClass('.tab-pane'):
+        return elem
+    else:
+        return elem.closest('.tab-pane')
+
+def get_table_type(elem):
+    tabsort = get_page(elem).find('.tabsort')
+    if tabsort.length>0:
+        return tabsort.attr('table_type')
+    else:
+        return ""
+
+def can_popup():
+    if(IS_POPUP):
+        return False
+    else:
+        return True

@@ -1,0 +1,124 @@
+def _on_popup():
+    nonlocal WAIT_ICON
+    WAIT_ICON = Ladda.create(this)
+    if is_hybrid():
+        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data")
+        jQuery('div.dialog-form').modal()
+    else:
+        if can_popup():
+            jQuery("div.dialog-data").load(jQuery(this).attr("href"), None,
+                def(responseText, status, response):
+                    if status!='error':
+                        _dialog_loaded(True)
+                        on_dialog_load()
+            )
+        else:
+            if WAIT_ICON:
+                WAIT_ICON.start()
+            jQuery(".inline_dialog").remove()
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    nonlocal WAIT_ICON
+                    if status!='error':
+                        _dialog_loaded(False)
+                        on_dialog_load()
+                    if WAIT_ICON:
+                        WAIT_ICON.stop()
+                        WAIT_ICON = None
+            )
+    return False
+
+def _on_popup_info():
+    if is_hybrid():
+        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-info")
+        jQuery('div.dialog-form-info').modal()
+    else:
+        if can_popup():
+            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    jQuery('div.dialog-form-info').modal()
+            )
+        else:
+            jQuery(".inline_dialog").remove()
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None)
+
+    return False
+
+
+def _on_popup_delete():
+    if is_hybrid():
+        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-delete")
+        jQuery('div.dialog-form-delete').modal()
+    else:
+        if can_popup():
+            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"),None,
+                def(responseText, status, response):
+                    jQuery('div.dialog-form-delete').modal()
+            )
+        else:
+            jQuery(".inline_dialog").remove()
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None)
+
+    return False
+
+
+def on_dialog_load():
+    pass
+
+
+def _dialog_loaded(is_modal):
+    nonlocal IS_POPUP
+    fragment_init(jQuery('div.dialog-form'))
+    ACTIVE_PAGE.page.find("div.resizable").resizable()
+    if is_modal:
+        jQuery("div.dialog-form").fadeTo( "fast", 1)
+        jQuery('div.dialog-form').modal()
+        IS_POPUP = True
+
+
+def dialog_ex_load2(responseText, status, response):
+    if status!='error':
+        _dialog_loaded(False)
+        on_dialog_load()
+
+
+def on_edit_ok(form):
+    jQuery.ajax({'type': "POST", 'url': form.attr('action'), 'data': form.serialize(), 'success': def(data): _refresh_win(data, form); })
+    return False
+
+
+
+def on_delete_ok(form):
+    jQuery.ajax({'type': "POST", 'url': form.attr('action'), 'data': form.serialize(),'success': def(data): _refresh_win(data, form); })
+    return False
+
+
+def _refresh_win(responseText, form):
+    if "RETURN_OK" in responseText:
+        subform = form.closest('div.inline_frame')
+        if subform.length>0:
+            subform.find("div.frame-data-inner").load(subform.attr('href'),None)
+        else:
+            filter = ACTIVE_PAGE.page.find('form.TableFiltr')
+            jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
+            if filter.length>0:
+                filter.attr('action', ACTIVE_PAGE.get_href())
+                ajax_submit(filter,
+                    def(data):
+                        ACTIVE_PAGE.page.html(data)
+                        jQuery("div.dialog-form").modal('hide')
+                        popup_init()
+                )
+            else:
+                jQuery("div.dialog-form").modal('hide')
+
+    else:
+        jQuery("div.dialog-data").html(responseText)
+
+
+def on_cancel_inline():
+    nonlocal ACTIVE_PAGE
+    ACTIVE_PAGE.page.find(".inline_dialog").remove()
