@@ -39,6 +39,7 @@ TabMenuItem.prototype.__init__ = function __init__(id, title, url, data){
 };
 
 
+
 function TabMenu() {
     TabMenu.prototype.__init__.apply(this, arguments);
 }
@@ -46,6 +47,11 @@ TabMenu.prototype.__init__ = function __init__(){
     var self = this;
     self.id = 0;
     self.titles = {};
+    self.active_item = null;
+};
+TabMenu.prototype.get_active_item = function get_active_item(){
+    var self = this;
+    return self.active_item;
 };
 TabMenu.prototype.is_open = function is_open(title){
     var self = this;
@@ -67,22 +73,25 @@ TabMenu.prototype.activate = function activate(title, push_state){
 };
 TabMenu.prototype.new_page = function new_page(title, data, href){
     var self = this;
-    var _id;
+    var _id, menu_item;
     _id = "tab" + self.id;
-    self.titles[title] = new TabMenuItem(_id, title, href, data);
+    menu_item = new TabMenuItem(_id, title, href, data);
+    self.titles[title] = menu_item;
     jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [ _id, _id, title, _id ]));
     jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
     ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
+    self.active_item = menu_item;
     jQuery("#" + _id).html(data);
     if (PUSH_STATE) {
         history_push_state(title, href);
     }
     jQuery("#tabs2 a:last").tab("show");
     jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
-        var menu, menu_item;
-        ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
+        var menu;
+        ACTIVE_PAGE = new Page(_id, jQuery("#" + _id), menu_item);
         menu = get_menu();
         menu_item = menu.titles[jQuery.trim(e.target.text)];
+        self.active_item = menu_item;
         if (PUSH_STATE) {
             history_push_state(menu_item.title, menu_item.url);
         }
@@ -232,7 +241,7 @@ function _refresh_win(responseText, form) {
                 ajax_submit(filter, function(data) {
                     ACTIVE_PAGE.page.html(data);
                     jQuery("div.dialog-form").modal("hide");
-                    popup_init();
+                    page_init();
                 });
             } else {
                 jQuery("div.dialog-form").modal("hide");
@@ -486,7 +495,7 @@ function page_init(id) {
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     jQuery("#" + id + " a").on("click", function(e) {
         var href;
-        if (jQuery(this).hasClass("menu-href") || jQuery(this).attr("href") && _$rapyd$_in("/admin/", jQuery(this).attr("href"))) {
+        if (jQuery(this).hasClass("menu-href")) {
             e.preventDefault();
             href = jQuery(this).attr("href");
             jQuery.ajax({
@@ -499,15 +508,17 @@ function page_init(id) {
                         page_init(ACTIVE_PAGE.id);
                     } else {
                         jQuery("#body_body").html(data);
+                        page_init("body_body");
+                    }
+                    ACTIVE_PAGE.set_href(href);
+                    get_menu().get_active_item().url = href;
+                    if (PUSH_STATE) {
+                        history_push_state("title", href);
                     }
                 }
             });
-            popup_init();
         }
     });
-    fragment_init();
-}
-function popup_init() {
     ACTIVE_PAGE.page.find("a.popup").click(_on_popup);
     ACTIVE_PAGE.page.find("a.popup_info").click(_on_popup_info);
     ACTIVE_PAGE.page.find("a.popup_delete").click(_on_popup_delete);
@@ -528,7 +539,6 @@ function popup_init() {
             WAIT_ICON = Ladda.create(submit_button[0]);
             WAIT_ICON.start();
         }
-        jQuery(this).find("input[type=\"submit\"]");
         href = jQuery(this).attr("action");
         if (href) {
             if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
@@ -540,18 +550,38 @@ function popup_init() {
         }
         ajax_submit(jQuery(this), function(data) {
             ACTIVE_PAGE.page.html(data);
-            popup_init();
+            page_init(id);
             if (WAIT_ICON) {
                 WAIT_ICON.stop();
             }
         });
     });
+    fragment_init();
 }
-function global_init() {
-    jQuery("div.dialog-form").on("hide.bs.modal", function(e) {
-        IS_POPUP = false;
-        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
-    });
+function app_init(application_template, menu_id, lang, base_path) {
+    var SUBWIN;
+    APPLICATION_TEMPLATE = application_template;
+    LANG = lang;
+    BASE_PATH = base_path;
+    if (IS_POPUP) {
+        SUBWIN = true;
+    } else {
+        SUBWIN = false;
+    }
+    if (!SUBWIN) {
+        jQuery(function() {
+            jQuery("#menu_tabs").tabs();
+            if (APPLICATION_TEMPLATE !== "traditional") {
+                jQuery("#tabs a:eq(1)").tab("show");
+            } else {
+                jQuery("#tabs a:eq(" + menu_id + ")").tab("show");
+            }
+            jQuery("a.menu-href").click(function(e) {
+                e.preventDefault();
+                _on_menu_href(this);
+            });
+        });
+    }
 }
 function _on_menu_href(elem, title) {
     if (typeof title === "undefined") title = null;
@@ -592,7 +622,6 @@ function _on_menu_href(elem, title) {
                         history_push_state(title, href);
                     }
                 }
-                popup_init();
                 if (WAIT_ICON) {
                     WAIT_ICON.stop();
                     WAIT_ICON = null;
@@ -616,31 +645,6 @@ function _on_menu_href(elem, title) {
         return false;
     }
 }
-function jquery_init(application_template, menu_id, lang, base_path) {
-    var SUBWIN;
-    APPLICATION_TEMPLATE = application_template;
-    LANG = lang;
-    BASE_PATH = base_path;
-    if (IS_POPUP) {
-        SUBWIN = true;
-    } else {
-        SUBWIN = false;
-    }
-    if (!SUBWIN) {
-        jQuery(function() {
-            jQuery("#menu_tabs").tabs();
-            if (APPLICATION_TEMPLATE !== "traditional") {
-                jQuery("#tabs a:eq(1)").tab("show");
-            } else {
-                jQuery("#tabs a:eq(" + menu_id + ")").tab("show");
-            }
-            jQuery("a.menu-href").click(function(e) {
-                e.preventDefault();
-                _on_menu_href(this);
-            });
-        });
-    }
-}
 function _on_error(request, settings) {
     var start, end;
     if (WAIT_ICON) {
@@ -660,7 +664,10 @@ function _on_error(request, settings) {
 function jquery_ready() {
     var txt2, txt, menu;
     jQuery(document).ajaxError(_on_error);
-    global_init();
+    jQuery("div.dialog-form").on("hide.bs.modal", function(e) {
+        IS_POPUP = false;
+        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
+    });
     if (APPLICATION_TEMPLATE === "traditional") {
         ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
         page_init("body_body");

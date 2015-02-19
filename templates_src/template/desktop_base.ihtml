@@ -46,7 +46,7 @@
 
 
 %% jquery_init
-    .jquery_init('{{application_type}}', '{{table_type}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}', '{{request.get_full_path}}')
+    .app_init('{{application_type}}', '{{table_type}}', {{app_manager.get_menu_id}}, '{{ get_current_language }}', '{{request.get_full_path}}')
 
 
 %% jquery_ready_start

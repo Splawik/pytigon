@@ -36,6 +36,7 @@ def fragment_init(elem=None):
 
 
 def page_init(id):
+    nonlocal WAIT_ICON, ACTIVE_PAGE
     table_type = get_table_type(jQuery('#'+ id))
 
     paginator = get_page(jQuery('#'+ id)).find('.pagination')
@@ -61,24 +62,24 @@ def page_init(id):
     jQuery('#'+ id + " a" ).on( "click",
         def(e):
             nonlocal ACTIVE_PAGE
-            if jQuery(this).hasClass( "menu-href" ) or (jQuery(this).attr('href') and '/admin/' in jQuery(this).attr('href')):
+            if jQuery(this).hasClass( "menu-href" ):
                 e.preventDefault()
                 href = jQuery(this).attr("href")
                 jQuery.ajax({'type': "GET", 'url': href, 'success': def(data):
+                    nonlocal href
                     if APPLICATION_TEMPLATE == 'modern':
                         ACTIVE_PAGE.page.html(data)
                         ACTIVE_PAGE.set_href(href)
                         page_init(ACTIVE_PAGE.id)
                     else:
                         jQuery('#body_body').html(data)
+                        page_init('body_body')
+                    ACTIVE_PAGE.set_href(href)
+                    get_menu().get_active_item().url = href
+                    if PUSH_STATE:
+                        history_push_state("title", href)
                 })
-                popup_init()
     )
-    fragment_init()
-
-
-def popup_init():
-    nonlocal WAIT_ICON
     ACTIVE_PAGE.page.find('a.popup').click(_on_popup)
     ACTIVE_PAGE.page.find('a.popup_info').click(_on_popup_info)
     ACTIVE_PAGE.page.find('a.popup_delete').click(_on_popup_delete)
@@ -103,7 +104,7 @@ def popup_init():
                 WAIT_ICON = Ladda.create(submit_button[0])
                 WAIT_ICON.start()
 
-            jQuery(this).find('input[type="submit"]')
+            #jQuery(this).find('input[type="submit"]')
 
             href = jQuery(this).attr("action")
             if href:
@@ -114,22 +115,39 @@ def popup_init():
                 jQuery(this).attr('action', href2)
 
             ajax_submit(jQuery(this), def(data):
-                nonlocal ACTIVE_PAGE, WAIT_ICON
+                nonlocal ACTIVE_PAGE, WAIT_ICON, id
                 ACTIVE_PAGE.page.html(data)
-                popup_init()
+                page_init(id)
                 if WAIT_ICON:
                     WAIT_ICON.stop()
             )
     )
+    fragment_init()
 
 
-def global_init():
-    jQuery('div.dialog-form').on('hide.bs.modal',
-        def(e):
-            nonlocal IS_POPUP
-            IS_POPUP = False
-            jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
-    )
+def app_init(application_template, menu_id, lang, base_path):
+    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH
+    APPLICATION_TEMPLATE = application_template
+    LANG = lang
+    BASE_PATH = base_path
+    if IS_POPUP:
+        SUBWIN = True
+    else:
+        SUBWIN = False
+
+    if not SUBWIN:
+        jQuery(def ():
+            jQuery("#menu_tabs").tabs()
+            if APPLICATION_TEMPLATE != 'traditional':
+                jQuery("#tabs a:eq(1)").tab('show')
+            else:
+                jQuery('#tabs a:eq('+ menu_id + ')').tab('show')
+            jQuery('a.menu-href').click(
+                def(e):
+                    e.preventDefault()
+                    _on_menu_href(this)
+            )
+        )
 
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
@@ -164,12 +182,10 @@ def _on_menu_href(elem, title=None):
                     jQuery('#body_body').html(data)
                     ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                     ACTIVE_PAGE.set_href(href2)
-                    #menu.on_new_page('body_body')
                     page_init('body_body')
                     if PUSH_STATE:
                         history_push_state(title, href)
 
-                popup_init()
                 if WAIT_ICON:
                     WAIT_ICON.stop()
                     WAIT_ICON = None
@@ -185,29 +201,6 @@ def _on_menu_href(elem, title=None):
         return False
 
 
-def jquery_init(application_template, menu_id, lang, base_path):
-    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH
-    APPLICATION_TEMPLATE = application_template
-    LANG = lang
-    BASE_PATH = base_path
-    if IS_POPUP:
-        SUBWIN = True
-    else:
-        SUBWIN = False
-
-    if not SUBWIN:
-        jQuery(def ():
-            jQuery("#menu_tabs").tabs()
-            if APPLICATION_TEMPLATE != 'traditional':
-                jQuery("#tabs a:eq(1)").tab('show')
-            else:
-                jQuery('#tabs a:eq('+ menu_id + ')').tab('show')
-            jQuery('a.menu-href').click(
-                def(e):
-                    e.preventDefault()
-                    _on_menu_href(this)
-            )
-        )
 
 
 def _on_error(request, settings):
@@ -230,7 +223,13 @@ def jquery_ready():
     nonlocal ACTIVE_PAGE, BASE_PATH
 
     jQuery(document).ajaxError(_on_error)
-    global_init()
+
+    jQuery('div.dialog-form').on('hide.bs.modal',
+        def(e):
+            nonlocal IS_POPUP
+            IS_POPUP = False
+            jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
+    )
 
     if APPLICATION_TEMPLATE == 'traditional':
         ACTIVE_PAGE = Page(0, jQuery('#body_body'))
@@ -274,3 +273,5 @@ def history_push_state(title, url, data=None):
         window.history.pushState(data, title, url2)
     else:
         window.history.pushState(title, title, url2)
+
+

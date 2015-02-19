@@ -110,7 +110,7 @@ def _refresh_win(responseText, form):
                     def(data):
                         ACTIVE_PAGE.page.html(data)
                         jQuery("div.dialog-form").modal('hide')
-                        popup_init()
+                        page_init()
                 )
             else:
                 jQuery("div.dialog-form").modal('hide')

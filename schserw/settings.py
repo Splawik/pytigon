@@ -110,6 +110,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'django.core.context_processors.static',
     'schserw.schsys.context_processors.sch_standard',
     'schserw.schsys.context_processors.sch_html_widget',
+    #'django.core.context_processors.request',
     ]
 
 TEMPLATE_DIRS = [ROOT_PATH + '/templates']
@@ -121,6 +122,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     #'registration',
+    #'django_admin_bootstrapped',
+    'bootstrap_admin',
     'django.contrib.admin',
     #'django.contrib.admin.apps.AdminConfig',
 #    'django.contrib.databrowse',
@@ -159,5 +162,6 @@ ALLOWED_HOSTS = ['127.0.0.1', '127.0.0.2', '127.0.0.3', 'localhost', 'localhost:
 PYTHON_INTERPRETER = 'python'
 PYTHON_CONSOLE = 'ipython --classic'
 
-
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+BOOTSTRAP_ADMIN_SIDEBAR_MENU = True

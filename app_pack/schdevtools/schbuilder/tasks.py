@@ -12,9 +12,5 @@ import time
 
 
 
-def test(id, input_queue, output_queue, *args, **kwargs):
-    
-    
-
 
 

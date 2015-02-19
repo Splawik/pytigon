@@ -1,9 +1,14 @@
 import page
+import tabmenuitem
 
 class TabMenu:
     def __init__(self):
         self.id = 0
         self.titles = {}
+        self.active_item = None
+
+    def get_active_item(self):
+        return self.active_item
 
     def is_open(self, title):
         if title in self.titles and self.titles[title]:
@@ -21,12 +26,15 @@ class TabMenu:
     def new_page(self, title, data, href):
         nonlocal ACTIVE_PAGE, PUSH_STATE
         _id = "tab" + self.id
-        self.titles[title] = new TabMenuItem(_id, title, href, data)
+        menu_item = TabMenuItem(_id, title, href, data)
+        self.titles[title] = menu_item
+        #self.titles[title] = new TabMenuItem(_id, title, href, data)
 
         jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [_id, _id, title, _id]))
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
         ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
+        self.active_item = menu_item
 
         jQuery('#'+_id).html(data)
 
@@ -39,10 +47,12 @@ class TabMenu:
 
         jQuery('#tabs2 a:last').on('shown.bs.tab',
             def(e):
-                nonlocal PUSH_STATE, ACTIVE_PAGE
-                ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
+                nonlocal PUSH_STATE, ACTIVE_PAGE, menu_item
+                ACTIVE_PAGE = Page(_id, jQuery('#'+_id), menu_item)
+
                 menu = get_menu()
                 menu_item = menu.titles[jQuery.trim(e.target.text)]
+                self.active_item = menu_item
                 if PUSH_STATE:
                     history_push_state(menu_item.title, menu_item.url)
         )
