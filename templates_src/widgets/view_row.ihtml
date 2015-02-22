@@ -2,7 +2,7 @@
 %extends "widgets/action.html"
 
 %% class
-    .popup_info btn btn-sm btn-default
+    .popup_info btn btn-sm btn-info
 
 %% content
     % with standard_web_browser=True

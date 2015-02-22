@@ -5,6 +5,7 @@ APPLICATION_TEMPLATE = 'standard'
 RET_BUFOR = None
 RET_OBJ = None
 
+
 IS_POPUP = False
 SUBWIN = False
 LANG = "en"
@@ -13,6 +14,7 @@ ACTIVE_PAGE = None
 PUSH_STATE = True
 BASE_PATH = None
 WAIT_ICON = None
+WAIT_ICON2 = False
 
 import page
 import tabmenuitem
@@ -35,10 +37,9 @@ def fragment_init(elem=None):
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
 
 
-def page_init(id):
-    nonlocal WAIT_ICON, ACTIVE_PAGE
+def page_init(id, first_time = True):
+    nonlocal WAIT_ICON, WAIT_ICON2, ACTIVE_PAGE
     table_type = get_table_type(jQuery('#'+ id))
-
     paginator = get_page(jQuery('#'+ id)).find('.pagination')
     if paginator.length>0:
         paginate = True
@@ -52,6 +53,9 @@ def page_init(id):
                 if form:
                     def _on_new_page(data):
                         pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+                        #page_init(ACTIVE_PAGE.id)
+                        fragment_init(pg.closest('.content').find(".tabsort tbody"))
+
                     jQuery.ajax({'type': "POST", 'url': pg.attr('href').replace('[[page]]', page)+'&hybrid=1', 'data': form.serialize(), 'success': _on_new_page })
         }
         pg.twbsPagination(options)
@@ -59,36 +63,47 @@ def page_init(id):
         paginate = False
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
-    jQuery('#'+ id + " a" ).on( "click",
-        def(e):
-            nonlocal ACTIVE_PAGE
-            if jQuery(this).hasClass( "menu-href" ):
-                e.preventDefault()
+    if first_time:
+        jQuery('#'+ id).on( "click", "a",
+            def(e):
+                nonlocal ACTIVE_PAGE
+                #if jQuery(this).hasClass( "menu-href" ):
+
+                for pos in [ ('popup', on_popup), ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
+                    if jQuery(this).hasClass(pos[0]):
+                        pos[1](this)
+                        return False
+
                 href = jQuery(this).attr("href")
-                jQuery.ajax({'type': "GET", 'url': href, 'success': def(data):
+                if '#' in href:
+                    return True
+
+                e.preventDefault()
+
+                if '?' in href and not hybrid in href:
+                    href2 = href + '&hybrid=1'
+                else:
+                    href2 = href + '?hybrid=1'
+
+                jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
                     nonlocal href
                     if APPLICATION_TEMPLATE == 'modern':
                         ACTIVE_PAGE.page.html(data)
                         ACTIVE_PAGE.set_href(href)
-                        page_init(ACTIVE_PAGE.id)
+                        page_init(ACTIVE_PAGE.id, False)
                     else:
                         jQuery('#body_body').html(data)
-                        page_init('body_body')
+                        page_init('body_body', False)
                     ACTIVE_PAGE.set_href(href)
                     get_menu().get_active_item().url = href
                     if PUSH_STATE:
                         history_push_state("title", href)
                 })
-    )
-    ACTIVE_PAGE.page.find('a.popup').click(_on_popup)
-    ACTIVE_PAGE.page.find('a.popup_info').click(_on_popup_info)
-    ACTIVE_PAGE.page.find('a.popup_delete').click(_on_popup_delete)
-
-
+        )
     ACTIVE_PAGE.page.find('form').attr('target', '_blank')
     ACTIVE_PAGE.page.find('form').submit(
         def(e):
-            nonlocal ACTIVE_PAGE, WAIT_ICON
+            nonlocal ACTIVE_PAGE, WAIT_ICON, WAIT_ICON2
 
             data = jQuery(this).serialize()
             console.log(data)
@@ -103,6 +118,10 @@ def page_init(id):
             if submit_button.length > 0:
                 WAIT_ICON = Ladda.create(submit_button[0])
                 WAIT_ICON.start()
+            else:
+                WAIT_ICON2 = True
+                $('#loading-indicator').show()
+
 
             #jQuery(this).find('input[type="submit"]')
 
@@ -115,14 +134,17 @@ def page_init(id):
                 jQuery(this).attr('action', href2)
 
             ajax_submit(jQuery(this), def(data):
-                nonlocal ACTIVE_PAGE, WAIT_ICON, id
+                nonlocal ACTIVE_PAGE, WAIT_ICON, WAIT_ICON2, id
                 ACTIVE_PAGE.page.html(data)
-                page_init(id)
+                page_init(id, False)
                 if WAIT_ICON:
                     WAIT_ICON.stop()
+                if WAIT_ICON2:
+                    $('#loading-indicator').hide()
+                    WAIT_ICON2 = False
             )
     )
-    fragment_init()
+    fragment_init(ACTIVE_PAGE.page)
 
 
 def app_init(application_template, menu_id, lang, base_path):
@@ -142,17 +164,23 @@ def app_init(application_template, menu_id, lang, base_path):
                 jQuery("#tabs a:eq(1)").tab('show')
             else:
                 jQuery('#tabs a:eq('+ menu_id + ')').tab('show')
-            jQuery('a.menu-href').click(
+
+            jQuery('body').on('click', 'a.menu-href',
                 def(e):
                     e.preventDefault()
                     _on_menu_href(this)
             )
+            #jQuery('a.menu-href').on('click',
+            #    def(e):
+            #        e.preventDefault()
+            #        _on_menu_href(this)
+            #)
         )
 
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None):
-    nonlocal WAIT_ICON
+    nonlocal WAIT_ICON, WAIT_ICON2
     if APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
@@ -174,7 +202,7 @@ def _on_menu_href(elem, title=None):
             else:
                 href2 = href + '?hybrid=1'
             def _on_new_win(data):
-                nonlocal href, href2, title, WAIT_ICON
+                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2
 
                 if APPLICATION_TEMPLATE == 'modern':
                     id = menu.new_page(title, data, href)
@@ -182,7 +210,7 @@ def _on_menu_href(elem, title=None):
                     jQuery('#body_body').html(data)
                     ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                     ACTIVE_PAGE.set_href(href2)
-                    page_init('body_body')
+                    page_init('body_body', False)
                     if PUSH_STATE:
                         history_push_state(title, href)
 
@@ -190,24 +218,34 @@ def _on_menu_href(elem, title=None):
                     WAIT_ICON.stop()
                     WAIT_ICON = None
 
+                if WAIT_ICON2:
+                    $('#loading-indicator').hide()
+                    WAIT_ICON2 = False
+
             if APPLICATION_TEMPLATE == 'standard' and 'btn' in classname:
                 jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
                 jQuery(elem).removeClass('btn-info').addClass('btn-warning')
             if WAIT_ICON:
                 WAIT_ICON.start()
+            else:
+                WAIT_ICON2 = True
+                $('#loading-indicator').show()
             jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
-            jQuery(elem).closest('.dropdown-menu').dropdown('toggle')
-            jQuery('.navbar-ex1-collapse').collapse('hide')
+            #jQuery(elem).closest('.dropdown-menu').dropdown('toggle')
+            #jQuery('.navbar-ex1-collapse').collapse('hide')
         return False
 
 
 
 
 def _on_error(request, settings):
-    nonlocal WAIT_ICON
+    nonlocal WAIT_ICON, WAIT_ICON2
     if WAIT_ICON:
         WAIT_ICON.stop()
         WAIT_ICON = None
+    if WAIT_ICON2:
+        $('#loading-indicator').hide()
+        WAIT_ICON2 = False
 
     start = settings.responseText.indexOf("<body>")
     end = settings.responseText.lastIndexOf("</body>")
@@ -257,7 +295,6 @@ window.addEventListener('popstate',
             if APPLICATION_TEMPLATE == 'modern':
                 menu = get_menu().activate(e.state, False)
             else:
-                alert("x1")
                 jQuery('#body_body').html(event.state)
                 ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                 ACTIVE_PAGE.set_href(href2)

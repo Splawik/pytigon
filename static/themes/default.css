@@ -127,3 +127,9 @@ body.fixed .menu_offset {
 .tabsort_panel {
     padding:5px;
 }
+
+#loading-indicator {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}

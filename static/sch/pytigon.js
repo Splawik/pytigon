@@ -9,6 +9,7 @@ ACTIVE_PAGE = null;
 PUSH_STATE = true;
 BASE_PATH = null;
 WAIT_ICON = null;
+WAIT_ICON2 = false;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -121,14 +122,14 @@ function get_menu() {
     }
     return MENU;
 }
-function _on_popup() {
-    WAIT_ICON = Ladda.create(this);
+function on_popup(elem) {
+    WAIT_ICON = Ladda.create(elem);
     if (is_hybrid()) {
-        cmd_to_python("href_to_elem|" + this.href + "|#dialog-data");
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
         jQuery("div.dialog-form").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+            jQuery("div.dialog-data").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
                     _dialog_loaded(true);
                     on_dialog_load();
@@ -139,8 +140,8 @@ function _on_popup() {
                 WAIT_ICON.start();
             }
             jQuery(".inline_dialog").remove();
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
                     _dialog_loaded(false);
                     on_dialog_load();
@@ -154,36 +155,36 @@ function _on_popup() {
     }
     return false;
 }
-function _on_popup_info() {
+function on_popup_info(elem) {
     if (is_hybrid()) {
-        cmd_to_python("href_to_elem|" + this.href + "|#dialog-data-info");
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data-info");
         jQuery("div.dialog-form-info").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+            jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 jQuery("div.dialog-form-info").modal();
             });
         } else {
             jQuery(".inline_dialog").remove();
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null);
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
         }
     }
     return false;
 }
-function _on_popup_delete() {
+function on_popup_delete(elem) {
     if (is_hybrid()) {
-        cmd_to_python("href_to_elem|" + this.href + "|#dialog-data-delete");
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data-delete");
         jQuery("div.dialog-form-delete").modal();
     } else {
         if (can_popup()) {
-            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"), null, function(responseText, status, response) {
+            jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 jQuery("div.dialog-form-delete").modal();
             });
         } else {
             jQuery(".inline_dialog").remove();
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"));
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"), null);
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
         }
     }
     return false;
@@ -241,7 +242,7 @@ function _refresh_win(responseText, form) {
                 ajax_submit(filter, function(data) {
                     ACTIVE_PAGE.page.html(data);
                     jQuery("div.dialog-form").modal("hide");
-                    page_init();
+                    page_init(ACTIVE_PAGE.id, false);
                 });
             } else {
                 jQuery("div.dialog-form").modal("hide");
@@ -378,9 +379,6 @@ function set_table_type(table_type, selector, paginate) {
         options["scrollY"] += get_datatable_dy(selector);
         jQuery(selector).dataTable(options);
     }
-    jQuery(selector).on("click", "a.popup", _on_popup);
-    jQuery(selector).on("click", "a.popup_info", _on_popup_info);
-    jQuery(selector).on("click", "a.popup_delete", _on_popup_delete);
 }
 function cmd_to_python(value) {
     document.title = ":";
@@ -457,7 +455,8 @@ function fragment_init(elem) {
         "language": "pl"
     });
 }
-function page_init(id) {
+function page_init(id, first_time) {
+    if (typeof first_time === "undefined") first_time = true;
     var table_type, paginator, pg, totalPages, options, paginate;
     table_type = get_table_type(jQuery("#" + id));
     paginator = get_page(jQuery("#" + id)).find(".pagination");
@@ -478,6 +477,7 @@ function page_init(id) {
                 if (form) {
                     function _on_new_page(data) {
                         pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
+                        fragment_init(pg.closest(".content").find(".tabsort tbody"));
                     }
                     jQuery.ajax({
                         "type": "POST",
@@ -493,22 +493,39 @@ function page_init(id) {
         paginate = false;
     }
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
-    jQuery("#" + id + " a").on("click", function(e) {
-        var href;
-        if (jQuery(this).hasClass("menu-href")) {
-            e.preventDefault();
+    if (first_time) {
+        jQuery("#" + id).on("click", "a", function(e) {
+            var pos, href, href2;
+            var _$rapyd$_Iter0 = [ ["popup", on_popup], ["popup_info", on_popup_info], ["popup_delete", 
+            on_popup_delete] ];
+            for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
+                pos = _$rapyd$_Iter0[_$rapyd$_Index0];
+                if (jQuery(this).hasClass(pos[0])) {
+                    pos[1](this);
+                    return false;
+                }
+            }
             href = jQuery(this).attr("href");
+            if (_$rapyd$_in("#", href)) {
+                return true;
+            }
+            e.preventDefault();
+            if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
+                href2 = href + "&hybrid=1";
+            } else {
+                href2 = href + "?hybrid=1";
+            }
             jQuery.ajax({
                 "type": "GET",
-                "url": href,
+                "url": href2,
                 "success": function(data) {
                     if (APPLICATION_TEMPLATE === "modern") {
                         ACTIVE_PAGE.page.html(data);
                         ACTIVE_PAGE.set_href(href);
-                        page_init(ACTIVE_PAGE.id);
+                        page_init(ACTIVE_PAGE.id, false);
                     } else {
                         jQuery("#body_body").html(data);
-                        page_init("body_body");
+                        page_init("body_body", false);
                     }
                     ACTIVE_PAGE.set_href(href);
                     get_menu().get_active_item().url = href;
@@ -517,11 +534,8 @@ function page_init(id) {
                     }
                 }
             });
-        }
-    });
-    ACTIVE_PAGE.page.find("a.popup").click(_on_popup);
-    ACTIVE_PAGE.page.find("a.popup_info").click(_on_popup_info);
-    ACTIVE_PAGE.page.find("a.popup_delete").click(_on_popup_delete);
+        });
+    }
     ACTIVE_PAGE.page.find("form").attr("target", "_blank");
     ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href, href2;
@@ -538,6 +552,9 @@ function page_init(id) {
         if (submit_button.length > 0) {
             WAIT_ICON = Ladda.create(submit_button[0]);
             WAIT_ICON.start();
+        } else {
+            WAIT_ICON2 = true;
+            $("#loading-indicator").show();
         }
         href = jQuery(this).attr("action");
         if (href) {
@@ -550,13 +567,17 @@ function page_init(id) {
         }
         ajax_submit(jQuery(this), function(data) {
             ACTIVE_PAGE.page.html(data);
-            page_init(id);
+            page_init(id, false);
             if (WAIT_ICON) {
                 WAIT_ICON.stop();
             }
+            if (WAIT_ICON2) {
+                $("#loading-indicator").hide();
+                WAIT_ICON2 = false;
+            }
         });
     });
-    fragment_init();
+    fragment_init(ACTIVE_PAGE.page);
 }
 function app_init(application_template, menu_id, lang, base_path) {
     var SUBWIN;
@@ -576,7 +597,7 @@ function app_init(application_template, menu_id, lang, base_path) {
             } else {
                 jQuery("#tabs a:eq(" + menu_id + ")").tab("show");
             }
-            jQuery("a.menu-href").click(function(e) {
+            jQuery("body").on("click", "a.menu-href", function(e) {
                 e.preventDefault();
                 _on_menu_href(this);
             });
@@ -617,7 +638,7 @@ function _on_menu_href(elem, title) {
                     jQuery("#body_body").html(data);
                     ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
                     ACTIVE_PAGE.set_href(href2);
-                    page_init("body_body");
+                    page_init("body_body", false);
                     if (PUSH_STATE) {
                         history_push_state(title, href);
                     }
@@ -626,6 +647,10 @@ function _on_menu_href(elem, title) {
                     WAIT_ICON.stop();
                     WAIT_ICON = null;
                 }
+                if (WAIT_ICON2) {
+                    $("#loading-indicator").hide();
+                    WAIT_ICON2 = false;
+                }
             }
             if (APPLICATION_TEMPLATE === "standard" && _$rapyd$_in("btn", classname)) {
                 jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
@@ -633,14 +658,15 @@ function _on_menu_href(elem, title) {
             }
             if (WAIT_ICON) {
                 WAIT_ICON.start();
+            } else {
+                WAIT_ICON2 = true;
+                $("#loading-indicator").show();
             }
             jQuery.ajax({
                 "type": "GET",
                 "url": href2,
                 "success": _on_new_win
             });
-            jQuery(elem).closest(".dropdown-menu").dropdown("toggle");
-            jQuery(".navbar-ex1-collapse").collapse("hide");
         }
         return false;
     }
@@ -650,6 +676,10 @@ function _on_error(request, settings) {
     if (WAIT_ICON) {
         WAIT_ICON.stop();
         WAIT_ICON = null;
+    }
+    if (WAIT_ICON2) {
+        $("#loading-indicator").hide();
+        WAIT_ICON2 = false;
     }
     start = settings.responseText.indexOf("<body>");
     end = settings.responseText.lastIndexOf("</body>");
@@ -694,7 +724,6 @@ window.addEventListener("popstate", function(e) {
         if (APPLICATION_TEMPLATE === "modern") {
             menu = get_menu().activate(e.state, false);
         } else {
-            alert("x1");
             jQuery("#body_body").html(event.state);
             ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
             ACTIVE_PAGE.set_href(href2);

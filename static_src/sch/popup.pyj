@@ -1,12 +1,12 @@
-def _on_popup():
+def on_popup(elem):
     nonlocal WAIT_ICON
-    WAIT_ICON = Ladda.create(this)
+    WAIT_ICON = Ladda.create(elem)
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data")
+        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
         jQuery('div.dialog-form').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data").load(jQuery(this).attr("href"), None,
+            jQuery("div.dialog-data").load(jQuery(elem).attr("href"), None,
                 def(responseText, status, response):
                     if status!='error':
                         _dialog_loaded(True)
@@ -16,8 +16,8 @@ def _on_popup():
             if WAIT_ICON:
                 WAIT_ICON.start()
             jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None,
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     nonlocal WAIT_ICON
                     if status!='error':
@@ -29,38 +29,38 @@ def _on_popup():
             )
     return False
 
-def _on_popup_info():
+def on_popup_info(elem):
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-info")
+        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data-info")
         jQuery('div.dialog-form-info').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data-info").load(jQuery(this).attr("href"),None,
+            jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     jQuery('div.dialog-form-info').modal()
             )
         else:
             jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None)
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
 
     return False
 
 
-def _on_popup_delete():
+def on_popup_delete(elem):
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+this.href+"|#dialog-data-delete")
+        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data-delete")
         jQuery('div.dialog-form-delete').modal()
     else:
         if can_popup():
-            jQuery("div.dialog-data-delete").load(jQuery(this).attr("href"),None,
+            jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     jQuery('div.dialog-form-delete').modal()
             )
         else:
             jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(this).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(this).attr("href"),None)
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
 
     return False
 
@@ -110,7 +110,7 @@ def _refresh_win(responseText, form):
                     def(data):
                         ACTIVE_PAGE.page.html(data)
                         jQuery("div.dialog-form").modal('hide')
-                        page_init()
+                        page_init(ACTIVE_PAGE.id, False)
                 )
             else:
                 jQuery("div.dialog-form").modal('hide')

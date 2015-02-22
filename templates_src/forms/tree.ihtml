@@ -15,12 +15,12 @@
 %% list_content_actions
     % if not readonly
         % if parent_pk > 0
-            % button '../../%d/this/-/add'|format:parent_obj.id 'New element'
+            % button '../../../%d/this/-/add'|format:parent_obj.id 'New element'
         % else
-            % button '../../0/this/-/add' 'New element'
+            % button '../../../0/this/-/add' 'New element'
     %if parent_pk > 0
         % if standard_web_browser
-            % button "../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
+            % button "../../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
         % else
             CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=Wstecz..
     % else

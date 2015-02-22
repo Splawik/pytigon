@@ -750,7 +750,7 @@ class GenericRows(object):
                                  * parent).parent.id
                     except:
                         parent = 0
-                    path2 = request.path.replace(str(parent_old), str(parent))
+                    path2 = request.get_full_path().replace(str(parent_old), str(parent))
                     return HttpResponseRedirect(path2)
                 else:
                     return super(TreeView, self).get(request, *args, **kwargs)
