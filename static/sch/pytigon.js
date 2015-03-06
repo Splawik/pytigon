@@ -598,8 +598,10 @@ function app_init(application_template, menu_id, lang, base_path) {
                 jQuery("#tabs a:eq(" + menu_id + ")").tab("show");
             }
             jQuery("body").on("click", "a.menu-href", function(e) {
-                e.preventDefault();
-                _on_menu_href(this);
+                if (APPLICATION_TEMPLATE !== "traditional") {
+                    e.preventDefault();
+                    _on_menu_href(this);
+                }
             });
         });
     }

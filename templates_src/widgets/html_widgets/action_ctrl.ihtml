@@ -10,7 +10,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         % if standard_web_browser
             input type=hidden,,,id=id_{{id}},,,name={{id}},,,value={{object|getfield:id}}
 

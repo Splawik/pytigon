@@ -173,10 +173,16 @@ class GenericTable(object):
         else:
             if field:
                 f = getattr(models.get_model(self.app, tab), field).related
-                table_name = f.var_name
+                try:
+                    table_name = f.name
+                except:
+                    table_name = f.var_name
             else:
                 table_name = tab.lower()
-            rows.template_name = self.app.lower() + '/' + table_name + '.html'
+            if ':' in table_name:
+                rows.template_name = self.app.lower() + '/' + table_name.split(':')[-1] + '.html'
+            else:
+                rows.template_name = self.app.lower() + '/' + table_name + '.html'
         rows.base_model = models.get_model(self.app, tab)
         rows.queryset = queryset
         rows.base_perm = self.app + '.%s_' + tab.lower()
@@ -476,6 +482,7 @@ class GenericRows(object):
             
             template_name = self.template_name
             title = self.title
+            fields = "__all__"
 
             def get_form(self, form_class):
                 form = super(UpdateView, self).get_form(form_class)
@@ -551,6 +558,8 @@ class GenericRows(object):
             title = self.title
             field = self.field
             init_form = None
+            fields = "__all__"
+
 
             def get_form(self, form_class):                
                 form = super(CreateView, self).get_form(form_class)

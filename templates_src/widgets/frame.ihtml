@@ -5,7 +5,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         % if standard_web_browser:
             div id={{id}},,,class=inline_frame,,,href={{href}},,,width=100%,,,height={{height}}
         % else

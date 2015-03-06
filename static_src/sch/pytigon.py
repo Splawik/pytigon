@@ -159,6 +159,7 @@ def app_init(application_template, menu_id, lang, base_path):
 
     if not SUBWIN:
         jQuery(def ():
+            nonlocal menu_id
             jQuery("#menu_tabs").tabs()
             if APPLICATION_TEMPLATE != 'traditional':
                 jQuery("#tabs a:eq(1)").tab('show')
@@ -167,14 +168,10 @@ def app_init(application_template, menu_id, lang, base_path):
 
             jQuery('body').on('click', 'a.menu-href',
                 def(e):
-                    e.preventDefault()
-                    _on_menu_href(this)
+                    if APPLICATION_TEMPLATE != 'traditional':
+                        e.preventDefault()
+                        _on_menu_href(this)
             )
-            #jQuery('a.menu-href').on('click',
-            #    def(e):
-            #        e.preventDefault()
-            #        _on_menu_href(this)
-            #)
         )
 
 

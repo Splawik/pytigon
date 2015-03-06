@@ -115,7 +115,7 @@
             %% list_content_header
                 div class=panel-heading
                     table width=100%
-                        % if browser_type == 'tablet':
+                        % if browser_type == 'smartfon':
                             tr
                                 td colspan=3,,,align=center
                                     h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}

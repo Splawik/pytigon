@@ -4,7 +4,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         div id={{id}},,,style=overflow-y:scroll;overflow-x:scroll;
 
     %% js

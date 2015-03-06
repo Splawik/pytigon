@@ -85,6 +85,41 @@ TEMPLATE_LOADERS = (
                     'django.template.loaders.app_directories.Loader',
                     )
 
+#TEMPLATES = [
+#    {
+#        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#        'DIRS': [
+#            ROOT_PATH + '/templates',
+#            # insert your TEMPLATE_DIRS here
+#        ],
+#        'OPTIONS': {
+#            'context_processors': [
+#                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+#                # list if you haven't customized them:
+#
+#                'schserw.schsys.context_processors.sch_standard',
+#                'schserw.schsys.context_processors.sch_html_widget',
+#
+#                'django.contrib.auth.context_processors.auth',
+#                'django.template.context_processors.request',
+#                'django.template.context_processors.debug',
+#                'django.template.context_processors.i18n',
+#                'django.template.context_processors.media',
+#                'django.template.context_processors.static',
+#                'django.template.context_processors.tz',
+#                'django.contrib.messages.context_processors.messages',
+#            ],
+#            'loaders': [
+#                # insert your TEMPLATE_LOADERS here
+#                'schlib.schdjangoext.python_style_template_loader.Loader',
+#                'schlib.schdjangoext.python_style_template_loader.FSLoader',
+#                'django.template.loaders.app_directories.Loader',
+#            ]
+#        },
+#    },
+#]
+
+
 INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
 
 MIDDLEWARE_CLASSES = (

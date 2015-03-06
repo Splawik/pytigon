@@ -75,6 +75,10 @@ urlpatterns = patterns(
     )
 
 
+#import schserw.schsys.initdjango
+#django_ok = schserw.schsys.initdjango.init_django()
+
+
 for app in settings.INSTALLED_APPS:
 
         if isinstance(app, AppConfigMod):

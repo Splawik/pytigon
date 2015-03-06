@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-%% content
+%% widget_content
     % if standard_web_browser:
         a href={{path}}{{action.url}},,,class={% block class %}{% if action.target == '_top' %}popup{% endif %} btn btn-default ladda-button {% endblock %},,,name={{action.name}},,,title={{action.title}},,,{% ifnotequal action.target '_top' %}target={{action.target}}{% endifnotequal %},,,data-role=button,,,data-inline=true,,,data-style=expand-left,,,data-spinner-color=#000000,,,{% block data_icon %}data-icon=plus{% endblock %}
             span class=ladda-label

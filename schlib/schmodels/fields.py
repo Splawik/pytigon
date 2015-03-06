@@ -19,7 +19,7 @@
 
 from django.db import models
 from django.forms.widgets import CheckboxInput, CheckboxSelectMultiple, \
-    RadioInput, RadioSelect
+    RadioChoiceInput, RadioSelect
 from django.utils.encoding import python_2_unicode_compatible
 
 
@@ -121,7 +121,7 @@ class ManyToManyFieldWidthIcon(models.ManyToManyField):
 models.ManyToManyFieldWidthIcon = ManyToManyFieldWidthIcon
 
 @python_2_unicode_compatible
-class RadioInput2(RadioInput):
+class RadioInput2(RadioChoiceInput):
 
     def __str__(self):
         if 'id' in self.attrs:
@@ -191,7 +191,7 @@ class ForeignKeyWidthIcon(models.ForeignKey):
 models.ForeignKeyWidthIcon = ForeignKeyWidthIcon
 
 @python_2_unicode_compatible
-class RadioInputTree(RadioInput):
+class RadioInputTree(RadioChoiceInput):
 
     def __str__(self):
         if 'id' in self.attrs:

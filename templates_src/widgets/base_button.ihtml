@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-%% content
+%% widget_content
     % if standard_web_browser
         a href={{url}},,,class=popup btn btn-default ,,,name={{name}},,,title={{title}},,,target={{target}},,,data-role=button,,,data-inline=true,,,{% block data_icon %}data-icon=plus{% endblock %}
             %% description

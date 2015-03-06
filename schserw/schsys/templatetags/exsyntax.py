@@ -6,7 +6,7 @@
 # version.
 #
 # This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
+# WITHOUT ANY WARRANTY; without even the implied warranty of ERCHANTIBILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
@@ -360,19 +360,6 @@ def new_row(
     ret['description'] = description
     return ret
 
-
-@register.inclusion_tag('widgets/list_action.html', takes_context=True)
-def list_action(
-    context,
-    action,
-    title="",
-    name="",
-    target='_blank',
-    style='',
-    url=""
-    ):
-    ret = action_fun(context, action, title, name, target, style, url if url else "../../../action/%s?childwin=1" % action)
-    return ret
 
 
 @register.inclusion_tag('widgets/list_action.html', takes_context=True)

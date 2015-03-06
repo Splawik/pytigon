@@ -4,7 +4,7 @@
 % load exsyntax
 % load mptt_tags
 
-%% content
+%% widget_content
     % if standard_web_browser:
         div class=btn-group
             button type=button,,,class=btn...{{title}}

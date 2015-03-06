@@ -5,7 +5,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         <div class="tree"{% if not standard_web_browser %} width='300' height='120'{% endif %}>
             ul class=root
                 % recursetree obj:

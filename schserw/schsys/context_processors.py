@@ -179,8 +179,10 @@ class AppManager:
         apps = self.get_apps_width_perm()
         for app in apps:
             if app[3] == self.appid():
+                print(">>>>", i)
                 return i
             i += 1
+        print(">>>>", 0)
         return 0
 
     def get_app_items(self):

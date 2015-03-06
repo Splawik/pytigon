@@ -4,7 +4,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         {% jscript_link 'ckeditor/ckeditor.js' %}
         <textarea class="ckeditor" id='{{id}}' name='{{id}}' style='width: {{width}}; height: {{height}}'>Hello world!, {{data}}</textarea>
 

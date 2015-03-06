@@ -121,7 +121,9 @@ class LocalizationTemplateResponse(TemplateResponse):
 
 class ExtTemplateResponse(LocalizationTemplateResponse):
     def __init__(self, request, template, context=None, content_type=None, status=None, mimetype=None,
-                 current_app=None):
+                 current_app=None, charset=None, using=None):
+
+
         if context and 'view' in context and context['view'].doc_type()=='pdf':
             template2 = []
             for pos in template:
@@ -132,7 +134,12 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 template2.append(pos.replace('.html', '.ods'))
         else:
             template2 = template
-        TemplateResponse.__init__(self, request, template2, context,
+
+        try:
+            TemplateResponse.__init__(self, request, template2, context,
+                                      content_type, status, current_app, charset=charset, using=using)
+        except:
+            TemplateResponse.__init__(self, request, template2, context,
                                   content_type, status, current_app)
 
     def render(self):

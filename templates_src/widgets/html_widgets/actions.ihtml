@@ -4,7 +4,7 @@
 % load exsyntax
 % load mptt_tags
 
-%% content
+%% widget_content
     div class=tree
         ul class=root
             li class=show_node

@@ -4,7 +4,7 @@
 %% all
     %% js_standard
 
-    %% content
+    %% widget_content
         % if standard_browser
             <iframe src="/static/pdfjs/web/viewer.html?file={{file}}" width="{{width}}" height="{{height}}"></iframe>
         % else

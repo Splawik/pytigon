@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-%% content
+%% widget_content
     % if standard_web_browser
         % if class:
             % if module:
