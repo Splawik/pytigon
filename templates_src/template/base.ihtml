@@ -115,22 +115,17 @@
             %% list_content_header
                 div class=panel-heading
                     table width=100%
-                        % if browser_type == 'smartfon':
-                            tr
-                                td colspan=3,,,align=center
-                                    h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}
-
                         %%list_content_header_first_row
                             tr
                                 td width=50%
                                     %% list_content_actions
                                 td
                                     %% list_content_title
-                                        % if not browser_type == 'tablet':
-                                            h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}
+                                        h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}
                                 td align=right,,,width=50%
                                     %% list_content_paginator
                                         {% paginator %}
+
                         %%list_content_header_two_row
                             tr
                                 td colspan=3,,,class=filter_td

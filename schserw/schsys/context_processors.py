@@ -347,11 +347,14 @@ def sch_standard(request):
 
     if standard == 2:
         d_template = default_template('hybrid')
+        d_template2 = default_template(b_type)
     else:
         d_template = default_template(b_type)
+        d_template2 = d_template
 
     if lng and lng != 'en':
         d_template = d_template.replace('.html', '_'+lng+'.html')
+        d_template2 = d_template2.replace('.html', '_'+lng+'.html')
 
     ret = {
         #'application_template': 'traditional',
@@ -375,6 +378,7 @@ def sch_standard(request):
         'browser_type': b_type,
         'application_type': b_type2,
         'default_template': d_template,
+        'default_template2': d_template2,
         'appset_name': settings.APPSET_NAME,
         'appset_title': settings.APPSET_TITLE,
         'settings': settings,

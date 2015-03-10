@@ -1,6 +1,6 @@
-APPLICATION_TEMPLATE = 'standard'
-
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
+
+APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
 RET_OBJ = None
@@ -15,6 +15,8 @@ PUSH_STATE = True
 BASE_PATH = None
 WAIT_ICON = None
 WAIT_ICON2 = False
+MENU_ID = 0
+
 
 import page
 import tabmenuitem
@@ -80,10 +82,7 @@ def page_init(id, first_time = True):
 
                 e.preventDefault()
 
-                if '?' in href and not hybrid in href:
-                    href2 = href + '&hybrid=1'
-                else:
-                    href2 = href + '?hybrid=1'
+                href2 = corect_href(href)
 
                 jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
                     nonlocal href
@@ -127,11 +126,7 @@ def page_init(id, first_time = True):
 
             href = jQuery(this).attr("action")
             if href:
-                if '?' in href and not hybrid in href:
-                    href2 = href + '&hybrid=1'
-                else:
-                    href2 = href + '?hybrid=1'
-                jQuery(this).attr('action', href2)
+                jQuery(this).attr('action', corect_href(href))
 
             ajax_submit(jQuery(this), def(data):
                 nonlocal ACTIVE_PAGE, WAIT_ICON, WAIT_ICON2, id
@@ -172,6 +167,13 @@ def app_init(application_template, menu_id, lang, base_path):
                         e.preventDefault()
                         _on_menu_href(this)
             )
+
+            jQuery('body').on('submit', 'form.DialogForm',
+                def(e):
+                    e.preventDefault()
+                    on_edit_ok($(this))
+            )
+
         )
 
 
@@ -194,12 +196,9 @@ def _on_menu_href(elem, title=None):
             menu.activate(title)
         else:
             href = jQuery(elem).attr("href")
-            if '?' in href:
-                href2 = href + '&hybrid=1'
-            else:
-                href2 = href + '?hybrid=1'
+            href2 = corect_href(href)
             def _on_new_win(data):
-                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2
+                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2, MENU_ID
 
                 if APPLICATION_TEMPLATE == 'modern':
                     id = menu.new_page(title, data, href)
@@ -209,7 +208,12 @@ def _on_menu_href(elem, title=None):
                     ACTIVE_PAGE.set_href(href2)
                     page_init('body_body', False)
                     if PUSH_STATE:
-                        history_push_state(title, href)
+                        id = jQuery(elem).attr('id')
+                        if not id:
+                            id = 'menu_id_' + MENU_ID
+                            MENU_ID = MENU_ID + 1
+                            jQuery(elem).attr('id', id)
+                        history_push_state(title, href, [data, id])
 
                 if WAIT_ICON:
                     WAIT_ICON.stop()
@@ -292,12 +296,26 @@ window.addEventListener('popstate',
             if APPLICATION_TEMPLATE == 'modern':
                 menu = get_menu().activate(e.state, False)
             else:
-                jQuery('#body_body').html(event.state)
+                x = e.state
+                jQuery('#body_body').html(x[0])
                 ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-                ACTIVE_PAGE.set_href(href2)
+                ACTIVE_PAGE.set_href(document.location)
                 #menu.on_new_page('body_body')
-                page_init('body_body')
+
+                if APPLICATION_TEMPLATE == 'standard':
+                    jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
+                    jQuery('#'+x[1]).removeClass('btn-info').addClass('btn-warning')
+
+                #page_init('body_body')
             PUSH_STATE = True
+        else:
+            if APPLICATION_TEMPLATE == 'modern':
+                alert("X1")
+            else:
+                jQuery('#body_body').html("")
+                ACTIVE_PAGE = None
+                if APPLICATION_TEMPLATE == 'standard':
+                    jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
 ,False)
 
 

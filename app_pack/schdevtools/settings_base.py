@@ -71,8 +71,6 @@ for app in APPS:
 
 TEMPLATE_DIRS.insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
-print(TEMPLATE_DIRS)
-
 if setup_databases:
     db_setup = setup_databases(APPSET_NAME)
     DATABASES = db_setup[0]

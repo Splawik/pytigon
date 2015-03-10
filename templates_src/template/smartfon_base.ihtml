@@ -2,6 +2,9 @@
 
 %extends 'template/desktop_base.html'
 
+% load exfiltry
+% load exsyntax
+
 %% menu_start
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -51,3 +54,20 @@
 
 %% menu_end
   </ul></div></nav>
+
+
+%% list_content_header_first_row
+    tr
+        td colspan=3,,,align=center
+            h4:::strong...{{title|wiki_href|safe}}
+    tr
+        td colspan=3,,,align=left
+            %% list_content_actions
+
+%% list_content_footer
+    table width=100%
+        tr
+            td colspan=3,,,align=right
+                %% list_content_paginator
+                    {% paginator %}
+    .

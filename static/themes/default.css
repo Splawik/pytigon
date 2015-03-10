@@ -4,7 +4,7 @@ div.content { margin: 4px 4px 0px 4px; padding: 0px; }
 
 .module td,th { padding:2px 4px; }
 
-.panel-heading { padding: 0px 3px 0px 3px; }
+.panel-heading { padding: 3px 3px 3px 3px; }
 
 .navbar { margin-bottom: 3px; }
 
@@ -12,7 +12,7 @@ div.content { margin: 4px 4px 0px 4px; padding: 0px; }
 
 .standard_padding td { padding: 5px; }
 
-.vert_form_panel { padding: 0px 15px; }
+.vert_form_panel { padding: 0px 0px; }
 
 div.ext_padding { padding: 0px 14px; }
 
@@ -132,4 +132,21 @@ body.fixed .menu_offset {
   position: absolute;
   left: 10px;
   top: 10px;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: Calibri,Candara,Arial,sans-serif;
+}
+
+.form-control {
+    height: 33px;
+    padding: 5px 18px;
+}
+
+.btn {
+    padding: 4px 18px;
+}
+
+.pagination {
+    margin: 0px 0px;
 }

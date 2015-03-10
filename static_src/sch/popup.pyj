@@ -1,3 +1,5 @@
+#import tools
+
 def on_popup(elem):
     nonlocal WAIT_ICON
     WAIT_ICON = Ladda.create(elem)
@@ -86,17 +88,18 @@ def dialog_ex_load2(responseText, status, response):
 
 
 def on_edit_ok(form):
-    jQuery.ajax({'type': "POST", 'url': form.attr('action'), 'data': form.serialize(), 'success': def(data): _refresh_win(data, form); })
+    jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': def(data): _refresh_win(data, form); })
     return False
 
 
 
 def on_delete_ok(form):
-    jQuery.ajax({'type': "POST", 'url': form.attr('action'), 'data': form.serialize(),'success': def(data): _refresh_win(data, form); })
+    jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(),'success': def(data): _refresh_win(data, form); })
     return False
 
 
 def _refresh_win(responseText, form):
+    nonlocal ACTIVE_PAGE
     if "RETURN_OK" in responseText:
         subform = form.closest('div.inline_frame')
         if subform.length>0:
@@ -108,6 +111,7 @@ def _refresh_win(responseText, form):
                 filter.attr('action', ACTIVE_PAGE.get_href())
                 ajax_submit(filter,
                     def(data):
+                        nonlocal ACTIVE_PAGE
                         ACTIVE_PAGE.page.html(data)
                         jQuery("div.dialog-form").modal('hide')
                         page_init(ACTIVE_PAGE.id, False)

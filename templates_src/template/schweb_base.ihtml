@@ -13,11 +13,21 @@
 %% messages
 
 %% extrahead
-    %%scroll
+    %% scroll
         %% vscroll
-            meta name=NO_VSCROLLBAR,,,content=True
+            % if form_edit:
+                % if edit_scroll or edit_vscroll:
+                % else:
+                    meta name=NO_VSCROLLBAR,,,content=True
+            % else:
+                meta name=NO_VSCROLLBAR,,,content=True
         %% hscroll
-            meta name=NO_HSCROLLBAR,,,content=True
+            % if form_edit:
+                % if edit_scroll or edit_hscroll:
+                % else:
+                    meta name=NO_HSCROLLBAR,,,content=True
+            % else:
+                meta name=NO_HSCROLLBAR,,,content=True
 
     % if 'start'|reverse == request.path
         %% indexhead
@@ -33,7 +43,7 @@
                 [ csrf_token | {{csrf_token}} ]
 
 %%pythoncode
-    % if form_edit
+    % if form_edit:
         %%pythoncode_editform
 
 %% submenu

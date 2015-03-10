@@ -476,8 +476,8 @@ class SchAppFrame(wx.Frame):
         n = AppNotebook(self._panel, -1, wx.Point(0, 0), wx.Size(0,
             0), style=style)
         n.SetAGWWindowStyleFlag(style)
-        n.SetArtProvider(aui.ChromeTabArt())
-        #n.SetArtProvider(aui.VC71TabArt())
+        #n.SetArtProvider(aui.ChromeTabArt())
+        n.SetArtProvider(aui.VC71TabArt())
         #n.SetArtProvider(aui.VC8TabArt())
         #n.SetArtProvider(aui.FF2TabArt())
         #if hasattr(aui, 'VC71TabArt'):

@@ -10,6 +10,7 @@ PUSH_STATE = true;
 BASE_PATH = null;
 WAIT_ICON = null;
 WAIT_ICON2 = false;
+MENU_ID = 0;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -209,7 +210,7 @@ function dialog_ex_load2(responseText, status, response) {
 function on_edit_ok(form) {
     jQuery.ajax({
         "type": "POST",
-        "url": form.attr("action"),
+        "url": corect_href(form.attr("action")),
         "data": form.serialize(),
         "success": function(data) {
             _refresh_win(data, form);
@@ -220,7 +221,7 @@ function on_edit_ok(form) {
 function on_delete_ok(form) {
     jQuery.ajax({
         "type": "POST",
-        "url": form.attr("action"),
+        "url": corect_href(form.attr("action")),
         "data": form.serialize(),
         "success": function(data) {
             _refresh_win(data, form);
@@ -409,8 +410,11 @@ function ajax_submit(form, func) {
         RET_OBJ = func;
         cmd_to_python("run_js|ret_submit();");
     } else {
-        form.ajaxSubmit({
-            success: func
+        jQuery.ajax({
+            "type": "POST",
+            "url": corect_href(form.attr("action")),
+            "data": form.serialize(),
+            "success": func
         });
     }
 }
@@ -435,6 +439,17 @@ function can_popup() {
         return false;
     } else {
         return true;
+    }
+}
+function corect_href(href) {
+    if (_$rapyd$_in("hybrid", href)) {
+        return href;
+    } else {
+        if (_$rapyd$_in("?", href)) {
+            return href + "&hybrid=1";
+        } else {
+            return href + "?hybrid=1";
+        }
     }
 }
 function fragment_init(elem) {
@@ -510,11 +525,7 @@ function page_init(id, first_time) {
                 return true;
             }
             e.preventDefault();
-            if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
-                href2 = href + "&hybrid=1";
-            } else {
-                href2 = href + "?hybrid=1";
-            }
+            href2 = corect_href(href);
             jQuery.ajax({
                 "type": "GET",
                 "url": href2,
@@ -538,7 +549,7 @@ function page_init(id, first_time) {
     }
     ACTIVE_PAGE.page.find("form").attr("target", "_blank");
     ACTIVE_PAGE.page.find("form").submit(function(e) {
-        var data, submit_button, href, href2;
+        var data, submit_button, href;
         data = jQuery(this).serialize();
         console.log(data);
         if (_$rapyd$_in("pdf=on", data)) {
@@ -558,12 +569,7 @@ function page_init(id, first_time) {
         }
         href = jQuery(this).attr("action");
         if (href) {
-            if (_$rapyd$_in("?", href) && _$rapyd$_in(!hybrid, href)) {
-                href2 = href + "&hybrid=1";
-            } else {
-                href2 = href + "?hybrid=1";
-            }
-            jQuery(this).attr("action", href2);
+            jQuery(this).attr("action", corect_href(href));
         }
         ajax_submit(jQuery(this), function(data) {
             ACTIVE_PAGE.page.html(data);
@@ -603,6 +609,10 @@ function app_init(application_template, menu_id, lang, base_path) {
                     _on_menu_href(this);
                 }
             });
+            jQuery("body").on("submit", "form.DialogForm", function(e) {
+                e.preventDefault();
+                on_edit_ok($(this));
+            });
         });
     }
 }
@@ -627,13 +637,9 @@ function _on_menu_href(elem, title) {
             menu.activate(title);
         } else {
             href = jQuery(elem).attr("href");
-            if (_$rapyd$_in("?", href)) {
-                href2 = href + "&hybrid=1";
-            } else {
-                href2 = href + "?hybrid=1";
-            }
+            href2 = corect_href(href);
             function _on_new_win(data) {
-                var id, ACTIVE_PAGE;
+                var ACTIVE_PAGE, id;
                 if (APPLICATION_TEMPLATE === "modern") {
                     id = menu.new_page(title, data, href);
                 } else {
@@ -642,7 +648,13 @@ function _on_menu_href(elem, title) {
                     ACTIVE_PAGE.set_href(href2);
                     page_init("body_body", false);
                     if (PUSH_STATE) {
-                        history_push_state(title, href);
+                        id = jQuery(elem).attr("id");
+                        if (!id) {
+                            id = "menu_id_" + MENU_ID;
+                            MENU_ID = MENU_ID + 1;
+                            jQuery(elem).attr("id", id);
+                        }
+                        history_push_state(title, href, [ data, id ]);
                     }
                 }
                 if (WAIT_ICON) {
@@ -720,18 +732,32 @@ function jquery_ready() {
     }
 }
 window.addEventListener("popstate", function(e) {
-    var menu, ACTIVE_PAGE;
+    var menu, x, ACTIVE_PAGE;
     if (e.state) {
         PUSH_STATE = false;
         if (APPLICATION_TEMPLATE === "modern") {
             menu = get_menu().activate(e.state, false);
         } else {
-            jQuery("#body_body").html(event.state);
+            x = e.state;
+            jQuery("#body_body").html(x[0]);
             ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
-            ACTIVE_PAGE.set_href(href2);
-            page_init("body_body");
+            ACTIVE_PAGE.set_href(document.location);
+            if (APPLICATION_TEMPLATE === "standard") {
+                jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
+                jQuery("#" + x[1]).removeClass("btn-info").addClass("btn-warning");
+            }
         }
         PUSH_STATE = true;
+    } else {
+        if (APPLICATION_TEMPLATE === "modern") {
+            alert("X1");
+        } else {
+            jQuery("#body_body").html("");
+            ACTIVE_PAGE = null;
+            if (APPLICATION_TEMPLATE === "standard") {
+                jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
+            }
+        }
     }
 }, false);
 function history_push_state(title, url, data) {

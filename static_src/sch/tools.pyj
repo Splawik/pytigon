@@ -1,3 +1,5 @@
+#import tools
+
 def ajax_submit(form, func):
     if is_hybrid():
         queryString = form.formSerialize()
@@ -5,7 +7,9 @@ def ajax_submit(form, func):
         RET_OBJ = func
         cmd_to_python('run_js|ret_submit();')
     else:
-        form.ajaxSubmit( { success: func } )
+        #form.ajaxSubmit( { success: func } )
+        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })
+
 
 def get_page(elem):
     if elem.hasClass('.tab-pane'):
@@ -25,3 +29,13 @@ def can_popup():
         return False
     else:
         return True
+
+
+def corect_href(href):
+    if 'hybrid' in href:
+        return href
+    else:
+        if '?' in href:
+            return href + '&hybrid=1'
+        else:
+            return href + '?hybrid=1'
