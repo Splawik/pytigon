@@ -48,7 +48,7 @@ for app in APPS:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        TEMPLATE_DIRS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")            
+        TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]
             sys.path.append(pp)
@@ -56,7 +56,7 @@ for app in APPS:
         else:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
-TEMPLATE_DIRS.insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
 if setup_databases:
     db_setup = setup_databases(APPSET_NAME)

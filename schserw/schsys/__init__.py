@@ -18,9 +18,8 @@
 #version: "0.1a"
 
 
-import schserw.schsys.initdjango
-
-django_ok = initdjango.init_django()
+#import schserw.schsys.initdjango
+#django_ok = initdjango.init_django()
 
 def decode(var):
     if var.__class__ == str:

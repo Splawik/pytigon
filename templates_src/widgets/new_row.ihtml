@@ -4,6 +4,6 @@
 
 %% description
     % if description:
-        <span class="glyphicon glyphicon-plus"></span> {{description}} abc
+        <span class="glyphicon glyphicon-plus"></span> {{description}}
     % else:
-        <span class="glyphicon glyphicon-plus">def</span>
+        <span class="glyphicon glyphicon-plus"></span>

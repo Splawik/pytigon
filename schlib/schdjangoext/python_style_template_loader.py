@@ -20,7 +20,9 @@
 from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.utils._os import safe_join
-from django.template.loader import BaseLoader
+#from django.template.loader import BaseLoader
+from django.template.loaders.base  import Loader as BaseLoader
+#from django.template.base import Loader as BaseLoader
 import django.template.loaders.filesystem
 import os
 import codecs
@@ -41,7 +43,7 @@ class Loader(BaseLoader):
 
     def get_template_sources(self, template_name, template_dirs=None):
         if not template_dirs:
-            template_dirs = settings.TEMPLATE_DIRS
+            template_dirs = settings.TEMPLATES[0]['DIRS']
         for template_dir in template_dirs:
             try:
                 yield safe_join(template_dir + '_src',

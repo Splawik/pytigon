@@ -25,6 +25,7 @@ from django.conf.urls import patterns
 from django.core.urlresolvers import get_script_prefix
 from django.shortcuts import render_to_response
 from django.db import models
+from django.apps import apps
 from django.template.response import TemplateResponse
 from django.utils import six
 from django.views import generic
@@ -172,7 +173,8 @@ class GenericTable(object):
             rows.template_name = template_name
         else:
             if field:
-                f = getattr(models.get_model(self.app, tab), field).related
+                #f = getattr(models.get_model(self.app, tab), field).related
+                f = getattr(apps.get_model(self.app + "." + tab), field).rel
                 try:
                     table_name = f.name
                 except:
@@ -183,7 +185,8 @@ class GenericTable(object):
                 rows.template_name = self.app.lower() + '/' + table_name.split(':')[-1] + '.html'
             else:
                 rows.template_name = self.app.lower() + '/' + table_name + '.html'
-        rows.base_model = models.get_model(self.app, tab)
+        #rows.base_model = models.get_model(self.app, tab)
+        rows.base_model = apps.get_model(self.app + "." + tab)
         rows.queryset = queryset
         rows.base_perm = self.app + '.%s_' + tab.lower()
         return rows
@@ -357,7 +360,7 @@ class GenericRows(object):
             base_class = self
             form = None
             form_valid = False
-            
+
             title = self.title
 
             extra_context = self.extra_context
@@ -400,7 +403,7 @@ class GenericRows(object):
                 **kwargs
                 ):
                 return self.get(request, *args, **kwargs)
-                
+
 
             def get_context_data(self, **kwargs):
                 context = super(ListView, self).get_context_data(**kwargs)
@@ -408,7 +411,7 @@ class GenericRows(object):
                 context['rel_field'] = self.rel_field
                 if self.form:
                     context['form'] = self.form
-                
+
                 return transform_extra_context(context, self.extra_context)
 
             def get_queryset(self):
@@ -455,7 +458,7 @@ class GenericRows(object):
                     return "odf"
                 else:
                     return "html"
-                                
+
             def get_context_data(self, **kwargs):
                 context = super(DetailView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+str(_('element information'))
@@ -472,14 +475,14 @@ class GenericRows(object):
         class UpdateView(generic.UpdateView):
 
             response_class = LocalizationTemplateResponse
-            
+
             if self.field:
-                f = getattr(self.base_model, self.field).related
+                f = getattr(self.base_model, self.field).rel
                 model = f.model
             else:
                 model = self.base_model
             success_url = make_path('schserw.urls.ok')
-            
+
             template_name = self.template_name
             title = self.title
             fields = "__all__"
@@ -543,11 +546,12 @@ class GenericRows(object):
 
 
         class CreateView(generic.CreateView):
-            
+
             response_class = LocalizationTemplateResponse
 
             if self.field and self.field != 'this':
-                f = getattr(self.base_model, self.field).related
+                #f = getattr(self.base_model, self.field).related
+                f = getattr(self.base_model, self.field).rel
                 model = f.model
                 pmodel = self.base_model
             else:
@@ -561,7 +565,7 @@ class GenericRows(object):
             fields = "__all__"
 
 
-            def get_form(self, form_class):                
+            def get_form(self, form_class):
                 form = super(CreateView, self).get_form(form_class)
                 #print "CreateView::get_form", self.object
                 if self.object and hasattr(self.object, 'transform_form'):
@@ -610,12 +614,12 @@ class GenericRows(object):
                 if self.init_form:
                     transform_extra_context(d, self.init_form)
                 return d
-            
+
             def get_form_kwargs(self):
                 ret = super(CreateView, self).get_form_kwargs()
                 #print "GET_FORM_KWARGS:", ret
                 return ret
-            
+
             def post(self, request, *args, **kwargs):
                 self.object = None
                 form_class = self.get_form_class()
@@ -672,11 +676,12 @@ class GenericRows(object):
 
 
         class DeleteView(generic.DeleteView):
-            
+
             response_class = LocalizationTemplateResponse
-            
+
             if self.field:
-                f = getattr(self.base_model, self.field).related
+                #f = getattr(self.base_model, self.field).related
+                f = getattr(self.base_model, self.field).rel
                 model = f.model
             else:
                 model = self.base_model
@@ -699,7 +704,8 @@ class GenericRows(object):
             r'(?P<pk>\d+)/(?P<field_edit_name>[\w_]*)/(?P<target>[\w_]*)/editor/$'
         fun = make_perms_test_fun(self.base_perm % 'change', view_editor)
         if self.field:
-            f = getattr(self.base_model, self.field).related
+            #f = getattr(self.base_model, self.field).related
+            f = getattr(self.base_model, self.field).rel
             model = f.model
         else:
             model = self.base_model
@@ -722,7 +728,7 @@ class GenericRows(object):
         class TreeView(generic.ListView):
 
             response_class = LocalizationTemplateResponse
-            
+
             model = self.base_model
             paginate_by = 64
             allow_empty = True
@@ -809,5 +815,4 @@ def generic_table(
 
 def generic_table_start(urlpatterns, app, views_module=None):
     return GenericTable(urlpatterns, app, views_module)
-
 

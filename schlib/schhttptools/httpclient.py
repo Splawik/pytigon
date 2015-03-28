@@ -56,6 +56,8 @@ def init_embeded_django():
 
     import django
     django.setup()
+    import schserw.schsys.initdjango
+    schserw.schsys.initdjango.init_django()
 
 
 import httplib2

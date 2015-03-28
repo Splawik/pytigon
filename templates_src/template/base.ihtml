@@ -166,7 +166,7 @@
                                             %% list_row_start
                                                 % if not no_id
                                                     td
-                                                        {% view_row "{{object.id}}" %}
+                                                        {% view_row object.id %}
                                             %% list_row
                                                 td...{{object}}
                                             %% list_row_end

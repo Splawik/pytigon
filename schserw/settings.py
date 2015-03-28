@@ -78,46 +78,46 @@ SECRET_KEY = 'anawa'
 
 ROOT_URLCONF = 'schserw.urls'
 
-TEMPLATE_LOADERS = (
-                    'schlib.schdjangoext.python_style_template_loader.Loader',
-                    'schlib.schdjangoext.python_style_template_loader.FSLoader',
-                    #'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
-                    )
+#TEMPLATE_LOADERS = (
+#                    'schlib.schdjangoext.python_style_template_loader.Loader',
+#                    'schlib.schdjangoext.python_style_template_loader.FSLoader',
+#                    #'django.template.loaders.filesystem.Loader',
+#                    'django.template.loaders.app_directories.Loader',
+#                    )
 
-#TEMPLATES = [
-#    {
-#        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-#        'DIRS': [
-#            ROOT_PATH + '/templates',
-#            # insert your TEMPLATE_DIRS here
-#        ],
-#        'OPTIONS': {
-#            'context_processors': [
-#                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-#                # list if you haven't customized them:
-#
-#                'schserw.schsys.context_processors.sch_standard',
-#                'schserw.schsys.context_processors.sch_html_widget',
-#
-#                'django.contrib.auth.context_processors.auth',
-#                'django.template.context_processors.request',
-#                'django.template.context_processors.debug',
-#                'django.template.context_processors.i18n',
-#                'django.template.context_processors.media',
-#                'django.template.context_processors.static',
-#                'django.template.context_processors.tz',
-#                'django.contrib.messages.context_processors.messages',
-#            ],
-#            'loaders': [
-#                # insert your TEMPLATE_LOADERS here
-#                'schlib.schdjangoext.python_style_template_loader.Loader',
-#                'schlib.schdjangoext.python_style_template_loader.FSLoader',
-#                'django.template.loaders.app_directories.Loader',
-#            ]
-#        },
-#    },
-#]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            ROOT_PATH + '/templates',
+            # insert your TEMPLATE_DIRS here
+        ],
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+
+                'schserw.schsys.context_processors.sch_standard',
+                'schserw.schsys.context_processors.sch_html_widget',
+
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.request',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'loaders': [
+                # insert your TEMPLATE_LOADERS here
+                'schlib.schdjangoext.python_style_template_loader.Loader',
+                'schlib.schdjangoext.python_style_template_loader.FSLoader',
+                'django.template.loaders.app_directories.Loader',
+            ]
+        },
+    },
+]
 
 
 INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
@@ -136,19 +136,19 @@ MIDDLEWARE_CLASSES = (
     #'schserw.schmiddleware.schpost.BeautyHtml',
     )
 
-TEMPLATE_CONTEXT_PROCESSORS = [
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'schserw.schsys.context_processors.sch_standard',
-    'schserw.schsys.context_processors.sch_html_widget',
-    #'django.core.context_processors.request',
-    ]
+#TEMPLATE_CONTEXT_PROCESSORS = [
+#    'django.contrib.auth.context_processors.auth',
+#    'django.core.context_processors.debug',
+#    'django.core.context_processors.i18n',
+#    'django.core.context_processors.request',
+#    'django.core.context_processors.media',
+#    'django.core.context_processors.static',
+#    'schserw.schsys.context_processors.sch_standard',
+#    'schserw.schsys.context_processors.sch_html_widget',
+#    #'django.core.context_processors.request',
+#    ]
 
-TEMPLATE_DIRS = [ROOT_PATH + '/templates']
+#TEMPLATE_DIRS = [ROOT_PATH + '/templates']
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -162,8 +162,8 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     #'django.contrib.admin.apps.AdminConfig',
 #    'django.contrib.databrowse',
-    'mptt',
     'schserw.schsys',
+    'schbase',
 #    'schserw.schwiki',
     'django.contrib.staticfiles',
     'crispy_forms',

@@ -25,7 +25,8 @@ from django import template
 from django.utils.translation import gettext_lazy as _
 import re
 from django.template.loader import get_template
-from django.template import Context, Template
+from django.template import Context, Template, RequestContext
+
 
 from django.conf import settings
 from schlib.schtools.wiki import wiki_from_str
@@ -47,9 +48,24 @@ from crispy_forms.bootstrap import (
     FieldWithButtons, StrictButton
 )
 
+#from templatetag_sugar.register import tag
+#from templatetag_sugar.parser import Name, Variable, Constant, Optional, Model
+
 import itertools
 
 register = template.Library()
+
+
+def inclusion_tag(file_name):
+    def dec(func):
+        def func2(context, *argi, **argv):
+            ret = func(context, *argi, **argv)
+            t = get_template(file_name)
+            c = Context(context)
+            c.update(ret)
+            return t.render(c)
+        return register.simple_tag(takes_context=True, name=getattr(func, '_decorated_function', func).__name__)(func2)
+    return dec
 
 
 def mark_safe2(x):
@@ -289,17 +305,26 @@ def row_actions(parser, token):
     parser.delete_first_token()
     return RowActionNode(nodelist)
 
-
-@register.inclusion_tag('widgets/view_row.html', takes_context=True)
+@inclusion_tag('widgets/view_row.html')
+#@register.simple_tag(takes_context=True)
 def view_row(
     context,
     description,
     target='',
     ):
-
     href = "../../../%s/_/view/" % context['object'].id
+    #href = "../../../%s/_/view/" % object_id
     ret = action_fun(context, 'view_row', description, 'view_row', target, "", href)
     return ret
+    #t = get_template('widgets/view_row.html')
+    #c = RequestContext(context['request'], context)
+    #c = Context(context)
+
+    #for (key, value) in ret.items():
+    #    c[key] = value
+    #x =  t.render(c)
+    #return x
+    #return ret
 
 
     #return standard_dict(context, {
@@ -311,7 +336,7 @@ def view_row(
 
 # ACTIONS
 
-@register.inclusion_tag('widgets/action.html', takes_context=True)
+#@inclusion_tag('widgets/action.html')
 def action_fun(
     context,
     action,
@@ -329,7 +354,7 @@ def action_fun(
     return standard_dict(context, d)
 
 
-@register.inclusion_tag('widgets/button.html', takes_context=True)
+@inclusion_tag('widgets/button.html')
 def button(
     context,
     url,
@@ -342,7 +367,7 @@ def button(
     return ret
 
 
-@register.inclusion_tag('widgets/new_row.html', takes_context=True)
+@inclusion_tag('widgets/new_row.html')
 def new_row(
     context,
     title="",
@@ -362,7 +387,7 @@ def new_row(
 
 
 
-@register.inclusion_tag('widgets/list_action.html', takes_context=True)
+@inclusion_tag('widgets/list_action.html')
 def list_action(
     context,
     action,
@@ -377,7 +402,7 @@ def list_action(
     return ret
 
 
-@register.inclusion_tag('widgets/wiki_button.html', takes_context=True)
+@inclusion_tag('widgets/wiki_button.html')
 def wiki_button(
     context,
     subject,
@@ -391,7 +416,7 @@ def wiki_button(
     return action_fun(context, "wiki", wiki_description, wiki_name, target, style, url if url else wiki_url)
 
 
-@register.inclusion_tag('widgets/wiki_link.html', takes_context=True)
+@inclusion_tag('widgets/wiki_link.html')
 def wiki_link(
     context,
     subject,
@@ -642,32 +667,32 @@ def id_num(context, name):
     return name
 
 
-@register.inclusion_tag('widgets/ok_cancel.html', takes_context=True)
+@inclusion_tag('widgets/ok_cancel.html')
 def ok_cancel(context):
     return standard_dict(context, {})
 
 
-@register.inclusion_tag('widgets/jscript_link.html', takes_context=True)
+@inclusion_tag('widgets/jscript_link.html')
 def jscript_link(context, href):
     return standard_dict(context, {'href': settings.STATIC_URL + href})
 
 
-@register.inclusion_tag('widgets/css_link.html', takes_context=True)
+@inclusion_tag('widgets/css_link.html')
 def css_link(context, href):
     return standard_dict(context, {'href': settings.STATIC_URL + href})
 
 
-@register.inclusion_tag('widgets/link.html', takes_context=True)
+@inclusion_tag('widgets/link.html')
 def link(context, href, rel, typ):
     return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ})
 
 
 
-@register.inclusion_tag('widgets/paginator.html', takes_context=True)
+@inclusion_tag('widgets/paginator.html')
 def paginator(context):
     return context
 
-@register.inclusion_tag('widgets/paginator.html', takes_context=True)
+@inclusion_tag('widgets/paginator.html')
 def paginator2(context):
 
     context['page_range'] = []
@@ -695,7 +720,7 @@ def paginator2(context):
     return context
 
 
-@register.inclusion_tag('widgets/html_widget_js.html', takes_context=True)
+@inclusion_tag('widgets/html_widget_js.html')
 def htmlwidget_js(context):
     if 'html_widget_dict' in context:
         html_widget_tab = context['html_widget_dict']
@@ -798,7 +823,7 @@ def do_html_widget(parser, token):
     return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
 
 
-@register.inclusion_tag('widgets/checkboxselectmultiple.html', takes_context=True)
+@inclusion_tag('widgets/checkboxselectmultiple.html')
 def checkboxselectmultiple(
     context,
     field,
@@ -912,7 +937,7 @@ def form_item(parser, token):
     return FormItemNode(nodelist, field_name, tag)
 
 
-@register.inclusion_tag('widgets/form2columns.html', takes_context=True)
+@inclusion_tag('widgets/form2columns.html')
 def form2columns(context, fields):
     ftab = fields.split(';')
     it = iter(ftab)
@@ -920,7 +945,7 @@ def form2columns(context, fields):
     return standard_dict(context, {'fields': ftab, 'fields2': fields2, 'form': context['form']})
 
 
-@register.inclusion_tag('widgets/frame.html', takes_context=True)
+@inclusion_tag('widgets/frame.html')
 def frame(context, id, href, height):
     return standard_dict(context, {'id': id, 'href': href, 'height': height })
 
@@ -1043,3 +1068,5 @@ def component(parser, token):
     nodelist = parser.parse(('endcomponent',))
     parser.delete_first_token()
     return ComponentNode("widgets/component.html", nodelist, extra_context=extra_context)
+
+
