@@ -96,7 +96,15 @@ try:
 except:
     from wx.wizard import Wizard, WizardPageSimple
 
+import wx.html2
+
+#wx.html2.WebView.New("START:C:\\prj\\pytigon\\ppython\\python.exe C:\\prj\\pytigon\\pytigon.py -a schwebtrapper")
+wx.html2.WebView.New("start:")
+
 import schcli.guictrl.schtag
+
+#import cairocffi
+#cairocffi.install_as_pycairo()
 
 import gc
 
@@ -140,9 +148,9 @@ class SchApp(App):
 
         bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
 
-        splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
-                                     1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
-                                     wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
+        #splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
+        #                             1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
+        #                             wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
 
         wx.Yield()
 
@@ -265,7 +273,7 @@ class SchApp(App):
                     return self.ext_app_http[app[0]]
                 else:
                     http = httpclient.AppHttp(app[1], app[0])
-                    self.ext_app_http[app[0]] = http
+                    self.exft_app_http[app[0]] = http
                     return http
         return self.HTTP
 
@@ -921,3 +929,4 @@ if __name__ == '__main__':
                 time.sleep(100)
         else:
             main()
+            wx.html2.WebView.New("stop")

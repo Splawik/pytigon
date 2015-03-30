@@ -59,6 +59,7 @@ class Loader(BaseLoader):
         for pos in settings.LANGUAGES:
             template_name_base = template_name_base.replace('_'+pos[0]+'.html', '.html')
             for filepath in self.get_template_sources(template_name_base, template_dirs):
+                print(filepath)
                 filepath2 = filepath.replace('_src', '').replace('.ihtml', '.html')
                 try:
                     write = False

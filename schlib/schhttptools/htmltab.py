@@ -19,7 +19,8 @@
 
 
 try:
-    from html.parser import HTMLParser, HTMLParseError
+    from html.parser import HTMLParser
+    HTMLParseError = None
 except:
     from HTMLParser import HTMLParser, HTMLParseError
 

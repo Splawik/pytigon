@@ -90,6 +90,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             ROOT_PATH + '/templates',
+            ROOT_PATH + '/schappdata/schplugins',
             # insert your TEMPLATE_DIRS here
         ],
         'OPTIONS': {

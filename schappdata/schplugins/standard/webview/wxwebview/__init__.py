@@ -35,6 +35,9 @@ window.onerror = function (msg, url, line) {
 }
 </script>"""
 
+
+CHROMIUM_INITED = False
+
 class WebViewMemoryHandler(wx.html2.WebViewHandler):
     def __init__(self):
         wx.html2.WebViewHandler.__init__(self, "static")
@@ -143,9 +146,17 @@ def init_plugin_web_view(
         logged = False
 
         def __init__(self, *args, **kwds):
+            global CHROMIUM_INITED
             SchBaseCtrl.__init__(self, args, kwds)
             wx.html2.WebView.New.__init__(self)
+            kwds['backend'] = "wxWebViewChromium"
+            #kwds['backend'] = "wxWebViewIE"
             self.wb = wx.html2.WebView.New(*args, **kwds)
+
+            #if not CHROMIUM_INITED:
+            #    self.wb.LoadURL('start')
+            #    CHROMIUM_INITED = True
+
 
             #ptr = self.wb.GetNativeBackend()
             #objptr = ctypes.c_void_p(int(ptr))
@@ -206,6 +217,9 @@ def init_plugin_web_view(
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self.wb)
 
+            self.Bind(wx.EVT_IDLE, self.OnIdle)
+
+
             self.edit = False
 
 
@@ -224,6 +238,8 @@ def init_plugin_web_view(
             #wx.MemoryFSHandler.AddFileWithMimeType('test.html','<html><body>SimpleTest</body></html>', 'text/html')
             #self.wb.RegisterHandler(WebViewMemoryHandler2())
 
+        def OnIdle(self, event):
+            wx.html2.WebView.New("messageloop")
 
         def __getattribute__(self, attr):
             try:
@@ -345,7 +361,11 @@ def init_plugin_web_view(
 
         def load_url(self, url):
             #print("LOAD:", url)
+            #self.wb.SetPage("<strong>Hello</strong>", "")
+            #test =  self.wb.GetNativeBackend()
+            #print(test)
             return self.wb.LoadURL(url)
+            #return True
 
         def _static_prefix(self):
             if wx.Platform == '__WXMSW__':

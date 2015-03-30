@@ -24,7 +24,7 @@ from schlib.schhtml.cairodc import CairoDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 from schlib.schhtml.cairodc import CairoDc
 
-from wx.lib.wxcairo import ContextFromDC
+#from wx.lib.wxcairo import ContextFromDC
 
 import os
 
