@@ -98,19 +98,15 @@ except:
 
 import wx.html2
 
-#wx.html2.WebView.New("START:C:\\prj\\pytigon\\ppython\\python.exe C:\\prj\\pytigon\\pytigon.py -a schwebtrapper")
-wx.html2.WebView.New("start:")
+if platform.system() == "Windows":
+    wx.html2.WebView.New("start:")
 
 import schcli.guictrl.schtag
-
-#import cairocffi
-#cairocffi.install_as_pycairo()
 
 import gc
 
 #gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
 gc.disable()
-
 
 
 wx.RegisterId(10000)
@@ -929,4 +925,5 @@ if __name__ == '__main__':
                 time.sleep(100)
         else:
             main()
-            wx.html2.WebView.New("stop")
+            if platform.system() == "Windows":
+                wx.html2.WebView.New("stop")
