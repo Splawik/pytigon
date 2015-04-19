@@ -29,13 +29,13 @@ import platform
 
 html_head = """
 <script type="text/javascript">
+<script type="text/javascript">
 window.onerror = function (msg, url, line) {
    alert("Message : " + msg );
    alert("url : " + url );
    alert("Line number : " + line );
 }
 </script>"""
-
 
 
 class WebViewMemoryHandler(wx.html2.WebViewHandler):
@@ -70,7 +70,6 @@ class WebViewMemoryHandler2(wx.html2.WebViewHandler):
         wx.html2.WebViewHandler.__init__(self, "intercept")
         self.browser = browser
         self.fs = wx.FileSystem()
-
 
     def GetFile(self, uri):
         if '/fonts/glyphicons' in uri:
@@ -141,115 +140,87 @@ def init_plugin_web_view(
     from tempfile import NamedTemporaryFile
 
 
-    class Html2(SchBaseCtrl, base_web_browser):
+    class BaseBrowser(SchBaseCtrl, base_web_browser):
 
         logged = False
 
-        def __init__(self, *args, **kwds):
+        def Init(self, *args, **kwds):
+            kwds['style'] = wx.TRANSPARENT_WINDOW| wx.WANTS_CHARS
             SchBaseCtrl.__init__(self, args, kwds)
-            wx.html2.WebView.New.__init__(self)
-            if platform.system() == "Windows":
-                kwds['backend'] = "wxWebViewChromium"
-                #kwds['backend'] = "wxWebViewIE"
-            self.loaded = True
-            self.wb = wx.html2.WebView.New(*args, **kwds)
-
             base_web_browser.__init__(self)
+
+            self.loaded = True
+
             self.redirect_to_html = [None, None]
             self.redirect_to_local = True
             self.last_status_txt = ''
-            if hasattr(self.wb.GetParent(), 'any_parent_command'):
-                self.wb.GetParent().any_parent_command('set_handle_info', 'browser', self)
+            if hasattr(self.GetParent(), 'any_parent_command'):
+                self.GetParent().any_parent_command('set_handle_info', 'browser', self)
 
-            self.wb.Bind(schevent.EVT_REFRPARM, self._redirect_to_local)
+            self.Bind(schevent.EVT_REFRPARM, self._redirect_to_local)
 
             self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
 
             try:
                 self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded,
-                      self.wb)
+                      self)
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_LOADED, self.on_web_view_loaded,
-                      self.wb)
+                      self)
 
             try:
                 self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error,
-                      self.wb)
+                      self)
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_web_view_error,
-                      self.wb)
+                      self)
 
             try:
-                self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self.wb)
+                self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self)
             except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_NEWWINDOW, self.on_new_window, self.wb)
+                self.Bind(wx.html2.EVT_WEB_VIEW_NEWWINDOW, self.on_new_window, self)
 
             try: 
-                self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self.wb)
+                self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
             except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_TITLE_CHANGED, self.on_title_changed, self.wb)
+                self.Bind(wx.html2.EVT_WEB_VIEW_TITLE_CHANGED, self.on_title_changed, self)
 
 
             try:
-                self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self.wb)
+                self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self)
             except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_NAVIGATING, self.on_navigating, self.wb)
+                self.Bind(wx.html2.EVT_WEB_VIEW_NAVIGATING, self.on_navigating, self)
 
 
             try:
-                self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_error, self.wb)
+                self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_error, self)
             except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self.wb)
+                self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self)
 
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
 
-            if platform.system() == "Windows":
-                self.Bind(wx.EVT_IDLE, self.OnIdle)
-
             self.edit = False
 
-
-            self.wb.RegisterHandler(WebViewMemoryHandler())
-            self.wb.RegisterHandler(WebViewMemoryHandler2(self))
+            self.RegisterHandler(WebViewMemoryHandler())
+            self.RegisterHandler(WebViewMemoryHandler2(self))
 
             if self.href != None and self.href != "":
                 self.go(self.href)
-            if hasattr(self.wb.GetParent(), 'any_parent_command'):
-                self.wb.GetParent().any_parent_command('show_info')
+            if hasattr(self.GetParent(), 'any_parent_command'):
+                self.GetParent().any_parent_command('show_info')
 
-            #self.data = None
             self.afetr_init()
 
 
-            #wx.MemoryFSHandler.AddFileWithMimeType('test.html','<html><body>SimpleTest</body></html>', 'text/html')
-            #self.wb.RegisterHandler(WebViewMemoryHandler2())
-
-        def OnIdle(self, event):
-            if platform.system() == "Windows":
-                if self.loaded:
-                    wx.html2.WebView.New("messageloop")
-
-
         def on_destroy(self, event):
-            print('DESTROY')
-            if self.wb.IsBusy():
-                self.wb.Stop()
             if platform.system() == "Windows":
-                while(self.wb.IsBusy()):
+                if self.IsBusy():
+                    self.Stop()
+                while self.IsBusy():
                     wx.html2.WebView.New("messageloop")
             self.loaded=False
             event.Skip()
 
-
-        def __getattribute__(self, attr):
-            try:
-                ret = SchBaseCtrl.__getattribute__(self, attr)
-            except:
-                try:
-                    ret = base_web_browser.__getattribute__(self, attr)
-                except:
-                    ret = getattr(self.wb, attr)
-            return ret
 
         def html_from_str(self, str_body):
             color = get_colour(wx.SYS_COLOUR_3DFACE)
@@ -360,7 +331,8 @@ def init_plugin_web_view(
             return self.GetParent()
 
         def load_url(self, url):
-            return self.wb.LoadURL(url)
+            self.LoadURL(url)
+            self.SetFocus()
 
         def _static_prefix(self):
             if wx.Platform == '__WXMSW__':
@@ -372,7 +344,7 @@ def init_plugin_web_view(
         def load_str(self, data, base=None):
             #print("LOAD_STR:")
             #self.wb.SetPage(data, base if base else self._static_prefix())
-            self.wb.SetPage(data, "")
+            self.SetPage(data, "")
             #self.data = (data, base)
             #self.wb.LoadURL("about:blank")
 
@@ -408,10 +380,26 @@ def init_plugin_web_view(
         def can_go_forward(self):
             return self.CanGoForward()
 
-
         def clear_history(self):
             self.ClearHistory()
 
+
+    def Html2(*args, **kwds):
+        kwds2 = {}
+        kwds2['name'] = kwds['name']
+        kwds2['size'] = kwds['size']
+        if 'backend' in kwds:
+            kwds2['backend'] = kwds['backend']
+
+        if platform.system() == "Windows":
+            kwds2['backend'] = "wxWebViewChromium"
+            #kwds['backend'] = "wxWebViewIE"
+
+        wb = wx.html2.WebView.New(*args, **kwds2)
+        wb.__class__ = type('BrowserCtrl',(wb.__class__,BaseBrowser),{})
+        wb.Init(*args, **kwds)
+
+        return wb
 
     schcli.guictrl.schctrl.HTML2 = Html2
 

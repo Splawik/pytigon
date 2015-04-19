@@ -95,9 +95,9 @@ class SchHtmlWindow(ScrolledPanel):
         #kwds['style'] = wx.VSCROLL
         #self.no_vscrollbar = True
 
-        style |= wx.TAB_TRAVERSAL
+        #style |= wx.TAB_TRAVERSAL
 
-        ScrolledPanel.__init__(self, parent, id, style=style)
+        ScrolledPanel.__init__(self, parent, id, style=wx.WANTS_CHARS)
         try:
             self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         except:
@@ -149,7 +149,7 @@ class SchHtmlWindow(ScrolledPanel):
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_up)
         self.Bind(wx.EVT_MOTION, self.on_motion)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.on_erase_background)
-        #self.Bind(wx.EVT_SET_FOCUS, self.on_focus)
+        self.Bind(wx.EVT_SET_FOCUS, self.on_focus)
 
         #self.Bind(wx.EVT_MENU, self.on_back, id=ID_WEB_BACK)
         #self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_go_back)
@@ -191,11 +191,11 @@ class SchHtmlWindow(ScrolledPanel):
                 children[0].SetFocus()
                 self.LastControlWithFocus = children[0]
 
-    #def on_focus(self, event):
-    #    if self.LastControlWithFocus:
-    #        self.LastControlWithFocus.SetFocus()
-    #    else:
-    #        self.navigate(None)
+    def on_focus(self, event):
+        if self.LastControlWithFocus:
+            self.LastControlWithFocus.SetFocus()
+        else:
+            self.navigate(None)
 
     #def SetFocus(self):
     #    self.on_focus(None)

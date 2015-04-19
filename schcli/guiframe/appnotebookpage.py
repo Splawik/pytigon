@@ -24,14 +24,14 @@ except:
     pass
 import wx.lib.resizewidget as rw
 
-class NotebookPage(wx.Panel):
+class NotebookPage(wx.Window):
 
     """HtmlPanel represent one tab pytigon applications"""
 
     def __init__(self, *args, **kwds):
-        kwds['style'] = wx.TAB_TRAVERSAL
+        kwds['style'] = wx.TAB_TRAVERSAL | wx.WANTS_CHARS
         kwds['name'] = 'NotebookPage'
-        wx.Panel.__init__(self, *args, **kwds)
+        wx.Window.__init__(self, *args, **kwds)
         try:
             self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         except:
@@ -51,6 +51,7 @@ class NotebookPage(wx.Panel):
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
         self.Bind(wx.EVT_MOTION, self.on_move)
+        self.SetWindowStyleFlag(wx.WANTS_CHARS)
 
     def get_app_http(self):
         return self.http
@@ -301,7 +302,7 @@ class NotebookPage(wx.Panel):
         address_or_parser,
         title='',
         parametry=None,
-        ):        
+        ):
         h = htmlsash.SchSashWindow(self, address_or_parser, parametry)
         if self.get_page_count() > 0:
             h.ParentTab = self.get_page(-1)

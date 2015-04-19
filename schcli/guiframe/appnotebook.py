@@ -26,6 +26,7 @@ from schlib.schtools.wiki import wiki_from_str
 class AppNotebook(aui.AuiNotebook):
 
     def __init__(self, *args, **keyw):
+        keyw['style'] |= wx.WANTS_CHARS
         aui.AuiNotebook.__init__(self, *args, **keyw)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_closing)
         self.Bind(aui.EVT_AUINOTEBOOK_TAB_DCLICK, self.on_dclick)
@@ -36,6 +37,7 @@ class AppNotebook(aui.AuiNotebook):
         self.active = False
         self.closing = False
         self.last_active = None
+        self.SetWindowStyleFlag(wx.WANTS_CHARS)
 
     def on_closing(self, event):
         idn = event.GetSelection()

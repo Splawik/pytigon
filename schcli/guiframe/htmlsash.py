@@ -31,7 +31,7 @@ from schcli.guilib.schevent import *
 import six
 
 
-class SchSashWindow(wx.Panel):
+class SchSashWindow(wx.Window):
 
     def __init__(
         self,
@@ -62,13 +62,13 @@ class SchSashWindow(wx.Panel):
         self.events_active = []
         self.last_size = None
 
-        wx.Panel.__init__(
+        wx.Window.__init__(
             self,
             parent,
             -1,
             pos,
             size,
-            style=wx.TAB_TRAVERSAL | wx.WANTS_CHARS,
+            style= wx.WANTS_CHARS,
             name=name,
             )
         self.Init = False
@@ -100,7 +100,7 @@ class SchSashWindow(wx.Panel):
             #topwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (100,
             #        5), wx.SW_3D)
             topwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (100,
-                    5), wx.adv.SW_3D)
+                    5), wx.adv.SW_3D, style=wx.WANTS_CHARS)
             topwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
             topwin.SetAlignment(wx.adv.LAYOUT_TOP)
             topwin.SetSashVisible(wx.adv.SASH_BOTTOM, True)
@@ -452,7 +452,7 @@ class SchSashWindow(wx.Panel):
         return True
 
     def on_navigate(self, evt):
-        print("ON_NAVIGATE")
+        #print("ON_NAVIGATE")
         forward = evt.GetDirection()
         test = False
         if len(self.Controls) > 0:

@@ -23,8 +23,10 @@
 
 import os
 import sys
+import platform
 
 import wx
+import wx.html2
 import datetime
 #import agw.aui as aui
 from agw import aui
@@ -43,11 +45,12 @@ import six
 
 _ = wx.GetTranslation
 
-class SChMainPanel(wx.Panel):
+class SChMainPanel(wx.Window):
     def __init__(self, *argi, **argv):
         argv['name'] = 'schmainpanel'
-        wx.Panel.__init__(self, *argi, **argv)
-
+        if 'style' in argv:
+            argv['style'] |= wx.WANTS_CHARS
+        wx.Window.__init__(self, *argi, **argv)
 
     def GetFrameManager(self):
         return self.GetParent().GetFrameManager()
@@ -81,7 +84,7 @@ class SchAppFrame(wx.Frame):
     """
 
     def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE |
-                 wx.CLIP_CHILDREN, name="MainWindow"):
+                 wx.CLIP_CHILDREN | wx.WANTS_CHARS, name="MainWindow"):
 
     #def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.RESIZE_BORDER | wx.CLIP_CHILDREN,
     #             name="MainWindow"):
@@ -89,7 +92,7 @@ class SchAppFrame(wx.Frame):
 
         self.gui_style = gui_style
 
-        wx.Frame.__init__(self, parent, id, title, pos, size, style, name)
+        wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
         self._id = wx.ID_HIGHEST
         #self._id = 32000
 
@@ -339,10 +342,10 @@ class SchAppFrame(wx.Frame):
 
         self._mgr.Update()
 
-        #self.t1 = wx.Timer(self)
-        #self.t1.Start(1000)
+        self.t1 = wx.Timer(self)
+        self.t1.Start(25)
 
-        #self.Bind(wx.EVT_TIMER, self.on_timer)
+        self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
         if 'tray' in gui_style:
             self.Bind(wx.EVT_CLOSE, self.on_taskbar_hide)
@@ -410,7 +413,6 @@ class SchAppFrame(wx.Frame):
 
 
 
-
     def on_idle(self, event):
         for obj in self.idle_objects:
             obj.on_idle()
@@ -469,7 +471,7 @@ class SchAppFrame(wx.Frame):
             tab.SetFocus()
 
     def create_notebook_ctrl(self, hideSingleTab=True):
-        style = aui.AUI_NB_DEFAULT_STYLE | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
+        style = aui.AUI_NB_DEFAULT_STYLE | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS 
         if hideSingleTab:
             if hasattr(aui, 'AUI_NB_HIDE_ON_SINGLE_TAB'):
                 style ^= aui.AUI_NB_HIDE_ON_SINGLE_TAB
@@ -688,8 +690,10 @@ class SchAppFrame(wx.Frame):
         self.active_child_ctrl = event.GetWindow()
         event.Skip()
 
-    #def on_timer(self, evt):
-    #    wx.GetApp().timer()
+    def on_timer(self, evt):
+        if platform.system() == "Windows":
+            wx.html2.WebView.New("messageloop")
+
 
     def _append_command(self, typ, command):
         self.command.append((self._id, typ, command))

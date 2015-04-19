@@ -18,13 +18,11 @@
 #version: "0.1a"
 
 import wx
-import sys
-import time
-from cefpython.cefwxpanel import initCEF, shutdownCEF, CEFWindow
-import cefpython
+from .cefcontrol import initCEF, shutdownCEF, loop, CEFControl, quit
 from schcli.guilib.tools import get_colour
 
-cef_count = 0
+CEF_INITIATED = False
+TIMER = None
 
 def init_plugin_cef(
     app,
@@ -49,18 +47,30 @@ def init_plugin_cef(
     from tempfile import NamedTemporaryFile
 
     def cef_init():
-        global cef_count, timer
-        if cef_count == 0:
+        global CEF_INITIATED, TIMER
+        if not CEF_INITIATED:
             initCEF()
-            cef_count =  1
+            CEF_INITIATED = True
+            frame = wx.GetApp().GetTopWindow()
+            TIMER = wx.Timer(frame)
+            def on_timer(event):
+                loop()
+            frame.on_cef_timer = on_timer
+            frame.Bind(wx.EVT_TIMER, frame.on_cef_timer, TIMER)
+            TIMER.Start(25)
 
     def cef_shutdown():
-        shutdownCEF()
+        print("#####################################################################################################")
+        if CEF_INITIATED:
+            shutdownCEF()
+            TIMER.Stop()
 
     class NullClientHandler:
         pass
 
     class ClientHandler:
+        mainBrowser = None
+
         def __init__(self, htmlwin):
             self.htmlwin = htmlwin
 
@@ -72,14 +82,16 @@ def init_plugin_cef(
             
         #def OnStatusMessage(self, browser, text): #, statusType):
         if True:
-            def OnStatusMessage(self, browser, text, statusType):
+            #def OnStatusMessage(self, browser, text, statusType):
+            def OnStatusMessage(self, browser, value):
                 event = wx.CommandEvent()
-                event.SetString(text)
+                event.SetString(value)
                 if self.htmlwin: self.htmlwin.on_status_message(event)
         else:
-            def OnStatusMessage(self, browser, text):
+            #def OnStatusMessage(self, browser, text):
+            def OnStatusMessage(self, browser, value):
                 event = wx.CommandEvent()
-                event.SetString(text)
+                event.SetString(value)
                 if self.htmlwin: self.htmlwin.on_status_message(event)
 
 
@@ -89,6 +101,8 @@ def init_plugin_cef(
             if self.htmlwin: self.htmlwin.on_title_changed(event)
 
         def OnLoadStart(self, browser, frame):
+            print("START")
+            if self.htmlwin: self.htmlwin.loading += 1
             event = wx.CommandEvent()
             event.SetString(frame.GetUrl())
             if self.htmlwin: self.htmlwin.on_load_start(event)
@@ -101,6 +115,8 @@ def init_plugin_cef(
                 if self.htmlwin:
                     self.htmlwin.on_load_end(event)
                     self.htmlwin.progress_changed(100)
+            if self.htmlwin: self.htmlwin.loading -= 1
+            print("END", self.htmlwin.loading)
 
         def OnLoadError(self, browser, frame, errorCode, failedURL, errorText):
             event = wx.CommandEvent()
@@ -109,21 +125,25 @@ def init_plugin_cef(
             if self.htmlwin:
                 self.htmlwin.on_load_error(event)
                 self.htmlwin.progress_changed(100)
-            
+            if self.htmlwin: self.htmlwin.loading -= 1
+            print("ERROR")
+
         def OnTooltip(self, browser, text):
             event = wx.CommandEvent()
             event.SetString(text[0])
             if self.htmlwin: self.htmlwin.on_status_message(event)
 
-        def OnBeforeBrowse(self, browser, frame, request, navType, isRedirect):
+        def OnBeforeBrowse(self, browser, frame, request, isRedirect):
             print(">>>", request.GetUrl())
-            if navType == 0 and wx.GetKeyState(wx.WXK_CONTROL):
+            if wx.GetKeyState(wx.WXK_CONTROL):
                 if self.htmlwin: self.htmlwin.new_win(request.GetUrl())
                 return True
             else:
                 return False
 
-        def OnBeforeResourceLoad(self, browser, request, redirectUrl, streamReader, response, loadFlags):
+        #def OnBeforeResourceLoad(self, browser, request, redirectUrl, streamReader, response, loadFlags):
+        def OnBeforeResourceLoad(self, browser, frame, request):
+            if self.htmlwin: self.htmlwin.loading += 1
             url = request.GetUrl()
             #print("|||", url)
             if url.startswith('static://') or url.startswith('file://'):
@@ -163,20 +183,9 @@ def init_plugin_cef(
                 response.SetMimeType("text/css")
                 streamReader.SetData("body { color: red; }")
 
-        def OnKeyEvent(self, browser, eventType, keyCode, modifiers, isSystemKey, isAfterJavascript):
-            #if eventType == cefpython.KEYEVENT_KEYDOWN and keyCode ==  ord('J') and modifiers == cefpython.KEY_ALT:
-            if eventType == 2 and keyCode in (ord('J'), ord('K')) and modifiers == 4:
-                return True
-            return False
+            if self.htmlwin: self.htmlwin.loading -= 1
 
-        #def OnBeforePopup(self, parentBrowser, popupFeatures, windowInfo, url, settings):
-        #def OnPopupShow(self, browser, show):
-        #    return True
-
-        #def RunModal(self, browser):
-        #    return True
-
-    class Html2(CEFWindow, SchBaseCtrl, base_web_browser):
+    class Html2(CEFControl, SchBaseCtrl, base_web_browser):
 
         logged = False
 
@@ -186,10 +195,18 @@ def init_plugin_cef(
             wx.GetApp().web_ctrl = self
 
             SchBaseCtrl.__init__(self, args, kwds)
-            CEFWindow.__init__(self, *args, **kwds)
+            if 'style' in kwds:
+                kwds['style'] |= wx.WANTS_CHARS
+            else:
+                kwds['style'] = wx.WANTS_CHARS
+
+            CEFControl.__init__(self, *args, **kwds)
+
             self.client_handler = ClientHandler(self)
             self.browser.SetClientHandler(self.client_handler)
-            #print(">>>", self.browser)
+
+            self.client_handler.mainBrowser = self.browser
+
             href = self.href
             base_web_browser.__init__(self)
             if hasattr(self.GetParent(), 'any_parent_command'):
@@ -198,12 +215,15 @@ def init_plugin_cef(
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('show_info')
             
-            self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
-            self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
+            #self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
+            #self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
+            self.Bind(wx.EVT_CLOSE, self.on_close)
 
             self.edit = False
+
+            self.loading = 0
             #self.exist = True
-            self.loaded = False
+            self.browser.GetMainFrame().LoadUrl("about:blank")
 
             if href != None:
                 self.go(href)
@@ -217,24 +237,36 @@ def init_plugin_cef(
             #return ("<!DOCTYPE html><html><head><base href=\"static:///\" target=\"_blank\"></head><body bgcolor='%s'>" % color ) + str_body+"</body></html>"
 
 
-        def on_destroy(self, event):
+        #def on_destroy(self, event):
+        def on_close(self, event):
+            print("X1")
+            #del self.browser
+            self.browser.StopLoad()
+            print("X2")
+            while self.loading:
+                wx.Yield()
+            #quit()
             self.client_handler.htmlwin = None
-            if self.loaded:
-                self.browser.CloseBrowser()
+            print("X3")
+            #del self.browser
+            #if self.loaded:
+            #self.browser.StopLoad()
+            #self.browser.GetMainFrame().LoadUrl("about:blank")
+            #self.browser.CloseBrowser(False)
+            #self.browser.GetCefBrowserHost().get().CloseBrowser(True)
+            #self.browser.ParentWindowWillClose()
+            #self.browser.GetCefBrowserHost().get().ParentWindowWillClose()
+            #print("X3")
+            #del self.client_handler.mainBrowser
+            #del self.browser
+            #self.browser = None
+            #print("X3.5")
+            #self.Destroy()
+            #print("X4")
             event.Skip()
+            print("X5")
 
-        def __getattribute__(self, attr):
-            try:
-                ret = SchBaseCtrl.__getattribute__(self, attr)
-            except:
-                try:
-                    ret = base_web_browser.__getattribute__(self, attr)
-                except:
-                    ret = getattr(self.browser, attr)
-            return ret
 
-        # overwrite
-        
         def get_shtml_window(self):
             return self.GetParent()
 
@@ -262,41 +294,39 @@ def init_plugin_cef(
             self.browser.GetMainFrame().LoadString(data,self._static_prefix())
 
         def on_back(self, event):
-            self.GoBack()
+            self.browser.GoBack()
 
         def on_forward(self, event):
-            self.GoForward()
+            self.browser.GoForward()
 
         def on_stop(self, event):
-            self.StopLoad()
+            self.browser.StopLoad()
 
         def on_refresh(self, event):
-            self.Reload()
+            self.browser.Reload()
 
         def can_go_back(self):
-            return self.CanGoBack()
+            return self.browser.CanGoBack()
 
         def can_go_forward(self):
-            return self.CanGoForward()
+            return self.browser.CanGoForward()
 
         def execute_javascript(self, script):
-            frame = self.GetMainFrame()
+            frame = self.browser.GetMainFrame()
             frame.ExecuteJavascript(script)
 
         def on_source(self, event):
             okno = self.GetParent().new_main_page('^standard/editor/editor.html',
                     self.GetParent().GetTab().title + ' - page source', None)
-            okno.Body['EDITOR'].SetValue(norm_html(self.GetPageSource()))
+            okno.Body['EDITOR'].SetValue(norm_html(self.browser.GetPageSource()))
             okno.Body['EDITOR'].GotoPos(0)
 
         def on_edit(self, event):
             self.edit = not self.edit
-            self.SetEditable(self.edit)
-
+            self.browser.SetEditable(self.edit)
 
     schcli.guictrl.schctrl.HTML2 = Html2
 
     return cef_shutdown
-    #return True
 
 

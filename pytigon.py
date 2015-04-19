@@ -99,7 +99,7 @@ except:
 import wx.html2
 
 if platform.system() == "Windows":
-    wx.html2.WebView.New("start:")
+    wx.html2.WebView.New("start:"+wx.html2.__file__.replace('html2.py', 'cefclient.exe'))
 
 import schcli.guictrl.schtag
 
@@ -258,6 +258,25 @@ class SchApp(App):
             self.thread_manager = SchThreadManager(self, frame.statusbar)
         if INSPECTION:
             self.ShowInspectionTool()
+
+        #m_timer = wx.Timer(frame, 100)
+        #m_timer.Start(25)
+
+        #if platform.system() == "Windows":
+         #   frame.Bind(wx.EVT_IDLE, self.on_idle)
+            #print("X1")
+            #frame.Bind(wx.EVT_TIMER, self.on_idle, 100)
+            #print("X2")
+            ##wxEVT_TIMER, wxTimerEventHandler(WebFrame::OnTimer), NULL, this);
+
+
+    #def on_idle(self, event):
+    #    #print('.')
+    #    if platform.system() == "Windows":
+    #        wx.html2.WebView.New("messageloop")
+    #        print('.')
+    #    event.Skip()
+
 
     def register_extern_app(self, address, app):
         self.ext_app.append((app, address))
