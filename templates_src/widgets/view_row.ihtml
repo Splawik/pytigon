@@ -4,6 +4,6 @@
 %% class
     .popup_info btn btn-sm btn-info
 
-%% widget_content
+%% action_widget_content
     % with standard_web_browser=True
         {{ block.super }}

@@ -170,6 +170,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     #'debug_toolbar',
     #'django_extensions',
+    'mptt',
     ]
 
 HIDE_APPS = []
