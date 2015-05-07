@@ -173,8 +173,8 @@ class GenericTable(object):
             rows.template_name = template_name
         else:
             if field:
-                #f = getattr(models.get_model(self.app, tab), field).related
-                f = getattr(apps.get_model(self.app + "." + tab), field).rel
+                f = getattr(models.get_model(self.app, tab), field).related
+                #f = getattr(apps.get_model(self.app + "." + tab), field).rel
                 try:
                     table_name = f.name
                 except:
@@ -477,7 +477,8 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field:
-                f = getattr(self.base_model, self.field).rel
+                #f = getattr(self.base_model, self.field).rel
+                f = getattr(self.base_model, self.field).related
                 model = f.model
             else:
                 model = self.base_model
@@ -550,8 +551,8 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field and self.field != 'this':
-                #f = getattr(self.base_model, self.field).related
-                f = getattr(self.base_model, self.field).rel
+                f = getattr(self.base_model, self.field).related
+                #f = getattr(self.base_model, self.field).rel
                 model = f.model
                 pmodel = self.base_model
             else:
@@ -680,8 +681,8 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field:
-                #f = getattr(self.base_model, self.field).related
-                f = getattr(self.base_model, self.field).rel
+                f = getattr(self.base_model, self.field).related
+                #f = getattr(self.base_model, self.field).rel
                 model = f.model
             else:
                 model = self.base_model
@@ -704,8 +705,8 @@ class GenericRows(object):
             r'(?P<pk>\d+)/(?P<field_edit_name>[\w_]*)/(?P<target>[\w_]*)/editor/$'
         fun = make_perms_test_fun(self.base_perm % 'change', view_editor)
         if self.field:
-            #f = getattr(self.base_model, self.field).related
-            f = getattr(self.base_model, self.field).rel
+            f = getattr(self.base_model, self.field).related
+            #f = getattr(self.base_model, self.field).rel
             model = f.model
         else:
             model = self.base_model

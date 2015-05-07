@@ -745,15 +745,15 @@ def main_init(argv):
     if inst_dir == '':
         inst_dir = cwd
     if embed_diango:
-        settings.TEMPLATE_DIRS.insert(0, inst_dir + '/schappdata/schplugins')
-        settings.TEMPLATE_DIRS.insert(0, cwd + '/schappdata/schplugins')
-        settings.TEMPLATE_DIRS.insert(0, inst_dir + '/../templates')
-        settings.TEMPLATE_DIRS.insert(0, cwd + '/templates')
+        #settings.TEMPLATE_DIRS.insert(0, inst_dir + '/schappdata/schplugins')
+        #settings.TEMPLATE_DIRS.insert(0, cwd + '/schappdata/schplugins')
+        #settings.TEMPLATE_DIRS.insert(0, inst_dir + '/../templates')
+        #settings.TEMPLATE_DIRS.insert(0, cwd + '/templates')
 
-        #settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/schappdata/schplugins')
-        #settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/schappdata/schplugins')
-        #settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/../templates')
-        #settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/templates')
+        settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/schappdata/schplugins')
+        settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/schappdata/schplugins')
+        settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/../templates')
+        settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/templates')
 
         for a in apps:
             settings.INSTALLED_APPS.append(a)
