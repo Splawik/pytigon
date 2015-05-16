@@ -1,7 +1,6 @@
-converter =  new Showdown.converter();
-var render = function() {
-  
-  return (
+converter = new Showdown.converter();
+function render() {
+    return (
                         React.createElement("div", {className: "comment"}, 
                                 React.createElement("h2", {className: "commentAuthor"}, 
                                       this.props.author
@@ -9,5 +8,4 @@ var render = function() {
                                 converter.makeHtml(this.props.children.toString())
                         ));
 }
-
-Comment = React.createClass({ render:render });
+Comment = React.createClass({render: render});

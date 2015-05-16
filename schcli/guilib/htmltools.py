@@ -18,6 +18,7 @@
 #version: "0.1a"
 
 import wx
+import platform
 import schcli.guictrl.schctrl
 
 
@@ -54,12 +55,16 @@ class HtmlErrorDialog(wx.Dialog):
             self.SetExtraStyle(wx.DIALOG_EX_METAL)
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        label = schcli.guictrl.schctrl.HTML2(self, size=(800,600))
-        label.load_str(text)
+
+        if wx.Platform == '__WXMSW__':
+            self.label = schcli.guictrl.schctrl.HTML2(self, size=(800,600), name="webbrowser", backend="wxWebViewIE")
+        else:
+            self.label = schcli.guictrl.schctrl.HTML2(self, size=(800,600), name="webbrowser")
+        #self.label = schcli.guictrl.schctrl.HTML(self, size=(800,600), name="webbrowser", data=text)
         try:
-            sizer.Add(label.wb, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+            sizer.Add(self.label.wb, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
         except:
-            sizer.Add(label, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
+            sizer.Add(self.label, 0, wx.ALIGN_CENTRE | wx.ALL, 5)
         btnsizer = wx.StdDialogButtonSizer()
         btn = wx.Button(self, wx.ID_OK, 'Kontynuuj')
         btn.SetHelpText('The OK button completes the dialog')
@@ -72,7 +77,23 @@ class HtmlErrorDialog(wx.Dialog):
         sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.SetSizer(sizer)
         sizer.Fit(self)
+        self.label.load_str(text)
+        #self.t1 = wx.Timer(self)
+        #self.t1.Start(25)
+        #self.txt = text
+        #self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
+
 
     def set_acc_key_tab(self, win, tab):
         pass
+
+    #def on_timer(self, evt):
+    #    if platform.system() == "Windows":
+    #        wx.html2.WebView.New("messageloop")
+    #    if self.txt:
+    #        #print(self.txt)
+    #        #self.label.load_url("www.onet.pl")
+    #        self.label.load_str(self.txt)
+    #        #self.label.SetValue(self.txt)
+    #        self.txt = None
 

@@ -477,9 +477,8 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field:
-                #f = getattr(self.base_model, self.field).rel
                 f = getattr(self.base_model, self.field).related
-                model = f.model
+                model = f.related_model
             else:
                 model = self.base_model
             success_url = make_path('schserw.urls.ok')
@@ -553,7 +552,7 @@ class GenericRows(object):
             if self.field and self.field != 'this':
                 f = getattr(self.base_model, self.field).related
                 #f = getattr(self.base_model, self.field).rel
-                model = f.model
+                model = f.related_model
                 pmodel = self.base_model
             else:
                 model = self.base_model
@@ -683,7 +682,7 @@ class GenericRows(object):
             if self.field:
                 f = getattr(self.base_model, self.field).related
                 #f = getattr(self.base_model, self.field).rel
-                model = f.model
+                model = f.related_model
             else:
                 model = self.base_model
             success_url = make_path('schserw.urls.ok')
@@ -707,7 +706,7 @@ class GenericRows(object):
         if self.field:
             f = getattr(self.base_model, self.field).related
             #f = getattr(self.base_model, self.field).rel
-            model = f.model
+            model = f.related_model
         else:
             model = self.base_model
         parm = dict(

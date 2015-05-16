@@ -68,3 +68,27 @@ def vfssave(request, file):
     return HttpResponse(buf)
 
 
+class _RowProxy():
+    def __init__(self, row):
+        self.raw_row = row
+
+    def __getattr__(self, attr_name):
+        return getattr(self.raw_row, attr_name)
+
+    def __getitem__(self, key):
+        return self.raw_row[int(key)]
+
+
+def result_proxy(tab):
+    for pos in tab:
+        yield _RowProxy(pos)
+
+
+if __name__ == '__main__':
+    test = [[1,2],[3,4],[5,6]]
+
+    gen = result_proxy(test)
+
+    for pos in gen:
+        print(pos[0], pos[1])
+
