@@ -64,8 +64,9 @@ def install_0():
         ini.close()
 
 install_0()
+
 sys.path = [xp for xp in sys.path if not ('plat-win' in xp or 'python27.zip' in xp
-             or 'lib-tk' in xp)]
+             or 'lib-tk' in xp or 'python35.zip' in xp)]
 
 import zipfile
 import getopt
@@ -695,7 +696,8 @@ def main_init(argv):
                 return (None, None)
                 #return (None, None)
     sys.path.insert(0,CWD_PATH)
-
+    #print(CWD_PATH)
+    #print(sys.path)
     httpclient.init_embeded_django()
 
     # wx.DateTime_SetCountry(wx.DateTime.USA)
@@ -944,5 +946,10 @@ if __name__ == '__main__':
                 time.sleep(100)
         else:
             main()
+            print("FINISH_0")
             if platform.system() == "Windows":
-                wx.html2.WebView.New("stop")
+                wx.html2.WebView.New("messageloop")
+                wx.html2.WebView.New("end")
+                #sys.exit()
+                #os._exit(0)
+            print("FINISH_1")

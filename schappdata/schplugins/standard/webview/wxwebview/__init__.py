@@ -331,6 +331,7 @@ def init_plugin_web_view(
             return self.GetParent()
 
         def load_url(self, url):
+            print("LoadURL:", url)
             self.LoadURL(url)
             self.SetFocus()
 
@@ -344,9 +345,16 @@ def init_plugin_web_view(
         def load_str(self, data, base=None):
             #print("LOAD_STR:")
             #self.wb.SetPage(data, base if base else self._static_prefix())
+
+            #self.load_url("about:blank")
+            #self.LoadURL("about:blank")
+            #self.SetPage(data, "")
+            #self.LoadURL("about:blank")
+            #self.SetPage("<html><head></head><body>Hello world</body></html>", "")
             self.SetPage(data, "")
             #self.data = (data, base)
             #self.wb.LoadURL("about:blank")
+            #pass
 
         def on_back(self, event):
             self.GoBack()
@@ -390,9 +398,9 @@ def init_plugin_web_view(
         kwds2['size'] = kwds['size']
         if 'backend' in kwds:
             kwds2['backend'] = kwds['backend']
-
-        if platform.system() == "Windows":
-            kwds2['backend'] = "wxWebViewChromium"
+        else:
+            if platform.system() == "Windows":
+                kwds2['backend'] = "wxWebViewChromium"
             #kwds['backend'] = "wxWebViewIE"
 
         wb = wx.html2.WebView.New(*args, **kwds2)

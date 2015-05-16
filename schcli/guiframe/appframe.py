@@ -753,6 +753,9 @@ class SchAppFrame(wx.Frame):
 
 
     def on_exit(self, event=None):
+        print("Timer stop 0")
+        self.t1.Stop()
+        print("Timer stop 1")
         wx.GetApp().on_exit()
         self._mgr.UnInit()
         self.Destroy()
@@ -774,6 +777,7 @@ class SchAppFrame(wx.Frame):
         #if self.tbIcon:
         #    self.tbIcon.RemoveIcon()
         #    self.tbIcon = None
+
 
         self.on_exit()
         event.Skip()

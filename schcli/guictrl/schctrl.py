@@ -1480,7 +1480,7 @@ class HTML(htmlsash.SchSashWindow, SchBaseCtrl):
         if self.src:
             value = self.load_string_from_server(self.src)
             self._set_value(value, False)
-        elif 'data' in self.param and len(self.param['data'])>0:
+        elif self.param and 'data' in self.param and len(self.param['data'])>0:
             self._set_value(self.param['data'], False)
         else:
             self._value = None
