@@ -38,6 +38,27 @@ window.onerror = function (msg, url, line) {
 </script>"""
 
 
+init_script = """
+window.addEventListener("click", mod_click, false);
+
+function mod_click(e) {
+    e = e ||  window.event;
+    var element = e.target || e.srcElement;
+
+    if (e.ctrlKey && element.tagName == 'A') {
+        var old_target = element.getAttribute("target");
+        element.setAttribute("target", "_blank");
+        setTimeout(function() {
+                if (old_target) element.setAttribute("target", old_target);
+                else element.removeAttribute("target");
+            },
+            0
+        );
+    }
+}
+"""
+
+
 class WebViewMemoryHandler(wx.html2.WebViewHandler):
     def __init__(self):
         wx.html2.WebViewHandler.__init__(self, "static")
@@ -150,6 +171,8 @@ def init_plugin_web_view(
             base_web_browser.__init__(self)
 
             self.loaded = True
+            self.next_in_new_win = False
+            self.page_loaded = False
 
             self.redirect_to_html = [None, None]
             self.redirect_to_local = True
@@ -197,7 +220,9 @@ def init_plugin_web_view(
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self)
 
+
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
+
 
             self.edit = False
 
@@ -228,10 +253,14 @@ def init_plugin_web_view(
 
         def on_navigating(self, event):
             url = event.GetURL()
-            if wx.GetKeyState(wx.WXK_CONTROL):
+            if self.next_in_new_win and wx.GetKeyState(wx.WXK_CONTROL):
+                print("on_navigating", url)
+                self.next_in_new_win = False
                 event.Veto()
                 self.new_win(event.GetURL())
             else:
+                self.next_in_new_win = False
+                self.page_loaded = False
                 event.Skip()
 
         def on_error(self, event):
@@ -245,6 +274,9 @@ def init_plugin_web_view(
             #    self.wb.SetPage(data, base if base else self._static_prefix())
             #    event.Skip()
             #else:
+
+            self.page_loaded = True
+
             ev = wx.CommandEvent()
             try:
                 ev.SetString(event.GetURL().decode('utf-8'))
@@ -253,6 +285,8 @@ def init_plugin_web_view(
             self.on_address_changed(ev)
             self.on_load_end(ev)
             event.Skip()
+
+            self.execute_javascript(init_script)
 
 
         def on_web_view_error(self, event):

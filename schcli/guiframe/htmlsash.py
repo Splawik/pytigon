@@ -185,7 +185,7 @@ class SchSashWindow(wx.Window):
         #self.Body.draw_background()
         self.Body.Bind(wx.EVT_CHILD_FOCUS, self.on_child_focus)
 
-        #self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
+        self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
 
 
     def init_binds(self):
@@ -473,7 +473,10 @@ class SchSashWindow(wx.Window):
         if not test:
             pass
 
-    #def on_set_focus(self, evt):
+    def on_set_focus(self, evt):
+        if self.Body:
+            self.Body.SetFocus()
+
     def on_child_focus(self, evt):
         if not self.disable_setfocus:
             #print(evt, evt.GetId())

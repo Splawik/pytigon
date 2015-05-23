@@ -51,7 +51,13 @@ class NotebookPage(wx.Window):
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
         self.Bind(wx.EVT_MOTION, self.on_move)
+        self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
+
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
+
+    def on_set_focus(self, evt):
+        if self.get_page_count() > 0:
+            self.get_page(-1).SetFocus()
 
     def get_app_http(self):
         return self.http

@@ -192,6 +192,7 @@ class SchHtmlWindow(ScrolledPanel):
                 self.LastControlWithFocus = children[0]
 
     def on_focus(self, event):
+        print("on_focus?????", self.LastControlWithFocus)
         if self.LastControlWithFocus:
             self.LastControlWithFocus.SetFocus()
         else:

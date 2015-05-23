@@ -41,7 +41,7 @@ class BaseWebBrowser(object):
     LOAD_FINISH_FAILED = 3
 
     def __init__(self):
-        self.test_ctrl = True
+        #self.test_ctrl = True
         self.progress = -1
         self.href = ''
         self.status = {
@@ -144,15 +144,16 @@ class BaseWebBrowser(object):
             okno.Body['PDFVIEWER'].LoadFile(name, True)
             return False
         else:
+            return True
             if 'schtml=1' in page and not wx.GetApp().is_hybrid:
                 self.get_shtml_window().any_parent_command('new_child_page', page)
                 return False
             elif 'childwin=1' in page:
                 self.new_child(page)
                 return False
-            elif wx.GetKeyState(wx.WXK_CONTROL) and self.test_ctrl:
-                self.new_win(page)
-                return False
+            #elif wx.GetKeyState(wx.WXK_CONTROL) and self.test_ctrl:
+            #    self.new_win(page)
+            #    return False
             return True
 
     def _redirect_to_local(self, event):
@@ -231,9 +232,9 @@ class BaseWebBrowser(object):
         okno = \
             wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
                 , bstr_url)
-        okno.Body.WEB.test_ctrl = False
+        #okno.Body.WEB.test_ctrl = False
         okno.Body.WEB.go(bstr_url)
-        okno.Body.WEB.test_ctrl = True
+        #okno.Body.WEB.test_ctrl = True
         return True
 
     def new_child(self, bstr_url):
@@ -268,6 +269,7 @@ class BaseWebBrowser(object):
         else:
             title2="Empty page" 
         if hasattr(self.get_shtml_window(), 'any_parent_command'):
+            print("TITLE:", title2)
             self.get_shtml_window().any_parent_command('change_notebook_page_title', title2)
 
     def get_status(self):

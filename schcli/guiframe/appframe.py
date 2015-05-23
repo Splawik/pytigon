@@ -597,6 +597,11 @@ class SchAppFrame(wx.Frame):
         return None
 
     def new_main_page(self, address_or_parser, title="", parametry=None, panel="desktop"):
+        if len(title)<32:
+            title2 = title
+        else:
+            title2 = title[:30] + '...'
+
         if panel.startswith("toolbar"):
             name = panel[7:]
             if name[0:1] == '_':
@@ -627,7 +632,7 @@ class SchAppFrame(wx.Frame):
                 else:
                     n.add_and_split(okno, address_or_parser.title, wx.RIGHT)
             else:
-                n.add_and_split(okno, title, wx.RIGHT)
+                n.add_and_split(okno, title2, wx.RIGHT)
         else:
             if title is None:
                 #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
@@ -636,7 +641,7 @@ class SchAppFrame(wx.Frame):
                 else:
                     n.AddPage(okno, address_or_parser.title, True)
             else:
-                n.AddPage(okno, title, True)
+                n.AddPage(okno, title2, True)
 
         #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
         if isinstance(address_or_parser, six.string_types):
