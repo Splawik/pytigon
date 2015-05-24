@@ -223,6 +223,8 @@ def init_plugin_web_view(
 
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
 
+            self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
+            self.Bind(wx.EVT_KILL_FOCUS, self.on_killfocus)
 
             self.edit = False
 
@@ -236,6 +238,14 @@ def init_plugin_web_view(
 
             self.afetr_init()
 
+
+        def on_setfocus(self, event):
+            print("on_setfocus")
+            event.Skip()
+
+        def on_killfocus(self, event):
+            print("on_killfocus", event.GetWindow())
+            event.Skip()
 
         def on_destroy(self, event):
             if platform.system() == "Windows":
@@ -287,7 +297,7 @@ def init_plugin_web_view(
             event.Skip()
 
             self.execute_javascript(init_script)
-
+            self.SetFocus()
 
         def on_web_view_error(self, event):
             print("on_web_view_error:", event.GetURL())
@@ -367,7 +377,10 @@ def init_plugin_web_view(
         def load_url(self, url):
             print("LoadURL:", url)
             self.LoadURL(url)
-            self.SetFocus()
+            #print("SetFocus1")
+            #self.SetFocus()
+            #self.GetParent().GetParent().SetFocus()
+            print("SetFocus2")
 
         def _static_prefix(self):
             if wx.Platform == '__WXMSW__':
