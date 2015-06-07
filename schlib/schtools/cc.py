@@ -17,11 +17,6 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-#try:
-from Cython.Compiler import Main
-#except:
-#    pass
-
 import os
 import ctypes
 import platform
