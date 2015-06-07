@@ -22,7 +22,7 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 
-THEMES = ['desktop_standard', 'tablet_standard', 'smartfon_standard']
+THEMES = ['desktop_traditional', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
@@ -61,7 +61,6 @@ for app in APPS:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        #TEMPLATE_DIRS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]
@@ -70,7 +69,6 @@ for app in APPS:
         else:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
-#TEMPLATE_DIRS.insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
 if setup_databases:

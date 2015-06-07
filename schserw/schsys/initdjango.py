@@ -18,7 +18,7 @@
 #version: "0.1a"
 
 import django.db.models.fields
-from mptt.models import TreeForeignKey
+#from mptt.models import TreeForeignKey
 import mimetypes
 from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
@@ -31,8 +31,12 @@ from django.forms.forms import BaseForm
 BaseForm._old_html_output = BaseForm._html_output
 
 
-models.TreeForeignKey = TreeForeignKey
-models.GTreeForeignKey = TreeForeignKey
+#models.TreeForeignKey = TreeForeignKey
+#models.GTreeForeignKey = TreeForeignKey
+
+models.TreeForeignKey = models.ForeignKey
+models.GTreeForeignKey = models.ForeignKey
+models.TreeModel = models.Model
 
 def _html_output(
     self,

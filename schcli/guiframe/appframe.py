@@ -305,7 +305,9 @@ class SchAppFrame(wx.Frame):
                         try_run=2
                         while try_run>0:
                             try:
-                                #print(os.path.join(dirname2, f))
+                                print(os.path.join(dirname2, f))
+                                if 'tcc' in f:
+                                    pass
                                 if os.path.isdir(os.path.join(dirname2, f)):
                                     p = dirname2.split('/')
                                     mod_name = p[-2] + "." + p[-1] + "." + f

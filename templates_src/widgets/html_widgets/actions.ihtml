@@ -2,7 +2,6 @@
 
 % load exfiltry
 % load exsyntax
-% load mptt_tags
 
 %% widget_content
     div class=tree

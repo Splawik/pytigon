@@ -14,7 +14,6 @@ from schlib.schhtml.htmltools import superstrip
 
 
 
-
 # -*- coding: utf-8 -*-
 
 import os.path
@@ -226,8 +225,6 @@ class SChAppSet(models.Model):
 
     
 
-    
-
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     title = models.CharField('Title', null=False, blank=False, editable=True, max_length=255)
     ext_apps = models.CharField('Extern applications', null=True, blank=True, editable=True, max_length=255)
@@ -269,7 +266,6 @@ class SChAppSet(models.Model):
 admin.site.register(SChAppSet)
 
 
-
 @python_2_unicode_compatible
 class SChApp(models.Model):
     
@@ -278,8 +274,6 @@ class SChApp(models.Model):
         verbose_name_plural = _("SChApp")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -389,7 +383,6 @@ class SChApp(models.Model):
 admin.site.register(SChApp)
 
 
-
 @python_2_unicode_compatible
 class SChChoice(models.Model):
     
@@ -398,8 +391,6 @@ class SChChoice(models.Model):
         verbose_name_plural = _("SChChoice")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -414,7 +405,6 @@ class SChChoice(models.Model):
 admin.site.register(SChChoice)
 
 
-
 @python_2_unicode_compatible
 class SChChoiceItem(models.Model):
     
@@ -423,8 +413,6 @@ class SChChoiceItem(models.Model):
         verbose_name_plural = _("SChChoiceItem")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -439,7 +427,6 @@ class SChChoiceItem(models.Model):
 admin.site.register(SChChoiceItem)
 
 
-
 @python_2_unicode_compatible
 class SChTable(models.Model):
     
@@ -448,8 +435,6 @@ class SChTable(models.Model):
         verbose_name_plural = _("SChTable")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -470,7 +455,7 @@ class SChTable(models.Model):
     
     def get_base_table(self):
         l = self.base_table.split('.')
-        if len(l)>1:
+        if len(l)>1 and l[-2]!='models':
             return l[-1]
         else:
             return self.base_table
@@ -481,7 +466,6 @@ class SChTable(models.Model):
 admin.site.register(SChTable)
 
 
-
 @python_2_unicode_compatible
 class SChField(models.Model):
     
@@ -490,8 +474,6 @@ class SChField(models.Model):
         verbose_name_plural = _("SChField")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -603,7 +585,6 @@ class SChField(models.Model):
 admin.site.register(SChField)
 
 
-
 @python_2_unicode_compatible
 class SChView(models.Model):
     
@@ -612,8 +593,6 @@ class SChView(models.Model):
         verbose_name_plural = _("SChView")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -701,7 +680,6 @@ class SChView(models.Model):
 admin.site.register(SChView)
 
 
-
 @python_2_unicode_compatible
 class SChTemplate(models.Model):
     
@@ -710,8 +688,6 @@ class SChTemplate(models.Model):
         verbose_name_plural = _("SChTemplate")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -808,7 +784,6 @@ class SChTemplate(models.Model):
 admin.site.register(SChTemplate)
 
 
-
 @python_2_unicode_compatible
 class SChAppMenu(models.Model):
     
@@ -817,8 +792,6 @@ class SChAppMenu(models.Model):
         verbose_name_plural = _("SChAppMenu")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -868,7 +841,6 @@ class SChAppMenu(models.Model):
 admin.site.register(SChAppMenu)
 
 
-
 @python_2_unicode_compatible
 class SChUrl(models.Model):
     
@@ -877,8 +849,6 @@ class SChUrl(models.Model):
         verbose_name_plural = _("SChUrl")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -893,7 +863,6 @@ class SChUrl(models.Model):
 admin.site.register(SChUrl)
 
 
-
 @python_2_unicode_compatible
 class SChForm(models.Model):
     
@@ -902,8 +871,6 @@ class SChForm(models.Model):
         verbose_name_plural = _("Form")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -920,7 +887,6 @@ class SChForm(models.Model):
 admin.site.register(SChForm)
 
 
-
 @python_2_unicode_compatible
 class SChFormField(models.Model):
     
@@ -929,8 +895,6 @@ class SChFormField(models.Model):
         verbose_name_plural = _("Form field")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -987,7 +951,6 @@ class SChFormField(models.Model):
 admin.site.register(SChFormField)
 
 
-
 @python_2_unicode_compatible
 class SChTask(models.Model):
     
@@ -996,8 +959,6 @@ class SChTask(models.Model):
         verbose_name_plural = _("SChTask")
         default_permissions = ('add', 'change', 'delete', 'list')
         
-
-    
 
     
 
@@ -1014,7 +975,6 @@ class SChTask(models.Model):
         return template_name
     
 admin.site.register(SChTask)
-
 
 
 

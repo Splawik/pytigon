@@ -17,10 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-try:
-    from Cython.Compiler import Main
-except:
-    pass
+#try:
+from Cython.Compiler import Main
+#except:
+#    pass
 
 import os
 import ctypes
@@ -34,11 +34,11 @@ def load_libtcc(base_path):
         return True
 
     if platform.system() == "Linux":
-        file_and_path_to_tcclib = base_path + "/tcc/libtcc.so.1.0"
+        file_and_path_to_tcclib = base_path + "/ext_prg/tcc/libtcc.so.1.0"
     else:
-        file_and_path_to_tcclib = base_path + "/tcc/libtcc.dll"
+        file_and_path_to_tcclib = base_path + "/ext_prg/tcc/libtcc.dll"
     try:
-        libtcc=ctypes.cdll.LoadLibrary(file_and_path_to_tcclib)
+        _libtcc=ctypes.cdll.LoadLibrary(file_and_path_to_tcclib)
     except:
         _libtcc = None
         return False
@@ -48,27 +48,23 @@ def _req0(funname,retval):
     if retval!=0:
         raise ValueError("%s returned error code %s." % (funname,retval))
 
-def compile(path_ptx, base_path):
-    for f in os.listdir(path_ptx):
-        if f[-4:]=='.pyx':
-            dest = path_ptx + "/" + f.replace('.pyx', '.c')
-            dest = dest.replace('\\','/')
-            src = path_ptx + "/" + f
-            options = dict(Main.default_options)
-            options['output_file'] = dest
-            Main.compile(src, options)
+def compile(path_c, base_path):
+    for f in os.listdir(path_c):
+        if f.lower().endswith('.c'):
+            src = path_c + "/" + f
             if load_libtcc(base_path):
+                os.chdir(base_path+"/ext_prg/tcc/")
                 tccstate=_libtcc.tcc_new()
                 _req0("set_output_type", _libtcc.tcc_set_output_type(tccstate,2))
                 if platform.system() == "Linux":
-                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ppython/include").encode('utf-8')))
-                    _req0("add_file", _libtcc.tcc_add_file(tccstate,dest.encode('utf-8')))
-                    _req0("output_file", _libtcc.tcc_output_file(tccstate, dest.replace('.c','.so').encode('utf-8')))
+                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
+                    _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
+                    _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
+                    print("end")
                 else:
-                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ppython/include").encode('utf-8')))
-                    _req0("add_file", _libtcc.tcc_add_file(tccstate,dest.encode('utf-8')))
-                    _req0("add_file", _libtcc.tcc_add_file(tccstate,(base_path + "/tcc/lib/python32.def").encode('utf-8')))
-                    _req0("output_file", _libtcc.tcc_output_file(tccstate, dest.replace('.c','.pyd').encode('utf-8')))
+                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
+                    _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
+                    _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
                 _libtcc.tcc_delete(tccstate)
 
 

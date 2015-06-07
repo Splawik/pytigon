@@ -85,7 +85,7 @@ for app in settings.INSTALLED_APPS:
             pos = app.name
         else:
             pos = app
-            if pos.startswith('django') or pos.startswith('mptt') or pos.startswith('debug') or pos.startswith('registration') or pos.startswith('crispy') or pos.startswith('bootstrap_admin'):
+            if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') or pos.startswith('crispy') or pos.startswith('bootstrap_admin'):
                 continue
 
         elementy = pos.split('.')

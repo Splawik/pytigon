@@ -5,6 +5,17 @@ import sys
 sys.path.append("./../../ext_lib")
 sys.path.append("./../..")
 
+import django
+
+setup_old = django.setup
+
+def setup():
+    import schserw.schsys.initdjango
+    schserw.schsys.initdjango.init_django()
+    setup_old()
+
+django.setup = setup
+
 def cmd(arg, from_main=False):
     if from_main:
         argv = arg

@@ -17,8 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-#from standard.tcctest import schtest
+
+from . import schtest
 
 def init_plugin(
     app,
@@ -29,4 +29,4 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    pass
+    print(schtest.silnia(10))

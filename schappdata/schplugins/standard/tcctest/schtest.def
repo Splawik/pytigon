@@ -1,4 +1,0 @@
-LIBRARY schtest.pyd
-
-EXPORTS
-PyInit_schtest

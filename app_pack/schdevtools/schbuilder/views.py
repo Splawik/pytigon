@@ -254,11 +254,11 @@ def gen(request, pk):
         for table in tables:
             object_list.append((datetime.datetime.now().time().isoformat(), 'create tab:', table.name))
             table.tree_table = 0
-            for field in table.schfield_set.filter(type__in=['GForeignKey','GManyToManyField', 'GHiddenForeignKey', 'GTreeForeignKey']):
+            for field in table.schfield_set.filter(type__in=['GForeignKey','GManyToManyField', 'GHiddenForeignKey', 'GTreeForeignKey', 'GHiddenTreeForeignKey']):
                 if field.type in ('GTreeForeignKey', 'GHiddenTreeForeignKey'):
                     is_tree_table = True
                     if table.base_table in ("", "models.Model"):
-                        table.base_table = 'MPTTModel'
+                        table.base_table = 'models.TreeModel'
                         table.tree_tab = 1
                     else: 
                         table.tree_tab = 2
