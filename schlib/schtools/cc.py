@@ -51,15 +51,9 @@ def compile(path_c, base_path):
                 os.chdir(base_path+"/ext_prg/tcc/")
                 tccstate=_libtcc.tcc_new()
                 _req0("set_output_type", _libtcc.tcc_set_output_type(tccstate,2))
-                if platform.system() == "Linux":
-                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
-                    _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
-                    _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
-                    print("end")
-                else:
-                    _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
-                    _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
-                    _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
+                _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
+                _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
+                _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
                 _libtcc.tcc_delete(tccstate)
 
 

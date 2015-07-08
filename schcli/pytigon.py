@@ -42,7 +42,7 @@ sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
 sys.path.insert(0, ROOT_PATH + '/ext_lib_cli')
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_desk_local'            
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_desk'
 
 def install_0():
     """install plugin
@@ -536,8 +536,8 @@ def main_init(argv):
     if embed_diango:
         #try:
         #print(sys.path)
-        import settings_desk_local
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_desk_local'
+        import settings_desk
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_desk'
         #except:
         #    try:
         #        import schserw.settings_desk

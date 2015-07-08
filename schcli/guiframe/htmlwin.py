@@ -1084,7 +1084,7 @@ class SchHtmlWindow(ScrolledPanel):
                 (err, adr2) = http.get(self, adr, post, nullpost)
 
 
-            if http.ret_content_type == 'text/plain':
+            if 'text/plain' in http.ret_content_type:
                 s = http.str()
                 http.clear_ptr()
                 if title:

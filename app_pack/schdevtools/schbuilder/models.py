@@ -12,6 +12,10 @@ import sys
 from schlib.schhtml.htmltools import superstrip
 
 
+from schtools.simplescripts.models import *
+
+from schwiki.wiki.models import *
+
 
 
 # -*- coding: utf-8 -*-

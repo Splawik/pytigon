@@ -40,18 +40,18 @@ if len(URL_POSTFIX) > 0:
 else:
     MEDIA_URL = '/site_media/'
 
-apps = []
-base_apps_path = os.path.join(_lp, '..')
-for ff in os.listdir(base_apps_path):
-    if os.path.isdir( os.path.join(base_apps_path,ff)):
-        if ff != 'schdevtools':
-            apps.append(ff)
-for app in apps:
-    base_apps_path2 = os.path.join(base_apps_path, app)
-    for ff in os.listdir(base_apps_path2):
-        if os.path.isdir( os.path.join(base_apps_path2,ff)):
-            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
-                APPS.append(app+"."+ff)
+#apps = []
+#base_apps_path = os.path.join(_lp, '..')
+#for ff in os.listdir(base_apps_path):
+#    if os.path.isdir( os.path.join(base_apps_path,ff)):
+#        if ff != 'schdevtools':
+#            apps.append(ff)
+#for app in apps:
+#    base_apps_path2 = os.path.join(base_apps_path, app)
+#    for ff in os.listdir(base_apps_path2):
+#        if os.path.isdir( os.path.join(base_apps_path2,ff)):
+#            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
+#                APPS.append(app+"."+ff)
 
 sys.path.append(LOCAL_ROOT_PATH)
 
@@ -71,21 +71,25 @@ for app in APPS:
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
+p = os.path.expanduser("~")
+if isinstance(p, six.text_type):
+    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
+else:
+    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")
+
+DATABASES = {
+    'default':  {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': _NAME,
+    },
+}
+
 if setup_databases:
     db_setup = setup_databases(APPSET_NAME)
+    db_local = DATABASES['default']
+
     DATABASES = db_setup[0]
+    DATABASES['local'] = db_local
+
     if db_setup[1]:
         AUTHENTICATION_BACKENDS = db_setup[1]
-else:
-    p = os.path.expanduser("~")
-    if isinstance(p, six.text_type):
-        _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
-    else:
-        _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")
-
-    DATABASES = {
-        'default':  {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': _NAME,
-        },
-}

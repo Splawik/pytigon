@@ -73,12 +73,7 @@
                                         {% endwith %}
                                         <button type="button" class="btn btn-danger" id="kill_task">Kill task</button>
                                         <script >
-var _on_kill = function() {
-  
-  window.location = "/";
-}
-
-$("#kill_task").click(_on_kill);</script>
+</script>
                                 </div>
                         </div>
                 </div>
@@ -144,99 +139,6 @@ $("#kill_task").click(_on_kill);</script>
                         {% endif %}
                         {% if object.status < 2 %}
                                 <script >
-var on_edit_ok = function(form) {
-  
-      var _on_kill = function() {
-    var filter;
-    filter = form.closest("div.content").find("form.TableFiltr");
-    $("div.dialog-form").fadeTo("slow", 0.5);
-    if (( filter.length ) > 0) {
-      filter.attr("action", "{{request.path}}/../../");
-      filter.submit();
-    }
-  }
-
-  on_kill(_on_kill);
-}
-
-var on_timer = function() {
-  var obj;
-  obj = $("#cmd_list_{{object.id}}");
-  if (__test_if_true__(obj.length)) {
-            var _on_post = function(data) {
-      var x,parm,fun,tmp;
-      start_id_{{object.id}} += data.length;
-            var __iter1 = data;
-      if (! (__iter1 instanceof Array || typeof __iter1 == "string" || __is_typed_array(__iter1) || __is_some_array(__iter1) )) { __iter1 = __object_keys__(__iter1) }
-      for (var __idx1=0; __idx1 < __iter1.length; __idx1++) {
-        var pos = __iter1[ __idx1 ];
-        tmp = data[((pos.__uid__) ? pos.__uid__ : ((pos instanceof Array) ? JSON.stringify(pos) : pos))];
-        if ((tmp.__getslice__(undefined, 3, undefined) instanceof Array ? JSON.stringify(tmp.__getslice__(undefined, 3, undefined))==JSON.stringify("$$$") : tmp.__getslice__(undefined, 3, undefined)==="$$$")) {
-          x = tmp.__getslice__(3, undefined, undefined).split(":");
-          fun = x[0];
-          parm = null;
-          if (( len(x) ) > 1) {
-            parm = x[1];
-          }
-          if ((fun instanceof Array ? JSON.stringify(fun)==JSON.stringify("PROGRESS") : fun==="PROGRESS")) {
-            var __left0,__right1;
-            __left0 = parm;
-            __right1 = "%";
-            $("#task_progress").css("width", (((typeof(__left0) instanceof Array ? JSON.stringify(typeof(__left0))==JSON.stringify("number") : typeof(__left0)==="number")) ? (__left0 + __right1) : __add_op(__left0, __right1)));
-          }
-        } else {
-          obj.append(data[((pos.__uid__) ? pos.__uid__ : ((pos instanceof Array) ? JSON.stringify(pos) : pos))]);
-          obj.append("<br />");
-          obj[0].scrollTop = obj[0].scrollHeight;
-        }
-      }
-    }
-
-    __DOLLAR__.post("/tasks/get_messages", __jsdict([["id", "{{object.id}}"], ["id_start", start_id_{{object.id}}]]), _on_post);
-  } else {
-    clearInterval(timer_{{object.id}});
-  }
-}
-
-timer_{{object.id}} = setInterval(on_timer, 1000);
-on_timer();
-start_id_{{object.id}} = 0;
-var _on_keydown = function(event) {
-  
-  if ((event.keyCode instanceof Array ? JSON.stringify(event.keyCode)==JSON.stringify(13) : event.keyCode===13)) {
-    event.preventDefault();
-    return false;
-  }
-}
-
-$(window).keydown(_on_keydown);
-var _on_key_up = function(e) {
-  
-      var _fun = function(data) {
-    
-    $("#cmd").val("");
-  }
-
-  if ((e.keyCode instanceof Array ? JSON.stringify(e.keyCode)==JSON.stringify(13) : e.keyCode===13)) {
-    var __left2,__right3;
-    __left2 = $("#cmd").val();
-    __right3 = "\n";
-    __DOLLAR__.post("/tasks/put_message", __jsdict([["id", "{{object.id}}"], ["message", (((typeof(__left2) instanceof Array ? JSON.stringify(typeof(__left2))==JSON.stringify("number") : typeof(__left2)==="number")) ? (__left2 + __right3) : __add_op(__left2, __right3))]]), _fun);
-  }
-}
-
-$("#cmd").keyup(_on_key_up);
-var on_kill = function(fun) {
-  
-      var _on_kill = function(result) {
-    
-    if (__test_if_true__(result)) {
-      __DOLLAR__.post("/tasks/kill_thread", __jsdict([["id", "{{object.id}}"]]), fun);
-    }
-  }
-
-  BootstrapDialog.confirm("Kill task, are you sure?", _on_kill);
-}
 </script>
                         {% endif %}
                   {% else %}
@@ -265,7 +167,7 @@ var on_kill = function(fun) {
                 <table width="100%" cellspacing="0" cellpadding="3">
                         <tr>
                                 <td align="center">
-                                        <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent"></CTRLBUTTON><input type="submit" value="Kill task" name="OKBUTTON">
+                                        <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="Close"></CTRLBUTTON><input type="submit" value="Kill task" name="OKBUTTON">
                                 </td>
                         </tr>
                 </table>

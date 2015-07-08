@@ -1,1 +1,1 @@
-APPS=['schbuilder',]
+APPS=['schbuilder','schtools.simplescripts','schwiki.wiki',]

@@ -172,6 +172,7 @@ class AppManager:
                         ))
             except:
                 pass
+        print("get_apps", ret)
         return ret
 
     def get_menu_id(self):
@@ -214,8 +215,28 @@ class AppManager:
                                 app[1],
                                 user_param,
                                 ))
+                        if hasattr(module2, 'AdditionalUrls'):
+                            if callable(module2.AdditionalUrls):
+                                urls2 = module2.AdditionalUrls()
+                            else:
+                                urls2 = module2.AdditionalUrls
+                        for pos in urls2:
+                            ret.append((
+                                module_title,
+                                app_title,
+                                app_name,
+                                app_name + '/' + pos[0],
+                                pos[1],
+                                pos[2],
+                                pos[3],
+                                app[1],
+                                user_param,
+                                ))
+
+
                 except:
                     pass
+        print("get_app_items", ret)
         return ret
 
     def get_apps_width_perm(self):

@@ -49,6 +49,7 @@ urlpatterns = patterns('',
     
     
     
+    
 )
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)

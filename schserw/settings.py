@@ -196,8 +196,9 @@ ALLOWED_HOSTS = ['127.0.0.1', '127.0.0.2', '127.0.0.3', 'localhost', 'localhost:
 #SERVER_EMAIL = 'slawomir.cholaj@gmail.pl'
 #EMAIL_USE_TLS = True
 
-PYTHON_INTERPRETER = 'python'
-PYTHON_CONSOLE = 'ipython --classic'
+PYTHON_INTERPRETER = 'python3'
+#PYTHON_CONSOLE = 'ipython --classic'
+PYTHON_CONSOLE = 'python3'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

@@ -305,27 +305,17 @@ class SchAppFrame(wx.Frame):
                         try_run=2
                         while try_run>0:
                             try:
-                                print(os.path.join(dirname2, f))
-                                if 'tcc' in f:
-                                    pass
                                 if os.path.isdir(os.path.join(dirname2, f)):
                                     p = dirname2.split('/')
                                     mod_name = p[-2] + "." + p[-1] + "." + f
                                     x = p[-1] + '/' + f
-                                    if (not '.pytigon' in dirname) or (wx.GetApp().plugins and x in wx.GetApp().plugins):
+                                    if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins):
                                         if '.__' in mod_name:
                                             break
                                         mod = __import__(mod_name)
                                         mod_path = mod_name.split('.')
-                                        #print(mod_path)
-                                        #if mod_path[2].startswith('_'):
-                                        #    continue
                                         mod2 = getattr(mod, mod_path[1])
                                         mod3 = getattr(mod2, mod_path[2])
-                                        #print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
-                                        #print((mod_path[1], mod_path[2]))
-                                        #print(dir(mod3))
-                                        #print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
                                         destroy = mod3.init_plugin(wx.GetApp(), self, self.desktop, self._mgr, self.get_menu_bar(), self.toolbar_interface.get_toolbars(), self.aTable)
                                         if destroy != None:
                                             self.destroy_fun_tab.append(destroy)

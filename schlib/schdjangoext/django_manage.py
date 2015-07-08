@@ -13,20 +13,37 @@
 #Pytigon - wxpython and django application framework
 
 #author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+#copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import os
+import sys
+import django
 
-from . import schtest
+setup_old = django.setup
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
-    print(schtest.silnia(10))
+def setup():
+    import schserw.schsys.initdjango
+    schserw.schsys.initdjango.init_django()
+    setup_old()
+
+django.setup = setup
+
+def cmd(arg, from_main=False):
+    if from_main:
+        argv = arg
+    else:
+        argv=['manage.py', arg]
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(argv)
+
+
+def syncdb():
+    cmd('syncdb')
+
+
+def help():
+    cmd('help')
+

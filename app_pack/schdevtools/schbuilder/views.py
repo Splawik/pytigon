@@ -29,6 +29,9 @@ import codecs
 import six
 import signal, os, ctypes 
 from schlib.schtasks.base_task import get_process_manager
+from django.core.management import call_command
+from subprocess import call, Popen, PIPE, STDOUT
+import io
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -180,18 +183,19 @@ def run_python_shell_task2(request):
     new_url = "../../schsys/thread/%d/edit/" % id
     return HttpResponseRedirect(new_url)
 
-def run_python_shell_task(request, base_path, appset_name):
+def run_python_shell_task_base(request, base_path, appset_name):
     command = "from app_sets.%s.manage import *" % appset_name
     pconsole = settings.PYTHON_CONSOLE.split(' ')
     pconsole[0]=">>>" + pconsole[0]
     pconsole.append('-i')
     pconsole.append('-c')
     pconsole.append(command)
-    print("a1:", pconsole)
     param = ["python-shell",] + pconsole
-    print("a2:", param)
-    #id = tasks.task_put("python-shell", ">>>ipython3", '-i', '--classic',  '-c', command)
     id = get_process_manager().put(request, *param)
+    return id
+
+def run_python_shell_task(request, base_path, appset_name):
+    id = run_python_shell_task_base(request, base_path, appset_name)
     new_url = "../../schsys/thread/%d/edit/" % id
     return HttpResponseRedirect(new_url)
      
@@ -520,7 +524,8 @@ def manage(request, pk):
     pconsole.append(command)
     param = ["python-shell",] + pconsole
     id = get_process_manager().put(request, *param)
-    new_url = "../../schsys/thread/%d/edit/" % id
+    new_url = "../../../tasks/form/TaskListForm/%d/edit2__task" % id
+    #new_url = "../../schsys/thread/%d/edit/" % id
     return HttpResponseRedirect(new_url)
     
 
@@ -592,12 +597,14 @@ def template_edit2(request, pk):
     return HttpResponseRedirect(new_url)
     
 
-
+@dict_to_template('schbuilder/v_installer.html')
 
 
 
 
 def installer(request, pk):
+    
+    buf = ""
     
     appset = models.SChAppSet.objects.get(id=pk)
     
@@ -608,17 +615,45 @@ def installer(request, pk):
     zip = ZipWriter(zip_path+appset.name+".ptig", base_path, exclude=exclude)
     zip.toZip(base_path)
     
+    buf += "PACK PROGRAM FILES TO: " + zip_path+appset.name+".ptig\n"
+    
     p = os.path.expanduser("~")
     if isinstance(p, six.text_type):
         db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db")
     else:
         db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db").decode("cp1250")
     
+    buf += "ADDING DATABASE FILES\n"
+    
+    if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(settings.ROOT_PATH+"/global_db_settings.py"):
+        if os.path.exists(db_name):
+            os.rename(db_name, db_name+"."+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+".bak")
+        buf += "SYNC DATABASE FILE\n"
+        p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'syncdb', '--database', 'local', '--noinput'], stdout=PIPE, stderr=STDOUT)
+        output = p.communicate()[0]
+        buf+=output.decode('utf-8')
+        buf += "CREATE AUTO LOGIN ACCOUNT\n"
+        p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'shell'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        script = b"""from django.contrib.auth.models import User; User.objects._db='local'; User.objects.create_superuser('auto', '', 'anawa')"""
+        output = p.communicate(input=script)[0]
+        buf+=output.decode('utf-8')
+    else:
+        if not os.path.exists(db_name):
+            buf += "SYNC DATABASE FILE\n"
+            p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'syncdb', '--noinput'], stdout=PIPE, stderr=STDOUT)
+            output = p.communicate()[0]
+            buf+=output.decode('utf-8')
+            buf += "CREATE AUTO LOGIN ACCOUNT\n"
+            p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'shell'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+            script = b"""from django.contrib.auth.models import User; User.objects.create_superuser('auto', '', 'anawa')"""
+            output = p.communicate(input=script)[0]
+            buf+=output.decode('utf-8')
+    
     zip.write(db_name, name_in_zip=appset.name+".db")
-    
     zip.close()
+    buf += "END\n"
     
-    return HttpResponse('<html><body>Hello world</body></html>')
+    return { 'object_list': buf.split('\n') }
     
 
 

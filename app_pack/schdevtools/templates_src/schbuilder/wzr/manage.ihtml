@@ -2,28 +2,15 @@
 import os
 import sys
 
-sys.path.append("./../../ext_lib")
-sys.path.append("./../..")
+base_path = __file__.replace("manage.py", "")
+if base_path == "":
+    base_path = "./"
+else:
+    os.chdir(base_path)
+sys.path.append(base_path + "../../ext_lib")
+sys.path.append(base_path + "../..")
 
-import django
-
-setup_old = django.setup
-
-def setup():
-    import schserw.schsys.initdjango
-    schserw.schsys.initdjango.init_django()
-    setup_old()
-
-django.setup = setup
-
-def cmd(arg, from_main=False):
-    if from_main:
-        argv = arg
-    else:
-        argv=['manage.py', arg]
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
-    from django.core.management import execute_from_command_line
-    execute_from_command_line(argv)
+from schlib.schdjangoext.django_manage import *
 
 if __name__ == "__main__":
     cmd(sys.argv, from_main=True)

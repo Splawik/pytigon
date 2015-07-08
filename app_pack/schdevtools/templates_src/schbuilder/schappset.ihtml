@@ -25,11 +25,12 @@
             if '/run' in href:
                 import subprocess
                 import threading
+                import sys
                 def app_process():
                     cmd = wx.GetApp().scr_path+"/pytigon.py"
                     appset = href.split('_')[-1].split('?')[0]
                     arg = "-a "+appset
-                    subprocess.call(["python", cmd, arg], shell=False)
+                    subprocess.call([sys.executable, cmd, arg], shell=False)
                 threading.Thread(target = app_process).start()
                 return True
             return href
