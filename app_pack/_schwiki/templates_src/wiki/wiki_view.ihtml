@@ -1,0 +1,102 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with form_info=False show_form=False form_width=470 form_height=665
+        {{ block.super }}
+
+
+%% jquery_ovr2
+    .var options = {
+    .    success: RefreshWin2
+    .}
+    .function RefreshWin2(responseText, statusText) {
+    .    location.href = "/schwiki/{{subject}}/{{page_name}}/view/"
+    .}
+
+%% extrastyle
+    %if standard_web_browser:
+        {% css_link 'pygments/pygments_style.css' %}
+
+%% pythoncode
+    script language=python
+
+        def init_form(self):
+            self.GetParent().register_signal(self, "refresh_controls")
+
+        def refresh_controls(self):
+            print("refresh_controls")
+            self.GetParent().refresh_html()
+            print("refresh_controls_2")
+
+    %if standard_web_browser:
+        link rel=Stylesheet,,,type=text/css,,,href=^auto/schwiki/css/wiki.css
+
+%% table_title
+
+%% scroll
+
+%% _nav
+
+%% form_rect
+    .width: 600, height: 890
+
+%% form_bar
+    % if not standard_web_browser
+        % if perms.schwiki.add_page:
+            table width=100%,,,class=form_bar
+                tr
+                    % if False
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                            CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                    % if content
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/wiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stronę,,,SRC=client://apps/accessories-text-editor.png
+                    % else
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=110,,,height=36
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/wiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stronę jako wiki,,,SRC=client://apps/accessories-character-map.png
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/wiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stronę jako ihtml,,,SRC=client://actions/format-indent-more.png
+                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/wiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stronę jako html,,,SRC=client://apps/accessories-text-editor.png
+                    td width=5
+                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
+                        span class=form_title
+                            %%form_title
+                                {{title|wiki_href|safe}}
+
+
+%% list_content_header
+    % if standard_web_browser and perms.schwiki.add_page:
+        a data-toggle=collapse,,,href=#collapse,,,style=position:fixed;right: 7px;
+            span class=glyphicon glyphicon-resize-full
+        div id=collapse,,,class=panel-collapse collapse
+            {{ block.super }}
+
+
+%% list_content_title
+    h4 style=white-space:nowrap;...{{subject}}: {{page_name}}
+
+%% list_content_actions
+    % if content
+        % button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę"
+    % else
+        % button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę wiki"
+        % button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę ihtml"
+        % button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę html"
+
+%% form
+    % if perms.schwiki.add_page
+        {{ block.super }}
+    % else
+        {{content|wikify|safe}}
+
+%% list_content_body
+    div class=panel-body
+        % if content
+            {{content|wikify|safe}}
+        % else
+            .Ta strona jeszcze nie istnieje!
+

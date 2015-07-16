@@ -1,0 +1,351 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        from base64 import b32encode, b32decode
+        from schlib.schtools.schhtmlgen import Html as Hgen
+        from PIL import Image
+
+        def init_form(self):
+            self.panels_dir=[]
+            self.panels_state=[]
+            self.tab  = 0
+            self.tab2 = 1
+            for pos in range(0,8):
+                self.panels_dir.append([pos+1, 0, "/", False])
+                self.panels_state.append(None)
+            #self.panels_dir[0][2]='/home/cholajs/usr/samples/wxPython/wxPython'
+            #self.panels_dir[1][2]='/media'
+            #self.panels_dir[2][2]='/home/scholaj/test'
+
+            paths = wx.StandardPaths.Get()
+            self.panels_dir[0][2] = paths.GetDocumentsDir()
+            self.panels_dir[1][2] =paths.GetLocalDataDir()
+            self.panels_dir[2][2] = paths.GetUserLocalDataDir()
+
+            self.panels_to_refresh=[]
+            
+            aTable = [
+                    (0, wx.WXK_F1,  self.OnHelp),
+                    (0, wx.WXK_F2,  self.OnRename),
+                    (0, wx.WXK_F3,  self.OnView),
+                    (0, wx.WXK_F4,  self.OnEdit),
+                    (0, wx.WXK_F5,  self.OnCopy),
+                    (0, wx.WXK_F6,  self.OnMove),
+                    (0, wx.WXK_F7,  self.OnMkDir),
+                    (0, wx.WXK_F8,  self.OnDelete),
+                    (0, wx.WXK_F9,  self.OnTest),
+                    (0, wx.WXK_F10, self.OnUserMenu),
+                    (0, wx.WXK_TAB, self.OnTab),
+                    (0, wx.WXK_BACK, self.OnBack),
+                    (0, wx.WXK_HOME, lambda event: self.CMD.GotoFirstRow()),
+                    (0, wx.WXK_END, lambda event: self.CMD.GotoLastRow())
+                     ]
+
+            self.CMD.GetTable().can_append=False
+            self.CMD.set_acc_key_tab(aTable)
+
+            self.CMD.Bind(wx.EVT_CHAR, self.OnChar)
+            self.CMD.DisableCellEditControl()
+            self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"//")
+            self.CMD.GetTable().refresh(0)
+
+            self.PANELS.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
+            self.RefreshHtml()
+            Image.init()
+            self.edit_img_win = None
+            wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.OnSelectCell)
+            self.PANELS.Body.filter_url = self.filter_url
+
+        def _transformItem(self, item):
+            from schlib.schfs.vfstools import replace_dot
+            item2 = replace_dot(item)
+            if len(item2)>32:
+                x = item2[-28:]
+                id = x.find('/')
+                if id>0:
+                    item2 = '...'+x[id+1:]
+                else:
+                    item2 = '...'+item[-27:]
+            return item2
+
+        def OnSetFocus(self, evt):
+            self.CMD.SetFocus()
+
+        def ShowItem(self, nr, item):
+            strong = False
+            if nr == self.tab:
+                color = wx.GetApp().COLOUR_INFOBK
+                strong = True
+            elif nr == self.tab2:
+                strong = True
+                #color = wx.GetApp().COLOUR_SHADOW
+                #color = wx.GetApp().COLOUR_INFOBK
+                color = wx.GetApp().COLOUR_BACKGROUND
+            else:
+                color = wx.GetApp().COLOUR_BACKGROUND
+
+            td = Hgen("td")
+            td.setattr("bgcolor='%s' width='50%%' border='1'" % color)
+
+            item2 = self._transformItem(item)
+
+            a = td.append("a", "href='%s'" % str(nr))
+            if len(item2)>24:
+                font = a.append("small", "")
+            else:
+                font = a
+            if strong:
+                txt = font.append("strong")
+                txt.value  = str(nr+1) + ". " + item2
+            else:
+                font.value = str(nr+1) + ". " + item2
+            return td
+
+        def RefreshHtml(self):
+            html = Hgen("html", "")
+            body = html.append("body", "bgcolor='%s'" % wx.GetApp().COLOUR_BACKGROUND)
+            table = body.append("table", "width='99%'")
+            for i in range(3):
+                tr = table.append('tr')
+                tr.append( self.ShowItem(i, self.panels_dir[i][2]) )
+                tr.append( self.ShowItem(i+3, self.panels_dir[i+3][2]) )
+            self.PANELS.set_page(html.dump())
+
+        def filter_url(self, target, href):
+            print("href:", href)
+            id = int(href)
+            if id != self.tab:
+                self.tab2 = self.tab
+                self.tab = id
+                self.ChangePanel()
+            return True
+
+        def ChangePanel(self):
+            print("X:", self.tab2, self.tab)
+            self.panels_state[self.tab2]=self.CMD.get_table_and_state()
+
+            if self.panels_state[self.tab]==None:
+                print("X1")
+                self.CMD.duplicate_table_and_state()
+                self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[self.tab][2].encode('utf-8') ).decode('utf-8')+"//")
+                self.panels_state[self.tab]=self.CMD.get_table_and_state()
+                self.CMD.GetTable().refresh(0)
+            else:
+                print("X2", self.tab, self.panels_state[self.tab])
+                self.CMD.set_table_and_state(self.panels_state[self.tab])
+
+                if self.panels_dir[self.tab][3]:
+                    self.panels_dir[self.tab][3]=False
+                    self.CMD.GetTable().refresh(0)
+
+            self.RefreshHtml()
+
+
+        def OnChar(self, evt):
+            #print "OnChar"
+            if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('8'):
+                i = evt.KeyCode - ord('1')
+                if evt.ControlDown():
+                    if i != self.tab2:
+                        self.tab2 = i
+                        self.RefreshHtml()
+                else:
+                    if i != self.tab:
+                        self.tab2 = self.tab
+                        self.tab = i
+                        self.ChangePanel()
+            else:
+                okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
+                dialog = okno.Body
+                dialog.StartKey(evt.KeyCode)
+
+
+        def _RefreshPanels(self):
+            for panel in self.panels_dir:
+                if panel[2] in self.panels_to_refresh:
+                    panel[3]=True
+                    if self.tab+1 == panel[0]:
+                        self.CMD.GetTable().Refresh(0)
+                        self.RefreshHtml()
+            self.panels_to_refresh=[]
+
+        def OnBack(self, url):
+            #key = self.CMD.GetTable().key
+            #if key and len(key)>0:
+            #    key=key[:-1]
+            #else:
+            key = ""
+            self.CMD.GetTable().Filter(key)
+
+        def TableUrl(self, url):
+            self.panels_dir[self.tab][2] = b32decode(url.split('/')[-3]).decode('utf-8')
+            #print ">", self.panels_dir[self.tab][2]
+            self.CMD.GetTable().ClearState()
+            self.CMD.GetTable().Filter("")
+            self.CMD.SetGridCursor(0, 0)
+            self.CMD.MakeCellVisible(0, 0)
+            self.RefreshHtml()
+
+        def TableCommand(self, url):
+            #print url
+            self.OnEdit(None)
+
+        def OnHelp(self, event):
+            #print "OnHelp"
+            #print ">>"
+            #print self.CMD.GetTable().GetSelRows()
+            #print "<<"
+            pass
+
+        def OnRename(self, event):
+            win = self.NewChildPage("/schcommander/table/FileManager/rename")
+            #row  = self.CMD.GetGridCursorRow()
+            #path2 = self.panels_dir[self.tab2][2]
+            #self.CMD.GetTable().RunCmd('RENAME', (row, path2 ), 1)
+
+        def Rename(self, name):
+            ret = self.CMD.GetTable().RunCmd("RENAME", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
+            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            self._RefreshPanels()
+
+        def OnView(self, evt):
+            #print "OnView"
+            pass
+
+        def GetNameAndExt(self, row=None):
+            if row==None:
+                row = self.CMD.GetGridCursorRow()
+            rec = self.CMD.GetTable().get_rec(row)
+            file_name = rec[0].decode('utf-8')
+            print("X1")
+            href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+file_name+"/"
+            print("X2")
+            href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+file_name+"/"
+            print("X3")
+            #ret=b32decode(file_name)
+            try:
+                name = b32decode(file_name).decode('utf-8').split('/')[-1]
+            except:
+                name = b32decode(rec[0]).decode('utf-8').split('/')[-1]
+            print("X4")
+            ext = name.split(".")
+            if len(ext)>1:
+                return (file_name, name, ext[-1])
+            else:
+                return (file_name, name, "")
+
+        def IsImage(self, row=None):
+            id,name,ext = self.GetNameAndExt(row)
+            if '.'+ext.lower() in Image.EXTENSION:
+                return True
+            else:
+                return False
+
+        def ExecEditor(self, row):
+            id, name, ext = self.GetNameAndExt(row)
+            href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+            href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+id+"/"
+            if '.'+ext.lower() in Image.EXTENSION: # ('jpg', 'jpeg', 'gif', 'png', 'bmp'):
+                if self.edit_img_win:
+                    okno = self.edit_img_win
+                    okno.change_notebook_page_title(name)
+                else:
+                    okno = self.new_main_page("^standard/image_viewer/viewer.html", name, None)
+                    self.edit_img_win=okno
+            else:
+                if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java',):
+                    okno = self.new_main_page("^standard/editor/editor.html", name, None)
+                else:
+                    if ext.lower() in ('svg',):
+                        #href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
+                        okno = self.new_main_page("^standard/svgctrl/viewer.html", name, None)
+                    else:
+                        href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
+                        okno = self.new_main_page("^standard/hexview/viewer.html", name, None)
+            #print("Y1:", okno, okno.Body, dir(okno.Body))
+            okno.Body["EDITOR"].load_from_url(href, ext)
+            okno.Body["EDITOR"].goto_pos(0)
+            okno.Body["EDITOR"].set_save_path(href2)
+
+        def OnEdit(self, evt):
+            row = self.CMD.GetGridCursorRow()
+            return self.ExecEditor(row)
+
+        def OnCopy(self, evt):
+            win = self.NewChildPage("/schcommander/table/FileManager/copy")
+
+        def Copy(self, path2, cmd):
+            ret = self.CMD.GetTable().RunCmd(cmd, (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(path2)), 1)
+            self.CMD.GetTable().ClearState()
+            if 'thread' in ret:
+                if ret['thread'] != None:
+                    from apptools.schthreadwindow import EVT_THREAD_INFO
+                    wx.GetApp().GetTopWindow().Bind(EVT_THREAD_INFO, self.OnCmdFinish)
+                    self.panels_to_refresh.append(path2)
+                    if cmd == 'MOVE':
+                        self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+
+        def OnCmdFinish(self, evt):
+            self._RefreshPanels()
+            evt.Skip()
+
+        def OnMove(self, evt):
+            win = self.NewChildPage("/schcommander/table/FileManager/move")
+
+        def MkDir(self, name):
+            ret = self.CMD.GetTable().RunCmd("MKDIR", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
+            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            self._RefreshPanels()
+
+        def OnMkDir(self, evt):
+            win = self.NewChildPage("/schcommander/table/FileManager/mkdir")
+
+        def OnDelete(self, evt):
+            ret = self.CMD.GetTable().RunCmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode('TRASH')), 1)
+            self.CMD.GetTable().ClearState()
+            if 'thread' in ret:
+                if ret['thread'] != None:
+                    from apptools.schthreadwindow import EVT_THREAD_INFO
+                    wx.GetApp().GetTopWindow().Bind(EVT_THREAD_INFO, self.OnCmdFinish)
+                    self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+
+        def OnTest(self, evt):
+            #print "OnTest"
+            pass
+
+        def OnUserMenu(self, evt):
+            #print "OnUserMenu"
+            pass
+
+        def OnTab(self, evt):
+            i = self.tab2
+            self.tab2 = self.tab
+            self.tab =i
+            self.ChangePanel()
+
+
+        def OnSelectCell(self, evt):
+            row = evt.GetRow()
+            if self.edit_img_win and self.IsImage(row):
+                self.ExecEditor(row)
+            evt.Skip()
+
+
+%%form_title
+    .Commander
+
+%% content
+    table width=100%
+        tr
+            td
+                CTRLHTML name=PANELS,,,width=100%,,,height=80
+        tr
+            td
+                CTRLGRID name=CMD,,,width=100%,,,height=100%,,,READONLY=1,,,src=/schcommander/table/FileManager/grid/_/_/
+
