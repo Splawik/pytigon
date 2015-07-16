@@ -46,7 +46,7 @@ sys.path.append(ROOT_PATH + '/schappdata/schplugins')
 ADMINS = (('Slawomir Cholaj', 'slawomir.cholaj@gmail.com'), )
 MANAGERS = ADMINS
 
-AUTH_PROFILE_MODULE = 'schserw.schbase.Person'
+#AUTH_PROFILE_MODULE = 'schserw.schbase.Person'
 
 TIME_ZONE = 'Europe/Warsaw'
 LANGUAGE_CODE = 'pl'
@@ -109,6 +109,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request'
             ],
             'loaders': [
                 # insert your TEMPLATE_LOADERS here
@@ -164,7 +165,7 @@ INSTALLED_APPS = [
     #'django.contrib.admin.apps.AdminConfig',
 #    'django.contrib.databrowse',
     'schserw.schsys',
-    'schbase',
+#    'schbase',
 #    'schserw.schwiki',
     'django.contrib.staticfiles',
     'crispy_forms',

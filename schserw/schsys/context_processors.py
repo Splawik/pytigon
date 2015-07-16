@@ -172,7 +172,6 @@ class AppManager:
                         ))
             except:
                 pass
-        print("get_apps", ret)
         return ret
 
     def get_menu_id(self):
@@ -180,10 +179,8 @@ class AppManager:
         apps = self.get_apps_width_perm()
         for app in apps:
             if app[3] == self.appid():
-                print(">>>>", i)
                 return i
             i += 1
-        print(">>>>", 0)
         return 0
 
     def get_app_items(self):
@@ -236,7 +233,6 @@ class AppManager:
 
                 except:
                     pass
-        print("get_app_items", ret)
         return ret
 
     def get_apps_width_perm(self):

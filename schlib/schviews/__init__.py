@@ -33,6 +33,8 @@ from django.template import loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
+#from django.apps.apps import get_model
+#from django.apps import apps
 
 from .viewtools import transform_template_name, LocalizationTemplateResponse, ExtTemplateResponse
 from .form_fun import form_with_perms
@@ -173,7 +175,9 @@ class GenericTable(object):
             rows.template_name = template_name
         else:
             if field:
-                f = getattr(models.get_model(self.app, tab), field).related
+                x  = apps.get_model(self.app, tab)
+                y = getattr(x, field)
+                f = getattr(apps.get_model(self.app, tab), field).related
                 #f = getattr(apps.get_model(self.app + "." + tab), field).rel
                 try:
                     table_name = f.name

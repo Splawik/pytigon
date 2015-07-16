@@ -29,7 +29,7 @@ from {{app}}.models import *
 
 {% for table in tables %}
 @python_2_unicode_compatible
-class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}models.Model{%endif%}):
+class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%if table.proxy_model %}{{table.proxy_model}}{% else %} models.Model{% endif %}{%endif%}):
     {% if table.doc %}"""{% for line in table.doc.splitlines %}
     {{line|safe}}{% endfor %}
     """{% endif %}
@@ -41,6 +41,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}mod
         {% for line in table.metaclass_code.splitlines %}{{line|safe}}
         {% endfor %}
         {% endif %}
+        {% if table.proxy_model %}proxy=True{% endif %}
 
     {% if table.tree_tab == 1 %}
     parent = models.TreeForeignKey('self', null=True, blank=True, related_name='children')

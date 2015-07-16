@@ -1,7 +1,0 @@
-{# -*- coding: utf-8 -*- #}
-
-% extends "schcommander/copydialog.html"
-
-{%block OnOk%}Copy(self.FOLDERS.GetValue(), "MOVE"){%endblock%}
-
-{%block CmdTitle%}Przenieś do:{%endblock%}
