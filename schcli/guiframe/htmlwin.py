@@ -43,7 +43,7 @@ from schlib.schhtml.htmlviewer import HtmlViewerParser
 from schlib.schtools.data import is_null
 from schcli.guilib.schevent import *
 
-import agw.ribbon as RB
+import wx.lib.agw.ribbon as RB
 
 
 import six

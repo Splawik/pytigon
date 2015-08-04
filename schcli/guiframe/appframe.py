@@ -29,7 +29,7 @@ import wx
 import wx.html2
 import datetime
 #import agw.aui as aui
-from agw import aui
+from wx.lib.agw import aui
 
 from schcli.guilib.art_provider import ArtProviderFromIcon
 from schcli.guilib.schevent import * #@UnusedWildImport

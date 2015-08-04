@@ -20,7 +20,7 @@
 import wx
 import sys
 
-from agw import customtreectrl as CT
+from wx.lib.agw import customtreectrl as CT
 from schcli.guilib.schevent import *
 from schcli.toolbar.basetoolbar import ToolbarInterface, TYPE_TOOLBAR, \
     TYPE_BUTTONBAR, TYPE_PANELBAR
