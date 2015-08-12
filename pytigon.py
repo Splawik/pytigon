@@ -65,8 +65,8 @@ def install_0():
 
 install_0()
 
-sys.path = [xp for xp in sys.path if not ('plat-win' in xp or 'python27.zip' in xp
-             or 'lib-tk' in xp or 'python35.zip' in xp)]
+#sys.path = [xp for xp in sys.path if not ('plat-win' in xp or 'python27.zip' in xp
+#             or 'lib-tk' in xp or 'python35.zip' in xp)]
 
 import zipfile
 import getopt
