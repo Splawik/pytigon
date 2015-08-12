@@ -21,7 +21,7 @@ import wx
 from schcli.guilib.schevent import *
 from autocomplete import TextCtrlAutoComplete
 from schcli.guilib.tools import bitmap_from_art_id, bitmaps_from_art_id
-from agw import flatmenu as FM
+from wx.lib.agw import flatmenu as FM
 
 _ = wx.GetTranslation
 

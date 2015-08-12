@@ -18,8 +18,8 @@
 #version: "0.1a"
 
 import wx
-import agw.aui as aui
-from agw.aui import framemanager
+import wx.lib.agw.aui as aui
+from wx.lib.agw.aui import framemanager
 from schlib.schtools.wiki import wiki_from_str
 
 

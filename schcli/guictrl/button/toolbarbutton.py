@@ -19,8 +19,8 @@
 
 import wx
 import wx.lib.buttons as buttons
-from agw.ribbon import art
-import agw.ribbon as RB
+from wx.lib.agw.ribbon import art
+import wx.lib.agw.ribbon as RB
 from wx.lib import imageutils
 
 

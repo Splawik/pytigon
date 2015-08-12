@@ -6,7 +6,7 @@
         <script language="python">
         def init_form(self):
             import datetime
-            import agw.aui as aui
+            import wx.lib.agw.aui as aui
             self.now_fun = datetime.datetime.now
             self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
             self.WEB.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
