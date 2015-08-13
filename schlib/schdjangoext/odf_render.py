@@ -35,9 +35,7 @@ Składnia:
                          _end_ zamieniane jest na: }}
 """
 
-
-template_dirs = getattr(settings, 'TEMPLATE_DIRS', None)
-
+template_dirs = getattr(settings, 'TEMPLATES')[0]['DIRS']
 
 class DocTemplateTransform(DocTransform):
     def process_template(self, doc_str, context):
