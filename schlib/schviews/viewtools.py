@@ -22,7 +22,7 @@ from django.db.models import Max, Min
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template.response import TemplateResponse
-from django.template import loader, RequestContext
+from django.template import loader, RequestContext, Context
 from django.views import generic
 from django.core import serializers
 
@@ -145,7 +145,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
     def render(self):
         if self.context_data['view'].doc_type()=='odf':
             self['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'
-            file_out, file_in = render_odf(self.template_name, None, self.resolve_context(self.context_data))
+            file_out, file_in = render_odf(self.template_name, None, Context(self.resolve_context(self.context_data)))
             if file_out:
                 f = open(file_out,"rb")
                 self.content = f.read()

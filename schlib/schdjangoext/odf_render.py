@@ -85,7 +85,7 @@ def render_odf(
     debug=None,
     ):
         
-    if not context_instance.has_key('tbl'):
+    if not 'tbl' in context_instance:
         context_instance['tbl'] = DefaultTbl()
 
     if template_name.__class__ in (list, tuple):
