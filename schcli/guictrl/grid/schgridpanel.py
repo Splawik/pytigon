@@ -135,9 +135,13 @@ class SchGridPanel(wx.Panel):
             self.spanel.SetVirtualSize(self.toolbar.GetSize())
         grid.set_panel(self)
         self.Bind(wx.EVT_SIZE, self.on_size)
+        self.on_size()
 
-    def on_size(self, event):
-        panel_size = event.GetSize()
+    def on_size(self, event=None):
+        if event:
+            panel_size = event.GetSize()
+        else:
+            panel_size = self.GetSize()
         toolbar_size = self.toolbar.GetSize()
         if self.vertical:
             if toolbar_size[1] >= panel_size[1]:
@@ -157,7 +161,8 @@ class SchGridPanel(wx.Panel):
             self.spanel.SetRect(wx.Rect(0, 0, panel_size[0], dy))
             self.grid.SetRect(wx.Rect(0, dy + 2, panel_size[0], (panel_size[1]
                                - dy) - 2))
-        event.Skip()
+        if event:
+            event.Skip()
 
     def on_tool_click(self, event):
         id = event.GetId()

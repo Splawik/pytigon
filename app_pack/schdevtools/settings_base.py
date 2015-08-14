@@ -11,7 +11,11 @@ _rp = _lp+"/../.."
 sys.path.append(_lp)
 sys.path.append(_rp)
 
-from schserw.settings import *
+try:
+    from schserw.settings_local import *
+except:
+    from schserw.settings import *
+
 from apps import APPS
 
 try:
@@ -35,10 +39,6 @@ if len(URL_POSTFIX) > 0:
 else:
     STATIC_URL = '/static/'
 
-if len(URL_POSTFIX) > 0:
-    MEDIA_URL = '/' + URL_POSTFIX + '/site_media/'
-else:
-    MEDIA_URL = '/site_media/'
 
 #apps = []
 #base_apps_path = os.path.join(_lp, '..')
@@ -52,6 +52,10 @@ else:
 #        if os.path.isdir( os.path.join(base_apps_path2,ff)):
 #            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
 #                APPS.append(app+"."+ff)
+if len(URL_POSTFIX) > 0:
+    MEDIA_URL = '/' + URL_POSTFIX + '/site_media/'
+else:
+    MEDIA_URL = '/site_media/'
 
 sys.path.append(LOCAL_ROOT_PATH)
 

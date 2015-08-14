@@ -62,7 +62,7 @@
         gen,Build
         |
         field_list/schapp_set,Applications,app
-        field_edit/user_app_template,Application template,app_templ,_top2
+        field_edit/user_app_template,Application template,app_templ,_top
         field_edit/doc,Doc,doc,_top2
         prj_export,Export
         manage,Manage

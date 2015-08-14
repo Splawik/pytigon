@@ -23,6 +23,7 @@ import wx
 import wx.lib.agw
 import wx.lib.agw.aui as aui
 import wx.lib.agw.aui.aui_utilities
+
 from schcli.toolbar.basetoolbar import ToolbarInterface, TYPE_TOOLBAR, \
     TYPE_BUTTONBAR, TYPE_PANELBAR
 from schcli.guictrl.schbasectrl import SchBaseCtrl

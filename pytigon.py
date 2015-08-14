@@ -33,7 +33,8 @@ if platform.system() == "Windows":
     myappid = 'slawomir_cholaj.pytigon.main.01'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-INSPECTION = False
+INSPECTION = True
+
 CWD_PATH = os.getcwd()
 SCR_PATH = os.path.dirname(__file__)
 if SCR_PATH == '':
@@ -71,6 +72,7 @@ install_0()
 import zipfile
 import getopt
 import wx
+
 from schcli.guilib import schimage
 from schcli.guilib import pytigon_install
 

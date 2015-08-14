@@ -11,7 +11,11 @@ _rp = _lp+"/../.."
 sys.path.append(_lp)
 sys.path.append(_rp)
 
-from schserw.settings import *
+try:
+    from schserw.settings_local import *
+except:
+    from schserw.settings import *
+
 from apps import APPS
 
 try:

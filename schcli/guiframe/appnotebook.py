@@ -39,6 +39,7 @@ class AppNotebook(aui.AuiNotebook):
         self.last_active = None
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
 
+
     def on_closing(self, event):
         idn = event.GetSelection()
         if idn >= 0:

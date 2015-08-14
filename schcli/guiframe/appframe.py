@@ -403,8 +403,6 @@ class SchAppFrame(wx.Frame):
         wx.CallAfter(self.UpdateWindowUI)
 
 
-
-
     def on_idle(self, event):
         for obj in self.idle_objects:
             obj.on_idle()
