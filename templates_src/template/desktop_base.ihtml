@@ -17,7 +17,7 @@
     {% jscript_link 'jquery_plugins/csrf.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/dataTables.bootstrap.js' %}
-    {% jscript_link 'jquery_plugins/jquery.text3d.js' %}
+    {% jscript_link '__jquery_plugins/jquery.text3d.js' %}
 
     {% jscript_link 'jquery_plugins/datatables/ColReorder/js/dataTables.colReorder.js' %}
     {% jscript_link 'jquery_plugins/datatables/ColVis/js/dataTables.colVis.js' %}
@@ -26,6 +26,8 @@
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
+    {% jscript_link 'themes/bootstrap-material-design/js/material.js' %}
+    {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
@@ -57,6 +59,7 @@
 
 %% jquery_ready
     .jquery_ready()
+    .$.material.init();
 
 %% jquery_ready_end
   });
@@ -87,6 +90,11 @@
     {% css_link 'themes/bootstrap/jquery-ui.css' %}
     {% css_link '__bootstrap/css/cosmo.bootstrap.min.css' %}
     {% css_link 'bootstrap/css/bootstrap.min.css' %}
+    {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
+    {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
+    {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
+
+
 
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
@@ -108,7 +116,7 @@
     <div class="bs-example bs-example-tabs">
 
 %% topmenu_start
-    <ul class="nav nav-tabs" id='tabs'><li><h4 style="padding: 0px 30px;" class="text3d"><strong>{{appset_title}}</strong></h4></li>
+    <ul class="nav nav-tabs" id='tabs'><li><h3 style="padding: 0px 50px 0px 5px; margin: 5px 0px;" class="txt3d">{{appset_title}}</h3></li>
 
 %% topmenu
     li class=topmenu
@@ -117,7 +125,7 @@
 
 %%topmenu_end
      </ul>
-     <div id="myTabContent" class="tab-content" style="padding:4px; background-color:#fff; width=400px;">
+     <div id="myTabContent" class="tab-content" style="padding:4px; width=400px;">
 
 
 %% submenu
@@ -126,9 +134,9 @@
             </div>
         <div id="{{app_name}}" class="tab-pane tab-tab">
     % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
-        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="slide-left">{{opis}}</a>
     % else
-        <a href="{%url 'start' %}{{url}}" class="btn btn-info btn-sm menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+        <a href="{%url 'start' %}{{url}}" class="btn btn-sm btn-raised menu-href ladda-button" data-style="slide-left">{{opis}}</a>
     % if forloop.last
         </div>
 

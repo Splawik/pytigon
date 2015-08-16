@@ -33,7 +33,7 @@ if platform.system() == "Windows":
     myappid = 'slawomir_cholaj.pytigon.main.01'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-INSPECTION = True
+INSPECTION = False
 
 CWD_PATH = os.getcwd()
 SCR_PATH = os.path.dirname(__file__)
