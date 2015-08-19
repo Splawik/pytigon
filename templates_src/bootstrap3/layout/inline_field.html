@@ -1,0 +1,24 @@
+!!!
+{% load crispy_forms_field %}
+
+{% if field.is_hidden %}
+	{{ field }}
+{% else %}
+    {% if field|is_checkbox %}
+        <div id="div_{{ field.auto_id }}" class="checkbox">
+            <label for="{{ field.id_for_label }}" class="{% if field.field.required %} requiredField{% endif %}">
+                {{ field.label|safe }}
+                {% crispy_field field 'class' 'checkbox' %}
+            </label>
+        </div>
+    {% else %}
+        <div id="div_{{ field.auto_id }}" class="form-group">
+            {% if form_show_labels %}
+                <label for="{{ field.id_for_label }}" class="sr-only{% if field.field.required %} requiredField{% endif %}">
+                    {{ field.label|safe }}
+                </label>
+            {% endif %}
+            {% crispy_field field 'placeholder' field.label 'class' 'form-control floating-label'       %}
+        </div>
+    {% endif %}
+{% endif %}
