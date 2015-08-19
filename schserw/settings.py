@@ -19,7 +19,7 @@
 
 import os
 import sys
-
+import platform
 
 APPSET_NAME = "Pytigon"
 
@@ -204,3 +204,12 @@ PYTHON_CONSOLE = 'python3'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
+
+if platform.system() == "Linux":
+    NODEJS = 'nodejs'
+else:
+    NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
+
+print(NODEJS)
+    
+RAPYD = ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'

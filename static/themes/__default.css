@@ -18,7 +18,7 @@ div.ext_padding { padding: 0px 14px; }
 
 
 .TableFiltr {
-    //line-height: 32px;
+    line-height: 32px;
     margin-top: 0px;
     margin-bottom: 3px;
     margin-left: 0px;
@@ -39,12 +39,12 @@ div.ext_padding { padding: 0px 14px; }
 }
 
 .TableFiltr .form-group {
-    //line-height:18px;
+    line-height:18px;
 }
 
-//.TableFiltr ::-webkit-input-placeholder { color:transparent; }
-//.TableFiltr ::-moz-placeholder { color:transparent; }
-//.TableFiltr :-ms-input-placeholder { color:transparent; }
+.TableFiltr ::-webkit-input-placeholder { color:transparent; }
+.TableFiltr ::-moz-placeholder { color:transparent; }
+.TableFiltr :-ms-input-placeholder { color:transparent; }
 
 .TableFiltr .form-group label {
     display: block;
@@ -57,7 +57,7 @@ div.ext_padding { padding: 0px 14px; }
 }
 
 .TableFiltr {
-    //line-height: 55px;
+    line-height: 55px;
 }
 
 .TableFiltr .btn {
@@ -66,9 +66,9 @@ div.ext_padding { padding: 0px 14px; }
 
 
 
+
 .tabsort td {
 	padding: 8px;
-	vertical-align: bottom;
 }
 
 .tabsort th {
@@ -113,7 +113,7 @@ td.control {
 
 
 #tabs2 > li > a {
-    //line-height: 0.4;
+    line-height: 0.4;
 }
 
 
@@ -138,18 +138,21 @@ body.fixed .menu_offset {
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-//    font-family: Calibri,Candara,Arial,sans-serif;
+    font-family: Calibri,Candara,Arial,sans-serif;
 }
 
+/*
 
 .form-control {
     height: 33px;
-    //padding: 5px 18px;
+    padding: 5px 18px;
 }
 
-//.btn {
-//    padding: 4px 18px;
-//}
+*/
+
+.btn {
+    padding: 4px 18px;
+}
 
 .pagination {
     margin: 0px 0px;
@@ -157,45 +160,24 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 
 .txt3d {
-  color: rgba(255,255,255,0.9);
+  color: #DFF;
   font-weight:900;
-  text-shadow: 4px 4px 5px rgba(0, 0, 0, 1);
+  text-shadow: 0 1px 0 #999,
+               0 2px 0 #aaa,
+               0 1px 2px rgba(0,0,0,.3),
+               0 2px 3px rgba(0,0,0,.2);
+
 }
 
 .nav-tabs > li.topmenu.active {
-    background-color: #8ba;	
+    background-color: #32b4a8;
 }
 
-.tab-content {	
-    background-color: #8ba;	
+.tab-content {
+    background-color: #32b4a8;
 }
+
 
 .nav-tabs {
     border-bottom: 0px;
-}
-
-.tabsort .btn {
-    padding: 5px 10px;
-    margin: -5px 0px 0px 0px;
-    vertical-align: top;
-}
-
-.tabsort .btn-group {
-    padding: 2px 2px;
-    margin: -5px 0px 0px 0px;
-    vertical-align: top;
-}
-
-
-.checkbox .checkbox-material::before {
-    top: -5px;
-    left: -2px;
-}
-
-.TableFiltr .checkbox .checkbox-material::before {
-    left: 0px;
-}
-
-.checkbox .checkbox-material .check {
-    margin: 0px 6px 0px 0px;
 }

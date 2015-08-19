@@ -37,12 +37,7 @@ from django.template.base import add_to_builtins
 import schlib.schindent.indent_style
 
 def get_py_to_js_compiler():
-    if platform.system() == "Linux":
-        node = 'nodejs'
-    else:
-        node  = settings.ROOT_PATH + '/ext_prg/node.exe'
-    rapyd = settings.ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
-    return [node, rapyd, "-p", "-b", "-m"]
+    return [settings.NODEJS, settings.RAPYD, "-p", "-b", "-m"]
 
 schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
@@ -138,7 +133,8 @@ if settings.DEBUG:
 
                     with open(src, "rt") as f:
                         code = f.read()
-                        try:
+                        #try:
+                        if True:
                             if file_name.lower().endswith('.py'):
                                 codejs = schlib.schindent.indent_style.py_to_js(code, root)
                             else:
@@ -146,5 +142,5 @@ if settings.DEBUG:
 
                             with open(dest, "wt") as f2:
                                 f2.write(codejs)
-                        except:
-                            print("compile error - file:", src)
+                        #except:
+                        #    print("compile error - file:", src)

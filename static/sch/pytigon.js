@@ -469,6 +469,7 @@ function fragment_init(elem) {
         "format": "YYYY-MM-DD hh:mm",
         "language": "pl"
     });
+    jQuery.material.init();
 }
 function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
@@ -667,8 +668,8 @@ function _on_menu_href(elem, title) {
                 }
             }
             if (APPLICATION_TEMPLATE === "standard" && _$rapyd$_in("btn", classname)) {
-                jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
-                jQuery(elem).removeClass("btn-info").addClass("btn-warning");
+                jQuery("a.menu-href").removeClass("btn-warning");
+                jQuery(elem).addClass("btn-warning");
             }
             if (WAIT_ICON) {
                 WAIT_ICON.start();
@@ -743,8 +744,8 @@ window.addEventListener("popstate", function(e) {
             ACTIVE_PAGE = new Page(0, jQuery("#body_body"));
             ACTIVE_PAGE.set_href(document.location);
             if (APPLICATION_TEMPLATE === "standard") {
-                jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
-                jQuery("#" + x[1]).removeClass("btn-info").addClass("btn-warning");
+                jQuery("a.menu-href").removeClass("btn-warning");
+                jQuery("#" + x[1]).addClass("btn-warning");
             }
         }
         PUSH_STATE = true;
@@ -755,7 +756,7 @@ window.addEventListener("popstate", function(e) {
             jQuery("#body_body").html("");
             ACTIVE_PAGE = null;
             if (APPLICATION_TEMPLATE === "standard") {
-                jQuery("a.menu-href").removeClass("btn-warning").addClass("btn-info");
+                jQuery("a.menu-href").removeClass("btn-warning");
             }
         }
     }

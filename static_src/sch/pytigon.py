@@ -37,6 +37,7 @@ def fragment_init(elem=None):
 
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+    jQuery.material.init()
 
 
 def page_init(id, first_time = True):
@@ -224,8 +225,12 @@ def _on_menu_href(elem, title=None):
                     WAIT_ICON2 = False
 
             if APPLICATION_TEMPLATE == 'standard' and 'btn' in classname:
-                jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
-                jQuery(elem).removeClass('btn-info').addClass('btn-warning')
+                #jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
+                #jQuery(elem).removeClass('btn-info').addClass('btn-warning')
+
+                jQuery('a.menu-href').removeClass('btn-warning')
+                jQuery(elem).addClass('btn-warning')
+
             if WAIT_ICON:
                 WAIT_ICON.start()
             else:
@@ -303,8 +308,11 @@ window.addEventListener('popstate',
                 #menu.on_new_page('body_body')
 
                 if APPLICATION_TEMPLATE == 'standard':
-                    jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
-                    jQuery('#'+x[1]).removeClass('btn-info').addClass('btn-warning')
+                    #jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
+                    #jQuery('#'+x[1]).removeClass('btn-info').addClass('btn-warning')
+
+                    jQuery('a.menu-href').removeClass('btn-warning')
+                    jQuery('#'+x[1]).addClass('btn-warning')
 
                 #page_init('body_body')
             PUSH_STATE = True
@@ -315,7 +323,8 @@ window.addEventListener('popstate',
                 jQuery('#body_body').html("")
                 ACTIVE_PAGE = None
                 if APPLICATION_TEMPLATE == 'standard':
-                    jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
+                    jQuery('a.menu-href').removeClass('btn-warning')
+                    #.addClass('btn-info')
 ,False)
 
 

@@ -26,8 +26,9 @@
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
-    {% jscript_link 'themes/bootstrap-material-design/js/material.js' %}
+    
     {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
+    {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
@@ -87,7 +88,7 @@
     {% css_link 'jquery_plugins/datatables/Responsive/css/dataTables.responsive.css' %}
     {% css_link 'jquery_plugins/datatables/Scroller/css/dataTables.scroller.css' %}
 
-    {% css_link 'themes/bootstrap/jquery-ui.css' %}
+    {% css_link '__themes/bootstrap/jquery-ui.css' %}
     {% css_link '__bootstrap/css/cosmo.bootstrap.min.css' %}
     {% css_link 'bootstrap/css/bootstrap.min.css' %}
     {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
@@ -102,8 +103,8 @@
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
 
-    {% css_link 'themes/default.css' %}
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
+    {% css_link 'themes/default.css' %}
 
 
 %% css_start
@@ -134,9 +135,9 @@
             </div>
         <div id="{{app_name}}" class="tab-pane tab-tab">
     % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
-        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % else
-        <a href="{%url 'start' %}{{url}}" class="btn btn-sm btn-raised menu-href ladda-button" data-style="slide-left">{{opis}}</a>
+        <a href="{%url 'start' %}{{url}}" class="btn btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % if forloop.last
         </div>
 
@@ -169,16 +170,6 @@
 
 
 %% tabs
-    % if True:
-        % component id='example2':
-            ReactBootstrap.Alert bsStyle=warning
-                strong...Holy king!
-                .Sławomir Chołaj!
-
-
-        script
-            $('#example2').text("")
-
     % if NO_TABS or application_type != 'modern':
         {{block.super}}
     % else

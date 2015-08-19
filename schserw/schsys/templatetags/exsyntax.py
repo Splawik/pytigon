@@ -860,6 +860,7 @@ class Form(Node):
                     form.helper.field_class = 'col-lg-9'
                 else:
                     form.helper.form_class = 'form-inline'
+                    form.helper.form_show_labels = False
                     form.helper.field_template = 'bootstrap3/layout/inline_field.html'
 
         if output:
