@@ -125,6 +125,18 @@
                         
                     small:
                         font-size: 60%
+                        
+                    table.standard:
+                        width:100%
+
+                    table.standard tr th:
+                        bgcolor:#eee
+                        padding:2
+                        cellpadding:2
+
+                    table.standard tr td:
+                        padding:2
+                        cellpadding:2
 
 %% body
         <body>

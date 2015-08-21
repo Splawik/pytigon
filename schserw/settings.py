@@ -210,6 +210,4 @@ if platform.system() == "Linux":
 else:
     NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
 
-print(NODEJS)
-    
 RAPYD = ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
