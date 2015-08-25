@@ -16,7 +16,7 @@ BASE_PATH = None
 WAIT_ICON = None
 WAIT_ICON2 = False
 MENU_ID = 0
-
+BASE_FRAGMENT_INIT = None
 
 import page
 import tabmenuitem
@@ -37,7 +37,8 @@ def fragment_init(elem=None):
 
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
-    jQuery.material.init()
+    if BASE_FRAGMENT_INIT:
+        BASE_FRAGMENT_INIT()
 
 
 def page_init(id, first_time = True):
@@ -143,11 +144,12 @@ def page_init(id, first_time = True):
     fragment_init(ACTIVE_PAGE.page)
 
 
-def app_init(application_template, menu_id, lang, base_path):
-    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH
+def app_init(application_template, menu_id, lang, base_path, base_fragment_init):
+    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH, BASE_FRAGMENT_INIT
     APPLICATION_TEMPLATE = application_template
     LANG = lang
     BASE_PATH = base_path
+    BASE_FRAGMENT_INIT = base_fragment_init
     if IS_POPUP:
         SUBWIN = True
     else:

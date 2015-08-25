@@ -1,0 +1,31 @@
+.nav-tabs > li.topmenu.active {
+    background-color: #8ba;	
+}
+
+
+.tab-content {	
+    background-color: #8ba;	
+}
+
+
+.nav-tabs {
+    border-bottom: 0px;
+}
+
+
+.checkbox .checkbox-material::before {
+    top: -5px;
+    left: -2px;
+}
+
+
+.TableFiltr .checkbox .checkbox-material::before {
+    left: 0px;
+}
+
+
+.checkbox .checkbox-material .check {
+    margin: 0px 6px 0px 0px;
+}
+
+

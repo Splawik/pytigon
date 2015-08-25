@@ -11,6 +11,7 @@ BASE_PATH = null;
 WAIT_ICON = null;
 WAIT_ICON2 = false;
 MENU_ID = 0;
+BASE_FRAGMENT_INIT = null;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -469,7 +470,9 @@ function fragment_init(elem) {
         "format": "YYYY-MM-DD hh:mm",
         "language": "pl"
     });
-    jQuery.material.init();
+    if (BASE_FRAGMENT_INIT) {
+        BASE_FRAGMENT_INIT();
+    }
 }
 function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
@@ -586,11 +589,12 @@ function page_init(id, first_time) {
     });
     fragment_init(ACTIVE_PAGE.page);
 }
-function app_init(application_template, menu_id, lang, base_path) {
+function app_init(application_template, menu_id, lang, base_path, base_fragment_init) {
     var SUBWIN;
     APPLICATION_TEMPLATE = application_template;
     LANG = lang;
     BASE_PATH = base_path;
+    BASE_FRAGMENT_INIT = base_fragment_init;
     if (IS_POPUP) {
         SUBWIN = true;
     } else {

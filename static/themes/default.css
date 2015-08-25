@@ -18,7 +18,6 @@ div.ext_padding { padding: 0px 14px; }
 
 
 .TableFiltr {
-    //line-height: 32px;
     margin-top: 0px;
     margin-bottom: 3px;
     margin-left: 0px;
@@ -38,14 +37,6 @@ div.ext_padding { padding: 0px 14px; }
     border: 0;
 }
 
-.TableFiltr .form-group {
-    //line-height:18px;
-}
-
-//.TableFiltr ::-webkit-input-placeholder { color:transparent; }
-//.TableFiltr ::-moz-placeholder { color:transparent; }
-//.TableFiltr :-ms-input-placeholder { color:transparent; }
-
 .TableFiltr .form-group label {
     display: block;
     white-space: nowrap;
@@ -56,15 +47,9 @@ div.ext_padding { padding: 0px 14px; }
     font-weight: bolder;
 }
 
-.TableFiltr {
-    //line-height: 55px;
-}
-
 .TableFiltr .btn {
     margin-top: 17px;
 }
-
-
 
 .tabsort td {
 	padding: 8px;
@@ -82,7 +67,6 @@ div.ext_padding { padding: 0px 14px; }
 .col_center {
     text-align:center;
 }
-
 
 .control_sel {
     font-weight: bold;
@@ -102,20 +86,9 @@ td.control {
     padding:10px;
 }
 
-
-.tab-tab {
-    margin: 0px 0px -5px 0px;
+.tab-pane .menu-href {
+    margin: 0px 0px 0px 0px;
 }
-
-.menu-href {
-    margin: -1px 0px 4px 0px;
-}
-
-
-#tabs2 > li > a {
-    //line-height: 0.4;
-}
-
 
 #tabs2 button.close {
   position:relative;
@@ -137,19 +110,9 @@ body.fixed .menu_offset {
   top: 10px;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-//    font-family: Calibri,Candara,Arial,sans-serif;
-}
-
-
 .form-control {
     height: 33px;
-    //padding: 5px 18px;
 }
-
-//.btn {
-//    padding: 4px 18px;
-//}
 
 .pagination {
     margin: 0px 0px;
@@ -162,16 +125,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   text-shadow: 4px 4px 5px rgba(0, 0, 0, 1);
 }
 
-.nav-tabs > li.topmenu.active {
-    background-color: #8ba;	
-}
-
-.tab-content {	
-    background-color: #8ba;	
-}
-
-.nav-tabs {
-    border-bottom: 0px;
+.txt3d a {
+  color: white;
 }
 
 .tabsort .btn {
@@ -182,20 +137,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .tabsort .btn-group {
     padding: 2px 2px;
-    margin: -5px 0px 0px 0px;
+    margin: -2px 0px 0px 0px;
     vertical-align: top;
 }
 
-
-.checkbox .checkbox-material::before {
-    top: -5px;
-    left: -2px;
+.tab-content {
+    background-color: white;
+    padding: 5px 5px 5px 5px;
+    align: left;
+    width: 100%;
 }
 
-.TableFiltr .checkbox .checkbox-material::before {
-    left: 0px;
-}
-
-.checkbox .checkbox-material .check {
-    margin: 0px 6px 0px 0px;
-}
