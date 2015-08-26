@@ -12,7 +12,6 @@
     border-bottom: 0px;
 }
 
-
 .checkbox .checkbox-material::before {
     top: -5px;
     left: -2px;
@@ -23,9 +22,18 @@
     left: 0px;
 }
 
-
 .checkbox .checkbox-material .check {
     margin: 0px 6px 0px 0px;
 }
 
 
+.tabsort .btn-group {
+    padding: 0px;
+    margin: -5px 0px 0px 0px;
+    vertical-align: top;
+}
+
+
+.txt3d a {
+    color: #fff;
+}

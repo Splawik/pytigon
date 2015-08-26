@@ -121,7 +121,7 @@
                                     %% list_content_actions
                                 td
                                     %% list_content_title
-                                        h4 style=white-space:nowrap; color: white;,,,class=txt3d...{{title|wiki_href|safe}}
+                                        h4 style=white-space:nowrap;,,,class=txt3d...{{title|wiki_href|safe}}
                                 td align=right,,,width=50%
                                     %% list_content_paginator
                                         {% paginator %}

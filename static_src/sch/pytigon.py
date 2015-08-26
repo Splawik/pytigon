@@ -304,7 +304,7 @@ window.addEventListener('popstate',
                 menu = get_menu().activate(e.state, False)
             else:
                 x = e.state
-                jQuery('#body_body').html(x[0])
+                jQuery('#body_body').html(LZString.decompress(x[0]))
                 ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                 ACTIVE_PAGE.set_href(document.location)
                 #menu.on_new_page('body_body')
@@ -333,8 +333,9 @@ window.addEventListener('popstate',
 def history_push_state(title, url, data=None):
     url2 = url.split("?")[0]
     if data:
-        window.history.pushState(data, title, url2)
+        data2 = [LZString.compress(data[0]),data[1]]
     else:
-        window.history.pushState(title, title, url2)
+        data2 = title
+    window.history.pushState(data2, title, url2)
 
 

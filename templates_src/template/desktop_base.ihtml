@@ -10,6 +10,7 @@
     {% jscript_link 'vanillajs_plugins/baselib.js' %}
     {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+    {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
 
     {% jscript_link 'jquery/js/jquery.min.js' %}
     {% jscript_link 'jquery/js/jquery-ui.min.js' %}
@@ -17,7 +18,6 @@
     {% jscript_link 'jquery_plugins/csrf.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/dataTables.bootstrap.js' %}
-    {% jscript_link '__jquery_plugins/jquery.text3d.js' %}
 
     {% jscript_link 'jquery_plugins/datatables/ColReorder/js/dataTables.colReorder.js' %}
     {% jscript_link 'jquery_plugins/datatables/ColVis/js/dataTables.colVis.js' %}
@@ -33,7 +33,6 @@
 
     {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
     {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
-
 
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
 
@@ -88,10 +87,8 @@
     {% css_link 'jquery_plugins/datatables/Responsive/css/dataTables.responsive.css' %}
     {% css_link 'jquery_plugins/datatables/Scroller/css/dataTables.scroller.css' %}
 
-    {% css_link '__themes/bootstrap/jquery-ui.css' %}
-    {% css_link '__bootstrap/css/cosmo.bootstrap.min.css' %}
-    {% css_link 'bootstrap/css/bootstrap.min.css' %}
-    {% css_link '__themes/metro-bootstrap/css/metro-bootstrap.css' %}
+    %% botstrap_css
+        {% css_link 'bootstrap/css/bootstrap.min.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}

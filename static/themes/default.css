@@ -119,16 +119,6 @@ body.fixed .menu_offset {
 }
 
 
-.txt3d {
-  color: rgba(255,255,255,0.9);
-  font-weight:900;
-  text-shadow: 4px 4px 5px rgba(0, 0, 0, 1);
-}
-
-.txt3d a {
-  color: white;
-}
-
 .tabsort .btn {
     padding: 5px 10px;
     margin: -5px 0px 0px 0px;
@@ -148,3 +138,18 @@ body.fixed .menu_offset {
     width: 100%;
 }
 
+
+.txt3d {
+    color: rgba(255,255,255,0.9);
+    font-weight:900;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6), 4px 4px 5px rgba(0, 0, 0, 0.8 );
+}
+
+
+.txt3d a {
+  color: white;
+}
+
+td a.btn {
+    padding: 8px 8px;
+}

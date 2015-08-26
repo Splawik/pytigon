@@ -301,6 +301,7 @@ def gen(request, pk):
     file_append = -1
     
     def output(file_name, file_append, file_content):
+        os.makedirs(os.path.dirname(os.path.join(base_path, file_name)), exist_ok=True)
         if file_append==-1:        
             f = open(os.path.join(base_path, file_name), "wb")
             f.write(("\n".join(file_content)).encode('utf-8'))
