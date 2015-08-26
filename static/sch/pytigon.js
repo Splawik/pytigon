@@ -12,6 +12,8 @@ WAIT_ICON = null;
 WAIT_ICON2 = false;
 MENU_ID = 0;
 BASE_FRAGMENT_INIT = null;
+POPUP_ACTIVATOR = null;
+COUNTER = 1;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -125,6 +127,7 @@ function get_menu() {
     return MENU;
 }
 function on_popup(elem) {
+    POPUP_ACTIVATOR = jQuery(elem);
     WAIT_ICON = Ladda.create(elem);
     if (is_hybrid()) {
         cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
@@ -154,6 +157,39 @@ function on_popup(elem) {
                 }
             });
         }
+    }
+    return false;
+}
+function on_popup_inline(elem) {
+    var id, href2;
+    jQuery(elem).attr("data-style", "zoom-out");
+    jQuery(elem).attr("data-spinner-color", "#FF0000");
+    WAIT_ICON = Ladda.create(elem);
+    if (is_hybrid()) {
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+        jQuery("div.dialog-form-info").modal();
+    } else {
+        if (WAIT_ICON) {
+            WAIT_ICON.start();
+        }
+        jQuery(elem).closest("table").find(".inline_dialog").remove();
+        COUNTER = COUNTER + 1;
+        id = COUNTER;
+        jQuery("<tr class='inline_dialog hide' id='IDIAL_" + id + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>").insertAfter(jQuery(elem).closest("tr"));
+        href2 = corect_href(jQuery(elem).attr("href"));
+        jQuery(elem).closest("table").find("div.dialog-data-inner").load(href2, null, function(responseText, status, response) {
+            $("#IDIAL_" + id).hide();
+            $("#IDIAL_" + id).removeClass("hide");
+            $("#IDIAL_" + id).show("slow");
+            if (status !== "error") {
+                _dialog_loaded(false);
+                on_dialog_load();
+            }
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+                WAIT_ICON = null;
+            }
+        });
     }
     return false;
 }
@@ -230,7 +266,7 @@ function on_delete_ok(form) {
     });
     return false;
 }
-function _refresh_win(responseText, form) {
+function _refresh_win2(responseText, form) {
     var subform, filter;
     if (_$rapyd$_in("RETURN_OK", responseText)) {
         subform = form.closest("div.inline_frame");
@@ -254,8 +290,40 @@ function _refresh_win(responseText, form) {
         jQuery("div.dialog-data").html(responseText);
     }
 }
-function on_cancel_inline() {
-    ACTIVE_PAGE.page.find(".inline_dialog").remove();
+function _refresh_win(responseText, ok_button) {
+    var form, subform, div, href, filter;
+    form = POPUP_ACTIVATOR.closest("div.content").find("form.TableFiltr");
+    if (_$rapyd$_in("RETURN_OK", responseText)) {
+        subform = form.closest("div.inline_frame");
+        if (subform.length > 0) {
+            subform.find("div.frame-data-inner").load(subform.attr("href"), null);
+        } else {
+            div = POPUP_ACTIVATOR.closest("div.dialog-data-inner");
+            if (div.length > 0) {
+                href = corect_href(form.attr("action"));
+                div.load(href, null);
+                jQuery("div.dialog-form").modal("hide");
+            } else {
+                filter = form;
+                jQuery("div.dialog-form").fadeTo("slow", .5);
+                if (filter.length > 0) {
+                    filter.attr("action", ACTIVE_PAGE.get_href());
+                    ajax_submit(filter, function(data) {
+                        ACTIVE_PAGE.page.html(data);
+                        jQuery("div.dialog-form").modal("hide");
+                        page_init(ACTIVE_PAGE.id, false);
+                    });
+                } else {
+                    jQuery("div.dialog-form").modal("hide");
+                }
+            }
+        }
+    } else {
+        form.jQuery("div.dialog-data").html(responseText);
+    }
+}
+function on_cancel_inline(elem) {
+    jQuery(elem).closest(".inline_dialog").remove();
 }
 function stick_resize() {
     var tbl, dy_table, dy_win, dy;
@@ -464,7 +532,7 @@ function fragment_init(elem) {
     elem2.find(".dateinput").datetimepicker({
         "pickTime": false,
         "format": "YYYY-MM-DD",
-        "language": LANG
+        "language": "pl"
     });
     elem2.find(".datetimeinput").datetimepicker({
         "format": "YYYY-MM-DD hh:mm",
@@ -515,8 +583,8 @@ function page_init(id, first_time) {
     if (first_time) {
         jQuery("#" + id).on("click", "a", function(e) {
             var pos, href, href2;
-            var _$rapyd$_Iter0 = [ ["popup", on_popup], ["popup_info", on_popup_info], ["popup_delete", 
-            on_popup_delete] ];
+            var _$rapyd$_Iter0 = [ ["popup", on_popup], ["popup_inline", on_popup_inline], ["popup_info", 
+            on_popup_info], ["popup_delete", on_popup_delete] ];
             for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
                 pos = _$rapyd$_Iter0[_$rapyd$_Index0];
                 if (jQuery(this).hasClass(pos[0])) {

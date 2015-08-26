@@ -153,3 +153,34 @@ body.fixed .menu_offset {
 td a.btn {
     padding: 8px 8px;
 }
+
+
+
+tr.inline_dialog div.content {
+    margin: 0px;
+}
+
+tr.inline_dialog div.panel-heading {
+    margin: 0px;
+    padding: 0px
+}
+
+tr.inline_dialog div.panel-body {
+    margin: 0px;
+    padding: 0px;
+}
+
+tr.inline_dialog div.content div.panel-default {
+    box-shadow: None;
+    margin-bottom: 0px;
+    border: 3px;
+}
+
+tr.inline_dialog div.panel-heading td {
+    padding: 0px 5px;
+}
+
+div.indent {
+    padding: 10px 5px 2px 5px;
+    margin: 0px -7px 0px 20px;
+}

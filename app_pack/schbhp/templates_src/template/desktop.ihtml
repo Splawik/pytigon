@@ -4,22 +4,12 @@
 
 % load exfiltry
 % load exsyntax
-% load crispy_forms_tags
 
 
-%% theme_js_scripts
-    {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
-    {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
-
+%% botstrap_css
+    {% css_link 'themes/bootswatch/spacelab.bootstrap.min.css' %}
 
 %% theme_css_links
-    {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
-    {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
-    {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
-    {% css_link 'themes/material.css' %}
+    {% css_link 'themes/metro.css' %}
 
 
-%% fragment_init
-    .function base_fragment_init() {
-    .    $.material.init();
-    .}

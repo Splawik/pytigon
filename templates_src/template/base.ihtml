@@ -166,6 +166,7 @@
                                             %% list_row_start
                                                 % if not no_id
                                                     td
+                                                        %% id_extra
                                                         {% view_row object.id %}
                                             %% list_row
                                                 td...{{object}}

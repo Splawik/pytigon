@@ -17,6 +17,8 @@ WAIT_ICON = None
 WAIT_ICON2 = False
 MENU_ID = 0
 BASE_FRAGMENT_INIT = None
+POPUP_ACTIVATOR = None
+COUNTER = 1
 
 import page
 import tabmenuitem
@@ -35,7 +37,8 @@ def fragment_init(elem=None):
     else:
         elem2 = ACTIVE_PAGE.page
 
-    elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
+    #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
+    elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
@@ -73,7 +76,7 @@ def page_init(id, first_time = True):
                 nonlocal ACTIVE_PAGE
                 #if jQuery(this).hasClass( "menu-href" ):
 
-                for pos in [ ('popup', on_popup), ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
+                for pos in [ ('popup', on_popup), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
                     if jQuery(this).hasClass(pos[0]):
                         pos[1](this)
                         return False

@@ -80,6 +80,7 @@ STANDARD_DESC = {
     'edit2': ('Update', "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'delete': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'delete2': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
+    'field_list': ('Default', "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 
@@ -109,7 +110,7 @@ STANDARD_ICON = {
     'print': ['glyphicon-print', 'arrow-d'],
     'pdf': ['glyphicon-eye-open', 'eye'],
     'odf': ['glyphicon-list', 'bullets'],
-    'field_list': ['glyphicon-th', 'grid'],
+    'field_list': ['glyphicon-triangle-bottom', 'grid'],
     'field_edit': ['glyphicon-edit', 'edit'],
 }
 
@@ -227,6 +228,10 @@ class Action:
 
     def format(self, s):
         return s.format(**self.d)
+
+    #def __str__(self):
+    #    return self.action + "|" + self.title + "|" + self.name + "|" + self.target + "|" + self.style + "|" + self.style_in_menu + "|" + self.url
+
 
 def actions_dict(
     context,
