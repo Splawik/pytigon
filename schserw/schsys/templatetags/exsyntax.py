@@ -81,6 +81,7 @@ STANDARD_DESC = {
     'delete': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'delete2': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'field_list': ('Default', "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_action': ('Default', "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 
@@ -111,13 +112,14 @@ STANDARD_ICON = {
     'pdf': ['glyphicon-eye-open', 'eye'],
     'odf': ['glyphicon-list', 'bullets'],
     'field_list': ['glyphicon-triangle-bottom', 'grid'],
+    'field_action': ['glyphicon-hand-down', 'grid'],
     'field_edit': ['glyphicon-edit', 'edit'],
 }
 
 
 class Action:
     def __init__(self, actions_str, context, d):
-        #actions_str: action,title,name,target,style,url
+        #actions_str: action,title,name,target,style,param,url
         self.d = d
         self.context = context
         self.action = ""
@@ -127,6 +129,7 @@ class Action:
         self.style = ""
         self.style_in_menu = ""
         self.url = ""
+        self.param = ""
 
         self.x1 = ""
         self.x2 = ""
@@ -159,7 +162,9 @@ class Action:
                     if len(pos)>4:
                         self.style = pos[4].strip()
                         if len(pos)>5:
-                            self.url = pos[5].strip()
+                            self.parm = pos[5].strip()
+                            if len(pos)>6:
+                                self.url = pos[6].strip()
 
         action2 = self.action.split('__')[0]
 
@@ -379,9 +384,14 @@ def new_row(
     name="",
     target='',
     style='',
+    param='-',
     url=""
     ):
-    ret = action_fun(context, 'new_row', title, name, target, style, url if url else '../../../-/add?childwin=1')
+    if url:
+        url2=url
+    else:
+        url2='../../../%s/add?childwin=1' % param
+    ret = action_fun(context, 'new_row', title, name, target, style, url2)
     if title and title[0] == '+':
         description = title[1:]
         title = ""

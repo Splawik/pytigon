@@ -450,7 +450,14 @@ class GenericRows(object):
         class DetailView(generic.DetailView):
 
             queryset = self.queryset
-            model = self.base_model
+
+            if self.field:
+                f = getattr(self.base_model, self.field).related
+                model = f.related_model
+            else:
+                model = self.base_model
+
+            #model = self.base_model
             template_name = self.template_name
             title = self.title
             response_class = ExtTemplateResponse
