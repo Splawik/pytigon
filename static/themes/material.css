@@ -1,14 +1,14 @@
-.nav-tabs > li.topmenu.active {
+#tabs > li.topmenu.active {
     background-color: #8ba;	
 }
 
 
-.tab-content {	
+.menu-content {	
     background-color: #8ba;	
 }
 
 
-.nav-tabs {
+#tabs {
     border-bottom: 0px;
 }
 

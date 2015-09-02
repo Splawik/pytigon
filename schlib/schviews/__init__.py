@@ -413,6 +413,7 @@ class GenericRows(object):
                 context = super(ListView, self).get_context_data(**kwargs)
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
+                context['filter'] = self.kwargs['filter']
                 if self.form:
                     context['form'] = self.form
 

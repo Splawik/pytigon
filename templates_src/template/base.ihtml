@@ -58,7 +58,7 @@
             %% row_edit_header
                 {{form.errors|as_crispy_errors}}
             %% row_edit_all
-                form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form
+                form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}application/x-www-form-urlencoded{% endblock %}
                     % csrf_token
                     %% row_edit_form
                         table width=100%
@@ -171,7 +171,7 @@
                                             %% list_row
                                                 td...{{object}}
                                             %% list_row_end
-                                                td style=white-space:nowrap
+                                                td style=white-space:nowrap,,,class=td_action
                                                     %% list_row_actions
                                                         % if readonly
                                                             a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select

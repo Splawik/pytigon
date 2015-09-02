@@ -57,7 +57,7 @@
 
 %% list_row_actions
     % row_actions: ===>
-        UP,Open in toolbar,,_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
+        UP,Open in toolbar,,_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
         edit
         gen,Build
         |

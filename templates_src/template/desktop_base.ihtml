@@ -119,7 +119,7 @@
 
 %%topmenu_end
      </ul>
-     <div id="myTabContent" class="tab-content">
+     <div id="menu" class="tab-content menu-content">
 
 
 %% submenu
@@ -149,7 +149,7 @@
 
 
 %% tabsort_class
-    .class="tabsort table"
+    .class="tabsort table table-hover table-striped"
 
 
 %% body_start

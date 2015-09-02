@@ -324,7 +324,7 @@ def view_row(
     ):
     href = "../../../%s/_/view/" % context['object'].id
     #href = "../../../%s/_/view/" % object_id
-    ret = action_fun(context, 'view_row', description, 'view_row', target, "", href)
+    ret = action_fun(context, 'view_row', description, 'view_row', target, "", "", href)
     return ret
     #t = get_template('widgets/view_row.html')
     #c = RequestContext(context['request'], context)
@@ -354,9 +354,10 @@ def action_fun(
     name="",
     target="",
     style="",
+    param="",
     url=""
     ):
-    action_str = "%s,%s,%s,%s,%s,%s" % (action, title, name, target, style, url)
+    action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, name, target, style, param, url)
     t = Template(action_str)
     output2 = t.render(context)
     #t = get_template('widgets/action.html')
@@ -373,7 +374,7 @@ def button(
     target="",
     style=''
     ):
-    ret = action_fun(context, 'button', title, name, target, style, url)
+    ret = action_fun(context, 'button', title, name, target, style, "", url)
     return ret
 
 
@@ -391,7 +392,7 @@ def new_row(
         url2=url
     else:
         url2='../../../%s/add?childwin=1' % param
-    ret = action_fun(context, 'new_row', title, name, target, style, url2)
+    ret = action_fun(context, 'new_row', title, name, target, style, param, url2)
     if title and title[0] == '+':
         description = title[1:]
         title = ""
@@ -413,7 +414,7 @@ def list_action(
     style='',
     url=""
     ):
-    ret = action_fun(context, action, title, name, target, style, url if url else "../../../action/%s?childwin=1" % action)
+    ret = action_fun(context, action, title, name, target, style, "", url if url else "../../../action/%s?childwin=1" % action)
     return ret
 
 
@@ -428,7 +429,7 @@ def wiki_button(
     ):
     wiki_name = wiki_from_str(wiki_description)
     wiki_url = "/schwiki/%s/%s/view/?childwin=1" % (subject, wiki_name)
-    return action_fun(context, "wiki", wiki_description, wiki_name, target, style, url if url else wiki_url)
+    return action_fun(context, "wiki", wiki_description, wiki_name, target, style, "", url if url else wiki_url)
 
 
 @inclusion_tag('widgets/wiki_link.html')

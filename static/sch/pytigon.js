@@ -235,6 +235,9 @@ function _dialog_loaded(is_modal) {
     if (is_modal) {
         jQuery("div.dialog-form").fadeTo("fast", 1);
         jQuery("div.dialog-form").modal();
+        jQuery("div.dialog-form").draggable({
+            "handle": ".modal-header"
+        });
         IS_POPUP = true;
     }
 }
@@ -244,15 +247,47 @@ function dialog_ex_load2(responseText, status, response) {
         on_dialog_load();
     }
 }
+function progressHandlingFunction(e) {
+    if (e.lengthComputable) {
+        $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%");
+    }
+}
+function xhr() {
+    var myXhr;
+    myXhr = jQuery.ajaxSettings.xhr();
+    if (myXhr.upload) {
+        myXhr.upload.addEventListener("progress", progressHandlingFunction, false);
+    }
+    return myXhr;
+}
 function on_edit_ok(form) {
-    jQuery.ajax({
-        "type": "POST",
-        "url": corect_href(form.attr("action")),
-        "data": form.serialize(),
-        "success": function(data) {
-            _refresh_win(data, form);
-        }
-    });
+    var data;
+    data = new FormData(form[0]);
+    if (_$rapyd$_in("multipart", form.attr("enctype"))) {
+        form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
+        jQuery.ajax({
+            "type": "POST",
+            "url": corect_href(form.attr("action")),
+            "data": data,
+            contentType: false,
+            processData: false,
+            "xhr": xhr,
+            "success": function(data) {
+                _refresh_win(data, form);
+            }
+        });
+    } else {
+        jQuery.ajax({
+            "type": "POST",
+            "url": corect_href(form.attr("action")),
+            "data": data,
+            contentType: false,
+            processData: false,
+            "success": function(data) {
+                _refresh_win(data, form);
+            }
+        });
+    }
     return false;
 }
 function on_delete_ok(form) {
