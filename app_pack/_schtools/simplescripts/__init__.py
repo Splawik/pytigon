@@ -3,10 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 
 ModuleTitle = _('main')
 Title = _('Simple scripts')
-Perms = False
+Perms = True
 Index = ''
 Urls  = (
-    ('table/Scripts/-/form/list?schtml=1',_('Scripts'),None,'client://apps/utilities-terminal.png'),
+    ('table/Scripts/-/form/list?schtml=1',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
 )
 UserParam = {}
 def AdditionalUrls():

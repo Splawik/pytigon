@@ -3,11 +3,10 @@ from django.utils.translation import ugettext_lazy as _
 
 ModuleTitle = _('main')
 Title = _('Wiki')
-Perms = False
+Perms = True
 Index = ''
 Urls  = (
-    ('table/Page/-/form/list?schtml=1',_('Wiki'),None,'wx.ART_HELP_SIDE_PANEL'),
-    ('../wiki/pytigon_doc/pytigon/view/?schtml=1',_('Pytigon doc'),None,'wx.ART_INFORMATION'),
+    ('table/Page/-/form/list?schtml=1',_('Wiki'),'wiki.change_page','wx.ART_HELP_SIDE_PANEL'),
 )
 UserParam = {}
 def AdditionalUrls():

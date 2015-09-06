@@ -87,7 +87,7 @@ td.control {
 }
 
 .tab-pane .menu-href {
-    margin: 0px 0px 0px 0px;
+    margin: 5px 0px 5px 0px;
 }
 
 #tabs2 button.close {
@@ -133,7 +133,8 @@ body.fixed .menu_offset {
 
 .tab-content {
     background-color: white;
-    padding: 5px 5px 5px 5px;
+    //padding: 5px 5px 5px 5px;
+    padding: 0px 5px;
     align: left;
     width: 100%;
 }
@@ -185,7 +186,13 @@ div.indent {
     margin: 0px -7px 0px 20px;
 }
 
-tr:not(:hover) td.td_action {
+tr:not(:hover) td.td_action,  tr:not(:hover) td.td_information  {
 	opacity: 0.1;
 	filter:alpha(opacity=10);
 }
+
+tr td.td_information  .btn.btn-sm {
+	padding: 5px 8px;
+}
+
+li.topmenu_right:last-child { float:right; }

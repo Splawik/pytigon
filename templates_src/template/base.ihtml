@@ -165,7 +165,7 @@
                                         tr {% block list_row_attr %}{% endblock %}
                                             %% list_row_start
                                                 % if not no_id
-                                                    td
+                                                    td class=td_information
                                                         %% id_extra
                                                         {% view_row object.id %}
                                             %% list_row

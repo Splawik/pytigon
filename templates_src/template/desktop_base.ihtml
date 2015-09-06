@@ -30,6 +30,9 @@
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
+    {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
+    {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
+
 
     {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
     {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
@@ -49,7 +52,7 @@
 
 %% jquery_init
     %% fragment_init
-        .function base_fragment_init() {}
+        .function base_fragment_init() { jQuery('input[type=file]').fileinput(); }
     .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{request.get_full_path}}', base_fragment_init)
 
 
@@ -94,6 +97,10 @@
     {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
     {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
 
+    {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
+
+
+
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
 
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
@@ -118,8 +125,12 @@
 
 
 %%topmenu_end
-     </ul>
-     <div id="menu" class="tab-content menu-content">
+    %if user.is_authenticated:
+        li class=topmenu_right
+            a href=/schsys/do_logout?schtml=1,,,title=Logout
+                span class=glyphicon glyphicon-log-out
+    </ul>
+    <div id="menu" class="tab-content menu-content">
 
 
 %% submenu
