@@ -126,6 +126,22 @@ function get_menu() {
     }
     return MENU;
 }
+function refresh_fragment2(data_item_to_refresh) {
+    var src, href, target;
+    src = data_item_to_refresh.closest(".refr_source");
+    href = src.attr("href");
+    target = src.find(".refr_target");
+    target.load(href, null, function(responseText, status, response) {
+    });
+}
+function refresh_fragment(data_item_to_refresh) {
+    var target, src, href;
+    target = data_item_to_refresh.closest(".refr_target");
+    src = target.find(".refr_source");
+    href = src.attr("href");
+    target.load(corect_href(href), null, function(responseText, status, response) {
+    });
+}
 function on_popup(elem) {
     POPUP_ACTIVATOR = jQuery(elem);
     WAIT_ICON = Ladda.create(elem);
@@ -161,7 +177,7 @@ function on_popup(elem) {
     return false;
 }
 function on_popup_inline(elem) {
-    var id, href2;
+    var id, href2, new_fragment;
     jQuery(elem).attr("data-style", "zoom-out");
     jQuery(elem).attr("data-spinner-color", "#FF0000");
     WAIT_ICON = Ladda.create(elem);
@@ -175,9 +191,10 @@ function on_popup_inline(elem) {
         jQuery(elem).closest("table").find(".inline_dialog").remove();
         COUNTER = COUNTER + 1;
         id = COUNTER;
-        jQuery("<tr class='inline_dialog hide' id='IDIAL_" + id + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>").insertAfter(jQuery(elem).closest("tr"));
         href2 = corect_href(jQuery(elem).attr("href"));
-        jQuery(elem).closest("table").find("div.dialog-data-inner").load(href2, null, function(responseText, status, response) {
+        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
+        new_fragment.insertAfter(jQuery(elem).closest("tr"));
+        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
             $("#IDIAL_" + id).hide();
             $("#IDIAL_" + id).removeClass("hide");
             $("#IDIAL_" + id).show("slow");
@@ -617,7 +634,11 @@ function page_init(id, first_time) {
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     if (first_time) {
         jQuery("#" + id).on("click", "a", function(e) {
-            var pos, href, href2;
+            var src_obj, pos, href, href2;
+            if ($(e.target).attr("target") === "_blank") {
+                return;
+            }
+            src_obj = jQuery(this);
             var _$rapyd$_Iter0 = [ ["popup", on_popup], ["popup_inline", on_popup_inline], ["popup_info", 
             on_popup_info], ["popup_delete", on_popup_delete] ];
             for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
@@ -637,18 +658,22 @@ function page_init(id, first_time) {
                 "type": "GET",
                 "url": href2,
                 "success": function(data) {
-                    if (APPLICATION_TEMPLATE === "modern") {
-                        ACTIVE_PAGE.page.html(data);
-                        ACTIVE_PAGE.set_href(href);
-                        page_init(ACTIVE_PAGE.id, false);
+                    if (_$rapyd$_in("_parent_refr", data)) {
+                        refresh_fragment(src_obj);
                     } else {
-                        jQuery("#body_body").html(data);
-                        page_init("body_body", false);
-                    }
-                    ACTIVE_PAGE.set_href(href);
-                    get_menu().get_active_item().url = href;
-                    if (PUSH_STATE) {
-                        history_push_state("title", href);
+                        if (APPLICATION_TEMPLATE === "modern") {
+                            ACTIVE_PAGE.page.html(data);
+                            ACTIVE_PAGE.set_href(href);
+                            page_init(ACTIVE_PAGE.id, false);
+                        } else {
+                            jQuery("#body_body").html(data);
+                            page_init("body_body", false);
+                        }
+                        ACTIVE_PAGE.set_href(href);
+                        get_menu().get_active_item().url = href;
+                        if (PUSH_STATE) {
+                            history_push_state("title", href);
+                        }
                     }
                 }
             });

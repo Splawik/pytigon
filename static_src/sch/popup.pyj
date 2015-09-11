@@ -1,5 +1,26 @@
 #import tools
 
+
+def refresh_fragment2(data_item_to_refresh):
+    src = data_item_to_refresh.closest('.refr_source')
+    href = src.attr('href')
+    target = src.find('.refr_target')
+    target.load(href, None, 
+        def(responseText, status, response):
+            pass
+    )
+
+
+def refresh_fragment(data_item_to_refresh):
+    target = data_item_to_refresh.closest('.refr_target')
+    src = target.find('.refr_source')    
+    href = src.attr('href')
+    target.load(corect_href(href), None, 
+        def(responseText, status, response):
+            pass
+    )
+
+
 def on_popup(elem):
     nonlocal WAIT_ICON
     nonlocal POPUP_ACTIVATOR
@@ -52,9 +73,12 @@ def on_popup_inline(elem):
         COUNTER = COUNTER + 1
         id = COUNTER
 
-        jQuery("<tr class='inline_dialog hide' id='IDIAL_"+id+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>").insertAfter(jQuery(elem).closest("tr"))
         href2 = corect_href(jQuery(elem).attr("href"))
-        jQuery(elem).closest('table').find("div.dialog-data-inner").load(href2,None,
+        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
+        new_fragment.insertAfter(jQuery(elem).closest("tr"))
+        
+        #jQuery(elem).closest('table').find("div.dialog-data-inner").load(href2,None,
+        new_fragment.find(".refr_target").load(href2,None,
             def(responseText, status, response):
                 nonlocal WAIT_ICON
                 $('#IDIAL_'+id).hide()

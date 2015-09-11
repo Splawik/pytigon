@@ -186,10 +186,17 @@ div.indent {
     margin: 0px -7px 0px 20px;
 }
 
-tr:not(:hover) td.td_action,  tr:not(:hover) td.td_information  {
-	opacity: 0.1;
-	filter:alpha(opacity=10);
+tr:not(:hover) td.td_action * {
+	opacity: 0.2;
+	filter:alpha(opacity=20);
 }
+
+tr:not(:hover) td.td_information * {
+	opacity: 0.4;
+	filter:alpha(opacity=40);
+}
+
+
 
 tr td.td_information  .btn.btn-sm {
 	padding: 5px 8px;

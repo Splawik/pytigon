@@ -38,7 +38,7 @@ var INLINE_TABLE_HTML = "\
     <button type='button' class='btn btn-danger btn-xs' onclick='on_cancel_inline($(this));return false'>\
         <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>\
     </button>\
-    <div class='dialog-data-inner'></div>\
+    <div class='refr_target dialog-data-inner'></div>\
 </div>\
 ";
 

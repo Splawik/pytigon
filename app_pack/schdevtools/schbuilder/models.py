@@ -669,11 +669,6 @@ class SChView( models.Model):
                 else:
                     return "%s('%s', '%s', views.%s)" % (bname, self.url, self.name, name)
     
-    def transform_form(self, form, new):
-        #if self.view_type in ('r', 't'):
-        #    form.fields['param'].widget = form.fields['param'].hidden_widget()
-        pass
-    
     def __str__(self):
         return self.name
     

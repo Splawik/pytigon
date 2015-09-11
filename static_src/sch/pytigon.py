@@ -75,6 +75,11 @@ def page_init(id, first_time = True):
             def(e):
                 nonlocal ACTIVE_PAGE
                 #if jQuery(this).hasClass( "menu-href" ):
+                
+                if $(e.target).attr('target') == "_blank":
+                    return 
+                
+                src_obj = jQuery(this)
 
                 for pos in [ ('popup', on_popup), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
                     if jQuery(this).hasClass(pos[0]):
@@ -90,18 +95,22 @@ def page_init(id, first_time = True):
                 href2 = corect_href(href)
 
                 jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
-                    nonlocal href
-                    if APPLICATION_TEMPLATE == 'modern':
-                        ACTIVE_PAGE.page.html(data)
+                    nonlocal href, src_obj
+                    
+                    if "_parent_refr" in data:
+                        refresh_fragment(src_obj)
+                    else:                    
+                        if APPLICATION_TEMPLATE == 'modern':
+                            ACTIVE_PAGE.page.html(data)
+                            ACTIVE_PAGE.set_href(href)
+                            page_init(ACTIVE_PAGE.id, False)
+                        else:
+                            jQuery('#body_body').html(data)
+                            page_init('body_body', False)
                         ACTIVE_PAGE.set_href(href)
-                        page_init(ACTIVE_PAGE.id, False)
-                    else:
-                        jQuery('#body_body').html(data)
-                        page_init('body_body', False)
-                    ACTIVE_PAGE.set_href(href)
-                    get_menu().get_active_item().url = href
-                    if PUSH_STATE:
-                        history_push_state("title", href)
+                        get_menu().get_active_item().url = href
+                        if PUSH_STATE:
+                            history_push_state("title", href)
                 })
         )
     ACTIVE_PAGE.page.find('form').attr('target', '_blank')

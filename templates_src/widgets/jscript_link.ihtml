@@ -1,1 +1,2 @@
-script type=text/javascript,,,src={{href}}
+% load staticfiles
+script type=text/javascript,,,src={% static href %}

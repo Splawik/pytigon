@@ -499,12 +499,6 @@ class GenericRows(object):
             title = self.title
             fields = "__all__"
 
-            def get_form(self, form_class):
-                form = super(UpdateView, self).get_form(form_class)
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(form, True)
-                return form
-
             def get_context_data(self, **kwargs):
                 context = super(UpdateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + 'update element'
@@ -519,6 +513,10 @@ class GenericRows(object):
                 self.object = self.get_object()
                 form_class = self.get_form_class()
                 form = self.get_form(form_class)
+
+                if self.object and hasattr(self.object, 'transform_form'):
+                    self.object.transform_form(request, form, False)
+                                    
                 if form:
                     for field in form.fields:
                         if hasattr(form.fields[field].widget, 'py_client'):
@@ -531,6 +529,10 @@ class GenericRows(object):
                 self.object = self.get_object()
                 form_class = self.get_form_class()
                 form = self.get_form(form_class)
+
+                if self.object and hasattr(self.object, 'transform_form'):
+                    self.object.transform_form(request, form, False)
+
                 if form.is_valid():
                     return self.form_valid(form, request)
                 else:
@@ -576,14 +578,6 @@ class GenericRows(object):
             init_form = None
             fields = "__all__"
 
-
-            def get_form(self, form_class):
-                form = super(CreateView, self).get_form(form_class)
-                #print "CreateView::get_form", self.object
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(form, True)
-                return form
-
             def get(
                 self,
                 request,
@@ -608,6 +602,10 @@ class GenericRows(object):
                     self.init_form = None
                 form_class = self.get_form_class()
                 form = self.get_form(form_class)
+
+                if self.object and hasattr(self.object, 'transform_form'):
+                    self.object.transform_form(request, form, True)
+                
                 if form:
                     for field in form.fields:
                         if hasattr(form.fields[field].widget, 'py_client'):
@@ -636,6 +634,10 @@ class GenericRows(object):
                 self.object = None
                 form_class = self.get_form_class()
                 form = self.get_form(form_class)
+                
+                if self.object and hasattr(self.object, 'transform_form'):
+                    self.object.transform_form(request, form, True)
+                
                 if form.is_valid():
                     return self.form_valid(form, request)
                 else:

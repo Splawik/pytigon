@@ -86,21 +86,21 @@ STANDARD_DESC = {
 
 
 STANDARD_URL = {
-    'action': "../../../{id}/action/{action}?childwin=1",
-    'edit': "../../../{id}/{action}?childwin=1",
-    'edit2': "./{id}/{action}?childwin=1",
-    'delete': "../../../{id}/{action}?childwin=1",
-    'delete2': "./{id}/{action}?childwin=1",
+    'action': "../../../{id}/action/{action}",
+    'edit': "../../../{id}/{action}",
+    'edit2': "./{id}/{action}",
+    'delete': "../../../{id}/{action}",
+    'delete2': "./{id}/{action}",
     'pdf': "../../../{id}/pdf/view/",
     'odf': "../../../{id}/odf/view/",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list?childwin=1",
-    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor?childwin=1",
+    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
 STANDARD_URL_CHILD_TAB = {
-    'action': "{base_path}../{table_name}/{id}/action/{action}?childwin=1",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list?childwin=1",
-    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor?childwin=1",
+    'action': "{base_path}../{table_name}/{id}/action/{action}",
+    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
 STANDARD_ICON = {
@@ -391,7 +391,7 @@ def new_row(
     if url:
         url2=url
     else:
-        url2='../../../%s/add?childwin=1' % param
+        url2='../../../%s/add' % param
     ret = action_fun(context, 'new_row', title, name, target, style, param, url2)
     if title and title[0] == '+':
         description = title[1:]
@@ -414,7 +414,7 @@ def list_action(
     style='',
     url=""
     ):
-    ret = action_fun(context, action, title, name, target, style, "", url if url else "../../../action/%s?childwin=1" % action)
+    ret = action_fun(context, action, title, name, target, style, "", url if url else "../../../action/%s" % action)
     return ret
 
 
@@ -428,7 +428,7 @@ def wiki_button(
     url=""
     ):
     wiki_name = wiki_from_str(wiki_description)
-    wiki_url = "/schwiki/%s/%s/view/?childwin=1" % (subject, wiki_name)
+    wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
     return action_fun(context, "wiki", wiki_description, wiki_name, target, style, "", url if url else wiki_url)
 
 
@@ -690,12 +690,12 @@ def ok_cancel(context):
 
 @inclusion_tag('widgets/jscript_link.html')
 def jscript_link(context, href):
-    return standard_dict(context, {'href': settings.STATIC_URL + href})
+    return standard_dict(context, {'href':  href})
 
 
 @inclusion_tag('widgets/css_link.html')
 def css_link(context, href):
-    return standard_dict(context, {'href': settings.STATIC_URL + href})
+    return standard_dict(context, {'href': href})
 
 
 @inclusion_tag('widgets/link.html')
