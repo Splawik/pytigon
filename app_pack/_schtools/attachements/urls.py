@@ -8,16 +8,14 @@ from . import views
 
 
 urlpatterns = patterns('',
-    gen_row_action('Scripts', 'run', views.run),
-    ('run/(?P<script_name>\w+)/$', views.run_script_by_name, {}),
-    
+    gen_row_action('Attachements', 'download', views.download),
     
     
     
 )
 
-gen = generic_table_start(urlpatterns, 'simplescripts', views)
+gen = generic_table_start(urlpatterns, 'attachements', views)
 
 
-gen.standard('Scripts', _('Scripts'))
+gen.standard('Attachements', _('Attachements'))
 

@@ -1,9 +1,11 @@
 ## -- coding: utf-8 --
 
 from django.conf.urls import patterns, url
+from django.utils.translation import ugettext_lazy as _
 from schlib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
 from . import views
+
 
 urlpatterns = patterns('',
     gen_row_action('SChAppSet', 'gen', views.gen),
@@ -57,29 +59,29 @@ gen.for_field('SChAppSet', 'schapp_set', 'Applications', prefix="up", template_n
 gen.for_field('SChApp', 'schappmenu_set', 'Menu', prefix="wiki", template_name="schbuilder/schappmenu2.html")
 #gen.standard('SChAppMenu', u'SChAppMenu', prefix="wiki")
 
-gen.standard('SChAppSet', 'SChAppSet')
-gen.standard('SChApp', 'SChApp')
-gen.standard('SChChoice', 'SChChoice')
-gen.standard('SChChoiceItem', 'SChChoiceItem')
-gen.standard('SChTable', 'SChTable')
-gen.standard('SChField', 'SChField')
-gen.standard('SChView', 'SChView')
-gen.standard('SChTemplate', 'SChTemplate')
-gen.standard('SChAppMenu', 'SChAppMenu')
-gen.standard('SChUrl', 'SChUrl')
-gen.standard('SChForm', 'Form')
-gen.standard('SChFormField', 'Form field')
-gen.standard('SChTask', 'SChTask')
+gen.standard('SChAppSet', _('SChAppSet'), _('SChAppSet'))
+gen.standard('SChApp', _('SChApp'), _('SChApp'))
+gen.standard('SChChoice', _('SChChoice'), _('SChChoice'))
+gen.standard('SChChoiceItem', _('SChChoiceItem'), _('SChChoiceItem'))
+gen.standard('SChTable', _('SChTable'), _('SChTable'))
+gen.standard('SChField', _('SChField'), _('SChField'))
+gen.standard('SChView', _('SChView'), _('SChView'))
+gen.standard('SChTemplate', _('SChTemplate'), _('SChTemplate'))
+gen.standard('SChAppMenu', _('SChAppMenu'), _('SChAppMenu'))
+gen.standard('SChUrl', _('SChUrl'), _('SChUrl'))
+gen.standard('SChForm', _('Form'), _('Form'))
+gen.standard('SChFormField', _('Form field'), _('Form field'))
+gen.standard('SChTask', _('SChTask'), _('SChTask'))
 
-gen.for_field('SChAppSet', "schapp_set", 'SChApp')
-gen.for_field('SChApp', "schchoice_set", 'SChChoice')
-gen.for_field('SChChoice', "schchoiceitem_set", 'SChChoiceItem')
-gen.for_field('SChApp', "schtable_set", 'SChTable')
-gen.for_field('SChTable', "schfield_set", 'SChField')
-gen.for_field('SChApp', "schview_set", 'SChView')
-gen.for_field('SChApp', "schtemplate_set", 'SChTemplate')
-gen.for_field('SChApp', "schappmenu_set", 'SChAppMenu')
-gen.for_field('SChApp', "schurl_set", 'SChUrl')
-gen.for_field('SChApp', "schform_set", 'Form')
-gen.for_field('SChForm', "schformfield_set", 'Form field')
-gen.for_field('SChApp', "schtask_set", 'SChTask')
+gen.for_field('SChAppSet', 'schapp_set', _('SChApp'), _('SChApp'))
+gen.for_field('SChApp', 'schchoice_set', _('SChChoice'), _('SChChoice'))
+gen.for_field('SChChoice', 'schchoiceitem_set', _('SChChoiceItem'), _('SChChoiceItem'))
+gen.for_field('SChApp', 'schtable_set', _('SChTable'), _('SChTable'))
+gen.for_field('SChTable', 'schfield_set', _('SChField'), _('SChField'))
+gen.for_field('SChApp', 'schview_set', _('SChView'), _('SChView'))
+gen.for_field('SChApp', 'schtemplate_set', _('SChTemplate'), _('SChTemplate'))
+gen.for_field('SChApp', 'schappmenu_set', _('SChAppMenu'), _('SChAppMenu'))
+gen.for_field('SChApp', 'schurl_set', _('SChUrl'), _('SChUrl'))
+gen.for_field('SChApp', 'schform_set', _('Form'), _('Form'))
+gen.for_field('SChForm', 'schformfield_set', _('Form field'), _('Form field'))
+gen.for_field('SChApp', 'schtask_set', _('SChTask'), _('SChTask'))

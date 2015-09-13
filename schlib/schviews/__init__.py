@@ -159,16 +159,17 @@ class GenericTable(object):
         tab,
         field=None,
         title='',
+        title_plural='',
         template_name=None,
         extra_context=None,
         queryset=None,
         prefix=None,
         ):
-        rows = GenericRows(self, prefix, title)
+        rows = GenericRows(self, prefix, title, title_plural)
         rows.tab = tab
         if field:
             rows.set_field(field)
-        rows.title = title
+        #rows.title = title
         rows.extra_context = extra_context
         rows.base_path = 'table/' + tab + '/'
         if template_name:
@@ -206,15 +207,19 @@ class GenericTable(object):
         tab,
         field=None,
         title='',
+        title_plural='',
         template_name=None,
         extra_context=None,
         queryset=None,
         prefix=None,
         ):
+        if not title_plural:
+            title_plural = title
         rows = self.new_rows(
             tab,
             field,
             title,
+            title_plural,
             template_name,
             extra_context,
             queryset,
@@ -227,6 +232,7 @@ class GenericTable(object):
         self,
         tab,
         title='',
+        title_plural='',
         template_name=None,
         extra_context=None,
         queryset=None,
@@ -238,6 +244,7 @@ class GenericTable(object):
             tab,
             None,
             title,
+            title_plural,
             template_name,
             extra_context,
             queryset,
@@ -249,6 +256,7 @@ class GenericTable(object):
         tab,
         field,
         title='',
+        title_plural='',
         template_name=None,
         extra_context=None,
         queryset=None,
@@ -258,6 +266,7 @@ class GenericTable(object):
             tab,
             field,
             title,
+            title_plural,
             template_name,
             extra_context,
             queryset,
@@ -271,6 +280,7 @@ class GenericTable(object):
         self,
         tab,
         title='',
+        title_plural='',
         template_name=None,
         extra_context=None,
         queryset=None,
@@ -282,6 +292,7 @@ class GenericTable(object):
             tab,
             None,
             title,
+            title_plural,
             template_name,
             extra_context,
             queryset,
@@ -298,12 +309,14 @@ class GenericRows(object):
         table,
         prefix,
         title="",
+        title_plural="",
         parent_rows=None,
         ):
         self.table = table
         self.prefix = prefix
         self.field = None
         self.title = title
+        self.title_plural = title_plural
         if parent_rows:
             self.base_path = parent_rows.base_path
             self.base_model = parent_rows.base_model
@@ -312,6 +325,7 @@ class GenericRows(object):
             self.field = parent_rows.field
             self.tab = parent_rows.tab
             self.title = parent_rows.title
+            self.title_plural = parent_rows.title_plural
             self.template_name = parent_rows.template_name
             self.extra_context = parent_rows.extra_context
             self.queryset = parent_rows.queryset
@@ -365,7 +379,7 @@ class GenericRows(object):
             form = None
             form_valid = False
 
-            title = self.title
+            title = self.title_plural
 
             extra_context = self.extra_context
             if self.field:
@@ -501,7 +515,7 @@ class GenericRows(object):
 
             def get_context_data(self, **kwargs):
                 context = super(UpdateView, self).get_context_data(**kwargs)
-                context['title'] = self.title + ' - ' + 'update element'
+                context['title'] = self.title + ' - ' + str(_('update element'))
                 return context
 
             def get(
@@ -705,7 +719,7 @@ class GenericRows(object):
 
             def get_context_data(self, **kwargs):
                 context = super(DeleteView, self).get_context_data(**kwargs)
-                context['title'] = self.title + ' - ' + 'delete element'
+                context['title'] = self.title + ' - ' + str(_('delete element'))
                 return context
 
 
@@ -731,7 +745,7 @@ class GenericRows(object):
             post_save_redirect = make_path('schserw.urls.ok'),
             template_name=self.template_name,
             extra_context=transform_extra_context({'title': self.title
-                     + ' - ' +'update element'}, self.extra_context),
+                     + ' - ' +str(_('update element')) }, self.extra_context),
             )
         return self._append(url, fun, parm)
 
@@ -747,7 +761,7 @@ class GenericRows(object):
             paginate_by = 64
             allow_empty = True
             template_name = self.template_name
-            title = self.title
+            title = self.title_plural
             if self.field:
                 rel_field = field
             else:
@@ -812,6 +826,7 @@ def generic_table(
     app,
     tab,
     title='',
+    title_plural='',
     template_name=None,
     extra_context=None,
     queryset=None,
@@ -821,6 +836,7 @@ def generic_table(
         tab,
         None,
         title,
+        title_plural,
         template_name,
         extra_context,
         queryset,

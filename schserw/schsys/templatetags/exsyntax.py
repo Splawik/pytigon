@@ -76,12 +76,12 @@ def mark_safe2(x):
 
 STANDARD_DESC = {
     'default': ('Default', "class='btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' "),
-    'edit': ('Update', "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'edit2': ('Update', "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'delete': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'delete2': ('Delete',  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'field_list': ('Default', "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_action': ('Default', "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'edit': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'edit2': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
+    'delete2': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
+    'field_list': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_action': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 

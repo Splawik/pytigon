@@ -10,56 +10,557 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 12:47+0200\n"
-"PO-Revision-Date: 2014-06-15 12:47+0100\n"
+"POT-Creation-Date: 2015-09-13 16:40+0200\n"
+"PO-Revision-Date: 2015-09-13 16:46+0100\n"
 "Last-Translator: Piotr Maliński <admin@rk.edu.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
-#: schbase/models.py:36 schbase/models.py:37
-msgid "Person"
-msgstr "Osoba"
+#: bootstrap_admin/templates/admin/404.html:4
+#: bootstrap_admin/templates/admin/404.html:8
+msgid "Page not found"
+msgstr "Strona nie znaleziona"
 
-#: schbase/models.py:60 schbase/models.py:61
-msgid "Parameter"
-msgstr "Parametr"
+#: bootstrap_admin/templates/admin/404.html:10
+msgid "We're sorry, but the requested page could not be found."
+msgstr "Niestety nie można znaleźć rządanej strony."
 
-#: schcommander/__init__.py:22
-msgid "Tools"
-msgstr "Narzędzia"
+#: bootstrap_admin/templates/admin/500.html:6
+#: bootstrap_admin/templates/admin/app_index.html:10
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:19
+#: bootstrap_admin/templates/admin/base.html:142
+#: bootstrap_admin/templates/admin/change_form.html:22
+#: bootstrap_admin/templates/admin/change_list.html:43
+#: bootstrap_admin/templates/admin/delete_confirmation.html:9
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:9
+#: bootstrap_admin/templates/admin/object_history.html:7
+#: bootstrap_admin/templates/registration/password_change_done.html:7
+#: bootstrap_admin/templates/registration/password_change_form.html:12
+#: bootstrap_admin/templates/registration/password_reset_complete.html:7
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:7
+#: bootstrap_admin/templates/registration/password_reset_done.html:7
+#: bootstrap_admin/templates/registration/password_reset_form.html:7
+msgid "Home"
+msgstr "Początek"
 
-#: schcommander/__init__.py:23 schcommander/models.py:48
-#: schcommander/models.py:49
-msgid "File manager"
-msgstr "Menadżer plików"
+#: bootstrap_admin/templates/admin/500.html:7
+msgid "Server error"
+msgstr "Błąd serwera"
 
-#: schcommander/views.py:29
-msgid "Name"
-msgstr "Nazwa"
+#: bootstrap_admin/templates/admin/500.html:11
+msgid "Server error (500)"
+msgstr "Bład serwera (500)"
 
-#: schcommander/views.py:29
-msgid "Size"
-msgstr "Rozmiar"
+#: bootstrap_admin/templates/admin/500.html:14
+msgid "Server Error <em>(500)</em>"
+msgstr "Błąd Serwera <em>(500)</em>"
 
-#: schcommander/views.py:29
-msgid "Time"
-msgstr "Czas"
+#: bootstrap_admin/templates/admin/500.html:15
+msgid ""
+"There's been an error. It's been reported to the site administrators via "
+"email and should be fixed shortly. Thanks for your patience."
+msgstr ""
+"Wystąpił niespodziewany błąd. Raport został wysłany emailem administratorowi "
+"strony."
 
-#: schcommander/views.py:39
-msgid "Sort"
-msgstr "Sortowanie"
+#: bootstrap_admin/templates/admin/actions.html:7
+msgid "Run the selected action"
+msgstr "Wykonaj wybraną akcję"
 
-#: schwiki/__init__.py:22 schwiki/__init__.py:23
-msgid "Wiki"
-msgstr "Wiki"
+#: bootstrap_admin/templates/admin/actions.html:7
+msgid "Go"
+msgstr "Szukaj"
 
-#: schwiki/models.py:35 schwiki/models.py:36
-msgid "Page"
-msgstr "Strona"
+#: bootstrap_admin/templates/admin/actions.html:20
+msgid "Click here to select the objects across all pages"
+msgstr "Kliknij tutaj aby zaznaczyć obiekt na wszystkich stronach"
+
+#: bootstrap_admin/templates/admin/actions.html:20
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr "Zaznacz wszystkie %(total_count)s %(module_name)s"
+
+#: bootstrap_admin/templates/admin/actions.html:22
+msgid "Clear selection"
+msgstr "Wyczyść zaznaczenie"
+
+#: bootstrap_admin/templates/admin/auth/user/add_form.html:7
+msgid ""
+"First, enter a username and password. Then, you'll be able to edit more user "
+"options."
+msgstr ""
+
+#: bootstrap_admin/templates/admin/auth/user/add_form.html:10
+msgid "Enter a username and password."
+msgstr ""
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:31
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:75
+#: bootstrap_admin/templates/admin/base.html:122
+msgid "Change password"
+msgstr "Zmiana hasła"
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:44
+#: bootstrap_admin/templates/admin/change_form.html:65
+#: bootstrap_admin/templates/admin/change_list.html:69
+#: bootstrap_admin/templates/admin/login.html:35
+#: bootstrap_admin/templates/registration/password_change_form.html:31
+msgid "Please correct the error below."
+msgstr "Proszę popraw poniższy błąd"
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:44
+#: bootstrap_admin/templates/admin/change_form.html:65
+#: bootstrap_admin/templates/registration/password_change_form.html:31
+msgid "Please correct the errors below."
+msgstr "Proszę popraw poniższy błąd"
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:50
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:60
+#: translate.py:14
+msgid "Password"
+msgstr "Hasło:"
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:68
+#: bootstrap_admin/templates/registration/password_change_form.html:57
+msgid "Password (again)"
+msgstr "Hasło (powtórnie)"
+
+#: bootstrap_admin/templates/admin/auth/user/change_password.html:69
+msgid "Enter the same password as above, for verification."
+msgstr "Wpisz ponownie hasło w celu weryfikacji"
+
+#: bootstrap_admin/templates/admin/base.html:70
+#: bootstrap_admin/templates/admin/base.html:95
+#: bootstrap_admin/templates/admin/base.html:98
+#: bootstrap_admin/templates/admin/login.html:23
+#: bootstrap_admin/templates/admin/login.html:27
+msgid "Django administration"
+msgstr "Administracja Django"
+
+#: bootstrap_admin/templates/admin/base.html:117
+#: bootstrap_admin/templates/admin/base.html:131
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+#: bootstrap_admin/templates/admin/base.html:126
+#: bootstrap_admin/templates/admin/base.html:133
+msgid "Log out"
+msgstr "Wyloguj się"
+
+#: bootstrap_admin/templates/admin/base.html:152
+#: bootstrap_admin/templates/admin/change_list.html:68 translate.py:7
+msgid "Close"
+msgstr "Zamknij"
+
+#: bootstrap_admin/templates/admin/base_site.html:3
+msgid "Django site admin"
+msgstr "Administracja stroną Django"
+
+#: bootstrap_admin/templates/admin/change_form.html:39
+#: bootstrap_admin/templates/admin/index.html:65
+msgid "Add"
+msgstr "Dodaj"
+
+#: bootstrap_admin/templates/admin/change_form.html:114
+#: bootstrap_admin/templates/admin/change_form.html:116
+#: bootstrap_admin/templates/admin/object_history.html:18
+msgid "History"
+msgstr "Historia"
+
+#: bootstrap_admin/templates/admin/change_form.html:121
+#: bootstrap_admin/templates/admin/change_form.html:123
+#: bootstrap_admin/templates/admin/edit_inline/stacked.html:20
+#: bootstrap_admin/templates/admin/edit_inline/tabular.html:35
+msgid "View on site"
+msgstr "Pokaż na stronie"
+
+#: bootstrap_admin/templates/admin/change_list.html:58
+msgid "Filter"
+msgstr "Filtr"
+
+#: bootstrap_admin/templates/admin/change_list.html:92
+#, python-format
+msgid "Add %(name)s"
+msgstr "Dodaj %(name)s"
+
+#: bootstrap_admin/templates/admin/change_list.html:154
+#: bootstrap_admin/templates/admin/submit_line.html:5
+#: bootstrap_admin/templates/admin/submit_line.html:7
+msgid "Save"
+msgstr "Zapisz"
+
+#: bootstrap_admin/templates/admin/change_list_results.html:13
+msgid "Remove from sorting"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/change_list_results.html:16
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr "Priorytet sortowania: %(priority_number)s"
+
+#: bootstrap_admin/templates/admin/change_list_results.html:17
+msgid "Toggle sorting"
+msgstr "Przełącz sortowanie"
+
+#: bootstrap_admin/templates/admin/delete_confirmation.html:20
+#: bootstrap_admin/templates/admin/submit_line.html:34
+#: bootstrap_admin/templates/admin/submit_line.html:36
+#: schsys/templatetags/exsyntax.py:81 schsys/templatetags/exsyntax.py:82
+msgid "Delete"
+msgstr "Skasuj"
+
+#: bootstrap_admin/templates/admin/delete_confirmation.html:29
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/delete_confirmation.html:43
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/delete_confirmation.html:57
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/delete_confirmation.html:65
+#: bootstrap_admin/templates/admin/delete_confirmation.html:67
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:68
+msgid "Yes, I'm sure"
+msgstr "Tak, usuń"
+
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:17
+msgid "Delete multiple objects"
+msgstr "Kasuj wiele obiektów"
+
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:26
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:40
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:54
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/edit_inline/stacked.html:41
+#: bootstrap_admin/templates/admin/edit_inline/tabular.html:82
+msgid "Remove"
+msgstr "Usuń"
+
+#: bootstrap_admin/templates/admin/edit_inline/stacked.html:42
+#: bootstrap_admin/templates/admin/edit_inline/tabular.html:81
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr "Dodaj inny %(verbose_name)s"
+
+#: bootstrap_admin/templates/admin/edit_inline/tabular.html:20
+msgid "Delete?"
+msgstr "Czy skasować?"
+
+#: bootstrap_admin/templates/admin/filter.html:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr "Według %(filter_title)s "
+
+#: bootstrap_admin/templates/admin/index.html:18
+#: bootstrap_admin/templates/admin/index.html:31
+msgid "Apps"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/index.html:21
+#: bootstrap_admin/templates/admin/index.html:22
+#: bootstrap_admin/templates/admin/index.html:80
+msgid "Recent Actions"
+msgstr "Ostatnie akcje"
+
+#: bootstrap_admin/templates/admin/index.html:37
+#: bootstrap_admin/templates/admin/index.html:67
+#: bootstrap_admin/templates/admin/search_form.html:11
+#: bootstrap_admin/templates/admin/search_form.html:13
+msgid "Search"
+msgstr "Szukaj"
+
+#: bootstrap_admin/templates/admin/index.html:42
+#: bootstrap_admin/templates/admin/object_history.html:31 translate.py:5
+msgid "Action"
+msgstr "Akcja"
+
+#: bootstrap_admin/templates/admin/index.html:52
+#: bootstrap_admin/templates/admin/index.html:58
+#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:6
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr "Modele dostępne w aplikacji %(name)s."
+
+#: bootstrap_admin/templates/admin/index.html:66
+msgid "Change"
+msgstr "Zmień"
+
+#: bootstrap_admin/templates/admin/index.html:80
+msgid "My Actions"
+msgstr "Moje akcje"
+
+#: bootstrap_admin/templates/admin/index.html:85
+msgid "None available"
+msgstr "Brak"
+
+#: bootstrap_admin/templates/admin/index.html:111
+msgid "Unknown content"
+msgstr "Nieznana zawartość"
+
+#: bootstrap_admin/templates/admin/index.html:139
+#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:12
+#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:18
+msgid "You don't have permission to edit anything."
+msgstr "Nie masz uprawnień by edytować cokolwiek"
+
+#: bootstrap_admin/templates/admin/invalid_setup.html:5
+msgid ""
+"Something's wrong with your database installation. Make sure the appropriate "
+"database tables have been created, and make sure the database is readable by "
+"the appropriate user."
+msgstr ""
+
+#: bootstrap_admin/templates/admin/login.html:76
+#: bootstrap_admin/templates/registration/password_reset_complete.html:23
+msgid "Log in"
+msgstr "Zaloguj się"
+
+#: bootstrap_admin/templates/admin/login.html:87
+msgid "Forgotten your password or username?"
+msgstr "Zapomniałeś hasło?"
+
+#: bootstrap_admin/templates/admin/object_history.html:29
+msgid "Date/time"
+msgstr "Data/czas"
+
+#: bootstrap_admin/templates/admin/object_history.html:30
+msgid "User"
+msgstr "Użytkownik"
+
+#: bootstrap_admin/templates/admin/object_history.html:45
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+"Ten obiekt nie ma historii zmian. Najprawdopodobniej wpis te nie został "
+"dodany poprzez panel admina"
+
+#: bootstrap_admin/templates/admin/pagination.html:19
+msgid "Show all"
+msgstr "Pokaż wszystko"
+
+#: bootstrap_admin/templates/admin/related_widget_wrapper.html:8
+#, python-format
+msgid "Change selected %(model)s"
+msgstr "Zmień wybrany %(model)s"
+
+#: bootstrap_admin/templates/admin/related_widget_wrapper.html:15
+#, python-format
+msgid "Add another %(model)s"
+msgstr "Dodaj inny %(model)s"
+
+#: bootstrap_admin/templates/admin/related_widget_wrapper.html:22
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr "Skazuj zaznaczony %(model)s"
+
+#: bootstrap_admin/templates/admin/search_form.html:4
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bootstrap_admin/templates/admin/search_form.html:4
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: bootstrap_admin/templates/admin/submit_line.html:12
+#: bootstrap_admin/templates/admin/submit_line.html:14
+msgid "Save as new"
+msgstr "Zapisz jako nowe"
+
+#: bootstrap_admin/templates/admin/submit_line.html:19
+#: bootstrap_admin/templates/admin/submit_line.html:21
+msgid "Save and add another"
+msgstr "Zapisz i dodaj nowe"
+
+#: bootstrap_admin/templates/admin/submit_line.html:26
+#: bootstrap_admin/templates/admin/submit_line.html:28
+msgid "Save and continue editing"
+msgstr "Zapisz i kontynuuj edycję"
+
+#: bootstrap_admin/templates/registration/logged_out.html:18
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr "Dziękujemy za odwiedzenie serwisu."
+
+#: bootstrap_admin/templates/registration/logged_out.html:20
+msgid "Log in again"
+msgstr "Zaloguj ponownie"
+
+#: bootstrap_admin/templates/registration/password_change_done.html:10
+#: bootstrap_admin/templates/registration/password_change_form.html:15
+msgid "Password change"
+msgstr "Zmiana hasła"
+
+#: bootstrap_admin/templates/registration/password_change_done.html:20
+msgid "Your password was changed."
+msgstr "Twoje hasło zostało zmienione"
+
+#: bootstrap_admin/templates/registration/password_change_form.html:37
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr "Podaj swoje stare hasło i dwa razy nowe."
+
+#: bootstrap_admin/templates/registration/password_change_form.html:43
+msgid "Old password"
+msgstr "Stare hasło:"
+
+#: bootstrap_admin/templates/registration/password_change_form.html:50
+msgid "New password"
+msgstr "Nowe hasło:"
+
+#: bootstrap_admin/templates/registration/password_change_form.html:66
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:46
+msgid "Change my password"
+msgstr "Zmień hasło"
+
+#: bootstrap_admin/templates/registration/password_reset_complete.html:10
+#: bootstrap_admin/templates/registration/password_reset_done.html:10
+#: bootstrap_admin/templates/registration/password_reset_form.html:10
+msgid "Password reset"
+msgstr "Zresetuj hasło"
+
+#: bootstrap_admin/templates/registration/password_reset_complete.html:20
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:10
+msgid "Password reset confirmation"
+msgstr "Zresetuj hasło"
+
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:24
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr "Podaj swoje stare hasło i dwa razy nowe."
+
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:30
+msgid "New password:"
+msgstr "Nowe hasło:"
+
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:37
+msgid "Confirm password:"
+msgstr "Potwierdź hasło:"
+
+#: bootstrap_admin/templates/registration/password_reset_confirm.html:55
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: bootstrap_admin/templates/registration/password_reset_done.html:19
+msgid ""
+"We've emailed you instructions for setting your password. You should be "
+"receiving them shortly."
+msgstr ""
+"Nowe hasło zostało wysłane na podany adres email. Powinieneś otrzymać je "
+"niebawem."
+
+#: bootstrap_admin/templates/registration/password_reset_done.html:21
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#: bootstrap_admin/templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+"Otrzymałeś email gdyż zarządałeś zresetowania hasła dla twojego konta na "
+"stronie %(site_name)s."
+
+#: bootstrap_admin/templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: bootstrap_admin/templates/registration/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr "Twój login:"
+
+#: bootstrap_admin/templates/registration/password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr "Dziękujemy za używanie strony!"
+
+#: bootstrap_admin/templates/registration/password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "Zespół %(site_name)s"
+
+#: bootstrap_admin/templates/registration/password_reset_form.html:23
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll email "
+"instructions for setting a new one."
+msgstr ""
+"Podaj swój adres email. Hasło zostanie zresetowane i wysłane na twój adres "
+"email."
+
+#: bootstrap_admin/templates/registration/password_reset_form.html:29
+msgid "Email address:"
+msgstr "Adres e-mail:"
+
+#: bootstrap_admin/templates/registration/password_reset_form.html:38
+msgid "Reset my password"
+msgstr "Zresetuj moje hasło"
+
+#: schsys/templatetags/exsyntax.py:79 schsys/templatetags/exsyntax.py:80
+msgid "Update"
+msgstr "Popraw"
+
+#: schsys/templatetags/exsyntax.py:83 schsys/templatetags/exsyntax.py:84
+msgid "Default"
+msgstr " "
+
+#: schsys/templatetags/exsyntax.py:1144
+#, python-format
+msgid "%s tag requires a queryset"
+msgstr "%s tag wymaga queryset"
 
 #: translate.py:1
 msgid "Field"
@@ -77,21 +578,74 @@ msgstr "Skasować pozycję"
 msgid "Refresh"
 msgstr "Odśwież"
 
-#: translate.py:5
-msgid "Action"
-msgstr "Akcja"
-
 #: translate.py:6
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: translate.py:7
-msgid "Close"
-msgstr "Zamknij"
-
 #: translate.py:8
 msgid "OK"
 msgstr "OK"
+
+#: translate.py:9
+msgid "Cancel2"
+msgstr "Anuluj"
+
+#: translate.py:10
+msgid " Sławomir Chołaj!"
+msgstr ""
+
+#: translate.py:11
+msgid "(Refresh)"
+msgstr "(Odśwież)"
+
+#: translate.py:12
+msgid "Login"
+msgstr ""
+
+#: translate.py:13
+msgid "User name"
+msgstr "Nazwa użytkownika:"
+
+#~ msgid "update element"
+#~ msgstr "popraw element"
+
+#~ msgid "new element"
+#~ msgstr "nowy element"
+
+#, fuzzy
+#~| msgid "Delete the item"
+#~ msgid "delete element"
+#~ msgstr "Skasować pozycję"
+
+#~ msgid "Person"
+#~ msgstr "Osoba"
+
+#~ msgid "Parameter"
+#~ msgstr "Parametr"
+
+#~ msgid "Tools"
+#~ msgstr "Narzędzia"
+
+#~ msgid "File manager"
+#~ msgstr "Menadżer plików"
+
+#~ msgid "Name"
+#~ msgstr "Nazwa"
+
+#~ msgid "Size"
+#~ msgstr "Rozmiar"
+
+#~ msgid "Time"
+#~ msgstr "Czas"
+
+#~ msgid "Sort"
+#~ msgstr "Sortowanie"
+
+#~ msgid "Wiki"
+#~ msgstr "Wiki"
+
+#~ msgid "Page"
+#~ msgstr "Strona"
 
 #~ msgid "object ID"
 #~ msgstr "ID obiektu"
@@ -137,9 +691,6 @@ msgstr "OK"
 
 #~ msgid "IP address"
 #~ msgstr "Adres IP"
-
-#~ msgid "is removed"
-#~ msgstr "usunięty"
 
 #~ msgid ""
 #~ "Check this box if the comment is inappropriate. A \"This comment has been "
@@ -224,9 +775,6 @@ msgstr "OK"
 #~ msgid "deletion date"
 #~ msgstr "data skasowania"
 
-#~ msgid "moderator deletion"
-#~ msgstr "usunięcie moderatora"
-
 #~ msgid "moderator deletions"
 #~ msgstr "usunięcia moderatorów"
 
@@ -251,18 +799,6 @@ msgstr "OK"
 
 #~ msgid "One or more of the required fields wasn't submitted"
 #~ msgstr "Jedno lub więcej wymaganych pól nie zostało wypełnionych"
-
-#~ msgid "Username:"
-#~ msgstr "Nazwa użytkownika:"
-
-#~ msgid "Password:"
-#~ msgstr "Hasło:"
-
-#~ msgid "Forgotten your password?"
-#~ msgstr "Zapomniałeś hasło?"
-
-#~ msgid "Log out"
-#~ msgstr "Wyloguj się"
 
 #~ msgid "Ratings"
 #~ msgstr "Oceny"
@@ -316,9 +852,6 @@ msgstr "OK"
 #~ msgid "No"
 #~ msgstr "Nie"
 
-#~ msgid "Unknown"
-#~ msgstr "Nieznany"
-
 #~ msgid "action time"
 #~ msgstr "czas akcji"
 
@@ -349,9 +882,6 @@ msgstr "OK"
 #~ msgstr ""
 #~ "Proszę wpisać poprawną nazwę użytkownika i hasło. Uwaga: wielkość liter "
 #~ "ma znaczenie."
-
-#~ msgid "Log in"
-#~ msgstr "Zaloguj się"
 
 #~ msgid ""
 #~ "Please log in again, because your session has expired. Don't worry: Your "
@@ -482,109 +1012,11 @@ msgstr "OK"
 #~ msgid "XML text"
 #~ msgstr "Tekst XML"
 
-#~ msgid "Documentation"
-#~ msgstr "Dokumentacja"
-
-#~ msgid "Change password"
-#~ msgstr "Zmiana hasła"
-
-#~ msgid "Home"
-#~ msgstr "Początek"
-
-#~ msgid "History"
-#~ msgstr "Historia"
-
-#~ msgid "Date/time"
-#~ msgstr "Data/czas"
-
-#~ msgid "User"
-#~ msgstr "Użytkownik"
-
-#~ msgid ""
-#~ "This object doesn't have a change history. It probably wasn't added via "
-#~ "this admin site."
-#~ msgstr ""
-#~ "Ten obiekt nie ma historii zmian. Najprawdopodobniej wpis te nie został "
-#~ "dodany poprzez panel admina"
-
-#~ msgid "Django site admin"
-#~ msgstr "Administracja stroną Django"
-
-#~ msgid "Django administration"
-#~ msgstr "Administracja Django"
-
-#~ msgid "Server error"
-#~ msgstr "Błąd serwera"
-
-#~ msgid "Server error (500)"
-#~ msgstr "Bład serwera (500)"
-
-#~ msgid "Server Error <em>(500)</em>"
-#~ msgstr "Błąd Serwera <em>(500)</em>"
-
-#~ msgid ""
-#~ "There's been an error. It's been reported to the site administrators via "
-#~ "e-mail and should be fixed shortly. Thanks for your patience."
-#~ msgstr ""
-#~ "Wystąpił niespodziewany błąd. Raport został wysłany emailem "
-#~ "administratorowi strony."
-
-#~ msgid "Page not found"
-#~ msgstr "Strona nie znaleziona"
-
-#~ msgid "We're sorry, but the requested page could not be found."
-#~ msgstr "Niestety nie można znaleźć rządanej strony."
-
-#~ msgid "Models available in the %(name)s application."
-#~ msgstr "Modele dostępne w aplikacji %(name)s."
-
-#~ msgid "Add"
-#~ msgstr "Dodaj"
-
-#~ msgid "Change"
-#~ msgstr "Zmień"
-
-#~ msgid "You don't have permission to edit anything."
-#~ msgstr "Nie masz uprawnień by edytować cokolwiek"
-
-#~ msgid "Recent Actions"
-#~ msgstr "Ostatnie akcje"
-
-#~ msgid "My Actions"
-#~ msgstr "Moje akcje"
-
-#~ msgid "None available"
-#~ msgstr "Brak"
-
-#~ msgid "Add %(name)s"
-#~ msgstr "Dodaj %(name)s"
-
 #~ msgid "Have you <a href=\"/password_reset/\">forgotten your password</a>?"
 #~ msgstr "Czy <a href=\"/password_reset/\">zapomniałeś/łaś</a> hasła?"
 
 #~ msgid "Welcome,"
 #~ msgstr "Witaj,"
-
-#~ msgid "Delete"
-#~ msgstr "Skasuj"
-
-#~ msgid "Yes, I'm sure"
-#~ msgstr "Tak, usuń"
-
-#~ msgid " By %(title)s "
-#~ msgstr "Używając %(title)s"
-
-#~ msgid "Go"
-#~ msgstr "Szukaj"
-
-#~ msgid "View on site"
-#~ msgstr "Pokaż na stronie"
-
-#, fuzzy
-#~ msgid "Please correct the error below."
-#~ msgid_plural "Please correct the errors below."
-#~ msgstr[0] "Proszę popraw poniższy błąd"
-#~ msgstr[1] "Proszę popraw poniższy błąd"
 
 #~ msgid "Ordering"
 #~ msgstr "Sortowanie"
@@ -592,78 +1024,11 @@ msgstr "OK"
 #~ msgid "Order:"
 #~ msgstr "Porządek:"
 
-#~ msgid "Save as new"
-#~ msgstr "Zapisz jako nowe"
-
-#~ msgid "Save and add another"
-#~ msgstr "Zapisz i dodaj nowe"
-
-#~ msgid "Save and continue editing"
-#~ msgstr "Zapisz i kontynuuj edycję"
-
-#~ msgid "Save"
-#~ msgstr "Zapisz"
-
-#~ msgid "Password change"
-#~ msgstr "Zmiana hasła"
-
 #~ msgid "Password change successful"
 #~ msgstr "Hasło zmienione"
 
-#~ msgid "Your password was changed."
-#~ msgstr "Twoje hasło zostało zmienione"
-
-#~ msgid "Password reset"
-#~ msgstr "Zresetuj hasło"
-
-#~ msgid ""
-#~ "Forgotten your password? Enter your e-mail address below, and we'll reset "
-#~ "your password and e-mail the new one to you."
-#~ msgstr ""
-#~ "Podaj swój adres email. Hasło zostanie zresetowane i wysłane na twój "
-#~ "adres email."
-
-#~ msgid "E-mail address:"
-#~ msgstr "Adres e-mail:"
-
-#~ msgid "Reset my password"
-#~ msgstr "Zresetuj moje hasło"
-
-#~ msgid "Thanks for spending some quality time with the Web site today."
-#~ msgstr "Dziękujemy za odwiedzenie serwisu."
-
-#~ msgid "Log in again"
-#~ msgstr "Zaloguj ponownie"
-
 #~ msgid "Password reset successful"
 #~ msgstr "Udane resetowanie hasła"
-
-#~ msgid ""
-#~ "We've e-mailed a new password to the e-mail address you submitted. You "
-#~ "should be receiving it shortly."
-#~ msgstr ""
-#~ "Nowe hasło zostało wysłane na podany adres email. Powinieneś otrzymać je "
-#~ "niebawem."
-
-#~ msgid ""
-#~ "Please enter your old password, for security's sake, and then enter your "
-#~ "new password twice so we can verify you typed it in correctly."
-#~ msgstr "Podaj swoje stare hasło i dwa razy nowe."
-
-#~ msgid "Old password:"
-#~ msgstr "Stare hasło:"
-
-#~ msgid "New password:"
-#~ msgstr "Nowe hasło:"
-
-#~ msgid "Confirm password:"
-#~ msgstr "Potwierdź hasło:"
-
-#~ msgid "Change my password"
-#~ msgstr "Zmień hasło"
-
-#~ msgid "You're receiving this e-mail because you requested a password reset"
-#~ msgstr "Otrzymałeś email gdyż zarządałeś zresetowania hasła"
 
 #~ msgid "for your user account at %(site_name)s"
 #~ msgstr "dla twojego konta użytkownika na stronie %(site_name)s"
@@ -673,15 +1038,6 @@ msgstr "OK"
 
 #~ msgid "Feel free to change this password by going to this page:"
 #~ msgstr "Możesz zmienić je na stronie:"
-
-#~ msgid "Your username, in case you've forgotten:"
-#~ msgstr "Twój login:"
-
-#~ msgid "Thanks for using our site!"
-#~ msgstr "Dziękujemy za używanie strony!"
-
-#~ msgid "The %(site_name)s team"
-#~ msgstr "Zespół %(site_name)s"
 
 #~ msgid "Documentation for this page"
 #~ msgstr "Dokumentacja dla tej strony"
@@ -931,9 +1287,6 @@ msgstr "OK"
 
 #~ msgid "February"
 #~ msgstr "Luty"
-
-#~ msgid "March"
-#~ msgstr "Marzec"
 
 #~ msgid "April"
 #~ msgstr "Kwiecień"

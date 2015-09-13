@@ -68,6 +68,7 @@ def iter_lines(f, f_name, lang):
     if lang!='en':
         try:
             t = gettext.translation('django', locale_path, languages=[lang,])
+            t.install()
 
             try:
                 p = open(os.path.join(base_path,"translate.py"), "rt")
@@ -97,7 +98,7 @@ def iter_lines(f, f_name, lang):
                 if not word2 in tab_translate:
                     tab_translate.append(word2)
                 ret = t.gettext(word2)
-
+                #print(word, "["+word2+"]", ret, t, locale_path, lang)
                 if strtest != None:
                     return strtest+ret+strtest
                 else:
