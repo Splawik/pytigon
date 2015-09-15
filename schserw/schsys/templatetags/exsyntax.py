@@ -136,16 +136,16 @@ class Action:
         self.x3 = ""
 
         pos = actions_str.split(',')
-        action = pos[0]
+        action = pos[0].strip()
 
         if '/' in action:
             x = action.split('/')
-            self.x1 = x[1]
+            self.x1 = x[1].strip()
             if len(x)>2:
                 self.x2 = x[2]
                 if len(x)>3:
-                    self.x3 = x[3]
-            self.d['action'] = self.action =  x[0]
+                    self.x3 = x[3].strip()
+            self.d['action'] = self.action =  x[0].strip()
         else:
             self.d['action'] = self.action = action
 
@@ -154,7 +154,7 @@ class Action:
         self.d['x3'] = self.x3
 
         if len(pos)>1:
-            self.title = pos[1].strip()
+            self.title = pos[1].strip().split(':::')[0]
             if len(pos)>2:
                 self.name = pos[2].strip()
                 if len(pos)>3:
@@ -226,6 +226,9 @@ class Action:
             self.icon = STANDARD_ICON[action2]
         else:
             self.icon = None
+        if len(pos)>1:
+            if ':::' in pos[1]:
+                self.icon = [ pos[1].strip().split(':::')[1], 'edit']
 
         if self.icon and context['browser_type']=='mobile':
             self.style = self.style + " data-iconpos='notext' data-icon='%s' " % self.icon[1]

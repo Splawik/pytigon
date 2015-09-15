@@ -64,7 +64,9 @@ urlpatterns = patterns(
     (r'schsys/do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     (r'schsys/do_logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     (r'schsys/message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
-    (r'schsys/ok/$', 'schserw.urls.ok'),
+    #url(r'^schsys/ok/$', ok, name='schsys_ok'),
+    #(r'schsys/ok/$', 'schserw.urls.ok'),
+    url(r'schsys/ok/$', 'schserw.urls.ok', name='ok'),
     (r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.ROOT_PATH + '/static'}),
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
