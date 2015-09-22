@@ -5,7 +5,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
     </div>\
     <div class='panel-footer'>\
         <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\
-        <button type='button' class='btn btn-primary' onclick=\"javascript:on_edit_ok($(this));return false;\">OK</button>\
+        <button type='button' class='btn btn-primary' onclick=\"javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;\">OK</button>\
     </div>\
 </div>\
 ";

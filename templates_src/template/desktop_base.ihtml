@@ -181,14 +181,14 @@
             div id=tab_tabs2
                 ul class=nav nav-tabs,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
-        div id=body_body,,,class=refr_target tab-pane
+        div id=body_body,,,class=tab-pane refr_target refr_object
             {{block.super}}
         script
             $('#tabs2:first').tabdrop()
 
 
 %% body_body
-    div id=body_body,,,class=refr_target tab-pane
+    div id=body_body,,,class=tab-pane refr_target refr_object
         {{block.super}}
 
 

@@ -28,7 +28,7 @@ def can_popup():
     if(IS_POPUP):
         return False
     else:
-        return True
+       return True
 
 
 def corect_href(href):

@@ -1,24 +1,26 @@
 #import tools
 
 
-def refresh_fragment2(data_item_to_refresh):
-    src = data_item_to_refresh.closest('.refr_source')
+def refresh_fragment(data_item_to_refresh, fun=None):
+    refr_block = data_item_to_refresh.closest('.refr_object')
+    if refr_block.hasClass('refr_target'):
+        target = refr_block
+    else:
+        target = refr_block.find('.refr_target')
+    src = refr_block.find('.refr_source')
     href = src.attr('href')
-    target = src.find('.refr_target')
-    target.load(href, None, 
-        def(responseText, status, response):
-            pass
-    )
-
-
-def refresh_fragment(data_item_to_refresh):
-    target = data_item_to_refresh.closest('.refr_target')
-    src = target.find('.refr_source')    
-    href = src.attr('href')
-    target.load(corect_href(href), None, 
-        def(responseText, status, response):
-            pass
-    )
+    if src.prop("tagName") == 'FORM':
+        data = new FormData(src[0])
+        def _refr2(data):
+            target.html(data);
+            if fun:
+                fun();
+        jQuery.ajax({'type': "POST", 'url': corect_href(href), 'data': data, contentType: False, processData: False,  'success': _refr2  })
+    else:
+        target.load(corect_href(href), None,
+            def(responseText, status, response):
+                pass
+        )
 
 
 def on_popup(elem):
@@ -30,7 +32,7 @@ def on_popup(elem):
         cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
         jQuery('div.dialog-form').modal()
     else:
-        if can_popup():
+        if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
             jQuery("div.dialog-data").load(jQuery(elem).attr("href"), None,
                 def(responseText, status, response):
                     if status!='error':
@@ -40,9 +42,10 @@ def on_popup(elem):
         else:
             if WAIT_ICON:
                 WAIT_ICON.start()
-            jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None,
+            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+            elem2.insertAfter(jQuery(elem).closest("tr"))
+            elem3 = elem2.find("div.dialog-data-inner")
+            elem3.load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     nonlocal WAIT_ICON
                     if status!='error':
@@ -204,13 +207,14 @@ def _refresh_win2(responseText, form):
         jQuery("div.dialog-data").html(responseText)
 
 
-def _refresh_win(responseText, ok_button):
+def _refresh_win3(responseText, ok_button):
     nonlocal ACTIVE_PAGE
     nonlocal POPUP_ACTIVATOR
     #form = POPUP_ACTIVATOR.closest('form.TableFiltr')    
     form = POPUP_ACTIVATOR.closest('div.content').find('form.TableFiltr')
     if "RETURN_OK" in responseText:            
-        subform = form.closest('div.inline_frame')
+        #subform = form.closest('div.inline_frame')
+        subform = form.closest('.refr_source')
         if subform.length>0:
             subform.find("div.frame-data-inner").load(subform.attr('href'),None)
         else:
@@ -235,7 +239,23 @@ def _refresh_win(responseText, ok_button):
                 else:
                     jQuery("div.dialog-form").modal('hide')
     else:
-        form.jQuery("div.dialog-data").html(responseText)
+        jQuery("div.dialog-data").html(responseText)
+
+
+
+def _refresh_win(responseText, ok_button):
+    nonlocal POPUP_ACTIVATOR
+    if "RETURN_OK" in responseText:
+        if jQuery("div.dialog-form").hasClass('in'):
+            def hide_dialog_form():
+                jQuery("div.dialog-form").modal('hide')
+            refresh_fragment(POPUP_ACTIVATOR, hide_dialog_form)
+            jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
+        else:
+            refresh_fragment(POPUP_ACTIVATOR)
+    else:
+        jQuery("div.dialog-data").html(responseText)
+
 
 
 def on_cancel_inline(elem):

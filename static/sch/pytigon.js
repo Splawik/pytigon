@@ -126,30 +126,47 @@ function get_menu() {
     }
     return MENU;
 }
-function refresh_fragment2(data_item_to_refresh) {
-    var src, href, target;
-    src = data_item_to_refresh.closest(".refr_source");
+function refresh_fragment(data_item_to_refresh, fun) {
+    if (typeof fun === "undefined") fun = null;
+    var refr_block, target, src, href, data;
+    refr_block = data_item_to_refresh.closest(".refr_object");
+    if (refr_block.hasClass("refr_target")) {
+        target = refr_block;
+    } else {
+        target = refr_block.find(".refr_target");
+    }
+    src = refr_block.find(".refr_source");
     href = src.attr("href");
-    target = src.find(".refr_target");
-    target.load(href, null, function(responseText, status, response) {
-    });
-}
-function refresh_fragment(data_item_to_refresh) {
-    var target, src, href;
-    target = data_item_to_refresh.closest(".refr_target");
-    src = target.find(".refr_source");
-    href = src.attr("href");
-    target.load(corect_href(href), null, function(responseText, status, response) {
-    });
+    if (src.prop("tagName") === "FORM") {
+        data = new FormData(src[0]);
+        function _refr2(data) {
+            target.html(data);
+            if (fun) {
+                fun();
+            }
+        }
+        jQuery.ajax({
+            "type": "POST",
+            "url": corect_href(href),
+            "data": data,
+            contentType: false,
+            processData: false,
+            "success": _refr2
+        });
+    } else {
+        target.load(corect_href(href), null, function(responseText, status, response) {
+        });
+    }
 }
 function on_popup(elem) {
+    var elem2, elem3;
     POPUP_ACTIVATOR = jQuery(elem);
     WAIT_ICON = Ladda.create(elem);
     if (is_hybrid()) {
         cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
         jQuery("div.dialog-form").modal();
     } else {
-        if (can_popup()) {
+        if (can_popup() && !jQuery(elem).hasClass("inline") && !(_$rapyd$_in("_inline", jQuery(elem).attr("name")))) {
             jQuery("div.dialog-data").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
                     _dialog_loaded(true);
@@ -160,9 +177,10 @@ function on_popup(elem) {
             if (WAIT_ICON) {
                 WAIT_ICON.start();
             }
-            jQuery(".inline_dialog").remove();
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
+            elem2.insertAfter(jQuery(elem).closest("tr"));
+            elem3 = elem2.find("div.dialog-data-inner");
+            elem3.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
                     _dialog_loaded(false);
                     on_dialog_load();
@@ -342,11 +360,11 @@ function _refresh_win2(responseText, form) {
         jQuery("div.dialog-data").html(responseText);
     }
 }
-function _refresh_win(responseText, ok_button) {
+function _refresh_win3(responseText, ok_button) {
     var form, subform, div, href, filter;
     form = POPUP_ACTIVATOR.closest("div.content").find("form.TableFiltr");
     if (_$rapyd$_in("RETURN_OK", responseText)) {
-        subform = form.closest("div.inline_frame");
+        subform = form.closest(".refr_source");
         if (subform.length > 0) {
             subform.find("div.frame-data-inner").load(subform.attr("href"), null);
         } else {
@@ -371,7 +389,22 @@ function _refresh_win(responseText, ok_button) {
             }
         }
     } else {
-        form.jQuery("div.dialog-data").html(responseText);
+        jQuery("div.dialog-data").html(responseText);
+    }
+}
+function _refresh_win(responseText, ok_button) {
+    if (_$rapyd$_in("RETURN_OK", responseText)) {
+        if (jQuery("div.dialog-form").hasClass("in")) {
+            function hide_dialog_form() {
+                jQuery("div.dialog-form").modal("hide");
+            }
+            refresh_fragment(POPUP_ACTIVATOR, hide_dialog_form);
+            jQuery("div.dialog-form").fadeTo("slow", .5);
+        } else {
+            refresh_fragment(POPUP_ACTIVATOR);
+        }
+    } else {
+        jQuery("div.dialog-data").html(responseText);
     }
 }
 function on_cancel_inline(elem) {
