@@ -81,6 +81,7 @@ STANDARD_DESC = {
     'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'delete2': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'field_list': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
     'field_action': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
@@ -94,12 +95,14 @@ STANDARD_URL = {
     'pdf': "../../../{id}/pdf/view/",
     'odf': "../../../{id}/odf/view/",
     'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
     'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
 STANDARD_URL_CHILD_TAB = {
     'action': "{base_path}../{table_name}/{id}/action/{action}",
     'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
     'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
@@ -112,6 +115,7 @@ STANDARD_ICON = {
     'pdf': ['glyphicon-eye-open', 'eye'],
     'odf': ['glyphicon-list', 'bullets'],
     'field_list': ['glyphicon-triangle-bottom', 'grid'],
+    'field_list_get': ['glyphicon-triangle-bottom', 'grid'],
     'field_action': ['glyphicon-hand-down', 'grid'],
     'field_edit': ['glyphicon-edit', 'edit'],
 }

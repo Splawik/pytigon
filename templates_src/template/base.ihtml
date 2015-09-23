@@ -193,3 +193,7 @@
         %% list_page_footer
 
         %% list_page_end
+
+%% content_end
+    %if get:
+        h1...GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTT!
