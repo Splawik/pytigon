@@ -14,6 +14,8 @@ MENU_ID = 0;
 BASE_FRAGMENT_INIT = null;
 POPUP_ACTIVATOR = null;
 COUNTER = 1;
+EDIT_RET_FUNCTION = null;
+RET_CONTROL = null;
 function Page() {
     Page.prototype.__init__.apply(this, arguments);
 }
@@ -158,7 +160,75 @@ function refresh_fragment(data_item_to_refresh, fun) {
         });
     }
 }
-function on_popup(elem) {
+function on_popup_inline(elem) {
+    var id, href2, new_fragment;
+    jQuery(elem).attr("data-style", "zoom-out");
+    jQuery(elem).attr("data-spinner-color", "#FF0000");
+    WAIT_ICON = Ladda.create(elem);
+    if (is_hybrid()) {
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+        jQuery("div.dialog-form-info").modal();
+    } else {
+        if (WAIT_ICON) {
+            WAIT_ICON.start();
+        }
+        jQuery(elem).closest("table").find(".inline_dialog").remove();
+        COUNTER = COUNTER + 1;
+        id = COUNTER;
+        href2 = corect_href(jQuery(elem).attr("href"));
+        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
+        new_fragment.insertAfter(jQuery(elem).closest("tr"));
+        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
+            $("#IDIAL_" + id).hide();
+            $("#IDIAL_" + id).removeClass("hide");
+            $("#IDIAL_" + id).show("slow");
+            if (status !== "error") {
+                _dialog_loaded(false);
+                on_dialog_load();
+            }
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+                WAIT_ICON = null;
+            }
+        });
+    }
+    return false;
+}
+function on_popup_in_form(elem) {
+    var id, href2, new_fragment;
+    jQuery(elem).attr("data-style", "zoom-out");
+    jQuery(elem).attr("data-spinner-color", "#FF0000");
+    WAIT_ICON = Ladda.create(elem);
+    if (is_hybrid()) {
+        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+        jQuery("div.dialog-form-info").modal();
+    } else {
+        if (WAIT_ICON) {
+            WAIT_ICON.start();
+        }
+        jQuery(elem).closest("div.Dialog").find(".inline_dialog").remove();
+        COUNTER = COUNTER + 1;
+        id = COUNTER;
+        href2 = corect_href(jQuery(elem).attr("href"));
+        new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'>" + INLINE_TABLE_HTML + "</div>");
+        new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
+        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
+            $("#IDIAL_" + id).hide();
+            $("#IDIAL_" + id).removeClass("hide");
+            $("#IDIAL_" + id).show("slow");
+            if (status !== "error") {
+                _dialog_loaded(false);
+                on_dialog_load();
+            }
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+                WAIT_ICON = null;
+            }
+        });
+    }
+    return false;
+}
+function on_popup_edit_new(elem) {
     var elem2, elem3;
     POPUP_ACTIVATOR = jQuery(elem);
     WAIT_ICON = Ladda.create(elem);
@@ -191,40 +261,6 @@ function on_popup(elem) {
                 }
             });
         }
-    }
-    return false;
-}
-function on_popup_inline(elem) {
-    var id, href2, new_fragment;
-    jQuery(elem).attr("data-style", "zoom-out");
-    jQuery(elem).attr("data-spinner-color", "#FF0000");
-    WAIT_ICON = Ladda.create(elem);
-    if (is_hybrid()) {
-        cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
-        jQuery("div.dialog-form-info").modal();
-    } else {
-        if (WAIT_ICON) {
-            WAIT_ICON.start();
-        }
-        jQuery(elem).closest("table").find(".inline_dialog").remove();
-        COUNTER = COUNTER + 1;
-        id = COUNTER;
-        href2 = corect_href(jQuery(elem).attr("href"));
-        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
-        new_fragment.insertAfter(jQuery(elem).closest("tr"));
-        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
-            $("#IDIAL_" + id).hide();
-            $("#IDIAL_" + id).removeClass("hide");
-            $("#IDIAL_" + id).show("slow");
-            if (status !== "error") {
-                _dialog_loaded(false);
-                on_dialog_load();
-            }
-            if (WAIT_ICON) {
-                WAIT_ICON.stop();
-                WAIT_ICON = null;
-            }
-        });
     }
     return false;
 }
@@ -308,7 +344,7 @@ function on_edit_ok(form) {
             processData: false,
             "xhr": xhr,
             "success": function(data) {
-                _refresh_win(data, form);
+                _refresh_win_after_ok(data, form);
             }
         });
     } else {
@@ -319,7 +355,7 @@ function on_edit_ok(form) {
             contentType: false,
             processData: false,
             "success": function(data) {
-                _refresh_win(data, form);
+                _refresh_win_after_ok(data, form);
             }
         });
     }
@@ -404,11 +440,64 @@ function _refresh_win(responseText, ok_button) {
             refresh_fragment(POPUP_ACTIVATOR);
         }
     } else {
-        jQuery("div.dialog-data").html(responseText);
+        if (jQuery("div.dialog-form").hasClass("in")) {
+            jQuery("div.dialog-data").html(responseText);
+        } else {
+            ok_button.closest(".refr_target").html(responseText);
+        }
+    }
+}
+function _refresh_win_after_ok(responseText, ok_button) {
+    if (EDIT_RET_FUNCTION) {
+        EDIT_RET_FUNCTION(responseText, ok_button);
+        EDIT_RET_FUNCTION = false;
+    } else {
+        _refresh_win(responseText, ok_button);
     }
 }
 function on_cancel_inline(elem) {
     jQuery(elem).closest(".inline_dialog").remove();
+}
+function _refresh_win_and_ret(responseText, ok_button) {
+    var q;
+    if (_$rapyd$_in("RETURN_OK", responseText)) {
+        if (jQuery("div.dialog-form").hasClass("in")) {
+            jQuery("div.dialog-form").modal("hide");
+        }
+        q = jQuery(responseText);
+        eval(q[1].text);
+    } else {
+        jQuery("div.dialog-data").html(responseText);
+    }
+}
+function ret_ok(id, title) {
+    RET_CONTROL.select2("data", {
+        id: id,
+        text: title
+    }).trigger("change");
+    RET_CONTROL.val(id.toString());
+    RET_CONTROL[0].defaultValue = id.toString();
+}
+function on_get_tbl_value(elem) {
+    on_popup_in_form(elem);
+}
+function on_new_tbl_value(elem) {
+    EDIT_RET_FUNCTION = _refresh_win_and_ret;
+    RET_CONTROL = jQuery(elem).closest(".input-group").find("input._autoheavyselect2widgetext");
+    return on_popup_edit_new(elem);
+}
+function on_get_row(elem) {
+    var id, text, ret_control;
+    id = jQuery(elem).attr("data-id");
+    text = jQuery(elem).attr("data-text");
+    ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find("input._autoheavyselect2widgetext");
+    ret_control.select2("data", {
+        id: id,
+        text: text
+    }).trigger("change");
+    ret_control.val(id.toString());
+    ret_control[0].defaultValue = id.toString();
+    jQuery(elem).closest(".refr_source").remove();
 }
 function stick_resize() {
     var tbl, dy_table, dy_win, dy;
@@ -666,17 +755,36 @@ function page_init(id, first_time) {
     }
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     if (first_time) {
+        jQuery("body").on("click", "button", function(e) {
+            var src_obj, pos;
+            if ($(e.target).attr("target") === "_blank") {
+                return;
+            }
+            src_obj = jQuery(this);
+            var _$rapyd$_Iter0 = [ ["get_tbl_value", on_get_tbl_value], ["new_tbl_value", on_new_tbl_value] ];
+            for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
+                pos = _$rapyd$_Iter0[_$rapyd$_Index0];
+                if (jQuery(this).hasClass(pos[0])) {
+                    e.preventDefault();
+                    pos[1](this);
+                    return false;
+                }
+            }
+            return true;
+        });
         jQuery("#" + id).on("click", "a", function(e) {
             var src_obj, pos, href, href2;
             if ($(e.target).attr("target") === "_blank") {
                 return;
             }
             src_obj = jQuery(this);
-            var _$rapyd$_Iter0 = [ ["popup", on_popup], ["popup_inline", on_popup_inline], ["popup_info", 
-            on_popup_info], ["popup_delete", on_popup_delete] ];
-            for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
-                pos = _$rapyd$_Iter0[_$rapyd$_Index0];
+            var _$rapyd$_Iter1 = [ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
+            on_popup_info], ["popup_delete", on_popup_delete], ["get_tbl_value", on_get_tbl_value], ["new_tbl_value", 
+            on_new_tbl_value], ["get_row", on_get_row] ];
+            for (var _$rapyd$_Index1 = 0; _$rapyd$_Index1 < _$rapyd$_Iter1.length; _$rapyd$_Index1++) {
+                pos = _$rapyd$_Iter1[_$rapyd$_Index1];
                 if (jQuery(this).hasClass(pos[0])) {
+                    e.preventDefault();
                     pos[1](this);
                     return false;
                 }

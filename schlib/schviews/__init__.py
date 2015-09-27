@@ -45,11 +45,11 @@ from django.utils.translation import ugettext_lazy as _
 # url:  /table/TableName/filter/target/list url width field:
 # /table/TableName/parent_pk/field/filter/target/list
 
-def make_path(view_name):
+def make_path(view_name, args=None):
     if settings.URL_POSTFIX:
-        return settings.URL_POSTFIX+"/"+reverse(view_name)
+        return settings.URL_POSTFIX+"/"+reverse(view_name, args=args)
     else:
-        return reverse(view_name)
+        return reverse(view_name, args=args)
 
 def gen_tab_action(
     table,
@@ -519,7 +519,7 @@ class GenericRows(object):
                 model = f.related_model
             else:
                 model = self.base_model
-            success_url = make_path('schserw.urls.ok')
+            success_url = make_path('schserw.urls.ok', )
 
             template_name = self.template_name
             title = self.title
@@ -597,12 +597,19 @@ class GenericRows(object):
             else:
                 model = self.base_model
                 pmodel = model
-            success_url = make_path('schserw.urls.ok')
+            #success_url = make_path('schserw.urls.ok')
             template_name = self.template_name
             title = self.title
             field = self.field
             init_form = None
             fields = "__all__"
+
+            def get_success_url(self):
+                if self.object:
+                    success_url = make_path('schserw.urls.ret_ok', (int(self.object.id), str(self.object)))
+                else:
+                    success_url = make_path('schserw.urls.ok')
+                return success_url
 
             def get(
                 self,

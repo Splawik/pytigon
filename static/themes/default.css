@@ -203,3 +203,24 @@ tr td.td_information  .btn.btn-sm {
 }
 
 li.topmenu_right:last-child { float:right; }
+
+button.foreignkey_button {
+    padding: 7px 7px;
+}
+
+.input-group .input-group-btn button.foreignkey_button {
+    margin: 0px 5px;
+}
+
+ div.inline_dialog {
+    margin-right: 15px;
+    margin-left: 0px;
+}
+
+tr.inline_dialog {
+    padding: 30px 100px;
+}
+
+td div div div div form.DialogForm {
+    padding: 10px;
+}

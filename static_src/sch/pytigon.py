@@ -19,6 +19,8 @@ MENU_ID = 0
 BASE_FRAGMENT_INIT = None
 POPUP_ACTIVATOR = None
 COUNTER = 1
+EDIT_RET_FUNCTION = None
+RET_CONTROL = None
 
 import page
 import tabmenuitem
@@ -71,6 +73,22 @@ def page_init(id, first_time = True):
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
     if first_time:
+        jQuery('body').on( "click", "button",
+            def(e):
+                nonlocal ACTIVE_PAGE
+
+                if $(e.target).attr('target') == "_blank":
+                    return
+
+                src_obj = jQuery(this)
+
+                for pos in [ ('get_tbl_value', on_get_tbl_value), ('new_tbl_value', on_new_tbl_value) ]:
+                    if jQuery(this).hasClass(pos[0]):
+                        e.preventDefault()
+                        pos[1](this)
+                        return False
+                return True
+        )
         jQuery('#'+ id).on( "click", "a",
             def(e):
                 nonlocal ACTIVE_PAGE
@@ -81,8 +99,9 @@ def page_init(id, first_time = True):
                 
                 src_obj = jQuery(this)
 
-                for pos in [ ('popup', on_popup), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
+                for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete), ('get_tbl_value', on_get_tbl_value), ('new_tbl_value', on_new_tbl_value), ('get_row', on_get_row), ]:
                     if jQuery(this).hasClass(pos[0]):
+                        e.preventDefault()
                         pos[1](this)
                         return False
 
@@ -349,5 +368,3 @@ def history_push_state(title, url, data=None):
     else:
         data2 = title
     window.history.pushState(data2, title, url2)
-
-

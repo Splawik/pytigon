@@ -5,6 +5,7 @@
 % load exfiltry
 % load exsyntax
 % load crispy_forms_tags
+% load django_select2_tags
 
 %% js_scripts_base
     {% jscript_link 'vanillajs_plugins/baselib.js' %}
@@ -13,6 +14,9 @@
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
 
     {% jscript_link 'jquery/js/jquery.min.js' %}
+    
+    {% import_django_select2_js %}
+    
     {% jscript_link 'jquery/js/jquery-ui.min.js' %}
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
@@ -24,7 +28,8 @@
     {% jscript_link 'jquery_plugins/datatables/FixedColumns/js/dataTables.fixedColumns.js' %}
     {% jscript_link 'jquery_plugins/datatables/Responsive/js/dataTables.responsive.js' %}
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
-
+    
+    
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
@@ -47,6 +52,7 @@
 
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
+
 
     %% theme_js_scripts
 
@@ -99,13 +105,17 @@
 
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
-
-
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
 
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
+
+    {% import_django_select2_css %}
+    {% css_link 'themes/select2-bootstrap.css' %}
+
     {% css_link 'themes/default.css' %}
+
     %% theme_css_links
+
 
 %% css_start
     <style type="text/css">

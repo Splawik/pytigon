@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -285,7 +286,7 @@ class SChApp( models.Model):
 
     
 
-    parent = models.ForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     module_title = models.CharField('Module title', null=True, blank=True, editable=True, max_length=32)
     title = models.CharField('Title', null=True, blank=True, editable=True, max_length=255)
@@ -404,7 +405,7 @@ class SChChoice( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     verbose_name = models.CharField('Verbose name', null=False, blank=False, editable=True, max_length=255)
     
@@ -428,7 +429,7 @@ class SChChoiceItem( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChChoice, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChChoice, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     value = models.CharField('Value', null=False, blank=False, editable=True, max_length=255)
     
@@ -452,7 +453,7 @@ class SChTable( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     base_table = models.CharField('Base table', null=True, blank=True, editable=True, max_length=255)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     verbose_name = models.CharField('Verbose name', null=False, blank=False, editable=True, max_length=255)
@@ -494,7 +495,7 @@ class SChField( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChTable, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChTable, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=True, blank=True, editable=True, max_length=255)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=Field_CHOICES,max_length=64)
@@ -559,8 +560,12 @@ class SChField( models.Model):
             return self.param
         if self.is_rel():
             rel_model =self.rel_to.split('.')[-1]
-            ret = "%s = models.%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-                (self.name, self.type if self.type[0]!='G' else self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)            
+            if self.type[0]=='G':
+                ret = "%s = %s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+                    (self.name, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)            
+            else:
+                ret = "%s = models.%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+                    (self.name, self.type, rel_model, self.null, self.blank, self.editable, self.description)                        
         else:
             ret = "%s = models.%s('%s', null=%s, blank=%s, editable=%s, " % \
                 (self.name, self.type, self.description, self.null, self.blank, self.editable)
@@ -615,7 +620,7 @@ class SChView( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     view_type = models.CharField('View type', null=False, blank=False, editable=True, choices=View_CHOICES,max_length=1)
     param = models.CharField('Param', null=True, blank=True, editable=True, max_length=255)
@@ -707,7 +712,7 @@ class SChTemplate( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     direct_to_template = models.NullBooleanField('Direct to template', null=True, blank=True, editable=True, )
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=64)
@@ -813,7 +818,7 @@ class SChAppMenu( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     url = models.CharField('Url', null=False, blank=False, editable=True, max_length=255)
     url_type = models.CharField('Url type', null=True, blank=True, editable=True, default='-',choices=Url_CHOICES,max_length=16)
@@ -872,7 +877,7 @@ class SChUrl( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     reg_expr = models.CharField('Regular expression', null=False, blank=False, editable=True, max_length=255)
     callback_fun = models.CharField('Callback function', null=False, blank=False, editable=True, max_length=64)
     dictionary = models.CharField('Dictionary', null=True, blank=True, editable=True, max_length=255)
@@ -896,7 +901,7 @@ class SChForm( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     module = models.CharField('Module', null=True, blank=True, editable=True, max_length=64)
     process_code = models.TextField('Process code', null=True, blank=True, editable=True, )
@@ -922,7 +927,7 @@ class SChFormField( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChForm, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChForm, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=FormField_CHOICES,max_length=64)
     required = models.NullBooleanField('Required', null=True, blank=True, editable=True, )
@@ -988,7 +993,7 @@ class SChTask( models.Model):
 
     
 
-    parent = models.HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     code = models.TextField('Code', null=True, blank=True, editable=True, )
     doc = models.TextField('Doc', null=True, blank=True, editable=True, )

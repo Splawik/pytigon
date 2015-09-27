@@ -23,7 +23,82 @@ def refresh_fragment(data_item_to_refresh, fun=None):
         )
 
 
-def on_popup(elem):
+def on_popup_inline(elem):
+    nonlocal WAIT_ICON
+    nonlocal COUNTER
+    jQuery(elem).attr("data-style", "zoom-out")
+    jQuery(elem).attr("data-spinner-color", "#FF0000")
+    WAIT_ICON = Ladda.create(elem)
+    if is_hybrid():
+        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
+        jQuery('div.dialog-form-info').modal()
+    else:
+        if WAIT_ICON:
+            WAIT_ICON.start()
+
+        jQuery(elem).closest('table').find(".inline_dialog").remove()
+
+        COUNTER = COUNTER + 1
+        id = COUNTER
+
+        href2 = corect_href(jQuery(elem).attr("href"))
+        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
+        new_fragment.insertAfter(jQuery(elem).closest("tr"))
+
+        new_fragment.find(".refr_target").load(href2,None,
+            def(responseText, status, response):
+                nonlocal WAIT_ICON
+                $('#IDIAL_'+id).hide()
+                $('#IDIAL_'+id).removeClass('hide')
+                $('#IDIAL_'+id).show("slow")
+                if status!='error':
+                    _dialog_loaded(False)
+                    on_dialog_load()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+                    WAIT_ICON = None
+        )
+    return False
+
+def on_popup_in_form(elem):
+    nonlocal WAIT_ICON
+    nonlocal COUNTER
+    jQuery(elem).attr("data-style", "zoom-out")
+    jQuery(elem).attr("data-spinner-color", "#FF0000")
+    WAIT_ICON = Ladda.create(elem)
+    if is_hybrid():
+        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
+        jQuery('div.dialog-form-info').modal()
+    else:
+        if WAIT_ICON:
+            WAIT_ICON.start()
+
+        jQuery(elem).closest('div.Dialog').find(".inline_dialog").remove()
+
+        COUNTER = COUNTER + 1
+        id = COUNTER
+
+        href2 = corect_href(jQuery(elem).attr("href"))
+        new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
+        new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
+
+        new_fragment.find(".refr_target").load(href2,None,
+            def(responseText, status, response):
+                nonlocal WAIT_ICON
+                $('#IDIAL_'+id).hide()
+                $('#IDIAL_'+id).removeClass('hide')
+                $('#IDIAL_'+id).show("slow")
+                if status!='error':
+                    _dialog_loaded(False)
+                    on_dialog_load()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+                    WAIT_ICON = None
+        )
+    return False
+
+
+def on_popup_edit_new(elem):
     nonlocal WAIT_ICON
     nonlocal POPUP_ACTIVATOR
     POPUP_ACTIVATOR = jQuery(elem)
@@ -57,44 +132,6 @@ def on_popup(elem):
             )
     return False
 
-
-def on_popup_inline(elem):
-    nonlocal WAIT_ICON
-    nonlocal COUNTER
-    jQuery(elem).attr("data-style", "zoom-out")
-    jQuery(elem).attr("data-spinner-color", "#FF0000")
-    WAIT_ICON = Ladda.create(elem)
-    if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
-        jQuery('div.dialog-form-info').modal()
-    else:
-        if WAIT_ICON:
-            WAIT_ICON.start()
-        
-        jQuery(elem).closest('table').find(".inline_dialog").remove()
-
-        COUNTER = COUNTER + 1
-        id = COUNTER
-
-        href2 = corect_href(jQuery(elem).attr("href"))
-        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
-        new_fragment.insertAfter(jQuery(elem).closest("tr"))
-        
-        #jQuery(elem).closest('table').find("div.dialog-data-inner").load(href2,None,
-        new_fragment.find(".refr_target").load(href2,None,
-            def(responseText, status, response):
-                nonlocal WAIT_ICON
-                $('#IDIAL_'+id).hide()
-                $('#IDIAL_'+id).removeClass('hide')
-                $('#IDIAL_'+id).show("slow")
-                if status!='error':
-                    _dialog_loaded(False)
-                    on_dialog_load()
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                    WAIT_ICON = None
-        )
-    return False
 
 
 def on_popup_info(elem):
@@ -170,10 +207,9 @@ def on_edit_ok(form):
     data = new FormData(form[0])
     if "multipart" in form.attr("enctype"):
         form.closest('div').append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
-        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False, 'xhr': xhr, 'success': def(data): _refresh_win(data, form); })
+        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False, 'xhr': xhr, 'success': def(data): _refresh_win_after_ok(data, form); })
     else:
-        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False,  'success': def(data): _refresh_win(data, form); })
-        #jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'contentType': 'multipart/form-data; charset=UTF-8',  'success': def(data): _refresh_win(data, form); })
+        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False,  'success': def(data): _refresh_win_after_ok(data, form); })
     return False
 
 
@@ -254,11 +290,62 @@ def _refresh_win(responseText, ok_button):
         else:
             refresh_fragment(POPUP_ACTIVATOR)
     else:
-        jQuery("div.dialog-data").html(responseText)
+        if jQuery("div.dialog-form").hasClass('in'):
+            jQuery("div.dialog-data").html(responseText)
+        else:
+            ok_button.closest('.refr_target').html(responseText)
 
+
+def _refresh_win_after_ok(responseText, ok_button):
+    nonlocal EDIT_RET_FUNCTION
+    if EDIT_RET_FUNCTION:
+        EDIT_RET_FUNCTION(responseText, ok_button)
+        EDIT_RET_FUNCTION = False
+    else:
+        _refresh_win(responseText, ok_button)
 
 
 def on_cancel_inline(elem):
     jQuery(elem).closest('.inline_dialog').remove()
     #nonlocal ACTIVE_PAGE
     #ACTIVE_PAGE.page.find(".inline_dialog").remove()
+
+
+def _refresh_win_and_ret(responseText, ok_button):
+    nonlocal POPUP_ACTIVATOR
+    if "RETURN_OK" in responseText:
+        if jQuery("div.dialog-form").hasClass('in'):
+            jQuery("div.dialog-form").modal('hide')
+        q = jQuery(responseText)
+        eval(q[1].text)
+    else:
+        jQuery("div.dialog-data").html(responseText)
+
+def ret_ok(id, title):
+    nonlocal RET_CONTROL
+    RET_CONTROL.select2('data', {id: id, text: title}).trigger("change")
+    RET_CONTROL.val(id.toString())
+    RET_CONTROL[0].defaultValue = id.toString()
+
+def on_get_tbl_value(elem):
+    on_popup_in_form(elem)
+
+def on_new_tbl_value(elem):
+    nonlocal EDIT_RET_FUNCTION
+    nonlocal RET_CONTROL
+    EDIT_RET_FUNCTION = _refresh_win_and_ret
+    RET_CONTROL = jQuery(elem).closest(".input-group").find('input._autoheavyselect2widgetext')
+    return on_popup_edit_new(elem)
+
+def on_get_row(elem):
+    id = jQuery(elem).attr('data-id')
+    text = jQuery(elem).attr('data-text')
+
+    ret_control = jQuery(elem).closest(".refr_source").prev('.form-group').find('input._autoheavyselect2widgetext')
+
+    ret_control.select2('data', {id: id, text: text}).trigger("change")
+    ret_control.val(id.toString())
+    ret_control[0].defaultValue = id.toString()
+
+    jQuery(elem).closest(".refr_source").remove()
+

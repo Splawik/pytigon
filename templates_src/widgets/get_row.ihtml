@@ -1,0 +1,11 @@
+{# -*- coding: utf-8 -*- #}
+%extends "widgets/action.html"
+
+%% action_widget_content
+    % if standard_web_browser:
+        a href={{action.url}},,,class=btn btn-default ladda-button get_row,,,name={{action.name}},,,title={{action.title}},,,data-role=button,,,data-inline=true,,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}}
+            span class=glyphicon glyphicon-check ladda-label
+                %% description
+                    {{action.title}}
+    % else
+        ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{path}}{{action.url}}

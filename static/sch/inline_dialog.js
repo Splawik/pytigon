@@ -1,7 +1,7 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
 <div class='panel panel-default'>\
     <div class='panel-body'>\
-        <div class='dialog-data-inner'></div>\
+        <div class='refr_target dialog-data-inner'></div>\
     </div>\
     <div class='panel-footer'>\
         <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\
@@ -13,7 +13,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 var INLINE_DIALOG_DELETE_HTML = "\
 <div class='panel panel-default alert alert-danger'>\
     <div class='panel-body'>\
-        <div class='dialog-data-inner'></div>\
+        <div class='refr_target dialog-data-inner'></div>\
     </div>\
     <div class='panel-footer'>\
         <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\
@@ -25,7 +25,7 @@ var INLINE_DIALOG_DELETE_HTML = "\
 var INLINE_DIALOG_INFO_HTML = "\
 <div class='panel panel-default'>\
     <div class='panel-body'>\
-        <div class='dialog-data-inner'></div>\
+        <div class='refr_target dialog-data-inner'></div>\
     </div>\
     <div class='panel-footer'>\
         <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\

@@ -323,33 +323,27 @@ def row_actions(parser, token):
     return RowActionNode(nodelist)
 
 @inclusion_tag('widgets/view_row.html')
-#@register.simple_tag(takes_context=True)
 def view_row(
     context,
     description,
     target='',
     ):
     href = "../../../%s/_/view/" % context['object'].id
-    #href = "../../../%s/_/view/" % object_id
     ret = action_fun(context, 'view_row', description, 'view_row', target, "", "", href)
     return ret
-    #t = get_template('widgets/view_row.html')
-    #c = RequestContext(context['request'], context)
-    #c = Context(context)
-
-    #for (key, value) in ret.items():
-    #    c[key] = value
-    #x =  t.render(c)
-    #return x
-    #return ret
 
 
-    #return standard_dict(context, {
-    #    'description': description,
-    #    'href': href,
-    #    'id': context['object'].id,
-    #    })
-
+@inclusion_tag('widgets/get_row.html')
+def get_row(
+    context,
+    description,
+    target='',
+    ):
+    href = ""
+    ret = action_fun(context, 'get_row', description, 'get_row', target, "", "", href)
+    ret['id'] = context['object'].id
+    ret['text'] = str(context['object'])
+    return ret
 
 # ACTIONS
 

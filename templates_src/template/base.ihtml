@@ -167,7 +167,10 @@
                                                 % if not no_id
                                                     td class=td_information
                                                         %% id_extra
-                                                        {% view_row object.id %}
+                                                        %if get:
+                                                            {% get_row object.id %}
+                                                        %else:
+                                                            {% view_row object.id %}
                                             %% list_row
                                                 td...{{object}}
                                             %% list_row_end
@@ -196,4 +199,3 @@
 
 %% content_end
     %if get:
-        h1...GETTTTTTTTTTTTTTTTTTTTTTTTTTTTTT!

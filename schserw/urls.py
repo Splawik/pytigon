@@ -19,6 +19,7 @@
 
 import platform
 
+
 from django.conf.urls import patterns, url, include
 from django.http import HttpResponse
 from django.conf import settings
@@ -48,6 +49,10 @@ def ok(request):
     return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")
 
 
+def ret_ok(request, id, title):
+    return HttpResponse("""<head><meta name="RETURN" content="RETURN_OK" /><script>ret_ok(%s,"%s");</script></head><body></body>""" % (id, title))
+
+
 def sch_login(request, *argi, **argv):
     ret = login(request, *argi, **argv)
     return ret
@@ -57,23 +62,20 @@ urlpatterns = patterns(
     '',
     url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
     (r'schplugins/(?P<template_name>.*)','schserw.schsys.views.plugin_template'),
-    #(r'schsys/r/', include('django.conf.urls.shortcut')),
     (r'schsys/jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages': ('django.conf', )}),
     (r'schsys/i18n/', include('django.conf.urls.i18n')),
     (r'admin/', include(admin.site.urls)),
     (r'schsys/do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     (r'schsys/do_logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     (r'schsys/message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
-    #url(r'^schsys/ok/$', ok, name='schsys_ok'),
-    #(r'schsys/ok/$', 'schserw.urls.ok'),
+
     url(r'schsys/ok/$', 'schserw.urls.ok', name='ok'),
+    url(r'schsys/(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.urls.ret_ok', name='ret_ok'),
+
     (r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.ROOT_PATH + '/static'}),
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^select2/', include('django_select2.urls')),
     )
-
-
-#import schserw.schsys.initdjango
-#django_ok = schserw.schsys.initdjango.init_django()
 
 
 for app in settings.INSTALLED_APPS:

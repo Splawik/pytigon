@@ -166,15 +166,15 @@ def __init2__(
 
 
 
-class HiddenForeignKey(models.ForeignKey):
-    
-    def formfield(self, **kwargs):
-        field = models.ForeignKey.formfield(self, **kwargs)
-        field.widget = HiddenInput()
-        field.widget.choices = None
-        return field
+#class HiddenForeignKey(models.ForeignKey):
+#
+#    def formfield(self, **kwargs):
+#        field = models.ForeignKey.formfield(self, **kwargs)
+#        field.widget = HiddenInput()
+#        field.widget.choices = None
+#        return field
 
-models.HiddenForeignKey = HiddenForeignKey
+#models.HiddenForeignKey = HiddenForeignKey
 
 
 def _get_builtin_permissions_mod(opts):

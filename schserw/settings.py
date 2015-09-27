@@ -172,6 +172,7 @@ INSTALLED_APPS = [
     #'debug_toolbar',
     #'django_extensions',
     #'mptt',
+    'django_select2',
     ]
 
 HIDE_APPS = []
@@ -211,3 +212,5 @@ else:
     NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
 
 RAPYD = ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
+
+AUTO_RENDER_SELECT2_STATICS = False
