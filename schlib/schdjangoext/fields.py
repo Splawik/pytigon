@@ -4,6 +4,7 @@ from django_select2 import AutoModelSelect2Field
 from django_select2.widgets import AutoHeavySelect2Widget
 from django.forms.widgets import HiddenInput
 from django.utils.safestring import mark_safe
+from django.conf import settings
 
 buttons="""
 <div class="input-group-btn">
@@ -38,8 +39,12 @@ class ForeignKey(models.ForeignKey):
         self.to = args[0]
 
     def formfield(self, **kwargs):
-        href1 = "/%s/table/%s/-/form/get?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
-        href2 = "/%s/table/%s/-/add?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
+        if settings.URL_ROOT_FOLDER:
+            href1 = "/%s/%s/table/%s/-/form/get?schtml=1" % (settings.URL_ROOT_FOLDER, self.to._meta.app_label, self.to._meta.object_name)
+            href2 = "/%s/%s/table/%s/-/add?schtml=1" % (settings.URL_ROOT_FOLDER, self.to._meta.app_label, self.to._meta.object_name)
+        else:
+            href1 = "/%s/table/%s/-/form/get?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
+            href2 = "/%s/table/%s/-/add?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
 
         if self.search_fields:
             class _Field(AutoModelSelect2Field):

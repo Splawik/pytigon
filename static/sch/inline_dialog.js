@@ -1,5 +1,5 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
-<div class='panel panel-default'>\
+<div class='panel panel-default refr_object'>\
     <div class='panel-body'>\
         <div class='refr_target dialog-data-inner'></div>\
     </div>\
@@ -11,7 +11,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 ";
 
 var INLINE_DIALOG_DELETE_HTML = "\
-<div class='panel panel-default alert alert-danger'>\
+<div class='panel panel-default alert alert-danger refr_object'>\
     <div class='panel-body'>\
         <div class='refr_target dialog-data-inner'></div>\
     </div>\
@@ -34,7 +34,7 @@ var INLINE_DIALOG_INFO_HTML = "\
 ";
 
 var INLINE_TABLE_HTML = "\
-<div class='indent shadow-z-2'>\
+<div class='indent shadow-z-2' refr_object>\
     <button type='button' class='btn btn-danger btn-xs' onclick='on_cancel_inline($(this));return false'>\
         <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>\
     </button>\

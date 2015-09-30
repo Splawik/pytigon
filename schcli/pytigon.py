@@ -613,7 +613,7 @@ def main_init(argv):
 
     if embed_diango:
         settings.BASE_URL = 'http://' + address
-        settings.URL_POSTFIX = ''
+        settings.URL_ROOT_FOLDER = ''
 
     app.init2(address, app_name)
     app.task_manager = task_manager

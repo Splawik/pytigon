@@ -39,3 +39,13 @@ def corect_href(href):
             return href + '&hybrid=1'
         else:
             return href + '?hybrid=1'
+
+
+def handle_class_click(fragment_obj, obj_class, fun):
+    fragment_obj.on( "click", "."+obj_class,
+        def(e):
+            src_obj = jQuery(this)
+            e.preventDefault()
+            fun(this)
+            return False
+    )

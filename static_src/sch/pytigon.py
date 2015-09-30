@@ -42,9 +42,14 @@ def fragment_init(elem=None):
     #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+
+    #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
+    #handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
+    #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
+    #handle_class_click(elem2, 'get_row', on_get_row)
+
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
-
 
 def page_init(id, first_time = True):
     nonlocal WAIT_ICON, WAIT_ICON2, ACTIVE_PAGE
@@ -73,22 +78,10 @@ def page_init(id, first_time = True):
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
     if first_time:
-        jQuery('body').on( "click", "button",
-            def(e):
-                nonlocal ACTIVE_PAGE
-
-                if $(e.target).attr('target') == "_blank":
-                    return
-
-                src_obj = jQuery(this)
-
-                for pos in [ ('get_tbl_value', on_get_tbl_value), ('new_tbl_value', on_new_tbl_value) ]:
-                    if jQuery(this).hasClass(pos[0]):
-                        e.preventDefault()
-                        pos[1](this)
-                        return False
-                return True
-        )
+        elem2 = jQuery('body')
+        handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
+        handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
+        handle_class_click(elem2, 'get_row', on_get_row)
         jQuery('#'+ id).on( "click", "a",
             def(e):
                 nonlocal ACTIVE_PAGE
@@ -96,10 +89,14 @@ def page_init(id, first_time = True):
                 
                 if $(e.target).attr('target') == "_blank":
                     return 
-                
+
+                for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
+                    if jQuery(this).hasClass(pos):
+                        return True
+
                 src_obj = jQuery(this)
 
-                for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete), ('get_tbl_value', on_get_tbl_value), ('new_tbl_value', on_new_tbl_value), ('get_row', on_get_row), ]:
+                for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
                     if jQuery(this).hasClass(pos[0]):
                         e.preventDefault()
                         pos[1](this)

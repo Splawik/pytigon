@@ -50,8 +50,8 @@ def wiki_from_str(wiki_value):
 
 def make_href(wiki_value, new_win=True, section=None, btn = False):
     wiki = wiki_from_str(wiki_value)
-    if settings.URL_POSTFIX and settings.URL_POSTFIX != '':
-        p = '/' + settings.URL_POSTFIX
+    if settings.URL_ROOT_FOLDER and settings.URL_ROOT_FOLDER != '':
+        p = '/' + settings.URL_ROOT_FOLDER
     else:
         p = ''
 

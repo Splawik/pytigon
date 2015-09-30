@@ -38,7 +38,7 @@ class ModWsgiHandler(django.core.handlers.wsgi.WSGIHandler):
         if self.address:
             from django.conf import settings
             settings.BASE_URL = 'http://' + self.address
-            settings.URL_POSTFIX = ''
+            settings.URL_ROOT_FOLDER = ''
         return django.core.handlers.wsgi.WSGIHandler.__call__(self, environ,
                 start_response)
 

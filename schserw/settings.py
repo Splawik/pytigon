@@ -58,17 +58,17 @@ LOGIN_REDIRECT_URL = '/'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 BASE_URL = 'http://127.0.0.1:81'
-URL_POSTFIX = 'intranet'
+URL_ROOT_FOLDER = 'intranet'
 _STATIC_ROOT = ROOT_PATH + '/static'
-if len(URL_POSTFIX) > 0:
-    _STATIC_URL = '/' + URL_POSTFIX + '/static/'
+if len(URL_ROOT_FOLDER) > 0:
+    _STATIC_URL = '/' + URL_ROOT_FOLDER + '/static/'
 else:
     _STATIC_URL = '/static/'
 
 
 MEDIA_ROOT = ROOT_PATH + '/app_pack'
-if len(URL_POSTFIX) > 0:
-    MEDIA_URL = '/' + URL_POSTFIX + '/site_media/'
+if len(URL_ROOT_FOLDER) > 0:
+    MEDIA_URL = '/' + URL_ROOT_FOLDER + '/site_media/'
 else:
     MEDIA_URL = '/site_media/'
 UPLOAD_PATH = '/home/publiczny/intranet/'

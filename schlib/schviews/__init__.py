@@ -46,8 +46,8 @@ from django.utils.translation import ugettext_lazy as _
 # /table/TableName/parent_pk/field/filter/target/list
 
 def make_path(view_name, args=None):
-    if settings.URL_POSTFIX:
-        return settings.URL_POSTFIX+"/"+reverse(view_name, args=args)
+    if settings.URL_ROOT_FOLDER:
+        return settings.URL_ROOT_FOLDER+"/"+reverse(view_name, args=args)
     else:
         return reverse(view_name, args=args)
 

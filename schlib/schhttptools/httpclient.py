@@ -339,7 +339,7 @@ class HttpClient:
             ret = self.contents
 
         if conwert_local_path and settings:
-            src = settings.URL_POSTFIX+"/static"
+            src = settings.URL_ROOT_FOLDER+"/static"
             dst = settings.ROOT_PATH+'/static'
             ret = ret.replace(src,"file://"+dst)
 
@@ -357,7 +357,7 @@ class HttpClient:
             dst = "href='"+self.Last_address+"."
             ret = ret.replace(src,dst)
             src="action=\"/"
-            dst="action=\""+settings.BASE_URL + settings.URL_POSTFIX + "/"
+            dst="action=\""+settings.BASE_URL + settings.URL_ROOT_FOLDER + "/"
             ret = ret.replace(src,dst)
         return ret
 
@@ -387,7 +387,7 @@ class AppHttp(HttpClient):
         return ret
 
 def conwert_local_path_fun(url):
-    src = settings.BASE_URL + settings.URL_POSTFIX+"/static"
+    src = settings.BASE_URL + settings.URL_ROOT_FOLDER+"/static"
     dst = "file://" + settings.ROOT_PATH+'/static'
     return url.replace(src,dst).replace('/static', dst)
 

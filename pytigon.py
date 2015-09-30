@@ -668,7 +668,7 @@ def main_init(argv):
 
     if embed_diango:
         settings.BASE_URL = 'http://' + address
-        settings.URL_POSTFIX = ''
+        settings.URL_ROOT_FOLDER = ''
 
     init_ret = app.init2(address, app_name)
     if init_ret != 200:

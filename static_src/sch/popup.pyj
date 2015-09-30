@@ -117,8 +117,13 @@ def on_popup_edit_new(elem):
         else:
             if WAIT_ICON:
                 WAIT_ICON.start()
-            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
-            elem2.insertAfter(jQuery(elem).closest("tr"))
+            test = jQuery(elem).closest('form')
+            if test.length > 0:
+                elem2 = jQuery("<div class='refr_source inline_dialog'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                elem2.insertAfter(jQuery(elem).closest("div.form-group"))
+            else:
+                elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+                elem2.insertAfter(jQuery(elem).closest("tr"))
             elem3 = elem2.find("div.dialog-data-inner")
             elem3.load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
@@ -314,8 +319,10 @@ def on_cancel_inline(elem):
 def _refresh_win_and_ret(responseText, ok_button):
     nonlocal POPUP_ACTIVATOR
     if "RETURN_OK" in responseText:
-        if jQuery("div.dialog-form").hasClass('in'):
+        if jQuery(ok_button).closest(".refr_object").find(".refr_target").hasClass('in'):
             jQuery("div.dialog-form").modal('hide')
+        else:
+            jQuery(ok_button).closest(".refr_object").remove()
         q = jQuery(responseText)
         eval(q[1].text)
     else:

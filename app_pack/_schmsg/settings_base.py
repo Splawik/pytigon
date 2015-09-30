@@ -26,15 +26,15 @@ LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
 ROOT_PATH = _rp
 
-URL_POSTFIX = ''
+URL_ROOT_FOLDER = ''
 
-if len(URL_POSTFIX) > 0:
-    STATIC_URL = '/' + URL_POSTFIX + '/static/'
+if len(URL_ROOT_FOLDER) > 0:
+    STATIC_URL = '/' + URL_ROOT_FOLDER + '/static/'
 else:
     STATIC_URL = '/static/'
 
-if len(URL_POSTFIX) > 0:
-    MEDIA_URL = '/' + URL_POSTFIX + '/app_media/'
+if len(URL_ROOT_FOLDER) > 0:
+    MEDIA_URL = '/' + URL_ROOT_FOLDER + '/app_media/'
 else:
     MEDIA_URL = '/app_media/'
 

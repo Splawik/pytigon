@@ -347,8 +347,8 @@ def sch_standard(request):
         list_view = True
     else:
         list_view = False
-    if settings.URL_POSTFIX and len(settings.URL_POSTFIX) > 0:
-        url_base = '/' + settings.URL_POSTFIX
+    if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
+        url_base = '/' + settings.URL_ROOT_FOLDER
     else:
         url_base = ''
 
@@ -389,7 +389,7 @@ def sch_standard(request):
         'ro': ro,
         'form_info': form_info,
         'form_grid': form_grid,
-        'URL_POSTFIX': settings.URL_POSTFIX,
+        'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
         'show_form': show_form,
         'browser_type': b_type,

@@ -229,7 +229,7 @@ function on_popup_in_form(elem) {
     return false;
 }
 function on_popup_edit_new(elem) {
-    var elem2, elem3;
+    var test, elem2, elem3;
     POPUP_ACTIVATOR = jQuery(elem);
     WAIT_ICON = Ladda.create(elem);
     if (is_hybrid()) {
@@ -247,8 +247,14 @@ function on_popup_edit_new(elem) {
             if (WAIT_ICON) {
                 WAIT_ICON.start();
             }
-            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
-            elem2.insertAfter(jQuery(elem).closest("tr"));
+            test = jQuery(elem).closest("form");
+            if (test.length > 0) {
+                elem2 = jQuery("<div class='refr_source inline_dialog'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
+                elem2.insertAfter(jQuery(elem).closest("div.form-group"));
+            } else {
+                elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
+                elem2.insertAfter(jQuery(elem).closest("tr"));
+            }
             elem3 = elem2.find("div.dialog-data-inner");
             elem3.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
@@ -461,8 +467,10 @@ function on_cancel_inline(elem) {
 function _refresh_win_and_ret(responseText, ok_button) {
     var q;
     if (_$rapyd$_in("RETURN_OK", responseText)) {
-        if (jQuery("div.dialog-form").hasClass("in")) {
+        if (jQuery(ok_button).closest(".refr_object").find(".refr_target").hasClass("in")) {
             jQuery("div.dialog-form").modal("hide");
+        } else {
+            jQuery(ok_button).closest(".refr_object").remove();
         }
         q = jQuery(responseText);
         eval(q[1].text);
@@ -695,6 +703,15 @@ function corect_href(href) {
         }
     }
 }
+function handle_class_click(fragment_obj, obj_class, fun) {
+    fragment_obj.on("click", "." + obj_class, function(e) {
+        var src_obj;
+        src_obj = jQuery(this);
+        e.preventDefault();
+        fun(this);
+        return false;
+    });
+}
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
     var elem2;
@@ -718,7 +735,7 @@ function fragment_init(elem) {
 }
 function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
-    var table_type, paginator, pg, totalPages, options, paginate;
+    var table_type, paginator, pg, totalPages, options, paginate, elem2;
     table_type = get_table_type(jQuery("#" + id));
     paginator = get_page(jQuery("#" + id)).find(".pagination");
     if (paginator.length > 0) {
@@ -755,32 +772,25 @@ function page_init(id, first_time) {
     }
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     if (first_time) {
-        jQuery("body").on("click", "button", function(e) {
-            var src_obj, pos;
+        elem2 = jQuery("body");
+        handle_class_click(elem2, "get_tbl_value", on_get_tbl_value);
+        handle_class_click(elem2, "new_tbl_value", on_new_tbl_value);
+        handle_class_click(elem2, "get_row", on_get_row);
+        jQuery("#" + id).on("click", "a", function(e) {
+            var pos, src_obj, href, href2;
             if ($(e.target).attr("target") === "_blank") {
                 return;
             }
-            src_obj = jQuery(this);
-            var _$rapyd$_Iter0 = [ ["get_tbl_value", on_get_tbl_value], ["new_tbl_value", on_new_tbl_value] ];
+            var _$rapyd$_Iter0 = [ "get_tbl_value", "new_tbl_value", "get_row" ];
             for (var _$rapyd$_Index0 = 0; _$rapyd$_Index0 < _$rapyd$_Iter0.length; _$rapyd$_Index0++) {
                 pos = _$rapyd$_Iter0[_$rapyd$_Index0];
-                if (jQuery(this).hasClass(pos[0])) {
-                    e.preventDefault();
-                    pos[1](this);
-                    return false;
+                if (jQuery(this).hasClass(pos)) {
+                    return true;
                 }
-            }
-            return true;
-        });
-        jQuery("#" + id).on("click", "a", function(e) {
-            var src_obj, pos, href, href2;
-            if ($(e.target).attr("target") === "_blank") {
-                return;
             }
             src_obj = jQuery(this);
             var _$rapyd$_Iter1 = [ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
-            on_popup_info], ["popup_delete", on_popup_delete], ["get_tbl_value", on_get_tbl_value], ["new_tbl_value", 
-            on_new_tbl_value], ["get_row", on_get_row] ];
+            on_popup_info], ["popup_delete", on_popup_delete] ];
             for (var _$rapyd$_Index1 = 0; _$rapyd$_Index1 < _$rapyd$_Iter1.length; _$rapyd$_Index1++) {
                 pos = _$rapyd$_Iter1[_$rapyd$_Index1];
                 if (jQuery(this).hasClass(pos[0])) {
