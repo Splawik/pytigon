@@ -198,6 +198,6 @@
         %% list_page_end
 
 %% content_end
-    script
-        .riot.mount('*')
+    script language=javascript
+        .riot.mount('*');
 

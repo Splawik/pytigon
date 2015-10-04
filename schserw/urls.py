@@ -134,7 +134,6 @@ if settings.DEBUG:
                     if os.path.exists(dest):
                         if os.path.getmtime(dest) >= os.path.getmtime(src):
                             continue
-
                     with open(src, "rt") as f:
                         code = f.read()
                         #try:
@@ -143,8 +142,8 @@ if settings.DEBUG:
                                 codejs = schlib.schindent.indent_style.py_to_js(code, root)
                             else:
                                 codejs = schlib.schindent.indent_style.pjsx_to_js(code, root)
-
-                            with open(dest, "wt") as f2:
-                                f2.write(codejs)
+                            if codejs:
+                                with open(dest, "wt") as f2:
+                                    f2.write(codejs)
                         #except:
                         #    print("compile error - file:", src)
