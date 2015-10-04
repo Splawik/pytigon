@@ -12,7 +12,6 @@ WAIT_ICON = null;
 WAIT_ICON2 = false;
 MENU_ID = 0;
 BASE_FRAGMENT_INIT = null;
-POPUP_ACTIVATOR = null;
 COUNTER = 1;
 EDIT_RET_FUNCTION = null;
 RET_CONTROL = null;
@@ -230,13 +229,15 @@ function on_popup_in_form(elem) {
 }
 function on_popup_edit_new(elem) {
     var test, elem2, elem3;
-    POPUP_ACTIVATOR = jQuery(elem);
+    jQuery(elem).attr("data-style", "zoom-out");
+    jQuery(elem).attr("data-spinner-color", "#FF0000");
     WAIT_ICON = Ladda.create(elem);
     if (is_hybrid()) {
         cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
         jQuery("div.dialog-form").modal();
     } else {
         if (can_popup() && !jQuery(elem).hasClass("inline") && !(_$rapyd$_in("_inline", jQuery(elem).attr("name")))) {
+            jQuery("div.dialog-data").closest(".refr_object").attr("related-object", jQuery(elem).uid());
             jQuery("div.dialog-data").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
                     _dialog_loaded(true);
@@ -249,14 +250,19 @@ function on_popup_edit_new(elem) {
             }
             test = jQuery(elem).closest("form");
             if (test.length > 0) {
-                elem2 = jQuery("<div class='refr_source inline_dialog'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
+                elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
                 elem2.insertAfter(jQuery(elem).closest("div.form-group"));
             } else {
-                elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
+                elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
                 elem2.insertAfter(jQuery(elem).closest("tr"));
             }
+            elem2.find(".modal-title").html(jQuery(elem).attr("title"));
+            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
             elem3 = elem2.find("div.dialog-data-inner");
             elem3.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+                elem2.hide();
+                elem2.removeClass("hide");
+                elem2.show("slow");
                 if (status !== "error") {
                     _dialog_loaded(false);
                     on_dialog_load();
@@ -378,72 +384,18 @@ function on_delete_ok(form) {
     });
     return false;
 }
-function _refresh_win2(responseText, form) {
-    var subform, filter;
-    if (_$rapyd$_in("RETURN_OK", responseText)) {
-        subform = form.closest("div.inline_frame");
-        if (subform.length > 0) {
-            subform.find("div.frame-data-inner").load(subform.attr("href"), null);
-        } else {
-            filter = ACTIVE_PAGE.page.find("form.TableFiltr");
-            jQuery("div.dialog-form").fadeTo("slow", .5);
-            if (filter.length > 0) {
-                filter.attr("action", ACTIVE_PAGE.get_href());
-                ajax_submit(filter, function(data) {
-                    ACTIVE_PAGE.page.html(data);
-                    jQuery("div.dialog-form").modal("hide");
-                    page_init(ACTIVE_PAGE.id, false);
-                });
-            } else {
-                jQuery("div.dialog-form").modal("hide");
-            }
-        }
-    } else {
-        jQuery("div.dialog-data").html(responseText);
-    }
-}
-function _refresh_win3(responseText, ok_button) {
-    var form, subform, div, href, filter;
-    form = POPUP_ACTIVATOR.closest("div.content").find("form.TableFiltr");
-    if (_$rapyd$_in("RETURN_OK", responseText)) {
-        subform = form.closest(".refr_source");
-        if (subform.length > 0) {
-            subform.find("div.frame-data-inner").load(subform.attr("href"), null);
-        } else {
-            div = POPUP_ACTIVATOR.closest("div.dialog-data-inner");
-            if (div.length > 0) {
-                href = corect_href(form.attr("action"));
-                div.load(href, null);
-                jQuery("div.dialog-form").modal("hide");
-            } else {
-                filter = form;
-                jQuery("div.dialog-form").fadeTo("slow", .5);
-                if (filter.length > 0) {
-                    filter.attr("action", ACTIVE_PAGE.get_href());
-                    ajax_submit(filter, function(data) {
-                        ACTIVE_PAGE.page.html(data);
-                        jQuery("div.dialog-form").modal("hide");
-                        page_init(ACTIVE_PAGE.id, false);
-                    });
-                } else {
-                    jQuery("div.dialog-form").modal("hide");
-                }
-            }
-        }
-    } else {
-        jQuery("div.dialog-data").html(responseText);
-    }
-}
 function _refresh_win(responseText, ok_button) {
+    var popup_activator;
+    popup_activator = jQuery("#" + jQuery(ok_button).closest(".refr_object").attr("related-object"));
     if (_$rapyd$_in("RETURN_OK", responseText)) {
         if (jQuery("div.dialog-form").hasClass("in")) {
             function hide_dialog_form() {
                 jQuery("div.dialog-form").modal("hide");
             }
-            refresh_fragment(POPUP_ACTIVATOR, hide_dialog_form);
+            refresh_fragment(popup_activator, hide_dialog_form);
             jQuery("div.dialog-form").fadeTo("slow", .5);
         } else {
-            refresh_fragment(POPUP_ACTIVATOR);
+            refresh_fragment(popup_activator);
         }
     } else {
         if (jQuery("div.dialog-form").hasClass("in")) {
@@ -451,6 +403,20 @@ function _refresh_win(responseText, ok_button) {
         } else {
             ok_button.closest(".refr_target").html(responseText);
         }
+    }
+}
+function _refresh_win_and_ret(responseText, ok_button) {
+    var q;
+    if (_$rapyd$_in("RETURN_OK", responseText)) {
+        if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
+            jQuery("div.dialog-form").modal("hide");
+        } else {
+            jQuery(ok_button).closest(".refr_object").remove();
+        }
+        q = jQuery(responseText);
+        eval(q[1].text);
+    } else {
+        jQuery("div.dialog-data").html(responseText);
     }
 }
 function _refresh_win_after_ok(responseText, ok_button) {
@@ -463,20 +429,6 @@ function _refresh_win_after_ok(responseText, ok_button) {
 }
 function on_cancel_inline(elem) {
     jQuery(elem).closest(".inline_dialog").remove();
-}
-function _refresh_win_and_ret(responseText, ok_button) {
-    var q;
-    if (_$rapyd$_in("RETURN_OK", responseText)) {
-        if (jQuery(ok_button).closest(".refr_object").find(".refr_target").hasClass("in")) {
-            jQuery("div.dialog-form").modal("hide");
-        } else {
-            jQuery(ok_button).closest(".refr_object").remove();
-        }
-        q = jQuery(responseText);
-        eval(q[1].text);
-    } else {
-        jQuery("div.dialog-data").html(responseText);
-    }
 }
 function ret_ok(id, title) {
     RET_CONTROL.select2("data", {

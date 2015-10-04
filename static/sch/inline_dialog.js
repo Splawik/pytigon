@@ -1,11 +1,17 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
-<div class='panel panel-default refr_object'>\
-    <div class='panel-body'>\
-        <div class='refr_target dialog-data-inner'></div>\
-    </div>\
-    <div class='panel-footer'>\
-        <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\
-        <button type='button' class='btn btn-primary' onclick=\"javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;\">OK</button>\
+<div class='modal-admin refr_object'>\
+    <div class='modal-content'>\
+        <div class='modal-header'>\
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
+            <h4 class='modal-title'>Modal title</h4>\
+        </div>\
+        <div class='modal-body'>\
+            <div class='refr_target dialog-data-inner'></div>\
+        </div>\
+        <div class='modal-footer'>\
+            <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>\
+            <button type='button' class='btn btn-primary' onclick=\"javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;\">OK</button>\
+        </div>\
     </div>\
 </div>\
 ";

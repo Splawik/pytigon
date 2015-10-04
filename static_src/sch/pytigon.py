@@ -17,7 +17,6 @@ WAIT_ICON = None
 WAIT_ICON2 = False
 MENU_ID = 0
 BASE_FRAGMENT_INIT = None
-POPUP_ACTIVATOR = None
 COUNTER = 1
 EDIT_RET_FUNCTION = None
 RET_CONTROL = None
@@ -42,11 +41,6 @@ def fragment_init(elem=None):
     #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
-
-    #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
-    #handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
-    #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
-    #handle_class_click(elem2, 'get_row', on_get_row)
 
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
@@ -85,8 +79,7 @@ def page_init(id, first_time = True):
         jQuery('#'+ id).on( "click", "a",
             def(e):
                 nonlocal ACTIVE_PAGE
-                #if jQuery(this).hasClass( "menu-href" ):
-                
+
                 if $(e.target).attr('target') == "_blank":
                     return 
 
@@ -151,8 +144,6 @@ def page_init(id, first_time = True):
                 WAIT_ICON2 = True
                 $('#loading-indicator').show()
 
-
-            #jQuery(this).find('input[type="submit"]')
 
             href = jQuery(this).attr("action")
             if href:
@@ -273,7 +264,6 @@ def _on_menu_href(elem, title=None):
 
 
 
-
 def _on_error(request, settings):
     nonlocal WAIT_ICON, WAIT_ICON2
     if WAIT_ICON:
@@ -365,3 +355,4 @@ def history_push_state(title, url, data=None):
     else:
         data2 = title
     window.history.pushState(data2, title, url2)
+

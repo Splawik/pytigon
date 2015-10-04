@@ -100,14 +100,15 @@ def on_popup_in_form(elem):
 
 def on_popup_edit_new(elem):
     nonlocal WAIT_ICON
-    nonlocal POPUP_ACTIVATOR
-    POPUP_ACTIVATOR = jQuery(elem)
+    jQuery(elem).attr("data-style", "zoom-out")
+    jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
     if is_hybrid():
         cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
         jQuery('div.dialog-form').modal()
     else:
         if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
+            jQuery("div.dialog-data").closest(".refr_object").attr("related-object", jQuery(elem).uid())
             jQuery("div.dialog-data").load(jQuery(elem).attr("href"), None,
                 def(responseText, status, response):
                     if status!='error':
@@ -119,15 +120,20 @@ def on_popup_edit_new(elem):
                 WAIT_ICON.start()
             test = jQuery(elem).closest('form')
             if test.length > 0:
-                elem2 = jQuery("<div class='refr_source inline_dialog'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
                 elem2.insertAfter(jQuery(elem).closest("div.form-group"))
             else:
-                elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+                elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
                 elem2.insertAfter(jQuery(elem).closest("tr"))
+            elem2.find('.modal-title').html(jQuery(elem).attr('title'))
+            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
             elem3 = elem2.find("div.dialog-data-inner")
             elem3.load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     nonlocal WAIT_ICON
+                    elem2.hide()
+                    elem2.removeClass('hide')
+                    elem2.show("slow")
                     if status!='error':
                         _dialog_loaded(False)
                         on_dialog_load()
@@ -223,82 +229,32 @@ def on_delete_ok(form):
     return False
 
 
-def _refresh_win2(responseText, form):
-    nonlocal ACTIVE_PAGE
-    if "RETURN_OK" in responseText:
-        subform = form.closest('div.inline_frame')
-        if subform.length>0:
-            subform.find("div.frame-data-inner").load(subform.attr('href'),None)
-        else:
-            filter = ACTIVE_PAGE.page.find('form.TableFiltr')
-            jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
-            if filter.length>0:
-                filter.attr('action', ACTIVE_PAGE.get_href())
-                ajax_submit(filter,
-                    def(data):
-                        nonlocal ACTIVE_PAGE
-                        ACTIVE_PAGE.page.html(data)
-                        jQuery("div.dialog-form").modal('hide')
-                        page_init(ACTIVE_PAGE.id, False)
-                )
-            else:
-                jQuery("div.dialog-form").modal('hide')
-
-    else:
-        jQuery("div.dialog-data").html(responseText)
-
-
-def _refresh_win3(responseText, ok_button):
-    nonlocal ACTIVE_PAGE
-    nonlocal POPUP_ACTIVATOR
-    #form = POPUP_ACTIVATOR.closest('form.TableFiltr')    
-    form = POPUP_ACTIVATOR.closest('div.content').find('form.TableFiltr')
-    if "RETURN_OK" in responseText:            
-        #subform = form.closest('div.inline_frame')
-        subform = form.closest('.refr_source')
-        if subform.length>0:
-            subform.find("div.frame-data-inner").load(subform.attr('href'),None)
-        else:
-            div = POPUP_ACTIVATOR.closest('div.dialog-data-inner')
-            if div.length>0:
-                href = corect_href(form.attr('action'))
-                #div.load(form.attr('href'),None)
-                div.load(href,None)
-                jQuery("div.dialog-form").modal('hide')
-            else:
-                filter = form
-                jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
-                if filter.length>0:
-                    filter.attr('action', ACTIVE_PAGE.get_href())
-                    ajax_submit(filter,
-                        def(data):
-                            nonlocal ACTIVE_PAGE
-                            ACTIVE_PAGE.page.html(data)
-                            jQuery("div.dialog-form").modal('hide')
-                            page_init(ACTIVE_PAGE.id, False)
-                    )
-                else:
-                    jQuery("div.dialog-form").modal('hide')
-    else:
-        jQuery("div.dialog-data").html(responseText)
-
-
-
 def _refresh_win(responseText, ok_button):
-    nonlocal POPUP_ACTIVATOR
+    popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
     if "RETURN_OK" in responseText:
         if jQuery("div.dialog-form").hasClass('in'):
             def hide_dialog_form():
                 jQuery("div.dialog-form").modal('hide')
-            refresh_fragment(POPUP_ACTIVATOR, hide_dialog_form)
+            refresh_fragment(popup_activator, hide_dialog_form)
             jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
         else:
-            refresh_fragment(POPUP_ACTIVATOR)
+            refresh_fragment(popup_activator)
     else:
         if jQuery("div.dialog-form").hasClass('in'):
             jQuery("div.dialog-data").html(responseText)
         else:
             ok_button.closest('.refr_target').html(responseText)
+
+def _refresh_win_and_ret(responseText, ok_button):
+    if "RETURN_OK" in responseText:
+        if jQuery(ok_button).closest(".refr_object").hasClass('in'):
+            jQuery("div.dialog-form").modal('hide')
+        else:
+            jQuery(ok_button).closest(".refr_object").remove()
+        q = jQuery(responseText)
+        eval(q[1].text)
+    else:
+        jQuery("div.dialog-data").html(responseText)
 
 
 def _refresh_win_after_ok(responseText, ok_button):
@@ -315,18 +271,6 @@ def on_cancel_inline(elem):
     #nonlocal ACTIVE_PAGE
     #ACTIVE_PAGE.page.find(".inline_dialog").remove()
 
-
-def _refresh_win_and_ret(responseText, ok_button):
-    nonlocal POPUP_ACTIVATOR
-    if "RETURN_OK" in responseText:
-        if jQuery(ok_button).closest(".refr_object").find(".refr_target").hasClass('in'):
-            jQuery("div.dialog-form").modal('hide')
-        else:
-            jQuery(ok_button).closest(".refr_object").remove()
-        q = jQuery(responseText)
-        eval(q[1].text)
-    else:
-        jQuery("div.dialog-data").html(responseText)
 
 def ret_ok(id, title):
     nonlocal RET_CONTROL

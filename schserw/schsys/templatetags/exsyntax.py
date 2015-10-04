@@ -379,21 +379,22 @@ def button(
     return ret
 
 
-@inclusion_tag('widgets/new_row.html')
-def new_row(
+def new_row_base(
     context,
     title="",
     name="",
     target='',
     style='',
     param='-',
-    url=""
+    url="",
+    action="new_row"
     ):
+    print(title, name, action)
     if url:
         url2=url
     else:
         url2='../../../%s/add' % param
-    ret = action_fun(context, 'new_row', title, name, target, style, param, url2)
+    ret = action_fun(context, action, title, name, target, style, param, url2)
     if title and title[0] == '+':
         description = title[1:]
         title = ""
@@ -402,6 +403,33 @@ def new_row(
     ret['description'] = description
     return ret
 
+
+@inclusion_tag('widgets/new_row.html')
+def new_row(
+    context,
+    title="",
+    name="",
+    target='',
+    style='',
+    param='-',
+    url="",
+    action="new_row"
+    ):
+    return new_row_base(context, title, name, target, style, param, url, action)
+
+
+@inclusion_tag('widgets/new_row.html')
+def new_row_inline(
+    context,
+    title="",
+    name="",
+    target='',
+    style='',
+    param='-',
+    url="",
+    action="new_row/inline"
+    ):
+    return new_row_base(context, title, name, target, style, param, url, action)
 
 
 @inclusion_tag('widgets/list_action.html')

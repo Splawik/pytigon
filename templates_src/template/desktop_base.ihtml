@@ -28,8 +28,8 @@
     {% jscript_link 'jquery_plugins/datatables/FixedColumns/js/dataTables.fixedColumns.js' %}
     {% jscript_link 'jquery_plugins/datatables/Responsive/js/dataTables.responsive.js' %}
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
-    
-    
+    {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
+
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
