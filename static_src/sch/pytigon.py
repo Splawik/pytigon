@@ -177,7 +177,8 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init)
     if not SUBWIN:
         jQuery(def ():
             nonlocal menu_id
-            jQuery("#menu_tabs").tabs()
+            #jQuery("#menu_tabs").tabs()
+            jQuery("#menu_tabs").tab()
             if APPLICATION_TEMPLATE != 'traditional':
                 jQuery("#tabs a:eq(1)").tab('show')
             else:

@@ -188,11 +188,13 @@ def on_dialog_load():
 def _dialog_loaded(is_modal):
     nonlocal IS_POPUP
     fragment_init(jQuery('div.dialog-form'))
-    ACTIVE_PAGE.page.find("div.resizable").resizable()
+    #ACTIVE_PAGE.page.find("div.resizable").resizable()
+    #ACTIVE_PAGE.page.find("div.resizable").drags()
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
         jQuery('div.dialog-form').modal()
-        jQuery('div.dialog-form').draggable({ "handle": ".modal-header" });
+        #jQuery('div.dialog-form').draggable({ "handle": ".modal-header" });
+        jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
         IS_POPUP = True
 
 

@@ -198,4 +198,6 @@
         %% list_page_end
 
 %% content_end
-    %if get:
+    script
+        .riot.mount('*')
+

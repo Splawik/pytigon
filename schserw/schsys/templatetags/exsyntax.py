@@ -389,7 +389,6 @@ def new_row_base(
     url="",
     action="new_row"
     ):
-    print(title, name, action)
     if url:
         url2=url
     else:

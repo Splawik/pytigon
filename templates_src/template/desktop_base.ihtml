@@ -17,7 +17,6 @@
     
     {% import_django_select2_js %}
     
-    {% jscript_link 'jquery/js/jquery-ui.min.js' %}
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
     {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
@@ -29,6 +28,7 @@
     {% jscript_link 'jquery_plugins/datatables/Responsive/js/dataTables.responsive.js' %}
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
     {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
+    {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
 
@@ -47,8 +47,7 @@
     {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
-    {% jscript_link 'react/react.js' %}
-    {% jscript_link 'react_plugins/react-bootstrap/react-bootstrap.min.js' %}
+    {% jscript_link 'riotjs/riot+compiler.min.js' %}
 
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}

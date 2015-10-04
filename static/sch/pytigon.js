@@ -314,11 +314,10 @@ function on_dialog_load() {
 }
 function _dialog_loaded(is_modal) {
     fragment_init(jQuery("div.dialog-form"));
-    ACTIVE_PAGE.page.find("div.resizable").resizable();
     if (is_modal) {
         jQuery("div.dialog-form").fadeTo("fast", 1);
         jQuery("div.dialog-form").modal();
-        jQuery("div.dialog-form").draggable({
+        jQuery("div.dialog-form").drags({
             "handle": ".modal-header"
         });
         IS_POPUP = true;
@@ -833,7 +832,7 @@ function app_init(application_template, menu_id, lang, base_path, base_fragment_
     }
     if (!SUBWIN) {
         jQuery(function() {
-            jQuery("#menu_tabs").tabs();
+            jQuery("#menu_tabs").tab();
             if (APPLICATION_TEMPLATE !== "traditional") {
                 jQuery("#tabs a:eq(1)").tab("show");
             } else {

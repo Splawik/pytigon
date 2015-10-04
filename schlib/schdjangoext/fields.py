@@ -20,7 +20,6 @@ buttons="""
 def make_select_widget(href1, href2):
     class _AutoHeavySelect2WidgetExt(AutoHeavySelect2Widget):
         def render(self, name, value, attrs=None, choices=()):
-            print("U1:", name, value, attrs, choices)
             x = super().render(name, value, attrs, choices)
             buttons2 = buttons % (href1, href2)
             return mark_safe("<div class='input-group'>%s%s</div>" % (x, buttons2))
