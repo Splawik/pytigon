@@ -47,7 +47,7 @@
     {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
-    {% jscript_link 'riotjs/riot+compiler.min.js' %}
+    {% jscript_link 'riotjs/riot+compiler.js' %}
 
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}

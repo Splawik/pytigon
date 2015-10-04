@@ -6,6 +6,10 @@
 % load exsyntax
 % load crispy_forms_tags
 
+%% extrahead
+    script language=javascript,,,type=riot/tag
+        time-now
+
 %% body
     % if not form_ext and show_form
         %% dialog_start
