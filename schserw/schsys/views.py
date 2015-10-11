@@ -29,6 +29,14 @@ from schlib.schmodels import import_model
 from schlib.schtasks.base_task import get_process_manager
 
 
+def ok(request):
+    return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")
+
+
+def ret_ok(request, id, title):
+    return HttpResponse("""<head><meta name="RETURN" content="RETURN_OK" /><script>ret_ok(%s,"%s");</script></head><body></body>""" % (id, title))
+
+
 messageList = {
     'null': '',
     'error': 'Program error',

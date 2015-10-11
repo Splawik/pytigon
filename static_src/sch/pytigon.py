@@ -259,8 +259,8 @@ def _on_menu_href(elem, title=None):
                 WAIT_ICON2 = True
                 $('#loading-indicator').show()
             jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
-            #jQuery(elem).closest('.dropdown-menu').dropdown('toggle')
-            #jQuery('.navbar-ex1-collapse').collapse('hide')
+            #jQuery("#main_menu_toogle").dropdown('toggle')
+            jQuery('.navbar-ex1-collapse').collapse('hide')
         return False
 
 

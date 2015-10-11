@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -26,6 +27,7 @@ class Parameter( models.Model):
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameter")
         default_permissions = ('add', 'change', 'delete', 'list')
+        ordering = ['id']
         
         
 
@@ -46,6 +48,7 @@ class Autocomplete( models.Model):
         verbose_name = _("Autocomplete")
         verbose_name_plural = _("Autocomplete")
         default_permissions = ('add', 'change', 'delete', 'list')
+        ordering = ['id']
         
         
 

@@ -224,3 +224,20 @@ tr.inline_dialog {
 td div div div div form.DialogForm {
     padding: 10px;
 }
+
+div.table {
+    margin-bottom: 0px;
+}
+
+div.td a.popup {
+    margin: 1px;
+}
+
+.navbar.navbar .dropdown-menu li > a, .navbar-default.navbar .dropdown-menu li > a {
+    font-size: 14px;
+    padding: 5px 40px;
+}
+
+button.dropdown-toggle span {
+    margin-top: 7px;
+}

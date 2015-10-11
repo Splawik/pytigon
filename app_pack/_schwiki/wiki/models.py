@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -46,6 +47,7 @@ class Page( models.Model):
         verbose_name = _("Page")
         verbose_name_plural = _("Page")
         default_permissions = ('add', 'change', 'delete', 'list')
+        ordering = ['id']
         
         
 

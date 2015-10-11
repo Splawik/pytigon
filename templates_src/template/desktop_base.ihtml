@@ -111,9 +111,8 @@
     {% import_django_select2_css %}
     {% css_link 'themes/select2-bootstrap.css' %}
 
-    {% css_link 'themes/default.css' %}
-
     %% theme_css_links
+        {% css_link 'themes/default.css' %}
 
 
 %% css_start

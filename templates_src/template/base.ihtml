@@ -10,6 +10,26 @@
     script language=javascript,,,type=riot/tag
         time-now
 
+%% login
+    % if not user.is_authenticated
+        % if settings.SHOW_LOGIN_WIN
+            div class=container,,,align=center
+                div class=panel panel-info,,,style=width:200pt;margin-top:20pt;
+                    div class=panel-heading
+                        h3 class=panel-title..._(Login)
+                    form class=form-inline,,,role=form,,,action={%url 'start'%}schsys/do_login/?next={{request.path}},,,method=post,,,name=signin
+                        div class=panel-body
+                            {% csrf_token %}
+                            div class=form-group
+                                label for=username_ ..._(User name)
+                                input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,placeholder=_(User name)
+                                label for=password_..._(Password)
+                                input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=,,,placeholder=_(Password)
+                        div class=panel-footer
+                            div class=form-group
+                                button type=submit,,,class=btn btn-default...OK
+
+
 %% body
     % if not form_ext and show_form
         %% dialog_start
@@ -118,21 +138,22 @@
 	            <div class="panel panel-default">
             %% list_content_header
                 div class=panel-heading
-                    table width=100%
+                    div class=table,,,width=100%
                         %%list_content_header_first_row
-                            tr
-                                td width=50%
+                            div class=tr row
+                                div class=td col-sm-5 col-xs-5
                                     %% list_content_actions
-                                td
+                                div class=td col-sm-3 hidden-xs text-center
                                     %% list_content_title
                                         h4 style=white-space:nowrap;,,,class=txt3d...{{title|wiki_href|safe}}
-                                td align=right,,,width=50%
-                                    %% list_content_paginator
-                                        {% paginator %}
+                                % if is_paginated:
+                                    div class=td col-sm-4 col-xs-7 text-right,,,align=right,,,width=50%
+                                        %% list_content_paginator
+                                            {% paginator %}
 
                         %%list_content_header_two_row
-                            tr
-                                td colspan=3,,,class=filter_td
+                            div class=tr row
+                                div class=td col-md-12 col-sm-12,,,colspan=3
                                     %% list_filter_form
                                         form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}
                                             % csrf_token

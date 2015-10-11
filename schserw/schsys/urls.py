@@ -19,9 +19,19 @@
 
 from django.conf.urls import patterns
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls import patterns, url, include
 
 urlpatterns = patterns(
     '',
+    url(r'ok/$', 'schserw.schsys.views.ok', name='ok'),
+    url(r'(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.schsys.views.ret_ok', name='ret_ok'),
+
+    (r'do_login/$', 'django.contrib.auth.views.login', { 'template_name': 'schapp/index.html'}),
+    (r'do_logout/$', 'django.contrib.auth.views.logout', {'next_page': settings.URL_ROOT_FOLDER+"/"}),
+
+    (r'message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
+
     (r'datedialog/(?P<akcja>\w+)/$', 'schserw.schsys.views.datedialog'),
     (r'listdialog/(?P<akcja>\w+)/$', 'schserw.schsys.views.listdialog'),
     (r'treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$','schserw.schsys.views.treedialog'),

@@ -19,5 +19,5 @@ urlpatterns = patterns('',
 gen = generic_table_start(urlpatterns, 'simplescripts', views)
 
 
-gen.standard('Scripts', _('Scripts'))
+gen.standard('Scripts', _('Scripts'), _('Scripts'))
 

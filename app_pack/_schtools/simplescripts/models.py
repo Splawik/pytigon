@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -28,6 +29,7 @@ class Scripts( models.Model):
         verbose_name = _("Scripts")
         verbose_name_plural = _("Scripts")
         default_permissions = ('add', 'change', 'delete', 'list')
+        ordering = ['id']
         
         
 
@@ -35,10 +37,10 @@ class Scripts( models.Model):
 
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     title = models.CharField('Title', null=True, blank=True, editable=True, max_length=64)
-    menu = models.CharField('Menu', null=True, blank=True, editable=True, max_length=64)
     code = models.TextField('Code', null=True, blank=True, editable=False, )
     category = models.CharField('Category', null=True, blank=True, editable=True, max_length=64)
     rights_group = models.CharField('Rights group', null=True, blank=True, editable=True, max_length=64)
+    menu = models.CharField('Menu', null=True, blank=True, editable=True, max_length=64)
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     _form = models.TextField('_form', null=True, blank=True, editable=True, )
     _view = models.TextField('_view', null=True, blank=True, editable=True, )

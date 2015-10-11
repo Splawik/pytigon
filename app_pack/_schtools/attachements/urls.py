@@ -17,5 +17,5 @@ urlpatterns = patterns('',
 gen = generic_table_start(urlpatterns, 'attachements', views)
 
 
-gen.standard('Attachements', _('Attachements'))
+gen.standard('Attachements', _('Attachements'), _('Attachements'))
 

@@ -916,6 +916,7 @@ function _on_menu_href(elem, title) {
                 "url": href2,
                 "success": _on_new_win
             });
+            jQuery(".navbar-ex1-collapse").collapse("hide");
         }
         return false;
     }

@@ -519,7 +519,8 @@ class GenericRows(object):
                 model = f.related_model
             else:
                 model = self.base_model
-            success_url = make_path('schserw.urls.ok', )
+            #success_url = make_path('schserw.urls.ok', )
+            success_url = reverse('ok')
 
             template_name = self.template_name
             title = self.title
@@ -606,9 +607,10 @@ class GenericRows(object):
 
             def get_success_url(self):
                 if self.object:
-                    success_url = make_path('schserw.urls.ret_ok', (int(self.object.id), str(self.object)))
+                    success_url = make_path('schserw.schsys.views.ret_ok', (int(self.object.id), str(self.object)))
                 else:
-                    success_url = make_path('schserw.urls.ok')
+                    #success_url = make_path('schserw.urls.ok')
+                    success_url = reverse('ok')
                 return success_url
 
             def get(
@@ -732,7 +734,8 @@ class GenericRows(object):
                 model = f.related_model
             else:
                 model = self.base_model
-            success_url = make_path('schserw.urls.ok')
+            #success_url = make_path('schserw.urls.ok')
+            success_url = reverse('ok')
             template_name = self.template_name
             title = self.title
 
@@ -761,7 +764,8 @@ class GenericRows(object):
             tab=self.tab,
             ext='py',
             model=model,
-            post_save_redirect = make_path('schserw.urls.ok'),
+            #post_save_redirect = make_path('schserw.urls.ok'),
+            post_save_redirect = reverse('ok'),
             template_name=self.template_name,
             extra_context=transform_extra_context({'title': self.title
                      + ' - ' +str(_('update element')) }, self.extra_context),

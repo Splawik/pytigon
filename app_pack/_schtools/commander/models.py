@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin

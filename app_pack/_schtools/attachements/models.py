@@ -2,6 +2,7 @@
 
 import django
 from django.db import models
+from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -33,16 +34,17 @@ class Attachements( models.Model):
         verbose_name = _("Attachements")
         verbose_name_plural = _("Attachements")
         default_permissions = ('add', 'change', 'delete', 'list')
+        ordering = ['id']
         
         
 
     
 
     name = models.CharField('Name', null=True, blank=True, editable=True, max_length=64)
-    group = models.CharField('Group', null=True, blank=True, editable=False, default='default',max_length=64)
     ext = models.CharField('Extension', null=True, blank=True, editable=False, max_length=64)
     application = models.CharField('Application', null=False, blank=False, editable=False, max_length=64)
     table = models.CharField('Table', null=False, blank=False, editable=False, default='default',max_length=64)
+    group = models.CharField('Group', null=True, blank=True, editable=False, default='default',max_length=64)
     parent_id = models.IntegerField('Parent id', null=True, blank=True, editable=False, )
     thumb = models.TextField('thumbnail', null=True, blank=True, editable=False, )
     upload_date = models.DateTimeField('Upload date', null=False, blank=False, editable=False, default=datetime.now(),)
