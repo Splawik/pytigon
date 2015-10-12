@@ -120,6 +120,8 @@ STANDARD_ICON = {
     'field_edit': ['glyphicon-edit', 'edit'],
 }
 
+NEW_WIN_ACTIONS = ['pdf', 'odf',]
+
 
 class Action:
     def __init__(self, actions_str, context, d):
@@ -182,7 +184,7 @@ class Action:
             self.name = action.replace('/', '_')
 
         if not self.target:
-            if context['standard_web_browser']:
+            if context['standard_web_browser'] and not action in NEW_WIN_ACTIONS:
                 #if context['default_template'] == 'template/mobile.html':
                 #    self.target = '_self'
                 #else:

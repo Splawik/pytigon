@@ -81,7 +81,7 @@ def page_init(id, first_time = True):
                 nonlocal ACTIVE_PAGE
 
                 if $(e.target).attr('target') == "_blank":
-                    return 
+                    return
 
                 for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
                     if jQuery(this).hasClass(pos):
