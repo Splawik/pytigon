@@ -74,8 +74,8 @@ def mark_safe2(x):
     else:
         return x
 
-STANDARD_DESC = {
-    'default': ('Default', "class='btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' "),
+STANDARD_DESC = { #title, attrs, 
+    'default': ('Default', 'btn btn-sm btn-default', "data-role='button' data-inline='true' data-mini='true' "),    
     'edit': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'edit2': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
@@ -191,7 +191,7 @@ class Action:
                 self.target = '_top'
             else:
                 self.target = '_blank'
-
+        
         if not self.style :
             if action2 in STANDARD_DESC:
                 self.style = STANDARD_DESC[action2][1]
@@ -203,7 +203,6 @@ class Action:
                     self.style = STANDARD_DESC[action2][1] + self.style[1:]
                 else:
                     self.style = STANDARD_DESC['default'][1] + self.style[1:]
-
 
         if '|' in self.style:
             x = self.style.split('|')

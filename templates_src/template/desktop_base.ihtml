@@ -235,7 +235,7 @@
                     button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
 
 
-    div class=dialog-form-delete modal ,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelDelete,,,title={{title}}
+    div class=dialog-form-delete modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelDelete,,,title={{title}}
         div class=modal-dialog
             div class=modal-content
                 div class=modal-header

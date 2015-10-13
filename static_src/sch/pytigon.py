@@ -6,8 +6,6 @@ RET_BUFOR = None
 RET_OBJ = None
 
 
-IS_POPUP = False
-SUBWIN = False
 LANG = "en"
 MENU = None
 ACTIVE_PAGE = None
@@ -42,6 +40,29 @@ def fragment_init(elem=None):
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
 
+
+    paginator = elem2.find('.pagination')
+    if paginator.length>0:
+        paginate = True
+        pg = paginator
+        totalPages = pg.attr('totalPages')
+        options = {
+            'totalPages': totalPages,
+            'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
+            'onPageClick':def(event, page):
+                form = pg.closest('form')
+                if form:
+                    def _on_new_page(data):
+                        pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+                        fragment_init(pg.closest('.content').find(".tabsort tbody"))
+
+                    jQuery.ajax({'type': "POST", 'url': pg.attr('href').replace('[[page]]', page)+'&hybrid=1', 'data': form.serialize(), 'success': _on_new_page })
+        }
+        pg.twbsPagination(options)
+    else:
+        paginate = False
+
+
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
 
@@ -71,6 +92,7 @@ def page_init(id, first_time = True):
         paginate = False
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
+    
     if first_time:
         elem2 = jQuery('body')
         handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
@@ -169,12 +191,9 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init)
     LANG = lang
     BASE_PATH = base_path
     BASE_FRAGMENT_INIT = base_fragment_init
-    if IS_POPUP:
-        SUBWIN = True
-    else:
+    if can_popup():
         SUBWIN = False
 
-    if not SUBWIN:
         jQuery(def ():
             nonlocal menu_id
             #jQuery("#menu_tabs").tabs()
@@ -198,7 +217,8 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init)
             )
 
         )
-
+    else:
+        SUBWIN = True
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None):

@@ -118,13 +118,17 @@ def on_popup_edit_new(elem):
         else:
             if WAIT_ICON:
                 WAIT_ICON.start()
-            test = jQuery(elem).closest('form')
-            if test.length > 0:
-                elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
-                elem2.insertAfter(jQuery(elem).closest("div.form-group"))
+            if jQuery(elem).hasClass('new-row'):
+                elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                elem2.insertAfter(jQuery(elem).closest("div.tr"))
             else:
-                elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
-                elem2.insertAfter(jQuery(elem).closest("tr"))
+                test = jQuery(elem).closest('form')
+                if test.length > 0:
+                    elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                    elem2.insertAfter(jQuery(elem).closest("div.form-group"))
+                else:
+                    elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+                    elem2.insertAfter(jQuery(elem).closest("tr"))
             elem2.find('.modal-title').html(jQuery(elem).attr('title'))
             elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
             elem3 = elem2.find("div.dialog-data-inner")
@@ -167,15 +171,19 @@ def on_popup_delete(elem):
     if is_hybrid():
         cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data-delete")
         jQuery('div.dialog-form-delete').modal()
-    else:
-        if can_popup():
+    else:       
+        if can_popup():            
+            jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid())
             jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
                 def(responseText, status, response):
                     jQuery('div.dialog-form-delete').modal()
+                    jQuery("div.dialog-form-delete").fadeTo( "fast", 1)
             )
         else:
-            jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+            jQuery(".inline_dialog").remove()            
+            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
+            elem2.insertAfter(jQuery(elem).parents("tr"))
+            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
             jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
 
     return False
@@ -186,16 +194,11 @@ def on_dialog_load():
 
 
 def _dialog_loaded(is_modal):
-    nonlocal IS_POPUP
     fragment_init(jQuery('div.dialog-form'))
-    #ACTIVE_PAGE.page.find("div.resizable").resizable()
-    #ACTIVE_PAGE.page.find("div.resizable").drags()
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
         jQuery('div.dialog-form').modal()
-        #jQuery('div.dialog-form').draggable({ "handle": ".modal-header" });
         jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
-        IS_POPUP = True
 
 
 def dialog_ex_load2(responseText, status, response):
@@ -234,15 +237,25 @@ def on_delete_ok(form):
 def _refresh_win(responseText, ok_button):
     popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
     if "RETURN_OK" in responseText:
-        if jQuery("div.dialog-form").hasClass('in'):
+        if not can_popup():
+            if jQuery("div.dialog-form").hasClass('in'):
+                dialog = "div.dialog-form"
+            else: 
+                if jQuery("div.dialog-form-delete").hasClass('in') :
+                    dialog = "div.dialog-form-delete"
+                else: 
+                    dialog = "div.dialog-form-info"
+            
             def hide_dialog_form():
-                jQuery("div.dialog-form").modal('hide')
+                jQuery(dialog).modal('hide')
+                
             refresh_fragment(popup_activator, hide_dialog_form)
-            jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
+            
+            jQuery(dialog).fadeTo( "slow", 0.5 )
         else:
             refresh_fragment(popup_activator)
     else:
-        if jQuery("div.dialog-form").hasClass('in'):
+        if not can_popup():
             jQuery("div.dialog-data").html(responseText)
         else:
             ok_button.closest('.refr_target').html(responseText)

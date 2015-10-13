@@ -25,11 +25,10 @@ def get_table_type(elem):
         return ""
 
 def can_popup():
-    if(IS_POPUP):
+    if jQuery("div.dialog-form").hasClass('in') or jQuery("div.dialog-form-delete").hasClass('in') or jQuery("div.dialog-form-info").hasClass('in'):
         return False
     else:
-       return True
-
+        return True
 
 def corect_href(href):
     if 'hybrid' in href:
