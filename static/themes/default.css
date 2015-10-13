@@ -125,6 +125,10 @@ body.fixed .menu_offset {
     vertical-align: top;
 }
 
+.td_action .btn-group .btn:hover {
+    margin: -5px 0px 0px 0px;
+}
+
 .tabsort .btn-group {
     padding: 2px 2px;
     margin: -2px 0px 0px 0px;

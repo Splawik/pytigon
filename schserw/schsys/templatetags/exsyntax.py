@@ -75,7 +75,7 @@ def mark_safe2(x):
         return x
 
 STANDARD_DESC = { #title, attrs, 
-    'default': ('Default', 'btn btn-sm btn-default', "data-role='button' data-inline='true' data-mini='true' "),    
+    'default': ('Default', "class='btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' "),
     'edit': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'edit2': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
