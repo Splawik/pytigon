@@ -4,5 +4,5 @@
 
 % if standard_web_browser
     % if is_paginated
-        ul class=pagination pagination-sm,,,totalPages={{paginator.num_pages}},,,href={{request.path}}?page=[[page]]{{ getvars }}{{ hashtag }},,,style=margin-top:5px;margin-bottom=0px;
+        ul class=pagination pagination-sm,,,totalPages={{paginator.num_pages}},,,start_page={{page_obj.number}},,,href={{request.path}}?page=[[page]]{{ getvars }}{{ hashtag }},,,style=margin-top:5px;margin-bottom=0px;
 

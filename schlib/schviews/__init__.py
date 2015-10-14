@@ -426,6 +426,7 @@ class GenericRows(object):
 
             def get_context_data(self, **kwargs):
                 context = super(ListView, self).get_context_data(**kwargs)
+                #print("X3", context['page_obj'], dir(context['page_obj']), context['page_obj'].number)
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
                 context['filter'] = self.kwargs['filter']

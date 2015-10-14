@@ -35,7 +35,8 @@ class ForeignKey(models.ForeignKey):
         else:
             self.search_fields = None
         super().__init__(*args, **kwargs)
-        self.to = args[0]
+        if len(args)>0:
+            self.to = args[0]
 
     def formfield(self, **kwargs):
         if settings.URL_ROOT_FOLDER:

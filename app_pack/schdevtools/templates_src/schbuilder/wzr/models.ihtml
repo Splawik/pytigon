@@ -38,7 +38,8 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
         verbose_name = _("{{table.verbose_name|safe}}")
         verbose_name_plural = _("{{table.verbose_name_plural|safe}}")
         default_permissions = ('add', 'change', 'delete', 'list')
-        ordering = ['id']
+        
+        {% if table.ordering != '-' %}{% if table.ordering %}ordering = {{table.ordering|safe}}{% else %}ordering = ['id']{% endif %}{% endif %}
         {% if table.metaclass_code %}
         {% for line in table.metaclass_code.splitlines %}{{line|safe}}
         {% endfor %}

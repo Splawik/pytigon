@@ -226,6 +226,7 @@ class SChAppSet( models.Model):
         verbose_name = _("SChAppSet")
         verbose_name_plural = _("SChAppSet")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -280,6 +281,7 @@ class SChApp( models.Model):
         verbose_name = _("SChApp")
         verbose_name_plural = _("SChApp")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -399,6 +401,7 @@ class SChChoice( models.Model):
         verbose_name = _("SChChoice")
         verbose_name_plural = _("SChChoice")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -423,6 +426,7 @@ class SChChoiceItem( models.Model):
         verbose_name = _("SChChoiceItem")
         verbose_name_plural = _("SChChoiceItem")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -447,6 +451,7 @@ class SChTable( models.Model):
         verbose_name = _("SChTable")
         verbose_name_plural = _("SChTable")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -460,6 +465,7 @@ class SChTable( models.Model):
     verbose_name_plural = models.CharField('Verbose name plural', null=False, blank=False, editable=True, max_length=255)
     metaclass_code = models.TextField('Metaclass code', null=True, blank=True, editable=False, )
     table_code = models.TextField('Table code', null=True, blank=True, editable=False, )
+    ordering = models.CharField('Ordering', null=True, blank=True, editable=True, default="['id']",max_length=255)
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     generic = models.BooleanField('Generic', null=False, blank=False, editable=True, default=False,)
     url_params = models.CharField('Url params', null=True, blank=True, editable=True, max_length=255)
@@ -489,6 +495,7 @@ class SChField( models.Model):
         verbose_name = _("SChField")
         verbose_name_plural = _("SChField")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -614,6 +621,7 @@ class SChView( models.Model):
         verbose_name = _("SChView")
         verbose_name_plural = _("SChView")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -706,6 +714,7 @@ class SChTemplate( models.Model):
         verbose_name = _("SChTemplate")
         verbose_name_plural = _("SChTemplate")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -812,6 +821,7 @@ class SChAppMenu( models.Model):
         verbose_name = _("SChAppMenu")
         verbose_name_plural = _("SChAppMenu")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -871,6 +881,7 @@ class SChUrl( models.Model):
         verbose_name = _("SChUrl")
         verbose_name_plural = _("SChUrl")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -895,6 +906,7 @@ class SChForm( models.Model):
         verbose_name = _("Form")
         verbose_name_plural = _("Form")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -921,6 +933,7 @@ class SChFormField( models.Model):
         verbose_name = _("Form field")
         verbose_name_plural = _("Form field")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         
@@ -987,6 +1000,7 @@ class SChTask( models.Model):
         verbose_name = _("SChTask")
         verbose_name_plural = _("SChTask")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         

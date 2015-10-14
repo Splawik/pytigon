@@ -13,6 +13,7 @@ def refresh_fragment(data_item_to_refresh, fun=None):
         data = new FormData(src[0])
         def _refr2(data):
             target.html(data);
+            fragment_init(target)
             if fun:
                 fun();
         jQuery.ajax({'type': "POST", 'url': corect_href(href), 'data': data, contentType: False, processData: False,  'success': _refr2  })
@@ -44,15 +45,15 @@ def on_popup_inline(elem):
         href2 = corect_href(jQuery(elem).attr("href"))
         new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
         new_fragment.insertAfter(jQuery(elem).closest("tr"))
-
-        new_fragment.find(".refr_target").load(href2,None,
+        elem2 = new_fragment.find(".refr_target")
+        elem2.load(href2,None,
             def(responseText, status, response):
                 nonlocal WAIT_ICON
                 $('#IDIAL_'+id).hide()
                 $('#IDIAL_'+id).removeClass('hide')
                 $('#IDIAL_'+id).show("slow")
                 if status!='error':
-                    _dialog_loaded(False)
+                    _dialog_loaded(False, elem2)
                     on_dialog_load()
                 if WAIT_ICON:
                     WAIT_ICON.stop()
@@ -81,15 +82,15 @@ def on_popup_in_form(elem):
         href2 = corect_href(jQuery(elem).attr("href"))
         new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
         new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
-
-        new_fragment.find(".refr_target").load(href2,None,
+        elem2 = new_fragment.find(".refr_target")
+        elem2.load(href2,None,
             def(responseText, status, response):
                 nonlocal WAIT_ICON
                 $('#IDIAL_'+id).hide()
                 $('#IDIAL_'+id).removeClass('hide')
                 $('#IDIAL_'+id).show("slow")
                 if status!='error':
-                    _dialog_loaded(False)
+                    _dialog_loaded(False, elem2)
                     on_dialog_load()
                 if WAIT_ICON:
                     WAIT_ICON.stop()
@@ -108,11 +109,12 @@ def on_popup_edit_new(elem):
         jQuery('div.dialog-form').modal()
     else:
         if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
-            jQuery("div.dialog-data").closest(".refr_object").attr("related-object", jQuery(elem).uid())
-            jQuery("div.dialog-data").load(jQuery(elem).attr("href"), None,
+            elem2 = jQuery("div.dialog-data")
+            elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
+            elem2.load(jQuery(elem).attr("href"), None,
                 def(responseText, status, response):
                     if status!='error':
-                        _dialog_loaded(True)
+                        _dialog_loaded(True, elem2)
                         on_dialog_load()
             )
         else:
@@ -139,7 +141,7 @@ def on_popup_edit_new(elem):
                     elem2.removeClass('hide')
                     elem2.show("slow")
                     if status!='error':
-                        _dialog_loaded(False)
+                        _dialog_loaded(False, elem3)
                         on_dialog_load()
                     if WAIT_ICON:
                         WAIT_ICON.stop()
@@ -193,8 +195,14 @@ def on_dialog_load():
     pass
 
 
-def _dialog_loaded(is_modal):
-    fragment_init(jQuery('div.dialog-form'))
+def _dialog_loaded(is_modal, elem):
+    #if is_modal:
+    #    fragment_init(jQuery("div.dialog-form"))
+    #    jQuery("div.dialog-form").fadeTo( "fast", 1)
+    #    jQuery('div.dialog-form').modal()
+    #    jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
+    
+    fragment_init(elem)
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
         jQuery('div.dialog-form').modal()

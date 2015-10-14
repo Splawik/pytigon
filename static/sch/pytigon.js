@@ -140,6 +140,7 @@ function refresh_fragment(data_item_to_refresh, fun) {
         data = new FormData(src[0]);
         function _refr2(data) {
             target.html(data);
+            fragment_init(target);
             if (fun) {
                 fun();
             }
@@ -158,7 +159,7 @@ function refresh_fragment(data_item_to_refresh, fun) {
     }
 }
 function on_popup_inline(elem) {
-    var id, href2, new_fragment;
+    var id, href2, new_fragment, elem2;
     jQuery(elem).attr("data-style", "zoom-out");
     jQuery(elem).attr("data-spinner-color", "#FF0000");
     WAIT_ICON = Ladda.create(elem);
@@ -175,12 +176,13 @@ function on_popup_inline(elem) {
         href2 = corect_href(jQuery(elem).attr("href"));
         new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
         new_fragment.insertAfter(jQuery(elem).closest("tr"));
-        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
+        elem2 = new_fragment.find(".refr_target");
+        elem2.load(href2, null, function(responseText, status, response) {
             $("#IDIAL_" + id).hide();
             $("#IDIAL_" + id).removeClass("hide");
             $("#IDIAL_" + id).show("slow");
             if (status !== "error") {
-                _dialog_loaded(false);
+                _dialog_loaded(false, elem2);
                 on_dialog_load();
             }
             if (WAIT_ICON) {
@@ -192,7 +194,7 @@ function on_popup_inline(elem) {
     return false;
 }
 function on_popup_in_form(elem) {
-    var id, href2, new_fragment;
+    var id, href2, new_fragment, elem2;
     jQuery(elem).attr("data-style", "zoom-out");
     jQuery(elem).attr("data-spinner-color", "#FF0000");
     WAIT_ICON = Ladda.create(elem);
@@ -209,12 +211,13 @@ function on_popup_in_form(elem) {
         href2 = corect_href(jQuery(elem).attr("href"));
         new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'>" + INLINE_TABLE_HTML + "</div>");
         new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
-        new_fragment.find(".refr_target").load(href2, null, function(responseText, status, response) {
+        elem2 = new_fragment.find(".refr_target");
+        elem2.load(href2, null, function(responseText, status, response) {
             $("#IDIAL_" + id).hide();
             $("#IDIAL_" + id).removeClass("hide");
             $("#IDIAL_" + id).show("slow");
             if (status !== "error") {
-                _dialog_loaded(false);
+                _dialog_loaded(false, elem2);
                 on_dialog_load();
             }
             if (WAIT_ICON) {
@@ -235,10 +238,11 @@ function on_popup_edit_new(elem) {
         jQuery("div.dialog-form").modal();
     } else {
         if (can_popup() && !jQuery(elem).hasClass("inline") && !(_$rapyd$_in("_inline", jQuery(elem).attr("name")))) {
-            jQuery("div.dialog-data").closest(".refr_object").attr("related-object", jQuery(elem).uid());
-            jQuery("div.dialog-data").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+            elem2 = jQuery("div.dialog-data");
+            elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid());
+            elem2.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
                 if (status !== "error") {
-                    _dialog_loaded(true);
+                    _dialog_loaded(true, elem2);
                     on_dialog_load();
                 }
             });
@@ -267,7 +271,7 @@ function on_popup_edit_new(elem) {
                 elem2.removeClass("hide");
                 elem2.show("slow");
                 if (status !== "error") {
-                    _dialog_loaded(false);
+                    _dialog_loaded(false, elem3);
                     on_dialog_load();
                 }
                 if (WAIT_ICON) {
@@ -320,8 +324,8 @@ function on_popup_delete(elem) {
 }
 function on_dialog_load() {
 }
-function _dialog_loaded(is_modal) {
-    fragment_init(jQuery("div.dialog-form"));
+function _dialog_loaded(is_modal, elem) {
+    fragment_init(elem);
     if (is_modal) {
         jQuery("div.dialog-form").fadeTo("fast", 1);
         jQuery("div.dialog-form").modal();
@@ -679,9 +683,62 @@ function handle_class_click(fragment_obj, obj_class, fun) {
         return false;
     });
 }
+function init_pagintor(pg) {
+    var totalPages, page_number, options, form, url, paginate;
+    if (pg.length > 0) {
+        paginate = true;
+        totalPages = pg.attr("totalPages");
+        page_number = pg.attr("start_page");
+        options = {
+            "totalPages": +totalPages,
+            "startPage": +page_number,
+            "visiblePages": 3,
+            "first": "<<",
+            "prev": "<",
+            "next": ">",
+            "last": ">>",
+            "onPageClick": function(event, page) {
+                var form, url, active_button, WAIT_ICON2;
+                form = pg.closest(".refr_object").find("form.refr_source");
+                if (form) {
+                    function _on_new_page(data) {
+                        pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
+                        fragment_init(pg.closest(".content").find(".tabsort tbody"));
+                        if (WAIT_ICON2) {
+                            $("#loading-indicator").hide();
+                            WAIT_ICON2 = false;
+                        }
+                    }
+                    url = pg.attr("href").replace("[[page]]", page) + "&hybrid=1";
+                    form.attr("action", url);
+                    form.attr("href", url);
+                    active_button = pg.find(".page active");
+                    WAIT_ICON2 = true;
+                    $("#loading-indicator").show();
+                    jQuery.ajax({
+                        "type": "POST",
+                        "url": url,
+                        "data": form.serialize(),
+                        "success": _on_new_page
+                    });
+                }
+            }
+        };
+        pg.twbsPagination(options);
+        if (+page_number !== 1) {
+            form = pg.closest(".refr_object").find("form.refr_source");
+            url = pg.attr("href").replace("[[page]]", page_number) + "&hybrid=1";
+            form.attr("action", url);
+            form.attr("href", url);
+        }
+    } else {
+        paginate = false;
+    }
+    return paginate;
+}
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, paginator, pg, totalPages, options, paginate;
+    var elem2, paginator, paginate;
     if (elem) {
         elem2 = elem;
     } else {
@@ -697,79 +754,17 @@ function fragment_init(elem) {
         "language": "pl"
     });
     paginator = elem2.find(".pagination");
-    if (paginator.length > 0) {
-        paginate = true;
-        pg = paginator;
-        totalPages = pg.attr("totalPages");
-        options = {
-            "totalPages": totalPages,
-            "visiblePages": 3,
-            "first": "<<",
-            "prev": "<",
-            "next": ">",
-            "last": ">>",
-            "onPageClick": function(event, page) {
-                var form;
-                form = pg.closest("form");
-                if (form) {
-                    function _on_new_page(data) {
-                        pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
-                        fragment_init(pg.closest(".content").find(".tabsort tbody"));
-                    }
-                    jQuery.ajax({
-                        "type": "POST",
-                        "url": pg.attr("href").replace("[[page]]", page) + "&hybrid=1",
-                        "data": form.serialize(),
-                        "success": _on_new_page
-                    });
-                }
-            }
-        };
-        pg.twbsPagination(options);
-    } else {
-        paginate = false;
-    }
+    paginate = init_pagintor(paginator);
     if (BASE_FRAGMENT_INIT) {
         BASE_FRAGMENT_INIT();
     }
 }
 function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
-    var table_type, paginator, pg, totalPages, options, paginate, elem2;
+    var table_type, pg, paginate, elem2;
     table_type = get_table_type(jQuery("#" + id));
-    paginator = get_page(jQuery("#" + id)).find(".pagination");
-    if (paginator.length > 0) {
-        paginate = true;
-        pg = ACTIVE_PAGE.page.find(".pagination");
-        totalPages = pg.attr("totalPages");
-        options = {
-            "totalPages": totalPages,
-            "visiblePages": 3,
-            "first": "<<",
-            "prev": "<",
-            "next": ">",
-            "last": ">>",
-            "onPageClick": function(event, page) {
-                var form;
-                form = pg.closest("form");
-                if (form) {
-                    function _on_new_page(data) {
-                        pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
-                        fragment_init(pg.closest(".content").find(".tabsort tbody"));
-                    }
-                    jQuery.ajax({
-                        "type": "POST",
-                        "url": pg.attr("href").replace("[[page]]", page) + "&hybrid=1",
-                        "data": form.serialize(),
-                        "success": _on_new_page
-                    });
-                }
-            }
-        };
-        pg.twbsPagination(options);
-    } else {
-        paginate = false;
-    }
+    pg = ACTIVE_PAGE.page.find(".pagination");
+    paginate = init_pagintor(pg);
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     if (first_time) {
         elem2 = jQuery("body");

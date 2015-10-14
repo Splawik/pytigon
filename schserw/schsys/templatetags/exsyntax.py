@@ -761,7 +761,7 @@ def paginator2(context):
             context['page_all'] = True
 
         context['page_last'] = context['paginator'].page_range[-1]
-
+        context['page_number'] = context['page_obj'].number
     return context
 
 

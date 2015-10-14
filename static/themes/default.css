@@ -245,3 +245,5 @@ div.td a.popup {
 button.dropdown-toggle span {
     margin-top: 7px;
 }
+
+div.indent button.btn { margin: 0px 0px 5px 0px; }
