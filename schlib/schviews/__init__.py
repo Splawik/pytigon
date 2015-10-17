@@ -176,9 +176,13 @@ class GenericTable(object):
             rows.template_name = template_name
         else:
             if field:
-                x  = apps.get_model(self.app, tab)
-                y = getattr(x, field)
-                f = getattr(apps.get_model(self.app, tab), field).related
+                if '.' in tab:
+                    pos = tab.rfind('.')
+                    m = apps.get_model(tab[:pos], tab[pos+1:])
+                else:
+                    m = apps.get_model(self.app, tab)
+                f = getattr(m, field).related
+                #f = getattr(apps.get_model(self.app, tab), field).related
                 #f = getattr(apps.get_model(self.app + "." + tab), field).rel
                 try:
                     table_name = f.name
@@ -191,9 +195,16 @@ class GenericTable(object):
             else:
                 rows.template_name = self.app.lower() + '/' + table_name + '.html'
         #rows.base_model = models.get_model(self.app, tab)
-        rows.base_model = apps.get_model(self.app + "." + tab)
+        if '.' in tab:
+            rows.base_model = apps.get_model(tab)
+        else:
+            rows.base_model = apps.get_model(self.app + "." + tab)
         rows.queryset = queryset
-        rows.base_perm = self.app + '.%s_' + tab.lower()
+        if '.' in tab:
+            pos = tab.rfind('.')            
+            rows.base_perm = tab[:pos]+ '.%s_' + tab[pos+1:].lower()
+        else:
+            rows.base_perm = self.app + '.%s_' + tab.lower()
         return rows
 
     def append_from_schema(self, rows, schema):
@@ -426,7 +437,6 @@ class GenericRows(object):
 
             def get_context_data(self, **kwargs):
                 context = super(ListView, self).get_context_data(**kwargs)
-                #print("X3", context['page_obj'], dir(context['page_obj']), context['page_obj'].number)
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
                 context['filter'] = self.kwargs['filter']
@@ -521,7 +531,7 @@ class GenericRows(object):
             else:
                 model = self.base_model
             #success_url = make_path('schserw.urls.ok', )
-            success_url = reverse('ok')
+            success_url = make_path('ok')
 
             template_name = self.template_name
             title = self.title
@@ -607,11 +617,13 @@ class GenericRows(object):
             fields = "__all__"
 
             def get_success_url(self):
+                print("X1", self.object)
                 if self.object:
-                    success_url = make_path('schserw.schsys.views.ret_ok', (int(self.object.id), str(self.object)))
+                    success_url = make_path('ret_ok', (int(self.object.id), str(self.object)))
                 else:
                     #success_url = make_path('schserw.urls.ok')
-                    success_url = reverse('ok')
+                    success_url = make_path('ok')
+                print("X2", success_url)
                 return success_url
 
             def get(
@@ -736,7 +748,7 @@ class GenericRows(object):
             else:
                 model = self.base_model
             #success_url = make_path('schserw.urls.ok')
-            success_url = reverse('ok')
+            success_url = make_path('ok')
             template_name = self.template_name
             title = self.title
 
@@ -766,7 +778,7 @@ class GenericRows(object):
             ext='py',
             model=model,
             #post_save_redirect = make_path('schserw.urls.ok'),
-            post_save_redirect = reverse('ok'),
+            post_save_redirect = make_path('ok'),
             template_name=self.template_name,
             extra_context=transform_extra_context({'title': self.title
                      + ' - ' +str(_('update element')) }, self.extra_context),
