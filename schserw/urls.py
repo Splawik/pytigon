@@ -44,9 +44,6 @@ schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
 add_to_builtins('schserw.schsys.templatetags.defexfiltry')
 
-print(settings.STATIC_URL)
-print(settings.STATIC_ROOT)
-
 urlpatterns = patterns(
     '',
     url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),

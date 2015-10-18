@@ -33,7 +33,7 @@ LOCAL_ROOT_PATH = _lp+"/.."
 settings.ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-settings.URL_ROOT_FOLDER='schdevtools'
+settings.URL_ROOT_FOLDER='devtools'
 
 for app in APPS:
     if not app in INSTALLED_APPS:
