@@ -21,6 +21,14 @@ import os
 import sys
 import platform
 
+
+def str_attr_from_fun(fun):
+    class _x(str):
+        def __str__(self):
+            return fun()
+    return _x()
+
+
 APPSET_NAME = "Pytigon"
 
 if sys.argv and (sys.argv[0] == 'manage.py' or '--debug' in sys.argv):
@@ -43,10 +51,8 @@ sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/ext_lib')
 sys.path.append(ROOT_PATH + '/schappdata/schplugins')
 
-ADMINS = (('Slawomir Cholaj', 'slawomir.cholaj@gmail.com'), )
+ADMINS = []
 MANAGERS = ADMINS
-
-#AUTH_PROFILE_MODULE = 'schserw.schbase.Person'
 
 TIME_ZONE = 'Europe/Warsaw'
 LANGUAGE_CODE = 'pl'
@@ -58,32 +64,42 @@ LOGIN_REDIRECT_URL = '/'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 BASE_URL = 'http://127.0.0.1:81'
-URL_ROOT_FOLDER = 'intranet'
-_STATIC_ROOT = ROOT_PATH + '/static'
-if len(URL_ROOT_FOLDER) > 0:
-    _STATIC_URL = '/' + URL_ROOT_FOLDER + '/static/'
-else:
-    _STATIC_URL = '/static/'
 
+URL_ROOT_FOLDER = ''
 
-MEDIA_ROOT = ROOT_PATH + '/app_pack'
-if len(URL_ROOT_FOLDER) > 0:
-    MEDIA_URL = '/' + URL_ROOT_FOLDER + '/site_media/'
-else:
-    MEDIA_URL = '/site_media/'
+def get_static_url():
+    global URL_ROOT_FOLDER
+    if URL_ROOT_FOLDER:
+        return '/' + URL_ROOT_FOLDER + '/static/'
+    else:
+        return '/static/'
+
+def get_media_url():
+    global URL_ROOT_FOLDER
+    if URL_ROOT_FOLDER:
+        return '/' + URL_ROOT_FOLDER + '/app_media/'
+    else:
+        return '/app_media/'
+
+def get_static_root():
+    global ROOT_PATH
+    return ROOT_PATH + '/static'
+
+def get_media_root():
+    global ROOT_PATH
+    return ROOT_PATH + '/app_pack'
+
+STATIC_URL = str_attr_from_fun(get_static_url)
+MEDIA_URL = str_attr_from_fun(get_media_url)
+STATIC_ROOT = str_attr_from_fun(get_static_root)
+MEDIA_ROOT = str_attr_from_fun(get_media_root)
+
 UPLOAD_PATH = '/home/publiczny/intranet/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 SECRET_KEY = 'anawa'
 
 ROOT_URLCONF = 'schserw.urls'
-
-#TEMPLATE_LOADERS = (
-#                    'schlib.schdjangoext.python_style_template_loader.Loader',
-#                    'schlib.schdjangoext.python_style_template_loader.FSLoader',
-#                    #'django.template.loaders.filesystem.Loader',
-#                    'django.template.loaders.app_directories.Loader',
-#                    )
 
 TEMPLATES = [
     {
@@ -122,8 +138,6 @@ TEMPLATES = [
 ]
 
 
-INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
-
 MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,68 +152,41 @@ MIDDLEWARE_CLASSES = (
     #'schserw.schmiddleware.schpost.BeautyHtml',
     )
 
-#TEMPLATE_CONTEXT_PROCESSORS = [
-#    'django.contrib.auth.context_processors.auth',
-#    'django.core.context_processors.debug',
-#    'django.core.context_processors.i18n',
-#    'django.core.context_processors.request',
-#    'django.core.context_processors.media',
-#    'django.core.context_processors.static',
-#    'schserw.schsys.context_processors.sch_standard',
-#    'schserw.schsys.context_processors.sch_html_widget',
-#    #'django.core.context_processors.request',
-#    ]
-
-#TEMPLATE_DIRS = [ROOT_PATH + '/templates']
-
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    #'registration',
-    #'django_admin_bootstrapped',
     'bootstrap_admin',
     'django.contrib.admin',
-    #'django.contrib.admin.apps.AdminConfig',
-#    'django.contrib.databrowse',
     'schserw.schsys',
-#    'schbase',
-#    'schserw.schwiki',
     'django.contrib.staticfiles',
     'crispy_forms',
-    #'debug_toolbar',
-    #'django_extensions',
-    #'mptt',
     'django_select2',
     ]
 
 HIDE_APPS = []
 
-LOGGING = {'version': 1, 'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},
-           'loggers': {'django.db.backends': {'level': 'DEBUG', 'handers': ['console']}}
+LOGGING = {
+    'version': 1,
+    'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},
+    'loggers': {'django.db.backends': {'level': 'DEBUG', 'handers': ['console']}}
 }
 
 LOCALE_PATHS = [
     SERW_PATH + "/locale",
 ]
 
-STATICFILES_DIRS  = [ _STATIC_ROOT, ]
+STATICFILES_DIRS  = [str(STATIC_ROOT), ]
 
 ATOMIC_REQUESTS = True
 
+INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
+
 ALLOWED_HOSTS = ['127.0.0.1', '127.0.0.2', '127.0.0.3', 'localhost', 'localhost:8080']
 
-#EMAIL_HOST = 'gmail.com'
-#EMAIL_HOST_USER = 'slawomir.cholaj'
-#EMAIL_HOST_PASSWORD = '----'
-#DEFAULT_FROM_EMAIL = 'slawomir.cholaj@gmail.pl'
-#SERVER_EMAIL = 'slawomir.cholaj@gmail.pl'
-#EMAIL_USE_TLS = True
-
 PYTHON_INTERPRETER = 'python3'
-#PYTHON_CONSOLE = 'ipython --classic'
 PYTHON_CONSOLE = 'python3'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

@@ -29,9 +29,9 @@ import os
 
 import traceback
 from django.views.generic import TemplateView
-#from django.contrib.auth.views import login
 from schlib.schdjangoext.django_init import AppConfigMod
 from django.template.base import add_to_builtins
+from django.conf.urls.static import static
 
 #from schlib.schjs.compile import py_to_js, psjx_to_js
 #from schlib.schindent.indent_style import py_to_js, pjsx_to_js
@@ -44,20 +44,6 @@ schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
 add_to_builtins('schserw.schsys.templatetags.defexfiltry')
 
-
-#def ok(request):
-#    return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")
-
-
-#def ret_ok(request, id, title):
-#    return HttpResponse("""<head><meta name="RETURN" content="RETURN_OK" /><script>ret_ok(%s,"%s");</script></head><body></body>""" % (id, title))
-
-
-#def sch_login(request, *argi, **argv):
-#    ret = login(request, *argi, **argv)
-#    return ret
-
-
 urlpatterns = patterns(
     '',
     url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
@@ -65,16 +51,11 @@ urlpatterns = patterns(
     (r'schsys/jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages': ('django.conf', )}),
     (r'schsys/i18n/', include('django.conf.urls.i18n')),
     (r'admin/', include(admin.site.urls)),
-#    (r'schsys/do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
-#    (r'schsys/do_logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
-
-#    url(r'schsys/ok/$', 'schserw.urls.ok', name='ok'),
-#    url(r'schsys/(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.urls.ret_ok', name='ret_ok'),
-
-    (r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.ROOT_PATH + '/static'}),
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^select2/', include('django_select2.urls')),
-    )
+    ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
 
 
 for app in settings.INSTALLED_APPS:
