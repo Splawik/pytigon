@@ -33,12 +33,13 @@ LOCAL_ROOT_PATH = _lp+"/.."
 settings.ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-settings.URL_ROOT_FOLDER='devtools'
+if not settings.DEBUG:
+    settings.URL_ROOT_FOLDER='devtools'
 
-for app in APPS:
-    if not app in INSTALLED_APPS:
-        INSTALLED_APPS.append(get_app_config(app))
-        aa = app.split('.')
+    STATIC_URL = '/'+settings.URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+settings.URL_ROOT_FOLDER+'/app_media/'
+
+MEDIA_ROOT =  LOCAL_ROOT_PATH + '/media'
 
 #apps = []
 #base_apps_path = os.path.join(_lp, '..')
@@ -52,6 +53,11 @@ for app in APPS:
 #        if os.path.isdir( os.path.join(base_apps_path2,ff)):
 #            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
 #                APPS.append(app+"."+ff)
+
+for app in APPS:
+    if not app in INSTALLED_APPS:
+        INSTALLED_APPS.append(get_app_config(app))
+        aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]

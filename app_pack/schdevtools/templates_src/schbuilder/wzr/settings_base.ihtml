@@ -33,7 +33,13 @@ LOCAL_ROOT_PATH = _lp+"/.."
 settings.ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-{% if not DEBUG %}{% if appset.start_page %}settings.URL_ROOT_FOLDER='{{appset.start_page}}'{% else %}settings.URL_ROOT_FOLDER='{{appset.name}}'{% endif %}{% endif %}
+if not settings.DEBUG:
+    {% if appset.start_page %}settings.URL_ROOT_FOLDER='{{appset.start_page}}'{% else %}settings.URL_ROOT_FOLDER='{{appset.name}}'{% endif %}
+
+    STATIC_URL = '/'+settings.URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+settings.URL_ROOT_FOLDER+'/app_media/'
+
+MEDIA_ROOT =  LOCAL_ROOT_PATH + '/media'
 
 for app in APPS:
     if not app in INSTALLED_APPS:
