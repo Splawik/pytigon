@@ -53,8 +53,10 @@ urlpatterns = patterns(
     (r'admin/', include(admin.site.urls)),
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^select2/', include('django_select2.urls')),
-    ) + static(str(settings.STATIC_URL), document_root=str(settings.STATIC_ROOT))
+    )
 
+if settings.DEBUG:
+    urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATIC_ROOT))
 
 for app in settings.INSTALLED_APPS:
 

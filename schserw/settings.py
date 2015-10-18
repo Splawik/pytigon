@@ -157,7 +157,7 @@ ATOMIC_REQUESTS = True
 
 INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
 
-ALLOWED_HOSTS = ['127.0.0.1', '127.0.0.2', '127.0.0.3', 'localhost', 'localhost:8080']
+ALLOWED_HOSTS = ['*',]
 
 PYTHON_INTERPRETER = 'python3'
 PYTHON_CONSOLE = 'python3'
