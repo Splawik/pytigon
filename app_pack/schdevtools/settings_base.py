@@ -15,6 +15,7 @@ try:
     from schserw.settings_local import *
 except:
     from schserw.settings import *
+import settings
 
 from apps import APPS
 
@@ -28,17 +29,16 @@ APPSET_NAME = "schdevtools"
 
 THEMES = ['desktop_traditional', 'tablet_standard', 'smartfon_standard']
 
-LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
-ROOT_PATH = _rp
+settings.ROOT_PATH = _rp
+sys.path.append(LOCAL_ROOT_PATH)
 
-URL_ROOT_FOLDER = ''
+settings.URL_ROOT_FOLDER='schdevtools'
 
-if len(URL_ROOT_FOLDER) > 0:
-    STATIC_URL = '/' + URL_ROOT_FOLDER + '/static/'
-else:
-    STATIC_URL = '/static/'
-
+for app in APPS:
+    if not app in INSTALLED_APPS:
+        INSTALLED_APPS.append(get_app_config(app))
+        aa = app.split('.')
 
 #apps = []
 #base_apps_path = os.path.join(_lp, '..')
@@ -52,19 +52,6 @@ else:
 #        if os.path.isdir( os.path.join(base_apps_path2,ff)):
 #            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
 #                APPS.append(app+"."+ff)
-if len(URL_ROOT_FOLDER) > 0:
-    MEDIA_URL = '/' + URL_ROOT_FOLDER + '/site_media/'
-else:
-    MEDIA_URL = '/site_media/'
-
-sys.path.append(LOCAL_ROOT_PATH)
-
-MEDIA_ROOT = ROOT_PATH + '/app_pack/' + APPSET_NAME +"/media"
-
-for app in APPS:
-    if not app in INSTALLED_APPS:
-        INSTALLED_APPS.append(get_app_config(app))
-        aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]

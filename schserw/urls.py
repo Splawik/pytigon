@@ -44,6 +44,9 @@ schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
 add_to_builtins('schserw.schsys.templatetags.defexfiltry')
 
+print(settings.STATIC_URL)
+print(settings.STATIC_ROOT)
+
 urlpatterns = patterns(
     '',
     url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
@@ -53,9 +56,7 @@ urlpatterns = patterns(
     (r'admin/', include(admin.site.urls)),
     (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^select2/', include('django_select2.urls')),
-    ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
+    ) + static(str(settings.STATIC_URL), document_root=str(settings.STATIC_ROOT))
 
 
 for app in settings.INSTALLED_APPS:

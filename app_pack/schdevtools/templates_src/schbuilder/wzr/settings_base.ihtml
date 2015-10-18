@@ -15,6 +15,7 @@ try:
     from schserw.settings_local import *
 except:
     from schserw.settings import *
+import settings
 
 from apps import APPS
 
@@ -28,25 +29,11 @@ APPSET_NAME = "{{appset.name}}"
 
 THEMES = ['{{appset.desktop_gui_type}}', '{{appset.tablet_gui_type}}', '{{appset.smartfon_gui_type}}']
 
-LOCAL_SERW_PATH = _lp
 LOCAL_ROOT_PATH = _lp+"/.."
-ROOT_PATH = _rp
-
-URL_ROOT_FOLDER = ''
-
-if len(URL_ROOT_FOLDER) > 0:
-    STATIC_URL = '/' + URL_ROOT_FOLDER + '/static/'
-else:
-    STATIC_URL = '/static/'
-
-if len(URL_ROOT_FOLDER) > 0:
-    MEDIA_URL = '/' + URL_ROOT_FOLDER + '/site_media/'
-else:
-    MEDIA_URL = '/site_media/'
-
+settings.ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-MEDIA_ROOT = ROOT_PATH + '/app_pack/' + APPSET_NAME +"/media"
+{% if not DEBUG %}{% if appset.start_page %}settings.URL_ROOT_FOLDER='{{appset.start_page}}'{% else %}settings.URL_ROOT_FOLDER='{{appset.name}}'{% endif %}{% endif %}
 
 for app in APPS:
     if not app in INSTALLED_APPS:

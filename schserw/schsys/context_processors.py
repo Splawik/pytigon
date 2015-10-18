@@ -401,7 +401,8 @@ def sch_standard(request):
         'settings': settings,
         #'uuid': str(uuid.uuid1()),
         'uuid': uuid(request.path),
-        'lang': request.LANGUAGE_CODE[:2].lower()
+        'lang': request.LANGUAGE_CODE[:2].lower(),
+        'DEBUG': settings.DEBUG,
         }
     parm = defparm
     parm_list = parm.split(',')

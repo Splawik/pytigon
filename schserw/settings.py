@@ -35,15 +35,14 @@ if sys.argv and (sys.argv[0] == 'manage.py' or '--debug' in sys.argv):
     DEBUG = True
     DB_DEBUG = True
 else:
-    DEBUG = True
-    DB_DEBUG = True
+    DEBUG = False
+    DB_DEBUG = False
 
 TEMPLATE_DEBUG = DEBUG
 
 SHOW_LOGIN_WIN = True
 
 SERW_PATH = os.path.dirname(os.path.abspath(__file__))
-LOCAL_SERW_PATH = SERW_PATH
 ROOT_PATH = SERW_PATH + '/..'
 
 sys.path.append(SERW_PATH)
