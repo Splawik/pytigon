@@ -174,3 +174,8 @@ else:
 RAPYD = ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
 
 AUTO_RENDER_SELECT2_STATICS = False
+
+try:
+    from schserw.settings_local import *
+except:
+    pass

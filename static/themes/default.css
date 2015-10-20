@@ -51,9 +51,9 @@ div.ext_padding { padding: 0px 14px; }
     margin-top: 17px;
 }
 
-.tabsort td {
+.tabsort > tbody > tr > td {
 	padding: 8px;
-	vertical-align: bottom;
+    vertical-align: middle;
 }
 
 .tabsort th {
@@ -118,16 +118,15 @@ body.fixed .menu_offset {
     margin: 0px 0px;
 }
 
-
 .tabsort .btn {
     padding: 5px 10px;
-    margin: -5px 0px 0px 0px;
     vertical-align: top;
 }
 
 .td_action .btn-group .btn:hover {
-    margin: -5px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
 }
+
 
 .tabsort .btn-group {
     padding: 2px 2px;
@@ -137,7 +136,6 @@ body.fixed .menu_offset {
 
 .tab-content {
     background-color: white;
-    //padding: 5px 5px 5px 5px;
     padding: 0px 5px;
     align: left;
     width: 100%;
@@ -240,10 +238,6 @@ div.td a.popup {
 .navbar.navbar .dropdown-menu li > a, .navbar-default.navbar .dropdown-menu li > a {
     font-size: 14px;
     padding: 5px 40px;
-}
-
-button.dropdown-toggle span {
-    margin-top: 7px;
 }
 
 div.indent button.btn { margin: 0px 0px 5px 0px; }

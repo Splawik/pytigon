@@ -47,6 +47,7 @@ class Page( models.Model):
         verbose_name = _("Page")
         verbose_name_plural = _("Page")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         

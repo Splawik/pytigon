@@ -26,13 +26,16 @@
     margin: 0px 6px 0px 0px;
 }
 
-
 .tabsort .btn-group {
     padding: 0px;
-    margin: -5px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     vertical-align: top;
 }
 
+.td_action .btn, .td_information .btn {
+    margin: 0px 0px 0px 0px;
+    vertical-align: top;
+}
 
 .txt3d a {
     color: #fff;
