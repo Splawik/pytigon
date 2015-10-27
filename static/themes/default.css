@@ -43,7 +43,7 @@ div.ext_padding { padding: 0px 14px; }
 }
 
 .TableFiltr .checkbox label {
-    margin-right: 30px;
+    margin-right: 15px;
     font-weight: bolder;
 }
 
@@ -112,6 +112,7 @@ body.fixed .menu_offset {
 
 .form-control {
     height: 33px;
+    min-width: 120px;
 }
 
 .pagination {
@@ -241,3 +242,27 @@ div.td a.popup {
 }
 
 div.indent button.btn { margin: 0px 0px 5px 0px; }
+
+.menu-status {
+    margin: 5px;
+}
+
+.tab-tab {
+    white-space: nowrap;
+    overflow: auto;
+    position: relative;
+}
+
+.inline-form-body  {
+    white-space: nowrap;
+    overflow: auto;
+    position: relative;
+    margin-right: 70px;
+}
+
+.refresh-button {
+    position: absolute;
+    right: 17px;
+    bottom: 3px;
+    height: 100%;
+}

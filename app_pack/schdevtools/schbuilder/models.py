@@ -216,6 +216,15 @@ ContentType_CHOICES = (
     
     )
 
+Static_CHOICES = (
+    ("C","css"),
+    ("J","javascript"),
+    ("P","python->javascript"),
+    ("R","riot.js module"),
+    ("I","icss->css"),
+    
+    )
+
 
 
 
@@ -708,6 +717,31 @@ admin.site.register(SChView)
 
 
 @python_2_unicode_compatible
+class SChStatic( models.Model):
+    
+    class Meta:
+        verbose_name = _("Static file")
+        verbose_name_plural = _("Static files")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        
+        ordering = ['id']
+        
+        
+
+    
+
+    parent = HiddenForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
+    code = models.TextField('Code', null=True, blank=True, editable=False, )
+    doc = models.TextField('Doc', null=True, blank=True, editable=False, )
+    type = models.CharField('Type', null=False, blank=False, editable=True, choices=Static_CHOICES,max_length=1)
+    
+
+    
+admin.site.register(SChStatic)
+
+
+@python_2_unicode_compatible
 class SChTemplate( models.Model):
     
     class Meta:
@@ -727,6 +761,7 @@ class SChTemplate( models.Model):
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=64)
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
+    static_files = models.ManyToManyField(SChStatic, null=False, blank=False, editable=True, verbose_name='Static files', )
     
 
     def get_url_name(self):

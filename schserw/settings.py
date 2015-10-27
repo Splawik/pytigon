@@ -58,7 +58,7 @@ BASE_URL = 'http://127.0.0.1:81'
 
 URL_ROOT_FOLDER = ''
 STATIC_URL = '/static/'
-MEDIA_URL = '/app_media/'
+MEDIA_URL = '/site_media/'
 
 if DEBUG:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]

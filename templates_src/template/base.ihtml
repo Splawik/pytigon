@@ -160,10 +160,12 @@
                                             %% form_filter
                                                 %if form
                                                     %% form_content
-                                                        {{ form.non_field_errors }}
-                                                        % inline_form:
-                                                        button type=submit,,,value=_(Refresh),,,class=btn btn-info ladda-button,,,data-style=slide-left
-                                                            ._(Refresh)
+                                                        div class=inline-form-body
+                                                            {{ form.non_field_errors }}
+                                                            % inline_form:
+                                                        button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-sm btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
+                                                            span class=glyphicon glyphicon-refresh
+
 
             %% list_content_body
               div class=tabsort_panel
@@ -222,7 +224,7 @@
 
         %% list_page_end
 
-%% content_end
+%% body_end...</body>
     script language=javascript
         .riot.mount('*');
-
+    {{ block.super }}

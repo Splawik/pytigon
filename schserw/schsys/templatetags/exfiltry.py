@@ -642,3 +642,22 @@ def second_section(html):
         return x[1]
     else:
         return ""
+
+
+@register.filter(name='is_menu_checked')
+def is_menu_checked(url, full_path):
+    if url and full_path:
+        p = full_path.split('?')[0]
+        if len(p)>0 and p[0]=='/': p=p[1:]
+        if len(p)>0 and p[-1]=='/': p=p[:-1]
+
+        u = url.split('?')[0]
+        if len(u)>0 and u[0]=='/': u=u[1:]
+        if len(u)>0 and u[-1]=='/': u=u[:-1]
+
+        if (p in u and 'wiki' in p) or u in p:
+            return True
+        else:
+            return False
+    else:
+        return False

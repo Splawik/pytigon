@@ -25,7 +25,7 @@ APPSET_NAME = "schdevtools"
 
 THEMES = ['desktop_traditional', 'tablet_standard', 'smartfon_standard']
 
-LOCAL_ROOT_PATH = _lp+"/.."
+LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
@@ -35,7 +35,7 @@ if not DEBUG:
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/app_media/'
 
-MEDIA_ROOT =  LOCAL_ROOT_PATH + '/media'
+MEDIA_ROOT =  os.path.join(_lp,  'media')
 
 for app in APPS:
     if not app in INSTALLED_APPS:

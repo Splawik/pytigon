@@ -117,7 +117,7 @@ def page_init(id, first_time = True):
     #    paginate = False
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
-    
+
     if first_time:
         elem2 = jQuery('body')
         handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
@@ -152,10 +152,10 @@ def page_init(id, first_time = True):
 
                 jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
                     nonlocal href, src_obj
-                    
+
                     if "_parent_refr" in data:
                         refresh_fragment(src_obj)
-                    else:                    
+                    else:
                         if APPLICATION_TEMPLATE == 'modern':
                             ACTIVE_PAGE.page.html(data)
                             ACTIVE_PAGE.set_href(href)
@@ -221,12 +221,21 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init)
 
         jQuery(def ():
             nonlocal menu_id
-            #jQuery("#menu_tabs").tabs()
-            jQuery("#menu_tabs").tab()
+            jQuery("#tabs").tabdrop()
             if APPLICATION_TEMPLATE != 'traditional':
-                jQuery("#tabs a:eq(1)").tab('show')
+                pos = jQuery(".menu-href.btn-warning")
+                if pos.length > 0:
+                    elem = jQuery('#a_'+pos.closest('div.tab-pane').attr('id'))
+                    elem.tab('show')
+                else:
+                    elem = jQuery(".first_pos")
+                    elem.tab('show')
             else:
-                jQuery('#tabs a:eq('+ menu_id + ')').tab('show')
+                id = int(menu_id) +1
+                elem = jQuery('#tabs a:eq('+ id + ')')
+                elem.tab('show')
+
+            jQuery(elem.prop("hash")).perfectScrollbar()
 
             jQuery('body').on('click', 'a.menu-href',
                 def(e):
@@ -239,6 +248,20 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init)
                 def(e):
                     e.preventDefault()
                     on_edit_ok($(this))
+            )
+
+            jQuery('#logout').on('click',
+                def():
+                    window.location = jQuery(this).attr('action')
+            )
+
+            #jQuery('.tab-tab').perfectScrollbar()
+
+            jQuery('#tabs a').click(
+                def (e):
+                    e.preventDefault()
+                    jQuery(this).tab('show')
+                    jQuery(jQuery(this).prop("hash")).perfectScrollbar()
             )
 
         )

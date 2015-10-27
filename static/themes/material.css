@@ -40,3 +40,49 @@
 .txt3d a {
     color: #fff;
 }
+
+form.form-inline div.checkbox input.checkboxinput {
+    margin-left: -16px;
+    margin-right: 0px;
+}
+
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus {
+    border: medium none;
+    box-shadow: 0px -2px 0px #FFFF8D inset;
+    color: #FFFF8D;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    background-color: #009688;
+    border-color: #009688;
+}
+
+form.form-inline .form-control {
+    margin-right: 10px;
+}
+
+#tabs2 a {
+    padding-right: 40px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#tabs2 li.active a {
+    color: #666 !important;
+}
+
+#tabs2 button.close {
+    position: relative;
+    left: -2px;
+    margin-left: -26px;
+    top: 3px;
+}
+
+#tabs2 {
+    background: #88BBAA;
+}
+
+#tabs2  li.active {
+    background: #fff;
+}

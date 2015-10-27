@@ -52,6 +52,7 @@ urlpatterns = patterns('',
     
     
     
+    
 )
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)
@@ -66,6 +67,7 @@ gen.standard('SChChoiceItem', _('SChChoiceItem'), _('SChChoiceItem'))
 gen.standard('SChTable', _('SChTable'), _('SChTable'))
 gen.standard('SChField', _('SChField'), _('SChField'))
 gen.standard('SChView', _('SChView'), _('SChView'))
+gen.standard('SChStatic', _('Static file'), _('Static files'))
 gen.standard('SChTemplate', _('SChTemplate'), _('SChTemplate'))
 gen.standard('SChAppMenu', _('SChAppMenu'), _('SChAppMenu'))
 gen.standard('SChUrl', _('SChUrl'), _('SChUrl'))
@@ -79,6 +81,7 @@ gen.for_field('SChChoice', 'schchoiceitem_set', _('SChChoiceItem'), _('SChChoice
 gen.for_field('SChApp', 'schtable_set', _('SChTable'), _('SChTable'))
 gen.for_field('SChTable', 'schfield_set', _('SChField'), _('SChField'))
 gen.for_field('SChApp', 'schview_set', _('SChView'), _('SChView'))
+gen.for_field('SChAppSet', 'schstatic_set', _('Static file'), _('Static files'))
 gen.for_field('SChApp', 'schtemplate_set', _('SChTemplate'), _('SChTemplate'))
 gen.for_field('SChApp', 'schappmenu_set', _('SChAppMenu'), _('SChAppMenu'))
 gen.for_field('SChApp', 'schurl_set', _('SChUrl'), _('SChUrl'))

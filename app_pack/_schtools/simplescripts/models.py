@@ -29,6 +29,7 @@ class Scripts( models.Model):
         verbose_name = _("Scripts")
         verbose_name_plural = _("Scripts")
         default_permissions = ('add', 'change', 'delete', 'list')
+        
         ordering = ['id']
         
         

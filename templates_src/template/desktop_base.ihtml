@@ -29,6 +29,7 @@
     {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
     {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
     {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
+    {% jscript_link 'jquery_plugins/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js' %}
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
 
@@ -105,6 +106,7 @@
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
+    {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.min.css' %}
 
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
@@ -125,18 +127,26 @@
     <div>
 
 %% topmenu_start
-    <ul class="nav nav-tabs" id='tabs'><li><h3 style="padding: 0px 50px 0px 5px; margin: 5px 0px;" class="txt3d">{{appset_title}}</h3></li>
+    <ul class="nav nav-tabs" id='tabs'>
+    %if user.is_authenticated:
+        li
+            div class=btn-group menu-status,,,role=group
+                button id=logout,,,type=button,,,class=btn btn-sm,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=Logout
+                    span class=glyphicon glyphicon-log-out
+    li
+        h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
+            {{appset_title}}
 
 %% topmenu
-    li class=topmenu
-        a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top...{{title}}
+    %if forloop.first:
+        li class=topmenu
+            a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top,,,class=first_pos...{{title}}
+    %else:
+        li class=topmenu
+            a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top...{{title}}
 
 
 %%topmenu_end
-    %if user.is_authenticated:
-        li class=topmenu_right
-            a href=/schsys/do_logout?schtml=1,,,title=Logout
-                span class=glyphicon glyphicon-log-out
     </ul>
     <div id="menu" class="tab-content menu-content">
 
@@ -146,7 +156,7 @@
         % if not forloop.first
             </div>
         <div id="{{app_name}}" class="tab-pane tab-tab">
-    % if request.get_full_path in url and 'wiki' in request.get_full_path or url in request.get_full_path:
+    % if url|is_menu_checked:request.get_full_path:
         <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % else
         <a href="{%url 'start' %}{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
@@ -158,7 +168,7 @@
     </div>
     % if application_type != 'traditional':
         script
-            $('#tabs:first').tabdrop()
+            //$('#tabs:first').tabdrop()
 
 
 %% style_content_start...<div class="content">
@@ -192,7 +202,7 @@
         div id=body_body,,,class=tab-pane refr_target refr_object
             {{block.super}}
         script
-            $('#tabs2:first').tabdrop()
+            //$('#tabs2:first').tabdrop()
 
 
 %% body_body
