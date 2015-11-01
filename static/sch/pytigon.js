@@ -425,21 +425,31 @@ function _refresh_win(responseText, ok_button) {
     }
 }
 function _refresh_win_and_ret(responseText, ok_button) {
-    var q;
+    var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
     if (_$rapyd$_in("RETURN_OK", responseText)) {
+        related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
+        popup_activator = jQuery("#" + related_object);
         if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
             jQuery("div.dialog-form").modal("hide");
         } else {
             jQuery(ok_button).closest(".refr_object").remove();
         }
-        q = jQuery(responseText);
-        eval(q[1].text);
+        if (popup_activator && popup_activator.data("edit_ret_function")) {
+            RET_CONTROL = popup_activator.data("ret_control");
+            EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
+            q = jQuery(responseText);
+            eval(q[1].text);
+        }
     } else {
         jQuery("div.dialog-data").html(responseText);
     }
 }
 function _refresh_win_after_ok(responseText, ok_button) {
-    if (EDIT_RET_FUNCTION) {
+    var related_object, popup_activator;
+    related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
+    popup_activator = jQuery("#" + related_object);
+    if (popup_activator && popup_activator.data("edit_ret_function")) {
+        EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
         EDIT_RET_FUNCTION(responseText, ok_button);
         EDIT_RET_FUNCTION = false;
     } else {
@@ -463,6 +473,8 @@ function on_get_tbl_value(elem) {
 function on_new_tbl_value(elem) {
     EDIT_RET_FUNCTION = _refresh_win_and_ret;
     RET_CONTROL = jQuery(elem).closest(".input-group").find("input._autoheavyselect2widgetext");
+    jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
+    jQuery(elem).data("ret_control", RET_CONTROL);
     return on_popup_edit_new(elem);
 }
 function on_get_row(elem) {
@@ -856,7 +868,7 @@ function page_init(id, first_time) {
                 WAIT_ICON.stop();
             }
             if (WAIT_ICON2) {
-                $("#loading-indicator").hide();
+                jQuery("#loading-indicator").hide();
                 WAIT_ICON2 = false;
             }
         });

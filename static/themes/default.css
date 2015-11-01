@@ -4,7 +4,12 @@ div.content { margin: 4px 4px 0px 4px; padding: 0px; }
 
 .module td,th { padding:2px 4px; }
 
-.panel-heading { padding: 3px 3px 3px 3px; }
+.panel-heading {
+    //margin: 3px 3px 3px 3px;
+    margin: 0px;
+
+    padding: 0px;
+}
 
 .navbar { margin-bottom: 3px; }
 
@@ -229,10 +234,19 @@ td div div div div form.DialogForm {
 }
 
 div.table {
-    margin-bottom: 0px;
+    //margin-bottom: 0px;
+    //margin-top: 5px;
+    //margin-left: 5px;
+    //margin-right: 5px;
+    //margin-bottom: 5px;
+    padding: 3px;
 }
 
 div.td a.popup {
+    margin: 1px;
+}
+
+div.td a.btn {
     margin: 1px;
 }
 
@@ -258,6 +272,7 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
     overflow: auto;
     position: relative;
     margin-right: 70px;
+    padding-top: 20px;
 }
 
 .refresh-button {
@@ -266,3 +281,17 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
     bottom: 3px;
     height: 100%;
 }
+
+
+.list_content_header_first_row h4 {
+    margin: 5px 1px -10px 1px;
+}
+
+.input-group-btn {
+    padding-left: 10px;
+}
+
+.list_content_header_third_row .btn {
+    padding:  8px 8px;
+}
+

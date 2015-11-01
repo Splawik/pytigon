@@ -5,7 +5,6 @@ APPLICATION_TEMPLATE = 'standard'
 RET_BUFOR = None
 RET_OBJ = None
 
-
 LANG = "en"
 MENU = None
 ACTIVE_PAGE = None
@@ -203,7 +202,7 @@ def page_init(id, first_time = True):
                 if WAIT_ICON:
                     WAIT_ICON.stop()
                 if WAIT_ICON2:
-                    $('#loading-indicator').hide()
+                    jQuery('#loading-indicator').hide()
                     WAIT_ICON2 = False
             )
     )
