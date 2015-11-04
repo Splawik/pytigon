@@ -126,7 +126,7 @@ def page_init(id, first_time = True):
             def(e):
                 nonlocal ACTIVE_PAGE
 
-                if $(e.target).attr('target') == "_blank":
+                if $(e.currentTarget).attr('target') == "_blank":
                     return
 
                 for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:

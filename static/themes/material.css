@@ -86,3 +86,13 @@ form.form-inline .form-control {
 #tabs2  li.active {
     background: #fff;
 }
+
+
+.TableFiltr .checkbox label {
+    min-height: 38px !important;
+}
+
+
+form.form-inline div.checkbox input.checkboxinput  {	
+	margin-right: 5px;
+}

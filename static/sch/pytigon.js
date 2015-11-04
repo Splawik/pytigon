@@ -785,7 +785,7 @@ function page_init(id, first_time) {
         handle_class_click(elem2, "get_row", on_get_row);
         jQuery("#" + id).on("click", "a", function(e) {
             var pos, src_obj, href, href2;
-            if ($(e.target).attr("target") === "_blank") {
+            if ($(e.currentTarget).attr("target") === "_blank") {
                 return;
             }
             var _$rapyd$_Iter0 = [ "get_tbl_value", "new_tbl_value", "get_row" ];

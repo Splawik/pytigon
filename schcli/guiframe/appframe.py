@@ -461,7 +461,8 @@ class SchAppFrame(wx.Frame):
             tab.SetFocus()
 
     def create_notebook_ctrl(self, hideSingleTab=True):
-        style = aui.AUI_NB_DEFAULT_STYLE | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS 
+        style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
+                #| aui.AUI_NB_DRAW_DND_TAB
         if hideSingleTab:
             if hasattr(aui, 'AUI_NB_HIDE_ON_SINGLE_TAB'):
                 style ^= aui.AUI_NB_HIDE_ON_SINGLE_TAB
