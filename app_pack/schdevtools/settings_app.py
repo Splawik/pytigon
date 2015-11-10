@@ -33,7 +33,7 @@ if not DEBUG:
     URL_ROOT_FOLDER='devtools'
 
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
-    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/app_media/'
+    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 

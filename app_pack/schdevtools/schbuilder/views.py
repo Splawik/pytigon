@@ -33,6 +33,11 @@ from schlib.schtasks.base_task import get_process_manager
 from django.core.management import call_command
 from subprocess import call, Popen, PIPE, STDOUT
 import io
+import schlib.schindent.indent_style
+from schlib.schindent.indent_tools import convert_js
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schtools.tools import open_and_create_dir
+
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -290,6 +295,51 @@ def gen(request, pk):
         template_to_file(base_path, "app_init", app.name+"/__init__.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
     
     template_to_file(base_path, "apps", "apps.py",  {'appset': appset, 'app_names': app_names })
+    
+    static_files = appset.schstatic_set.all()
+    
+    static_root = settings.ROOT_PATH+"/static/"+appset.name+"/"
+    
+    for static_file in static_files:
+        txt = static_file.code
+        if static_file.type=='C':
+            t = Template(txt)
+            txt2 = t.render(Context({'appset': appset} ))
+            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f.write(txt2.encode('utf-8'))
+            f.close()        
+        if static_file.type=='J':
+            t = Template(txt)
+            txt2 = t.render(Context({'appset': appset} ))
+            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f.write(txt2.encode('utf-8'))
+            f.close()        
+        if static_file.type=='P':
+            t = Template(txt)
+            txt2 = t.render(Context({'appset': appset} ))
+            codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
+            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f.write(codejs.encode('utf-8'))
+            f.close()        
+        if static_file.type=='R':
+            txt2 = ihtml_to_html(None, input_str=txt, lang='en')
+            txt2 = txt2.replace("\"{", '{').replace("}\"", '}') 
+            t = Template(txt2)
+            txt3 = t.render(Context({'appset': appset} ))
+            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f.write(txt3.encode('utf-8'))
+            f.close()        
+        if static_file.type=='I':
+            in_str = io.StringIO(txt)
+            out_str = io.StringIO()
+            convert_js(in_str, out_str)
+            t = Template(out_str.getvalue())
+            txt2 = t.render(Context({'appset': appset} ))
+            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f.write(txt2.encode('utf-8'))
+            f.close()        
+            
+        #template_to_file(base_path, "apps", "apps.py",  {'appset': appset, 'static_file': static_file })
     
     base_path_src = base_path + "/src"
     

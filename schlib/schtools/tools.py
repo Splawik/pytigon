@@ -121,3 +121,9 @@ def split2(txt, sep):
         return (txt[:id], txt[id+1:])
     else:
         return (txt,"")
+
+
+def open_and_create_dir(filename, mode):
+    if not os.path.exists(os.path.dirname(filename)):
+        os.makedirs(os.path.dirname(filename))
+    return open(filename, mode)

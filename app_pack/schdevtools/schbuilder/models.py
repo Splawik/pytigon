@@ -219,9 +219,9 @@ ContentType_CHOICES = (
 Static_CHOICES = (
     ("C","css"),
     ("J","javascript"),
-    ("P","python->javascript"),
+    ("P","python to javascript"),
     ("R","riot.js module"),
-    ("I","icss->css"),
+    ("I","icss to css"),
     
     )
 
@@ -731,12 +731,14 @@ class SChStatic( models.Model):
     
 
     parent = HiddenForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
+    type = models.CharField('Type', null=False, blank=False, editable=True, choices=Static_CHOICES,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     code = models.TextField('Code', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
-    type = models.CharField('Type', null=False, blank=False, editable=True, choices=Static_CHOICES,max_length=1)
     
 
+    def __str__(self):
+        return self.get_type_display() + "/" + self.name
     
 admin.site.register(SChStatic)
 
@@ -762,6 +764,7 @@ class SChTemplate( models.Model):
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
     static_files = models.ManyToManyField(SChStatic, null=False, blank=False, editable=True, verbose_name='Static files', )
+    tags_mount = models.CharField('Mount riot tags', null=True, blank=True, editable=True, max_length=256)
     
 
     def get_url_name(self):

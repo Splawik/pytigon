@@ -27,6 +27,7 @@ from .indent_tools import convert_js
 import gettext
 import codecs
 import subprocess
+import itertools
 
 #from pythonjs.python_to_pythonjs import main as python_to_pythonjs
 #from pythonjs.pythonjs import main as pythonjs_to_javascript
@@ -646,6 +647,11 @@ def pjsx_to_js(script, module_path):
     #print(script2)
     #print("==============================")
     script2 = script2.replace('{{', 'xxyyzz22').replace('}}', 'xxyyzz33' )
+
+    spaces = sum( 1 for _ in itertools.takewhile(str.isspace,script2) )
+    if spaces>0:
+        script2 = script2[spaces:].replace('\n'+spaces*' ', '\n')
+
     code = py_to_js(script2, module_path)
     for pos in tabrepl:
         pos2 = pos

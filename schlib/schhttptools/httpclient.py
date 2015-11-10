@@ -193,7 +193,7 @@ class HttpClient:
 
         adr = replace_dot(adr)
         adr = adr.replace('intercept://', 'http://')
-
+        adr = adr.replace(' ', '%20')
         print(">>>", adr)
 
         post = None

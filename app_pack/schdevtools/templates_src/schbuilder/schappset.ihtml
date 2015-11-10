@@ -17,7 +17,8 @@
                     "prj_export": "client://actions/document-save-as.png",
                     "manage": "client://categories/preferences-system.png",
                     "installer": "client://apps/internet-web-browser.png",
-                    "UP": "wx.ART_GO_TO_PARENT"
+                    "UP": "wx.ART_GO_TO_PARENT",
+                    "static": "client://apps/system-file-manager.png"
                 }
                 child.set_bitmaps(bitmaps)
 
