@@ -28,13 +28,32 @@ from django.conf import settings
 from schlib.schmodels import import_model
 from schlib.schtasks.base_task import get_process_manager
 
-
 def ok(request):
     return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")
 
+_RET_OK_HTML = """
+<head>
+    <meta name="RETURN" content="RETURN_OK" />
+    <script>ret_ok(%s,"%s");</script>
+</head>
+<body></body>
+"""
+
+_RET_OK_SHTML = """
+<head>
+    <meta name="RETURN" content="RETURN_OK" />
+    <meta name="target" content="code" />
+</head>
+<body>
+    <script language=python>self.ret_ok(%s,"%s");</script>
+</body>
+"""
 
 def ret_ok(request, id, title):
-    return HttpResponse("""<head><meta name="RETURN" content="RETURN_OK" /><script>ret_ok(%s,"%s");</script></head><body></body>""" % (id, title))
+    if request.META['HTTP_USER_AGENT'].startswith('Py'):
+        return HttpResponse(_RET_OK_SHTML % (id, title))
+    else:
+        return HttpResponse(_RET_OK_HTML % (id, title))
 
 
 messageList = {

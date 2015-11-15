@@ -206,6 +206,39 @@ class OptionTag(BaseHtmlElemParser):
             self.parent.tdata.append([Td(data, self.attrs)])
 
 
+class CompositeChildTag(BaseHtmlElemParser):
+
+    def __init__(
+        self,
+        parent,
+        parser,
+        tag,
+        attrs,
+        ):
+        BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
+        self.composite_data = {}
+        self.composite_data['tag'] = tag
+        self.composite_data['attrs'] = attrs
+        self.composite_data['data'] = None
+        self.composite_data['childs'] = []
+
+    def close(self):
+        if self.data:
+            self.composite_data['data'] = self.data
+        if type(self.parent) == CompositeChildTag:
+            self.parent.composite_data['childs'].append(self.composite_data)
+        elif type(self.parent).__name__=='CtrlTag':
+                self.parent.data2.append(self.composite_data)
+
+    def handle_starttag(
+        self,
+        parser,
+        tag,
+        attrs,
+        ):
+        return CompositeChildTag(self, parser, tag, attrs)
+
+
 class CtrlTag(TableTag):
 
     def __init__(
@@ -237,6 +270,8 @@ class CtrlTag(TableTag):
         if self.tag == 'ctrlcheckbox':
             pass
 
+        if self.tag == 'ctrlcomposite':
+            self.data2 = []
 
     def append_to_tree(self, elem):
         if not self.list:
@@ -287,7 +322,11 @@ class CtrlTag(TableTag):
         if self.tag == 'ctrlcheckbox':
             pass
 
+        if self.tag == 'ctrlcomposite':
+            return CompositeChildTag(self, parser, tag, attrs)
+
         if tag[:3] + '*' in self.child_tags:
+            print("tag:", tag)
             return self.class_from_tag_name(tag[:3] + '*')(self, parser, tag,
                     attrs)
         elif tag == 'ul':
@@ -473,6 +512,10 @@ class CtrlTag(TableTag):
         if self.list:
             l = self.list.get_list()
             self.kwargs['ldata'] = l
+
+        #if self.tag == 'ctrlcomposite':
+        #    self.kwargs['param'] = self.data2
+
         obj = None
         if parent:
             gparent = parent.GetParent()
@@ -551,7 +594,7 @@ def input_to_ctrltab(parent, attrs):
         ret = 'button'
     elif type == 'email':
         ret = 'masktext'
-        attrs_ret = { 'valuetype': '!EMAIL', 'width': '250' }
+        attrs_ret = { 'src': '!EMAIL', 'width': '250', 'value': attrs['value'], 'valuetype': 'str' }
     elif type == 'hidden':
         ret = 'text'
         attrs_ret = {'hidden': '1', 'width': '0', 'height': '0'}
@@ -700,6 +743,8 @@ def div_convert(parent, attrs):
             return ('td', attrs)
         if 'tree' in attrs['class']:
             return ('ctrltree', attrs)
+        if 'select2' in attrs['class']:
+            return ('ctrlcomposite', attrs)
         if 'checkbox' in attrs['class']:
             obj = parent.parent.handle_starttag(parent.parser, "th", {})
             if obj:

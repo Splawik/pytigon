@@ -5,9 +5,9 @@
         a href={{url}},,,class=popup btn btn-default ,,,name={{name}},,,title={{title}},,,target={{target}},,,data-role=button,,,data-inline=true,,,{% block data_icon %}data-icon=plus{% endblock %}
             %% description
                 % if description
-                    <span class="glyphicon glyphicon-plus"></span> {{description}}
+                    <span class="fa fa-plus"></span> {{description}}
                 % else
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
     % else
         % if name:
             ctrlbutton name={{name}},,,label={{title}},,,href={{url}}

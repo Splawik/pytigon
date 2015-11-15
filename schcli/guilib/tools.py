@@ -131,6 +131,10 @@ def bitmap_from_href(href, size_type=size_default):
         image = wx.Image(wx.GetApp().scr_path + '/schappdata/media/%dx%d/' % (icon_size,
                          icon_size) + href2[9:])
         bmp = wx.BitmapFromImage(image)
+    elif href.startswith('fa://'):
+        image = wx.Image(wx.GetApp().scr_path + '/static/fonts/font-awesome/fonts/%dx%d/' % (icon_size,icon_size) + href2[5:].replace('fa-','')+".png")
+        image = image.AdjustChannels(1, 1, 1, 0.55)
+        bmp = wx.BitmapFromImage(image)
     else:
         http = wx.GetApp().get_http(None)
         http.get(None, str(href))

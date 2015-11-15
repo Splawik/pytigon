@@ -9,10 +9,10 @@ from django.conf import settings
 buttons="""
 <div class="input-group-btn">
     <button type="button" name ="get_tbl_value" class="btn btn-default btn-flat foreignkey_button get_tbl_value" href='%s'>
-      <span class="glyphicon glyphicon-th-large"></span>
+      <span class="fa-table fa"></span>
     </button>s
     <button type="button" name="new_tbl_value" class="btn btn-default btn-flat foreignkey_button new_tbl_value" href='%s'>
-      <span class="glyphicon glyphicon-plus"></span>
+      <span class="fa-plus fa"></span>
     </button>
 </div>
 """
@@ -21,8 +21,12 @@ def make_select_widget(href1, href2):
     class _AutoHeavySelect2WidgetExt(AutoHeavySelect2Widget):
         def render(self, name, value, attrs=None, choices=()):
             x = super().render(name, value, attrs, choices)
+            if len(self.choices.queryset)>0:
+                txt = str(self.choices.queryset[0])
+            else:
+                txt=""
             buttons2 = buttons % (href1, href2)
-            return mark_safe("<div class='input-group'>%s%s</div>" % (x, buttons2))
+            return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" % (value, txt, x, buttons2))
     return _AutoHeavySelect2WidgetExt
 
 

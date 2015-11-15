@@ -13,15 +13,15 @@
                             % if node.is_root_node or node.parent == node.get_root:
                                 % if node.is_root_node:
                                     span class=root
-                                        i class=glyphicon glyphicon-minus-sign
+                                        i class=fa fa-minus
                                             {{node.name}}
                                 % else:
                                     span class=root
-                                        i class=glyphicon glyphicon-plus-sign
+                                        i class=fa fa-plus
                                             {{node.name}}
                             % else:
                                 span
-                                    i class=glyphicon glyphicon-plus-sign
+                                    i class=fa fa-plus
                                         {{node.name}}
                             ul class=children
                                 {{ children }}
@@ -43,10 +43,10 @@
                 var children = $(this).parent('li.parent_li').find(' > ul > li')
                 if(children.is(":visible")):
                     children.hide('fast')
-                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('glyphicon-plus-sign').removeClass('glyphicon-minus-sign')
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus').removeClass('fa-minus')
                 else:
                     children.show('fast')
-                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('glyphicon-minus-sign').removeClass('glyphicon-plus-sign')
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus').removeClass('fa-plus')
                 if(e):
                     e.stopPropagation()
 

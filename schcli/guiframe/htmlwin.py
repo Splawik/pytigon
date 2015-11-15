@@ -138,6 +138,7 @@ class SchHtmlWindow(ScrolledPanel):
         self.evt_ind = -1
         self.closing = False
         self.acc_tab = None
+        self.last_clicked = None
 
         self.SetupScrolling(hscroll, vscroll, rate_y=1)
         self.register_signal(self, 'Refr')
@@ -168,6 +169,12 @@ class SchHtmlWindow(ScrolledPanel):
         #self.bind_to_active(self.on_forward, ID_WEB_FORWARD)
         #self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
 
+    def ret_ok(self, id, title):
+        print("ret_ok:", id, title)
+        parent_panel = self.get_parent_panel()
+        if parent_panel and parent_panel.last_clicked and hasattr(parent_panel.last_clicked,"ret_ok"):
+            parent_panel.last_clicked.ret_ok(id, title)
+        self.any_parent_command('on_ok', None)
 
     def navigate(self, ctrl, back = False):
         next = False
@@ -986,6 +993,7 @@ class SchHtmlWindow(ScrolledPanel):
             fields=False,
             params=None,
     ):
+        self.last_clicked = ctrl
 
         if 'href' in attr_dict:
             href = attr_dict['href']
@@ -1175,12 +1183,12 @@ class SchHtmlWindow(ScrolledPanel):
                 if target == 'code':
                     script = mp.get_body()[1]
                     app = wx.GetApp()
-                    main_window = app.GetMainWindow()
+                    main_window = app.GetTopWindow()
                     desktop = (main_window.desktop, )
                     mgr = main_window._mgr
                     menu_bar = main_window.get_menu_bar()
-                    tool_bars = main_window.tooblars
-                    exec (script.replace('\r', ''))
+                    tool_bars = main_window.toolbar_interface.get_toolbars()
+                    exec (script.getvalue().replace('\r', ''))
                     return
 
     def get_evt_ind(self):

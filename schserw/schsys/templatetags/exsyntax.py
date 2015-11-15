@@ -122,30 +122,30 @@ STANDARD_URL = {
     'delete2': "./{id}/{action}",
     'pdf': "../../../{id}/pdf/view/",
     'odf': "../../../{id}/odf/view/",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
     'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
     'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
 STANDARD_URL_CHILD_TAB = {
     'action': "{base_path}../{table_name}/{id}/action/{action}",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/list",
+    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
     'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
     'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
 }
 
 STANDARD_ICON = {
-    'edit':  ['glyphicon-edit', 'edit'],
-    'edit2':  ['glyphicon-edit', 'edit'],
-    'delete': ['glyphicon-trash', 'delete'],
-    'delete2': ['glyphicon-trash', 'delete'],
-    'print': ['glyphicon-print', 'arrow-d'],
-    'pdf': ['glyphicon-eye-open', 'eye'],
-    'odf': ['glyphicon-list', 'bullets'],
-    'field_list': ['glyphicon-triangle-bottom', 'grid'],
-    'field_list_get': ['glyphicon-triangle-bottom', 'grid'],
-    'field_action': ['glyphicon-hand-down', 'grid'],
-    'field_edit': ['glyphicon-edit', 'edit'],
+    'edit':  ['fa-pencil', 'edit'],
+    'edit2':  ['fa-pencil', 'edit'],
+    'delete': ['fa-trash-o', 'delete'],
+    'delete2': ['fa-trash-o', 'delete'],
+    'print': ['fa-print', 'arrow-d'],
+    'pdf': ['fa-eye', 'eye'],
+    'odf': ['fa-list', 'bullets'],
+    'field_list': ['fa-caret-down', 'grid'],
+    'field_list_get': ['fa-angle-double-down', 'grid'],
+    'field_action': ['fa-hand-o-down', 'grid'],
+    'field_edit': ['fa-pencil-square-o', 'edit'],
 }
 
 NEW_WIN_ACTIONS = ['pdf', 'odf',]
@@ -209,8 +209,10 @@ class Action:
                 self.title = action.replace('/', '_')
 
         if not self.name:
-            self.name = action.replace('/', '_')
-
+            if context['standard_web_browser']:
+                self.name = action.replace('/', '_')
+            else:
+                self.name = action.split('/')[0]
         if not self.target:
             if context['standard_web_browser'] and not action in NEW_WIN_ACTIONS:
                 #if context['default_template'] == 'template/mobile.html':

@@ -500,7 +500,10 @@ class SchTableGrid(wx.grid.Grid):
                 if self.typ == self.GET_ID:
                     self.action('get')
                 else:
-                    self.action(self.default_command)
+                    if self.action_exists('get_row'):
+                        self.action('get_row')
+                    else:
+                        self.action(self.default_command)
         else:
             #self.EnableCellEditControl(enable=True)
             self.SetGridCursor(evt.GetRow(), evt.GetCol())
@@ -559,7 +562,10 @@ class SchTableGrid(wx.grid.Grid):
                 if value and value.strip() == '-':
                     self.action('insert')
                 else:
-                    self.action(self.default_command)
+                    if self.action_exists('get_row'):
+                        self.action('get_row')
+                    else:
+                        self.action(self.default_command)
                 return
             if self.typ == self.GET_ID:
                 if hasattr(self.Parent, 'ReturnRec'):
@@ -718,15 +724,28 @@ class SchTableGrid(wx.grid.Grid):
         message = wx.MessageDialog(self, 'a', 'Komunikat')
         message.ShowModal()
 
+    def action_exists(self, command):
+        akcja = self.GetTable().get_actions(self.GetGridCursorRow())
+        if akcja and command in akcja:
+            return True
+        else:
+            return False
+
     def action(self, command):
         akcja = self.GetTable().get_actions(self.GetGridCursorRow())
         if akcja and command in akcja:
             if akcja[command][0] == 'openurl':
                 self.LastAction = command
-                ret = self.GetParent().GetParent().href_clicked(self,
-                        akcja[command][3])
-                ret = 1
-                return ret
+                if command=='get_row':
+                    p = akcja[command]
+                    id = p[3]['data-id']
+                    title = p[3]['data-text']
+                    self.GetParent().get_parent_form().ret_ok(id, title)
+                    return 1
+                else:
+                    ret = self.GetParent().GetParent().href_clicked(self, akcja[command][3])
+                    ret = 1
+                    return ret
 
             if akcja[command][0] == 'tableurl':
                 self.GetTable().proxy.set_address(akcja[command][1])

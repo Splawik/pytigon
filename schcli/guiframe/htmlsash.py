@@ -452,7 +452,6 @@ class SchSashWindow(wx.Window):
         return True
 
     def on_navigate(self, evt):
-        #print("ON_NAVIGATE")
         forward = evt.GetDirection()
         test = False
         if len(self.Controls) > 0:

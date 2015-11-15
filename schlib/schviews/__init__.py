@@ -376,8 +376,8 @@ class GenericRows(object):
         return self
 
     def list(self):
-        url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?list$'
-        url2 = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?get$'
+        url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(list|sublist|get)$'
+        #url2 = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?get$'
 
         class ListView(generic.ListView):
 
@@ -467,18 +467,18 @@ class GenericRows(object):
                 else:
                     return ret
 
-        class ListViewGet(ListView):
+        #class ListViewGet(ListView):
 
-            def get_context_data(self, **kwargs):
-                ret = super().get_context_data(**kwargs)
-                ret['get'] = True
-                return ret
+        #    def get_context_data(self, **kwargs):
+        #        ret = super().get_context_data(**kwargs)
+        #        ret['get'] = True
+        #        return ret
 
         fun = make_perms_test_fun(self.base_perm % 'list', ListView.as_view())
-        fun2 = make_perms_test_fun(self.base_perm % 'list', ListViewGet.as_view())
+        #fun2 = make_perms_test_fun(self.base_perm % 'list', ListViewGet.as_view())
 
         self._append(url, fun)
-        self._append(url2, fun2)
+        #self._append(url2, fun2)
 
         return self
 

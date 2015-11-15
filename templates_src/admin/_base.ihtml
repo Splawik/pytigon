@@ -61,10 +61,10 @@
                   </ul>
                 </div>
                 {% if docsroot %}
-                  <a href="{{ docsroot }}" title="{% trans 'Documentation' %}" class="btn btn-default hidden-sm"><span class="glyphicon glyphicon-book"></span></a>
+                  <a href="{{ docsroot }}" title="{% trans 'Documentation' %}" class="btn btn-default hidden-sm"><span class="fa fa-book"></span></a>
                 {% endif %}
                 <a href="{% url 'admin:logout' %}" title="{% trans 'Log out' %}" class="btn btn-default hidden-xs">
-                  <span class="glyphicon glyphicon-off"></span>
+                  <span class="fa fa-power-off"></span>
                 </a>
               </div>
             </div>
@@ -72,7 +72,7 @@
           {% block breadcrumbs %}
             <ol class="breadcrumb">
               <li class="home">
-                <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}"><span class="glyphicon glyphicon-home"></span></a>
+                <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}"><span class="fa fa-home"></span></a>
               </li>
               <li class="active">{% if title %}{{ title }}{% endif %}</li>
             </ol>

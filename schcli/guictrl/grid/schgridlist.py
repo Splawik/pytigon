@@ -202,6 +202,10 @@ class SimpleDataTable(SchGridTableBase):
                         txt += atom.data
                     a['data'] = txt
                     attrs.append(a)
+            if col2!=0:
+                attrs2 = self.get_action_list(row, 0)
+                for pos in attrs2:
+                    attrs.append(pos)
             return attrs
         except:
             return []

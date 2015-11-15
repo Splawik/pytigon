@@ -24,9 +24,12 @@ from base64 import b64encode
 import os
 import platform
 import datetime
+import string
 
 import wx
 import six
+from schlib.schtools import schjson
+
 
 #from wx import calendar, combo, gizmos
 if six.PY2:
@@ -81,6 +84,7 @@ from schcli.guictrl.schbasectrl import SchBaseCtrl
 from schcli.guictrl.button.toolbarbutton import BitmapTextButton
 from schcli.guilib.tools import bitmap_from_href
 
+from schcli.guictrl.composite.base import COMPOSITE_PANEL
 
 
 def SELECT(*args, **kwds):
@@ -260,7 +264,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 upload = False
                 if self.valuetype == 'upload':
                     upload = True
-                self.GetParent().href_clicked(self, { 'href': self.href, 'target': self.target}, upload, self.fields, self.param)
+                self.get_parent_form().href_clicked(self, { 'href': self.href, 'target': self.target}, upload, self.fields, self.param)
 
     return BUTTONCLASS
 
@@ -544,6 +548,7 @@ class BITMAPCOMBOBOX(BitmapComboBox, SchBaseCtrl):
         if self.init_default_icons:
             self.init_wx_icons()
             self.init_embeded_icons()
+            self.init_fa_icons()
 
     def init_wx_icons(self):
         for id in ArtIDs:
@@ -556,6 +561,12 @@ class BITMAPCOMBOBOX(BitmapComboBox, SchBaseCtrl):
         base_path = wx.GetApp().scr_path+'/schappdata/media/22x22/'
         #print "init_embeded_icons:", base_path
         return self._init_icons(base_path, 'client://')
+
+    def init_fa_icons(self):
+        base_path = wx.GetApp().scr_path+'/static/fonts/font-awesome/fonts/22x22/'
+        #print "init_embeded_icons:", base_path
+        return self._init_icons(base_path, 'fa://')
+
 
     def init_extern_icons(self, base_path, prefix):
         return self._init_icons(base_path, prefix)
@@ -800,7 +811,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
 
         self.grid = schgrid.SchTableGrid(table, "", self, typ=schgrid.SchTableGrid.VIEW, style= wx.TAB_TRAVERSAL|wx.FULL_REPAINT_ON_RESIZE )
 
-        self.GetParent().register_signal(self, "refresh_controls")
+        self.get_parent_form().register_signal(self, "refresh_controls")
         self.create_toolbar(self.grid)
         #wx.CallAfter(self.CreateToolbar, self.grid)
         self.Bind(wx.EVT_CLOSE, self.on_close)
@@ -808,7 +819,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         self._table = table
 
     def on_close(self, event):
-        self.GetParent().UnRegisterSignal(self, "refresh_controls")
+        self.get_parent_form().UnRegisterSignal(self, "refresh_controls")
         event.Skip()
 
     def GetMinSize(self):
@@ -1225,10 +1236,10 @@ class MASKTEXT(masked.TextCtrl, SchBaseCtrl):
     def __init__(self, *args, **kwds):
         SchBaseCtrl.__init__(self, args, kwds)
         if self.valuetype:
-            if self.valuetype.startswith('!'):
-                kwds['autoformat'] = self.valuetype[1:]
+            if self.src.startswith('!'):
+                kwds['autoformat'] = self.src[1:]
             else:
-                kwds['mask'] = self.valuetype
+                kwds['mask'] = self.src
         masked.TextCtrl.__init__(self, *args, **kwds)
         self._autofit = False
 
@@ -2029,3 +2040,272 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
         #print("----------------------------------------------")
         #print(self, args, kwds)
         #print("----------------------------------------------")
+
+
+class ListBoxNoFocus(wx.ListBox):
+
+    def AcceptsFocus(self):
+        return False
+
+
+class Select2Popup(wx.MiniFrame):
+    def __init__(self, parent, id, title, pos, size, style, combo, href_id):
+        from schcli.guiframe.htmlsash import SchSashWindow
+        self.combo = combo
+        self.point = pos
+        self.href_id = href_id
+
+        wx.MiniFrame.__init__(self, parent, id, title, pos, size, wx.RESIZE_BORDER )
+
+
+        self.edit_ctrl = wx.TextCtrl(self, size=(440,-1), style=wx.TE_PROCESS_ENTER|wx.TE_PROCESS_TAB)
+        self.list_ctrl = ListBoxNoFocus(self, size=(440,200), style=wx.LB_SINGLE)
+
+        self.edit_ctrl.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+        self.edit_ctrl.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+        self.list_ctrl.Bind(wx.EVT_LISTBOX_DCLICK, self.on_enter)
+
+        self.Bind(wx.EVT_ACTIVATE, self.on_activate)
+        self.Bind(wx.EVT_TEXT, self.OnText)
+
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(self.edit_ctrl)
+        box.Add(self.list_ctrl, 1, wx.ALL | wx.GROW, 1)
+        self.SetSizer(box)
+        self.SetAutoLayout(True)
+        self.Fit()
+
+    def on_enter(self, event):
+        id = self.list_ctrl.GetSelection()
+        if id != wx.NOT_FOUND:
+            self.Dismiss()
+            item_id = self.list_ctrl.GetClientData(id)
+            item_str = self.list_ctrl.GetString(id)
+            self.combo.set_value(item_id, item_str)
+
+
+    def on_activate(self, event):
+        if not event.GetActive():
+            self.Hide()
+            self.combo.SetFocus()
+        else:
+            #LayoutAlgorithm().LayoutWindow(self.html, self.html.Body)
+            pass
+        event.Skip()
+
+    def on_key_down(self, event):
+        print(event.KeyCode)
+        if event.KeyCode == wx.WXK_ESCAPE:
+            self.Dismiss()
+        elif event.KeyCode == wx.WXK_DOWN:
+            id = self.list_ctrl.GetSelection()
+            if id != wx.NOT_FOUND:
+                if id < self.list_ctrl.GetCount()-1:
+                    self.list_ctrl.SetSelection(id+1)
+        elif event.KeyCode == wx.WXK_UP:
+            id = self.list_ctrl.GetSelection()
+            if id != wx.NOT_FOUND:
+                if id > 0:
+                    self.list_ctrl.SetSelection(id-1)
+        elif event.KeyCode == wx.WXK_TAB:
+            return self.on_enter(event)
+        else:
+            event.Skip()
+
+    def OnText(self, event):
+        event.Skip()
+        s = event.GetString()
+        href = '/select2/fields/auto.json?term=%s&page=1&context=&field_id=%s' % (s, self.href_id)
+        http = wx.GetApp().get_http(self.combo)
+        http.get(self, href)
+        #self.Http.get(self, str(self.href) + "test/", {"value": x})
+                #self.Http.Get(self, str(self.href) + "test/", {"value": b32encode(value).encode('utf-8')})
+        tab = schjson.loads(http.str())
+        print(tab)
+        http.clear_ptr()
+        if tab['err'] == 'nil':
+            self.list_ctrl.Clear()
+            if len(tab['results'])>0:
+                for pos in tab['results']:
+                    self.list_ctrl.Append(pos['text'], pos['id'])
+                self.list_ctrl.SetSelection(0)
+
+    def SetXY(self, point):
+        self.point = point
+
+    def Popup(self):
+        self.Show()
+        self.Move(self.point)
+
+    def Dismiss(self):
+        self.Hide()
+        self.combo.SetFocus()
+
+    def clear(self):
+        self.edit_ctrl.ChangeValue("")
+        self.list_ctrl.Clear()
+
+class _SELECT2(ComboCtrl,  SchBaseCtrl):
+
+    def __init__(self, *args, **kwds):
+
+        SchBaseCtrl.__init__(self, args, kwds)
+
+        if "style" in kwds:
+            kwds['style'] |= wx.TE_PROCESS_ENTER
+        else:
+            kwds['style'] = wx.TE_PROCESS_ENTER
+
+        if 'item_id' in self.param and self.param['item_id']!='None':
+            self.item_id = int(self.param['item_id'])
+            self.item_str = self.param['item_str']
+        else:
+            self.item_id = -1
+            self.item_str = ""
+
+        kwds['size'] = (445, -1)
+
+        ComboCtrl.__init__(self, *args, **kwds)
+
+        if self.GetTextCtrl():
+            self.GetTextCtrl().SetForegroundColour(wx.Colour(0, 0, 0))
+
+        self.popup = None
+        self.button1 = None
+        self.button2 = None
+
+        self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
+        self.Bind(wx.EVT_CHAR, self.OnChar)
+
+        if self.item_str:
+            self.SetValue(self.item_str)
+
+        self.Bind(wx.EVT_KEY_DOWN, self.on_key_down_base)
+
+    def init(self, button1, button2):
+        self.button1 = button1
+        self.button2 = button2
+
+    def on_key_down_base(self, event):
+        if event.GetKeyCode() == wx.WXK_TAB:
+            if event.ShiftDown():
+                self.GetParent().GetParent().navigate(self.GetParent(), True)
+            else:
+                self.GetParent().GetParent().navigate(self.GetParent(), False)
+        elif event.GetKeyCode() == wx.WXK_F2:
+            self.button1.on_click(event)
+        elif event.GetKeyCode() == wx.WXK_INSERT:
+            self.button2.on_click(event)
+        else:
+            event.Skip()
+
+
+    def set_value(self, item_id, item_str):
+        self.item_id = item_id
+        self.item_str = item_str
+        self.SetValue(item_str)
+
+    def GetValue(self):
+        return self.item_id
+
+    def OnSetFocus(self, event):
+        event.Skip()
+
+    def OnChar(self, event):
+        c = event.GetUnicodeKey()
+        if c in string.printable:
+            self._OnButtonClick()
+            self.popup.edit_ctrl.AppendText(event.GetUnicodeKey())
+        else:
+            event.Skip()
+
+    def OnButtonClick(self):
+        ret = self._OnButtonClick()
+        self.popup.edit_ctrl.SetValue("")
+        return ret
+
+    def _OnButtonClick(self):
+        if not self.popup:
+            pos = self.GetScreenPosition()
+            pos = (pos[0], pos[1] + self.GetSize()[1])
+            if self.GetTextCtrl():
+                #href_id = self.data['']
+                href_id = self.param['data'][0]['attrs']['data-select2-id']
+                self.popup = Select2Popup(self.GetTextCtrl(), -1, "Wybierz pozycję", pos=pos, size=(450, 400), style=wx.DEFAULT_DIALOG_STYLE,
+                                combo=self, href_id=href_id)
+            else:
+                self.popup = Select2Popup(self, -1, "Wybierz pozycję", pos=pos, size=(450, 400), style=wx.DEFAULT_DIALOG_STYLE,
+                                combo=self, href_id=href_id)
+
+        self.popup.clear()
+
+        pos = self.GetScreenPosition()
+        pos = (pos[0], pos[1] + self.GetSize()[1])
+        pos = [pos[0], pos[1]]
+
+        screen_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
+        screen_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
+
+        try:
+            popup_size = self.popup.GetSize()
+        except:
+            popup_size = self.popup.GetSizeTuple()
+
+        if pos[0] + popup_size[0] > screen_dx:
+            pos[0] = screen_dx - popup_size[0]
+        if pos[1] + popup_size[1] > screen_dy:
+            pos[1] = pos[1]-self.GetSize().GetHeight()-popup_size[1]
+
+        self.popup.SetXY(pos)
+        self.popup.Popup()
+
+
+    def DoSetPopupControl(self, popup):
+        pass
+
+    def Dismiss(self):
+        if self.popup:
+            self.popup.Close()
+            self.popup = None
+        self.SetFocus()
+
+def button_from_parm(parent, param):
+    icon = param['childs'][0]['attrs']['class']
+    href = param['attrs']['href']
+    button = BUTTON(parent, src='fa://'+icon+'?size=0', href=href)
+    return button
+
+
+def SELECT2(*args, **kwds):
+    data = kwds['param']['data']
+    panel = COMPOSITE_PANEL(*args, size=(500, -1))
+    ctrl = _SELECT2(panel, **kwds)
+    button1 = button_from_parm(panel, param=data[1]['childs'][0])
+    button2 = button_from_parm(panel, param=data[1]['childs'][1])
+    ctrl.init(button1, button2)
+
+    def ret_ok(id, title):
+        ctrl.set_value(id, title)
+        wx.CallAfter(ctrl.SetFocus)
+
+    ctrl.ret_ok=ret_ok
+    button1.ret_ok=ret_ok
+    button2.ret_ok=ret_ok
+
+    box = wx.BoxSizer(wx.HORIZONTAL)
+    box.Add(ctrl, 0, wx.EXPAND)
+    box.Add(button1)
+    box.Add(button2)
+
+    panel.SetSizer(box)
+    panel.SetAutoLayout(True)
+    panel.Fit()
+
+    return panel
+
+
+def COMPOSITE(*args, **kwds):
+    cls = kwds['param']['class'].upper()
+    if cls in globals():
+        return globals()[cls](*args, **kwds)
+

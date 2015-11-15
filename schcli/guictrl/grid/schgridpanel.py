@@ -29,7 +29,8 @@ class SchGridPanel(wx.Panel):
         self.icon_size = 2
         wx.Panel.__init__(self, *args, **argv)
         self.vertical = False
-        self._bitmaps = {'edit': 'wx.ART_FILE_OPEN', 'delete': 'wx.ART_DELETE'}
+        self._bitmaps = {'edit': 'wx.ART_FILE_OPEN', 'edit_inline': 'wx.ART_FILE_OPEN', 'delete': 'wx.ART_DELETE'}
+        #self._bitmaps = {'edit': 'fa://fa-pencil?size=1', 'delete': 'fa://fa-trash-o?size=1'}
 
     def set_bitmap(self, action, path):
         self._bitmaps[action] = path
@@ -45,11 +46,6 @@ class SchGridPanel(wx.Panel):
         if id_str in self._bitmaps:
             value = self._bitmaps[id_str]
             return bitmap_from_href(value, self.icon_size)
-# if value.startswith('wx'): return wx.ArtProvider_GetBitmap(value,
-# wx.ART_TOOLBAR, (self.icon_size, self.icon_size)) else: return
-# bitmap_from_href("client://"+value, self.icon_size) image =
-# wx.Image(wx.GetApp().scr_path+('/images/%dx%d/' %
-# (self.icon_size,self.icon_size))+value) return wx.BitmapFromImage(image)
         try:
             ret = wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
         except:
@@ -68,13 +64,9 @@ class SchGridPanel(wx.Panel):
         (standard, akcje) = grid.get_action_list()
         if standard or akcje and len(akcje) > 0:
             if self.vertical:
-# self.toolbar = wx.ToolBar(self.spanel, -1, wx.DefaultPosition, wx.DefaultSize,
-# wx.TB_TEXT|wx.TB_VERTICAL)
                 self.toolbar = wx.ToolBar(self.spanel, -1, wx.DefaultPosition,
                         wx.DefaultSize, wx.TB_VERTICAL)
             else:
-# self.toolbar = wx.ToolBar(self.spanel, -1, wx.DefaultPosition, wx.DefaultSize,
-# wx.TB_TEXT)
                 self.toolbar = wx.ToolBar(self.spanel, -1, wx.DefaultPosition,
                         wx.DefaultSize, 0)
             tsize = (22, 22)
@@ -111,11 +103,20 @@ class SchGridPanel(wx.Panel):
                             title = akcja['title']
                         else:
                             title = ''
-                        if not name in ('insert', 'edit', 'delete', 'new'):
+                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row'):
+
+                            if name in self._bitmaps:
+                                b = self._get_bmp(name)
+                            else:
+                                if 'src' in akcja:
+                                    b = bitmap_from_href(akcja['src'])
+                                else:
+                                    b = bitmap_from_href("fa://fa-chevron-right?size=1")
+
                             self.toolbar.AddLabelTool(
                                 self.lp,
                                 label,
-                                self._get_bmp(name),
+                                b,
                                 wx.NullBitmap,
                                 wx.ITEM_NORMAL,
                                 label,
@@ -125,7 +126,6 @@ class SchGridPanel(wx.Panel):
                             self.lp += 1
             self.toolbar.Realize()
             self.toolbar.Bind(wx.EVT_TOOL, self.on_tool_click)
-# self.toolbar.Bind(wx.EVT_TOOL_RCLICKED, self.OnToolRClick)  # Match all
 
             self.toolbar.SetSize(self.toolbar.GetBestSize())
             if self.vertical:
@@ -168,8 +168,6 @@ class SchGridPanel(wx.Panel):
         id = event.GetId()
         self.grid.action(self.commands[id - 101])
 
-# def OnToolRClick(self, event): tb = event.GetEventObject() #print
-# event.GetId()
 
     def refresh(self, row):
         if self.grid.GetTable().GetNumberRows() > 0:
@@ -186,7 +184,7 @@ class SchGridPanel(wx.Panel):
                         else:
                             title = ''
                         akcje_dict[name] = akcje
-                        if not name in ('insert', 'edit', 'delete', 'new')\
+                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row')\
                              and not name in self.commands:
                             self.toolbar.AddLabelTool(
                                 self.lp,

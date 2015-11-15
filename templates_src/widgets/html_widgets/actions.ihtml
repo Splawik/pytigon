@@ -8,7 +8,7 @@
         ul class=root
             li class=show_node
                 span class=root
-                    i class=glyphicon glyphicon-plus-sign
+                    i class=fa fa-plus
                         {{title}}
                 ul class=children
                     % for node in obj:

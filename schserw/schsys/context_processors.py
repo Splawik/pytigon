@@ -347,6 +347,14 @@ def sch_standard(request):
         list_view = True
     else:
         list_view = False
+    if '_set' in request.path or '/sublist' in request.path or '/get' in request.path:
+        show_title_bar=True
+    else:
+        show_title_bar=False
+    if '/get' in request.path:
+        get = True
+    else:
+        get = False
     if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
         url_base = '/' + settings.URL_ROOT_FOLDER
     else:
@@ -398,6 +406,8 @@ def sch_standard(request):
         'default_template2': d_template2,
         'appset_name': settings.APPSET_NAME,
         'appset_title': settings.APPSET_TITLE,
+        'show_title_bar': show_title_bar,
+        'get': get,
         'settings': settings,
         #'uuid': str(uuid.uuid1()),
         'uuid': uuid(request.path),

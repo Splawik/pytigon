@@ -221,4 +221,10 @@ class SchBaseCtrl(object):
             selfreshLDATA()
         return self.ldatabuf
 
-
+    def get_parent_form(self):
+        parent = self.GetParent()
+        while(parent!=None):
+            if type(parent).__name__ == 'SchHtmlWindow':
+                return parent
+            parent = parent.GetParent()
+        return None

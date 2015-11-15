@@ -205,7 +205,13 @@ class BaseHtmlElemParser(object):
         attrs,
         ):
         if tag in self.child_tags or tag=='comment':
-            return self.class_from_tag_name(tag)(self, parser, tag, attrs)
+            if tag=='script':
+                print("tag:", tag)
+            handler = self.class_from_tag_name(tag)
+            if handler:
+                return handler(self, parser, tag, attrs)
+            else:
+                return None
         elif tag[:3] + '*' in self.child_tags:
             return self.class_from_tag_name(tag[:3] + '*')(self, parser, tag,
                     attrs)

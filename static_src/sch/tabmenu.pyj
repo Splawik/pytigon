@@ -30,7 +30,7 @@ class TabMenu:
         self.titles[title] = menu_item
         #self.titles[title] = new TabMenuItem(_id, title, href, data)
 
-        jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='glyphicon glyphicon-remove'></span></button></li>", [_id, _id, title, _id]))
+        jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title, _id]))
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
         ACTIVE_PAGE = Page(_id, jQuery('#'+_id))

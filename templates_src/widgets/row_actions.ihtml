@@ -6,13 +6,13 @@
                     {{pos.title}}
             % else:
                 % if pos.icon:
-                    <span class="glyphicon {{pos.icon.0}}"></span>
+                    <span class="{{pos.icon.0}} fa fa-lg"></span>
                 % else:
                     {{pos.title}}
 
     % if actions2:
         div class=btn-group
-            button class=btn btn-sm btn-default dropdown-toggle,,,data-toggle=dropdown...<span class="glyphicon glyphicon-align-justify"></span>
+            button class=btn btn-sm btn-default dropdown-toggle,,,data-toggle=dropdown...<span class="fa fa-bars fa-lg"></span>
             ul class=dropdown-menu pull-right
                 % for pos in actions2:
                     li style=margin:4px
@@ -20,6 +20,10 @@
                             {{pos.title}}
 % else:
     % for pos in actions|add:actions2:
-        a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
-            {{pos.title}}
+        % if pos.icon:
+            a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}},,,src=fa://{{pos.icon.0}}?size=1
+                {{pos.title}}
+        % else:
+            a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
+                {{pos.title}}
 
