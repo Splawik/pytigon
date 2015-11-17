@@ -143,8 +143,8 @@ STANDARD_ICON = {
     'pdf': ['fa-eye', 'eye'],
     'odf': ['fa-list', 'bullets'],
     'field_list': ['fa-caret-down', 'grid'],
-    'field_list_get': ['fa-angle-double-down', 'grid'],
-    'field_action': ['fa-hand-o-down', 'grid'],
+    'field_list_get': ['fa-caret-down', 'grid'],
+    'field_action': ['fa-angle-double-down', 'grid'],
     'field_edit': ['fa-pencil-square-o', 'edit'],
 }
 

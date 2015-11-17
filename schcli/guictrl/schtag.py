@@ -594,7 +594,9 @@ def input_to_ctrltab(parent, attrs):
         ret = 'button'
     elif type == 'email':
         ret = 'masktext'
-        attrs_ret = { 'src': '!EMAIL', 'width': '250', 'value': attrs['value'], 'valuetype': 'str' }
+        attrs_ret = { 'src': '!EMAIL', 'width': '250', 'valuetype': 'str' }
+        if 'value' in attrs:
+            attrs_ret['value'] = attrs['value']
     elif type == 'hidden':
         ret = 'text'
         attrs_ret = {'hidden': '1', 'width': '0', 'height': '0'}

@@ -141,10 +141,11 @@
     table width=100%,,,cellspacing=0,,,cellpadding=3
         tr
             td align=center
-                % ok_cancel
+                <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" />
 
 
 %% list_content_height...height="100%"
+
 
 %% grid1
     table width=100%

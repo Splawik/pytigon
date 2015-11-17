@@ -46,9 +46,10 @@
                             tr
                                 td...{{ field.verbose_name }}
                                 td...{{ object|getfield:field.name }}
-                        %% form_ok_cancel_info
-                script
-                    $('#ModalLabelInfo').html('{{title}}')
+                    %% form_ok_cancel_info
+                % if standard_browser:
+                    script
+                        $('#ModalLabelInfo').html('{{title}}')
             % else:
                 %% form_delete
                     form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete

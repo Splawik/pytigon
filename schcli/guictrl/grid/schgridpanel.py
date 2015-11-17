@@ -29,8 +29,7 @@ class SchGridPanel(wx.Panel):
         self.icon_size = 2
         wx.Panel.__init__(self, *args, **argv)
         self.vertical = False
-        self._bitmaps = {'edit': 'wx.ART_FILE_OPEN', 'edit_inline': 'wx.ART_FILE_OPEN', 'delete': 'wx.ART_DELETE'}
-        #self._bitmaps = {'edit': 'fa://fa-pencil?size=1', 'delete': 'fa://fa-trash-o?size=1'}
+        self._bitmaps = {'edit': 'wx.ART_FILE_OPEN', 'edit_inline': 'wx.ART_FILE_OPEN', 'delete': 'wx.ART_DELETE', 'view_row': 'wx.ART_INFORMATION'}
 
     def set_bitmap(self, action, path):
         self._bitmaps[action] = path
@@ -90,10 +89,20 @@ class SchGridPanel(wx.Panel):
                     _('Delete'),
                     _('Delete'),
                     )
+                self.toolbar.AddLabelTool(
+                    self.lp + 2,
+                    _('view_row'),
+                    self._get_bmp('view_row'),
+                    wx.NullBitmap,
+                    wx.ITEM_NORMAL,
+                    _('View row'),
+                    _('View row'),
+                    )
                 self.toolbar.AddSeparator()
                 self.commands.append('edit')
                 self.commands.append('delete')
-                self.lp += 2
+                self.commands.append('view_row')
+                self.lp += 3
             if akcje:
                 for akcja in akcje:
                     if 'name' in akcja:
@@ -103,7 +112,7 @@ class SchGridPanel(wx.Panel):
                             title = akcja['title']
                         else:
                             title = ''
-                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row'):
+                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row'):
 
                             if name in self._bitmaps:
                                 b = self._get_bmp(name)
@@ -184,8 +193,7 @@ class SchGridPanel(wx.Panel):
                         else:
                             title = ''
                         akcje_dict[name] = akcje
-                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row')\
-                             and not name in self.commands:
+                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row') and not name in self.commands:
                             self.toolbar.AddLabelTool(
                                 self.lp,
                                 label,

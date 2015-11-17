@@ -427,7 +427,6 @@ class SchTableGrid(wx.grid.Grid):
         evt.Skip()
 
     def on_range_selected(self, evt):
-        #print("OnRangeSelected", evt.GetTopRow(), evt.GetBottomRow(), evt.GetLeftCol(), evt.GetRightCol())
         if evt.Selecting():
             if evt.GetTopRow() != evt.GetBottomRow():
                 self.ClearSelection()
@@ -445,7 +444,6 @@ class SchTableGrid(wx.grid.Grid):
     def on_cell_left_click(self, evt):
         row1 = self.GetGridCursorRow()
         row2 = evt.GetRow()
-# print "OnCellLeftClick:", row1, row2, evt.GetRow()
         self.SelectRow(evt.GetRow())
         self.SetGridCursor(evt.GetRow(), evt.GetCol())
         self.SetFocus()
@@ -466,24 +464,12 @@ class SchTableGrid(wx.grid.Grid):
                     for child_id in childs:
                         child = childs[child_id]
                         if 'href' in child.attrs:
-# print "XX2:", child.attrs['href']
-                            self.GetParent().GetParent().href_clicked(self,
-                                    child.attrs)
+                            self.GetParent().GetParent().href_clicked(self, child.attrs)
                             break
             else:
-# print child, child.tag, child.attrs if child.tag in ('image', 'img'): if 'src'
-# in child.attrs: return self.GetImageFromCache(child.attrs['src'])
-#
-# if 'action' in attr: act =  attr['action'] if '+' in act: x = act['+'] if
-# x[0]=='openurl': self.GetParent().GetParent().href_clicked(self, x[3])
                 if self.typ == self.GET_ID:
                     print("self.action('get')")
                     self.action('get')
-
-# self.process_get = True
-#
-    # def OnLUp(self, evt): print "OnLUp:" if self.process_get:
-#   self.process_get=False self.Action('get')
 
     def OnLUp(self, event):
         pass
@@ -509,10 +495,6 @@ class SchTableGrid(wx.grid.Grid):
             self.SetGridCursor(evt.GetRow(), evt.GetCol())
             #wx.CallAfter(self.EnableCellEditControl, enable=True)
             self.begin_edit()
-
-    #def on_right_up(self, event):
-    #        self.SetGridCursor(evt.GetRow(), evt.GetCol())
-    #        wx.CallAfter(self.EnableCellEditControl, enable=True)
 
 
     def on_key_j(self, evt):
