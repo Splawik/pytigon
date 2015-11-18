@@ -6,7 +6,7 @@
     % if not user.is_authenticated
         % if settings.SHOW_LOGIN_WIN
             div class=container,,,align=center
-                div class=panel panel-info,,,style=width:200pt;margin-top:20pt;
+                div class=panel panel-info panel-login,,,style=width:200pt;margin-top:20pt;
                     div class=panel-heading
                         h3 class=panel-title..._(Login)
                     form class=form-inline,,,role=form,,,action={%url 'start'%}schsys/do_login/?next={% url 'start' %},,,method=post,,,name=signin

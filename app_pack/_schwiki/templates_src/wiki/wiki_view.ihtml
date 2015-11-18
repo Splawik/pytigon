@@ -70,8 +70,8 @@
 
 %% list_content_header
     % if standard_web_browser and perms.schwiki.add_page:
-        a data-toggle=collapse,,,href=#collapse,,,style=position:fixed;right: 7px;
-            span class=glyphicon glyphicon-resize-full
+        a data-toggle=collapse,,,href=#collapse,,,style=position:absolute;left: 8px;z-index:10;
+            span class=fa-arrows-v fa fa-fw
         div id=collapse,,,class=panel-collapse collapse
             {{ block.super }}
 

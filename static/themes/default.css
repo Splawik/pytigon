@@ -295,3 +295,8 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
     padding:  8px 8px;
 }
 
+
+.panel-login .panel-heading h3 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
