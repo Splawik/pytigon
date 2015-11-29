@@ -749,7 +749,7 @@ def ok_cancel(context):
 
 @inclusion_tag('widgets/jscript_link.html')
 def jscript_link(context, href):
-    return standard_dict(context, {'href':  href})
+    return  {'href':  mark_safe(href)}
 
 
 @inclusion_tag('widgets/css_link.html')
@@ -761,7 +761,9 @@ def css_link(context, href):
 def link(context, href, rel, typ):
     return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ})
 
-
+@inclusion_tag('widgets/riot_component.html')
+def riot_component(context, name):
+    return standard_dict(context, {'href': "components/"+name+".tag",})
 
 @inclusion_tag('widgets/paginator.html')
 def paginator(context):
@@ -1208,3 +1210,8 @@ def recursetree(parser, token):
     parser.delete_first_token()
 
     return RecurseTreeNode(template_nodes, queryset_var)
+
+
+@register.simple_tag
+def spec(format):
+    return format.replace('{', '{{').replace('}', '}}').replace('[', '{%').replace(']', '%}')

@@ -1,3 +1,6 @@
+import glob
+from scrolltbl import stick_header
+
 def get_datatable_options():
     options = { 'scrollY': -120,
                 'paging': False,
@@ -27,7 +30,7 @@ def get_datatable_options2():
     return options
 
 def get_datatable_dy(selector):
-    dy_table = ACTIVE_PAGE.page.find('.tabsort_panel').offset().top
+    dy_table = glob.ACTIVE_PAGE.page.find('.tabsort_panel').offset().top
     dy_win = jQuery(window).height()
     dy = dy_win - dy_table
     if dy<100: dy = 100

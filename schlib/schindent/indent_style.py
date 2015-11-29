@@ -577,6 +577,7 @@ def py2js(script, module_path):
         os.chdir(module_path)
     else:
         old_path = None
+    print("X:", PY_TO_JS)
     proc = subprocess.Popen(PY_TO_JS,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,

@@ -17,6 +17,6 @@
         [ hybrid | 0 ]
         [ title  | Developer tools ]
         [ start_page |  ]
-        [ plugins |  ]
+        [ plugins | riot:standard_components/code_editor ]
 
 

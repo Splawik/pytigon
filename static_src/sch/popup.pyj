@@ -1,5 +1,5 @@
-#import tools
-
+from tools import can_popup, corect_href
+from schclient import is_hybrid, cmd_to_python, is_hybrid
 
 def refresh_fragment(data_item_to_refresh, fun=None):
     refr_block = data_item_to_refresh.closest('.refr_object')
@@ -209,11 +209,10 @@ def _dialog_loaded(is_modal, elem):
         jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
 
 
-def dialog_ex_load2(responseText, status, response):
-    if status!='error':
-        _dialog_loaded(False)
-        on_dialog_load()
-
+#def dialog_ex_load2(responseText, status, response):
+#    if status!='error':
+#        _dialog_loaded(False)
+#        on_dialog_load()
 
 def progressHandlingFunction(e):
     if e.lengthComputable:
@@ -301,8 +300,6 @@ def _refresh_win_after_ok(responseText, ok_button):
 
 def on_cancel_inline(elem):
     jQuery(elem).closest('.inline_dialog').remove()
-    #nonlocal ACTIVE_PAGE
-    #ACTIVE_PAGE.page.find(".inline_dialog").remove()
 
 
 def ret_ok(id, title):

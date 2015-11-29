@@ -299,6 +299,7 @@ def indent_html(txt):
     return ret
 
 
+
 if __name__ == '__main__':
     
     #f_in = open('./test/input2.js', 'r')    

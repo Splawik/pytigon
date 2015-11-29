@@ -1,5 +1,6 @@
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
+
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -7,7 +8,6 @@ RET_OBJ = None
 
 LANG = "en"
 MENU = None
-ACTIVE_PAGE = None
 PUSH_STATE = True
 BASE_PATH = None
 WAIT_ICON = None
@@ -17,15 +17,18 @@ BASE_FRAGMENT_INIT = None
 COUNTER = 1
 EDIT_RET_FUNCTION = None
 RET_CONTROL = None
+RIOT_INIT = None
 
-import page
-import tabmenuitem
-import tabmenu
-import popup
-import scrolltbl
-import tbl
-import schclient
-import tools
+import glob
+from page import Page
+from tabmenuitem import TabMenuItem
+from tabmenu import get_menu
+from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
+     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
+#import scrolltbl
+from tbl import set_table_type
+#import schclient
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_submit
 
 def init_pagintor(pg):
     nonlocal WAIT_ICON2
@@ -48,7 +51,7 @@ def init_pagintor(pg):
                             $('#loading-indicator').hide()
                             WAIT_ICON2 = False
 
-                    url = pg.attr('href').replace('[[page]]', page)+'&hybrid=1'
+                    url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
                     form.attr('action', url)
                     form.attr('href', url)
                     active_button = pg.find('.page active')
@@ -59,7 +62,7 @@ def init_pagintor(pg):
         pg.twbsPagination(options)
         if +page_number != 1:
             form = pg.closest('.refr_object').find('form.refr_source')
-            url = pg.attr('href').replace('[[page]]', page_number)+'&hybrid=1'
+            url = pg.attr('href').replace('[[page]]', page_number)+'&only_content=1'
             form.attr('action', url)
             form.attr('href', url)
     else:
@@ -68,11 +71,11 @@ def init_pagintor(pg):
     return paginate
 
 def fragment_init(elem=None):
-    nonlocal ACTIVE_PAGE
+    #nonlocal ACTIVE_PAGE
     if elem:
         elem2 = elem
     else:
-        elem2 = ACTIVE_PAGE.page
+        elem2 = glob.ACTIVE_PAGE.page
 
     #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
@@ -86,11 +89,12 @@ def fragment_init(elem=None):
         BASE_FRAGMENT_INIT()
 
 def page_init(id, first_time = True):
-    nonlocal WAIT_ICON, WAIT_ICON2, ACTIVE_PAGE
+    nonlocal WAIT_ICON, WAIT_ICON2 #, ACTIVE_PAGE
     table_type = get_table_type(jQuery('#'+ id))
 
-    pg = ACTIVE_PAGE.page.find('.pagination')
-    paginate = init_pagintor(pg)
+    if glob.ACTIVE_PAGE:
+        pg = glob.ACTIVE_PAGE.page.find('.pagination')
+        paginate = init_pagintor(pg)
     #paginator = get_page(jQuery('#'+ id)).find('.pagination')
     #if paginator.length>0:
     #    paginate = True
@@ -124,7 +128,7 @@ def page_init(id, first_time = True):
         handle_class_click(elem2, 'get_row', on_get_row)
         jQuery('#'+ id).on( "click", "a",
             def(e):
-                nonlocal ACTIVE_PAGE
+                #nonlocal ACTIVE_PAGE
 
                 if $(e.currentTarget).attr('target') == "_blank":
                     return
@@ -147,6 +151,15 @@ def page_init(id, first_time = True):
 
                 e.preventDefault()
 
+                if $(e.currentTarget).attr('target') in ("_top", "_top2"):
+                    title = $(e.currentTarget).attr('title')
+                    if not title:
+                        if len(href)>16:
+                            title = '...'+href[-13:]
+                        else:
+                            title = href
+                    return _on_menu_href(this,title)
+
                 href2 = corect_href(href)
 
                 jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
@@ -156,22 +169,22 @@ def page_init(id, first_time = True):
                         refresh_fragment(src_obj)
                     else:
                         if APPLICATION_TEMPLATE == 'modern':
-                            ACTIVE_PAGE.page.html(data)
-                            ACTIVE_PAGE.set_href(href)
-                            page_init(ACTIVE_PAGE.id, False)
+                            glob.ACTIVE_PAGE.page.html(data)
+                            glob.ACTIVE_PAGE.set_href(href)
+                            page_init(glob.ACTIVE_PAGE.id, False)
                         else:
                             jQuery('#body_body').html(data)
                             page_init('body_body', False)
-                        ACTIVE_PAGE.set_href(href)
+                        glob.ACTIVE_PAGE.set_href(href)
                         get_menu().get_active_item().url = href
                         if PUSH_STATE:
                             history_push_state("title", href)
                 })
         )
-    ACTIVE_PAGE.page.find('form').attr('target', '_blank')
-    ACTIVE_PAGE.page.find('form').submit(
+    glob.ACTIVE_PAGE.page.find('form').attr('target', '_blank')
+    glob.ACTIVE_PAGE.page.find('form').submit(
         def(e):
-            nonlocal ACTIVE_PAGE, WAIT_ICON, WAIT_ICON2
+            nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
 
             data = jQuery(this).serialize()
             console.log(data)
@@ -196,8 +209,8 @@ def page_init(id, first_time = True):
                 jQuery(this).attr('action', corect_href(href))
 
             ajax_submit(jQuery(this), def(data):
-                nonlocal ACTIVE_PAGE, WAIT_ICON, WAIT_ICON2, id
-                ACTIVE_PAGE.page.html(data)
+                nonlocal  WAIT_ICON, WAIT_ICON2, id #, ACTIVE_PAGE,
+                glob.ACTIVE_PAGE.page.html(data)
                 page_init(id, False)
                 if WAIT_ICON:
                     WAIT_ICON.stop()
@@ -206,15 +219,16 @@ def page_init(id, first_time = True):
                     WAIT_ICON2 = False
             )
     )
-    fragment_init(ACTIVE_PAGE.page)
+    fragment_init(glob.ACTIVE_PAGE.page)
 
 
-def app_init(application_template, menu_id, lang, base_path, base_fragment_init):
-    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH, BASE_FRAGMENT_INIT
+def app_init(application_template, menu_id, lang, base_path, base_fragment_init, riot_init):
+    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH, BASE_FRAGMENT_INIT, RIOT_INIT
     APPLICATION_TEMPLATE = application_template
     LANG = lang
     BASE_PATH = base_path
     BASE_FRAGMENT_INIT = base_fragment_init
+    RIOT_INIT = riot_init
     if can_popup():
         SUBWIN = False
 
@@ -288,14 +302,14 @@ def _on_menu_href(elem, title=None):
             href = jQuery(elem).attr("href")
             href2 = corect_href(href)
             def _on_new_win(data):
-                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2, MENU_ID
+                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2, MENU_ID, RIOT_INIT
 
                 if APPLICATION_TEMPLATE == 'modern':
-                    id = menu.new_page(title, data, href)
+                    id = menu.new_page(title, data, href2, RIOT_INIT)
                 else:
                     jQuery('#body_body').html(data)
-                    ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-                    ACTIVE_PAGE.set_href(href2)
+                    glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+                    glob.ACTIVE_PAGE.set_href(href2)
                     page_init('body_body', False)
                     if PUSH_STATE:
                         id = jQuery(elem).attr('id')
@@ -352,7 +366,7 @@ def _on_error(request, settings):
 
 
 def jquery_ready():
-    nonlocal ACTIVE_PAGE, BASE_PATH
+    nonlocal BASE_PATH, RIOT_INIT
 
     jQuery(document).ajaxError(_on_error)
 
@@ -364,7 +378,7 @@ def jquery_ready():
     )
 
     if APPLICATION_TEMPLATE == 'traditional':
-        ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+        glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
 
         page_init('body_body')
     else:
@@ -375,9 +389,9 @@ def jquery_ready():
                 txt = jQuery.trim(jQuery('#body_body').html())
                 jQuery('#body_body').html("")
                 menu = get_menu()
-                menu.new_page(jQuery('title').text(), txt, BASE_PATH)
+                menu.new_page(jQuery('title').text(), txt, BASE_PATH, RIOT_INIT)
         else:
-            ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+            glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
             page_init('body_body')
 
 
@@ -391,8 +405,8 @@ window.addEventListener('popstate',
             else:
                 x = e.state
                 jQuery('#body_body').html(LZString.decompress(x[0]))
-                ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-                ACTIVE_PAGE.set_href(document.location)
+                glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+                glob.ACTIVE_PAGE.set_href(document.location)
                 #menu.on_new_page('body_body')
 
                 if APPLICATION_TEMPLATE == 'standard':
@@ -409,7 +423,7 @@ window.addEventListener('popstate',
                 alert("X1")
             else:
                 jQuery('#body_body').html("")
-                ACTIVE_PAGE = None
+                glob.ACTIVE_PAGE = None
                 if APPLICATION_TEMPLATE == 'standard':
                     jQuery('a.menu-href').removeClass('btn-warning')
                     #.addClass('btn-info')

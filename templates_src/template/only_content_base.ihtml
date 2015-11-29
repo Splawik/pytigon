@@ -1,0 +1,37 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends default_template2
+
+%% page_start
+
+%% page_head
+
+%% body_start
+
+%% body_header
+
+%% nav
+
+%% login
+
+%% body_init
+
+%% panel
+
+%% messages
+
+%% navglobal
+
+%% sidebar
+
+%% tabs
+    % with NO_TABS=True:
+        {{block.super}}
+
+%% html_widgets_init
+
+%% body_footer
+
+%% body_end
+
+%% page_end

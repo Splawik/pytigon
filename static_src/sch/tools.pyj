@@ -1,4 +1,4 @@
-#import tools
+from schclient import cmd_to_python, is_hybrid, to_absolute_url, ret_submit
 
 def ajax_submit(form, func):
     if is_hybrid():
@@ -31,13 +31,13 @@ def can_popup():
         return True
 
 def corect_href(href):
-    if 'hybrid' in href:
+    if 'only_content' in href:
         return href
     else:
         if '?' in href:
-            return href + '&hybrid=1'
+            return href + '&only_content=1'
         else:
-            return href + '?hybrid=1'
+            return href + '?only_content=1'
 
 
 def handle_class_click(fragment_obj, obj_class, fun):

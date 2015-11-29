@@ -1,5 +1,6 @@
-import page
-import tabmenuitem
+import glob
+from page import Page
+from tabmenuitem import TabMenuItem
 
 class TabMenu:
     def __init__(self):
@@ -23,8 +24,8 @@ class TabMenu:
         if push_state and PUSH_STATE:
             history_push_state(menu_item.title, menu_item.url)
 
-    def new_page(self, title, data, href):
-        nonlocal ACTIVE_PAGE, PUSH_STATE
+    def new_page(self, title, data, href, riot_init):
+        nonlocal PUSH_STATE #ACTIVE_PAGE
         _id = "tab" + self.id
         menu_item = TabMenuItem(_id, title, href, data)
         self.titles[title] = menu_item
@@ -33,7 +34,7 @@ class TabMenu:
         jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title, _id]))
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
-        ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
+        glob.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
         self.active_item = menu_item
 
         jQuery('#'+_id).html(data)
@@ -44,11 +45,10 @@ class TabMenu:
 
         jQuery('#tabs2 a:last').tab('show')
 
-
         jQuery('#tabs2 a:last').on('shown.bs.tab',
             def(e):
-                nonlocal PUSH_STATE, ACTIVE_PAGE, menu_item
-                ACTIVE_PAGE = Page(_id, jQuery('#'+_id), menu_item)
+                nonlocal PUSH_STATE, menu_item #ACTIVE_PAGE
+                glob.ACTIVE_PAGE = Page(_id, jQuery('#'+_id), menu_item)
 
                 menu = get_menu()
                 menu_item = menu.titles[jQuery.trim(e.target.text)]
@@ -64,6 +64,19 @@ class TabMenu:
             def(event):
                 get_menu().remove_page(jQuery(this).attr('id').replace('button_',''))
         )
+
+        scripts = jQuery('#'+_id+' script')
+        scripts.each( def ( index, element ):
+            eval(this.innerHTML)
+        )
+
+        if riot_init:
+            for pos in riot_init:
+                x = sprintf("riot.mount('#%s')", _id+" "+pos)
+                print(x)
+                eval(x)
+                #eval("riot.mount('*')")
+
         self.id += 1
 
         return _id

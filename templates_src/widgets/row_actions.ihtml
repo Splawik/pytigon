@@ -1,6 +1,6 @@
 % if standard_web_browser:
     % for pos in actions:
-        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,{% ifnotequal pos.target '_top' %}target={{pos.target}}{% endifnotequal %},,,{{pos.style|safe}}
+        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
             % if browser_type == 'mobile':
                 % if not pos.icon:
                     {{pos.title}}

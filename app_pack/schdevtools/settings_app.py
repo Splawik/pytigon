@@ -23,7 +23,7 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 
-THEMES = ['desktop_traditional', 'tablet_standard', 'smartfon_standard']
+THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
@@ -53,6 +53,7 @@ for app in APPS:
 #        if os.path.isdir( os.path.join(base_apps_path2,ff)):
 #            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
 #                APPS.append(app+"."+ff)
+
         aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:

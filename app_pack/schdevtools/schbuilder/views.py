@@ -323,10 +323,10 @@ def gen(request, pk):
             f.close()        
         if static_file.type=='R':
             txt2 = ihtml_to_html(None, input_str=txt, lang='en')
-            txt2 = txt2.replace("\"{", '{').replace("}\"", '}') 
+            txt2 = txt2.replace("\"{", '{').replace("}\"", '}').replace('function on_', '').replace("""var __name__ = "__main__";""", '')
             t = Template(txt2)
             txt3 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f = open_and_create_dir(settings.ROOT_PATH+"/static/components/"+appset.name+"/"+static_file.name+'.tag',"wb")
             f.write(txt3.encode('utf-8'))
             f.close()        
         if static_file.type=='I':
@@ -338,8 +338,22 @@ def gen(request, pk):
             f = open_and_create_dir(static_root+static_file.name,"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
-            
-        #template_to_file(base_path, "apps", "apps.py",  {'appset': appset, 'static_file': static_file })
+    
+    r_elements = []
+    if appset.plugins:
+        r_external = [ pos[5:] for pos in appset.plugins.split(';') if pos.startswith('riot:') ]
+        for pos in r_external:
+            r_elements.append(pos.split('/')[-1])
+    else:
+        r_external = []
+    
+    r_static_files = [ pos for pos in static_files if pos.type in ('R',) ]
+    for pos in r_static_files:
+        r_elements.append(pos.name)
+    js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
+    css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
+    riot = True if len(r_static_files)>0 or len(r_external)>0 else False
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'r_static_files': r_static_files, 'r_external': r_external, 'r_elements': r_elements, 'riot': riot })
     
     base_path_src = base_path + "/src"
     

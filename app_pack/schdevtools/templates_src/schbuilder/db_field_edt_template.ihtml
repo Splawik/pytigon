@@ -65,75 +65,81 @@
     %with form_width=800 form_height=1200 title=tab|add:"."|add:verbose_field_name
         {{ block.super }}
 
-%% form_bar
-    % if form_edit or form_delete or form_info or show_title_bar
-        % if not standard_web_browser
-            table width=100%,,,class=form_bar
-                tr
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_txt,,,label=insert,,,SRC=client://actions/list-add.png
-                    td cellpadding=0,,,valign=top,,,width=250,,,height=36
-                        ctrlbitmapcombobox width=250,,,name=_icon,,,onload=self.init_default_icons=True
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_icon,,,label=icon,,,SRC=client://actions/list-add.png
-                    td width=5
-                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
-                        span class=form_title
-                            %%form_title
-                                .Edycja: {{object.name}} [{{title}}]
-            hr
-
 %% title
     .T:{{object.name}}
 
 %% body
-    {{ block.super.super }}
-    table width=100%
-        tr
-            td width=200
-                ctrltree name=_panel,,,width=200,,,height=100%
-                    li...{{object}}
-                        ul
-                            li...object.fields
-                                ul
-                                    %for pos in object.get_table_fields
-                                        li...{{pos}}
-                                            ul
-                                                li...{{pos}}
-                                                li...object.{{pos}}
-                                                li...form.fields_as_table.{{pos}}
-                            li...object methods
-                                ul
-                                    %for pos in object.get_table_methods
-                                        li...{{pos}}
-                                            ul
-                                                li...{{pos}}
-                                                li...object.{{pos}}
-                    li...django
-                        ul
-                            li...filters
-                                ul
-                                    %for pos in object.get_django_filters
-                                        li...{{pos}}
-                            li...tags
-                                ul
-                                    %for pos in object.get_django_tags
-                                        li...{{pos}}
+    % if standard_web_browser:
+        {{ block.super }}
+    % else:
+        table width=100%,,,class=form_bar
+            tr
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_txt,,,label=insert,,,SRC=client://actions/list-add.png
+                td cellpadding=0,,,valign=top,,,width=250,,,height=36
+                    ctrlbitmapcombobox width=250,,,name=_icon,,,onload=self.init_default_icons=True
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_icon,,,label=icon,,,SRC=client://actions/list-add.png
+                td width=5
+                td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
+                    span class=form_title
+                        %%form_title
+                            .Edycja: {{object.name}} [{{title}}]
+        hr
+        table width=100%
+            tr
+                td width=200
+                    ctrltree name=_panel,,,width=200,,,height=100%
+                        li...{{object}}
+                            ul
+                                li...object.fields
+                                    ul
+                                        %for pos in object.get_table_fields
+                                            li...{{pos}}
+                                                ul
+                                                    li...{{pos}}
+                                                    li...object.{{pos}}
+                                                    li...form.fields_as_table.{{pos}}
+                                li...object methods
+                                    ul
+                                        %for pos in object.get_table_methods
+                                            li...{{pos}}
+                                                ul
+                                                    li...{{pos}}
+                                                    li...object.{{pos}}
+                        li...django
+                            ul
+                                li...filters
+                                    ul
+                                        %for pos in object.get_django_filters
+                                            li...{{pos}}
+                                li...tags
+                                    ul
+                                        %for pos in object.get_django_tags
+                                            li...{{pos}}
 
-                    li ...widgets
-                        ul
-                            %for pos in object.get_template_widgets
-                                li...{{pos|safe}}
+                        li ...widgets
+                            ul
+                                %for pos in object.get_template_widgets
+                                    li...{{pos|safe}}
 
 
-                    li ...blocks
-                        ul
-                            %for pos in object.get_blocks
-                                li...{{pos|safe}}
-            td
-                CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
-                    DATA...{{txt|bencode}}
+                        li ...blocks
+                            ul
+                                %for pos in object.get_blocks
+                                    li...{{pos|safe}}
+                td
+                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
+                        DATA...{{txt|bencode}}
+
+%% content
+    % if standard_web_browser
+        %% edit_area
+            code_editor id=ace_editor,,,value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
+    % else:
+        {{ block.super }}
+

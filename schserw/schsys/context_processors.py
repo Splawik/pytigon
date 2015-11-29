@@ -25,6 +25,7 @@ from django.contrib.auth.models import Permission
 from schlib.schdjangoext.django_init import get_app_name
 
 import uuid
+from urllib.parse import urlparse
 
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
 # python client 3 - python client -> web client
@@ -72,6 +73,8 @@ def standard_web_browser(request):
     else:
         if 'HYBRID_BROWSER' in request.session or 'hybrid' in request.GET:
             return 2
+        elif 'only_content' in request.GET:
+            return 5
         else:
             return 1
 
@@ -309,22 +312,38 @@ def uuid(path):
 
 def sch_standard(request):
     standard = standard_web_browser(request)
-    if '/edit' in request.path or '/add' in request.path:
+
+    r = urlparse(request.path)
+    rr = r.path.split('/')
+    if len(rr)>0:
+        if rr[-1]:
+            last_fragment = rr[-1]
+        else:
+            if len(rr)>1:
+                last_fragment = rr[-2]
+            else:
+                last_fragment = ""
+    else:
+        last_fragment = r.path
+
+    if last_fragment =='edit' or last_fragment == 'add':
         form_edit = True
     else:
         form_edit = False
-    if '/add' in request.path:
+    if last_fragment == 'add':
         form_add = True
     else:
         form_add = False
-    if '/delete' in request.path:
+    if last_fragment == 'delete':
         form_delete = True
     else:
         form_delete = False
+
     if '/view' in request.path:
         form_info = True
     else:
         form_info = False
+
     if form_edit or form_delete or form_info:
         show_form = True
     else:
@@ -373,6 +392,9 @@ def sch_standard(request):
     if standard == 2:
         d_template = default_template('hybrid')
         d_template2 = default_template(b_type)
+    elif standard==5:
+        d_template = default_template('only_content')
+        d_template2 = default_template(b_type)
     else:
         d_template = default_template(b_type)
         d_template2 = d_template
@@ -420,6 +442,7 @@ def sch_standard(request):
         x = pos.split(':')
         if len(x) == 2:
             ret[x[0]] = x[1]
+    print(ret)
     return ret
 
 def sch_html_widget(request):

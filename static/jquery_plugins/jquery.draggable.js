@@ -31,10 +31,10 @@
                             cw = $(window).width();
 
                             top = (top < 0) ? 0 : top;
-                            top = (top + drg_h > ch) ? ch - drg_h : top;
+                            //top = (top + drg_h > ch) ? ch - drg_h : top;
 
                             left = (left < 0) ? 0 : left;
-                            left = (left + drg_w > cw) ? cw - drg_w : left;
+                            //left = (left + drg_w > cw) ? cw - drg_w : left;
                         }
 
                         $('.draggable')

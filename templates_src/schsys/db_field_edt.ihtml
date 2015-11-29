@@ -134,26 +134,36 @@
                 self.set_modified(modified)
 
 %% form_bar
-    % if form_edit or form_delete or form_info or show_title_bar
-        % if not standard_web_browser
-            table width=100%,,,class=form_bar
-                tr
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
-                    td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                        CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
-                    td width=5
-                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
-                        span class=form_title
-                            %%form_title
-                                .Edycja: {{title}}
-            hr
 
 %% body
-    {{ block.super.super }}
-    table width=800
-        tr
-            td
-    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{save_path}}
-        DATA...{{txt|bencode}}
+    % if standard_web_browser:
+        {{ block.super }}
+    % else:
+        table width=100%,,,class=form_bar
+            tr
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
+                td width=5
+                td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
+                    span class=form_title
+                        %%form_title
+                            .Edycja: {{title}}
+        hr
+        %% edit_area_sch
+            table width=800
+                tr
+                    td
+            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{save_path}}
+                DATA...{{txt|bencode}}
+
+
+
+%% content
+    % if standard_web_browser
+        %% edit_area
+            code_editor value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
+    % else:
+        {{ block.super }}
 

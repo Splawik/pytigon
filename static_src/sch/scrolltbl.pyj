@@ -1,6 +1,7 @@
+import glob
 
 def stick_resize():
-    tbl = ACTIVE_PAGE.page.find(".tbl_scroll")
+    tbl = glob.ACTIVE_PAGE.page.find(".tbl_scroll")
     dy_table = tbl.offset().top
     dy_win = dy_win = jQuery(window).height()
     dy = dy_win - dy_table
@@ -11,15 +12,15 @@ def stick_resize():
 def resize_win():
     stick_resize()
     tab2 = []
-    tab_width = ACTIVE_PAGE.page.find("table[name='tabsort']").width()
-    ACTIVE_PAGE.page.find(".tbl_header").width(tab_width)
+    tab_width = glob.ACTIVE_PAGE.page.find("table[name='tabsort']").width()
+    glob.ACTIVE_PAGE.page.find(".tbl_header").width(tab_width)
 
-    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
+    glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
         def():
             tab2.push(jQuery(this).width())
     )
     tab2 = tab2.reverse()
-    ACTIVE_PAGE.page.find(".tbl_header th").each(
+    glob.ACTIVE_PAGE.page.find(".tbl_header th").each(
         def():
             jQuery(this).width(tab2.pop())
     )
@@ -30,24 +31,24 @@ def stick_header():
     tab = []
     tab2 = []
 
-    ACTIVE_PAGE.page.find("table.tabsort th").each(
+    glob.ACTIVE_PAGE.page.find("table.tabsort th").each(
         def():
             tab.push(jQuery(this).width())
     )
 
     table = jQuery('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>')
-    table.append( ACTIVE_PAGE.page.find("table.tabsort thead") )
+    table.append( glob.ACTIVE_PAGE.page.find("table.tabsort thead") )
 
-    ACTIVE_PAGE.page.find('.tbl_scroll').before(table)
+    glob.ACTIVE_PAGE.page.find('.tbl_scroll').before(table)
 
-    ACTIVE_PAGE.page.find(".tbl_header th").each(
+    glob.ACTIVE_PAGE.page.find(".tbl_header th").each(
         def():
             tab2.push(jQuery(this).width())
     )
 
     tab2 = tab2.reverse()
 
-    ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
+    glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(
         def():
             x = tab2.pop()
             if x > jQuery(this).width():
@@ -55,7 +56,7 @@ def stick_header():
     )
 
     tab = tab.reverse()
-    ACTIVE_PAGE.page.find(".tbl_header th").each(
+    glob.ACTIVE_PAGE.page.find(".tbl_header th").each(
         def():
             jQuery(this).width(tab.pop())
     )

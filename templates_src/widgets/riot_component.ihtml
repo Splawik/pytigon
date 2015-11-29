@@ -1,0 +1,2 @@
+% load staticfiles
+script type=riot/tag,,,src={% static href %}

@@ -13,7 +13,7 @@
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
 
-    {% jscript_link 'jquery/js/jquery.min.js' %}
+    {% jscript_link 'jquery/js/jquery-2.1.4.js' %}
     
     {% import_django_select2_js %}
     
@@ -48,18 +48,18 @@
     {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
-    {% jscript_link 'riotjs/riot+compiler.js' %}
-
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
 
-
     %% theme_js_scripts
+
 
 %% jquery_init
     %% fragment_init
         .function base_fragment_init() { jQuery('input[type=file]').fileinput(); }
-    .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{request.get_full_path}}', base_fragment_init)
+    %% riot_init
+        .riot_init = null
+    .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{request.get_full_path}}', base_fragment_init, riot_init)
 
 
 %% jquery_ready_start
@@ -200,10 +200,7 @@
             div id=tab_tabs2
                 ul class=nav nav-tabs,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
-        div id=body_body,,,class=tab-pane refr_target refr_object
-            {{block.super}}
-        script
-            //$('#tabs2:first').tabdrop()
+        {{block.super}}
 
 
 %% body_body

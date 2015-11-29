@@ -6,9 +6,6 @@
 % load exsyntax
 % load crispy_forms_tags
 
-%% extrahead
-    script language=javascript,,,type=riot/tag
-        time-now
 
 %% login
     % if not user.is_authenticated
@@ -225,7 +222,3 @@
 
         %% list_page_end
 
-%% body_end...</body>
-    script language=javascript
-        .riot.mount('*');
-    {{ block.super }}
