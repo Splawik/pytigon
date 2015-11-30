@@ -143,7 +143,7 @@ def page_init(id, first_time = True):
                     if jQuery(this).hasClass(pos[0]):
                         e.preventDefault()
                         pos[1](this)
-                        return False
+                        return True
 
                 href = jQuery(this).attr("href")
                 if '#' in href:

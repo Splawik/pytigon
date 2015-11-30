@@ -133,6 +133,10 @@ body.fixed .menu_offset {
     margin: 0px 0px 0px 0px;
 }
 
+.td_action .btn-group .btn {
+    margin: 0px 0px 0px 0px;
+}
+
 
 .tabsort .btn-group {
     padding: 2px 2px;
@@ -299,4 +303,17 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
 .panel-login .panel-heading h3 {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.modal-content .modal-header {
+    border-bottom: medium none;
+    padding: 12px 12px 0px;
+}
+
+modal-content .modal-body {
+    padding: 12px 12px 16px;
+}
+
+.table {
+    margin-bottom: 5px;
 }

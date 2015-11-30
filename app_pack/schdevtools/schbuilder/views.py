@@ -326,8 +326,13 @@ def gen(request, pk):
             txt2 = txt2.replace("\"{", '{').replace("}\"", '}').replace('function on_', '').replace("""var __name__ = "__main__";""", '')
             t = Template(txt2)
             txt3 = t.render(Context({'appset': appset} ))
+            buf = []
+            buf.append("<%s>" % static_file.name)
+            for line in txt3.split('\n'):
+                buf.append('    '+line.replace('\r',''))
+            buf.append("</%s>" % static_file.name)
             f = open_and_create_dir(settings.ROOT_PATH+"/static/components/"+appset.name+"/"+static_file.name+'.tag',"wb")
-            f.write(txt3.encode('utf-8'))
+            f.write("\n".join(buf).encode('utf-8'))
             f.close()        
         if static_file.type=='I':
             in_str = io.StringIO(txt)

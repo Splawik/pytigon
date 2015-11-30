@@ -442,7 +442,6 @@ def sch_standard(request):
         x = pos.split(':')
         if len(x) == 2:
             ret[x[0]] = x[1]
-    print(ret)
     return ret
 
 def sch_html_widget(request):

@@ -617,13 +617,11 @@ class GenericRows(object):
             fields = "__all__"
 
             def get_success_url(self):
-                print("X1", self.object)
                 if self.object:
                     success_url = make_path('ret_ok', (int(self.object.id), str(self.object)))
                 else:
                     #success_url = make_path('schserw.urls.ok')
                     success_url = make_path('ok')
-                print("X2", success_url)
                 return success_url
 
             def get(
@@ -675,7 +673,6 @@ class GenericRows(object):
 
             def get_form_kwargs(self):
                 ret = super(CreateView, self).get_form_kwargs()
-                #print "GET_FORM_KWARGS:", ret
                 return ret
 
             def post(self, request, *args, **kwargs):

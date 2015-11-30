@@ -991,7 +991,7 @@ function page_init(id, first_time) {
                 if (jQuery(this).hasClass(pos[0])) {
                     e.preventDefault();
                     pos[1](this);
-                    return false;
+                    return true;
                 }
             }
             href = jQuery(this).attr("href");
