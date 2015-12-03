@@ -23,7 +23,7 @@
     
     
     
-    base_path = "/static/vanillajs_plugins/ace/src-min";
+    base_path = BASE_PATH + "static/vanillajs_plugins/ace/src-min";
     this.value = opts.value;
     this.href = opts.href;
     this.changed = false;

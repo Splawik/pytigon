@@ -22,13 +22,18 @@ from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls import patterns, url, include
 
+if settings.URL_ROOT_FOLDER:
+    START_PATH = '/' + settings.URL_ROOT_FOLDER +'/'
+else:
+    START_PATH = '/'
+
 urlpatterns = patterns(
     '',
     url(r'^ok/$', 'schserw.schsys.views.ok', name='ok'),
     url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.schsys.views.ret_ok', name='ret_ok'),
 
     (r'^do_login/$', 'django.contrib.auth.views.login', { 'template_name': 'schapp/index.html'}),
-    (r'^do_logout/$', 'django.contrib.auth.views.logout', {'next_page': settings.URL_ROOT_FOLDER+"/"}),
+    (r'^do_logout/$', 'django.contrib.auth.views.logout', {'next_page': START_PATH}),
 
     (r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
 
