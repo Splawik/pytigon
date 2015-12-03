@@ -17,6 +17,6 @@
         [ hybrid | 0 ]
         [ title  | Developer tools ]
         [ start_page |  ]
-        [ plugins | riot:standard_components/code_editor ]
+        [ plugins | riot:standard_components/code_editor;riot:standard_components/txtarea_editor ]
 
 

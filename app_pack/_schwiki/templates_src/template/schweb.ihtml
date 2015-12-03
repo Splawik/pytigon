@@ -17,6 +17,6 @@
         [ hybrid | 0 ]
         [ title  | Wiki ]
         [ start_page |  ]
-        [ plugins |  ]
+        [ plugins | riot:standard_components/txtarea_editor ]
 
 

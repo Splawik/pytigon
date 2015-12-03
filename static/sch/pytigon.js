@@ -96,7 +96,7 @@ var ՐՏ_modules = {};
     };
     TabMenu.prototype.new_page = function new_page(title, data, href, riot_init){
         var self = this;
-        var _id, menu_item, scripts, x, pos;
+        var _id, menu_item, scripts;
         _id = "tab" + self.id;
         menu_item = new TabMenuItem(_id, title, href, data);
         self.titles[title] = menu_item;
@@ -127,15 +127,6 @@ var ՐՏ_modules = {};
         scripts.each(function(index, element) {
             eval(this.innerHTML);
         });
-        if (riot_init) {
-            var ՐՏ_Iter0 = ՐՏ_Iterable(riot_init);
-            for (var ՐՏ_Index0 = 0; ՐՏ_Index0 < ՐՏ_Iter0.length; ՐՏ_Index0++) {
-                pos = ՐՏ_Iter0[ՐՏ_Index0];
-                x = sprintf("riot.mount('#%s')", _id + " " + pos);
-                ՐՏ_print(x);
-                eval(x);
-            }
-        }
         self.id += 1;
         return _id;
     };
@@ -936,7 +927,7 @@ function init_pagintor(pg) {
 }
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, paginator, paginate;
+    var elem2, paginator, paginate, _id, x, pos;
     if (elem) {
         elem2 = elem;
     } else {
@@ -953,6 +944,16 @@ function fragment_init(elem) {
     });
     paginator = elem2.find(".pagination");
     paginate = init_pagintor(paginator);
+    if (RIOT_INIT) {
+        _id = jQuery(elem).uid();
+        var ՐՏ_Iter0 = ՐՏ_Iterable(RIOT_INIT);
+        for (var ՐՏ_Index0 = 0; ՐՏ_Index0 < ՐՏ_Iter0.length; ՐՏ_Index0++) {
+            pos = ՐՏ_Iter0[ՐՏ_Index0];
+            x = sprintf("riot.mount('#%s')", _id + " " + pos);
+            ՐՏ_print(x);
+            eval(x);
+        }
+    }
     if (BASE_FRAGMENT_INIT) {
         BASE_FRAGMENT_INIT();
     }

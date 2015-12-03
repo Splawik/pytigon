@@ -120,21 +120,7 @@
                     div class=vert_form_panel
                         % vert_form:
                             'content_src'
-                        div id=ace_editor
-        script src=/static/vanillajs_plugins/ace/src-min-noconflict/ace.js,,,type=text/javascript,,,charset=utf-8
-        script ===>
-            var editor = ace.edit("ace_editor");
-            var txtarea = $('#id_content_src').hide();
-            editor.setOptions({
-                maxLines: 32
-            });
-            editor.setTheme("ace/theme/textmate");
-            editor.getSession().setMode("ace/mode/markdown");
-            editor.getSession().setValue(txtarea.val());
-            editor.getSession().on('change', function(){
-                txtarea.val(editor.getSession().getValue());
-            });
-        
+                        txtarea_editor rel_id=id_content_src        
     % else:
         % form:
             'name', 'page_type', 'subject', 'description', 'base_template', 'rights_group', 'menu'

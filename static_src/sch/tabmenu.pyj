@@ -70,12 +70,12 @@ class TabMenu:
             eval(this.innerHTML)
         )
 
-        if riot_init:
-            for pos in riot_init:
-                x = sprintf("riot.mount('#%s')", _id+" "+pos)
-                print(x)
-                eval(x)
-                #eval("riot.mount('*')")
+        #if riot_init:
+        #    for pos in riot_init:
+        #        x = sprintf("riot.mount('#%s')", _id+" "+pos)
+        #        print(x)
+        #        eval(x)
+        #        #eval("riot.mount('*')")
 
         self.id += 1
 

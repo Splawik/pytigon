@@ -1,6 +1,5 @@
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
-
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -71,7 +70,7 @@ def init_pagintor(pg):
     return paginate
 
 def fragment_init(elem=None):
-    #nonlocal ACTIVE_PAGE
+    nonlocal RIOT_INIT
     if elem:
         elem2 = elem
     else:
@@ -84,6 +83,13 @@ def fragment_init(elem=None):
 
     paginator = elem2.find('.pagination')
     paginate = init_pagintor(paginator)
+
+    if RIOT_INIT:
+        _id = jQuery(elem).uid()
+        for pos in RIOT_INIT:
+            x = sprintf("riot.mount('#%s')", _id+" "+pos)
+            print(x)
+            eval(x)
 
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
