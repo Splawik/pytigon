@@ -705,7 +705,8 @@ def main_init(argv):
             app.title = row[1].data
         elif row[0].data == 'plugins':
             if row[1].data and row[1].data != "":
-                app.plugins = row[1].data.split(';')
+                #app.plugins = row[1].data.split(';')
+                app.plugins = [pos for pos in row[1].data.split(';') if not pos.startswith('riot:')]
     if server_only:
         app.gui_style = \
             'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar,=,trayicon))'

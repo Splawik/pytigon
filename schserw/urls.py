@@ -123,7 +123,7 @@ if settings.DEBUG:
                             else:
                                 codejs = schlib.schindent.indent_style.pjsx_to_js(code, root)
                             if codejs:
-                                with open(dest, "wt") as f2:
+                                with open(dest, "wt", encoding='utf-8') as f2:
                                     f2.write(codejs)
                         #except:
                         #    print("compile error - file:", src)

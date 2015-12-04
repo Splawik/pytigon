@@ -20,6 +20,7 @@
 #from __future__ import unicode_literals
 
 import os
+import os.path
 import sys
 import io
 import re
@@ -28,6 +29,8 @@ import gettext
 import codecs
 import subprocess
 import itertools
+import uuid
+import tempfile
 
 #from pythonjs.python_to_pythonjs import main as python_to_pythonjs
 #from pythonjs.pythonjs import main as pythonjs_to_javascript
@@ -577,8 +580,11 @@ def py2js(script, module_path):
         os.chdir(module_path)
     else:
         old_path = None
-    print("X:", PY_TO_JS)
-    proc = subprocess.Popen(PY_TO_JS,
+    temp_name = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
+    cmd = list(PY_TO_JS)
+    cmd.append('-o')
+    cmd.append(temp_name)
+    proc = subprocess.Popen(cmd,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
@@ -592,7 +598,11 @@ def py2js(script, module_path):
     if old_path:
         os.chdir(old_path)
 
-    return str(ret)
+    f = open(temp_name,"rt", encoding='utf-8')
+    ret = f.read()
+    f.close()
+    os.unlink(temp_name)
+    return ret
 
 
 def py_to_js(script, module_path):
