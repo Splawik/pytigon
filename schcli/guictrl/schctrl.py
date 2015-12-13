@@ -2309,3 +2309,15 @@ def COMPOSITE(*args, **kwds):
     if cls in globals():
         return globals()[cls](*args, **kwds)
 
+def RIOT(*args, **kwds):
+    http = wx.GetApp().get_http(args[0])
+    http.get(args[0], "/schsys/widget_web?browser_type=1")
+    buf = http.str()
+    http.clear_ptr()
+    elem = kwds['param']['riot_elem']
+    buf = buf.replace('/static/', 'static://static/')
+    buf=buf.replace('</body>', "<%s></%s><script>riot.mount('*');</script></body>" % (elem, elem))
+    buf=buf.replace("app_init('modern', '0', '', '/', base_fragment_init, riot_init)", "app_init('modern', '0', '', 'static://', base_fragment_init, riot_init)")
+    obj =  HTML2(*args, **kwds)
+    obj.load_str(buf, "static:///")
+    return obj

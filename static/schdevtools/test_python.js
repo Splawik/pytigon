@@ -12,4 +12,3 @@ Test.prototype.get_value = function get_value(){
     var self = this;
     return self.value;
 };
-

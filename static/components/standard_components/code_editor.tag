@@ -28,48 +28,42 @@
     this.href = opts.href;
     this.changed = false;
     self = this;
-    function init() {
-        var editor, rect;
-        ace.config.set("basePath", base_path);
-        editor = ace.edit(self.ceditor);
-        rect = editor.container.getBoundingClientRect();
-        editor.container.style.position = "absolute";
-        editor.container.style.top = rect.top + 2 + "px";
-        editor.container.style.right = "5px";
-        editor.container.style.bottom = "5px";
-        editor.container.style.left = "5px";
-        editor.setTheme("ace/theme/textmate");
-        editor.getSession().setMode("ace/mode/python");
-        editor.setOptions({
-            minLines: 32
-        });
-        editor.on("input", function(e) {
-            var f, tag;
-            f = jQuery(":focus");
-            if (f.length > 0) {
-                tag = f.get(0).nodeName.toLowerCase();
-            } else {
-                tag === "";
-            }
-            if (tag === "textarea") {
-                self.changed = true;
-                self.update();
-            } else {
-                setTimeout(function() {
-                    editor.focus();
-                }, 0);
-            }
-        });
-        editor.getSession().setValue(atob(self.value));
-        self.editor = editor;
-    }
-    ajax_options = {
-        url: base_path + "/ace.js",
-        dataType: "script",
-        cache: true
-    };
     this.on("mount", function() {
-        jQuery.ajax(ajax_options).done(init);
+        load_js(base_path + "/ace.js", function() {
+            var editor, rect;
+            ace.config.set("basePath", base_path);
+            editor = ace.edit(self.ceditor);
+            rect = editor.container.getBoundingClientRect();
+            editor.container.style.position = "absolute";
+            editor.container.style.top = rect.top + 2 + "px";
+            editor.container.style.right = "5px";
+            editor.container.style.bottom = "5px";
+            editor.container.style.left = "5px";
+            editor.setTheme("ace/theme/textmate");
+            editor.getSession().setMode("ace/mode/python");
+            editor.setOptions({
+                minLines: 32
+            });
+            editor.on("input", function(e) {
+                var f, tag;
+                f = jQuery(":focus");
+                if (f.length > 0) {
+                    tag = f.get(0).nodeName.toLowerCase();
+                } else {
+                    tag === "";
+                }
+                if (tag === "textarea") {
+                    self.changed = true;
+                    self.update();
+                } else {
+                    setTimeout(function() {
+                        editor.focus();
+                    }, 0);
+                }
+            });
+            editor.getSession().setValue(atob(self.value));
+            self.editor = editor;
+        });
     });
     save(e) {
         var ajax_options;
@@ -87,8 +81,7 @@
                 self.update();
             });
         }
-    }
-    </script>
+    }</script>
     
     
 </code_editor>

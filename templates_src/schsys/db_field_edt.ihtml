@@ -151,7 +151,7 @@
                         %%form_title
                             .Edycja: {{title}}
         hr
-        %% edit_area_sch
+        %% edit_area_sc
             table width=800
                 tr
                     td
@@ -163,7 +163,7 @@
 %% content
     % if standard_web_browser
         %% edit_area
-            code_editor value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
+            summernote value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
     % else:
         {{ block.super }}
 

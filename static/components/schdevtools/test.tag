@@ -24,8 +24,7 @@
         input = e.target[0];
         this.items.push(input.value);
         input.value = "";
-    }
-    </script>
+    }</script>
     
     
 </test>

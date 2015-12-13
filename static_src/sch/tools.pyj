@@ -1,5 +1,7 @@
 from schclient import cmd_to_python, is_hybrid, to_absolute_url, ret_submit
 
+LOADED_FILES = []
+
 def ajax_submit(form, func):
     if is_hybrid():
         queryString = form.formSerialize()
@@ -48,3 +50,41 @@ def handle_class_click(fragment_obj, obj_class, fun):
             fun(this)
             return False
     )
+
+
+def load_css(path):
+    nonlocal LOADED_FILES
+    if not (LOADED_FILES and path in LOADED_FILES):
+        jQuery.get(path, def (css):
+            jQuery('<style type="text/css"></style>').html(css).appendTo("head")
+        )
+
+
+def load_js(path, fun):
+    nonlocal LOADED_FILES
+    if LOADED_FILES and path in LOADED_FILES:
+        fun()
+    else:
+        ajax_options = {
+          url: path,
+          dataType: "script",
+          cache: true
+        }
+        jQuery.ajax(ajax_options).done(fun)
+
+
+def load_many_js(paths, fun):
+    counter = 0
+
+    def _fun():
+        nonlocal counter
+        counter = counter - 1
+        if counter == 0:
+            fun()
+
+    for path in paths.split(paths, ';'):
+        if path.lenght()>0:
+            counter = counter + 1
+            load_js(path, _fun):
+
+

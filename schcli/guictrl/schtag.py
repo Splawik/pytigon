@@ -28,12 +28,7 @@ try:
 except:
     from urllib import unquote
 
-#import urllib.request, urllib.parse, urllib.error
 from base64 import b64decode
-#try:
-#    from base64 import decodebytes
-#except:
-#    pass
 
 from schlib.schhtml.tags.table_tags import TableTag, TdTag
 from schlib.schhtml.tags.p_tags import Par
@@ -44,6 +39,7 @@ from schlib.schhtml.htmltools import superstrip
 from .schbasectrl import SchBaseCtrl
 from schlib.schhttptools.htmltab import Td
 from schlib.schtools.data import is_null
+
 Atrybuty = (
     'name',
     'href',
@@ -792,3 +788,16 @@ register_tag_preprocess_map('ul', ul_convert)
 
 
 #<p id="error_1_id_integer_field" class="help-block"><strong>To pole jest wymagane.</strong></p>
+
+
+def register_riot_elem(name):
+    def _convert(parent, attrs):
+        attrs['riot_elem'] = name
+        return ('ctrlriot', attrs)
+    register_tag_preprocess_map(name, _convert)
+
+
+def init_riot_tags(riot_elements):
+    for pos in riot_elements:
+        name = pos.split('/')[-1]
+        register_riot_elem(name)

@@ -53,6 +53,7 @@ urlpatterns = patterns('',
     
     
     
+    
 )
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)
@@ -74,6 +75,7 @@ gen.standard('SChUrl', _('SChUrl'), _('SChUrl'))
 gen.standard('SChForm', _('Form'), _('Form'))
 gen.standard('SChFormField', _('Form field'), _('Form field'))
 gen.standard('SChTask', _('SChTask'), _('SChTask'))
+gen.standard('SChFiles', _('SChFiles'), _('SChFiles'))
 
 gen.for_field('SChAppSet', 'schapp_set', _('SChApp'), _('SChApp'))
 gen.for_field('SChApp', 'schchoice_set', _('SChChoice'), _('SChChoice'))
@@ -88,3 +90,4 @@ gen.for_field('SChApp', 'schurl_set', _('SChUrl'), _('SChUrl'))
 gen.for_field('SChApp', 'schform_set', _('Form'), _('Form'))
 gen.for_field('SChForm', 'schformfield_set', _('Form field'), _('Form field'))
 gen.for_field('SChApp', 'schtask_set', _('SChTask'), _('SChTask'))
+gen.for_field('SChApp', 'schfiles_set', _('SChFiles'), _('SChFiles'))

@@ -1,0 +1,64 @@
+<summernote>
+    <div class="inline">
+                    <button onclick={save} class="btn btn-sm btn-primary">
+                            <span class="fa fa-floppy-o"></span>
+                    </button>
+    </div>
+    <div class="inline inline_title">
+            <strong>{opts.title}</strong>
+    </div>
+    <div name="summernote"></div>
+    <style >
+        summernote div.inline {
+            display: inline-block;
+        }
+        summernote div.inline_title {
+            margin-left: 10px;
+        }
+        summernote button.btn {
+            margin: 0px;
+        }
+    </style>
+    <script>
+    
+    
+    
+    base_path = BASE_PATH + "static/bootstrap_plugins/summernote";
+    this.value = opts.value;
+    this.href = opts.href;
+    self = this;
+    load_css(base_path + "/summernote.css");
+    this.on("mount", function() {
+        load_js(base_path + "/summernote.min.js", function() {
+            var editor, rect;
+            editor = jQuery(self.summernote);
+            rect = self.summernote.getBoundingClientRect();
+            self.summernote.style.position = "absolute";
+            self.summernote.style.top = rect.top + 2 + "px";
+            self.summernote.style.right = "5px";
+            self.summernote.style.bottom = "5px";
+            self.summernote.style.left = "5px";
+            editor.html(atob(self.value));
+            editor.summernote();
+            self.editor = editor;
+        });
+    });
+    save(e) {
+        var ajax_options;
+        if (self.href) {
+            ajax_options = {
+                method: "POST",
+                url: self.href,
+                dataType: "html",
+                data: {
+                    data: self.editor.summernote("code")
+                }
+            };
+            jQuery.ajax(ajax_options).done(function() {
+                self.update();
+            });
+        }
+    }</script>
+    
+    
+</summernote>

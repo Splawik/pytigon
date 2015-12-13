@@ -18,7 +18,8 @@
                     "manage": "client://categories/preferences-system.png",
                     "installer": "client://apps/internet-web-browser.png",
                     "UP": "wx.ART_GO_TO_PARENT",
-                    "static": "client://apps/system-file-manager.png"
+                    "static": "client://apps/system-file-manager.png",
+                    "files": "client://mimetypes/text-html.png",
                 }
                 child.set_bitmaps(bitmaps)
 
@@ -75,4 +76,4 @@
 
 %% row_edit
     % form:
-        'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type', 'user_param'
+        'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type', 'custom_tags', 'user_param'

@@ -240,8 +240,6 @@ def gen(request, pk):
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
     template_to_file(base_path, "wsgi", "run.wsgi",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
     
-    template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset})
-    
     app_names = []
     for app in apps:
         object_list.append((datetime.datetime.now().time().isoformat(), 'create app:', app.name))
@@ -344,21 +342,19 @@ def gen(request, pk):
             f.write(txt2.encode('utf-8'))
             f.close()        
     
-    r_elements = []
-    if appset.plugins:
-        r_external = [ pos[5:] for pos in appset.plugins.split(';') if pos.startswith('riot:') ]
-        for pos in r_external:
-            r_elements.append(pos.split('/')[-1])
-    else:
-        r_external = []
+    riot_elements = []
+    if appset.custom_tags:
+        riot_elements += [ pos for pos in appset.custom_tags.replace('\n',';').replace('\r','').split(';') if pos ]
+    riot_elements += [ appset.name+"/"+pos.name for pos in static_files if pos.type in ('R',) ]
     
-    r_static_files = [ pos for pos in static_files if pos.type in ('R',) ]
-    for pos in r_static_files:
-        r_elements.append(pos.name)
     js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
-    riot = True if len(r_static_files)>0 or len(r_external)>0 else False
-    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'r_static_files': r_static_files, 'r_external': r_external, 'r_elements': r_elements, 'riot': riot })
+    
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'riot_elements': riot_elements })
+    print(riot_elements)
+    #template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset, 'riot_elements': riot_elements })
+    
+    template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'riot_elements': riot_elements })
     
     base_path_src = base_path + "/src"
     

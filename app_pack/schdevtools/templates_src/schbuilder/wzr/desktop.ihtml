@@ -10,10 +10,8 @@
 
 %% js_extrascipts
     {% spec '{' %}block.super{% spec '}' %}
-    {% if riot %}{% spec "[" %} jscript_link 'riotjs/riot_compiler.js' {% spec "]" %}
-    {% for r_ext in r_external %}{% spec "[" %} riot_component '{{r_ext}}' {% spec ']' %}
-    {% endfor %}
-    {% for r_static in r_static_files %}{% spec '[' %} riot_component '{{appset.name}}/{{r_static.name}}' %}
+    {% if riot_elements %}{% spec "[" %} jscript_link 'riotjs/riot_compiler.js' {% spec "]" %}
+    {% for riot_elem in riot_elements %}{% spec "[" %} riot_component '{{riot_elem}}' {% spec ']' %}
     {% endfor %}
     {% endif %}
     {% for js_static in js_static_files %}{% spec '[' %} jscript_link '{{appset.name}}/{{js_static.name}}' {% spec ']' %}
@@ -28,4 +26,4 @@
     {% spec '{' %}block.super{% spec '}' %}
 
 %% riot_init
-    {% if riot %}.riot_init = [ {% for pos in r_elements %}"{{pos}}", {% endfor %} ] {% else %} .riot_init = [] {% endif %}
+    {% if riot_elements %}.riot_init = [ {% for pos in riot_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ] {% else %} .riot_init = [] {% endif %}

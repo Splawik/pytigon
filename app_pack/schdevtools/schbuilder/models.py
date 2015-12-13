@@ -225,6 +225,13 @@ Static_CHOICES = (
     
     )
 
+FileType_CHOICES = (
+    ("f","TemplateFilters"),
+    ("t","TemplateTags"),
+    ("c","Custom file"),
+    
+    )
+
 
 
 
@@ -256,6 +263,7 @@ class SChAppSet( models.Model):
     smartfon_gui_type = models.CharField('Gui type for smartfon', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
     tablet_gui_type = models.CharField('Gui type for tablet', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
     user_param = models.TextField('User parameter', null=True, blank=True, editable=True, )
+    custom_tags = models.TextField('Custom tags', null=True, blank=True, editable=True, )
     
 
     def get_ext_apps(self):
@@ -1058,6 +1066,30 @@ class SChTask( models.Model):
         return template_name
     
 admin.site.register(SChTask)
+
+
+@python_2_unicode_compatible
+class SChFiles( models.Model):
+    
+    class Meta:
+        verbose_name = _("SChFiles")
+        verbose_name_plural = _("SChFiles")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        
+        ordering = ['id']
+        
+        
+
+    
+
+    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
+    file_type = models.CharField('File  type', null=False, blank=False, editable=True, choices=FileType_CHOICES,max_length=3)
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=256)
+    content = models.TextField('Content', null=True, blank=True, editable=False, )
+    
+
+    
+admin.site.register(SChFiles)
 
 
 

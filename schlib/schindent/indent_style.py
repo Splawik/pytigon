@@ -592,8 +592,10 @@ def py2js(script, module_path):
                             )
     ret, stderr_value = proc.communicate(script)
 
-    for line in stderr_value.split('\n'):
-        process_output(line)
+    if stderr_value:
+        print(script)
+        for line in stderr_value.split('\n'):
+            process_output(line)
 
     if old_path:
         os.chdir(old_path)

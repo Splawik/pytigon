@@ -1,5 +1,6 @@
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
+
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -27,7 +28,7 @@ from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_
 #import scrolltbl
 from tbl import set_table_type
 #import schclient
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_submit
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_submit, load_css, load_js, load_many_js
 
 def init_pagintor(pg):
     nonlocal WAIT_ICON2
@@ -395,7 +396,7 @@ def jquery_ready():
                 txt = jQuery.trim(jQuery('#body_body').html())
                 jQuery('#body_body').html("")
                 menu = get_menu()
-                menu.new_page(jQuery('title').text(), txt, BASE_PATH, RIOT_INIT)
+                menu.new_page(jQuery('title').text(), txt, window.location.href, RIOT_INIT)
         else:
             glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
             page_init('body_body')
@@ -426,7 +427,8 @@ window.addEventListener('popstate',
             PUSH_STATE = True
         else:
             if APPLICATION_TEMPLATE == 'modern':
-                alert("X1")
+                #alert("X1")
+                pass
             else:
                 jQuery('#body_body').html("")
                 glob.ACTIVE_PAGE = None

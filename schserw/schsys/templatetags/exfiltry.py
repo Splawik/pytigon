@@ -661,3 +661,9 @@ def is_menu_checked(url, full_path):
             return False
     else:
         return False
+
+
+@register.filter(name='last_elem')
+def last_elem(value, sep='/'):
+    return value.split(sep)[-1]
+

@@ -75,6 +75,7 @@
         field_list/schappmenu_set,Menu,menu,_top2
         field_list/schurl_set,Urls,urls,_top2
         field_list/schform_set,Forms,forms,_top2
+        field_list/schfiles_set,Custom files,files,_top2
         field_edit/model_code,Additional models,add_models,_top2
         field_edit/view_code,Additional views,add_views,_top2
         field_edit/urls_code,Additional urls,add_urls,_top2
@@ -90,3 +91,4 @@
 %% row_edit
     % form:
             'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
+            

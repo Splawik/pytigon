@@ -65,6 +65,8 @@ def test_tablet(request):
 
 
 def standard_web_browser(request):
+    if 'browser_type' in request.GET:
+        return int(request.GET['browser_type'])
     if request and request.META['HTTP_USER_AGENT'].startswith('Py'):
         if 'WebKit' in request.META['HTTP_USER_AGENT']:
             return 3
