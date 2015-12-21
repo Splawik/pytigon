@@ -1,0 +1,33 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load crispy_forms_tags
+% load staticfiles
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'riotjs/riot_compiler.js' %}
+    {% riot_component 'standard_components/code_editor' %}
+    {% riot_component 'standard_components/d3' %}
+    {% riot_component 'schdevtools/test' %}
+    
+    
+    {% jscript_link 'schdevtools/test_javascript.js' %}
+    {% jscript_link 'schdevtools/test_python.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    {% css_link 'schdevtools/style.css' %}
+    {% css_link 'schdevtools/test_icss.css' %}
+    
+
+%% body_footer
+    {{block.super}}
+
+%% riot_init
+    .riot_init = [ "code_editor", "d3", "test",  ] 

@@ -1,0 +1,61 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load crispy_forms_tags
+% load staticfiles
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'riotjs/riot_compiler.js' %}
+    {% riot_component 'standard_components/code_editor' %}
+    {% riot_component 'standard_components/d3' %}
+    {% riot_component 'standard_components/leaflet' %}
+    {% riot_component 'standard_components/video-js' %}
+    {% riot_component 'standard_components/code_editor' %}
+    {% riot_component 'standard_components/handsontable' %}
+    {% riot_component 'standard_components/pivottable' %}
+    {% riot_component 'standard_components/summernote' %}
+    {% riot_component 'standard_components/txtarea_editor' %}
+    {% riot_component 'standard_components/plotly' %}
+    {% riot_component 'schdevtools/test' %}
+    
+    
+    {% jscript_link 'schdevtools/test_javascript.js' %}
+    {% jscript_link 'schdevtools/test_python.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    {% css_link 'schdevtools/style.css' %}
+    {% css_link 'schdevtools/test_icss.css' %}
+    
+
+%% body_footer
+    {{block.super}}
+
+%% riot_init
+    .riot_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "test",  ] 
+
+%% theme_js_scripts
+    {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
+    {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
+
+%% theme_css_links
+    {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
+    {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
+    {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
+    {% css_link 'themes/default.css' %}
+    {% css_link 'themes/material.css' %}
+
+
+%% fragment_init
+    .function base_fragment_init() {
+    .    $.material.init();
+    .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
+    .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
+    .}
+
