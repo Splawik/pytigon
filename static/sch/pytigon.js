@@ -254,23 +254,32 @@ var ՐՏ_modules = {};
         });
     }
     function load_css(path) {
+        var req;
         if (!(LOADED_FILES && ՐՏ_in(path, LOADED_FILES))) {
-            jQuery.get(path, function(css) {
-                jQuery("<style type=\"text/css\"></style>").html(css).appendTo("head");
-            });
+            req = new XMLHttpRequest();
+            function _onload() {
+                jQuery("<style type=\"text/css\"></style>").html(req.responseText).appendTo("head");
+            }
+            req.onload = _onload;
+            req.open("GET", path, true);
+            req.send("");
+            LOADED_FILES.push(path);
         }
     }
     function load_js(path, fun) {
-        var ajax_options;
+        var req;
         if (LOADED_FILES && ՐՏ_in(path, LOADED_FILES)) {
             fun();
         } else {
-            ajax_options = {
-                url: path,
-                dataType: "script",
-                cache: true
-            };
-            jQuery.ajax(ajax_options).done(fun);
+            req = new XMLHttpRequest();
+            function _onload() {
+                jQuery.globalEval(req.responseText);
+                fun();
+            }
+            req.onload = _onload;
+            req.open("GET", path, true);
+            req.send("");
+            LOADED_FILES.push(path);
         }
     }
     function load_many_js(paths, fun) {
@@ -1002,7 +1011,6 @@ function fragment_init(elem) {
         for (var ՐՏ_Index1 = 0; ՐՏ_Index1 < ՐՏ_Iter1.length; ՐՏ_Index1++) {
             pos = ՐՏ_Iter1[ՐՏ_Index1];
             x = sprintf("riot.mount('#%s')", _id + " " + pos);
-            ՐՏ_print(x);
             eval(x);
         }
     }

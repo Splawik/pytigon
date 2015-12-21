@@ -1,10 +1,10 @@
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
-
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
 RET_OBJ = None
+
 
 LANG = "en"
 MENU = None
@@ -89,7 +89,6 @@ def fragment_init(elem=None):
         _id = jQuery(elem).uid()
         for pos in RIOT_INIT:
             x = sprintf("riot.mount('#%s')", _id+" "+pos)
-            print(x)
             eval(x)
 
     if BASE_FRAGMENT_INIT:

@@ -15,7 +15,7 @@
             [ login | 1 ]
         [ autologin | 1 ]
         [ csrf_token | {%csrf_token%} ]
-        [ riot_elements | standard_components/code_editor;standard_components/d3;standard_components/leaflet;standard_components/video-js;standard_components/code_editor;standard_components/handsontable;standard_components/pivottable;standard_components/summernote;standard_components/txtarea_editor;schdevtools/test;]
+        [ riot_elements | standard_components/code_editor;standard_components/d3;standard_components/leaflet;standard_components/video-js;standard_components/code_editor;standard_components/handsontable;standard_components/pivottable;standard_components/summernote;standard_components/txtarea_editor;standard_components/plotly;schdevtools/test;]
         [ gui_style | modern(toolbar(file(open,exit),clipboard)) ]
         [ hybrid | 0 ]
         [ title  | Developer tools ]

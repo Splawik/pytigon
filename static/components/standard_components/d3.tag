@@ -1,6 +1,9 @@
 <d3>
     <div name="d3div" width={ opts.width } height={ opts.height }></div>
     <script>
+    
+    
+    
     base_path = BASE_PATH + "static/vanillajs_plugins";
     self = this;
     this.on("mount", function() {

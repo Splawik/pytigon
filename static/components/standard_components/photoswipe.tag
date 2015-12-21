@@ -1,4 +1,0 @@
-<photoswipe>
-    
-    
-</photoswipe>

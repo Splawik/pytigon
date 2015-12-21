@@ -1,4 +1,0 @@
-<raphael>
-    
-    
-</raphael>

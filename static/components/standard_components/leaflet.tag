@@ -1,6 +1,9 @@
 <leaflet>
     <div name="mapdiv" style="width: { opts.width }; height: { opts.height };"></div>
     <script>
+    
+    
+    
     base_path = BASE_PATH + "static/vanillajs_plugins/leaflet";
     self = this;
     load_css(base_path + "/leaflet.css");
