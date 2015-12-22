@@ -11,6 +11,7 @@
         this._status = 0;
         this.sch_local_request = false;
         this.url = null;
+
         actual.onreadystatechange = function() {
             if (self.onreadystatechange != null) self.onreadystatechange();
         };
@@ -38,8 +39,8 @@
                 {   window.ajax_get_response_fun = {};
                     window.ajax_get_response_fun[sUrl] = xx;
                 }
-                if(navigator.product==='ie') {
-                    document.location.href = "localbrowser://ajax_get??"+ sUrl;
+                if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+                    document.location.href = "http://localbrowser/?ajax_get??"+ sUrl;
                 }
                 else {
                     document.title = ":ajax_get??"+ sUrl;
@@ -85,5 +86,3 @@
     }
     window.XMLHttpRequest = modXMLHttpRequest;
 })();
-
-
