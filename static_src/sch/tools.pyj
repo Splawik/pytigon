@@ -5,9 +5,9 @@ LOADED_FILES = []
 def ajax_submit(form, func):
     if is_hybrid():
         queryString = form.formSerialize()
-        cmd_to_python('href_to_var|'+to_absolute_url(form.attr('action'))+'?'+queryString+'|RET_BUFOR')
+        cmd_to_python('href_to_var??'+to_absolute_url(form.attr('action'))+'?'+queryString+'??RET_BUFOR')
         RET_OBJ = func
-        cmd_to_python('run_js|ret_submit();')
+        cmd_to_python('run_js??ret_submit();')
     else:
         #form.ajaxSubmit( { success: func } )
         jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })

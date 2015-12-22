@@ -198,9 +198,9 @@ var ՐՏ_modules = {};
         var queryString, RET_OBJ;
         if (is_hybrid()) {
             queryString = form.formSerialize();
-            cmd_to_python("href_to_var|" + to_absolute_url(form.attr("action")) + "?" + queryString + "|RET_BUFOR");
+            cmd_to_python("href_to_var??" + to_absolute_url(form.attr("action")) + "?" + queryString + "??RET_BUFOR");
             RET_OBJ = func;
-            cmd_to_python("run_js|ret_submit();");
+            cmd_to_python("run_js??ret_submit();");
         } else {
             jQuery.ajax({
                 "type": "POST",
@@ -370,7 +370,7 @@ var ՐՏ_modules = {};
         jQuery(elem).attr("data-spinner-color", "#FF0000");
         WAIT_ICON = Ladda.create(elem);
         if (is_hybrid()) {
-            cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
             jQuery("div.dialog-form-info").modal();
         } else {
             if (WAIT_ICON) {
@@ -405,7 +405,7 @@ var ՐՏ_modules = {};
         jQuery(elem).attr("data-spinner-color", "#FF0000");
         WAIT_ICON = Ladda.create(elem);
         if (is_hybrid()) {
-            cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
             jQuery("div.dialog-form-info").modal();
         } else {
             if (WAIT_ICON) {
@@ -440,7 +440,7 @@ var ՐՏ_modules = {};
         jQuery(elem).attr("data-spinner-color", "#FF0000");
         WAIT_ICON = Ladda.create(elem);
         if (is_hybrid()) {
-            cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data");
+            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
             jQuery("div.dialog-form").modal();
         } else {
             if (can_popup() && !jQuery(elem).hasClass("inline") && !(ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
@@ -491,7 +491,7 @@ var ՐՏ_modules = {};
     }
     function on_popup_info(elem) {
         if (is_hybrid()) {
-            cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data-info");
+            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data-info");
             jQuery("div.dialog-form-info").modal();
         } else {
             if (can_popup()) {
@@ -509,7 +509,7 @@ var ՐՏ_modules = {};
     function on_popup_delete(elem) {
         var elem2;
         if (is_hybrid()) {
-            cmd_to_python("href_to_elem|" + elem.href + "|#dialog-data-delete");
+            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data-delete");
             jQuery("div.dialog-form-delete").modal();
         } else {
             if (can_popup()) {

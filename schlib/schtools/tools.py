@@ -118,7 +118,7 @@ class ZipWriter:
 def split2(txt, sep):
     id = txt.find(sep)
     if id>=0:
-        return (txt[:id], txt[id+1:])
+        return (txt[:id], txt[id+len(sep):])
     else:
         return (txt,"")
 

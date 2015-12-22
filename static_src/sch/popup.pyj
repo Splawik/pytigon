@@ -31,7 +31,7 @@ def on_popup_inline(elem):
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
+        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
         jQuery('div.dialog-form-info').modal()
     else:
         if WAIT_ICON:
@@ -68,7 +68,7 @@ def on_popup_in_form(elem):
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
+        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
         jQuery('div.dialog-form-info').modal()
     else:
         if WAIT_ICON:
@@ -105,7 +105,7 @@ def on_popup_edit_new(elem):
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data")
+        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
         jQuery('div.dialog-form').modal()
     else:
         if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
@@ -153,7 +153,7 @@ def on_popup_edit_new(elem):
 
 def on_popup_info(elem):
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data-info")
+        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data-info")
         jQuery('div.dialog-form-info').modal()
     else:
         if can_popup():
@@ -171,7 +171,7 @@ def on_popup_info(elem):
 
 def on_popup_delete(elem):
     if is_hybrid():
-        cmd_to_python("href_to_elem|"+elem.href+"|#dialog-data-delete")
+        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data-delete")
         jQuery('div.dialog-form-delete').modal()
     else:       
         if can_popup():            

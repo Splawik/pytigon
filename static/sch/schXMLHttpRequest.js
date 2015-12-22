@@ -11,7 +11,6 @@
         this._status = 0;
         this.sch_local_request = false;
         this.url = null;
-
         actual.onreadystatechange = function() {
             if (self.onreadystatechange != null) self.onreadystatechange();
         };
@@ -39,8 +38,13 @@
                 {   window.ajax_get_response_fun = {};
                     window.ajax_get_response_fun[sUrl] = xx;
                 }
-                document.title = ":ajax_get|"+ sUrl;
-                return this;
+                if(navigator.product==='ie') {
+                    document.location.href = "localbrowser://ajax_get??"+ sUrl;
+                }
+                else {
+                    document.title = ":ajax_get??"+ sUrl;
+                }
+                return null;
             }
             return actual.open(sMethod, sUrl, bAsync, sUser, sPassword)
         };
