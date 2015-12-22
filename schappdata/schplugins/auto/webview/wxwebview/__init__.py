@@ -451,6 +451,7 @@ def init_plugin_web_view(
         kwds2 = {}
         kwds2['name'] = kwds['name']
         kwds2['size'] = kwds['size']
+        kwds2['style'] = wx.BORDER_NONE
         if 'backend' in kwds:
             kwds2['backend'] = kwds['backend']
         else:

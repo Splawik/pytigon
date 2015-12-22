@@ -280,24 +280,6 @@ class AppManager:
         return ret
 
 
-defparm= "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
-color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
-color_higlight:FFFFFF,color_shadow:A0A0A0,color_background_0_5:787878,color_background_0_8:C0C0C0,\
-color_background_0_9:D8D8D8,color_background:F0F0F0,color_background_1_1:F1F1F1,\
-color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
-
-
-def sch_login(request, *argi, **argv):
-    ret = login(request, *argi, **argv)
-    parm = request.REQUEST.get('client_param', '')
-    if parm != '':
-        request.session['client_param'] = parm
-    else:
-        request.session['client_param'] = defparm
-        
-    return ret
-
-
 def uuid(path):
     if ':' in path:
         path2 = path.split(':')[1]
@@ -438,12 +420,8 @@ def sch_standard(request):
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         }
-    parm = defparm
-    parm_list = parm.split(',')
-    for pos in parm_list:
-        x = pos.split(':')
-        if len(x) == 2:
-            ret[x[0]] = x[1]
+    if 'client_param' in request.session:
+        ret.update(request.session['client_param'])
     return ret
 
 def sch_html_widget(request):

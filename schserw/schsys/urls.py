@@ -21,6 +21,25 @@ from django.conf.urls import patterns
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls import patterns, url, include
+from django.contrib.auth.views import login
+
+defparm= "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
+color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
+color_higlight:FFFFFF,color_shadow:A0A0A0,color_background_0_5:787878,color_background_0_8:C0C0C0,\
+color_background_0_9:D8D8D8,color_background:F0F0F0,color_background_1_1:F1F1F1,\
+color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
+
+
+def sch_login(request, *argi, **argv):
+    ret = login(request, *argi, **argv)
+    parm = request.REQUEST.get('client_param', '')
+    if parm != '':
+        request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
+    else:
+        request.session['client_param'] = dict([pos.split(':') for pos in defparm.split(',')])
+
+    return ret
+
 
 if settings.URL_ROOT_FOLDER:
     START_PATH = '/' + settings.URL_ROOT_FOLDER +'/'
@@ -32,7 +51,8 @@ urlpatterns = patterns(
     url(r'^ok/$', 'schserw.schsys.views.ok', name='ok'),
     url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.schsys.views.ret_ok', name='ret_ok'),
 
-    (r'^do_login/$', 'django.contrib.auth.views.login', { 'template_name': 'schapp/index.html'}),
+    #(r'^do_login/$', 'django.contrib.auth.views.login', { 'template_name': 'schapp/index.html'}),
+    (r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     (r'^do_logout/$', 'django.contrib.auth.views.logout', {'next_page': START_PATH}),
 
     (r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),

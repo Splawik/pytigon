@@ -44,8 +44,6 @@
 
 
 %% list_content_actions
-    plotly width=640px,,,height=480px
-
     % new_row _("New application set")
     % list_action "prj_import/edit" _("Import")
     % list_action "restart_server" _("Restart server")
