@@ -7,14 +7,15 @@
     
     
     
-    base_path = BASE_PATH + "static/vanillajs_plugins/video-js";
-    self = this;
+    this.base_path = BASE_PATH + "static/vanillajs_plugins/video-js";
     jQuery(self.videodiv).on("contextmenu", function(e) {
         e.preventDefault();
     });
-    load_css(base_path + "/video-js.min.css");
+    load_css(this.base_path + "/video-js.min.css");
     this.on("mount", function() {
-        load_js(base_path + "/video.min.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/video.min.js", function() {
             var player;
             videojs.options.flash.swf = "video-js.swf";
             player = videojs(self.videodiv, {}, function() {

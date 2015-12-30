@@ -4,12 +4,13 @@
     
     
     
-    base_path = BASE_PATH + "static/jquery_plugins/pivottable";
-    self = this;
-    load_css(base_path + "/pivot.css");
+    this.base_path = BASE_PATH + "static/jquery_plugins/pivottable";
+    load_css(this.base_path + "/pivot.css");
     this.on("mount", function() {
-        load_js(base_path + "/pivot.js", function() {
-            load_js(base_path + "/../jquery.ui/jquery-ui.min.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/pivot.js", function() {
+            load_js(self.base_path + "/../jquery.ui/jquery-ui.min.js", function() {
                 var data, options, pivottable;
                 data = [ {
                     color: "blue",

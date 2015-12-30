@@ -56,7 +56,7 @@ urlpatterns = patterns(
     )
 
 if settings.DEBUG:
-    urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATIC_ROOT))
+    urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
 for app in settings.INSTALLED_APPS:
 

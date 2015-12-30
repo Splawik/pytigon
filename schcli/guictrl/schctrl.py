@@ -211,6 +211,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 if is_close_button:
                     self.src="client://emblems/emblem-unreadable.png"
                 if self.src:
+                    print(self.src)
                     self.bmp = bitmap_from_href(self.src, icon_size)
 
         def process_refr_data(self, *args, **kwds):
@@ -1236,10 +1237,11 @@ class MASKTEXT(masked.TextCtrl, SchBaseCtrl):
     def __init__(self, *args, **kwds):
         SchBaseCtrl.__init__(self, args, kwds)
         if self.valuetype:
-            if self.src.startswith('!'):
-                kwds['autoformat'] = self.src[1:]
-            else:
-                kwds['mask'] = self.src
+            if self.src:
+                if self.src.startswith('!'):
+                    kwds['autoformat'] = self.src[1:]
+                else:
+                    kwds['mask'] = self.src
         masked.TextCtrl.__init__(self, *args, **kwds)
         self._autofit = False
 
@@ -1299,40 +1301,35 @@ class STYLEDTEXT(wx.TextCtrl, SchBaseCtrl):
                 self.SetValue(self.param['data'].encode('utf-8'))
 
         def SetValue(self, value):
-            if value.__class__==str:
-                return wx.TextCtrl.SetValue(self, value.decode('utf-8'))
+            if value.startswith('\n'):
+                value2 = value[1:]
             else:
-                return wx.TextCtrl.SetValue(self, value)
+                value2 = value
+            if value2.__class__==str:
+                return wx.TextCtrl.SetValue(self, value2.decode('utf-8'))
+            else:
+                return wx.TextCtrl.SetValue(self, value2)
 
 AUTOCOMPLETE = STYLEDTEXT
 STANDARDSTYLEDTEXT = STYLEDTEXT
 
 def TEXTAREA(*args, **kwds):
-    #print "T1", kwds
+    if 'param' in kwds:
+        if 'data' in kwds['param']:
+            data = kwds['param']['data'].replace('\r', '')
+            if data.startswith('\n'):
+                data = data[1:]
+                kwds['param']['data'] = data
+
     if "src" in kwds:
-        #print "T2"
         if kwds['src'] in ('c', 'python', 'html'):
-            #print "T3"
             ret=STYLEDTEXT(*args, **kwds)
         else:
-            #print "T4"
             ret=AUTOCOMPLETE(*args, **kwds)
     else:
-        #ret=STANDARDSTYLEDTEXT_ORG(*args, **kwds)
-        #print "T5"
         ret=STYLEDTEXT(*args, **kwds)
-    #if 'param' in kwds:
-    #    if 'data' in kwds['param']:
-    #        value = urllib.unquote(kwds['param']['data'].encode('utf-8'))
-    #        ret.SetValue(value)
-            #urllib.quote(self.value.encode('utf-8'))
-            #ret.SetValue(kwds['param']['data'])
-    #print "T6", ret
     return ret
 
-
-#STANDARDSTYLEDTEXT = STYLEDTEXT
-#STANDARDSTYLEDTEXT_ORG = STYLEDTEXT
 
 class TICKER(ticker.Ticker, SchBaseCtrl):
 

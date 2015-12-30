@@ -62,8 +62,10 @@ MEDIA_URL = '/site_media/'
 
 if DEBUG:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
+    #STATIC_ROOT = ROOT_PATH + '/static'
 else:
-    STATIC_ROOT = ROOT_PATH + '/static'
+    STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
+    #STATIC_ROOT = ROOT_PATH + '/static'
 
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 

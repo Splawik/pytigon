@@ -21,8 +21,6 @@ import six
 
 from tempfile import NamedTemporaryFile
 from schlib.schhttptools.httpclient import get_cookie_str
-#from base64 import decodestring, b64encode
-#if not six.PY2:
 from base64 import decodebytes, b64encode
 import urllib
 from schcli.guilib.tools import get_colour
@@ -30,7 +28,6 @@ from schcli.guilib.schevent import ID_WEB_NEW_WINDOW
 from schlib.schtools.tools import split2
 
 import os
-#import base64
 
 
 class BaseWebBrowser(object):

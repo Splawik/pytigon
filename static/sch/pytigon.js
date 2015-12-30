@@ -193,7 +193,7 @@ var ՐՏ_modules = {};
     var to_absolute_url = ՐՏ_modules["schclient"].to_absolute_url;
     var ret_submit = ՐՏ_modules["schclient"].ret_submit;
     
-    LOADED_FILES = [];
+    LOADED_FILES = {};
     function ajax_submit(form, func) {
         var queryString, RET_OBJ;
         if (is_hybrid()) {
@@ -256,6 +256,7 @@ var ՐՏ_modules = {};
     function load_css(path) {
         var req;
         if (!(LOADED_FILES && ՐՏ_in(path, LOADED_FILES))) {
+            LOADED_FILES[path] = null;
             req = new XMLHttpRequest();
             function _onload() {
                 jQuery("<style type=\"text/css\"></style>").html(req.responseText).appendTo("head");
@@ -263,23 +264,40 @@ var ՐՏ_modules = {};
             req.onload = _onload;
             req.open("GET", path, true);
             req.send("");
-            LOADED_FILES.push(path);
+        }
+    }
+    function on_load_js(path) {
+        var functions, fun;
+        if (LOADED_FILES && ՐՏ_in(path, LOADED_FILES)) {
+            functions = LOADED_FILES[path];
+            if (functions) {
+                var ՐՏ_Iter0 = ՐՏ_Iterable(functions);
+                for (var ՐՏ_Index0 = 0; ՐՏ_Index0 < ՐՏ_Iter0.length; ՐՏ_Index0++) {
+                    fun = ՐՏ_Iter0[ՐՏ_Index0];
+                    fun();
+                }
+            }
+            LOADED_FILES[path] = null;
         }
     }
     function load_js(path, fun) {
         var req;
         if (LOADED_FILES && ՐՏ_in(path, LOADED_FILES)) {
-            fun();
+            if (LOADED_FILES[path]) {
+                LOADED_FILES[path].push(fun);
+            } else {
+                fun();
+            }
         } else {
+            LOADED_FILES[path] = [ fun ];
             req = new XMLHttpRequest();
             function _onload() {
                 jQuery.globalEval(req.responseText);
-                fun();
+                on_load_js(path);
             }
             req.onload = _onload;
             req.open("GET", path, true);
             req.send("");
-            LOADED_FILES.push(path);
         }
     }
     function load_many_js(paths, fun) {
@@ -291,9 +309,9 @@ var ՐՏ_modules = {};
                 fun();
             }
         }
-        var ՐՏ_Iter0 = ՐՏ_Iterable(paths.split(paths, ";"));
-        for (var ՐՏ_Index0 = 0; ՐՏ_Index0 < ՐՏ_Iter0.length; ՐՏ_Index0++) {
-            path = ՐՏ_Iter0[ՐՏ_Index0];
+        var ՐՏ_Iter1 = ՐՏ_Iterable(paths.split(paths, ";"));
+        for (var ՐՏ_Index1 = 0; ՐՏ_Index1 < ՐՏ_Iter1.length; ՐՏ_Index1++) {
+            path = ՐՏ_Iter1[ՐՏ_Index1];
             if (path.lenght() > 0) {
                 counter = counter + 1;
                 load_js(path, _fun);
@@ -316,6 +334,8 @@ var ՐՏ_modules = {};
     ՐՏ_modules["tools"]["handle_class_click"] = handle_class_click;
 
     ՐՏ_modules["tools"]["load_css"] = load_css;
+
+    ՐՏ_modules["tools"]["on_load_js"] = on_load_js;
 
     ՐՏ_modules["tools"]["load_js"] = load_js;
 
@@ -1007,9 +1027,9 @@ function fragment_init(elem) {
     paginate = init_pagintor(paginator);
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
-        var ՐՏ_Iter1 = ՐՏ_Iterable(RIOT_INIT);
-        for (var ՐՏ_Index1 = 0; ՐՏ_Index1 < ՐՏ_Iter1.length; ՐՏ_Index1++) {
-            pos = ՐՏ_Iter1[ՐՏ_Index1];
+        var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);
+        for (var ՐՏ_Index2 = 0; ՐՏ_Index2 < ՐՏ_Iter2.length; ՐՏ_Index2++) {
+            pos = ՐՏ_Iter2[ՐՏ_Index2];
             x = sprintf("riot.mount('#%s')", _id + " " + pos);
             eval(x);
         }
@@ -1037,18 +1057,18 @@ function page_init(id, first_time) {
             if ($(e.currentTarget).attr("target") === "_blank") {
                 return;
             }
-            var ՐՏ_Iter2 = ՐՏ_Iterable([ "get_tbl_value", "new_tbl_value", "get_row" ]);
-            for (var ՐՏ_Index2 = 0; ՐՏ_Index2 < ՐՏ_Iter2.length; ՐՏ_Index2++) {
-                pos = ՐՏ_Iter2[ՐՏ_Index2];
+            var ՐՏ_Iter3 = ՐՏ_Iterable([ "get_tbl_value", "new_tbl_value", "get_row" ]);
+            for (var ՐՏ_Index3 = 0; ՐՏ_Index3 < ՐՏ_Iter3.length; ՐՏ_Index3++) {
+                pos = ՐՏ_Iter3[ՐՏ_Index3];
                 if (jQuery(this).hasClass(pos)) {
                     return true;
                 }
             }
             src_obj = jQuery(this);
-            var ՐՏ_Iter3 = ՐՏ_Iterable([ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
+            var ՐՏ_Iter4 = ՐՏ_Iterable([ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
             on_popup_info], ["popup_delete", on_popup_delete] ]);
-            for (var ՐՏ_Index3 = 0; ՐՏ_Index3 < ՐՏ_Iter3.length; ՐՏ_Index3++) {
-                pos = ՐՏ_Iter3[ՐՏ_Index3];
+            for (var ՐՏ_Index4 = 0; ՐՏ_Index4 < ՐՏ_Iter4.length; ՐՏ_Index4++) {
+                pos = ՐՏ_Iter4[ՐՏ_Index4];
                 if (jQuery(this).hasClass(pos[0])) {
                     e.preventDefault();
                     pos[1](this);

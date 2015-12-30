@@ -1,13 +1,14 @@
 <plotly>
-    <div name="plotlydiv" width={ opts.width } height={ opts.height } modebar="false"></div>
+    <div name="plotlydiv" style="width:{ opts.width };height:{ opts.height };" modebar="false"></div>
     <script>
     
     
     
-    base_path = BASE_PATH + "static/vanillajs_plugins";
-    self = this;
+    this.base_path = BASE_PATH + "static/vanillajs_plugins";
     this.on("mount", function() {
-        load_js(base_path + "/plotly-latest.min.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/plotly-latest.min.js", function() {
             var data, layout, plot;
             data = [ {
                 values: [ 19, 26, 55 ],

@@ -23,15 +23,16 @@
     
     
     
-    base_path = BASE_PATH + "static/vanillajs_plugins/ace/src-min";
+    this.base_path = BASE_PATH + "static/vanillajs_plugins/ace/src-min";
     this.value = opts.value;
     this.href = opts.href;
     this.changed = false;
-    self = this;
     this.on("mount", function() {
-        load_js(base_path + "/ace.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/ace.js", function() {
             var editor, rect;
-            ace.config.set("basePath", base_path);
+            ace.config.set("basePath", self.base_path);
             editor = ace.edit(self.ceditor);
             rect = editor.container.getBoundingClientRect();
             editor.container.style.position = "absolute";
@@ -67,10 +68,10 @@
     });
     save(e) {
         var ajax_options;
-        if (self.href) {
+        if (this.href) {
             ajax_options = {
                 method: "POST",
-                url: self.href,
+                url: this.href,
                 dataType: "html",
                 data: {
                     data: self.editor.getValue()

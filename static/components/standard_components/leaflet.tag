@@ -4,13 +4,14 @@
     
     
     
-    base_path = BASE_PATH + "static/vanillajs_plugins/leaflet";
-    self = this;
-    load_css(base_path + "/leaflet.css");
+    this.base_path = BASE_PATH + "static/vanillajs_plugins/leaflet";
+    load_css(this.base_path + "/leaflet.css");
     this.on("mount", function() {
-        load_js(base_path + "/leaflet.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/leaflet.js", function() {
             var mapobj, maker;
-            L.Icon.Default.imagePath = base_path + "/images";
+            L.Icon.Default.imagePath = self.base_path + "/images";
             mapobj = L.map(self.mapdiv).setView([ 51.613007, 21.491859 ], 13);
             L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
                 attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"

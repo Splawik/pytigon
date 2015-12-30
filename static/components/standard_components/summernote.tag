@@ -23,13 +23,14 @@
     
     
     
-    base_path = BASE_PATH + "static/bootstrap_plugins/summernote";
+    this.base_path = BASE_PATH + "static/bootstrap_plugins/summernote";
     this.value = opts.value;
     this.href = opts.href;
-    self = this;
-    load_css(base_path + "/summernote.css");
+    load_css(this.base_path + "/summernote.css");
     this.on("mount", function() {
-        load_js(base_path + "/summernote.min.js", function() {
+        var self;
+        self = this;
+        load_js(self.base_path + "/summernote.min.js", function() {
             var editor, rect;
             editor = jQuery(self.summernote);
             rect = self.summernote.getBoundingClientRect();
@@ -45,10 +46,10 @@
     });
     save(e) {
         var ajax_options;
-        if (self.href) {
+        if (this.href) {
             ajax_options = {
                 method: "POST",
-                url: self.href,
+                url: this.href,
                 dataType: "html",
                 data: {
                     data: self.editor.summernote("code")
