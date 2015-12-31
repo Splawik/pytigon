@@ -250,10 +250,10 @@ class SchAppFrame(wx.Frame):
                 if all_panes[ii].name != 'Menu':
                     all_panes[ii].Hide()
 
-        if self.desktop.GetPageCount() > 0:
-            self._mgr.GetPane("desktop").Show()
-        else:
-            self._mgr.GetPane("desktop").Hide()
+        #if self.desktop.GetPageCount() > 0:
+        self._mgr.GetPane("desktop").Show()
+        #else:
+        #    self._mgr.GetPane("desktop").Hide()
 
         perspective_default = self._mgr.SavePerspective()
 

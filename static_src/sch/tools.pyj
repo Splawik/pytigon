@@ -10,7 +10,6 @@ def ajax_submit(form, func):
         RET_OBJ = func
         cmd_to_python('run_js??ret_submit();')
     else:
-        #form.ajaxSubmit( { success: func } )
         jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })
 
 
@@ -56,7 +55,6 @@ def handle_class_click(fragment_obj, obj_class, fun):
     )
 
 
-
 def load_css(path):
     nonlocal LOADED_FILES
     if not (LOADED_FILES and path in LOADED_FILES):
@@ -71,8 +69,6 @@ def load_css(path):
         req.open('GET', path, True)
         req.send('')
 
-        #LOADED_FILES.push(path)
-
 
 def on_load_js(path):
     nonlocal LOADED_FILES
@@ -82,6 +78,7 @@ def on_load_js(path):
             for fun in functions:
                 fun()
         LOADED_FILES[path] = None
+
 
 def load_js(path, fun):
     nonlocal LOADED_FILES
@@ -96,23 +93,11 @@ def load_js(path, fun):
         def _onload():
             jQuery.globalEval(req.responseText)
             on_load_js(path)
-            #fun()
 
         req.onload = _onload
 
         req.open('GET', path, True)
         req.send('')
-
-
-        #ajax_options = {
-        #  url: path,
-        #  dataType: "script",
-        #  cache: true
-        #}
-        #jQuery.ajax(ajax_options).done(fun)
-
-
-        #LOADED_FILES.push(path)
 
 
 def load_many_js(paths, fun):

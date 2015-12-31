@@ -29,6 +29,7 @@ from tbl import set_table_type
 #import schclient
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_submit, load_css, load_js, load_many_js
 
+
 def init_pagintor(pg):
     nonlocal WAIT_ICON2
     if pg.length>0:
