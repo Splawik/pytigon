@@ -1,7 +1,8 @@
-from tools import can_popup, corect_href
+from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post
 from schclient import is_hybrid, cmd_to_python, is_hybrid
 
 def refresh_fragment(data_item_to_refresh, fun=None):
+    console.log(data_item_to_refresh.prop("tagName"))
     refr_block = data_item_to_refresh.closest('.refr_object')
     if refr_block.hasClass('refr_target'):
         target = refr_block
@@ -10,16 +11,18 @@ def refresh_fragment(data_item_to_refresh, fun=None):
     src = refr_block.find('.refr_source')
     href = src.attr('href')
     if src.prop("tagName") == 'FORM':
-        data = new FormData(src[0])
+        #data = new FormData(src[0])
         def _refr2(data):
             target.html(data);
             fragment_init(target)
             if fun:
                 fun();
-        jQuery.ajax({'type': "POST", 'url': corect_href(href), 'data': data, contentType: False, processData: False,  'success': _refr2  })
+        #jQuery.ajax({'type': "POST", 'url': corect_href(href), 'data': data, contentType: False, processData: False,  'success': _refr2  })
+        ajax_post(corect_href(href), src.serialize(), _refr2)
     else:
-        target.load(corect_href(href), None,
-            def(responseText, status, response):
+        #target.load(corect_href(href), None,
+        ajax_load(target, corect_href(href),
+            def(responseText):
                 pass
         )
 
@@ -111,11 +114,10 @@ def on_popup_edit_new(elem):
         if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
             elem2 = jQuery("div.dialog-data")
             elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
-            elem2.load(jQuery(elem).attr("href"), None,
+            ajax_load(elem2, jQuery(elem).attr("href"),
                 def(responseText, status, response):
-                    if status!='error':
-                        _dialog_loaded(True, elem2)
-                        on_dialog_load()
+                    _dialog_loaded(True, elem2)
+                    on_dialog_load()
             )
         else:
             if WAIT_ICON:
@@ -227,17 +229,19 @@ def xhr():
 
 
 def on_edit_ok(form):
-    data = new FormData(form[0])
     if "multipart" in form.attr("enctype"):
+        data = new FormData(form[0])
         form.closest('div').append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False, 'xhr': xhr, 'success': def(data): _refresh_win_after_ok(data, form); })
     else:
-        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False,  'success': def(data): _refresh_win_after_ok(data, form); })
+        #jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': data, contentType: False, processData: False,  'success': def(data): _refresh_win_after_ok(data, form); })
+        ajax_post(corect_href(form.attr('action')), form.serialize(), def(data): _refresh_win_after_ok(data, form); )
     return False
 
 
 def on_delete_ok(form):
-    jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(),'success': def(data): _refresh_win(data, form); })
+    #jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(),'success': def(data): _refresh_win(data, form); })
+    ajax_post(corect_href(form.attr('action')), form.serialize(), def(data): _refresh_win(data, form); )
     return False
 
 

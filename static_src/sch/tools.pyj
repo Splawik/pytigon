@@ -3,14 +3,50 @@ from schclient import cmd_to_python, is_hybrid, to_absolute_url, ret_submit
 
 LOADED_FILES = {}
 
+
+def ajax_get(url, complete):
+    req = new XMLHttpRequest()
+
+    def _onload():
+        complete(req.responseText)
+
+    req.onload = _onload
+
+    req.open('GET', url, True)
+    req.send()
+
+
+def ajax_post(url, data, complete):
+    req = new XMLHttpRequest()
+
+    def _onload():
+        complete(req.responseText)
+
+    req.onload = _onload
+
+    req.open('POST', url, True)
+    req.send(data)
+
+
+def ajax_load(elem, url, complete):
+
+    def _onload(responseText):
+        elem.html(responseText)
+        complete(responseText)
+
+    ajax_get(url, _onload)
+
+
 def ajax_submit(form, func):
-    if is_hybrid():
-        queryString = form.formSerialize()
-        cmd_to_python('href_to_var??'+to_absolute_url(form.attr('action'))+'?'+queryString+'??RET_BUFOR')
-        RET_OBJ = func
-        cmd_to_python('run_js??ret_submit();')
-    else:
-        jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })
+    #if is_hybrid():
+    #    queryString = form.formSerialize()
+    #    cmd_to_python('href_to_var??'+to_absolute_url(form.attr('action'))+'?'+queryString+'??RET_BUFOR')
+    #    RET_OBJ = func
+    #    cmd_to_python('run_js??ret_submit();')
+    #else:
+    #    jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })
+    ajax_post(corect_href(form.attr('action')), form.serialize(), func )
+
 
 
 def get_page(elem):

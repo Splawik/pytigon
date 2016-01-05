@@ -195,6 +195,8 @@ class HttpClient:
         adr = adr.replace('intercept://', 'http://')
         adr = adr.replace(' ', '%20')
         print(">>>", adr)
+        if adr=="http://127.0.0.2/schbuilder/table/SChAppSet/-/form/list?schtml=1&only_content=1":
+            pass
 
         post = None
         if parm == None:

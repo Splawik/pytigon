@@ -156,15 +156,10 @@ var ՐՏ_modules = {};
 (function(){
     var __name__ = "schclient";
     function cmd_to_python(value) {
-        document.title = ":";
-        document.title = ":" + value;
+        //document.title = ":" + value;
     }
     function is_hybrid() {
-        if (window.location.host === "127.0.0.2") {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
     function to_absolute_url(url) {
         if (url[0] === "/") {
@@ -194,21 +189,35 @@ var ՐՏ_modules = {};
     var ret_submit = ՐՏ_modules["schclient"].ret_submit;
     
     LOADED_FILES = {};
-    function ajax_submit(form, func) {
-        var queryString, RET_OBJ;
-        if (is_hybrid()) {
-            queryString = form.formSerialize();
-            cmd_to_python("href_to_var??" + to_absolute_url(form.attr("action")) + "?" + queryString + "??RET_BUFOR");
-            RET_OBJ = func;
-            cmd_to_python("run_js??ret_submit();");
-        } else {
-            jQuery.ajax({
-                "type": "POST",
-                "url": corect_href(form.attr("action")),
-                "data": form.serialize(),
-                "success": func
-            });
+    function ajax_get2(url, complete) {
+        var req;
+        req = new XMLHttpRequest();
+        function _onload() {
+            complete(req.responseText);
         }
+        req.onload = _onload;
+        req.open("GET", url, true);
+        req.send();
+    }
+    function ajax_post(url, data, complete) {
+        var req;
+        req = new XMLHttpRequest();
+        function _onload() {
+            complete(req.responseText);
+        }
+        req.onload = _onload;
+        req.open("POST", url, true);
+        req.send(data);
+    }
+    function ajax_load(elem, url, complete) {
+        function _onload(responseText) {
+            elem.html(responseText);
+            complete(responseText);
+        }
+        ajax_get(url, _onload);
+    }
+    function ajax_submit(form, func) {
+        ajax_post(corect_href(form.attr("action")), form.serialize(), func);
     }
     function get_page(elem) {
         if (elem.hasClass(".tab-pane")) {
@@ -321,6 +330,14 @@ var ՐՏ_modules = {};
     }
     ՐՏ_modules["tools"]["LOADED_FILES"] = LOADED_FILES;
 
+    ՐՏ_modules["tools"]["ajax_get"] = ajax_get;
+
+    ՐՏ_modules["tools"]["ajax_get2"] = ajax_get2;
+
+    ՐՏ_modules["tools"]["ajax_post"] = ajax_post;
+
+    ՐՏ_modules["tools"]["ajax_load"] = ajax_load;
+
     ՐՏ_modules["tools"]["ajax_submit"] = ajax_submit;
 
     ՐՏ_modules["tools"]["get_page"] = get_page;
@@ -346,6 +363,10 @@ var ՐՏ_modules = {};
     var __name__ = "popup";
     var can_popup = ՐՏ_modules["tools"].can_popup;
     var corect_href = ՐՏ_modules["tools"].corect_href;
+    var ajax_load = ՐՏ_modules["tools"].ajax_load;
+    var ajax_get = ՐՏ_modules["tools"].ajax_get;
+    var ajax_get2 = ՐՏ_modules["tools"].ajax_get2;
+    var ajax_post = ՐՏ_modules["tools"].ajax_post;
     
     var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
     var cmd_to_python = ՐՏ_modules["schclient"].cmd_to_python;
@@ -353,7 +374,8 @@ var ՐՏ_modules = {};
     
     function refresh_fragment(data_item_to_refresh, fun) {
         if (typeof fun === "undefined") fun = null;
-        var refr_block, target, src, href, data;
+        var refr_block, target, src, href;
+        console.log(data_item_to_refresh.prop("tagName"));
         refr_block = data_item_to_refresh.closest(".refr_object");
         if (refr_block.hasClass("refr_target")) {
             target = refr_block;
@@ -363,7 +385,6 @@ var ՐՏ_modules = {};
         src = refr_block.find(".refr_source");
         href = src.attr("href");
         if (src.prop("tagName") === "FORM") {
-            data = new FormData(src[0]);
             function _refr2(data) {
                 target.html(data);
                 fragment_init(target);
@@ -371,16 +392,9 @@ var ՐՏ_modules = {};
                     fun();
                 }
             }
-            jQuery.ajax({
-                "type": "POST",
-                "url": corect_href(href),
-                "data": data,
-                contentType: false,
-                processData: false,
-                "success": _refr2
-            });
+            ajax_post(corect_href(href), src.serialize(), _refr2);
         } else {
-            target.load(corect_href(href), null, function(responseText, status, response) {
+            ajax_load(target, corect_href(href), function(responseText) {
             });
         }
     }
@@ -466,11 +480,9 @@ var ՐՏ_modules = {};
             if (can_popup() && !jQuery(elem).hasClass("inline") && !(ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
                 elem2 = jQuery("div.dialog-data");
                 elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid());
-                elem2.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
-                    if (status !== "error") {
-                        _dialog_loaded(true, elem2);
-                        on_dialog_load();
-                    }
+                ajax_load(elem2, jQuery(elem).attr("href"), function(responseText, status, response) {
+                    _dialog_loaded(true, elem2);
+                    on_dialog_load();
                 });
             } else {
                 if (WAIT_ICON) {
@@ -575,8 +587,8 @@ var ՐՏ_modules = {};
     }
     function on_edit_ok(form) {
         var data;
-        data = new FormData(form[0]);
         if (ՐՏ_in("multipart", form.attr("enctype"))) {
+            data = new FormData(form[0]);
             form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
             jQuery.ajax({
                 "type": "POST",
@@ -590,27 +602,15 @@ var ՐՏ_modules = {};
                 }
             });
         } else {
-            jQuery.ajax({
-                "type": "POST",
-                "url": corect_href(form.attr("action")),
-                "data": data,
-                contentType: false,
-                processData: false,
-                "success": function(data) {
-                    _refresh_win_after_ok(data, form);
-                }
+            ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
+                _refresh_win_after_ok(data, form);
             });
         }
         return false;
     }
     function on_delete_ok(form) {
-        jQuery.ajax({
-            "type": "POST",
-            "url": corect_href(form.attr("action")),
-            "data": form.serialize(),
-            "success": function(data) {
-                _refresh_win(data, form);
-            }
+        ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
+            _refresh_win(data, form);
         });
         return false;
     }
@@ -948,6 +948,10 @@ var can_popup = ՐՏ_modules["tools"].can_popup;
 var corect_href = ՐՏ_modules["tools"].corect_href;
 var get_table_type = ՐՏ_modules["tools"].get_table_type;
 var handle_class_click = ՐՏ_modules["tools"].handle_class_click;
+var ajax_get = ՐՏ_modules["tools"].ajax_get;
+var ajax_get2 = ՐՏ_modules["tools"].ajax_get2;
+var ajax_post = ՐՏ_modules["tools"].ajax_post;
+var ajax_load = ՐՏ_modules["tools"].ajax_load;
 var ajax_submit = ՐՏ_modules["tools"].ajax_submit;
 var load_css = ՐՏ_modules["tools"].load_css;
 var load_js = ՐՏ_modules["tools"].load_js;
@@ -985,12 +989,7 @@ function init_pagintor(pg) {
                     active_button = pg.find(".page active");
                     WAIT_ICON2 = true;
                     $("#loading-indicator").show();
-                    jQuery.ajax({
-                        "type": "POST",
-                        "url": url,
-                        "data": form.serialize(),
-                        "success": _on_new_page
-                    });
+                    ajax_post(url, form.serialize(), _on_new_page);
                 }
             }
         };
@@ -1092,26 +1091,22 @@ function page_init(id, first_time) {
                 return _on_menu_href(this, title);
             }
             href2 = corect_href(href);
-            jQuery.ajax({
-                "type": "GET",
-                "url": href2,
-                "success": function(data) {
-                    if (ՐՏ_in("_parent_refr", data)) {
-                        refresh_fragment(src_obj);
-                    } else {
-                        if (APPLICATION_TEMPLATE === "modern") {
-                            glob.ACTIVE_PAGE.page.html(data);
-                            glob.ACTIVE_PAGE.set_href(href);
-                            page_init(glob.ACTIVE_PAGE.id, false);
-                        } else {
-                            jQuery("#body_body").html(data);
-                            page_init("body_body", false);
-                        }
+            ajax_get(href2, function(data) {
+                if (ՐՏ_in("_parent_refr", data)) {
+                    refresh_fragment(src_obj);
+                } else {
+                    if (APPLICATION_TEMPLATE === "modern") {
+                        glob.ACTIVE_PAGE.page.html(data);
                         glob.ACTIVE_PAGE.set_href(href);
-                        get_menu().get_active_item().url = href;
-                        if (PUSH_STATE) {
-                            history_push_state("title", href);
-                        }
+                        page_init(glob.ACTIVE_PAGE.id, false);
+                    } else {
+                        jQuery("#body_body").html(data);
+                        page_init("body_body", false);
+                    }
+                    glob.ACTIVE_PAGE.set_href(href);
+                    get_menu().get_active_item().url = href;
+                    if (PUSH_STATE) {
+                        history_push_state("title", href);
                     }
                 }
             });
@@ -1228,6 +1223,19 @@ function _on_menu_href(elem, title) {
             href = jQuery(elem).attr("href");
             href2 = corect_href(href);
             function _on_new_win(data) {
+                //alert("X2");
+
+                try { var a = {}; a.debug(); }
+                catch(ex) {
+                     var arr = ex.stack.split('\n');
+                     var i;
+                     for(i=0;i<arr.length;i++) {
+                        arr[i]=arr[i].slice(0,40);
+                     }
+                    alert(arr.join("\n"))
+                }
+
+
                 var id;
                 if (APPLICATION_TEMPLATE === "modern") {
                     id = menu.new_page(title, data, href2, RIOT_INIT);
@@ -1265,11 +1273,7 @@ function _on_menu_href(elem, title) {
                 WAIT_ICON2 = true;
                 $("#loading-indicator").show();
             }
-            jQuery.ajax({
-                "type": "GET",
-                "url": href2,
-                "success": _on_new_win
-            });
+            ajax_get2(href2, _on_new_win);
             jQuery(".navbar-ex1-collapse").collapse("hide");
         }
         return false;

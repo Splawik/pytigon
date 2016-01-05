@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+#! /usr/bin/python3
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -32,6 +33,7 @@ if platform.system() == "Windows":
     import ctypes
     myappid = 'slawomir_cholaj.pytigon.main.01'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
 
 INSPECTION = False
 
@@ -86,6 +88,7 @@ from schlib.schhttptools import htmltab
 from schcli.guilib.tools import standard_tab_colour
 from schlib.schhttptools import httpclient
 from schcli.guilib.httperror import http_error
+from schcli.guiframe import browserframe
 import six
 #from wx import wizard
 
@@ -258,7 +261,7 @@ class SchApp(App):
         icon = wx.Icon(SCR_PATH + '/pytigon.ico', wx.BITMAP_TYPE_ICO)
         frame.SetIcon(icon)
 
-        if frame.statusbar:
+        if hasattr(frame, 'statusbar') and frame.statusbar:
             self.thread_manager = SchThreadManager(self, frame.statusbar)
         if INSPECTION:
             self.ShowInspectionTool()
@@ -467,6 +470,7 @@ def main_init(argv):
     address = 'intercept://127.0.0.2'
     embed_diango = True
     app_title = _("Pytigon system")
+    embeded_browser = False
     app = SchApp()
     if len(argv)==1 and '.ptig' in argv[0].lower():
         if zipfile.is_zipfile(argv[0]):
@@ -490,6 +494,7 @@ def main_init(argv):
             'nogui',
             'menu_always',
             'debug',
+            'embededbrowser'
             ])
     except getopt.GetoptError:
         usage()
@@ -511,6 +516,8 @@ def main_init(argv):
             loaddb = True
         elif opt == '--server_only':
             server_only = True
+        elif opt == '--embededbrowser':
+            embeded_browser = True
         elif opt == '--href':
             if arg != 'embeded':
                 CWD_PATH = ROOT_PATH + '/app_pack/_schremote'
@@ -685,6 +692,7 @@ def main_init(argv):
     app.server = server
     app.cwd = cwd
     app.inst_dir = inst_dir
+    app.embeded_browser = embeded_browser
     tab = app.get_tab(0)
 
     app.title = app_title
@@ -755,27 +763,29 @@ def main():
     app.locale.AddCatalog('wx')
     app.locale.AddCatalog('pytigon')
 
-    frame = appframe.SchAppFrame(
-        None,
-        app.gui_style,
-        wx.ID_ANY,
-        app.title,
-        wx.DefaultPosition,
-        wx.Size(800, 700),
+    if app.embeded_browser:
+        frame = browserframe.SchBrowserFrame(
+            None,
+            app.gui_style,
+            wx.ID_ANY,
+            app.title,
+            wx.DefaultPosition,
+            wx.Size(800, 700),
         )
+    else:
+        frame = appframe.SchAppFrame(
+            None,
+            app.gui_style,
+            wx.ID_ANY,
+            app.title,
+            wx.DefaultPosition,
+            wx.Size(800, 700),
+            )
+
     frame.CenterOnScreen()
-    #app.SetTopWindow(frame)
+
     if not 'tray' in app.gui_style:
         frame.Show()
-
-    #if len(app.start_pages) > 0:
-    #    def start_pages():
-    #        for page in app.start_pages:
-    #            url_page = page.split(';')
-    #            if len(url_page) == 2:
-    #                frame._on_html(url_page[0] + ',' + app.base_address
-    #                                + url_page[1])
-    #    wx.CallAfter(start_pages)
 
     destroy_fun_tab = frame.destroy_fun_tab
     httpclient.set_http_error_func(http_error)

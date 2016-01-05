@@ -21,7 +21,6 @@ riot.compile = (function () {
       */
     
     var req = new XMLHttpRequest()
-    alert("CCC");
     req.onreadystatechange = function() {
       if (req.readyState === 4 &&
          (req.status === 200 || !req.status && req.responseText.length))

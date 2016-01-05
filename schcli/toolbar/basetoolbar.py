@@ -179,9 +179,11 @@ class ToolbarInterface(object):
             bar_size = self.bar.GetSize()
             panel = htmlsash.GetParent()
             sizer = panel.GetSizer()
-            dy = self.bar.get_bar_height() + 3
+
+            dy = self.bar.get_bar_height() + 5
+
             htmlsash2 = SchSashWindow(panel, address_or_parser, parametry,
-                                      size=wx.Size(900, dy))
+                                      size=wx.Size(900, dy), pos=wx.Point(2,2))
             best = htmlsash2.Body.calculate_best_size()
             htmlsash2.SetSize(wx.Size(best[0], best[1]))
             sizer.Replace(htmlsash, htmlsash2)

@@ -21,7 +21,7 @@ import six
 
 from tempfile import NamedTemporaryFile
 from schlib.schhttptools.httpclient import get_cookie_str
-from base64 import decodebytes, b64encode
+from base64 import decodebytes, b64encode, b64decode
 import urllib
 from schcli.guilib.tools import get_colour
 from schcli.guilib.schevent import ID_WEB_NEW_WINDOW
@@ -181,7 +181,7 @@ class BaseWebBrowser(object):
 
     def get_local(self, uri, parm=None):
         http = wx.GetApp().get_http(self)
-        http.get(self, uri, user_agent='embeded', parm=parm)
+        http.get(self, uri.replace('intercept://', 'http://'), user_agent='embeded', parm=parm)
         s = http.ptr()
         http.clear_ptr()
         return s
@@ -258,7 +258,7 @@ class BaseWebBrowser(object):
     def set_title(self, title):
         if title:
             if len(title) < 32:
-                #title2 = title.decode('utf-8')
+                #title2 = title.decode('utf-8')title
                 title2 = title
             else:
                 #title2 = title.decode('utf-8')[:30] + '...'
@@ -383,9 +383,12 @@ class BaseWebBrowser(object):
    
         
     def on_title_changed(self, event):
+        event.Skip()
         title = event.GetString()
         if title.startswith(':'):
-            self.run_command_from_js(title[1:])
+            print("TITLE:", title)
+            if title != ":":
+                self.run_command_from_js(title[1:])
         else:
             self.set_title(title)
         
@@ -468,8 +471,9 @@ class BaseWebBrowser(object):
     def run_command_from_js(self, cmd):
         l = split2(cmd, '??')
         if l[0] == 'href_to_elem':
-            s = self.get_local(l[1])
-            self.value_to_elem(l[2], s)
+            x = split2(l[1], '??')
+            s = self.get_local(x[0])
+            self.value_to_elem(x[1], s)
         elif l[0] == 'href_to_var':
             if '?' in l[1]:
                 x = l[1].split('?')
@@ -485,11 +489,30 @@ class BaseWebBrowser(object):
         elif l[0] == 'python':
             self.GetParent().exec_code(l[1])
         elif l[0] == 'ajax_get':
-            x = os.path.join( l[1].replace('static:/',wx.GetApp().root_path))
-            f = open(x, "rt")
-            txt = b64encode(f.read().encode('utf-8')).decode('utf-8')
-            f.close()
-            cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (l[1],txt)
+            if l[1].startswith('static:/'):
+                x = os.path.join( l[1].replace('static:/',wx.GetApp().root_path))
+                f = open(x, "rt")
+                txt = b64encode(f.read().encode('utf-8')).decode('utf-8')
+                f.close()
+            else:
+                txt = b64encode(self.get_local(l[1])).decode('utf-8')
+            fun_id = l[1].split('?')[0]
+            if '//127.0.0.2' in fun_id:
+                fun_id = fun_id.split('//127.0.0.2')[1]
+            print("FUN_ID_GET:", fun_id)
+            cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
+            self.execute_javascript(cmd)
+
+        elif l[0] == 'ajax_post':
+            x = split2(l[1], '??')
+            parm = b64decode(x[1].encode('utf-8')).decode('utf-8')
+            s = self.get_local(x[0], parm)
+            txt = b64encode(s).decode('utf-8')
+            fun_id = x[0].split('?')[0]
+            if '//127.0.0.2' in fun_id:
+                fun_id = fun_id.split('//127.0.0.2')[1]
+            print("FUN_ID_POST:", fun_id)
+            cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
             self.execute_javascript(cmd)
         return
 

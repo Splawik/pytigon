@@ -33,11 +33,12 @@ class LoginToSession(object):
             user = User.objects.get(pk=uid)
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            request.session['HYBRID_BROWSER'] = True
+            #request.session['HYBRID_BROWSER'] = True
             if 'client_param' in request.GET:
                 parm = request.GET['client_param']
                 if parm != '':
-                    request.session['client_param'] = parm
+                    request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
+                    #request.session['client_param'] = parm
 
 
 class ViewRequests(object):

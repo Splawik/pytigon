@@ -94,8 +94,12 @@ class WebViewMemoryHandler2(wx.html2.WebViewHandler):
         self.fs = wx.FileSystem()
 
     def GetFile(self, uri):
-        if '/fonts/glyphicons' in uri:
-            uri2='/static/bootstrap/fonts/glyphicons' + uri.split('/fonts/glyphicons')[1].split('#')[0]
+        print(uri)
+        if uri.startswith('intercept://127.0.0.2/fonts/'):
+            if uri.startswith('intercept://127.0.0.2/fonts/fontawesome'):
+                uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/font-awesome/fonts/')
+            else:
+                uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
         else:
             uri2 = uri
 

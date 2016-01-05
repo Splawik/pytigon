@@ -55,6 +55,9 @@ class NotebookPage(wx.Window):
 
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
 
+        self.reverse_style = True
+
+
     def on_set_focus(self, evt):
         if self.get_page_count() > 0:
             self.get_page(-1).SetFocus()
@@ -136,6 +139,9 @@ class NotebookPage(wx.Window):
             pos = event.GetPosition()
             dx = pos[0] - self._start_pos[0]
             dy = pos[1] - self._start_pos[1]
+            if self.reverse_style:
+                dx = -1 * dx
+                dy = -1 * dy
             self._best_x_y_dx_dy = (self._start_pos_x_y_dx_dy[0] + dx,
                                     self._start_pos_x_y_dx_dy[1] + dy,
                                     self._start_pos_x_y_dx_dy[2],
@@ -166,9 +172,12 @@ class NotebookPage(wx.Window):
     def get_margins(self):
         return 2
 
-    def _set_dimensions(self, page, x, y, width, height):
+    def _set_dimensions(self, page, x, y, width, height, dx, dy):
         if x>0 and y>0 and width>=0 and height>=0:
-            page.SetDimensions(x,y,width,height)
+            if self.reverse_style:
+                page.SetDimensions(dx-width-x,dy-height-y,width,height)
+            else:
+                page.SetDimensions(x,y,width,height)
 
     def _layout(self, size=None):
         if self.get_page_count() > 0:
@@ -184,7 +193,7 @@ class NotebookPage(wx.Window):
                     dx = size.GetWidth()
                     dy = size.GetHeight()
                 self._set_dimensions(self.get_page(0), margin, margin, dx - 2 * margin,
-                        dy - 2 * margin)
+                        dy - 2 * margin, dx, dy)
             if count > 1:
                 (x, y, dx, dy) = self.get_xy(size)
                 if not self._best_x_y_dx_dy:
@@ -197,27 +206,23 @@ class NotebookPage(wx.Window):
                 if count == 2:
                     if (dx - x) * dy < 2 * ((dy - y) * dx):
                         self._layout_style = 1
-                        self._set_dimensions(self.get_page(0), margin, margin, x - 2
-                                 * margin, dy - 2 * margin)
-                        self._set_dimensions(self.get_page(1), x + 5 * margin, margin,
-                                (dx - x) - 6 * margin, dy - 2 * margin)
+                        self._set_dimensions(self.get_page(0), margin, margin, x - 2* margin, dy - 2 * margin, dx, dy)
+                        self._set_dimensions(self.get_page(1), x + 5 * margin, margin, (dx - x) - 6 * margin, dy - 2 * margin, dx, dy)
                     else:
                         self._layout_style = 2
-                        self._set_dimensions(self.get_page(0), margin, margin, dx - 2
-                                 * margin, y - 2 * margin)
-                        self._set_dimensions(self.get_page(1), margin, y + 5 * margin, dx
-                                 - 2 * margin, (dy - y) - 6 * margin)
+                        self._set_dimensions(self.get_page(0), margin, margin, dx - 2* margin, y - 2 * margin, dx, dy)
+                        self._set_dimensions(self.get_page(1), margin, y + 5 * margin, dx - 2 * margin, (dy - y) - 6 * margin, dx, dy)
                 if count > 2:
                     self._layout_style = 3
                     for i in range(0, count - 2):
                         self._set_dimensions(self.get_page(i), margin, margin + (i * dy)
                                  / (count - 2), x - 2 * margin, dy / (count - 2)
-                                 - 2 * margin)
+                                 - 2 * margin, dx, dy)
                     self._set_dimensions(self.get_page(-2), x + margin, margin, (dx - x)
-                             - 2 * margin, y - 2 * margin)
+                             - 2 * margin, y - 2 * margin, dx, dy)
                     self._set_dimensions(self.get_page(-1), x + 5 * margin, y + 5
                              * margin, (dx - x) - 6 * margin, (dy - y) - 6
-                             * margin)
+                             * margin, dx, dy)
             self.Refresh()
 
     def get_page_count(self):

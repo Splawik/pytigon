@@ -27,7 +27,7 @@ from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_
 #import scrolltbl
 from tbl import set_table_type
 #import schclient
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_submit, load_css, load_js, load_many_js
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
 
 
 def init_pagintor(pg):
@@ -57,7 +57,8 @@ def init_pagintor(pg):
                     active_button = pg.find('.page active')
                     WAIT_ICON2 = True
                     $('#loading-indicator').show()
-                    jQuery.ajax({'type': "POST", 'url': url, 'data': form.serialize(), 'success': _on_new_page })
+                    #jQuery.ajax({'type': "POST", 'url': url, 'data': form.serialize(), 'success': _on_new_page })
+                    ajax_post(url, form.serialize(), _on_new_page)
         }
         pg.twbsPagination(options)
         if +page_number != 1:
@@ -168,7 +169,8 @@ def page_init(id, first_time = True):
 
                 href2 = corect_href(href)
 
-                jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
+                #jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
+                ajax_get(href2, def (data):
                     nonlocal href, src_obj
 
                     if "_parent_refr" in data:
@@ -185,7 +187,7 @@ def page_init(id, first_time = True):
                         get_menu().get_active_item().url = href
                         if PUSH_STATE:
                             history_push_state("title", href)
-                })
+                )
         )
     glob.ACTIVE_PAGE.page.find('form').attr('target', '_blank')
     glob.ACTIVE_PAGE.page.find('form').submit(
@@ -345,7 +347,8 @@ def _on_menu_href(elem, title=None):
             else:
                 WAIT_ICON2 = True
                 $('#loading-indicator').show()
-            jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
+            #jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
+            ajax_get(href2, _on_new_win)
             #jQuery("#main_menu_toogle").dropdown('toggle')
             jQuery('.navbar-ex1-collapse').collapse('hide')
         return False

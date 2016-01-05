@@ -250,7 +250,8 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 self.Enable(False)
             else:
                 self.Enable(True)
-
+            if not self.style:
+                self.style=0
 
         def AcceptsFocus(self):
             return False

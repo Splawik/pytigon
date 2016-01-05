@@ -35,9 +35,10 @@
         {{ block.super }}
 
 %% body_start
-    <body class="toolbar" bgcolor="#fff">
+    <body class="toolbar">
 
 %% body
+    p height=5px
     table class=toolbar,,,bgcolor=#fff
         tr
             td cellpadding=0
