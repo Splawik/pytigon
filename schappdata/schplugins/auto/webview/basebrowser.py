@@ -65,7 +65,7 @@ class BaseWebBrowser(object):
 
         self.pdf = None
 
-        if hasattr(self.GetParent(), 'get_parent'):
+        if False and hasattr(self.GetParent(), 'get_parent'):
             self.GetParent().get_parent().on_check_can_go_forward = self.on_check_can_go_forward
             self.GetParent().get_parent().on_check_can_go_back = self.on_check_can_go_back
             self.GetParent().get_parent().back = self.back
@@ -431,7 +431,7 @@ class BaseWebBrowser(object):
 
     def _local_request(self, uri, parm=None):
         http = wx.GetApp().get_http(self)
-        http.get(self, uri.replace('intercept://', 'http://'), user_agent='embeded', parm=parm)
+        http.get(self, uri, user_agent='embeded', parm=parm)
         s = http.ptr()
         http.clear_ptr()
         return s

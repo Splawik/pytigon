@@ -53,7 +53,6 @@ class WebViewMemoryHandler(wx.html2.WebViewHandler):
     def GetFile(self, uri):
         if uri.startswith('http://127.0.0.2'):
             s, file_name = self.browser._get_http_file(uri)
-            print("GetFile:", uri)
             if not file_name:
                 p = uri.replace('http://127.0.0.2', '').split('?')[0].split('#')[0]
                 file_name = os.path.join(tempfile.gettempdir(), p.replace('/', '_').replace('\\','_').replace(':','_'))
@@ -111,38 +110,12 @@ def init_plugin_web_view(
 
             self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
             self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded, self)
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error,
-                      self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_web_view_error,
-                      self)
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_NEWWINDOW, self.on_new_window, self)
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_TITLE_CHANGED, self.on_title_changed, self)
-
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_NAVIGATING, self.on_navigating, self)
-
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_error, self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self)
-
+            self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error, self)
+            self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self)
+            self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
+            self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self)
+            self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_error, self)
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
-
             self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
             self.Bind(wx.EVT_KILL_FOCUS, self.on_killfocus)
 
@@ -168,11 +141,13 @@ def init_plugin_web_view(
             event.Skip()
 
         def on_destroy(self, event):
-            if platform.system() == "Windows":
-                if self.IsBusy():
-                    self.Stop()
-                while self.IsBusy():
-                    wx.html2.WebView.New("messageloop")
+            #self.SetHandleEvent(False)
+            #if platform.system() == "Windows":
+            #    if self.IsBusy():
+            #        self.Stop()
+            #    while self.IsBusy():
+            #        wx.html2.WebView.New("messageloop")
+            #    print("X1")
             self.loaded=False
             event.Skip()
 

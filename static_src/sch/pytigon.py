@@ -5,6 +5,7 @@ APPLICATION_TEMPLATE = 'standard'
 RET_BUFOR = None
 RET_OBJ = None
 
+
 LANG = "en"
 MENU = None
 PUSH_STATE = True

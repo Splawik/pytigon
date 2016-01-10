@@ -22,8 +22,7 @@
 
         this.open = function(sMethod, sUrl, bAsync, sUser, sPassword) {
             self.url = sUrl;
-
-            if(sUrl.slice(0, 9) == "static://" || window.location.host == "127.0.0.2") {
+            if(window.location.host == "127.0.0.2" && ( sMethod == 'POST' || navigator.userAgent.indexOf("Windows") != -1  ) ) {
                 this.sch_local_request = true;
                 return null;
             }
@@ -54,20 +53,18 @@
                 }
 
                 if(vData) {
-                    //var data = JSON.stringify(vData.getAll());
+                    //hack
                     var data=vData;
-                    //if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true ))
-                        //document.location.href = "http://localbrowser/?ajax_post??"+ sUrl2+"??"+btoa(data);
+                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
                         console.log(":ajax_post??"+ sUrl2+"??"+btoa(data));
-                    //else
-                    //    document.title = ":ajax_post??"+ sUrl2+"??"+btoa(data);
+                    else
+                        document.title = ":ajax_post??"+ sUrl2+"??"+btoa(data);
                 }
                 else {
-                    //if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true ))
-                        //document.location.href = "http://localbrowser/?ajax_get??"+ sUrl2;
+                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
                         console.log(":ajax_get??"+ sUrl2);
-                    //else
-                    //    document.title = ":ajax_get??"+ sUrl2;
+                    else
+                        document.title = ":ajax_get??"+ sUrl2;
                 }
 
                 return null;
@@ -105,5 +102,5 @@
             });
         });
     }
-    //window.XMLHttpRequest = modXMLHttpRequest;
+    window.XMLHttpRequest = modXMLHttpRequest;
 })();

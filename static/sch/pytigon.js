@@ -156,7 +156,7 @@ var ՐՏ_modules = {};
 (function(){
     var __name__ = "schclient";
     function cmd_to_python(value) {
-        //document.title = ":" + value;
+        document.title = ":" + value;
     }
     function is_hybrid() {
         return false;
@@ -189,7 +189,7 @@ var ՐՏ_modules = {};
     var ret_submit = ՐՏ_modules["schclient"].ret_submit;
     
     LOADED_FILES = {};
-    function ajax_get2(url, complete) {
+    function ajax_get(url, complete) {
         var req;
         req = new XMLHttpRequest();
         function _onload() {
@@ -332,8 +332,6 @@ var ՐՏ_modules = {};
 
     ՐՏ_modules["tools"]["ajax_get"] = ajax_get;
 
-    ՐՏ_modules["tools"]["ajax_get2"] = ajax_get2;
-
     ՐՏ_modules["tools"]["ajax_post"] = ajax_post;
 
     ՐՏ_modules["tools"]["ajax_load"] = ajax_load;
@@ -365,7 +363,6 @@ var ՐՏ_modules = {};
     var corect_href = ՐՏ_modules["tools"].corect_href;
     var ajax_load = ՐՏ_modules["tools"].ajax_load;
     var ajax_get = ՐՏ_modules["tools"].ajax_get;
-    var ajax_get2 = ՐՏ_modules["tools"].ajax_get2;
     var ajax_post = ՐՏ_modules["tools"].ajax_post;
     
     var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
@@ -949,7 +946,6 @@ var corect_href = ՐՏ_modules["tools"].corect_href;
 var get_table_type = ՐՏ_modules["tools"].get_table_type;
 var handle_class_click = ՐՏ_modules["tools"].handle_class_click;
 var ajax_get = ՐՏ_modules["tools"].ajax_get;
-var ajax_get2 = ՐՏ_modules["tools"].ajax_get2;
 var ajax_post = ՐՏ_modules["tools"].ajax_post;
 var ajax_load = ՐՏ_modules["tools"].ajax_load;
 var ajax_submit = ՐՏ_modules["tools"].ajax_submit;
@@ -1223,19 +1219,6 @@ function _on_menu_href(elem, title) {
             href = jQuery(elem).attr("href");
             href2 = corect_href(href);
             function _on_new_win(data) {
-                //alert("X2");
-
-                try { var a = {}; a.debug(); }
-                catch(ex) {
-                     var arr = ex.stack.split('\n');
-                     var i;
-                     for(i=0;i<arr.length;i++) {
-                        arr[i]=arr[i].slice(0,40);
-                     }
-                    alert(arr.join("\n"))
-                }
-
-
                 var id;
                 if (APPLICATION_TEMPLATE === "modern") {
                     id = menu.new_page(title, data, href2, RIOT_INIT);
@@ -1273,7 +1256,7 @@ function _on_menu_href(elem, title) {
                 WAIT_ICON2 = true;
                 $("#loading-indicator").show();
             }
-            ajax_get2(href2, _on_new_win);
+            ajax_get(href2, _on_new_win);
             jQuery(".navbar-ex1-collapse").collapse("hide");
         }
         return false;

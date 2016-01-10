@@ -38,7 +38,7 @@ from mimetypes import guess_type
 from schlib.schtools.encode import decode_utf
 from os.path import basename
 import http.cookies
-
+import traceback
 
 def init_embeded_django():
     from django.conf import settings
@@ -192,11 +192,8 @@ class HttpClient:
             adr = address
 
         adr = replace_dot(adr)
-        adr = adr.replace('intercept://', 'http://')
         adr = adr.replace(' ', '%20')
-        print(">>>", adr)
-        if adr=="http://127.0.0.2/schbuilder/table/SChAppSet/-/form/list?schtml=1&only_content=1":
-            pass
+        print(">>>>>>>>", adr)
 
         post = None
         if parm == None:
@@ -211,7 +208,8 @@ class HttpClient:
                 post = urlencode(parm)
                 
         if not self.http:
-            self.http = httplib2.Http(os.path.join(os.path.expanduser("~"), ".pytigon/.cache"))
+            #self.http = httplib2.Http(os.path.join(os.path.expanduser("~"), ".pytigon/.cache"))
+            self.http = httplib2.Http(os.path.join(os.path.expanduser("~")))
 
         if credentials:
             self.http.add_credentials(credentials[0], credentials[1])
