@@ -19,24 +19,10 @@
 
 import wx
 import os
-import ctypes
-#import base64
-from schcli.guilib.tools import get_colour
-import io
-import datetime
+from base64 import b64decode
+from schlib.schtools.tools import split2
 import tempfile
 import platform
-
-html_head = """
-<script type="text/javascript">
-<script type="text/javascript">
-window.onerror = function (msg, url, line) {
-   alert("Message : " + msg );
-   alert("url : " + url );
-   alert("Line number : " + line );
-}
-</script>"""
-
 
 init_script = """
 window.addEventListener("click", mod_click, false);
@@ -58,90 +44,29 @@ function mod_click(e) {
 }
 """
 
-
 class WebViewMemoryHandler(wx.html2.WebViewHandler):
-    def __init__(self):
-        wx.html2.WebViewHandler.__init__(self, "static")
-        fs = wx.FileSystem()
-        fs.AddHandler(wx.MemoryFSHandler())
-        self.fs = fs
-
-    def GetFile(self, uri):
-        if wx.Platform == '__WXMSW__':
-            uri1 = uri.replace('static://', '')
-        else:
-            uri1 = uri.replace('static://', '')
-            uri1 = uri.replace('static:/', '')
-        if uri1 == '/': return None
-        if uri1[0]=='/':
-            uri2 = os.path.join(wx.GetApp().root_path, uri1[1:])
-        else:
-            uri2 = os.path.join(wx.GetApp().root_path, uri1)
-        uri3 = uri2.split('?')[0].replace('//','/')
-        ret = self.fs.OpenFile(uri3)
-        if not ret:
-            print("Resource error:", uri3, uri)
-        return ret
-
-    def GetName(self):
-        return "static"
-
-
-class WebViewMemoryHandler2(wx.html2.WebViewHandler):
     def __init__(self, browser):
-        wx.html2.WebViewHandler.__init__(self, "intercept")
+        wx.html2.WebViewHandler.__init__(self, "http")
         self.browser = browser
         self.fs = wx.FileSystem()
 
     def GetFile(self, uri):
-        print(uri)
-        if uri.startswith('intercept://127.0.0.2/fonts/'):
-            if uri.startswith('intercept://127.0.0.2/fonts/fontawesome'):
-                uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/font-awesome/fonts/')
-            else:
-                uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
+        if uri.startswith('http://127.0.0.2'):
+            s, file_name = self.browser._get_http_file(uri)
+            print("GetFile:", uri)
+            if not file_name:
+                p = uri.replace('http://127.0.0.2', '').split('?')[0].split('#')[0]
+                file_name = os.path.join(tempfile.gettempdir(), p.replace('/', '_').replace('\\','_').replace(':','_'))
+                f = open(file_name, "wb")
+                f.write(s)
+                f.close()
+            return self.fs.OpenFile(file_name)
         else:
-            uri2 = uri
-
-        if '/images/ui' in uri2:
-            uri2='/static/themes/bootstrap/images/ui' + uri2.split('/images/ui')[1].split('#')[0]
-
-        s = self.browser.get_local(uri2)
-        p = uri.replace('intercept://127.0.0.2', '').split('?')[0].split('#')[0]
-        fname = os.path.join(tempfile.gettempdir(), p.replace('/', '_').replace('\\','_'))
-        f = open(fname, "wb")
-        f.write(s)
-        f.close()
-        return self.fs.OpenFile(fname)
-
-
-    def GetName(self):
-        return "intercept"
-
-
-class WebViewMemoryHandler3(wx.html2.WebViewHandler):
-    def __init__(self):
-        wx.html2.WebViewHandler.__init__(self, "http")
-        self.fs = wx.FileSystem()
-        self.mfs = wx.MemoryFSHandler()
-        self.fs.AddHandler(self.mfs)
-
-
-    def GetFile(self, uri):
-        uri1 = uri.replace('http:/', '')
-        if uri1[0]=='/':
-            uri2 = wx.GetApp().root_path + uri1
-        else:
-            uri2 = os.path.join(wx.GetApp().root_path, uri1)
-        uri3 = uri2.split('?')[0].replace('//','/')
-        ret = self.fs.OpenFile(uri3)
-        if not ret:
-            print("Resource error:", uri3, uri)
-        return ret
-
+            return None
 
     def GetName(self):
         return "http"
+
 
 
 def init_plugin_web_view(
@@ -163,7 +88,6 @@ def init_plugin_web_view(
         from urllib.parse import quote as escape
     except:
         from urllib import quote as escape
-    from tempfile import NamedTemporaryFile
 
 
     class BaseBrowser(SchBaseCtrl, base_web_browser):
@@ -185,16 +109,8 @@ def init_plugin_web_view(
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('set_handle_info', 'browser', self)
 
-            self.Bind(schevent.EVT_REFRPARM, self._redirect_to_local)
-
             self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
-
-            try:
-                self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded,
-                      self)
-            except:
-                self.Bind(wx.html2.EVT_WEB_VIEW_LOADED, self.on_web_view_loaded,
-                      self)
+            self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded, self)
 
             try:
                 self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error,
@@ -208,7 +124,7 @@ def init_plugin_web_view(
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_NEWWINDOW, self.on_new_window, self)
 
-            try: 
+            try:
                 self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_TITLE_CHANGED, self.on_title_changed, self)
@@ -225,19 +141,18 @@ def init_plugin_web_view(
             except:
                 self.Bind(wx.html2.EVT_WEB_VIEW_ERROR, self.on_error, self)
 
-
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
 
             self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
             self.Bind(wx.EVT_KILL_FOCUS, self.on_killfocus)
 
             self.edit = False
+            self.local = False
 
-            self.RegisterHandler(WebViewMemoryHandler())
-            self.RegisterHandler(WebViewMemoryHandler2(self))
+            if 'url' in kwds and kwds['url'].startswith('http://127.0.0.2'):
+                self.RegisterHandler(WebViewMemoryHandler(self))
+                self.local = True
 
-            if self.href != None and self.href != "":
-                self.go(self.href)
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('show_info')
 
@@ -262,10 +177,6 @@ def init_plugin_web_view(
             event.Skip()
 
 
-        def html_from_str(self, str_body):
-            color = get_colour(wx.SYS_COLOUR_3DFACE)
-            return ("<!DOCTYPE html><html><head>%s<base href=\"%s\" target=\"_blank\" /></head><body bgcolor='%s'>" % (html_head, self._static_prefix(), color) ) + str_body+"</body></html>"
-
         def on_navigating(self, event):
             url = event.GetURL()
             if url.startswith('http://localbrowser/?'):
@@ -273,7 +184,6 @@ def init_plugin_web_view(
                 self.run_command_from_js(url[21:])
             else:
                 if self.next_in_new_win and wx.GetKeyState(wx.WXK_CONTROL):
-                    print("on_navigating", url)
                     self.next_in_new_win = False
                     event.Veto()
                     self.new_win(event.GetURL())
@@ -286,13 +196,6 @@ def init_plugin_web_view(
             print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERROR!")
 
         def on_web_view_loaded(self, event):            
-            #print("on_web_view_loaded:", event.GetURL())
-            #if self.data:
-            #    data, base = self.data
-            #    self.data = None
-            #    self.wb.SetPage(data, base if base else self._static_prefix())
-            #    event.Skip()
-            #else:
 
             self.page_loaded = True
 
@@ -318,39 +221,6 @@ def init_plugin_web_view(
             self.new_win(event.GetURL())
             event.Skip()
 
-#         def before_navigate2(
-#             self,
-#             this,
-#             p_disp,
-#             url,
-#             flags,
-#             target_frame_name,
-#             post_data,
-#             headers,
-#             cancel,
-#             ):
-#             print "Before_navigate_1", url
-#             if self.accept_page(url[0]):
-#                 if self.redirect_to_local and '127.0.0.2' in url[0]:
-#                     cancel[0] = True
-#                     self.url = url[0]
-#                     evt = schevent.RefrParmEvent(schevent.userEVT_REFRPARM,
-#                             self.GetId())
-#                     self.GetEventHandler().AddPendingEvent(evt)
-#                     return True
-#                 else:
-#                     return False
-#             else:
-#                 cancel[0] = True
-#                 return True
-# 
-#         def document_complete(
-#             self,
-#             this,
-#             p_disp,
-#             url,
-#             ):
-#             pass
 
         def progress_change(self, progress, max_progress):
             if max_progress == 0:
@@ -361,35 +231,15 @@ def init_plugin_web_view(
                 progress2 = 100
             return self.progress_changed(progress2)
 
-#         def status_text_change(self, txt):
-#             self.status_text(txt)
-#             self.last_status_txt = txt
-# 
-#         def new_window3(
-#             self,
-#             pp_disp,
-#             cancel,
-#             dw_flags,
-#             bstr_url_context,
-#             bstr_url,
-#             ):
-#             print "Before_navigate_3", bstr_url
-#             if self.new_win(bstr_url):
-#                 cancel[0] = True
-#             return cancel            
 
-        # overwrite
-        
         def get_shtml_window(self):
             return self.GetParent()
 
         def load_url(self, url):
-            print("LoadURL:", url)
+            if not self.local and url.startswith('http://127.0.0.2'):
+                self.local = True
+                self.RegisterHandler(WebViewMemoryHandler(self))
             self.LoadURL(url)
-            #print("SetFocus1")
-            #self.SetFocus()
-            #self.GetParent().GetParent().SetFocus()
-            print("SetFocus2")
 
         def _static_prefix(self):
             if wx.Platform == '__WXMSW__':
@@ -399,21 +249,8 @@ def init_plugin_web_view(
             return "static://" + p + "/static/"
 
         def load_str(self, data, base=None):
-            #print("LOAD_STR:")
-            #self.wb.SetPage(data, base if base else self._static_prefix())
-
-            #self.load_url("about:blank")
-            #self.LoadURL("about:blank")
-            #self.SetPage(data, "")
-            #self.LoadURL("about:blank")
-            #self.SetPage("<html><head></head><body>Hello world</body></html>", "")
-            #self.SetPage(data, "")
-            #if base:
-            #    data = data.replace("<head>", "<head><base href='%s'>" % base)
+            self.LoadURL("about:blank")
             self.SetPage(data, "")
-            #self.data = (data, base)
-            #self.wb.LoadURL("about:blank")
-            #pass
 
         def on_back(self, event):
             self.GoBack()
@@ -459,13 +296,11 @@ def init_plugin_web_view(
         if 'backend' in kwds:
             kwds2['backend'] = kwds['backend']
         else:
-            pass
-            #kwds['backend'] = "WebViewBackendWebKit"
-            #if platform.system() == "Windows":
-            #    kwds2['backend'] = "wxWebViewChromium"
-            #kwds['backend'] = "wxWebViewIE"
+            if platform.system() == "Windows":
+                kwds2['backend'] = "wxWebViewChromium"
 
-
+        if 'url' in kwds:
+            kwds2['url'] = kwds['url']
         wb = wx.html2.WebView.New(*args, **kwds2)
         wb.__class__ = type('BrowserCtrl',(wb.__class__,BaseBrowser),{})
         wb.Init(*args, **kwds)

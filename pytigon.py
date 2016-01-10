@@ -467,7 +467,7 @@ def main_init(argv):
     loaddb = False
     nogui = False
     server_only = False
-    address = 'intercept://127.0.0.2'
+    address = 'http://127.0.0.2'
     embed_diango = True
     app_title = _("Pytigon system")
     embeded_browser = False
@@ -584,7 +584,7 @@ def main_init(argv):
     # locale.AddCatalogLookupPathPrefix(SCR_PATH+"/locale") locale.AddCatalog("wx")
     # locale.AddCatalog("scskr")
 
-    if address == 'intercept://127.0.0.2':
+    if address == 'http://127.0.0.2':
         embed_diango = True
     else:
         embed_diango = True

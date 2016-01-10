@@ -38,7 +38,6 @@ class BaseWebBrowser(object):
     LOAD_FINISH_FAILED = 3
 
     def __init__(self):
-        #self.test_ctrl = True
         self.progress = -1
         self.href = ''
         self.status = {
@@ -50,12 +49,6 @@ class BaseWebBrowser(object):
 
         if hasattr(self.get_shtml_window().GetParent(), 'handleInfo'):
             self.get_shtml_window().GetParent().handleInfo['browser'] = self
-        #if self.tdata:
-        #    try:
-        #        data =  decodestring(self.tdata[0][0].data).decode('utf-8')
-        #    except:
-        #        data =  decodebytes(self.tdata[0][0].data.encode('utf-8')).decode('utf-8')
-        #    self.load_str(self.html_from_str(data))
 
         aTable = [
                 #(0, wx.WXK_F2,  self.OnExtButtonClick),
@@ -68,9 +61,6 @@ class BaseWebBrowser(object):
                 
                  ]
         self.set_acc_key_tab(aTable)
-
-        self.redirect_to_html = [None, None]
-        self.redirect_to_local = True
         self.last_status_txt = ''
 
         self.pdf = None
@@ -102,7 +92,6 @@ class BaseWebBrowser(object):
                 data =  decodestring(self.tdata[0][0].data).decode('utf-8')
             except:
                 data =  decodebytes(self.tdata[0][0].data.encode('utf-8')).decode('utf-8')
-            print("after_init:load_str")
             self.load_str(self.html_from_str(data))
 
     def html_from_str(self, str_body):
@@ -142,49 +131,8 @@ class BaseWebBrowser(object):
             return False
         else:
             return True
-            if 'schtml=1' in page and not wx.GetApp().is_hybrid:
-                self.get_shtml_window().any_parent_command('new_child_page', page)
-                return False
-            elif 'childwin=1' in page:
-                self.new_child(page)
-                return False
-            #elif wx.GetKeyState(wx.WXK_CONTROL) and self.test_ctrl:
-            #    self.new_win(page)
-            #    return False
             return True
 
-    def _redirect_to_local(self, event):
-        self.redirect_to_local = False
-        self.OnBeforeLoad(self.url)
-        self.redirect_to_local = True
-
-    def on_before_load(self, url):
-        http = wx.GetApp().get_http(self)
-        http.get(self, str(url), user_agent='embeded')
-        s = http.str(conwert_local_path=True)
-        base_dir = local_media_path()
-        self.LoadString(s)
-        http.clear_ptr()
-        return True
-
-    def redirect_to_file(self, url):
-        http = wx.GetApp().get_http(self)
-        http.get(self, str(url), user_agent='embeded')
-        s = http.str(conwert_local_path=True)
-        base_dir = local_media_path()
-        file_url = base_dir + '/test.html'
-        file_name = file_url.replace('file://', '')
-        f = open(file_name, 'w')
-        f.write(s.encode('utf-8'))
-        f.close
-        return file_url
-
-    def get_local(self, uri, parm=None):
-        http = wx.GetApp().get_http(self)
-        http.get(self, uri.replace('intercept://', 'http://'), user_agent='embeded', parm=parm)
-        s = http.ptr()
-        http.clear_ptr()
-        return s
 
     def status_text(self, txt):
         if txt and txt != '':
@@ -258,44 +206,17 @@ class BaseWebBrowser(object):
     def set_title(self, title):
         if title:
             if len(title) < 32:
-                #title2 = title.decode('utf-8')title
                 title2 = title
             else:
-                #title2 = title.decode('utf-8')[:30] + '...'
                 title2 = title[:30] + '...'
         else:
             title2="Empty page" 
         if hasattr(self.get_shtml_window(), 'any_parent_command'):
-            print("TITLE:", title2)
             self.get_shtml_window().any_parent_command('change_notebook_page_title', title2)
 
     def get_status(self):
         return self.status
 
-    def transform_url(self, url):
-        url2 = url
-        #if not url2.startswith('http') and not url2.startswith('file'):
-        #    url2 = 'http://' + url2
-        if not "://" in url2:
-            url2 = 'http://' + url2
-        if not self.__class__.logged and '127.0.0.2' in url2:
-            self.__class__.logged = True
-            cookie = get_cookie_str()
-            cookie_tab = cookie.split(';')
-            sessionid = None
-            for pos in cookie_tab:
-                c = pos.split('=')
-                if c[0].strip() == 'sessionid':
-                    sessionid = c[1].strip()
-                    if '?' in url:
-                        url2 = url + '&' + 'sessionid=%s' % sessionid
-                    else:
-                        url2 = url + '?' + 'sessionid=%s' % sessionid
-            if '?' in url2:
-                url2 = url2 + '&client_param=' + wx.GetApp().get_parm_for_server()
-            else:
-                url2 = url2 + '?client_param=' + wx.GetApp().get_parm_for_server()
-        return url2
 
     def go(self, href):
         find = False
@@ -305,15 +226,11 @@ class BaseWebBrowser(object):
         if not 'localhost' in href2 and not '.' in href2:
             find=True
         if not find:
-            url = self.transform_url(href)
+            url = href
             if url[-4:].lower()=='.pdf':
                 self.pdf = url
                 x = '/' if wx.Platform == '__WXMSW__' else ''
                 return self.go("file://"+x+os.path.join(wx.GetApp().root_path, "static/pdfjs/web/viewer.html").replace('\\','/'))
-                #f = open(os.path.join(wx.GetApp().root_path, "static/pdfjs/web/viewer.html"),"rb")
-                #buf = f.read()
-                #f.close()
-                #return self.load_str(buf.decode('utf-8'), "file:///")
 
             if '://' in url:
                 self.load_url(url)
@@ -322,6 +239,7 @@ class BaseWebBrowser(object):
                     self.load_url('http://' + url)
                 else:
                     self.load_url('https://www.google.pl/search?q=' + url)
+
             if hasattr(self.get_shtml_window(), 'go_event'):
                 self.get_shtml_window().go_event(url)
         else:
@@ -354,11 +272,8 @@ class BaseWebBrowser(object):
         self.set_status(self.LOAD_FINISH_OK, event.GetString())
         if hasattr(self.get_shtml_window(), 'loaded_event'):
             self.get_shtml_window().loaded_event()
-        #print("XXXXXXXX", self.GetParent().get_parent())
-        #self.GetParent().get_parent().reg_href(event.GetString(), {})
 
         if self.pdf:
-            print("X1================================================")
             if self.pdf.startswith('file://'):
                 if wx.Platform == '__WXMSW__':
                     x = open(self.pdf.replace('file:///',''), "rb")
@@ -386,16 +301,12 @@ class BaseWebBrowser(object):
         event.Skip()
         title = event.GetString()
         if title.startswith(':'):
-            print("TITLE:", title)
             if title != ":":
                 self.run_command_from_js(title[1:])
         else:
             self.set_title(title)
         
-#    def on_loaded(self, event):
-#        if hasattr(self.get_shtml_window(), 'loaded_event'):
-#            self.get_shtml_window().loaded_event()
-        
+
     def on_progress(self, event):
         pass
 
@@ -472,7 +383,7 @@ class BaseWebBrowser(object):
         l = split2(cmd, '??')
         if l[0] == 'href_to_elem':
             x = split2(l[1], '??')
-            s = self.get_local(x[0])
+            s = self._local_request(x[0])
             self.value_to_elem(x[1], s)
         elif l[0] == 'href_to_var':
             if '?' in l[1]:
@@ -482,7 +393,7 @@ class BaseWebBrowser(object):
             else:
                 href = l[1]
                 parm = None
-            s = self.get_local(href, parm)
+            s = self._local_request(href, parm)
             self.value_to_var(l[2], s)
         elif l[0] == 'run_js':
             self.execute_javascript(l[1])
@@ -495,26 +406,57 @@ class BaseWebBrowser(object):
                 txt = b64encode(f.read().encode('utf-8')).decode('utf-8')
                 f.close()
             else:
-                txt = b64encode(self.get_local(l[1])).decode('utf-8')
+                txt = b64encode(self._local_request(l[1])).decode('utf-8')
             fun_id = l[1].split('?')[0]
             if '//127.0.0.2' in fun_id:
                 fun_id = fun_id.split('//127.0.0.2')[1]
-            print("FUN_ID_GET:", fun_id)
             cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
             self.execute_javascript(cmd)
 
         elif l[0] == 'ajax_post':
             x = split2(l[1], '??')
             parm = b64decode(x[1].encode('utf-8')).decode('utf-8')
-            s = self.get_local(x[0], parm)
+            s = self._local_request(x[0], parm)
             txt = b64encode(s).decode('utf-8')
             fun_id = x[0].split('?')[0]
             if '//127.0.0.2' in fun_id:
                 fun_id = fun_id.split('//127.0.0.2')[1]
-            print("FUN_ID_POST:", fun_id)
             cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
             self.execute_javascript(cmd)
         return
 
     def clear_history(self):
         pass
+
+
+    def _local_request(self, uri, parm=None):
+        http = wx.GetApp().get_http(self)
+        http.get(self, uri.replace('intercept://', 'http://'), user_agent='embeded', parm=parm)
+        s = http.ptr()
+        http.clear_ptr()
+        return s
+
+    def _get_http_file(self, uri):
+        if uri.startswith('http://127.0.0.2'):
+            if uri.startswith('http://127.0.0.2/data') and '?' in uri:
+                data = split2(uri, '?')
+                s = b64decode(data[1].encode('utf-8'))
+                return (s, None)
+            elif uri.startswith('http://127.0.0.2/fonts/'):
+                if uri.startswith('http://127.0.0.2/fonts/fontawesome'):
+                    uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/font-awesome/fonts/')
+                else:
+                    uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
+            else:
+                uri2 = uri
+
+            if '/images/ui' in uri2:
+                uri2='/static/themes/bootstrap/images/ui' + uri2.split('/images/ui')[1].split('#')[0]
+
+            if uri.startswith('http://127.0.0.2/static') and not '?' in uri:
+                path = wx.GetApp().scr_path+uri.replace('http://127.0.0.2', '')
+                return (None, path)
+            else:
+                s = self._local_request(uri2)
+                return (s, None)
+        return (None, None)

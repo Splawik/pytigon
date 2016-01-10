@@ -421,8 +421,8 @@ def sch_standard(request):
         'DEBUG': settings.DEBUG,
         }
     if 'client_param' in request.session:
-        print(type(request.session['client_param']))
-        print(request.session['client_param'])
+        #print(type(request.session['client_param']))
+        #print(request.session['client_param'])
         ret.update(request.session['client_param'])
     return ret
 

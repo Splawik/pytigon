@@ -2313,9 +2313,9 @@ def RIOT(*args, **kwds):
     buf = http.str()
     http.clear_ptr()
     elem = kwds['param']['riot_elem']
-    buf = buf.replace('/static/', 'static://static/')
     buf=buf.replace('</body>', "<%s></%s><script>riot.mount('*');</script></body>" % (elem, elem))
-    buf=buf.replace("app_init('modern', '0', '', '/', base_fragment_init, riot_init)", "app_init('modern', '0', '', 'static://', base_fragment_init, riot_init)")
+    url='http://127.0.0.2/data?'+ b64encode(buf.encode('utf-8')).decode('utf-8')
+    #kwds['url'] = url
     obj =  HTML2(*args, **kwds)
-    obj.load_str(buf, "static:///")
+    obj.load_url(url)
     return obj

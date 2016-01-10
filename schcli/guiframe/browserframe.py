@@ -20,6 +20,7 @@
 import os
 import wx
 import schcli.guictrl.schctrl
+import platform
 
 class SchBrowserFrame(wx.Frame):
     """
@@ -29,17 +30,18 @@ class SchBrowserFrame(wx.Frame):
     def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE |
                  wx.CLIP_CHILDREN | wx.WANTS_CHARS, name="MainWindow"):
 
-    #def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.RESIZE_BORDER | wx.CLIP_CHILDREN,
-    #             name="MainWindow"):
-
 
         self.gui_style = gui_style
         self.destroy_fun_tab = []
 
-
         wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
         wx.GetApp().SetTopWindow(self)
 
+        if platform.system() == "Windows":
+            self.t1 = wx.Timer(self)
+            self.t1.Start(25)
+
+            self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
         home_dir = wx.GetApp().get_working_dir()
 
@@ -83,17 +85,14 @@ class SchBrowserFrame(wx.Frame):
                                     print(sys.exc_info()[0])
                                     print(traceback.print_exc())
 
-
-        ctrl = schcli.guictrl.schctrl.HTML2(self, name='schbrowser', size=(400,300))
-
         app = wx.GetApp()
-
-        #print(app.base_address+"/")
-        ctrl.go(app.base_address+"/")
-#        ctrl.go("intercept://127.0.0.2/")
-#        ctrl.go("http://www.onet.pl")
-        #ctrl.SetSize(400,300)
+        ctrl = schcli.guictrl.schctrl.HTML2(self, name='schbrowser', size=(400,300))
+        ctrl.load_url(app.base_address+"/")
 
 
     def set_acc_key_tab(self, win, tab):
         pass
+
+    if platform.system() == "Windows":
+        def on_timer(self, evt):
+            wx.html2.WebView.New("messageloop")
