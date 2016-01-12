@@ -2,9 +2,9 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
+
 RET_BUFOR = None
 RET_OBJ = None
-
 
 LANG = "en"
 MENU = None
@@ -196,7 +196,6 @@ def page_init(id, first_time = True):
             nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
 
             data = jQuery(this).serialize()
-            console.log(data)
             if 'pdf=on' in data:
                 return True
             if 'odf=on' in data:

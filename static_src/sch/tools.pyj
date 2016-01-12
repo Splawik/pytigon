@@ -25,6 +25,7 @@ def ajax_post(url, data, complete):
     req.onload = _onload
 
     req.open('POST', url, True)
+
     req.send(data)
 
 

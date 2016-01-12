@@ -372,7 +372,6 @@ var ՐՏ_modules = {};
     function refresh_fragment(data_item_to_refresh, fun) {
         if (typeof fun === "undefined") fun = null;
         var refr_block, target, src, href;
-        console.log(data_item_to_refresh.prop("tagName"));
         refr_block = data_item_to_refresh.closest(".refr_object");
         if (refr_block.hasClass("refr_target")) {
             target = refr_block;
@@ -628,8 +627,8 @@ var ՐՏ_modules = {};
                 function hide_dialog_form() {
                     jQuery(dialog).modal("hide");
                 }
-                refresh_fragment(popup_activator, hide_dialog_form);
                 jQuery(dialog).fadeTo("slow", .5);
+                refresh_fragment(popup_activator, hide_dialog_form);
             } else {
                 refresh_fragment(popup_activator);
             }
@@ -1112,7 +1111,6 @@ function page_init(id, first_time) {
     glob.ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href;
         data = jQuery(this).serialize();
-        console.log(data);
         if (ՐՏ_in("pdf=on", data)) {
             return true;
         }

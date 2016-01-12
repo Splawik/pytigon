@@ -54,6 +54,7 @@ else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
 
 
+
 def install_0():
     """install plugin
     """
@@ -92,6 +93,8 @@ from schcli.guiframe import browserframe
 import six
 #from wx import wizard
 
+from wx.lib.infoframe import PyInformationalMessagesFrame
+
 from schlib.schtools import createparm
 from schlib.schhttptools.schhtml_parser import ShtmlParser
 
@@ -110,6 +113,10 @@ gc.disable()
 
 wx.RegisterId(10000)
 _ = wx.GetTranslation
+
+
+wx.outputWindowClass = None
+
 
 _DEBUG = False
 
@@ -130,16 +137,55 @@ def idle_fun():
     wx.GetApp().web_ctrl.OnIdle(None)
 
 
+#print(wx.PyOnDemandOutputWindow)
+
+
+class SChOutput(wx.PyOnDemandOutputWindow):
+
+    def __init__(self, title="wxPython: stdout/stderr"):
+        self.frame  = None
+        self.title  = title
+        self.pos    = wx.DefaultPosition
+        self.size   = (450, 300)
+        self.parent = None
+
+    def _SetParent(self, parent):
+        pass
+        #print("X2")
+        #self.parent = parent
+
+    def _CreateOutputWindow(self, txt):
+        pass
+        #print("X3")
+        #print(txt)
+
+    def write(self, text):
+        pass
+        #print("X5")
+        #print(text)
+
+    def close(self):
+        #print("X6")
+        pass
+
+    def flush(self):
+        #print("X7")
+        pass
+
+
 #class SchApp(wx.App, InspectionMixin):
 class SchApp(App):
 
     """Pytigon application
     """
 
+    #outputWindowClass = PyInformationalMessagesFrame
+    #outputWindowClass = SChOutput
+
     def __init__(self):
         #wx.App.__init__(self, False)
         #InspectionMixin.__init__(self)
-        App.__init__(self)
+        App.__init__(self, redirect=False)
 
         bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
 

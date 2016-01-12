@@ -22,11 +22,16 @@
 
         this.open = function(sMethod, sUrl, bAsync, sUser, sPassword) {
             self.url = sUrl;
-            if(window.location.host == "127.0.0.2" && ( sMethod == 'POST' || navigator.userAgent.indexOf("Windows") != -1  ) ) {
-                this.sch_local_request = true;
+            if(window.location.host == "127.0.0.2" && ( sMethod == 'POST' || navigator.userAgent.indexOf("Windows") != -1  )
+               && (sUrl.indexOf("/static") == -1 )
+            )
+            {
+                self.sch_local_request = true;
                 return null;
             }
-            return actual.open(sMethod, sUrl, bAsync, sUser, sPassword)
+            var ret = actual.open(sMethod, sUrl, bAsync, sUser, sPassword);
+            self.overrideMimeType('text/xml; charset=utf-8');
+            return ret;
         };
 
         this.send = function(vData) {
@@ -58,20 +63,30 @@
                     if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
                         console.log(":ajax_post??"+ sUrl2+"??"+btoa(data));
                     else
-                        document.title = ":ajax_post??"+ sUrl2+"??"+btoa(data);
+                        window.open("http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
                 }
                 else {
                     if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
                         console.log(":ajax_get??"+ sUrl2);
                     else
-                        document.title = ":ajax_get??"+ sUrl2;
+                        window.open("http://127.0.0.2/?:ajax_get??"+ sUrl2);
                 }
 
                 return null;
             }
             else {
+                if(vData) {
+                    self.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    self.setRequestHeader("Content-length", vData.length);
+                    self.setRequestHeader("Connection", "close");
+                }
                 actual.send(vData)
             }
+        };
+
+        this.setRequestHeader = function(key, value) {
+            if(this.sch_local_request) return;
+            return actual.setRequestHeader(key, value);
         };
 
         [ "statusText", "responseType", "response",
@@ -96,7 +111,7 @@
         });
 
         ["addEventListener", "abort", "getAllResponseHeaders",
-         "getResponseHeader", "overrideMimeType", "setRequestHeader"].forEach(function(item) {
+         "getResponseHeader", "overrideMimeType"].forEach(function(item) {
             Object.defineProperty(self, item, {
                 value: function() {return actual[item].apply(actual, arguments);}
             });

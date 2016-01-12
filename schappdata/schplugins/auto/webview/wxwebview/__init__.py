@@ -56,9 +56,19 @@ class WebViewMemoryHandler(wx.html2.WebViewHandler):
             if not file_name:
                 p = uri.replace('http://127.0.0.2', '').split('?')[0].split('#')[0]
                 file_name = os.path.join(tempfile.gettempdir(), p.replace('/', '_').replace('\\','_').replace(':','_'))
-                f = open(file_name, "wb")
-                f.write(s)
-                f.close()
+                try:
+                    print("Start:", file_name)
+                    s2 = s.decode('utf-8')
+                    #s3 = s2.encode('iso-8859-2')
+                    f = open(file_name, "w")
+                    #f.write(s3)
+                    f.write(s2)
+                    f.close()
+                    print(file_name)
+                except:
+                    f = open(file_name, "wb")
+                    f.write(s)
+                    f.close()
             return self.fs.OpenFile(file_name)
         else:
             return None
@@ -192,9 +202,15 @@ def init_plugin_web_view(
 
 
         def on_new_window(self, event):
-            print("on_new_window:", event.GetURL())
-            self.new_win(event.GetURL())
-            event.Skip()
+            url = event.GetURL()
+            if url.startswith('http://127.0.0.2/?:'):
+                event.Veto()
+                if url != "http://127.0.0.2/?:":
+                    self.run_command_from_js(url[19:])
+            else:
+                print("on_new_window:", event.GetURL())
+                self.new_win(event.GetURL())
+                event.Skip()
 
 
         def progress_change(self, progress, max_progress):

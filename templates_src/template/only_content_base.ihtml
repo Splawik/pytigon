@@ -2,7 +2,6 @@
 
 % extends default_template2
 
-%% page_start
 
 %% page_head
 
@@ -34,4 +33,3 @@
 
 %% body_end
 
-%% page_end

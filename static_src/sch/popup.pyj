@@ -2,7 +2,6 @@ from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post
 from schclient import is_hybrid, cmd_to_python, is_hybrid
 
 def refresh_fragment(data_item_to_refresh, fun=None):
-    console.log(data_item_to_refresh.prop("tagName"))
     refr_block = data_item_to_refresh.closest('.refr_object')
     if refr_block.hasClass('refr_target'):
         target = refr_block
@@ -259,10 +258,10 @@ def _refresh_win(responseText, ok_button):
             
             def hide_dialog_form():
                 jQuery(dialog).modal('hide')
-                
-            refresh_fragment(popup_activator, hide_dialog_form)
-            
+
             jQuery(dialog).fadeTo( "slow", 0.5 )
+            refresh_fragment(popup_activator, hide_dialog_form)
+
         else:
             refresh_fragment(popup_activator)
     else:

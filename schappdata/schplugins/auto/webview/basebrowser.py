@@ -131,7 +131,6 @@ class BaseWebBrowser(object):
             return False
         else:
             return True
-            return True
 
 
     def status_text(self, txt):
@@ -302,6 +301,7 @@ class BaseWebBrowser(object):
         title = event.GetString()
         if title.startswith(':'):
             if title != ":":
+                print("on_title_changed:", title)
                 self.run_command_from_js(title[1:])
         else:
             self.set_title(title)
@@ -400,6 +400,7 @@ class BaseWebBrowser(object):
         elif l[0] == 'python':
             self.GetParent().exec_code(l[1])
         elif l[0] == 'ajax_get':
+            print("ajax_get", l[1])
             if l[1].startswith('static:/'):
                 x = os.path.join( l[1].replace('static:/',wx.GetApp().root_path))
                 f = open(x, "rt")
@@ -414,6 +415,7 @@ class BaseWebBrowser(object):
             self.execute_javascript(cmd)
 
         elif l[0] == 'ajax_post':
+            print("ajax_post", l[1])
             x = split2(l[1], '??')
             parm = b64decode(x[1].encode('utf-8')).decode('utf-8')
             s = self._local_request(x[0], parm)
