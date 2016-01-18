@@ -415,8 +415,10 @@ class SchAppFrame(wx.Frame):
                     for page in app.start_pages:
                         url_page = page.split(';')
                         if len(url_page) == 2:
-                            self._on_html(_(url_page[0]) + ',' + app.base_address
-                                            + url_page[1])
+                            #self._on_html(_(url_page[0]) + ',' + app.base_address
+                            #                + url_page[1])
+                            # sch
+                            pass
                 wx.CallAfter(start_pages)
 
         event.Skip()

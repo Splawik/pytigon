@@ -31,6 +31,7 @@ except:
 
 from schlib.schfs.vfstools import replace_dot
 from schlib.schtools.schjson import json_dumps, json_loads
+from django.conf import settings
 
 import email.generator
 from mimetypes import guess_type
@@ -41,7 +42,7 @@ import http.cookies
 import traceback
 
 def init_embeded_django():
-    from django.conf import settings
+    #from django.conf import settings
 
     import django.core.handlers.wsgi
     from wsgi_intercept.httplib2_intercept import install
@@ -144,6 +145,8 @@ def schurljoin(base, address):
     else:
         return base + address
 
+
+
 class HttpClient:
 
     def __init__(self, address):
@@ -194,6 +197,19 @@ class HttpClient:
         adr = replace_dot(adr)
         adr = adr.replace(' ', '%20')
         print(">>>>>>>>", adr)
+
+        if adr.startswith('http://127.0.0') and ('/static/' in adr or '/site_media' in adr) and not '?' in adr:
+            if '/static/' in adr:
+                path = settings.STATICFILES_DIRS[0]+adr.replace('http://127.0.0.2', '')
+            else:
+                path = settings.MEDIA_ROOT+adr.replace('http://127.0.0.2', '').replace('/site_media','')
+
+            f = open(path, "rb")
+            self.contents = f.read()
+            self.content_type = "text/html"
+            f.close()
+
+            return (200, adr)
 
         post = None
         if parm == None:

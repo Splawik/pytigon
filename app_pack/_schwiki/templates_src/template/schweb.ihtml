@@ -1,8 +1,11 @@
-{# -*- coding: utf-8 -*- #}
 
-%extends 'template/schweb_base.html'
+
+%extends 'template/schweb_base.html'|translate:lang
+
 
 % load exfiltry
+% load exsyntax
+% load staticfiles
 
 %% indexhead
     table style=width: 100%;,,,border=1
@@ -11,12 +14,11 @@
         % else
             [ login | 1 ]
         [ autologin | 1 ]
-        [ csrf_token | {{csrf_token}} ]
-        
+        [ csrf_token | {%csrf_token%} ]
+        [ riot_elements | ]
         [ gui_style | modern(toolbar(file(exit),clipboard)) ]
         [ hybrid | 0 ]
         [ title  | Wiki ]
         [ start_page |  ]
         [ plugins | riot:standard_components/txtarea_editor ]
-
 

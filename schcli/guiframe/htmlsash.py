@@ -29,7 +29,7 @@ from schcli.guiframe.htmlwin import SchHtmlWindow
 from schcli.guilib.schevent import *
 
 import six
-
+#from wx.lib.pubsub import pub
 
 class SchSashWindow(wx.Window):
 
@@ -61,6 +61,7 @@ class SchSashWindow(wx.Window):
         self.href_status = 0
         self.events_active = []
         self.last_size = None
+        self._active = True
 
         wx.Window.__init__(
             self,
@@ -187,6 +188,17 @@ class SchSashWindow(wx.Window):
 
         self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
 
+#        pub.subscribe(self.listener1, 'rootTopic')
+#        tab = []
+#        pub.sendMessage('rootTopic', arg1=123, arg2=tab)
+#        print("TAB:", tab)
+
+#    def listener1(self, arg1, arg2=None):
+#        print('Function listener1 received:')
+#        print('  arg1 =', arg1)
+#        print('  arg2 =', arg2)
+#        arg2.append(100)
+
 
     def init_binds(self):
         test_bind = True
@@ -195,11 +207,11 @@ class SchSashWindow(wx.Window):
                 test_bind = False
                 break
 
-        if test_bind:
-            self.bind_to_active(self.on_back, ID_WEB_BACK)
-            self.bind_to_active(self.on_check_can_go_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
-            self.bind_to_active(self.on_forward, ID_WEB_FORWARD)
-            self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
+        #if test_bind:
+        #    self.bind_to_active(self.on_back, ID_WEB_BACK)
+        #    self.bind_to_active(self.on_check_can_go_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
+        #    self.bind_to_active(self.on_forward, ID_WEB_FORWARD)
+        #    self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
 
     def bind_to_active(self, fun, id, e=None):
         self.events_active.append((fun, id, e))
@@ -279,7 +291,7 @@ class SchSashWindow(wx.Window):
                 adr = address_or_parser
             (err, url) = http.get(self, adr)
             self.href_pos=(adr,None)
-            print(err, url)
+            #print(err, url)
             if err == 404:
                 print("XXXXXXXXXXXXXXXXXXXXXX")
                 raise Exception('http', '404')
@@ -648,33 +660,34 @@ class SchSashWindow(wx.Window):
 
     def show_info(self):
         wx.GetApp().GetTopWindow().active_page = self
-        web = None
-        if 'browser' in self.handleInfo:
-            web = self.handleInfo['browser']
-            if web and web.href:
-                wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
-                        ]['address'].SetValue(web.href)
+#        web = None
+#        if 'browser' in self.handleInfo:
+#            web = self.handleInfo['browser']
+#            if web and web.href:
+#                wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
+#                        ]['address'].SetValue(web.href)
         self.set_status_text(self.statusText)
 
     def del_info(self):
         self.set_status_text('')
         wx.GetApp().GetTopWindow().active_page = None
-        self.handleInfo['browser'] = None
+#        self.handleInfo['browser'] = None
 
     def refr_info(self, key):
-        if key == 'browser':
-            web = None
-            if 'browser' in self.handleInfo:
-                web = self.handleInfo['browser']
-            if wx.GetApp().GetTopWindow().active_page == self:
-                if web:
-                    wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
-                            ]['address'].SetValue(web.href)
-                else:
-                    wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
-                            ]['address'].SetValue('')
-                wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
-                        ]['bar'].Refr(web)
+        pass
+#        if key == 'browser':
+#            web = None
+#            if 'browser' in self.handleInfo:
+#                web = self.handleInfo['browser']
+#            if wx.GetApp().GetTopWindow().active_page == self:
+#                if web:
+#                    wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
+#                            ]['address'].SetValue(web.href)
+#                else:
+#                    wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
+#                            ]['address'].SetValue('')
+#                wx.GetApp().GetTopWindow().toolbar_interface.get_toolbars()['browser'
+#                        ]['bar'].Refr(web)
 
     def set_handle_info(self, key, value):
         self.handleInfo[key] = value
@@ -731,21 +744,26 @@ class SchSashWindow(wx.Window):
 
 
     def activate_page(self):
+        self._active = True
         for pos in self.events_active:
             if pos[2]:
                 wx.GetApp().GetTopWindow().toolbar_interface.bind(pos[0], pos[1], pos[2])
             else:
                 wx.GetApp().GetTopWindow().toolbar_interface.bind(pos[0], pos[1])
-        self.show_info()
+        #self.show_info()
         self.Body.SetFocus()
 
     def deactivate_page(self):
+        self._active = False
         for pos in self.events_active:
             if pos[2]:
                 wx.GetApp().GetTopWindow().toolbar_interface.un_bind(pos[1], pos[2])
             else:
                 wx.GetApp().GetTopWindow().toolbar_interface.un_bind(pos[1])
         self.del_info()
+
+    def is_active(self):
+        return self._active
 
     def set_page(self, page_source):
         self.Body.set_page(page_source)

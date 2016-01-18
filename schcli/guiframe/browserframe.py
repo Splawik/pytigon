@@ -88,6 +88,13 @@ class SchBrowserFrame(wx.Frame):
         app = wx.GetApp()
         ctrl = schcli.guictrl.schctrl.HTML2(self, name='schbrowser', size=(400,300))
         ctrl.load_url(app.base_address+"/")
+        self.Bind(wx.EVT_CLOSE, self.on_close)
+
+
+    def on_close(self, event):
+        if platform.system() == "Windows":
+            self.t1.Stop()
+        event.Skip()
 
 
     def set_acc_key_tab(self, win, tab):

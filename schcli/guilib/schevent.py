@@ -84,6 +84,8 @@ ID_LOAD = wx.NewId()
 ID_SAVE = wx.NewId()
 ID_SAVE_AS = wx.NewId()
 
+ID_SIGNAL = wx.NewId()
+
 ID_END = wx.NewId()
 
 #EVT_USER_FIRST=32000
@@ -92,9 +94,68 @@ userEVT_REFRPARM = wx.NewEventType()
 EVT_REFRPARM = wx.PyEventBinder(userEVT_REFRPARM, 1)
 
 
-class RefrParmEvent(wx.PyCommandEvent):
+#class RefrParmEvent(wx.PyCommandEvent):
+#
+#    def __init__(self, evt_type, id):
+#        wx.PyCommandEvent.__init__(self, evt_type, id)
 
-    def __init__(self, evt_type, id):
-        wx.PyCommandEvent.__init__(self, evt_type, id)
+userEVT_SIGNAL = wx.NewEventType()
+EVT_SIGNAL = wx.PyEventBinder(userEVT_SIGNAL, 1)
 
+
+class SignalEvent(wx.PyCommandEvent):
+    def __init__(self, id, name, param):
+        wx.PyCommandEvent.__init__(self, userEVT_SIGNAL, id)
+        self.name = name
+        self.param = param
+        self.ret = None
+
+    def set_signale_name(self, name):
+        self.name = name
+
+    def get_signal_name(self):
+        return self.name
+
+    def set_signal_params(self, param):
+        self.param = param
+
+    def get_signal_param(self):
+        return self.param
+
+    def set_return_value(self, ret):
+        self.ret = ret
+
+    def get_return_value(self):
+        return self.ret
+
+
+class Signals():
+    def __init__(self):
+        self._capture_signals = {}
+        self.Bind(EVT_SIGNAL, self.on_signal)
+
+
+    def send_signal(self, signal, params):
+        event = SignalEvent(self.GetId(), signa, params)
+        self.GetEventHandler().ProcessEvent(event)
+        event.get_return_value()
+
+
+    def post_signal(self, signal, params):
+        event = SignalEvent(self.GetId(), signa, params)
+        return self.GetEventHandler().QueueEvent(event)
+
+
+    def on_signal(self, event):
+        name = event.get_signal_name()
+        if name in self._capture_signals:
+            fun = self._capture_signals[name]
+            ret = fun(event.get_signal_param())
+            event.set_return_value(ret)
+        else:
+            event.Skip()
+
+
+    def handle_signal(self, signal_name, fun):
+        self._capture_signals[signal_name] = fun
 

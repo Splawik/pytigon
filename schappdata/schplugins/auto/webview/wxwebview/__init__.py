@@ -56,19 +56,9 @@ class WebViewMemoryHandler(wx.html2.WebViewHandler):
             if not file_name:
                 p = uri.replace('http://127.0.0.2', '').split('?')[0].split('#')[0]
                 file_name = os.path.join(tempfile.gettempdir(), p.replace('/', '_').replace('\\','_').replace(':','_'))
-                try:
-                    print("Start:", file_name)
-                    s2 = s.decode('utf-8')
-                    #s3 = s2.encode('iso-8859-2')
-                    f = open(file_name, "w")
-                    #f.write(s3)
-                    f.write(s2)
-                    f.close()
-                    print(file_name)
-                except:
-                    f = open(file_name, "wb")
-                    f.write(s)
-                    f.close()
+                f = open(file_name, "wb")
+                f.write(s)
+                f.close()
             return self.fs.OpenFile(file_name)
         else:
             return None
@@ -120,7 +110,7 @@ def init_plugin_web_view(
 
             self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
             self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded, self)
-            self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error, self)
+            #self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error, self)
             self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self)
             self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
             self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self)
@@ -178,7 +168,11 @@ def init_plugin_web_view(
                     event.Skip()
 
         def on_error(self, event):
-            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERROR!")
+            message = "%s\n, %s" % ( event.GetURL(),event.GetString())
+            dlg = wx.MessageDialog(self, event.GetString(), "Webview error",  wx.OK | wx.ICON_WARNING)
+            dlg.ShowModal()
+            dlg.Destroy()
+            event.Skip()
 
         def on_web_view_loaded(self, event):            
 
@@ -222,9 +216,6 @@ def init_plugin_web_view(
                 progress2 = 100
             return self.progress_changed(progress2)
 
-
-        def get_shtml_window(self):
-            return self.GetParent()
 
         def load_url(self, url):
             if not self.local and url.startswith('http://127.0.0.2'):

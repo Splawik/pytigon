@@ -211,7 +211,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 if is_close_button:
                     self.src="client://emblems/emblem-unreadable.png"
                 if self.src:
-                    print(self.src)
+                    #print(self.src)
                     self.bmp = bitmap_from_href(self.src, icon_size)
 
         def process_refr_data(self, *args, **kwds):

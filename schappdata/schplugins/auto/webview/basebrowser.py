@@ -20,11 +20,10 @@ import wx
 import six
 
 from tempfile import NamedTemporaryFile
-from schlib.schhttptools.httpclient import get_cookie_str
 from base64 import decodebytes, b64encode, b64decode
 import urllib
 from schcli.guilib.tools import get_colour
-from schcli.guilib.schevent import ID_WEB_NEW_WINDOW
+from schcli.guilib.schevent import *
 from schlib.schtools.tools import split2
 
 import os
@@ -47,8 +46,8 @@ class BaseWebBrowser(object):
             'address': None,
             }
 
-        if hasattr(self.get_shtml_window().GetParent(), 'handleInfo'):
-            self.get_shtml_window().GetParent().handleInfo['browser'] = self
+        #if hasattr(self.get_parent_form().GetParent(), 'handleInfo'):
+        #    self.get_parent_form().GetParent().handleInfo['browser'] = self
 
         aTable = [
                 #(0, wx.WXK_F2,  self.OnExtButtonClick),
@@ -65,26 +64,86 @@ class BaseWebBrowser(object):
 
         self.pdf = None
 
-        if False and hasattr(self.GetParent(), 'get_parent'):
-            self.GetParent().get_parent().on_check_can_go_forward = self.on_check_can_go_forward
-            self.GetParent().get_parent().on_check_can_go_back = self.on_check_can_go_back
-            self.GetParent().get_parent().back = self.back
-            self.GetParent().get_parent().forward = self.forward
+
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_goback, id=ID_WEB_BACK)
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_goforward, id=ID_WEB_FORWARD)
+
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_stop, id=ID_WEB_STOP)
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_refresh, id=ID_WEB_REFRESH)
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_addbookmark, id=ID_WEB_ADDBOOKMARK)
+
+        self.Bind(wx.EVT_MENU, self._on_back, id=ID_WEB_BACK)
+        self.Bind(wx.EVT_MENU, self._on_forward, id=ID_WEB_FORWARD)
+
+        self.Bind(wx.EVT_MENU, self._on_stop, id=ID_WEB_STOP)
+        self.Bind(wx.EVT_MENU, self._on_refresh, id=ID_WEB_REFRESH)
+        self.Bind(wx.EVT_MENU, self._on_addbookmark, id=ID_WEB_ADDBOOKMARK)
 
 
-    def on_check_can_go_forward(self, event):
-        test = self.can_go_forward()
-        event.Enable(test)
+    def on_check_can_goforward(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            test = self.can_go_forward()
+            event.Enable(test)
+        else:
+            event.Skip()
 
-    def on_check_can_go_back(self, event):
-        test =  self.can_go_back()
-        event.Enable(test)
+    def on_check_can_goback(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            test =  self.can_go_back()
+            event.Enable(test)
+        else:
+            event.Skip()
 
-    def back(self):
-        return self.on_back(None)
+    def on_check_can_stop(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            test =  self.can_stop()
+            event.Enable(test)
+        else:
+            event.Skip()
 
-    def forward(self):
-        return self.on_forward(None)
+    def on_check_can_refresh(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            test =  self.can_refresh()
+            event.Enable(test)
+        else:
+            event.Skip()
+
+    def on_check_can_addbookmark(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            test =  self.can_addbookmark()
+            event.Enable(test)
+        else:
+            event.Skip()
+
+    def _on_back(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            self.on_back(None)
+        else:
+            event.Skip()
+
+    def _on_forward(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            self.on_forward(None)
+        else:
+            event.Skip()
+
+    def _on_stop(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            self.on_stop(None)
+        else:
+            event.Skip()
+
+    def _on_refresh(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            self.on_refresh(None)
+        else:
+            event.Skip()
+
+    def _on_addbookmark(self, event):
+        if self.get_parent_form().get_tab().is_active():
+            self.on_addbookmark(None)
+        else:
+            event.Skip()
 
     def afetr_init(self):
         if self.tdata:
@@ -111,7 +170,7 @@ class BaseWebBrowser(object):
             wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
 
     def on_key_l(self, event):
-        self.get_shtml_window().GetParent().Body.new_child_page("^standard/webview/gotopanel.html", title="Go")
+        self.get_parent_form().GetParent().Body.new_child_page("^standard/webview/gotopanel.html", title="Go")
 
     def accept_page(self, page):
         self.status['address'] = page
@@ -182,7 +241,7 @@ class BaseWebBrowser(object):
         return True
 
     def new_child(self, bstr_url):
-        okno = self.get_shtml_window().any_parent_command('new_child_page',
+        okno = self.get_parent_form().any_parent_command('new_child_page',
                 '^standard/webview/widget_web.html')
         dx = 800
         dy = 600
@@ -210,8 +269,8 @@ class BaseWebBrowser(object):
                 title2 = title[:30] + '...'
         else:
             title2="Empty page" 
-        if hasattr(self.get_shtml_window(), 'any_parent_command'):
-            self.get_shtml_window().any_parent_command('change_notebook_page_title', title2)
+        if hasattr(self.get_parent_form(), 'any_parent_command'):
+            self.get_parent_form().any_parent_command('change_notebook_page_title', title2)
 
     def get_status(self):
         return self.status
@@ -239,8 +298,8 @@ class BaseWebBrowser(object):
                 else:
                     self.load_url('https://www.google.pl/search?q=' + url)
 
-            if hasattr(self.get_shtml_window(), 'go_event'):
-                self.get_shtml_window().go_event(url)
+            if hasattr(self.get_parent_form(), 'go_event'):
+                self.get_parent_form().go_event(url)
         else:
             if href2=="":
                 pass
@@ -269,8 +328,8 @@ class BaseWebBrowser(object):
 
     def on_load_end(self, event):
         self.set_status(self.LOAD_FINISH_OK, event.GetString())
-        if hasattr(self.get_shtml_window(), 'loaded_event'):
-            self.get_shtml_window().loaded_event()
+        if hasattr(self.get_parent_form(), 'loaded_event'):
+            self.get_parent_form().loaded_event()
 
         if self.pdf:
             if self.pdf.startswith('file://'):
@@ -301,7 +360,7 @@ class BaseWebBrowser(object):
         title = event.GetString()
         if title.startswith(':'):
             if title != ":":
-                print("on_title_changed:", title)
+                #print("on_title_changed:", title)
                 self.run_command_from_js(title[1:])
         else:
             self.set_title(title)
@@ -311,13 +370,13 @@ class BaseWebBrowser(object):
         pass
 
     def on_add_bookmark(self, event):
-        if hasattr(self.get_shtml_window(), 'addbookmark_event'):
-            self.get_shtml_window().addbookmark_event()
+        if hasattr(self.get_parent_form(), 'addbookmark_event'):
+            self.get_parent_form().addbookmark_event()
 
 
 # abstract method
 
-    def get_shtml_window(self):
+    def get_parent_form(self):
         return None
 
     def load_url(self, url):
@@ -352,10 +411,10 @@ class BaseWebBrowser(object):
             return False
 
     def can_refresh(self):
-        if self.progress >= 0:
-            return True
-        else:
-            return False
+        return True
+
+    def can_addbookmark(self):
+        return True
 
     def execute_javascript(self, script):
         pass
@@ -400,7 +459,7 @@ class BaseWebBrowser(object):
         elif l[0] == 'python':
             self.GetParent().exec_code(l[1])
         elif l[0] == 'ajax_get':
-            print("ajax_get", l[1])
+            #print("ajax_get", l[1])
             if l[1].startswith('static:/'):
                 x = os.path.join( l[1].replace('static:/',wx.GetApp().root_path))
                 f = open(x, "rt")
@@ -415,7 +474,7 @@ class BaseWebBrowser(object):
             self.execute_javascript(cmd)
 
         elif l[0] == 'ajax_post':
-            print("ajax_post", l[1])
+            #print("ajax_post", l[1])
             x = split2(l[1], '??')
             parm = b64decode(x[1].encode('utf-8')).decode('utf-8')
             s = self._local_request(x[0], parm)
@@ -439,6 +498,7 @@ class BaseWebBrowser(object):
         return s
 
     def _get_http_file(self, uri):
+        #print("uri:", uri)
         if uri.startswith('http://127.0.0.2'):
             if uri.startswith('http://127.0.0.2/data') and '?' in uri:
                 data = split2(uri, '?')
@@ -457,6 +517,11 @@ class BaseWebBrowser(object):
 
             if uri.startswith('http://127.0.0.2/static') and not '?' in uri:
                 path = wx.GetApp().scr_path+uri.replace('http://127.0.0.2', '')
+                return (None, path)
+            elif '/site_media/' in uri and not '?' in uri:
+                #print("X1:", wx.GetApp().cwd)
+                path = wx.GetApp().cwd+uri.replace('http://127.0.0.2', '')
+                #print(path)
                 return (None, path)
             else:
                 s = self._local_request(uri2)

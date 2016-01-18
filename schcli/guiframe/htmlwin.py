@@ -325,7 +325,6 @@ class SchHtmlWindow(ScrolledPanel):
     def html_updatet(self, dc, size):
         w = size.GetWidth()
         h = size.GetHeight()
-        print("SIZE:", w, h)
         if w == 20 and h == 20:
             print("20x20")
             return
