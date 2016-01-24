@@ -39,6 +39,7 @@ from schcli.guilib.tools import bitmap_from_href
 from schcli.toolbar import toolbar_interface
 from schlib.schfs.vfstools import get_temp_filename
 from schlib.schtools.cc import compile
+from schlib.schtools.tools import split2
 from tempfile import NamedTemporaryFile
 
 import six
@@ -415,10 +416,10 @@ class SchAppFrame(wx.Frame):
                     for page in app.start_pages:
                         url_page = page.split(';')
                         if len(url_page) == 2:
-                            #self._on_html(_(url_page[0]) + ',' + app.base_address
-                            #                + url_page[1])
+                            self._on_html(_(url_page[0]) + ',' + app.base_address
+                                            + url_page[1])
                             # sch
-                            pass
+                            #pass
                 wx.CallAfter(start_pages)
 
         event.Skip()
@@ -590,6 +591,35 @@ class SchAppFrame(wx.Frame):
         return None
 
     def new_main_page(self, address_or_parser, title="", parametry=None, panel="desktop"):
+        #print(address_or_parser)
+        #win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
+        #win.Body.WEB.go(wx.GetApp().base_address + l[1])
+
+        if type(address_or_parser) == str:
+            address = address_or_parser
+        else:
+            address = address_or_parser.address
+
+        if not address.startswith('^'):
+            parm = split2(address,'?')
+            pdict = {}
+            if len(parm)==2:
+                parm2 = parm[1].split(',')
+                parm3 = [ pos.split('=') for pos in parm2 ]
+                for pos in parm3:
+                    if len(pos)==2:
+                        pdict[pos[0]]=pos[1]
+                    else:
+                        pdict[pos[0]]=None
+
+            if ('schtml' in pdict and pdict['schtml'] != '1') or (address.startswith('http://') and not address.startswith(wx.GetApp().base_address)):
+                ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page")
+                if address.startswith('http://'):
+                    ret.Body.WEB.go(address)
+                else:
+                    ret.Body.WEB.go(wx.GetApp().base_address + address)
+                return ret
+
         if len(title)<32:
             title2 = title
         else:

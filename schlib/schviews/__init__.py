@@ -201,7 +201,7 @@ class GenericTable(object):
             rows.base_model = apps.get_model(self.app + "." + tab)
         rows.queryset = queryset
         if '.' in tab:
-            pos = tab.rfind('.')            
+            pos = tab.rfind('.')
             rows.base_perm = tab[:pos]+ '.%s_' + tab[pos+1:].lower()
         else:
             rows.base_perm = self.app + '.%s_' + tab.lower()
@@ -403,9 +403,16 @@ class GenericRows(object):
                 if self.kwargs['target']=='pdf':
                     return "pdf"
                 elif self.kwargs['target']=='odf':
+                    self.paginate_by = -1
                     return "odf"
                 else:
                     return "html"
+
+            def get_paginate_by(self, queryset):
+                if self.doc_type() in ('pdf', 'odf'):
+                    return None
+                else:
+                    return self.paginate_by
 
             def get(
                 self,
@@ -554,7 +561,7 @@ class GenericRows(object):
 
                 if self.object and hasattr(self.object, 'transform_form'):
                     self.object.transform_form(request, form, False)
-                                    
+
                 if form:
                     for field in form.fields:
                         if hasattr(form.fields[field].widget, 'py_client'):
@@ -651,7 +658,7 @@ class GenericRows(object):
 
                 if self.object and hasattr(self.object, 'transform_form'):
                     self.object.transform_form(request, form, True)
-                
+
                 if form:
                     for field in form.fields:
                         if hasattr(form.fields[field].widget, 'py_client'):
@@ -679,10 +686,10 @@ class GenericRows(object):
                 self.object = None
                 form_class = self.get_form_class()
                 form = self.get_form(form_class)
-                
+
                 if self.object and hasattr(self.object, 'transform_form'):
                     self.object.transform_form(request, form, True)
-                
+
                 if form.is_valid():
                     return self.form_valid(form, request)
                 else:
@@ -878,4 +885,3 @@ def generic_table(
 
 def generic_table_start(urlpatterns, app, views_module=None):
     return GenericTable(urlpatterns, app, views_module)
-

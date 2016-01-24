@@ -53,9 +53,10 @@ class ViewPost(object):
     def process_request(self, request):
         try:
             if request.method == 'POST':
-                print('==============================')
-                print('POST: ', request.POST)
-                print('==============================')
+                print('=================== POST ======================')
+                print(request.path)
+                print(request.POST)
+                print('===============================================')
         except:
             pass
 

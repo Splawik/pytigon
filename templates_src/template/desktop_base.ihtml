@@ -8,11 +8,14 @@
 % load django_select2_tags
 
 %% js_scripts_base
-    {% jscript_link 'sch/schXMLHttpRequest.js' %}
+    % if request.get_host == '127.0.0.2':
+        {% jscript_link 'sch/schXMLHttpRequest.js' %}
+
     {% jscript_link 'vanillajs_plugins/baselib.js' %}
     {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
+    {% jscript_link 'vanillajs_plugins/js.cookie.js' %}
 
     {% jscript_link 'jquery/js/jquery-2.1.4.js' %}
     

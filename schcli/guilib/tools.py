@@ -138,11 +138,14 @@ def bitmap_from_href(href, size_type=size_default):
         bmp = wx.BitmapFromImage(image)
     else:
         http = wx.GetApp().get_http(None)
-        http.get(None, str(href))
-        s = http.ptr()
-        http.clear_ptr()
-        stream = BytesIO(s)
-        bmp = wx.BitmapFromImage(wx.ImageFromStream(stream))
+        if http.get(None, str(href))[0]!=404:
+            s = http.ptr()
+            http.clear_ptr()
+            stream = BytesIO(s)
+            bmp = wx.BitmapFromImage(wx.ImageFromStream(stream))
+        else:
+            bmp = wx.Bitmap()
+            print("bitmap_from_href: can't read from href:", href)
     return bmp
 
 

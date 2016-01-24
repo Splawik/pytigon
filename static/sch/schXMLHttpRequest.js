@@ -42,6 +42,7 @@
                 sUrl3 = self.url.split("?")[0]
                 function xx(txt) {
                     self.readyState = 4;
+                    console.log(txt);
                     self.responseText = txt;
                     self.status = 200;
                     if(self.onreadystatechange != null) self.onreadystatechange();

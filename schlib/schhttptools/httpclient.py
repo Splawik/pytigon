@@ -175,7 +175,7 @@ class HttpClient:
                         HttpIdleFunc()
                     #wx.GetApp().web_ctrl.OnIdle(None)
                 except:
-                    return
+                    return (500, address_str)
 
         self.content_type = None
         self.contents = ""
@@ -200,16 +200,19 @@ class HttpClient:
 
         if adr.startswith('http://127.0.0') and ('/static/' in adr or '/site_media' in adr) and not '?' in adr:
             if '/static/' in adr:
-                path = settings.STATICFILES_DIRS[0]+adr.replace('http://127.0.0.2', '')
+                path = settings.STATICFILES_DIRS[0]+adr.replace('http://127.0.0.2', '').replace('/static','')
             else:
                 path = settings.MEDIA_ROOT+adr.replace('http://127.0.0.2', '').replace('/site_media','')
 
-            f = open(path, "rb")
-            self.contents = f.read()
-            self.content_type = "text/html"
-            f.close()
-
-            return (200, adr)
+            try:
+                with open(path, "rb") as f:
+                    self.contents = f.read()
+                    self.content_type = "text/html"
+                return (200, adr)
+            except:
+                self.contents = b""
+                self.content_type = "text/html"
+                return (404, adr)
 
         post = None
         if parm == None:

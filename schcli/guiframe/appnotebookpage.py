@@ -140,7 +140,7 @@ class NotebookPage(wx.Window):
             dx = pos[0] - self._start_pos[0]
             dy = pos[1] - self._start_pos[1]
             if self.reverse_style:
-                dx = -1 * dx
+                #dx = -1 * dx
                 dy = -1 * dy
             self._best_x_y_dx_dy = (self._start_pos_x_y_dx_dy[0] + dx,
                                     self._start_pos_x_y_dx_dy[1] + dy,
@@ -175,7 +175,8 @@ class NotebookPage(wx.Window):
     def _set_dimensions(self, page, x, y, width, height, dx, dy):
         if x>0 and y>0 and width>=0 and height>=0:
             if self.reverse_style:
-                page.SetDimensions(dx-width-x,dy-height-y,width,height)
+                #page.SetDimensions(dx-width-x,dy-height-y,width,height)
+                page.SetDimensions(x,dy-height-y,width,height)
             else:
                 page.SetDimensions(x,y,width,height)
 
@@ -339,7 +340,7 @@ class NotebookPage(wx.Window):
         title='',
         param=None,
         panel='desktop',
-        ):        
+        ):
         if panel == None:
             pp = \
                 self.GetParent().GetParent().GetParent()._mgr.GetPane(self.GetParent())
@@ -349,5 +350,4 @@ class NotebookPage(wx.Window):
         else:
             return wx.GetApp().GetTopWindow().new_main_page(address_or_parser,
                     title, param, panel)
-
 

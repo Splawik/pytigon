@@ -189,25 +189,46 @@ var ՐՏ_modules = {};
     var ret_submit = ՐՏ_modules["schclient"].ret_submit;
     
     LOADED_FILES = {};
+    function download_binary_file(buf, content_disposition) {
+        var l, buffer, view, i, mimetype, blob, blobURL;
+        l = buf.length;
+        buffer = new ArrayBuffer(l);
+        view = new Uint8Array(buffer);
+        for (i = 0; i < l; i++) {
+            view[i] = buf.charCodeAt(i);
+        }
+        mimetype = "text/html";
+        if (ՐՏ_in("odf", content_disposition) || ՐՏ_in("ods", content_disposition)) {
+            mimetype = "application/vnd.oasis.opendocument.formula";
+        } else if (ՐՏ_in("pdf", content_disposition)) {
+            mimetype = "application/pdf";
+        } else if (ՐՏ_in("zip", content_disposition)) {
+            mimetype = "application/x-compressed";
+        } else if (ՐՏ_in("xls", content_disposition)) {
+            mimetype = "application/excel";
+        }
+        blob = new Blob([ view ], {
+            "type": mimetype
+        });
+        blobURL = window.URL.createObjectURL(blob);
+        window.open(blobURL);
+    }
     function ajax_get(url, complete) {
         var req;
         req = new XMLHttpRequest();
         function _onload() {
-            complete(req.responseText);
+            var disp;
+            disp = req.getResponseHeader("Content-Disposition");
+            if (disp && ՐՏ_in("attachment", disp)) {
+                download_binary_file(req.response, disp);
+                complete(null);
+            } else {
+                complete(req.responseText);
+            }
         }
         req.onload = _onload;
         req.open("GET", url, true);
         req.send();
-    }
-    function ajax_post(url, data, complete) {
-        var req;
-        req = new XMLHttpRequest();
-        function _onload() {
-            complete(req.responseText);
-        }
-        req.onload = _onload;
-        req.open("POST", url, true);
-        req.send(data);
     }
     function ajax_load(elem, url, complete) {
         function _onload(responseText) {
@@ -216,8 +237,50 @@ var ՐՏ_modules = {};
         }
         ajax_get(url, _onload);
     }
-    function ajax_submit(form, func) {
-        ajax_post(corect_href(form.attr("action")), form.serialize(), func);
+    function _req_post(req, url, data, complete) {
+        function _onload() {
+            var disp;
+            disp = req.getResponseHeader("Content-Disposition");
+            if (disp && ՐՏ_in("attachment", disp)) {
+                download_binary_file(req.response, disp);
+                complete(null);
+            } else {
+                complete(req.responseText);
+            }
+        }
+        req.onload = _onload;
+        req.open("POST", url, true);
+        req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"));
+        req.overrideMimeType("text/plain; charset=x-user-defined");
+        if (data.length) {
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.setRequestHeader("Content-length", data.length);
+            req.setRequestHeader("Connection", "close");
+        }
+        req.send(data);
+    }
+    function ajax_post(url, data, complete) {
+        var req;
+        req = new XMLHttpRequest();
+        _req_post(req, url, data, complete);
+    }
+    function ajax_submit(form, complete) {
+        var req, data;
+        req = new XMLHttpRequest();
+        if (form.find("[type='file']").length > 0) {
+            form.attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
+            data = new FormData(form[0]);
+            form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
+            function _progressHandlingFunction(e) {
+                if (e.lengthComputable) {
+                    $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%");
+                }
+            }
+            req.upload.addEventListener("progress", _progressHandlingFunction, false);
+        } else {
+            data = form.serialize();
+        }
+        _req_post(req, corect_href(form.attr("action")), data, complete);
     }
     function get_page(elem) {
         if (elem.hasClass(".tab-pane")) {
@@ -330,11 +393,15 @@ var ՐՏ_modules = {};
     }
     ՐՏ_modules["tools"]["LOADED_FILES"] = LOADED_FILES;
 
+    ՐՏ_modules["tools"]["download_binary_file"] = download_binary_file;
+
     ՐՏ_modules["tools"]["ajax_get"] = ajax_get;
 
-    ՐՏ_modules["tools"]["ajax_post"] = ajax_post;
-
     ՐՏ_modules["tools"]["ajax_load"] = ajax_load;
+
+    ՐՏ_modules["tools"]["_req_post"] = _req_post;
+
+    ՐՏ_modules["tools"]["ajax_post"] = ajax_post;
 
     ՐՏ_modules["tools"]["ajax_submit"] = ajax_submit;
 
@@ -379,19 +446,21 @@ var ՐՏ_modules = {};
             target = refr_block.find(".refr_target");
         }
         src = refr_block.find(".refr_source");
-        href = src.attr("href");
-        if (src.prop("tagName") === "FORM") {
-            function _refr2(data) {
-                target.html(data);
-                fragment_init(target);
-                if (fun) {
-                    fun();
+        if (src.length > 0) {
+            href = src.attr("href");
+            if (src.prop("tagName") === "FORM") {
+                function _refr2(data) {
+                    target.html(data);
+                    fragment_init(target);
+                    if (fun) {
+                        fun();
+                    }
                 }
+                ajax_post(corect_href(href), src.serialize(), _refr2);
+            } else {
+                ajax_load(target, corect_href(href), function(responseText) {
+                });
             }
-            ajax_post(corect_href(href), src.serialize(), _refr2);
-        } else {
-            ajax_load(target, corect_href(href), function(responseText) {
-            });
         }
     }
     function on_popup_inline(elem) {
@@ -568,40 +637,11 @@ var ՐՏ_modules = {};
             });
         }
     }
-    function progressHandlingFunction(e) {
-        if (e.lengthComputable) {
-            $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%");
-        }
-    }
-    function xhr() {
-        var myXhr;
-        myXhr = jQuery.ajaxSettings.xhr();
-        if (myXhr.upload) {
-            myXhr.upload.addEventListener("progress", progressHandlingFunction, false);
-        }
-        return myXhr;
-    }
     function on_edit_ok(form) {
-        var data;
-        if (ՐՏ_in("multipart", form.attr("enctype"))) {
-            data = new FormData(form[0]);
-            form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
-            jQuery.ajax({
-                "type": "POST",
-                "url": corect_href(form.attr("action")),
-                "data": data,
-                contentType: false,
-                processData: false,
-                "xhr": xhr,
-                "success": function(data) {
-                    _refresh_win_after_ok(data, form);
-                }
-            });
-        } else {
-            ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
-                _refresh_win_after_ok(data, form);
-            });
+        function _fun(data) {
+            _refresh_win_after_ok(data, form);
         }
+        ajax_submit(form, _fun);
         return false;
     }
     function on_delete_ok(form) {
@@ -721,10 +761,6 @@ var ՐՏ_modules = {};
     ՐՏ_modules["popup"]["on_dialog_load"] = on_dialog_load;
 
     ՐՏ_modules["popup"]["_dialog_loaded"] = _dialog_loaded;
-
-    ՐՏ_modules["popup"]["progressHandlingFunction"] = progressHandlingFunction;
-
-    ՐՏ_modules["popup"]["xhr"] = xhr;
 
     ՐՏ_modules["popup"]["on_edit_ok"] = on_edit_ok;
 
@@ -1107,9 +1143,11 @@ function page_init(id, first_time) {
             });
         });
     }
-    glob.ACTIVE_PAGE.page.find("form").attr("target", "_blank");
     glob.ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href;
+        if (jQuery(this).attr("target") === "_blank") {
+            return true;
+        }
         data = jQuery(this).serialize();
         if (ՐՏ_in("pdf=on", data)) {
             return true;

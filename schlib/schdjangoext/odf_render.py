@@ -84,38 +84,47 @@ def render_odf(
     tabele=None,
     debug=None,
     ):
-        
-    if not 'tbl' in context_instance:
-        context_instance['tbl'] = DefaultTbl()
 
-    if template_name.__class__ in (list, tuple):
-        test = False
-        for tname in template_name:
-            if tname[0] == '/':
-                name = tname
-                if os.path.exists(name):
-                    test = True
-                    break
-            else:
-                for template_dir in template_dirs:
-                    name = template_dir + '/' + tname
+
+    if not 'tbl' in context_instance:
+        context = { 'tbl':  DefaultTbl(), }
+    else:
+        context = {}
+
+    ret2 = None
+
+    with context_instance.push(context):
+        if not 'tbl' in context_instance:
+            context_instance['tbl'] = DefaultTbl()
+
+        if template_name.__class__ in (list, tuple):
+            test = False
+            for tname in template_name:
+                if tname[0] == '/':
+                    name = tname
                     if os.path.exists(name):
                         test = True
                         break
-                if test:
-                    break
-        if not test:
-            raise TemplateDoesNotExist(";".join(template_name))
-    else:
-        name = template_name
-    name_out = get_temp_filename()
-    doc = DocTemplateTransform(name, name_out)
-    ret = doc.process(context_instance, debug)
-    if ret != 1:
-        ret2 = (None, name)
-        os.remove(name_out)
-    else:
-        ret2 = (name_out, name)
+                else:
+                    for template_dir in template_dirs:
+                        name = template_dir + '/' + tname
+                        if os.path.exists(name):
+                            test = True
+                            break
+                    if test:
+                        break
+            if not test:
+                raise TemplateDoesNotExist(";".join(template_name))
+        else:
+            name = template_name
+        name_out = get_temp_filename()
+        doc = DocTemplateTransform(name, name_out)
+        ret = doc.process(context_instance, debug)
+        if ret != 1:
+            ret2 = (None, name)
+            os.remove(name_out)
+        else:
+            ret2 = (name_out, name)
     return ret2
 
 

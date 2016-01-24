@@ -2,7 +2,6 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
-
 RET_BUFOR = None
 RET_OBJ = None
 
@@ -25,9 +24,7 @@ from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
-#import scrolltbl
 from tbl import set_table_type
-#import schclient
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
 
 
@@ -103,29 +100,6 @@ def page_init(id, first_time = True):
     if glob.ACTIVE_PAGE:
         pg = glob.ACTIVE_PAGE.page.find('.pagination')
         paginate = init_pagintor(pg)
-    #paginator = get_page(jQuery('#'+ id)).find('.pagination')
-    #if paginator.length>0:
-    #    paginate = True
-    #    pg = ACTIVE_PAGE.page.find('.pagination')
-    #    totalPages = pg.attr('totalPages')
-    #    options = {
-    #        'totalPages': totalPages,
-    #        'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
-    #        'onPageClick':def(event, page):
-    #            form = pg.closest('.refr_object').find('form.refr_source')
-    #            if form:
-    #                def _on_new_page(data):
-    #                    pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
-    #                    fragment_init(pg.closest('.content').find(".tabsort tbody"))
-    #
-    #                url = pg.attr('href').replace('[[page]]', page)+'&hybrid=1'
-    #                form.attr('action', url)
-    #                form.attr('href', url)
-    #                jQuery.ajax({'type': "POST", 'url': url, 'data': form.serialize(), 'success': _on_new_page })
-    #    }
-    #    pg.twbsPagination(options)
-    #else:
-    #    paginate = False
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
 
@@ -136,8 +110,6 @@ def page_init(id, first_time = True):
         handle_class_click(elem2, 'get_row', on_get_row)
         jQuery('#'+ id).on( "click", "a",
             def(e):
-                #nonlocal ACTIVE_PAGE
-
                 if $(e.currentTarget).attr('target') == "_blank":
                     return
 
@@ -170,7 +142,6 @@ def page_init(id, first_time = True):
 
                 href2 = corect_href(href)
 
-                #jQuery.ajax({'type': "GET", 'url': href2, 'success': def(data):
                 ajax_get(href2, def (data):
                     nonlocal href, src_obj
 
@@ -190,12 +161,16 @@ def page_init(id, first_time = True):
                             history_push_state("title", href)
                 )
         )
-    glob.ACTIVE_PAGE.page.find('form').attr('target', '_blank')
+    #glob.ACTIVE_PAGE.page.find('form').attr('target', '_blank')
     glob.ACTIVE_PAGE.page.find('form').submit(
         def(e):
             nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
 
+            if jQuery(this).attr('target')=='_blank':
+                return True
+
             data = jQuery(this).serialize()
+
             if 'pdf=on' in data:
                 return True
             if 'odf=on' in data:
@@ -347,9 +322,7 @@ def _on_menu_href(elem, title=None):
             else:
                 WAIT_ICON2 = True
                 $('#loading-indicator').show()
-            #jQuery.ajax({'type': "GET", 'url': href2, 'success': _on_new_win })
             ajax_get(href2, _on_new_win)
-            #jQuery("#main_menu_toogle").dropdown('toggle')
             jQuery('.navbar-ex1-collapse').collapse('hide')
         return False
 
@@ -429,7 +402,6 @@ window.addEventListener('popstate',
             PUSH_STATE = True
         else:
             if APPLICATION_TEMPLATE == 'modern':
-                #alert("X1")
                 pass
             else:
                 jQuery('#body_body').html("")

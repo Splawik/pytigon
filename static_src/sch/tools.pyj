@@ -3,30 +3,41 @@ from schclient import cmd_to_python, is_hybrid, to_absolute_url, ret_submit
 
 LOADED_FILES = {}
 
+def download_binary_file(buf, content_disposition):
+    l = buf.length
+    buffer = new ArrayBuffer(l)
+    view = new Uint8Array(buffer)
+    for i in range(l):
+        view[i] = buf.charCodeAt(i)
+    mimetype = 'text/html'
+    if 'odf' in content_disposition or 'ods' in content_disposition:
+        mimetype = 'application/vnd.oasis.opendocument.formula'
+    elif 'pdf' in content_disposition:
+        mimetype = 'application/pdf'
+    elif 'zip' in content_disposition:
+        mimetype = 'application/x-compressed'
+    elif 'xls' in content_disposition:
+        mimetype = 'application/excel'
+    blob = new Blob([view], {'type': mimetype })
+    blobURL = window.URL.createObjectURL(blob)
+    window.open(blobURL)
+
 
 def ajax_get(url, complete):
     req = new XMLHttpRequest()
 
     def _onload():
-        complete(req.responseText)
+        disp = req.getResponseHeader('Content-Disposition')
+        if disp and 'attachment' in disp:
+            download_binary_file(req.response, disp)
+            complete(None)
+        else:
+            complete(req.responseText)
 
     req.onload = _onload
 
     req.open('GET', url, True)
     req.send()
-
-
-def ajax_post(url, data, complete):
-    req = new XMLHttpRequest()
-
-    def _onload():
-        complete(req.responseText)
-
-    req.onload = _onload
-
-    req.open('POST', url, True)
-
-    req.send(data)
 
 
 def ajax_load(elem, url, complete):
@@ -38,16 +49,52 @@ def ajax_load(elem, url, complete):
     ajax_get(url, _onload)
 
 
-def ajax_submit(form, func):
-    #if is_hybrid():
-    #    queryString = form.formSerialize()
-    #    cmd_to_python('href_to_var??'+to_absolute_url(form.attr('action'))+'?'+queryString+'??RET_BUFOR')
-    #    RET_OBJ = func
-    #    cmd_to_python('run_js??ret_submit();')
-    #else:
-    #    jQuery.ajax({'type': "POST", 'url': corect_href(form.attr('action')), 'data': form.serialize(), 'success': func })
-    ajax_post(corect_href(form.attr('action')), form.serialize(), func )
+def _req_post(req, url, data, complete):
+    def _onload():
+        disp = req.getResponseHeader('Content-Disposition')
+        if disp and 'attachment' in disp:
+            download_binary_file(req.response, disp)
+            complete(None)
+        else:
+            complete(req.responseText)
+    req.onload = _onload
 
+    req.open("POST", url, True)
+
+    req.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'))
+    req.overrideMimeType('text/plain; charset=x-user-defined');
+    #req.responseType = "blob"
+    #req.responseType = 'arraybuffer'
+
+    if data.length:
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        req.setRequestHeader("Content-length", data.length)
+        req.setRequestHeader("Connection", "close")
+
+    req.send(data)
+
+
+
+def ajax_post(url, data, complete):
+    req = new XMLHttpRequest()
+    _req_post(req, url, data, complete)
+
+
+def ajax_submit(form, complete):
+    req = new XMLHttpRequest();
+
+    if form.find("[type='file']").length > 0:
+        form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
+        data = new FormData(form[0])
+        form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
+        def _progressHandlingFunction(e):
+            if e.lengthComputable:
+                $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")
+        req.upload.addEventListener("progress", _progressHandlingFunction, false)
+    else:
+        data = form.serialize()
+
+    _req_post(req, corect_href(form.attr("action")), data, complete)
 
 
 def get_page(elem):

@@ -56,7 +56,4 @@ def set_table_type(table_type, selector, paginate):
         options['scrollY'] += get_datatable_dy(selector)
         jQuery(selector).dataTable( options )
 
-    #jQuery(selector).on('click', 'a.popup', _on_popup)
-    #jQuery(selector).on('click', 'a.popup_info', _on_popup_info)
-    #jQuery(selector).on('click', 'a.popup_delete', _on_popup_delete)
 

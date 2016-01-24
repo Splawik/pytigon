@@ -2,8 +2,9 @@
 
 % extends default_template2
 
-
 %% page_head
+    head
+        meta charset=utf-8
 
 %% body_start
 
