@@ -2,7 +2,6 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
-
 RET_BUFOR = None
 RET_OBJ = None
 

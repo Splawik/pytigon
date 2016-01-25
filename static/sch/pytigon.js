@@ -251,7 +251,6 @@ var ՐՏ_modules = {};
         req.onload = _onload;
         req.open("POST", url, true);
         req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"));
-        req.overrideMimeType("text/plain; charset=x-user-defined");
         if (data.length) {
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             req.setRequestHeader("Content-length", data.length);

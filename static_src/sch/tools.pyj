@@ -62,7 +62,7 @@ def _req_post(req, url, data, complete):
     req.open("POST", url, True)
 
     req.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'))
-    req.overrideMimeType('text/plain; charset=x-user-defined');
+    #req.overrideMimeType('text/plain; charset=x-user-defined');
     #req.responseType = "blob"
     #req.responseType = 'arraybuffer'
 
