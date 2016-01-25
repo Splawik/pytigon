@@ -18,7 +18,7 @@ def AdditionalUrls():
             if len(elements)>2:
                 if elements[0]=='main':
                     if len(elements)>2:
-                        ret.append(('/simplescripts/run/'+object.name+"/?schtml=1", elements[1], None, elements[2]))
+                        ret.append(('run/'+object.name+"/?schtml=1", elements[1], None, elements[2]))
                     else:
-                        ret.append(('/simplescripts/run/'+object.name+"/?schtml=1", elements[1], None, 'client://apps/utilities-terminal.png'))
+                        ret.append(('run/'+object.name+"/?schtml=1", elements[1], None, 'client://apps/utilities-terminal.png'))
     return ret

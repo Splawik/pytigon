@@ -81,7 +81,10 @@ def run_script_by_name(request, script_name):
     
     script = models.Scripts.objects.get(name=script_name)
     if script:
-        return HttpResponseRedirect("/simplescripts/table/Scripts/%d/action/run?childwin=1" % script.id)
+        if 'only_content' in request.GET:
+            return HttpResponseRedirect("/simplescripts/table/Scripts/%d/action/run?childwin=1&only_content=1" % script.id)
+        else:
+            return HttpResponseRedirect("/simplescripts/table/Scripts/%d/action/run?childwin=1" % script.id)
     else:
         raise Http404("Script does not exist")
     

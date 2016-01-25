@@ -41,9 +41,6 @@ class TabMenu:
         if PUSH_STATE:
             history_push_state(title, href)
 
-
-        jQuery('#tabs2 a:last').tab('show')
-
         jQuery('#tabs2 a:last').on('shown.bs.tab',
             def(e):
                 nonlocal PUSH_STATE, menu_item #ACTIVE_PAGE
@@ -55,6 +52,7 @@ class TabMenu:
                 if PUSH_STATE:
                     history_push_state(menu_item.title, menu_item.url)
         )
+        jQuery('#tabs2 a:last').tab('show')
 
         page_init(_id)
 

@@ -519,9 +519,7 @@ class BaseWebBrowser(object):
                 path = wx.GetApp().scr_path+uri.replace('http://127.0.0.2', '')
                 return (None, path)
             elif '/site_media/' in uri and not '?' in uri:
-                #print("X1:", wx.GetApp().cwd)
-                path = wx.GetApp().cwd+uri.replace('http://127.0.0.2', '')
-                #print(path)
+                path = wx.GetApp().cwd+uri.replace('http://127.0.0.2', '').replace('site_media', 'media')
                 return (None, path)
             else:
                 s = self._local_request(uri2)

@@ -145,6 +145,8 @@ class AppManager:
         ret = []
         for _app in settings.INSTALLED_APPS:
             app = get_app_name(_app)
+            if self.request.get_host()=='127.0.0.2' and app=='schserw.schsys':
+                continue
             try:
                 module_title = None
                 title = None

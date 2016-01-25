@@ -133,14 +133,18 @@
 
 %% topmenu_start
     <ul class="nav nav-tabs" id='tabs'>
-    %if user.is_authenticated:
+    % if request.get_host != '127.0.0.2':
+        %if user.is_authenticated:
+            li
+                div class=btn-group menu-status,,,role=group
+                    button id=logout,,,type=button,,,class=btn btn-sm,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=Logout
+                        span class=fa fa-power-off
         li
-            div class=btn-group menu-status,,,role=group
-                button id=logout,,,type=button,,,class=btn btn-sm,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=Logout
-                    span class=fa fa-power-off
-    li
-        h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
-            {{appset_title}}
+            h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
+                {{appset_title}}
+    % else:
+        li
+            div style=width:5px; height:10px;
 
 %% topmenu
     %if forloop.first:

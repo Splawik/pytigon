@@ -108,7 +108,6 @@ var ՐՏ_modules = {};
         if (PUSH_STATE) {
             history_push_state(title, href);
         }
-        jQuery("#tabs2 a:last").tab("show");
         jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
             var menu;
             glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id), menu_item);
@@ -119,6 +118,7 @@ var ՐՏ_modules = {};
                 history_push_state(menu_item.title, menu_item.url);
             }
         });
+        jQuery("#tabs2 a:last").tab("show");
         page_init(_id);
         jQuery(sprintf("#button_%s", _id)).click(function(event) {
             get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
@@ -790,11 +790,13 @@ var ՐՏ_modules = {};
     function stick_resize() {
         var tbl, dy_table, dy_win, dy;
         tbl = glob.ACTIVE_PAGE.page.find(".tbl_scroll");
-        dy_table = tbl.offset().top;
-        dy_win = dy_win = jQuery(window).height();
-        dy = dy_win - dy_table;
-        if (dy < 100) dy = 100;
-        tbl.height(dy - 35);
+        if (tbl.length > 0) {
+            dy_table = tbl.offset().top;
+            dy_win = dy_win = jQuery(window).height();
+            dy = dy_win - dy_table;
+            if (dy < 100) dy = 100;
+            tbl.height(dy - 35);
+        }
     }
     function resize_win() {
         var tab_width, tab2;
@@ -1146,13 +1148,16 @@ function page_init(id, first_time) {
     glob.ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href;
         if (jQuery(this).attr("target") === "_blank") {
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
         data = jQuery(this).serialize();
         if (ՐՏ_in("pdf=on", data)) {
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
         if (ՐՏ_in("odf=on", data)) {
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
         e.preventDefault();

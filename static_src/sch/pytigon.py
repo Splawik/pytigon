@@ -2,6 +2,7 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
+
 RET_BUFOR = None
 RET_OBJ = None
 
@@ -167,13 +168,16 @@ def page_init(id, first_time = True):
             nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
 
             if jQuery(this).attr('target')=='_blank':
+                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
 
             data = jQuery(this).serialize()
 
             if 'pdf=on' in data:
+                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
             if 'odf=on' in data:
+                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
 
             e.preventDefault()

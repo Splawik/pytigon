@@ -38,6 +38,7 @@ class SchImage:
             http = wx.GetApp().HTTP
             (status, ur) = http.get(self, address)
             if status == 404:
+                print("I can't load image from:", address)
                 self.bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE,
                         wx.ART_TOOLBAR, (32, 32))
             else:
@@ -46,6 +47,7 @@ class SchImage:
                 self.bmp = wx.BitmapFromImage(wx.ImageFromStream(stream))
             http.clear_ptr()
         except:
+            print("The exception while loading image from:", address)
             self.bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE,
                     wx.ART_TOOLBAR, (32, 32))
 

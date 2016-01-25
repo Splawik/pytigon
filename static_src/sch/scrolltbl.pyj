@@ -2,11 +2,12 @@ import glob
 
 def stick_resize():
     tbl = glob.ACTIVE_PAGE.page.find(".tbl_scroll")
-    dy_table = tbl.offset().top
-    dy_win = dy_win = jQuery(window).height()
-    dy = dy_win - dy_table
-    if(dy<100)  dy = 100
-    tbl.height(dy-35)
+    if tbl.length>0:
+        dy_table = tbl.offset().top
+        dy_win = dy_win = jQuery(window).height()
+        dy = dy_win - dy_table
+        if(dy<100)  dy = 100
+        tbl.height(dy-35)
 
 
 def resize_win():
