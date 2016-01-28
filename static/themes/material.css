@@ -96,3 +96,7 @@ form.form-inline .form-control {
 form.form-inline div.checkbox input.checkboxinput  {	
 	margin-right: 5px;
 }
+
+body {
+    margin-top: 0px;
+}

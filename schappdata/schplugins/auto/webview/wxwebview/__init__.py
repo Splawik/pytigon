@@ -129,6 +129,7 @@ def init_plugin_web_view(
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('show_info')
 
+            self.SetZoom(1)
             self.afetr_init()
 
 
