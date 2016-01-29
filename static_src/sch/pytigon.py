@@ -126,7 +126,7 @@ def page_init(id, first_time = True):
                         return True
 
                 href = jQuery(this).attr("href")
-                if '#' in href:
+                if href and '#' in href:
                     return True
 
                 e.preventDefault()
@@ -145,7 +145,7 @@ def page_init(id, first_time = True):
                 ajax_get(href2, def (data):
                     nonlocal href, src_obj
 
-                    if "_parent_refr" in data:
+                    if data and "_parent_refr" in data:
                         refresh_fragment(src_obj)
                     else:
                         if APPLICATION_TEMPLATE == 'modern':
@@ -172,10 +172,10 @@ def page_init(id, first_time = True):
 
             data = jQuery(this).serialize()
 
-            if 'pdf=on' in data:
+            if data and 'pdf=on' in data:
                 jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
-            if 'odf=on' in data:
+            if data and 'odf=on' in data:
                 jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
 
@@ -313,7 +313,7 @@ def _on_menu_href(elem, title=None):
                     $('#loading-indicator').hide()
                     WAIT_ICON2 = False
 
-            if APPLICATION_TEMPLATE == 'standard' and 'btn' in classname:
+            if APPLICATION_TEMPLATE == 'standard' and classname and 'btn' in classname:
                 #jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
                 #jQuery(elem).removeClass('btn-info').addClass('btn-warning')
 
@@ -340,13 +340,17 @@ def _on_error(request, settings):
         $('#loading-indicator').hide()
         WAIT_ICON2 = False
 
-    start = settings.responseText.indexOf("<body>")
-    end = settings.responseText.lastIndexOf("</body>")
-    if start > 0 and end > 0:
-        jQuery("#dialog-data-error").html(settings.responseText.substring(start+6,end-1))
-        jQuery('#dialog-form-error').modal()
+    if settings.responseText:
+        start = settings.responseText.indexOf("<body>")
+        end = settings.responseText.lastIndexOf("</body>")
+        if start > 0 and end > 0:
+            jQuery("#dialog-data-error").html(settings.responseText.substring(start+6,end-1))
+            jQuery('#dialog-form-error').modal()
+        else:
+            jQuery("#dialog-data-error").html(settings.responseText)
+            jQuery('#dialog-form-error').modal()
     else:
-        jQuery("#dialog-data-error").html(settings.responseText)
+        jQuery("#dialog-data-error").html("ERROR")
         jQuery('#dialog-form-error').modal()
 
 

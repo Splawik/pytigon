@@ -78,7 +78,7 @@ var ՐՏ_modules = {};
     };
     TabMenu.prototype.is_open = function is_open(title){
         var self = this;
-        if (ՐՏ_in(title, self.titles) && self.titles[title]) {
+        if (self.titles && ՐՏ_in(title, self.titles) && self.titles[title]) {
             return true;
         } else {
             return false;
@@ -541,7 +541,7 @@ var ՐՏ_modules = {};
             cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
             jQuery("div.dialog-form").modal();
         } else {
-            if (can_popup() && !jQuery(elem).hasClass("inline") && !(ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
+            if (can_popup() && !jQuery(elem).hasClass("inline") && !(jQuery(elem).attr("name") && ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
                 elem2 = jQuery("div.dialog-data");
                 elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid());
                 ajax_load(elem2, jQuery(elem).attr("href"), function(responseText, status, response) {
@@ -652,7 +652,7 @@ var ՐՏ_modules = {};
     function _refresh_win(responseText, ok_button) {
         var popup_activator, dialog;
         popup_activator = jQuery("#" + jQuery(ok_button).closest(".refr_object").attr("related-object"));
-        if (ՐՏ_in("RETURN_OK", responseText)) {
+        if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
             if (!can_popup()) {
                 if (jQuery("div.dialog-form").hasClass("in")) {
                     dialog = "div.dialog-form";
@@ -681,7 +681,7 @@ var ՐՏ_modules = {};
     }
     function _refresh_win_and_ret(responseText, ok_button) {
         var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
-        if (ՐՏ_in("RETURN_OK", responseText)) {
+        if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
             related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
             popup_activator = jQuery("#" + related_object);
             if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
@@ -1107,7 +1107,7 @@ function page_init(id, first_time) {
                 }
             }
             href = jQuery(this).attr("href");
-            if (ՐՏ_in("#", href)) {
+            if (href && ՐՏ_in("#", href)) {
                 return true;
             }
             e.preventDefault();
@@ -1124,7 +1124,7 @@ function page_init(id, first_time) {
             }
             href2 = corect_href(href);
             ajax_get(href2, function(data) {
-                if (ՐՏ_in("_parent_refr", data)) {
+                if (data && ՐՏ_in("_parent_refr", data)) {
                     refresh_fragment(src_obj);
                 } else {
                     if (APPLICATION_TEMPLATE === "modern") {
@@ -1151,11 +1151,11 @@ function page_init(id, first_time) {
             return true;
         }
         data = jQuery(this).serialize();
-        if (ՐՏ_in("pdf=on", data)) {
+        if (data && ՐՏ_in("pdf=on", data)) {
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
-        if (ՐՏ_in("odf=on", data)) {
+        if (data && ՐՏ_in("odf=on", data)) {
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
@@ -1286,7 +1286,7 @@ function _on_menu_href(elem, title) {
                     WAIT_ICON2 = false;
                 }
             }
-            if (APPLICATION_TEMPLATE === "standard" && ՐՏ_in("btn", classname)) {
+            if (APPLICATION_TEMPLATE === "standard" && classname && ՐՏ_in("btn", classname)) {
                 jQuery("a.menu-href").removeClass("btn-warning");
                 jQuery(elem).addClass("btn-warning");
             }
@@ -1312,13 +1312,18 @@ function _on_error(request, settings) {
         $("#loading-indicator").hide();
         WAIT_ICON2 = false;
     }
-    start = settings.responseText.indexOf("<body>");
-    end = settings.responseText.lastIndexOf("</body>");
-    if (start > 0 && end > 0) {
-        jQuery("#dialog-data-error").html(settings.responseText.substring(start + 6, end - 1));
-        jQuery("#dialog-form-error").modal();
+    if (settings.responseText) {
+        start = settings.responseText.indexOf("<body>");
+        end = settings.responseText.lastIndexOf("</body>");
+        if (start > 0 && end > 0) {
+            jQuery("#dialog-data-error").html(settings.responseText.substring(start + 6, end - 1));
+            jQuery("#dialog-form-error").modal();
+        } else {
+            jQuery("#dialog-data-error").html(settings.responseText);
+            jQuery("#dialog-form-error").modal();
+        }
     } else {
-        jQuery("#dialog-data-error").html(settings.responseText);
+        jQuery("#dialog-data-error").html("ERROR");
         jQuery("#dialog-form-error").modal();
     }
 }

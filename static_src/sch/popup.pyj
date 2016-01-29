@@ -108,7 +108,7 @@ def on_popup_edit_new(elem):
         cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
         jQuery('div.dialog-form').modal()
     else:
-        if can_popup() and not jQuery(elem).hasClass('inline') and not ('_inline' in jQuery(elem).attr('name')) :
+        if can_popup() and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
             elem2 = jQuery("div.dialog-data")
             elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
             ajax_load(elem2, jQuery(elem).attr("href"),
@@ -216,7 +216,7 @@ def on_delete_ok(form):
 
 def _refresh_win(responseText, ok_button):
     popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
-    if "RETURN_OK" in responseText:
+    if responseText and "RETURN_OK" in responseText:
         if not can_popup():
             if jQuery("div.dialog-form").hasClass('in'):
                 dialog = "div.dialog-form"
@@ -241,7 +241,7 @@ def _refresh_win(responseText, ok_button):
             ok_button.closest('.refr_target').html(responseText)
 
 def _refresh_win_and_ret(responseText, ok_button):
-    if "RETURN_OK" in responseText:
+    if responseText and "RETURN_OK" in responseText:
         related_object = jQuery(ok_button).closest(".refr_object").attr('related-object')
         popup_activator = jQuery("#"+related_object)
         if jQuery(ok_button).closest(".refr_object").hasClass('in'):
