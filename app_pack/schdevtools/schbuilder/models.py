@@ -62,7 +62,19 @@ field_defaults = {
 formfield_default = {'required':True, }
 
 formfield_defaults = {
-    'CharField': { },
+    'CharField': { 'param': "max_length=None, min_length=None", },
+    'ChoiceField': { 'param': "choices=models.<<choice_name>>", },
+    'TypedChoiceField': { 'param': "coerce=,empty_value=''", },
+    'DecimalField': { 'param': "max_value=None, min_value=None, max_digits=None, decimal_places=None", },
+    'FilePathField': { 'param': "path=<<path>>, match=None, recursive=False, allow_files=True, allow_folders=False", },
+    'FloatField': { 'param': "max_value=None, min_value=None", },
+    'IntegerField': { 'param': "max_value=None, min_value=None", },
+    'GenericIPAddressField': { 'param': "protocol='both', unpack_ipv4=False", },
+    'MultipleChoiceField': { 'param': "choices=models.<<choice_name>>", },
+    'TypedMultipleChoiceField': { 'param': "coerce=,empty_value=''", },
+    'RegexField': {'param': "regex='<<regex>>', max_length=None, min_length=None", },
+    'URLField': { 'param': "max_length=None, min_length=None", },
+    'ComboField': { 'param': "fields=<<fields>>", },    
 }
 
 
@@ -177,7 +189,6 @@ FormField_CHOICES = (
     ("TypedMultipleChoiceField","TypedMultipleChoiceField"),
     ("NullBooleanField","NullBooleanField"),
     ("RegexField","RegexField"),
-    ("SlugField","SlugField"),
     ("TimeField","TimeField"),
     ("URLField","URLField"),
     ("UserField","UserField"),
@@ -544,7 +555,9 @@ class SChField( models.Model):
             defaults['type'] = param
     
             for key in defaults:
-                setattr(self, key, defaults[key])
+                value = getattr(self, key)
+                if not value:
+                    setattr(self, key, defaults[key])
             return defaults
         else:
             return None

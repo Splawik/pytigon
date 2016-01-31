@@ -29,9 +29,9 @@ import datetime
 class {{form.name}}(forms.Form):
     {% for field in form.schformfield_set.all %}{{field.as_declaration|safe}}
     {% endfor %}
-    def process(self, request, queryset=None):
+    {% if form.process_code %}def process(self, request, queryset=None):
     {% for line in form.process_code.splitlines %}
-        {{line|safe}}{% endfor %}
+        {{line|safe}}{% endfor %}{% endif %}
     {% if form.end_class_code and form.end_class_code != '' %}{% for line in form.end_class_code.splitlines %}
     {{ line|safe }}{% endfor %}{% endif %}
 {% if form.end_code and form.end_code != '' %}{{form.end_code|safe}}{% endif %}
