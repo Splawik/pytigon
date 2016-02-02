@@ -31,7 +31,7 @@
     % if not form_ext and show_form
         %% dialog_start
         % if form_delete or form_info
-            % if standard_browser:
+            % if standard_web_browser:
                 <div id="Dialog">
             % if form_info:
                 %% form_info
@@ -44,7 +44,7 @@
                                 td...{{ field.verbose_name }}
                                 td...{{ object|getfield:field.name }}
                     %% form_ok_cancel_info
-                % if standard_browser:
+                % if standard_web_browser:
                     script
                         $('#ModalLabelInfo').html('{{title}}')
             % else:
@@ -71,7 +71,7 @@
                 script
                     $('#ModalLabelDelete').html('{{title}}')
 
-            % if standard_browser
+            % if standard_web_browser:
                 </div>
         % else
             %% row_edit_start
@@ -177,7 +177,16 @@
                                 %% list_row_header_start
                                     % if not no_id
                                         th
-                                            {% id_num 'Id' %}
+                                            % if standard_web_browser:
+                                                div class=dropdown
+                                                      a type=button,,,data-toggle=dropdown,,,class=btn btn-default
+                                                           {% id_num 'Id' %}
+                                                           span class=fa fa-bars
+                                                      ul class=dropdown-menu
+                                                            li:::a href=../odf/list,,,target=_blank...=> ods
+                                                            li:::a href=../pdf/list,,,target=_blank...=> pdf
+                                            % else:
+                                                {% id_num 'Id' %}
                                 %% list_row_header
                                 %% list_row_header_end
                                     th

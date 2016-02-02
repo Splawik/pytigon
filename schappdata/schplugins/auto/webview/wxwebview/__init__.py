@@ -129,7 +129,11 @@ def init_plugin_web_view(
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('show_info')
 
-            self.SetZoom(1)
+
+            #self.SetZoomType(wx.html2.WEBVIEW_ZOOM_TYPE_LAYOUT)
+            #self.SetZoomType(wx.html2.WEBVIEW_ZOOM_TYPE_TEXT)
+            #self.SetZoom(wx.html2.WEBVIEW_ZOOM_MEDIUM)
+            #self.SetZoom(wx.html2.WEBVIEW_ZOOM_SMALL)
             self.afetr_init()
 
 

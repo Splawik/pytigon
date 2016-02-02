@@ -667,3 +667,37 @@ def is_menu_checked(url, full_path):
 def last_elem(value, sep='/'):
     return value.split(sep)[-1]
 
+
+@register.filter(name='get_fields_names')
+def get_fields_names(obj):
+    ret = []
+    for field in obj._meta.get_fields():
+        if hasattr(obj, field.name):
+            if field.name == 'id':
+                ret.insert(0,field.name)
+            else:
+                ret.append(field.name)
+    return ret
+
+@register.filter(name='get_fields_verbose_names')
+def get_fields_verbose_names(obj):
+    ret = []
+    for field in obj._meta.get_fields():
+        if hasattr(obj, field.name):
+            if field.name == 'id':
+                ret.insert(0,field.verbose_name)
+            else:
+                ret.append(field.verbose_name)
+    return ret
+
+@register.filter(name='get_fields')
+def get_fields(obj):
+    ret = []
+    for field in obj._meta.get_fields():
+        if hasattr(obj, field.name):
+            if field.name == 'id':
+                ret.insert(0, getattr(obj, field.name))
+            else:
+                ret.append(getattr(obj, field.name))
+    return ret
+

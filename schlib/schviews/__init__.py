@@ -377,7 +377,6 @@ class GenericRows(object):
 
     def list(self):
         url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(list|sublist|get)$'
-        #url2 = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?get$'
 
         class ListView(generic.ListView):
 

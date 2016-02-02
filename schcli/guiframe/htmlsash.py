@@ -72,6 +72,7 @@ class SchSashWindow(wx.Window):
             style= wx.WANTS_CHARS,
             name=name,
             )
+
         self.Init = False
         self.signals = {}
         self.statusText = ''

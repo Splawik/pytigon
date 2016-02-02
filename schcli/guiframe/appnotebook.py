@@ -117,10 +117,16 @@ class AppNotebook(aui.AuiNotebook):
 
     def add_and_split(
         self,
+        notebook,
         page,
         title,
         direction,
         ):
+
+        #p = notebook.AddPage(page, title, True)
+        #notebook.Split(1, direction)
+        #return
+
         self.closing = False
         if self.GetPageCount() < 1:
             return

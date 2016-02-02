@@ -50,7 +50,42 @@ class SchGridPanel(wx.Panel):
         except:
             ret = wx.ArtProvider_GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
         return ret
-    
+
+    def _add_action(self, akcja):
+        test = False
+        if 'name' in akcja:
+            name = akcja['name']
+            label = akcja['data']
+            if 'title' in akcja:
+                title = akcja['title']
+                if not label:
+                    label = title
+            else:
+                title = ''
+            if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row') and not name in self.commands:
+
+                if name in self._bitmaps:
+                    b = self._get_bmp(name)
+                else:
+                    if 'src' in akcja:
+                        b = bitmap_from_href(akcja['src'])
+                    else:
+                        b = bitmap_from_href("fa://fa-chevron-right?size=1")
+
+                self.toolbar.AddLabelTool(
+                    self.lp,
+                    label,
+                    b,
+                    wx.NullBitmap,
+                    wx.ITEM_NORMAL,
+                    label,
+                    title,
+                    )
+                self.commands.append(name)
+                test = True
+                self.lp+=1
+        return test
+
     def create_toolbar(self, grid):
         self.GetParent().signal_from_child(self, 'set_bitmap_list')
         self.grid = grid
@@ -105,34 +140,7 @@ class SchGridPanel(wx.Panel):
                 self.lp += 3
             if akcje:
                 for akcja in akcje:
-                    if 'name' in akcja:
-                        name = akcja['name']
-                        label = akcja['data']
-                        if 'title' in akcja:
-                            title = akcja['title']
-                        else:
-                            title = ''
-                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row'):
-
-                            if name in self._bitmaps:
-                                b = self._get_bmp(name)
-                            else:
-                                if 'src' in akcja:
-                                    b = bitmap_from_href(akcja['src'])
-                                else:
-                                    b = bitmap_from_href("fa://fa-chevron-right?size=1")
-
-                            self.toolbar.AddLabelTool(
-                                self.lp,
-                                label,
-                                b,
-                                wx.NullBitmap,
-                                wx.ITEM_NORMAL,
-                                label,
-                                title,
-                                )
-                            self.commands.append(name)
-                            self.lp += 1
+                    self._add_action(akcja)
             self.toolbar.Realize()
             self.toolbar.Bind(wx.EVT_TOOL, self.on_tool_click)
 
@@ -154,22 +162,18 @@ class SchGridPanel(wx.Panel):
         toolbar_size = self.toolbar.GetSize()
         if self.vertical:
             if toolbar_size[1] >= panel_size[1]:
-                dx = toolbar_size[0]\
-                     + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
+                dx = toolbar_size[0] + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
             else:
                 dx = toolbar_size[0]
             self.spanel.SetRect(wx.Rect(0, 0, dx, panel_size[1]))
-            self.grid.SetRect(wx.Rect(dx + 2, 0, (panel_size[1] - dx) - 2,
-                              panel_size[1]))
+            self.grid.SetRect(wx.Rect(dx + 2, 0, (panel_size[1] - dx) - 2,panel_size[1]))
         else:
             if toolbar_size[0] >= panel_size[0]:
-                dy = toolbar_size[1]\
-                     + wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
+                dy = toolbar_size[1] + wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
             else:
                 dy = toolbar_size[1]
             self.spanel.SetRect(wx.Rect(0, 0, panel_size[0], dy))
-            self.grid.SetRect(wx.Rect(0, dy + 2, panel_size[0], (panel_size[1]
-                               - dy) - 2))
+            self.grid.SetRect(wx.Rect(0, dy + 2, panel_size[0], (panel_size[1] - dy) - 2))
         if event:
             event.Skip()
 
@@ -185,27 +189,11 @@ class SchGridPanel(wx.Panel):
             test = False
             if akcje:
                 for akcja in akcje:
-                    if 'name' in akcja:
-                        name = akcja['name']
-                        label = akcja['data']
-                        if 'title' in akcja:
-                            title = akcja['title']
-                        else:
-                            title = ''
-                        akcje_dict[name] = akcje
-                        if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row') and not name in self.commands:
-                            self.toolbar.AddLabelTool(
-                                self.lp,
-                                label,
-                                self._get_bmp(name),
-                                wx.NullBitmap,
-                                wx.ITEM_NORMAL,
-                                label,
-                                title,
-                                )
-                            self.commands.append(name)
-                            self.lp += 1
-                            test = True
+                    if not 'name' in akcja:
+                        continue
+                    akcje_dict[akcja['name']] = akcje
+                    if self._add_action(akcja):
+                        test = True
             if test:
                 self.toolbar.Realize()
                 self.toolbar.SetSize(self.toolbar.GetBestSize())

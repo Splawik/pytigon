@@ -372,6 +372,7 @@ class SchHtmlWindow(ScrolledPanel):
         #if not rect[2]==1 and not rect[3]==1:
         #   print(rect)
         self.draw_background()
+        #event.Skip()
 
 
     def draw_background(self, refresh_all=False, size=None):

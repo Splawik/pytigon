@@ -19,8 +19,6 @@ from _schwiki.wiki.models import *
 
 
 
-# -*- coding: utf-8 -*-
-
 import os.path
 from schlib.schhtml.htmltools import superstrip
 import inspect
@@ -931,31 +929,6 @@ class SChAppMenu( models.Model):
         return self.name
     
 admin.site.register(SChAppMenu)
-
-
-@python_2_unicode_compatible
-class SChUrl( models.Model):
-    
-    class Meta:
-        verbose_name = _("SChUrl")
-        verbose_name_plural = _("SChUrl")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        
-        ordering = ['id']
-        
-        
-
-    
-
-    parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
-    reg_expr = models.CharField('Regular expression', null=False, blank=False, editable=True, max_length=255)
-    callback_fun = models.CharField('Callback function', null=False, blank=False, editable=True, max_length=64)
-    dictionary = models.CharField('Dictionary', null=True, blank=True, editable=True, max_length=255)
-    name = models.CharField('Name', null=True, blank=True, editable=True, max_length=64)
-    
-
-    
-admin.site.register(SChUrl)
 
 
 @python_2_unicode_compatible

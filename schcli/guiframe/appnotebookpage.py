@@ -66,6 +66,7 @@ class NotebookPage(wx.Window):
         return self.http
 
     def on_erase_background(self, evt):
+        evt.Skip()
         if not wx.GetApp().GetTopWindow():
             return
         dc = wx.ClientDC(self)

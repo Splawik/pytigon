@@ -129,6 +129,13 @@ body.fixed .menu_offset {
     vertical-align: top;
 }
 
+.tabsort th .btn {
+    margin: 0px;
+    padding: 0px 5px;
+    overflow: visible;
+}
+
+
 .td_action .btn-group .btn:hover {
     margin: 0px 0px 0px 0px;
 }
@@ -321,4 +328,15 @@ modal-content .modal-body {
 
 body {
     margin-top: 2px;
+}
+
+
+.tabsort th .dropdown-menu > li{
+  display: inline-block;
+    float:left;
+ }
+.tabsort th .open> ul {
+    display: inline-flex !important;
+    margin-top: -35px;
+    margin-left: 50px;
 }

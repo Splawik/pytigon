@@ -28,6 +28,7 @@ import platform
 import wx
 import wx.html2
 import datetime
+import time
 #import agw.aui as aui
 from wx.lib.agw import aui
 
@@ -647,15 +648,18 @@ class SchAppFrame(wx.Frame):
 
         okno = NotebookPage(n)
         
-        if panel == "Desktop2":
+        #if panel == "Desktop2":
+        #error in AGW
+        if panel == "__Desktop2":
             if title is None:
                 #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
                 if isinstance(address_or_parser, six.string_types):
-                    n.add_and_split(okno, "", wx.RIGHT)
+                    n.add_and_split(n, okno, "", wx.RIGHT)
                 else:
-                    n.add_and_split(okno, address_or_parser.title, wx.RIGHT)
+                    n.add_and_split(n, okno, address_or_parser.title, wx.RIGHT)
             else:
-                n.add_and_split(okno, title2, wx.RIGHT)
+                #n.add_and_split(okno, title2, wx.RIGHT)
+                n.add_and_split(n, okno, title2, wx.RIGHT)
         else:
             if title is None:
                 #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
@@ -665,7 +669,6 @@ class SchAppFrame(wx.Frame):
                     n.AddPage(okno, address_or_parser.title, True)
             else:
                 n.AddPage(okno, title2, True)
-
         #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
         if isinstance(address_or_parser, six.string_types):
             address = address_or_parser

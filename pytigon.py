@@ -124,6 +124,39 @@ if INSPECTION:
     import wx.lib.mixins.inspection
     #InspectionMixin = wx.lib.mixins.inspection.InspectionMixin
     App = wx.lib.mixins.inspection.InspectableApp
+
+
+    def trace_calls(frame, event, arg):
+        if event != 'call':
+            return
+        co = frame.f_code
+        func_name = co.co_name
+        if func_name == 'write':
+            # Ignore write() calls from print statements
+            return
+        for pos in ('process_window_event', 'idle', 'timer', 'update_ui'):
+            if pos in func_name:
+                return
+        if 'process_window_event' in func_name or 'idle' in func_name or 'idle' in func_name:
+            return
+        if not 'background'  in func_name:
+            return
+        func_line_no = frame.f_lineno
+        func_filename = co.co_filename
+        if not 'schcli/guiframe' in func_filename:
+            return
+        caller = frame.f_back
+        caller_line_no = caller.f_lineno
+        caller_filename = caller.f_code.co_filename
+        print('Call to %s on line %s of %s from line %s of %s' % \
+            (func_name, func_line_no, func_filename,
+             caller_line_no, caller_filename))
+        time.sleep(1)
+        return
+
+
+    sys.settrace(trace_calls)
+
 else:
     #class InspectionNone(object):
     #    def __init__(self):

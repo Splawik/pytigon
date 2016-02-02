@@ -74,10 +74,9 @@
             td cellpadding=0
                 % widget class='menu' id='user_action' title='User action' style='toolbar': 
                     li:::a class=btn btn-primary btn-sm,,,href=schtemplate_set/-/form/list..._(Templates)
-                    li:::a class=btn btn-primary btn-sm,,,href=schurl_set/-/form/list..._(Urls)
                     li:::a class=btn btn-primary btn-sm,,,href=schfiles_set/-/form/list..._(Custom files)
                     li:::a class=btn btn-primary btn-sm,,,href=model_code/form/editor..._(User Models)
                     li:::a class=btn btn-primary btn-sm,,,href=view_code/form/editor..._(User View)
                     li:::a class=btn btn-primary btn-sm,,,href=urls_code/form/editor..._(User Url)
                     li:::a class=btn btn-primary btn-sm,,,href=tasks_code/form/editor..._(User Tasks)
-                    li:::a class=btn btn-primary btn-sm,,,href=doc_code/form/editor..._(Doc)
+                    li:::a class=btn btn-primary btn-sm,,,href=doc/form/editor..._(Doc)

@@ -132,6 +132,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             template2 = []
             for pos in template:
                 template2.append(pos.replace('.html', '.ods'))
+            template2.append("schsys/table.ods")
         else:
             template2 = template
 
