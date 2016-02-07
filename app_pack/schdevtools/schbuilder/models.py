@@ -782,7 +782,7 @@ class SChTemplate( models.Model):
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=64)
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
-    static_files = models.ManyToManyField(SChStatic, null=False, blank=False, editable=True, verbose_name='Static files', )
+    static_files = models.ManyToManyField(SChStatic, null=True, blank=True, editable=True, verbose_name='Static files', )
     tags_mount = models.CharField('Mount riot tags', null=True, blank=True, editable=True, max_length=256)
     
 

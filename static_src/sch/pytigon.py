@@ -80,9 +80,8 @@ def fragment_init(elem=None):
     elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
     elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
 
-
-    paginator = elem2.find('.pagination')
-    paginate = init_pagintor(paginator)
+    #paginator = elem2.find('.pagination')
+    #paginate = init_pagintor(paginator)
 
     if RIOT_INIT:
         _id = jQuery(elem).uid()
@@ -93,13 +92,15 @@ def fragment_init(elem=None):
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
 
+
 def page_init(id, first_time = True):
     nonlocal WAIT_ICON, WAIT_ICON2 #, ACTIVE_PAGE
     table_type = get_table_type(jQuery('#'+ id))
 
-    if glob.ACTIVE_PAGE:
-        pg = glob.ACTIVE_PAGE.page.find('.pagination')
-        paginate = init_pagintor(pg)
+    if table_type != 'datatable':
+        if glob.ACTIVE_PAGE:
+            pg = glob.ACTIVE_PAGE.page.find('.pagination')
+            paginate = init_pagintor(pg)
 
     set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
 
@@ -173,9 +174,11 @@ def page_init(id, first_time = True):
             data = jQuery(this).serialize()
 
             if data and 'pdf=on' in data:
+                jQuery(this).attr('target','_blank')
                 jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
             if data and 'odf=on' in data:
+                jQuery(this).attr('target','_blank')
                 jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
 
@@ -339,6 +342,9 @@ def _on_error(request, settings):
     if WAIT_ICON2:
         $('#loading-indicator').hide()
         WAIT_ICON2 = False
+
+    if settings.status==200:
+        return
 
     if settings.responseText:
         start = settings.responseText.indexOf("<body>")

@@ -735,7 +735,7 @@ def standard_dict(context, parm):
 
 @register.simple_tag(takes_context=True)
 def id_num(context, name):
-    if not context['standard_web_browser']:
+    if not context['standard_web_browser'] or ('doc_type' in context and context['doc_type'] == 'json' ):
         if 'paginator' in context:
             return name + ':' + str(context['paginator'].per_page) + '/'\
                  + str(context['paginator'].count)

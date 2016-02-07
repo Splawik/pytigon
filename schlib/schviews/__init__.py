@@ -36,11 +36,15 @@ from django.conf import settings
 #from django.apps.apps import get_model
 #from django.apps import apps
 
+from django.db.models import CharField
+from django.db.models import  Q
+
 from .viewtools import transform_template_name, LocalizationTemplateResponse, ExtTemplateResponse
 from .form_fun import form_with_perms
 from .perms import make_perms_test_fun
 
 from django.utils.translation import ugettext_lazy as _
+import uuid
 
 # url:  /table/TableName/filter/target/list url width field:
 # /table/TableName/parent_pk/field/filter/target/list
@@ -398,12 +402,17 @@ class GenericRows(object):
             else:
                 rel_field = None
 
+            sort = None
+            order = None
+            search = None
+
             def doc_type(self):
                 if self.kwargs['target']=='pdf':
                     return "pdf"
                 elif self.kwargs['target']=='odf':
-                    self.paginate_by = -1
                     return "odf"
+                elif self.kwargs['target']=='json':
+                    return "json"
                 else:
                     return "html"
 
@@ -419,6 +428,18 @@ class GenericRows(object):
                 *args,
                 **kwargs
                 ):
+                offset = request.GET.get('offset')
+
+                self.sort=request.GET.get('sort')
+                self.order = request.GET.get('order')
+                self.search = request.GET.get('search')
+
+                if offset:
+                    self.kwargs['page'] = int(int(offset)/64)+1
+
+                if self.search:
+                    self.kwargs['filter'] = self.search
+
                 views_module = self.base_class.table.views_module
                 form_name = '_FilterForm' + self.model._meta.object_name
                 if hasattr(views_module, form_name):
@@ -449,6 +470,9 @@ class GenericRows(object):
                 if self.form:
                     context['form'] = self.form
 
+                context['doc_type'] = self.doc_type()
+                context['uuid'] = uuid.uuid4()
+
                 return transform_extra_context(context, self.extra_context)
 
             def get_queryset(self):
@@ -464,10 +488,29 @@ class GenericRows(object):
                         ret = f.all()
                     else:
                         filter =  self.kwargs['filter']
-                        if filter and filter != '-' and hasattr(self.model, 'filter'):
-                            ret = self.model.filter(filter)
+                        if filter and filter != '-':
+                            if hasattr(self.model, 'filter'):
+                                ret = self.model.filter(filter)
+                            else:
+                                fields = [f for f in self.model._meta.fields if isinstance(f, CharField)]
+                                print(fields)
+                                queries = [Q(**{f.name+"__icontains": filter}) for f in fields]
+                                qs = Q()
+                                for query in queries:
+                                    qs = qs | query
+                                ret = self.model.objects.filter(qs)
                         else:
                             ret = self.model.objects.all()
+
+                if hasattr(self.model, 'sort'):
+                    ret = self.model.sort(ret, self.sort, self.order)
+                else:
+                    if self.sort=='cid':
+                        if self.order=='asc':
+                            ret = ret.order_by('id')
+                        else:
+                            ret = ret.order_by('-id')
+
                 if self.form_valid == True:
                     return self.form.process(None, ret)
                 else:

@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import sys
+import io
 
 try:
     from html.parser import HTMLParser
@@ -77,7 +79,8 @@ class SimpleTabParser(HTMLParser):
         elif tag.upper() == 'IMG':
             for attr in attrs:
                 if attr[0].lower() == 'src':
-                    self.cur_attr['image'] = attr[1]
+                    if self.cur_attr:
+                        self.cur_attr['image'] = attr[1]
 
     def handle_endtag(self, tag):
         if tag.upper() in self.main_tags:
@@ -100,8 +103,53 @@ class SimpleTabParser(HTMLParser):
         try:
             HTMLParser.feed(self, html_str)
             self.close()
-        except HTMLParseError as msg:
-            print(msg)
-            print(html_str.split('\n')[msg.lineno - 2].encode('utf-8'))
-            print(html_str.split('\n')[msg.lineno - 1].encode('utf-8'))
-            print(html_str.split('\n')[msg.lineno - 0].encode('utf-8'))
+        except:
+        #except HTMLParseError as msg:
+            print("ERROR:", sys.exc_info()[0])
+            #print(html_str.split('\n')[msg.lineno - 2].encode('utf-8'))
+            #print(html_str.split('\n')[msg.lineno - 1].encode('utf-8'))
+            #print(html_str.split('\n')[msg.lineno - 0].encode('utf-8'))
+
+
+
+class SimpleTabParser2(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.in_td=False
+        self.current_row = []
+        self.current_tab = []
+        self.tables = []
+        self.current_data = io.StringIO()
+
+    def handle_starttag(self, tag, attrs):
+        if tag=='td' or tag=='th':
+            self.in_td = True
+        else:
+            if self.in_td:
+                self.current_data.write(self.get_starttag_text())
+
+    def handle_endtag(self, tag):
+        if tag=='td' or tag=='th':
+            self.current_row.append(self.current_data.getvalue().strip())
+            self.current_data = io.StringIO()
+            self.in_td = False
+        elif tag=='tr':
+            self.current_tab.append(self.current_row)
+            self.current_row = []
+        elif tag=='table':
+            self.tables.append(self.current_tab)
+            self.current_tab = []
+        else:
+            if self.in_td:
+                self.current_data.write("</%s>" % tag)
+
+    def handle_data(self, data):
+        if self.in_td:
+            self.current_data.write(data)
+
+    def print(self):
+        for row in self.tables[-1]:
+            print("-------------------------------------------------------------")
+            for pos in row:
+                print("[", pos.replace('\n','')[:20],"]",)
+            print("-------------------------------------------------------------")

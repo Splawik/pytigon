@@ -31,8 +31,10 @@ import os.path
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
 from schlib.schtools import schjson
-
+from schlib.schhttptools.htmltab import SimpleTabParser2
 from django.utils import six
+import io
+
 
 def transform_template_name(obj, request, template_name):
     if hasattr(obj, 'transform_template_name'):
@@ -128,6 +130,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             template2 = []
             for pos in template:
                 template2.append(pos.replace('.html', '_pdf.html'))
+            template2.append("schsys/table_pdf.html")
         elif context and 'view' in context and context['view'].doc_type()=='odf':
             template2 = []
             for pos in template:
@@ -168,6 +171,41 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                     #self['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
                     pdf_stream = stream_from_html(self.content, stream_type='pdf')
                     self.content = pdf_stream.getvalue()
+            elif self.context_data['view'].doc_type()=='json':
+                self['Content-Type'] = 'application/json'
+
+                mp = SimpleTabParser2()
+                mp.feed(self.content.decode('utf-8'))
+                mp.close()
+
+                row_title = mp.tables[-1][0]
+                tab = mp.tables[-1][1:]
+
+
+                if ':' in row_title[0]:
+                    x = row_title[0].split(':')
+                    title=x[0]
+                    per_page, c = x[1].split('/')
+                    row_title[0] = title
+                else:
+                    per_page = 1
+                    c = len(tab)-1
+
+                for i in range(len(row_title)):
+                    row_title[i] = "%d" % i
+                row_title[0] = 'cid'
+                row_title[-1] = 'caction'
+
+                tab2 = []
+                for row in tab:
+                    tab2.append(dict(zip(row_title, row)))
+
+                d = {}
+                d['total'] = c
+                d['rows'] = tab2
+
+                self.content = schjson.json_dumps(d)
+
             return ret
 
 

@@ -23,14 +23,11 @@
     
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
-    {% jscript_link 'jquery_plugins/datatables/js/jquery.dataTables.js' %}
-    {% jscript_link 'jquery_plugins/datatables/js/dataTables.bootstrap.js' %}
 
-    {% jscript_link 'jquery_plugins/datatables/ColReorder/js/dataTables.colReorder.js' %}
-    {% jscript_link 'jquery_plugins/datatables/ColVis/js/dataTables.colVis.js' %}
-    {% jscript_link 'jquery_plugins/datatables/FixedColumns/js/dataTables.fixedColumns.js' %}
-    {% jscript_link 'jquery_plugins/datatables/Responsive/js/dataTables.responsive.js' %}
-    {% jscript_link 'jquery_plugins/datatables/Scroller/js/dataTables.scroller.js' %}
+
+    {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+
     {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
     {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
     {% jscript_link 'jquery_plugins/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js' %}
@@ -91,14 +88,7 @@
 
 
 %% css_links
-    {% css_link 'jquery_plugins/datatables/css/jquery.dataTables.css' %}
-    {% css_link 'jquery_plugins/datatables/css/dataTables.bootstrap.css' %}
-
-    {% css_link 'jquery_plugins/datatables/ColReorder/css/dataTables.colReorder.css' %}
-    {% css_link 'jquery_plugins/datatables/ColVis/css/dataTables.colVis.css' %}
-    {% css_link 'jquery_plugins/datatables/FixedColumns/css/dataTables.fixedColumns.css' %}
-    {% css_link 'jquery_plugins/datatables/Responsive/css/dataTables.responsive.css' %}
-    {% css_link 'jquery_plugins/datatables/Scroller/css/dataTables.scroller.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
 
     %% botstrap_css
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
@@ -181,10 +171,6 @@
 
 
 %% style_content_end...</div>
-
-
-%% tabsort_class
-    .class="tabsort table table-hover table-striped"
 
 
 %% body_start
@@ -275,6 +261,26 @@
                 div class=modal-footer
                     button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
 
+
+
+%% tabsort_class
+    % if table_type == 'datatable':
+        .class="tabsort table datatable table-hover table-striped"
+        .data-toggle="table"
+        .data-url="{{request.get_path}}../json/list"
+        .data-height="400"
+        .data-side-pagination="server"
+        .data-pagination="true"
+        .data-page-size="64"
+        .data-page-list="[64]"
+        .data-search="true"
+        .data-sortable="true"
+        .data-toolbar="#{{uuid}}_toolbar"
+        .data-locale="pl-PL"
+        .data-show-columns="true"
+        .data-id-field="cid"
+    % else
+        .class="tabsort table table-hover table-striped"
 
 %% row_edit_form
     %if form

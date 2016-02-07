@@ -156,6 +156,7 @@ body.fixed .menu_offset {
     padding: 0px 5px;
     align: left;
     width: 100%;
+    overflow: hidden;
 }
 
 
@@ -295,7 +296,7 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
 
 
 .list_content_header_first_row h4 {
-    margin: 5px 1px -10px 1px;
+    margin: 5px 1px 0px 1px;
 }
 
 .input-group-btn {
@@ -335,8 +336,19 @@ body {
   display: inline-block;
     float:left;
  }
+
+/*
 .tabsort th .open> ul {
     display: inline-flex !important;
     margin-top: -35px;
     margin-left: 50px;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+    border-bottom: 0px;
+}
+*/
+
+.panel-content {
+    margin-bottom: 5px !important;
 }

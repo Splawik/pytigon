@@ -36,6 +36,43 @@ def get_datatable_dy(selector):
     if dy<100: dy = 100
     return dy
 
+def datetable_set_height():
+    elem = jQuery(this).closest(".tabsort_panel")
+    dy_table = elem.offset().top
+    dy_win = jQuery(window).height()
+    dy = dy_win - dy_table
+    if dy<100: dy = 100
+    #jQuery(this).height(dy-20)
+    jQuery(this).bootstrapTable("resetView", {"height": dy-20})
+    #jQuery(this).bootstrapTable({"height": dy-20})
+
+
+def datatable_onresize():
+    #jQuery('.bootstrap-table').each(datetable_set_height)
+    jQuery('.tabsort').each(datetable_set_height)
+
+
+def datatable_request(params):
+    params['search']
+    params['sort']
+    params['order']
+    params['limit']
+
+    page = int(int(params['offset'])/params['limit'])
+
+
+    #setTimeout(function () {
+    #    params.success({
+    #        total: 100,
+    #        rows: [{
+    #            "id": 0,
+    #            "name": "Item 0",
+    #            "price": "$0"
+    #        }]
+    #    });
+    #    // hide loading
+    #    params.complete();
+    #}, 1000);
 
 def set_table_type(table_type, selector, paginate):
     if table_type == '' or table_type == 'simple':
@@ -43,14 +80,12 @@ def set_table_type(table_type, selector, paginate):
     if table_type == 'scrolled':
         stick_header()
     if table_type == 'datatable':
-        if paginate:
-            options = get_datatable_options1()
-            options['scrollY'] += get_datatable_dy(selector)
-            jQuery(selector).dataTable( options )
-        else:
-            options = get_datatable_options()
-            options['scrollY'] += get_datatable_dy(selector)
-            jQuery(selector).dataTable( options )
+        #jQuery(selector).bootstrapTable({"resetView":{}})
+        jQuery(selector).bootstrapTable({})
+        #"resetView":{}})
+        jQuery(selector).each(datetable_set_height)
+        jQuery(window).resize(datatable_onresize)
+        return
     if table_type == 'server-side':
         options = get_datatable_options2()
         options['scrollY'] += get_datatable_dy(selector)

@@ -47,7 +47,7 @@ var ՐՏ_modules = {};
         var self = this;
         if (typeof data === "undefined") data = null;
         self.id = id;
-        self.title = title;
+        self.title = jQuery.trim(title);
         self.url = url;
         self.data = data;
     };
@@ -96,17 +96,18 @@ var ՐՏ_modules = {};
     };
     TabMenu.prototype.new_page = function new_page(title, data, href, riot_init){
         var self = this;
-        var _id, menu_item, scripts;
+        var _id, title2, menu_item, scripts;
         _id = "tab" + self.id;
-        menu_item = new TabMenuItem(_id, title, href, data);
-        self.titles[title] = menu_item;
-        jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [ _id, _id, title, _id ]));
+        title2 = jQuery.trim(title);
+        menu_item = new TabMenuItem(_id, title2, href, data);
+        self.titles[title2] = menu_item;
+        jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [ _id, _id, title2, _id ]));
         jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
         glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
         self.active_item = menu_item;
         jQuery("#" + _id).html(data);
         if (PUSH_STATE) {
-            history_push_state(title, href);
+            history_push_state(title2, href);
         }
         jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
             var menu;
@@ -435,14 +436,23 @@ var ՐՏ_modules = {};
     var cmd_to_python = ՐՏ_modules["schclient"].cmd_to_python;
     var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
     
-    function refresh_fragment(data_item_to_refresh, fun) {
+    function refresh_fragment(data_item_to_refresh, fun, only_table) {
         if (typeof fun === "undefined") fun = null;
-        var refr_block, target, src, href;
+        if (typeof only_table === "undefined") only_table = false;
+        var refr_block, target, datatable, src, href;
         refr_block = data_item_to_refresh.closest(".refr_object");
         if (refr_block.hasClass("refr_target")) {
             target = refr_block;
         } else {
             target = refr_block.find(".refr_target");
+        }
+        if (only_table) {
+            datatable = target.find(".datatable");
+            if (datatable.length > 0) {
+                datatable.bootstrapTable("refresh");
+                fun();
+                return;
+            }
         }
         src = refr_block.find(".refr_source");
         if (src.length > 0) {
@@ -667,9 +677,9 @@ var ՐՏ_modules = {};
                     jQuery(dialog).modal("hide");
                 }
                 jQuery(dialog).fadeTo("slow", .5);
-                refresh_fragment(popup_activator, hide_dialog_form);
+                refresh_fragment(popup_activator, hide_dialog_form, true);
             } else {
-                refresh_fragment(popup_activator);
+                refresh_fragment(popup_activator, null, true);
             }
         } else {
             if (!can_popup()) {
@@ -902,6 +912,30 @@ var ՐՏ_modules = {};
         }
         return dy;
     }
+    function datetable_set_height() {
+        var elem, dy_table, dy_win, dy;
+        elem = jQuery(this).closest(".tabsort_panel");
+        dy_table = elem.offset().top;
+        dy_win = jQuery(window).height();
+        dy = dy_win - dy_table;
+        if (dy < 100) {
+            dy = 100;
+        }
+        jQuery(this).bootstrapTable("resetView", {
+            "height": dy - 20
+        });
+    }
+    function datatable_onresize() {
+        jQuery(".tabsort").each(datetable_set_height);
+    }
+    function datatable_request(params) {
+        var page;
+        params["search"];
+        params["sort"];
+        params["order"];
+        params["limit"];
+        page = parseInt(parseInt(params["offset"]) / params["limit"]);
+    }
     function set_table_type(table_type, selector, paginate) {
         var options;
         if (table_type === "" || table_type === "simple") {
@@ -910,15 +944,10 @@ var ՐՏ_modules = {};
             stick_header();
         }
         if (table_type === "datatable") {
-            if (paginate) {
-                options = get_datatable_options1();
-                options["scrollY"] += get_datatable_dy(selector);
-                jQuery(selector).dataTable(options);
-            } else {
-                options = get_datatable_options();
-                options["scrollY"] += get_datatable_dy(selector);
-                jQuery(selector).dataTable(options);
-            }
+            jQuery(selector).bootstrapTable({});
+            jQuery(selector).each(datetable_set_height);
+            jQuery(window).resize(datatable_onresize);
+            return;
         }
         if (table_type === "server-side") {
             options = get_datatable_options2();
@@ -933,6 +962,12 @@ var ՐՏ_modules = {};
     ՐՏ_modules["tbl"]["get_datatable_options2"] = get_datatable_options2;
 
     ՐՏ_modules["tbl"]["get_datatable_dy"] = get_datatable_dy;
+
+    ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
+
+    ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
+
+    ՐՏ_modules["tbl"]["datatable_request"] = datatable_request;
 
     ՐՏ_modules["tbl"]["set_table_type"] = set_table_type;
 })();
@@ -1039,7 +1074,7 @@ function init_pagintor(pg) {
 }
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, paginator, paginate, _id, x, pos;
+    var elem2, _id, x, pos;
     if (elem) {
         elem2 = elem;
     } else {
@@ -1054,8 +1089,6 @@ function fragment_init(elem) {
         "format": "YYYY-MM-DD hh:mm",
         "language": "pl"
     });
-    paginator = elem2.find(".pagination");
-    paginate = init_pagintor(paginator);
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
         var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);
@@ -1073,9 +1106,11 @@ function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
     var table_type, pg, paginate, elem2;
     table_type = get_table_type(jQuery("#" + id));
-    if (glob.ACTIVE_PAGE) {
-        pg = glob.ACTIVE_PAGE.page.find(".pagination");
-        paginate = init_pagintor(pg);
+    if (table_type !== "datatable") {
+        if (glob.ACTIVE_PAGE) {
+            pg = glob.ACTIVE_PAGE.page.find(".pagination");
+            paginate = init_pagintor(pg);
+        }
     }
     set_table_type(table_type, "#" + id + " .tabsort", paginate);
     if (first_time) {
@@ -1152,10 +1187,12 @@ function page_init(id, first_time) {
         }
         data = jQuery(this).serialize();
         if (data && ՐՏ_in("pdf=on", data)) {
+            jQuery(this).attr("target", "_blank");
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
         if (data && ՐՏ_in("odf=on", data)) {
+            jQuery(this).attr("target", "_blank");
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
         }
@@ -1311,6 +1348,9 @@ function _on_error(request, settings) {
     if (WAIT_ICON2) {
         $("#loading-indicator").hide();
         WAIT_ICON2 = false;
+    }
+    if (settings.status === 200) {
+        return;
     }
     if (settings.responseText) {
         start = settings.responseText.indexOf("<body>");

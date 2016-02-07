@@ -133,7 +133,7 @@
 
         %% list_page
 	        %% list_content_start
-	            <div class="panel panel-default">
+	            <div class="panel panel-default panel-content">
             %% list_content_header
                 div class=panel-heading
                     div class=table,,,width=100%
@@ -158,9 +158,16 @@
                                                             span class=fa fa-refresh
                         %%list_content_header_third_row
                             div class=tr row list_content_header_third_row
-                                div class=td col-sm-8 col-xs-5
-                                    %% list_content_actions
-                                % if is_paginated:
+                                div class={% if table_type == 'datatable'%}x{% else %}td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar
+                                    div class=dropdown
+                                        % if standard_web_browser:
+                                                button type=button,,,class=btn btn-default dropdown-toggle,,,data-toggle=dropdown
+                                                    span class=fa fa-bars
+                                                ul class=dropdown-menu
+                                                    li:::a href=../odf/list,,,target=_blank...=> ods
+                                                    li:::a href=../pdf/list,,,target=_blank...=> pdf
+                                        %% list_content_actions
+                                % if False and is_paginated and table_type != 'datatable':
                                     div class=td col-sm-4 col-xs-7 text-right,,,align=right
                                         %% list_content_paginator
                                             {% paginator %}
@@ -176,20 +183,11 @@
                             tr
                                 %% list_row_header_start
                                     % if not no_id
-                                        th
-                                            % if standard_web_browser:
-                                                div class=dropdown
-                                                      a type=button,,,data-toggle=dropdown,,,class=btn btn-default
-                                                           {% id_num 'Id' %}
-                                                           span class=fa fa-bars
-                                                      ul class=dropdown-menu
-                                                            li:::a href=../odf/list,,,target=_blank...=> ods
-                                                            li:::a href=../pdf/list,,,target=_blank...=> pdf
-                                            % else:
-                                                {% id_num 'Id' %}
+                                        th data-field=cid,,,data-sortable=true
+                                            {% id_num 'Id' %}
                                 %% list_row_header
                                 %% list_row_header_end
-                                    th
+                                    th data-field=caction
                                         ._(Action)
                     %% list_table
                         tbody
