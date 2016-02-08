@@ -107,7 +107,11 @@ def get_page(elem):
 def get_table_type(elem):
     tabsort = get_page(elem).find('.tabsort')
     if tabsort.length>0:
-        return tabsort.attr('table_type')
+        ret = tabsort.attr('table_type')
+        if ret:
+            return ret
+        else:
+            return "scrolled"
     else:
         return ""
 

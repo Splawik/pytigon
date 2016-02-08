@@ -1,33 +1,6 @@
 import glob
 from scrolltbl import stick_header
 
-def get_datatable_options():
-    options = { 'scrollY': -120,
-                'paging': False,
-                'responsive': True,
-                "dom": 'RC<"clear">frt',
-                "language": { "url": "/static/jquery_plugins/datatables/i18n/Polish.lang" }
-    }
-    return options
-
-def get_datatable_options1():
-    options = { 'scrollY': -75,
-                'paging': False,
-                'responsive': True,
-                "dom": 'lrt',
-                "bSort" : False,
-                "language": { "url": "/static/jquery_plugins/datatables/i18n/Polish.lang" }
-    }
-    return options
-
-def get_datatable_options2():
-    options = { 'scrollY': 0,
-                'paging': False,
-                'responsive': True,
-                "dom": 'lrt',
-                "language": { "url": "/static/jquery_plugins/datatables/i18n/Polish.lang" }
-    }
-    return options
 
 def get_datatable_dy(selector):
     dy_table = glob.ACTIVE_PAGE.page.find('.tabsort_panel').offset().top
@@ -36,43 +9,19 @@ def get_datatable_dy(selector):
     if dy<100: dy = 100
     return dy
 
+
 def datetable_set_height():
     elem = jQuery(this).closest(".tabsort_panel")
     dy_table = elem.offset().top
     dy_win = jQuery(window).height()
     dy = dy_win - dy_table
     if dy<100: dy = 100
-    #jQuery(this).height(dy-20)
     jQuery(this).bootstrapTable("resetView", {"height": dy-20})
-    #jQuery(this).bootstrapTable({"height": dy-20})
 
 
 def datatable_onresize():
-    #jQuery('.bootstrap-table').each(datetable_set_height)
-    jQuery('.tabsort').each(datetable_set_height)
+    jQuery('.datatable').each(datetable_set_height)
 
-
-def datatable_request(params):
-    params['search']
-    params['sort']
-    params['order']
-    params['limit']
-
-    page = int(int(params['offset'])/params['limit'])
-
-
-    #setTimeout(function () {
-    #    params.success({
-    #        total: 100,
-    #        rows: [{
-    #            "id": 0,
-    #            "name": "Item 0",
-    #            "price": "$0"
-    #        }]
-    #    });
-    #    // hide loading
-    #    params.complete();
-    #}, 1000);
 
 def set_table_type(table_type, selector, paginate):
     if table_type == '' or table_type == 'simple':
@@ -80,9 +29,7 @@ def set_table_type(table_type, selector, paginate):
     if table_type == 'scrolled':
         stick_header()
     if table_type == 'datatable':
-        #jQuery(selector).bootstrapTable({"resetView":{}})
         jQuery(selector).bootstrapTable({})
-        #"resetView":{}})
         jQuery(selector).each(datetable_set_height)
         jQuery(window).resize(datatable_onresize)
         return

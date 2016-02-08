@@ -6,7 +6,7 @@
 
 
 %% all
-    %with form_width=<<dx>> form_height=<<dy>> show_title_bar=1 title='<<form_title>>'
+    %with show_title_bar=1 title='<<form_title>>'
         {{ block.super }}
 
 

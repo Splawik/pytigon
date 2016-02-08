@@ -290,10 +290,15 @@ var ՐՏ_modules = {};
         }
     }
     function get_table_type(elem) {
-        var tabsort;
+        var tabsort, ret;
         tabsort = get_page(elem).find(".tabsort");
         if (tabsort.length > 0) {
-            return tabsort.attr("table_type");
+            ret = tabsort.attr("table_type");
+            if (ret) {
+                return ret;
+            } else {
+                return "scrolled";
+            }
         } else {
             return "";
         }
@@ -862,46 +867,6 @@ var ՐՏ_modules = {};
     
     var stick_header = ՐՏ_modules["scrolltbl"].stick_header;
     
-    function get_datatable_options() {
-        var options;
-        options = {
-            "scrollY": -120,
-            "paging": false,
-            "responsive": true,
-            "dom": "RC<\"clear\">frt",
-            "language": {
-                "url": "/static/jquery_plugins/datatables/i18n/Polish.lang"
-            }
-        };
-        return options;
-    }
-    function get_datatable_options1() {
-        var options;
-        options = {
-            "scrollY": -75,
-            "paging": false,
-            "responsive": true,
-            "dom": "lrt",
-            "bSort": false,
-            "language": {
-                "url": "/static/jquery_plugins/datatables/i18n/Polish.lang"
-            }
-        };
-        return options;
-    }
-    function get_datatable_options2() {
-        var options;
-        options = {
-            "scrollY": 0,
-            "paging": false,
-            "responsive": true,
-            "dom": "lrt",
-            "language": {
-                "url": "/static/jquery_plugins/datatables/i18n/Polish.lang"
-            }
-        };
-        return options;
-    }
     function get_datatable_dy(selector) {
         var dy_table, dy_win, dy;
         dy_table = glob.ACTIVE_PAGE.page.find(".tabsort_panel").offset().top;
@@ -926,15 +891,7 @@ var ՐՏ_modules = {};
         });
     }
     function datatable_onresize() {
-        jQuery(".tabsort").each(datetable_set_height);
-    }
-    function datatable_request(params) {
-        var page;
-        params["search"];
-        params["sort"];
-        params["order"];
-        params["limit"];
-        page = parseInt(parseInt(params["offset"]) / params["limit"]);
+        jQuery(".datatable").each(datetable_set_height);
     }
     function set_table_type(table_type, selector, paginate) {
         var options;
@@ -955,19 +912,11 @@ var ՐՏ_modules = {};
             jQuery(selector).dataTable(options);
         }
     }
-    ՐՏ_modules["tbl"]["get_datatable_options"] = get_datatable_options;
-
-    ՐՏ_modules["tbl"]["get_datatable_options1"] = get_datatable_options1;
-
-    ՐՏ_modules["tbl"]["get_datatable_options2"] = get_datatable_options2;
-
     ՐՏ_modules["tbl"]["get_datatable_dy"] = get_datatable_dy;
 
     ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
 
     ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
-
-    ՐՏ_modules["tbl"]["datatable_request"] = datatable_request;
 
     ՐՏ_modules["tbl"]["set_table_type"] = set_table_type;
 })();

@@ -251,7 +251,13 @@ div.table {
     //margin-left: 5px;
     //margin-right: 5px;
     //margin-bottom: 5px;
-    padding: 3px;
+    //padding: 3px;
+    //padding: 0px 15px;
+    padding: 0px 3px;
+}
+
+div.td {
+    padding: 0px 4px;
 }
 
 div.td a.popup {
@@ -289,7 +295,7 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
 
 .refresh-button {
     position: absolute;
-    right: 17px;
+    right: 3px;
     bottom: 3px;
     height: 100%;
 }
@@ -351,4 +357,16 @@ body {
 
 .panel-content {
     margin-bottom: 5px !important;
+}
+
+
+.table > div.row {
+    margin-right: 0px !important;
+    margin-left:  0px !important;
+}
+
+
+.fixed-table-pagination div.pagination, .fixed-table-pagination .pagination-detail {
+    margin-top: 10px;
+    margin-bottom: 0px;
 }

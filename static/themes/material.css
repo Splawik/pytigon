@@ -26,9 +26,10 @@
     margin: 0px 6px 0px 0px;
 }
 
-.tabsort .btn-group {
-    padding: 0px;
-    margin: 0px 0px 0px 0px;
+.datatable .btn-group {
+    padding: 0px !important;
+    //margin: 0px 0px 0px 0px;
+    margin: 10px 1px;
     vertical-align: top;
 }
 
@@ -100,3 +101,24 @@ form.form-inline div.checkbox input.checkboxinput  {
 body {
     margin-top: 0px;
 }
+
+
+.list_content_header_third_row .btn {
+    margin: 1px;
+}
+
+.list_content_header_first_row h4 {
+    margin: 5px 1px 6px 1px;
+}
+
+
+.fixed-table-toolbar .bars, .fixed-table-toolbar .search, .fixed-table-toolbar .columns {
+    margin-top: 0px;
+    margin-bottom: 0px;
+ }
+
+ .datatable > tbody > tr > td {
+    padding: 3px;
+    vertical-align: middle;
+}
+

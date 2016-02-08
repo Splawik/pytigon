@@ -192,7 +192,8 @@ class RenderBorder(RenderBase):
 
     def __init__(self, parent):
         RenderBase.__init__(self, parent)
-        self.rendered_attribs = ('border', )
+        self.rendered_attribs = ('border-top', 'border-right', 'border-bottom', 'border-left', 'border')
+        #self.rendered_attribs = ('border', )
 
     def handle_get_size(self, border):
         return sizes_from_attr(border)
@@ -207,16 +208,29 @@ class RenderBorder(RenderBase):
         border,
         ):
         p = self.handle_get_size(border)
-        b = p[0]
+        b = p[0]        
         if b > 0:
             if 'border-color' in self.parent.attrs:
                 (_r, _g, _b) = dc.rgbfromhex(self.parent.attrs['border-color'])
                 dc.set_color(_r, _g, _b, 255)
             else:
-# dc.set_color(0,0,0,255)
                 dc.set_color(0, 0, 0, 255)
-            dc.set_line_width(b)
-            dc.add_rectangle(b / 2, b / 2, dc.dx - b, dc.dy - b)
+            dc.set_line_width(b)            
+            test = False
+            if 'border-top' in self.parent.attrs:
+                dc.add_line(b / 2, b / 2, dc.dx - b, 0)
+                test = True
+            if 'border-right' in self.parent.attrs:
+                dc.add_line(dc.dx - b/2, b / 2,  0, dc.dy - b)
+                test = True
+            if 'border-bottom' in self.parent.attrs:
+                dc.add_line(b/2, dc.dy - b / 2,  dc.dx - b, 0)
+                test = True
+            if 'border-left' in self.parent.attrs:
+                dc.add_line(b / 2, b / 2, 0, dc.dy - b)            
+                test = True
+            if not test:
+                dc.add_rectangle(b / 2, b / 2, dc.dx - b, dc.dy - b)
             dc.draw()
         return dc.subdc(b, b, dc.dx - 2 * b, dc.dy - 2 * b)
 
