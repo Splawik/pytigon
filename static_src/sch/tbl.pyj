@@ -11,17 +11,25 @@ def get_datatable_dy(selector):
 
 
 def datetable_set_height():
-    elem = jQuery(this).closest(".tabsort_panel")
-    dy_table = elem.offset().top
+    elem = jQuery(this).closest(".bootstrap-table")
+
+    dy_table = elem.height()
     dy_win = jQuery(window).height()
-    dy = dy_win - dy_table
+    dy_body = jQuery('body').height()
+    dy = dy_table + (dy_win-dy_body)
+
     if dy<100: dy = 100
-    jQuery(this).bootstrapTable("resetView", {"height": dy-20})
+
+    jQuery(this).bootstrapTable("resetView", {"height": dy-10})
 
 
 def datatable_onresize():
     jQuery('.datatable').each(datetable_set_height)
-
+    #setTimeout(
+    #    def ():
+    #        jQuery('.datatable').each(datetable_set_height)
+    #    ,300
+    #)
 
 def set_table_type(table_type, selector, paginate):
     if table_type == '' or table_type == 'simple':

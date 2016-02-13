@@ -15,7 +15,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><span><strong>{{appset_title}}</strong></span></a>
+            %if user.is_authenticated:
+                div class=dropdown,,,style=display: inline-block;float: left;padding: 10px 0px;margins:0px
+                    button class=btn btn-default dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown,,,style=color: rgba(255, 255, 255, 0.84);
+                        span class=fa fa-power-off
+                        span class=caret
+                    ul class=dropdown-menu
+                        li
+                            a class=system_menu,,,href=#,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
+                        li role=separator,,,class=divider
+                        li
+                            a href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                        li
+                            a class=system_menu,,,href=#,,,action={%url 'start' %}admin?schtml=1,,,title=_(Administration)..._(Administraction)
+            <a class="navbar-brand" href="#" style="padding: 12px"><span class="label label-info" style="padding: 10px; "><strong>{{appset_title}}</strong></span></a>
         </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">

@@ -55,54 +55,58 @@
 
     %% body
 
-        %% nav
-            %% menu_start
-            %% menu
-
-                %% topmenu_start
-                %for title, perms, index, app_name, user_param in app_manager.get_apps_width_perm:
-                    %% topmenu
-                %% topmenu_end
-
-                %% submenu_start
-                %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager.get_app_items_width_perm:
-                    %% submenu
-                %% submenu_end
-            %% menu_end
-
-            %% menu2
-
         %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+            %% login_header
             %% login
+            %% login_footer
+        % else:
+            %% nav
+                %% change_password
+                %% menu_start
+                %% menu
 
-        %% body_init
-        %% tabs
-            %% body_body
-                %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
-                    %% panel
-                    %% messages
-                        % if messages:
-                            % for message in messages:
-                                % ifequal message|slice:"-1:" '!'
-                                        ul class=errorlist
-                                            li...{{message}}
-                                    {% else %}
-                                        ul class=messagelist
-                                            li...{{message}}
-                    %% navglobal
-                    %% sidebar
+                    %% topmenu_start
+                    %for title, perms, index, app_name, user_param in app_manager.get_apps_width_perm:
+                        %% topmenu
+                    %% topmenu_end
 
-                    %% style_content_start
-                    %% content_start
-                    %% no_content
-                        %% content
-                    %% content_end
-                    %% style_content_end
+                    %% submenu_start
+                    %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager.get_app_items_width_perm:
+                        %% submenu
+                    %% submenu_end
+                %% menu_end
+
+                %% menu2
+
+            %% body_init
+
+            %% messages
+                % if messages:
+                    % for message in messages:
+                        % ifequal message|slice:"-1:" '!'
+                                ul class=errorlist
+                                    li...{{message}}
+                            {% else %}
+                                ul class=messagelist
+                                    li...{{message}}
+            %% tabs
+                %% body_body
+                    %if user.is_authenticated or not settings.SHOW_LOGIN_WIN
+                        %% panel
+                        %% navglobal
+                        %% sidebar
+
+                        %% style_content_start
+                        %% content_start
+                        %% no_content
+                            %% content
+                        %% content_end
+                        %% style_content_end
 
 
-    %% html_widgets_init
+        %% html_widgets_init
 
-    %% body_footer
+        %% body_footer
   
     %% body_end...</body>
 

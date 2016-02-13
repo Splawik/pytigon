@@ -118,6 +118,14 @@
 %% css_end
     </style>
 
+
+%% login_header
+    div
+        h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
+            {{appset_title}}
+
+%% login_footer
+
 %% menu_start
     <div>
 
@@ -126,12 +134,22 @@
     % if request.get_host != '127.0.0.2':
         %if user.is_authenticated:
             li
-                div class=btn-group menu-status,,,role=group
-                    button id=logout,,,type=button,,,class=btn btn-sm,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=Logout
+                div class=dropdown
+                    button class=btn btn-default dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown
                         span class=fa fa-power-off
+                        span class=caret
+                    ul class=dropdown-menu
+                        li
+                            a class=system_menu,,,href=#,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
+                        li role=separator,,,class=divider
+                        li
+                            a href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                        li
+                            a class=system_menu,,,href=#,,,action={%url 'start' %}admin?schtml=1,,,title=_(Administration)..._(Administraction)
         li
-            h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
-                {{appset_title}}
+            a class=system_menu,,,href=#,,,action={%url 'start' %},,,id=logo_href
+                h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
+                    {{appset_title}}
     % else:
         li
             div style=width:5px; height:10px;
@@ -176,7 +194,11 @@
 %% body_start
     %% body_start_0
         % if not show_form:
-            <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}" class="skin-blue">
+            %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+                <body bgcolor="#{{color_body_1_5}}" class="login_background">
+            % else:
+                <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}" class="skin-blue">
+
     %% form_bar
 
 
@@ -264,11 +286,9 @@
 
 
 %% tabsort_class
-    % if table_type == 'datatable'
+    % if table_type == 'datatable':
         .class="tabsort table datatable table-hover table-striped table-condensed"
-        .data-toggle="table"
         .data-url="{{request.path}}/../../json/list"
-        .data-height="400"
         .data-side-pagination="server"
         .data-pagination="true"
         .data-page-size="64"
@@ -279,7 +299,7 @@
         .data-locale="pl-PL"
         .data-show-columns="true"
         .data-id-field="cid"
-    % else
+    % else:
         .class="tabsort table table-hover table-striped"
 
 %% row_edit_form

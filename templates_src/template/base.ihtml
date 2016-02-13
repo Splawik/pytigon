@@ -11,9 +11,11 @@
     % if not user.is_authenticated
         % if settings.SHOW_LOGIN_WIN
             div class=container,,,align=center
-                div class=panel panel-info,,,style=width:200pt;margin-top:20pt;
+                div class=panel panel-info,,,style=width:400pt;margin-top:20pt;
                     div class=panel-heading
-                        h3 class=panel-title..._(Login)
+                        h3 class=panel-title
+                            span class=fa fa-lock
+                            _(Login)
                     form class=form-inline,,,role=form,,,action={%url 'start'%}schsys/do_login/?next={{request.path}},,,method=post,,,name=signin
                         div class=panel-body
                             {% csrf_token %}
@@ -26,6 +28,40 @@
                             div class=form-group
                                 button type=submit,,,class=btn btn-default...OK
 
+%% change_password
+    % if standard_web_browser:
+        div class=modal fade,,,id=change_passwd,,,role=dialog
+            div class=modal-dialog modal-sm
+                div class=modal-content
+                    div class=modal-header
+                        h3...Change Password
+                    form class=form-inline,,,role=form,,,action={%url 'start'%}schsys/change_password/,,,method=post,,,name=change_password
+                        div class=modal-body
+                            {% csrf_token %}
+                            div class=form-group
+                                label for=current_password...Current Password
+                                input class=form-control,,,name=current_password,,,type=password
+                            div class=form-group
+                                label for=new_password...New Password
+                                input class=form-control,,,name=new_password,,,type=password
+                            div class=form-group
+                                label for=confirm_password...Confirm Password
+                                input class=form-control,,,name=confirm_password,,,type=password
+                        div class=modal-footer
+                            button href=#,,,class=btn,,,data-dismiss=modal...Cancel
+                            button type=submit,,,class=btn btn-default...OK
+
+%% messages
+    % if messages:
+        div class=alert alert-danger,,,role=alert
+            a href=#,,,class=close,,,data-dismiss=alert... &times;
+            % for message in messages:
+                % ifequal message|slice:"-1:" '!'
+                        ul class=errorlist
+                            li...{{message}}
+                    {% else %}
+                        ul class=messagelist
+                            li...{{message}}
 
 %% body
     % if not form_ext and show_form
@@ -133,9 +169,9 @@
 
         %% list_page
 	        %% list_content_start
-	            <div class="panel panel-default panel-content">
+	            <div class="panel panel-content">
             %% list_content_header
-                div class=panel-heading
+                div
                     div class=table,,,width=100%
                         %%list_content_header_first_row
                             div class=tr row list_content_header_first_row

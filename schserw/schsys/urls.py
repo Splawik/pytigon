@@ -55,6 +55,8 @@ urlpatterns = patterns(
     (r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     (r'^do_logout/$', 'django.contrib.auth.views.logout', {'next_page': START_PATH}),
 
+    (r'^change_password/$', 'schserw.schsys.views.change_password'),
+
     (r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
 
     (r'^datedialog/(?P<akcja>\w+)/$', 'schserw.schsys.views.datedialog'),

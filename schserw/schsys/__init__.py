@@ -57,5 +57,6 @@ Perms = True
 Index = 'index'
 Urls = (
          #('../admin?schtml=1', 'Administracja', 'auth.add_user', 'client://categories/applications-other.png'),
-         ('../admin/password_change?schtml=1', 'Zmień hasło', None, 'client://categories/applications-other.png'),
-         ('do_logout?schtml=1', 'Wyloguj się', None, 'client://categories/applications-other.png'))
+         #('../admin/password_change?schtml=1', 'Zmień hasło', None, 'client://categories/applications-other.png'),
+         #('do_logout?schtml=1', 'Wyloguj się', None, 'client://categories/applications-other.png')
+)

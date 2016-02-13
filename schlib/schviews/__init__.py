@@ -437,8 +437,8 @@ class GenericRows(object):
                 if offset:
                     self.kwargs['page'] = int(int(offset)/64)+1
 
-                if self.search:
-                    self.kwargs['filter'] = self.search
+                #if self.search:
+                #    self.kwargs['filter'] = self.search
 
                 views_module = self.base_class.table.views_module
                 form_name = '_FilterForm' + self.model._meta.object_name
@@ -492,15 +492,17 @@ class GenericRows(object):
                             if hasattr(self.model, 'filter'):
                                 ret = self.model.filter(filter)
                             else:
-                                fields = [f for f in self.model._meta.fields if isinstance(f, CharField)]
-                                print(fields)
-                                queries = [Q(**{f.name+"__icontains": filter}) for f in fields]
-                                qs = Q()
-                                for query in queries:
-                                    qs = qs | query
-                                ret = self.model.objects.filter(qs)
+                                ret = self.model.objects.all()
                         else:
                             ret = self.model.objects.all()
+
+                if self.search:
+                    fields = [f for f in self.model._meta.fields if isinstance(f, CharField)]
+                    queries = [Q(**{f.name+"__icontains": self.search}) for f in fields]
+                    qs = Q()
+                    for query in queries:
+                        qs = qs | query
+                    ret = ret.filter(qs)
 
                 if hasattr(self.model, 'sort'):
                     ret = self.model.sort(ret, self.sort, self.order)

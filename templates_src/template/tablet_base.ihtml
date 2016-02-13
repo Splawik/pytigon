@@ -18,6 +18,7 @@
 
 %% menu_start
     header class=header
+
         a href=.,,,class=logo,,,style=white-space:nowrap;text-align: center;
             % if appset_title|length > 20:
                 small...{{appset_title}}

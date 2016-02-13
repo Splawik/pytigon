@@ -122,3 +122,17 @@ body {
     vertical-align: middle;
 }
 
+
+#quit_menu {
+    padding: 8px 10px;
+    margin: 1px;
+}
+
+#logo_href {
+    margin: 0px;
+    padding: 0px;
+}
+
+.tabsort_panel .fixed-table-toolbar .btn {
+    padding: 8px 5px;
+}

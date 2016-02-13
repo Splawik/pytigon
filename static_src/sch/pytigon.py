@@ -2,7 +2,6 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
-
 RET_BUFOR = None
 RET_OBJ = None
 
@@ -25,7 +24,7 @@ from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
-from tbl import set_table_type
+from tbl import set_table_type, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
 
 
@@ -258,6 +257,11 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
                     window.location = jQuery(this).attr('action')
             )
 
+            jQuery('.system_menu').on('click',
+                def():
+                    window.location = jQuery(this).attr('action')
+            )
+
             #jQuery('.tab-tab').perfectScrollbar()
 
             jQuery('#tabs a').click(
@@ -331,6 +335,7 @@ def _on_menu_href(elem, title=None):
                 $('#loading-indicator').show()
             ajax_get(href2, _on_new_win)
             jQuery('.navbar-ex1-collapse').collapse('hide')
+            #datatable_onresize()
         return False
 
 
@@ -371,6 +376,11 @@ def jquery_ready():
             nonlocal IS_POPUP
             IS_POPUP = False
             jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
+    )
+
+    jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse",
+        def():
+            console.log("collapsed")
     )
 
     if APPLICATION_TEMPLATE == 'traditional':

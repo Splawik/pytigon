@@ -878,16 +878,17 @@ var ՐՏ_modules = {};
         return dy;
     }
     function datetable_set_height() {
-        var elem, dy_table, dy_win, dy;
-        elem = jQuery(this).closest(".tabsort_panel");
-        dy_table = elem.offset().top;
+        var elem, dy_table, dy_win, dy_body, dy;
+        elem = jQuery(this).closest(".bootstrap-table");
+        dy_table = elem.height();
         dy_win = jQuery(window).height();
-        dy = dy_win - dy_table;
+        dy_body = jQuery("body").height();
+        dy = dy_table + (dy_win - dy_body);
         if (dy < 100) {
             dy = 100;
         }
         jQuery(this).bootstrapTable("resetView", {
-            "height": dy - 20
+            "height": dy - 10
         });
     }
     function datatable_onresize() {
@@ -960,6 +961,7 @@ var on_delete_ok = ՐՏ_modules["popup"].on_delete_ok;
 var ret_ok = ՐՏ_modules["popup"].ret_ok;
 
 var set_table_type = ՐՏ_modules["tbl"].set_table_type;
+var datatable_onresize = ՐՏ_modules["tbl"].datatable_onresize;
 
 var can_popup = ՐՏ_modules["tools"].can_popup;
 var corect_href = ՐՏ_modules["tools"].corect_href;
@@ -1212,6 +1214,9 @@ function app_init(application_template, menu_id, lang, base_path, base_fragment_
             jQuery("#logout").on("click", function() {
                 window.location = jQuery(this).attr("action");
             });
+            jQuery(".system_menu").on("click", function() {
+                window.location = jQuery(this).attr("action");
+            });
             jQuery("#tabs a").click(function(e) {
                 e.preventDefault();
                 jQuery(this).tab("show");
@@ -1322,6 +1327,9 @@ function jquery_ready() {
     jQuery("div.dialog-form").on("hide.bs.modal", function(e) {
         IS_POPUP = false;
         jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
+    });
+    jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", function() {
+        console.log("collapsed");
     });
     if (APPLICATION_TEMPLATE === "traditional") {
         glob.ACTIVE_PAGE = new Page(0, jQuery("#body_body"));

@@ -27,6 +27,27 @@ from django.http import Http404
 from django.conf import settings
 from schlib.schmodels import import_model
 from schlib.schtasks.base_task import get_process_manager
+from django.contrib.auth import authenticate
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+
+def change_password(request):
+    old_password = request.POST.get("current_password", "")
+    new_password = request.POST.get("new_password", "")
+    confirm_password = request.POST.get("confirm_password", ".")
+    if new_password == confirm_password:
+        user = authenticate(username=request.user, password=old_password)
+        if user is not None and user.is_active:
+            user.set_password(new_password)
+            user.save()
+            return HttpResponseRedirect(reverse('start')+"schsys/do_logout?schtml=1")
+        else:
+            messages.add_message(request, messages.ERROR, 'Bad old password')
+            return HttpResponseRedirect(reverse('start'))
+    else:
+        messages.add_message(request, messages.ERROR, 'Bad confirmed password')
+        return HttpResponseRedirect(reverse('start'))
+
 
 def ok(request):
     return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")

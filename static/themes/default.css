@@ -370,3 +370,25 @@ body {
     margin-top: 10px;
     margin-bottom: 0px;
 }
+
+.login_background {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e5799+0,7db9e8+100&1+0,1+62,0.7+68,0+100;Blue+to+Transparent+Sharp */
+    background: -moz-linear-gradient(-45deg,  rgba(30,87,153,1) 0%, rgba(89,148,202,1) 62%, rgba(95,154,207,0.7) 68%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  rgba(30,87,153,1) 0%,rgba(89,148,202,1) 62%,rgba(95,154,207,0.7) 68%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  rgba(30,87,153,1) 0%,rgba(89,148,202,1) 62%,rgba(95,154,207,0.7) 68%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    height:100vh;
+    overflow: hidden;
+}
+
+#quit_menu {
+    padding: 8px 10px;
+    margin: 0px 5px;
+    //margin-top: -5px;
+    //background-color: transparent;
+}
+
+#logo_href {
+    margin: 0px;
+    padding: 0px;
+}
