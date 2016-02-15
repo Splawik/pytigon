@@ -26,13 +26,14 @@
     margin: 0px 6px 0px 0px;
 }
 
+/*
 .datatable .btn-group {
     padding: 0px !important;
     //margin: 0px 0px 0px 0px;
     margin: 10px 1px;
     vertical-align: top;
 }
-
+*/
 .td_action .btn, .td_information .btn {
     margin: 0px 0px 0px 0px;
     vertical-align: top;
