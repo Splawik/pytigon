@@ -235,21 +235,23 @@
                                             tr {% block list_row_attr %}{% endblock %}
                                                 %% list_row_start
                                                     % if not no_id
-                                                        td class=td_information
-                                                            %% id_extra
-                                                            %if get:
-                                                                {% get_row object.id %}
-                                                            %else:
-                                                                {% view_row object.id %}
+                                                        td
+                                                            div class=td_information,,,style=white-space:nowrap
+                                                                %% id_extra
+                                                                %if get:
+                                                                    {% get_row object.id %}
+                                                                %else:
+                                                                    {% view_row object.id %}
                                                 %% list_row
                                                     td...{{object}}
                                                 %% list_row_end
-                                                    td style=white-space:nowrap,,,class=td_action
-                                                        %% list_row_actions
-                                                            % if readonly
-                                                                a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
-                                                            % else
-                                                                % row_actions:...edit;delete
+                                                    td
+                                                        div class=td_action,,,style=white-space:nowrap
+                                                            %% list_row_actions
+                                                                % if readonly
+                                                                    a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
+                                                                % else
+                                                                    % row_actions:...edit;delete
                                         %% list_row2
 
                         %% list_table_footer

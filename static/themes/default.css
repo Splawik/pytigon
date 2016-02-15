@@ -206,12 +206,12 @@ div.indent {
     margin: 0px -7px 0px 20px;
 }
 
-tr:not(:hover) td.td_action * {
+tr:not(:hover) div.td_action * {
 	opacity: 0.2;
 	filter:alpha(opacity=20);
 }
 
-tr:not(:hover) td.td_information * {
+tr:not(:hover) div.td_information * {
 	opacity: 0.4;
 	filter:alpha(opacity=40);
 }
