@@ -57,6 +57,9 @@ def test_mobile(request):
 
 def test_tablet(request):
     s = request.META["HTTP_USER_AGENT"].lower()
+    print("-----------------------------------------------")
+    print(s)
+    print("-----------------------------------------------")
     if 'tablet' in s:
         return True
     else:

@@ -66,15 +66,14 @@ class NotebookPage(wx.Window):
         return self.http
 
     def on_erase_background(self, evt):
-        evt.Skip()
+        #evt.Skip()
         if not wx.GetApp().GetTopWindow():
             return
         dc = wx.ClientDC(self)
         dc.Clear()
         margin = self.get_margins()
         if hasattr(wx.GetApp().GetTopWindow(), 'desktop'):
-            tabs_count = \
-                len(wx.GetApp().GetTopWindow().desktop._mgr.GetAllPanes())
+            tabs_count = len(wx.GetApp().GetTopWindow().desktop._mgr.GetAllPanes())
             if self.get_page_count() and tabs_count > 2 or self.get_page_count() > 1\
                  or wx.GetApp().GetTopWindow().count_shown_panels(count_toolbars=False)\
                  > 1 and self.get_page_count() > 0:
@@ -90,12 +89,10 @@ class NotebookPage(wx.Window):
                 y = y - margin / 2
                 dx = dx + margin
                 dy = dy + margin
-                if self.GetParent().active and self.GetParent().GetCurrentPage()\
-                     == self:
+                if self.GetParent().active and self.GetParent().GetCurrentPage() == self:
                     col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
                 else:
-                    col = \
-                        wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVEBORDER)
+                    col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVEBORDER)
                 dc.SetPen(wx.Pen(col, margin))
                 dc.DrawLine(x, y, x + dx, y)
                 dc.DrawLine(x + dx, y, x + dx, y + dy)

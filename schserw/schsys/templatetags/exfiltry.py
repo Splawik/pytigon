@@ -333,6 +333,22 @@ def floatformat3(text):
         return formatstr % f
 
 
+@register.filter(name='amount')
+def amount(text):
+    try:
+        f = float(text)
+    except ValueError:
+        return ''
+    if f==0.0:
+        return '-  '
+    def split_len(seq, length):
+        return [seq[i:i+length] for i in range(0, len(seq), length)]
+
+    s = "%.02f" % f
+    t = s.split('.')
+    return ' '.join(split_len(t[0][::-1], 3))[::-1] + "." + t[1]
+
+
 @register.filter(name='hide')
 def hide(value):
     value.widget = HiddenInput()

@@ -27,7 +27,6 @@ from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_
 from tbl import set_table_type, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
 
-
 def init_pagintor(pg):
     nonlocal WAIT_ICON2
     if pg.length>0:
@@ -224,6 +223,7 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
         jQuery(def ():
             nonlocal menu_id
             jQuery("#tabs").tabdrop()
+            jQuery("#tabs2").tabdrop()
             if APPLICATION_TEMPLATE != 'traditional':
                 pos = jQuery(".menu-href.btn-warning")
                 if pos.length > 0:

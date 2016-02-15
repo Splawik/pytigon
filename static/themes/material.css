@@ -136,3 +136,7 @@ body {
 .tabsort_panel .fixed-table-toolbar .btn {
     padding: 8px 5px;
 }
+
+.TableFiltr .btn {
+    margin-top: 0px !important;
+}

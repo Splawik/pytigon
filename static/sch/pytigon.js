@@ -878,15 +878,21 @@ var ՐՏ_modules = {};
         return dy;
     }
     function datetable_set_height() {
-        var elem, dy_table, dy_win, dy_body, dy;
-        elem = jQuery(this).closest(".bootstrap-table");
+        var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
+        elem = jQuery(this).closest(".tabsort_panel");
         dy_table = elem.height();
         dy_win = jQuery(window).height();
-        dy_body = jQuery("body").height();
+        dy_body1 = 0;
+        jQuery(".win-header").each(function() {
+            dy_body1 += jQuery(this).height();
+        });
+        dy_body2 = jQuery(".win-content").height();
+        dy_body = dy_body1 + dy_body2;
         dy = dy_table + (dy_win - dy_body);
-        if (dy < 100) {
-            dy = 100;
+        if (dy < 200) {
+            dy = 200;
         }
+        console.log("dy_win:" + dy_win + ", dy_table:" + dy_table + ", dy_body1:" + dy_body1 + ", dy_body2:" + dy_body2 + ", dy:" + dy);
         jQuery(this).bootstrapTable("resetView", {
             "height": dy - 10
         });
@@ -902,9 +908,14 @@ var ՐՏ_modules = {};
             stick_header();
         }
         if (table_type === "datatable") {
-            jQuery(selector).bootstrapTable({});
-            jQuery(selector).each(datetable_set_height);
-            jQuery(window).resize(datatable_onresize);
+            function onLoadSuccess(data) {
+                jQuery(selector).each(datetable_set_height);
+                jQuery(window).resize(datatable_onresize);
+                return false;
+            }
+            jQuery(selector).bootstrapTable({
+                "onLoadSuccess": onLoadSuccess
+            });
             return;
         }
         if (table_type === "server-side") {
@@ -1186,6 +1197,7 @@ function app_init(application_template, menu_id, lang, base_path, base_fragment_
         jQuery(function() {
             var pos, id, elem;
             jQuery("#tabs").tabdrop();
+            jQuery("#tabs2").tabdrop();
             if (APPLICATION_TEMPLATE !== "traditional") {
                 pos = jQuery(".menu-href.btn-warning");
                 if (pos.length > 0) {

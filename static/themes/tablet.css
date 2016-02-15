@@ -1,0 +1,76 @@
+.navbar .navbar-nav > li > a {
+    color: inherit;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#tabs2 {
+    background: transparent;
+}
+
+.nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    color: #aaa !important;
+}
+
+body {
+    margin-top: 0px;
+}
+
+
+.content {
+    min-height: 250px !important;
+    padding: 1px !important;
+    margin: 0px !important;
+    margin-left: 0px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+
+.control-sidebar .nav-tabs {
+    background: transparent;
+}
+
+.tab-content {
+    background-color: transparent;
+}
+
+.dropdown-menu {
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26) !important;
+}
+
+#tabs2 li.active a {
+    color: #000 !important;
+}
+
+.sidebar-menu .treeview-menu > li > a > .fa {
+    display: none;
+}
+
+#tab_tabs2 {
+    float: left;
+    bottom: 0px;
+    position: absolute;
+    left: 42px;
+    right: 200px;
+}
+
+.skin-blue .main-header .navbar .nav > li > a {
+    color: #fff !important;
+}
+
+
+.navbar.navbar .dropdown-menu li > a:hover, .navbar-default.navbar .dropdown-menu li > a:hover, .navbar.navbar .dropdown-menu li > a:focus, .navbar-default.navbar .dropdown-menu li > a:focus {
+    color: #000 !important;
+    background-color: #eee;
+}
+
+
+.navbar.navbar .dropdown-menu .active > a, .navbar-default.navbar .dropdown-menu .active > a {
+    background-color: #bbb;
+}
+
+#tabs2 .dropdown-menu a {
+
+    color: #000 !important;
+}

@@ -49,11 +49,12 @@
     {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
+    %% ext_js_scripts
+
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
 
     %% theme_js_scripts
-
 
 %% jquery_init
     %% fragment_init
@@ -111,6 +112,7 @@
     %% theme_css_links
         {% css_link 'themes/default.css' %}
 
+    {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
 
 %% css_start
     <style type="text/css">
@@ -130,7 +132,7 @@
     <div>
 
 %% topmenu_start
-    <ul class="nav nav-tabs" id='tabs'>
+    <ul class="nav nav-tabs win-header" id='tabs'>
     % if request.get_host != '127.0.0.2':
         %if user.is_authenticated:
             li
@@ -165,7 +167,7 @@
 
 %%topmenu_end
     </ul>
-    <div id="menu" class="tab-content menu-content">
+    <div id="menu" class="tab-content menu-content win-header">
 
 
 %% submenu
@@ -209,7 +211,7 @@
     % if NO_TABS or application_type != 'modern':
         {{block.super}}
     % else
-        div class=tabbable
+        div class=tabbable win-content
             div id=tab_tabs2
                 ul class=nav nav-tabs,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
@@ -217,7 +219,7 @@
 
 
 %% body_body
-    div id=body_body,,,class=tab-pane refr_target refr_object
+    div id=body_body,,,class=tab-pane refr_target refr_object win-content
         {{block.super}}
 
 

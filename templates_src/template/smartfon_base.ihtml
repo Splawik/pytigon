@@ -7,7 +7,7 @@
 
 
 %% menu_start
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default win-header" role="navigation">
         <div class="navbar-header">
             <button id="main_menu_toogle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
