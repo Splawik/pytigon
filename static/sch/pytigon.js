@@ -911,6 +911,7 @@ var ՐՏ_modules = {};
             function onLoadSuccess(data) {
                 jQuery(selector).each(datetable_set_height);
                 jQuery(window).resize(datatable_onresize);
+                jQuery(".win-content").bind("resize", datatable_onresize);
                 return false;
             }
             jQuery(selector).bootstrapTable({

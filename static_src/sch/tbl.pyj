@@ -52,6 +52,7 @@ def set_table_type(table_type, selector, paginate):
         def onLoadSuccess(data):
             jQuery(selector).each(datetable_set_height)
             jQuery(window).resize(datatable_onresize)
+            jQuery('.win-content').bind('resize', datatable_onresize)
             return False
 
         jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess })
