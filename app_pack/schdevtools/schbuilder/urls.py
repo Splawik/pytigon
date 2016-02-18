@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     gen_row_action('SChFormField', 'field_up', views.change_pos_form_field, {'app':'schbuilder', 'tab':'SChFormField', 'forward':False, 'field': 'parent'}),
     gen_row_action('SChFormField', 'field_down', views.change_pos_form_field, {'app':'schbuilder', 'tab':'SChFormField', 'forward':True, 'field': 'parent'}),
     gen_row_action('SChView', 'template_edit3', views.template_edit3),
+    gen_tab_action('SChAppSet', 'update', views.update),
     
     
     

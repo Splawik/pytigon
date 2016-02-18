@@ -38,7 +38,7 @@ import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.tools import open_and_create_dir
-
+import git
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -294,6 +294,28 @@ def gen(request, pk):
             user_param = '{}'
         
         template_to_file(base_path, "app_init", app.name+"/__init__.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
+    
+        for file_obj in app.schfiles_set.all():
+            if file_obj.file_type=='f':
+                file_name = base_path + "/" + app.name+"/templatetags/"+ file_obj.name + ".py"
+            elif file_obj.file_type=='t':
+                file_name = base_path + "/" + app.name+"/templatetags/"+ file_obj.name + ".py"
+            elif file_obj.file_type=='c':
+                file_name = base_path + "/" + app.name+"/"+ file_obj.name
+            elif file_obj.file_type=='m':
+                f = open_and_create_dir(base_path + "/" + app.name+"/management/__init__.py", "w")
+                f.close()
+                f = open_and_create_dir(base_path + "/" + app.name+"/management/commands/__init__.py","w")
+                f.close()
+                file_name = base_path + "/" + app.name+"/management/commands/"+ file_obj.name
+            else: 
+                file_name=None
+                
+            if file_name:
+                f = open_and_create_dir(file_name,"w")
+                f.write(file_obj.content)
+                f.close()
+            
     
     template_to_file(base_path, "apps", "apps.py",  {'appset': appset, 'app_names': app_names })
     
@@ -795,6 +817,21 @@ def template_edit3(request, pk):
         id = templates[0].id
     new_url = "/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id)
     return HttpResponseRedirect(new_url)
+    
+
+
+
+
+
+
+def update(request):
+    
+    g = git.cmd.Git(settings.ROOT_PATH)
+    g.reset('--hard')
+    g.pull()
+    
+    return HttpResponse("GIT PULL", content_type="text/plain")
+    
     
 
 

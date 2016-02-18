@@ -47,6 +47,7 @@
     % new_row _("New application set")
     % list_action "prj_import/edit" _("Import")
     % list_action "restart_server" _("Restart server")
+    % list_action "update" _("Update server from git")
 
 
 %% list_row_header

@@ -238,6 +238,7 @@ FileType_CHOICES = (
     ("f","TemplateFilters"),
     ("t","TemplateTags"),
     ("c","Custom file"),
+    ("m","Management command"),
     
     )
 
