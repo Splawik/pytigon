@@ -70,7 +70,7 @@
 
 %% list_content_header
     % if standard_web_browser and perms.schwiki.add_page:
-        a data-toggle=collapse,,,href=#collapse,,,style=position:absolute;left: 8px;z-index:10;
+        a data-toggle=collapse,,,href=#collapse,,,style=position: absolute;right: 5px;
             span class=fa-arrows-v fa fa-fw
         div id=collapse,,,class=panel-collapse collapse
             {{ block.super }}
@@ -94,9 +94,28 @@
         {{content|wikify|safe}}
 
 %% list_content_body
+    % if wiki_path_list:
+        % if standard_web_browser:
+            ol class=breadcrumb
+                % for wiki_elem in wiki_path_list:
+                    li
+                        {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
+        % else:
+            table width=100%,,,bgcolor=#a0a0a0
+                tr:::td
+                tr
+                    td
+                        % for wiki_elem in wiki_path_list:
+                            {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                tr:::td
+            br
+
     div class=panel-body
         % if content
-            {{content|wikify|safe}}
+            % if wiki_path:
+                {{content|wikify:wiki_path|safe}}
+            % else:
+                {{content|wikify|safe}}
         % else
             .Ta strona jeszcze nie istnieje!
 

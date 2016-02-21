@@ -375,8 +375,8 @@ def print_info(value):
     return value
 
 @register.filter(name='wikify')
-def _wikify(value):
-    return wikify(value)
+def _wikify(value, path=None):
+    return wikify(value, path)
 
 
 @register.filter(name='wiki')
@@ -386,7 +386,12 @@ def wiki(value):
 
 @register.filter(name='wiki_href')
 def wiki_href(value, section="help"):
-    return make_href(value, section=section)
+    if section.startswith('+'):
+        path = section
+        section = 'help'
+    else:
+        path=None
+    return make_href(value, section=section, path=path)
 
 
 @register.filter(name='comma')

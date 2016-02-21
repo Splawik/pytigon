@@ -54,13 +54,24 @@ template_start = """
 
 def view_page(request, subject, page_name):
     
+    path, sep, page_name = page_name.rpartition('+')
+    if path:
+        path_list = path.split('+')
+        if page_name in path_list:
+            path_list = path_list[:path_list.index(page_name)]
+        if len(path_list) > 10:
+            path_list = path_list[1:]    
+        path = '+'.join(path_list+[page_name,]) 
+    else:
+        path_list = None
+        path = page_name
     page = None
     try:
         page = Page.objects.get(name=page_name, subject=subject)
         content = page.content
     except Page.DoesNotExist:
         content = None
-    c = RequestContext(request, {'page_name': page_name, 'subject': subject, 'content': content,
+    c = RequestContext(request, {'page_name': page_name, 'subject': subject, 'content': content, 'wiki_path': path, 'wiki_path_list': path_list,
                        'title': '?: ' + page_name})
     if page:
         if page.page_type != 'W':

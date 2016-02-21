@@ -718,13 +718,20 @@ register_tag_preprocess_map('select', select_to_ctrltab)
 
 def a_to_button(parent, attrs):
     if 'class' in attrs:
-        if 'popup' in attrs['class'] or 'button' in attrs['class'] or 'btn' in attrs['class']:
-            try:
-                if parent.parent.parent.tag == 'ctrltable':
+        if 'popup' in attrs['class'] or 'button' in attrs['class'] or 'btn' in attrs['class'] or 'schbtn' in attrs['class']:
+            if 'schbtn' in attrs['class']:
+                try:
+                    if parent.parent.parent.tag == 'ctrltable':
+                        return ('ctrlbutton', attrs)
+                except:
                     return ('a', attrs)
-            except:
-                pass
-            return ('ctrlbutton', attrs)
+            else:
+                try:
+                    if parent.parent.parent.tag == 'ctrltable':
+                        return ('a', attrs)
+                except:
+                    pass
+                return ('ctrlbutton', attrs)
     return ('a', attrs)
 
 

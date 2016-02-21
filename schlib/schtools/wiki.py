@@ -48,8 +48,10 @@ def wiki_from_str(wiki_value):
     return wiki
 
 
-def make_href(wiki_value, new_win=True, section=None, btn = False):
+def make_href(wiki_value, new_win=True, section=None, btn = False, path=None):
     wiki = wiki_from_str(wiki_value)
+    if path:
+        wiki = path + '+' + wiki
     if settings.URL_ROOT_FOLDER and settings.URL_ROOT_FOLDER != '':
         p = '/' + settings.URL_ROOT_FOLDER
     else:
@@ -58,7 +60,7 @@ def make_href(wiki_value, new_win=True, section=None, btn = False):
     if btn:
         btn_str = "class='btn btn-default' label='%s'" % wiki_value
     else:
-        btn_str = ""
+        btn_str = "class='schbtn' label='%s' " % wiki_value
 
     if section:
         if new_win:
@@ -72,7 +74,7 @@ def make_href(wiki_value, new_win=True, section=None, btn = False):
             return "<a href='../../%s/view/' target='_self' %s>%s</a>" % (wiki, btn_str, wiki_value)
 
 
-def wikify(value):
+def wikify(value, path=None):
     x = value.split('[[')
     if len(x) > 1:
         ret = []
@@ -98,8 +100,7 @@ def wikify(value):
                     section = l[1]
                 else:
                     section = None
-
-                ret.append(make_href(txt, new_win=new_win, section=section, btn=btn) + y[1])
+                ret.append(make_href(txt, new_win=new_win, section=section, btn=btn, path=path) + y[1])
             else:
                 ret.append('[[' + pos)
         return ''.join(ret)

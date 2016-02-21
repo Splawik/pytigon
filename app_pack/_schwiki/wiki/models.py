@@ -68,16 +68,19 @@ class Page( models.Model):
     def save(self, *args, **kwargs):
         if self.page_type == 'W':
             if self.content_src:
-                content = wikify(markdown.markdown(self.content_src, extensions=['tables', 'codehilite']))
+                #content = wikify(markdown.markdown(self.content_src, extensions=['tables', 'codehilite']))
+                content = markdown.markdown(self.content_src, extensions=['tables', 'codehilite'])
             else:
                 content = ""
             t = Template(template_content % content)
             c = Context({})
             self.content=t.render(c)
         elif self.page_type == 'I':
-            self.content = wikify(ihtml_to_html(None, self.content_src))
+            #self.content = wikify(ihtml_to_html(None, self.content_src))
+            self.content = ihtml_to_html(None, self.content_src)
         elif self.page_type == 'H':
-            self.content = wikify(self.content_src)
+            #self.content = wikify(self.content_src)
+            self.content = self.content_src
     
         super(Page, self).save(*args, **kwargs) 
     
