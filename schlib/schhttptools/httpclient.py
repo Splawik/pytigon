@@ -22,6 +22,7 @@ import sys
 import io
 import time
 import six
+import tempfile
 
 try:
     from urllib.parse import urlencode, urljoin
@@ -228,7 +229,8 @@ class HttpClient:
                 
         if not self.http:
             #self.http = httplib2.Http(os.path.join(os.path.expanduser("~"), ".pytigon/.cache"))
-            self.http = httplib2.Http(os.path.join(os.path.expanduser("~")))
+            #self.http = httplib2.Http(os.path.join(os.path.expanduser("~")))
+            self.http = httplib2.Http(os.path.join(tempfile.gettempdir(), ".pytigon_cache"))
 
         if credentials:
             self.http.add_credentials(credentials[0], credentials[1])

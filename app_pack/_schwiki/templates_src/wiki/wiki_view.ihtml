@@ -101,12 +101,14 @@
                     li
                         {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
         % else:
-            table width=100%,,,bgcolor=#a0a0a0
-                tr:::td
-                tr
+            table width=100%
+                tr bgcolor=#{{color_background_0_9}}
                     td
+                tr
+                    td bgcolor=#{{color_background_0_9}}
                         % for wiki_elem in wiki_path_list:
                             {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                        >
                 tr:::td
             br
 
