@@ -39,11 +39,13 @@ if platform.system() == "Windows":
 else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
 
+print(sys.argv[1:])
+
 from schlib.schhttptools import httpclient
 from schlib.schhttptools import htmltab
 
 def usage():
-    print("pytigon_task.py -a arguments -u user -p password app_set:/view_name")
+    print("pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password app_set:/view_name")
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'ha:u:p:', [
@@ -71,15 +73,15 @@ if not APP_SET or not VIEW:
     usage()
     sys.exit()
 
+ARGUMENTS = {}
 for (opt, arg) in opts:
     if opt in ('-h', '--help'):
         usage()
         sys.exit()
-    elif opt in ('-a', '--arguments='):
-        ARGUMENTS = {}
-        for pos in [ x.split(':') for x in arg.replace('__',' ').split(',') ]:
-            if len(pos)==2:
-                ARGUMENTS[pos[0]]=pos[1]
+    elif opt in ('-a', '--arguments'):
+        pos = arg.replace('__',' ').split('=')
+        if len(pos)==2:
+            ARGUMENTS[pos[0]]=pos[1]
     elif opt in ('-u', '--username='):
         USERNAME = arg
     elif opt in ('-p', '--password='):
@@ -87,6 +89,7 @@ for (opt, arg) in opts:
 
 CWD_PATH = ROOT_PATH + '/app_pack/' + APP_SET
 sys.path.insert(0, CWD_PATH)
+print(CWD_PATH)
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 httpclient.init_embeded_django()
@@ -107,7 +110,7 @@ parm={'csrfmiddlewaretoken': csrf_token, 'username': USERNAME, 'password': PASSW
 ret, newaddr = http.get(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
 http.clear_ptr()
 
-ret, newaddr = http.get(None, '/tasks_demo/from_script/', parm=ARGUMENTS)
+ret, newaddr = http.get(None, VIEW, parm=ARGUMENTS)
 ret_str = http.str()
 http.clear_ptr()
 

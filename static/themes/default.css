@@ -98,6 +98,7 @@ td.control {
 #tabs2 button.close {
   position:relative;
   left: -4px;
+  top: -14px;
   margin: -26px 0px 0px 0px;
 }
 
@@ -392,3 +393,8 @@ body {
     margin: 0px;
     padding: 0px;
 }
+
+.skin-blue .main-header .navbar .nav > .active > a {
+    background: rgba(255,255,255,1) !important;
+}
+

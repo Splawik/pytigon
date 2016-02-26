@@ -61,7 +61,7 @@
         .function base_fragment_init() { jQuery('input[type=file]').fileinput(); }
     %% riot_init
         .riot_init = null
-    .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_ROOT_FOLDER}}/', base_fragment_init, riot_init)
+    .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, riot_init)
 
 
 %% jquery_ready_start
