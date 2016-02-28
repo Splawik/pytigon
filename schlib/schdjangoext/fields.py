@@ -1,7 +1,6 @@
 from django.db import models
-from django.db.models.fields.related import ManyToOneRel
-from django_select2 import AutoModelSelect2Field
-from django_select2.widgets import AutoHeavySelect2Widget
+from django_select2.forms import ModelSelect2Widget
+from django import forms
 from django.forms.widgets import HiddenInput
 from django.utils.safestring import mark_safe
 from django.conf import settings
@@ -17,17 +16,20 @@ buttons="""
 </div>
 """
 
-def make_select_widget(href1, href2):
-    class _AutoHeavySelect2WidgetExt(AutoHeavySelect2Widget):
-        def render(self, name, value, attrs=None, choices=()):
-            x = super().render(name, value, attrs, choices)
-            if len(self.choices.queryset)>0:
-                txt = str(self.choices.queryset[0])
-            else:
-                txt=""
-            buttons2 = buttons % (href1, href2)
-            return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" % (value, txt, x, buttons2))
-    return _AutoHeavySelect2WidgetExt
+class _ModelSelect2WidgetExt(ModelSelect2Widget):
+    def __init__(self, href1=None, href2=None, *argi, **argv):
+        ModelSelect2Widget.__init__(self, *argi, **argv)
+        self.href1 = href1
+        self.href2 = href2
+
+    def render(self, name, value, attrs=None, choices=()):
+        x = super().render(name, value, attrs, choices)
+        if len(self.choices.queryset)>0:
+            txt = str(self.choices.queryset[0])
+        else:
+            txt=""
+        buttons2 = buttons % (self.href1, self.href2)
+        return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" % (value, txt, x, buttons2))
 
 
 class ForeignKey(models.ForeignKey):
@@ -51,11 +53,13 @@ class ForeignKey(models.ForeignKey):
             href2 = "/%s/table/%s/-/add?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
 
         if self.search_fields:
-            class _Field(AutoModelSelect2Field):
-                widget = make_select_widget(href1, href2)
-                queryset = self.related_model.objects
-                search_fields = self.search_fields
-
+            _search_fields = self.search_fields
+            class _Field(forms.ModelChoiceField):
+                def __init__(self, queryset, *argi, **argv):
+                    widget=_ModelSelect2WidgetExt(href1, href2, queryset = queryset,search_fields=_search_fields)
+                    widget.attrs['style'] = 'width:400px;'
+                    argv['widget'] = widget
+                    forms.ModelChoiceField.__init__(self, queryset, *argi, **argv)
             defaults = {
                 'form_class': _Field,
             }

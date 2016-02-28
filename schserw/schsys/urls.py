@@ -17,11 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.conf.urls import patterns
-from django.views.generic import TemplateView
 from django.conf import settings
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url
 from django.contrib.auth.views import login
+from django.views.generic import TemplateView
+
+import schserw.schsys.views
+import django.contrib.auth.views
+import schlib.schtools.dbtools
 
 defparm= "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
 color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
@@ -32,7 +35,7 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
 def sch_login(request, *argi, **argv):
     ret = login(request, *argi, **argv)
-    parm = request.REQUEST.get('client_param', '')
+    parm = request.POST.get('client_param', '')
     if parm != '':
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
     else:
@@ -46,28 +49,25 @@ if settings.URL_ROOT_FOLDER:
 else:
     START_PATH = '/'
 
-urlpatterns = patterns(
-    '',
-    url(r'^ok/$', 'schserw.schsys.views.ok', name='ok'),
-    url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', 'schserw.schsys.views.ret_ok', name='ret_ok'),
+urlpatterns = [
+    url(r'^ok/$', schserw.schsys.views.ok, name='ok'),
+    url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', schserw.schsys.views.ret_ok, name='ret_ok'),
 
-    #(r'^do_login/$', 'django.contrib.auth.views.login', { 'template_name': 'schapp/index.html'}),
-    (r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
-    (r'^do_logout/$', 'django.contrib.auth.views.logout', {'next_page': START_PATH}),
+    url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
+    url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': START_PATH}),
 
-    (r'^change_password/$', 'schserw.schsys.views.change_password'),
+    url(r'^change_password/$', schserw.schsys.views.change_password),
 
-    (r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$','schserw.schsys.views.message'),
+    url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
 
-    (r'^datedialog/(?P<akcja>\w+)/$', 'schserw.schsys.views.datedialog'),
-    (r'^listdialog/(?P<akcja>\w+)/$', 'schserw.schsys.views.listdialog'),
-    (r'^treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$','schserw.schsys.views.treedialog'),
-    (r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$', 'schserw.schsys.views.tabdialog'),
-    (r'^table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', 'schserw.schsys.views.tbl'),
+    url(r'^datedialog/(?P<akcja>\w+)/$', schserw.schsys.views.datedialog),
+    url(r'^listdialog/(?P<akcja>\w+)/$', schserw.schsys.views.listdialog),
+    url(r'^treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$',schserw.schsys.views.treedialog),
+    url(r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$', schserw.schsys.views.tabdialog),
+    url(r'^table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', schserw.schsys.views.tbl),
 
-    (r'^db/field/open/(?P<file>.*)/$', 'schlib.schtools.dbtools.open_db_field'),
-    (r'^db/field/save/(?P<file>.*)/$', 'schlib.schtools.dbtools.save_db_field'),
-    (r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
-    (r'^plugins/(?P<app>\w+)/(?P<plugin_name>\w+)/$','schserw.schsys.views.plugins'),
-    )
-
+    url(r'^db/field/open/(?P<file>.*)/$', schlib.schtools.dbtools.open_db_field),
+    url(r'^db/field/save/(?P<file>.*)/$', schlib.schtools.dbtools.save_db_field),
+    url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
+    url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>\w+)/$',schserw.schsys.views.plugins),
+]

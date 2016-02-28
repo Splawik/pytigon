@@ -247,13 +247,6 @@ td div div div div form.DialogForm {
 }
 
 div.table {
-    //margin-bottom: 0px;
-    //margin-top: 5px;
-    //margin-left: 5px;
-    //margin-right: 5px;
-    //margin-bottom: 5px;
-    //padding: 3px;
-    //padding: 0px 15px;
     padding: 0px 3px;
 }
 
@@ -344,18 +337,6 @@ body {
     float:left;
  }
 
-/*
-.tabsort th .open> ul {
-    display: inline-flex !important;
-    margin-top: -35px;
-    margin-left: 50px;
-}
-
-.dataTables_wrapper.no-footer .dataTables_scrollBody {
-    border-bottom: 0px;
-}
-*/
-
 .panel-content {
     margin-bottom: 5px !important;
 }
@@ -385,8 +366,6 @@ body {
 #quit_menu {
     padding: 8px 10px;
     margin: 0px 5px;
-    //margin-top: -5px;
-    //background-color: transparent;
 }
 
 #logo_href {
@@ -398,3 +377,44 @@ body {
     background: rgba(255,255,255,1) !important;
 }
 
+.select2-selection--single {
+    height: 32px !important;
+}
+
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/static/bootstrap_plugins/bootstrap-material-datetimepicker/font/Material-Design-Icons.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(/static/bootstrap_plugins/bootstrap-material-datetimepicker/font/Material-Design-Icons.woff2) format('woff2'),
+       url(/static/bootstrap_plugins/bootstrap-material-datetimepicker/font/Material-Design-Icons.woff) format('woff'),
+       url(/static/bootstrap_plugins/bootstrap-material-datetimepicker/font/Material-Design-Icons.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}

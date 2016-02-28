@@ -7,14 +7,14 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
-    ('(?P<subject>.*)/(?P<page_name>.*)/view/$', views.view_page),
-    ('^(?P<subject>\w*)/(?P<page_name>\w*)/edit/$', views.edit_page),
+urlpatterns = [
+    url('(?P<subject>.*)/(?P<page_name>.*)/view/$', views.view_page),
+    url('^(?P<subject>\w*)/(?P<page_name>\w*)/edit/$', views.edit_page),
     
     
     
     
-)
+]
 
 gen = generic_table_start(urlpatterns, 'wiki', views)
 

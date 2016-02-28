@@ -7,13 +7,13 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     {% for view in views %}{{view.get_url|safe}},
-    {% endfor %}{% for template in templates %}{% if template.direct_to_template %} {{template.get_url|safe}}, {% endif %}
+    {% endfor %}{% for template in templates %}{% if template.direct_to_template %} url{{template.get_url|safe}}, {% endif %}
     {% endfor %}
     {% for form in forms %}{% if not form.name|is_ %}
-    ('form/{{form.name}}/$', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
-)
+    url('form/{{form.name}}/$', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
+]
 
 gen = generic_table_start(urlpatterns, '{{app.name}}', views)
 {% if app.urls_code %}{{app.urls_code|safe}}{% endif %}

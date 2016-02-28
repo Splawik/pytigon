@@ -48,7 +48,7 @@ class Attachements( models.Model):
     group = models.CharField('Group', null=True, blank=True, editable=False, default='default',max_length=64)
     parent_id = models.IntegerField('Parent id', null=True, blank=True, editable=False, )
     thumb = models.TextField('thumbnail', null=True, blank=True, editable=False, )
-    upload_date = models.DateTimeField('Upload date', null=False, blank=False, editable=False, default=datetime.now(),)
+    upload_date = models.DateTimeField('Upload date', null=False, blank=False, editable=False, default=datetime.now,)
     file = models.FileField('Select file', null=False, blank=False, editable=True, upload_to=upload_path_fun)
     
 

@@ -291,7 +291,10 @@ var ՐՏ_modules = {};
     }
     function get_table_type(elem) {
         var tabsort, ret;
-        tabsort = get_page(elem).find(".tabsort");
+        tabsort = elem.find(".tabsort");
+        if (tabsort.length === 0) {
+            tabsort = get_page(elem).find(".tabsort");
+        }
         if (tabsort.length > 0) {
             ret = tabsort.attr("table_type");
             if (ret) {
@@ -532,11 +535,14 @@ var ՐՏ_modules = {};
             new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
             elem2 = new_fragment.find(".refr_target");
             elem2.load(href2, null, function(responseText, status, response) {
+                var table_type;
                 $("#IDIAL_" + id).hide();
                 $("#IDIAL_" + id).removeClass("hide");
                 $("#IDIAL_" + id).show("slow");
                 if (status !== "error") {
                     _dialog_loaded(false, elem2);
+                    table_type = get_table_type(elem2);
+                    set_table_type(table_type, "#" + jQuery(elem2).uid() + " .tabsort");
                     on_dialog_load();
                 }
                 if (WAIT_ICON) {
@@ -583,12 +589,15 @@ var ՐՏ_modules = {};
                 elem2.find(".modal-title").html(jQuery(elem).attr("title"));
                 elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
                 elem3 = elem2.find("div.dialog-data-inner");
-                elem3.load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+                ajax_load(elem3, jQuery(elem).attr("href"), function(responseText, status, response) {
+                    var table_type;
                     elem2.hide();
                     elem2.removeClass("hide");
                     elem2.show("slow");
                     if (status !== "error") {
                         _dialog_loaded(false, elem3);
+                        table_type = get_table_type(elem3);
+                        set_table_type(table_type, "#" + jQuery(elem3).uid() + " .tabsort");
                         on_dialog_load();
                     }
                     if (WAIT_ICON) {
@@ -742,7 +751,7 @@ var ՐՏ_modules = {};
     }
     function on_new_tbl_value(elem) {
         EDIT_RET_FUNCTION = _refresh_win_and_ret;
-        RET_CONTROL = jQuery(elem).closest(".input-group").find("input._autoheavyselect2widgetext");
+        RET_CONTROL = jQuery(elem).closest(".input-group").find(".django-select2");
         jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
         jQuery(elem).data("ret_control", RET_CONTROL);
         return on_popup_edit_new(elem);
@@ -751,13 +760,15 @@ var ՐՏ_modules = {};
         var id, text, ret_control;
         id = jQuery(elem).attr("data-id");
         text = jQuery(elem).attr("data-text");
-        ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find("input._autoheavyselect2widgetext");
-        ret_control.select2("data", {
-            id: id,
-            text: text
-        }).trigger("change");
+        ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find(".django-select2");
+        if (ret_control.find("option[value='" + id + "']").length === 0) {
+            ret_control.append(jQuery("<option>", {
+                "value": id,
+                "text": text
+            }));
+        }
         ret_control.val(id.toString());
-        ret_control[0].defaultValue = id.toString();
+        ret_control.trigger("change");
         jQuery(elem).closest(".refr_source").remove();
     }
     ՐՏ_modules["popup"]["refresh_fragment"] = refresh_fragment;
@@ -900,7 +911,7 @@ var ՐՏ_modules = {};
     function datatable_onresize() {
         jQuery(".datatable").each(datetable_set_height);
     }
-    function set_table_type(table_type, selector, paginate) {
+    function set_table_type(table_type, selector) {
         var options;
         if (table_type === "" || table_type === "simple") {
         }
@@ -1037,21 +1048,24 @@ function init_pagintor(pg) {
 }
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, _id, x, pos;
+    var elem2, datetime_options, _id, x, pos;
     if (elem) {
         elem2 = elem;
     } else {
         elem2 = glob.ACTIVE_PAGE.page;
     }
-    elem2.find(".dateinput").datetimepicker({
-        "pickTime": false,
+    datetime_options = {
+        "time": false,
         "format": "YYYY-MM-DD",
-        "language": "pl"
-    });
-    elem2.find(".datetimeinput").datetimepicker({
-        "format": "YYYY-MM-DD hh:mm",
-        "language": "pl"
-    });
+        "lang": "pl",
+        "cancelText": "ANULUJ",
+        "clearButton": false,
+        "nowButton": true,
+        "nowText": "Dzisiaj"
+    };
+    elem2.find(".dateinput").bootstrapMaterialDatePicker(datetime_options);
+    datetime_options["time"] = true;
+    elem2.find(".datetimeinput").bootstrapMaterialDatePicker(datetime_options);
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
         var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);
@@ -1075,7 +1089,7 @@ function page_init(id, first_time) {
             paginate = init_pagintor(pg);
         }
     }
-    set_table_type(table_type, "#" + id + " .tabsort", paginate);
+    set_table_type(table_type, "#" + id + " .tabsort");
     if (first_time) {
         elem2 = jQuery("body");
         handle_class_click(elem2, "get_tbl_value", on_get_tbl_value);
@@ -1329,9 +1343,6 @@ function _on_error(request, settings) {
             jQuery("#dialog-data-error").html(settings.responseText);
             jQuery("#dialog-form-error").modal();
         }
-    } else {
-        jQuery("#dialog-data-error").html("ERROR");
-        jQuery("#dialog-form-error").modal();
     }
 }
 function jquery_ready() {

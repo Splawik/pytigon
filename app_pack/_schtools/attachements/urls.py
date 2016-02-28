@@ -7,12 +7,12 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     gen_row_action('Attachements', 'download', views.download),
     
     
     
-)
+]
 
 gen = generic_table_start(urlpatterns, 'attachements', views)
 

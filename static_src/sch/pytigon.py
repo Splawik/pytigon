@@ -2,7 +2,6 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
-
 RET_BUFOR = None
 RET_OBJ = None
 
@@ -77,8 +76,21 @@ def fragment_init(elem=None):
         elem2 = glob.ACTIVE_PAGE.page
 
     #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
-    elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
-    elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+    #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
+    #elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+
+    datetime_options = {
+        'time': False,
+        'format': "YYYY-MM-DD",
+        'lang': 'pl',
+        'cancelText': 'ANULUJ',
+        'clearButton': False,
+        'nowButton': True,
+        'nowText': "Dzisiaj",
+    }
+    elem2.find('.dateinput').bootstrapMaterialDatePicker(datetime_options)
+    datetime_options['time']=True
+    elem2.find('.datetimeinput').bootstrapMaterialDatePicker(datetime_options)
 
     #paginator = elem2.find('.pagination')
     #paginate = init_pagintor(paginator)
@@ -102,7 +114,7 @@ def page_init(id, first_time = True):
             pg = glob.ACTIVE_PAGE.page.find('.pagination')
             paginate = init_pagintor(pg)
 
-    set_table_type(table_type, '#'+ id + ' .tabsort', paginate)
+    set_table_type(table_type, '#'+ id + ' .tabsort')
 
     if first_time:
         elem2 = jQuery('body')
@@ -362,9 +374,9 @@ def _on_error(request, settings):
         else:
             jQuery("#dialog-data-error").html(settings.responseText)
             jQuery('#dialog-form-error').modal()
-    else:
-        jQuery("#dialog-data-error").html("ERROR")
-        jQuery('#dialog-form-error').modal()
+    #else:
+    #    jQuery("#dialog-data-error").html("ERROR")
+    #    jQuery('#dialog-form-error').modal()
 
 
 def jquery_ready():

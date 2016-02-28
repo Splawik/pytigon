@@ -59,8 +59,8 @@ register = template.Library()
 
 
 class GetAllAttributesParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *argi, **argv):
+        super().__init__(*argi, **argv)
         self.v = {}
         
     def handle_starttag(self, tag, attrs):        

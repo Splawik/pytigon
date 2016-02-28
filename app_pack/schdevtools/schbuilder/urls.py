@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     gen_row_action('SChAppSet', 'gen', views.gen),
     gen_row_action('SChAppSet', 'prj_export', views.prj_export),
     gen_tab_action('SChAppSet', 'prj_import', views.prj_import),
@@ -55,7 +55,7 @@ urlpatterns = patterns('',
     
     
     
-)
+]
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)
 gen.for_field('SChAppSet', 'schapp_set', 'Applications', prefix="up", template_name="schbuilder/schapp2.html")

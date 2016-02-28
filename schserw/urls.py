@@ -20,21 +20,23 @@
 import platform
 
 
-from django.conf.urls import patterns, url, include
-from django.http import HttpResponse
+from django.conf.urls import url, include
 from django.conf import settings
 from django.contrib import admin
 
 import os
+import importlib
 
 import traceback
 from django.views.generic import TemplateView
 from schlib.schdjangoext.django_init import AppConfigMod
-from django.template.base import add_to_builtins
 from django.conf.urls.static import static
 
-#from schlib.schjs.compile import py_to_js, psjx_to_js
-#from schlib.schindent.indent_style import py_to_js, pjsx_to_js
+import schserw.schsys.views
+import django.views.i18n
+import django.conf.urls.i18n
+import django_select2.urls
+
 import schlib.schindent.indent_style
 
 def get_py_to_js_compiler():
@@ -42,61 +44,44 @@ def get_py_to_js_compiler():
 
 schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
 
-add_to_builtins('schserw.schsys.templatetags.defexfiltry')
+#import warnings
+#warnings.simplefilter('error', DeprecationWarning)
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
-    (r'schplugins/(?P<template_name>.*)','schserw.schsys.views.plugin_template'),
-    (r'schsys/jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages': ('django.conf', )}),
-    (r'schsys/i18n/', include('django.conf.urls.i18n')),
-    (r'admin/', include(admin.site.urls)),
-    (r'^site_media/(.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-    url(r'^select2/', include('django_select2.urls')),
-    )
+    url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
+    url(r'schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
+    url(r'schsys/i18n/', include(django.conf.urls.i18n)),
+    url(r'admin/', include(admin.site.urls)),
+    url(r'^site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+    url(r'^select2/', include(django_select2.urls)),
+]
 
 if settings.DEBUG:
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
 for app in settings.INSTALLED_APPS:
-
         if isinstance(app, AppConfigMod):
             pos = app.name
         else:
             pos = app
             if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') or pos.startswith('crispy') or pos.startswith('bootstrap_admin'):
                 continue
-
         elementy = pos.split('.')
         module = __import__(pos)
 
         if pos == 'pytigon':
             pass
-
         try:
-        #if True:
-            #if not pos.startswith('django') and not pos.startswith('mptt') and not pos.startswith('debug'):
                 module_name = '%s.urls' % str(pos)
-                __import__('%s.urls' % str(pos))
+                m = importlib.import_module(module_name)
                 if len(elementy) > 1:
-                    urlpatterns += patterns('', (r'%s/' % str(elementy[1]),
-                                            include('%s.urls' % str(pos))))
-                    #urlpatterns += patterns('', (r'site_media/' + str(elementy[1]) + '/(.*)$', 'django.views.static.serve', {'document_root': settings.ROOT_PATH + '/app_pack/' + str(elementy[1])}))
+                    urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
                 else:
-                    urlpatterns += patterns('', (r'%s/' % str(elementy[0]),
-                                            include('%s.urls' % str(pos))))
-                    #urlpatterns += patterns('', (r'site_media/' + str(elementy[0]) + '/(.*)$', 'django.views.static.serve', {'document_root': settings.LOCAL_SERW_PATH + '/media/' + str(elementy[0])}))
-        #except exceptions.ImportError:
-        #else:
+                    urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
         except:
-            #if settings.DEBUG:
-                #exceptions.ImportError
             print(pos)
             traceback.print_exc()
-
-            #else:
-            #    pass
-
 
 if settings.DEBUG:
     for dir in settings.STATICFILES_DIRS:

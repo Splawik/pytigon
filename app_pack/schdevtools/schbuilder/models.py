@@ -23,6 +23,7 @@ import os.path
 from schlib.schhtml.htmltools import superstrip
 import inspect
 from schlib.schtools.schpath import norm_path
+from django.template import engines
 
 field_default = {'null':False,'blank':False,'editable':True,}
 field_defaults = {
@@ -696,9 +697,9 @@ class SChView( models.Model):
         name = self.get_name()
         if self.view_type == 'u':
             if self.url_params and self.url_params!="":
-                return "('%s', views.%s, %s)" % (self.url, name, self.url_params)
+                return "url('%s', views.%s, %s)" % (self.url, name, self.url_params)
             else:
-                return "('%s', views.%s)" % (self.url, name)
+                return "url('%s', views.%s)" % (self.url, name)
         else:
             if self.view_type == 'r':
                 bname='gen_row_action'
@@ -834,14 +835,16 @@ class SChTemplate( models.Model):
     
     def get_django_filters(self):
         ret = []
-        for pos in django.template.base.builtins:
+        django_engine = engines['django'].engine
+        for pos in django_engine.template_builtins:
             for f in pos.filters:
                 ret.append(f)
         return ret
     
     def get_django_tags(self):
         ret = []
-        for pos in django.template.base.builtins:
+        django_engine = engines['django'].engine
+        for pos in django_engine.template_builtins:
             for f in pos.tags:
                 ret.append(f)
         return ret
@@ -868,6 +871,7 @@ class SChTemplate( models.Model):
     
     def __str__(self):
         return self.name
+        
     
 admin.site.register(SChTemplate)
 

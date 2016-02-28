@@ -8,7 +8,8 @@ import os.path
 from django.template import Template
 from django.http import HttpResponse
 from django.conf import settings
-from django.template.base import TemplateDoesNotExist
+#from django.template.base import TemplateDoesNotExist
+from django.template.exceptions import TemplateDoesNotExist
 
 from schlib.schfs.vfstools import get_temp_filename
 from zipfile import ZipFile

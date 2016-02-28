@@ -30,8 +30,6 @@ else:
     DEBUG = False
     DB_DEBUG = False
 
-TEMPLATE_DEBUG = DEBUG
-
 SHOW_LOGIN_WIN = True
 
 SERW_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -62,10 +60,8 @@ MEDIA_URL = '/site_media/'
 
 if DEBUG:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
-    #STATIC_ROOT = ROOT_PATH + '/static'
 else:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
-    #STATIC_ROOT = ROOT_PATH + '/static'
 
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 
@@ -83,13 +79,9 @@ TEMPLATES = [
         'DIRS': [
             ROOT_PATH + '/templates',
             ROOT_PATH + '/schappdata/schplugins',
-            # insert your TEMPLATE_DIRS here
         ],
         'OPTIONS': {
             'context_processors': [
-                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                # list if you haven't customized them:
-
                 'schserw.schsys.context_processors.sch_standard',
                 'schserw.schsys.context_processors.sch_html_widget',
 
@@ -104,15 +96,16 @@ TEMPLATES = [
                 'django.core.context_processors.request'
             ],
             'loaders': [
-                # insert your TEMPLATE_LOADERS here
                 'schlib.schdjangoext.python_style_template_loader.Loader',
                 'schlib.schdjangoext.python_style_template_loader.FSLoader',
                 'django.template.loaders.app_directories.Loader',
-            ]
+            ],
+            'builtins': ['schserw.schsys.templatetags.defexfiltry'],
+            'debug': DEBUG,
+
         },
     },
 ]
-
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -153,7 +146,6 @@ LOGGING = {
 LOCALE_PATHS = [
     SERW_PATH + "/locale",
 ]
-
 
 ATOMIC_REQUESTS = True
 

@@ -42,7 +42,7 @@ def datatable_onresize():
     #    ,300
     #)
 
-def set_table_type(table_type, selector, paginate):
+def set_table_type(table_type, selector):
     if table_type == '' or table_type == 'simple':
         pass
     if table_type == 'scrolled':

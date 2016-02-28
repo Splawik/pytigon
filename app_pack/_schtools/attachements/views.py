@@ -21,7 +21,7 @@ import os
 import sys
 import datetime
 
-from django.core.servers.basehttp import FileWrapper
+from wsgiref.util import FileWrapper
 import mimetypes
  
 

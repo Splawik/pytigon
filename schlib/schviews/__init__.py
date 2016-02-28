@@ -35,6 +35,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 #from django.apps.apps import get_model
 #from django.apps import apps
+from django.conf.urls import url
 
 from django.db.models import CharField
 from django.db.models import  Q
@@ -61,7 +62,7 @@ def gen_tab_action(
     fun,
     extra_context=None,
     ):
-    return (r'table/%s/action/%s$' % (table, action), fun, extra_context)
+    return url(r'table/%s/action/%s$' % (table, action), fun, extra_context)
 
 
 def gen_tab_field_action(
@@ -71,8 +72,7 @@ def gen_tab_field_action(
     fun,
     extra_context=None,
     ):
-    return (r'table/%s/(?P<parent_pk>\d+)/%s/action/%s$' % (table, field,
-            action), fun, extra_context)
+    return url(r'table/%s/(?P<parent_pk>\d+)/%s/action/%s$' % (table, field, action), fun, extra_context)
 
 
 def gen_row_action(
@@ -81,8 +81,7 @@ def gen_row_action(
     fun,
     extra_context=None,
     ):
-    return ('table/%s/(?P<pk>\d+)/action/%s$' % (table, action), fun,
-            extra_context)
+    return url('table/%s/(?P<pk>\d+)/action/%s$' % (table, action), fun, extra_context)
 
 
 def transform_extra_context(context1, context2):
@@ -144,9 +143,7 @@ def view_editor(
             'verbose_field_name': f.verbose_name,
             })
 
-        return render_to_response(transform_template_name(obj, request,
-                                  'schsys/db_field_edt.html'),
-                                  context_instance=c)
+        return render_to_response(transform_template_name(obj, request, 'schsys/db_field_edt.html'), context_instance=c)
 
 
 
@@ -185,7 +182,10 @@ class GenericTable(object):
                     m = apps.get_model(tab[:pos], tab[pos+1:])
                 else:
                     m = apps.get_model(self.app, tab)
-                f = getattr(m, field).related
+                try:
+                    f = getattr(m, field).related
+                except:
+                    f = getattr(m, field).rel
                 #f = getattr(apps.get_model(self.app, tab), field).related
                 #f = getattr(apps.get_model(self.app + "." + tab), field).rel
                 try:
@@ -364,16 +364,14 @@ class GenericRows(object):
 
     def _append(
         self,
-        url,
+        url_str,
         fun,
         parm=None,
         ):
         if parm:
-            self.table.urlpatterns += patterns('', (self._get_base_path()
-                     + url, fun, parm))
+            self.table.urlpatterns += [ url(self._get_base_path() + url_str, fun, parm), ]
         else:
-            self.table.urlpatterns += patterns('', (self._get_base_path()
-                     + url, fun))
+            self.table.urlpatterns += [ url(self._get_base_path() + url_str, fun), ]
         return self
 
     def gen(self):
@@ -541,7 +539,11 @@ class GenericRows(object):
             queryset = self.queryset
 
             if self.field:
-                f = getattr(self.base_model, self.field).related
+                #print(dir(getattr(self.base_model, self.field)))
+                try:
+                    f = getattr(self.base_model, self.field).related
+                except:
+                    f = getattr(self.base_model, self.field).rel
                 model = f.related_model
             else:
                 model = self.base_model
@@ -577,7 +579,10 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field:
-                f = getattr(self.base_model, self.field).related
+                try:
+                    f = getattr(self.base_model, self.field).related
+                except:
+                    f = getattr(self.base_model, self.field).rel
                 model = f.related_model
             else:
                 model = self.base_model
@@ -653,8 +658,10 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field and self.field != 'this':
-                f = getattr(self.base_model, self.field).related
-                #f = getattr(self.base_model, self.field).rel
+                try:
+                    f = getattr(self.base_model, self.field).related
+                except:
+                    f = getattr(self.base_model, self.field).rel
                 model = f.related_model
                 pmodel = self.base_model
             else:
@@ -790,8 +797,10 @@ class GenericRows(object):
             response_class = LocalizationTemplateResponse
 
             if self.field:
-                f = getattr(self.base_model, self.field).related
-                #f = getattr(self.base_model, self.field).rel
+                try:
+                    f = getattr(self.base_model, self.field).related
+                except:
+                    f = getattr(self.base_model, self.field).rel
                 model = f.related_model
             else:
                 model = self.base_model
@@ -815,8 +824,10 @@ class GenericRows(object):
             r'(?P<pk>\d+)/(?P<field_edit_name>[\w_]*)/(?P<target>[\w_]*)/editor/$'
         fun = make_perms_test_fun(self.base_perm % 'change', view_editor)
         if self.field:
-            f = getattr(self.base_model, self.field).related
-            #f = getattr(self.base_model, self.field).rel
+            try:
+                f = getattr(self.base_model, self.field).related
+            except:
+                f = getattr(self.base_model, self.field).rel
             model = f.related_model
         else:
             model = self.base_model

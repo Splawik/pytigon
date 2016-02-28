@@ -105,7 +105,9 @@ def get_page(elem):
 
 
 def get_table_type(elem):
-    tabsort = get_page(elem).find('.tabsort')
+    tabsort = elem.find('.tabsort')
+    if tabsort.length == 0:
+        tabsort = get_page(elem).find('.tabsort')
     if tabsort.length>0:
         ret = tabsort.attr('table_type')
         if ret:
