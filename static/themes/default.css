@@ -418,3 +418,7 @@ body {
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+
+.tab-content {
+    overflow: visible;
+}
