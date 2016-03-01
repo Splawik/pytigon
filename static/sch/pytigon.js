@@ -890,6 +890,9 @@ var ՐՏ_modules = {};
     }
     function datetable_set_height() {
         var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
+        if (jQuery(this).hasClass("table_get")) {
+            return;
+        }
         elem = jQuery(this).closest(".tabsort_panel");
         dy_table = elem.height();
         dy_win = jQuery(window).height();
@@ -909,7 +912,7 @@ var ՐՏ_modules = {};
         });
     }
     function datatable_onresize() {
-        jQuery(".datatable").each(datetable_set_height);
+        jQuery(".datatable:not(.table_get)").each(datetable_set_height);
     }
     function set_table_type(table_type, selector) {
         var options;
@@ -925,9 +928,16 @@ var ՐՏ_modules = {};
                 jQuery(".win-content").bind("resize", datatable_onresize);
                 return false;
             }
-            jQuery(selector).bootstrapTable({
-                "onLoadSuccess": onLoadSuccess
-            });
+            if (jQuery(selector).hasClass("table_get")) {
+                jQuery(selector).bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess,
+                    "height": 350
+                });
+            } else {
+                jQuery(selector).bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess
+                });
+            }
             return;
         }
         if (table_type === "server-side") {

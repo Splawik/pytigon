@@ -7,11 +7,11 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
-    ('search/(?P<type>.+)/', views.autocomplete_search, {}),
+urlpatterns = [
+    url('search/(?P<type>.+)/', views.autocomplete_search, {}),
     
     
-)
+]
 
 gen = generic_table_start(urlpatterns, 'tools', views)
 

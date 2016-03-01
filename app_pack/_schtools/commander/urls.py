@@ -7,20 +7,20 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = patterns('',
-    ('grid/(?P<folder>.*)/(?P<value>[\w=]*)/$', views.grid, {}),
-    ('open/(?P<file_name>.*)/$', views.open, {}),
-    ('save/(?P<file_name>.*)/$', views.save, {}),
-    ('open_page/(?P<file_name>.*)/(?P<page>\d+)/$', views.open_page, {}),
-     url(r'^copy', TemplateView.as_view(template_name='commander/copy.html'), {}), 
-     url(r'^move', TemplateView.as_view(template_name='commander/move.html'), {}), 
-     url(r'^mkdir', TemplateView.as_view(template_name='commander/mkdir.html'), {}), 
-     url(r'^mkdir', TemplateView.as_view(template_name='commander/rename.html'), {}), 
+urlpatterns = [
+    url('grid/(?P<folder>.*)/(?P<value>[\w=]*)/$', views.grid, {}),
+    url('open/(?P<file_name>.*)/$', views.open, {}),
+    url('save/(?P<file_name>.*)/$', views.save, {}),
+    url('open_page/(?P<file_name>.*)/(?P<page>\d+)/$', views.open_page, {}),
+     urlurl(r'^copy', TemplateView.as_view(template_name='commander/copy.html'), {}), 
+     urlurl(r'^move', TemplateView.as_view(template_name='commander/move.html'), {}), 
+     urlurl(r'^mkdir', TemplateView.as_view(template_name='commander/mkdir.html'), {}), 
+     urlurl(r'^mkdir', TemplateView.as_view(template_name='commander/rename.html'), {}), 
     
     
     
-    ('form/FileMmanager/$', views.view_filemmanager, {}),
-)
+    url('form/FileMmanager/$', views.view_filemmanager, {}),
+]
 
 gen = generic_table_start(urlpatterns, 'commander', views)
 

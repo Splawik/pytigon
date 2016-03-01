@@ -11,6 +11,8 @@ def get_datatable_dy(selector):
 
 
 def datetable_set_height():
+    if jQuery(this).hasClass('table_get'):
+        return
     elem = jQuery(this).closest(".tabsort_panel")
 
     dy_table = elem.height()
@@ -35,7 +37,7 @@ def datetable_set_height():
 
 
 def datatable_onresize():
-    jQuery('.datatable').each(datetable_set_height)
+    jQuery('.datatable:not(.table_get)').each(datetable_set_height)
     #setTimeout(
     #    def ():
     #        jQuery('.datatable').each(datetable_set_height)
@@ -54,9 +56,11 @@ def set_table_type(table_type, selector):
             jQuery(window).resize(datatable_onresize)
             jQuery('.win-content').bind('resize', datatable_onresize)
             return False
-
-        jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess })
-
+        if jQuery(selector).hasClass('table_get'):
+            jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350 })
+            #jQuery(selector).bootstrapTable("resetView", {"height":300})
+        else:
+            jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess })
         return
     if table_type == 'server-side':
         options = get_datatable_options2()

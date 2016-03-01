@@ -30,6 +30,10 @@ td .content {
     min-height: 50px !important;
 }
 
+td .content_get {
+    min-height: 250px !important;
+}
+
 .control-sidebar .nav-tabs {
     background: transparent;
 }

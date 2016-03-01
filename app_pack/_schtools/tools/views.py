@@ -34,10 +34,10 @@ import datetime
 
 def autocomplete_search(request, type):
     
-    if not request.REQUEST.get('query'):
+    q = request.GET.get('query', request.POST.get('query', None))
+    if not q:
         return HttpResponse(content_type='text/plain')
-    q = request.REQUEST.get('query')
-    limit = request.REQUEST.get('limit', 15)
+    limit = request.GET.get('limit', request.POST.get('limit', 15))
     try:
         limit = int(limit)
     except ValueError:

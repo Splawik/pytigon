@@ -204,7 +204,7 @@
     </div>
 
 
-%% style_content_start...<div class="content">
+%% style_content_start...<div class="content {%if get %}content_get{% endif %}">
 
 
 %% style_content_end...</div>
@@ -308,8 +308,8 @@
 
 %% tabsort_class
     % if table_type == 'datatable':
-        .class="tabsort table datatable table-hover table-striped table-condensed"
-        .data-url="{{request.path}}/../../json/list"
+        .class="tabsort table datatable table-hover table-striped table-condensed {%if get %}table_get{% endif %}"
+        .data-url="{{request.path}}/../../json/{% if get %}get{% else %}list{% endif %}"
         .data-side-pagination="server"
         .data-pagination="true"
         .data-page-size="64"
@@ -321,7 +321,9 @@
         .data-show-columns="true"
         .data-id-field="cid"
     % else:
-        .class="tabsort table table-hover table-striped"
+        .class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
+
+
 
 %% row_edit_form
     %if form
