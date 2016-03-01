@@ -16,8 +16,9 @@
 #copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
+#from django.db import models
 
-from django.db import models
+from django.apps import apps
 from django.db.models import Max, Min
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -52,7 +53,7 @@ def change_pos(
     field=None,
     callback_fun=None
     ):
-    model = models.get_model(app, tab)
+    model = apps.get_model(app, tab)
     #obj = lookup_object(model, pk, None, None)
     obj = model.objects.get(id=pk)
     if field:
@@ -93,7 +94,7 @@ def duplicate_row(
     pk,
     field=None,
     ):
-    model = models.get_model(app, tab)
+    model = apps.get_model(app, tab)
     obj = model.objects.get(id=pk)
     if obj:
         obj.id = None

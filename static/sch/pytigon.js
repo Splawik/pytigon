@@ -1058,24 +1058,20 @@ function init_pagintor(pg) {
 }
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, datetime_options, _id, x, pos;
+    var elem2, _id, x, pos;
     if (elem) {
         elem2 = elem;
     } else {
         elem2 = glob.ACTIVE_PAGE.page;
     }
-    datetime_options = {
-        "time": false,
+    elem2.find(".dateinput").datetimepicker({
         "format": "YYYY-MM-DD",
-        "lang": "pl",
-        "cancelText": "ANULUJ",
-        "clearButton": false,
-        "nowButton": true,
-        "nowText": "Dzisiaj"
-    };
-    elem2.find(".dateinput").bootstrapMaterialDatePicker(datetime_options);
-    datetime_options["time"] = true;
-    elem2.find(".datetimeinput").bootstrapMaterialDatePicker(datetime_options);
+        "locale": "pl"
+    });
+    elem2.find(".datetimeinput").datetimepicker({
+        "format": "YYYY-MM-DD hh:mm",
+        "locale": "pl"
+    });
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
         var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);

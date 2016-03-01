@@ -127,7 +127,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'bootstrap_admin',
+    #'bootstrap_admin',
     'django.contrib.admin',
     'schserw.schsys',
     'django.contrib.staticfiles',

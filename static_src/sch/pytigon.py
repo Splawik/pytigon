@@ -77,21 +77,21 @@ def fragment_init(elem=None):
         elem2 = glob.ACTIVE_PAGE.page
 
     #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
-    #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': 'pl' })
-    #elem2.find('.datetimeinput').datetimepicker({'format': "YYYY-MM-DD hh:mm", 'language': 'pl'})
+    elem2.find('.dateinput').datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl'})
+    elem2.find('.datetimeinput').datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl'})
 
-    datetime_options = {
-        'time': False,
-        'format': "YYYY-MM-DD",
-        'lang': 'pl',
-        'cancelText': 'ANULUJ',
-        'clearButton': False,
-        'nowButton': True,
-        'nowText': "Dzisiaj",
-    }
-    elem2.find('.dateinput').bootstrapMaterialDatePicker(datetime_options)
-    datetime_options['time']=True
-    elem2.find('.datetimeinput').bootstrapMaterialDatePicker(datetime_options)
+    #datetime_options = {
+    #    'time': False,
+    #    'format': "YYYY-MM-DD",
+    #    'lang': 'pl',
+    #    'cancelText': 'ANULUJ',
+    #    'clearButton': False,
+    #    'nowButton': True,
+    #    'nowText': "Dzisiaj",
+    #}
+    #elem2.find('.dateinput').bootstrapMaterialDatePicker(datetime_options)
+    #datetime_options['time']=True
+    #elem2.find('.datetimeinput').bootstrapMaterialDatePicker(datetime_options)
 
     #paginator = elem2.find('.pagination')
     #paginate = init_pagintor(paginator)

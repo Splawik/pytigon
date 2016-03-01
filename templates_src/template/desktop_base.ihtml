@@ -40,9 +40,9 @@
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
     % comment:
-        {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
-    {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
@@ -103,10 +103,10 @@
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
         {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
-    % comment:
-        {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
 
-    {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
+    % comment:
+        {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
     {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
