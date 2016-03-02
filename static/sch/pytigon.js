@@ -1102,8 +1102,10 @@ function page_init(id, first_time) {
         handle_class_click(elem2, "new_tbl_value", on_new_tbl_value);
         handle_class_click(elem2, "get_row", on_get_row);
         jQuery("#" + id).on("click", "a", function(e) {
-            var pos, src_obj, href, title, href2;
-            if ($(e.currentTarget).attr("target") === "_blank") {
+            var target, src_obj, pos, href, title, href2;
+            target = jQuery(e.currentTarget).attr("target");
+            src_obj = jQuery(this);
+            if (target === "_blank") {
                 return;
             }
             var ՐՏ_Iter3 = ՐՏ_Iterable([ "get_tbl_value", "new_tbl_value", "get_row" ]);
@@ -1113,7 +1115,6 @@ function page_init(id, first_time) {
                     return true;
                 }
             }
-            src_obj = jQuery(this);
             var ՐՏ_Iter4 = ՐՏ_Iterable([ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
             on_popup_info], ["popup_delete", on_popup_delete] ]);
             for (var ՐՏ_Index4 = 0; ՐՏ_Index4 < ՐՏ_Iter4.length; ՐՏ_Index4++) {
@@ -1142,8 +1143,12 @@ function page_init(id, first_time) {
             }
             href2 = corect_href(href);
             ajax_get(href2, function(data) {
-                if (data && ՐՏ_in("_parent_refr", data)) {
-                    refresh_fragment(src_obj);
+                if (data && ՐՏ_in("_parent_refr", data) || ՐՏ_in(target, ["refresh_obj", "refresh_page"])) {
+                    if (target === "refresh_obj") {
+                        refresh_fragment(src_obj, null, true);
+                    } else {
+                        refresh_fragment(src_obj);
+                    }
                 } else {
                     if (APPLICATION_TEMPLATE === "modern") {
                         glob.ACTIVE_PAGE.page.html(data);

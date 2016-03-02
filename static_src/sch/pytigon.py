@@ -1,5 +1,13 @@
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
+#target:
+## _blank: new browser window
+## _top: new app tab
+## _self: replace current page
+## refresh_obj: replace current object
+## refresh_page: replace current page (like _self)
+## refresh_app: replace current app
+
 APPLICATION_TEMPLATE = 'standard'
 
 
@@ -124,14 +132,15 @@ def page_init(id, first_time = True):
         handle_class_click(elem2, 'get_row', on_get_row)
         jQuery('#'+ id).on( "click", "a",
             def(e):
-                if $(e.currentTarget).attr('target') == "_blank":
+                target = jQuery(e.currentTarget).attr('target')
+                src_obj = jQuery(this)
+
+                if target == "_blank":
                     return
 
                 for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
                     if jQuery(this).hasClass(pos):
                         return True
-
-                src_obj = jQuery(this)
 
                 for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
                     if jQuery(this).hasClass(pos[0]):
@@ -159,8 +168,11 @@ def page_init(id, first_time = True):
                 ajax_get(href2, def (data):
                     nonlocal href, src_obj
 
-                    if data and "_parent_refr" in data:
-                        refresh_fragment(src_obj)
+                    if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+                        if target=="refresh_obj":
+                            refresh_fragment(src_obj, None, True)
+                        else:
+                            refresh_fragment(src_obj)
                     else:
                         if APPLICATION_TEMPLATE == 'modern':
                             glob.ACTIVE_PAGE.page.html(data)
@@ -175,7 +187,6 @@ def page_init(id, first_time = True):
                             history_push_state("title", href)
                 )
         )
-    #glob.ACTIVE_PAGE.page.find('form').attr('target', '_blank')
     glob.ACTIVE_PAGE.page.find('form').submit(
         def(e):
             nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
