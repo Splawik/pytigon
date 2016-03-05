@@ -1,17 +1,10 @@
 import glob
 from scrolltbl import stick_header
 
-
-def get_datatable_dy(selector):
-    dy_table = glob.ACTIVE_PAGE.page.find('.tabsort_panel').offset().top
-    dy_win = jQuery(window).height()
-    dy = dy_win - dy_table
-    if dy<100: dy = 100
-    return dy
-
-
 def datetable_set_height():
     if jQuery(this).hasClass('table_get'):
+        return
+    if not jQuery(this).is(':visible'):
         return
     elem = jQuery(this).closest(".tabsort_panel")
 
@@ -30,41 +23,33 @@ def datetable_set_height():
     dy = dy_table + (dy_win-dy_body)
 
     if dy<200: dy = 200
-    console.log("dy_win:" + dy_win + ", dy_table:"+dy_table+", dy_body1:" + dy_body1 + ", dy_body2:" + dy_body2 + ", dy:"+ dy)
-    #alert("dy_win:" + dy_win + ", dy_table:"+dy_table+", dy_body1:" + dy_body1 + ", dy_body2:" + dy_body2 + ", dy:"+ dy)
 
     jQuery(this).bootstrapTable("resetView", {"height": dy-10})
 
 
-def datatable_onresize():
-    jQuery('.datatable:not(.table_get)').each(datetable_set_height)
-    #setTimeout(
-    #    def ():
-    #        jQuery('.datatable').each(datetable_set_height)
-    #    ,300
-    #)
+def datatable_refresh(table):
+    table.bootstrapTable('refresh')
 
-def set_table_type(table_type, selector):
-    if table_type == '' or table_type == 'simple':
-        pass
+
+def _rowStyle(value, row, index):
+    x = jQuery("<div>"+value['cid']+"</div>").find("div.td_information")
+    if x.length > 0:
+        c = x.attr('class').replace('td_information', '')
+        if c.length>0:
+            return { 'classes': c, }
+    return {}
+
+def init_table(table, table_type):
     if table_type == 'scrolled':
         stick_header()
     if table_type == 'datatable':
-
         def onLoadSuccess(data):
-            jQuery(selector).each(datetable_set_height)
-            jQuery(window).resize(datatable_onresize)
-            jQuery('.win-content').bind('resize', datatable_onresize)
+            datatable_onresize()
             return False
-        if jQuery(selector).hasClass('table_get'):
-            jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350 })
-            #jQuery(selector).bootstrapTable("resetView", {"height":300})
+        if table.hasClass('table_get'):
+            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350, 'rowStyle': _rowStyle })
         else:
-            jQuery(selector).bootstrapTable({'onLoadSuccess': onLoadSuccess })
-        return
-    if table_type == 'server-side':
-        options = get_datatable_options2()
-        options['scrollY'] += get_datatable_dy(selector)
-        jQuery(selector).dataTable( options )
+            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'rowStyle': _rowStyle })
 
-
+def datatable_onresize():
+    jQuery('.datatable:not(.table_get)').each(datetable_set_height)

@@ -1,5 +1,5 @@
 from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post
-from schclient import is_hybrid, cmd_to_python, is_hybrid
+from tbl import datatable_refresh
 
 def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
     refr_block = data_item_to_refresh.closest('.refr_object')
@@ -9,10 +9,12 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
         target = refr_block.find('.refr_target')
 
     if only_table:
-        datatable = target.find('.datatable')
+        datatable = target.find('table[name=tabsort].datatable')
         if datatable.length>0:
-            datatable.bootstrapTable('refresh')
-            fun()
+            #datatable.bootstrapTable('refresh')
+            datatable_refresh(datatable)
+            if fun:
+                fun()
             return
 
     src = refr_block.find('.refr_source')
@@ -38,36 +40,33 @@ def on_popup_inline(elem):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
-    if is_hybrid():
-        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
-        jQuery('div.dialog-form-info').modal()
-    else:
-        if WAIT_ICON:
-            WAIT_ICON.start()
+    if WAIT_ICON:
+        WAIT_ICON.start()
 
-        jQuery(elem).closest('table').find(".inline_dialog").remove()
+    jQuery(elem).closest('table').find(".inline_dialog").remove()
 
-        COUNTER = COUNTER    + 1
-        id = COUNTER
+    COUNTER = COUNTER    + 1
+    id = COUNTER
 
-        href2 = corect_href(jQuery(elem).attr("href"))
-        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
-        new_fragment.insertAfter(jQuery(elem).closest("tr"))
-        elem2 = new_fragment.find(".refr_target")
-        elem2.load(href2,None,
-            def(responseText, status, response):
-                nonlocal WAIT_ICON
-                $('#IDIAL_'+id).hide()
-                $('#IDIAL_'+id).removeClass('hide')
-                $('#IDIAL_'+id).show("slow")
-                if status!='error':
-                    _dialog_loaded(False, elem2)
-                    on_dialog_load()
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                    WAIT_ICON = None
-        )
+    href2 = corect_href(jQuery(elem).attr("href"))
+    new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
+    new_fragment.insertAfter(jQuery(elem).closest("tr"))
+    elem2 = new_fragment.find(".refr_target")
+    elem2.load(href2,None,
+        def(responseText, status, response):
+            nonlocal WAIT_ICON
+            $('#IDIAL_'+id).hide()
+            $('#IDIAL_'+id).removeClass('hide')
+            $('#IDIAL_'+id).show("slow")
+            if status!='error':
+                _dialog_loaded(False, elem2)
+                on_dialog_load()
+            if WAIT_ICON:
+                WAIT_ICON.stop()
+                WAIT_ICON = None
+    )
     return False
+
 
 def on_popup_in_form(elem):
     nonlocal WAIT_ICON
@@ -75,37 +74,33 @@ def on_popup_in_form(elem):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
-    if is_hybrid():
-        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
-        jQuery('div.dialog-form-info').modal()
-    else:
-        if WAIT_ICON:
-            WAIT_ICON.start()
+    if WAIT_ICON:
+        WAIT_ICON.start()
 
-        jQuery(elem).closest('div.Dialog').find(".inline_dialog").remove()
+    jQuery(elem).closest('div.Dialog').find(".inline_dialog").remove()
 
-        COUNTER = COUNTER + 1
-        id = COUNTER
+    COUNTER = COUNTER + 1
+    id = COUNTER
 
-        href2 = corect_href(jQuery(elem).attr("href"))
-        new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
-        new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
-        elem2 = new_fragment.find(".refr_target")
-        elem2.load(href2,None,
-            def(responseText, status, response):
-                nonlocal WAIT_ICON
-                $('#IDIAL_'+id).hide()
-                $('#IDIAL_'+id).removeClass('hide')
-                $('#IDIAL_'+id).show("slow")
-                if status!='error':
-                    _dialog_loaded(False, elem2)
-                    table_type = get_table_type(elem2)
-                    set_table_type(table_type, '#'+ jQuery(elem2).uid() + ' .tabsort')
-                    on_dialog_load()
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                    WAIT_ICON = None
-        )
+    href2 = corect_href(jQuery(elem).attr("href"))
+    new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
+    new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
+    elem2 = new_fragment.find(".refr_target")
+    elem2.load(href2,None,
+        def(responseText, status, response):
+            nonlocal WAIT_ICON
+            $('#IDIAL_'+id).hide()
+            $('#IDIAL_'+id).removeClass('hide')
+            $('#IDIAL_'+id).show("slow")
+            if status!='error':
+                _dialog_loaded(False, elem2)
+                table_type = get_table_type(elem2)
+                init_table(elem2, table_type)
+                on_dialog_load()
+            if WAIT_ICON:
+                WAIT_ICON.stop()
+                WAIT_ICON = None
+    )
     return False
 
 
@@ -114,93 +109,79 @@ def on_popup_edit_new(elem):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     WAIT_ICON = Ladda.create(elem)
-    if is_hybrid():
-        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data")
-        jQuery('div.dialog-form').modal()
+    if can_popup() and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
+        elem2 = jQuery("div.dialog-data")
+        elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
+        ajax_load(elem2, jQuery(elem).attr("href"),
+            def(responseText, status, response):
+                _dialog_loaded(True, elem2)
+                on_dialog_load()
+        )
     else:
-        if can_popup() and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
-            elem2 = jQuery("div.dialog-data")
-            elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
-            ajax_load(elem2, jQuery(elem).attr("href"),
-                def(responseText, status, response):
-                    _dialog_loaded(True, elem2)
-                    on_dialog_load()
-            )
+        if WAIT_ICON:
+            WAIT_ICON.start()
+        if jQuery(elem).hasClass('new-row'):
+            elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+            elem2.insertAfter(jQuery(elem).closest("div.tr"))
         else:
-            if WAIT_ICON:
-                WAIT_ICON.start()
-            if jQuery(elem).hasClass('new-row'):
-                elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
-                elem2.insertAfter(jQuery(elem).closest("div.tr"))
+            test = jQuery(elem).closest('form')
+            if test.length > 0:
+                elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                elem2.insertAfter(jQuery(elem).closest("div.form-group"))
             else:
-                test = jQuery(elem).closest('form')
-                if test.length > 0:
-                    elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
-                    elem2.insertAfter(jQuery(elem).closest("div.form-group"))
-                else:
-                    elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
-                    elem2.insertAfter(jQuery(elem).closest("tr"))
-            elem2.find('.modal-title').html(jQuery(elem).attr('title'))
-            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
-            elem3 = elem2.find("div.dialog-data-inner")
-            #elem3.load(jQuery(elem).attr("href"),None,
-            ajax_load(elem3,jQuery(elem).attr("href"),
-                def(responseText, status, response):
-                    nonlocal WAIT_ICON
-                    elem2.hide()
-                    elem2.removeClass('hide')
-                    elem2.show("slow")
-                    if status!='error':
-                        _dialog_loaded(False, elem3)
-
-                        table_type = get_table_type(elem3)
-                        set_table_type(table_type, '#'+ jQuery(elem3).uid() + ' .tabsort')
-
-                        on_dialog_load()
-                    if WAIT_ICON:
-                        WAIT_ICON.stop()
-                        WAIT_ICON = None
-            )
+                elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+                elem2.insertAfter(jQuery(elem).closest("tr"))
+        elem2.find('.modal-title').html(jQuery(elem).attr('title'))
+        elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
+        elem3 = elem2.find("div.dialog-data-inner")
+        #elem3.load(jQuery(elem).attr("href"),None,
+        ajax_load(elem3,jQuery(elem).attr("href"),
+            def(responseText, status, response):
+                nonlocal WAIT_ICON
+                elem2.hide()
+                elem2.removeClass('hide')
+                elem2.show("slow")
+                if status!='error':
+                    _dialog_loaded(False, elem3)
+                    table_type = get_table_type(elem3)
+                    init_table(elem3, table_type)
+                    on_dialog_load()
+                if WAIT_ICON:
+                    WAIT_ICON.stop()
+                    WAIT_ICON = None
+        )
     return False
 
 
 
 def on_popup_info(elem):
-    if is_hybrid():
-        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data-info")
-        jQuery('div.dialog-form-info').modal()
+    if can_popup():
+        jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"),None,
+            def(responseText, status, response):
+                jQuery('div.dialog-form-info').modal()
+        )
     else:
-        if can_popup():
-            jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"),None,
-                def(responseText, status, response):
-                    jQuery('div.dialog-form-info').modal()
-            )
-        else:
-            jQuery(".inline_dialog").remove()
-            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+        jQuery(".inline_dialog").remove()
+        jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+        jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
 
     return False
 
 
 def on_popup_delete(elem):
-    if is_hybrid():
-        cmd_to_python("href_to_elem??"+elem.href+"??#dialog-data-delete")
-        jQuery('div.dialog-form-delete').modal()
-    else:       
-        if can_popup():            
-            jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid())
-            jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
-                def(responseText, status, response):
-                    jQuery('div.dialog-form-delete').modal()
-                    jQuery("div.dialog-form-delete").fadeTo( "fast", 1)
-            )
-        else:
-            jQuery(".inline_dialog").remove()            
-            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
-            elem2.insertAfter(jQuery(elem).parents("tr"))
-            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+    if can_popup():
+        jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid())
+        jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
+            def(responseText, status, response):
+                jQuery('div.dialog-form-delete').modal()
+                jQuery("div.dialog-form-delete").fadeTo( "fast", 1)
+        )
+    else:
+        jQuery(".inline_dialog").remove()
+        elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
+        elem2.insertAfter(jQuery(elem).parents("tr"))
+        elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
+        jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
 
     return False
 

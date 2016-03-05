@@ -10,7 +10,6 @@
 
 APPLICATION_TEMPLATE = 'standard'
 
-
 RET_BUFOR = None
 RET_OBJ = None
 
@@ -33,7 +32,7 @@ from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
-from tbl import set_table_type, datatable_onresize
+from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
 
 def init_pagintor(pg):
@@ -63,7 +62,6 @@ def init_pagintor(pg):
                     active_button = pg.find('.page active')
                     WAIT_ICON2 = True
                     $('#loading-indicator').show()
-                    #jQuery.ajax({'type': "POST", 'url': url, 'data': form.serialize(), 'success': _on_new_page })
                     ajax_post(url, form.serialize(), _on_new_page)
         }
         pg.twbsPagination(options)
@@ -84,25 +82,17 @@ def fragment_init(elem=None):
     else:
         elem2 = glob.ACTIVE_PAGE.page
 
-    #elem2.find('.dateinput').datetimepicker({ 'pickTime': False, 'format': "YYYY-MM-DD", 'language': LANG })
-    elem2.find('.dateinput').datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl'})
-    elem2.find('.datetimeinput').datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl'})
+    d = elem2.find('.dateinput')
+    d.wrap( "<div class='input-group date'></div>" )
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
+    d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True})
 
-    #datetime_options = {
-    #    'time': False,
-    #    'format': "YYYY-MM-DD",
-    #    'lang': 'pl',
-    #    'cancelText': 'ANULUJ',
-    #    'clearButton': False,
-    #    'nowButton': True,
-    #    'nowText': "Dzisiaj",
-    #}
-    #elem2.find('.dateinput').bootstrapMaterialDatePicker(datetime_options)
-    #datetime_options['time']=True
-    #elem2.find('.datetimeinput').bootstrapMaterialDatePicker(datetime_options)
+    d = elem2.find('.datetimeinput')
+    d.wrap( "<div class='input-group date datetime'></div>" )
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
+    d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True})
 
-    #paginator = elem2.find('.pagination')
-    #paginate = init_pagintor(paginator)
+    elem2.find('.win-content').bind('resize', datatable_onresize)
 
     if RIOT_INIT:
         _id = jQuery(elem).uid()
@@ -113,6 +103,7 @@ def fragment_init(elem=None):
     if BASE_FRAGMENT_INIT:
         BASE_FRAGMENT_INIT()
 
+    datatable_onresize()
 
 def page_init(id, first_time = True):
     nonlocal WAIT_ICON, WAIT_ICON2 #, ACTIVE_PAGE
@@ -123,7 +114,7 @@ def page_init(id, first_time = True):
             pg = glob.ACTIVE_PAGE.page.find('.pagination')
             paginate = init_pagintor(pg)
 
-    set_table_type(table_type, '#'+ id + ' .tabsort')
+    init_table(jQuery('#'+ id + ' .tabsort'), table_type)
 
     if first_time:
         elem2 = jQuery('body')
@@ -296,6 +287,18 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
                     jQuery(jQuery(this).prop("hash")).perfectScrollbar()
             )
 
+            jQuery("#tabs2").on('shown.bs.tab',
+                def (e):
+                    datatable_onresize()
+            )
+
+            jQuery('body').on('expanded.pushMenu collapsed.pushMenu',
+                def (e):
+                    window.setTimeout(datatable_onresize, 300)
+            )
+
+            jQuery(window).resize(datatable_onresize)
+
         )
     else:
         SUBWIN = True
@@ -364,7 +367,6 @@ def _on_menu_href(elem, title=None):
         return False
 
 
-
 def _on_error(request, settings):
     nonlocal WAIT_ICON, WAIT_ICON2
     if WAIT_ICON:
@@ -414,11 +416,11 @@ def jquery_ready():
         page_init('body_body')
     else:
         if APPLICATION_TEMPLATE == 'modern':
-            txt  = jQuery('#body_body').text()
+            txt  = jQuery('.page').text()
             txt2 = jQuery.trim(txt)
             if txt2:
-                txt = jQuery.trim(jQuery('#body_body').html())
-                jQuery('#body_body').html("")
+                txt = jQuery.trim(jQuery('.page')[0].outerHTML)
+                jQuery('.page').remove()
                 menu = get_menu()
                 menu.new_page(jQuery('title').text(), txt, window.location.href, RIOT_INIT)
         else:
@@ -438,16 +440,10 @@ window.addEventListener('popstate',
                 jQuery('#body_body').html(LZString.decompress(x[0]))
                 glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                 glob.ACTIVE_PAGE.set_href(document.location)
-                #menu.on_new_page('body_body')
 
                 if APPLICATION_TEMPLATE == 'standard':
-                    #jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
-                    #jQuery('#'+x[1]).removeClass('btn-info').addClass('btn-warning')
-
                     jQuery('a.menu-href').removeClass('btn-warning')
                     jQuery('#'+x[1]).addClass('btn-warning')
-
-                #page_init('body_body')
             PUSH_STATE = True
         else:
             if APPLICATION_TEMPLATE == 'modern':
@@ -457,7 +453,6 @@ window.addEventListener('popstate',
                 glob.ACTIVE_PAGE = None
                 if APPLICATION_TEMPLATE == 'standard':
                     jQuery('a.menu-href').removeClass('btn-warning')
-                    #.addClass('btn-info')
 ,False)
 
 

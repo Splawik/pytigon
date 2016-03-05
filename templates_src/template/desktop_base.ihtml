@@ -236,9 +236,12 @@
 
 
 %% body_body
-    div id=body_body,,,class=tab-pane refr_target refr_object win-content
-        {{block.super}}
-
+    % if application_type == 'modern':
+        div class=tab-pane refr_target refr_object win-content page
+            {{block.super}}
+    % else:
+        div id=body_body,,,class=tab-pane refr_target refr_object win-content page
+            {{block.super}}
 
 %% body_end
     % if standard_web_browser:

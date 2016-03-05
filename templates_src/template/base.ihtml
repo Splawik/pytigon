@@ -236,12 +236,13 @@
                                                 %% list_row_start
                                                     % if not no_id
                                                         td
-                                                            div class=td_information,,,style=white-space:nowrap
+                                                            <div {% block id_row_attr %}class="td_information"{% endblock %}>
                                                                 %% id_extra
                                                                 %if get:
                                                                     {% get_row object.id %}
                                                                 %else:
                                                                     {% view_row object.id %}
+                                                            </div>
                                                 %% list_row
                                                     td...{{object}}
                                                 %% list_row_end

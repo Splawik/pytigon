@@ -41,7 +41,7 @@ var INLINE_DIALOG_INFO_HTML = "\
 
 var INLINE_TABLE_HTML = "\
 <div class='indent shadow-z-2 refr_object'>\
-    <button type='button' class='btn btn-danger btn-xs' onclick='on_cancel_inline($(this));return false'>\
+    <button type='button' class='btn btn-danger btn-xs close' onclick='on_cancel_inline($(this));return false'>\
         <span class='fa fa-times' aria-hidden='true'></span>\
     </button>\
     <div class='refr_target dialog-data-inner'></div>\

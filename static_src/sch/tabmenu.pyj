@@ -1,6 +1,7 @@
 import glob
 from page import Page
 from tabmenuitem import TabMenuItem
+from tbl import datatable_onresize
 
 class TabMenu:
     def __init__(self):
@@ -23,6 +24,7 @@ class TabMenu:
         jQuery(sprintf('#li_%s a', menu_item.id)).tab('show')
         if push_state and PUSH_STATE:
             history_push_state(menu_item.title, menu_item.url)
+        datatable_onresize()
 
     def new_page(self, title, data, href, riot_init):
         nonlocal PUSH_STATE #ACTIVE_PAGE

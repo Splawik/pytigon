@@ -2,12 +2,11 @@ var ՐՏ_modules = {};
 ՐՏ_modules["glob"] = {};
 ՐՏ_modules["page"] = {};
 ՐՏ_modules["tabmenuitem"] = {};
-ՐՏ_modules["tabmenu"] = {};
-ՐՏ_modules["schclient"] = {};
-ՐՏ_modules["tools"] = {};
-ՐՏ_modules["popup"] = {};
 ՐՏ_modules["scrolltbl"] = {};
 ՐՏ_modules["tbl"] = {};
+ՐՏ_modules["tabmenu"] = {};
+ՐՏ_modules["tools"] = {};
+ՐՏ_modules["popup"] = {};
 
 (function(){
     var __name__ = "glob";
@@ -56,12 +55,162 @@ var ՐՏ_modules = {};
 })();
 
 (function(){
+    var __name__ = "scrolltbl";
+    var glob = ՐՏ_modules["glob"];
+    
+    function stick_resize() {
+        var tbl, dy_table, dy_win, dy;
+        tbl = glob.ACTIVE_PAGE.page.find(".tbl_scroll");
+        if (tbl.length > 0) {
+            dy_table = tbl.offset().top;
+            dy_win = dy_win = jQuery(window).height();
+            dy = dy_win - dy_table;
+            if (dy < 100) dy = 100;
+            tbl.height(dy - 35);
+        }
+    }
+    function resize_win() {
+        var tab_width, tab2;
+        stick_resize();
+        tab2 = [];
+        tab_width = glob.ACTIVE_PAGE.page.find("table[name='tabsort']").width();
+        glob.ACTIVE_PAGE.page.find(".tbl_header").width(tab_width);
+        glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(function() {
+            tab2.push(jQuery(this).width());
+        });
+        tab2 = tab2.reverse();
+        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
+            jQuery(this).width(tab2.pop());
+        });
+    }
+    function stick_header() {
+        var table, tab2, tab;
+        tab = [];
+        tab2 = [];
+        glob.ACTIVE_PAGE.page.find("table.tabsort th").each(function() {
+            tab.push(jQuery(this).width());
+        });
+        table = jQuery("<table class=\"tabsort tbl_header\" style=\"overflow-x: hidden;\"></table>");
+        table.append(glob.ACTIVE_PAGE.page.find("table.tabsort thead"));
+        glob.ACTIVE_PAGE.page.find(".tbl_scroll").before(table);
+        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
+            tab2.push(jQuery(this).width());
+        });
+        tab2 = tab2.reverse();
+        glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(function() {
+            var x;
+            x = tab2.pop();
+            if (x > jQuery(this).width()) {
+                jQuery(this).css("min-width", x);
+            }
+        });
+        tab = tab.reverse();
+        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
+            jQuery(this).width(tab.pop());
+        });
+        jQuery(window).resize(resize_win);
+        resize_win();
+    }
+    ՐՏ_modules["scrolltbl"]["stick_resize"] = stick_resize;
+
+    ՐՏ_modules["scrolltbl"]["resize_win"] = resize_win;
+
+    ՐՏ_modules["scrolltbl"]["stick_header"] = stick_header;
+})();
+
+(function(){
+    var __name__ = "tbl";
+    var glob = ՐՏ_modules["glob"];
+    
+    var stick_header = ՐՏ_modules["scrolltbl"].stick_header;
+    
+    function datetable_set_height() {
+        var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
+        if (jQuery(this).hasClass("table_get")) {
+            return;
+        }
+        if (!jQuery(this).is(":visible")) {
+            return;
+        }
+        elem = jQuery(this).closest(".tabsort_panel");
+        dy_table = elem.height();
+        dy_win = jQuery(window).height();
+        dy_body1 = 0;
+        jQuery(".win-header").each(function() {
+            dy_body1 += jQuery(this).height();
+        });
+        dy_body2 = jQuery(".win-content").height();
+        dy_body = dy_body1 + dy_body2;
+        dy = dy_table + (dy_win - dy_body);
+        if (dy < 200) {
+            dy = 200;
+        }
+        jQuery(this).bootstrapTable("resetView", {
+            "height": dy - 10
+        });
+    }
+    function datatable_refresh(table) {
+        table.bootstrapTable("refresh");
+    }
+    function _rowStyle(value, row, index) {
+        var x, c;
+        x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information");
+        if (x.length > 0) {
+            c = x.attr("class").replace("td_information", "");
+            if (c.length > 0) {
+                return {
+                    "classes": c
+                };
+            }
+        }
+        return {};
+    }
+    function init_table(table, table_type) {
+        if (table_type === "scrolled") {
+            stick_header();
+        }
+        if (table_type === "datatable") {
+            function onLoadSuccess(data) {
+                datatable_onresize();
+                return false;
+            }
+            if (table.hasClass("table_get")) {
+                table.bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess,
+                    "height": 350,
+                    "rowStyle": _rowStyle
+                });
+            } else {
+                table.bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess,
+                    "rowStyle": _rowStyle
+                });
+            }
+        }
+    }
+    function datatable_onresize() {
+        jQuery(".datatable:not(.table_get)").each(datetable_set_height);
+    }
+    ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
+
+    ՐՏ_modules["tbl"]["datatable_refresh"] = datatable_refresh;
+
+    ՐՏ_modules["tbl"]["_rowStyle"] = _rowStyle;
+
+    ՐՏ_modules["tbl"]["init_table"] = init_table;
+
+    ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
+})();
+
+(function(){
     var __name__ = "tabmenu";
     var glob = ՐՏ_modules["glob"];
     
     var Page = ՐՏ_modules["page"].Page;
     
     var TabMenuItem = ՐՏ_modules["tabmenuitem"].TabMenuItem;
+    
+    var datatable_onresize = ՐՏ_modules["tbl"].datatable_onresize;
     
     function TabMenu() {
         TabMenu.prototype.__init__.apply(this, arguments);
@@ -93,6 +242,7 @@ var ՐՏ_modules = {};
         if (push_state && PUSH_STATE) {
             history_push_state(menu_item.title, menu_item.url);
         }
+        datatable_onresize();
     };
     TabMenu.prototype.new_page = function new_page(title, data, href, riot_init){
         var self = this;
@@ -155,40 +305,8 @@ var ՐՏ_modules = {};
 })();
 
 (function(){
-    var __name__ = "schclient";
-    function cmd_to_python(value) {
-        document.title = ":" + value;
-    }
-    function is_hybrid() {
-        return false;
-    }
-    function to_absolute_url(url) {
-        if (url[0] === "/") {
-            return window.location.protocol + "//" + window.location.host + url;
-        } else {
-            return window.location.protocol + "//" + window.location.host + window.location.pathname + "/" + url;
-        }
-    }
-    function ret_submit() {
-        RET_OBJ(RET_BUFOR, "OK");
-    }
-    ՐՏ_modules["schclient"]["cmd_to_python"] = cmd_to_python;
-
-    ՐՏ_modules["schclient"]["is_hybrid"] = is_hybrid;
-
-    ՐՏ_modules["schclient"]["to_absolute_url"] = to_absolute_url;
-
-    ՐՏ_modules["schclient"]["ret_submit"] = ret_submit;
-})();
-
-(function(){
     var __name__ = "tools";
     var LOADED_FILES;
-    var cmd_to_python = ՐՏ_modules["schclient"].cmd_to_python;
-    var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
-    var to_absolute_url = ՐՏ_modules["schclient"].to_absolute_url;
-    var ret_submit = ՐՏ_modules["schclient"].ret_submit;
-    
     LOADED_FILES = {};
     function download_binary_file(buf, content_disposition) {
         var l, buffer, view, i, mimetype, blob, blobURL;
@@ -440,9 +558,7 @@ var ՐՏ_modules = {};
     var ajax_get = ՐՏ_modules["tools"].ajax_get;
     var ajax_post = ՐՏ_modules["tools"].ajax_post;
     
-    var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
-    var cmd_to_python = ՐՏ_modules["schclient"].cmd_to_python;
-    var is_hybrid = ՐՏ_modules["schclient"].is_hybrid;
+    var datatable_refresh = ՐՏ_modules["tbl"].datatable_refresh;
     
     function refresh_fragment(data_item_to_refresh, fun, only_table) {
         if (typeof fun === "undefined") fun = null;
@@ -455,10 +571,12 @@ var ՐՏ_modules = {};
             target = refr_block.find(".refr_target");
         }
         if (only_table) {
-            datatable = target.find(".datatable");
+            datatable = target.find("table[name=tabsort].datatable");
             if (datatable.length > 0) {
-                datatable.bootstrapTable("refresh");
-                fun();
+                datatable_refresh(datatable);
+                if (fun) {
+                    fun();
+                }
                 return;
             }
         }
@@ -485,34 +603,29 @@ var ՐՏ_modules = {};
         jQuery(elem).attr("data-style", "zoom-out");
         jQuery(elem).attr("data-spinner-color", "#FF0000");
         WAIT_ICON = Ladda.create(elem);
-        if (is_hybrid()) {
-            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
-            jQuery("div.dialog-form-info").modal();
-        } else {
-            if (WAIT_ICON) {
-                WAIT_ICON.start();
-            }
-            jQuery(elem).closest("table").find(".inline_dialog").remove();
-            COUNTER = COUNTER + 1;
-            id = COUNTER;
-            href2 = corect_href(jQuery(elem).attr("href"));
-            new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
-            new_fragment.insertAfter(jQuery(elem).closest("tr"));
-            elem2 = new_fragment.find(".refr_target");
-            elem2.load(href2, null, function(responseText, status, response) {
-                $("#IDIAL_" + id).hide();
-                $("#IDIAL_" + id).removeClass("hide");
-                $("#IDIAL_" + id).show("slow");
-                if (status !== "error") {
-                    _dialog_loaded(false, elem2);
-                    on_dialog_load();
-                }
-                if (WAIT_ICON) {
-                    WAIT_ICON.stop();
-                    WAIT_ICON = null;
-                }
-            });
+        if (WAIT_ICON) {
+            WAIT_ICON.start();
         }
+        jQuery(elem).closest("table").find(".inline_dialog").remove();
+        COUNTER = COUNTER + 1;
+        id = COUNTER;
+        href2 = corect_href(jQuery(elem).attr("href"));
+        new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
+        new_fragment.insertAfter(jQuery(elem).closest("tr"));
+        elem2 = new_fragment.find(".refr_target");
+        elem2.load(href2, null, function(responseText, status, response) {
+            $("#IDIAL_" + id).hide();
+            $("#IDIAL_" + id).removeClass("hide");
+            $("#IDIAL_" + id).show("slow");
+            if (status !== "error") {
+                _dialog_loaded(false, elem2);
+                on_dialog_load();
+            }
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+                WAIT_ICON = null;
+            }
+        });
         return false;
     }
     function on_popup_in_form(elem) {
@@ -520,29 +633,75 @@ var ՐՏ_modules = {};
         jQuery(elem).attr("data-style", "zoom-out");
         jQuery(elem).attr("data-spinner-color", "#FF0000");
         WAIT_ICON = Ladda.create(elem);
-        if (is_hybrid()) {
-            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
-            jQuery("div.dialog-form-info").modal();
+        if (WAIT_ICON) {
+            WAIT_ICON.start();
+        }
+        jQuery(elem).closest("div.Dialog").find(".inline_dialog").remove();
+        COUNTER = COUNTER + 1;
+        id = COUNTER;
+        href2 = corect_href(jQuery(elem).attr("href"));
+        new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'>" + INLINE_TABLE_HTML + "</div>");
+        new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
+        elem2 = new_fragment.find(".refr_target");
+        elem2.load(href2, null, function(responseText, status, response) {
+            var table_type;
+            $("#IDIAL_" + id).hide();
+            $("#IDIAL_" + id).removeClass("hide");
+            $("#IDIAL_" + id).show("slow");
+            if (status !== "error") {
+                _dialog_loaded(false, elem2);
+                table_type = get_table_type(elem2);
+                init_table(elem2, table_type);
+                on_dialog_load();
+            }
+            if (WAIT_ICON) {
+                WAIT_ICON.stop();
+                WAIT_ICON = null;
+            }
+        });
+        return false;
+    }
+    function on_popup_edit_new(elem) {
+        var test, elem2, elem3;
+        jQuery(elem).attr("data-style", "zoom-out");
+        jQuery(elem).attr("data-spinner-color", "#FF0000");
+        WAIT_ICON = Ladda.create(elem);
+        if (can_popup() && !jQuery(elem).hasClass("inline") && !(jQuery(elem).attr("name") && ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
+            elem2 = jQuery("div.dialog-data");
+            elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid());
+            ajax_load(elem2, jQuery(elem).attr("href"), function(responseText, status, response) {
+                _dialog_loaded(true, elem2);
+                on_dialog_load();
+            });
         } else {
             if (WAIT_ICON) {
                 WAIT_ICON.start();
             }
-            jQuery(elem).closest("div.Dialog").find(".inline_dialog").remove();
-            COUNTER = COUNTER + 1;
-            id = COUNTER;
-            href2 = corect_href(jQuery(elem).attr("href"));
-            new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'>" + INLINE_TABLE_HTML + "</div>");
-            new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
-            elem2 = new_fragment.find(".refr_target");
-            elem2.load(href2, null, function(responseText, status, response) {
+            if (jQuery(elem).hasClass("new-row")) {
+                elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
+                elem2.insertAfter(jQuery(elem).closest("div.tr"));
+            } else {
+                test = jQuery(elem).closest("form");
+                if (test.length > 0) {
+                    elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
+                    elem2.insertAfter(jQuery(elem).closest("div.form-group"));
+                } else {
+                    elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
+                    elem2.insertAfter(jQuery(elem).closest("tr"));
+                }
+            }
+            elem2.find(".modal-title").html(jQuery(elem).attr("title"));
+            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
+            elem3 = elem2.find("div.dialog-data-inner");
+            ajax_load(elem3, jQuery(elem).attr("href"), function(responseText, status, response) {
                 var table_type;
-                $("#IDIAL_" + id).hide();
-                $("#IDIAL_" + id).removeClass("hide");
-                $("#IDIAL_" + id).show("slow");
+                elem2.hide();
+                elem2.removeClass("hide");
+                elem2.show("slow");
                 if (status !== "error") {
-                    _dialog_loaded(false, elem2);
-                    table_type = get_table_type(elem2);
-                    set_table_type(table_type, "#" + jQuery(elem2).uid() + " .tabsort");
+                    _dialog_loaded(false, elem3);
+                    table_type = get_table_type(elem3);
+                    init_table(elem3, table_type);
                     on_dialog_load();
                 }
                 if (WAIT_ICON) {
@@ -553,98 +712,32 @@ var ՐՏ_modules = {};
         }
         return false;
     }
-    function on_popup_edit_new(elem) {
-        var test, elem2, elem3;
-        jQuery(elem).attr("data-style", "zoom-out");
-        jQuery(elem).attr("data-spinner-color", "#FF0000");
-        WAIT_ICON = Ladda.create(elem);
-        if (is_hybrid()) {
-            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data");
-            jQuery("div.dialog-form").modal();
-        } else {
-            if (can_popup() && !jQuery(elem).hasClass("inline") && !(jQuery(elem).attr("name") && ՐՏ_in("_inline", jQuery(elem).attr("name")))) {
-                elem2 = jQuery("div.dialog-data");
-                elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid());
-                ajax_load(elem2, jQuery(elem).attr("href"), function(responseText, status, response) {
-                    _dialog_loaded(true, elem2);
-                    on_dialog_load();
-                });
-            } else {
-                if (WAIT_ICON) {
-                    WAIT_ICON.start();
-                }
-                if (jQuery(elem).hasClass("new-row")) {
-                    elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
-                    elem2.insertAfter(jQuery(elem).closest("div.tr"));
-                } else {
-                    test = jQuery(elem).closest("form");
-                    if (test.length > 0) {
-                        elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>");
-                        elem2.insertAfter(jQuery(elem).closest("div.form-group"));
-                    } else {
-                        elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>");
-                        elem2.insertAfter(jQuery(elem).closest("tr"));
-                    }
-                }
-                elem2.find(".modal-title").html(jQuery(elem).attr("title"));
-                elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
-                elem3 = elem2.find("div.dialog-data-inner");
-                ajax_load(elem3, jQuery(elem).attr("href"), function(responseText, status, response) {
-                    var table_type;
-                    elem2.hide();
-                    elem2.removeClass("hide");
-                    elem2.show("slow");
-                    if (status !== "error") {
-                        _dialog_loaded(false, elem3);
-                        table_type = get_table_type(elem3);
-                        set_table_type(table_type, "#" + jQuery(elem3).uid() + " .tabsort");
-                        on_dialog_load();
-                    }
-                    if (WAIT_ICON) {
-                        WAIT_ICON.stop();
-                        WAIT_ICON = null;
-                    }
-                });
-            }
-        }
-        return false;
-    }
     function on_popup_info(elem) {
-        if (is_hybrid()) {
-            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data-info");
-            jQuery("div.dialog-form-info").modal();
+        if (can_popup()) {
+            jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+                jQuery("div.dialog-form-info").modal();
+            });
         } else {
-            if (can_popup()) {
-                jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
-                    jQuery("div.dialog-form-info").modal();
-                });
-            } else {
-                jQuery(".inline_dialog").remove();
-                jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
-                jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
-            }
+            jQuery(".inline_dialog").remove();
+            jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
         }
         return false;
     }
     function on_popup_delete(elem) {
         var elem2;
-        if (is_hybrid()) {
-            cmd_to_python("href_to_elem??" + elem.href + "??#dialog-data-delete");
-            jQuery("div.dialog-form-delete").modal();
+        if (can_popup()) {
+            jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid());
+            jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+                jQuery("div.dialog-form-delete").modal();
+                jQuery("div.dialog-form-delete").fadeTo("fast", 1);
+            });
         } else {
-            if (can_popup()) {
-                jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid());
-                jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
-                    jQuery("div.dialog-form-delete").modal();
-                    jQuery("div.dialog-form-delete").fadeTo("fast", 1);
-                });
-            } else {
-                jQuery(".inline_dialog").remove();
-                elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>");
-                elem2.insertAfter(jQuery(elem).parents("tr"));
-                elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
-                jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
-            }
+            jQuery(".inline_dialog").remove();
+            elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>");
+            elem2.insertAfter(jQuery(elem).parents("tr"));
+            elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
+            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
         }
         return false;
     }
@@ -808,153 +901,6 @@ var ՐՏ_modules = {};
     ՐՏ_modules["popup"]["on_get_row"] = on_get_row;
 })();
 
-(function(){
-    var __name__ = "scrolltbl";
-    var glob = ՐՏ_modules["glob"];
-    
-    function stick_resize() {
-        var tbl, dy_table, dy_win, dy;
-        tbl = glob.ACTIVE_PAGE.page.find(".tbl_scroll");
-        if (tbl.length > 0) {
-            dy_table = tbl.offset().top;
-            dy_win = dy_win = jQuery(window).height();
-            dy = dy_win - dy_table;
-            if (dy < 100) dy = 100;
-            tbl.height(dy - 35);
-        }
-    }
-    function resize_win() {
-        var tab_width, tab2;
-        stick_resize();
-        tab2 = [];
-        tab_width = glob.ACTIVE_PAGE.page.find("table[name='tabsort']").width();
-        glob.ACTIVE_PAGE.page.find(".tbl_header").width(tab_width);
-        glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(function() {
-            tab2.push(jQuery(this).width());
-        });
-        tab2 = tab2.reverse();
-        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
-            jQuery(this).width(tab2.pop());
-        });
-    }
-    function stick_header() {
-        var table, tab2, tab;
-        tab = [];
-        tab2 = [];
-        glob.ACTIVE_PAGE.page.find("table.tabsort th").each(function() {
-            tab.push(jQuery(this).width());
-        });
-        table = jQuery("<table class=\"tabsort tbl_header\" style=\"overflow-x: hidden;\"></table>");
-        table.append(glob.ACTIVE_PAGE.page.find("table.tabsort thead"));
-        glob.ACTIVE_PAGE.page.find(".tbl_scroll").before(table);
-        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
-            tab2.push(jQuery(this).width());
-        });
-        tab2 = tab2.reverse();
-        glob.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(function() {
-            var x;
-            x = tab2.pop();
-            if (x > jQuery(this).width()) {
-                jQuery(this).css("min-width", x);
-            }
-        });
-        tab = tab.reverse();
-        glob.ACTIVE_PAGE.page.find(".tbl_header th").each(function() {
-            jQuery(this).width(tab.pop());
-        });
-        jQuery(window).resize(resize_win);
-        resize_win();
-    }
-    ՐՏ_modules["scrolltbl"]["stick_resize"] = stick_resize;
-
-    ՐՏ_modules["scrolltbl"]["resize_win"] = resize_win;
-
-    ՐՏ_modules["scrolltbl"]["stick_header"] = stick_header;
-})();
-
-(function(){
-    var __name__ = "tbl";
-    var glob = ՐՏ_modules["glob"];
-    
-    var stick_header = ՐՏ_modules["scrolltbl"].stick_header;
-    
-    function get_datatable_dy(selector) {
-        var dy_table, dy_win, dy;
-        dy_table = glob.ACTIVE_PAGE.page.find(".tabsort_panel").offset().top;
-        dy_win = jQuery(window).height();
-        dy = dy_win - dy_table;
-        if (dy < 100) {
-            dy = 100;
-        }
-        return dy;
-    }
-    function datetable_set_height() {
-        var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
-        if (jQuery(this).hasClass("table_get")) {
-            return;
-        }
-        elem = jQuery(this).closest(".tabsort_panel");
-        dy_table = elem.height();
-        dy_win = jQuery(window).height();
-        dy_body1 = 0;
-        jQuery(".win-header").each(function() {
-            dy_body1 += jQuery(this).height();
-        });
-        dy_body2 = jQuery(".win-content").height();
-        dy_body = dy_body1 + dy_body2;
-        dy = dy_table + (dy_win - dy_body);
-        if (dy < 200) {
-            dy = 200;
-        }
-        console.log("dy_win:" + dy_win + ", dy_table:" + dy_table + ", dy_body1:" + dy_body1 + ", dy_body2:" + dy_body2 + ", dy:" + dy);
-        jQuery(this).bootstrapTable("resetView", {
-            "height": dy - 10
-        });
-    }
-    function datatable_onresize() {
-        jQuery(".datatable:not(.table_get)").each(datetable_set_height);
-    }
-    function set_table_type(table_type, selector) {
-        var options;
-        if (table_type === "" || table_type === "simple") {
-        }
-        if (table_type === "scrolled") {
-            stick_header();
-        }
-        if (table_type === "datatable") {
-            function onLoadSuccess(data) {
-                jQuery(selector).each(datetable_set_height);
-                jQuery(window).resize(datatable_onresize);
-                jQuery(".win-content").bind("resize", datatable_onresize);
-                return false;
-            }
-            if (jQuery(selector).hasClass("table_get")) {
-                jQuery(selector).bootstrapTable({
-                    "onLoadSuccess": onLoadSuccess,
-                    "height": 350
-                });
-            } else {
-                jQuery(selector).bootstrapTable({
-                    "onLoadSuccess": onLoadSuccess
-                });
-            }
-            return;
-        }
-        if (table_type === "server-side") {
-            options = get_datatable_options2();
-            options["scrollY"] += get_datatable_dy(selector);
-            jQuery(selector).dataTable(options);
-        }
-    }
-    ՐՏ_modules["tbl"]["get_datatable_dy"] = get_datatable_dy;
-
-    ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
-
-    ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
-
-    ՐՏ_modules["tbl"]["set_table_type"] = set_table_type;
-})();
-
 var __name__ = "__main__";
 
 APPLICATION_TEMPLATE = "standard";
@@ -993,7 +939,7 @@ var on_edit_ok = ՐՏ_modules["popup"].on_edit_ok;
 var on_delete_ok = ՐՏ_modules["popup"].on_delete_ok;
 var ret_ok = ՐՏ_modules["popup"].ret_ok;
 
-var set_table_type = ՐՏ_modules["tbl"].set_table_type;
+var init_table = ՐՏ_modules["tbl"].init_table;
 var datatable_onresize = ՐՏ_modules["tbl"].datatable_onresize;
 
 var can_popup = ՐՏ_modules["tools"].can_popup;
@@ -1058,20 +1004,29 @@ function init_pagintor(pg) {
 }
 function fragment_init(elem) {
     if (typeof elem === "undefined") elem = null;
-    var elem2, _id, x, pos;
+    var elem2, d, _id, x, pos;
     if (elem) {
         elem2 = elem;
     } else {
         elem2 = glob.ACTIVE_PAGE.page;
     }
-    elem2.find(".dateinput").datetimepicker({
+    d = elem2.find(".dateinput");
+    d.wrap("<div class='input-group date'></div>");
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
+    d.parent().datetimepicker({
         "format": "YYYY-MM-DD",
-        "locale": "pl"
+        "locale": "pl",
+        "showTodayButton": true
     });
-    elem2.find(".datetimeinput").datetimepicker({
+    d = elem2.find(".datetimeinput");
+    d.wrap("<div class='input-group date datetime'></div>");
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
+    d.parent().datetimepicker({
         "format": "YYYY-MM-DD hh:mm",
-        "locale": "pl"
+        "locale": "pl",
+        "showTodayButton": true
     });
+    elem2.find(".win-content").bind("resize", datatable_onresize);
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
         var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);
@@ -1084,6 +1039,7 @@ function fragment_init(elem) {
     if (BASE_FRAGMENT_INIT) {
         BASE_FRAGMENT_INIT();
     }
+    datatable_onresize();
 }
 function page_init(id, first_time) {
     if (typeof first_time === "undefined") first_time = true;
@@ -1095,7 +1051,7 @@ function page_init(id, first_time) {
             paginate = init_pagintor(pg);
         }
     }
-    set_table_type(table_type, "#" + id + " .tabsort");
+    init_table(jQuery("#" + id + " .tabsort"), table_type);
     if (first_time) {
         elem2 = jQuery("body");
         handle_class_click(elem2, "get_tbl_value", on_get_tbl_value);
@@ -1260,6 +1216,13 @@ function app_init(application_template, menu_id, lang, base_path, base_fragment_
                 jQuery(this).tab("show");
                 jQuery(jQuery(this).prop("hash")).perfectScrollbar();
             });
+            jQuery("#tabs2").on("shown.bs.tab", function(e) {
+                datatable_onresize();
+            });
+            jQuery("body").on("expanded.pushMenu collapsed.pushMenu", function(e) {
+                window.setTimeout(datatable_onresize, 300);
+            });
+            jQuery(window).resize(datatable_onresize);
         });
     } else {
         SUBWIN = true;
@@ -1371,11 +1334,11 @@ function jquery_ready() {
         page_init("body_body");
     } else {
         if (APPLICATION_TEMPLATE === "modern") {
-            txt = jQuery("#body_body").text();
+            txt = jQuery(".page").text();
             txt2 = jQuery.trim(txt);
             if (txt2) {
-                txt = jQuery.trim(jQuery("#body_body").html());
-                jQuery("#body_body").html("");
+                txt = jQuery.trim(jQuery(".page")[0].outerHTML);
+                jQuery(".page").remove();
                 menu = get_menu();
                 menu.new_page(jQuery("title").text(), txt, window.location.href, RIOT_INIT);
             }

@@ -1,6 +1,3 @@
-from schclient import cmd_to_python, is_hybrid, to_absolute_url, ret_submit
-
-
 LOADED_FILES = {}
 
 def download_binary_file(buf, content_disposition):
@@ -62,9 +59,6 @@ def _req_post(req, url, data, complete):
     req.open("POST", url, True)
 
     req.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'))
-    #req.overrideMimeType('text/plain; charset=x-user-defined');
-    #req.responseType = "blob"
-    #req.responseType = 'arraybuffer'
 
     if data.length:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
