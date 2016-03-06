@@ -115,11 +115,11 @@ STANDARD_DESC = { #title, attrs,
 
 
 STANDARD_URL = {
-    'action': "../../../{id}/action/{action}",
-    'edit': "../../../{id}/{action}",
-    'edit2': "./{id}/{action}",
-    'delete': "../../../{id}/{action}",
-    'delete2': "./{id}/{action}",
+    'action': "../../../{id}/action/{action}/",
+    'edit': "../../../{id}/{action}/",
+    'edit2': "./{id}/{action}/",
+    'delete': "../../../{id}/{action}/",
+    'delete2': "./{id}/{action}/",
     'pdf': "../../../{id}/pdf/view/",
     'odf': "../../../{id}/odf/view/",
     'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",

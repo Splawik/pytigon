@@ -293,6 +293,7 @@ class Ul(ParArray):
                 self.lp += 1
             self.rendered_childs.append(child)
             self.childs.append(child)
+            child.make_atom_list()
             child.atom_list.pre = True
             child.atom_list.append_text(self._get_sym(child), self.get_style_id())
             atom = child.atom_list.atom_list[-1]

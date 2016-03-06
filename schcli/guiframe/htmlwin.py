@@ -1080,18 +1080,16 @@ class SchHtmlWindow(ScrolledPanel):
                 else:
                     adr = parm[0] + parm[1] + parm[2]
                     post = None
+
             http = wx.GetApp().get_http(ctrl)
-            nullpost = False
-            if params and 'post' in params:
-                nullpost = True
-            else:
-                nullpost = False
 
             if upload:
-                (err, adr2) = http.get(self, adr, post, nullpost, upload=True)
+                (err, adr2) = http.post(self, adr, post, upload=True)
             else:
-                (err, adr2) = http.get(self, adr, post, nullpost)
-
+                if post:
+                    (err, adr2) = http.post(self, adr, post)
+                else:
+                    (err, adr2) = http.get(self, adr)
 
             if 'text/plain' in http.ret_content_type:
                 s = http.str()
@@ -1105,7 +1103,7 @@ class SchHtmlWindow(ScrolledPanel):
                 okno.Body['EDITOR'].SetValue(s)
                 okno.Body['EDITOR'].GotoPos(0)
             else:
-                if 'content-disposition' in http.resp and 'attachment' in http.resp['content-disposition']:
+                if 'application' in http.ret_content_type:
                     wx.GetApp().GetTopWindow().open_binary_data(http, href)
                     http.clear_ptr()
                     return

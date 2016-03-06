@@ -967,11 +967,11 @@ class SchAppFrame(wx.Frame):
         return self.open_binary_data(http, page)
     
     def open_binary_data(self, http_ret, page):
-        ct = http_ret.resp['content-type']
-        if 'application/vnd.oasis.opendocument' in ct:
-            if 'content-disposition' in http_ret.resp:
-                content_disposition = http_ret.resp['content-disposition']
-                name = content_disposition.split('filename=')[1]
+        if 'application/vnd.oasis.opendocument' in http_ret.ret_content_type:
+
+            cd = http_ret.http.headers.get('content-disposition')
+            if cd:
+                name = cd.split('filename=')[1]
             else:
                 name = None
             p = http_ret.ptr()
@@ -992,7 +992,7 @@ class SchAppFrame(wx.Frame):
             okno = self.new_main_page('^standard/odf_view/odf_view.html', name, parametry=name)
             return True
         
-        if 'zip' in ct:
+        if 'zip' in http_ret.ret_content_type:
             p = http_ret.ptr()
             f = NamedTemporaryFile(delete=False)
             f.write(p)
@@ -1002,4 +1002,3 @@ class SchAppFrame(wx.Frame):
             return True
         
         return True
-    

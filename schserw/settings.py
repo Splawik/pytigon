@@ -49,7 +49,6 @@ USE_I18N = True
 SITE_ID = 1
 LANGUAGES = (('pl', 'Polish'), ('en', 'English'))
 LOGIN_REDIRECT_URL = '/'
-
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 BASE_URL = 'http://127.0.0.1:81'

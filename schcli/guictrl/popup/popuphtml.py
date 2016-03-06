@@ -272,7 +272,7 @@ class DataPopupControl(ComboCtrl):
             if not str(value) == "":
                 self.Http = wx.GetApp().get_http(self)
                 x = b32encode(value.encode('utf-8'))
-                self.Http.get(self, str(self.href) + "test/", {"value": x})
+                self.Http.post(self, str(self.href) + "test/", {"value": x})
                 #self.Http.Get(self, str(self.href) + "test/", {"value": b32encode(value).encode('utf-8')})
                 tab = schjson.loads(self.Http.str())
                 ret = tab[0]

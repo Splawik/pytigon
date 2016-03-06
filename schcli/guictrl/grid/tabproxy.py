@@ -67,7 +67,7 @@ class DataProxy:
 
         self.Http = http
 
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_info, }))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_info, }))
 
         ret = schjson.loads(self.Http.str())
 
@@ -152,7 +152,7 @@ class DataProxy:
         if self.parm:
             for (key, value) in list(self.parm.items()):
                 c[key] = value
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm(c))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
 
         #try:
         if True:
@@ -176,7 +176,7 @@ class DataProxy:
         return retpage
 
     def GetRecAsStr(self, nrRec):
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_recasstr, 'nr': nrRec}))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_recasstr, 'nr': nrRec}))
         ret = schjson.loads(self.Http.str())
 
         self.Http.clear_ptr()
@@ -208,7 +208,7 @@ class DataProxy:
         parm = {'cmd': cmd_count}
         if 'value' in self.parm:
             parm['value']=self.parm['value']
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm(parm))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(parm))
         #print "Count:", self.Http.Str()
         s = self.Http.str()
         #print(s)
@@ -225,7 +225,7 @@ class DataProxy:
         delete = schjson.dumps(listaRecDelete)
 
         c = {'cmd': cmd_sync, 'update': update, 'insert': insert, 'delete': delete}
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm(c))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
         self.Http.clear_ptr()
 
     def GetAttr(self, row, col, kind):
@@ -241,7 +241,7 @@ class DataProxy:
 
         c = {'cmd': cmd_auto, 'col_name': col_name2, 'col_names': col_names2, "rec": rec2}
 
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm(c))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
         ret = schjson.loads(self.Http.str())
         self.Http.clear_ptr()
         if ret == None:
@@ -256,7 +256,7 @@ class DataProxy:
 
     def exec(self, parm):
         c = {'cmd': cmd_exec, 'value': parm}
-        self.Http.get(self.parent, self.tabaddress, ProcessPostParm(c))
+        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
         #self.Http.ClearPtr()
         #print "Exec ret:", self.Http.Str()
         ret = schjson.loads(self.Http.str())

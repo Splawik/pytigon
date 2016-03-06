@@ -1020,7 +1020,7 @@ function fragment_init(elem) {
     });
     d = elem2.find(".datetimeinput");
     d.wrap("<div class='input-group date datetime'></div>");
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-time'></span></span>");
     d.parent().datetimepicker({
         "format": "YYYY-MM-DD hh:mm",
         "locale": "pl",

@@ -515,7 +515,7 @@ def login(base_href, auth_type = None):
         }
 
         if auth_type == None:
-            wx.GetApp().HTTP.get(wx.GetApp(), '/schsys/do_login/', parm, credentials=(username, password))
+            wx.GetApp().HTTP.post(wx.GetApp(), '/schsys/do_login/', parm, credentials=(username, password))
 
             ret_str = wx.GetApp().HTTP.str()
             if 'RETURN_OK' in ret_str:
@@ -811,7 +811,7 @@ def main_init(argv):
         ready_to_run = False
         username = 'auto'
         password = 'anawa'
-        app.HTTP.get(app, '/schsys/do_login/', {
+        app.HTTP.post(app, '/schsys/do_login/', {
             'csrfmiddlewaretoken': app.csrf_token,
             'username': username,
             'password': password,

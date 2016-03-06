@@ -452,3 +452,7 @@ div.shadow-z-2 .close {
 .form-inline .bootstrap-datetimepicker-widget {
     position: static;
 }
+
+.file-caption {
+    margin-right: 0px !important;
+}
