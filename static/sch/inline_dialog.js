@@ -2,7 +2,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 <div class='modal-admin refr_object'>\
     <div class='modal-content'>\
         <div class='modal-header'>\
-            <button type='button' class='close' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
+            <button type='button' class='close btn-raised' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
             <h4 class='modal-title'>Modal title</h4>\
         </div>\
         <div class='modal-body'>\
@@ -41,7 +41,7 @@ var INLINE_DIALOG_INFO_HTML = "\
 
 var INLINE_TABLE_HTML = "\
 <div class='indent shadow-z-2 refr_object'>\
-    <button type='button' class='btn btn-danger btn-xs close' onclick='on_cancel_inline($(this));return false'>\
+    <button type='button' class='btn btn-danger btn-raised btn-xs close' onclick='on_cancel_inline($(this));return false'>\
         <span class='fa fa-times' aria-hidden='true'></span>\
     </button>\
     <div class='refr_target dialog-data-inner'></div>\

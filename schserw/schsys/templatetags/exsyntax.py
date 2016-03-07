@@ -103,23 +103,23 @@ def mark_safe2(x):
         return x
 
 STANDARD_DESC = { #title, attrs, 
-    'default': ('Default', "class='btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' "),
+    'default': ('Default', "class='btn btn-sm' data-role='button' data-inline='true' data-mini='true' "),
     'edit': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'edit2': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'delete2': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'field_list': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_action': (_('Default'), "class='popup_inline btn btn-sm btn-default' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_action': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 
 STANDARD_URL = {
-    'action': "../../../{id}/action/{action}/",
-    'edit': "../../../{id}/{action}/",
-    'edit2': "./{id}/{action}/",
-    'delete': "../../../{id}/{action}/",
-    'delete2': "./{id}/{action}/",
+    'action': "../../../{id}/action/{action}",
+    'edit': "../../../{id}/{action}",
+    'edit2': "./{id}/{action}",
+    'delete': "../../../{id}/{action}",
+    'delete2': "./{id}/{action}",
     'pdf': "../../../{id}/pdf/view/",
     'odf': "../../../{id}/odf/view/",
     'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",

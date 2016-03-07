@@ -293,7 +293,7 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
 }
 
 .refresh-button {
-    position: absolute;
+    position: absolute !important;
     right: 3px;
     bottom: 3px;
     height: 100%;

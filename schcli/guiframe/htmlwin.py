@@ -1055,8 +1055,7 @@ class SchHtmlWindow(ScrolledPanel):
                 wx.GetApp().GetTopWindow().show_odf(adr)
                 return
 
-            parm = createparm.create_parm(adr, self.get_parm_obj(),
-                                          no_encode=upload)
+            parm = createparm.create_parm(adr, self.get_parm_obj(), no_encode=True)
             if parm:
                 adr = parm[0]
 
@@ -1067,16 +1066,12 @@ class SchHtmlWindow(ScrolledPanel):
                 self.any_parent_command('set_adr_and_param', adr, self.get_parm_obj())
                 self.any_parent_command('refresh_html')
                 return
-            parm = createparm.create_parm(adr, self.get_parm_obj(),
-                                          no_encode=upload)
+            parm = createparm.create_parm(adr, self.get_parm_obj(), no_encode=True)
             post = None
             if parm:
                 if typ in ('POST', 'post'):
                     adr = parm[0]
-                    if upload:
-                        post = parm[2]
-                    else:
-                        post = str(parm[2])
+                    post = parm[2]
                 else:
                     adr = parm[0] + parm[1] + parm[2]
                     post = None

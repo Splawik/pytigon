@@ -8,6 +8,7 @@
 ## refresh_page: replace current page (like _self)
 ## refresh_app: replace current app
 
+
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -89,7 +90,7 @@ def fragment_init(elem=None):
 
     d = elem2.find('.datetimeinput')
     d.wrap( "<div class='input-group date datetime'></div>" )
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
+    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-time'></span></span>")
     d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True})
 
     elem2.find('.win-content').bind('resize', datatable_onresize)

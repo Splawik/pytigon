@@ -127,7 +127,7 @@ def init_plugin(
 # print "OnSave" http = wx.GetApp().HTTP
             http = wx.GetApp().get_http(self)
             if self.href:
-                http.get(self, self.href, {'data': self.GetText()})
+                http.post(self, self.href, {'data': self.GetText()})
 # txt = http.Ptr() print "Save result:", txt
             http.clear_ptr()
 

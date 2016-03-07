@@ -77,7 +77,7 @@ class HttpClient:
     def post(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None):
         return self.get(parent, address_str, parm, upload, credentials, user_agent, True)
 
-    def get(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, post_request=False):
+    def get(self, parent, address_str, parm=None,                                                                                                                                                                                                                   upload = False, credentials=False, user_agent=None, post_request=False):
         global COOKIES
         global BLOCK
 

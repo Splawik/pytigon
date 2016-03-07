@@ -142,3 +142,8 @@ body {
     margin-top: 0px !important;
     padding-top: 10px;
 }
+
+.form-group {
+    padding-bottom: 7px;
+    margin: 0 0 0 0;
+}

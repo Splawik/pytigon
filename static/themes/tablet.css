@@ -82,3 +82,13 @@ td .content_get {
 
     color: #000 !important;
 }
+
+/*
+.btn-primary {
+    background-color: transparent !important;
+    border-color: #ddd !important;
+
+.btn-primary:hover, .btn-primary:focus  {
+    border-color: #adadad !important;
+}
+*/
