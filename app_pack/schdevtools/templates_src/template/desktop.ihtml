@@ -45,9 +45,14 @@
     {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
 
 %% theme_css_links
-    {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
-    {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
+    % comment:
+        {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
+        {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
+        {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
+
+    {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
     {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
+
     {% css_link 'themes/default.css' %}
     {% css_link 'themes/material.css' %}
 
