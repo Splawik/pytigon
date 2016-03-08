@@ -1,0 +1,32 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "plugin_form.html" %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.GO.Bind(wx.EVT_BUTTON, self.on_go_to)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.on_exit)
+            a_table = [(0, wx.WXK_RETURN, self.on_go_to),]
+            self.set_acc_key_tab(self.GOLINE, a_table)
+            self.GOLINE.SetMax(999999)
+            self.GOLINE.SetValue('')
+        def on_go_to(self, event):
+            editor = self.get_parent_panel()['EDITOR']
+            value = self.GOLINE.GetValue()
+            editor.GotoLine(int(value)-1)
+            self.on_exit(event)
+        def on_exit(self, event):
+            self.any_parent_command('cancel', True)
+</script>
+{% endblock %}
+{% block content %}
+        <table width="100%" height="100%">
+                <tr>
+                        <td><CTRLSTATICTEXT LABEL="Go to line:"></CTRLSTATICTEXT></td>
+                        <td><CTRLNUM NAME="GOLINE" STYLE="wx.TE_PROCESS_ENTER"></CTRLNUM></td>
+                        <td><CTRLBITMAPBUTTON NAME="GO" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
+                        <td width="99%"></td>
+                        <td><CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON></td>
+                </tr>
+        </table>
+{% endblock %}
+
