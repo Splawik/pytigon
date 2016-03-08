@@ -15,13 +15,15 @@
     $.fn.fileinputLocales['zh-TW'] = {
         fileSingle: '單一檔案',
         filePlural: '複選檔案',
-        browseLabel: '預覽 &hellip;',
+        browseLabel: '瀏覽 &hellip;',
         removeLabel: '移除',
         removeTitle: '清除選取檔案',
         cancelLabel: '取消',
         cancelTitle: '取消上傳中檔案',
         uploadLabel: '上傳',
         uploadTitle: '上傳選取檔案',
+        msgNo: '沒有',
+        msgCancelled: '取消',
         msgZoomTitle: '詳細資料',
         msgZoomModalHeading: '內容預覽',
         msgSizeTooLarge: '檔案 "{name}" (<b>{size} KB</b>) 大小超過上限 <b>{maxSize} KB</b>.',
@@ -35,7 +37,7 @@
         msgInvalidFileType: '檔案類型錯誤 "{name}". 只能使用 "{types}" 類型的檔案.',
         msgInvalidFileExtension: '附檔名錯誤 "{name}". 只能使用 "{extensions}" 的檔案.',
         msgUploadAborted: '該文件上傳被中止',
-        msgValidationError: '檔案上傳失敗',
+        msgValidationError: '驗證錯誤',
         msgLoading: '載入第 {index} 個檔案，共 {files} &hellip;',
         msgProgress: '載入第 {index} 個檔案，共 {files} - {name} - {percent}% 成功.',
         msgSelected: '{n} {files} 選取',
@@ -44,10 +46,9 @@
         msgImageHeightSmall: '圖檔高度"{name}"必須至少為{size}像素(px).',
         msgImageWidthLarge: '圖檔寬度"{name}"不能超過{size}像素(px).',
         msgImageHeightLarge: '圖檔高度"{name}"不能超過{size}像素(px).',
+        msgImageResizeError: '無法獲取的圖像尺寸調整。',
+        msgImageResizeException: '錯誤而調整圖像大小。<pre>{errors}</pre>',
         dropZoneTitle: '拖曳檔案至此 &hellip;',
-        slugCallback: function(text) {
-            return text ? text.split(/(\\|\/)/g).pop().replace(/[^\w\u4e00-\u9fa5\-.\\\/ ]+/g, '') : '';
-        },
         fileActionSettings: {
             removeTitle: '刪除檔案',
             uploadTitle: '上傳檔案',

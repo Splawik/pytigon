@@ -1,6 +1,85 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 4.3.1
+
+**Date:** 28-Feb-2016
+
+1. (enh #514): Set default value for `removeFromPreviewOnError` to `false`.
+2. (enh #554): Update documentation and demos to include `webkitdirectory` for upload.
+3. (enh #555): Set default value for `removeFromPreviewOnError` to `false`.
+4. (enh #557): Enhance default file type parsing to intelligently not render unpreviewable content.
+5. (enh #559): Allow custom error display styles (e.g. via bootstrap dialog) through these changes:
+    - added `msg` param in `fileerror`, `fileuploaderror`, and `filefoldererror` events.
+6. (enh #560): Update French Translations.
+7. (enh #565): Enhance progress bar display when upload is aborted or cancelled.
+8. (enh #567): New properties and improved messages.
+9. (enh #572): Add Finnish Translations.
+10. (enh #573): Update package.json to include `peerDependencies`.
+11. (enh #574): Change naming convention for private / internal methods. Prepend internal plugin methods with underscore `_`.
+12. (enh #575): Implement public method chaining and update docs for methods.
+13. (bug #576): Correct previewCache initialization.
+14. (bug #577): Better label spacing for default browse icon.
+
+## version 4.3.0
+
+**Date:** 25-Jan-2016
+
+1. (enh #550): Correct Drag and drop issue with v4.2.9.
+
+## version 4.2.9
+
+**Date:** 22-Jan-2016
+
+1. (enh #489): Update documentation for `change` and `fileselect` events.
+2. (enh #521): Update Dutch Translations.
+3. (enh #523): Add new branch `sass` for `bootstrap-sass-official` support.
+4. (enh #530): Error alert box and preview thumbnail styling enhancements.
+5. (enh #531): Enhance/Fix typos of Arabic translation.
+6. (enh #534, enh #535): Ability to remove errored file thumbnails via `removeFromPreviewOnError`.
+7. (enh #541): Improve default slug callback to accept most characters.
+8. (enh #545): Refactor code to deep extend options correctly.
+
+## version 4.2.8
+
+**Date:** 18-Nov-2015
+
+1. Update bootstrap bower version to support only 3.x variants.
+2. Implement package.json.
+3. (enh #449): Add Arabic Translations.
+4. (enh #454): Update Turkish Translations.
+5. (enh #460): Update CSS selectors prefix to start with `file`.
+6. (enh #462): Responsive buttons and new property `buttonLabelClass`.
+7. (enh #465): Add Català translations.
+8. (enh #474): Upload via button within each preview thumbnail skips last file for async uploads.
+9. (enh #477): Fix IE10 specific styling bug for file input block button.
+10. (enh #481): Universal Module Definition for use with CommonJS, AMD or browser globals.
+11. (bug #483): Clear and reset native input after uploading each single file thumbnail.
+12. (enh #488): Publish to npm.
+13. (enh #490): Fix `zh-TW` translation `browseLabel` wording.
+14. (enh #494): Add Indonesian translations.
+
+## version 4.2.7
+
+**Date**: 13-Sep-2015
+
+1. (bug #420): Revamp file status progress and positioning updates for asynchronous upload.
+2. (enh #427): Add image resizing capability before upload.
+3. (enh #428): Enhancements to asynchronous uploads when `showPreview` is `false`.
+4. (bug #429): Fix for MS Edge bug that does not support drag and drop.
+5. (enh #431): Add Danish locale translations.
+6. (enh #432): Send slugged file names with the file blob when uploading via ajax.
+7. (enh #433): Added new events for image handling.
+    - `fileimageloaded` (fires after each image is loaded in preview) - this is an existing event
+    - `fileimagesloaded` (fires after all images are loaded in preview)
+    - `fileimageresized` (fires after each image in preview is resized)
+    - `fileimagesresized` (fires after all images in preview are resized)
+    - `fileimageresizeerror` (fires when any image resize error is faced)
+8. (enh #434): Added Japanese translations.
+9. (enh #436): New property `showClose` and new layout template `close` to control close icon display.
+10. (enh #437): New property `defaultPreviewContent` to control a default preview.
+11. (bug #442); Enhance the filenames parsing in the filestack and slug conversion.
+
 ## version 4.2.6
 
 **Date**: 26-Aug-2015

@@ -208,8 +208,8 @@ div.indent {
 }
 
 tr:not(:hover) div.td_action * {
-	opacity: 0.2;
-	filter:alpha(opacity=20);
+	opacity: 0.25;
+	filter:alpha(opacity=25);
 }
 
 .td_information {

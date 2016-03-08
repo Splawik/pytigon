@@ -147,3 +147,20 @@ body {
     padding-bottom: 7px;
     margin: 0 0 0 0;
 }
+
+
+form.form-inline .file-input-new {
+    margin-top: -5px;
+}
+
+form.form-inline .kv-fileinput-caption {
+    top: -7px;
+}
+
+form.form-inline .form-group {
+    vertical-align: bottom;
+}
+
+.form-horizontal .form-group label.control-label, .form-vertical .form-group label.control-label {
+    margin: 5px 0 0 0;
+}
