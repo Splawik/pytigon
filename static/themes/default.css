@@ -428,6 +428,8 @@ body {
     overflow: visible;
 }
 
+
+
 div.second_row {
     visibility: visible !important;
     position: absolute;
@@ -435,7 +437,12 @@ div.second_row {
     right: 0px !important;
     background: none repeat scroll 0% 0% #FFFFF8 !important;
     width: 100%;
-    margin-top: -12px;
+    margin-top: -14px;
+	padding: 0px 5px !important;
+}
+
+tr.second_row {
+	position: relative;
 }
 
 td div.shadow-z-2 {
