@@ -301,7 +301,8 @@ class GenericTable(object):
         queryset=None,
         prefix=None,
         ):
-        schema = 'list;detail;edit;add;delete;editor;tree'
+        #schema = 'list;detail;edit;add;delete;editor;tree'
+        schema = 'add'
         rows = self.from_schema(
             schema,
             tab,
@@ -378,7 +379,7 @@ class GenericRows(object):
         return self
 
     def list(self):
-        url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(list|sublist|get)$'
+        url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|get|tree)$'
 
         class ListView(generic.ListView):
 
@@ -426,6 +427,18 @@ class GenericRows(object):
                 *args,
                 **kwargs
                 ):
+                if 'tree' in self.kwargs['vtype']:
+                    parent = int(kwargs['filter'])
+                    if parent < 0:
+                        parent_old = parent
+                        try:
+                            parent = self.model.objects.get(id=-1
+                                     * parent).parent.id
+                        except:
+                            parent = 0
+                        path2 = request.get_full_path().replace(str(parent_old), str(parent))
+                        return HttpResponseRedirect(path2)
+
                 offset = request.GET.get('offset')
 
                 self.sort=request.GET.get('sort')
@@ -471,28 +484,49 @@ class GenericRows(object):
                 context['doc_type'] = self.doc_type()
                 context['uuid'] = uuid.uuid4()
 
+                if 'tree' in self.kwargs['vtype']:
+                    parent = int(self.kwargs['filter'])
+                    context['parent_pk'] = parent
+                    if parent > 0:
+                        context['parent_obj'] = self.model.objects.get(id=parent)
+                    else:
+                        context['parent_obj'] = None
+
                 return transform_extra_context(context, self.extra_context)
 
             def get_queryset(self):
                 ret = None
 
-                if self.queryset:
-                    ret = self.queryset
-                else:
-                    if self.rel_field:
-                        ppk = int(self.kwargs['parent_pk'])
-                        parent = self.model.objects.get(id=ppk)
-                        f = getattr(parent, self.rel_field)
-                        ret = f.all()
+
+                if 'tree' in self.kwargs['vtype']:
+                    if self.queryset:
+                        ret = self.queryset
                     else:
-                        filter =  self.kwargs['filter']
-                        if filter and filter != '-':
-                            if hasattr(self.model, 'filter'):
-                                ret = self.model.filter(filter)
+                        ret = self.model.objects.all()
+                    parent = int(self.kwargs['filter'])
+                    if parent >= 0:
+                        if parent == 0:
+                            parent = None
+                        ret =  ret.filter(parent=parent)
+                else:
+                    if self.queryset:
+                        ret = self.queryset
+                    else:
+                        if self.rel_field:
+                            ppk = int(self.kwargs['parent_pk'])
+                            parent = self.model.objects.get(id=ppk)
+                            f = getattr(parent, self.rel_field)
+                            ret = f.all()
+                        else:
+                            filter =  self.kwargs['filter']
+                            if filter and filter != '-':
+                                if hasattr(self.model, 'filter'):
+                                    ret = self.model.filter(filter)
+                                else:
+                                    ret = self.model.objects.all()
                             else:
                                 ret = self.model.objects.all()
-                        else:
-                            ret = self.model.objects.all()
+
 
                 if self.search:
                     fields = [f for f in self.model._meta.fields if isinstance(f, CharField)]
@@ -516,18 +550,9 @@ class GenericRows(object):
                 else:
                     return ret
 
-        #class ListViewGet(ListView):
-
-        #    def get_context_data(self, **kwargs):
-        #        ret = super().get_context_data(**kwargs)
-        #        ret['get'] = True
-        #        return ret
 
         fun = make_perms_test_fun(self.base_perm % 'list', ListView.as_view())
-        #fun2 = make_perms_test_fun(self.base_perm % 'list', ListViewGet.as_view())
-
         self._append(url, fun)
-        #self._append(url2, fun2)
 
         return self
 
@@ -845,8 +870,9 @@ class GenericRows(object):
         return self._append(url, fun, parm)
 
     def tree(self):
-        url = r'(?P<parent_pk>[\d-]*)/form/[_]?tree$'
+        url = r'(?P<parent_pk>[\d-]*)/(?P<target>[\w_-]*)/[_]?tree$'
 
+        #url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(list|sublist|get)$'
 
         class TreeView(generic.ListView):
 
@@ -861,6 +887,16 @@ class GenericRows(object):
                 rel_field = field
             else:
                 rel_field = None
+
+            def doc_type(self):
+                if self.kwargs['target']=='pdf':
+                    return "pdf"
+                elif self.kwargs['target']=='odf':
+                    return "odf"
+                elif self.kwargs['target']=='json':
+                    return "json"
+                else:
+                    return "html"
 
             def get_context_data(self, **kwargs):
                 context = super(TreeView, self).get_context_data(**kwargs)

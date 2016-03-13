@@ -747,6 +747,11 @@ var ՐՏ_modules = {};
         fragment_init(elem);
         if (is_modal) {
             jQuery("div.dialog-form").fadeTo("fast", 1);
+            if (jQuery("div.dialog-form").find("div.form2columns").length > 0) {
+                jQuery("div.dialog-form").find(".modal-dialog").addClass("modal-lg");
+            } else {
+                jQuery("div.dialog-form").find(".modal-dialog").removeClass("modal-lg");
+            }
             jQuery("div.dialog-form").modal();
             jQuery("div.dialog-form").drags({
                 "handle": ".modal-header"
@@ -1027,6 +1032,7 @@ function fragment_init(elem) {
         "showTodayButton": true
     });
     elem2.find(".win-content").bind("resize", datatable_onresize);
+    jQuery(".selectpicker").selectpicker();
     if (RIOT_INIT) {
         _id = jQuery(elem).uid();
         var ՐՏ_Iter2 = ՐՏ_Iterable(RIOT_INIT);

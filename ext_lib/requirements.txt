@@ -20,3 +20,4 @@ smmap
 wsgi_intercept
 xlrd
 markdown2
+httpie

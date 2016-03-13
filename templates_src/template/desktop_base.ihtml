@@ -48,6 +48,8 @@
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
 
+    {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
+
 
     {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
     {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
@@ -112,6 +114,8 @@
     {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
 
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
+
+    {% css_link 'bootstrap_plugins//css/fileinput.min.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.min.css' %}

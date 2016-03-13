@@ -95,6 +95,8 @@ def fragment_init(elem=None):
 
     elem2.find('.win-content').bind('resize', datatable_onresize)
 
+    jQuery('.selectpicker').selectpicker()
+
     if RIOT_INIT:
         _id = jQuery(elem).uid()
         for pos in RIOT_INIT:

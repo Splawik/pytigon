@@ -194,6 +194,12 @@ def _dialog_loaded(is_modal, elem):
     fragment_init(elem)
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
+
+        if jQuery('div.dialog-form').find('div.form2columns').length > 0:
+            jQuery('div.dialog-form').find('.modal-dialog').addClass('modal-lg')
+        else:
+            jQuery('div.dialog-form').find('.modal-dialog').removeClass('modal-lg')
+
         jQuery('div.dialog-form').modal()
         jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
 

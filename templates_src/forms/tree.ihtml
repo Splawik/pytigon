@@ -6,48 +6,54 @@
 % load exsyntax
 
 
-%% all
-    %with form_width=620 form_height=360  table_type=1 no_id=True
-        {{ block.super }}
-
-
 %% list_content_actions
     % if not readonly
         % if parent_pk > 0
             % button '../../../%d/this/-/add'|format:parent_obj.id 'New element'
         % else
             % button '../../../0/this/-/add' 'New element'
-    %if parent_pk > 0
-        % if standard_web_browser
+
+    % if standard_web_browser
+        %if parent_pk > 0
             % button "../../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
-        % else
+        % else:
+            a href=../../../-{{parent_pk}}/form/{{ro}}tree,,,class=button btn btn-default,,,disabled=disabled... ..
+    % else:
+        % if parent_pk > 0:
             CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=Wstecz..
-    % else
-        % if not standard_web_browser
+        % else:
             CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=Wstecz..
 
 
-%% list_content_title
-    h4 style=white-space:nowrap:::strong...{{title|wiki_href|safe}}
-    ol class=breadcrumb,,,style=padding:0; margins:0; vertical-align:bottom; white-space:nowrap
-        a href=../../0/form/tree.../
-        %for pos in parent_obj.get_ancestors:
-            li
-                a href=../../{{pos.id}}/form/tree...{{pos.code}}
-        li class="active"
+    a href=../../0/form/tree,,,class=button btn btn-default ladda-button.../
+    %for pos in parent_obj.parents|slice:"::-1":
+        a href=../../{{pos.id}}/form/tree,,,class=button btn btn-default ladda-button...{{pos.code}}
+    % if parent_obj.code:
+        a class=button btn btn-default ladda-button,,,disabled=disabled
             {{parent_obj.code}}
 
+%% id_extra
+    %if object|childs
+        a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button btn btn-primary ladda-button,,,name=+
+            span class=fa fa-lg fa-plus
+    %else
+        a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button btn ladda-button,,,name=+
+            span class=fa fa-lg fa-plus
+    {{ block.super }}
 
-%% list_row_header
-    th...+
-    th...Element
-
-%% list_row
-    td
-        %if object|childs
-            a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button,,,name=+:::big:::strong...+
-        %else
-            a href=../../{{object.id}}/form/{{ro}}tree,,,target=_refresh_data,,,class=button,,,name=+:::small...+
-    %% list_tree_row
-        td...{{object}}
-
+%% tabsort_class
+    % if table_type == 'datatable':
+        .class="tabsort table datatable table-hover table-striped table-condensed {%if get %}table_get{% endif %}"
+        .data-url="{{request.path}}/../../json/{% if get %}get{% else %}tree{% endif %}"
+        .data-side-pagination="server"
+        .data-pagination="true"
+        .data-page-size="64"
+        .data-page-list="[64]"
+        .data-search="true"
+        .data-sortable="true"
+        .data-toolbar="#{{uuid}}_toolbar"
+        .data-locale="pl-PL"
+        .data-show-columns="true"
+        .data-id-field="cid"
+    % else:
+        .class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"

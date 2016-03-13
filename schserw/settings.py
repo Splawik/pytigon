@@ -172,3 +172,6 @@ try:
     from schserw.settings_local import *
 except:
     pass
+
+
+CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}

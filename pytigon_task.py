@@ -107,10 +107,10 @@ for pos in mp.tables[0]:
 http.clear_ptr()
 
 parm={'csrfmiddlewaretoken': csrf_token, 'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok',}
-ret, newaddr = http.get(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
+ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
 http.clear_ptr()
 
-ret, newaddr = http.get(None, VIEW, parm=ARGUMENTS)
+ret, newaddr = http.post(None, VIEW, parm=ARGUMENTS)
 ret_str = http.str()
 http.clear_ptr()
 

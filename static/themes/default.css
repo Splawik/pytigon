@@ -304,6 +304,10 @@ div.indent button.btn { margin: 0px 0px 5px 0px; }
     margin: 5px 1px 0px 1px;
 }
 
+.list_content_header_first_row {
+    margin-bottom: 5px;
+}
+
 .input-group-btn {
     padding-left: 10px;
 }
@@ -452,6 +456,7 @@ td div.shadow-z-2 {
 div.shadow-z-2 .close {
     margin-top: 5px !important;
     margin-left: 5px !important;
+    padding: 2px;
     position: absolute;
     z-index: 1000;
 }
@@ -462,4 +467,26 @@ div.shadow-z-2 .close {
 
 .file-caption {
     margin-right: 0px !important;
+}
+
+.form_tab_control {
+    margin-top: 5px;
+}
+
+
+div.tree span.ladda-label, div.tree span.fa, div.tree span.ladda-spinner {
+    border: 0px !important;
+}
+
+div.tree .btn {
+    padding: 0px !important;
+}
+
+div.tree {
+    margin-bottom: 5px !important;
+    padding-top: 5px !important;
+}
+
+.form2columns div.form-group {
+    margin: 0px 0px;
 }

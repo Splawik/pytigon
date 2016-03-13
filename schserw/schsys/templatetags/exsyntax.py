@@ -935,12 +935,20 @@ class Form(Node):
                     form.helper.form_class = self.form_class
                     form.helper.label_class = 'col-lg-3'
                     form.helper.field_class = 'col-lg-9'
+                elif self.form_class == 'col2':
+                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
+                    form.helper.field_div_class = 'col-xs-6'
+                    #form.helper.form_class = 'col-xs-6'
+                    #form.helper.label_class = 'col-xs-6'
+                    #form.helper.field_class = 'col-xs-6'
+                    #form.helper.wrapper_classes = { 'field_name': "selected" }
                 else:
                     form.helper.form_class = 'form-inline'
                     form.helper.form_show_labels = False
                     form.helper.field_template = 'bootstrap3/layout/inline_field.html'
 
         if output:
+            print(output)
             form.helper.layout = eval("Layout("+output.replace('[[', '{{').replace(']]', '}}')+")")
         t = Template("""{% load crispy_forms_tags %}{% crispy form %}""")
         return t.render(context)
@@ -965,6 +973,13 @@ def inline_form(parser, token):
     nodelist = parser.parse(('endinline_form',))
     parser.delete_first_token()
     return Form(nodelist, 'form-inline')
+
+
+@register.tag
+def col2_form(parser, token):
+    nodelist = parser.parse(('endcol2_form',))
+    parser.delete_first_token()
+    return Form(nodelist, 'col2')
 
 
 class FormItemNode(Node):

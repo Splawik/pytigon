@@ -134,7 +134,8 @@ class RadioInput2(RadioChoiceInput):
             label = "<img src='%s' /> &nbsp; " % x[0] + x[1]
         else:
             label = x[0]
-        return mark_safe('%s &nbsp; %s' % (self.tag(), label))
+        self.attrs['class'] = 'radioselectwithicon'
+        return mark_safe("<div><label>%s %s</label></div>" % (self.tag(), label))
 
 @python_2_unicode_compatible
 class RadioFieldRendererWithIcon(object):
@@ -308,37 +309,29 @@ class ModelChoiceFieldExt(forms.ModelChoiceField):
 
     widget = RadioSelectExt
 
-    def __init__(
-        self,
-        queryset,
-        model_to,
-        empty_label='---------',
-        cache_choices=False,
-        required=True,
-        widget=None,
-        label=None,
-        initial=None,
-        help_text=None,
-        to_field_name=None,
-        *args,
-        **kwargs
-        ):
-        self.model_to = model_to
+    def __init__(self, queryset, empty_label="---------",
+                 required=True, widget=None, label=None, initial=None,
+                 help_text='', to_field_name=None, limit_choices_to=None,
+                 *args, **kwargs):
+        self.model_to = queryset.model
+        #self.model_to = model_to
         forms.ModelChoiceField.__init__(
             self,
             queryset,
             empty_label,
-            cache_choices,
             required,
             widget,
             label,
             initial,
             help_text,
             to_field_name,
+            limit_choices_to,
             *args,
             **kwargs
             )
-        self.widget.set_ext_data(model_to)
+        self.widget.set_ext_data(self.model_to)
+
+
 
 
 class ForeignKeyExt(models.ForeignKey):
@@ -348,7 +341,7 @@ class ForeignKeyExt(models.ForeignKey):
         defaults = {
             'form_class': ModelChoiceFieldExt,
             'queryset': self.rel.to._default_manager.using(db).complex_filter(self.rel.limit_choices_to),
-            'model_to': self.rel.to._default_manager.model,
+            #'model_to': self.rel.to._default_manager.model,
             'to_field_name': self.rel.field_name,
             }
         defaults.update(kwargs)
