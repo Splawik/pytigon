@@ -45,11 +45,6 @@
     {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
 
 %% theme_css_links
-    % comment:
-        {% css_link 'themes/bootstrap-material-design/css/material.min.css' %}
-        {% css_link 'themes/bootstrap-material-design/css/roboto.min.css' %}
-        {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
-
     {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
     {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
 

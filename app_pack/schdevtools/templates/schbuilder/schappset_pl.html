@@ -1,0 +1,79 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "app": "client://apps/preferences-system-windows.png",
+                    "app_templ": "client://mimetypes/text-x-script.png",
+                    "doc": "client://apps/help-browser.png",
+                    "gen": "client://categories/applications-multimedia.png",
+                    "run": "client://actions/media-playback-start.png",
+                    "prj_export": "client://actions/document-save-as.png",
+                    "manage": "client://categories/preferences-system.png",
+                    "installer": "client://apps/internet-web-browser.png",
+                    "UP": "wx.ART_GO_TO_PARENT",
+                    "static": "client://apps/system-file-manager.png",
+                    "files": "client://mimetypes/text-html.png",
+                }
+                child.set_bitmaps(bitmaps)
+        def filter_url(self, target, href):
+            if '/run' in href:
+                import subprocess
+                import threading
+                import sys
+                def app_process():
+                    cmd = wx.GetApp().scr_path+"/pytigon.py"
+                    appset = href.split('_')[-1].split('?')[0]
+                    arg = "-a "+appset
+                    subprocess.call([sys.executable, cmd, arg], shell=False)
+                threading.Thread(target = app_process).start()
+                return True
+            return href
+</script>
+{% endblock %}
+{% block all %}
+        {% with edit_vscroll=True table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New application set" %}
+        {% list_action "prj_import/edit" "Import" %}
+        {% list_action "restart_server" "Restart server" %}
+        {% list_action "update" "Update server from git" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+        
+        UP,Open in toolbar,,_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
+        edit
+        gen,Build
+        |
+        field_list/schapp_set,Applications,app
+        field_edit/user_app_template,Application template,app_templ,_top
+        field_edit/doc,Doc,doc,_top2
+        field_list/schstatic_set,Static files,static,_top
+        prj_export,Export
+        manage,Manage
+        installer,Make installer
+        delete
+        run_{{object.name}},Run,run
+
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type', 'custom_tags', 'user_param'
+        {% endform %}
+{% endblock %}
+

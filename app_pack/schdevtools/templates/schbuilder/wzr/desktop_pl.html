@@ -1,0 +1,29 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/desktop_base.html'|translate:lang
+{% load exfiltry %}{% load exsyntax %}
+
+% load exfiltry
+% load exsyntax
+% load crispy_forms_tags
+% load staticfiles
+
+%% js_extrascipts
+    {% spec '{' %}block.super{% spec '}' %}
+    {% if riot_elements %}{% spec "[" %} jscript_link 'riotjs/riot_compiler.js' {% spec "]" %}
+    {% for riot_elem in riot_elements %}{% spec "[" %} riot_component '{{riot_elem}}' {% spec ']' %}
+    {% endfor %}
+    {% endif %}
+    {% for js_static in js_static_files %}{% spec '[' %} jscript_link '{{appset.name}}/{{js_static.name}}' {% spec ']' %}
+    {% endfor %}
+
+%% extrastyle
+    {% spec '{' %}block.super{% spec '}' %}
+    {% for css_static in css_static_files %}{% spec '[' %} css_link '{{appset.name}}/{{css_static.name}}' {% spec ']' %}
+    {% endfor %}
+
+%% body_footer
+    {% spec '{' %}block.super{% spec '}' %}
+
+%% riot_init
+    {% if riot_elements %}.riot_init = [ {% for pos in riot_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ] {% else %} .riot_init = [] {% endif %}

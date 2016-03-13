@@ -1,0 +1,23 @@
+#!/usr/bin/python
+{% load exfiltry %}
+# -*- coding: utf-8 -*-
+
+from django.utils.translation import ugettext_lazy as _
+
+import os
+import sys
+import datetime
+import time
+
+{% if app.tasks_code %}{{app.tasks_code|first_section|safe}} {% endif %}
+
+{% for task in tasks %}
+def {{task.name}}(id, input_queue, output_queue, *args, **kwargs):
+    {% if task.doc %}"""{% for line in task.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    {% for line in task.code.splitlines %}{{line|safe}}
+    {% endfor %}
+{% endfor %}
+
+{% if app.tasks_code %}{{app.tasks_code|second_section|safe}} {% endif %}

@@ -257,7 +257,6 @@ class SChAppSet( models.Model):
         ordering = ['id']
         
         
-
     
 
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
@@ -313,7 +312,6 @@ class SChApp( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = ForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -433,7 +431,6 @@ class SChChoice( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -458,7 +455,6 @@ class SChChoiceItem( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChChoice, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -483,7 +479,6 @@ class SChTable( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -527,7 +522,6 @@ class SChField( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChTable, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -655,7 +649,6 @@ class SChView( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -748,7 +741,6 @@ class SChStatic( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChAppSet, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -775,7 +767,6 @@ class SChTemplate( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -887,7 +878,6 @@ class SChAppMenu( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -947,7 +937,6 @@ class SChForm( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -974,7 +963,6 @@ class SChFormField( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChForm, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -1041,7 +1029,6 @@ class SChTask( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
@@ -1070,7 +1057,6 @@ class SChFiles( models.Model):
         ordering = ['id']
         
         
-
     
 
     parent = HiddenForeignKey(SChApp, null=False, blank=False, editable=True, verbose_name='Parent', )
