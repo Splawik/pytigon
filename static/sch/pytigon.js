@@ -1149,6 +1149,8 @@ function page_init(id, first_time) {
         e.preventDefault();
         submit_button = jQuery(this).find("button[type=\"submit\"]");
         if (submit_button.length > 0) {
+            submit_button.attr("data-style", "zoom-out");
+            submit_button.attr("data-spinner-color", "#FF0000");
             WAIT_ICON = Ladda.create(submit_button[0]);
             WAIT_ICON.start();
         } else {
@@ -1247,6 +1249,8 @@ function _on_menu_href(elem, title) {
             if (WAIT_ICON) {
                 WAIT_ICON.stop();
             }
+            jQuery(elem).attr("data-style", "zoom-out");
+            jQuery(elem).attr("data-spinner-color", "#FF0000");
             WAIT_ICON = Ladda.create(elem);
         } else {
             WAIT_ICON = null;

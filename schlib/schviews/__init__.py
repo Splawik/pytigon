@@ -253,6 +253,22 @@ class GenericTable(object):
         queryset=None,
         prefix=None,
         ):
+
+        schema = 'add'
+        rows = self.from_schema(
+            schema,
+            tab,
+            None,
+            title,
+            title_plural,
+            template_name,
+            extra_context,
+            queryset,
+            prefix,
+            )
+        rows.set_field('this')
+        rows.add().gen()
+
         schema = 'list;detail;edit;add;delete;editor'
         return self.from_schema(
             schema,
@@ -301,21 +317,22 @@ class GenericTable(object):
         queryset=None,
         prefix=None,
         ):
+        return None
         #schema = 'list;detail;edit;add;delete;editor;tree'
-        schema = 'add'
-        rows = self.from_schema(
-            schema,
-            tab,
-            None,
-            title,
-            title_plural,
-            template_name,
-            extra_context,
-            queryset,
-            prefix,
-            )
-        rows.set_field('this')
-        return rows.add().gen()
+#        schema = 'add'
+#        rows = self.from_schema(
+#            schema,
+#            tab,
+#            None,
+#            title,
+#            title_plural,
+#            template_name,
+#            extra_context,
+#            queryset,
+#            prefix,
+#            )
+#        rows.set_field('this')
+#        return rows.add().gen()
 
 
 class GenericRows(object):

@@ -490,3 +490,7 @@ div.tree {
 .form2columns div.form-group {
     margin: 0px 0px;
 }
+
+div.td_action div.dropdown {
+    position: absolute;
+}
