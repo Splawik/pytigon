@@ -3,9 +3,9 @@ var ՐՏ_modules = {};
 ՐՏ_modules["page"] = {};
 ՐՏ_modules["tabmenuitem"] = {};
 ՐՏ_modules["scrolltbl"] = {};
+ՐՏ_modules["tools"] = {};
 ՐՏ_modules["tbl"] = {};
 ՐՏ_modules["tabmenu"] = {};
-ՐՏ_modules["tools"] = {};
 ՐՏ_modules["popup"] = {};
 
 (function(){
@@ -116,192 +116,6 @@ var ՐՏ_modules = {};
     ՐՏ_modules["scrolltbl"]["resize_win"] = resize_win;
 
     ՐՏ_modules["scrolltbl"]["stick_header"] = stick_header;
-})();
-
-(function(){
-    var __name__ = "tbl";
-    var glob = ՐՏ_modules["glob"];
-    
-    var stick_header = ՐՏ_modules["scrolltbl"].stick_header;
-    
-    function datetable_set_height() {
-        var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
-        if (jQuery(this).hasClass("table_get")) {
-            return;
-        }
-        if (!jQuery(this).is(":visible")) {
-            return;
-        }
-        elem = jQuery(this).closest(".tabsort_panel");
-        dy_table = elem.height();
-        dy_win = jQuery(window).height();
-        dy_body1 = 0;
-        jQuery(".win-header").each(function() {
-            dy_body1 += jQuery(this).height();
-        });
-        dy_body2 = jQuery(".win-content").height();
-        dy_body = dy_body1 + dy_body2;
-        dy = dy_table + (dy_win - dy_body);
-        if (dy < 200) {
-            dy = 200;
-        }
-        jQuery(this).bootstrapTable("resetView", {
-            "height": dy - 10
-        });
-    }
-    function datatable_refresh(table) {
-        table.bootstrapTable("refresh");
-    }
-    function _rowStyle(value, row, index) {
-        var x, c;
-        x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information");
-        if (x.length > 0) {
-            c = x.attr("class").replace("td_information", "");
-            if (c.length > 0) {
-                return {
-                    "classes": c
-                };
-            }
-        }
-        return {};
-    }
-    function init_table(table, table_type) {
-        if (table_type === "scrolled") {
-            stick_header();
-        }
-        if (table_type === "datatable") {
-            function onLoadSuccess(data) {
-                datatable_onresize();
-                return false;
-            }
-            if (table.hasClass("table_get")) {
-                table.bootstrapTable({
-                    "onLoadSuccess": onLoadSuccess,
-                    "height": 350,
-                    "rowStyle": _rowStyle
-                });
-            } else {
-                table.bootstrapTable({
-                    "onLoadSuccess": onLoadSuccess,
-                    "rowStyle": _rowStyle
-                });
-            }
-        }
-    }
-    function datatable_onresize() {
-        jQuery(".datatable:not(.table_get)").each(datetable_set_height);
-    }
-    ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
-
-    ՐՏ_modules["tbl"]["datatable_refresh"] = datatable_refresh;
-
-    ՐՏ_modules["tbl"]["_rowStyle"] = _rowStyle;
-
-    ՐՏ_modules["tbl"]["init_table"] = init_table;
-
-    ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
-})();
-
-(function(){
-    var __name__ = "tabmenu";
-    var glob = ՐՏ_modules["glob"];
-    
-    var Page = ՐՏ_modules["page"].Page;
-    
-    var TabMenuItem = ՐՏ_modules["tabmenuitem"].TabMenuItem;
-    
-    var datatable_onresize = ՐՏ_modules["tbl"].datatable_onresize;
-    
-    function TabMenu() {
-        TabMenu.prototype.__init__.apply(this, arguments);
-    }
-    TabMenu.prototype.__init__ = function __init__(){
-        var self = this;
-        self.id = 0;
-        self.titles = {};
-        self.active_item = null;
-    };
-    TabMenu.prototype.get_active_item = function get_active_item(){
-        var self = this;
-        return self.active_item;
-    };
-    TabMenu.prototype.is_open = function is_open(title){
-        var self = this;
-        if (self.titles && ՐՏ_in(title, self.titles) && self.titles[title]) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-    TabMenu.prototype.activate = function activate(title, push_state){
-        var self = this;
-        if (typeof push_state === "undefined") push_state = true;
-        var menu_item;
-        menu_item = self.titles[title];
-        jQuery(sprintf("#li_%s a", menu_item.id)).tab("show");
-        if (push_state && PUSH_STATE) {
-            history_push_state(menu_item.title, menu_item.url);
-        }
-        datatable_onresize();
-    };
-    TabMenu.prototype.new_page = function new_page(title, data, href, riot_init){
-        var self = this;
-        var _id, title2, menu_item, scripts;
-        _id = "tab" + self.id;
-        title2 = jQuery.trim(title);
-        menu_item = new TabMenuItem(_id, title2, href, data);
-        self.titles[title2] = menu_item;
-        jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [ _id, _id, title2, _id ]));
-        jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
-        glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
-        self.active_item = menu_item;
-        jQuery("#" + _id).html(data);
-        if (PUSH_STATE) {
-            history_push_state(title2, href);
-        }
-        jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
-            var menu;
-            glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id), menu_item);
-            menu = get_menu();
-            menu_item = menu.titles[jQuery.trim(e.target.text)];
-            self.active_item = menu_item;
-            if (PUSH_STATE) {
-                history_push_state(menu_item.title, menu_item.url);
-            }
-        });
-        jQuery("#tabs2 a:last").tab("show");
-        page_init(_id);
-        jQuery(sprintf("#button_%s", _id)).click(function(event) {
-            get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
-        });
-        scripts = jQuery("#" + _id + " script");
-        scripts.each(function(index, element) {
-            eval(this.innerHTML);
-        });
-        self.id += 1;
-        return _id;
-    };
-    TabMenu.prototype.remove_page = function remove_page(id){
-        var self = this;
-        jQuery.each(self.titles, function(index, value) {
-            if (value && value.id === id) {
-                self.titles[index] = null;
-            }
-        });
-        jQuery(sprintf("#li_%s", id)).remove();
-        jQuery(sprintf("#%s", id)).remove();
-        jQuery("#tabs2 a:last").tab("show");
-    };
-
-    function get_menu() {
-        if (!MENU) {
-            MENU = new TabMenu();
-        }
-        return MENU;
-    }
-    ՐՏ_modules["tabmenu"]["TabMenu"] = TabMenu;
-
-    ՐՏ_modules["tabmenu"]["get_menu"] = get_menu;
 })();
 
 (function(){
@@ -548,6 +362,234 @@ var ՐՏ_modules = {};
     ՐՏ_modules["tools"]["load_js"] = load_js;
 
     ՐՏ_modules["tools"]["load_many_js"] = load_many_js;
+})();
+
+(function(){
+    var __name__ = "tbl";
+    var glob = ՐՏ_modules["glob"];
+    
+    var stick_header = ՐՏ_modules["scrolltbl"].stick_header;
+    
+    var ajax_post = ՐՏ_modules["tools"].ajax_post;
+    var ajax_post = ՐՏ_modules["tools"].ajax_post;
+    
+    function datetable_set_height() {
+        var elem, dy_table, dy_win, dy_body1, dy_body2, dy_body, dy;
+        if (jQuery(this).hasClass("table_get")) {
+            return;
+        }
+        if (!jQuery(this).is(":visible")) {
+            return;
+        }
+        elem = jQuery(this).closest(".tabsort_panel");
+        dy_table = elem.height();
+        dy_win = jQuery(window).height();
+        dy_body1 = 0;
+        jQuery(".win-header").each(function() {
+            dy_body1 += jQuery(this).height();
+        });
+        dy_body2 = jQuery(".win-content").height();
+        dy_body = dy_body1 + dy_body2;
+        dy = dy_table + (dy_win - dy_body);
+        if (dy < 200) {
+            dy = 200;
+        }
+        jQuery(this).bootstrapTable("resetView", {
+            "height": dy - 10
+        });
+    }
+    function datatable_refresh(table) {
+        table.bootstrapTable("refresh");
+    }
+    function _rowStyle(value, row, index) {
+        var x, c;
+        x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information");
+        if (x.length > 0) {
+            c = x.attr("class").replace("td_information", "");
+            if (c.length > 0) {
+                return {
+                    "classes": c
+                };
+            }
+        }
+        return {};
+    }
+    function datatable_ajax(params) {
+        var success, form, d, url;
+        url = params["url"];
+        success = params["success"];
+        if (ՐՏ_in("form", params["data"])) {
+            form = params["data"]["form"];
+            delete params["data"]["form"];
+            d = jQuery.param(params["data"]);
+            url += "?" + d;
+            ajax_post(url, form, function(data) {
+                var d2;
+                d2 = JSON.parse(data);
+                success(d2);
+            });
+        } else {
+            d = jQuery.param(params["data"]);
+            url += "?" + d;
+            ajax_get(url, function(data) {
+                var d2;
+                d2 = JSON.parse(data);
+                success(d2);
+            });
+        }
+    }
+    function init_table(table, table_type) {
+        if (table_type === "scrolled") {
+            stick_header();
+        }
+        if (table_type === "datatable") {
+            function onLoadSuccess(data) {
+                datatable_onresize();
+                return false;
+            }
+            function queryParams(p) {
+                var refr_block, src;
+                refr_block = jQuery(table).closest(".refr_object");
+                src = refr_block.find(".refr_source");
+                if (src.length > 0 && src.prop("tagName") === "FORM") {
+                    p["form"] = src.serialize();
+                }
+                return p;
+            }
+            if (table.hasClass("table_get")) {
+                table.bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess,
+                    "height": 350,
+                    "rowStyle": _rowStyle,
+                    "queryParams": queryParams,
+                    "ajax": datatable_ajax
+                });
+            } else {
+                table.bootstrapTable({
+                    "onLoadSuccess": onLoadSuccess,
+                    "rowStyle": _rowStyle,
+                    "queryParams": queryParams,
+                    "ajax": datatable_ajax
+                });
+            }
+        }
+    }
+    function datatable_onresize() {
+        jQuery(".datatable:not(.table_get)").each(datetable_set_height);
+    }
+    ՐՏ_modules["tbl"]["datetable_set_height"] = datetable_set_height;
+
+    ՐՏ_modules["tbl"]["datatable_refresh"] = datatable_refresh;
+
+    ՐՏ_modules["tbl"]["_rowStyle"] = _rowStyle;
+
+    ՐՏ_modules["tbl"]["datatable_ajax"] = datatable_ajax;
+
+    ՐՏ_modules["tbl"]["init_table"] = init_table;
+
+    ՐՏ_modules["tbl"]["datatable_onresize"] = datatable_onresize;
+})();
+
+(function(){
+    var __name__ = "tabmenu";
+    var glob = ՐՏ_modules["glob"];
+    
+    var Page = ՐՏ_modules["page"].Page;
+    
+    var TabMenuItem = ՐՏ_modules["tabmenuitem"].TabMenuItem;
+    
+    var datatable_onresize = ՐՏ_modules["tbl"].datatable_onresize;
+    
+    function TabMenu() {
+        TabMenu.prototype.__init__.apply(this, arguments);
+    }
+    TabMenu.prototype.__init__ = function __init__(){
+        var self = this;
+        self.id = 0;
+        self.titles = {};
+        self.active_item = null;
+    };
+    TabMenu.prototype.get_active_item = function get_active_item(){
+        var self = this;
+        return self.active_item;
+    };
+    TabMenu.prototype.is_open = function is_open(title){
+        var self = this;
+        if (self.titles && ՐՏ_in(title, self.titles) && self.titles[title]) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    TabMenu.prototype.activate = function activate(title, push_state){
+        var self = this;
+        if (typeof push_state === "undefined") push_state = true;
+        var menu_item;
+        menu_item = self.titles[title];
+        jQuery(sprintf("#li_%s a", menu_item.id)).tab("show");
+        if (push_state && PUSH_STATE) {
+            history_push_state(menu_item.title, menu_item.url);
+        }
+        datatable_onresize();
+    };
+    TabMenu.prototype.new_page = function new_page(title, data, href, riot_init){
+        var self = this;
+        var _id, title2, menu_item, scripts;
+        _id = "tab" + self.id;
+        title2 = jQuery.trim(title);
+        menu_item = new TabMenuItem(_id, title2, href, data);
+        self.titles[title2] = menu_item;
+        jQuery("#tabs2").append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [ _id, _id, title2, _id ]));
+        jQuery("#tabs2_content").append(sprintf("<div class='tab-pane' id='%s'></div>", _id));
+        glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
+        self.active_item = menu_item;
+        jQuery("#" + _id).html(data);
+        if (PUSH_STATE) {
+            history_push_state(title2, href);
+        }
+        jQuery("#tabs2 a:last").on("shown.bs.tab", function(e) {
+            var menu;
+            glob.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id), menu_item);
+            menu = get_menu();
+            menu_item = menu.titles[jQuery.trim(e.target.text)];
+            self.active_item = menu_item;
+            if (PUSH_STATE) {
+                history_push_state(menu_item.title, menu_item.url);
+            }
+        });
+        jQuery("#tabs2 a:last").tab("show");
+        page_init(_id);
+        jQuery(sprintf("#button_%s", _id)).click(function(event) {
+            get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
+        });
+        scripts = jQuery("#" + _id + " script");
+        scripts.each(function(index, element) {
+            eval(this.innerHTML);
+        });
+        self.id += 1;
+        return _id;
+    };
+    TabMenu.prototype.remove_page = function remove_page(id){
+        var self = this;
+        jQuery.each(self.titles, function(index, value) {
+            if (value && value.id === id) {
+                self.titles[index] = null;
+            }
+        });
+        jQuery(sprintf("#li_%s", id)).remove();
+        jQuery(sprintf("#%s", id)).remove();
+        jQuery("#tabs2 a:last").tab("show");
+    };
+
+    function get_menu() {
+        if (!MENU) {
+            MENU = new TabMenu();
+        }
+        return MENU;
+    }
+    ՐՏ_modules["tabmenu"]["TabMenu"] = TabMenu;
+
+    ՐՏ_modules["tabmenu"]["get_menu"] = get_menu;
 })();
 
 (function(){

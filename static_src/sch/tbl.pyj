@@ -1,5 +1,6 @@
 import glob
 from scrolltbl import stick_header
+from tools import ajax_post, ajax_post
 
 def datetable_set_height():
     if jQuery(this).hasClass('table_get'):
@@ -39,6 +40,28 @@ def _rowStyle(value, row, index):
             return { 'classes': c, }
     return {}
 
+
+def datatable_ajax(params):
+    url = params['url']
+    success = params['success']
+    if 'form' in params['data']:
+        form = params['data']['form']
+        del params['data']['form']
+        d = jQuery.param(params['data'])
+        url += '?' + d
+        ajax_post(url, form, def(data):
+            d2 = JSON.parse(data)
+            success(d2)
+        )
+    else:
+        d = jQuery.param(params['data'])
+        url += '?' + d
+        ajax_get(url, def(data):
+            d2 = JSON.parse(data)
+            success(d2)
+        )
+
+
 def init_table(table, table_type):
     if table_type == 'scrolled':
         stick_header()
@@ -46,10 +69,18 @@ def init_table(table, table_type):
         def onLoadSuccess(data):
             datatable_onresize()
             return False
+        
+        def queryParams(p):
+            refr_block = jQuery(table).closest('.refr_object')
+            src = refr_block.find('.refr_source')
+            if src.length > 0 and src.prop("tagName") == 'FORM':
+                p['form'] = src.serialize()
+            return p
+        
         if table.hasClass('table_get'):
-            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350, 'rowStyle': _rowStyle })
+            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350, 'rowStyle': _rowStyle,  'queryParams': queryParams,  'ajax': datatable_ajax })
         else:
-            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'rowStyle': _rowStyle })
+            table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'rowStyle': _rowStyle, 'queryParams': queryParams, 'ajax': datatable_ajax })
 
 def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)

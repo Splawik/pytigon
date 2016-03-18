@@ -514,7 +514,6 @@ class GenericRows(object):
             def get_queryset(self):
                 ret = None
 
-
                 if 'tree' in self.kwargs['vtype']:
                     if self.queryset:
                         ret = self.queryset
@@ -543,7 +542,6 @@ class GenericRows(object):
                                     ret = self.model.objects.all()
                             else:
                                 ret = self.model.objects.all()
-
 
                 if self.search:
                     fields = [f for f in self.model._meta.fields if isinstance(f, CharField)]
