@@ -164,3 +164,7 @@ form.form-inline .form-group {
 .form-horizontal .form-group label.control-label, .form-vertical .form-group label.control-label {
     margin: 5px 0 0 0;
 }
+
+div.shadow-z-2 .close {
+    padding: 8px;
+}

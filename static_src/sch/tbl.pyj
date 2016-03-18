@@ -41,6 +41,15 @@ def _rowStyle(value, row, index):
     return {}
 
 
+def prepare_datatable(table):
+    table.find('div.second_row').each( def(index ):
+        td = jQuery(this).parent()        
+        tr = td.parent()
+        l = tr.find('td').length
+        tr.find("td:gt(0)").remove()
+        td.attr('colspan', l)
+    )
+
 def datatable_ajax(params):
     url = params['url']
     success = params['success']
@@ -67,6 +76,7 @@ def init_table(table, table_type):
         stick_header()
     if table_type == 'datatable':
         def onLoadSuccess(data):
+            prepare_datatable(table)
             datatable_onresize()
             return False
         

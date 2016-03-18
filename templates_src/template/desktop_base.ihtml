@@ -115,7 +115,7 @@
 
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
-    {% css_link 'bootstrap_plugins//css/fileinput.min.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.min.css' %}

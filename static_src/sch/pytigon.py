@@ -8,7 +8,6 @@
 ## refresh_page: replace current page (like _self)
 ## refresh_app: replace current app
 
-
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None

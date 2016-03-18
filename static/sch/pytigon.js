@@ -414,6 +414,16 @@ var ՐՏ_modules = {};
         }
         return {};
     }
+    function prepare_datatable(table) {
+        table.find("div.second_row").each(function(index) {
+            var td, tr, l;
+            td = jQuery(this).parent();
+            tr = td.parent();
+            l = tr.find("td").length;
+            tr.find("td:gt(0)").remove();
+            td.attr("colspan", l);
+        });
+    }
     function datatable_ajax(params) {
         var success, form, d, url;
         url = params["url"];
@@ -444,6 +454,7 @@ var ՐՏ_modules = {};
         }
         if (table_type === "datatable") {
             function onLoadSuccess(data) {
+                prepare_datatable(table);
                 datatable_onresize();
                 return false;
             }
@@ -482,6 +493,8 @@ var ՐՏ_modules = {};
     ՐՏ_modules["tbl"]["datatable_refresh"] = datatable_refresh;
 
     ՐՏ_modules["tbl"]["_rowStyle"] = _rowStyle;
+
+    ՐՏ_modules["tbl"]["prepare_datatable"] = prepare_datatable;
 
     ՐՏ_modules["tbl"]["datatable_ajax"] = datatable_ajax;
 

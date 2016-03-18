@@ -433,7 +433,7 @@ body {
 }
 
 
-
+/*
 div.second_row {
     visibility: visible !important;
     position: absolute;
@@ -448,6 +448,7 @@ div.second_row {
 tr.second_row {
 	position: relative;
 }
+*/
 
 td div.shadow-z-2 {
     position: relative;
