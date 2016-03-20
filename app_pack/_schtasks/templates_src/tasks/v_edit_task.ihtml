@@ -22,7 +22,7 @@
             test = False
             http = wx.GetApp().HTTP
             parm = { 'id': "{{object.id}}", 'id_start': self.start_id } 
-            http.get(self, "/tasks/get_messages", parm=parm)
+            http.post(self, "/tasks/get_messages", parm=parm)
             s = http.str()
             http.clear_ptr()
             lines = self.schjson.loads(s)
@@ -58,7 +58,7 @@
 
             http = wx.GetApp().HTTP
 
-            http.get(self, "/tasks/put_message", parm=parm)
+            http.post(self, "/tasks/put_message", parm=parm)
             s = http.str()
             http.clear_ptr()
 
@@ -74,9 +74,13 @@
         {{ block.super }}
 
 %% body_body
+    %if not object:
+        {{ block.super }}
+    % else:
+        {{ object }}
 
 %% body
-    % if not show_form:
+    % if not show_form and object:
         {{ block.super }}
         div class=content
             div class=panel

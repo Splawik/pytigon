@@ -1011,6 +1011,9 @@ class TEXT(SchBaseCtrl, wx.TextCtrl):
         else:
             return wx.TextCtrl.SetValue(self, value)
 
+    def GetBestSize(self):
+        size = super().GetBestSize()
+        return (4*size[0], size[1])
 
 class SEARCH(wx.SearchCtrl, SchBaseCtrl):
 

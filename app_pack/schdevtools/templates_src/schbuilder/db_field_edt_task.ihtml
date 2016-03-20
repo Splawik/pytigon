@@ -11,13 +11,19 @@
 %% title
     .V:{{object.name}}
 
-%% body
-    {{ block.super.super.super }}
+%% edit_area_sc
     table width=100%
         tr
             td
-                .def {{object.name}}(id, input_queue, output_queue, *args, **kwargs):
-        tr
-            td
-                CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
-                    DATA...{{txt|bencode}}
+    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{save_path}}
+        DATA...{{txt|bencode}}
+
+    % comment:
+        table width=100%
+            tr
+                td
+                    .def {{object.name}}(id, input_queue, output_queue, *args, **kwargs):
+            tr
+                td
+                    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
+                        DATA...{{txt|bencode}}
