@@ -1,8 +1,4 @@
-try:
-    from queue import Queue
-except:
-    from Queue import Queue
-
+from queue import Queue, Empty
 from threading import Thread
 from subprocess import Popen, PIPE 
 from signal import SIGINT
@@ -12,52 +8,16 @@ import datetime
 import importlib
 from schlib.schtasks.term_tools import ansi_to_txt
 from schlib.schtools.schjson import json_dumps, json_loads
+import sqlite3
+import tempfile
+import gc
+
 
 _PROCESS_MANAGER = None
 _MAX_PROC_LOG = 99
 _ID = 0
 _ON_POSIX = 'posix' in sys.builtin_module_names
 
-class thread_status(object):
-    def __init__(self, manager, id, title, input_queue, username):
-        self.manager = manager
-        self.id = int(id)
-        self.title = title
-        self.input_queue = input_queue
-        self.status = 0
-        self.username = username
-        self.time_from = datetime.datetime.now()
-        self.time_to = None
-
-
-    #def __contains__(self, item):
-    #    if item in ('id', 'title', 'status', 'username', 'time_from', 'time_to'):
-    #        return True
-    #    else:
-    #        return False
-
-    def __getitem__(self, item):
-        if item in ('id', 'title', 'status', 'username', 'time_from', 'time_to'):
-            return getattr(self, item)
-        else:
-            raise KeyError(key)
-            return None
-
-    def get_messages(self, start_id=0):
-        return self.manager.get_messages(self.id, start_id) 
-
-    def pop_messages(self):
-        return self.manager.pop_messages(self.id)
-
-def start_process(manager, argv):
-    manager.process_list[argv['id']].status=1
-    
-def end_process(manager, argv):
-    manager.process_list[argv['id']].status=2
-    manager.process_list[argv['id']].time_to = datetime.datetime.now()
-
-def end_process_error(manager, argv):
-    manager.process_list[argv['id']].status=3
 
 def enqueue_input(process, input_queue, output_queue, id, status):
     while True:
@@ -69,7 +29,8 @@ def enqueue_input(process, input_queue, output_queue, id, status):
                 break
         except:
             print("except")
-            pass
+            print(sys.exc_info()[0])
+            break
         else:
             if type(value)==bytes:
                 process.stdin.write(value.decode('utf-8'))
@@ -183,17 +144,29 @@ def run_funct(func, id, status_queue, input_queue, output_queue, args, kwargs):
 
         return func2(id, input_queue, output_queue, *args, **kwargs)
 
+
+###################################################################################################
+def start_process(manager, argv):
+    manager.process_list[argv['id']].status=1
+
+def end_process(manager, argv):
+    manager.process_list[argv['id']].status=2
+    manager.process_list[argv['id']].time_to = datetime.datetime.now()
+
+def end_process_error(manager, argv):
+    manager.process_list[argv['id']].status=3
+
+
 class Worker(Thread):
-    """Thread executing tasks from a given tasks queue"""
-    def __init__(self, tasks):
+    def __init__(self, tasks_queue):
         Thread.__init__(self)
-        self.tasks = tasks
+        self.tasks_queue = tasks_queue
         self.daemon = True
         self.start()
     
     def run(self):
         while True:
-            func, id, status_queue, input_queue, output_queue, args, kwargs = self.tasks.get()
+            func, id, status_queue, input_queue, output_queue, args, kwargs = self.tasks_queue.get()
             status_queue.put( (start_process, {'id': id}) )
             try:
                 run_funct(func, id, status_queue, input_queue, output_queue, args, kwargs)
@@ -202,35 +175,69 @@ class Worker(Thread):
                 print("Exception in:", func)
                 print(e)
                 status_queue.put( (end_process_error, {'id': id}) )
-            self.tasks.task_done()
+            self.tasks_queue.task_done()
+            gc.collect()
+
 
 class ThreadPool:
-    """Pool of threads consuming tasks from a queue"""
     def __init__(self, num_threads):
-        self.tasks = Queue(num_threads)
+        self.tasks = Queue()
         for _ in range(num_threads): Worker(self.tasks)
 
     def add_task(self, func, id, status_queue, input_queue, output_queue, args, kwargs):
-        """Add a task to the queue"""
         self.tasks.put((func, id, status_queue, input_queue, output_queue, args, kwargs))
 
     def wait_completion(self):
-        """Wait for completion of all the tasks in the queue"""
         self.tasks.join()
+
+
+class ThreadStatus(object):
+    def __init__(self, manager, id, title, input_queue, username):
+        self.manager = manager
+        self.id = int(id)
+        self.title = title
+        self.input_queue = input_queue
+        self.status = 0
+        self.username = username
+        self.time_from = datetime.datetime.now()
+        self.time_to = None
+
+    def __getitem__(self, item):
+        if item in ('id', 'title', 'status', 'username', 'time_from', 'time_to'):
+            return getattr(self, item)
+        else:
+            raise KeyError(key)
+            return None
+
+    def get_messages(self, start_id=0):
+        return self.manager.get_messages(self.id, start_id)
+
+    def pop_messages(self):
+        return self.manager.pop_messages(self.id)
+
 
 class ProcessManager():
     def __init__(self, thread_pool):
         self.output_queue = Queue()
         self.status_queue = Queue()
-        self.ret_messages = {}
         self.thread_pool = thread_pool
         self.process_list = {}
 
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            temp_file_name = tmp.name
+        self.db=sqlite3.connect(temp_file_name)
+        #self.db=sqlite3.connect(':memory:')
+        self.cur = self.db.cursor()
+        self.cur.execute("CREATE TABLE log(Id INTEGER, Value TEXT);")
+
     def process_status_queue(self):
+        to_del = []
         if len(self.process_list)> _MAX_PROC_LOG:
             for key in self.process_list:
                 if self.process_list[key].status in (2,3):
-                    del self.process_list[key]
+                    to_del.append(key)
+            for key in to_del:
+                del self.process_list[key]
                 
         while not self.status_queue.empty():
             func, argv = self.status_queue.get()
@@ -249,7 +256,7 @@ class ProcessManager():
             else:
                 username = 'guest'
 
-        self.process_list[_ID] = thread_status(self, _ID, title, input_queue, username)
+        self.process_list[_ID] = ThreadStatus(self, _ID, title, input_queue, username)
         self.thread_pool.add_task(func, _ID, self.status_queue, input_queue, self.output_queue, args, kwargs)
         return _ID
 
@@ -261,22 +268,27 @@ class ProcessManager():
     def get_messages(self, id, id_start=0):
         iid = int(id)
         iid_start = int(id_start)
-        while not self.output_queue.empty():
-            _id, message = self.output_queue.get()
-            if _id in self.ret_messages:
-                self.ret_messages[_id].append(message)
-            else:
-                self.ret_messages[_id] = [message,]
-        if iid in self.ret_messages:
-            ret = self.ret_messages[iid][iid_start:]
-            return ret
-        else:
-            return []
-  
+        while True:
+            try:
+                _id, message = self.output_queue.get_nowait()
+                self.cur.execute("INSERT INTO log(Id, Value) VALUES (?, ?);", (_id, message))
+                self.output_queue.task_done()
+            except Empty:
+                break
+
+        tbl = self.cur.execute("SELECT Value from log where Id = ?;", (iid,) )
+        if iid_start>0:
+            self.cur.fetchmany(iid_start)
+        ret=[]
+        for pos in self.cur.fetchall():
+            ret.append(pos[0])
+
+        return ret
+
     def pop_messages(self, id):
         iid = int(id)
         ret = self.get_messages(iid)
-        self.ret_messages[iid] = []
+        self.cur.execute("delete from where Id = ?;", (iid,) )
         return ret
     
     def kill_thread(self, id):
@@ -324,7 +336,7 @@ class ProcessManager():
 
 
 def get_base_process_manager():
-    return ProcessManager(ThreadPool(10))
+    return ProcessManager(ThreadPool(8))
 
 
 def get_process_manager():

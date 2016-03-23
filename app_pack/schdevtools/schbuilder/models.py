@@ -970,9 +970,9 @@ class SChFormField( models.Model):
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=FormField_CHOICES,max_length=64)
     required = models.NullBooleanField('Required', null=True, blank=True, editable=True, )
     label = models.CharField('Label', null=False, blank=False, editable=True, max_length=64)
-    initial = models.CharField('Initial', null=True, blank=True, editable=True, max_length=64)
+    initial = models.CharField('Initial', null=True, blank=True, editable=True, max_length=256)
     widget = models.CharField('Widget', null=True, blank=True, editable=True, max_length=64)
-    help_text = models.CharField('Help text', null=True, blank=True, editable=True, max_length=64)
+    help_text = models.CharField('Help text', null=True, blank=True, editable=True, max_length=256)
     error_messages = models.CharField('Error messages', null=True, blank=True, editable=True, max_length=64)
     param = models.CharField('Param', null=True, blank=True, editable=True, max_length=64)
     

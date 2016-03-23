@@ -23,6 +23,7 @@ import requests
 from schlib.schfs.vfstools import replace_dot
 from schlib.schtools.schjson import json_loads
 from schlib.schtools.encode import decode_utf
+import threading
 
 def init_embeded_django():
     import django.core.handlers.wsgi
@@ -43,6 +44,8 @@ def init_embeded_django():
 
 BLOCK = False
 COOKIES = {}
+HTTP_LOCK = threading.Lock()
+
 
 HTTP_ERROR_FUNC = None
 
@@ -80,7 +83,6 @@ class HttpClient:
     def get(self, parent, address_str, parm=None,                                                                                                                                                                                                                   upload = False, credentials=False, user_agent=None, post_request=False):
         global COOKIES
         global BLOCK
-
         if BLOCK:
             while BLOCK:
                 try:
@@ -88,6 +90,7 @@ class HttpClient:
                         HTTP_IDLE_FUNC()
                 except:
                     return (500, address_str)
+
 
         self.content = ""
         if address_str[0]=='^':
@@ -138,30 +141,35 @@ class HttpClient:
         if user_agent:
             headers['User-Agent'] = user_agent
 
-        if post_request:
-            if 'csrftoken' in COOKIES:
-                parm['csrfmiddlewaretoken'] = COOKIES['csrftoken']
-            if upload:
-                files = {}
-                for key, value in parm.items():
-                    if type(value)==str and value.startswith('@'):
-                        files[key]=open(value[1:], "rb")
-                for key in files:
-                    del parm[key]
-                if credentials:
-                    self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+        HTTP_LOCK.acquire()
+        try:
+
+            if post_request:
+                if 'csrftoken' in COOKIES:
+                    parm['csrfmiddlewaretoken'] = COOKIES['csrftoken']
+                if upload:
+                    files = {}
+                    for key, value in parm.items():
+                        if type(value)==str and value.startswith('@'):
+                            files[key]=open(value[1:], "rb")
+                    for key in files:
+                        del parm[key]
+                    if credentials:
+                        self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                    else:
+                        self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=COOKIES)
                 else:
-                    self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=COOKIES)
+                    if credentials:
+                        self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                    else:
+                        self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
             else:
                 if credentials:
-                    self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                    self.http = requests.get(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
                 else:
-                    self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
-        else:
-            if credentials:
-                self.http = requests.get(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
-            else:
-                self.http = requests.get(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
+                    self.http = requests.get(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
+        finally:
+            HTTP_LOCK.release()
 
         self.content = self.http.content
 

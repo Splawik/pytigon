@@ -561,7 +561,7 @@ class GenericRows(object):
                             ret = ret.order_by('-id')
 
                 if self.form_valid == True:
-                    return self.form.process(None, ret)
+                    return self.form.process(self.request, ret)
                 else:
                     return ret
 
