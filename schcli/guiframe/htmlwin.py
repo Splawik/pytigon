@@ -829,13 +829,13 @@ class SchHtmlWindow(ScrolledPanel):
     def show_page(self, page_and_script, parametry=None):
         if self.TabWindow and self.TabWindow.exists == False:
             return False
-        self.page_source = self.pre_process_page(page_and_script[0].getvalue())
+        self.page_source = self.pre_process_page(page_and_script[0])
         if self.page_source == '$$$':
             self.t2 = wx.CallLater(10000, self.close_with_delay)
             return False
         self.Parametry = parametry
         if not self.script:
-            self.script = page_and_script[1].getvalue()
+            self.script = page_and_script[1]
             if self.script and len(self.script) > 1:
                 app = wx.GetApp()
                 main_window = app.GetTopWindow()
@@ -1182,7 +1182,7 @@ class SchHtmlWindow(ScrolledPanel):
                     mgr = main_window._mgr
                     menu_bar = main_window.get_menu_bar()
                     tool_bars = main_window.toolbar_interface.get_toolbars()
-                    exec (script.getvalue().replace('\r', ''))
+                    exec (script.replace('\r', ''))
                     return
 
     def get_evt_ind(self):

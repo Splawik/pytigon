@@ -26,7 +26,6 @@ from schcli.guilib import schevent
 
 from .renderers import ExtStringRenderer, IconAndStringRenderer, \
     MultiLineStringRenderer
-from schlib.schhttptools import schhtml_parser
 import schlib.schtools.tools as tools
 from wx.grid import PyGridTableBase, GridCellAttr, GridTableMessage, \
     GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED

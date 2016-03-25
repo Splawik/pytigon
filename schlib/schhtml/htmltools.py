@@ -17,11 +17,13 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-try:
-    from html.parser import HTMLParser
-    HTMLParseError = None
-except:
-    from HTMLParser import HTMLParser, HTMLParseError
+#try:
+#    from html.parser import HTMLParser
+#    HTMLParseError = None
+#except:
+#    from HTMLParser import HTMLParser, HTMLParseError
+
+from schlib.schhtml.parser import Parser
 
 try:
     from urllib.request import urlopen
@@ -42,31 +44,31 @@ def superstrip(s):
     return s2.strip()
 
 
-class HtmlModParser(HTMLParser):
+class HtmlModParser(Parser):
 
     def __init__(self, url=None):
-        HTMLParser.__init__(self)
+        Parser.__init__(self)
         if url:
             req = urlopen(url)
             self.feed(req.read().decode('utf-8'))
 
-    def parse_endtag(self, i):
-        try:
-            ret = HTMLParser.parse_endtag(self, i)
-        except:
-            ret = i + 1
-        return ret
+    #def parse_endtag(self, i):
+    #    try:
+    #        ret = Parser.parse_endtag(self, i)
+    #    except:
+    #        ret = i + 1
+    #    return ret
 
 
-    def handle_entityref(self, name):
-        if name in ('gt', 'lt', 'amp', 'quot'):
-            self.handle_data('&'+name+';')
+    #def handle_entityref(self, name):
+    #    if name in ('gt', 'lt', 'amp', 'quot'):
+    #        self.handle_data('&'+name+';')
 
 
-class HtmlProxyParser(HTMLParser):
+class HtmlProxyParser(Parser):
 
     def __init__(self, tag):
-        HTMLParser.__init__(self)
+        Parser.__init__(self)
         self.tag_obj = tag
         self.parser = tag.parser 
         self.org_tag_parser=self.parser.tag_parser
@@ -86,7 +88,7 @@ class HtmlProxyParser(HTMLParser):
     def close(self):
         self.parser.tag_parser=self.org_tag_parser
         self.tag_obj.dc.restore_state(self.org_state)
-        return HTMLParser.close(self)
+        return Parser.close(self)
 
 class Td:
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+3#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -17,234 +17,131 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
-
-try:
-    from html.parser import HTMLParser
-    HTMLParseError = None
-except:
-    from HTMLParser import HTMLParser, HTMLParseError
-
 import io
 from schlib.schhtml.htmltools import HtmlModParser
+from schlib.schhtml.parser import Parser, tostring
 
-
-class ShtmlParser(HtmlModParser):
-
-    cdata_content_elements = ('script', 'style', 'pscript')
-    not_process = ('thead', 'tbody')
-
+class ShtmlParser(Parser):
     def __init__(self):
-        self.var = {}
-        self.title = ''
-        self.schhtml = False
-        self.header = io.StringIO()
-        self.header_script = io.StringIO()
-        self.header_exists = False
-        self.body = io.StringIO()
-        self.body_script = io.StringIO()
-        self.body_attrs = {}
-        self.footer = io.StringIO()
-        self.footer_script = io.StringIO()
-        self.footer_exists = False
-        self.panel = io.StringIO()
-        self.panel_script = io.StringIO()
-        self.panel_exists = False
-        self.status = 0
-        self.status_in_script = 0
-        self.count = 0
+        super().__init__()
         self.address = None
-        HtmlModParser.__init__(self)
+        self._title = None
+        self._data = None
+        self.var = {}
+        self.schhtml = None
 
-    def get_panel(self):
-        if self.panel_exists:
-            return [self.panel, self.panel_script]
-        else:
-            return None
+    def _data_to_string(self, id):
+        if self._data[id] != None:
+            return tostring(self._data[id])
+        return ""
 
-    def get_footer(self):
-        if self.footer_exists:
-            return [self.footer, self.footer_script]
-        else:
-            return None
+    def _script_to_string(self, id):
+        if self._data[id] != None:
+            return self._data[id].text
+        return ""
 
-    def get_header(self):
-        if self.header_exists:
-            return [self.header, self.header_script]
-        else:
-            return None
 
-    def get_body(self):
-        return [self.body, self.body_script]
+    def _reparent(self, selectors):
+        ret = []
 
-    def get_body_attrs(self):
-        return self.body_attrs
+        for selector in selectors:
+            tmp = self._tree.find(selector)
+            tmp2 = None
+            if tmp != None:
+                tmp.getparent().remove(tmp)
+                tmp2 = tmp.find(".//script[@language='python']")
+                if tmp2 != None:
+                    tmp2.getparent().remove(tmp2)
+                for elem in tmp.iterfind(".//script"):
+                    elem.getparent().remove(elem)
+            ret.append(tmp)
+            ret.append(tmp2)
 
-# def handle_startendtag(self, tag, lattrs): self.handle_starttag(tag, lattrs)
-# self.handle_endtag(tag)
+        tmp2 = self._tree.find(".//script[@language='python']")
+        if tmp2 != None:
+            tmp2.getparent().remove(tmp2)
+        tmp = self._tree.find(".//body")
+        if tmp == None:
+            tmp = self._tree
+        for elem in tmp.iterfind(".//script"):
+            elem.getparent().remove(elem)
 
-    def get_starttag_text(self):
-        ret = HtmlModParser.get_starttag_text(self)
-        ret = ret.replace('/>', '>').replace('/ >', '>')
+        ret.insert(0, tmp2)
+        ret.insert(0, tmp)
         return ret
 
-    def handle_starttag(self, tag, attrs):
-        if tag in self.not_process:
-            return
-        if self.status_in_script:
-            self.handle_data(self.get_starttag_text())
-            return
-        tagprint = tag
-        if tag == 'meta':
-            name = None
-            content = None
-            for a in attrs:
-                if a[0] == 'name':
-                    name = a[1]
-                if a[0] == 'content':
-                    content = a[1]
-            if name:
-                if name.lower() == 'schhtml':
-                    self.schhtml = int(content)
-                else:
-                    self.var[str(name).lower()] = content
-        if tag == 'body':
-            self.body_attrs = dict(attrs)
-        if tag == 'title':
-            self.status = 1
-            return
-        if tag == 'script':
-            for a in attrs:
-                if a[0] == 'language' and a[1] == 'python':
-                    self.status_in_script = 1
-                    return
-                else:
-                    self.status_in_script = 2
-                    return
-        if tag == 'frame':
-            id = None
-            for a in attrs:
-                if a[0] == 'id':
-                    id = a[1]
-            if id:
-                if id == 'header':
-                    self.status = 3
-                    self.count = 1
-                    tagprint = 'body'
-                    self.header_exists = True
-                    self.header.write('<html>')
-                elif id == 'footer':
-                    self.status = 4
-                    self.count = 1
-                    tagprint = 'body'
-                    self.footer_exists = True
-                    self.footer.write('<html>')
-                elif id == 'panel':
-                    self.status = 5
-                    self.count = 1
-                    tagprint = 'body'
-                    self.panel_exists = True
-                    self.panel.write('<html>')
-                else:
-                    if self.count > 0:
-                        self.count += 1
-            else:
-                if self.count > 0:
-                    self.count += 1
-        if not self.status_in_script:
-            if self.status == 0:
-                self.body.write(self.get_starttag_text())
-            if self.status == 3:
-                self.header.write(self.get_starttag_text())
-            if self.status == 4:
-                self.footer.write(self.get_starttag_text())
-            if self.status == 5:
-                self.panel.write(self.get_starttag_text())
-
-    def handle_endtag(self, tag):
-        if tag in self.not_process:
-            return
-        if self.status_in_script and tag != 'script':
-            self.handle_data('</' + tag + '>')
-            return
-        tagprint = tag
-        status = self.status
-        if tag == 'script':
-            self.status_in_script = 0
-            return
-        if tag == 'title':
-            self.status = 0
-            return
-        if tag == 'frame':
-            if self.count > 0:
-                self.count -= 1
-                if self.count == 0:
-                    self.status = 0
-                    tagprint = 'body'
-        if status == 0:
-            self.body.write('</' + tagprint + '>')
-        if status == 3:
-            self.header.write('</' + tagprint + '>')
-        if status == 4:
-            self.footer.write('</' + tagprint + '>')
-        if status == 5:
-            self.panel.write('</' + tagprint + '>')
-
-    def handle_data(self, data):
-        if self.status_in_script:
-            if self.status_in_script == 1:
-                if self.status == 3:
-                    self.header_script.write(data)
-                elif self.status == 4:
-                    self.footer_script.write(data)
-                elif self.status == 5:
-                    self.panel_script.write(data)
-                else:
-                    self.body_script.write(data)
-        else:
-            if self.status == 0:
-                self.body.write(""+data)
-            if self.status == 1:
-                self.title = data.replace('\n', '').strip().replace('  ', ' ')
-            if self.status == 3:
-                self.header.write(data)
-            if self.status == 4:
-                self.footer.write(data)
-            if self.status == 5:
-                self.panel.write(data)
-
-    def process(self, data, address=None):
-        try:
-            self.feed(data)
-            self.close()
-        except HTMLParseError as e:
-            l = data.split('\n')
-            print(e.msg)
-            print('------------------------------------------------------')
-            print(l[e.lineno - 2].encode('utf-8'))
-            print(l[e.lineno - 1].encode('utf-8'))
-            print('===>', l[e.lineno + 0].encode('utf-8'))
-            print(l[e.lineno + 1].encode('utf-8'))
-            print(l[e.lineno + 2].encode('utf-8'))
-            print('------------------------------------------------------')
-            print(data)
-            print('------------------------------------------------------')
-            return
-        #try:
-        #self.close()
-        #except:
-        #    print "######################################################"
-        #    print data
-        #    print "######################################################"
-        #    pass
-        if self.header_exists:
-            self.header.write('</html>')
-        if self.footer_exists:
-            self.footer.write('</html>')
-        if self.panel_exists:
-            self.panel.write('</html>')
+    def process(self, html_txt, address=None):
         self.address = address
+        self.init(html_txt)
+        for elem in self._tree.iterfind(".//meta"):
+            if 'name' in elem.attrib:
+                name = elem.attrib['name'].lower()
+                if 'content' in elem.attrib:
+                    if name == 'schhtml':
+                        self.schhtml = int(elem.attrib['content'])
+                    else:
+                        self.var[name] = elem.attrib['content']
+                else:
+                    self.var[name] = None
+        self._data = self._reparent((".//frame[@id='header']",".//frame[@id='footer']",".//frame[@id='panel']",))
 
+
+    @property
+    def title(self):
+        if not self._title:
+            self._title = self._tree.findtext('.//title').strip()
+        return self._title
+
+    @property
+    def body(self):
+        return self._data_to_string(0)
+
+    @property
+    def body_script(self):
+        return self._script_to_string(1)
+
+    @property
+    def header(self):
+        return self._data_to_string(2)
+
+    @property
+    def header_script(self):
+        return self._script_to_string(3)
+
+    @property
+    def footer(self):
+        return self._data_to_string(4)
+
+    @property
+    def footer_script(self):
+        return self._script_to_string(5)
+
+    @property
+    def panel(self):
+        return self._data_to_string(6)
+
+    @property
+    def panel_script(self):
+        return self._script_to_string(7)
+
+    def get_body(self):
+        return (self.body, self.body_script)
+
+    def get_header(self):
+        return (self.header, self.header_script)
+
+    def get_footer(self):
+        return (self.footer, self.footer_script)
+
+    def get_panel(self):
+        return (self.panel, self.panel_script)
+
+    def get_body_attrs(self):
+        b = self._tree.find('.//body')
+        if b != None:
+            return b.attrib
+        else:
+            return {}
 
 if __name__ == '__main__':
     f = open('test.html', 'rt')

@@ -19,11 +19,12 @@
 
 from __future__ import unicode_literals
 
-try:
-    from html.parser import HTMLParser
-    HTMLParseError = None
-except:
-    from HTMLParser import HTMLParser, HTMLParseError
+#try:
+#    from html.parser import HTMLParser
+#    HTMLParseError = None
+#except:
+#    from HTMLParser import HTMLParser, HTMLParseError
+from schlib.schhtml.parser import Parser
 
 import io
 
@@ -186,12 +187,12 @@ def convert_js(stream_in, stream_out):
 
 
 
-class NormParser(HTMLParser):
+class NormParser(Parser):
 
     def __init__(self):
         self.txt = io.StringIO()
         self.tab = 0
-        HTMLParser.__init__(self)
+        Parser.__init__(self)
 
     def _remove_spaces(self, value):
         return value.strip()
@@ -227,20 +228,20 @@ class NormParser(HTMLParser):
             self.txt.write(self._remove_spaces(data).replace('\n', '\\n'))
 
     def process(self, data):
-        try:
-            self.feed(data)
-        except HTMLParseError as error:
-            lines = data.split('\n')
-            print(error)
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            print(lines[error.lineno - 2])
-            print((lines[error.lineno - 1])[:error.offset] + '!!!'\
-                 + (lines[error.lineno - 1])[error.offset:])
-            print(lines[error.lineno])
-            print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-            print(data)
-            print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-        return self.txt.getvalue()[1:] + '\n'
+        #try:
+        self.feed(data)
+        #except HTMLParseError as error:
+        #    lines = data.split('\n')
+        #    print(error)
+        #    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        #    print(lines[error.lineno - 2])
+        #    print((lines[error.lineno - 1])[:error.offset] + '!!!'\
+        #         + (lines[error.lineno - 1])[error.offset:])
+        #    print(lines[error.lineno])
+        #    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        #    print(data)
+        #    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        #return self.txt.getvalue()[1:] + '\n'
 
 
 class IndentHtmlParser(NormParser):

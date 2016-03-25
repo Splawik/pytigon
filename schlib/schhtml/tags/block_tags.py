@@ -17,11 +17,12 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-try:
-    from html.parser import HTMLParser
-    HTMLParseError = None
-except:
-    from HTMLParser import HTMLParser, HTMLParseError
+#try:
+#    from html.parser import HTMLParser
+#    HTMLParseError = None
+#except:
+#    from HTMLParser import HTMLParser, HTMLParseError
+
 
 from schlib.schhtml.basehtmltags import BaseHtmlElemParser, BaseHtmlAtomParser, \
     register_tag_map

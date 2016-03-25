@@ -166,7 +166,7 @@ class Data(BaseHtmlElemParser):
 
     def close(self):
         if self.data:
-            self.parent.data2 = b64decode(self.data.encode('utf-8'))
+            self.parent.data2 = b64decode(self.data.encode('utf-8')).decode('utf-8')
         else:
             self.parent.data2 = ''
 
@@ -500,9 +500,9 @@ class CtrlTag(TableTag):
         if len(self.tdata) > 0:
             self.kwargs['tdata'] = self.tdata
         self.kwargs['param'] = self.attrs
-        self.kwargs['param']['table_lp'] = self.parser.table_lp
+        self.kwargs['param']['table_lp'] = str(self.parser.table_lp)
         if self.data2 != None:
-            self.kwargs['param']['data'] = self.data2
+            self.kwargs['param']['data'] = is_null(self.data2,"")
         else:
             self.kwargs['param']['data'] = ''.join(self.data)
         if self.list:

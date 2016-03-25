@@ -98,7 +98,7 @@ class SchSashWindow(wx.Window):
         self.Body = None
         self.Footer = None
         self.ActiveWin = None
-        if header:
+        if header[0]:
             #topwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (100,
             #        5), wx.SW_3D)
             topwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (100,
@@ -137,13 +137,13 @@ class SchSashWindow(wx.Window):
             h = attrs['height']
             #self.Body.calculate_best_size(int(w))
             self.Body.bestsize = (int(w)*4/3, int(h)*4/3)
-        if 'NO_BACKGROUND' in config:
+        if 'no_background' in config:
             self.Body.no_background = True
         self.Body.show_page(body, parameters)
         self.Body.set_address_parm(address)
         if 'refresh' in mp.var:
             self.Body.refresh_time(int(mp.var['refresh']))
-        if footer:
+        if footer[0]:
             bottomwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition,
                     (1000, 5), wx.adv.SW_3D)
             bottomwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
@@ -158,7 +158,7 @@ class SchSashWindow(wx.Window):
             winids.append(bottomwin.GetId())
         else:
             self.bottomWindow = None
-        if panel and panel != '':
+        if panel[0]:
             leftwin1 = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (5,
                     100), wx.adv.SW_3D)
             leftwin1.SetOrientation(wx.adv.LAYOUT_VERTICAL)

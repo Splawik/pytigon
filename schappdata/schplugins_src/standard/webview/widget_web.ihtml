@@ -28,8 +28,9 @@
 
 %% form_bar
 
-
 %% extrahead
+
+%% extrahead2
     table style=width: 100%;,,,border=1
         % if user.is_authenticated
           [ login | 0 ]

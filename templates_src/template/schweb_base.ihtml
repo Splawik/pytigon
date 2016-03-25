@@ -41,7 +41,7 @@
                 [ hybrid | 1 ]
                 [ hybrid2 | 1111111111111111111 ]
                 [ csrf_token | {{csrf_token}} ]
-
+            .X{{'start'|reverse}}Y
 %%pythoncode
     % if form_edit:
         %%pythoncode_editform

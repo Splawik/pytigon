@@ -32,7 +32,7 @@ import os.path
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
 from schlib.schtools import schjson
-from schlib.schhttptools.htmltab import SimpleTabParser2
+from schlib.schhttptools.htmltab import SimpleTabParserBase
 from django.utils import six
 import io
 
@@ -175,7 +175,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             elif self.context_data['view'].doc_type()=='json':
                 self['Content-Type'] = 'application/json'
 
-                mp = SimpleTabParser2()
+                mp = SimpleTabParserBase()
                 mp.feed(self.content.decode('utf-8'))
                 mp.close()
 

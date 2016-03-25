@@ -17,14 +17,15 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-try:
-    from html.parser import HTMLParser
-    HTMLParseError = None
-except:
-    from HTMLParser import HTMLParser, HTMLParseError
+#try:
+#    from html.parser import HTMLParser
+#    HTMLParseError = None
+#except:
+#    from HTMLParser import HTMLParser, HTMLParseError
 
+from schlib.schhtml.parser import Parser
 
-class TreeParser(HTMLParser):
+class TreeParser(Parser):
 
     def __init__(self):
         self.TreeParent = [['TREE', []]]
@@ -32,7 +33,7 @@ class TreeParser(HTMLParser):
         self.Stos = []
         self.attr_to_li = []
         self.EnableDataRead = False
-        HTMLParser.__init__(self)
+        Parser.__init__(self)
 
     def handle_starttag(self, tag, attrs):
         self.attr_to_li += attrs

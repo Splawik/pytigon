@@ -749,7 +749,7 @@ def main_init(argv):
         address = 'http://' + address + ':' + str(port)
     else:
         from schlib.schtasks.base_task import get_process_manager
-        task_manager = get_process_manager()
+        app.task_manager = get_process_manager()
         server = None
 
     if embed_diango:

@@ -177,40 +177,21 @@ class HtmlViewerParser(HtmlModParser):
         obj.last_rendered_dc = dc
         obj.rendered_rects.append((dc.x, dc.y, dc.dx, dc.dy))
 
-    def handle_starttag(self, tag, lattrs):
-        if tag.lower() in ('img', 'image', 'input', 'br', 'link'):
-            return self.handle_startendtag(tag, lattrs)
-        else:
-            return self._handle_starttag(tag, lattrs)
+    def handle_starttag(self, tag, attrs):
+        #if tag.lower() in ('img', 'image', 'input', 'br', 'link'):
+        #    return self.handle_startendtag(tag, attrs)
+        #else:
+        return self._handle_starttag(tag, attrs)
 
-    def _handle_starttag(self, tag, lattrs):
+    def _handle_starttag(self, tag, attrs):
         try:
-            attrs = {}
-            for pos in lattrs:
-                if pos[0].lower() == 'style':
-                    for s in pos[1].split(';'):
-                        s2 = s.split(':')
-                        if len(s2) == 2:
-                            attrs[s2[0].lower()] = s2[1]
-                else:
-                    class_name = pos[0].lower()
-                    if pos[1].__class__ == str:
-                        #try:
-                        #    if class_name == 'class':
-                        #        attrs[class_name] = pos[1].decode('utf-8').split(' ')[0]
-                        #    else:
-                        #        attrs[class_name] = pos[1].decode('utf-8')
-                        #except:
-                        if class_name == 'class':
-                            attrs[class_name] = pos[1].split(' ')[0]
-                        else:
-                            attrs[class_name] = pos[1]
-
-                    else:
-                        if class_name == 'class':
-                            attrs[class_name] = pos[1].split(' ')[0]
-                        else:
-                            attrs[class_name] = pos[1]
+            if 'style' in attrs:
+                for s in attrs['style'].split(';'):
+                    s2 = s.split(':')
+                    if len(s2) == 2:
+                        attrs[s2[0].lower()] = s2[1]
+            if 'class' in attrs:
+                attrs['class'] = attrs['class'].split(' ')[0]
 
             tmap = get_tag_preprocess_map()
             tag2 = tag.lower()
@@ -236,8 +217,8 @@ class HtmlViewerParser(HtmlModParser):
             (exc_type, exc_value, exc_tb) = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_tb)
 
-    def handle_startendtag(self, tag, lattrs):
-        self._handle_starttag(tag, lattrs)
+    def handle_startendtag(self, tag, attrs):
+        self._handle_starttag(tag, attrs)
         self.handle_endtag(tag)
 
     def handle_endtag(self, tag):
@@ -258,11 +239,7 @@ class HtmlViewerParser(HtmlModParser):
     def handle_data(self, data):
         try:
             if self.tag_parser:
-# self.tag_parser.handle_data(data.decode('utf-8'))
                 if data.__class__ == str:
-                    #try:
-                    #    self.tag_parser.handle_data(data.decode('utf-8'))
-                    #except:
                     self.tag_parser.handle_data(data)
                 else:
                     self.tag_parser.handle_data(data)
@@ -277,7 +254,7 @@ class HtmlViewerParser(HtmlModParser):
     def get_max_sizes(self):
         sizes = self.dc.get_max_sizes()
         sizes2 = self.get_max_rendered_size()
-# print "GetMaxSizes:", sizes, sizes2
+        # print "GetMaxSizes:", sizes, sizes2
         return (max(sizes[0], sizes2[0]), max(sizes[1], sizes2[1]))
 
     def print_obj(self, obj, start=True):

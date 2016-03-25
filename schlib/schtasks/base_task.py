@@ -336,7 +336,8 @@ class ProcessManager():
 
 
 def get_base_process_manager():
-    return ProcessManager(ThreadPool(8))
+    return ProcessManager(ThreadPool(100))
+    #return None
 
 
 def get_process_manager():
