@@ -242,7 +242,10 @@ class ParCalc(AtomTag):
             if parent.tag=='html':
                 html=parent
             parent = parent.parent
+        print("data:")
+        print(data)
         data2 = str(eval(data))
+        print(data2)
         return AtomTag.handle_data(self, data2)
 
     #def render(self, dc):

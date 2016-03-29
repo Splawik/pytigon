@@ -12,7 +12,7 @@ import time
 {% if app.tasks_code %}{{app.tasks_code|first_section|safe}} {% endif %}
 
 {% for task in tasks %}
-def {{task.name}}(id, input_queue, output_queue, *args, **kwargs):
+def {{task.name}}(cproxy, *args, **kwargs):
     {% if task.doc %}"""{% for line in task.doc.splitlines %}
     {{line|safe}}{% endfor %}
     """{% endif %}

@@ -19,7 +19,8 @@
 
 import io
 from schlib.schhtml.htmltools import HtmlModParser
-from schlib.schhtml.parser import Parser, tostring
+from schlib.schhtml.parser import Parser, Elem, Script, tostring
+
 
 class ShtmlParser(Parser):
     def __init__(self):
@@ -85,56 +86,23 @@ class ShtmlParser(Parser):
                     self.var[name] = None
         self._data = self._reparent((".//frame[@id='header']",".//frame[@id='footer']",".//frame[@id='panel']",))
 
-
     @property
     def title(self):
         if not self._title:
             self._title = self._tree.findtext('.//title').strip()
         return self._title
 
-    @property
-    def body(self):
-        return self._data_to_string(0)
-
-    @property
-    def body_script(self):
-        return self._script_to_string(1)
-
-    @property
-    def header(self):
-        return self._data_to_string(2)
-
-    @property
-    def header_script(self):
-        return self._script_to_string(3)
-
-    @property
-    def footer(self):
-        return self._data_to_string(4)
-
-    @property
-    def footer_script(self):
-        return self._script_to_string(5)
-
-    @property
-    def panel(self):
-        return self._data_to_string(6)
-
-    @property
-    def panel_script(self):
-        return self._script_to_string(7)
-
     def get_body(self):
-        return (self.body, self.body_script)
+        return (Elem(self._data[0]), Script(self._data[1]))
 
     def get_header(self):
-        return (self.header, self.header_script)
+        return (Elem(self._data[2]), Script(self._data[3]))
 
     def get_footer(self):
-        return (self.footer, self.footer_script)
+        return (Elem(self._data[4]), Script(self._data[5]))
 
     def get_panel(self):
-        return (self.panel, self.panel_script)
+        return (Elem(self._data[6]), Script(self._data[7]))
 
     def get_body_attrs(self):
         b = self._tree.find('.//body')

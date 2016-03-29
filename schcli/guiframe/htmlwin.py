@@ -583,7 +583,8 @@ class SchHtmlWindow(ScrolledPanel):
         okno = self.new_main_page('^standard/editor/editor.html',
                                   self.get_tab().title + ' - page source', None)
         #okno.Body['EDITOR'].SetValue(norm_html(self.page_source))
-        okno.Body['EDITOR'].SetValue(self.page_source)
+
+        okno.Body['EDITOR'].SetValue(self.page_source.tostream().getvalue())
         okno.Body['EDITOR'].GotoPos(0)
 
     def _get_obj_for_redraw(self, pos, type=0):
@@ -835,7 +836,7 @@ class SchHtmlWindow(ScrolledPanel):
             return False
         self.Parametry = parametry
         if not self.script:
-            self.script = page_and_script[1]
+            self.script = str(page_and_script[1])
             if self.script and len(self.script) > 1:
                 app = wx.GetApp()
                 main_window = app.GetTopWindow()
@@ -854,7 +855,7 @@ class SchHtmlWindow(ScrolledPanel):
                 d = {'wx': wx}
                 self.exec_code(script, d)
                 #try:
-                #    exec (script, d)
+                ##    exec (script, d)
                 #except:
                 #    print('### ERROR IN SCRIPT ###################################')
                 #    print(script)
@@ -904,6 +905,8 @@ class SchHtmlWindow(ScrolledPanel):
         else:
             if hasattr(self, 'reinit'):
                 self.reinit()
+            elif hasattr(self, 'init_form'):
+                self.init_form()
 
     def new_local_child_page(
             self,
@@ -1121,9 +1124,13 @@ class SchHtmlWindow(ScrolledPanel):
                     update_controls = self.update_controls
                     self.update_controls = True
                     self.show_page(mp.get_body(), self.get_parm_obj())
+
+                        #pass
+
                     self.wxdc = None
                     self.draw_background()
                     self.Refresh()
+                    self.init_page()
                     self.update_controls = update_controls
                     if 'href' in attr_dict:
                         href = attr_dict['href']

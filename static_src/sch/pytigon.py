@@ -163,7 +163,8 @@ def page_init(id, first_time = True):
 
                     if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
                         if target=="refresh_obj":
-                            refresh_fragment(src_obj, None, True)
+                            if not refresh_fragment(src_obj, None, True):
+                                refresh_fragment(src_obj)
                         else:
                             refresh_fragment(src_obj)
                     else:
@@ -187,6 +188,10 @@ def page_init(id, first_time = True):
             if jQuery(this).attr('target')=='_blank':
                 jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
                 return True
+
+            if jQuery(this).attr('target')=='refresh_obj':
+                if refresh_fragment(jQuery(this), None, True):
+                    return False
 
             data = jQuery(this).serialize()
 

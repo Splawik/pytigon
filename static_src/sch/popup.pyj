@@ -15,7 +15,8 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
             datatable_refresh(datatable)
             if fun:
                 fun()
-            return
+            return True
+        return False
 
     src = refr_block.find('.refr_source')
     if src.length > 0:
@@ -32,7 +33,7 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
                 def(responseText):
                     pass
             )
-
+    return True
 
 def on_popup_inline(elem):
     nonlocal WAIT_ICON
@@ -52,7 +53,8 @@ def on_popup_inline(elem):
     new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
     new_fragment.insertAfter(jQuery(elem).closest("tr"))
     elem2 = new_fragment.find(".refr_target")
-    elem2.load(href2,None,
+    #elem2.load(href2,None,
+    ajax_load(elem2, href2,
         def(responseText, status, response):
             nonlocal WAIT_ICON
             $('#IDIAL_'+id).hide()
@@ -86,7 +88,8 @@ def on_popup_in_form(elem):
     new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
     new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
     elem2 = new_fragment.find(".refr_target")
-    elem2.load(href2,None,
+    #elem2.load(href2,None,
+    ajax_load(elem2,href2,
         def(responseText, status, response):
             nonlocal WAIT_ICON
             $('#IDIAL_'+id).hide()
@@ -156,14 +159,21 @@ def on_popup_edit_new(elem):
 
 def on_popup_info(elem):
     if can_popup():
-        jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"),None,
+        #jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"),None,
+        ajax_load(jQuery("div.dialog-data-info"),jQuery(elem).attr("href"),
             def(responseText, status, response):
                 jQuery('div.dialog-form-info').modal()
         )
     else:
         jQuery(".inline_dialog").remove()
         jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
-        jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+
+        ajax_load(jQuery("div.dialog-data-inner"),jQuery(elem).attr("href"),
+            def (responseText, status, response):
+                pass
+        )
+        #jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+
 
     return False
 
@@ -171,7 +181,8 @@ def on_popup_info(elem):
 def on_popup_delete(elem):
     if can_popup():
         jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid())
-        jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
+        #jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"),None,
+        ajax_load(jQuery("div.dialog-data-delete"),jQuery(elem).attr("href"),
             def(responseText, status, response):
                 jQuery('div.dialog-form-delete').modal()
                 jQuery("div.dialog-form-delete").fadeTo( "fast", 1)
@@ -181,7 +192,11 @@ def on_popup_delete(elem):
         elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
         elem2.insertAfter(jQuery(elem).parents("tr"))
         elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
-        jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+        #jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"),None)
+        ajax_load(jQuery("div.dialog-data-inner"),jQuery(elem).attr("href"),
+            def ():
+                pass
+        )
 
     return False
 
@@ -204,38 +219,27 @@ def _dialog_loaded(is_modal, elem):
         jQuery('div.dialog-form').drags({ "handle": ".modal-header" })
 
 
-def on_edit_ok(form):
-    def _fun(data):
-        _refresh_win_after_ok(data, form)
-    ajax_submit(form, _fun)
-    return False
-
-
-def on_delete_ok(form):
-    ajax_post(corect_href(form.attr('action')), form.serialize(), def(data): _refresh_win(data, form); )
-    return False
-
-
 def _refresh_win(responseText, ok_button):
     popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
     if responseText and "RETURN_OK" in responseText:
         if not can_popup():
             if jQuery("div.dialog-form").hasClass('in'):
                 dialog = "div.dialog-form"
-            else: 
+            else:
                 if jQuery("div.dialog-form-delete").hasClass('in') :
                     dialog = "div.dialog-form-delete"
-                else: 
+                else:
                     dialog = "div.dialog-form-info"
-            
+
             def hide_dialog_form():
                 jQuery(dialog).modal('hide')
 
             jQuery(dialog).fadeTo( "slow", 0.5 )
-            refresh_fragment(popup_activator, hide_dialog_form, True)
-
+            if not refresh_fragment(popup_activator, hide_dialog_form, True):
+                refresh_fragment(popup_activator, hide_dialog_form, False)
         else:
-            refresh_fragment(popup_activator, None, True)
+            if not refresh_fragment(popup_activator, None, True):
+                return refresh_fragment(popup_activator, None, True)
     else:
         if not can_popup():
             jQuery("div.dialog-data").html(responseText)
@@ -269,6 +273,18 @@ def _refresh_win_after_ok(responseText, ok_button):
         EDIT_RET_FUNCTION = False
     else:
         _refresh_win(responseText, ok_button)
+
+
+def on_edit_ok(form):
+    def _fun(data):
+        _refresh_win_after_ok(data, form)
+    ajax_submit(form, _fun)
+    return False
+
+
+def on_delete_ok(form):
+    ajax_post(corect_href(form.attr('action')), form.serialize(), def(data): _refresh_win(data, form); )
+    return False
 
 
 def on_cancel_inline(elem):
@@ -306,4 +322,3 @@ def on_get_row(elem):
     #ret_control[0].defaultValue = id.toString()
 
     jQuery(elem).closest(".refr_source").remove()
-

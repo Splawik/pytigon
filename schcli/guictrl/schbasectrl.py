@@ -218,7 +218,7 @@ class SchBaseCtrl(object):
         if self.ldatabuf:
             return self.ldatabuf
         if self.src:
-            selfreshLDATA()
+            self.refreshLDATA()
         return self.ldatabuf
 
     def get_parent_form(self):

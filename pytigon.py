@@ -868,6 +868,10 @@ def main():
     destroy_fun_tab = frame.destroy_fun_tab
     httpclient.set_http_error_func(http_error)
     httpclient.set_http_idle_func(idle_fun)
+
+    if app.task_manager:
+        frame.idle_objects.append(app.task_manager)
+
     app.MainLoop()
 
     if app.task_manager:

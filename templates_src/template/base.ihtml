@@ -22,6 +22,7 @@
                             div class=form-group
                                 label for=username_ ..._(User name)
                                 input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,placeholder=_(User name)
+                            div class=form-group
                                 label for=password_..._(Password)
                                 input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=,,,placeholder=_(Password)
                         div class=panel-footer
@@ -182,7 +183,7 @@
                             div class=tr row list_content_header_two_row
                                 div class=td col-md-12 col-sm-12,,,colspan=3
                                     %% list_filter_form
-                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}
+                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
                                             % csrf_token
                                             %% form_filter
                                                 %if form

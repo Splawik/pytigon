@@ -17,11 +17,6 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-#try:
-#    from html.parser import HTMLParser
-#    HTMLParseError = None
-#except:
-#    from HTMLParser import HTMLParser, HTMLParseError
 
 from schlib.schhtml.parser import Parser
 
@@ -52,23 +47,12 @@ class HtmlModParser(Parser):
             req = urlopen(url)
             self.feed(req.read().decode('utf-8'))
 
-    #def parse_endtag(self, i):
-    #    try:
-    #        ret = Parser.parse_endtag(self, i)
-    #    except:
-    #        ret = i + 1
-    #    return ret
-
-
-    #def handle_entityref(self, name):
-    #    if name in ('gt', 'lt', 'amp', 'quot'):
-    #        self.handle_data('&'+name+';')
-
 
 class HtmlProxyParser(Parser):
 
     def __init__(self, tag):
         Parser.__init__(self)
+        
         self.tag_obj = tag
         self.parser = tag.parser 
         self.org_tag_parser=self.parser.tag_parser
@@ -85,19 +69,26 @@ class HtmlProxyParser(Parser):
     def handle_data(self, data):
         return self.parser.handle_data(data)
 
+    def feed(self, html_txt):                
+        _tree = self._tree
+        _cur_elem = self._cur_elem        
+        _header = self.tag_obj.header
+        _footer  = self.tag_obj.footer
+        self.tag_obj.header = ""
+        self.tag_obj.footer  = ""
+        super().feed(html_txt)
+        self.tag_obj.header = _header
+        self.tag_obj.footer  =_footer
+        self._tree = _tree
+        self._cur_elem = _cur_elem        
+        
     def close(self):
         self.parser.tag_parser=self.org_tag_parser
         self.tag_obj.dc.restore_state(self.org_state)
-        return Parser.close(self)
+
 
 class Td:
-
-    def __init__(
-        self,
-        data,
-        attr,
-        childs=None,
-        ):
+    def __init__(self, data, attr, childs=None):
         self.data = data
         self.attr = attr
         self.childs = childs

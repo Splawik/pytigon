@@ -632,8 +632,9 @@ var ՐՏ_modules = {};
                 if (fun) {
                     fun();
                 }
-                return;
+                return true;
             }
+            return false;
         }
         src = refr_block.find(".refr_source");
         if (src.length > 0) {
@@ -652,6 +653,7 @@ var ՐՏ_modules = {};
                 });
             }
         }
+        return true;
     }
     function on_popup_inline(elem) {
         var id, href2, new_fragment, elem2;
@@ -813,19 +815,6 @@ var ՐՏ_modules = {};
             });
         }
     }
-    function on_edit_ok(form) {
-        function _fun(data) {
-            _refresh_win_after_ok(data, form);
-        }
-        ajax_submit(form, _fun);
-        return false;
-    }
-    function on_delete_ok(form) {
-        ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
-            _refresh_win(data, form);
-        });
-        return false;
-    }
     function _refresh_win(responseText, ok_button) {
         var popup_activator, dialog;
         popup_activator = jQuery("#" + jQuery(ok_button).closest(".refr_object").attr("related-object"));
@@ -844,85 +833,103 @@ var ՐՏ_modules = {};
                     jQuery(dialog).modal("hide");
                 }
                 jQuery(dialog).fadeTo("slow", .5);
-                refresh_fragment(popup_activator, hide_dialog_form, true);
+                if (!refresh_fragment(popup_activator, hide_dialog_form, true)) {
+                    refresh_fragment(popup_activator, hide_dialog_form, false);
+                    {}
+                } else {
+                    if (!refresh_fragment(popup_activator, null, true)) {
+                        return refresh_fragment(popup_activator, null, true);
+                    }
+                }
             } else {
-                refresh_fragment(popup_activator, null, true);
-            }
-        } else {
-            if (!can_popup()) {
-                jQuery("div.dialog-data").html(responseText);
-            } else {
-                ok_button.closest(".refr_target").html(responseText);
+                if (!can_popup()) {
+                    jQuery("div.dialog-data").html(responseText);
+                } else {
+                    ok_button.closest(".refr_target").html(responseText);
+                }
             }
         }
-    }
-    function _refresh_win_and_ret(responseText, ok_button) {
-        var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
-        if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
+        function _refresh_win_and_ret(responseText, ok_button) {
+            var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
+            if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
+                related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
+                popup_activator = jQuery("#" + related_object);
+                if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
+                    jQuery("div.dialog-form").modal("hide");
+                } else {
+                    jQuery(ok_button).closest(".refr_object").remove();
+                }
+                if (popup_activator && popup_activator.data("edit_ret_function")) {
+                    RET_CONTROL = popup_activator.data("ret_control");
+                    EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
+                    q = jQuery(responseText);
+                    eval(q[1].text);
+                }
+            } else {
+                jQuery("div.dialog-data").html(responseText);
+            }
+        }
+        function _refresh_win_after_ok(responseText, ok_button) {
+            var related_object, popup_activator;
             related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
             popup_activator = jQuery("#" + related_object);
-            if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
-                jQuery("div.dialog-form").modal("hide");
-            } else {
-                jQuery(ok_button).closest(".refr_object").remove();
-            }
             if (popup_activator && popup_activator.data("edit_ret_function")) {
-                RET_CONTROL = popup_activator.data("ret_control");
                 EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
-                q = jQuery(responseText);
-                eval(q[1].text);
+                EDIT_RET_FUNCTION(responseText, ok_button);
+                EDIT_RET_FUNCTION = false;
+            } else {
+                _refresh_win(responseText, ok_button);
             }
-        } else {
-            jQuery("div.dialog-data").html(responseText);
         }
-    }
-    function _refresh_win_after_ok(responseText, ok_button) {
-        var related_object, popup_activator;
-        related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
-        popup_activator = jQuery("#" + related_object);
-        if (popup_activator && popup_activator.data("edit_ret_function")) {
-            EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
-            EDIT_RET_FUNCTION(responseText, ok_button);
-            EDIT_RET_FUNCTION = false;
-        } else {
-            _refresh_win(responseText, ok_button);
+        function on_edit_ok(form) {
+            function _fun(data) {
+                _refresh_win_after_ok(data, form);
+            }
+            ajax_submit(form, _fun);
+            return false;
         }
-    }
-    function on_cancel_inline(elem) {
-        jQuery(elem).closest(".inline_dialog").remove();
-    }
-    function ret_ok(id, title) {
-        RET_CONTROL.select2("data", {
-            id: id,
-            text: title
-        }).trigger("change");
-        RET_CONTROL.val(id.toString());
-        RET_CONTROL[0].defaultValue = id.toString();
-    }
-    function on_get_tbl_value(elem) {
-        on_popup_in_form(elem);
-    }
-    function on_new_tbl_value(elem) {
-        EDIT_RET_FUNCTION = _refresh_win_and_ret;
-        RET_CONTROL = jQuery(elem).closest(".input-group").find(".django-select2");
-        jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
-        jQuery(elem).data("ret_control", RET_CONTROL);
-        return on_popup_edit_new(elem);
-    }
-    function on_get_row(elem) {
-        var id, text, ret_control;
-        id = jQuery(elem).attr("data-id");
-        text = jQuery(elem).attr("data-text");
-        ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find(".django-select2");
-        if (ret_control.find("option[value='" + id + "']").length === 0) {
-            ret_control.append(jQuery("<option>", {
-                "value": id,
-                "text": text
-            }));
+        function on_delete_ok(form) {
+            ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
+                _refresh_win(data, form);
+            });
+            return false;
         }
-        ret_control.val(id.toString());
-        ret_control.trigger("change");
-        jQuery(elem).closest(".refr_source").remove();
+        function on_cancel_inline(elem) {
+            jQuery(elem).closest(".inline_dialog").remove();
+        }
+        function ret_ok(id, title) {
+            RET_CONTROL.select2("data", {
+                id: id,
+                text: title
+            }).trigger("change");
+            RET_CONTROL.val(id.toString());
+            RET_CONTROL[0].defaultValue = id.toString();
+        }
+        function on_get_tbl_value(elem) {
+            on_popup_in_form(elem);
+        }
+        function on_new_tbl_value(elem) {
+            EDIT_RET_FUNCTION = _refresh_win_and_ret;
+            RET_CONTROL = jQuery(elem).closest(".input-group").find(".django-select2");
+            jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
+            jQuery(elem).data("ret_control", RET_CONTROL);
+            return on_popup_edit_new(elem);
+        }
+        function on_get_row(elem) {
+            var id, text, ret_control;
+            id = jQuery(elem).attr("data-id");
+            text = jQuery(elem).attr("data-text");
+            ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find(".django-select2");
+            if (ret_control.find("option[value='" + id + "']").length === 0) {
+                ret_control.append(jQuery("<option>", {
+                    "value": id,
+                    "text": text
+                }));
+            }
+            ret_control.val(id.toString());
+            ret_control.trigger("change");
+            jQuery(elem).closest(".refr_source").remove();
+        }
     }
     ՐՏ_modules["popup"]["refresh_fragment"] = refresh_fragment;
 
@@ -940,25 +947,7 @@ var ՐՏ_modules = {};
 
     ՐՏ_modules["popup"]["_dialog_loaded"] = _dialog_loaded;
 
-    ՐՏ_modules["popup"]["on_edit_ok"] = on_edit_ok;
-
-    ՐՏ_modules["popup"]["on_delete_ok"] = on_delete_ok;
-
     ՐՏ_modules["popup"]["_refresh_win"] = _refresh_win;
-
-    ՐՏ_modules["popup"]["_refresh_win_and_ret"] = _refresh_win_and_ret;
-
-    ՐՏ_modules["popup"]["_refresh_win_after_ok"] = _refresh_win_after_ok;
-
-    ՐՏ_modules["popup"]["on_cancel_inline"] = on_cancel_inline;
-
-    ՐՏ_modules["popup"]["ret_ok"] = ret_ok;
-
-    ՐՏ_modules["popup"]["on_get_tbl_value"] = on_get_tbl_value;
-
-    ՐՏ_modules["popup"]["on_new_tbl_value"] = on_new_tbl_value;
-
-    ՐՏ_modules["popup"]["on_get_row"] = on_get_row;
 })();
 
 var __name__ = "__main__";
@@ -1162,7 +1151,9 @@ function page_init(id, first_time) {
             ajax_get(href2, function(data) {
                 if (data && ՐՏ_in("_parent_refr", data) || ՐՏ_in(target, ["refresh_obj", "refresh_page"])) {
                     if (target === "refresh_obj") {
-                        refresh_fragment(src_obj, null, true);
+                        if (!refresh_fragment(src_obj, null, true)) {
+                            refresh_fragment(src_obj);
+                        }
                     } else {
                         refresh_fragment(src_obj);
                     }
@@ -1189,6 +1180,11 @@ function page_init(id, first_time) {
         if (jQuery(this).attr("target") === "_blank") {
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data");
             return true;
+        }
+        if (jQuery(this).attr("target") === "refresh_obj") {
+            if (refresh_fragment(jQuery(this), null, true)) {
+                return false;
+            }
         }
         data = jQuery(this).serialize();
         if (data && ՐՏ_in("pdf=on", data)) {

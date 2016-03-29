@@ -10,15 +10,24 @@
         def init_form(self):
             from schlib.schtools import schjson
             self.schjson = schjson
-            self.txt.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+            
+            if hasattr(self, "txt"):
+                self.txt.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+            
             self.start_id = 0
-            self.task_progress.SetValue(0)
-
-            #self.tuser = wx.Timer(self)
-            #self.tuser.Start(2000)
-            #self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
-            self.transfer()
-
+            
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(1000)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            
+            if hasattr(self, "task_progress"):
+                self.task_progress.SetValue(0)
+        
+        def reinit(self):            
+            if hasattr(self, 'tuser'):
+                self.tuser.Stop()
+            self.init_form()
+                
         def transfer(self):
             test = False
             http = wx.GetApp().HTTP
@@ -37,35 +46,33 @@
                         else:
                             parm = None
                         if fun == 'PROGRESS':
-                            self.task_progress.SetValue(int(parm))
+                            if hasattr(self, 'task_progress'):
+                                self.task_progress.SetValue(int(parm))
                     else:
-                        #self.cmd.AppendText(line)
-                        self.cmd.Append(line)
+                        if hasattr(self, 'cmd'):
+                            self.cmd.AppendText(line)
                     self.start_id += 1
                     test = True
-            #if test:
-            #    self.cmd.ScrollToLine(self.start_id)
-
-        def on_exit(self, event):
-            #http = wx.GetApp().HTTP
-            #http.get(self, "{{request.path}}../delete/")
-            pass
+            if test:
+                if hasattr(self, 'cmd'):
+                    self.cmd.ScrollToLine(self.start_id)
 
         def on_close(self):
-            #self.tuser.Stop()
-            pass
+            self.tuser.Stop()
 
         def on_enter(self, event):
-            value = self.txt.GetValue()
-            parm = { 'id': '{{object.id}}', 'message': value + "\n" }
+            if hasattr(self, 'txt'):
+                value = self.txt.GetValue()
+            
+                parm = { 'id': '{{object.id}}', 'message': value + "\n" }
 
-            http = wx.GetApp().HTTP
+                http = wx.GetApp().HTTP
 
-            http.post(self, "/tasks/put_message", parm=parm)
-            s = http.str()
-            http.clear_ptr()
+                http.post(self, "/tasks/put_message", parm=parm)
+                s = http.str()
+                http.clear_ptr()
 
-            self.txt.SetValue("")
+                self.txt.SetValue("")
             
 
         def on_timer_user(self, event):
@@ -73,14 +80,11 @@
 
 
 %% all
-    %with form_width=800 form_height=600 show_title_bar=1 title='Edit task'
+    %with show_title_bar=1 title='Edit task':
         {{ block.super }}
 
 %% body_body
-    %if not object:
-        {{ block.super }}
-    % else:
-        {{ object }}
+    {{ block.super }}
 
 %% body
     % if not show_form and object:
@@ -90,32 +94,35 @@
                 div class=panel-body
                     % with show_form=True:
                         {{ block.super }}
-                    button type=button,,,class=btn btn-danger,,,id=kill_task...Kill task
-                    script 
-                        def _on_kill():
-                            window.location = "/"                            
-                        $('#kill_task').click(_on_kill)
+                    % if standard_web_browser:
+                        button type=button,,,class=btn btn-danger,,,id=kill_task...Kill task
+                        script
+                            def _on_kill():
+                                window.location = "/"
+                            jQuery('#kill_task').click(_on_kill)
     % else:
         {{ block.super }}
 
 
 %% row_edit_form
-    h3 class=panel-title...{{object.title}} (id={{object.id}})
-    br
+    %% task_title
+        h3 class=panel-title...{{object.title}} (id={{object.id}})
+        br
     table class=table
-        tr
-            th...status
-            td...{{object.status}}
-        tr
-            th...username
-            td...{{object.username}}
-        tr
-            th...time_from
-            td...{{object.time_from|isoformat_short}}
-        % if object.status > 1:
+        %% task_status
             tr
-                th...time_to
-                td...{{object.time_to|isoformat_short}}        
+                th...status
+                td...{{object.status}}
+            tr
+                th...username
+                td...{{object.username}}
+            tr
+                th...time_from
+                td...{{object.time_from|isoformat_short}}
+            % if object.status > 1:
+                tr
+                    th...time_to
+                    td...{{object.time_to|isoformat_short}}        
 
         % if standard_web_browser:
             % if object.status < 2:
@@ -149,7 +156,7 @@
                                 filter.submit()
                         on_kill(_on_kill)
                         
-                    def c():
+                    def on_timer():
                         obj = $('#cmd_list_{{object.id}}')
                         if obj.length:
                             def _on_post(data):
@@ -201,21 +208,25 @@
                         BootstrapDialog.confirm('Kill task, are you sure?', _on_kill)
                             
         % else:
-            tr
-                td colspan=2,,,width=100%-10
-                    CTRLGAUGE name=task_progress,,,width=100%-10
-            tr
-                td colspan=2,,,width=100%-10
-                    strong...Enter command: <br />
-                    CTRLTEXT name=txt,,,param=PROCESS_ENTER,,,width=100%-10
+            %% wx_task_progress
+                tr
+                    td colspan=2,,,width=100%-10
+                        CTRLGAUGE name=task_progress,,,width=100%-10
+            %% wx_task_input
+                tr
+                    td colspan=2,,,width=100%-10
+                        strong...Enter command: <br />
+                        CTRLTEXT name=txt,,,param=PROCESS_ENTER,,,width=100%-10
             </table><table>
-            tr
-                td width=100%
-                    CTRLLISTBOX name=cmd,,,width=100%-10,,,height=100%-50
+            %% wx_task_list
+                tr
+                    td width=100%
+                        CTRLHTMLLISTBOX name=cmd,,,width=100%-10,,,height=100%-50
 
 %% form_ok_cancel
-    % if not standard_web_browser
+    % if not standard_web_browser:
         table width=100%,,,cellspacing=0,,,cellpadding=3
             tr
                 td align=center
-                    <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="Close"></CTRLBUTTON><input type="submit" value="Kill task" name="OKBUTTON">
+                    <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="close" />
+                    <input type="submit" value="Kill task" name="OKBUTTON" />
