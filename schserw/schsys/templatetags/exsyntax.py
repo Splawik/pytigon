@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 
 from base64 import b64encode, b64decode
 import io
-from html.parser import HTMLParser
+from schlib.schhtml.parser import Parser
 
 from django import template
 from django.utils.translation import gettext_lazy as _
@@ -50,32 +50,30 @@ from crispy_forms.bootstrap import (
     FieldWithButtons, StrictButton
 )
 
-#from templatetag_sugar.register import tag
-#from templatetag_sugar.parser import Name, Variable, Constant, Optional, Model
 
 import itertools
 
 register = template.Library()
 
 
-class GetAllAttributesParser(HTMLParser):
+class GetAllAttributesParser(Parser):
     def __init__(self, *argi, **argv):
         super().__init__(*argi, **argv)
         self.v = {}
         
     def handle_starttag(self, tag, attrs):        
-        for elem in attrs:
-            if elem[0] in self.v:
-                self.v[elem[0]] += " "+elem[1]
+        for key, value in attrs.items():
+            if key in self.v:
+                self.v[key] += " "+value
             else:
-                self.v[elem[0]] = elem[1]
+                self.v[key] = value
         
 
 def add_2_attribute_str(s1, s2):
     out = io.StringIO()
     parser = GetAllAttributesParser()
-    parser.feed("<x "+s1+">")
-    parser.feed("<x "+s2+">")
+    parser.feed("<html><x "+s1+"></html>")
+    parser.feed("<html><x "+s2+"></html>")
     for pos in parser.v:
         out.write(pos)
         out.write("=\"")
@@ -221,6 +219,7 @@ class Action:
                 self.target = '_top'
             else:
                 self.target = '_blank'
+
                 
         if not self.style :
             if action2 in STANDARD_DESC:
@@ -230,9 +229,9 @@ class Action:
         else:
             if self.style[0]=='+':
                 if action2 in STANDARD_DESC:
-                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC[action2][1])
+                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC[action2][1].split('|')[0])
                 else:
-                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC['default'][1])
+                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC['default'][1].split('|')[0])
 
         if '|' in self.style:
             x = self.style.split('|')

@@ -33,6 +33,8 @@ class SchBrowserFrame(wx.Frame):
 
         self.gui_style = gui_style
         self.destroy_fun_tab = []
+        self.idle_objects = []
+        self.after_init = False
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
         wx.GetApp().SetTopWindow(self)
@@ -89,6 +91,27 @@ class SchBrowserFrame(wx.Frame):
         ctrl = schcli.guictrl.schctrl.HTML2(self, name='schbrowser', size=(400,300))
         ctrl.load_url(app.base_address+"/")
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+
+    def on_idle(self, event):
+        for obj in self.idle_objects:
+            obj.on_idle()
+
+        if not self.after_init:
+            self.after_init = True
+            app = wx.GetApp()
+            if len(app.start_pages) > 0:
+                def start_pages():
+                    for page in app.start_pages:
+                        url_page = page.split(';')
+                        if len(url_page) == 2:
+                            self._on_html(_(url_page[0]) + ',' + app.base_address
+                                            + url_page[1])
+                            # sch
+                            #pass
+                wx.CallAfter(start_pages)
+
+        event.Skip()
 
 
     def on_close(self, event):

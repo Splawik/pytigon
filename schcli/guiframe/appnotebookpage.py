@@ -23,6 +23,7 @@ try:
 except:
     pass
 import wx.lib.resizewidget as rw
+import time
 
 class NotebookPage(wx.Window):
 
@@ -177,6 +178,7 @@ class NotebookPage(wx.Window):
                 page.SetDimensions(x,dy-height-y,width,height)
             else:
                 page.SetDimensions(x,y,width,height)
+            #page.on_size(None)
 
     def _layout(self, size=None):
         if self.get_page_count() > 0:
@@ -241,6 +243,7 @@ class NotebookPage(wx.Window):
             self.get_page(-1).enable_panels(False)
         self.child_panels.append(page)
         self._layout()
+        #wx.CallAfter(self._layout)
 
     def on_size(self, event):
         size = event.GetSize()

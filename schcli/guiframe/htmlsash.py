@@ -72,7 +72,6 @@ class SchSashWindow(wx.Window):
             style= wx.WANTS_CHARS,
             name=name,
             )
-
         self.Init = False
         self.signals = {}
         self.statusText = ''
@@ -131,6 +130,8 @@ class SchSashWindow(wx.Window):
         self.Body = SchHtmlWindow(self, -1, 0, hscroll, vscroll)
         self.Body.set_htm_type('body')
         self.Body.TabWindow = self
+
+
         attrs = mp.get_body_attrs()
         if 'width' in attrs and 'height' in attrs:
             w = attrs['width']
@@ -541,7 +542,8 @@ class SchSashWindow(wx.Window):
     def on_size(self, event):
         LayoutAlgorithm().LayoutWindow(self, self.Body)
         self.Body.Refresh()
-        event.Skip()
+        if event:
+            event.Skip()
 
     def get_last_control_with_focus(self):
         return self.LastControlWithFocus

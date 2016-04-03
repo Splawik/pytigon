@@ -10,24 +10,41 @@
 %% login
     % if not user.is_authenticated
         % if settings.SHOW_LOGIN_WIN
-            div class=container,,,align=center
-                div class=panel panel-info,,,style=width:400pt;margin-top:20pt;
-                    div class=panel-heading
-                        h3 class=panel-title
-                            span class=fa fa-lock
-                            _(Login)
-                    form class=form-inline,,,role=form,,,action={%url 'start'%}schsys/do_login/?next={{request.path}},,,method=post,,,name=signin
-                        div class=panel-body
-                            {% csrf_token %}
-                            div class=form-group
-                                label for=username_ ..._(User name)
-                                input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,placeholder=_(User name)
-                            div class=form-group
-                                label for=password_..._(Password)
-                                input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=,,,placeholder=_(Password)
-                        div class=panel-footer
-                            div class=form-group
-                                button type=submit,,,class=btn btn-default...OK
+            table width=100%
+                tr
+                    td colspan=3,,,style=height:50px
+                tr
+                    td width=50%
+                    td
+                        div class=panel panel-default,,,style=width:300px
+                            div class=panel-body
+                                form action={%url 'start'%}schsys/do_login/?next={% url 'start' %},,,method=post,,,name=signin
+                                    h3 class=panel-title
+                                        ._(Login)
+                                    br
+                                    br
+                                    {% csrf_token %}
+                                    div class=form-group label-floating
+                                        div class=input-group
+                                            span class=input-group-addon glyphicon glyphicon-user
+                                            label class=control-label,,,for=username_ ..._(User name)
+                                            input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=
+                                    br
+                                    div class=form-group label-floating
+                                        div class=input-group
+                                            span class=input-group-addon glyphicon glyphicon-eye-close
+                                            label class=control-label,,,for=password_..._(Password)
+                                            input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=
+                                    br
+                                    div class=form-group
+                                        table width=100%
+                                            td width=50%...&nbsp
+                                            td
+                                                button type=submit,,,class=btn btn-default btn-raised btn-lg...OK
+                                            td width=50%...&nbsp
+                    td width=50%
+
+
 
 %% change_password
     % if standard_web_browser:
@@ -211,56 +228,56 @@
                                             {% paginator %}
 
             %% list_content_body
-              div class=tabsort_panel
-                % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                    %if table_type == 'scrolled' or not table_type:
-                        <div class="tbl_scroll" style="overflow-y: scroll;">
-                table id=tabsort,,,name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
-                    %% list_full_row_header
-                        thead
-                            tr
-                                %% list_row_header_start
-                                    % if not no_id
-                                        th data-field=cid,,,data-sortable=true
-                                            {% id_num 'Id' %}
-                                %% list_row_header
-                                %% list_row_header_end
-                                    th data-field=caction
-                                        ._(Action)
-                    %% list_table
-                        %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
-                            tbody
-                                % if object_list
-                                    %for object in object_list
-                                        %% list_full_row
-                                            tr {% block list_row_attr %}{% endblock %}
-                                                %% list_row_start
-                                                    % if not no_id
+                div class=tabsort_panel
+                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        %if table_type == 'scrolled' or not table_type:
+                            <div class="tbl_scroll" style="overflow-y: scroll;">
+                    table id=tabsort,,,name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
+                        %% list_full_row_header
+                            thead
+                                tr
+                                    %% list_row_header_start
+                                        % if not no_id
+                                            th data-field=cid,,,data-sortable=true
+                                                {% id_num 'Id' %}
+                                    %% list_row_header
+                                    %% list_row_header_end
+                                        th data-field=caction
+                                            ._(Action)
+                        %% list_table
+                            %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
+                                tbody
+                                    % if object_list
+                                        %for object in object_list
+                                            %% list_full_row
+                                                tr {% block list_row_attr %}{% endblock %}
+                                                    %% list_row_start
+                                                        % if not no_id
+                                                            td
+                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                    %% id_extra
+                                                                        %if get:
+                                                                            {% get_row object.id %}
+                                                                        %else:
+                                                                            {% view_row object.id %}
+                                                                </div>
+                                                    %% list_row
+                                                        td...{{object}}
+                                                    %% list_row_end
                                                         td
-                                                            <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                %% id_extra
-                                                                    %if get:
-                                                                        {% get_row object.id %}
-                                                                    %else:
-                                                                        {% view_row object.id %}
-                                                            </div>
-                                                %% list_row
-                                                    td...{{object}}
-                                                %% list_row_end
-                                                    td
-                                                        div class=td_action,,,style=white-space:nowrap
-                                                            %% list_row_actions
-                                                                % if readonly
-                                                                    a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
-                                                                % else
-                                                                    % row_actions:...edit;delete
-                                        %% list_row2
+                                                            div class=td_action,,,style=white-space:nowrap
+                                                                %% list_row_actions
+                                                                    % if readonly
+                                                                        a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
+                                                                    % else
+                                                                        % row_actions:...edit;delete
+                                            %% list_row2
 
-                        %% list_table_footer
+                            %% list_table_footer
 
-                %if standard_web_browser == 1  or standard_web_browser == 2 or standard_web_browser == 5:
-                    % if table_type == 'scrolled':
-                        </div>
+                    %if standard_web_browser == 1  or standard_web_browser == 2 or standard_web_browser == 5:
+                        % if table_type == 'scrolled':
+                            </div>
 
 	        %% list_content_footer
 

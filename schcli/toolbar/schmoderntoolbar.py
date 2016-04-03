@@ -549,7 +549,9 @@ class SchRibbonBar(RB.RibbonBar):
             provider = RB.RibbonMSWArtProvider()
             (dummy, secondary, tertiary) = provider.GetColourScheme(None, 1, 1)
             colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
-            colour2 = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
+            #colour2 = wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUTEXT)
+            colour2 = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT)
+            #colour2 = wx.Colour(0,0,0)
             provider.SetColourScheme(colour, secondary, colour2)
             provider._tab_label_colour = colour2
             provider._button_bar_label_colour = colour2

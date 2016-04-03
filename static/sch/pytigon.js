@@ -571,7 +571,7 @@ var ՐՏ_modules = {};
             }
         });
         jQuery("#tabs2 a:last").tab("show");
-        page_init(_id);
+        page_init(_id, false);
         jQuery(sprintf("#button_%s", _id)).click(function(event) {
             get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""));
         });
@@ -670,7 +670,7 @@ var ՐՏ_modules = {};
         new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>");
         new_fragment.insertAfter(jQuery(elem).closest("tr"));
         elem2 = new_fragment.find(".refr_target");
-        elem2.load(href2, null, function(responseText, status, response) {
+        ajax_load(elem2, href2, function(responseText, status, response) {
             $("#IDIAL_" + id).hide();
             $("#IDIAL_" + id).removeClass("hide");
             $("#IDIAL_" + id).show("slow");
@@ -700,15 +700,18 @@ var ՐՏ_modules = {};
         new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_" + id + "' href='" + href2 + "'>" + INLINE_TABLE_HTML + "</div>");
         new_fragment.insertAfter(jQuery(elem).closest("div.form-group"));
         elem2 = new_fragment.find(".refr_target");
-        elem2.load(href2, null, function(responseText, status, response) {
-            var table_type;
+        ajax_load(elem2, href2, function(responseText, status, response) {
+            var table_type, tbl;
             $("#IDIAL_" + id).hide();
             $("#IDIAL_" + id).removeClass("hide");
             $("#IDIAL_" + id).show("slow");
             if (status !== "error") {
                 _dialog_loaded(false, elem2);
                 table_type = get_table_type(elem2);
-                init_table(elem2, table_type);
+                tbl = elem2.find(".tabsort");
+                if (tbl.length > 0) {
+                    init_table(tbl, table_type);
+                }
                 on_dialog_load();
             }
             if (WAIT_ICON) {
@@ -771,13 +774,14 @@ var ՐՏ_modules = {};
     }
     function on_popup_info(elem) {
         if (can_popup()) {
-            jQuery("div.dialog-data-info").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+            ajax_load(jQuery("div.dialog-data-info"), jQuery(elem).attr("href"), function(responseText, status, response) {
                 jQuery("div.dialog-form-info").modal();
             });
         } else {
             jQuery(".inline_dialog").remove();
             jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"));
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
+            ajax_load(jQuery("div.dialog-data-inner"), jQuery(elem).attr("href"), function(responseText, status, response) {
+            });
         }
         return false;
     }
@@ -785,7 +789,7 @@ var ՐՏ_modules = {};
         var elem2;
         if (can_popup()) {
             jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid());
-            jQuery("div.dialog-data-delete").load(jQuery(elem).attr("href"), null, function(responseText, status, response) {
+            ajax_load(jQuery("div.dialog-data-delete"), jQuery(elem).attr("href"), function(responseText, status, response) {
                 jQuery("div.dialog-form-delete").modal();
                 jQuery("div.dialog-form-delete").fadeTo("fast", 1);
             });
@@ -794,7 +798,8 @@ var ՐՏ_modules = {};
             elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>");
             elem2.insertAfter(jQuery(elem).parents("tr"));
             elem2.find(".refr_object").attr("related-object", jQuery(elem).uid());
-            jQuery("div.dialog-data-inner").load(jQuery(elem).attr("href"), null);
+            ajax_load(jQuery("div.dialog-data-inner"), jQuery(elem).attr("href"), function() {
+            });
         }
         return false;
     }
@@ -835,101 +840,100 @@ var ՐՏ_modules = {};
                 jQuery(dialog).fadeTo("slow", .5);
                 if (!refresh_fragment(popup_activator, hide_dialog_form, true)) {
                     refresh_fragment(popup_activator, hide_dialog_form, false);
-                    {}
-                } else {
-                    if (!refresh_fragment(popup_activator, null, true)) {
-                        return refresh_fragment(popup_activator, null, true);
-                    }
                 }
             } else {
-                if (!can_popup()) {
-                    jQuery("div.dialog-data").html(responseText);
-                } else {
-                    ok_button.closest(".refr_target").html(responseText);
+                if (!refresh_fragment(popup_activator, null, true)) {
+                    return refresh_fragment(popup_activator, null, true);
                 }
             }
-        }
-        function _refresh_win_and_ret(responseText, ok_button) {
-            var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
-            if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
-                related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
-                popup_activator = jQuery("#" + related_object);
-                if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
-                    jQuery("div.dialog-form").modal("hide");
-                } else {
-                    jQuery(ok_button).closest(".refr_object").remove();
-                }
-                if (popup_activator && popup_activator.data("edit_ret_function")) {
-                    RET_CONTROL = popup_activator.data("ret_control");
-                    EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
-                    q = jQuery(responseText);
-                    eval(q[1].text);
-                }
-            } else {
+        } else {
+            if (!can_popup()) {
                 jQuery("div.dialog-data").html(responseText);
+            } else {
+                ok_button.closest(".refr_target").html(responseText);
             }
         }
-        function _refresh_win_after_ok(responseText, ok_button) {
-            var related_object, popup_activator;
+    }
+    function _refresh_win_and_ret(responseText, ok_button) {
+        var related_object, popup_activator, RET_CONTROL, EDIT_RET_FUNCTION, q;
+        if (responseText && ՐՏ_in("RETURN_OK", responseText)) {
             related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
             popup_activator = jQuery("#" + related_object);
-            if (popup_activator && popup_activator.data("edit_ret_function")) {
-                EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
-                EDIT_RET_FUNCTION(responseText, ok_button);
-                EDIT_RET_FUNCTION = false;
+            if (jQuery(ok_button).closest(".refr_object").hasClass("in")) {
+                jQuery("div.dialog-form").modal("hide");
             } else {
-                _refresh_win(responseText, ok_button);
+                jQuery(ok_button).closest(".refr_object").remove();
             }
-        }
-        function on_edit_ok(form) {
-            function _fun(data) {
-                _refresh_win_after_ok(data, form);
+            if (popup_activator && popup_activator.data("edit_ret_function")) {
+                RET_CONTROL = popup_activator.data("ret_control");
+                EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
+                q = jQuery(responseText);
+                eval(q[1].text);
             }
-            ajax_submit(form, _fun);
-            return false;
+        } else {
+            jQuery("div.dialog-data").html(responseText);
         }
-        function on_delete_ok(form) {
-            ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
-                _refresh_win(data, form);
-            });
-            return false;
+    }
+    function _refresh_win_after_ok(responseText, ok_button) {
+        var related_object, popup_activator;
+        related_object = jQuery(ok_button).closest(".refr_object").attr("related-object");
+        popup_activator = jQuery("#" + related_object);
+        if (popup_activator && popup_activator.data("edit_ret_function")) {
+            EDIT_RET_FUNCTION = popup_activator.data("edit_ret_function");
+            EDIT_RET_FUNCTION(responseText, ok_button);
+            EDIT_RET_FUNCTION = false;
+        } else {
+            _refresh_win(responseText, ok_button);
         }
-        function on_cancel_inline(elem) {
-            jQuery(elem).closest(".inline_dialog").remove();
+    }
+    function on_edit_ok(form) {
+        function _fun(data) {
+            _refresh_win_after_ok(data, form);
         }
-        function ret_ok(id, title) {
-            RET_CONTROL.select2("data", {
-                id: id,
-                text: title
-            }).trigger("change");
-            RET_CONTROL.val(id.toString());
-            RET_CONTROL[0].defaultValue = id.toString();
+        ajax_submit(form, _fun);
+        return false;
+    }
+    function on_delete_ok(form) {
+        ajax_post(corect_href(form.attr("action")), form.serialize(), function(data) {
+            _refresh_win(data, form);
+        });
+        return false;
+    }
+    function on_cancel_inline(elem) {
+        jQuery(elem).closest(".inline_dialog").remove();
+    }
+    function ret_ok(id, title) {
+        RET_CONTROL.select2("data", {
+            id: id,
+            text: title
+        }).trigger("change");
+        RET_CONTROL.val(id.toString());
+        RET_CONTROL[0].defaultValue = id.toString();
+    }
+    function on_get_tbl_value(elem) {
+        on_popup_in_form(elem);
+    }
+    function on_new_tbl_value(elem) {
+        EDIT_RET_FUNCTION = _refresh_win_and_ret;
+        RET_CONTROL = jQuery(elem).closest(".input-group").find(".django-select2");
+        jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
+        jQuery(elem).data("ret_control", RET_CONTROL);
+        return on_popup_edit_new(elem);
+    }
+    function on_get_row(elem) {
+        var id, text, ret_control;
+        id = jQuery(elem).attr("data-id");
+        text = jQuery(elem).attr("data-text");
+        ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find(".django-select2");
+        if (ret_control.find("option[value='" + id + "']").length === 0) {
+            ret_control.append(jQuery("<option>", {
+                "value": id,
+                "text": text
+            }));
         }
-        function on_get_tbl_value(elem) {
-            on_popup_in_form(elem);
-        }
-        function on_new_tbl_value(elem) {
-            EDIT_RET_FUNCTION = _refresh_win_and_ret;
-            RET_CONTROL = jQuery(elem).closest(".input-group").find(".django-select2");
-            jQuery(elem).data("edit_ret_function", EDIT_RET_FUNCTION);
-            jQuery(elem).data("ret_control", RET_CONTROL);
-            return on_popup_edit_new(elem);
-        }
-        function on_get_row(elem) {
-            var id, text, ret_control;
-            id = jQuery(elem).attr("data-id");
-            text = jQuery(elem).attr("data-text");
-            ret_control = jQuery(elem).closest(".refr_source").prev(".form-group").find(".django-select2");
-            if (ret_control.find("option[value='" + id + "']").length === 0) {
-                ret_control.append(jQuery("<option>", {
-                    "value": id,
-                    "text": text
-                }));
-            }
-            ret_control.val(id.toString());
-            ret_control.trigger("change");
-            jQuery(elem).closest(".refr_source").remove();
-        }
+        ret_control.val(id.toString());
+        ret_control.trigger("change");
+        jQuery(elem).closest(".refr_source").remove();
     }
     ՐՏ_modules["popup"]["refresh_fragment"] = refresh_fragment;
 
@@ -948,6 +952,24 @@ var ՐՏ_modules = {};
     ՐՏ_modules["popup"]["_dialog_loaded"] = _dialog_loaded;
 
     ՐՏ_modules["popup"]["_refresh_win"] = _refresh_win;
+
+    ՐՏ_modules["popup"]["_refresh_win_and_ret"] = _refresh_win_and_ret;
+
+    ՐՏ_modules["popup"]["_refresh_win_after_ok"] = _refresh_win_after_ok;
+
+    ՐՏ_modules["popup"]["on_edit_ok"] = on_edit_ok;
+
+    ՐՏ_modules["popup"]["on_delete_ok"] = on_delete_ok;
+
+    ՐՏ_modules["popup"]["on_cancel_inline"] = on_cancel_inline;
+
+    ՐՏ_modules["popup"]["ret_ok"] = ret_ok;
+
+    ՐՏ_modules["popup"]["on_get_tbl_value"] = on_get_tbl_value;
+
+    ՐՏ_modules["popup"]["on_new_tbl_value"] = on_new_tbl_value;
+
+    ՐՏ_modules["popup"]["on_get_row"] = on_get_row;
 })();
 
 var __name__ = "__main__";
@@ -1059,6 +1081,9 @@ function fragment_init(elem) {
     } else {
         elem2 = glob.ACTIVE_PAGE.page;
     }
+    handle_class_click(elem, "get_tbl_value", on_get_tbl_value);
+    handle_class_click(elem, "new_tbl_value", on_new_tbl_value);
+    handle_class_click(elem, "get_row", on_get_row);
     d = elem2.find(".dateinput");
     d.wrap("<div class='input-group date'></div>");
     d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
@@ -1104,77 +1129,74 @@ function page_init(id, first_time) {
     init_table(jQuery("#" + id + " .tabsort"), table_type);
     if (first_time) {
         elem2 = jQuery("body");
-        handle_class_click(elem2, "get_tbl_value", on_get_tbl_value);
-        handle_class_click(elem2, "new_tbl_value", on_new_tbl_value);
-        handle_class_click(elem2, "get_row", on_get_row);
-        jQuery("#" + id).on("click", "a", function(e) {
-            var target, src_obj, pos, href, title, href2;
-            target = jQuery(e.currentTarget).attr("target");
-            src_obj = jQuery(this);
-            if (target === "_blank") {
-                return;
-            }
-            var ՐՏ_Iter3 = ՐՏ_Iterable([ "get_tbl_value", "new_tbl_value", "get_row" ]);
-            for (var ՐՏ_Index3 = 0; ՐՏ_Index3 < ՐՏ_Iter3.length; ՐՏ_Index3++) {
-                pos = ՐՏ_Iter3[ՐՏ_Index3];
-                if (jQuery(this).hasClass(pos)) {
-                    return true;
-                }
-            }
-            var ՐՏ_Iter4 = ՐՏ_Iterable([ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
-            on_popup_info], ["popup_delete", on_popup_delete] ]);
-            for (var ՐՏ_Index4 = 0; ՐՏ_Index4 < ՐՏ_Iter4.length; ՐՏ_Index4++) {
-                pos = ՐՏ_Iter4[ՐՏ_Index4];
-                if (jQuery(this).hasClass(pos[0])) {
-                    e.preventDefault();
-                    pos[1](this);
-                    return true;
-                }
-            }
-            href = jQuery(this).attr("href");
-            if (href && ՐՏ_in("#", href)) {
+    }
+    jQuery("#" + id).on("click", "a", function(e) {
+        var target, src_obj, pos, href, title, href2;
+        target = jQuery(e.currentTarget).attr("target");
+        src_obj = jQuery(this);
+        if (target === "_blank") {
+            return;
+        }
+        var ՐՏ_Iter3 = ՐՏ_Iterable([ "get_tbl_value", "new_tbl_value", "get_row" ]);
+        for (var ՐՏ_Index3 = 0; ՐՏ_Index3 < ՐՏ_Iter3.length; ՐՏ_Index3++) {
+            pos = ՐՏ_Iter3[ՐՏ_Index3];
+            if (jQuery(this).hasClass(pos)) {
                 return true;
             }
-            e.preventDefault();
-            if (ՐՏ_in($(e.currentTarget).attr("target"), ["_top", "_top2"])) {
-                title = $(e.currentTarget).attr("title");
-                if (!title) {
-                    if (len(href) > 16) {
-                        title = "..." + href.slice(-13);
-                    } else {
-                        title = href;
-                    }
-                }
-                return _on_menu_href(this, title);
+        }
+        var ՐՏ_Iter4 = ՐՏ_Iterable([ ["popup", on_popup_edit_new], ["popup_inline", on_popup_inline], ["popup_info", 
+        on_popup_info], ["popup_delete", on_popup_delete] ]);
+        for (var ՐՏ_Index4 = 0; ՐՏ_Index4 < ՐՏ_Iter4.length; ՐՏ_Index4++) {
+            pos = ՐՏ_Iter4[ՐՏ_Index4];
+            if (jQuery(this).hasClass(pos[0])) {
+                e.preventDefault();
+                pos[1](this);
+                return true;
             }
-            href2 = corect_href(href);
-            ajax_get(href2, function(data) {
-                if (data && ՐՏ_in("_parent_refr", data) || ՐՏ_in(target, ["refresh_obj", "refresh_page"])) {
-                    if (target === "refresh_obj") {
-                        if (!refresh_fragment(src_obj, null, true)) {
-                            refresh_fragment(src_obj);
-                        }
-                    } else {
+        }
+        href = jQuery(this).attr("href");
+        if (href && ՐՏ_in("#", href)) {
+            return true;
+        }
+        e.preventDefault();
+        if (ՐՏ_in($(e.currentTarget).attr("target"), ["_top", "_top2"])) {
+            title = $(e.currentTarget).attr("title");
+            if (!title) {
+                if (len(href) > 16) {
+                    title = "..." + href.slice(-13);
+                } else {
+                    title = href;
+                }
+            }
+            return _on_menu_href(this, title);
+        }
+        href2 = corect_href(href);
+        ajax_get(href2, function(data) {
+            if (data && ՐՏ_in("_parent_refr", data) || ՐՏ_in(target, ["refresh_obj", "refresh_page"])) {
+                if (target === "refresh_obj") {
+                    if (!refresh_fragment(src_obj, null, true)) {
                         refresh_fragment(src_obj);
                     }
                 } else {
-                    if (APPLICATION_TEMPLATE === "modern") {
-                        glob.ACTIVE_PAGE.page.html(data);
-                        glob.ACTIVE_PAGE.set_href(href);
-                        page_init(glob.ACTIVE_PAGE.id, false);
-                    } else {
-                        jQuery("#body_body").html(data);
-                        page_init("body_body", false);
-                    }
-                    glob.ACTIVE_PAGE.set_href(href);
-                    get_menu().get_active_item().url = href;
-                    if (PUSH_STATE) {
-                        history_push_state("title", href);
-                    }
+                    refresh_fragment(src_obj);
                 }
-            });
+            } else {
+                if (APPLICATION_TEMPLATE === "modern") {
+                    glob.ACTIVE_PAGE.page.html(data);
+                    glob.ACTIVE_PAGE.set_href(href);
+                    page_init(glob.ACTIVE_PAGE.id, false);
+                } else {
+                    jQuery("#body_body").html(data);
+                    page_init("body_body", false);
+                }
+                glob.ACTIVE_PAGE.set_href(href);
+                get_menu().get_active_item().url = href;
+                if (PUSH_STATE) {
+                    history_push_state("title", href);
+                }
+            }
         });
-    }
+    });
     glob.ACTIVE_PAGE.page.find("form").submit(function(e) {
         var data, submit_button, href;
         if (jQuery(this).attr("target") === "_blank") {

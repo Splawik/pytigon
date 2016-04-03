@@ -39,6 +39,7 @@ class BitmapTextButton(wx.lib.buttons.GenBitmapButton):
         name='bitmaptextbutton',
         ):
         self._art = RB.RibbonMSWArtProvider()
+        #self._art = RB.RibbonArtProvider()
         wx.lib.buttons.GenBitmapButton.__init__(
             self,
             parent,
@@ -57,6 +58,9 @@ class BitmapTextButton(wx.lib.buttons.GenBitmapButton):
         image = wx.ImageFromBitmap(self.bmpLabel)
         imageutils.grayOut(image)
         self.bmpLabel2 = wx.BitmapFromImage(image)
+
+    def GetBackgroundBrush(self, dc):
+        return None
 
     def _GetLabelSize(self):
         s = (self.bmpLabel.GetWidth(), self.bmpLabel.GetHeight())

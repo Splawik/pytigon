@@ -57,7 +57,7 @@ class TabMenu:
         )
         jQuery('#tabs2 a:last').tab('show')
 
-        page_init(_id)
+        page_init(_id, False)
 
         jQuery(sprintf('#button_%s', _id)).click(
             def(event):

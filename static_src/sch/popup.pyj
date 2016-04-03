@@ -98,7 +98,9 @@ def on_popup_in_form(elem):
             if status!='error':
                 _dialog_loaded(False, elem2)
                 table_type = get_table_type(elem2)
-                init_table(elem2, table_type)
+                tbl = elem2.find('.tabsort')
+                if tbl.length > 0:
+                    init_table(tbl, table_type)
                 on_dialog_load()
             if WAIT_ICON:
                 WAIT_ICON.stop()

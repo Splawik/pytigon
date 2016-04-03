@@ -8,6 +8,7 @@
 ## refresh_page: replace current page (like _self)
 ## refresh_app: replace current app
 
+
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -81,7 +82,11 @@ def fragment_init(elem=None):
         elem2 = elem
     else:
         elem2 = glob.ACTIVE_PAGE.page
-
+    
+    handle_class_click(elem, 'get_tbl_value', on_get_tbl_value)
+    handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
+    handle_class_click(elem, 'get_row', on_get_row)
+        
     d = elem2.find('.dateinput')
     d.wrap( "<div class='input-group date'></div>" )
     d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
@@ -120,67 +125,67 @@ def page_init(id, first_time = True):
 
     if first_time:
         elem2 = jQuery('body')
-        handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
-        handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
-        handle_class_click(elem2, 'get_row', on_get_row)
-        jQuery('#'+ id).on( "click", "a",
-            def(e):
-                target = jQuery(e.currentTarget).attr('target')
-                src_obj = jQuery(this)
+        #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
+        #handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
+        #handle_class_click(elem2, 'get_row', on_get_row)
+    jQuery('#'+ id).on( "click", "a",
+        def(e):
+            target = jQuery(e.currentTarget).attr('target')
+            src_obj = jQuery(this)
 
-                if target == "_blank":
-                    return
+            if target == "_blank":
+                return
 
-                for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
-                    if jQuery(this).hasClass(pos):
-                        return True
-
-                for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
-                    if jQuery(this).hasClass(pos[0]):
-                        e.preventDefault()
-                        pos[1](this)
-                        return True
-
-                href = jQuery(this).attr("href")
-                if href and '#' in href:
+            for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
+                if jQuery(this).hasClass(pos):
                     return True
 
-                e.preventDefault()
+            for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
+                if jQuery(this).hasClass(pos[0]):
+                    e.preventDefault()
+                    pos[1](this)
+                    return True
 
-                if $(e.currentTarget).attr('target') in ("_top", "_top2"):
-                    title = $(e.currentTarget).attr('title')
-                    if not title:
-                        if len(href)>16:
-                            title = '...'+href[-13:]
-                        else:
-                            title = href
-                    return _on_menu_href(this,title)
+            href = jQuery(this).attr("href")
+            if href and '#' in href:
+                return True
 
-                href2 = corect_href(href)
+            e.preventDefault()
 
-                ajax_get(href2, def (data):
-                    nonlocal href, src_obj
+            if $(e.currentTarget).attr('target') in ("_top", "_top2"):
+                title = $(e.currentTarget).attr('title')
+                if not title:
+                    if len(href)>16:
+                        title = '...'+href[-13:]
+                    else:
+                        title = href
+                return _on_menu_href(this,title)
 
-                    if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
-                        if target=="refresh_obj":
-                            if not refresh_fragment(src_obj, None, True):
-                                refresh_fragment(src_obj)
-                        else:
+            href2 = corect_href(href)
+
+            ajax_get(href2, def (data):
+                nonlocal href, src_obj
+
+                if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+                    if target=="refresh_obj":
+                        if not refresh_fragment(src_obj, None, True):
                             refresh_fragment(src_obj)
                     else:
-                        if APPLICATION_TEMPLATE == 'modern':
-                            glob.ACTIVE_PAGE.page.html(data)
-                            glob.ACTIVE_PAGE.set_href(href)
-                            page_init(glob.ACTIVE_PAGE.id, False)
-                        else:
-                            jQuery('#body_body').html(data)
-                            page_init('body_body', False)
+                        refresh_fragment(src_obj)
+                else:
+                    if APPLICATION_TEMPLATE == 'modern':
+                        glob.ACTIVE_PAGE.page.html(data)
                         glob.ACTIVE_PAGE.set_href(href)
-                        get_menu().get_active_item().url = href
-                        if PUSH_STATE:
-                            history_push_state("title", href)
-                )
-        )
+                        page_init(glob.ACTIVE_PAGE.id, False)
+                    else:
+                        jQuery('#body_body').html(data)
+                        page_init('body_body', False)
+                    glob.ACTIVE_PAGE.set_href(href)
+                    get_menu().get_active_item().url = href
+                    if PUSH_STATE:
+                        history_push_state("title", href)
+            )
+    )
     glob.ACTIVE_PAGE.page.find('form').submit(
         def(e):
             nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,

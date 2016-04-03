@@ -495,3 +495,9 @@ div.tree {
 div.td_action div.dropdown {
     position: absolute;
 }
+
+
+div.input-group span.input-group-addon  {
+    right: 2px;
+    border: medium none;
+}

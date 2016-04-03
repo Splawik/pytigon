@@ -647,7 +647,7 @@ class SchAppFrame(wx.Frame):
             refr = False
 
         okno = NotebookPage(n)
-        
+
         #if panel == "Desktop2":
         #error in AGW
         if panel == "__Desktop2":
@@ -681,8 +681,10 @@ class SchAppFrame(wx.Frame):
             self._mgr.GetPane(_panel).Show()
             self._mgr.Update()
 
-        return okno.new_child_page(address_or_parser, None, parametry)
-
+        #return okno.new_child_page(address_or_parser, None, parametry)
+        #return okno.new_child_page(address_or_parser, None, parametry)
+        wx.CallAfter(okno.new_child_page, address_or_parser, None, parametry)
+        return
 
     def on_taskbar_hide(self, event):
         self.Hide()

@@ -104,10 +104,10 @@ if platform.system() == "Windows":
 
 import schcli.guictrl.schtag
 
-import gc
+#import gc
 
 #gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
-gc.disable()
+#gc.disable()
 
 
 wx.RegisterId(10000)
@@ -138,11 +138,11 @@ if INSPECTION:
                 return
         if 'process_window_event' in func_name or 'idle' in func_name or 'idle' in func_name:
             return
-        if not 'background'  in func_name:
-            return
+        #if not 'framemanager'  in func_name:
+        #    return
         func_line_no = frame.f_lineno
         func_filename = co.co_filename
-        if not 'schcli/guiframe' in func_filename:
+        if not 'aui' in func_filename or 'framemanager' in func_filename:
             return
         caller = frame.f_back
         caller_line_no = caller.f_lineno
@@ -150,7 +150,7 @@ if INSPECTION:
         print('Call to %s on line %s of %s from line %s of %s' % \
             (func_name, func_line_no, func_filename,
              caller_line_no, caller_filename))
-        time.sleep(1)
+        time.sleep(0.01)
         return
 
 
@@ -913,7 +913,7 @@ if __name__ == '__main__':
             main()
             print("FINISH_0")
             if platform.system() == "Windows":
-                gc.collect()
+                #gc.collect()
                 wx.html2.WebView.New("messageloop")
                 print("FINISH_0.1")
                 #os._exit(0)

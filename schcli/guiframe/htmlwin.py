@@ -328,7 +328,6 @@ class SchHtmlWindow(ScrolledPanel):
         if w == 20 and h == 20:
             print("20x20")
             return
-
         if not self.wxdc:
             if self.no_vscrollbar:
                 self.wxdc = DcDc(dc, calc_only=False, width=w - 1, height=-1)
