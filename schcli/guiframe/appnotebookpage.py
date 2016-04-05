@@ -310,6 +310,7 @@ class NotebookPage(wx.Window):
     def refresh_html(self):
         pass
 
+
     def new_child_page(
         self,
         address_or_parser,
@@ -331,8 +332,11 @@ class NotebookPage(wx.Window):
         else:
             title2 = h.get_title()
         self.add_page(h, title2, True, nr)
-        h.init_frame()
-        h.activate_page()
+        def init_page():
+            h.init_frame()
+            h.activate_page()
+            wx.GetApp().GetTopWindow()._mgr.GetPane("desktop").Show()
+        wx.CallAfter(init_page)
         return h
 
     def new_main_page(

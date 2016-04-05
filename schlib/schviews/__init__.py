@@ -33,8 +33,7 @@ from django.template import loader, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
-#from django.apps.apps import get_model
-#from django.apps import apps
+
 from django.conf.urls import url
 
 from django.db.models import CharField
@@ -679,8 +678,10 @@ class GenericRows(object):
                 """
                 self.object = form.save(commit=False)
                 if hasattr(self.object, 'post'):
-                    self.object.post(request)
-                self.object.save()
+                    if self.object.post(request):
+                        self.object.save()
+                else:
+                    self.object.save()
                 form.save_m2m()
                 return super(generic.edit.ModelFormMixin, self).form_valid(form)
 
@@ -812,8 +813,10 @@ class GenericRows(object):
                             setattr(self.object, pos, self.init_form[pos])
 
                 if hasattr(self.object, 'post'):
-                    self.object.post(request)
-                self.object.save()
+                    if self.object.post(request):
+                        self.object.save()
+                else:
+                    self.object.save()
                 form.save_m2m()
                 return super(generic.edit.ModelFormMixin, self).form_valid(form)
 

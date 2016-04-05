@@ -58,9 +58,10 @@ class BitmapTextButton(wx.lib.buttons.GenBitmapButton):
         image = wx.ImageFromBitmap(self.bmpLabel)
         imageutils.grayOut(image)
         self.bmpLabel2 = wx.BitmapFromImage(image)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
 
-    def GetBackgroundBrush(self, dc):
-        return None
+    #def GetBackgroundBrush(self, dc):
+    #    return wx.Brush(self.faceDnClr)
 
     def _GetLabelSize(self):
         s = (self.bmpLabel.GetWidth(), self.bmpLabel.GetHeight())

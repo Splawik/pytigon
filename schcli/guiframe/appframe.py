@@ -135,7 +135,6 @@ class SchAppFrame(wx.Frame):
         self._panel = SChMainPanel(self)
         self._mgr.SetManagedWindow(self._panel)
         self.desktop = self.create_notebook_ctrl(hide_on_single_page)
-
         self.get_dock_art().SetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE, 0)
 
         self.Bind(aui.EVT_AUI_PANE_ACTIVATED, self.on_pane_activated)
@@ -252,7 +251,7 @@ class SchAppFrame(wx.Frame):
                 if all_panes[ii].name != 'Menu':
                     all_panes[ii].Hide()
 
-        #if self.desktop.GetPageCount() > 0:
+        ##if self.desktop.GetPageCount() > 0:
         self._mgr.GetPane("desktop").Show()
         #else:
         #    self._mgr.GetPane("desktop").Hide()
@@ -467,9 +466,9 @@ class SchAppFrame(wx.Frame):
     def create_notebook_ctrl(self, hideSingleTab=True):
         style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
                 #| aui.AUI_NB_DRAW_DND_TAB
-        if hideSingleTab:
-            if hasattr(aui, 'AUI_NB_HIDE_ON_SINGLE_TAB'):
-                style ^= aui.AUI_NB_HIDE_ON_SINGLE_TAB
+        #if hideSingleTab:
+        #    if hasattr(aui, 'AUI_NB_HIDE_ON_SINGLE_TAB'):
+        #        style ^= aui.AUI_NB_HIDE_ON_SINGLE_TAB
         n = AppNotebook(self._panel, -1, wx.Point(0, 0), wx.Size(0,
             0), style=style)
         n.SetAGWWindowStyleFlag(style)
@@ -647,7 +646,6 @@ class SchAppFrame(wx.Frame):
             refr = False
 
         okno = NotebookPage(n)
-
         #if panel == "Desktop2":
         #error in AGW
         if panel == "__Desktop2":
@@ -669,11 +667,17 @@ class SchAppFrame(wx.Frame):
                     n.AddPage(okno, address_or_parser.title, True)
             else:
                 n.AddPage(okno, title2, True)
+        okno.SetSize(0,0)
         #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
         if isinstance(address_or_parser, six.string_types):
             address = address_or_parser
         else:
             address = address_or_parser.address
+
+        #okno.SetSize(10000,10000)
+
+        #self.Refresh()
+        #self.Update()
 
         okno.http = wx.GetApp().get_http_for_adr(address)
 
@@ -681,10 +685,10 @@ class SchAppFrame(wx.Frame):
             self._mgr.GetPane(_panel).Show()
             self._mgr.Update()
 
+        return okno.new_child_page(address_or_parser, None, parametry)
         #return okno.new_child_page(address_or_parser, None, parametry)
-        #return okno.new_child_page(address_or_parser, None, parametry)
-        wx.CallAfter(okno.new_child_page, address_or_parser, None, parametry)
-        return
+        #wx.CallAfter(okno.new_child_page, address_or_parser, None, parametry)
+        #return
 
     def on_taskbar_hide(self, event):
         self.Hide()

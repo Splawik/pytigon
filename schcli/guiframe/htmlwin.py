@@ -582,9 +582,10 @@ class SchHtmlWindow(ScrolledPanel):
         okno = self.new_main_page('^standard/editor/editor.html',
                                   self.get_tab().title + ' - page source', None)
         #okno.Body['EDITOR'].SetValue(norm_html(self.page_source))
-
-        okno.Body['EDITOR'].SetValue(self.page_source.tostream().getvalue())
-        okno.Body['EDITOR'].GotoPos(0)
+        def init_ctrl():
+            okno.Body['EDITOR'].SetValue(self.page_source.tostream().getvalue())
+            okno.Body['EDITOR'].GotoPos(0)
+        wx.CallAfter(init_ctrl)
 
     def _get_obj_for_redraw(self, pos, type=0):
         if 'href' in self.obj_action_dict:

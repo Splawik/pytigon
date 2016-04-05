@@ -142,7 +142,7 @@ if INSPECTION:
         #    return
         func_line_no = frame.f_lineno
         func_filename = co.co_filename
-        if not 'aui' in func_filename or 'framemanager' in func_filename:
+        if not 'wx/core' in func_filename:
             return
         caller = frame.f_back
         caller_line_no = caller.f_lineno
@@ -150,7 +150,7 @@ if INSPECTION:
         print('Call to %s on line %s of %s from line %s of %s' % \
             (func_name, func_line_no, func_filename,
              caller_line_no, caller_filename))
-        time.sleep(0.01)
+        #time.sleep(0.01)
         return
 
 
