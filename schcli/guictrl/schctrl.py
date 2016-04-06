@@ -1419,6 +1419,14 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
         self.SetItemCount(len(self.choices))
         self.Refresh()
 
+
+    def AppendTexts(self, txt_list):
+        for txt in txt_list:
+            self.AppendHtml(txt.replace('\n',''))
+        self.SetItemCount(len(self.choices))
+        self.SetSelection(len(self.choices)-1)
+        self.Refresh()
+
     def GetValue(self):
         ret = []
         if self.HasMultipleSelection():

@@ -497,9 +497,6 @@ class SchApp(App):
                     self.task_manager.kill_all()
 
 
-
-
-
 def login(base_href, auth_type = None):
     dlg = LoginDialog(None, 101, _("Pytigon - login"))
 

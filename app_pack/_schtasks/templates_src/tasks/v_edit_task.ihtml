@@ -23,19 +23,24 @@
             if hasattr(self, "task_progress"):
                 self.task_progress.SetValue(0)
         
-        def reinit(self):            
+        def reinit(self):
+            if hasattr(self, "start_id"):
+                start_id = self.start_id
+            else:
+                start_id = 0
             if hasattr(self, 'tuser'):
                 self.tuser.Stop()
             self.init_form()
+            self.start_id = start_id
                 
         def transfer(self):
-            test = False
             http = wx.GetApp().HTTP
             parm = { 'id': "{{object.id}}", 'id_start': self.start_id } 
             http.post(self, "/tasks/get_messages", parm=parm)
             s = http.str()
             http.clear_ptr()
             lines = self.schjson.loads(s)
+            self.cmd.AppendTexts(lines)
             for line in lines:
                 if line!="":
                     if line.startswith('$$$'):
@@ -48,14 +53,7 @@
                         if fun == 'PROGRESS':
                             if hasattr(self, 'task_progress'):
                                 self.task_progress.SetValue(int(parm))
-                    else:
-                        if hasattr(self, 'cmd'):
-                            self.cmd.AppendText(line)
-                    self.start_id += 1
-                    test = True
-            if test:
-                if hasattr(self, 'cmd'):
-                    self.cmd.ScrollToLine(self.start_id)
+                self.start_id += 1
 
         def on_close(self):
             self.tuser.Stop()
@@ -104,11 +102,13 @@
         {{ block.super }}
 
 
+%% list_content_body
+
 %% row_edit_form
     %% task_title
         h3 class=panel-title...{{object.title}} (id={{object.id}})
         br
-    table class=table
+    table class=tasks_tbl table
         %% task_status
             tr
                 th...status
@@ -123,7 +123,6 @@
                 tr
                     th...time_to
                     td...{{object.time_to|isoformat_short}}        
-
         % if standard_web_browser:
             % if object.status < 2:
                 tr:::td colspan=2
@@ -150,14 +149,14 @@
                     def on_edit_ok(form):
                         def _on_kill():
                             filter = form.closest('div.content').find('form.TableFiltr')
-                            $("div.dialog-form").fadeTo( "slow", 0.5 )
+                            jQuery("div.dialog-form").fadeTo( "slow", 0.5 )
                             if filter.length>0:
                                 filter.attr('action','{{request.path}}/../../')
                                 filter.submit()
                         on_kill(_on_kill)
                         
                     def on_timer():
-                        obj = $('#cmd_list_{{object.id}}')
+                        obj = jQuery('#cmd_list_{{object.id}}')
                         if obj.length:
                             def _on_post(data):
                                 start_id_{{object.id}} += data.length
@@ -170,12 +169,12 @@
                                         if len(x)>1:
                                             parm = x[1]
                                         if fun=="PROGRESS":
-                                            $('#task_progress').css('width', parm+'%')
+                                            jQuery('#task_progress').css('width', parm+'%')
                                     else:
                                         obj.append(data[pos])
                                         obj.append("<br />")
                                         obj[0].scrollTop = obj[0].scrollHeight
-                            $.post("/tasks/get_messages", { 'id': "{{object.id}}", 'id_start': start_id_{{object.id}} }, _on_post)
+                            jQuery.post("/tasks/get_messages", { 'id': "{{object.id}}", 'id_start': start_id_{{object.id}} }, _on_post)
                         else:
                             clearInterval(timer_{{object.id}})
                 
@@ -187,24 +186,20 @@
                         if(event.keyCode == 13):
                             event.preventDefault()
                             return false
-                        
-                    $(window).keydown(_on_keydown)
-                            
-                    
+                    jQuery(window).keydown(_on_keydown)
                     def _on_key_up(e):
                         def _fun(data):
-                            $('#cmd').val("")                      
+                            jQuery('#cmd').val("")                      
                             
                         if (e.keyCode == 13):
-                            $.post("/tasks/put_message", { 'id': "{{object.id}}", 'message': $('#cmd').val()+"\n" }, _fun)
+                            jQuery.post("/tasks/put_message", { 'id': "{{object.id}}", 'message': jQuery('#cmd').val()+"\n" }, _fun)
                             
-                    $("#cmd").keyup(_on_key_up)
+                    jQuery("#cmd").keyup(_on_key_up)
                     
                     def on_kill(fun):
                         def _on_kill(result):
                             if(result):
-                                $.post("/tasks/kill_thread", { 'id': "{{object.id}}", }, fun)
-
+                                jQuery.post("/tasks/kill_thread", { 'id': "{{object.id}}", }, fun)
                         BootstrapDialog.confirm('Kill task, are you sure?', _on_kill)
                             
         % else:

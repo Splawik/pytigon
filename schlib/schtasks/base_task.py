@@ -1,4 +1,3 @@
-#from queue import Queue, Empty
 from threading import Thread
 from subprocess import Popen, PIPE 
 from signal import SIGINT
@@ -10,14 +9,15 @@ from schlib.schtasks.term_tools import ansi_to_txt
 from schlib.schtools.schjson import json_dumps, json_loads
 import sqlite3
 import tempfile
+import time
 #import gc
 
 from queue import Empty
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Manager
 
 
 _PROCESS_MANAGER = None
-_MAX_PROC_LOG = 99
+_MAX_PROC_LOG = 1024
 _ID = 0
 _ON_POSIX = 'posix' in sys.builtin_module_names
 
@@ -119,11 +119,11 @@ def run_func(func, cproxy, args, kwargs):
         except:
             print("cmd error:", cmd)
 
-        t1 = Thread(target=enqueue_error, args=(p, cproxy.input_queue, cproxy.output_queue, id, status))
+        t1 = Thread(target=enqueue_error, args=(p, cproxy.input_queue, cproxy.output_queue, id, status), name="enqueue_error")
         t1.daemon = True
         t1.start()
 
-        t2 = Thread(target=enqueue_input, args=(p, cproxy.input_queue, cproxy.output_queue, id, status))
+        t2 = Thread(target=enqueue_input, args=(p, cproxy.input_queue, cproxy.output_queue, id, status), name="enqueue_input")
         t2.daemon = True
         t2.start()
 
@@ -234,8 +234,7 @@ class ProcessManager():
 
         for process_id in range(self.num_threads):
             input_queue = self.manager.Queue()
-            self.workers.append((process_id, input_queue))
-            ProcessWorker(self.task_queue, input_queue, self.output_queue, process_id)
+            self.workers.append((process_id, input_queue, ProcessWorker(self.task_queue, input_queue, self.output_queue, process_id)))
 
     def _add_task(self, func, id, args, kwargs):
         if not self.manager:
@@ -248,9 +247,14 @@ class ProcessManager():
     def _process_output_queue(self):
         to_del = []
         if len(self.process_list)> _MAX_PROC_LOG:
+            to_del_count = len(self.process_list) - _MAX_PROC_LOG
             for key in self.process_list:
                 if self.process_list[key].status in (2,3):
                     to_del.append(key)
+                    to_del_count -= 1
+                    if to_del_count <= 0:
+                        break
+
             for key in to_del:
                 del self.process_list[key]
 
@@ -312,7 +316,6 @@ class ProcessManager():
         ret=[]
         for pos in self.cur.fetchall():
             ret.append(pos[0])
-
         return ret
 
     def pop_messages(self, id):
@@ -348,11 +351,22 @@ class ProcessManager():
         else:
             return None
 
-
     def kill_all(self):
+        while not self.task_queue.empty():
+            self.task_queue.get()
+
         threads = self.list_threads(all=True)
         for thread in threads:
             self.kill_thread(thread.id)
+
+        time.sleep(1)
+
+        for worker in self.workers:
+            worker[2].terminate()
+
+        if self.manager:
+            self.manager.shutdown()
+            self.manager = None
 
 
     def wait_for_result(self):

@@ -8,6 +8,7 @@ import os
 import sys
 import datetime
 import time
+from queue import Empty
 
 {% if app.tasks_code %}{{app.tasks_code|first_section|safe}} {% endif %}
 
