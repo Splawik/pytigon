@@ -667,12 +667,15 @@ class SchAppFrame(wx.Frame):
                     n.AddPage(okno, address_or_parser.title, True)
             else:
                 n.AddPage(okno, title2, True)
-        okno.SetSize(0,0)
+
+        if platform.system() == "Linux":
+            okno.SetSize(0,0)
         #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
         if isinstance(address_or_parser, six.string_types):
             address = address_or_parser
         else:
             address = address_or_parser.address
+
 
         #okno.SetSize(10000,10000)
 

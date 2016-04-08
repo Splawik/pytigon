@@ -97,13 +97,13 @@ http = httpclient.HttpClient("http://127.0.0.2")
 
 ret, newaddr = http.get(None, '/')
 ret_str = http.str()
-mp = htmltab.SimpleTabParser2()
+mp = htmltab.SimpleTabParserBase()
 mp.feed(ret_str)
 mp.close()
 csrf_token = ""
 for pos in mp.tables[0]:
     if pos[0].strip()=='csrf_token':
-        csrf_token = pos[1].split('value')[1].split("'")[1]
+        csrf_token = pos[1].split('value')[1].split("\"")[1]
 http.clear_ptr()
 
 parm={'csrfmiddlewaretoken': csrf_token, 'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok',}
