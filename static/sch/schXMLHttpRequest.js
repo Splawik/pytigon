@@ -1,3 +1,12 @@
+ function str2ab(str) {
+    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var bufView = new Uint16Array(buf);
+    for (var i=0, strLen=str.length; i<strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+}
+
 (function() {
     var oldXMLHttpRequest = XMLHttpRequest;
     modXMLHttpRequest = function() {
@@ -40,16 +49,23 @@
                 if(self.url.slice(0,1) == "/") sUrl2 = window.location.protocol + "//" + window.location.host + self.url;
                 else sUrl2 = self.url;
                 sUrl3 = self.url.split("?")[0]
+                x = sUrl3.split("127.0.0.2")
+                if(x.length > 1) {
+                    sUrl3 = x[1]
+                }
                 function xx(txt) {
                     self.readyState = 4;
-                    console.log(txt);
-                    self.responseText = txt;
+                    if (self.responseType == arraybuffer') {
+                        self.response = str2ab(txt);
+                    }
+                    else {
+                        self.responseText = txt;
+                    }
                     self.status = 200;
                     if(self.onreadystatechange != null) self.onreadystatechange();
                     if(self.onload != null) self.onload();
                     return;
                 }
-
                 if("ajax_get_response_fun" in window) {
                     window.ajax_get_response_fun[sUrl3] = xx;
                 }
@@ -64,13 +80,19 @@
                     if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
                         console.log(":ajax_post??"+ sUrl2+"??"+btoa(data));
                     else
-                        window.open("http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', "http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
+                        xhr.send();
                 }
                 else {
-                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
+                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true )) {
                         console.log(":ajax_get??"+ sUrl2);
-                    else
-                        window.open("http://127.0.0.2/?:ajax_get??"+ sUrl2);
+                    }
+                    else {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', "http://127.0.0.2/?:ajax_get??"+ sUrl2);
+                        xhr.send();
+                    }
                 }
 
                 return null;

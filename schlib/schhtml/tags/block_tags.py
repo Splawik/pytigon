@@ -122,8 +122,6 @@ class BodyTag(ParBase):
         if self.header:
             self.dc.paging = False
             self.y = 0
-            print("print_header")
-            print(self.header)
             proxy = HtmlProxyParser(self)
             proxy.feed(self.header)
             self.render_atom_list()
@@ -138,8 +136,6 @@ class BodyTag(ParBase):
             self.y = self.height - self.footer_height
             self.in_footer = True
             proxy = HtmlProxyParser(self)
-            print("print_footer")
-            print(self.footer)
             proxy.feed(self.footer)
             proxy.close()
             self.render_atom_list()

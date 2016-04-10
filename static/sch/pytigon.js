@@ -148,6 +148,7 @@ var ՐՏ_modules = {};
     }
     function ajax_get(url, complete) {
         var req;
+        alert("ajax_get");
         req = new XMLHttpRequest();
         function _onload() {
             var disp;

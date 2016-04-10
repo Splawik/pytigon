@@ -611,13 +611,19 @@ class SchAppFrame(wx.Frame):
                         pdict[pos[0]]=pos[1]
                     else:
                         pdict[pos[0]]=None
+            if parametry:
+                pdict.update(parametry)
 
-            if ('schtml' in pdict and pdict['schtml'] != '1') or (address.startswith('http://') and not address.startswith(wx.GetApp().base_address)):
+            if ('schtml' in pdict and pdict['schtml'] != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
                 ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page")
-                if address.startswith('http://'):
-                    ret.Body.WEB.go(address)
+                if address.startswith('http://') or address.startswith('https://') or address.startswith('file://'):
+                    def _ret_fun():
+                        ret.Body.WEB.go(address)
+                    wx.CallAfter(_ret_fun)
                 else:
-                    ret.Body.WEB.go(wx.GetApp().base_address + address)
+                    def _ret_fun():
+                        ret.Body.WEB.go(wx.GetApp().base_address + address)
+                    wx.CallAfter(_ret_fun)
                 return ret
 
         if len(title)<32:
@@ -968,7 +974,14 @@ class SchAppFrame(wx.Frame):
     def show_pdf(self, page):
         http = wx.GetApp().get_http(self)
         http.get(self, str(page)) #, user_agent='webkit')
-        return self.open_binary_data(http, page)
+        okno = self.open_binary_data(http, page)
+
+        def _after_init():
+            okno.Body.WEB.execute_javascript("document.title = '%s';" % page)
+        wx.CallAfter(_after_init)
+
+        return okno
+
 
     def show_odf(self, page):
         http = wx.GetApp().get_http(self)
@@ -998,16 +1011,22 @@ class SchAppFrame(wx.Frame):
                 wx.GetApp().download_files = []
             wx.GetApp().download_files.append( (file_name, name, datetime.datetime.now() ) )
     
-            okno = self.new_main_page('^standard/odf_view/odf_view.html', name, parametry=name)
-            return True
-        
-        if 'zip' in http_ret.ret_content_type:
+            return self.new_main_page('^standard/odf_view/odf_view.html', name, parametry=name)
+        elif 'application/pdf' in http_ret.ret_content_type:
             p = http_ret.ptr()
             f = NamedTemporaryFile(delete=False)
             f.write(p)
             name = f.name
             f.close()
-            okno = self.new_main_page('^standard/html_print/html_print.html', name, parametry=name)
-            return True
-        
+            href = "http://127.0.0.2/static/vanillajs_plugins/pdfjs/web/viewer.html?file="+name
+            return self.new_main_page(href, name, parametry={ 'schtml': 0 } )
+
+        elif 'zip' in http_ret.ret_content_type:
+            p = http_ret.ptr()
+            f = NamedTemporaryFile(delete=False)
+            f.write(p)
+            name = f.name
+            f.close()
+            return self.new_main_page('^standard/html_print/html_print.html', name, parametry=name)
+
         return True

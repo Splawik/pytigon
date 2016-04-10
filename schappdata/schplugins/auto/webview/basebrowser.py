@@ -311,7 +311,7 @@ class BaseWebBrowser(object):
 
                 self.load_url('https://www.google.pl/search?q=' + q)
 
-# callbacks
+    # callbacks
     def on_key_pressed(self, event):
         #print("OnKeyPressed:basebrowser")
         event.Skip()
@@ -470,7 +470,7 @@ class BaseWebBrowser(object):
             fun_id = l[1].split('?')[0]
             if '//127.0.0.2' in fun_id:
                 fun_id = fun_id.split('//127.0.0.2')[1]
-            cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
+            cmd = """window.ajax_get_response_fun['%s'](window.atob("%s"));""" % (fun_id,txt)
             self.execute_javascript(cmd)
 
         elif l[0] == 'ajax_post':
@@ -509,6 +509,12 @@ class BaseWebBrowser(object):
                     uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/font-awesome/fonts/')
                 else:
                     uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
+            elif uri.startswith('http://127.0.0.2/file/'):
+                #p=open(uri.replace('http://127.0.0.2/file/',''),"rb")
+                #x = p.read()
+                #p.close()
+                #return (x,None)
+                return (None, uri.replace('http://127.0.0.2/file/',''))
             else:
                 uri2 = uri
 

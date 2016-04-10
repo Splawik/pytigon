@@ -66,7 +66,7 @@
                             ctrlbutton src=wx.ART_FILE_SAVE_AS,,,name=btn_save
 
             td
-                % htmlwidget_ext class='pdfviewer' id='editor' lang='pl' width="100%-30" height="100%"
+                % htmlwidget_ext class='pdfviewer' id='pdfviewer' lang='pl' width="100%-30" height="100%"
                     .Hello world
 
 

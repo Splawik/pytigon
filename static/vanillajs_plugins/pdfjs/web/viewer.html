@@ -26,10 +26,11 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="google" content="notranslate">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PDF.js viewer</title>
 
 
     <link rel="stylesheet" href="viewer.css"/>
+
+    <script src="../../../sch/schXMLHttpRequest.js"></script>
 
     <script src="compatibility.js"></script>
 
@@ -281,7 +282,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               <p id="passwordText" data-l10n-id="password_label">Enter the password to open this PDF file:</p>
             </div>
             <div class="row">
-              <input type="password" id="password" class="toolbarField" />
+              <!-- The type="password" attribute is set via script, to prevent warnings in Firefox for all http:// documents. -->
+              <input id="password" class="toolbarField" />
             </div>
             <div class="buttonRow">
               <button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
