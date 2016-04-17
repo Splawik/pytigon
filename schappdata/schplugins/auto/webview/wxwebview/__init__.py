@@ -163,7 +163,7 @@ def init_plugin_web_view(
 
         def on_navigating(self, event):
             url = event.GetURL()
-            if url.startswith('http://localbrowser/?'):
+            if url.startswith('http://127.0.0.2/?:'):
                 event.Veto()
                 self.run_command_from_js(url[21:])
             else:

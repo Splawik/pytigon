@@ -19,4 +19,5 @@ pip-delete-this-directory.txt
 # Translations
 *.mo
 
+/app_pack/schdevtools/schbuilder/migrations
 migrations/
