@@ -1,0 +1,3 @@
+[submodule "ext_prg/rapydscript"]
+	path = ext_prg/rapydscript
+	url = https://github.com/atsepkov/RapydScript.git

@@ -38,7 +38,7 @@ if not DEBUG:
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
 for app in APPS:
-    if not app in INSTALLED_APPS:
+    if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")

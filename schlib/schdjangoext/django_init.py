@@ -32,6 +32,7 @@ class AppConfigMod(AppConfig):
             except:
                 self.models_module = None
 
+
 def get_app_config(app_name):
     return AppConfigMod.create(app_name)
 
