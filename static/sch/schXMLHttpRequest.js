@@ -31,14 +31,14 @@ function str2ab(str) {
 
         this.open = function(sMethod, sUrl, bAsync, sUser, sPassword) {
             self.url = sUrl;
-            if(window.location.host == "127.0.0.2" && ( sMethod == 'POST' || navigator.userAgent.indexOf("Windows") != -1  )
+            if(window.location.host == "127.0.0.2" && ( sMethod == 'POST' /*|| navigator.userAgent.indexOf("Windows") != -1 */  )
                && (sUrl.indexOf("/static") == -1 )
             )
             {
                 self.sch_local_request = true;
                 return null;
             }
-            var ret = actual.open(sMethod, sUrl, bAsync, sUser, sPassword);
+            var ret = actual.open(sMethod, sUrl, true, sUser, sPassword);
             self.overrideMimeType('text/xml; charset=utf-8');
             return ret;
         };
@@ -77,32 +77,23 @@ function str2ab(str) {
                 if(vData) {
                     //hack
                     var data=vData;
-                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true ))
-                        console.log(":ajax_post??"+ sUrl2+"??"+btoa(data));
-                    else
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('GET', "http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
-                        try {
-                            xhr.send();
-                        }
-                        catch(e) {
-                        }
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', "http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
+                    try {
+                        xhr.send();
+                    }
+                    catch(e) {
+                    }
                 }
                 else {
-                    if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true )) {
-                        console.log(":ajax_get??"+ sUrl2);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', "http://127.0.0.2/?:ajax_get??"+ sUrl2);
+                    try {
+                        xhr.send();
                     }
-                    else {
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('GET', "http://127.0.0.2/?:ajax_get??"+ sUrl2);
-                        try {
-                            xhr.send();
-                        }
-                        catch(e) {
-                        }
+                    catch(e) {
                     }
                 }
-
                 return null;
             }
             else {
