@@ -1,4 +1,4 @@
- function str2ab(str) {
+function str2ab(str) {
     var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
     var bufView = new Uint16Array(buf);
     for (var i=0, strLen=str.length; i<strLen; i++) {
@@ -55,7 +55,7 @@
                 }
                 function xx(txt) {
                     self.readyState = 4;
-                    if (self.responseType == arraybuffer') {
+                    if (self.responseType == 'arraybuffer') {
                         self.response = str2ab(txt);
                     }
                     else {
@@ -82,7 +82,11 @@
                     else
                         var xhr = new XMLHttpRequest();
                         xhr.open('GET', "http://127.0.0.2/?:ajax_post??"+ sUrl2+"??"+btoa(data));
-                        xhr.send();
+                        try {
+                            xhr.send();
+                        }
+                        catch(e) {
+                        }
                 }
                 else {
                     if((navigator.userAgent.indexOf("Windows") != -1 ) || (!!document.documentMode == true )) {
@@ -91,7 +95,11 @@
                     else {
                         var xhr = new XMLHttpRequest();
                         xhr.open('GET', "http://127.0.0.2/?:ajax_get??"+ sUrl2);
-                        xhr.send();
+                        try {
+                            xhr.send();
+                        }
+                        catch(e) {
+                        }
                     }
                 }
 
@@ -108,7 +116,8 @@
         };
 
         this.setRequestHeader = function(key, value) {
-            if(this.sch_local_request) return;
+            //if(this.sch_local_request) return;
+            if(window.location.host == "127.0.0.2" ) return;
             return actual.setRequestHeader(key, value);
         };
 
@@ -139,6 +148,7 @@
                 value: function() {return actual[item].apply(actual, arguments);}
             });
         });
+
     }
     window.XMLHttpRequest = modXMLHttpRequest;
 })();

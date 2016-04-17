@@ -26,7 +26,7 @@
                 table width=100%
                   tr
                     td align=center
-                      input type=button,,,value=Zamknij,,,onClick=$('#FormErrorMsgFrame').hide()
+                      input type=button,,,value=Zamknij,,,onClick=jQuery('#FormErrorMsgFrame').hide()
               div class=jqmWindow,,,id=FormFrame
               br
             p

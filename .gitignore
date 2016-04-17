@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+ext_lib/
+ext_lib_cli_lin/
+ext_lib_cli_win/
+ext_prg/
+templates/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.cache
+
+# Translations
+*.mo
+
+migrations/

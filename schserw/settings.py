@@ -160,7 +160,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
 if platform.system() == "Linux":
-    NODEJS = 'nodejs'
+    NODEJS = 'node'
+    #NODEJS  = ROOT_PATH + '/ext_prg/nodejs/bin/node'
 else:
     NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
 

@@ -83,8 +83,8 @@ def ajax_submit(form, complete):
         form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         def _progressHandlingFunction(e):
             if e.lengthComputable:
-                $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")
-        req.upload.addEventListener("progress", _progressHandlingFunction, false)
+                jQuery("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")
+        req.upload.addEventListener("progress", _progressHandlingFunction, False)
     else:
         data = form.serialize()
 

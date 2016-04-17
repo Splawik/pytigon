@@ -40,16 +40,16 @@
     %% js2
         script {:}
             function on_click(e):
-                var children = $(this).parent('li.parent_li').find(' > ul > li')
+                var children = jQuery(this).parent('li.parent_li').find(' > ul > li')
                 if(children.is(":visible")):
                     children.hide('fast')
-                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus').removeClass('fa-minus')
+                    jQuery(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus').removeClass('fa-minus')
                 else:
                     children.show('fast')
-                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus').removeClass('fa-plus')
+                    jQuery(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus').removeClass('fa-plus')
                 if(e):
                     e.stopPropagation()
 
-            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch')
-            $('.tree li.parent_li > span').on('click', on_click)
-            $('.hide_node').hide().removeClass('hide')
+            jQuery('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch')
+            jQuery('.tree li.parent_li > span').on('click', on_click)
+            jQuery('.hide_node').hide().removeClass('hide')

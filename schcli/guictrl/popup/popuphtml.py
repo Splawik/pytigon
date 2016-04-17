@@ -44,9 +44,9 @@ class DataPopup(wx.MiniFrame):
         self.href = href
         self.combo = combo
         self.point = pos
+        self.size = size
         self.dismiss_block = False
-
-        wx.MiniFrame.__init__(self, parent, id, title, pos, size, wx.RESIZE_BORDER )
+        wx.Window.__init__(self, parent, id, title, pos, size) #, wx.RESIZE_BORDER )
         self.html = SchSashWindow(self, self.href + "dialog/|value", self.combo,  pos=(0, 0), size=size)
         self.html.Body.parent_combo = combo
 
@@ -58,6 +58,7 @@ class DataPopup(wx.MiniFrame):
         self.SetSizer(box)
         self.SetAutoLayout(True)
         self.Fit()
+        self.Move(self.point)
 
 
     def on_activate(self, event):
@@ -80,9 +81,12 @@ class DataPopup(wx.MiniFrame):
 
     def Popup(self):
         self.Show()
-        self.Move(self.point)
-        self.html.refresh_html()
-        self.html.SetFocus()
+        def _after():
+            self.Move(self.point)
+            self.SetSize(self.size)
+            self.html.refresh_html()
+            self.html.SetFocus()
+        wx.CallAfter(_after)
 
     def Dismiss(self):
         if not self.dismiss_block:
@@ -223,6 +227,8 @@ class DataPopupControl(ComboCtrl):
             else:
                 self.popup = DataPopup(self, -1, "Wybierz pozycję", pos=pos, size=self.size, style=wx.DEFAULT_DIALOG_STYLE,
                                 combo=self, href=self.href)
+            self.popup.Show()
+            print(pos)
 
         pos = self.GetScreenPosition()
         pos = (pos[0], pos[1] + self.GetSize()[1])

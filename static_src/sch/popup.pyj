@@ -57,9 +57,9 @@ def on_popup_inline(elem):
     ajax_load(elem2, href2,
         def(responseText, status, response):
             nonlocal WAIT_ICON
-            $('#IDIAL_'+id).hide()
-            $('#IDIAL_'+id).removeClass('hide')
-            $('#IDIAL_'+id).show("slow")
+            jQuery('#IDIAL_'+id).hide()
+            jQuery('#IDIAL_'+id).removeClass('hide')
+            jQuery('#IDIAL_'+id).show("slow")
             if status!='error':
                 _dialog_loaded(False, elem2)
                 on_dialog_load()
@@ -92,9 +92,9 @@ def on_popup_in_form(elem):
     ajax_load(elem2,href2,
         def(responseText, status, response):
             nonlocal WAIT_ICON
-            $('#IDIAL_'+id).hide()
-            $('#IDIAL_'+id).removeClass('hide')
-            $('#IDIAL_'+id).show("slow")
+            jQuery('#IDIAL_'+id).hide()
+            jQuery('#IDIAL_'+id).removeClass('hide')
+            jQuery('#IDIAL_'+id).show("slow")
             if status!='error':
                 _dialog_loaded(False, elem2)
                 table_type = get_table_type(elem2)

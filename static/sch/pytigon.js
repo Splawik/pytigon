@@ -148,7 +148,6 @@ var ՐՏ_modules = {};
     }
     function ajax_get(url, complete) {
         var req;
-        alert("ajax_get");
         req = new XMLHttpRequest();
         function _onload() {
             var disp;
@@ -206,7 +205,7 @@ var ՐՏ_modules = {};
             form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
             function _progressHandlingFunction(e) {
                 if (e.lengthComputable) {
-                    $("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%");
+                    jQuery("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%");
                 }
             }
             req.upload.addEventListener("progress", _progressHandlingFunction, false);
@@ -672,9 +671,9 @@ var ՐՏ_modules = {};
         new_fragment.insertAfter(jQuery(elem).closest("tr"));
         elem2 = new_fragment.find(".refr_target");
         ajax_load(elem2, href2, function(responseText, status, response) {
-            $("#IDIAL_" + id).hide();
-            $("#IDIAL_" + id).removeClass("hide");
-            $("#IDIAL_" + id).show("slow");
+            jQuery("#IDIAL_" + id).hide();
+            jQuery("#IDIAL_" + id).removeClass("hide");
+            jQuery("#IDIAL_" + id).show("slow");
             if (status !== "error") {
                 _dialog_loaded(false, elem2);
                 on_dialog_load();
@@ -703,9 +702,9 @@ var ՐՏ_modules = {};
         elem2 = new_fragment.find(".refr_target");
         ajax_load(elem2, href2, function(responseText, status, response) {
             var table_type, tbl;
-            $("#IDIAL_" + id).hide();
-            $("#IDIAL_" + id).removeClass("hide");
-            $("#IDIAL_" + id).show("slow");
+            jQuery("#IDIAL_" + id).hide();
+            jQuery("#IDIAL_" + id).removeClass("hide");
+            jQuery("#IDIAL_" + id).show("slow");
             if (status !== "error") {
                 _dialog_loaded(false, elem2);
                 table_type = get_table_type(elem2);
@@ -1048,7 +1047,7 @@ function init_pagintor(pg) {
                         pg.closest(".content").find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html());
                         fragment_init(pg.closest(".content").find(".tabsort tbody"));
                         if (WAIT_ICON2) {
-                            $("#loading-indicator").hide();
+                            jQuery("#loading-indicator").hide();
                             WAIT_ICON2 = false;
                         }
                     }
@@ -1057,7 +1056,7 @@ function init_pagintor(pg) {
                     form.attr("href", url);
                     active_button = pg.find(".page active");
                     WAIT_ICON2 = true;
-                    $("#loading-indicator").show();
+                    jQuery("#loading-indicator").show();
                     ajax_post(url, form.serialize(), _on_new_page);
                 }
             }
@@ -1160,8 +1159,8 @@ function page_init(id, first_time) {
             return true;
         }
         e.preventDefault();
-        if (ՐՏ_in($(e.currentTarget).attr("target"), ["_top", "_top2"])) {
-            title = $(e.currentTarget).attr("title");
+        if (ՐՏ_in(jQuery(e.currentTarget).attr("target"), ["_top", "_top2"])) {
+            title = jQuery(e.currentTarget).attr("title");
             if (!title) {
                 if (len(href) > 16) {
                     title = "..." + href.slice(-13);
@@ -1229,7 +1228,7 @@ function page_init(id, first_time) {
             WAIT_ICON.start();
         } else {
             WAIT_ICON2 = true;
-            $("#loading-indicator").show();
+            jQuery("#loading-indicator").show();
         }
         href = jQuery(this).attr("action");
         if (href) {
@@ -1285,7 +1284,7 @@ function app_init(application_template, menu_id, lang, base_path, base_fragment_
             });
             jQuery("body").on("submit", "form.DialogForm", function(e) {
                 e.preventDefault();
-                on_edit_ok($(this));
+                on_edit_ok(jQuery(this));
             });
             jQuery("#logout").on("click", function() {
                 window.location = jQuery(this).attr("action");
@@ -1358,7 +1357,7 @@ function _on_menu_href(elem, title) {
                     WAIT_ICON = null;
                 }
                 if (WAIT_ICON2) {
-                    $("#loading-indicator").hide();
+                    jQuery("#loading-indicator").hide();
                     WAIT_ICON2 = false;
                 }
             }
@@ -1370,7 +1369,7 @@ function _on_menu_href(elem, title) {
                 WAIT_ICON.start();
             } else {
                 WAIT_ICON2 = true;
-                $("#loading-indicator").show();
+                jQuery("#loading-indicator").show();
             }
             ajax_get(href2, _on_new_win);
             jQuery(".navbar-ex1-collapse").collapse("hide");
@@ -1385,7 +1384,7 @@ function _on_error(request, settings) {
         WAIT_ICON = null;
     }
     if (WAIT_ICON2) {
-        $("#loading-indicator").hide();
+        jQuery("#loading-indicator").hide();
         WAIT_ICON2 = false;
     }
     if (settings.status === 200) {

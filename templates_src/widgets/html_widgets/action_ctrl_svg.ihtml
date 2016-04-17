@@ -9,10 +9,10 @@
         {{id}}_var.attr('fill-opacity', 1)
         {{id}}_var.find('.control').css('stroke', {{id}}_var_color).css('stroke-width', {{id}}_var_widh)
 
-    {{id}}_var = $(this)
-    {{id}}_var_widh = $(this).find('.control').css("stroke-width")
-    {{id}}_var_color = $(this).find('.control').css("stroke")
+    {{id}}_var = jQuery(this)
+    {{id}}_var_widh = jQuery(this).find('.control').css("stroke-width")
+    {{id}}_var_color = jQuery(this).find('.control').css("stroke")
 
-    $(this).attr('fill-opacity', 0.3)
-    $(this).find('.control').css('stroke', '#F0AD4E').css('stroke-width', '4')
+    jQuery(this).attr('fill-opacity', 0.3)
+    jQuery(this).find('.control').css('stroke', '#F0AD4E').css('stroke-width', '4')
 

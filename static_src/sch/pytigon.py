@@ -9,6 +9,7 @@
 ## refresh_app: replace current app
 
 
+
 APPLICATION_TEMPLATE = 'standard'
 
 RET_BUFOR = None
@@ -54,7 +55,7 @@ def init_pagintor(pg):
                         pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
                         fragment_init(pg.closest('.content').find(".tabsort tbody"))
                         if WAIT_ICON2:
-                            $('#loading-indicator').hide()
+                            jQuery('#loading-indicator').hide()
                             WAIT_ICON2 = False
 
                     url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
@@ -62,7 +63,7 @@ def init_pagintor(pg):
                     form.attr('href', url)
                     active_button = pg.find('.page active')
                     WAIT_ICON2 = True
-                    $('#loading-indicator').show()
+                    jQuery('#loading-indicator').show()
                     ajax_post(url, form.serialize(), _on_new_page)
         }
         pg.twbsPagination(options)
@@ -152,8 +153,8 @@ def page_init(id, first_time = True):
 
             e.preventDefault()
 
-            if $(e.currentTarget).attr('target') in ("_top", "_top2"):
-                title = $(e.currentTarget).attr('title')
+            if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
+                title = jQuery(e.currentTarget).attr('title')
                 if not title:
                     if len(href)>16:
                         title = '...'+href[-13:]
@@ -219,7 +220,7 @@ def page_init(id, first_time = True):
                 WAIT_ICON.start()
             else:
                 WAIT_ICON2 = True
-                $('#loading-indicator').show()
+                jQuery('#loading-indicator').show()
 
 
             href = jQuery(this).attr("action")
@@ -279,7 +280,7 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
             jQuery('body').on('submit', 'form.DialogForm',
                 def(e):
                     e.preventDefault()
-                    on_edit_ok($(this))
+                    on_edit_ok(jQuery(this))
             )
 
             jQuery('#logout').on('click',
@@ -362,7 +363,7 @@ def _on_menu_href(elem, title=None):
                     WAIT_ICON = None
 
                 if WAIT_ICON2:
-                    $('#loading-indicator').hide()
+                    jQuery('#loading-indicator').hide()
                     WAIT_ICON2 = False
 
             if APPLICATION_TEMPLATE == 'standard' and classname and 'btn' in classname:
@@ -376,7 +377,7 @@ def _on_menu_href(elem, title=None):
                 WAIT_ICON.start()
             else:
                 WAIT_ICON2 = True
-                $('#loading-indicator').show()
+                jQuery('#loading-indicator').show()
             ajax_get(href2, _on_new_win)
             jQuery('.navbar-ex1-collapse').collapse('hide')
             #datatable_onresize()
@@ -389,7 +390,7 @@ def _on_error(request, settings):
         WAIT_ICON.stop()
         WAIT_ICON = None
     if WAIT_ICON2:
-        $('#loading-indicator').hide()
+        jQuery('#loading-indicator').hide()
         WAIT_ICON2 = False
 
     if settings.status==200:

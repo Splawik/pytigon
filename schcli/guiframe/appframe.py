@@ -611,7 +611,7 @@ class SchAppFrame(wx.Frame):
                         pdict[pos[0]]=pos[1]
                     else:
                         pdict[pos[0]]=None
-            if parametry:
+            if parametry and type(parametry)==dict:
                 pdict.update(parametry)
 
             if ('schtml' in pdict and pdict['schtml'] != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
