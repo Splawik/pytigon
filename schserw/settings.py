@@ -165,7 +165,7 @@ if platform.system() == "Linux":
 else:
     NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
 
-RAPYD = ROOT_PATH + '/ext_prg/rapydscript/bin/rapydscript'
+RAPYD = ROOT_PATH + '/ext_prg/rapydscript-ng/bin/rapydscript'
 
 AUTO_RENDER_SELECT2_STATICS = False
 

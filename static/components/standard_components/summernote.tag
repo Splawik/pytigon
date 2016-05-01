@@ -27,10 +27,10 @@
     this.value = opts.value;
     this.href = opts.href;
     load_css(this.base_path + "/summernote.css");
-    this.on("mount", function() {
+    this.on("mount", function () {
         var self;
         self = this;
-        load_js(self.base_path + "/summernote.min.js", function() {
+        load_js(self.base_path + "/summernote.min.js", function () {
             var editor, rect;
             editor = jQuery(self.summernote);
             rect = self.summernote.getBoundingClientRect();
@@ -47,19 +47,27 @@
     save(e) {
         var ajax_options;
         if (this.href) {
-            ajax_options = {
-                method: "POST",
-                url: this.href,
-                dataType: "html",
-                data: {
-                    data: self.editor.summernote("code")
-                }
-            };
-            jQuery.ajax(ajax_options).done(function() {
+            ajax_options = (function(){
+                var ρσ_d = {};
+                ρσ_d[method] = "POST";
+                ρσ_d[url] = this.href;
+                ρσ_d[dataType] = "html";
+                ρσ_d[data] = (function(){
+                    var ρσ_d = {};
+                    ρσ_d[data] = self.editor.summernote("code");
+                    return ρσ_d;
+                }).call(this);
+                return ρσ_d;
+            }).call(this);
+            jQuery.ajax(ajax_options).done(function () {
                 self.update();
             });
         }
-    }</script>
+    };
+    Object.defineProperties(on_save, {
+        __argnames__ : {value: ["e"]}
+    });
+    </script>
     
     
 </summernote>

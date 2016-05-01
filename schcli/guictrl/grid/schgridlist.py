@@ -22,6 +22,7 @@ import wx
 from schlib.schhttptools import htmltab
 from .gridtablebase import SchGridTableBase
 from schlib.schhtml.htmlviewer import tdata_from_html
+from schcli.guilib.tools import colour_to_html
 
 #def _cmp(rec1, rec2, tabsort):
 #    for pos in tabsort:
@@ -319,7 +320,7 @@ class SimpleDataTable(SchGridTableBase):
         if 'strong' in tdattr:
             strong = 's'
         if self._is_sel(row):
-            bgcolor = self.sel_colour.GetAsString(wx.C2S_HTML_SYNTAX)
+            bgcolor = colour_to_html(self.sel_colour)
             strong = 's'
         key = ''
         key = key + (bgcolor if bgcolor else '_')

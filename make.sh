@@ -1,0 +1,1 @@
+./ext_prg/rapydscript-ng/bin/rapydscript compile -p -b -o ./static/sch/pytigon.js ./static_src/sch/pytigon.py

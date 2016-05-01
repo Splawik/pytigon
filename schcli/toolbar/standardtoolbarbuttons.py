@@ -20,7 +20,7 @@
 import wx
 from schcli.guilib.schevent import *
 from autocomplete import TextCtrlAutoComplete
-from schcli.guilib.tools import bitmap_from_art_id, bitmaps_from_art_id
+from schcli.guilib.tools import bitmap_from_art_id, bitmaps_from_art_id, colour_to_html
 from wx.lib.agw import flatmenu as FM
 
 _ = wx.GetTranslation
@@ -153,11 +153,11 @@ class StandardButtons(object):
         self.nav = True if 'nav' in self.gui_style else False
         self.address_bar = True if 'address_bar' in self.gui_style else False
         self.bg = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.bg_info = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
         self.bg_h = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self.progress = 0
         self.info = ''
         self.address_txt = ''

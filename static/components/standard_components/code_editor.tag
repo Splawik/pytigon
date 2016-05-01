@@ -27,10 +27,10 @@
     this.value = opts.value;
     this.href = opts.href;
     this.changed = false;
-    this.on("mount", function() {
+    this.on("mount", function () {
         var self;
         self = this;
-        load_js(self.base_path + "/ace.js", function() {
+        load_js(self.base_path + "/ace.js", function () {
             var editor, rect;
             ace.config.set("basePath", self.base_path);
             editor = ace.edit(self.ceditor);
@@ -42,26 +42,34 @@
             editor.container.style.left = "5px";
             editor.setTheme("ace/theme/textmate");
             editor.getSession().setMode("ace/mode/python");
-            editor.setOptions({
-                minLines: 32
-            });
-            editor.on("input", function(e) {
-                var f, tag;
-                f = jQuery(":focus");
-                if (f.length > 0) {
-                    tag = f.get(0).nodeName.toLowerCase();
-                } else {
-                    tag === "";
-                }
-                if (tag === "textarea") {
-                    self.changed = true;
-                    self.update();
-                } else {
-                    setTimeout(function() {
-                        editor.focus();
-                    }, 0);
-                }
-            });
+            editor.setOptions((function(){
+                var ρσ_d = {};
+                ρσ_d[minLines] = 32;
+                return ρσ_d;
+            }).call(this));
+            editor.on("input", (function() {
+                var ρσ_anonfunc = function (e) {
+                    var f, tag;
+                    f = jQuery(":focus");
+                    if (f.length > 0) {
+                        tag = f.get(0).nodeName.toLowerCase();
+                    } else {
+                        (tag === "" || typeof tag === "object" && ρσ_equals(tag, ""));
+                    }
+                    if ((tag === "textarea" || typeof tag === "object" && ρσ_equals(tag, "textarea"))) {
+                        self.changed = true;
+                        self.update();
+                    } else {
+                        setTimeout(function () {
+                            editor.focus();
+                        }, 0);
+                    }
+                };
+                Object.defineProperties(ρσ_anonfunc, {
+                    __argnames__ : {value: ["e"]}
+                });
+                return ρσ_anonfunc;
+            })());
             editor.getSession().setValue(atob(self.value));
             self.editor = editor;
         });
@@ -69,20 +77,28 @@
     save(e) {
         var ajax_options;
         if (this.href) {
-            ajax_options = {
-                method: "POST",
-                url: this.href,
-                dataType: "html",
-                data: {
-                    data: self.editor.getValue()
-                }
-            };
-            jQuery.ajax(ajax_options).done(function() {
+            ajax_options = (function(){
+                var ρσ_d = {};
+                ρσ_d[method] = "POST";
+                ρσ_d[url] = this.href;
+                ρσ_d[dataType] = "html";
+                ρσ_d[data] = (function(){
+                    var ρσ_d = {};
+                    ρσ_d[data] = self.editor.getValue();
+                    return ρσ_d;
+                }).call(this);
+                return ρσ_d;
+            }).call(this);
+            jQuery.ajax(ajax_options).done(function () {
                 self.changed = false;
                 self.update();
             });
         }
-    }</script>
+    };
+    Object.defineProperties(on_save, {
+        __argnames__ : {value: ["e"]}
+    });
+    </script>
     
     
 </code_editor>

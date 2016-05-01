@@ -54,15 +54,18 @@ def norm_colour(
             ret[i] = 255
     return ret
 
+def colour_to_html(colour):
+    return wx.Colour(colour.Red(), colour.Green(), colour.Blue()).GetAsString(wx.C2S_HTML_SYNTAX)
+
 
 def get_colour(wx_id, proc=None):
     c1 = wx.SystemSettings.GetColour(wx_id)
     if not proc:
-        return c1.GetAsString(wx.C2S_HTML_SYNTAX)
+        return colour_to_html(c1)
     else:
         x = norm_colour(c1.Red(), c1.Green(), c1.Blue(), proc)
         c2 = wx.Colour(x[0], x[1], x[2])
-        return c2.GetAsString(wx.C2S_HTML_SYNTAX)
+        return colour_to_html(c2)
 
 
 def standard_tab_colour():

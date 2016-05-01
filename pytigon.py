@@ -85,7 +85,7 @@ from schcli.guiframe import appframe
 from schcli.guilib.schthreadwindow import SchThreadManager
 from schlib.schtools.tools import extractall
 from schlib.schhttptools import htmltab
-from schcli.guilib.tools import standard_tab_colour
+from schcli.guilib.tools import standard_tab_colour, colour_to_html
 from schlib.schhttptools import httpclient
 from schcli.guilib.httperror import http_error
 from schcli.guiframe import browserframe
@@ -269,17 +269,17 @@ class SchApp(App):
             'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
 
         self.COLOUR_HIGHLIGHT = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self.COLOUR_BACKGROUND = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
         self.COLOUR_SHADOW = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW))
         self.COLOUR_DKSHADOW = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW))
         self.COLOUR_ACTIVECATPION = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
         self.COLOUR_INFOBK = \
-            wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK).GetAsString(wx.C2S_HTML_SYNTAX)
+            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
 
 
     def get_locale_object(self):
