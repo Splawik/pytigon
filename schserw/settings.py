@@ -152,8 +152,8 @@ INTERNAL_IPS = ('127.0.0.1','127.0.0.2','127.0.0.3', 'localhost')
 
 ALLOWED_HOSTS = ['*',]
 
-PYTHON_INTERPRETER = 'python3'
-PYTHON_CONSOLE = 'python3'
+PYTHON_INTERPRETER = sys.executable
+PYTHON_CONSOLE = sys.executable
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

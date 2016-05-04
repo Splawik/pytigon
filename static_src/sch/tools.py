@@ -2,8 +2,8 @@ LOADED_FILES = {}
 
 def download_binary_file(buf, content_disposition):
     l = buf.length
-    buffer = new ArrayBuffer(l)
-    view = new Uint8Array(buffer)
+    buffer = __new__(ArrayBuffer(l))
+    view = __new__(Uint8Array(buffer))
     for i in range(l):
         view[i] = buf.charCodeAt(i)
     mimetype = 'text/html'
@@ -15,13 +15,13 @@ def download_binary_file(buf, content_disposition):
         mimetype = 'application/x-compressed'
     elif 'xls' in content_disposition:
         mimetype = 'application/excel'
-    blob = new Blob([view], {'type': mimetype })
+    blob = __new__(Blob([view], {'type': mimetype }))
     blobURL = window.URL.createObjectURL(blob)
     window.open(blobURL)
 
 
 def ajax_get(url, complete):
-    req = new XMLHttpRequest()
+    req = __new__(XMLHttpRequest())
 
     def _onload():
         disp = req.getResponseHeader('Content-Disposition')
@@ -36,6 +36,7 @@ def ajax_get(url, complete):
     req.open('GET', url, True)
     req.send()
 
+window.ajax_get = ajax_get
 
 def ajax_load(elem, url, complete):
 
@@ -45,6 +46,7 @@ def ajax_load(elem, url, complete):
 
     ajax_get(url, _onload)
 
+window.ajax_load = ajax_load
 
 def _req_post(req, url, data, complete):
     def _onload():
@@ -68,18 +70,18 @@ def _req_post(req, url, data, complete):
     req.send(data)
 
 
-
 def ajax_post(url, data, complete):
-    req = new XMLHttpRequest()
+    req = __new__(XMLHttpRequest())
     _req_post(req, url, data, complete)
 
+window.ajax_post = ajax_post
 
 def ajax_submit(form, complete):
-    req = new XMLHttpRequest();
+    req = __new__(XMLHttpRequest())
 
     if form.find("[type='file']").length > 0:
         form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-        data = new FormData(form[0])
+        data = __new__(FormData(form[0]))
         form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         def _progressHandlingFunction(e):
             if e.lengthComputable:
@@ -90,6 +92,7 @@ def ajax_submit(form, complete):
 
     _req_post(req, corect_href(form.attr("action")), data, complete)
 
+window.ajax_submit = ajax_submit
 
 def get_page(elem):
     if elem.hasClass('.tab-pane'):
@@ -130,20 +133,19 @@ def corect_href(href):
 
 
 def handle_class_click(fragment_obj, obj_class, fun):
-    fragment_obj.on( "click", "."+obj_class,
-        def(e):
-            src_obj = jQuery(this)
-            e.preventDefault()
-            fun(this)
-            return False
-    )
+    def _on_click(e):
+        src_obj = jQuery(this)
+        e.preventDefault()
+        fun(this)
+        return False
+    fragment_obj.on( "click", "."+obj_class, _on_click)
 
 
 def load_css(path):
     nonlocal LOADED_FILES
     if not (LOADED_FILES and path in LOADED_FILES):
         LOADED_FILES[path] = None
-        req = new XMLHttpRequest()
+        req = __new__(XMLHttpRequest())
 
         def _onload():
             jQuery('<style type="text/css"></style>').html(req.responseText).appendTo("head")
@@ -152,7 +154,7 @@ def load_css(path):
 
         req.open('GET', path, True)
         req.send('')
-
+window.load_css = load_css
 
 def on_load_js(path):
     nonlocal LOADED_FILES
@@ -173,7 +175,7 @@ def load_js(path, fun):
             fun()
     else:
         LOADED_FILES[path] = [fun,]
-        req = new XMLHttpRequest()
+        req = __new__(XMLHttpRequest())
         def _onload():
             jQuery.globalEval(req.responseText)
             on_load_js(path)
@@ -183,6 +185,7 @@ def load_js(path, fun):
         req.open('GET', path, True)
         req.send('')
 
+window.load_js = load_js
 
 def load_many_js(paths, fun):
     counter = 0
@@ -196,6 +199,16 @@ def load_many_js(paths, fun):
     for path in paths.split(paths, ';'):
         if path.lenght()>0:
             counter = counter + 1
-            load_js(path, _fun):
+            load_js(path, _fun)
 
+
+window.load_many_js = load_many_js
+
+def history_push_state(title, url, data=None):
+    url2 = url.split("?")[0]
+    if data:
+        data2 = [LZString.compress(data[0]),data[1]]
+    else:
+        data2 = title
+    window.history.pushState(data2, title, url2)
 

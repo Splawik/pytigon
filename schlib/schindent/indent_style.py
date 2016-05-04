@@ -547,16 +547,36 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
         return ""
 
 
+
 def py2js(script, module_path):
-    #print("module_path:", module_path)
+
+    error = False
+    tempdir = tempfile.gettempdir()
+
+    cwd = os.getcwd()
+    os.chdir(tempdir)
+
+    script_name = os.path.join(tempdir, "pytigon_module.py")
+
+    f = open(script_name, "wt")
+    f.write(script)
+    f.close()
+
+    transcrypt_lib = os.path.join(os.path.dirname(__file__), "../../ext_lib/transcrypt")
+    cmd = [sys.executable, os.path.join(transcrypt_lib, "__main__.py"), '-n', 'pytigon_module.py' ]
+
     def process_output(line):
-        if line.startswith('WARN:'):
+        if line.startswith('Error in program'):
+            nonlocal error
+            error = True
             print(line)
-            m = re.search(".*\[(.*):(.*),(.*)].*", line)
+            m = re.search(".*line (\d*):(.*)", line)
             if m:
                 try:
-                    row = int(m.groups()[1])-1
-                    col = int(m.groups()[2])-1
+                    row = int(m.groups()[0])-1
+                    description = m.groups()[1]
+                    print("Python to javascript compile error:")
+                    print(description)
                     lines = script.split('\n')
                     start = row-4
                     end = row+4
@@ -567,43 +587,46 @@ def py2js(script, module_path):
                     for i in range(start, end):
                         if row == i:
                             print(lines[i], " <===")
-                            print(' '*col, '^')
                         else:
                             print(lines[i])
                     print()
                 except:
                     pass
-        else:
-            print(line)
     if module_path:
         old_path = os.getcwd()
         os.chdir(module_path)
     else:
         old_path = None
-    temp_name = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-    cmd = list(PY_TO_JS)
-    cmd.append('-o')
-    cmd.append(temp_name)
+
     proc = subprocess.Popen(cmd,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
                             universal_newlines=True
                             )
-    ret, stderr_value = proc.communicate(script)
+    ret, stderr_value = proc.communicate() #script)
 
     if stderr_value:
-        print(script)
         for line in stderr_value.split('\n'):
             process_output(line)
+    if ret:
+        for line in ret.split('\n'):
+            process_output(line)
+
+    if error:
+        raise Exception('Python to javascript compile error!')
+
+    js_script_name = os.path.join(tempdir, "__javascript__/pytigon_module.mod.js")
+    f = open(js_script_name, "rt")
+    s = f.read()
+    f.close()
+    s = s.split('(function () {', 1)[1]
+    s = s.rsplit('}) ();', 1)[0]
+    ret = s
 
     if old_path:
         os.chdir(old_path)
 
-    f = open(temp_name,"rt", encoding='utf-8')
-    ret = f.read()
-    f.close()
-    os.unlink(temp_name)
     return ret
 
 

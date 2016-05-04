@@ -69,7 +69,7 @@
         .function base_fragment_init() { jQuery('input[type=file]').fileinput(); }
     %% riot_init
         .riot_init = null
-    .app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, riot_init)
+    .pytigon.app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, riot_init)
 
 
 %% jquery_ready_start
@@ -77,7 +77,7 @@
 
 
 %% jquery_ready
-    .jquery_ready();
+    .pytigon.jquery_ready();
     .base_fragment_init();
 
 %% jquery_ready_end

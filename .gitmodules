@@ -1,3 +1,0 @@
-[submodule "ext_prg/rapydscript"]
-	path = ext_prg/rapydscript-ng
-	url = https://github.com/kovidgoyal/rapydscript-ng.git

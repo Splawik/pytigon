@@ -8,63 +8,45 @@
 ## refresh_page: replace current page (like _self)
 ## refresh_app: replace current app
 
-
-
-APPLICATION_TEMPLATE = 'standard'
-
-RET_BUFOR = None
-RET_OBJ = None
-
-LANG = "en"
-MENU = None
-PUSH_STATE = True
-BASE_PATH = None
-WAIT_ICON = None
-WAIT_ICON2 = False
-MENU_ID = 0
-BASE_FRAGMENT_INIT = None
-COUNTER = 1
-EDIT_RET_FUNCTION = None
-RET_CONTROL = None
-RIOT_INIT = None
-
-import glob
 from page import Page
 from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
-     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
+     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok, fragment_init
 from tbl import init_table, datatable_onresize
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state
+
 
 def init_pagintor(pg):
-    nonlocal WAIT_ICON2
+    x=load_js
     if pg.length>0:
         paginate = True
         totalPages = pg.attr('totalPages')
         page_number = pg.attr('start_page')
+
+        def _on_page_click(event, page):
+            form = pg.closest('.refr_object').find('form.refr_source')
+            if form:
+                def _on_new_page(data):
+                    pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+                    fragment_init(pg.closest('.content').find(".tabsort tbody"))
+                    if window.WAIT_ICON2:
+                        jQuery('#loading-indicator').hide()
+                        window.WAIT_ICON2 = False
+
+                url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
+                form.attr('action', url)
+                form.attr('href', url)
+                active_button = pg.find('.page active')
+                window.WAIT_ICON2 = True
+                jQuery('#loading-indicator').show()
+                ajax_post(url, form.serialize(), _on_new_page)
+
         options = {
             'totalPages': +totalPages,
             'startPage': +page_number,
             'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
-            'onPageClick':def(event, page):
-                form = pg.closest('.refr_object').find('form.refr_source')
-                if form:
-                    def _on_new_page(data):
-                        nonlocal WAIT_ICON2
-                        pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
-                        fragment_init(pg.closest('.content').find(".tabsort tbody"))
-                        if WAIT_ICON2:
-                            jQuery('#loading-indicator').hide()
-                            WAIT_ICON2 = False
-
-                    url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
-                    form.attr('action', url)
-                    form.attr('href', url)
-                    active_button = pg.find('.page active')
-                    WAIT_ICON2 = True
-                    jQuery('#loading-indicator').show()
-                    ajax_post(url, form.serialize(), _on_new_page)
+            'onPageClick': _on_page_click
         }
         pg.twbsPagination(options)
         if +page_number != 1:
@@ -77,49 +59,13 @@ def init_pagintor(pg):
 
     return paginate
 
-def fragment_init(elem=None):
-    nonlocal RIOT_INIT
-    if elem:
-        elem2 = elem
-    else:
-        elem2 = glob.ACTIVE_PAGE.page
-    
-    handle_class_click(elem, 'get_tbl_value', on_get_tbl_value)
-    handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
-    handle_class_click(elem, 'get_row', on_get_row)
-        
-    d = elem2.find('.dateinput')
-    d.wrap( "<div class='input-group date'></div>" )
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
-    d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True})
-
-    d = elem2.find('.datetimeinput')
-    d.wrap( "<div class='input-group date datetime'></div>" )
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-time'></span></span>")
-    d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True})
-
-    elem2.find('.win-content').bind('resize', datatable_onresize)
-
-    jQuery('.selectpicker').selectpicker()
-
-    if RIOT_INIT:
-        _id = jQuery(elem).uid()
-        for pos in RIOT_INIT:
-            x = sprintf("riot.mount('#%s')", _id+" "+pos)
-            eval(x)
-
-    if BASE_FRAGMENT_INIT:
-        BASE_FRAGMENT_INIT()
-
-    datatable_onresize()
 
 def page_init(id, first_time = True):
-    nonlocal WAIT_ICON, WAIT_ICON2 #, ACTIVE_PAGE
     table_type = get_table_type(jQuery('#'+ id))
 
     if table_type != 'datatable':
-        if glob.ACTIVE_PAGE:
-            pg = glob.ACTIVE_PAGE.page.find('.pagination')
+        if window.ACTIVE_PAGE:
+            pg = window.ACTIVE_PAGE.page.find('.pagination')
             paginate = init_pagintor(pg)
 
     init_table(jQuery('#'+ id + ' .tabsort'), table_type)
@@ -129,133 +75,142 @@ def page_init(id, first_time = True):
         #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
         #handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
         #handle_class_click(elem2, 'get_row', on_get_row)
-    jQuery('#'+ id).on( "click", "a",
-        def(e):
-            target = jQuery(e.currentTarget).attr('target')
-            src_obj = jQuery(this)
+    def _on_click(e):
+        target = jQuery(e.currentTarget).attr('target')
+        src_obj = jQuery(this)
 
-            if target == "_blank":
-                return
+        if target == "_blank":
+            return
 
-            for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
-                if jQuery(this).hasClass(pos):
-                    return True
-
-            for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
-                if jQuery(this).hasClass(pos[0]):
-                    e.preventDefault()
-                    pos[1](this)
-                    return True
-
-            href = jQuery(this).attr("href")
-            if href and '#' in href:
+        for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
+            if jQuery(this).hasClass(pos):
                 return True
 
-            e.preventDefault()
+        for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
+            if jQuery(this).hasClass(pos[0]):
+                e.preventDefault()
+                pos[1](this)
+                return True
 
-            if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
-                title = jQuery(e.currentTarget).attr('title')
-                if not title:
-                    if len(href)>16:
-                        title = '...'+href[-13:]
-                    else:
-                        title = href
-                return _on_menu_href(this,title)
+        href = jQuery(this).attr("href")
+        if href and '#' in href:
+            return True
 
-            href2 = corect_href(href)
+        e.preventDefault()
 
-            ajax_get(href2, def (data):
-                nonlocal href, src_obj
+        if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
+            title = jQuery(e.currentTarget).attr('title')
+            if not title:
+                if len(href)>16:
+                    title = '...'+href[-13:]
+                else:
+                    title = href
+            return _on_menu_href(this,title)
 
-                if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
-                    if target=="refresh_obj":
-                        if not refresh_fragment(src_obj, None, True):
-                            refresh_fragment(src_obj)
-                    else:
+        href2 = corect_href(href)
+
+        def _on_data(data):
+            nonlocal href, src_obj
+
+            if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+                if target=="refresh_obj":
+                    if not refresh_fragment(src_obj, None, True):
                         refresh_fragment(src_obj)
                 else:
-                    if APPLICATION_TEMPLATE == 'modern':
-                        glob.ACTIVE_PAGE.page.html(data)
-                        glob.ACTIVE_PAGE.set_href(href)
-                        page_init(glob.ACTIVE_PAGE.id, False)
-                    else:
-                        jQuery('#body_body').html(data)
-                        page_init('body_body', False)
-                    glob.ACTIVE_PAGE.set_href(href)
-                    get_menu().get_active_item().url = href
-                    if PUSH_STATE:
-                        history_push_state("title", href)
-            )
-    )
-    glob.ACTIVE_PAGE.page.find('form').submit(
-        def(e):
-            nonlocal WAIT_ICON, WAIT_ICON2 #ACTIVE_PAGE,
-
-            if jQuery(this).attr('target')=='_blank':
-                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-                return True
-
-            if jQuery(this).attr('target')=='refresh_obj':
-                if refresh_fragment(jQuery(this), None, True):
-                    return False
-
-            data = jQuery(this).serialize()
-
-            if data and 'pdf=on' in data:
-                jQuery(this).attr('target','_blank')
-                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-                return True
-            if data and 'odf=on' in data:
-                jQuery(this).attr('target','_blank')
-                jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-                return True
-
-            e.preventDefault()
-
-            submit_button = jQuery(this).find('button[type="submit"]')
-            if submit_button.length > 0:
-                submit_button.attr("data-style", "zoom-out")
-                submit_button.attr("data-spinner-color", "#FF0000")
-                WAIT_ICON = Ladda.create(submit_button[0])
-                WAIT_ICON.start()
+                    refresh_fragment(src_obj)
             else:
-                WAIT_ICON2 = True
-                jQuery('#loading-indicator').show()
+                if window.APPLICATION_TEMPLATE == 'modern':
+                    window.ACTIVE_PAGE.page.html(data)
+                    window.ACTIVE_PAGE.set_href(href)
+                    page_init(window.ACTIVE_PAGE.id, False)
+                else:
+                    jQuery('#body_body').html(data)
+                    page_init('body_body', False)
+                window.ACTIVE_PAGE.set_href(href)
+                get_menu().get_active_item().url = href
+                if window.PUSH_STATE:
+                    history_push_state("title", href)
+        ajax_get(href2,_on_data)
 
 
-            href = jQuery(this).attr("action")
-            if href:
-                jQuery(this).attr('action', corect_href(href))
+    jQuery('#'+ id).on( "click", "a", _on_click)
 
-            ajax_submit(jQuery(this), def(data):
-                nonlocal  WAIT_ICON, WAIT_ICON2, id #, ACTIVE_PAGE,
-                glob.ACTIVE_PAGE.page.html(data)
-                page_init(id, False)
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                if WAIT_ICON2:
-                    jQuery('#loading-indicator').hide()
-                    WAIT_ICON2 = False
-            )
-    )
-    fragment_init(glob.ACTIVE_PAGE.page)
+    def _on_submit(e):
+        if jQuery(this).attr('target')=='_blank':
+            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
+            return True
+
+        if jQuery(this).attr('target')=='refresh_obj':
+            if refresh_fragment(jQuery(this), None, True):
+                return False
+
+        data = jQuery(this).serialize()
+
+        if data and 'pdf=on' in data:
+            jQuery(this).attr('target','_blank')
+            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
+            return True
+        if data and 'odf=on' in data:
+            jQuery(this).attr('target','_blank')
+            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
+            return True
+
+        e.preventDefault()
+
+        submit_button = jQuery(this).find('button[type="submit"]')
+        if submit_button.length > 0:
+            submit_button.attr("data-style", "zoom-out")
+            submit_button.attr("data-spinner-color", "#FF0000")
+            window.WAIT_ICON = Ladda.create(submit_button[0])
+            window.WAIT_ICON.start()
+        else:
+            window.WAIT_ICON2 = True
+            jQuery('#loading-indicator').show()
+
+
+        href = jQuery(this).attr("action")
+        if href:
+            jQuery(this).attr('action', corect_href(href))
+
+        def _on_submit():
+            nonlocal id
+            window.ACTIVE_PAGE.page.html(data)
+            page_init(id, False)
+            if window.WAIT_ICON:
+                window.WAIT_ICON.stop()
+            if window.WAIT_ICON2:
+                jQuery('#loading-indicator').hide()
+                window.WAIT_ICON2 = False
+        ajax_submit(jQuery(this), _on_submit)
+
+
+    window.ACTIVE_PAGE.page.find('form').submit(_on_submit)
+
+    fragment_init(window.ACTIVE_PAGE.page)
 
 
 def app_init(application_template, menu_id, lang, base_path, base_fragment_init, riot_init):
-    nonlocal APPLICATION_TEMPLATE, LANG, BASE_PATH, BASE_FRAGMENT_INIT, RIOT_INIT
-    APPLICATION_TEMPLATE = application_template
-    LANG = lang
-    BASE_PATH = base_path
-    BASE_FRAGMENT_INIT = base_fragment_init
-    RIOT_INIT = riot_init
-    if can_popup():
-        SUBWIN = False
+    window.APPLICATION_TEMPLATE = application_template
+    window.MENU = None
+    window.PUSH_STATE = True
+    window.BASE_PATH = None
+    window.BASE_PATH = base_path
+    window.WAIT_ICON = None
+    window.WAIT_ICON2 = False
+    window.MENU_ID = 0
+    window.BASE_FRAGMENT_INIT = base_fragment_init
+    window.COUNTER = 1
+    window.EDIT_RET_FUNCTION = None
+    window.RET_CONTROL = None
+    window.RIOT_INIT = riot_init
+    window.LANG = lang
 
-        jQuery(def ():
+    if can_popup():
+        def _local_fun():
             nonlocal menu_id
             jQuery("#tabs").tabdrop()
             jQuery("#tabs2").tabdrop()
-            if APPLICATION_TEMPLATE != 'traditional':
+            if window.APPLICATION_TEMPLATE != 'traditional':
                 pos = jQuery(".menu-href.btn-warning")
                 if pos.length > 0:
                     elem = jQuery('#a_'+pos.closest('div.tab-pane').attr('id'))
@@ -270,128 +225,114 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
 
             jQuery(elem.prop("hash")).perfectScrollbar()
 
-            jQuery('body').on('click', 'a.menu-href',
-                def(e):
-                    if APPLICATION_TEMPLATE != 'traditional':
-                        e.preventDefault()
-                        _on_menu_href(this)
-            )
-
-            jQuery('body').on('submit', 'form.DialogForm',
-                def(e):
+            def _on_menu_click(e):
+                if window.APPLICATION_TEMPLATE != 'traditional':
                     e.preventDefault()
-                    on_edit_ok(jQuery(this))
-            )
+                    _on_menu_href(this)
+            jQuery('body').on('click', 'a.menu-href', _on_menu_click)
 
-            jQuery('#logout').on('click',
-                def():
-                    window.location = jQuery(this).attr('action')
-            )
+            def _on_submit(e):
+                e.preventDefault()
+                on_edit_ok(jQuery(this))
+            jQuery('body').on('submit', 'form.DialogForm', _on_submit)
 
-            jQuery('.system_menu').on('click',
-                def():
-                    window.location = jQuery(this).attr('action')
-            )
+            def _on_logout_click():
+                window.location = jQuery(this).attr('action')
+            jQuery('#logout').on('click', _on_logout_click)
 
-            #jQuery('.tab-tab').perfectScrollbar()
+            def _on_sysmenu_click():
+                window.location = jQuery(this).attr('action')
 
-            jQuery('#tabs a').click(
-                def (e):
-                    e.preventDefault()
-                    jQuery(this).tab('show')
-                    jQuery(jQuery(this).prop("hash")).perfectScrollbar()
-            )
+            jQuery('.system_menu').on('click', _on_sysmenu_click)
 
-            jQuery("#tabs2").on('shown.bs.tab',
-                def (e):
-                    datatable_onresize()
-            )
+            def _on_tabs_click(e):
+                e.preventDefault()
+                jQuery(this).tab('show')
+                jQuery(jQuery(this).prop("hash")).perfectScrollbar()
+            jQuery('#tabs a').click(_on_tabs_click)
 
-            jQuery('body').on('expanded.pushMenu collapsed.pushMenu',
-                def (e):
-                    window.setTimeout(datatable_onresize, 300)
-            )
+            def _on_resize(e):
+                datatable_onresize()
+            jQuery("#tabs2").on('shown.bs.tab', _on_resize)
+
+            def _on_timeout(e):
+                window.setTimeout(datatable_onresize, 300)
+
+            jQuery('body').on('expanded.pushMenu collapsed.pushMenu', _on_timeout)
 
             jQuery(window).resize(datatable_onresize)
 
-        )
-    else:
-        SUBWIN = True
+        jQuery(_local_fun)
+
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None):
-    nonlocal WAIT_ICON, WAIT_ICON2
-    if APPLICATION_TEMPLATE != 'traditional':
+    if window.APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
         menu = get_menu()
         classname = jQuery(elem).attr("class")
         if classname and 'btn' in classname:
-            if WAIT_ICON:
-                WAIT_ICON.stop()
+            if window.WAIT_ICON:
+                window.WAIT_ICON.stop()
             jQuery(elem).attr("data-style", "zoom-out")
             jQuery(elem).attr("data-spinner-color", "#FF0000")
-            WAIT_ICON = Ladda.create(elem)
+            window.WAIT_ICON = Ladda.create(elem)
         else:
-            WAIT_ICON = None
+            window.WAIT_ICON = None
 
-        if APPLICATION_TEMPLATE == 'modern' and menu.is_open(title):
+        if window.APPLICATION_TEMPLATE == 'modern' and menu.is_open(title):
             menu.activate(title)
         else:
             href = jQuery(elem).attr("href")
             href2 = corect_href(href)
             def _on_new_win(data):
-                nonlocal href, href2, title, WAIT_ICON, WAIT_ICON2, MENU_ID, RIOT_INIT
+                nonlocal href, href2, title
 
-                if APPLICATION_TEMPLATE == 'modern':
-                    id = menu.new_page(title, data, href2, RIOT_INIT)
+                if window.APPLICATION_TEMPLATE == 'modern':
+                    id = menu.new_page(title, data, href2, window.RIOT_INIT, page_init)
                 else:
                     jQuery('#body_body').html(data)
-                    glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-                    glob.ACTIVE_PAGE.set_href(href2)
+                    window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+                    window.ACTIVE_PAGE.set_href(href2)
                     page_init('body_body', False)
-                    if PUSH_STATE:
+                    if window.PUSH_STATE:
                         id = jQuery(elem).attr('id')
                         if not id:
-                            id = 'menu_id_' + MENU_ID
-                            MENU_ID = MENU_ID + 1
+                            id = 'menu_id_' + window.MENU_ID
+                            window.MENU_ID = window.MENU_ID + 1
                             jQuery(elem).attr('id', id)
                         history_push_state(title, href, [data, id])
 
-                if WAIT_ICON:
-                    WAIT_ICON.stop()
-                    WAIT_ICON = None
+                if window.WAIT_ICON:
+                    window.WAIT_ICON.stop()
+                    window.WAIT_ICON = None
 
-                if WAIT_ICON2:
+                if window.WAIT_ICON2:
                     jQuery('#loading-indicator').hide()
-                    WAIT_ICON2 = False
+                    window.WAIT_ICON2 = False
 
-            if APPLICATION_TEMPLATE == 'standard' and classname and 'btn' in classname:
-                #jQuery('a.menu-href').removeClass('btn-warning').addClass('btn-info')
-                #jQuery(elem).removeClass('btn-info').addClass('btn-warning')
-
+            if window.APPLICATION_TEMPLATE == 'standard' and classname and 'btn' in classname:
                 jQuery('a.menu-href').removeClass('btn-warning')
                 jQuery(elem).addClass('btn-warning')
 
-            if WAIT_ICON:
-                WAIT_ICON.start()
+            if window.WAIT_ICON:
+                window.WAIT_ICON.start()
             else:
-                WAIT_ICON2 = True
+                window.WAIT_ICON2 = True
                 jQuery('#loading-indicator').show()
             ajax_get(href2, _on_new_win)
             jQuery('.navbar-ex1-collapse').collapse('hide')
-            #datatable_onresize()
         return False
 
 
 def _on_error(request, settings):
-    nonlocal WAIT_ICON, WAIT_ICON2
-    if WAIT_ICON:
-        WAIT_ICON.stop()
-        WAIT_ICON = None
-    if WAIT_ICON2:
+    if window.WAIT_ICON:
+        window.WAIT_ICON.stop()
+        window.WAIT_ICON = None
+    if window.WAIT_ICON2:
         jQuery('#loading-indicator').hide()
-        WAIT_ICON2 = False
+        window.WAIT_ICON2 = False
 
     if settings.status==200:
         return
@@ -411,73 +352,61 @@ def _on_error(request, settings):
 
 
 def jquery_ready():
-    nonlocal BASE_PATH, RIOT_INIT
-
     jQuery(document).ajaxError(_on_error)
 
-    jQuery('div.dialog-form').on('hide.bs.modal',
-        def(e):
-            nonlocal IS_POPUP
-            IS_POPUP = False
-            jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
-    )
+    def _on_hide(e):
+        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
 
-    jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse",
-        def():
-            console.log("collapsed")
-    )
+    jQuery('div.dialog-form').on('hide.bs.modal', _on_hide)
 
-    if APPLICATION_TEMPLATE == 'traditional':
-        glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+
+    def _local_fun():
+        console.log("collapsed")
+    jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
+
+    if window.APPLICATION_TEMPLATE == 'traditional':
+        window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
 
         page_init('body_body')
     else:
-        if APPLICATION_TEMPLATE == 'modern':
+        if window.APPLICATION_TEMPLATE == 'modern':
             txt  = jQuery('.page').text()
             txt2 = jQuery.trim(txt)
             if txt2:
                 txt = jQuery.trim(jQuery('.page')[0].outerHTML)
                 jQuery('.page').remove()
                 menu = get_menu()
-                menu.new_page(jQuery('title').text(), txt, window.location.href, RIOT_INIT)
+                menu.new_page(jQuery('title').text(), txt, window.location.href, window.RIOT_INIT, page_init)
         else:
-            glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+            window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
             page_init('body_body')
 
 
-window.addEventListener('popstate',
-    def(e):
-        nonlocal PUSH_STATE
-        if e.state:
-            PUSH_STATE = False
-            if APPLICATION_TEMPLATE == 'modern':
-                menu = get_menu().activate(e.state, False)
-            else:
-                x = e.state
-                jQuery('#body_body').html(LZString.decompress(x[0]))
-                glob.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-                glob.ACTIVE_PAGE.set_href(document.location)
 
-                if APPLICATION_TEMPLATE == 'standard':
-                    jQuery('a.menu-href').removeClass('btn-warning')
-                    jQuery('#'+x[1]).addClass('btn-warning')
-            PUSH_STATE = True
+
+def _on_popstate(e):
+    if e.state:
+        window.PUSH_STATE = False
+        if window.APPLICATION_TEMPLATE == 'modern':
+            menu = get_menu().activate(e.state, False)
         else:
-            if APPLICATION_TEMPLATE == 'modern':
-                pass
-            else:
-                jQuery('#body_body').html("")
-                glob.ACTIVE_PAGE = None
-                if APPLICATION_TEMPLATE == 'standard':
-                    jQuery('a.menu-href').removeClass('btn-warning')
-,False)
+            x = e.state
+            jQuery('#body_body').html(LZString.decompress(x[0]))
+            window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
+            window.ACTIVE_PAGE.set_href(document.location)
 
-
-def history_push_state(title, url, data=None):
-    url2 = url.split("?")[0]
-    if data:
-        data2 = [LZString.compress(data[0]),data[1]]
+            if window.APPLICATION_TEMPLATE == 'standard':
+                jQuery('a.menu-href').removeClass('btn-warning')
+                jQuery('#'+x[1]).addClass('btn-warning')
+        window.PUSH_STATE = True
     else:
-        data2 = title
-    window.history.pushState(data2, title, url2)
+        if window.APPLICATION_TEMPLATE == 'modern':
+            pass
+        else:
+            jQuery('#body_body').html("")
+            window.ACTIVE_PAGE = None
+            if window.APPLICATION_TEMPLATE == 'standard':
+                jQuery('a.menu-href').removeClass('btn-warning')
 
+
+window.addEventListener('popstate', _on_popstate, False)

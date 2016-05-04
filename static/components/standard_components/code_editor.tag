@@ -21,84 +21,65 @@
     </style>
     <script>
     
-    
-    
-    this.base_path = BASE_PATH + "static/vanillajs_plugins/ace/src-min";
-    this.value = opts.value;
-    this.href = opts.href;
-    this.changed = false;
-    this.on("mount", function () {
-        var self;
-        self = this;
-        load_js(self.base_path + "/ace.js", function () {
-            var editor, rect;
-            ace.config.set("basePath", self.base_path);
-            editor = ace.edit(self.ceditor);
-            rect = editor.container.getBoundingClientRect();
-            editor.container.style.position = "absolute";
-            editor.container.style.top = rect.top + 2 + "px";
-            editor.container.style.right = "5px";
-            editor.container.style.bottom = "5px";
-            editor.container.style.left = "5px";
-            editor.setTheme("ace/theme/textmate");
-            editor.getSession().setMode("ace/mode/python");
-            editor.setOptions((function(){
-                var ρσ_d = {};
-                ρσ_d[minLines] = 32;
-                return ρσ_d;
-            }).call(this));
-            editor.on("input", (function() {
-                var ρσ_anonfunc = function (e) {
-                    var f, tag;
-                    f = jQuery(":focus");
-                    if (f.length > 0) {
-                        tag = f.get(0).nodeName.toLowerCase();
-                    } else {
-                        (tag === "" || typeof tag === "object" && ρσ_equals(tag, ""));
-                    }
-                    if ((tag === "textarea" || typeof tag === "object" && ρσ_equals(tag, "textarea"))) {
-                        self.changed = true;
-                        self.update();
-                    } else {
-                        setTimeout(function () {
-                            editor.focus();
-                        }, 0);
-                    }
-                };
-                Object.defineProperties(ρσ_anonfunc, {
-                    __argnames__ : {value: ["e"]}
-                });
-                return ρσ_anonfunc;
-            })());
-            editor.getSession().setValue(atob(self.value));
-            self.editor = editor;
-        });
-    });
-    save(e) {
-        var ajax_options;
-        if (this.href) {
-            ajax_options = (function(){
-                var ρσ_d = {};
-                ρσ_d[method] = "POST";
-                ρσ_d[url] = this.href;
-                ρσ_d[dataType] = "html";
-                ρσ_d[data] = (function(){
-                    var ρσ_d = {};
-                    ρσ_d[data] = self.editor.getValue();
-                    return ρσ_d;
-                }).call(this);
-                return ρσ_d;
-            }).call(this);
-            jQuery.ajax(ajax_options).done(function () {
-                self.changed = false;
-                self.update();
-            });
-        }
-    };
-    Object.defineProperties(on_save, {
-        __argnames__ : {value: ["e"]}
-    });
-    </script>
+    		this.base_path = BASE_PATH + 'static/vanillajs_plugins/ace/src-min';
+    		this.value = opts.value;
+    		this.href = opts.href;
+    		this.changed = false;
+    		var _on_mount = function () {
+    			var self = this;
+    			var _on_load = function () {
+    				ace.config.set ('basePath', self.base_path);
+    				var editor = ace.edit (self.ceditor);
+    				var rect = editor.container.getBoundingClientRect ();
+    				editor.container.style.position = 'absolute';
+    				editor.container.style.top = (rect.top + 2) + 'px';
+    				editor.container.style.right = '5px';
+    				editor.container.style.bottom = '5px';
+    				editor.container.style.left = '5px';
+    				editor.setTheme ('ace/theme/textmate');
+    				editor.getSession ().setMode ('ace/mode/python');
+    				editor.setOptions (dict ([[minLines, 32]]));
+    				var _on_input = function (e) {
+    					var f = jQuery (':focus');
+    					if (f.length > 0) {
+    						var tag = f.get (0).nodeName.toLowerCase ();
+    					}
+    					else {
+    						tag == '';
+    					}
+    					if (tag == 'textarea') {
+    						self.changed = true;
+    						self.update ();
+    					}
+    					else {
+    						var _on_timeout = function () {
+    							editor.focus ();
+    						};
+    						setTimeout (_on_timeout, 0);
+    					}
+    				};
+    				editor.on ('input', _on_input);
+    				editor.getSession ().setValue (atob (self.value));
+    				self.editor = editor;
+    			};
+    			load_js (self.base_path + '/ace.js', _on_load);
+    		};
+    		this.on ('mount', _on_mount);
+    		var on_save = function (e) {
+    			if (this.href) {
+    				var ajax_options = dict ([[method, 'POST'], [url, this.href], [dataType, 'html'], [data, dict ([[data, self.editor.getValue ()]])]]);
+    				var _on_ajax = function () {
+    					self.changed = false;
+    					self.update ();
+    				};
+    				jQuery.ajax (ajax_options).done (_on_ajax);
+    			}
+    		};
+    		__pragma__ ('<all>')
+    			__all__._on_mount = _on_mount;
+    			__all__.on_save = on_save;
+    		__pragma__ ('</all>')
+    	</script>
     
     
 </code_editor>

@@ -28,6 +28,7 @@ import sys
 import time
 import datetime
 
+
 INSPECTION = False
 CWD_PATH = os.getcwd()
 SCR_PATH = os.path.dirname(__file__)

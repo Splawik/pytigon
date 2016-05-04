@@ -1,11 +1,12 @@
-import glob
+__pragma__ ('alias', 'jquery_is', 'is')
+
 from scrolltbl import stick_header
 from tools import ajax_post, ajax_post
 
 def datetable_set_height():
     if jQuery(this).hasClass('table_get'):
         return
-    if not jQuery(this).is(':visible'):
+    if not jQuery(this).jquery_is(':visible'):
         return
     elem = jQuery(this).closest(".tabsort_panel")
 
@@ -13,10 +14,12 @@ def datetable_set_height():
     dy_win = jQuery(window).height()
 
     dy_body1 = 0
-    jQuery('.win-header').each(def ():
+
+    def _local_fun():
         nonlocal dy_body1
         dy_body1 += jQuery(this).height()
-    )
+
+    jQuery('.win-header').each(_local_fun)
 
     dy_body2 = jQuery('.win-content').height()
     dy_body = dy_body1+dy_body2
@@ -42,33 +45,36 @@ def _rowStyle(value, row, index):
 
 
 def prepare_datatable(table):
-    table.find('div.second_row').each( def(index ):
-        td = jQuery(this).parent()        
+    def _local_fun(index ):
+        td = jQuery(this).parent()
         tr = td.parent()
         l = tr.find('td').length
         tr.find("td:gt(0)").remove()
         td.attr('colspan', l)
-    )
+    table.find('div.second_row').each(_local_fun)
 
 def datatable_ajax(params):
     url = params['url']
     success = params['success']
-    if 'form' in params['data']:
+    if 'form' in dict(params['data']):
         form = params['data']['form']
         del params['data']['form']
         d = jQuery.param(params['data'])
         url += '?' + d
-        ajax_post(url, form, def(data):
+
+        def _on_post_data(data):
             d2 = JSON.parse(data)
             success(d2)
-        )
+        ajax_post(url, form, _on_post_data)
+
     else:
         d = jQuery.param(params['data'])
         url += '?' + d
-        ajax_get(url, def(data):
+
+        def _on_get_data(data):
             d2 = JSON.parse(data)
             success(d2)
-        )
+        ajax_get(url, _on_get_data)
 
 
 def init_table(table, table_type):
