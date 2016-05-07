@@ -1,1 +1,1 @@
-APPS=['commander','simplescripts','tools','attachements',]
+APPS=['commander','simplescripts','tools','attachements','log',]

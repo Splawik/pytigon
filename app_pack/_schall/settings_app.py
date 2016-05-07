@@ -23,17 +23,17 @@ except:
 APPSET_TITLE = "Pytigon"
 APPSET_NAME = "_schall"
 
-THEMES = ['tablet_modern', 'auto', 'auto']
+THEMES = ['desktop_modern', 'auto', 'auto']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if not DEBUG:
-    URL_ROOT_FOLDER=''
+    URL_ROOT_FOLDER='_schall'
 
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/site_media/'
+    STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
@@ -42,7 +42,8 @@ apps = []
 base_apps_path = os.path.join(_lp, '..')
 for ff in os.listdir(base_apps_path):
     if os.path.isdir( os.path.join(base_apps_path,ff)):
-        apps.append(ff)
+        if ff != 'schdevtools':
+            apps.append(ff)
 for app in apps:
     base_apps_path2 = os.path.join(base_apps_path, app)
     for ff in os.listdir(base_apps_path2):

@@ -39,12 +39,6 @@ import django_select2.urls
 
 import schlib.schindent.indent_style
 
-def get_py_to_js_compiler():
-    return [settings.NODEJS, settings.RAPYD, "-p", "-b", "-m"]
-    #return [settings.NODEJS, settings.RAPYD, "-p", "-b",]
-
-schlib.schindent.indent_style.PY_TO_JS = get_py_to_js_compiler()
-
 #import warnings
 #warnings.simplefilter('error', DeprecationWarning)
 

@@ -37,23 +37,10 @@ if not DEBUG:
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
+
 for app in APPS:
-    if not app in INSTALLED_APPS:
+    if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
-
-#apps = []
-#base_apps_path = os.path.join(_lp, '..')
-#for ff in os.listdir(base_apps_path):
-#    if os.path.isdir( os.path.join(base_apps_path,ff)):
-#        if ff != 'schdevtools':
-#            apps.append(ff)
-#for app in apps:
-#    base_apps_path2 = os.path.join(base_apps_path, app)
-#    for ff in os.listdir(base_apps_path2):
-#        if os.path.isdir( os.path.join(base_apps_path2,ff)):
-#            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
-#                APPS.append(app+"."+ff)
-
         aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:

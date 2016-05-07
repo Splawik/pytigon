@@ -51,7 +51,6 @@ class Page( models.Model):
         ordering = ['id']
         
         
-
     
 
     name = models.CharField('name', null=False, blank=False, editable=True, max_length=64)

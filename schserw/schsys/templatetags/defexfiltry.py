@@ -31,7 +31,10 @@ register = template.Library()
 @register.filter(name='translate')
 def translate(s, lng):
     if lng:
-        return s.replace('.html', "_"+lng+".html")
+        if lng=='en':
+            return s
+        else:
+            return s.replace('.html', "_"+lng+".html")
     else:
         return s
 

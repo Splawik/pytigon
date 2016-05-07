@@ -38,7 +38,6 @@ class Attachements( models.Model):
         ordering = ['id']
         
         
-
     
 
     name = models.CharField('Name', null=True, blank=True, editable=True, max_length=64)
@@ -70,6 +69,8 @@ class Attachements( models.Model):
     
     def save(self, *args, **kwargs):
         self.ext = self.file.url.split('.')[-1].upper()
+        if not self.name:
+            self.name = str(self.file)
         super(Attachements, self).save(*args, **kwargs)
     
 admin.site.register(Attachements)

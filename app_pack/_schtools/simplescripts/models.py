@@ -33,7 +33,6 @@ class Scripts( models.Model):
         ordering = ['id']
         
         
-
     
 
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-05-03 22:24:21
+// Transcrypt'ed from Python, 2016-05-06 20:07:49
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -2389,7 +2389,7 @@ function pytigon () {
 				if (href) {
 					jQuery (this).attr ('action', corect_href (href));
 				}
-				var _on_submit = function () {
+				var _on_submit2 = function (data) {
 					window.ACTIVE_PAGE.page.html (data);
 					page_init (id, false);
 					if (window.WAIT_ICON) {
@@ -2400,7 +2400,7 @@ function pytigon () {
 						window.WAIT_ICON2 = false;
 					}
 				};
-				ajax_submit (jQuery (this), _on_submit);
+				ajax_submit (jQuery (this), _on_submit2);
 			};
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 			fragment_init (window.ACTIVE_PAGE.page);

@@ -562,7 +562,10 @@ def py2js(script, module_path):
     f.write(script)
     f.close()
 
-    transcrypt_lib = os.path.join(os.path.dirname(__file__), "../../ext_lib/transcrypt")
+    import transcrypt
+    #transcrypt.__path__._path[0]
+    #transcrypt_lib = os.path.join(os.path.dirname(__file__), "../../ext_lib/transcrypt")
+    transcrypt_lib = transcrypt.__path__._path[0]
     cmd = [sys.executable, os.path.join(transcrypt_lib, "__main__.py"), '-n', 'pytigon_module.py' ]
 
     def process_output(line):

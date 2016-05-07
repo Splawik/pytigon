@@ -25,8 +25,6 @@ import sys
 import time
 import datetime
 
-import schlib.schindent.indent_style
-
 import platform
 
 if platform.system() == "Windows":
@@ -47,13 +45,11 @@ if ROOT_PATH.startswith('.'):
 EXT_LIB_PATH = ROOT_PATH + '/..'
 sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
-sys.path.insert(0, ROOT_PATH + '/ext_lib')
+sys.path.insert(0,ROOT_PATH + "/python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
 if platform.system() == "Windows":
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_win')
 else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
-
-
 
 def install_0():
     """install plugin

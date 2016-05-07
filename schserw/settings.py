@@ -159,14 +159,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
-if platform.system() == "Linux":
-    NODEJS = 'node'
-    #NODEJS  = ROOT_PATH + '/ext_prg/nodejs/bin/node'
-else:
-    NODEJS  = ROOT_PATH + '/ext_prg/node.exe'
-
-RAPYD = ROOT_PATH + '/ext_prg/rapydscript-ng/bin/rapydscript'
-
 AUTO_RENDER_SELECT2_STATICS = False
 
 try:

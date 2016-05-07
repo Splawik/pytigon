@@ -16,15 +16,16 @@
     
     <script>
     
-    
-    
-    this.items = [];
-    function add(e) {
-        var input;
-        input = e.target[0];
-        this.items.push(input.value);
-        input.value = "";
-    }</script>
+    		this.py_items = list ([]);
+    		var add = function (e) {
+    			var input = e.target [0];
+    			this.py_items.push (input.value);
+    			input.value = '';
+    		};
+    		__pragma__ ('<all>')
+    			__all__.add = add;
+    		__pragma__ ('</all>')
+    	</script>
     
     
 </test>

@@ -172,7 +172,7 @@ def page_init(id, first_time = True):
         if href:
             jQuery(this).attr('action', corect_href(href))
 
-        def _on_submit():
+        def _on_submit2(data):
             nonlocal id
             window.ACTIVE_PAGE.page.html(data)
             page_init(id, False)
@@ -181,7 +181,7 @@ def page_init(id, first_time = True):
             if window.WAIT_ICON2:
                 jQuery('#loading-indicator').hide()
                 window.WAIT_ICON2 = False
-        ajax_submit(jQuery(this), _on_submit)
+        ajax_submit(jQuery(this), _on_submit2)
 
 
     window.ACTIVE_PAGE.page.find('form').submit(_on_submit)

@@ -31,7 +31,6 @@ class Parameter( models.Model):
         ordering = ['id']
         
         
-
     
 
     key = models.CharField('Key', null=False, blank=False, editable=True, max_length=64)
@@ -53,7 +52,6 @@ class Autocomplete( models.Model):
         ordering = ['id']
         
         
-
     
 
     type = models.CharField('Type', null=False, blank=False, editable=True, max_length=64)

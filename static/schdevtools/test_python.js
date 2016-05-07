@@ -1,14 +1,13 @@
 
-var __name__ = "__main__";
-
-function Test() {
-    Test.prototype.__init__.apply(this, arguments);
-}
-Test.prototype.__init__ = function __init__(){
-    var self = this;
-    self.value = 0;
-};
-Test.prototype.get_value = function get_value(){
-    var self = this;
-    return self.value;
-};
+		var Test = __class__ ('Test', [object], {
+			get __init__ () {return __get__ (this, function (self) {
+				self.value = 0;
+			});},
+			get get_value () {return __get__ (this, function (self) {
+				return self.value;
+			});}
+		});
+		__pragma__ ('<all>')
+			__all__.Test = Test;
+		__pragma__ ('</all>')
+	

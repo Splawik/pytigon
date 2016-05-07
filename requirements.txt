@@ -18,7 +18,9 @@ pymysql
 requests
 smmap
 wsgi_intercept
-xlrd
+openpyxl
 markdown2
 httpie
 transcrypt
+lxml
+pillow
