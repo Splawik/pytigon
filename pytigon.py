@@ -42,7 +42,6 @@ if SCR_PATH == '':
 ROOT_PATH = SCR_PATH
 if ROOT_PATH.startswith('.'):
     ROOT_PATH = CWD_PATH + '/' + ROOT_PATH
-EXT_LIB_PATH = ROOT_PATH + '/..'
 sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
 sys.path.insert(0,ROOT_PATH + "/python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))

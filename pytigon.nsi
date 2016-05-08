@@ -17,7 +17,7 @@ InstType "$(no_python_runtime)"
 
 ;--------------------------------
 ;Pages
-  !insertmacro MUI_PAGE_LICENSE "lgpl-3.0.txt"
+  !insertmacro MUI_PAGE_LICENSE "LICENSE"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -36,8 +36,6 @@ Section "pytigon - server"
 
   SectionIn 1 2 3
   
-  SetOutPath $INSTDIR\ext_lib
-  File /r  /x __pycache__ /x *.pyc /x *.pyo ext_lib\*.*
   SetOutPath $INSTDIR\ext_lib_cli_win
   File /r  /x __pycache__ /x *.pyc /x *.pyo ext_lib_cli_win\*.*
   SetOutPath $INSTDIR\ext_prg
@@ -55,7 +53,7 @@ Section "pytigon - server"
   SetOutPath $INSTDIR\templates_src
   File /r templates_src\*.ihtml
   SetOutPath $INSTDIR
-  File lgpl-3.0.txt
+  File LICENSE
   
   ;Store installation folder
   WriteRegStr HKCU "Software\pytigon" "" $INSTDIR
@@ -101,6 +99,8 @@ Section "pytigon - client"
 
   SetOutPath $INSTDIR
   File pytigon.py
+  File pytigon_task.py
+  File wsgi.py
   File pytigon.exe
   File pytigon_cmd.exe
   File pytigon_splash.jpeg
@@ -114,8 +114,8 @@ SectionEnd
 
 Section "python runtime"
   SectionIn 1
-  SetOutPath $INSTDIR\ppython
-  File /r /x *.pyc /x *.pyo /x __pycache__  ppython\*.*
+  SetOutPath $INSTDIR\python
+  File /r /x *.pyo /x __pycache__  python\*.*
 SectionEnd
 
 

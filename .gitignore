@@ -3,8 +3,6 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
-ext_lib_cli_lin/
-ext_lib_cli_win/
 templates/
 
 # Installer logs
