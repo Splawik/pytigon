@@ -23,4 +23,4 @@ markdown2
 httpie
 transcrypt
 lxml
-pillow
+Pillow
