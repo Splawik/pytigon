@@ -4,6 +4,7 @@ django-crispy-forms
 django-debug_toolbar
 django_extensions
 django_python3_ldap
+django-appconf
 django_select2
 PyExecJS
 fpdf
