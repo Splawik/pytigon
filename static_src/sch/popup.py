@@ -278,6 +278,8 @@ window.on_delete_ok = on_delete_ok
 def on_cancel_inline(elem):
     jQuery(elem).closest('.inline_dialog').remove()
 
+window.on_cancel_inline = on_cancel_inline
+
 
 def ret_ok(id, title):
     window.RET_CONTROL.select2('data', {id: id, text: title}).trigger("change")

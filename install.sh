@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     ./python/bin/pip install  -r requirements.txt
-    ./python/bin/python ./ext_prg/http -dco ./ext_prg/tcc-0.9.26.tar.bz2 http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26.tar.bz2
+    curl -L -o ./ext_prg/tcc-0.9.26.tar.bz2 http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26.tar.bz2
     tar xjf ./ext_prg/tcc-0.9.26.tar.bz2 -C ./ext_prg/
+    rm ./ext_prg/tcc-0.9.26.tar.bz2
     mv ./ext_prg/tcc-0.9.26 ./ext_prg/tcc
     cd ./ext_prg/tcc
     ./configure --disable-static
@@ -29,9 +30,9 @@ else
     curl -L -o ./ext_prg/LinkRes2Exe.zip http://pytigon.tk/download/LinkRes2Exe.zip
     unzip ./ext_prg/LinkRes2Exe.zip -d ./ext_prg
     rm ./ext_prg/LinkRes2Exe.zip
-    ./ext_prg/tcc pytigon.c -ladvapi32
+    ./ext_prg/tcc/tcc pytigon.c -ladvapi32
     ./ext_prg/LinkRes2Exe pytigon.res pytigon.exe
-    ./ext_prg/tcc pytigon_cmd.c -ladvapi32
+    ./ext_prg/tcc/tcc pytigon_cmd.c -ladvapi32
     ./ext_prg/LinkRes2Exe pytigon.res pytigon_cmd.exe
     curl -L -o ./install/vcredist_x86.exe http://pytigon.tk/download/vcredist_x86.exe
 fi

@@ -1,0 +1,24 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load crispy_forms_tags
+% load staticfiles
+
+%% js_extrascipts
+    {{block.super}}
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    
+
+%% body_footer
+    {{block.super}}
+
+%% riot_init
+     .riot_init = [] 
