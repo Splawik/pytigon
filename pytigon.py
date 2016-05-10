@@ -44,7 +44,10 @@ if ROOT_PATH.startswith('.'):
     ROOT_PATH = CWD_PATH + '/' + ROOT_PATH
 sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
-sys.path.insert(0,ROOT_PATH + "/python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
+
+from schlib import init_paths
+init_paths()
+
 if platform.system() == "Windows":
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_win')
 else:

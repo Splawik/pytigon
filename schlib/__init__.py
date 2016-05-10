@@ -17,3 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import sys
+import platform
+
+def init_paths():
+    base_path = __file__.replace("__init__.py", "")
+    if base_path == "":
+        base_path = "./"
+    if platform.system() == "Windows":
+        sys.path.insert(0,base_path + "../../python/lib/site-packages")
+    else:
+        sys.path.insert(0,base_path + "../../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
