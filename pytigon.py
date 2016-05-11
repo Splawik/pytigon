@@ -53,6 +53,7 @@ if platform.system() == "Windows":
 else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
 
+
 def install_0():
     """install plugin
     """

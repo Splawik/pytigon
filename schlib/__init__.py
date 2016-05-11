@@ -19,12 +19,25 @@
 
 import sys
 import platform
+import os
 
 def init_paths():
     base_path = __file__.replace("__init__.py", "")
+
     if base_path == "":
         base_path = "./"
+
     if platform.system() == "Windows":
-        sys.path.insert(0,base_path + "../../python/lib/site-packages")
+        p = base_path + "../python/lib/site-packages"
     else:
-        sys.path.insert(0,base_path + "../../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
+        p = base_path + "../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])
+
+    p = os.path.abspath(p)
+    sys.path.insert(0, p)
+
+    tmp = []
+    for pos in sys.path:
+        if not pos in tmp:
+            if not '.zip' in pos:
+                tmp.append(pos)
+    sys.path = tmp
