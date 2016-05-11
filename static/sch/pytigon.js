@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-05-06 20:07:49
+// Transcrypt'ed from Python, 2016-05-11 22:29:42
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -1508,6 +1508,7 @@ function pytigon () {
 					var on_cancel_inline = function (elem) {
 						jQuery (elem).closest ('.inline_dialog').remove ();
 					};
+					window.on_cancel_inline = on_cancel_inline;
 					var ret_ok = function (id, title) {
 						window.RET_CONTROL.select2 ('data', dict ([[id, id], [text, title]])).trigger ('change');
 						window.RET_CONTROL.val (id.toString ());
@@ -2018,11 +2019,17 @@ function pytigon () {
 						_req_post (req, url, data, complete);
 					};
 					window.ajax_post = ajax_post;
-					var ajax_submit = function (form, complete) {
+					var ajax_submit = function (form, complete, data_filter) {
+						if (typeof data_filter == 'undefined' || (data_filter != null && data_filter .__class__ == __kwargdict__)) {;
+							var data_filter = null;
+						};
 						var req = new XMLHttpRequest ();
 						if (form.find ("[type='file']").length > 0) {
 							form.attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
 							var data = new FormData (form [0]);
+							if (data_filter) {
+								var data = data_filter (data);
+							}
 							form.closest ('div').append ("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
 							var _progressHandlingFunction = function (e) {
 								if (e.lengthComputable) {
@@ -2033,6 +2040,9 @@ function pytigon () {
 						}
 						else {
 							var data = form.serialize ();
+							if (data_filter) {
+								var data = data_filter (data);
+							}
 						}
 						_req_post (req, corect_href (form.attr ('action')), data, complete);
 					};

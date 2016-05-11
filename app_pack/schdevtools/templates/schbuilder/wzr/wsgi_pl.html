@@ -6,8 +6,8 @@ if base_path == "":
 else:
     os.chdir(base_path)
 
-sys.path.insert(0,base_path + "./")
-sys.path.insert(0,base_path + "../..")
+sys.path.insert(0,os.path.abspath(base_path + "./"))
+sys.path.insert(0,os.path.abspath(base_path + "../.."))
 
 from schlib import init_paths
 init_paths()

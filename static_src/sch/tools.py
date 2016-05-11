@@ -76,12 +76,14 @@ def ajax_post(url, data, complete):
 
 window.ajax_post = ajax_post
 
-def ajax_submit(form, complete):
+def ajax_submit(form, complete, data_filter=None):
     req = __new__(XMLHttpRequest())
 
     if form.find("[type='file']").length > 0:
         form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
         data = __new__(FormData(form[0]))
+        if data_filter:
+            data = data_filter(data)
         form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         def _progressHandlingFunction(e):
             if e.lengthComputable:
@@ -89,6 +91,8 @@ def ajax_submit(form, complete):
         req.upload.addEventListener("progress", _progressHandlingFunction, False)
     else:
         data = form.serialize()
+        if data_filter:
+            data = data_filter(data)
 
     _req_post(req, corect_href(form.attr("action")), data, complete)
 

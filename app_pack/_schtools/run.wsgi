@@ -6,9 +6,11 @@ if base_path == "":
 else:
     os.chdir(base_path)
 
-sys.path.insert(0,base_path + "./")
-sys.path.insert(0,base_path + "../../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
-sys.path.insert(0,base_path + "../..")
+sys.path.insert(0,os.path.abspath(base_path + "./"))
+sys.path.insert(0,os.path.abspath(base_path + "../.."))
+
+from schlib import init_paths
+init_paths()
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
