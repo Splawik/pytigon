@@ -38,7 +38,9 @@
     				editor.container.style.left = '5px';
     				editor.setTheme ('ace/theme/textmate');
     				editor.getSession ().setMode ('ace/mode/python');
-    				editor.setOptions (dict ([[minLines, 32]]));
+    				console.log("X1");
+                    editor.setOptions ({minLines: 32});
+                    console.log("X2");
     				var _on_input = function (e) {
     					var f = jQuery (':focus');
     					if (f.length > 0) {
@@ -58,11 +60,18 @@
     						setTimeout (_on_timeout, 0);
     					}
     				};
+                    console.log("U1");
     				editor.on ('input', _on_input);
+                    console.log("U2");
+                    console.log(this.value);
     				editor.getSession ().setValue (atob (self.value));
+                    console.log("U3");
     				self.editor = editor;
+                    console.log("U4");
     			};
     			load_js (self.base_path + '/ace.js', _on_load);
+                console.log("U5");
+
     		};
     		this.on ('mount', _on_mount);
     		var on_save = function (e) {

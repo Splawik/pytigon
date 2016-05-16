@@ -12,9 +12,10 @@
             self.list1.BlockRefresh()
             self.list1.SetFocus()
 
-            self.list1.Bind(wx.EVT_LISTBOX, self.OnListSelected)
-            self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
-            self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+            self.list1.Bind(wx.EVT_LISTBOX, self.on_list_selected)
+            self.list1.Bind(wx.EVT_LISTBOX_DCLICK, self.on_list_ret)
+            #self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
+            #self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
 
             self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
             aTable = [(0, wx.WXK_RETURN, ID_RetValue),]
@@ -59,13 +60,13 @@
             self.retlist = self.choices[id]
             self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
 
-        def OnListSelected(self, event):
-            if self.listclick==True:
-                id = event.GetSelection()
-                self.retlist = self.choices[id]
-            else:
-                event.Skip()
-                self.listclick=False
+        def on_list_selected(self, event):
+            id = event.GetSelection()
+            self.retlist = self.choices[id]
+
+        def on_list_ret(self, event):
+            self.on_list_selected(event)
+            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
 
 %% form_bar
 

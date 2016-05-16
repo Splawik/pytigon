@@ -8,7 +8,7 @@
     			var self = this;
     			var _on_loadjs = function () {
     				var data = list ([list (['Column A', 'Column B', 'Column C']), list (['1', '2', '3'])]);
-    				var htable = __new_window.Handsontable (self.handsontablediv, dict ({'data': data}));
+    				var htable = new window.Handsontable (self.handsontablediv, dict ({'data': data}));
     				self.htable = htable;
     			};
     			load_js (self.base_path + '/handsontable.full.js', _on_loadjs);
