@@ -1820,6 +1820,7 @@ class CHOICE(POPUPHTML):
         #else:
             kwds['size'] = wx.Size(250, -1)
 
+        kwds['dialog_with_value'] = False
         POPUPHTML.__init__(self, *args, **kwds)
 
         choices = None

@@ -39,11 +39,10 @@ from wx.adv import LayoutAlgorithm
 """
 
 class DataPopup(wx.ComboPopup):
-    def __init__(self, parent, id, title, size, style, combo, href):
+    def __init__(self, size, combo, href):
         self.href = href
         self.combo = combo
         self.size = size
-        self.dismiss_block = False
         wx.ComboPopup.__init__(self)
         self.html = None
 
@@ -96,6 +95,10 @@ class DataPopupControl(ComboCtrl):
         else:
             kwds['style'] = wx.TE_PROCESS_ENTER
 
+        if 'dialog_with_value' in kwds:
+            self.dialog_with_value = kwds['dialog_with_value']
+            del kwds['dialog_with_value']
+
         ComboCtrl.__init__(self, *args, **kwds)
 
         self.win = None
@@ -110,7 +113,6 @@ class DataPopupControl(ComboCtrl):
 
         self.Http = wx.GetApp().get_http(self)
         self.Http.get(self, str(self.href) + "size/")
-
         self.size = schjson.loads(self.Http.str())
         self.Http.clear_ptr()
 
@@ -124,24 +126,25 @@ class DataPopupControl(ComboCtrl):
         self.DismissObject = None
         self.EventObject = None
 
-        pos = self.GetScreenPosition()
-        pos = (pos[0], pos[1] + self.GetSize()[1])
-
         self.sash = None
         self.popup = None
-        self.defSize = False
 
-        self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
+        self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
 
         self.simpleDialog = True
-        #self.simpleDialog = False
         if self.GetTextCtrl():
             self.GetTextCtrl().SetForegroundColour(wx.Colour(0, 0, 0))
 
         self.UseAltPopupWindow(enable=True)
+
         popoup = self._create_popoup()
         self.SetPopupControl(popoup)
 
+
+    def _create_popoup(self):
+        if not self.popup:
+            self.popup = DataPopup(size=self.size, combo=self, href=self.href)
+        return self.popup
 
     def to_masked(self, **kwds):
         self.win = ComboCtrl.GetTextCtrl(self)
@@ -161,8 +164,6 @@ class DataPopupControl(ComboCtrl):
             self.SetFocus()
 
     def any_parent_command(self, command, *args, **kwds):
-        '''Uruchomienie komendy okna nadrzędnego np: any_parent_command("RegisterRefrObj",self)'''
-
         parent = self
         while parent != None:
             if hasattr(parent, command):
@@ -170,7 +171,7 @@ class DataPopupControl(ComboCtrl):
             parent = parent.GetParent()
         return None
 
-    def OnSetFocus(self, event):
+    def on_setfocus(self, event):
         value = ComboCtrl.GetValue(self)
         self.FocusIn(value)
         event.Skip()
@@ -185,73 +186,12 @@ class DataPopupControl(ComboCtrl):
             if hasattr(self.EventObject, "OnBeforeButtonClick"):
                 self.EventObject.OnBeforeButtonClick()
 
-        if self.simpleDialog:
-            self.RunExtDialog()
-        else:
-            self.RunSimpleDialog()
+        self.RunExtDialog()
 
         if self.EventObject:
             if hasattr(self.EventObject, "OnButtonClick"):
                 self.EventObject.OnButtonClick()
 
-    def _OnButtonClick(self):
-        if self.EventObject:
-            if hasattr(self.EventObject, "OnBeforeButtonClick"):
-                self.EventObject.OnBeforeButtonClick()
-
-        if self.simpleDialog:
-            self.RunSimpleDialog()
-        else:
-            self.RunExtDialog()
-
-        if self.EventObject:
-            if hasattr(self.EventObject, "OnButtonClick"):
-                self.EventObject.OnButtonClick()
-
-    def _create_popoup(self):
-        if not self.popup:
-            pos = self.GetScreenPosition()
-            pos = (pos[0], pos[1] + self.GetSize()[1])
-            if self.GetTextCtrl():
-                self.popup = DataPopup(self.GetTextCtrl(), -1, "Wybierz pozycję", size=self.size, style=wx.DEFAULT_DIALOG_STYLE,
-                                combo=self, href=self.href)
-            else:
-                self.popup = DataPopup(self, -1, "Wybierz pozycję", size=self.size, style=wx.DEFAULT_DIALOG_STYLE,
-                                combo=self, href=self.href)
-        return self.popup
-
-    def RunSimpleDialog(self):
-        if not self.popup:
-            pos = self.GetScreenPosition()
-            pos = (pos[0], pos[1] + self.GetSize()[1])
-            if self.GetTextCtrl():
-                self.popup = DataPopup(self.GetTextCtrl(), -1, "Wybierz pozycję", pos=pos, size=self.size, style=wx.DEFAULT_DIALOG_STYLE,
-                                combo=self, href=self.href)
-            else:
-                self.popup = DataPopup(self, -1, "Wybierz pozycję", pos=pos, size=self.size, style=wx.DEFAULT_DIALOG_STYLE,
-                                combo=self, href=self.href)
-            self.popup.Show()
-
-        pos = self.GetScreenPosition()
-        pos = (pos[0], pos[1] + self.GetSize()[1])
-        pos = [pos[0], pos[1]]
-
-        screen_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
-        screen_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
-
-        try:
-            popup_size = self.popup.GetSize()
-        except:
-            popup_size = self.popup.GetSizeTuple()
-
-        if pos[0] + popup_size[0] > screen_dx:
-            pos[0] = screen_dx - popup_size[0]
-        if pos[1] + popup_size[1] > screen_dy:
-            pos[1] = pos[1]-self.GetSize().GetHeight()-popup_size[1]
-
-        self.defSize = True
-        self.popup.SetXY(pos)
-        self.popup.Popup()
 
     def RunExtDialog(self):
         self.GetTextCtrl().SetFocus()
@@ -264,7 +204,8 @@ class DataPopupControl(ComboCtrl):
         else:
             href = self.href
 
-        self.sash = self.GetParent().NewChildPage(str(href + "dialog/|value"), "Wybierz pozycję", parm)
+        _href = href + "dialog/|value" if self.dialog_with_value else href + "dialog/"
+        self.sash = self.GetParent().NewChildPage(str(_href), "Wybierz pozycję", parm)
         self.sash.Body.old_any_parent_command = self.sash.Body.any_parent_command
         self.sash.Body.any_parent_command = self.any_parent_command
         self.sash.Body.parent_combo = self
@@ -318,7 +259,6 @@ class DataPopupControl(ComboCtrl):
         if hasattr(parent, "OnPopupControlChangeValue"):
             parent.OnPopupControlChangeValue(self)
 
-
     def get_rec(self):
         return self.RecValue
 
@@ -327,14 +267,12 @@ class DataPopupControl(ComboCtrl):
         self.SetValue(self.ClearStr)
         self.RecValue = []
 
-
-
     def on_create(self, parent):
         from schcli.guiframe.htmlsash import SchSashWindow
-        self.html = SchSashWindow(parent, self.href + "dialog/|value", self, size=self.size)
+        href = self.href + "dialog/|value" if self.dialog_with_value else self.href + "dialog/"
+        self.html = SchSashWindow(parent, href, self, size=self.size)
         self.html.Body.parent_combo = self
         return self.html
-
 
     def on_popoup(self):
         if self.html:
@@ -344,8 +282,8 @@ class DataPopupControl(ComboCtrl):
                 self.html.refresh_html()
                 self.html.SetFocus()
                 self.html.on_size(None)
-                self.html.Body.find_value = self.StartValue
-                self.html.Body.RefrList()
+                #self.html.Body.find_value = self.StartValue
+                self.html.Body.RefrList(self.StartValue)
                 self.html.Body.Show()
                 wx.EndBusyCursor()
             wx.CallAfter(_after)
@@ -374,7 +312,10 @@ class DataPopupControl(ComboCtrl):
         else:
             href3 = self.href
 
-        href3 += "dialog/|value"
+        if self.dialog_with_value:
+            href3 += "dialog/|value"
+        else:
+            href3 += "dialog/"
 
         if self.popup:
             self.popup.set_new_href(href3)

@@ -2,7 +2,7 @@
 
 % extends "form.html"
 
-%% _cache
+%% cache
     meta http-equiv=Cache-control,,,content=public
 
 %% pythoncode
@@ -52,7 +52,12 @@
             else:
                 event.Skip()
 
-        def RefrList(self):
+        def RefrList(self, value=None):
+            if value:
+                self.find_value = value
+            #else:
+            #    self.find_value = ""
+
             if hasattr(self,'choices'):
                 self.list1.Clear()
                 for item in self.choices:
@@ -76,6 +81,5 @@
 %% form_bar
 
 %% content
-    .[{{value}}]
     CTRLLISTBOX name=list1,,,width=100%,,,height=100%
 
