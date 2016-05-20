@@ -66,6 +66,7 @@ def schurljoin(base, address):
         return base + address
 
 
+
 class HttpClient:
 
     def __init__(self, address):
@@ -73,6 +74,7 @@ class HttpClient:
         self.http = None
         self.content = ""
         self.ret_content_type = None
+        self.http_cache = {}
 
     def close(self):
         pass
@@ -80,7 +82,7 @@ class HttpClient:
     def post(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None):
         return self.get(parent, address_str, parm, upload, credentials, user_agent, True)
 
-    def get(self, parent, address_str, parm=None,                                                                                                                                                                                                                   upload = False, credentials=False, user_agent=None, post_request=False):
+    def get(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, post_request=False):
         global COOKIES
         global BLOCK
         if BLOCK:
@@ -106,6 +108,12 @@ class HttpClient:
         adr = replace_dot(adr)
         adr = adr.replace(' ', '%20')
         print(">>>>>>>>", adr)
+
+        if not post_request:
+            if adr in self.http_cache:
+                self.ret_content_type = self.http_cache[adr][0]
+                self.content = self.http_cache[adr][1]
+                return (200, adr)
 
         if adr.startswith('http://127.0.0') and ('/static/' in adr or '/site_media' in adr) and not '?' in adr:
             if '/static/' in adr:
@@ -200,6 +208,9 @@ class HttpClient:
                     with open("last_error.html", "wb") as f:
                         f.write(self.content)
                 return (500, self.http.url)
+
+        if not post_request and type(self.content)==bytes and b'Cache-control' in self.content:
+            self.http_cache[adr]=(self.ret_content_type, self.content)
 
         return (self.http.status_code, self.http.url)
 

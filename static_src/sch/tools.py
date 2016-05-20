@@ -84,7 +84,12 @@ def ajax_submit(form, complete, data_filter=None):
         data = __new__(FormData(form[0]))
         if data_filter:
             data = data_filter(data)
-        form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
+        #if not form.f("div").find("#progress").length == 1:
+        if not form.find("#progress").length == 1:        
+            form.find('div.inline-form-body').append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
+            #form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
+        else:
+            jQuery("#progress").width("0%")
         def _progressHandlingFunction(e):
             if e.lengthComputable:
                 jQuery("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-05-12 20:57:22
+// Transcrypt'ed from Python, 2016-05-20 11:39:45
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -2030,7 +2030,12 @@ function pytigon () {
 							if (data_filter) {
 								var data = data_filter (data);
 							}
-							form.closest ('div').append ("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
+							if (!(form.find ('#progress').length == 1)) {
+								form.find ('div.inline-form-body').append ("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
+							}
+							else {
+								jQuery ('#progress').width ('0%');
+							}
 							var _progressHandlingFunction = function (e) {
 								if (e.lengthComputable) {
 									jQuery ('#progress').width (('' + parseInt ((100 * e.loaded) / e.total)) + '%');

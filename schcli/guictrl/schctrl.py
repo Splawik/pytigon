@@ -1876,11 +1876,13 @@ class CHOICE(POPUPHTML):
         ret = self.AlternateButtonClick()
         if self.sash:
             self.sash.Body.choices = self.choices
-            self.sash.Body.RefrList()
+            #self.sash.Body.RefrList()
+            wx.CallAfter(self.sash.Body.RefrList)
         else:
             self.popup.html.Body.choices = self.choices
             #print "CHOICES:", self.choices
-            self.popup.html.Body.RefrList()
+            #self.popup.html.Body.RefrList()
+            wx.CallAfter(self.sash.Body.RefrList)
         return ret
 
     #def OnButtonClick(self):
@@ -1892,11 +1894,13 @@ class CHOICE(POPUPHTML):
             ret = POPUPHTML.OnButtonClick(self)
             self.popup.html.Body.choices = self.choices
             #print "TEST:", self.popup.html.Body, self.popup.html.GetParent()
-            self.popup.html.Body.RefrList()
+            #self.popup.html.Body.RefrList()
+            wx.CallAfter(self.popup.html.Body.RefrList)
         else:
             ret = POPUPHTML.OnButtonClick(self)
             self.sash.Body.choices = self.choices
-            self.sash.Body.RefrList()
+            wx.CallAfter(self.popup.html.Body.RefrList)
+            #self.sash.Body.RefrList()
         return ret
 
     def GetValue(self):

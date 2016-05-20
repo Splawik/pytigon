@@ -164,7 +164,7 @@ def listdialog(request, akcja):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p['value'].encode('ascii'))
+        value = b32decode(p['value'].encode('ascii')).decode('utf-8')
         if value == None:
             value = ''
     else:
@@ -174,7 +174,8 @@ def listdialog(request, akcja):
         return HttpResponse(schjson.dumps((250, 300)))
     if akcja == 'dialog':
         c = RequestContext(request, {'value': value})
-        return render_to_response('schsys/list.html', context_instance=c)
+        ret = render_to_response('schsys/list.html', context_instance=c)
+        return ret
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')

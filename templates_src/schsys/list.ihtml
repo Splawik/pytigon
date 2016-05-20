@@ -2,11 +2,14 @@
 
 % extends "form.html"
 
+%% _cache
+    meta http-equiv=Cache-control,,,content=public
+
 %% pythoncode
     script language=python
         def init_form(self):
             from schcli.guilib.schevent import ID_RetValue
-
+            self.find_value = ""
             self.listclick=False
             self.retlist = None
             self.list1.BlockRefresh()
@@ -30,7 +33,9 @@
             self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
 
         def FindValueStr(self):
-            return '{{value}}'
+            #print('FindValueStr:', '{{value}}')
+            #return '{{value}}'
+            return self.find_value
 
         def OnLDown(self, event):
             self.listclick=True
@@ -71,5 +76,6 @@
 %% form_bar
 
 %% content
+    .[{{value}}]
     CTRLLISTBOX name=list1,,,width=100%,,,height=100%
 
