@@ -109,7 +109,7 @@ class HttpClient:
         adr = adr.replace(' ', '%20')
         print(">>>>>>>>", adr)
 
-        if not post_request:
+        if not post_request and not '?' in adr:
             if adr in self.http_cache:
                 self.ret_content_type = self.http_cache[adr][0]
                 self.content = self.http_cache[adr][1]
@@ -209,7 +209,7 @@ class HttpClient:
                         f.write(self.content)
                 return (500, self.http.url)
 
-        if not post_request and type(self.content)==bytes and b'Cache-control' in self.content:
+        if not post_request and not '?' in adr and type(self.content)==bytes and b'Cache-control' in self.content:
             self.http_cache[adr]=(self.ret_content_type, self.content)
 
         return (self.http.status_code, self.http.url)

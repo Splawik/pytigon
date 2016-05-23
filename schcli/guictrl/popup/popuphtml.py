@@ -42,28 +42,25 @@ class DataPopup(wx.ComboPopup):
     def __init__(self, size, combo, href):
         self.href = href
         self.combo = combo
+        self.html = None
         self.size = size
         wx.ComboPopup.__init__(self)
-        self.html = None
 
     def Create(self, parent):
         self.html = self.combo.on_create(parent)
-
         parent.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
-
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self.html, 1, wx.ALL|wx.GROW, 1)
         parent.SetSizer(box)
         parent.SetAutoLayout(True)
         parent.Fit()
-
         return True
 
     def GetControl(self):
         return self.html
 
     def GetStringValue(self):
-        return self.combo.StartValue
+        return self.combo.start_value
 
     def on_key_down(self, event):
         if event.KeyCode == wx.WXK_ESCAPE:
@@ -85,7 +82,7 @@ class DataPopup(wx.ComboPopup):
         height = self.size[1]
         return wx.ComboPopup.GetAdjustedSize(self, width, height, maxHeight)
 
-#-------------------------------------------------
+
 
 class DataPopupControl(ComboCtrl):
 
@@ -103,6 +100,16 @@ class DataPopupControl(ComboCtrl):
 
         self.win = None
         self.html = None
+        self.rec_value = []
+        self.event_object = None
+        self.sash = None
+        self.popup = None
+        self.start_value = ""
+
+        if self.defaultvalue:
+            self.clear_str = self.defaultvalue
+        else:
+            self.clear_str = ""
 
         href = self.href.split(';')
         if len(href)>1:
@@ -111,23 +118,10 @@ class DataPopupControl(ComboCtrl):
         else:
             self.href2=None
 
-        self.Http = wx.GetApp().get_http(self)
-        self.Http.get(self, str(self.href) + "size/")
-        self.size = schjson.loads(self.Http.str())
-        self.Http.clear_ptr()
-
-        self.RecValue = []
-        if self.defaultvalue:
-            self.ClearStr = self.defaultvalue
-        else:
-            self.ClearStr = ""
-        self.StartValue = ""
-
-        self.DismissObject = None
-        self.EventObject = None
-
-        self.sash = None
-        self.popup = None
+        self.http = wx.GetApp().get_http(self)
+        self.http.get(self, str(self.href) + "size/")
+        self.size = schjson.loads(self.http.str())
+        self.http.clear_ptr()
 
         self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
 
@@ -163,6 +157,11 @@ class DataPopupControl(ComboCtrl):
         else:
             self.SetFocus()
 
+    def KillFocus(self):
+        value = ComboCtrl.GetValue(self)
+        if self.readonly:
+            self.focus_out(value)
+
     def any_parent_command(self, command, *args, **kwds):
         parent = self
         while parent != None:
@@ -173,27 +172,21 @@ class DataPopupControl(ComboCtrl):
 
     def on_setfocus(self, event):
         value = ComboCtrl.GetValue(self)
-        self.FocusIn(value)
+        self.focus_in(value)
         event.Skip()
 
-    def KillFocus(self):
-        value = ComboCtrl.GetValue(self)
-        if self.readonly:
-            self.FocusOut(value)
+    def alternate_button_click(self):
+        if self.event_object:
+            if hasattr(self.event_object, "on_before_button_click"):
+                self.event_object.on_before_button_click()
 
-    def AlternateButtonClick(self):
-        if self.EventObject:
-            if hasattr(self.EventObject, "OnBeforeButtonClick"):
-                self.EventObject.OnBeforeButtonClick()
+        self.run_ext_dialog()
 
-        self.RunExtDialog()
+        if self.event_object:
+            if hasattr(self.event_object, "OnButtonClick"):
+                self.event_object.OnButtonClick()
 
-        if self.EventObject:
-            if hasattr(self.EventObject, "OnButtonClick"):
-                self.EventObject.OnButtonClick()
-
-
-    def RunExtDialog(self):
+    def run_ext_dialog(self):
         self.GetTextCtrl().SetFocus()
 
         parm = dict()
@@ -205,36 +198,35 @@ class DataPopupControl(ComboCtrl):
             href = self.href
 
         _href = href + "dialog/|value" if self.dialog_with_value else href + "dialog/"
-        self.sash = self.GetParent().NewChildPage(str(_href), "Wybierz pozycję", parm)
+        self.sash = self.GetParent().NewChildPage(str(_href), "Select", parm)
         self.sash.Body.old_any_parent_command = self.sash.Body.any_parent_command
         self.sash.Body.any_parent_command = self.any_parent_command
         self.sash.Body.parent_combo = self
 
-    def GetLastControlWithFocus(self):
+    def get_last_control_with_focus(self):
         return self
 
-    def FocusIn(self, value):
+    def focus_in(self, value):
         pass
 
-    def FocusOut(self, value):
-        if str(value) != self.StartValue:
+    def focus_out(self, value):
+        if str(value) != self.start_value:
             if not str(value) == "":
-                self.Http = wx.GetApp().get_http(self)
+                self.http = wx.GetApp().get_http(self)
                 x = b32encode(value.encode('utf-8'))
-                self.Http.post(self, str(self.href) + "test/", {"value": x})
-                #self.Http.Get(self, str(self.href) + "test/", {"value": b32encode(value).encode('utf-8')})
-                tab = schjson.loads(self.Http.str())
+                self.http.post(self, str(self.href) + "test/", {"value": x})
+                tab = schjson.loads(self.http.str())
                 ret = tab[0]
 
-                self.Http.clear_ptr()
+                self.http.clear_ptr()
                 if ret != 1:
                     if ret == 2:
                         self.forceFocus = False
                         self.OnButtonClick()
                     else:
-                        self.ClearRec()
+                        self.clear_rec()
                 else:
-                    self.SetRec(tab[1], tab[2], False)
+                    self.set_rec(tab[1], tab[2], False)
 
     def has_parm(self, parm):
         return True if parm=='value' else False
@@ -242,30 +234,30 @@ class DataPopupControl(ComboCtrl):
     def get_parm(self, parm):
         return b32encode(ComboCtrl.GetValue(self).encode('utf-8')) if parm=='value' else None
 
-    def SetRec(self, value, value_rec, dismiss=False):
+    def set_rec(self, value, value_rec, dismiss=False):
         value2 = value
-        if self.EventObject:
-            if hasattr(self.EventObject, "SetRec"):
-                value2 = self.EventObject.SetRec(value, value_rec, dismiss)
+        if self.event_object:
+            if hasattr(self.event_object, "set_rec"):
+                value2 = self.event_object.set_rec(value, value_rec, dismiss)
 
-        self.StartValue = value2
+        self.start_value = value2
         self.SetValue(value2)
-        self.RecValue = value_rec
+        self.rec_value = value_rec
 
         if dismiss:
             self.Dismiss()
 
         parent = self.GetParent()
-        if hasattr(parent, "OnPopupControlChangeValue"):
-            parent.OnPopupControlChangeValue(self)
+        if hasattr(parent, "on_popup_control_change_value"):
+            parent.on_popup_control_change_value(self)
 
     def get_rec(self):
-        return self.RecValue
+        return self.rec_value
 
-    def ClearRec(self):
-        self.StartValue = ""
-        self.SetValue(self.ClearStr)
-        self.RecValue = []
+    def clear_rec(self):
+        self.start_value = ""
+        self.SetValue(self.clear_str)
+        self.rec_value = []
 
     def on_create(self, parent):
         from schcli.guiframe.htmlsash import SchSashWindow
@@ -282,8 +274,7 @@ class DataPopupControl(ComboCtrl):
                 self.html.refresh_html()
                 self.html.SetFocus()
                 self.html.on_size(None)
-                #self.html.Body.find_value = self.StartValue
-                self.html.Body.RefrList(self.StartValue)
+                self.html.Body.refr_list(self.start_value)
                 self.html.Body.Show()
                 wx.EndBusyCursor()
             wx.CallAfter(_after)

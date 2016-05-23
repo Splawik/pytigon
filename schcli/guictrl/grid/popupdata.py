@@ -99,21 +99,21 @@ class PopupDataCellEditor(GridCellEditor):
         ):
 
         self.grid = grid
-        self.startValue = None
+        self.start_value = None
         value = grid.GetTable().GetValue(row, col)
 
         if value.__class__ == datetime.date:
-            self.startValue = value.isoformat()
+            self.start_value = value.isoformat()
 
         if isinstance(value, six.text_type):
-            self.startValue = value
+            self.start_value = value
         else:
-            self.startValue = str(value)
+            self.start_value = str(value)
 
-        print(">>>>>", self.startValue)
-        self._tc.FocusIn(self.startValue)
-        if self.startValue:
-            self._tc.SetRec(self.startValue, (self.startValue, ))
+        print(">>>>>", self.start_value)
+        self._tc.focus_in(self.start_value)
+        if self.start_value:
+            self._tc.set_rec(self.start_value, (self.start_value, ))
         self._tc.SetInsertionPointEnd()
         self._tc.GetTextCtrl().SetSelection(0, -1)
         self._tc.GetTextCtrl().SetFocus()
@@ -125,11 +125,11 @@ class PopupDataCellEditor(GridCellEditor):
         grid,
         old_value
         ):
-        self._tc.FocusOut(self._tc.GetValue())
+        self._tc.focus_out(self._tc.GetValue())
         changed = False
         value = self._tc.GetValue()
         print("<<<<<", value)
-        if str(value) != str(self.startValue):
+        if str(value) != str(self.start_value):
             changed = True
             grid.GetTable().SetValue(row, col, value)  # update the table
         grid.SetFocus()
@@ -138,11 +138,11 @@ class PopupDataCellEditor(GridCellEditor):
     def ApplyEdit(self, row, col, grid):
         val = self._tc.GetValue()
         grid.GetTable().SetValue(row, col, val)
-        self.startValue = ''
+        self.start_value = ''
         self._tc.SetValue('')
 
     def Reset(self):
-        self._tc.SetValue(self.startValue)
+        self._tc.SetValue(self.start_value)
 
 
     def IsAcceptedKey(self, evt):
@@ -155,11 +155,11 @@ class PopupDataCellEditor(GridCellEditor):
         if key < 256 and key >= 0 and chr(key) in string.printable:
             ch = chr(key)
         if ch is not None:
-            self._tc.StartValue = ''
+            self._tc.start_value = ''
             self._tc.SetValue(ch)
             if self._tc.popup:
                 self._tc.popup.set_string_value(ch)
-            self._tc.RecValue = (ch, )
+            self._tc.rec_value = (ch, )
             if self._tc.popup:
                 self._tc.popup.Dismiss()
             self._tc.SetInsertionPointEnd()
@@ -238,13 +238,13 @@ class ListPopupCellEditor(PopupDataCellEditor):
         self.choices = schjson.loads(typ[id + 1:])
         PopupDataCellEditor.BeginEdit(self, row, col, grid)
 
-    def on_button_click(self):
+    def OnButtonClick(self):
         if self._tc.simpleDialog:
             self._tc.popup.html.choices = self.choices
-            self._tc.popup.html.RefrList()
+            self._tc.popup.html.refr_list()
         else:
             self._tc.sash.Body.choices = self.choices
-            self._tc.sash.Body.RefrList()
+            self._tc.sash.Body.refr_list()
 
     def set_rec(
         self,

@@ -65,14 +65,11 @@ from schlib.schhttptools.schhtml_parser import ShtmlParser
 from schcli.guilib import schevent
 from schcli.guictrl.grid import schgrid, datasource, tabproxy
 from schcli.guiframe import htmlwin, htmlsash
-from schcli.guictrl.popup import schchoice
 
 from schcli.guictrl.grid.schgridlist import SimpleDataTable
 from schcli.guictrl.grid.schgridpanel import SchGridPanel
 from schcli.guictrl.popup.popuphtml import DataPopupControl
-#import schlib.schclilib.tools as tools
 
-#import schcli.guictrl
 import wx.lib.imagebrowser
 import wx.lib.platebtn as platebtn
 import wx.lib.buttons  as  buttons
@@ -422,69 +419,6 @@ class CHECKLISTBOX(wx.CheckListBox, SchBaseCtrl):
             for row in tdata:
                 self.Append(row[0].data)
 
-
-class SIMPLE_CHOICE(ComboCtrl, SchBaseCtrl):
-
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-
-        choices = None
-        self._norefresh = False
-        self.retvalues = []
-        self.sel = None
-        tdata = self.get_tdata()
-        i = 0
-        if tdata:
-            choices = []
-
-            for row in tdata:
-                value = row[0].data
-
-                if value.find("!!") >= 0:
-                    value = value.replace("!!", "")
-                    self.sel = value
-
-                if len(value) > 1 and value[0] == ":":
-                    value = value[1:]
-
-                choices.append(value)
-
-                i = i + 1
-
-        if self.readonly:
-            style = 0
-            if "style" in kwds:
-                style = kwds["style"]
-            style = style | wx.CB_READONLY
-            kwds["style"] = style
-
-        ComboCtrl.__init__(self, *args, **kwds)
-        popup = schchoice.HtmlComboPopup()
-        self.SetPopupControl(popup)
-        self.SetPopupMaxHeight(200)
-
-        for choice in choices:
-            popup.AddItem(choice)
-
-        if self.sel:
-            self.SetValue(self.sel)
-
-    def Refresh(self):
-        self.Clear()
-        self.RefreshTDATA()
-        tdata = self.get_tdata()
-        if tdata:
-
-            for row in tdata:
-                self.AddItem(row[0].data)
-
-    def GetValue(self):
-        value = ComboCtrl.GetValue(self)
-        v = value.split(":")
-        if len(v) > 1:
-            return v[0]
-        else:
-            return ""
 
 ArtIDs = [ "wx.ART_ADD_BOOKMARK",
            "wx.ART_DEL_BOOKMARK",
@@ -1716,9 +1650,9 @@ if platform.system() == "Linux":
             POPUPHTML.__init__(self, *args, **kwds)
 
             if self.value:
-                self.SetRec(self.value, [self.value,])
+                self.set_rec(self.value, [self.value,])
             else:
-                self.SetRec(wx.DateTime.Today().FormatISODate(), [wx.DateTime.Today().FormatISODate(),], False)
+                self.set_rec(wx.DateTime.Today().FormatISODate(), [wx.DateTime.Today().FormatISODate(),], False)
 
             self.to_masked(autoformat='EUDATEYYYYMMDD.')
 
@@ -1782,9 +1716,9 @@ class DATETIMEPICKER(POPUPHTML):
         POPUPHTML.__init__(self, *args, **kwds)
 
         if self.value:
-            self.SetRec(self.value, [self.value,])
+            self.set_rec(self.value, [self.value,])
         else:
-            self.SetRec(wx.DateTime.Today().FormatISODate(), [wx.DateTime.Today().FormatISODate(),], False)
+            self.set_rec(wx.DateTime.Today().FormatISODate(), [wx.DateTime.Today().FormatISODate(),], False)
 
         self.to_masked(autoformat='EUDATE24HRTIMEYYYYMMDD.HHMM')
 
@@ -1835,22 +1769,16 @@ class CHOICE(POPUPHTML):
 
             for row in tdata:
                 value = row[0].data
-                #.replace('\t',' ').lstrip()
-                #print "XX>", value, "<"
                 if value.find("!!") >= 0:
                     value = value.replace("!!", "")
                     sel = value.split(':')
                     if len(sel)>1:
                       ComboCtrl.SetValue(self, sel[1].lstrip())
-                      self.SetRec(sel[1], sel, dismiss=False)
-                      #print "SetRec", sel[1], sel
+                      self.set_rec(sel[1], sel, dismiss=False)
                     else:
                       ComboCtrl.SetValue(self, sel[0], dismiss=False)
-                      self.SetRec(sel[0], sel)
-                      #print "SetRec2", sel[0], sel
+                      self.set_rec(sel[0], sel)
 
-                #if len(value) > 1 and value[0] == ":":
-                #    value = value[1:]
                 value = value.split(':')
                 if len(value)>1:
                     choices.append((value[1].lstrip(), value))
@@ -1864,51 +1792,36 @@ class CHOICE(POPUPHTML):
             self.choices = []
 
         aTable = [
-                (0, wx.WXK_F2,  self.OnExtButtonClick),
+                (0, wx.WXK_F2,  self.on_ext_button_click),
                  ]
         self.set_acc_key_tab(aTable)
 
 
-        #if self.value:
-        #    self.SetRec(self.value, [])
-
-
-    def OnExtButtonClick(self, event):
-        ret = self.AlternateButtonClick()
+    def on_ext_button_click(self, event):
+        ret = self.alternate_button_click()
         if self.sash:
             self.sash.Body.choices = self.choices
-            #self.sash.Body.RefrList()
-            wx.CallAfter(self.sash.Body.RefrList)
+            wx.CallAfter(self.sash.Body.refr_list)
         else:
             self.popup.html.Body.choices = self.choices
-            #print "CHOICES:", self.choices
-            #self.popup.html.Body.RefrList()
-            wx.CallAfter(self.sash.Body.RefrList)
+            wx.CallAfter(self.sash.Body.refr_list)
         return ret
 
-    #def OnButtonClick(self):
-    #    wx.CallAfter(self._OnButtonClick)
 
     def OnButtonClick(self):
-        #print "CHOICES2:", self.choices
         if self.simpleDialog:
             ret = POPUPHTML.OnButtonClick(self)
             self.popup.html.Body.choices = self.choices
-            #print "TEST:", self.popup.html.Body, self.popup.html.GetParent()
-            #self.popup.html.Body.RefrList()
-            wx.CallAfter(self.popup.html.Body.RefrList)
+            wx.CallAfter(self.popup.html.Body.refr_list)
         else:
             ret = POPUPHTML.OnButtonClick(self)
             self.sash.Body.choices = self.choices
-            wx.CallAfter(self.popup.html.Body.RefrList)
-            #self.sash.Body.RefrList()
+            wx.CallAfter(self.popup.html.Body.refr_list)
         return ret
 
     def GetValue(self):
         if self.readonly:
             value = self.get_rec()
-            #if len(value)>0:
-            #    return value[1][0]
             return value[0]
         else:
             return POPUPHTML.GetValue(self)
@@ -1944,7 +1857,7 @@ class DBCHOICE_EXT(POPUPHTML):
         if '!!' in value:
             id = value.split(':')[0]
             name = value[len(id)+1:].replace('!!','')
-            self.SetRec(name, [id,name], dismiss=False)
+            self.set_rec(name, [id,name], dismiss=False)
         else:
             POPUPHTML.SetValue(self, value)
 
@@ -1962,8 +1875,8 @@ class DBCHOICE_EXT(POPUPHTML):
         return None
 
     def get_parm(self, parm):
-        if len(self.RecValue)>0:
-            id = self.RecValue[0]
+        if len(self.rec_value)>0:
+            id = self.rec_value[0]
             return b64encode(str(id).encode('utf-8')) if parm=='value' else None
         else:
             return None
@@ -2228,17 +2141,17 @@ class _SELECT2(ComboCtrl,  SchBaseCtrl):
     def OnChar(self, event):
         c = event.GetUnicodeKey()
         if c in string.printable:
-            self._OnButtonClick()
+            self._on_button_click()
             self.popup.edit_ctrl.AppendText(event.GetUnicodeKey())
         else:
             event.Skip()
 
     def OnButtonClick(self):
-        ret = self._OnButtonClick()
+        ret = self._on_button_click()
         self.popup.edit_ctrl.SetValue("")
         return ret
 
-    def _OnButtonClick(self):
+    def _on_button_click(self):
         if not self.popup:
             pos = self.GetScreenPosition()
             pos = (pos[0], pos[1] + self.GetSize()[1])

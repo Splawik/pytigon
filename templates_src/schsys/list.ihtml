@@ -25,16 +25,14 @@
             self.SetAcceleratorTable(wx.AcceleratorTable(aTable))
             self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RetValue)
 
-            self.RefrList()
+            self.refr_list()
 
         def OnExit(self, event):
             id = self.list1.GetSelection()
             self.retlist = self.choices[id]
-            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
 
         def FindValueStr(self):
-            #print('FindValueStr:', '{{value}}')
-            #return '{{value}}'
             return self.find_value
 
         def OnLDown(self, event):
@@ -48,15 +46,13 @@
             self.retlist = self.choices[id]
 
             if self.retlist:
-                self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+                self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
             else:
                 event.Skip()
 
-        def RefrList(self, value=None):
+        def refr_list(self, value=None):
             if value:
                 self.find_value = value
-            #else:
-            #    self.find_value = ""
 
             if hasattr(self,'choices'):
                 self.list1.Clear()
@@ -68,7 +64,7 @@
         def OnNavigationKey(self, event):
             id = self.list1.GetSelection()
             self.retlist = self.choices[id]
-            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
 
         def on_list_selected(self, event):
             id = event.GetSelection()
@@ -76,7 +72,7 @@
 
         def on_list_ret(self, event):
             self.on_list_selected(event)
-            self.parent_combo.SetRec(self.retlist[0], self.retlist, dismiss=True)
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
 
 %% form_bar
 
