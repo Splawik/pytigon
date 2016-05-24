@@ -279,7 +279,10 @@ class SchHtmlWindow(ScrolledPanel):
         if self._best_virtual_size:
             return self._best_virtual_size
         else:
-            (dx, dy) = self.GetSize()
+            try:
+                (dx, dy) = self.GetSize()
+            except:
+                return (0,0)
             #dx -= wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) + 1
             #dy -= wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y) + 1
             return (dx, dy)

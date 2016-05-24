@@ -75,7 +75,7 @@ class DataPopup(wx.ComboPopup):
 
     def OnPopup(self):
         self.combo.on_popoup()
-        wx.ComboPopup.OnPopup(self)
+        return wx.ComboPopup.OnPopup(self)
 
     def GetAdjustedSize(self, minWidth, prefHeight, maxHeight):
         width = self.size[0]
@@ -123,7 +123,7 @@ class DataPopupControl(ComboCtrl):
         self.size = schjson.loads(self.http.str())
         self.http.clear_ptr()
 
-        self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
+        #self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
 
         self.simpleDialog = True
         if self.GetTextCtrl():
@@ -151,7 +151,7 @@ class DataPopupControl(ComboCtrl):
             return self.win
         return ComboCtrl.GetTextCtrl(self)
 
-    def SetFocus(self):
+    def _SetFocus(self):
         if self.GetTextCtrl():
             self.GetTextCtrl().SetFocus()
         else:
@@ -159,8 +159,8 @@ class DataPopupControl(ComboCtrl):
 
     def KillFocus(self):
         value = ComboCtrl.GetValue(self)
-        if self.readonly:
-            self.focus_out(value)
+        #if self.readonly:
+        #    self.focus_out(value)
 
     def any_parent_command(self, command, *args, **kwds):
         parent = self

@@ -513,7 +513,7 @@ class SchSashWindow(wx.Window):
                     if hasattr(self.LastControlWithFocus, 'KillFocus'):
                         self.disable_setfocus = True
                         getattr(self.LastControlWithFocus, 'KillFocus')()
-                        new_win.SetFocus()
+                        #new_win.SetFocus()
                         self.disable_setfocus = False
                 self.LastControlWithFocus = new_win
             evt.Skip()
