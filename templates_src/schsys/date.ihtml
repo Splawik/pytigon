@@ -27,6 +27,9 @@
             self.dayclick=False
 
 
+        def refr(self, value=None):
+            pass
+
         def on_click(self, event):
             wx.CallAfter(self.ok)
             event.Skip()
@@ -43,10 +46,10 @@
             date = self.cal1.GetDate()
             if self.is_time:
                 retdate = datetime.datetime(date.GetYear(), date.GetMonth()+1, date.GetDay(), 0, 0)
-                self.parent_combo.SetRec(retdate.isoformat().replace('T',' ')[:16], [retdate,], dismiss=True)
+                self.parent_combo.set_rec(retdate.isoformat().replace('T',' ')[:16], [retdate,], dismiss=True)
             else:
                 retdate = datetime.date(date.GetYear(), date.GetMonth()+1, date.GetDay())
-                self.parent_combo.SetRec(retdate.isoformat(), [retdate,], dismiss=True)
+                self.parent_combo.set_rec(retdate.isoformat(), [retdate,], dismiss=True)
 
 
 %% form_bar

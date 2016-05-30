@@ -23,6 +23,7 @@ openpyxl
 markdown2
 httpie
 transcrypt
+cffi
 pyodbc
 lxml
 Pillow

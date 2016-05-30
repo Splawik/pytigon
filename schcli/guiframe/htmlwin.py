@@ -903,8 +903,8 @@ class SchHtmlWindow(ScrolledPanel):
     def init_page(self):
         if not self.after_init:
             if hasattr(self, 'init_form'):
-                wx.CallAfter(self.init_form)
-                #self.init_form()
+                #wx.CallAfter(self.init_form)
+                self.init_form()
             self.after_init = True
         else:
             if hasattr(self, 'reinit'):

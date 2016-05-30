@@ -25,7 +25,7 @@
             self.SetAcceleratorTable(wx.AcceleratorTable(aTable))
             self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RetValue)
 
-            self.refr_list()
+            self.refr()
 
         def OnExit(self, event):
             id = self.list1.GetSelection()
@@ -50,7 +50,7 @@
             else:
                 event.Skip()
 
-        def refr_list(self, value=None):
+        def refr(self, value=None):
             if value:
                 self.find_value = value
 

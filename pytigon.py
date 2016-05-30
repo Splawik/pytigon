@@ -169,61 +169,21 @@ def idle_fun():
     wx.GetApp().web_ctrl.OnIdle(None)
 
 
-#print(wx.PyOnDemandOutputWindow)
 
-
-class SChOutput(wx.PyOnDemandOutputWindow):
-
-    def __init__(self, title="wxPython: stdout/stderr"):
-        self.frame  = None
-        self.title  = title
-        self.pos    = wx.DefaultPosition
-        self.size   = (450, 300)
-        self.parent = None
-
-    def _SetParent(self, parent):
-        pass
-        #print("X2")
-        #self.parent = parent
-
-    def _CreateOutputWindow(self, txt):
-        pass
-        #print("X3")
-        #print(txt)
-
-    def write(self, text):
-        pass
-        #print("X5")
-        #print(text)
-
-    def close(self):
-        #print("X6")
-        pass
-
-    def flush(self):
-        #print("X7")
-        pass
-
-
-#class SchApp(wx.App, InspectionMixin):
 class SchApp(App):
 
     """Pytigon application
     """
 
-    #outputWindowClass = PyInformationalMessagesFrame
-    #outputWindowClass = SChOutput
 
     def __init__(self):
-        #wx.App.__init__(self, False)
-        #InspectionMixin.__init__(self)
         App.__init__(self, redirect=False)
 
         bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
 
-        #splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
-        #                             1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
-        #                             wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
+        splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
+                                     1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
+                                     wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
 
         wx.Yield()
 
@@ -236,9 +196,6 @@ class SchApp(App):
         self.lock = None
 
         self.base_address = None
-        #self.scr_path = None
-        #self.root_path = None
-        #self.cwd_path = None
 
         self.scr_path = SCR_PATH
         self.root_path = ROOT_PATH

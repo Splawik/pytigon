@@ -1801,10 +1801,10 @@ class CHOICE(POPUPHTML):
         ret = self.alternate_button_click()
         if self.sash:
             self.sash.Body.choices = self.choices
-            wx.CallAfter(self.sash.Body.refr_list)
+            wx.CallAfter(self.sash.Body.refr)
         else:
             self.popup.html.Body.choices = self.choices
-            wx.CallAfter(self.sash.Body.refr_list)
+            wx.CallAfter(self.sash.Body.refr)
         return ret
 
 
@@ -1812,11 +1812,11 @@ class CHOICE(POPUPHTML):
         if self.simpleDialog:
             ret = POPUPHTML.OnButtonClick(self)
             self.popup.html.Body.choices = self.choices
-            wx.CallAfter(self.popup.html.Body.refr_list)
+            wx.CallAfter(self.popup.html.Body.refr)
         else:
             ret = POPUPHTML.OnButtonClick(self)
             self.sash.Body.choices = self.choices
-            wx.CallAfter(self.popup.html.Body.refr_list)
+            wx.CallAfter(self.popup.html.Body.refr)
         return ret
 
     def GetValue(self):

@@ -241,10 +241,10 @@ class ListPopupCellEditor(PopupDataCellEditor):
     def OnButtonClick(self):
         if self._tc.simpleDialog:
             self._tc.popup.html.choices = self.choices
-            self._tc.popup.html.refr_list()
+            self._tc.popup.html.refr()
         else:
             self._tc.sash.Body.choices = self.choices
-            self._tc.sash.Body.refr_list()
+            self._tc.sash.Body.refr()
 
     def set_rec(
         self,

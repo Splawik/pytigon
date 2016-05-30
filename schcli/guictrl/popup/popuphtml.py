@@ -95,7 +95,8 @@ class DataPopupControl(ComboCtrl):
         if 'dialog_with_value' in kwds:
             self.dialog_with_value = kwds['dialog_with_value']
             del kwds['dialog_with_value']
-
+        else:
+            self.dialog_with_value = True
         ComboCtrl.__init__(self, *args, **kwds)
 
         self.win = None
@@ -274,7 +275,7 @@ class DataPopupControl(ComboCtrl):
                 self.html.refresh_html()
                 self.html.SetFocus()
                 self.html.on_size(None)
-                self.html.Body.refr_list(self.start_value)
+                self.html.Body.refr(self.start_value)
                 self.html.Body.Show()
                 wx.EndBusyCursor()
             wx.CallAfter(_after)
