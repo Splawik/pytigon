@@ -1,5 +1,5 @@
 Django
-cherrypy
+channels
 django-crispy-forms
 django-debug_toolbar
 django_extensions

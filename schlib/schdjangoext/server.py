@@ -24,16 +24,15 @@ import datetime
 import sys
 import threading
 
-from django.conf import settings
-from django.core.management.commands.runserver import Command as RunserverCommand
 from django.utils import six
 from django.utils.encoding import get_system_encoding
 
 from channels import DEFAULT_CHANNEL_LAYER, channel_layers
 from channels.handler import ViewConsumer
-from channels.log import setup_logger
-from channels.staticfiles import StaticFilesConsumer
 from channels.worker import Worker
+
+import django
+import schserw.schsys.initdjango
 
 
 class WorkerThread(threading.Thread):
@@ -99,11 +98,12 @@ class ServProc():
         self.proc.terminate()
 
 def run_server(address, port):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print('Start serwer: ', address, port)
 
-    #thread = Thread(target = _run, args=(address, port) )
-    #thread.start()
+    django.setup()
+    schserw.schsys.initdjango.init_django()
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    print('Start server: ', address, port)
 
     proc = Process(target = _run, args=(address, port) )
     proc.start()
@@ -116,6 +116,5 @@ def run_server(address, port):
         except:
             pass
     print("Server started")
-    #return thread
 
     return ServProc(proc)
