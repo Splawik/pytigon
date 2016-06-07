@@ -242,6 +242,7 @@ def gen(request, pk):
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
     template_to_file(base_path, "wsgi", "run.wsgi",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
+    template_to_file(base_path, "asgi", "asgi.py",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
     
     app_names = []
     for app in apps:
@@ -303,17 +304,20 @@ def gen(request, pk):
             elif file_obj.file_type=='c':
                 file_name = base_path + "/" + app.name+"/"+ file_obj.name
             elif file_obj.file_type=='m':
-                f = open_and_create_dir(base_path + "/" + app.name+"/management/__init__.py", "w")
+                f = open_and_create_dir(base_path + "/" + app.name+"/management/__init__.py", "wb")
                 f.close()
-                f = open_and_create_dir(base_path + "/" + app.name+"/management/commands/__init__.py","w")
+                f = open_and_create_dir(base_path + "/" + app.name+"/management/commands/__init__.py","wb")
                 f.close()
                 file_name = base_path + "/" + app.name+"/management/commands/"+ file_obj.name
             else: 
                 file_name=None
                 
             if file_name:
-                f = open_and_create_dir(file_name,"w")
-                f.write(file_obj.content)
+                f = open_and_create_dir(file_name,"wb")
+                if type(file_obj.content)==str:
+                    f.write(file_obj.content.encode('utf-8'))
+                else:
+                    f.write(file_obj.content)
                 f.close()
             
     

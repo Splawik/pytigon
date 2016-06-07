@@ -74,6 +74,7 @@ install_0()
 import zipfile
 import getopt
 import wx
+from threading import Thread
 
 from schcli.guilib import schimage
 from schcli.guilib import pytigon_install
@@ -676,7 +677,11 @@ def main_init(argv):
         address = 'embeded'
     if address == 'embeded':
         import socket
-        from schserw.cherrypy_server import CherryServer
+        #from schserw.cherrypy_server import CherryServer
+
+        #from django.core.management import call_command
+        from schlib.schdjangoext.server import run_server
+
         #from schlib.schtasks.base_task import get_process_manager
         #from schlib.schtasks.base_task import get_process_manager
         if server_only:
@@ -695,11 +700,31 @@ def main_init(argv):
                 test = False
             except:
                 port += 1
+
+
+        server = run_server(address, port)
         #task_manager = get_process_manager()
-        server = CherryServer(address, port)
+        #server = CherryServer(address, port)
         #server.engine.task_manager = task_manager
-        print('Start serwer: ', address, port)
-        server.start()
+        #print('Start serwer: ', address, port)
+        #server.start()
+
+        #def _runserver():
+        #    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        #    call_command('runserver', str(port))
+
+
+        #thread = Thread(target = _runserver)
+        #thread.start()
+        #sleep(5)
+        #while(True):
+        #    try:
+        #        s.bind((address, port))
+        #        s.close()
+        #        break
+        #    except:
+        #        pass
+
         address = 'http://' + address + ':' + str(port)
     else:
         from schlib.schtasks.base_task import get_process_manager

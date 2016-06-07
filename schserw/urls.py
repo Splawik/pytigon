@@ -60,7 +60,7 @@ for app in settings.INSTALLED_APPS:
             pos = app.name
         else:
             pos = app
-            if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') or pos.startswith('crispy') or pos.startswith('bootstrap_admin'):
+            if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') or pos.startswith('crispy') or pos.startswith('bootstrap_admin') or pos.startswith('channels'):
                 continue
         elementy = pos.split('.')
         module = __import__(pos)

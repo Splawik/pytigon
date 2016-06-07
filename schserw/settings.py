@@ -132,6 +132,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'django_select2',
+    'channels',
     ]
 
 HIDE_APPS = []
@@ -168,3 +169,18 @@ except:
 
 
 CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
+
+if True:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "asgiref.inmemory.ChannelLayer",
+            #"BACKEND": "asgi_ipc.IPCChannelLayer",
+            "ROUTING": "schserw.routing.channel_routing",
+            #"BACKEND": "asgiref.wsgi.ChannelLayer",
+            #"BACKEND": "asgi_redis.RedisChannelLayer",
+           # "CONFIG": {
+           #     "hosts": [("localhost", 6379)],
+           # },
+            #"ROUTING": "tracker_project.routing.channel_routing",
+        },
+    }
