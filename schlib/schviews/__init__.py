@@ -397,6 +397,8 @@ class GenericRows(object):
     def list(self):
         url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|get|tree)$'
 
+        parent_class = self
+
         class ListView(generic.ListView):
 
             model = self.base_model
@@ -490,6 +492,7 @@ class GenericRows(object):
 
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(ListView, self).get_context_data(**kwargs)
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
@@ -499,6 +502,14 @@ class GenericRows(object):
 
                 context['doc_type'] = self.doc_type()
                 context['uuid'] = uuid.uuid4()
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
 
                 if 'tree' in self.kwargs['vtype']:
                     parent = int(self.kwargs['filter'])
@@ -603,6 +614,7 @@ class GenericRows(object):
             def get_context_data(self, **kwargs):
                 context = super(DetailView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+str(_('element information'))
+                #context['web_app'] = self.app
                 return context
 
 
@@ -635,6 +647,7 @@ class GenericRows(object):
             def get_context_data(self, **kwargs):
                 context = super(UpdateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('update element'))
+                #context['web_app'] = self.app
                 return context
 
             def get(
@@ -824,6 +837,7 @@ class GenericRows(object):
                 context = super(CreateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+ str(_('new element'))
                 context['object'] = self.object
+                #context['web_app'] = self.app
                 return context
 
 
@@ -855,6 +869,7 @@ class GenericRows(object):
             def get_context_data(self, **kwargs):
                 context = super(DeleteView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('delete element'))
+                #context['web_app'] = self.app
                 return context
 
 
@@ -926,6 +941,7 @@ class GenericRows(object):
                     context['parent_obj'] = self.model.objects.get(id=parent)
                 else:
                     context['parent_obj'] = None
+                #context['web_app'] = self.app
                 return context
 
             def get(

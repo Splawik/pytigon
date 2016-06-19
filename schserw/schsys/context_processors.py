@@ -144,9 +144,29 @@ class AppManager:
                 return app[0]
         return ""
 
-    def get_apps(self):
+    def get_apps(self, app_set=None):
         ret = []
+
+        if app_set:
+            _temp = __import__(app_set+".apps")
+            apps = _temp.apps.APPS
+        else:
+            apps = None
+
         for _app in settings.INSTALLED_APPS:
+            if apps:
+                test = False
+                name = _app if type(_app)==str else _app.name
+                if name.startswith(app_set):
+                    test = True
+                else:
+                    for app in apps:
+                        if name in app:
+                            test = True
+                            break
+                if not test:
+                    continue
+
             app = get_app_name(_app)
             if self.request.get_host()=='127.0.0.2' and app=='schserw.schsys':
                 continue
@@ -193,8 +213,8 @@ class AppManager:
             i += 1
         return 0
 
-    def get_app_items(self):
-        apps = self.get_apps()
+    def get_app_items(self, app_pack=None):
+        apps = self.get_apps(app_pack)
         ret = []
         for app in apps:
             app_name = app[3]
@@ -245,7 +265,7 @@ class AppManager:
                     pass
         return ret
 
-    def get_apps_width_perm(self):
+    def get_apps_width_perm(self, app_pack=None):
         ret = []
         items = self.get_app_items()
         no_empty_apps = []
@@ -253,7 +273,7 @@ class AppManager:
             app_name = item[2]
             if not app_name in no_empty_apps:
                 no_empty_apps.append(app_name)
-        for item in self.get_apps():
+        for item in self.get_apps(app_pack):
             if item[3] in settings.HIDE_APPS:                
                 continue
             if item[3] in no_empty_apps:
@@ -264,9 +284,9 @@ class AppManager:
                     ret.append(item)
         return ret
 
-    def get_app_items_width_perm(self):
+    def get_app_items_width_perm(self, app_pack=None):
         ret = []
-        for item in self.get_app_items():
+        for item in self.get_app_items(app_pack):
             if item[2] in settings.HIDE_APPS:                
                 continue
             if not item[7] or self.request.user.has_module_perms(item[2]):

@@ -1,5 +1,8 @@
 {# -*- coding: utf-9 -*- #}
 
+% load exfiltry
+% load exsyntax
+
 %% all
     %% page_start
         <!DOCTYPE html>
@@ -67,14 +70,16 @@
                 %% menu
 
                     %% topmenu_start
-                    %for title, perms, index, app_name, user_param in app_manager.get_apps_width_perm:
+
+                    %for title, perms, index, app_name, user_param in app_manager|args:app_pack|call:"get_apps_width_perm":
                         %% topmenu
                     %% topmenu_end
 
                     %% submenu_start
-                    %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager.get_app_items_width_perm:
+                    %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager|args:app_pack|call:"get_app_items_width_perm":
                         %% submenu
                     %% submenu_end
+
                 %% menu_end
 
                 %% menu2

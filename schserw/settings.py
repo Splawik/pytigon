@@ -137,6 +137,8 @@ INSTALLED_APPS = [
 
 HIDE_APPS = []
 
+APP_PACKS = []
+
 LOGGING = {
     'version': 1,
     'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},

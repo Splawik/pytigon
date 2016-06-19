@@ -23,7 +23,7 @@ except:
 APPSET_TITLE = "Pytigon"
 APPSET_NAME = "_schall"
 
-THEMES = ['desktop_modern', 'auto', 'auto']
+THEMES = ['tablet_modern', 'tablet_modern', 'tablet_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
@@ -38,19 +38,25 @@ if not DEBUG:
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
 
-apps = []
+app_pack_folders = []
 base_apps_path = os.path.join(_lp, '..')
 for ff in os.listdir(base_apps_path):
     if os.path.isdir( os.path.join(base_apps_path,ff)):
-        if ff != 'schdevtools':
-            apps.append(ff)
-for app in apps:
-    base_apps_path2 = os.path.join(base_apps_path, app)
-    for ff in os.listdir(base_apps_path2):
-        if os.path.isdir( os.path.join(base_apps_path2,ff)):
-            if os.path.exists(os.path.join(os.path.join(base_apps_path2,ff),"models.py")):
-                APPS.append(app+"."+ff)
+        if not ff.startswith('_'):
+            app_pack_folders.append(ff)
+for app_pack in app_pack_folders:
+    base_apps_path2 = os.path.join(base_apps_path, app_pack)
+    APP_PACKS.append(app_pack)
 
+    x = __import__(app_pack+".apps")
+    apps = x.apps.APPS
+    for pos in apps:
+        if '.' in pos:
+            name = pos
+        else:
+            name = app_pack + '.' + pos
+        if not name in APPS:
+            APPS.append(name)
 
 for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:

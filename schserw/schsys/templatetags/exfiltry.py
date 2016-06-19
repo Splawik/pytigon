@@ -448,8 +448,10 @@ def replace(value, replace_str):
 
 @register.filter(name='append_str')
 def append_str(value, s):
-    return value + str(s)
-
+    if s==None or s=="":
+        return value
+    else:
+        return value + str(s)
 
 @register.filter(name='isoformat')
 def isoformat(value):
@@ -727,3 +729,20 @@ def get_fields(obj):
 def has_group(user, group_name): 
     return user.groups.filter(name=group_name).exists()
 
+
+def callMethod(obj, methodName):
+    method = getattr(obj, methodName)
+    if hasattr(obj, "__callArg"):
+        ret = method(*obj.__callArg)
+        del obj.__callArg
+        return ret
+    return method()
+register.filter("call", callMethod)
+
+
+def args(obj, arg):
+    if not hasattr(obj, "__callArg"):
+        obj.__callArg = []
+    obj.__callArg += [arg]
+    return obj
+register.filter("args", args)

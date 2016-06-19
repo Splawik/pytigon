@@ -19,6 +19,7 @@ def setup_databases(app_name):
                         'USER': 'root',
                         'PASSWORD': 'AnawaAnawa1',
                         'HOST': 'pytigondev.tk',
+                        #'HOST': '192.168.1.10',
                     },
     }
     #auth = (

@@ -43,7 +43,8 @@ import schlib.schindent.indent_style
 #warnings.simplefilter('error', DeprecationWarning)
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
+    #url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start'),
+    #url(r'^'+settings.URL_ROOT_FOLDER+'/$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
     url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url(r'schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
     url(r'schsys/i18n/', include(django.conf.urls.i18n)),
@@ -51,6 +52,21 @@ urlpatterns = [
     url(r'^site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^select2/', include(django_select2.urls)),
 ]
+
+if len(settings.APP_PACKS) > 0:
+    for app_pack in settings.APP_PACKS:
+        if app_pack.startswith('_'):
+            continue
+        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'), {'app_pack': app_pack }, name='start'+app_pack )
+        urlpatterns.append(u)
+
+    u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),  {'app_packs': settings.APP_PACKS }, name='start')
+
+    urlpatterns.append(u)
+else:
+    u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
+    urlpatterns.append(u)
+
 
 if settings.DEBUG:
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
@@ -107,3 +123,4 @@ for app in settings.INSTALLED_APPS:
 #                                    f2.write(codejs)
 #                        #except:
 #                        #    print("compile error - file:", src)
+#

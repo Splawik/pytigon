@@ -1,0 +1,13 @@
+% extends "base.html"
+
+%% body
+    div style=padding:10px;
+        div class=jumbotron
+            h1...Application list
+            div class=table-responsive
+                table class=table table-striped
+                    % for app_pack in app_packs:
+                        tr
+                            td...{{app_pack}}
+                            td
+                                a class=btn btn-primary btn-lg,,,href=./{{app_pack}}/,,,role=button...goto web page

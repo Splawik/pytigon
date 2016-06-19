@@ -9,19 +9,15 @@ else:
 
 sys.path.insert(0,base_path)
 sys.path.insert(0,base_path + "ext_lib")
-sys.path.insert(0,base_path + "app_pack/_schall/")
+sys.path.insert(0,base_path + "app_pack/")
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
-from django.core.wsgi import get_wsgi_application
-import django
-import schserw.schsys.initdjango
-django.setup()
-schserw.schsys.initdjango.init_django()
+import schdevtools.wsgi 
 
-application = get_wsgi_application()
+def application(environ, start_response):
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", environ, start_response)
+    return schdevtools.wsgi.application(environ, start_response)
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     from schlib.schdjangoext.server import run_server
     run_server('0.0.0.0', 8080)
-

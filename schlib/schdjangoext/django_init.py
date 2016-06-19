@@ -23,6 +23,9 @@ from django.utils.module_loading import module_has_submodule
 from importlib import import_module
 
 class AppConfigMod(AppConfig):
+    def __init__(self, *argi, **argv):
+        super().__init__(*argi, **argv)
+
     def import_models(self, all_models):
         self.models = all_models
         if module_has_submodule(self.module, MODELS_MODULE_NAME):

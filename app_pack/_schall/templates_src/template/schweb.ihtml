@@ -16,7 +16,7 @@
         [ autologin | 1 ]
         [ csrf_token | {%csrf_token%} ]
         [ riot_elements | ]
-        [ gui_style | standard() ]
+        [ gui_style | modern() ]
         [ hybrid | 0 ]
         [ title  | Pytigon ]
         [ start_page |  ]
