@@ -92,3 +92,11 @@ td .content_get {
     border-color: #adadad !important;
 }
 */
+
+#tabs2 {
+    border-bottom: 0px;
+}
+
+.skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
+    border-left-color: #FDFD8C !important;
+}
