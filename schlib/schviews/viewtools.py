@@ -132,6 +132,10 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             for pos in template:
                 template2.append(pos.replace('.html', '_pdf.html'))
             template2.append("schsys/table_pdf.html")
+        elif context and 'view' in context and context['view'].doc_type()=='txt':
+            template2 = []
+            for pos in template:
+                template2.append(pos.replace('.html', '_txt.html'))
         elif context and 'view' in context and context['view'].doc_type()=='odf':
             template2 = []
             for pos in template:
@@ -222,6 +226,8 @@ class ExtTemplateView(generic.TemplateView):
             return "pdf"
         elif self.kwargs['target']=='odf':
             return "odf"
+        elif self.kwargs['target']=='txt':
+            return "txt"
         else:
             return "html"
 
@@ -230,7 +236,7 @@ def render_to_response_ext(request, template_name, context, doc_type='html'):
     if 'request' in context:
         del context['request']
     return ExtTemplateView.as_view(template_name=template_name)(request, **context)
-    
+
 
 
 def dict_to_template(template_name):

@@ -26,6 +26,8 @@ from schlib.schtools.wiki import wiki_from_str, make_href, wikify
 from django.template.loader import get_template
 from django.template import Context, Template
 from django.db.models.query import QuerySet
+from django.db.models import Count, Min, Sum, Avg
+
 from base64 import b64encode, b64decode
 
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
@@ -746,3 +748,29 @@ def args(obj, arg):
     obj.__callArg += [arg]
     return obj
 register.filter("args", args)
+
+
+@register.filter(name='aggregate')
+def aggregate(objects, field_name):
+    if field_name.startswith('max_'):
+        field = field_name[4:]
+        x = objects.aggregate(Max(field))
+        return x[field+'__max']
+    elif field_name.startswith('min_'):
+        field = field_name[4:]
+        x = objects.aggregate(Min(field))
+        return x[field+'__min']
+    elif field_name.startswith('sum_'):
+        field = field_name[4:]
+        x = objects.aggregate(Sum(field))
+        return x[field+'__sum']
+    elif field_name.startswith('avg_'):
+        field = field_name[4:]
+        x = objects.aggregate(Avg(field))
+        return x[field+'__avg']
+    elif field_name.startswith('count_'):
+        field = field_name[6:]
+        x = objects.aggregate(Count(field))
+        return x[field+'__count']
+    return 0
+

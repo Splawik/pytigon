@@ -430,11 +430,13 @@ class GenericRows(object):
                     return "odf"
                 elif self.kwargs['target']=='json':
                     return "json"
+                elif self.kwargs['target']=='txt':
+                    return "txt"
                 else:
                     return "html"
 
             def get_paginate_by(self, queryset):
-                if self.doc_type() in ('pdf', 'odf'):
+                if self.doc_type() in ('pdf', 'odf', 'txt'):
                     return None
                 else:
                     return self.paginate_by
@@ -608,6 +610,8 @@ class GenericRows(object):
                     return "pdf"
                 elif self.kwargs['target']=='odf':
                     return "odf"
+                elif self.kwargs['target']=='txt':
+                    return "txt"
                 else:
                     return "html"
 
@@ -926,6 +930,8 @@ class GenericRows(object):
                     return "pdf"
                 elif self.kwargs['target']=='odf':
                     return "odf"
+                elif self.kwargs['target']=='txt':
+                    return "txt"
                 elif self.kwargs['target']=='json':
                     return "json"
                 else:
