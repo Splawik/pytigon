@@ -1,4 +1,4 @@
-#!/usr/bin/python
+3#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -17,7 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 
 import collections
 
@@ -585,6 +585,7 @@ class GenericRows(object):
 
     def detail(self):
         url = r'(?P<pk>\d+)/(?P<target>[\w_]*)/view/$'
+        parent_class = self
 
         class DetailView(generic.DetailView):
 
@@ -616,8 +617,18 @@ class GenericRows(object):
                     return "html"
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(DetailView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+str(_('element information'))
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
+
                 #context['web_app'] = self.app
                 return context
 
@@ -627,7 +638,7 @@ class GenericRows(object):
 
     def edit(self):
         url = r'(?P<pk>\d+)/edit/$'
-
+        parent_class = self
 
         class UpdateView(generic.UpdateView):
 
@@ -649,8 +660,18 @@ class GenericRows(object):
             fields = "__all__"
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(UpdateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('update element'))
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
+
                 #context['web_app'] = self.app
                 return context
 
@@ -709,7 +730,7 @@ class GenericRows(object):
 
     def add(self):
         url = r'(?P<add_param>[\w=_-]*)/add$'
-
+        parent_class = self
 
         class CreateView(generic.CreateView):
 
@@ -838,9 +859,19 @@ class GenericRows(object):
                 return super(generic.edit.ModelFormMixin, self).form_valid(form)
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(CreateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+ str(_('new element'))
                 context['object'] = self.object
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
+
                 #context['web_app'] = self.app
                 return context
 
@@ -851,7 +882,7 @@ class GenericRows(object):
 
     def delete(self):
         url = r'(?P<pk>\d+)/delete/$'
-
+        parent_class = self
 
         class DeleteView(generic.DeleteView):
 
@@ -871,8 +902,18 @@ class GenericRows(object):
             title = self.title
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(DeleteView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('delete element'))
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
+
                 #context['web_app'] = self.app
                 return context
 
@@ -908,7 +949,7 @@ class GenericRows(object):
 
     def tree(self):
         url = r'(?P<parent_pk>[\d-]*)/(?P<target>[\w_-]*)/[_]?tree$'
-
+        parent_class = self
         #url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(list|sublist|get)$'
 
         class TreeView(generic.ListView):
@@ -938,6 +979,7 @@ class GenericRows(object):
                     return "html"
 
             def get_context_data(self, **kwargs):
+                nonlocal parent_class
                 context = super(TreeView, self).get_context_data(**kwargs)
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
@@ -947,6 +989,15 @@ class GenericRows(object):
                     context['parent_obj'] = self.model.objects.get(id=parent)
                 else:
                     context['parent_obj'] = None
+
+                context['app_pack'] = ""
+                for app in settings.APPS:
+                    if '.' in app and parent_class.table.app in app:
+                        _app = app.split('.')[0]
+                        if not _app.startswith('_'):
+                            context['app_pack'] = app.split('.')[0]
+                        break
+
                 #context['web_app'] = self.app
                 return context
 

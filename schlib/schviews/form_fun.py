@@ -25,9 +25,20 @@ from django.template import RequestContext
 from django.template import loader
 from .perms import make_perms_url_test_fun
 from .viewtools import render_to_response_ext
+from django.conf import settings
 
-def form(request, form_class, template_name, object_id=None, form_end=False, param=None, mimetype=None):
+
+def form(request, app_name, form_class, template_name, object_id=None, form_end=False, param=None, mimetype=None):
     template_name2 = template_name
+
+    app_pack = ""
+    for app in settings.APPS:
+        if '.' in app and app_name in app:
+            _app = app.split('.')[0]
+            if not _app.startswith('_'):
+                app_pack = app.split('.')[0]
+            break
+
     if request.POST:
         f = form_class(request.POST, request.FILES)
         if hasattr(f, "init"):
@@ -69,10 +80,10 @@ def form(request, form_class, template_name, object_id=None, form_end=False, par
                 user_dict = f.process_empty(request, param)
             else:
                 user_dict = f.process_empty(request)
-            c = RequestContext(request, {'form': f})
+            c = RequestContext(request, {'form': f, 'app_pack': app_pack})
             c.update(user_dict)
         else:
-            user_dict = {'form': f}
+            user_dict = {'form': f,  'app_pack': app_pack}
             if object_id:
                 user_dict.update({'object_id': object_id})
             c = RequestContext(request, user_dict)

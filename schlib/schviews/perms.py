@@ -72,7 +72,7 @@ def make_perms_url_test_fun(app_name, fun, if_block_view=default_block):
                     user = request.user
             if not user.has_perm(appbase + '.' + perm):
                 return if_block_view(request)
-        return fun(request, *args, **kwargs)
+        return fun(request, app_name, *args, **kwargs)
 
     return perms_test
 
