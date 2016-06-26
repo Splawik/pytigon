@@ -10,4 +10,4 @@
                         tr
                             td...{{app_pack}}
                             td
-                                a class=btn btn-primary btn-lg,,,href=./{{app_pack}}/,,,role=button...goto web page
+                                a class=btn btn-primary btn-lg,,,href={{URL_BASE}}/{{app_pack}}/,,,role=button...goto web page
