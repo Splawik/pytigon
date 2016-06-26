@@ -58,6 +58,11 @@ for app_pack in app_pack_folders:
         if not name in APPS:
             APPS.append(name)
 
+URL_ROOT_FOLDER=''
+STATIC_URL = '/static/'
+MEDIA_URL = '/site_media/'
+
+
 for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
