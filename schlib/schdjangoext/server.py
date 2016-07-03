@@ -28,6 +28,7 @@ from django.utils import six
 from django.utils.encoding import get_system_encoding
 
 from channels import DEFAULT_CHANNEL_LAYER, channel_layers
+from channels.asgi import get_channel_layer
 from channels.handler import ViewConsumer
 from channels.worker import Worker
 
@@ -58,20 +59,23 @@ def log_action(protocol, action, details):
     sys.stderr.write(msg)
 
 
-def _run(addr, port):
-    channel_layer = channel_layers[DEFAULT_CHANNEL_LAYER]
-    channel_layer.router.check_default(
-        http_consumer=ViewConsumer(),
-    )
+def _run(addr, port, prod):
     quit_command = 'CTRL-BREAK' if sys.platform == 'win32' else 'CONTROL-C'
     now = datetime.datetime.now().strftime('%B %d, %Y - %X')
     if six.PY2:
         now = now.decode(get_system_encoding())
 
-    for _ in range(4):
-        worker = WorkerThread(channel_layer)
-        worker.daemon = True
-        worker.start()
+    if prod:
+        channel_layer = get_channel_layer()
+    else:
+        channel_layer = channel_layers[DEFAULT_CHANNEL_LAYER]
+        channel_layer.router.check_default(
+            http_consumer=ViewConsumer(),
+        )
+        for _ in range(4):
+            worker = WorkerThread(channel_layer)
+            worker.daemon = True
+            worker.start()
 
     # Launch server in 'main' thread. Signals are disabled as it's still
     # actually a subthread under the autoreloader.
@@ -97,7 +101,7 @@ class ServProc():
     def stop(self):
         self.proc.terminate()
 
-def run_server(address, port):
+def run_server(address, port, prod=True):
 
     django.setup()
     schserw.schsys.initdjango.init_django()
@@ -105,7 +109,7 @@ def run_server(address, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('Start server: ', address, port)
 
-    proc = Process(target = _run, args=(address, port) )
+    proc = Process(target = _run, args=(address, port, prod) )
     proc.start()
 
     while(True):
