@@ -164,25 +164,18 @@ BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
 AUTO_RENDER_SELECT2_STATICS = False
 
+CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        #"BACKEND": "asgi_ipc.IPCChannelLayer",
+        #"BACKEND": "asgi_redis.RedisChannelLayer",
+        "ROUTING": "schserw.routing.channel_routing",
+    },
+}
+
 try:
     from schserw.settings_local import *
 except:
     pass
-
-
-CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
-
-if True:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "asgiref.inmemory.ChannelLayer",
-            #"BACKEND": "asgi_ipc.IPCChannelLayer",
-            "ROUTING": "schserw.routing.channel_routing",
-            #"BACKEND": "asgiref.wsgi.ChannelLayer",
-            #"BACKEND": "asgi_redis.RedisChannelLayer",
-           # "CONFIG": {
-           #     "hosts": [("localhost", 6379)],
-           # },
-            #"ROUTING": "tracker_project.routing.channel_routing",
-        },
-    }
