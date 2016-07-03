@@ -62,6 +62,8 @@ if DEBUG:
 else:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 
+STATIC_ROOT  = STATICFILES_DIRS[0]
+
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 
 UPLOAD_PATH = MEDIA_ROOT + '/upload/'
@@ -118,6 +120,7 @@ MIDDLEWARE_CLASSES = (
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     )
 
 INSTALLED_APPS = [
