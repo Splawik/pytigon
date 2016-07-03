@@ -23,7 +23,7 @@ import platform
 
 APPSET_NAME = "Pytigon"
 
-if sys.argv and (sys.argv[0] == 'manage.py' or '--debug' in sys.argv):
+if sys.argv and (sys.argv[0] == ('manage.py' and '--runserver' in sys.argv) or '--debug' in sys.argv):
     DEBUG = True
     DB_DEBUG = True
 else:
@@ -62,7 +62,8 @@ if DEBUG:
 else:
     STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 
-STATIC_ROOT  = STATICFILES_DIRS[0]
+if not DEBUG:
+    STATIC_ROOT  = STATICFILES_DIRS[0]
 
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 
@@ -120,7 +121,7 @@ MIDDLEWARE_CLASSES = (
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else None,
     )
 
 INSTALLED_APPS = [
