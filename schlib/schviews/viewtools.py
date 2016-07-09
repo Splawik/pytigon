@@ -129,15 +129,21 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
 
         if context and 'view' in context and context['view'].doc_type()=='pdf':
             template2 = []
+            if 'template_name' in context:
+                template2.append(context['template_name']+'.html')
             for pos in template:
                 template2.append(pos.replace('.html', '_pdf.html'))
             template2.append("schsys/table_pdf.html")
         elif context and 'view' in context and context['view'].doc_type()=='txt':
             template2 = []
+            if 'template_name' in context:
+                template2.append(context['template_name']+'.html')
             for pos in template:
                 template2.append(pos.replace('.html', '_txt.html'))
         elif context and 'view' in context and context['view'].doc_type()=='odf':
             template2 = []
+            if 'template_name' in context:
+                template2.append(context['template_name']+'.ods')
             for pos in template:
                 template2.append(pos.replace('.html', '.ods'))
             template2.append("schsys/table.ods")
@@ -236,7 +242,7 @@ def render_to_response_ext(request, template_name, context, doc_type='html'):
     if 'request' in context:
         del context['request']
     return ExtTemplateView.as_view(template_name=template_name)(request, **context)
-
+    
 
 
 def dict_to_template(template_name):

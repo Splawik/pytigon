@@ -37,7 +37,15 @@ if not DEBUG:
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
+PACKS = []
+
 for app in APPS:
+    if '.' in app:
+        pack = app.split['.'][0]
+        if not pack in PACKS:
+            PACKS.append(pack)
+            sys.path.append(os.path.join(LOCAL_ROOT_PATH, pack)
+
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')

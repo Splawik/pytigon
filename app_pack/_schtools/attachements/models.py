@@ -34,6 +34,8 @@ class Attachements( models.Model):
         verbose_name = _("Attachements")
         verbose_name_plural = _("Attachements")
         default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'attachements'
+
         
         ordering = ['id']
         

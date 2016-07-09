@@ -6,11 +6,9 @@ if base_path == "":
 else:
     os.chdir(base_path)
 
-sys.path.insert(0,os.path.abspath(base_path + "./"))
-sys.path.insert(0,os.path.abspath(base_path + "../.."))
-
-from schlib import init_paths
-init_paths()
+sys.path.insert(0,base_path + "./")
+sys.path.insert(0,base_path + "../../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]))
+sys.path.insert(0,base_path + "../..")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
@@ -23,5 +21,20 @@ schserw.schsys.initdjango.init_django()
 application = get_wsgi_application()
 
 if __name__ == '__main__': 
-    from schlib.schdjangoext.server import run_server
-    run_server('0.0.0.0', 8080)
+    import cherrypy
+    from schlib.schtasks.cherrypy_task import subscribe,  get_process_manager
+
+    cherrypy.tree.graft(application, "/")
+    cherrypy.server.unsubscribe()
+
+    server = cherrypy._cpserver.Server()
+    server.socket_host = "0.0.0.0"
+    server.socket_port = 8080
+    server.thread_pool = 10
+    server.subscribe()
+
+    subscribe()
+    get_process_manager()
+
+    cherrypy.engine.start()
+    cherrypy.engine.block()

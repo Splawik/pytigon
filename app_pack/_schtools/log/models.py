@@ -27,6 +27,8 @@ class Log( models.Model):
         verbose_name = _("Log")
         verbose_name_plural = _("Logi")
         default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'log'
+
         
         ordering = ['id']
         

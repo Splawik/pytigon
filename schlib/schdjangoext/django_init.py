@@ -37,7 +37,10 @@ class AppConfigMod(AppConfig):
 
 
 def get_app_config(app_name):
-    return AppConfigMod.create(app_name)
+    if '.' in app_name:
+        return AppConfigMod.create(app_name.split('.')[1])
+    else:
+        return AppConfigMod.create(app_name)
 
 def get_app_name(app):
     if isinstance(app, AppConfig):

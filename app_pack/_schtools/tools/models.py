@@ -27,6 +27,8 @@ class Parameter( models.Model):
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameter")
         default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'tools'
+
         
         ordering = ['id']
         
@@ -48,6 +50,8 @@ class Autocomplete( models.Model):
         verbose_name = _("Autocomplete")
         verbose_name_plural = _("Autocomplete")
         default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'tools'
+
         
         ordering = ['id']
         
