@@ -26,14 +26,6 @@
                 % if not show_form:
                     %%js_scripts
                         %% js_scripts_base
-                        script type=text/javascript
-                            %% jquery_init
-                            %% jquery_init_once
-                            %% jquery_ready_all
-                                %% jquery_ready_start
-                                %% jquery_ready
-                                %% jquery_ready_end
-                            %% js_script_body
 
 
                 %% js_extrascipts
@@ -113,7 +105,19 @@
         %% html_widgets_init
 
         %% body_footer
-  
+
+    %% page_footer
+
+        %% js_extrascipts_init
+            script type=text/javascript
+                %% jquery_init
+                %% jquery_init_once
+                %% jquery_ready_all
+                    %% jquery_ready_start
+                    %% jquery_ready
+                    %% jquery_ready_end
+                %% js_script_body
+
     %% body_end...</body>
 
     %% page_end...</html>

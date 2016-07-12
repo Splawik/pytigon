@@ -27,3 +27,4 @@ cffi
 pyodbc
 lxml
 Pillow
+whitenoise
