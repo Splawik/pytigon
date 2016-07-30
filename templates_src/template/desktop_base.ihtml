@@ -90,7 +90,15 @@
   });
 
 
-%%js_scripts
+%% js_scripts
+    % if form_edit or form_delete or form_info
+        % if form_ext
+            {{ block.super }}
+    % else
+        {{ block.super }}
+
+
+%% js_extrascipts_init
     % if form_edit or form_delete or form_info
         % if form_ext
             {{ block.super }}
