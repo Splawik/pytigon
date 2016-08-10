@@ -184,6 +184,8 @@ class HttpClient:
 
         if self.http.status_code != 200:
             print(adr, " httpcode:", self.http.status_code)
+            if self.http.status_code == 500:
+                print(self.content)
 
         if 'content-type' in self.http.headers:
             self.ret_content_type=self.http.headers['content-type']

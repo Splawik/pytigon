@@ -21,7 +21,7 @@
 from django.apps import apps
 from django.db.models import Max, Min
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
 from django.template.response import TemplateResponse
 from django.template import loader, RequestContext, Context
 from django.views import generic
@@ -237,6 +237,11 @@ class ExtTemplateView(generic.TemplateView):
         else:
             return "html"
 
+def render_to_response(template_name, context=None, content_type=None, status=None, using=None, request=None):
+    content = loader.render_to_string(template_name, context, request, using=using)
+    return HttpResponse(content, content_type, status)
+
+
 def render_to_response_ext(request, template_name, context, doc_type='html'):
     context['target'] = doc_type
     if 'request' in context:
@@ -249,8 +254,9 @@ def dict_to_template(template_name):
     def _dict_to_template(func):
         def inner(request, *args, **kwargs):
             v = func(request, *args, **kwargs)
-            content = loader.render_to_string(template_name, v, request) #, using=using)
-            return HttpResponse(content) #, content_type, status)
+            return render_to_response(template_name, v, request=request)
+            #content = loader.render_to_string(template_name, v, request) #, using=using)
+            #return HttpResponse(content) #, content_type, status)
         return inner
     return _dict_to_template
 

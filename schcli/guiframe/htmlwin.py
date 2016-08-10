@@ -406,7 +406,7 @@ class SchHtmlWindow(ScrolledPanel):
             if rect.GetWidth() < 1 or rect.GetHeight() < 1:
                 rect = wx.Rect(0, 0, 1, 1) #width=1, height=1)
             dc.SetDeviceOrigin(-1 * x, -1 * y)
-            bitmap = wx.EmptyBitmap(rect.GetWidth(), rect.GetHeight())
+            bitmap = wx.Bitmap(rect.GetWidth(), rect.GetHeight())
             dc2 = wx.MemoryDC(bitmap)
             dc2.SetBackground(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)))
             dc2.Clear()

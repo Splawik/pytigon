@@ -55,9 +55,9 @@ class BitmapTextButton(wx.lib.buttons.GenBitmapButton):
         self.enter_state = False
         self.Bind(wx.EVT_ENTER_WINDOW, self.on_enter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave)
-        image = wx.ImageFromBitmap(self.bmpLabel)
+        image = self.bmpLabel.ConvertToImage()
         imageutils.grayOut(image)
-        self.bmpLabel2 = wx.BitmapFromImage(image)
+        self.bmpLabel2 = wx.Bitmap(image)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
 
     #def GetBackgroundBrush(self, dc):

@@ -20,7 +20,8 @@
 # -*- coding: utf-8 -*-
 
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
+from schlib.schviews.viewtools import render_to_response
 from django.template import RequestContext
 from django.template import loader
 from .perms import make_perms_url_test_fun
@@ -66,8 +67,8 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 #elif doc_type= 'pdf':
 
         else:
-            c = RequestContext(request, {'form': f})
-            return render_to_response(template_name2, context_instance=c)
+            #c = RequestContext(request, {'form': f})
+            return render_to_response(template_name2, context={'form': f}, request=request)
     else:
         f = form_class()
         if hasattr(f, "init"):
@@ -86,10 +87,10 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
             user_dict = {'form': f,  'app_pack': app_pack}
             if object_id:
                 user_dict.update({'object_id': object_id})
-            c = RequestContext(request, user_dict)
+            #c = RequestContext(request, user_dict)
             if param:
-                c.update(param)
-        return render_to_response(template_name2, context_instance=c)
+                user_dict.update(param)
+        return render_to_response(template_name2, context=user_dict, request=request)
 
 def form_with_perms(app):
     return make_perms_url_test_fun(app, form)
@@ -164,8 +165,8 @@ def list_and_form(
                 mimetype=mimetype,
                 )
 
-    c = RequestContext(request, {'form': f})
-    return render_to_response(template_name, context_instance=c)
+    #c = RequestContext(request, {'form': f})
+    return render_to_response(template_name, context={'form': f}, request=request)
 
 
 def direct_to_template(request, template, extra_context=None, mimetype=None, **kwargs):

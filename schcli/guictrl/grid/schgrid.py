@@ -143,24 +143,26 @@ class SchTableGrid(wx.grid.Grid):
             self.SetSelectionMode(wx.grid.Grid.wxGridSelectRows)
         
         self.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_select_cell)
-        wx.grid.EVT_GRID_CELL_LEFT_CLICK(self, self.on_cell_left_click)
-        wx.grid.EVT_GRID_CELL_LEFT_DCLICK(self, self.on_cell_left_dclick)
-        wx.grid.EVT_GRID_RANGE_SELECT(self, self.on_range_selected)
-        wx.grid.EVT_GRID_CMD_LABEL_LEFT_CLICK(self, -1, self.on_label_left_click)
-        wx.grid.EVT_GRID_CMD_LABEL_RIGHT_CLICK(self, -1, self.on_label_right_click)
-        wx.grid.EVT_GRID_CMD_LABEL_LEFT_DCLICK(self, -1, self.on_label_left_dclick)
-        wx.grid.EVT_GRID_CMD_CELL_RIGHT_CLICK(self, -1, self.on_cell_right_click)
-        #wx.grid.EVT_GRID_HIDE_EDITOR(self, self.on_hide_editor)
+        self.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.on_cell_left_click)
+
+        self.Bind(wx.grid.EVT_GRID_CELL_LEFT_DCLICK, self.on_cell_left_dclick)
+        self.Bind(wx.grid.EVT_GRID_RANGE_SELECT, self.on_range_selected)
+        self.Bind(wx.grid.EVT_GRID_CMD_LABEL_LEFT_CLICK, self.on_label_left_click)
+        self.Bind(wx.grid.EVT_GRID_CMD_LABEL_RIGHT_CLICK, self.on_label_right_click)
+        self.Bind(wx.grid.EVT_GRID_CMD_LABEL_LEFT_DCLICK, self.on_label_left_dclick)
+        self.Bind(wx.grid.EVT_GRID_CMD_CELL_RIGHT_CLICK, self.on_cell_right_click)
+
 
         #self.Bind(schevent.EVT_REFRPARM, self.begin_edit)
         self.Bind(wx.EVT_MENU, self.begin_edit)
 
         #self.Bind(wx.EVT_RIGHT_UP, self.on_right_up)
         #self.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.on_hide_editor)
-        try:
-            wx.grid.EVT_GRID_CMD_CELL_CHANGED(self, -1, self.on_cell_change)
-        except:
-            wx.grid.EVT_GRID_CELL_CHANGE(self, self.on_cell_change)
+        #try:
+        #    wx.grid.EVT_GRID_CMD_CELL_CHANGED(self, -1, self.on_cell_change)
+        self.Bind(wx.grid.EVT_GRID_CMD_CELL_CHANGED, self.on_cell_change)
+        #except:
+        #    wx.grid.EVT_GRID_CELL_CHANGE(self, self.on_cell_change)
 
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGING, self.on_cell_change)
 
@@ -168,7 +170,8 @@ class SchTableGrid(wx.grid.Grid):
         self.GetGridWindow().Bind(wx.EVT_LEFT_UP, self.OnLUp)
 
         column_label_window = self.GetGridColLabelWindow()
-        wx.EVT_PAINT(column_label_window, self.on_column_header_paint)
+        #wx.EVT_PAINT(column_label_window, self.on_column_header_paint)
+        self.Bind(wx.EVT_PAINT, self.on_column_header_paint, column_label_window)
 
 # self.SelectRow(0)
 #

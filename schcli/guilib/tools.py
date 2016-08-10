@@ -99,12 +99,9 @@ def bitmap_from_art_id(bmp, size):
 
 
 def bitmaps_from_art_id(bmp, size):
-    #bitmap = ArtProviderFromIcon.GetBitmap(bmp, wx.ART_OTHER, size)
     bitmap = wx.ArtProvider.GetBitmap(bmp, wx.ART_OTHER, size)
     img = bitmap.ConvertToImage()
-    bitmap_disabled = \
-        wx.BitmapFromImage(img.ConvertToGreyscale().AdjustChannels(1, 1, 1,
-                           0.3))
+    bitmap_disabled = wx.Bitmap(img.ConvertToGreyscale().AdjustChannels(1, 1, 1, 0.3))
     return (bitmap, bitmap_disabled)
 
 
@@ -134,7 +131,7 @@ def bitmap_from_href(href, size_type=size_default):
     elif href.startswith('client://'):
         image = wx.Image(wx.GetApp().scr_path + '/schappdata/media/%dx%d/' % (icon_size,
                          icon_size) + href2[9:])
-        bmp = wx.BitmapFromImage(image)
+        bmp = wx.Bitmap(image)
     elif href.startswith('fa://'):
         if '.png' in href.lower():
             suffix = ''
@@ -142,14 +139,14 @@ def bitmap_from_href(href, size_type=size_default):
             suffix = '.png'
         image = wx.Image(wx.GetApp().scr_path + '/static/fonts/font-awesome/fonts/%dx%d/' % (icon_size,icon_size) + href2[5:].replace('fa-','')+suffix)
         image = image.AdjustChannels(1, 1, 1, 0.55)
-        bmp = wx.BitmapFromImage(image)
+        bmp = wx.Bitmap(image)
     else:
         http = wx.GetApp().get_http(None)
         if http.get(None, str(href))[0]!=404:
             s = http.ptr()
             http.clear_ptr()
             stream = BytesIO(s)
-            bmp = wx.BitmapFromImage(wx.ImageFromStream(stream))
+            bmp = wx.Bitmap(wx.Image(stream))
         else:
             bmp = wx.Bitmap()
             print("bitmap_from_href: can't read from href:", href)

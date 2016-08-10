@@ -89,7 +89,10 @@ class ShtmlParser(Parser):
     @property
     def title(self):
         if not self._title:
-            self._title = self._tree.findtext('.//title').strip()
+            try:
+                self._title = self._tree.findtext('.//title').strip()
+            except:
+                self._title = ""
         return self._title
 
     def get_body(self):

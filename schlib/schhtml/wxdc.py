@@ -53,7 +53,7 @@ class DcDc(BaseDc):
             height2 = self.default_height
         self.type = None
         if self.calc_only:
-            self.surf = wx.EmptyBitmap(10, 10, 32)
+            self.surf = wx.Bitmap(10, 10, 32)
             self.dc = wx.MemoryDC(self.surf)
             self.dc.Clear()
             if width < 0:

@@ -44,7 +44,7 @@ class SchImage:
             else:
                 str = http.ptr()
                 stream = io.BytesIO(str)
-                self.bmp = wx.BitmapFromImage(wx.ImageFromStream(stream))
+                self.bmp = wx.Bitmap(wx.Image(stream))
             http.clear_ptr()
         except:
             print("The exception while loading image from:", address)

@@ -178,7 +178,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 self.parent.any_parent_command('set_default_button',self)
 
             if is_bitmap_button and self.label:
-                self.SetToolTipString(self.label.replace('&',''))
+                self.SetToolTip(self.label.replace('&',''))
 
             if is_close_button:
                 self.Bind(wx.EVT_BUTTON, self.on_exit)

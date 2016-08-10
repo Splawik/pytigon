@@ -21,7 +21,8 @@ from schlib.schdjangoext.dbtable import DbTable
 from django.http import HttpResponse, HttpResponseRedirect
 from schlib.schtools import schjson
 from base64 import b32decode
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
+from schlib.schviews.viewtools import render_to_response
 from django.template import RequestContext
 from django.http import Http404
 from django.conf import settings
@@ -96,9 +97,8 @@ def message(
         message = messageList[messageid] % id
     else:
         message = messageList[messageid]
-    c = RequestContext(request, {'title': title.decode('utf-8'), 'message'
-                       : message.decode('utf-8')})
-    return render_to_response('schsys/message.html', context_instance=c)
+    c =  {'title': title.decode('utf-8'), 'message': message.decode('utf-8')}
+    return render_to_response('schsys/message.html', context=c, request=request)
 
 
 def tbl(
@@ -142,8 +142,8 @@ def datedialog(request, akcja):
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             value = d
-        c = RequestContext(request, {'value': value})
-        return render_to_response('schsys/date.html', context_instance=c)
+        c = {'value': value}
+        return render_to_response('schsys/date.html', context=c, request=request)
     if akcja == 'test':
         if value.__class__ == int:
             import datetime
@@ -173,8 +173,8 @@ def listdialog(request, akcja):
     if akcja == 'size':
         return HttpResponse(schjson.dumps((250, 300)))
     if akcja == 'dialog':
-        c = RequestContext(request, {'value': value})
-        ret = render_to_response('schsys/list.html', context_instance=c)
+        c = {'value': value}
+        ret = render_to_response('schsys/list.html', context=c, request=request)
         return ret
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
@@ -210,7 +210,7 @@ def treedialog(
                 id2 = obj.parent.id
                 if id2 and id2 > 0:
                     parent_pk = id2
-        c = RequestContext(request, {
+        c = {
             'value': value,
             'app': app,
             'tab': tab,
@@ -218,9 +218,8 @@ def treedialog(
             'parent_pk': parent_pk,
             'model': model,
             'object': obj,
-            })
-        return render_to_response('schsys/get_from_tree.html',
-                                  context_instance=c)
+            }
+        return render_to_response('schsys/get_from_tree.html', context=c, request=request)
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
@@ -250,16 +249,15 @@ def tabdialog(
         obj = None
         if int(id) >= 0:
             obj = model.objects.get(id=id)
-        c = RequestContext(request, {
+        c = {
             'value': value,
             'app': app,
             'tab': tab,
             'id': id,
             'model': model,
             'obj': obj,
-            })
-        return render_to_response('schsys/get_from_tab.html',
-                                  context_instance=c)
+            }
+        return render_to_response('schsys/get_from_tab.html', context=c, request=request)
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
@@ -272,9 +270,9 @@ def plugin_template(request, template_name):
     if not APP:
         import wx
         APP = wx.GetApp()
-    c = RequestContext(request)
-    c['app'] = APP
-    return render_to_response(template_name, context_instance=c)
+    #c = RequestContext(request)
+    c = {'app':  APP }
+    return render_to_response(template_name, context=c, request=request)
 
 
 

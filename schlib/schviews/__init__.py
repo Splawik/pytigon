@@ -22,7 +22,8 @@
 import collections
 
 from django.core.urlresolvers import get_script_prefix
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
+from schlib.schviews.viewtools import render_to_response
 from django.db import models
 from django.apps import apps
 from django.template.response import TemplateResponse
@@ -129,7 +130,19 @@ def view_editor(
         else:
             save_path = '/' + app + '/table/' + table_name + '/' + str(pk) + '/'\
                  + field_edit_name + '/py/editor/'
-        c = RequestContext(request, {
+        #c = RequestContext(request, {
+        #    'app': app,
+        #    'tab': table_name,
+        #    'pk': pk,
+        #    'object': obj,
+        #    'field_name': field_edit_name,
+        #    'ext': ext,
+        #    'save_path': save_path,
+        #    'txt': txt,
+        #    'verbose_field_name': f.verbose_name,
+        #    })
+
+        c = {
             'app': app,
             'tab': table_name,
             'pk': pk,
@@ -139,9 +152,9 @@ def view_editor(
             'save_path': save_path,
             'txt': txt,
             'verbose_field_name': f.verbose_name,
-            })
+        }
 
-        return render_to_response(transform_template_name(obj, request, 'schsys/db_field_edt.html'), context_instance=c)
+        return render_to_response(transform_template_name(obj, request, 'schsys/db_field_edt.html'), context=c, request=request)
 
 
 

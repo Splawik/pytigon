@@ -72,7 +72,7 @@ class SchGridPanel(wx.Panel):
                     else:
                         b = bitmap_from_href("fa://fa-chevron-right?size=1")
 
-                self.toolbar.AddLabelTool(
+                self.toolbar.AddTool(
                     self.lp,
                     label,
                     b,
@@ -106,7 +106,7 @@ class SchGridPanel(wx.Panel):
             tsize = (22, 22)
             self.toolbar.SetToolBitmapSize(tsize)
             if standard:
-                self.toolbar.AddLabelTool(
+                self.toolbar.AddTool(
                     self.lp,
                     _('Edit'),
                     self._get_bmp('edit'),
@@ -115,7 +115,7 @@ class SchGridPanel(wx.Panel):
                     _('Edit'),
                     _('Edit'),
                     )
-                self.toolbar.AddLabelTool(
+                self.toolbar.AddTool(
                     self.lp + 1,
                     _('Delete'),
                     self._get_bmp('delete'),
@@ -124,7 +124,7 @@ class SchGridPanel(wx.Panel):
                     _('Delete'),
                     _('Delete'),
                     )
-                self.toolbar.AddLabelTool(
+                self.toolbar.AddTool(
                     self.lp + 2,
                     _('view_row'),
                     self._get_bmp('view_row'),

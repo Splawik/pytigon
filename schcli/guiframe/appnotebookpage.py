@@ -78,14 +78,14 @@ class NotebookPage(wx.Window):
             if self.get_page_count() and tabs_count > 2 or self.get_page_count() > 1\
                  or wx.GetApp().GetTopWindow().count_shown_panels(count_toolbars=False)\
                  > 1 and self.get_page_count() > 0:
-                try:
-                    (dx, dy) = self.get_page(-1).GetSizeTuple()
-                except:
-                    (dx, dy) = self.get_page(-1).GetSize()
-                try:
-                    (x, y) = self.get_page(-1).GetPositionTuple()
-                except:
-                    (x, y) = self.get_page(-1).GetPosition()
+                #try:
+                #    (dx, dy) = self.get_page(-1).GetSizeTuple()
+                #except:
+                (dx, dy) = self.get_page(-1).GetSize()
+                #try:
+                #    (x, y) = self.get_page(-1).GetPositionTuple()
+                #except:
+                (x, y) = self.get_page(-1).GetPosition()
                 x = x - margin / 2
                 y = y - margin / 2
                 dx = dx + margin
@@ -175,9 +175,9 @@ class NotebookPage(wx.Window):
         if x>0 and y>0 and width>=0 and height>=0:
             if self.reverse_style:
                 #page.SetDimensions(dx-width-x,dy-height-y,width,height)
-                page.SetDimensions(x,dy-height-y,width,height)
+                page.SetSize(x,dy-height-y,width,height)
             else:
-                page.SetDimensions(x,y,width,height)
+                page.SetSize(x,y,width,height)
             #page.on_size(None)
 
     def _layout(self, size=None):
