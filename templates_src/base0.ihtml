@@ -62,8 +62,7 @@
                 %% menu
 
                     %% topmenu_start
-
-                    %for title, perms, index, app_name, user_param in app_manager|args:app_pack|call:"get_apps_width_perm":
+                    %for title, perms, index, app_name, user_param, xnone, xnone in app_manager|args:app_pack|call:"get_apps_width_perm":
                         %% topmenu
                     %% topmenu_end
 

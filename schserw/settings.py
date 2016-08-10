@@ -23,7 +23,7 @@ import platform
 
 APPSET_NAME = "Pytigon"
 
-if sys.argv and (sys.argv[0] == ('manage.py' and '--runserver' in sys.argv) or '--debug' in sys.argv):
+if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv):
     DEBUG = True
     DB_DEBUG = True
 else:
@@ -95,7 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.request'
+                'django.template.context_processors.request'
             ],
             'loaders': [
                 'schlib.schdjangoext.python_style_template_loader.Loader',
@@ -109,7 +109,7 @@ TEMPLATES = [
     },
 ]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -121,8 +121,10 @@ MIDDLEWARE_CLASSES = (
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
-    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else None,
-    )
+    ]
+
+if not DEBUG:
+    MIDDLEWARE_CLASSES.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 INSTALLED_APPS = [
     'django.contrib.auth',

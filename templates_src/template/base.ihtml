@@ -175,7 +175,7 @@
                   th scope=col...SQL
                   th scope=col...Time
                 % for query in sql_queries:
-                    tr class={% cycle odd,even %}
+                    tr class={% cycle 'odd' 'even' %}
                         td...{{ forloop.counter }}
                         td...{{ query.sql|escape }}
                         td...{{ query.time }}

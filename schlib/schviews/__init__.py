@@ -21,7 +21,6 @@
 
 import collections
 
-from django.conf.urls import patterns
 from django.core.urlresolvers import get_script_prefix
 from django.shortcuts import render_to_response
 from django.db import models

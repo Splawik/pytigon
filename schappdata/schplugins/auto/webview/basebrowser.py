@@ -498,7 +498,7 @@ class BaseWebBrowser(object):
         return s
 
     def _get_http_file(self, uri):
-        #print("uri:", uri)
+        print("uri:", uri)
         if uri.startswith('http://127.0.0.2'):
             if uri.startswith('http://127.0.0.2/data') and '?' in uri:
                 data = split2(uri, '?')

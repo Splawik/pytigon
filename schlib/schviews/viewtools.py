@@ -249,8 +249,8 @@ def dict_to_template(template_name):
     def _dict_to_template(func):
         def inner(request, *args, **kwargs):
             v = func(request, *args, **kwargs)
-            c=RequestContext(request, v)
-            return render_to_response(template_name, context_instance=c)
+            content = loader.render_to_string(template_name, v, request) #, using=using)
+            return HttpResponse(content) #, content_type, status)
         return inner
     return _dict_to_template
 

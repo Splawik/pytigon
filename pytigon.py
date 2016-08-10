@@ -702,7 +702,7 @@ def main_init(argv):
                 port += 1
 
 
-        server = run_server(address, port)
+        server = run_server(address, port, prod=False)
         #task_manager = get_process_manager()
         #server = CherryServer(address, port)
         #server.engine.task_manager = task_manager

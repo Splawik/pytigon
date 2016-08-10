@@ -30,14 +30,15 @@ def init_embeded_django():
     from wsgi_intercept import requests_intercept, add_wsgi_intercept
     requests_intercept.install()
 
+    import django
+    django.setup()
+
     application = django.core.handlers.wsgi.WSGIHandler()
     def create_fn():
         return application
 
     add_wsgi_intercept('127.0.0.2', 80, create_fn)
 
-    import django
-    django.setup()
     import schserw.schsys.initdjango
     schserw.schsys.initdjango.init_django()
 
