@@ -29,7 +29,7 @@ class Parameter( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'tools'
 
-        
+
         ordering = ['id']
         
         
@@ -52,7 +52,7 @@ class Autocomplete( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'tools'
 
-        
+
         ordering = ['id']
         
         

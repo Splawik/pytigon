@@ -583,7 +583,8 @@ class SchSashWindow(wx.Window):
     def register_signal(self, obj, signal):
         if signal not in self.signals:
             self.signals[signal] = []
-        self.signals[signal].append(obj)
+        if not obj in self.signals[signal]:
+            self.signals[signal].append(obj)
 
     def un_register_signal(self, obj, signal):
         if obj in self.signals[signal]:

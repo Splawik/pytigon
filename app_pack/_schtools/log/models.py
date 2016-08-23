@@ -29,7 +29,7 @@ class Log( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'log'
 
-        
+
         ordering = ['id']
         
         

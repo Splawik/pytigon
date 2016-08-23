@@ -643,11 +643,11 @@ class SchHtmlWindow(ScrolledPanel):
             cursor_type = 0
         if cursor_type != self.cursor_type:
             if cursor_type == 0:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
             elif cursor_type == 1:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+                self.SetCursor(wx.Cursor(wx.CURSOR_HAND))
             else:
-                self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+                self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
             self.cursor_type = cursor_type
 
     def on_left_up(self, evt):

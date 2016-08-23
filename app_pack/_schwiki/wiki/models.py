@@ -49,7 +49,7 @@ class Page( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'wiki'
 
-        
+
         ordering = ['id']
         
         

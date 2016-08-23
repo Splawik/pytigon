@@ -404,7 +404,7 @@ class CtrlTag(TableTag):
     def render(self, dc):
         if dc.rec:
             if self.obj:
-                self.obj.SetDimensions(dc.x + self.padding[0], dc.y
+                self.obj.SetSize(dc.x + self.padding[0], dc.y
                                         + self.padding[2], (self.width
                                         - self.padding[0]) - self.padding[1],
                                        (self.height - self.padding[2])

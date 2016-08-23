@@ -36,6 +36,7 @@ from schcli.guilib.art_provider import ArtProviderFromIcon
 from schcli.guilib.schevent import * #@UnusedWildImport
 from schcli.guiframe.appnotebook import AppNotebook
 from schcli.guiframe.appnotebookpage import NotebookPage
+from schcli.guiframe.manager import SChAuiManager
 from schcli.guilib.tools import bitmap_from_href
 from schcli.toolbar import toolbar_interface
 from schlib.schfs.vfstools import get_temp_filename
@@ -59,25 +60,6 @@ class SChMainPanel(wx.Window):
 
     def GetMenuBar(self):
         return self.GetParent().GetMenuBar()
-
-
-class SChAuiManager(aui.AuiManager):
-    def __init__(self, *argi, **argv):
-        aui.AuiManager.__init__(self, *argi, **argv)
-
-    def AddPane(self, window, arg1=None, arg2=None):
-        ret = aui.AuiManager.AddPane(self, window, arg1, arg2)
-        if hasattr(window, 'SetPanel'):
-            window.SetPanel(arg1)
-        return ret
-
-    def ActivatePane(self, window):
-        #print "ActivatePane", window
-        try:
-            ret = aui.AuiManager.ActivatePane(self, window)
-        except:
-            ret = None
-        return ret
 
 
 class SchAppFrame(wx.Frame):

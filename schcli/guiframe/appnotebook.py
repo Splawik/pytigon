@@ -21,13 +21,41 @@ import wx
 import wx.lib.agw.aui as aui
 from wx.lib.agw.aui import framemanager
 from schlib.schtools.wiki import wiki_from_str
+from schcli.guiframe.manager import SChAuiBaseManager
+from wx.lib.agw.aui.aui_constants import *
 
 
 class AppNotebook(aui.AuiNotebook):
 
-    def __init__(self, *args, **keyw):
-        keyw['style'] |= wx.WANTS_CHARS
-        aui.AuiNotebook.__init__(self, *args, **keyw)
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=0, agwStyle=AUI_NB_DEFAULT_STYLE, name="AuiNotebook"):
+    #def __init__(self, *args, **keyw):
+        #keyw['style'] |= wx.WANTS_CHARS
+        #aui.AuiNotebook.__init__(self, *args, **keyw)
+        #self._mgr = SChAuiBaseManager()
+        #styla |= wx.WANTS_CHARS
+
+
+        self._curpage = -1
+        self._tab_id_counter = AuiBaseTabCtrlId
+        self._dummy_wnd = None
+        self._hide_tabs = False
+        self._sash_dclick_unsplit = False
+        self._tab_ctrl_height = 20
+        self._requested_bmp_size = wx.Size(-1, -1)
+        self._requested_tabctrl_height = -1
+        self._textCtrl = None
+        self._tabBounds = (-1, -1)
+
+        wx.Panel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS, name=name)
+        #from . import framemanager
+        self._mgr = SChAuiBaseManager()
+        self._tabs = aui.AuiTabContainer(self)
+
+        self.InitNotebook(agwStyle)
+
+
+
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_closing)
         self.Bind(aui.EVT_AUINOTEBOOK_TAB_DCLICK, self.on_dclick)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_changed)
@@ -184,3 +212,5 @@ class AppNotebook(aui.AuiNotebook):
         evt.Skip()
 
 
+    def Hide(self):
+        print("Hide 0")

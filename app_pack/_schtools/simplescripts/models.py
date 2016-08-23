@@ -31,7 +31,7 @@ class Scripts( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'simplescripts'
 
-        
+
         ordering = ['id']
         
         

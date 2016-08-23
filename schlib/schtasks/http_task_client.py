@@ -17,7 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.core.context_processors import csrf
+#from django.core.context_processors import csrf
+from django.template.context_processors import csrf
+
 
 from schlib.schhttptools import httpclient
 import schlib.schtasks.base_task as btask

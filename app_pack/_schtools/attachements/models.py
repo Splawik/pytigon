@@ -36,7 +36,7 @@ class Attachements( models.Model):
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'attachements'
 
-        
+
         ordering = ['id']
         
         

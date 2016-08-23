@@ -21,6 +21,7 @@ import sys
 import platform
 import os
 
+
 def init_paths():
     base_path = __file__.replace("__init__.py", "")
 
@@ -41,3 +42,4 @@ def init_paths():
             if not '.zip' in pos:
                 tmp.append(pos)
     sys.path = tmp
+
