@@ -49,10 +49,11 @@ import six
 _ = wx.GetTranslation
 
 class SChMainPanel(wx.Window):
-    def __init__(self, *argi, **argv):
+    def __init__(self, app_frame, *argi, **argv):
         argv['name'] = 'schmainpanel'
         if 'style' in argv:
             argv['style'] |= wx.WANTS_CHARS
+        self.app_frame = app_frame
         wx.Window.__init__(self, *argi, **argv)
 
     def GetFrameManager(self):
@@ -114,7 +115,7 @@ class SchAppFrame(wx.Frame):
 
         self._mgr.SetAGWFlags(self._mgr.GetAGWFlags() ^ aui.AUI_MGR_ALLOW_ACTIVE_PANE)
 
-        self._panel = SChMainPanel(self)
+        self._panel = SChMainPanel(self, self)
         self._mgr.SetManagedWindow(self._panel)
         self.desktop = self.create_notebook_ctrl(hide_on_single_page)
         self.get_dock_art().SetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE, 0)
@@ -656,8 +657,10 @@ class SchAppFrame(wx.Frame):
             else:
                 n.AddPage(okno, title2, True)
 
-        if platform.system() == "Linux":
-            okno.SetSize(0,0)
+
+        #if platform.system() == "Linux":
+        #    okno.SetSize(0,0)
+
         #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
         if isinstance(address_or_parser, six.string_types):
             address = address_or_parser

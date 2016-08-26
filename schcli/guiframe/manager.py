@@ -27,9 +27,8 @@ import wx
 class SChAuiBaseManager(aui.framemanager.AuiManager):
 
     def Update(self):
-        print("UUUUUUUUUUUUUUUUUUUUUUUUUUUPDATE")
         def _update():
-            if self._frame and self._frame.Size.Height != 0:
+            if self._frame:
                 self.DoUpdate()
         wx.CallAfter(_update)
 

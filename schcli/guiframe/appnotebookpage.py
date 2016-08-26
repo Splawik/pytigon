@@ -336,6 +336,7 @@ class NotebookPage(wx.Window):
             h.init_frame()
             h.activate_page()
             wx.GetApp().GetTopWindow()._mgr.GetPane("desktop").Show()
+            h.Update()
         wx.CallAfter(init_page)
         return h
 
