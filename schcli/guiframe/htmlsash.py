@@ -76,6 +76,7 @@ class SchSashWindow(wx.Window):
         self.signals = {}
         self.statusText = ''
         self.exists = True
+        self.vertical_position = None
         mp = self._read_html(address_or_parser, parameters)
         if not mp:
             print('ERROR READ HTML:', address_or_parser, parameters)
@@ -123,6 +124,8 @@ class SchSashWindow(wx.Window):
             vscroll = False
         if 'no_hscrollbar' in config:
             hscroll = False
+        if 'vertical_position' in config:
+            self.set_vertical_position(config['vertical_position'])
 
         #    self.Body = SchHtmlWindow(self, -1, style=0)
         #else:
@@ -772,3 +775,12 @@ class SchSashWindow(wx.Window):
     def set_page(self, page_source):
         self.Body.set_page(page_source)
 
+
+    def set_vertical_position(self, position):
+        """
+        position:
+            "top"
+            "bottom"
+            None or "default" (defautl)
+        """
+        self.vertical_position = position

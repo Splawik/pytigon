@@ -2,6 +2,9 @@
 
 % extends "plugin_form.html"
 
+%% extrahead
+    meta name=vertical_position,,,content=bottom
+
 %% pythoncode
     script language=python
         def init_form(self):

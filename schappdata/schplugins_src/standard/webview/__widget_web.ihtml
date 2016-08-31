@@ -1,9 +1,0 @@
-{# -*- coding: utf-8 -*- #}
-
-% extends "form.html"
-
-%% form_bar
-
-%% content
-    div width=100%,,,height=100%
-        CTRLHTML2 NAME=WEB,,,WIDTH=100%,,,HEIGHT=100%

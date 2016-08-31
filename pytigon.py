@@ -27,6 +27,7 @@ import datetime
 
 import platform
 
+
 if platform.system() == "Windows":
     import ctypes
     myappid = 'slawomir_cholaj.pytigon.main.01'
@@ -97,6 +98,9 @@ from wx.lib.infoframe import PyInformationalMessagesFrame
 
 from schlib.schtools import createparm
 from schlib.schhttptools.schhtml_parser import ShtmlParser
+
+import configparser
+
 
 import wx.html2
 
@@ -188,6 +192,10 @@ class SchApp(App):
 
         wx.Yield()
 
+
+        config_name = os.path.join(SCR_PATH, "pytigon.ini")
+        self.config = configparser.ConfigParser()
+        self.config.read(config_name)
 
         self.is_hybrid = False
         self.locale = None

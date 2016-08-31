@@ -275,7 +275,7 @@ class SchAppFrame(wx.Frame):
         home_dir = wx.GetApp().get_working_dir()
 
         dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/"]
-
+        auto_plugins = wx.GetApp().config['Global settings']['auto_plugins'].split(';')
         for dirname in dirnames:
             for ff in os.listdir(dirname):
                 if os.path.isdir(os.path.join(dirname, ff)):
@@ -293,7 +293,7 @@ class SchAppFrame(wx.Frame):
                                     p = dirname2.split('/')
                                     mod_name = p[-2] + "." + p[-1] + "." + f
                                     x = p[-1] + '/' + f
-                                    if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins):
+                                    if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins) or x in auto_plugins:
                                         if '.__' in mod_name:
                                             break
                                         mod = __import__(mod_name)

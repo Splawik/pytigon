@@ -173,12 +173,16 @@ class NotebookPage(wx.Window):
 
     def _set_dimensions(self, page, x, y, width, height, dx, dy):
         if x>0 and y>0 and width>=0 and height>=0:
-            if self.reverse_style:
-                #page.SetDimensions(dx-width-x,dy-height-y,width,height)
-                page.SetSize(x,dy-height-y,width,height)
+            if self.child_panels[-1].vertical_position:
+                if self.child_panels[-1].vertical_position=="top":
+                    page.SetSize(x,dy-height-y,width,height)
+                else:
+                    page.SetSize(x,y,width,height)
             else:
-                page.SetSize(x,y,width,height)
-            #page.on_size(None)
+                if self.reverse_style:
+                    page.SetSize(x,dy-height-y,width,height)
+                else:
+                    page.SetSize(x,y,width,height)
 
     def _layout(self, size=None):
         if self.get_page_count() > 0:
