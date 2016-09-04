@@ -23,10 +23,10 @@ import django
 
 setup_old = django.setup
 
-def setup():
+def setup(*argi, **argv):
     import schserw.schsys.initdjango
     schserw.schsys.initdjango.init_django()
-    setup_old()
+    setup_old(*argi, **argv)
 
 django.setup = setup
 

@@ -123,8 +123,8 @@ MIDDLEWARE_CLASSES = [
     #'schserw.schmiddleware.schpost.BeautyHtml',
     ]
 
-if not DEBUG:
-    MIDDLEWARE_CLASSES.append('whitenoise.middleware.WhiteNoiseMiddleware')
+#if not DEBUG:
+MIDDLEWARE_CLASSES.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -132,10 +132,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    #'bootstrap_admin',
     'django.contrib.admin',
     'schserw.schsys',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     'crispy_forms',
     'django_select2',
     'channels',
