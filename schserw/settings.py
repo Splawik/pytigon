@@ -134,7 +134,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.admin',
     'schserw.schsys',
-    #'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'crispy_forms',
     'django_select2',
     'channels',
