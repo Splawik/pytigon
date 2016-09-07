@@ -9,6 +9,7 @@
     script language=python
         def init_form(self):
             from schcli.guilib.schevent import ID_RetValue
+            print("X1")
             self.find_value = ""
             self.listclick=False
             self.retlist = None

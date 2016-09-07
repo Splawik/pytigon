@@ -16,8 +16,6 @@
             self.SEARCH.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.OnCancelBtn)
             self.search_txt = ""
             self.SEARCH.SetFocus()
-            self.get_tab().set_vertical_position("bottom")
-            print("X2")
         def calculate_best_size(self):
             x, y = self.base_calculate_best_size()
             if self.TabWindow and self.TabWindow.ParentTab:

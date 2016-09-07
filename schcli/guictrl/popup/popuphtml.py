@@ -274,7 +274,11 @@ class DataPopupControl(ComboCtrl):
             def _after():
                 self.html.refresh_html()
                 self.html.SetFocus()
-                self.html.on_size(None)
+                #self.html.on_size(None)
+                #self.html.Body.on_erase_background(None)
+                self.html.Body.init_page()
+                #wx.CallAfter(self.html.Body.refr, self.start_value)
+                print("X2")
                 self.html.Body.refr(self.start_value)
                 self.html.Body.Show()
                 wx.EndBusyCursor()

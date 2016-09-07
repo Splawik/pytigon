@@ -16,7 +16,7 @@ from schlib.schhtml.htmltools import superstrip
 
 
 from django.template import RequestContext,Context, Template
-import markdown
+import markdown2 as markdown
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.wiki import wikify
 

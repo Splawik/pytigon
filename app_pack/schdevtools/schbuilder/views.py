@@ -38,7 +38,6 @@ import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.tools import open_and_create_dir
-import git
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -830,9 +829,9 @@ def template_edit3(request, pk):
 
 def update(request):
     
-    g = git.cmd.Git(settings.ROOT_PATH)
-    g.reset('--hard')
-    g.pull()
+    #g = git.cmd.Git(settings.ROOT_PATH)
+    #g.reset('--hard')
+    #g.pull()
     
     return HttpResponse("GIT PULL", content_type="text/plain")
     

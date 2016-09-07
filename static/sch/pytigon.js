@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-08-28 10:56:40
+// Transcrypt'ed from Python, 2016-09-04 16:36:27
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -145,7 +145,7 @@
 					var __Envir__ = __class__ ('__Envir__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.5.216';
+							self.transpiler_version = '3.5.218';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -303,80 +303,6 @@
 							return __accu0__;
 						} ();
 					};
-					var complex = __class__ ('complex', [object], {
-						get __init__ () {return __get__ (this, function (self, real, imag) {
-							self.real = real;
-							self.imag = imag;
-						});},
-						get __neg__ () {return __get__ (this, function (self) {
-							return complex (-(self.real), -(self.imag));
-						});},
-						get __exp__ () {return __get__ (this, function (self) {
-							var modulus = Math.exp (self.real);
-							return complex (modulus * Math.cos (self.imag), modulus * Math.sin (self.imag));
-						});},
-						get __log__ () {return __get__ (this, function (self) {
-							return complex (Math.log (Math.sqrt (self.real * self.real + self.imag * self.imag)), Math.atan2 (self.imag, self.real));
-						});},
-						get __pow__ () {return __get__ (this, function (self, other) {
-							return self.__log__ ().__mul__ (other).__exp__ ();
-						});},
-						get __rpow__ () {return __get__ (this, function (self, real) {
-							return self.__mul__ (Math.log (real)).__exp__ ();
-						});},
-						get __mul__ () {return __get__ (this, function (self, other) {
-							if (typeof other === 'number') {
-								return complex (self.real * other, self.imag * other);
-							}
-							else {
-								return complex (self.real * other.real - self.imag * other.imag, self.real * other.imag + self.imag * other.real);
-							}
-						});},
-						get __rmul__ () {return __get__ (this, function (self, real) {
-							return complex (self.real * real, self.imag * real);
-						});},
-						get __div__ () {return __get__ (this, function (self, other) {
-							if (typeof other === 'number') {
-								return complex (self.real / other, self.imag / other);
-							}
-							else {
-								var denom = other.real * other.real + other.imag * other.imag;
-								return complex ((self.real * other.real + self.imag * other.imag) / denom, (self.imag * other.real - self.real * other.imag) / denom);
-							}
-						});},
-						get __rdiv__ () {return __get__ (this, function (self, real) {
-							var denom = self.real * self.real;
-							return complex ((real * self.real) / denom, (real * self.imag) / denom);
-						});},
-						get __add__ () {return __get__ (this, function (self, other) {
-							if (typeof other === 'number') {
-								return complex (self.real + other, self.imag);
-							}
-							else {
-								return complex (self.real + other.real, self.imag + other.imag);
-							}
-						});},
-						get __radd__ () {return __get__ (this, function (self, real) {
-							return complex (self.real + real, self.imag);
-						});},
-						get __sub__ () {return __get__ (this, function (self, other) {
-							if (typeof other === 'number') {
-								return complex (self.real - other, self.imag);
-							}
-							else {
-								return complex (self.real - other.real, self.imag - other.imag);
-							}
-						});},
-						get __rsub__ () {return __get__ (this, function (self, real) {
-							return complex (real - self.real, -(self.imag));
-						});},
-						get __repr__ () {return __get__ (this, function (self) {
-							return '({}{}{}j)'.format (self.real, (self.imag >= 0 ? '+' : ''), self.imag);
-						});},
-						get __str__ () {return __get__ (this, function (self) {
-							return __repr__ (self).__getslice__ (1, -(1), 1);
-						});}
-					});
 					var __Terminal__ = __class__ ('__Terminal__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
 							try {
@@ -473,7 +399,6 @@
 						__all__.__Terminal__ = __Terminal__;
 						__all__.__sort__ = __sort__;
 						__all__.__terminal__ = __terminal__;
-						__all__.complex = complex;
 						__all__.filter = filter;
 						__all__.map = map;
 						__all__.sorted = sorted;
@@ -1800,42 +1725,42 @@
 	};
 	__all__.__ge__ = __ge__;
 		
-	var __getitem__ = function (container, key) {
+	var __getitem__ = function (container, key) {							// Slice c.q. index, direct generated call to runtime switch
 		if (typeof container == 'object' && '__getitem__' in container) {
-			return container.__getitem__ (key);
+			return container.__getitem__ (key);								// Overloaded on container
 		}
 		else {
-			return container [key];
+			return container [key];											// Container must support bare JavaScript brackets
 		}
 	};
 	__all__.__getitem__ = __getitem__;
 
-	var __setitem__ = function (container, key, value) {
+	var __setitem__ = function (container, key, value) {					// Slice c.q. index, direct generated call to runtime switch
 		if (typeof container == 'object' && '__setitem__' in container) {
-			container.__setitem__ (key, value);
+			container.__setitem__ (key, value);								// Overloaded on container
 		}
 		else {
-			container [key] = value;
+			container [key] = value;										// Container must support bare JavaScript brackets
 		}
 	};
 	__all__.__setitem__ = __setitem__;
 
-	var __getslice__ = function (container, lower, upper, step) {
+	var __getslice__ = function (container, lower, upper, step) {			// Slice only, no index, direct generated call to runtime switch
 		if (typeof container == 'object' && '__getitem__' in container) {
-			return container.__getitem__ ([lower, upper, step]);
+			return container.__getitem__ ([lower, upper, step]);			// Container supports overloaded slicing c.q. indexing
 		}
 		else {
-			return container.__getslice__ (lower, upper, step);
+			return container.__getslice__ (lower, upper, step);				// Container only supports slicing injected natively in prototype
 		}
 	};
 	__all__.__getslice__ = __getslice__;
 
-	var __setslice__ = function (container, lower, upper, step, value) {
+	var __setslice__ = function (container, lower, upper, step, value) {	// Slice, no index, direct generated call to runtime switch
 		if (typeof container == 'object' && '__setitem__' in container) {
-			container.__setitem__ ([lower, upper, step], value);
+			container.__setitem__ ([lower, upper, step], value);			// Container supports overloaded slicing c.q. indexing
 		}
 		else {
-			container.__setslice__ (lower, upper, step, value);
+			container.__setslice__ (lower, upper, step, value);				// Container only supports slicing injected natively in prototype
 		}
 	};
 	__all__.__setslice__ = __setslice__;
@@ -2256,9 +2181,9 @@ function pytigon () {
 						jQuery ('.selectpicker').selectpicker ();
 						if (window.RIOT_INIT) {
 							var _id = jQuery (elem).uid ();
-							var __iter0__ = window.RIOT_INIT;
-							for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-								var pos = __iter0__ [__index0__];
+							var __iterable0__ = window.RIOT_INIT;
+							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								var pos = __iterable0__ [__index0__];
 								var x = sprintf ("riot.mount('#%s')", (_id + ' ') + pos);
 								eval (x);
 							}
@@ -2277,7 +2202,16 @@ function pytigon () {
 						__all__._refresh_win = _refresh_win;
 						__all__._refresh_win_after_ok = _refresh_win_after_ok;
 						__all__._refresh_win_and_ret = _refresh_win_and_ret;
+						__all__.ajax_get = ajax_get;
+						__all__.ajax_load = ajax_load;
+						__all__.ajax_post = ajax_post;
+						__all__.ajax_submit = ajax_submit;
+						__all__.can_popup = can_popup;
+						__all__.corect_href = corect_href;
+						__all__.datatable_onresize = datatable_onresize;
+						__all__.datatable_refresh = datatable_refresh;
 						__all__.fragment_init = fragment_init;
+						__all__.handle_class_click = handle_class_click;
 						__all__.on_cancel_inline = on_cancel_inline;
 						__all__.on_delete_ok = on_delete_ok;
 						__all__.on_dialog_load = on_dialog_load;
@@ -2471,8 +2405,12 @@ function pytigon () {
 						'tools' +
 					'</use>')
 					__pragma__ ('<all>')
+						__all__.Page = Page;
 						__all__.TabMenu = TabMenu;
+						__all__.TabMenuItem = TabMenuItem;
+						__all__.datatable_onresize = datatable_onresize;
 						__all__.get_menu = get_menu;
+						__all__.history_push_state = history_push_state;
 					__pragma__ ('</all>')
 				}
 			}
@@ -2616,12 +2554,14 @@ function pytigon () {
 					'</use>')
 					__pragma__ ('<all>')
 						__all__._rowStyle = _rowStyle;
+						__all__.ajax_post = ajax_post;
 						__all__.datatable_ajax = datatable_ajax;
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.datatable_refresh = datatable_refresh;
 						__all__.datetable_set_height = datetable_set_height;
 						__all__.init_table = init_table;
 						__all__.prepare_datatable = prepare_datatable;
+						__all__.stick_header = stick_header;
 					__pragma__ ('</all>')
 				}
 			}
@@ -2821,9 +2761,9 @@ function pytigon () {
 						if (LOADED_FILES && __in__ (path, LOADED_FILES)) {
 							var functions = LOADED_FILES [path];
 							if (functions) {
-								var __iter0__ = functions;
-								for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-									var fun = __iter0__ [__index0__];
+								var __iterable0__ = functions;
+								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+									var fun = __iterable0__ [__index0__];
 									fun ();
 								}
 							}
@@ -2860,9 +2800,9 @@ function pytigon () {
 								fun ();
 							}
 						};
-						var __iter0__ = paths.py_split (paths, ';');
-						for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-							var path = __iter0__ [__index0__];
+						var __iterable0__ = paths.py_split (paths, ';');
+						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							var path = __iterable0__ [__index0__];
 							if (path.lenght () > 0) {
 								var counter = counter + 1;
 								load_js (path, _fun);
@@ -2907,6 +2847,7 @@ function pytigon () {
 		}
 	);
 	(function () {
+		var __symbols__ = ['__esv5__'];
 		var Page = __init__ (__world__.page).Page;
 		var TabMenuItem = __init__ (__world__.tabmenuitem).TabMenuItem;
 		var get_menu = __init__ (__world__.tabmenu).get_menu;
@@ -2998,16 +2939,16 @@ function pytigon () {
 				if (target == '_blank') {
 					return ;
 				}
-				var __iter0__ = list (['get_tbl_value', 'new_tbl_value', 'get_row']);
-				for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-					var pos = __iter0__ [__index0__];
+				var __iterable0__ = list (['get_tbl_value', 'new_tbl_value', 'get_row']);
+				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+					var pos = __iterable0__ [__index0__];
 					if (jQuery (this).hasClass (pos)) {
 						return true;
 					}
 				}
-				var __iter0__ = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete])]);
-				for (var __index0__ = 0; __index0__ < __iter0__.length; __index0__++) {
-					var pos = __iter0__ [__index0__];
+				var __iterable0__ = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete])]);
+				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+					var pos = __iterable0__ [__index0__];
 					if (jQuery (this).hasClass (pos [0])) {
 						e.preventDefault ();
 						pos [1] (this);
@@ -3360,13 +3301,43 @@ function pytigon () {
 			'tools' +
 		'</use>')
 		__pragma__ ('<all>')
+			__all__.Page = Page;
+			__all__.TabMenuItem = TabMenuItem;
 			__all__._on_error = _on_error;
 			__all__._on_menu_href = _on_menu_href;
 			__all__._on_popstate = _on_popstate;
+			__all__.ajax_get = ajax_get;
+			__all__.ajax_load = ajax_load;
+			__all__.ajax_post = ajax_post;
+			__all__.ajax_submit = ajax_submit;
 			__all__.app_init = app_init;
+			__all__.can_popup = can_popup;
+			__all__.corect_href = corect_href;
+			__all__.datatable_onresize = datatable_onresize;
+			__all__.fragment_init = fragment_init;
+			__all__.get_menu = get_menu;
+			__all__.get_table_type = get_table_type;
+			__all__.handle_class_click = handle_class_click;
+			__all__.history_push_state = history_push_state;
 			__all__.init_pagintor = init_pagintor;
+			__all__.init_table = init_table;
 			__all__.jquery_ready = jquery_ready;
+			__all__.load_css = load_css;
+			__all__.load_js = load_js;
+			__all__.load_many_js = load_many_js;
+			__all__.on_cancel_inline = on_cancel_inline;
+			__all__.on_delete_ok = on_delete_ok;
+			__all__.on_edit_ok = on_edit_ok;
+			__all__.on_get_row = on_get_row;
+			__all__.on_get_tbl_value = on_get_tbl_value;
+			__all__.on_new_tbl_value = on_new_tbl_value;
+			__all__.on_popup_delete = on_popup_delete;
+			__all__.on_popup_edit_new = on_popup_edit_new;
+			__all__.on_popup_info = on_popup_info;
+			__all__.on_popup_inline = on_popup_inline;
 			__all__.page_init = page_init;
+			__all__.refresh_fragment = refresh_fragment;
+			__all__.ret_ok = ret_ok;
 		__pragma__ ('</all>')
 	}) ();
 	return __all__;
