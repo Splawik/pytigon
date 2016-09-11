@@ -278,7 +278,7 @@ class DataPopupControl(ComboCtrl):
                 #self.html.Body.on_erase_background(None)
                 self.html.Body.init_page()
                 #wx.CallAfter(self.html.Body.refr, self.start_value)
-                print("X2")
+                #print("X2")
                 self.html.Body.refr(self.start_value)
                 self.html.Body.Show()
                 wx.EndBusyCursor()
