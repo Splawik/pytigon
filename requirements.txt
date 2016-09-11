@@ -17,3 +17,4 @@ httpie
 cffi
 Pillow
 gunicorn
+psycopg2
