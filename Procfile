@@ -1,0 +1,1 @@
+web: gunicorn ./app_pack/_schall/run.wsgi --log-file -
