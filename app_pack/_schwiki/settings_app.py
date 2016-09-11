@@ -3,6 +3,7 @@
 import os
 import sys
 import six
+from urllib.parse import urlparse
 from schlib.schdjangoext.django_init import get_app_config
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
@@ -81,7 +82,30 @@ if setup_databases:
 
     if db_setup[1]:
         AUTHENTICATION_BACKENDS = db_setup[1]
-
+else:
+    if "DATABASE_URL" in os.environ:
+        db_url = os.environ["DATABASE_URL"]
+        db_local = DATABASES['default']
+        url = urlparse(db_url)
+        scheme = url.scheme
+        if scheme=='postgres':
+            scheme='postgresql'
+        database=url.path[1:]
+        user=url.username
+        password=url.password
+        host=url.hostname
+        port=url.port
+        DATABASES = {
+            'default':  {
+                'ENGINE': 'django.db.backends.'+scheme,
+                'NAME': database,
+                'USER': user,
+                'PASSWORD': password,
+                'HOST': host,
+                'PORT': port,
+            },
+        }
+        DATABASES['local'] = db_local
 try:
     from settings_app_local import *
 except:

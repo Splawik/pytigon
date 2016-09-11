@@ -240,7 +240,7 @@ def gen(request, pk):
     template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset})
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
-    template_to_file(base_path, "wsgi", "run.wsgi",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
+    template_to_file(base_path, "wsgi", "wsgi.py",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
     template_to_file(base_path, "asgi", "asgi.py",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
     
     app_names = []

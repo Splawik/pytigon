@@ -16,10 +16,11 @@
     
     <script>
     
-    		this.py_items = list ([]);
+    		var __symbols__ = ['__esv5__'];
+    		this.items = list ([]);
     		var add = function (e) {
     			var input = e.target [0];
-    			this.py_items.push (input.value);
+    			this.items.push (input.value);
     			input.value = '';
     		};
     		__pragma__ ('<all>')
