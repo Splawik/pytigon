@@ -181,8 +181,7 @@ if DEBUG:
 else:
     CHANNEL_LAYERS = {
         "default": {
-            #"BACKEND": "asgi_redis.RedisChannelLayer",
-            "BACKEND": "asgi_ipc.IPCChannelLayer",
+            "BACKEND": "asgi_redis.RedisChannelLayer",
             "ROUTING": "schserw.routing.channel_routing",
         },
     }

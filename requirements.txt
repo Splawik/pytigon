@@ -16,4 +16,4 @@ openpyxl
 httpie
 cffi
 Pillow
-asgi_ipc
+gunicorn
