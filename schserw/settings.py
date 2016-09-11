@@ -171,14 +171,22 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        #"BACKEND": "asgi_ipc.IPCChannelLayer",
-        #"BACKEND": "asgi_redis.RedisChannelLayer",
-        "ROUTING": "schserw.routing.channel_routing",
-    },
-}
+if DEBUG:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "asgiref.inmemory.ChannelLayer",
+            "ROUTING": "schserw.routing.channel_routing",
+        },
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            #"BACKEND": "asgi_redis.RedisChannelLayer",
+            "BACKEND": "asgi_ipc.IPCChannelLayer",
+            "ROUTING": "schserw.routing.channel_routing",
+        },
+    }
+
 
 try:
     from schserw.settings_local import *
