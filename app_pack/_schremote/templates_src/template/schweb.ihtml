@@ -18,7 +18,7 @@
         [ riot_elements | ]
         [ gui_style | modern(toolbar(file(open,exit),clipboard)) ]
         [ hybrid | 0 ]
-        [ title  | Pytigon ]
+        [ title  | Pytigon web client ]
         [ start_page |  ]
         [ plugins |  ]
 

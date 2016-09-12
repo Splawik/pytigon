@@ -4,7 +4,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="20">
+          <list size="21">
             <item index="0" class="java.lang.String" itemvalue="django-debug_toolbar" />
             <item index="1" class="java.lang.String" itemvalue="GitPython" />
             <item index="2" class="java.lang.String" itemvalue="markdown2" />
@@ -25,6 +25,7 @@
             <item index="17" class="java.lang.String" itemvalue="httpie" />
             <item index="18" class="java.lang.String" itemvalue="Django" />
             <item index="19" class="java.lang.String" itemvalue="pygments" />
+            <item index="20" class="java.lang.String" itemvalue="psycopg2" />
           </list>
         </value>
       </option>

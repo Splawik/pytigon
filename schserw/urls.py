@@ -57,7 +57,7 @@ if len(settings.APP_PACKS) > 0:
     for app_pack in settings.APP_PACKS:
         if app_pack.startswith('_'):
             continue
-        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'), {'app_pack': app_pack }, name='start'+app_pack )
+        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'), {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
         urlpatterns.append(u)
 
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),  {'app_packs': settings.APP_PACKS }, name='start')

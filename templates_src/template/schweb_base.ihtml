@@ -29,7 +29,7 @@
             % else:
                 meta name=NO_HSCROLLBAR,,,content=True
 
-    % if 'start'|reverse == request.path
+    % if 'start'|reverse == request.path or start_page:
         %% indexhead
             table style=width: 100%;,,,border=1
                 % if user.is_authenticated
@@ -47,7 +47,7 @@
         %%pythoncode_editform
 
 %% submenu
-    % if not app_manager.appname
+    % if not app_manager.appname or start_page:
         % if forloop.first
             h1...Aplikacja:
             h2...SCHWeb
@@ -84,7 +84,7 @@
 
 
 %% menu2
-    % if not app_manager.appname
+    % if not app_manager.appname or start_page:
         h1...Toolbar 1
         .Typ:<br />
             .0 - przycisk<br />
