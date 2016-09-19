@@ -39,16 +39,22 @@ def init_plugin(
                     (wx.ACCEL_ALT, ord('K'), self.on_up),
                     (wx.ACCEL_ALT, ord('H'), self.on_left),
                     (wx.ACCEL_ALT, ord('L'), self.on_right),
-                    (wx.ACCEL_ALT, ord('B'), self.on_page_up),
-                    (wx.ACCEL_ALT, ord('F'), self.on_page_down),
+                    #(wx.ACCEL_ALT, ord('B'), self.on_page_up),
+                    #(wx.ACCEL_ALT, ord('F'), self.on_page_down),
 
-                    (wx.ACCEL_ALT, ord('I'), self.on_home),
-                    (wx.ACCEL_ALT, ord('A'), self.on_end),
-                    (wx.ACCEL_ALT, ord('O'), self.on_line_next),
+                    (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('6'), self.on_home),
+                    (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('4'), self.on_end),
+
+                    #(wx.ACCEL_ALT, ord('O'), self.on_line_next),
 
                     (wx.ACCEL_ALT, ord('V'), self.on_start_sel),
                     (wx.ACCEL_ALT, ord('Y'), self.on_copy),
                     (wx.ACCEL_ALT, ord('P'), self.on_paste),
+
+                    (wx.ACCEL_CTRL, ord('D'), self.on_page_down),
+                    (wx.ACCEL_CTRL, ord('U'), self.on_page_up),
+                    (wx.ACCEL_ALT, ord('X'), self.on_delete),
+
 
             ]
             base.__init__(self, *args, **kwds)
@@ -133,6 +139,16 @@ def init_plugin(
                     self.SetSelection(pos, pos)
                 self.EnsureCaretVisible()
 
+        def on_delete(self, event):
+            start,end = self.GetSelection()
+            if start==end:
+                pos = self.GetCurrentPos()+1
+                self.SetCurrentPos(pos)
+                self.SetSelection(pos, pos)
+                self.DeleteBack()
+                self.EnsureCaretVisible()
+            else:
+                self.DeleteBack()
 
     schcli.guictrl.schctrl.STYLEDTEXT = ViKeyMapEditor
 

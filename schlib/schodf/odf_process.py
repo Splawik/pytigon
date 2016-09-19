@@ -250,7 +250,7 @@ class DocTransform:
 
         p = re.compile('\^(.*?\(.*?\))')
         doc_str = p.sub(r'${\1}', doc_str)
-        doc_str = doc_str.replace('{{', '{% expr_safe ').replace('}}', ' %}')
+        doc_str = doc_str.replace('{{', '{% expr_escape ').replace('}}', ' %}')
 
         x = self.process_template(doc_str, context)
         if not x:

@@ -53,6 +53,8 @@ from crispy_forms.bootstrap import (
 
 import itertools
 
+import html
+
 register = template.Library()
 
 
@@ -502,22 +504,13 @@ def wiki_link(
     return wiki_button(context, subject, wiki_description, style, target, url)
 
 
-# This tag can be used to calculate a python expression, and save it into a
-# template variable which you can reuse later or directly output to template. So
-# if the default django tag can not be suit for your need, you can use it. How
-# to use it {% expr "1" as var1 %} {% expr [0, 1, 2] as var2 %} {% expr
-# _('Menu') as var3 %} {% expr var1 + "abc" as var4 %} ... {{ var1 }} for 0.2
-# version {% expr 3 %} {% expr "".join(["a", "b", "c"]) %} Will directly output
-# the result to template Syntax {% expr python_expression as variable_name %}
-# python_expression can be valid python expression, and you can even use _() to
-# translate a string. Expr tag also can used context variables.
-
 class ExprNode(template.Node):
 
-    def __init__(self, expr_string, var_name, safe=True):
+    def __init__(self, expr_string, var_name, safe=True, escape=False):
         self.expr_string = expr_string
         self.var_name = var_name
         self.safe = safe
+        self.escape = escape
 
     def render(self, context):
         try:
@@ -528,10 +521,16 @@ class ExprNode(template.Node):
             for c in clist:
                 d.update(c)
             if self.var_name:
-                if self.safe:
-                    context[self.var_name] = mark_safe2(eval(self.expr_string, d))
+                if self.escape:
+                    if self.safe:
+                        context[self.var_name] = html.escape(mark_safe2(eval(self.expr_string, d)))
+                    else:
+                        context[self.var_name] = html.escape(eval(self.expr_string, d))
                 else:
-                    context[self.var_name] = eval(self.expr_string, d)
+                    if self.safe:
+                        context[self.var_name] = mark_safe2(eval(self.expr_string, d))
+                    else:
+                        context[self.var_name] = eval(self.expr_string, d)
                 return ''
             else:
                 #try:
@@ -541,9 +540,13 @@ class ExprNode(template.Node):
                 #    val =self.expr_string
                 if val != None:
                     if self.safe:
-                        return mark_safe2(str(val))
+                        ret =  mark_safe2(str(val))
                     else:
-                        return str(val)
+                        ret = str(val)
+                    if self.escape:
+                        return html.escape(ret)
+                    else:
+                        return ret
                 else:
                     return ''
         except:
@@ -590,6 +593,27 @@ def do_expr_safe(parser, token):
 
 
 do_expr_safe = register.tag('expr_safe', do_expr_safe)
+
+
+
+def do_expr_escape(parser, token):
+    try:
+        (tag_name, arg) = token.contents.split(None, 1)
+    except ValueError:
+        raise template.TemplateSyntaxError('%r tag requires arguments'\
+             % token.contents[0])
+    m = r_expr.search(arg)
+    if m:
+        (expr_string, var_name) = m.groups()
+    else:
+        if not arg:
+            raise template.TemplateSyntaxError('%r tag at least require one argument' % tag_name)
+        (expr_string, var_name) = (arg, None)
+    return ExprNode(expr_string, var_name, True, True)
+
+
+do_expr_escape = register.tag('expr_escape', do_expr_escape)
+
 
 
 #

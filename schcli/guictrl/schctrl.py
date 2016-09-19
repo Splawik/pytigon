@@ -598,12 +598,12 @@ class LISTBOX(wx.ListBox, SchBaseCtrl):
         #print self.GetSize()
 
     def FindAndSelect(self, item):
-        print("X3", item)
+        #print("X3", item)
         l = self.GetStrings()
         for i in range(len(l)):
             if l[i].startswith(item):
                 self.SetSelection(i)
-                print("X4", i)
+                #print("X4", i)
                 return
 
     def BlockRefresh(self, block=True):

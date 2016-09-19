@@ -715,8 +715,14 @@ class GenericRows(object):
 
                 if self.object and hasattr(self.object, 'transform_form'):
                     self.object.transform_form(request, form, False)
+                    
+                if self.model and hasattr(self.model, 'is_form_valid'):
+                    def vfun():
+                        return self.model.is_form_valid(form)
+                else:
+                    vfun = form.is_valid
 
-                if form.is_valid():
+                if vfun():
                     return self.form_valid(form, request)
                 else:
                     print("INVALID:", form.errors)
@@ -832,7 +838,14 @@ class GenericRows(object):
                 if self.object and hasattr(self.object, 'transform_form'):
                     self.object.transform_form(request, form, True)
 
-                if form.is_valid():
+                if self.model and hasattr(self.model, 'is_form_valid'):
+                    def vfun():
+                        return self.model.is_form_valid(form)
+                else:
+                    vfun = form.is_valid
+
+
+                if vfun():
                     return self.form_valid(form, request)
                 else:
                     print("INVALID:", form.errors)
