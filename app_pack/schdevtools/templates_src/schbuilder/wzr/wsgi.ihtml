@@ -1,6 +1,6 @@
 !!!import os, sys
 
-base_path = __file__.replace("run.wsgi", "")
+base_path = __file__.replace("wsgi.py", "")
 if base_path == "":
     base_path = "./"
 else:

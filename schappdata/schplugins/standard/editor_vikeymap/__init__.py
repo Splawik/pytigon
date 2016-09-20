@@ -35,27 +35,29 @@ def init_plugin(
     class ViKeyMapEditor(base):
         def __init__(self, *args, **kwds):
             aTable = [
-                    (wx.ACCEL_ALT, ord('J'), self.on_down),
-                    (wx.ACCEL_ALT, ord('K'), self.on_up),
-                    (wx.ACCEL_ALT, ord('H'), self.on_left),
-                    (wx.ACCEL_ALT, ord('L'), self.on_right),
-                    #(wx.ACCEL_ALT, ord('B'), self.on_page_up),
-                    #(wx.ACCEL_ALT, ord('F'), self.on_page_down),
+                (wx.ACCEL_ALT, ord('J'), self.on_down),
+                (wx.ACCEL_ALT, ord('K'), self.on_up),
+                (wx.ACCEL_ALT, ord('H'), self.on_left),
+                (wx.ACCEL_ALT, ord('L'), self.on_right),
 
-                    (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('6'), self.on_home),
-                    (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('4'), self.on_end),
+                (wx.ACCEL_ALT, ord('N'), self.on_home),
+                (wx.ACCEL_ALT, ord(';'), self.on_end),
 
-                    #(wx.ACCEL_ALT, ord('O'), self.on_line_next),
+                (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('L'), self.on_next_word),
+                (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('H'), self.on_prev_word),
 
-                    (wx.ACCEL_ALT, ord('V'), self.on_start_sel),
-                    (wx.ACCEL_ALT, ord('Y'), self.on_copy),
-                    (wx.ACCEL_ALT, ord('P'), self.on_paste),
+                (wx.ACCEL_CTRL, ord('H'), self.on_top),
+                (wx.ACCEL_CTRL, ord('L'), self.on_bottom),
 
-                    (wx.ACCEL_CTRL, ord('D'), self.on_page_down),
-                    (wx.ACCEL_CTRL, ord('U'), self.on_page_up),
-                    (wx.ACCEL_ALT, ord('X'), self.on_delete),
+                (wx.ACCEL_ALT, ord('V'), self.on_start_sel),
+                (wx.ACCEL_CTRL, ord('C'), self.on_copy),
+                (wx.ACCEL_ALT, ord('P'), self.on_paste),
+                (wx.ACCEL_ALT, ord('X'), self.on_delete),
 
+                (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('J'), self.on_page_down),
+                (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('K'), self.on_page_up),
 
+                (wx.ACCEL_ALT, wx.WXK_RETURN, self.on_line_next),
             ]
             base.__init__(self, *args, **kwds)
             self.GetParent().set_acc_key_tab(self, aTable)
@@ -64,80 +66,63 @@ def init_plugin(
         def on_start_sel(self, event):
             if self.start_sel:
                 self.start_sel = None
+                pos =  self.GetCurrentPos()
+                self.SetSelection(pos,pos)
             else:
                 self.start_sel =  self.GetCurrentPos()
 
         def on_copy(self, event):
             if self.start_sel != None:
                 pos = self.GetCurrentPos()
-                self.SetSelection(self.start_sel, pos)
                 self.Copy()
                 self.SetSelection(pos, pos)
-            self.start_sel = None
-
+                self.start_sel = None
 
         def on_paste(self, event):
             self.Paste()
 
-        def on_down(self, event):
+        def _cmd(self, cmd1, cmd2):
             if self.start_sel != None:
-                self.LineDownExtend()
+                cmd2()
             else:
-                self.LineDown()
+                cmd1()
+            self.EnsureCaretVisible()
+
+        def on_down(self, event):
+            self._cmd(self.LineDown, self.LineDownExtend)
 
         def on_up(self, event):
-            if self.start_sel != None:
-                self.LineUpExtend()
-            else:
-                self.LineUp()
+            self._cmd(self.LineUp, self.LineUpExtend)
 
         def on_page_down(self, event):
-            if self.start_sel != None:
-                self.PageDownExtend()
-            else:
-                self.PageDown()
+            self._cmd(self.PageDown, self.PageDownExtend)
 
         def on_page_up(self, event):
-            if self.start_sel != None:
-                self.PageUpExtend()
-            else:
-                self.PageUp()
+            self._cmd(self.PageUp, self.PageUpExtend)
 
         def on_home(self, event):
-            if self.start_sel != None:
-                self.VCHomeExtend()
-            else:
-                self.VCHome()
+            self._cmd(self.VCHome, self.VCHomeExtend)
 
         def on_end(self, event):
-            if self.start_sel != None:
-                self.LineEndExtend()
-            else:
-                self.LineEnd()
-
-        def on_line_next(self, event):
-            self.LineEnd()
-            self._enter_key()
+            self._cmd(self.LineEnd, self.LineEndExtend)
 
         def on_left(self, event):
-            pos = self.GetCurrentPos()-1
-            if pos>=0:
-                self.SetCurrentPos(pos)
-                if self.start_sel != None:
-                    self.SetSelection(self.start_sel, pos)
-                else:
-                    self.SetSelection(pos, pos)
-                self.EnsureCaretVisible()
+            self._cmd(self.CharLeft, self.CharLeftExtend)
 
         def on_right(self, event):
-            pos = self.GetCurrentPos()+1
-            if pos>=0:
-                self.SetCurrentPos(pos)
-                if self.start_sel != None:
-                    self.SetSelection(self.start_sel, pos)
-                else:
-                    self.SetSelection(pos, pos)
-                self.EnsureCaretVisible()
+            self._cmd(self.CharRight, self.CharRightExtend)
+
+        def on_next_word(self, event):
+            self._cmd(self.WordRight, self.WordRightExtend)
+
+        def on_prev_word(self, event):
+            self._cmd(self.WordLeft, self.WordLeftExtend)
+
+        def on_top(self, event):
+            self._cmd(self.DocumentStart, self.DocumentStartExtend)
+
+        def on_bottom(self, event):
+            self._cmd(self.DocumentEnd, self.DocumentEndExtend)
 
         def on_delete(self, event):
             start,end = self.GetSelection()
@@ -149,6 +134,10 @@ def init_plugin(
                 self.EnsureCaretVisible()
             else:
                 self.DeleteBack()
+
+        def on_line_next(self, event):
+            self.LineEnd()
+            self._enter_key()
 
     schcli.guictrl.schctrl.STYLEDTEXT = ViKeyMapEditor
 
