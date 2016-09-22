@@ -27,55 +27,15 @@ from schlib.schfs.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
 PFORM = form_with_perms('commander') 
 
 
-class FileMmanager(forms.Form):
+class FileManager(forms.Form):
     folder = forms.CharField(label='Folder', required=True, )
     sort = forms.ChoiceField(label='Sort', required=True, choices=models.file_manager_sort_choices)
     
-    def process(self, request, queryset=None):
     
-        folder = self.cleaned_data['folder']
-        sort = self.cleaned_data['sort']
-        if folder == None or folder == '':
-            folder = '/'
-        tabela = self.get_table(folder)
-        return {
-            'folder': folder,
-            'sort': sort,
-            'folders': tabela[0],
-            'files': tabela[1],
-            'tabela': tabela,
-            }
-        
-        
     
-def get_table(self, folder):
-    f = get_dir(folder, vfsman)
-    files = []
-    folders = []
-    for pos in f.get_dirs():
-        folders.append(pos)
 
-    for pos in f.get_files():
-        files.append(pos)
-
-    return (folders, files)
-
-def process_empty(self, request, param=None):
-    if param and param != '' and param != '_':
-        dir = b32decode(param.split('/')[0])
-    else:
-        dir = '/'
-    tabela = self.get_table(dir)
-    self.data = {
-        'folder': dir,
-        'folders': tabela[0],
-        'files': tabela[1],
-        'tabela': tabela,
-        }
-    return self.data
-
-def view_filemmanager(request, *argi, **argv):
-    return PFORM(request, FileMmanager, 'commander/formfilemmanager.html', {})
+def view_filemanager(request, *argi, **argv):
+    return PFORM(request, FileManager, 'commander/formfilemanager.html', {})
 
 
 

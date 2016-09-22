@@ -19,7 +19,8 @@ urlpatterns = [
     
     
     
-    url('form/FileMmanager/$', views.view_filemmanager, {}),
+    
+    url('form/FileManager/$', views.view_filemanager, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'commander', views)

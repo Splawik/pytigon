@@ -6,6 +6,6 @@ Title = _('File manager')
 Perms = False
 Index = ''
 Urls  = (
-    ('form/FileMmanager/?schtml=1',_('File manager'),None,'client://places/folder.png'),
+    ('form/FileManager/?schtml=1',_('File manager'),None,'client://places/folder.png'),
 )
 UserParam = {}

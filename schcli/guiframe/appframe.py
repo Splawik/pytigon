@@ -795,7 +795,7 @@ class SchAppFrame(wx.Frame):
             self.tbIcon = None
 
     def on_open(self, event):
-        self.new_main_page(wx.GetApp().base_address + '/schcommander/table/FileManager/list//', "Commander", None, "Panel")
+        self.new_main_page(wx.GetApp().base_address + '/commander/form/FileManager/', "Commander", None, "Panel")
 
 
     def on_close(self, event):
