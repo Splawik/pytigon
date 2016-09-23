@@ -19,7 +19,7 @@
 
 from __future__ import unicode_literals
 
-from zipfile import ZipFile, ZIP_STORED
+from zipfile import ZipFile, ZIP_STORED, ZIP_DEFLATED
 import re
 import shutil
 import xml.dom.minidom
@@ -257,7 +257,7 @@ class DocTransform:
             x = doc_str
 
 
-        z = ZipFile(self.file_name_out, 'a', ZIP_STORED)
+        z = ZipFile(self.file_name_out, 'a', ZIP_DEFLATED)
         z.writestr('content.xml', x.encode('utf-8'))
         z.close()
 
