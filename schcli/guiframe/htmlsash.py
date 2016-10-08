@@ -275,47 +275,6 @@ class SchSashWindow(wx.Window):
             self.href_pos=(adr,None)
         return mp
 
-    def _read_html2(self, address_or_parser, parameters):
-        #if address_or_parser.__class__ == str or address_or_parser.__class__\
-        #     == unicode:
-        if isinstance(address_or_parser, six.string_types):
-            address = address_or_parser
-            http = wx.GetApp().get_http(self)
-            parm = ''
-            if parameters:
-                if type(parameters) == dict:
-                    parameters2 = createparm.DictParm(parameters)
-                else:
-                    parameters2 = parameters
-                adrtmp = createparm.create_parm(address_or_parser, parameters2)
-                if adrtmp:
-                    adr = adrtmp[0] + adrtmp[1] + adrtmp[2]
-                else:
-                    adr = address_or_parser
-            else:
-                adr = address_or_parser
-            (err, url) = http.get(self, adr)
-            self.href_pos=(adr,None)
-            #print(err, url)
-            if err == 404:
-                print("XXXXXXXXXXXXXXXXXXXXXX")
-                raise Exception('http', '404')
-                print("yyyyyyyyyyyyyyyyyyyyyy")
-                return None
-            ptr = http.str()
-            mp = ShtmlParser()
-            mp.process(ptr, address_or_parser)
-            mp.address = adr
-            http.clear_ptr()
-        else:
-            if address_or_parser:
-                mp = address_or_parser
-            else:
-                mp = ShtmlParser()
-                mp.process('<html><body></body></html>')
-                mp.address = None
-        return mp
-
     def append_ctrl(self, obj):
         self.ctrl_dict[obj.get_unique_name()] = obj
 
@@ -526,7 +485,8 @@ class SchSashWindow(wx.Window):
     def set_focus(self):
         if self.LastControlWithFocus:
             self.LastControlWithFocus.SetFocus()
-        super().SetFocus()
+        else:
+            super().SetFocus()
 
 
     def on_sash_drag(self, event):
@@ -589,9 +549,10 @@ class SchSashWindow(wx.Window):
         if not obj in self.signals[signal]:
             self.signals[signal].append(obj)
 
-    def un_register_signal(self, obj, signal):
+    def unregister_signal(self, obj, signal):
         if obj in self.signals[signal]:
-            del self.signals[signal][obj]
+            id = self.signals[signal].index(obj)
+            del self.signals[signal][id]
 
     def signal(self, signal):
         if signal in self.signals:

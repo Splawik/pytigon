@@ -155,7 +155,7 @@ class ToolBarInterface(ToolbarInterface):
                                     #|aui.AUI_TB_TEXT|aui.AUI_TB_OVERFLOW)
                                        # |aui.AUI_TB_PLAIN_BACKGROUNDaui.AUI_TB_OVERFLOW|)
             self.page.SetToolBitmapSize(wx.Size(24, 24))
-            #self.page.SetArtProvider(SchAuiToolBarArt())
+            self.page.SetArtProvider(SchAuiToolBarArt())
             nr = len(self.bar.toolbars) + 1
             self.bar.parent._mgr.AddPane(self.page, self.bar.parent.panel('tb'
                      + str(nr), 'Toolbar '

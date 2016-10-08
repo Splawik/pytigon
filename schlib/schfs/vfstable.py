@@ -361,9 +361,9 @@ def vfssave(request, file):
 # print "save2"
             file2 = b32decode(file).decode('utf-8')
 # print "save3", file2
-            plik = OpenFile(file2, vfsman)
+            plik = open_file(file2, vfsman)
 # print "save4"
-            plik.write(data)
+            plik.write(data.encode('utf-8'))
 # print "save5"
             plik.close()
 # print "save6"

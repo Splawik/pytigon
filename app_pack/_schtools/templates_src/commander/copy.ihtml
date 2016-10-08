@@ -1,0 +1,35 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+%% pythoncode
+    script language=python>>>
+        class Form(FormBase):
+            def init_form(self):
+                for pos in self.PARENT_panels_dir:
+                    self.FOLDERS.choices.append( (pos[2], pos[0]) )
+                value = self.PARENT_panels_dir[self.PARENT_tab2][2]
+                self.FOLDERS.SetRec(value, (value,), dismiss=False)
+                self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
+                self.OKButton.Bind(wx.EVT_BUTTON, self.OnOk)
+
+            def OnOk(self, event):
+                self.PARENT_{%block OnOk%}Copy(self.FOLDERS.GetValue(), "COPY"){%endblock%}
+                self.any_parent_command('Cancel', True)
+
+            def OnExit(self, event):
+                self.any_parent_command('Cancel', True)
+    <<<
+
+%% content
+    table width=100%
+        tr
+            td
+                CTRLSTATICTEXT label={%block CmdTitle%}Kopiuj do:{%endblock%}
+            td  width=99%
+                CTRLCHOICE name=FOLDERS,,,PARAM=NOT_IN_NEW_WIN,,,WIDTH=100%
+            td
+                CTRLBITMAPBUTTON NAME=OKButton,,,DEFAULTVALUE=1,,,SRC=wx.ART_TICK_MARK
+            td
+                CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+

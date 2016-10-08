@@ -69,5 +69,5 @@ urlpatterns = [
     url(r'^db/field/open/(?P<file>.*)/$', schlib.schtools.dbtools.open_db_field),
     url(r'^db/field/save/(?P<file>.*)/$', schlib.schtools.dbtools.save_db_field),
     url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
-    url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>\w+)/$',schserw.schsys.views.plugins),
+    url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>[\w_]+)/$',schserw.schsys.views.plugins),
 ]

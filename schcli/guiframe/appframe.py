@@ -300,7 +300,7 @@ class SchAppFrame(wx.Frame):
                                         mod_path = mod_name.split('.')
                                         mod2 = getattr(mod, mod_path[1])
                                         mod3 = getattr(mod2, mod_path[2])
-                                        destroy = mod3.init_plugin(wx.GetApp(), self, self.desktop, self._mgr, self.get_menu_bar(), self.toolbar_interface.get_toolbars(), self.aTable)
+                                        destroy = mod3.init_plugin(wx.GetApp(), self, self.desktop, self._mgr, self.get_menu_bar(), self.toolbar_interface, self.aTable)
                                         if destroy != None:
                                             self.destroy_fun_tab.append(destroy)
                                 break
@@ -597,7 +597,7 @@ class SchAppFrame(wx.Frame):
             if parametry and type(parametry)==dict:
                 pdict.update(parametry)
 
-            if ('schtml' in pdict and pdict['schtml'] != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
+            if ('schtml' in pdict and pdict['schtml'].strip() != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
                 ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page")
                 if address.startswith('http://') or address.startswith('https://') or address.startswith('file://'):
                     def _ret_fun():
@@ -850,11 +850,18 @@ class SchAppFrame(wx.Frame):
         if parm != None and parm[0] == ' ':
             parm = parm[1:]
 
-        if 'schtml=1' in l[1] and not wx.GetApp().is_hybrid:
-            self.new_main_page(l[1], l[0], parm, panel)
+        if panel=='pscript':
+            http = wx.GetApp().get_http(self)
+            http.get(self, l[1])
+            ptr = http.str()
+            exec(ptr)
+            http.clear_ptr()
         else:
-            win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
-            win.Body.WEB.go(wx.GetApp().base_address + l[1])
+            if 'schtml=1' in l[1] and not wx.GetApp().is_hybrid:
+                self.new_main_page(l[1], l[0], parm, panel)
+            else:
+                win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
+                win.Body.WEB.go(wx.GetApp().base_address + l[1])
 
     def _on_python(self, command):
         exec(command)

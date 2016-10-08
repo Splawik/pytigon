@@ -7,7 +7,7 @@
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General PubliLicense
 # for more details.
 
 #Pytigon - wxpython and django application framework
@@ -75,7 +75,7 @@ def init_plugin(
             return self.GetText()
 
         def load_from_url(self, url, ext):
-            self.SetExt(ext)
+            self.set_ext(ext)
             http = wx.GetApp().HTTP
             http.get(self, url)
             txt = http.str()

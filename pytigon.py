@@ -75,6 +75,16 @@ install_0()
 import zipfile
 import getopt
 import wx
+
+if any(s.startswith('--rpc') for s in sys.argv):
+    import wxreactor
+    wxreactor.install()
+    from twisted.internet import reactor
+    from twisted.web import xmlrpc, server
+    RPC = True
+else:
+    RPC = False
+
 from threading import Thread
 
 from schcli.guilib import schimage
@@ -174,8 +184,15 @@ def idle_fun():
     wx.GetApp().web_ctrl.OnIdle(None)
 
 
+if RPC:
+    _BASE_APP=xmlrpc.XMLRPC
+else:
+    class _base:
+        pass
+    _BASE_APP= _base
 
-class SchApp(App):
+
+class SchApp(App, _BASE_APP):
 
     """Pytigon application
     """
@@ -183,15 +200,15 @@ class SchApp(App):
 
     def __init__(self):
         App.__init__(self, redirect=False)
+        if RPC:
+            xmlrpc.XMLRPC.__init__(self)
 
-        bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
-
-        splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
-                                     1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
-                                     wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
-
+        if not '--no_splash' in sys.argv:
+            bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
+            splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
+                                         1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
+                                         wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
         wx.Yield()
-
 
         config_name = os.path.join(SCR_PATH, "pytigon.ini")
         self.config = configparser.ConfigParser()
@@ -230,6 +247,7 @@ class SchApp(App):
 
         self.menu_always = False
         self.authorized = False
+        self.rpc = None
 
         self.gui_style = \
             'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
@@ -246,6 +264,22 @@ class SchApp(App):
             colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
         self.COLOUR_INFOBK = \
             colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
+
+
+    # some XML-RPC function calls for twisted server
+    def xmlrpc_stop(self):
+        """Closes the wx application."""
+        self.frame.Close() # Sending closing event
+        return 'Shutdown initiated'
+
+    def xmlrpc_title(self, x):
+        """Return all passed args."""
+        self.GetTopWindow().SetTitle(x)
+        return x.upper()
+
+    def xmlrpc_add(self, a, b):
+        """Return sum of arguments."""
+        return a + b
 
 
     def get_locale_object(self):
@@ -353,22 +387,21 @@ class SchApp(App):
 
     def read_html(self, win, address_or_parser, parameters):
         if isinstance(address_or_parser, six.string_types):
-            address = address_or_parser
             http = self.get_http(win)
-            parm = ''
-            if parameters:
-                if type(parameters) == dict:
-                    parameters2 = createparm.DictParm(parameters)
-                else:
-                    parameters2 = parameters
-                adrtmp = createparm.create_parm(address_or_parser, parameters2)
-                if adrtmp:
-                    adr = adrtmp[0] + adrtmp[1] + adrtmp[2]
+
+            if parameters and type(parameters) == dict:
+                adr = address_or_parser
+                (err, url) = http.post(self, adr, parm=parameters)
+            else:
+                if parameters:
+                    adrtmp = createparm.create_parm(address_or_parser, parameters)
+                    if adrtmp:
+                        adr = adrtmp[0] + adrtmp[1] + adrtmp[2]
+                    else:
+                        adr = address_or_parser
                 else:
                     adr = address_or_parser
-            else:
-                adr = address_or_parser
-            (err, url) = http.get(win, adr)
+                (err, url) = http.get(win, adr)
             if err == 404:
                 raise Exception('http', '404')
             ptr = http.str()
@@ -386,8 +419,6 @@ class SchApp(App):
                 mp.address = None
         return (mp,adr)
 
-
-
     def get_log(self):
         return self.log
 
@@ -399,7 +430,6 @@ class SchApp(App):
 
     def get_main_windows(self):
         return [self.GetTopWindow()]
-
 
     def append_thread(self, thread_address):
         if self.thread_manager:
@@ -524,7 +554,7 @@ def main_init(argv):
     else:
         argv2 = argv
     try:
-        (opts, args) = getopt.getopt(argv2, 'ha:dm', [
+        (opts, args) = getopt.getopt(argv2, 'ha:dmp', [
             'help',
             'app_set=',
             'hybrid',
@@ -535,7 +565,10 @@ def main_init(argv):
             'nogui',
             'menu_always',
             'debug',
-            'embededbrowser'
+            'embededbrowser',
+            'rpc=',
+            'no_splash',
+            'param',
             ])
     except getopt.GetoptError:
         usage()
@@ -570,6 +603,10 @@ def main_init(argv):
             nogui = True
         elif opt in ('-m', '--menu_always'):
             app.menu_always = True
+        elif opt in ('--rpc'):
+            app.rpc = int(arg)
+        elif opt in ('-p', '--param'):
+            app.param = arg
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
     if not test_app_set:
         #choices = []
@@ -859,7 +896,12 @@ def main():
     if app.task_manager:
         frame.idle_objects.append(app.task_manager)
 
-    app.MainLoop()
+    if RPC:
+        reactor.registerWxApp(app)
+        reactor.listenTCP(app.rpc, server.Site(app))
+        reactor.run()
+    else:
+        app.MainLoop()
 
     if app.task_manager:
         app.task_manager.wait_for_result()

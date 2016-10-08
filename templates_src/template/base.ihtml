@@ -208,8 +208,9 @@
                                                         div class=inline-form-body
                                                             {{ form.non_field_errors }}
                                                             % inline_form:
-                                                        button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
-                                                            span class=fa fa-refresh
+                                                        %% form_content_button
+                                                            button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
+                                                                span class=fa fa-refresh
                         %%list_content_header_third_row
                             div class=tr row list_content_header_third_row
                                 div class={% if table_type == 'datatable'%}x{% else %}td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar

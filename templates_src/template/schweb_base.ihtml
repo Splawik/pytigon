@@ -32,16 +32,19 @@
     % if 'start'|reverse == request.path or start_page:
         %% indexhead
             table style=width: 100%;,,,border=1
-                % if user.is_authenticated
-                  [ login | 0 ]
-                % else
-                  [ login | 1 ]
-                [ hello | 1 ]
-                [ gui_style | 3 ]
-                [ hybrid | 1 ]
-                [ hybrid2 | 1111111111111111111 ]
-                [ csrf_token | {{csrf_token}} ]
-            .X{{'start'|reverse}}Y
+                tr
+                    td...login
+                    td...{% if user.is_authenticated %}0{% else %}1{% endif %}
+                tr
+                    td...gui_style
+                    td...3
+                tr
+                    td...hybrid
+                    td...1
+                tr
+                    td...csrf_token
+                    td...{{csrf_token}}
+
 %%pythoncode
     % if form_edit:
         %%pythoncode_editform
@@ -61,27 +64,73 @@
             .sys - nazwa przedefiniowanego zdarzenia<br />
             br
 
-
             h1...Menu bar or toolbar:
             <table style="width: 100%;" border="1">
-            [ Menu - poziom 1 | Menu - poziom 2 | Menu - poziom 3 | Typ | Ik. | Komenda | Dana                                                                    ]
+            tr
+                th...Menu - poziom 1
+                th...Menu - poziom 2
+                th...Menu - poziom 3
+                th...Typ
+                th...Ikona
+                th...Command
+                th...Dana
+            %% toolbars_start
 
         % ifchanged module_title
-            [ {{module_title}} |                |                 |     |     |         |                                                                         ]
+            tr
+                td...{{module_title}}
+                td
+                td
+                td
+                td
+                td
+                td
 
         % ifchanged app_name
-            [                 | {{app_title}}    |                 |     |     |         |                                                                         ]
-
-        [                 |                 | {{opis}}        | 1   | {{icon}} | html    | {{opis}}, /{{url}}                                                   ]
+            tr
+                td
+                td...{{app_title}}
+                td
+                td
+                td
+                td
+                td
+        tr
+            td
+            td
+            td...{{opis}}
+            td...1
+            td...{{icon}}
+            td...html
+            td...{{opis}},/{{url}}
 
         % if forloop.last
-            [ Pomoc   |                 |                 |     |     |         |                                                                         ]
-            [                 | Pomoc           |                 |     |     |         |                                                                         ]
-            [                 |                 | Spis tematów    |     | 2   | html    | ?: SchBhp, /schwiki/help/SchBhp/view/?schtml=1                                          ]
-            [                 |                 | O programie     |     | 2   | html    | ?: SChSkr, /schwiki/help/pytigon/view/?schtml=1                                          ]
+            %% toolbars_end
+                tr
+                    td...Help
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
+                tr
+                    td
+                    td...Help
+                    td
+                    td
+                    td
+                    td
+                    td
+                tr
+                    td
+                    td
+                    td...About program
+                    td...2
+                    td...wx.ART_HELP
+                    td...html
+                    td...?: SChSkr,/schwiki/help/pytigon/view/?schtml=1
             </table>
-            br
-
 
 %% menu2
     % if not app_manager.appname or start_page:
@@ -93,7 +142,14 @@
             .3 - control, w polu opis długi - kod w pythonie dla obiektu "control"<br />
         br
         table style=width: 100%;,,,border=1
-            [ Tekst | Opis krótki | Opis długi | Typ | Ikona | Komenda | Dana ]
+            tr
+                th...name
+                th...description
+                th...description long
+                th...type
+                th...icon
+                th...command
+                th...data
         br
 
 
@@ -166,12 +222,17 @@
                         %% form_content
                             table class=filter_form_frame,,,width=100%,,,bgcolor=#fff:::tr:::td
                                 % for field in form
-                                    table class=filter_form:::tr:::td
-                                        {{ field|as_crispy_field:"sch_bootstrap"}}{{ field.errors }}
+                                    table class=filter_form,,,border=1
+                                        tr
+                                            td
+                                                {{ field|as_crispy_field:"sch_bootstrap"}}
+                                            td
+                                                {{ field.errors }}
                                 table class=filter_form
                                     tr
                                         td
-                                            input type=submit,,,value=Odśwież,,,class=btn btn-info,,,target=_self,,,height=44
+                                            %% form_content_schbutton
+                                                input type=submit,,,value=Odśwież,,,class=btn btn-info,,,target=_self,,,height=44
 
 
 %% tabsort_class...class=tabsort

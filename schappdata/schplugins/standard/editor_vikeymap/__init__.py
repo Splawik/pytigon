@@ -46,13 +46,14 @@ def init_plugin(
                 (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('L'), self.on_next_word),
                 (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('H'), self.on_prev_word),
 
-                (wx.ACCEL_CTRL, ord('H'), self.on_top),
-                (wx.ACCEL_CTRL, ord('L'), self.on_bottom),
+                (wx.ACCEL_CTRL, ord('K'), self.on_top),
+                (wx.ACCEL_CTRL, ord('J'), self.on_bottom),
 
-                (wx.ACCEL_ALT, ord('V'), self.on_start_sel),
-                (wx.ACCEL_CTRL, ord('C'), self.on_copy),
+                (wx.ACCEL_ALT, ord('I'), self.on_start_sel),
+                (wx.ACCEL_ALT, ord('C'), self.on_copy),
                 (wx.ACCEL_ALT, ord('P'), self.on_paste),
                 (wx.ACCEL_ALT, ord('X'), self.on_delete),
+                (wx.ACCEL_ALT, ord('Z'), self.on_undo),
 
                 (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('J'), self.on_page_down),
                 (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('K'), self.on_page_up),
@@ -77,9 +78,12 @@ def init_plugin(
                 self.Copy()
                 self.SetSelection(pos, pos)
                 self.start_sel = None
+            else:
+                self.Copy()
 
         def on_paste(self, event):
             self.Paste()
+            self.start_sel = None
 
         def _cmd(self, cmd1, cmd2):
             if self.start_sel != None:
@@ -134,6 +138,10 @@ def init_plugin(
                 self.EnsureCaretVisible()
             else:
                 self.DeleteBack()
+            self.start_sel = None
+
+        def on_undo(self, event):
+            self.Redo()
 
         def on_line_next(self, event):
             self.LineEnd()

@@ -22,6 +22,10 @@ import sys
 import datetime
 
 from schlib.schfs.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
+from schlib.schfs.zip import VfsPluginZip
+from schlib.schfs.vfs import VfsManager, get_dir
+
+
  
 
 PFORM = form_with_perms('commander') 
@@ -36,6 +40,84 @@ class FileManager(forms.Form):
 
 def view_filemanager(request, *argi, **argv):
     return PFORM(request, FileManager, 'commander/formfilemanager.html', {})
+
+
+class Move(forms.Form):
+    dest = forms.ChoiceField(label='Destination', required=True, choices=[])
+    
+    
+    
+
+def view_move(request, *argi, **argv):
+    return PFORM(request, Move, 'commander/formmove.html', {})
+
+
+class Copy(forms.Form):
+    dest = forms.ChoiceField(label='Destination', required=True, choices=[])
+    
+    
+    
+
+def view_copy(request, *argi, **argv):
+    return PFORM(request, Copy, 'commander/formcopy.html', {})
+
+
+class MkDir(forms.Form):
+    name = forms.CharField(label='Folder name', required=True, max_length=None, min_length=None)
+    
+    def process(self, request, queryset=None):
+    
+        name = self.cleaned_data['name']
+        base_folder = request.session.get('commander_mkdir', None)
+        if base_folder: 
+            man = VfsManager()
+            man.install_plugin(VfsPluginZip())
+            x = get_dir(base_folder, man)
+            x.mk_dir(name)
+        
+        request.session['commander_mkdir'] = None
+        
+        return { "OK": True }
+    
+    def preprocess_request(self, request):
+        if 'dir' in request.POST:
+            request.session['commander_mkdir'] = request.POST['dir']
+            return None
+        else:
+            return request.POST
+
+def view_mkdir(request, *argi, **argv):
+    return PFORM(request, MkDir, 'commander/formmkdir.html', {})
+
+
+class Rename(forms.Form):
+    name = forms.CharField(label='Name', required=True, max_length=None, min_length=None)
+    
+    
+    
+
+def view_rename(request, *argi, **argv):
+    return PFORM(request, Rename, 'commander/formrename.html', {})
+
+
+class NewFile(forms.Form):
+    name = forms.CharField(label='Name', required=True, max_length=None, min_length=None)
+    
+    
+    
+
+def view_newfile(request, *argi, **argv):
+    return PFORM(request, NewFile, 'commander/formnewfile.html', {})
+
+
+class Delete(forms.Form):
+    recycle_bin = forms.BooleanField(label='Recycle bin', required=True, initial=True,)
+    
+    
+    
+
+def view_delete(request, *argi, **argv):
+    return PFORM(request, Delete, 'commander/formdelete.html', {})
 
 
 

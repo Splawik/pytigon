@@ -756,7 +756,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         self._table = table
 
     def on_close(self, event):
-        self.get_parent_form().UnRegisterSignal(self, "refresh_controls")
+        self.get_parent_form().unregister_signal(self, "refresh_controls")
         event.Skip()
 
     def GetMinSize(self):

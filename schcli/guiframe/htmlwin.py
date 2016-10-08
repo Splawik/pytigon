@@ -168,10 +168,26 @@ class SchHtmlWindow(ScrolledPanel):
         #self.bind_to_active(self.on_check_can_go_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
         #self.bind_to_active(self.on_forward, ID_WEB_FORWARD)
         #self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
+        self.GetParent().register_signal(self, "refresh_controls")
+        self.GetParent().register_signal(self, "child_canceled")
+
+
+    def refresh_controls(self):
+        if hasattr(self, "refresh_after_ok"):
+            self.refresh_after_ok()
+
+    def child_canceled(self):
+        #self.GetParent().disable_setfocus = False
+        #if hasattr(self.GetParent(), 'LastControlWithFocus'):
+        #    self.GetParent().LastControlWithFocus.SetFocus()
+        #    print("FOCUS:", self.GetParent().LastControlWithFocus)
+        if hasattr(self, "child_closed"):
+            self.child_closed()
 
     def ret_ok(self, id, title):
-        print("ret_ok:", id, title)
-        parent_panel = self.get_parent_panel()
+        #self.GetParent().disable_setfocus = False
+        #print("ret_ok:", id, title)
+        #parent_panel = self.get_parent_panel()
         if parent_panel and parent_panel.last_clicked and hasattr(parent_panel.last_clicked,"ret_ok"):
             parent_panel.last_clicked.ret_ok(id, title)
         self.any_parent_command('on_ok', None)
@@ -558,7 +574,7 @@ class SchHtmlWindow(ScrolledPanel):
             if not self.TabWindow.exists:
                 self.t1.Stop()
                 return
-        self.GetParent().RefreshHtml()
+        self.GetParent().refresh_html()
 
     def cancel(self, cancel):
         if self.TabWindow:
@@ -684,6 +700,8 @@ class SchHtmlWindow(ScrolledPanel):
         self.closing=True
         if hasattr(self, 'on_close'):
             self.on_close()
+        self.GetParent().unregister_signal(self, "refresh_controls")
+        self.GetParent().unregister_signal(self, "child_canceled")
         gc.collect()
 
     def any_parent_command(
@@ -945,6 +963,7 @@ class SchHtmlWindow(ScrolledPanel):
             self.LastControlWithFocus = self.GetParent().LastControlWithFocus
         else:
             self.LastControlWithFocus = None
+        self.GetParent().disable_setfocus = True
         return self.any_parent_command('new_child_page', address_or_parser, title,
                                        param)
 
@@ -1174,7 +1193,7 @@ class SchHtmlWindow(ScrolledPanel):
                     self.any_parent_command('on_cancel', None)
                     return
                 if target == '_refresh':
-                    self.GetParent().RefreshHtml()
+                    self.GetParent().refresh_html()
                     return
                 if target == '_parent_refr':
                     self.any_parent_command('on_ok', None)

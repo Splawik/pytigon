@@ -212,9 +212,14 @@ class SchTableGrid(wx.grid.Grid):
             (wx.ACCEL_ALT, ord('H'), self.on_key_h),
 
             ]
-        self.GetParent().set_acc_key_tab(aTable)
+        #print("TEST", self.GetParent())
+        #self.GetParent().set_acc_key_tab(self, aTable)
         #self.set_acc_key_tab(aTable)
 
+        if hasattr(self, 'set_acc_key_tab'):
+            self.set_acc_key_tab(aTable)
+        else:
+            self.GetParent().set_acc_key_tab(aTable)
 
 
     def begin_edit(self, event=None):

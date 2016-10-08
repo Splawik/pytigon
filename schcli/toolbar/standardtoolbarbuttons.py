@@ -176,23 +176,24 @@ class StandardButtons(object):
             if 'open' in self.gui_style:
                 bar.add_separator()
                 self.tbs['file']['open'] = bar.add_tool(wx.ID_OPEN, _('Open'),
-                        bitmaps_from_art_id(wx.ART_FILE_OPEN, wx.Size(16, 16)))
+                        bitmaps_from_art_id(wx.ART_FILE_OPEN, wx.Size(32, 32)))
                 test = True
             if 'save' in self.gui_style:
                 if not test:
                     bar.add_separator()
                 self.tbs['file']['save'] = bar.add_tool(wx.ID_SAVE, _('Save'),
-                        bitmaps_from_art_id(wx.ART_FILE_SAVE, wx.Size(16, 16)))
-                self.tbs['file']['save_as'] = bar.add_tool(wx.ID_SAVEAS,
-                        _('Save as'), bitmaps_from_art_id(wx.ART_FILE_SAVE_AS,
-                        wx.Size(16, 16)))
+                        bitmaps_from_art_id(wx.ART_FILE_SAVE, wx.Size(32, 32)))
+                if 'save_as' in self.gui_style:
+                    self.tbs['file']['save_as'] = bar.add_tool(wx.ID_SAVEAS,
+                            _('Save as'), bitmaps_from_art_id(wx.ART_FILE_SAVE_AS,
+                            wx.Size(32, 32)))
                 test = True
             if 'print' in self.gui_style:
                 if test:
                     bar.add_separator()
                     self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT,
-                            _('Print'), bitmaps_from_art_id(wx.ART_PRINT, wx.Size(16,
-                            16)))
+                            _('Print'), bitmaps_from_art_id(wx.ART_PRINT, wx.Size(32,
+                            32)))
                     bar.add_separator()
                 else:
                     self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT,
@@ -218,17 +219,17 @@ class StandardButtons(object):
                     TYPE_TOOLBAR)
             self.tbs['operations']['bar'] = bar
             self.tbs['operations']['undo'] = bar.add_tool(wx.ID_UNDO, _('Undo'),
-                    bitmaps_from_art_id(wx.ART_UNDO, wx.Size(16, 16)))
+                    bitmaps_from_art_id(wx.ART_UNDO, wx.Size(32, 32)))
             self.tbs['operations']['redo'] = bar.add_tool(wx.ID_REDO, _('Redo'),
-                    bitmaps_from_art_id(wx.ART_REDO, wx.Size(16, 16)))
+                    bitmaps_from_art_id(wx.ART_REDO, wx.Size(32, 32)))
             self.tbs['operations']['find'] = bar.add_hybrid_tool(ID_FIND, _('Find'),
-                    bitmaps_from_art_id(wx.ART_FIND, wx.Size(16, 16)))
+                    bitmaps_from_art_id(wx.ART_FIND, wx.Size(32, 32)))
             bar.AddSeparator()
             self.tbs['operations']['filemanager'] = bar.add_tool(wx.ID_ANY,
                     _('File manager'), bitmaps_from_art_id(wx.ART_FOLDER_OPEN,
-                    wx.Size(16, 16)))
+                    wx.Size(32, 32)))
             self.tbs['operations']['editor'] = bar.add_tool(wx.ID_ANY, _('Editor'),
-                    bitmaps_from_art_id(wx.ART_NORMAL_FILE, wx.Size(16, 16)))
+                    bitmaps_from_art_id(wx.ART_NORMAL_FILE, wx.Size(32, 32)))
             self.ti.bind_dropdown(self.OnFind, ID_FIND)
 
     def create_browse_panel(self, toolbar_page):

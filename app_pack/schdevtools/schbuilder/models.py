@@ -167,6 +167,8 @@ Url_CHOICES = (
     ("Default","-"),
     ("shtml","shtml"),
     ("panel","panel"),
+    ("script","script"),
+    ("pscript","pscript"),
     
     )
 
@@ -945,6 +947,10 @@ class SChAppMenu( models.Model):
             return '?schtml=1'
         elif self.url_type=='panel':
             return '?schtml=1,,panel'
+        elif self.url_type=='script':
+            return '?script=1'
+        elif self.url_type=='pscript':
+            return '?schtml=1,,pscript'
         elif self.url_type=='-':
             return ""
         else:

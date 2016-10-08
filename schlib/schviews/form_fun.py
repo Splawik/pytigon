@@ -40,8 +40,16 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 app_pack = app.split('.')[0]
             break
 
-    if request.POST:
-        f = form_class(request.POST, request.FILES)
+
+    f = form_class(request.POST, request.FILES)
+    if hasattr(f, "preprocess_request"):
+        post = f.preprocess_request(request)
+    else:
+        post = request.POST
+
+    #if request.POST:
+    if post:
+        #f = form_class(request.POST, request.FILES)
         if hasattr(f, "init"):
             f.init(request)
         if f.is_valid():
@@ -70,7 +78,7 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
             #c = RequestContext(request, {'form': f})
             return render_to_response(template_name2, context={'form': f}, request=request)
     else:
-        f = form_class()
+        #f = form_class()
         if hasattr(f, "init"):
             f.init(request)
         if object_id:

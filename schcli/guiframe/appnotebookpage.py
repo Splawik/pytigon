@@ -273,7 +273,9 @@ class NotebookPage(wx.Window):
                     self.get_page(-1).enable_panels(True)
                     self._layout()
                     self.get_page(-1).set_focus()
-                    if not cancel:
+                    if cancel:
+                        self.get_page(-1).signal('child_canceled')
+                    else:
                         self.get_page(-1).signal('refresh_controls')
                     return True
                 else:
