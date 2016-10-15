@@ -45,6 +45,12 @@ class SchBaseCtrl(object):
     def init_base(self, args, kwds):
         self.parent = args[0]
         self.ldatabuf = None
+
+        self.tag = None
+        if 'param' in kwds:
+            if 'tag' in kwds['param']:
+                self.tag = kwds['param']['tag']
+
         if 'href' in kwds:
             self.href = kwds['href']
             if self.href == None:
@@ -141,6 +147,12 @@ class SchBaseCtrl(object):
             self.style=None
             #kwds['style'] = eval(str(style))
 
+        print(self.tag)
+        ctrl_process = wx.GetApp().ctrl_process
+        if self.tag in ctrl_process:
+            for fun in ctrl_process[self.tag]:
+                fun(self)
+
     def set_unique_name(self, name):
         self.unique_name = name
 
@@ -155,6 +167,9 @@ class SchBaseCtrl(object):
         if self.onload:
             d = {'wx': wx, 'self': self}
             exec(self.onload, d)
+
+        if hasattr(self, "__ext_init__"):
+            self.__ext_init__()
 
     def on_key_down_base(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:

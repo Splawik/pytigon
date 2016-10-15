@@ -19,6 +19,9 @@
 
 import wx
 from schcli.guilib.schevent import *
+from base64 import b32encode, b32decode
+import os.path
+
 
 def init_plugin(
     app,
@@ -37,6 +40,7 @@ def init_plugin(
     class Styledtext(CodeEditor, SchBaseCtrl):
 
         def __init__(self, *args, **kwds):
+            self.href = None
             SchBaseCtrl.__init__(self, args, kwds)
             kwds['style'] = wx.TE_PROCESS_ENTER
             CodeEditor.__init__(self, *args, **kwds)
@@ -55,8 +59,56 @@ def init_plugin(
                        self.on_save)]
             self.set_acc_key_tab(a_table)
             if 'data' in self.param:
-# self.SetValue(self.param['data'].encode('utf-8'))
                 self.SetValue(self.param['data'])
+
+            self.href_save = None
+
+
+            self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save, id=wx.ID_SAVE)
+            self.Bind(wx.EVT_MENU, self.on_save2, id=wx.ID_SAVE)
+
+            self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save_as, id=wx.ID_SAVEAS)
+            self.Bind(wx.EVT_MENU, self.on_save_as, id=wx.ID_SAVEAS)
+
+
+        def on_check_can_save(self, event):
+            modified = self.GetModify()
+            event.Enable(modified)
+
+        def on_save2(self, event):
+            self.save()
+            self.SetSavePoint()
+
+        def on_check_can_save_as(self, event):
+            event.Enable(True if self.href_save else False)
+
+        def on_save_as(self, event):
+            dlg = wx.TextEntryDialog(self, 'Enter new file name', 'Rename file', '')
+
+            if dlg.ShowModal() == wx.ID_OK:
+                value = dlg.GetValue()
+                if value:
+                    x = self.href.split('/')
+                    try:
+                        encoded_file_path = x[-1]
+                        if not encoded_file_path:
+                            encoded_file_path = x[-2]
+                    except:
+                        encoded_file_path = self.href
+                    file_path = b32decode(encoded_file_path.encode('utf-8')).decode('utf-8')
+
+                    xx = file_path.replace('\\','/').rsplit('/',1)
+
+                    new_file_path = os.path.join(file_path[:len(xx[0])+1], dlg.GetValue())
+                    encoded_new_file_path = b32encode(new_file_path.encode('utf-8')).decode('utf-8')
+
+                    self.href = self.href_save.replace('{{file}}', encoded_new_file_path)
+
+                    self.save()
+                    self.SetSavePoint()
+
+                    self.get_parent_form().get_tab().change_notebook_page_title(dlg.GetValue())
+
 
         def on_key_down_base(self, event):
             if event.GetKeyCode() == wx.WXK_TAB:
@@ -64,8 +116,9 @@ def init_plugin(
             else:
                 return SchBaseCtrl.on_key_down_base(self, event)
 
-        def set_save_path(self, href):
+        def set_save_path(self, href, href_save=None):
             self.href = href
+            self.href_save = href_save
 
         def SetValue(self, value):
 # if  value.__class__ == str: x = x / 0 self.AddTextUTF8(value.encode('cp1250'))
@@ -86,8 +139,6 @@ def init_plugin(
         def on_save(self, event):
             self.save()
             self.SetSavePoint()
-
-# print "OnSave" http = wx.GetApp().HTTP
 
         def save(self):
             http = wx.GetApp().get_http(self)

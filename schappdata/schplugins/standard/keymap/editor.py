@@ -1,39 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-#Pytigon - wxpython and django application framework
-
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
-
 import wx
+from schlib.schtools.tools import extend_fun_to
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
-    import schcli.guictrl.schctrl
-
-    base = schcli.guictrl.schctrl.STYLEDTEXT
-
-    class ViKeyMapEditor(base):
-        def __init__(self, *args, **kwds):
+def init_control(ctrl):
+    if 'keymap' in ctrl.param and ctrl.param['keymap'] == 'standard':
+        @extend_fun_to(ctrl)
+        def __ext_init__(self):
             aTable = [
                 (wx.ACCEL_ALT, ord('J'), self.on_down),
                 (wx.ACCEL_ALT, ord('K'), self.on_up),
@@ -60,10 +31,10 @@ def init_plugin(
 
                 (wx.ACCEL_ALT, wx.WXK_RETURN, self.on_line_next),
             ]
-            base.__init__(self, *args, **kwds)
             self.GetParent().set_acc_key_tab(self, aTable)
             self.start_sel = None
 
+        @extend_fun_to(ctrl)
         def on_start_sel(self, event):
             if self.start_sel:
                 self.start_sel = None
@@ -72,6 +43,7 @@ def init_plugin(
             else:
                 self.start_sel =  self.GetCurrentPos()
 
+        @extend_fun_to(ctrl)
         def on_copy(self, event):
             if self.start_sel != None:
                 pos = self.GetCurrentPos()
@@ -81,10 +53,12 @@ def init_plugin(
             else:
                 self.Copy()
 
+        @extend_fun_to(ctrl)
         def on_paste(self, event):
             self.Paste()
             self.start_sel = None
 
+        @extend_fun_to(ctrl)
         def _cmd(self, cmd1, cmd2):
             if self.start_sel != None:
                 cmd2()
@@ -92,42 +66,55 @@ def init_plugin(
                 cmd1()
             self.EnsureCaretVisible()
 
+        @extend_fun_to(ctrl)
         def on_down(self, event):
             self._cmd(self.LineDown, self.LineDownExtend)
 
+        @extend_fun_to(ctrl)
         def on_up(self, event):
             self._cmd(self.LineUp, self.LineUpExtend)
 
+        @extend_fun_to(ctrl)
         def on_page_down(self, event):
             self._cmd(self.PageDown, self.PageDownExtend)
 
+        @extend_fun_to(ctrl)
         def on_page_up(self, event):
             self._cmd(self.PageUp, self.PageUpExtend)
 
+        @extend_fun_to(ctrl)
         def on_home(self, event):
             self._cmd(self.VCHome, self.VCHomeExtend)
 
+        @extend_fun_to(ctrl)
         def on_end(self, event):
             self._cmd(self.LineEnd, self.LineEndExtend)
 
+        @extend_fun_to(ctrl)
         def on_left(self, event):
             self._cmd(self.CharLeft, self.CharLeftExtend)
 
+        @extend_fun_to(ctrl)
         def on_right(self, event):
             self._cmd(self.CharRight, self.CharRightExtend)
 
+        @extend_fun_to(ctrl)
         def on_next_word(self, event):
             self._cmd(self.WordRight, self.WordRightExtend)
 
+        @extend_fun_to(ctrl)
         def on_prev_word(self, event):
             self._cmd(self.WordLeft, self.WordLeftExtend)
 
+        @extend_fun_to(ctrl)
         def on_top(self, event):
             self._cmd(self.DocumentStart, self.DocumentStartExtend)
 
+        @extend_fun_to(ctrl)
         def on_bottom(self, event):
             self._cmd(self.DocumentEnd, self.DocumentEndExtend)
 
+        @extend_fun_to(ctrl)
         def on_delete(self, event):
             start,end = self.GetSelection()
             if start==end:
@@ -140,12 +127,11 @@ def init_plugin(
                 self.DeleteBack()
             self.start_sel = None
 
+        @extend_fun_to(ctrl)
         def on_undo(self, event):
             self.Redo()
 
+        @extend_fun_to(ctrl)
         def on_line_next(self, event):
             self.LineEnd()
             self._enter_key()
-
-    schcli.guictrl.schctrl.STYLEDTEXT = ViKeyMapEditor
-

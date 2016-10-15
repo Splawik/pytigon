@@ -2,6 +2,7 @@
     <div name="plotlydiv" style="width:{ opts.width };height:{ opts.height };" modebar="false"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/vanillajs_plugins';
     		var _on_mount = function () {
     			var self = this;

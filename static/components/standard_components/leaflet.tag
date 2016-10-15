@@ -2,6 +2,7 @@
     <div name="mapdiv" style="width: { opts.width }; height: { opts.height };"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/vanillajs_plugins/leaflet';
     		load_css (this.base_path + '/leaflet.css');
     		var _on_mount = function () {

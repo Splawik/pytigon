@@ -20,6 +20,7 @@
 import os
 import zipfile
 import re
+import types
 
 def split_tag(s, start, end):
     i1 = s.find(start)
@@ -127,3 +128,10 @@ def open_and_create_dir(filename, mode):
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
     return open(filename, mode)
+
+
+def extend_fun_to(ctrl):
+    def fun(func):
+        setattr(ctrl, func.__name__, types.MethodType(func, ctrl))
+        return func
+    return fun

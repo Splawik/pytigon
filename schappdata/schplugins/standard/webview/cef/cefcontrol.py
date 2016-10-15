@@ -5,7 +5,8 @@
 
 import platform
 import os, sys
-from cefpython import cefpython_py35 as cefpython
+#from cefpython import cefpython_py35 as cefpython
+from cefpython3 import cefpython as cefpython
 
 import wx
 
@@ -26,6 +27,8 @@ def GetApplicationPath(file=None):
         path = path + os.sep + file
         path = re.sub(r"[/\\]+", re.escape(os.sep), path)
         path = re.sub(r"[/\\]+$", "", path)
+        print(path)
+        path = path.replace('\\','')
         return path
     return str(file)
 
@@ -113,7 +116,8 @@ def initCEF(settings=None):
             "locales_dir_path": cefpython.GetModuleDirectory()+"/locales",
             "resources_dir_path": cefpython.GetModuleDirectory(),
             #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/cefclient.exe",
-            "browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess_32bit.exe",
+            #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess_32bit.exe",
+            "browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess",
             #'no_sandbox': True,
             "unique_request_context_per_browser": True,
             "downloads_enabled": True,
@@ -135,6 +139,7 @@ def shutdownCEF():
     cefpython.Shutdown()
 
 def loop():
+    print("loop")
     cefpython.MessageLoopWork()
 
 def quit():

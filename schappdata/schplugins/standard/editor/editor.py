@@ -125,8 +125,8 @@ class CodeEditor(stc.StyledTextCtrl):
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
 
 
-        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save, id=wx.ID_SAVE)
-        self.Bind(wx.EVT_MENU, self.on_save2, id=wx.ID_SAVE)
+        #self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save, id=wx.ID_SAVE)
+        #self.Bind(wx.EVT_MENU, self.on_save2, id=wx.ID_SAVE)
 
 
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d'
@@ -189,13 +189,13 @@ class CodeEditor(stc.StyledTextCtrl):
         self._last_flag = None
         self._last_text = None
 
-    def on_save2(self, event):
-        self.save()
-        self.SetSavePoint()
+    #def on_save2(self, event):
+    #    self.save()
+    #    self.SetSavePoint()
 
-    def on_check_can_save(self, event):
-        modified = self.GetModify()
-        event.Enable(modified)
+    #def on_check_can_save(self, event):
+    #    modified = self.GetModify()
+    #    event.Enable(modified)
 
     def set_ext(self, ext):
         if ext in EditorObjectMap:

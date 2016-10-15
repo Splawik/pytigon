@@ -265,6 +265,14 @@ class SchApp(App, _BASE_APP):
         self.COLOUR_INFOBK = \
             colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
 
+        self.ctrl_process = {}
+
+
+    def register_ctrl_process_fun(self, tag, fun):
+        if tag in self.ctrl_process:
+            self.ctrl_process[tag].append(fun)
+        else:
+            self.ctrl_process[tag] = [fun,]
 
     # some XML-RPC function calls for twisted server
     def xmlrpc_stop(self):

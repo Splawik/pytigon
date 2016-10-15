@@ -21,6 +21,7 @@
     </style>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/bootstrap_plugins/summernote';
     		this.value = opts.value;
     		this.href = opts.href;

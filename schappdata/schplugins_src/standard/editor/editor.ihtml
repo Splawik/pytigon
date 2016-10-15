@@ -11,4 +11,4 @@
     .Page source
 
 %% body
-    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,SRC=py
+    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,SRC=py,,,keymap=standard

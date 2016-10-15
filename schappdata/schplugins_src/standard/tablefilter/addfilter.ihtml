@@ -9,11 +9,11 @@
             self['ADD'].Bind(wx.EVT_BUTTON, self.OnAddFilter)
             self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
             self.select = True
-            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            grid = self.get_parent_panel().LastControlWithFocus.GetParent()
             grid.GetTable().FilterBy(1)
 
         def OnAddFilter(self, event):
-            grid = self.go_parent_panel().LastControlWithFocus.GetParent()
+            grid = self.get_parent_panel().LastControlWithFocus.GetParent()
             value = self['ADDFILTER'].GetValue()
             if self.select:
                 mask = '+'+value

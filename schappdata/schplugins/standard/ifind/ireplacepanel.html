@@ -1,12 +1,10 @@
 {# -*- coding: utf-8 -*- #}
-
-% extends "standard/ifind/ifindpanel.html"
-
-%% extrahead
-    meta name=vertical_position,,,content=bottom
-
-%% pythoncode
-    script language=python
+{% extends "standard/ifind/ifindpanel.html" %}
+{% block extrahead %}
+        <meta name="vertical_position" content="bottom" />
+{% endblock %}
+{% block pythoncode %}
+        <script language="python">
         def init_form(self):
             #self['SEARCH'].ShowSearchButton(True)
             #self['SEARCH'].ShowCancelButton(True)
@@ -17,21 +15,16 @@
             self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
             self['REPLACE'].Bind(wx.EVT_BUTTON, self.OnReplace)
             self['REPLACE_ALL'].Bind(wx.EVT_BUTTON, self.OnReplaceAll)
-
             self.search_txt = ""
             self['SEARCH'].SetFocus()
-
         def SearchText(self, regex=False, back=False, corectSelection=False):
-            editor = self.get_parent_panel()['EDITOR']
+            editor = self.get_parent_form()['EDITOR']
             text   = self.search_txt
-
             flags = wx.stc.STC_FIND_MATCHCASE
             if regex:
                 flags = flags | wx.stc.STC_FIND_REGEXP
-
             if not back and corectSelection:
                 editor.SetSelectionStart(editor.GetSelectionEnd())
-
             editor.SearchAnchor()
             if not back:
                 # Search forward
@@ -51,54 +44,50 @@
                     res = editor.SearchPrev(flags, text)
             editor.EnsureCaretVisible()
             return res
-
-
         def OnDoSearch(self, event):
             self.SearchText(corectSelection=True)
-
         def OnNext(self, event):
             self.SearchText(corectSelection=True)
-
         def OnPrev(self, event):
             self.SearchText(back=True)
-
         def Search(self):
             self.SearchText()
-
         def OnKeyUp(self, event):
             value = self['SEARCH'].GetValue()
             if value!=self.search_txt:
                 self.search_txt=value
                 self.SearchText()
             event.Skip()
-
         def OnExit(self, event):
             self.any_parent_command('Cancel', True)
-
         def OnReplace(self, event):
             editor = self.GetParentPanel()['EDITOR']
             editor.ReplaceSelection(self['REPLACE_TXT'].GetValue())
-
         def OnReplaceAll(self, event):
             editor = self.get_parent_panel()['EDITOR']
             self.search_txt=self['SEARCH'].GetValue()
             while(self.SearchText()>0):
                 editor.ReplaceSelection(self['REPLACE_TXT'].GetValue())
+</script>
+{% endblock %}
+{% block content %}
+        <table width="100%" height="100%">
+                <tr>
+                        <td><CTRLTEXT NAME="SEARCH"></CTRLTEXT></td>
+                        <td><CTRLBITMAPBUTTON NAME="PREV" SRC="wx.ART_GO_UP"></CTRLBITMAPBUTTON></td>
+                        <td><CTRLCHECKBOX label="Whole Word"></CTRLCHECKBOX></td>
+                        <td><CTRLBUTTON label="Replace" NAME="REPLACE"></CTRLBUTTON></td>
+                        <td width="99%"></td>
+                        <td><CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON></td>
+                </tr>
+                <tr>
+                        <td><CTRLTEXT NAME="REPLACE_TXT" WIDTH="200"></CTRLTEXT></td>
+                        <td><CTRLBITMAPBUTTON NAME="NEXT" SRC="wx.ART_GO_DOWN"></CTRLBITMAPBUTTON></td>
+                        <td><CTRLCHECKBOX label="Regular Expression"></CTRLCHECKBOX></td>
+                        <td><CTRLBUTTON label="Replace all" NAME="REPLACE_ALL"></CTRLBUTTON></td>
+                        <td width="99%"></td>
+                        <td></td>
+                </tr>
+        </table>
+{% endblock %}
 
-
-%% content
-    table width=100%,,,height=100%
-        tr
-            td:::CTRLTEXT NAME=SEARCH
-            td:::CTRLBITMAPBUTTON NAME=PREV,,,SRC=wx.ART_GO_UP
-            td:::CTRLCHECKBOX label=Whole Word
-            td:::CTRLBUTTON label=Replace,,,NAME=REPLACE
-            td width=99%
-            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
-        tr
-            td:::CTRLTEXT NAME=REPLACE_TXT,,,WIDTH=200
-            td:::CTRLBITMAPBUTTON NAME=NEXT,,,SRC=wx.ART_GO_DOWN
-            td:::CTRLCHECKBOX label=Regular Expression
-            td:::CTRLBUTTON label=Replace all,,,NAME=REPLACE_ALL
-            td width=99%
-            td

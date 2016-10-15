@@ -2,6 +2,7 @@
     <div name="d3div" style="width:{ opts.width };height:{ opts.height };"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/vanillajs_plugins';
     		var _on_mount = function () {
     			var self = this;

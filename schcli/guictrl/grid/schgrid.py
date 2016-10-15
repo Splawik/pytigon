@@ -203,23 +203,23 @@ class SchTableGrid(wx.grid.Grid):
 #
         self.SelectRow(0)
 
-        aTable = [
-            #(0, wx.WXK_F2,  self.OnExtButtonClick),
-            (wx.ACCEL_ALT, ord('J'), self.on_key_j),
-            (wx.ACCEL_ALT, ord('K'), self.on_key_k),
-            #(wx.ACCEL_CTRL, ord('N'), self.on_new),
-            (wx.ACCEL_ALT, ord('L'), self.on_key_l),
-            (wx.ACCEL_ALT, ord('H'), self.on_key_h),
+        #aTable = [
+        #    #(0, wx.WXK_F2,  self.OnExtButtonClick),
+        #    (wx.ACCEL_ALT, ord('J'), self.on_key_j),
+        #    (wx.ACCEL_ALT, ord('K'), self.on_key_k),
+        #    #(wx.ACCEL_CTRL, ord('N'), self.on_new),
+        #    (wx.ACCEL_ALT, ord('L'), self.on_key_l),
+        #    (wx.ACCEL_ALT, ord('H'), self.on_key_h),
 
-            ]
-        #print("TEST", self.GetParent())
-        #self.GetParent().set_acc_key_tab(self, aTable)
-        #self.set_acc_key_tab(aTable)
+        #    ]
+        ##print("TEST", self.GetParent())
+        ##self.GetParent().set_acc_key_tab(self, aTable)
+        ##self.set_acc_key_tab(aTable)
 
-        if hasattr(self, 'set_acc_key_tab'):
-            self.set_acc_key_tab(aTable)
-        else:
-            self.GetParent().set_acc_key_tab(aTable)
+        #if hasattr(self, 'set_acc_key_tab'):
+        #    self.set_acc_key_tab(aTable)
+        #else:
+        #    self.GetParent().set_acc_key_tab(aTable)
 
 
     def begin_edit(self, event=None):

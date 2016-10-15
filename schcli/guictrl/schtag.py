@@ -501,6 +501,7 @@ class CtrlTag(TableTag):
             self.kwargs['tdata'] = self.tdata
         self.kwargs['param'] = self.attrs
         self.kwargs['param']['table_lp'] = str(self.parser.table_lp)
+        self.kwargs['param']['tag'] = tag.lower()
         if self.data2 != None:
             self.kwargs['param']['data'] = is_null(self.data2,"")
         else:

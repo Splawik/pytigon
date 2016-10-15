@@ -71,19 +71,11 @@ if wx.Platform == '__WXMSW__':
                 BaseWebBrowser,
                 )
 else:
-    import wx.html2
-    from .wxwebview import init_plugin_web_view
+    if False:
+        import wx.html2
+        from .wxwebview import init_plugin_web_view
 
-    def init_plugin(
-        app,
-        mainframe,
-        desktop,
-        mgr,
-        menubar,
-        toolbar,
-        accel,
-        ):
-        return init_plugin_web_view(
+        def init_plugin(
             app,
             mainframe,
             desktop,
@@ -91,5 +83,38 @@ else:
             menubar,
             toolbar,
             accel,
-            BaseWebBrowser,
-            )
+            ):
+            return init_plugin_web_view(
+                app,
+                mainframe,
+                desktop,
+                mgr,
+                menubar,
+                toolbar,
+                accel,
+                BaseWebBrowser,
+                )
+
+
+
+    if True:
+        from .cef import init_plugin_cef
+        def init_plugin(
+            app,
+            mainframe,
+            desktop,
+            mgr,
+            menubar,
+            toolbar,
+            accel,
+            ):
+            return init_plugin_cef(
+                app,
+                mainframe,
+                desktop,
+                mgr,
+                menubar,
+                toolbar,
+                accel,
+                BaseWebBrowser,
+                )

@@ -5,6 +5,7 @@
     </video>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/vanillajs_plugins/video-js';
     		var _on_contextmenu = function (e) {
     			e.preventDefault ();

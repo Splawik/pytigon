@@ -35,12 +35,13 @@ def init_plugin(
     def xmlrpc_edit(self, path=None):
         okno=self.GetTopWindow().new_main_page("^standard/editor/editor.html", path, None)
         p = "/schcommander/table/FileManager/open/%s/" % b32encode(path.encode('utf-8')).decode('utf-8')
+        p_save = p.replace('/open/','/save/')
+        p_save_as = "/schcommander/table/FileManager/save/{{file}}/"
         ed = okno.Body["EDITOR"]
         ed.load_from_url(p, "py")
-        ed.set_save_path(p.replace('/open/','/save/'))
+        ed.set_save_path(p_save, p_save_as)
         ed.GotoPos(0)
         self.GetTopWindow().Raise()
-        #self.GetTopWindow().RequestUserAttention()
         return "OK"
 
     app.xmlrpc_edit = types.MethodType(xmlrpc_edit, app)
@@ -54,7 +55,7 @@ def init_plugin(
     def on_edit3(self):
         print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
-    mainframe.on_edit = types.MethodType(on_edit, mainframe)
+    mainframe.on_edit = types.MethodType(on_edit3, mainframe)
 
     idn = mainframe._append_command("python", "self.on_edit3()")
     bitmap = bitmap_from_href("client://emblems/emblem-favorite.png")

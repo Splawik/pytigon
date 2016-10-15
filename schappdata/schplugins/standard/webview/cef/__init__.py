@@ -47,17 +47,26 @@ def init_plugin_cef(
     from tempfile import NamedTemporaryFile
 
     def cef_init():
+        print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         global CEF_INITIATED, TIMER
         if not CEF_INITIATED:
-            initCEF()
+            print("A1")
+            print("A2")
             CEF_INITIATED = True
             frame = wx.GetApp().GetTopWindow()
             TIMER = wx.Timer(frame)
             def on_timer(event):
                 loop()
+                print("A7")
+            print("A3")
+
             frame.on_cef_timer = on_timer
-            frame.Bind(wx.EVT_TIMER, frame.on_cef_timer, TIMER)
+            #frame.Bind(wx.EVT_TIMER, frame.on_cef_timer, TIMER)
+            frame.Bind(wx.EVT_TIMER, on_timer, TIMER)
             TIMER.Start(25)
+            print("A4")
+            initCEF()
+            print("OOOOOOOOOOOOOOOOOOOOOK")
 
     def cef_shutdown():
         print("#####################################################################################################")

@@ -87,7 +87,7 @@ class SchAppFrame(wx.Frame):
         self.x = 0
         self.idle_objects = []
         self.gui_style = gui_style
-        self.command = []
+        self.command = {}
         self.last_pane = None
         self.active_pane = None
         self.active_page = None
@@ -257,10 +257,6 @@ class SchAppFrame(wx.Frame):
                   (wx.ACCEL_ALT, wx.WXK_UP, ID_GotoHeader),
                   (wx.ACCEL_CTRL, ord('W'), ID_CloseTab),
                   (wx.ACCEL_CTRL, ord('N'), ID_WEB_NEW_WINDOW),
-                  #(wx.ACCEL_CTRL, ord('J'), ID_KEY_J),
-                  #(wx.ACCEL_CTRL, ord('K'), ID_KEY_K),
-                  #(wx.ACCEL_CTRL, ord('H'), ID_KEY_H),
-                  #(wx.ACCEL_CTRL, ord('L'), ID_KEY_L),
                   (wx.ACCEL_CTRL, wx.WXK_TAB, ID_NextTab),
                   (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_TAB, ID_PrevTab),
                   (wx.ACCEL_CTRL, wx.WXK_F6, ID_NextTab),
@@ -520,7 +516,8 @@ class SchAppFrame(wx.Frame):
         return
 
     def on_close_tab(self, evt):
-        win = wx.Window_FindFocus()
+        #win = wx.Window_FindFocus()
+        win = wx.Window.FindFocus()
         while win:
             if win.__class__.__name__ == 'AppNotebook':
                 id = win.GetSelection()
@@ -727,9 +724,13 @@ class SchAppFrame(wx.Frame):
 
 
     def _append_command(self, typ, command):
-        self.command.append((self._id, typ, command))
-        self._id = self._id + 1
-        return self._id-1
+        #self.command.append((self._id, typ, command))
+        #self._id = self._id + 1
+        #return self._id-1
+        id = wx.NewId()
+        self.command[id] = (typ, command)
+        return id
+
 
     def create_bars(self, bar, tab):
         for row in tab:
@@ -872,14 +873,16 @@ class SchAppFrame(wx.Frame):
     def on_command(self, event):
         id = event.GetId()
         #print("on_command:", id)
-        if id - wx.ID_HIGHEST >= 0 and id - wx.ID_HIGHEST < len(self.command):
-            cmd = (self.command)[id - wx.ID_HIGHEST]
-            if cmd[1] == 'html':
-                return self._on_html(cmd[2])
-            if cmd[1] == 'python':
-                return self._on_python(cmd[2])
-            if cmd[1] == 'sys':
-                return self._on_sys(cmd[2])
+        #if id - wx.ID_HIGHEST >= 0 and id - wx.ID_HIGHEST < len(self.command):
+        if id in self.command:
+            #cmd = (self.command)[id - wx.ID_HIGHEST]
+            cmd = self.command[id]
+            if cmd[0] == 'html':
+                return self._on_html(cmd[1])
+            if cmd[0] == 'python':
+                return self._on_python(cmd[1])
+            if cmd[0] == 'sys':
+                return self._on_sys(cmd[1])
         else:
             if id == ID_Reset:
                 from schcli.toolbar.schmoderntoolbar import RibbonInterface

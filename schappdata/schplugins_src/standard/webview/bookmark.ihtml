@@ -12,7 +12,7 @@
             self['GO'].SetDefault()
 
         def go(self):
-            web = self.go_parent_panel()['WEB']
+            web = self.get_parent_panel()['WEB']
             value = self['GOHREF'].GetValue()
             web.go(value)
             self.any_parent_command('Cancel', True)

@@ -2,6 +2,7 @@
     <div name="handsontablediv"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/jquery_plugins';
     		load_css (this.base_path + '/handsontable.full.css');
     		var _on_mount = function () {

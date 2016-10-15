@@ -425,7 +425,7 @@ class DataSource(SchGridTableBase):
         #print 'value', key
         self.key = key
         self.proxy.set_parm('value', key)
-        self.Refresh(0)
+        self.refresh(0)
 
 
     def get_table_and_state(self):

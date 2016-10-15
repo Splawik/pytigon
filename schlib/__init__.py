@@ -33,8 +33,12 @@ def init_paths():
     else:
         p = base_path + "../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])
 
+    p2 = base_path + "../ext_lib"
+
     p = os.path.abspath(p)
+    p2 = os.path.abspath(p2)
     sys.path.insert(0, p)
+    sys.path.append(p2)
 
     tmp = []
     for pos in sys.path:

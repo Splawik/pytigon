@@ -2,6 +2,7 @@
     <div name="ceditor"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/vanillajs_plugins/ace/src-min';
     		this.rel_id = opts.rel_id;
     		var _on_mount = function () {

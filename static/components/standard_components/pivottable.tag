@@ -2,6 +2,7 @@
     <div name="pivottablediv"></div>
     <script>
     
+    		var __symbols__ = ['__esv5__'];
     		this.base_path = BASE_PATH + 'static/jquery_plugins/pivottable';
     		load_css (this.base_path + '/pivot.css');
     		var _on_mount = function () {
