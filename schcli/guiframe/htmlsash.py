@@ -90,6 +90,15 @@ class SchSashWindow(wx.Window):
         panel = mp.get_panel()
         config = mp.var
         self.title = mp.title
+
+        if 'disable_parent' in config:
+            if config['disable_parent'] == '0':
+                self.disable_parent = False
+            else:
+                self.disable_parent = True
+        else:
+            self.disable_parent = True
+
         winids = []
         self.address = address
         self.refr_obj_tab = []
@@ -126,6 +135,8 @@ class SchSashWindow(wx.Window):
             hscroll = False
         if 'vertical_position' in config:
             self.set_vertical_position(config['vertical_position'])
+
+        self.LastControlWithFocus = None
 
         #    self.Body = SchHtmlWindow(self, -1, style=0)
         #else:
@@ -183,7 +194,7 @@ class SchSashWindow(wx.Window):
                       id=min(winids), id2=max(winids))
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Controls = []
-        self.LastControlWithFocus = None
+
         self.disable_setfocus = 0
         self.Bind(wx.EVT_NAVIGATION_KEY, self.on_navigate)
         self.Bind(schevent.EVT_REFRPARM, self.on_refr_parm)
@@ -688,14 +699,15 @@ class SchSashWindow(wx.Window):
     def enable_panels(self, enable):
         if enable==False:
             self.last_size = self.GetSize()
-        if self.Header:
-            self.Header.Enable(enable)
-        if self.Body:
-            self.Body.Enable(enable)
-        if self.Footer:
-            self.Footer.Enable(enable)
-        if self.Panel:
-            self.Panel.Enable(enable)
+        if not (enable==False and not self.disable_parent):
+            if self.Header:
+                self.Header.Enable(enable)
+            if self.Body:
+                self.Body.Enable(enable)
+            if self.Footer:
+                self.Footer.Enable(enable)
+            if self.Panel:
+                self.Panel.Enable(enable)
 
     def change_notebook_page_title(self, new_title):
         p = self.GetParent()

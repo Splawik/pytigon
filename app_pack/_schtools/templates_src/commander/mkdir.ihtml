@@ -10,7 +10,7 @@
                 self.OKButton.Bind(wx.EVT_BUTTON, self.OnOk)
 
             def OnOk(self, event):
-                self.PARENT_{%block OnOk%}MkDir(self.FOLDER.GetValue()){%endblock%}
+                self.PARENT_{%block OnOk%}mk_dir(self.FOLDER.GetValue()){%endblock%}
                 self.any_parent_command('Cancel', True)
 
             def OnExit(self, event):
@@ -21,7 +21,7 @@
     table width=100%
         tr
             td
-                CTRLSTATICTEXT label={%block CmdTitle%}Utwórz folder:{%endblock%}
+                CTRLSTATICTEXT label={%block CmdTitle%}Make folder:{%endblock%}
             td  width=99%
                 CTRLTEXT name=FOLDER,,,WIDTH=100%
             td

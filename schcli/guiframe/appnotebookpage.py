@@ -244,7 +244,8 @@ class NotebookPage(wx.Window):
         image_id=-1,
         ):
         if self.get_page_count() > 0:
-            self.get_page(-1).enable_panels(False)
+            if page.disable_parent:
+                self.get_page(-1).enable_panels(False)
         self.child_panels.append(page)
         self._layout()
         #wx.CallAfter(self._layout)

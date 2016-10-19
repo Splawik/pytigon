@@ -207,7 +207,7 @@ class SchAppFrame(wx.Frame):
         s_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         s_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Panel", "Tools").CaptionVisible(True).Left().MinSize((250,
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Panel", "Tools").CaptionVisible(True).Left().MinSize((400,
                           s_dy / 2)).BestSize((s_dx / 2 - 50, s_dy - 100)).Show())
         self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Header", "Header").CaptionVisible(False).Top().Show())
         self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Footer", "Footer").CaptionVisible(False).Bottom().Show())

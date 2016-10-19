@@ -2,6 +2,6 @@
 
 % extends "schcommander/mkdir.html"
 
-{%block OnOk%}Rename(self.FOLDER.GetValue()){%endblock%}
+{%block OnOk%}rename(self.FOLDER.GetValue()){%endblock%}
 
-{%block CmdTitle%}Zmień nazwę na:{%endblock%}
+{%block CmdTitle%}Rename to:{%endblock%}

@@ -19,6 +19,8 @@
 
 import wx
 import string
+import binascii
+import wx.stc as stc
 
 
 def init_plugin(
@@ -30,16 +32,13 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    from .editor import CodeEditor
-    from schcli.guictrl.schctrl import SchBaseCtrl
+    import schcli
     import schcli.guictrl.schctrl
 
-
-    class Hexviewer(CodeEditor, SchBaseCtrl):
+    class Hexviewer(schcli.guictrl.schctrl.STYLEDTEXT):
 
         def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
-            CodeEditor.__init__(self, *args, **kwds)
+            schcli.guictrl.schctrl.STYLEDTEXT.__init__(self, *args, **kwds)
             if self.src:
                 self.SetExt(self.src)
             self.last_clipboard_state = False
@@ -54,71 +53,26 @@ def init_plugin(
             return self.GetText()
 
         def print_hex(self, hex):
-            num_buf = len(hex) / 64
+            num_buf = len(hex) // 32
             for i in range(num_buf):
                 h = hex[0 + i * 32:32 + i * 32]
-                hh = ''
-                s = ''
-                for j in range(16):
-# print "A1:", h[2*j: 2*j+2], string.atoi(h[2*j: 2*j+2], 16)
-                    f = h[2 * j:2 * j + 2]
-                    hh += f + ' '
-                    c = string.atoi(f, 16)
-# if ( ord('a') <= c <= ord('z') ) or ( ord('A') <= c <= ord('Z') ) or (
-# ord('0') <= c <= ord('9') ):
-                    if chr(c) in string.ascii_letters or chr(c) in string.digits\
-                         or chr(c) in '()[]=*/+-{}:;':
-                        s += chr(c)
-                    else:
-                        s += '.'
-                self.AddText(s + ' | ' + hh + '\n')
+                hh = " ".join([a+b for a,b in zip(h[::2],h[1::2])])
+                b = binascii.unhexlify(h)
+                p = b.decode('utf-8', 'replace').replace('\n','.').replace('\r','.').replace('\t','.').replace("'", '.').replace("\"","")
+                pp = ''.join([x if x in string.printable else '.' for x in p])
+                self.AddText(hh + ' | ' + pp + '\n')
 
         def load_from_url(self, url, ext):
-# self.SetExt(ext)
-            self.SetExt('txt')
+            self.set_ext('txt')
             http = wx.GetApp().HTTP
             http.get(self, url + '0/')
-            txt = http.ptr()
-            self.PrintHex(txt)
-# self.AddText(txt)
+            txt = http.str()
+            self.print_hex(txt)
             http.clear_ptr()
             self.url = url
 
         def on_save(self, event):
-# print "OnSave" http = wx.GetApp().HTTP
-            http = wx.GetApp().get_http(self)
-            if self.href:
-                http.post(self, self.href, {'data': self.GetText()})
-# txt = http.Ptr() print "Save result:", txt
-            http.clear_ptr()
-
-        def can_copy(self):
-            if self.GetSelectionEnd() - self.GetSelectionStart() != 0:
-                return True
-            else:
-                return False
-
-        def can_cut(self):
-            return self.CanCopy()
-
-# if self.GetSelectionEnd() - self.GetSelectionStart() != 0: return True else:
-# return False
-
-        def can_paste(self):
-            if self.last_clipboard_state or CodeEditor.CanPaste(self):
-                self.last_clipboard_state = True
-                return True
-            else:
-                return False
-
-        def on_copy(self, event):
-            self.Copy()
-
-        def on_cut(self, event):
-            self.Cut()
-
-        def on_paste(self, event):
-            self.Paste()
+            pass
 
 
     schcli.guictrl.schctrl.HEXVIEWER = Hexviewer

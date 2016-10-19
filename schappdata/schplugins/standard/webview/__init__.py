@@ -71,7 +71,7 @@ if wx.Platform == '__WXMSW__':
                 BaseWebBrowser,
                 )
 else:
-    if False:
+    if True:
         import wx.html2
         from .wxwebview import init_plugin_web_view
 
@@ -97,7 +97,7 @@ else:
 
 
 
-    if True:
+    if False:
         from .cef import init_plugin_cef
         def init_plugin(
             app,

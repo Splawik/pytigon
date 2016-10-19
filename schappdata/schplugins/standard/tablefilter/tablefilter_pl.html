@@ -2,6 +2,10 @@
 {% extends "plugin_form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
+{% block extrahead %}
+        <meta name="DISABLE_PARENT" content="0" />
+        {{block.super}}
+{% endblock %}
 {% block pythoncode %}
         <script language="python">
         def init_form(self):
@@ -10,39 +14,65 @@
             self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearch)
             self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
             self.search_txt = ""
-            grid = self.get_parent_panel().LastControlWithFocus.GetParent()
-            grid.GetTable().filter_by(1)
-            if grid.GetTable().key:
-                self.search_txt = grid.GetTable().key
-                self['SEARCH'].SetValue(grid.GetTable().key)
-                self['SEARCH'].SetInsertionPointEnd()
+            tab = self._get_tab()
+            if tab:
+                tab.filter_by(1)
+                if tab.key:
+                    self.search_txt = tab.key
+                    self['SEARCH'].SetValue(tab.key)
+                    self['SEARCH'].SetInsertionPointEnd()
             self['SEARCH'].SetFocus()
+            self.SearchText()
+        def _get_grid(self):
+            ppanel = self.get_parent_panel()
+            if ppanel:
+                grid = self.get_parent_panel().LastControlWithFocus
+                if grid:
+                    if grid.__class__.__name__ == 'GRID':
+                        return grid
+                    else:
+                        return grid.GetParent()
+            return None
+        def _get_tab(self):
+            g = self._get_grid()
+            if g:
+                return g.GetTable()
+            else:
+                return None
         def StartKey(self, key):
-            self['SEARCH'].SetValue(chr(key))
+            v = self['SEARCH'].GetValue()
+            self.search_txt = v+chr(key)
+            self['SEARCH'].SetValue(self.search_txt)
             self['SEARCH'].SetInsertionPointEnd()
             self.SearchText()
         def clear(self):
             self['SEARCH'].SetValue("")
             self['SEARCH'].SetInsertionPointEnd()
             self.SearchText()
-        def SearchText(self):
-            grid = self.get_parent_panel().LastControlWithFocus.GetParent()
-            text   = self.search_txt
-            grid.GetTable().filter(text)
+        def SearchText(self, txt=None):
+            if txt!=None:
+                text = txt
+            else:
+                text   = self.search_txt
+            tab = self._get_tab()
+            if tab:
+                tab.filter(text)
             return True
         def OnDoSearch(self, event):
             self.SearchText()
         def OnKeyDown(self, event):
             if event.KeyCode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_HOME, wx.WXK_END):
-                grid = self.get_parent_panel().LastControlWithFocus.GetParent()
+                grid = self._get_grid()
                 grid.ProcessEvent(event)
             elif event.KeyCode in (wx.WXK_F4,):
-                grid = self.get_parent_panel().LastControlWithFocus.GetParent()
+                grid = self._get_grid()
                 grid.ProcessEvent(event)
             elif event.KeyCode in (wx.WXK_RETURN,):
-                grid = self.get_parent_panel().LastControlWithFocus.GetParent()
+                grid = self._get_grid()
                 grid.ProcessEvent(event)
-                self.clear()
+                #self.clear()
+                self.SearchText("")
+                self.any_parent_command('cancel', True)
             else:
                 event.Skip()
         def OnKeyUp(self, event):

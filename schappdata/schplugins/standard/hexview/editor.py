@@ -90,9 +90,9 @@ class CodeEditor(stc.StyledTextCtrl):
         self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL, stc.STC_MARK_TCORNER,
                           'white', '#808080')
         self.SetMarginType(2, stc.STC_MARGIN_SYMBOL)
-        self.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
-        self.Bind(stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyPressed)
+        self.Bind(stc.EVT_STC_UPDATEUI, self.on_update_ui)
+        self.Bind(stc.EVT_STC_MARGINCLICK, self.on_margin_click)
+        self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
 
 #  font = wx.Font(9, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL,
 # wx.FONTWEIGHT_NORMAL) face = font.GetFaceName() size = font.GetPointSize()
@@ -103,7 +103,7 @@ class CodeEditor(stc.StyledTextCtrl):
         self.StyleClearAll()
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d'
                            % faces)
-        col = wx.SystemSettings_GetColour(wx.SYS_COLOUR_GRAYTEXT)
+        col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
         colstr = col.GetAsString(wx.C2S_HTML_SYNTAX)
         self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, 'fore:#000000,back:%s'
                            % colstr)
@@ -142,9 +142,9 @@ class CodeEditor(stc.StyledTextCtrl):
                            % faces)
         self.SetCaretForeground('BLUE')
         self.SetSelBackground(True,
-                              wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+                              wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self.SetSelForeground(True,
-                              wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
+                              wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
         b1 = wx.ArtProvider.GetBitmap(wx.ART_FIND, wx.ART_MENU, (16, 16))
         b2 = wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE, wx.ART_MENU,
                                       (16, 16))

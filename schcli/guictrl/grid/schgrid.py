@@ -601,7 +601,7 @@ class SchTableGrid(wx.grid.Grid):
             parm = dict()
             parm['rec'] = rec
             self.GetHtmlParent().ActiveCtrl = self
-            okno = self.GetHtmlParent().NewChildPage(self.address + '../'
+            okno = self.GetHtmlParent().new_child_page(self.address + '../'
                      + str(rec[0]) + '/edit/', '', param=parm)
             return
         if evt.KeyCode == wx.WXK_HOME and not evt.ControlDown():

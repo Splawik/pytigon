@@ -9,12 +9,12 @@
                 for pos in self.PARENT_panels_dir:
                     self.FOLDERS.choices.append( (pos[2], pos[0]) )
                 value = self.PARENT_panels_dir[self.PARENT_tab2][2]
-                self.FOLDERS.SetRec(value, (value,), dismiss=False)
+                self.FOLDERS.set_rec(value, (value,), dismiss=False)
                 self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
                 self.OKButton.Bind(wx.EVT_BUTTON, self.OnOk)
 
             def OnOk(self, event):
-                self.PARENT_{%block OnOk%}Copy(self.FOLDERS.GetValue(), "COPY"){%endblock%}
+                self.PARENT_{%block OnOk%}copy(self.FOLDERS.GetValue(), "COPY"){%endblock%}
                 self.any_parent_command('Cancel', True)
 
             def OnExit(self, event):

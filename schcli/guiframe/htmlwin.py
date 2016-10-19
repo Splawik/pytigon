@@ -137,6 +137,7 @@ class SchHtmlWindow(ScrolledPanel):
         self.init_css_str = None
         self.evt_ind = -1
         self.closing = False
+        self.acc_tabs = {}
         self.acc_tab = None
         self.last_clicked = None
 
@@ -144,6 +145,7 @@ class SchHtmlWindow(ScrolledPanel):
         self.register_signal(self, 'Refr')
 
         self.SetAcceleratorTable(wx.AcceleratorTable(wx.GetApp().GetTopWindow().aTable))
+
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_LEFT_DOWN, self.on_left_down)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
@@ -929,6 +931,8 @@ class SchHtmlWindow(ScrolledPanel):
                 self.reinit()
             elif hasattr(self, 'init_form'):
                 self.init_form()
+        wx.CallAfter(self._build_acc_tab)
+
 
     def new_local_child_page(
             self,
@@ -1223,11 +1227,25 @@ class SchHtmlWindow(ScrolledPanel):
         return self.evt_ind
 
     def set_acc_key_tab(self, win, tab):
+        if win in self.acc_tabs:
+            self.acc_tabs[win].append(tab)
+        else:
+            self.acc_tabs[win] = [tab,]
+
+    def _build_acc_tab(self):
+        for win in self.acc_tabs.keys():
+            tab = []
+            for pos in self.acc_tabs[win]:
+                tab += pos
+            self._set_acc_key_tab(win, tab)
+
+    def _set_acc_key_tab(self, win, tab):
         tab2 = []
         id_start = self.get_evt_ind()
         for pos in tab:
             tab2.append((pos[0], pos[1], self.get_evt_ind()))
-        win.SetAcceleratorTable(wx.AcceleratorTable(tab2))
+        #win.SetAcceleratorTable(wx.AcceleratorTable(tab2))
+        self.SetAcceleratorTable(wx.AcceleratorTable(tab2))
 
         if wx.Platform == '__WXMSW__':
             def on_command(event):

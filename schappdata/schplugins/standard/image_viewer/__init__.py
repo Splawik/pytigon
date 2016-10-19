@@ -40,6 +40,7 @@ def init_plugin(
 
         def __init__(self, *args, **kwds):
 # self.obj = SChBaseCtrl(self, args, kwds) kwds['label']=wx.EmptyBitmap(2,2)
+            print("X1")
             SchBaseCtrl.__init__(self, args, kwds)
             wx.ScrolledWindow.__init__(self, *args, **kwds)
             self.static_bitmap = wx.StaticBitmap(self)
@@ -55,6 +56,7 @@ def init_plugin(
             self.resize_to_win = True
             self.Bind(wx.EVT_SIZE, self.on_size)
             self.pil = None
+            print("X2")
 
         def on_size(self, event):
             if self.pil:

@@ -86,7 +86,7 @@ def init_control(ctrl_param):
             if self.typ == self.VIEW or self.typ == self.GET_ID:
                 if not self.readonly:
                     self.action('delete')
-                evt.Skip()
+                event.Skip()
                 return
 
         ctrl.__ext_init__()

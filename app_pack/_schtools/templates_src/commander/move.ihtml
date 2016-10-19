@@ -2,6 +2,6 @@
 
 % extends "schcommander/copydialog.html"
 
-{%block OnOk%}Copy(self.FOLDERS.GetValue(), "MOVE"){%endblock%}
+{%block OnOk%}copy(self.FOLDERS.GetValue(), "MOVE"){%endblock%}
 
-{%block CmdTitle%}Przenieś do:{%endblock%}
+{%block CmdTitle%}Move to:{%endblock%}

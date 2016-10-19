@@ -199,7 +199,7 @@ class DataPopupControl(ComboCtrl):
             href = self.href
 
         _href = href + "dialog/|value" if self.dialog_with_value else href + "dialog/"
-        self.sash = self.GetParent().new_NewChildPage(str(_href), "Select", parm)
+        self.sash = self.GetParent().new_child_page(str(_href), "Select", parm)
         self.sash.Body.old_any_parent_command = self.sash.Body.any_parent_command
         self.sash.Body.any_parent_command = self.any_parent_command
         self.sash.Body.parent_combo = self

@@ -169,7 +169,7 @@ if INSPECTION:
         return
 
 
-    sys.settrace(trace_calls)
+    #sys.settrace(trace_calls)
 
 else:
     #class InspectionNone(object):

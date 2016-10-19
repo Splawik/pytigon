@@ -18,6 +18,7 @@
 #version: "0.1a"
 
 from base64 import b32encode, b32decode
+import binascii
 from schlib.schtools import schjson
 import sys
 from schlib.schdjangoext.table import Table
@@ -32,6 +33,7 @@ from schlib.schtools.data import is_null
 import datetime
 import re
 import traceback
+
 
 vfsman = VfsManager()
 vfsman.install_plugin(VfsPluginZip())
@@ -340,7 +342,7 @@ def vfsopen_page(request, file, page):
         plik = open_file(file2, vfsman)
         try:
             plik.seek(page2 * 4096)
-            buf = plik.read(4096).encode('hex')
+            buf = binascii.hexlify(plik.read(4096))
             plik.close()
         except:
 # print sys.exc_info()[0] print sys.exc_info() traceback.print_exc()
