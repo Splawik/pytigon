@@ -14,7 +14,7 @@ from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok, fragment_init
 from tbl import init_table, datatable_onresize
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html
 
 
 def init_pagintor(pg):
@@ -28,7 +28,7 @@ def init_pagintor(pg):
             form = pg.closest('.refr_object').find('form.refr_source')
             if form:
                 def _on_new_page(data):
-                    pg.closest('.content').find(".tabsort tbody").html(jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+                    mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
                     fragment_init(pg.closest('.content').find(".tabsort tbody"))
                     if window.WAIT_ICON2:
                         jQuery('#loading-indicator').hide()
@@ -120,11 +120,11 @@ def page_init(id, first_time = True):
                     refresh_fragment(src_obj)
             else:
                 if window.APPLICATION_TEMPLATE == 'modern':
-                    window.ACTIVE_PAGE.page.html(data)
+                    mount_html(window.ACTIVE_PAGE.page, data)
                     window.ACTIVE_PAGE.set_href(href)
                     page_init(window.ACTIVE_PAGE.id, False)
                 else:
-                    jQuery('#body_body').html(data)
+                    mount_html(jQuery('#body_body'), data)
                     page_init('body_body', False)
                 window.ACTIVE_PAGE.set_href(href)
                 get_menu().get_active_item().url = href
@@ -174,7 +174,7 @@ def page_init(id, first_time = True):
 
         def _on_submit2(data):
             nonlocal id
-            window.ACTIVE_PAGE.page.html(data)
+            mount_html(window.ACTIVE_PAGE.page, data)
             page_init(id, False)
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
@@ -189,7 +189,7 @@ def page_init(id, first_time = True):
     fragment_init(window.ACTIVE_PAGE.page)
 
 
-def app_init(application_template, menu_id, lang, base_path, base_fragment_init, riot_init):
+def app_init(application_template, menu_id, lang, base_path, base_fragment_init, component_init):
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
     window.PUSH_STATE = True
@@ -202,7 +202,7 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
     window.COUNTER = 1
     window.EDIT_RET_FUNCTION = None
     window.RET_CONTROL = None
-    window.RIOT_INIT = riot_init
+    window.COMPONENT_INIT = component_init
     window.LANG = lang
 
     if can_popup():
@@ -290,9 +290,9 @@ def _on_menu_href(elem, title=None):
                 nonlocal href, href2, title
 
                 if window.APPLICATION_TEMPLATE == 'modern':
-                    id = menu.new_page(title, data, href2, window.RIOT_INIT, page_init)
+                    id = menu.new_page(title, data, href2, window.COMPONENT_INIT, page_init)
                 else:
-                    jQuery('#body_body').html(data)
+                    mount_html(jQuery('#body_body'),data)
                     window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                     window.ACTIVE_PAGE.set_href(href2)
                     page_init('body_body', False)
@@ -341,10 +341,10 @@ def _on_error(request, settings):
         start = settings.responseText.indexOf("<body>")
         end = settings.responseText.lastIndexOf("</body>")
         if start > 0 and end > 0:
-            jQuery("#dialog-data-error").html(settings.responseText.substring(start+6,end-1))
+            mount_html(jQuery("#dialog-data-error"),settings.responseText.substring(start+6,end-1))
             jQuery('#dialog-form-error').modal()
         else:
-            jQuery("#dialog-data-error").html(settings.responseText)
+            mount_html(jQuery("#dialog-data-error"),settings.responseText)
             jQuery('#dialog-form-error').modal()
     #else:
     #    jQuery("#dialog-data-error").html("ERROR")
@@ -355,7 +355,7 @@ def jquery_ready():
     jQuery(document).ajaxError(_on_error)
 
     def _on_hide(e):
-        jQuery(this).find("div.dialog-data").html("<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
+        mount_html(jQuery(this).find("div.dialog-data"),"<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
 
     jQuery('div.dialog-form').on('hide.bs.modal', _on_hide)
 
@@ -376,7 +376,7 @@ def jquery_ready():
                 txt = jQuery.trim(jQuery('.page')[0].outerHTML)
                 jQuery('.page').remove()
                 menu = get_menu()
-                menu.new_page(jQuery('title').text(), txt, window.location.href, window.RIOT_INIT, page_init)
+                menu.new_page(jQuery('title').text(), txt, window.location.href, window.COMPONENT_INIT, page_init)
         else:
             window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
             page_init('body_body')
@@ -391,7 +391,7 @@ def _on_popstate(e):
             menu = get_menu().activate(e.state, False)
         else:
             x = e.state
-            jQuery('#body_body').html(LZString.decompress(x[0]))
+            mount_html(jQuery('#body_body'), LZString.decompress(x[0]))
             window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
             window.ACTIVE_PAGE.set_href(document.location)
 
@@ -403,7 +403,7 @@ def _on_popstate(e):
         if window.APPLICATION_TEMPLATE == 'modern':
             pass
         else:
-            jQuery('#body_body').html("")
+            mount_html(jQuery('#body_body'), "")
             window.ACTIVE_PAGE = None
             if window.APPLICATION_TEMPLATE == 'standard':
                 jQuery('a.menu-href').removeClass('btn-warning')

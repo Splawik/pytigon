@@ -223,6 +223,7 @@ def gen(request, pk):
     base_path = settings.ROOT_PATH+"/app_pack/"+appset.name
     src_path = settings.ROOT_PATH+"/app_pack/schdevtools/"
     object_list = []
+    object_list = []
     
     if not os.path.exists(base_path):
         object_list.append((datetime.datetime.now().time().isoformat(), 'mkdir:', base_path))
@@ -348,17 +349,26 @@ def gen(request, pk):
             f.write(codejs.encode('utf-8'))
             f.close()        
         if static_file.type=='R':
-            txt2 = ihtml_to_html(None, input_str=txt, lang='en')
-            txt2 = txt2.replace("\"{", '{').replace("}\"", '}').replace('function on_', '').replace("""var __name__ = "__main__";""", '')
-            t = Template(txt2)
-            txt3 = t.render(Context({'appset': appset} ))
-            buf = []
-            buf.append("<%s>" % static_file.name)
-            for line in txt3.split('\n'):
-                buf.append('    '+line.replace('\r',''))
-            buf.append("</%s>" % static_file.name)
-            f = open_and_create_dir(settings.ROOT_PATH+"/static/components/"+appset.name+"/"+static_file.name+'.tag',"wb")
-            f.write("\n".join(buf).encode('utf-8'))
+            t = Template(txt)
+            txt2 = t.render(Context({'appset': appset} ))
+            try:
+                codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
+            except:
+                codejs = ""
+    
+    
+            #txt2 = ihtml_to_html(None, input_str=txt, lang='en')
+            #txt2 = txt2.replace("\"{", '{').replace("}\"", '}').replace('function on_', '').replace("""var __name__ = "__main__";""", '')
+            #t = Template(txt2)
+            #txt3 = t.render(Context({'appset': appset} ))
+            #buf = []
+            #buf.append("<%s>" % static_file.name)
+            #for line in txt3.split('\n'):
+            #    buf.append('    '+line.replace('\r',''))
+            #buf.append("</%s>" % static_file.name)
+            f = open_and_create_dir(settings.ROOT_PATH+"/static/components/"+appset.name+"/"+static_file.name+'.js',"wb")
+            #f.write("\n".join(buf).encode('utf-8'))
+            f.write(codejs.encode('utf-8'))
             f.close()        
         if static_file.type=='I':
             in_str = io.StringIO(txt)
@@ -370,19 +380,19 @@ def gen(request, pk):
             f.write(txt2.encode('utf-8'))
             f.close()        
     
-    riot_elements = []
+    component_elements = []
     if appset.custom_tags:
-        riot_elements += [ pos for pos in appset.custom_tags.replace('\n',';').replace('\r','').split(';') if pos ]
-    riot_elements += [ appset.name+"/"+pos.name for pos in static_files if pos.type in ('R',) ]
+        component_elements += [ pos for pos in appset.custom_tags.replace('\n',';').replace('\r','').split(';') if pos ]
+    component_elements += [ appset.name+"/"+pos.name for pos in static_files if pos.type in ('R',) ]
     
     js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
     
-    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'riot_elements': riot_elements })
-    print(riot_elements)
-    #template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset, 'riot_elements': riot_elements })
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'component_elements': component_elements })
+    print(component_elements)
+    #template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
     
-    template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'riot_elements': riot_elements })
+    template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
     
     base_path_src = base_path + "/src"
     

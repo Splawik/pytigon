@@ -234,7 +234,7 @@ Static_CHOICES = (
     ("C","css"),
     ("J","javascript"),
     ("P","python to javascript"),
-    ("R","riot.js module"),
+    ("R","component.js module"),
     ("I","icss to css"),
     
     )
@@ -809,7 +809,7 @@ class SChTemplate( models.Model):
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
     static_files = models.ManyToManyField(SChStatic, null=True, blank=True, editable=True, verbose_name='Static files', )
-    tags_mount = models.CharField('Mount riot tags', null=True, blank=True, editable=True, max_length=256)
+    tags_mount = models.CharField('Mount component tags', null=True, blank=True, editable=True, max_length=256)
     
 
     def get_url_name(self):

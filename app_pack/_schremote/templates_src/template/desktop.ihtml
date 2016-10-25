@@ -19,6 +19,7 @@
 
 %% body_footer
     {{block.super}}
+    
 
-%% riot_init
-     .riot_init = [] 
+%% component_init
+     .component_init = [] 

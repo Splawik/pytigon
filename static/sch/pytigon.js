@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-09-04 16:36:27
+// Transcrypt'ed from Python, 2016-10-25 21:51:48
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -145,7 +145,7 @@
 					var __Envir__ = __class__ ('__Envir__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.5.218';
+							self.transpiler_version = '3.5.222';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -577,10 +577,21 @@
 	}
 	__all__.len = len;
 	
-	var bool = function (any) {	// Subtly different from __ (any), always truly returns a bool, rather than something truthy or falsy
-		return typeof any == 'boolean' ? any : typeof any == 'number' ? any != 0 : len (any) ? true : false;
+
+	// General conversions
+	
+	function __ (any) {				// Truthyness, __ ([1, 2, 3]) returns [1, 2, 3], needed for nonempty selection: l = list1 or list2]
+		return (['boolean', 'number'] .indexOf (typeof any) >= 0 || any instanceof Function || len (any)) ? any : false;
+		// JavaScript functions have a length attribute, denoting the number of parameters
+		// Python objects are JavaScript functions, but their length doesn't matter, only their existence
+		// By the term 'any instanceof Function' we make sure that Python objects aren't rejected when their length equals zero
 	}
-	bool.__name__ = 'bool'	// So it can be used as a type with a name
+	__all__.__ = __;
+	
+	var bool = function (any) {		// Always truly returns a bool, rather than something truthy or falsy
+		return !!__ (any);
+	}
+	bool.__name__ = 'bool'			// So it can be used as a type with a name
 	__all__.bool = bool;
 	
 	var float = function (any) {
@@ -646,12 +657,6 @@
 		}
 	};
 	__all__.isinstance = isinstance;
-	
-	// Truthyness conversion
-	function __ (any) {	// Subtly different from bool (any), __ ([1, 2, 3]) returns [1, 2, 3], needed for nonempty selection: l = list1 or list2
-		return ['boolean', 'number'] .indexOf (typeof (any)) >= 0 ? any : len (any) ? any : false;
-	}
-	__all__.__ = __;
 	
 	// Repr function uses __repr__ method, then __str__ then toString
 	var repr = function (anObject) {
@@ -1816,6 +1821,7 @@ function pytigon () {
 					var ajax_post = __init__ (__world__.tools).ajax_post;
 					var ajax_submit = __init__ (__world__.tools).ajax_submit;
 					var handle_class_click = __init__ (__world__.tools).handle_class_click;
+					var mount_html = __init__ (__world__.tools).mount_html;
 					var datatable_refresh = __init__ (__world__.tbl).datatable_refresh;
 					var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 					var refresh_fragment = function (data_item_to_refresh, fun, only_table) {
@@ -1848,7 +1854,7 @@ function pytigon () {
 							var href = src.attr ('href');
 							if (src.prop ('tagName') == 'FORM') {
 								var _refr2 = function (data) {
-									target.html (data);
+									mount_html (target, data);
 									fragment_init (target);
 									if (fun) {
 										fun ();
@@ -1962,7 +1968,7 @@ function pytigon () {
 									elem2.insertAfter (jQuery (elem).closest ('tr'));
 								}
 							}
-							elem2.find ('.modal-title').html (jQuery (elem).attr ('title'));
+							mount_html (elem2.find ('.modal-title'), jQuery (elem).attr ('title'));
 							elem2.find ('.refr_object').attr ('related-object', jQuery (elem).uid ());
 							var elem3 = elem2.find ('div.dialog-data-inner');
 							var _on_load2 = function (responseText, status, response) {
@@ -2070,10 +2076,10 @@ function pytigon () {
 						}
 						else {
 							if (!(can_popup ())) {
-								jQuery ('div.dialog-data').html (responseText);
+								mount_html (jQuery ('div.dialog-data'), responseText);
 							}
 							else {
-								ok_button.closest ('.refr_target').html (responseText);
+								mount_html (ok_button.closest ('.refr_target'), responseText);
 							}
 						}
 					};
@@ -2095,7 +2101,7 @@ function pytigon () {
 							}
 						}
 						else {
-							jQuery ('div.dialog-data').html (responseText);
+							mount_html (jQuery ('div.dialog-data'), responseText);
 						}
 					};
 					var _refresh_win_after_ok = function (responseText, ok_button) {
@@ -2179,15 +2185,6 @@ function pytigon () {
 						d.parent ().datetimepicker (dict ({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': true}));
 						elem2.find ('.win-content').bind ('resize', datatable_onresize);
 						jQuery ('.selectpicker').selectpicker ();
-						if (window.RIOT_INIT) {
-							var _id = jQuery (elem).uid ();
-							var __iterable0__ = window.RIOT_INIT;
-							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
-								var pos = __iterable0__ [__index0__];
-								var x = sprintf ("riot.mount('#%s')", (_id + ' ') + pos);
-								eval (x);
-							}
-						}
 						if (window.BASE_FRAGMENT_INIT) {
 							window.BASE_FRAGMENT_INIT ();
 						}
@@ -2212,6 +2209,7 @@ function pytigon () {
 						__all__.datatable_refresh = datatable_refresh;
 						__all__.fragment_init = fragment_init;
 						__all__.handle_class_click = handle_class_click;
+						__all__.mount_html = mount_html;
 						__all__.on_cancel_inline = on_cancel_inline;
 						__all__.on_delete_ok = on_delete_ok;
 						__all__.on_dialog_load = on_dialog_load;
@@ -2315,6 +2313,7 @@ function pytigon () {
 					var TabMenuItem = __init__ (__world__.tabmenuitem).TabMenuItem;
 					var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 					var history_push_state = __init__ (__world__.tools).history_push_state;
+					var mount_html = __init__ (__world__.tools).mount_html;
 					var TabMenu = __class__ ('TabMenu', [object], {
 						get __init__ () {return __get__ (this, function (self) {
 							self.id = 0;
@@ -2343,7 +2342,7 @@ function pytigon () {
 							}
 							datatable_onresize ();
 						});},
-						get new_page () {return __get__ (this, function (self, title, data, href, riot_init, page_init) {
+						get new_page () {return __get__ (this, function (self, title, data, href, component_init, page_init) {
 							var _id = 'tab' + self.id;
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
@@ -2352,7 +2351,7 @@ function pytigon () {
 							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;
-							jQuery ('#' + _id).html (data);
+							mount_html (jQuery ('#' + _id), data);
 							if (window.PUSH_STATE) {
 								history_push_state (title2, href);
 							}
@@ -2411,6 +2410,7 @@ function pytigon () {
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.get_menu = get_menu;
 						__all__.history_push_state = history_push_state;
+						__all__.mount_html = mount_html;
 					__pragma__ ('</all>')
 				}
 			}
@@ -2574,6 +2574,35 @@ function pytigon () {
 				__inited__: false,
 				__init__: function (__all__) {
 					var LOADED_FILES = dict ({});
+					var evalJSFromHtml = function (html) {
+						var newElement = document.createElement ('div');
+						newElement.innerHTML = html;
+						var scripts = newElement.getElementsByTagName ('script');
+						var eval_fun = function (id, value) {
+							eval (value.innerHTML);
+						};
+						jQuery.each (scripts, eval_fun);
+					};
+					var mount_html = function (elem, html_txt) {
+						if (window.COMPONENT_INIT) {
+							elem.empty ();
+							var res = Vue.compile (('<div>' + html_txt) + '</div>');
+							if (elem && elem.length > 0) {
+								var vm = new Vue (dict ({'render': res.render, 'staticRenderFns': res.staticRenderFns}));
+								var component = vm.$mount ();
+								var _append = function (index, value) {
+									if (value) {
+										elem [0].appendChild (value);
+									}
+								};
+								jQuery.each (component.$el.childNodes, _append);
+								evalJSFromHtml (html_txt);
+							}
+						}
+						else {
+							elem.html (html_txt);
+						}
+					};
 					var download_binary_file = function (buf, content_disposition) {
 						var l = buf.length;
 						var buffer = new ArrayBuffer (l);
@@ -2623,7 +2652,7 @@ function pytigon () {
 					window.ajax_get = ajax_get;
 					var ajax_load = function (elem, url, complete) {
 						var _onload = function (responseText) {
-							elem.html (responseText);
+							mount_html (elem, responseText);
 							complete (responseText);
 						};
 						ajax_get (url, _onload);
@@ -2833,6 +2862,7 @@ function pytigon () {
 						__all__.can_popup = can_popup;
 						__all__.corect_href = corect_href;
 						__all__.download_binary_file = download_binary_file;
+						__all__.evalJSFromHtml = evalJSFromHtml;
 						__all__.get_page = get_page;
 						__all__.get_table_type = get_table_type;
 						__all__.handle_class_click = handle_class_click;
@@ -2840,6 +2870,7 @@ function pytigon () {
 						__all__.load_css = load_css;
 						__all__.load_js = load_js;
 						__all__.load_many_js = load_many_js;
+						__all__.mount_html = mount_html;
 						__all__.on_load_js = on_load_js;
 					__pragma__ ('</all>')
 				}
@@ -2878,6 +2909,7 @@ function pytigon () {
 		var load_js = __init__ (__world__.tools).load_js;
 		var load_many_js = __init__ (__world__.tools).load_many_js;
 		var history_push_state = __init__ (__world__.tools).history_push_state;
+		var mount_html = __init__ (__world__.tools).mount_html;
 		var init_pagintor = function (pg) {
 			var x = load_js;
 			if (pg.length > 0) {
@@ -2888,7 +2920,7 @@ function pytigon () {
 					var form = pg.closest ('.refr_object').find ('form.refr_source');
 					if (form) {
 						var _on_new_page = function (data) {
-							pg.closest ('.content').find ('.tabsort tbody').html (jQuery (jQuery.parseHTML (data)).find ('.tabsort tbody').html ());
+							mount_html (pg.closest ('.content').find ('.tabsort tbody'), jQuery (jQuery.parseHTML (data)).find ('.tabsort tbody').html ());
 							fragment_init (pg.closest ('.content').find ('.tabsort tbody'));
 							if (window.WAIT_ICON2) {
 								jQuery ('#loading-indicator').hide ();
@@ -2986,12 +3018,12 @@ function pytigon () {
 					}
 					else {
 						if (window.APPLICATION_TEMPLATE == 'modern') {
-							window.ACTIVE_PAGE.page.html (data);
+							mount_html (window.ACTIVE_PAGE.page, data);
 							window.ACTIVE_PAGE.set_href (href);
 							page_init (window.ACTIVE_PAGE.id, false);
 						}
 						else {
-							jQuery ('#body_body').html (data);
+							mount_html (jQuery ('#body_body'), data);
 							page_init ('body_body', false);
 						}
 						window.ACTIVE_PAGE.set_href (href);
@@ -3042,7 +3074,7 @@ function pytigon () {
 					jQuery (this).attr ('action', corect_href (href));
 				}
 				var _on_submit2 = function (data) {
-					window.ACTIVE_PAGE.page.html (data);
+					mount_html (window.ACTIVE_PAGE.page, data);
 					page_init (id, false);
 					if (window.WAIT_ICON) {
 						window.WAIT_ICON.stop ();
@@ -3057,7 +3089,7 @@ function pytigon () {
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 			fragment_init (window.ACTIVE_PAGE.page);
 		};
-		var app_init = function (application_template, menu_id, lang, base_path, base_fragment_init, riot_init) {
+		var app_init = function (application_template, menu_id, lang, base_path, base_fragment_init, component_init) {
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
 			window.PUSH_STATE = true;
@@ -3070,7 +3102,7 @@ function pytigon () {
 			window.COUNTER = 1;
 			window.EDIT_RET_FUNCTION = null;
 			window.RET_CONTROL = null;
-			window.RIOT_INIT = riot_init;
+			window.COMPONENT_INIT = component_init;
 			window.LANG = lang;
 			if (can_popup ()) {
 				var _local_fun = function () {
@@ -3161,10 +3193,10 @@ function pytigon () {
 					var href2 = corect_href (href);
 					var _on_new_win = function (data) {
 						if (window.APPLICATION_TEMPLATE == 'modern') {
-							var id = menu.new_page (title, data, href2, window.RIOT_INIT, page_init);
+							var id = menu.new_page (title, data, href2, window.COMPONENT_INIT, page_init);
 						}
 						else {
-							jQuery ('#body_body').html (data);
+							mount_html (jQuery ('#body_body'), data);
 							window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
 							window.ACTIVE_PAGE.set_href (href2);
 							page_init ('body_body', false);
@@ -3220,11 +3252,11 @@ function pytigon () {
 				var start = settings.responseText.indexOf ('<body>');
 				var end = settings.responseText.lastIndexOf ('</body>');
 				if (start > 0 && end > 0) {
-					jQuery ('#dialog-data-error').html (settings.responseText.substring (start + 6, end - 1));
+					mount_html (jQuery ('#dialog-data-error'), settings.responseText.substring (start + 6, end - 1));
 					jQuery ('#dialog-form-error').modal ();
 				}
 				else {
-					jQuery ('#dialog-data-error').html (settings.responseText);
+					mount_html (jQuery ('#dialog-data-error'), settings.responseText);
 					jQuery ('#dialog-form-error').modal ();
 				}
 			}
@@ -3232,7 +3264,7 @@ function pytigon () {
 		var jquery_ready = function () {
 			jQuery (document).ajaxError (_on_error);
 			var _on_hide = function (e) {
-				jQuery (this).find ('div.dialog-data').html ("<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
+				mount_html (jQuery (this).find ('div.dialog-data'), "<div class='alert alert-info' role='alert'>Sending data - please wait</div>");
 			};
 			jQuery ('div.dialog-form').on ('hide.bs.modal', _on_hide);
 			var _local_fun = function () {
@@ -3251,7 +3283,7 @@ function pytigon () {
 						var txt = jQuery.trim (jQuery ('.page') [0].outerHTML);
 						jQuery ('.page').remove ();
 						var menu = get_menu ();
-						menu.new_page (jQuery ('title').text (), txt, window.location.href, window.RIOT_INIT, page_init);
+						menu.new_page (jQuery ('title').text (), txt, window.location.href, window.COMPONENT_INIT, page_init);
 					}
 				}
 				else {
@@ -3268,7 +3300,7 @@ function pytigon () {
 				}
 				else {
 					var x = e.state;
-					jQuery ('#body_body').html (LZString.decompress (x [0]));
+					mount_html (jQuery ('#body_body'), LZString.decompress (x [0]));
 					window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
 					window.ACTIVE_PAGE.set_href (document.location);
 					if (window.APPLICATION_TEMPLATE == 'standard') {
@@ -3283,7 +3315,7 @@ function pytigon () {
 					// pass;
 				}
 				else {
-					jQuery ('#body_body').html ('');
+					mount_html (jQuery ('#body_body'), '');
 					window.ACTIVE_PAGE = null;
 					if (window.APPLICATION_TEMPLATE == 'standard') {
 						jQuery ('a.menu-href').removeClass ('btn-warning');
@@ -3325,6 +3357,7 @@ function pytigon () {
 			__all__.load_css = load_css;
 			__all__.load_js = load_js;
 			__all__.load_many_js = load_many_js;
+			__all__.mount_html = mount_html;
 			__all__.on_cancel_inline = on_cancel_inline;
 			__all__.on_delete_ok = on_delete_ok;
 			__all__.on_edit_ok = on_edit_ok;

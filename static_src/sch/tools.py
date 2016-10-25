@@ -1,4 +1,36 @@
+__pragma__ ('alias', 'S', '$')
+
 LOADED_FILES = {}
+
+
+def evalJSFromHtml(html):
+  newElement = document.createElement('div')
+  newElement.innerHTML = html
+
+  scripts = newElement.getElementsByTagName("script")
+  def eval_fun(id, value):
+      eval(value.innerHTML)
+
+  jQuery.each(scripts, eval_fun)
+
+
+def mount_html(elem, html_txt):
+    if window.COMPONENT_INIT:
+        elem.empty()
+        res = Vue.compile("<div>"+html_txt+"</div>")
+        if elem and elem.length>0:
+            vm = __new__(Vue( { 'render': res.render, 'staticRenderFns': res.staticRenderFns } ))
+            component = vm.S__mount()
+
+            def _append(index, value):
+                if value:
+                    elem[0].appendChild(value)
+
+            jQuery.each(component.S__el.childNodes, _append)
+
+            evalJSFromHtml(html_txt)
+    else:
+        elem.html(html_txt)
 
 def download_binary_file(buf, content_disposition):
     l = buf.length
@@ -41,7 +73,7 @@ window.ajax_get = ajax_get
 def ajax_load(elem, url, complete):
 
     def _onload(responseText):
-        elem.html(responseText)
+        mount_html(elem, responseText)
         complete(responseText)
 
     ajax_get(url, _onload)

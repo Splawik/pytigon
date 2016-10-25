@@ -73,9 +73,9 @@
         .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
         .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
         .}
-    %% riot_init
-        .riot_init = null
-    .pytigon.app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, riot_init)
+    %% component_init
+        .component_init = null
+    .pytigon.app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init)
 
 
 %% jquery_ready_start

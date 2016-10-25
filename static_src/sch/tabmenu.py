@@ -1,7 +1,7 @@
 from page import Page
 from tabmenuitem import TabMenuItem
 from tbl import datatable_onresize
-from tools import history_push_state
+from tools import history_push_state, mount_html
 
 class TabMenu:
     def __init__(self):
@@ -25,7 +25,7 @@ class TabMenu:
             history_push_state(menu_item.title, menu_item.url)
         datatable_onresize()
 
-    def new_page(self, title, data, href, riot_init, page_init):
+    def new_page(self, title, data, href, component_init, page_init):
         _id = "tab" + self.id
         title2 = jQuery.trim(title)
         menu_item = TabMenuItem(_id, title2, href, data)
@@ -37,7 +37,7 @@ class TabMenu:
         window.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
         self.active_item = menu_item
 
-        jQuery('#'+_id).html(data)
+        mount_html(jQuery('#'+_id),data)
 
         if window.PUSH_STATE:
             history_push_state(title2, href)

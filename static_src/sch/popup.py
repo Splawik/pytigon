@@ -1,4 +1,4 @@
-from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click
+from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html
 from tbl import datatable_refresh, datatable_onresize
 
 
@@ -23,7 +23,7 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
         href = src.attr('href')
         if src.prop("tagName") == 'FORM':
             def _refr2(data):
-                target.html(data);
+                mount_html(target, data)
                 fragment_init(target)
                 if fun:
                     fun();
@@ -127,7 +127,7 @@ def on_popup_edit_new(elem):
             else:
                 elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
                 elem2.insertAfter(jQuery(elem).closest("tr"))
-        elem2.find('.modal-title').html(jQuery(elem).attr('title'))
+        mount_html(elem2.find('.modal-title'), jQuery(elem).attr('title'))
         elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
         elem3 = elem2.find("div.dialog-data-inner")
 
@@ -226,9 +226,9 @@ def _refresh_win(responseText, ok_button):
                 return refresh_fragment(popup_activator, None, True)
     else:
         if not can_popup():
-            jQuery("div.dialog-data").html(responseText)
+            mount_html(jQuery("div.dialog-data"), responseText)
         else:
-            ok_button.closest('.refr_target').html(responseText)
+            mount_html(ok_button.closest('.refr_target'),responseText)
 
 def _refresh_win_and_ret(responseText, ok_button):
     if responseText and "RETURN_OK" in responseText:
@@ -244,7 +244,7 @@ def _refresh_win_and_ret(responseText, ok_button):
             q = jQuery(responseText)
             eval(q[1].text)
     else:
-        jQuery("div.dialog-data").html(responseText)
+        mount_html(jQuery("div.dialog-data"), responseText)
 
 
 def _refresh_win_after_ok(responseText, ok_button):
@@ -332,11 +332,17 @@ def fragment_init(elem=None):
 
     jQuery('.selectpicker').selectpicker()
 
-    if window.RIOT_INIT:
-        _id = jQuery(elem).uid()
-        for pos in window.RIOT_INIT:
-            x = sprintf("riot.mount('#%s')", _id+" "+pos)
-            eval(x)
+    #if window.RIOT_INIT:
+    #    _id = jQuery(elem).uid()
+    #    for pos in window.RIOT_INIT:
+    #        x = sprintf("riot.mount('#%s')", _id+" "+pos)
+    #        eval(x)
+
+
+    #x = __new__(Vue())
+
+    #__pragma__ ('alias', 'Q', '$')
+    #x.Qcompile(elem2[0])
 
     if window.BASE_FRAGMENT_INIT:
         window.BASE_FRAGMENT_INIT()

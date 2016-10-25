@@ -132,10 +132,11 @@
 
 
 %% body_start
-    %if user.is_authenticated:
-        <body class="hold-transition skin-blue sidebar-mini" bgcolor="#{{color_body}}">
-    % else:
-        {{block.super}}
+    % if form_ext or not show_form:
+        %if user.is_authenticated:
+            <body class="hold-transition skin-blue sidebar-mini" bgcolor="#{{color_body}}">
+        % else:
+            {{block.super}}
 
 %% body_init
     <div class="content-wrapper">
