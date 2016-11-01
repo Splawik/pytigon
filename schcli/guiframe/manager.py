@@ -26,25 +26,34 @@ import wx
 
 class SChAuiBaseManager(aui.framemanager.AuiManager):
 
+    def __init__(self, *argi, **argv):
+        aui.framemanager.AuiManager.__init__(self, *argi, **argv)
+        self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
+
     def Update(self):
-        def _update():
-            if self._frame:
-                self.DoUpdate()
-        wx.CallAfter(_update)
+        if '__WXGTK__' in wx.PlatformInfo:
+            wx.CallAfter(self.DoUpdate)
+        else:
+            super().Update()
+
+    def OnRender(self, event):
+        if self._frame and self._frame.GetHandle():
+            super().OnRender(event)
+        else:
+            event.Skip()
 
 
 class SChAuiManager(SChAuiBaseManager):
     def __init__(self, *argi, **argv):
         aui.AuiManager.__init__(self, *argi, **argv)
 
-    def AddPane(self, window, arg1=None, arg2=None):
-        ret = aui.AuiManager.AddPane(self, window, arg1, arg2)
+    def AddPane(self, window, arg1, *argi, **argv):
+        ret = aui.AuiManager.AddPane(self, window, arg1, *argi, **argv)
         if hasattr(window, 'SetPanel'):
             window.SetPanel(arg1)
         return ret
 
     def ActivatePane(self, window):
-        #print "ActivatePane", window
         try:
             ret = aui.AuiManager.ActivatePane(self, window)
         except:

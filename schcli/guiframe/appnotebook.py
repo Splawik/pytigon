@@ -48,8 +48,12 @@ class AppNotebook(aui.AuiNotebook):
         self._tabBounds = (-1, -1)
 
         wx.Panel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS, name=name)
+
+        #aui.AuiNotebook.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS, name=name)
+
         #from . import framemanager
         self._mgr = SChAuiBaseManager()
+
         self._tabs = aui.AuiTabContainer(self)
 
         self.InitNotebook(agwStyle)
@@ -66,9 +70,16 @@ class AppNotebook(aui.AuiNotebook):
         self.closing = False
         self.last_active = None
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
+        #self.SetThemeEnabled(wx.SystemSettings)
+        #self.SetBackgroundStyle(wx.BG_STYLE_COLOUR) #wx.BG_STYLE_SYSTEM)
+        #self.SetBackgroundColour(wx.RED)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
 
 
     def on_closing(self, event):
+        #if len(self._tabs._pages)==1:
+        #    self._mgr.ClosePane(self.panel)
+
         idn = event.GetSelection()
         if idn >= 0:
             page = self.GetPage(idn)
@@ -76,8 +87,13 @@ class AppNotebook(aui.AuiNotebook):
             if page.close_no_del(True):
                 self.GetParent().GetParent().after_close(self)
                 event.Veto()
-            else:
-                pass
+
+        def _close():
+            self.panel.Hide()
+            wx.GetApp().GetTopWindow()._mgr.Update()
+
+        if len(self._tabs._pages)==1:
+            wx.CallAfter(_close)
 
     def on_changed(self, event):
         sel = event.GetSelection()

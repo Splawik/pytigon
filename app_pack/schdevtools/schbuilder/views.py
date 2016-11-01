@@ -349,8 +349,9 @@ def gen(request, pk):
             f.write(codejs.encode('utf-8'))
             f.close()        
         if static_file.type=='R':
-            t = Template(txt)
-            txt2 = t.render(Context({'appset': appset} ))
+            #t = Template(txt)
+            #txt2 = t.render(Context({'appset': appset} ))
+            txt2 = txt
             try:
                 codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
             except:

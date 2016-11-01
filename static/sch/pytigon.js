@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-10-25 21:51:48
+// Transcrypt'ed from Python, 2016-10-31 20:43:15
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -2812,7 +2812,9 @@ function pytigon () {
 							LOADED_FILES [path] = list ([fun]);
 							var req = new XMLHttpRequest ();
 							var _onload = function () {
-								jQuery.globalEval (req.responseText);
+								var script = document.createElement ('script');
+								script.text = req.responseText;
+								document.head.appendChild (script).parentNode.removeChild (script);
 								on_load_js (path);
 							};
 							req.onload = _onload;
@@ -2822,21 +2824,22 @@ function pytigon () {
 					};
 					window.load_js = load_js;
 					var load_many_js = function (paths, fun) {
-						var counter = 0;
+						var counter = 1;
 						var _fun = function () {
 							counter = counter - 1;
 							if (counter == 0) {
 								fun ();
 							}
 						};
-						var __iterable0__ = paths.py_split (paths, ';');
+						var __iterable0__ = paths.py_split (';');
 						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 							var path = __iterable0__ [__index0__];
-							if (path.lenght () > 0) {
+							if (path.length > 0) {
 								var counter = counter + 1;
 								load_js (path, _fun);
 							}
 						}
+						_fun ();
 					};
 					window.load_many_js = load_many_js;
 					var history_push_state = function (title, url, data) {

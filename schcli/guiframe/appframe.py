@@ -55,6 +55,7 @@ class SChMainPanel(wx.Window):
             argv['style'] |= wx.WANTS_CHARS
         self.app_frame = app_frame
         wx.Window.__init__(self, *argi, **argv)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
 
     def GetFrameManager(self):
         return self.GetParent().GetFrameManager()
@@ -78,11 +79,12 @@ class SchAppFrame(wx.Frame):
         self.gui_style = gui_style
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
+        #self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
         self._id = wx.ID_HIGHEST
         #self._id = 32000
 
         self._perspectives = []
-        self._mgr = SChAuiManager()
+        #self._mgr.SetManagedWindow(self)
 
         self.x = 0
         self.idle_objects = []
@@ -109,14 +111,17 @@ class SchAppFrame(wx.Frame):
         else:
             hide_on_single_page = False
 
+
+        self._panel = SChMainPanel(self, self)
+        self._mgr = SChAuiManager()
+        self._mgr.SetManagedWindow(self._panel)
+
         if not hasattr(self._mgr, 'SetAGWFlags'):
             self._mgr.SetAGWFlags = self._mgr.SetFlags
             self._mgr.GetAGWFlags = self._mgr.GetFlags
 
         self._mgr.SetAGWFlags(self._mgr.GetAGWFlags() ^ aui.AUI_MGR_ALLOW_ACTIVE_PANE)
 
-        self._panel = SChMainPanel(self, self)
-        self._mgr.SetManagedWindow(self._panel)
         self.desktop = self.create_notebook_ctrl(hide_on_single_page)
         self.get_dock_art().SetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE, 0)
 
@@ -443,6 +448,9 @@ class SchAppFrame(wx.Frame):
             tab.SetFocus()
 
     def create_notebook_ctrl(self, hideSingleTab=True):
+        #if hideSingleTab:
+        #    style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS | aui.AUI_NB_HIDE_ON_SINGLE_TAB
+        #else:
         style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
                 #| aui.AUI_NB_DRAW_DND_TAB
         #if hideSingleTab:
@@ -630,6 +638,16 @@ class SchAppFrame(wx.Frame):
             refr = True
         else:
             refr = False
+
+        if title2 in [ pos.caption for pos in n._tabs._pages ]:
+            for id, pos in enumerate(n._tabs._pages):
+                if pos.caption==title2:
+                    n.SetSelection(id)
+                    n.activate_page(pos.window)
+            if refr:
+                self._mgr.GetPane(_panel).Show()
+                self._mgr.Update()
+            return False
 
         okno = NotebookPage(n)
         #if panel == "Desktop2":

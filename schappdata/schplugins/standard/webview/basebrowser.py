@@ -17,6 +17,7 @@
 #version: "0.1a"
 
 import wx
+import wx.lib.agw.toasterbox as TB
 import six
 
 from tempfile import NamedTemporaryFile
@@ -27,7 +28,6 @@ from schcli.guilib.schevent import *
 from schlib.schtools.tools import split2
 
 import os
-
 
 class BaseWebBrowser(object):
 
@@ -531,3 +531,12 @@ class BaseWebBrowser(object):
                 s = self._local_request(uri2)
                 return (s, None)
         return (None, None)
+
+    def show_error(self, title, description):
+        #toaster = TB.ToasterBox(self, scrollType=TB.TB_SCR_TYPE_FADE)
+        #toaster.SetPopupPauseTime(5000)
+        #toaster.SetPopupText(description)
+        #toaster.SetTitle(title)
+        #toaster.Play()
+        print("ERROR: ", title)
+        print(description)

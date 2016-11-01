@@ -60,6 +60,10 @@
             self.edit_img_win = None
             wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)
             self.PANELS.Body.filter_url = self.filter_url
+            self.child_win = None
+
+        def child_closed(self):
+            self.child_win = None
 
         def refresh_after_ok(self):
             self._refresh_panels()
@@ -153,14 +157,13 @@
                         self.tab = i
                         self.change_panel()
             else:
-                okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
-                dialog = okno.Body
+                if not self.child_win:
+                    okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
+                    self.child_win = okno.Body
+                    self.child_win.refr()
+                    self.child_win.Show()
 
-                dialog.refr()
-                dialog.Show()
-
-                wx.CallAfter(dialog.StartKey, evt.KeyCode)
-
+                wx.CallAfter(self.child_win.StartKey, evt.KeyCode)
 
         def _refresh_panels(self):
             for panel in self.panels_dir:

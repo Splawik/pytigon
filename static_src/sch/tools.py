@@ -2,16 +2,15 @@ __pragma__ ('alias', 'S', '$')
 
 LOADED_FILES = {}
 
-
 def evalJSFromHtml(html):
-  newElement = document.createElement('div')
-  newElement.innerHTML = html
+    newElement = document.createElement('div')
+    newElement.innerHTML = html
 
-  scripts = newElement.getElementsByTagName("script")
-  def eval_fun(id, value):
-      eval(value.innerHTML)
+    scripts = newElement.getElementsByTagName("script")
+    def eval_fun(id, value):
+        eval(value.innerHTML)
 
-  jQuery.each(scripts, eval_fun)
+    jQuery.each(scripts, eval_fun)
 
 
 def mount_html(elem, html_txt):
@@ -218,7 +217,12 @@ def load_js(path, fun):
         LOADED_FILES[path] = [fun,]
         req = __new__(XMLHttpRequest())
         def _onload():
-            jQuery.globalEval(req.responseText)
+            #jQuery.globalEval(req.responseText)
+
+            script = document.createElement("script")
+            script.text = req.responseText
+            document.head.appendChild( script ).parentNode.removeChild( script )
+
             on_load_js(path)
 
         req.onload = _onload
@@ -229,7 +233,7 @@ def load_js(path, fun):
 window.load_js = load_js
 
 def load_many_js(paths, fun):
-    counter = 0
+    counter = 1
 
     def _fun():
         nonlocal counter
@@ -237,11 +241,11 @@ def load_many_js(paths, fun):
         if counter == 0:
             fun()
 
-    for path in paths.split(paths, ';'):
-        if path.lenght()>0:
+    for path in paths.split(';'):
+        if path.length>0:
             counter = counter + 1
             load_js(path, _fun)
-
+    _fun()
 
 window.load_many_js = load_many_js
 

@@ -180,9 +180,12 @@ def init_plugin_web_view(
 
         def on_error(self, event):
             message = "%s\n, %s" % ( event.GetURL(),event.GetString())
-            dlg = wx.MessageDialog(self, event.GetString(), "Webview error",  wx.OK | wx.ICON_WARNING)
-            dlg.ShowModal()
-            dlg.Destroy()
+            #dlg = wx.MessageDialog(self, event.GetString(), "Webview error",  wx.OK | wx.ICON_WARNING)
+            #dlg.ShowModal()
+            #dlg.Destroy()
+
+            self.show_error("WebView error", message+"\n"+event.GetString())
+
             event.Skip()
 
         def on_web_view_loaded(self, event):            
