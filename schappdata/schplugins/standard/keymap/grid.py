@@ -13,7 +13,7 @@ def init_control(ctrl_param):
         @extend_fun_to(ctrl)
         def __ext_init__(self):
 
-            aTable = [
+            self.grid_aTable = [
                 (wx.ACCEL_ALT, ord('J'), self.on_down),
                 (wx.ACCEL_ALT, ord('K'), self.on_up),
                 (wx.ACCEL_ALT, ord('H'), self.on_left),
@@ -31,7 +31,7 @@ def init_control(ctrl_param):
                 (wx.ACCEL_ALT|wx.ACCEL_SHIFT, ord('K'), self.on_page_up),
 
             ]
-            ctrl_param.GetParent().set_acc_key_tab(ctrl_param, aTable)
+            ctrl_param.GetParent().set_acc_key_tab(ctrl_param, self.grid_aTable)
 
         @extend_fun_to(ctrl)
         def on_down(self, event):

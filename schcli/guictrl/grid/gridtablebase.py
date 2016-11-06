@@ -228,8 +228,8 @@ class SchGridTableBase(PyGridTableBase):
         if option == 0:
             data = [cmd]
         elif option == 1:
-            selrows = self.GetSelRows()
-            key = self.GetSelKey()
+            selrows = self.get_sel_rows()
+            key = self.get_sel_key()
             data = [cmd, (key, ) + selrows]
         else:
             data = [cmd]

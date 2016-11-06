@@ -38,6 +38,8 @@ if not DEBUG:
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
+from fs.osfs import OSFS
+DEFAULT_FILE_STORAGE_FS.mountdir('pytigon', OSFS(ROOT_PATH))
 
 PACKS = []
 

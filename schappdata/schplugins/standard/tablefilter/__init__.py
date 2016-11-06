@@ -36,8 +36,7 @@ def init_plugin(
 # key = event.GetKeyCode() print "OnKeyDown", event.KeyCode,
 # int(wx.WXK_NUMPAD_ADD), int(ord('-'))
 
-        if (event.KeyCode == ord('F') or event.KeyCode == ord('f'))\
-             and event.ControlDown():
+        if (event.KeyCode == ord('F') or event.KeyCode == ord('f')) and event.ControlDown():
 # print __file__
             win = self.GetParent()
             while not hasattr(win, 'NewChildPage'):

@@ -13,8 +13,6 @@ import sys
 from schlib.schhtml.htmltools import superstrip
 
 
-from commander.models import *
-
 
 
 from django.core.mail import send_mail

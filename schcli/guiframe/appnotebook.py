@@ -70,9 +70,6 @@ class AppNotebook(aui.AuiNotebook):
         self.closing = False
         self.last_active = None
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
-        #self.SetThemeEnabled(wx.SystemSettings)
-        #self.SetBackgroundStyle(wx.BG_STYLE_COLOUR) #wx.BG_STYLE_SYSTEM)
-        #self.SetBackgroundColour(wx.RED)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
 
 

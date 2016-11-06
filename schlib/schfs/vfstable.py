@@ -22,97 +22,31 @@ import binascii
 from schlib.schtools import schjson
 import sys
 from schlib.schdjangoext.table import Table
-from schlib.schfs.vfs import VfsManager, get_dir, open_file
-from schlib.schfs.zip import VfsPluginZip
-from schlib.schfs.sevenzip import VfsPluginSevenZip
-from schlib.schfs.tar import VfsPluginTar
 from schlib.schfs.vfstools import replace_dot
 from django.http import HttpResponse
 from django.core.cache import cache
+from django.core.files.storage import default_storage
+
+from fs.opener import fsopendir
+
+import fs.path
 from schlib.schtools.data import is_null
+from schlib.schtasks.task import get_process_manager
 import datetime
 import re
-import traceback
 
 
-vfsman = VfsManager()
-vfsman.install_plugin(VfsPluginZip())
-vfsman.install_plugin(VfsPluginSevenZip())
-vfsman.install_plugin(VfsPluginTar())
+def automount(path):
+    lpath = path.lower()
+    if lpath.endswith('.zip') or '.zip/' in lpath:
+        id = lpath.find('.zip')
+        pp = path[:id+4]
 
-
-def thread_fs(self, parm, fun):
-    value = schjson.loads(parm)
-    src_file = b32decode(value[0][0])
-    src_files = []
-    for pos in value[0][1]:
-        src_files.append(b32decode(pos).split('/')[-1])
-    selmask = value[0][2]
-    key = value[0][3]
-    src_path = b32decode(value[1][0])
-    dest = b32decode(value[1][1])
-    fun(
-        self,
-        src_path,
-        dest,
-        src_files,
-        selmask,
-        key,
-        )
-
-
-def thread_copy(self, parm):
-    return thread_fs(self, parm, vfsman.copy)
-
-
-def thread_move(self, parm):
-    return thread_fs(self, parm, vfsman.move)
-
-
-def thread_delete(self, parm):
-    return thread_fs(self, parm, vfsman.delete)
-
-
-scr = \
-    """
-import time
-i=0
-while True:
-   time.sleep(1)
-   print "TestThread:%s %s" % (self.getName(), i)
-   x = { 'progress': i*5, 'description': 'count: %s' % i }
-   #self.WriteInfo("TestThread:%s %s" % (self.getName(), i) )
-   self.WriteInfo(x)
-   i = i + 1
-   if i>20:
-       break
-"""
-
-
-def test_thread(self):
-    import time
-    i = 0
-    while not self.exit:
-        time.sleep(1)
-        x = {'progress': i * 5, 'description': 'count: %s' % i}
-        self.WriteInfo(x)
-        x = {
-            'progress': i * 5,
-            'description': 'count: %s' % i,
-            'template': 'schcommander/copyprogress.html',
-            'exit': 0,
-            }
-        self.WriteData(x, False)
-        i = i + 1
-        if i > 20:
-            break
-    x = {
-        'progress': 100,
-        'description': 'Zadanie zako\xc5\x84czone',
-        'template': 'schcommander/copyprogress.html',
-        'exit': 1,
-        }
-    self.WriteData(x, False)
+        syspath = default_storage.fs.getsyspath(pp, allow_none=True)
+        if syspath:
+            zip_name = 'zip://'+default_storage.fs.getsyspath(pp)
+            default_storage.fs.mountdir(pp[1:], fsopendir(zip_name))
+    return path
 
 
 def str_cmp(x, y, ts):
@@ -131,14 +65,16 @@ class VfsTable(Table):
 
     def __init__(self, folder):
         self.var_count = -1
-        self.Folder = replace_dot(folder).replace('%20', ' ')
+        self.folder = replace_dot(folder).replace('%20', ' ')
         self.AutoCols = []
         self.ColLength = [10, 10, 10]
-# self.ColNames = ["ID", "Nazwa", "Rozmiar", "Czas mod", "Czas otw", "Czas utw",
-# "Wlasciciel", "Link"]
-        self.ColNames = ['ID', 'Nazwa', 'Rozmiar', 'Czas utw']
+        self.ColNames = ['ID', 'Name', 'Size', 'Created']
         self.ColTypes = ['int', 'str', 'int', 'datetime']
         self.DefaultRec = ['', 0, None]
+        self.task_href = None
+
+    def set_task_href(self, href):
+        self.task_href = href
 
     def _size_to_color(self, size):
         colors = ((1024, '#fff'), (1048576, '#fdd'), (1073741824, '#f99,#FFF'),
@@ -148,14 +84,10 @@ class VfsTable(Table):
                 return pos[1]
         return colors[-1][1]
 
-# fdd
-
     def _time_to_color(self, time):
         if time:
-            d2 = datetime.datetime.strptime(time[:10], '%Y-%m-%d').date()
-            size = (datetime.date.today() - d2).days
-            colors = ((1, '#FFF,#F00'), (7, '#efe'), (31, '#dfd'), (365, '#cfc'
-                      ), (365, '#000,#FFF'))
+            size = (datetime.datetime.today() - time).days
+            colors = ((1, '#FFF,#F00'), (7, '#efe'), (31, '#dfd'), (365, '#cfc'), (365, '#000,#FFF'))
             for pos in colors:
                 if size < pos[0]:
                     return pos[1]
@@ -164,42 +96,55 @@ class VfsTable(Table):
             return '#FFF,#F00'
 
     def _get_table(self, value=None):
-        f = get_dir(self.Folder, vfsman)
+        try:
+            f = default_storage.fs.listdir(automount(self.folder))
+        except:
+            return []
+
+        elements = []
         files = []
         if value:
             cmp = re.compile(value, re.IGNORECASE)
         else:
             cmp = None
-        for pos in f.get_dirs():
-            if cmp and cmp.match(pos.name) or not cmp:
-                action = pos.id
-                files.append([  #                    (pos.atime, ',#dfd'),
-                                # (pos.mtime, ',#ddf'),
-                                # pos.id,                    "",
-                    pos.id,
-                    (pos.name, ',#fdd'),
-                    '',
-                    (pos.ctime, ',,#f00,s'),
-                    pos.param,
-                    {'edit': ('tableurl', '../../%s//' % action,
-                     'Zmie\xc5\x84 folder')},
+
+        if self.folder!='/':
+            f = ['..',] + f
+        for p in f:
+            pos = fs.path.join(self.folder, p)
+            if default_storage.fs.isdir(pos) or p.lower().endswith('.zip'):
+                if cmp and cmp.match(p) or not cmp:
+                    id = b32encode(pos.encode('utf-8')).decode('utf-8')
+                    info = default_storage.fs.getinfo(pos)
+                    if not 'created_time' in info:
+                        info['created_time'] = ''
+                    elements.append([
+                        id,
+                        (p, ',#fdd'),
+                        '',
+                        (info['created_time'], ',,#f00,s'),
+                        info,
+                        {'edit': ('tableurl', '../../%s//' % id, 'Change folder')},
                     ])
-        action = b32encode(self.Folder.encode('utf-8'))
-        f.get_files()
-        for pos in f.get_files():
-            if cmp and cmp.match(pos.name) or not cmp:
-                files.append([  #                    pos.atime,
-                                # pos.mtime,                    pos.islink,
-                                # pos.uid,
-                    pos.id,
-                    pos.name,
-                    (pos.size, '>,' + self._size_to_color(pos.size)),
-                    (pos.ctime, ',' + self._time_to_color(pos.ctime)),
-                    pos.param,
-                    {'edit': ('command', '../../%s//' % pos.id,
-                     'Otw\xc3\xb3rz plik')},
+            else:
+                files.append((p, pos))
+        for pp in files:
+            p=pp[0]
+            pos=pp[1]
+            if cmp and cmp.match(p) or not cmp:
+                id = b32encode(pos.encode('utf-8')).decode('utf-8')
+                info = default_storage.fs.getinfo(pos)
+                size = info['size']
+                ctime = info['created_time']
+                elements.append([
+                    id,
+                    p,
+                    (size, '>,' + self._size_to_color(size)),
+                    (ctime, ',' + self._time_to_color(ctime)),
+                    info,
+                    {'edit': ('command', '../../%s//' % id, 'Open file')},
                     ])
-        return files
+        return elements
 
     def page(
         self,
@@ -207,17 +152,17 @@ class VfsTable(Table):
         sort=None,
         value=None,
         ):
-        #key = 'FOLDER_' + b32encode(self.Folder.encode('utf-8')) + '_TAB'
+        key = 'FOLDER_' + b32encode(self.folder.encode('utf-8')).decode('utf-8') + '_TAB'
 
-        key = 'FOLDER_' + b32encode(self.Folder.encode('utf-8')).decode('utf-8') + '_TAB'
-
-        tabvalue = cache.get(key + '::' + is_null(value, ''))
+        #tabvalue = cache.get(key + '::' + is_null(value, ''))
         tabvalue = None
+
         if tabvalue:
             tab = tabvalue
         else:
             tab = self._get_table(value)[nr * 256:(nr + 1) * 256]
             cache.set(key + '::' + is_null(value, ''), tab, 300)
+
         self.var_count = len(tab)
         if sort != None:
             s = sort.split(',')
@@ -237,15 +182,16 @@ class VfsTable(Table):
         return tab
 
     def count(self, value):
-        key = 'FOLDER_' + b32encode(self.Folder.encode('utf-8')).decode('utf-8') + '_COUNT'
+        key = 'FOLDER_' + b32encode(self.folder.encode('utf-8')).decode('utf-8') + '_COUNT'
         countvalue = cache.get(key + '::' + is_null(value, ''))
-# countvalue = None
+
         if countvalue:
             return countvalue
         else:
             countvalue = len(self._get_table(value))
             cache.set(key + '::' + is_null(value, ''), countvalue, 300)
             return countvalue
+
         return len(self._get_table(value))
 
     def insert_rec(self, rec):
@@ -272,12 +218,19 @@ class VfsTable(Table):
         MKDIR(source_folder, folder_name);
         MOVE(source_folder, dest_folder, files, mask):
         RENAME(source_folder, old_name, new_name);
+        """
 
-"""
+        print(value)
 
         thread_commands = ('COPY', 'MOVE', 'DELETE')
         if value[0] in thread_commands:
-            pass
+            parm = {}
+            parm["cmd"] = value[0]
+            parm["files"] = b32decode(value[1][0])
+            parm["dest"] = b32decode(value[2][1])
+            task_manager = get_process_manager(self.task_href if self.task_href else '127.0.0.1:8080')
+            _id = task_manager.put('system', parm["cmd"], "@schlib.schfs:filesystemcmd", user_parm = parm)
+            c = { 'process': _id }
         elif value[0] == 'MKDIR':
             path = b32decode(value[2][0])
             name = b32decode(value[2][1])
@@ -292,11 +245,7 @@ class VfsTable(Table):
             f.rename(oldname, name)
             c = {}
         else:
-            #global scr
-            #thread_name = schthread.ThreadSerwerStartApp('kosmos',
-            #        'schlib.schfs.vfstable:TestThread', type=1)
-            #c = {'thread': thread_name}
-            pass
+            c = { }
         return c
 
 
@@ -327,7 +276,9 @@ def vfsopen(request, file):
             file2 = b32decode(file).decode('utf-8')
         except:
             file2 = b32decode(file.encode('utf-8')).decode('utf-8')
-        plik = open_file(file2, vfsman)
+
+
+        plik = default_storage.fs.open(automount(file2),'rb')
         buf = plik.read()
         plik.close()
     except:
@@ -339,13 +290,12 @@ def vfsopen_page(request, file, page):
     try:
         file2 = b32decode(file).decode('utf-8')
         page2 = int(page)
-        plik = open_file(file2, vfsman)
+        plik = default_storage.fs.open(automount(file2),'rb')
         try:
             plik.seek(page2 * 4096)
             buf = binascii.hexlify(plik.read(4096))
             plik.close()
         except:
-# print sys.exc_info()[0] print sys.exc_info() traceback.print_exc()
             buf = ''
     except:
         buf = ''
@@ -355,25 +305,16 @@ def vfsopen_page(request, file, page):
 def vfssave(request, file):
     buf = 'ERROR'
     plik = None
-# print "save0"
     if request.POST:
-# print "save1"
         try:
             data = request.POST['data']
-# print "save2"
             file2 = b32decode(file).decode('utf-8')
-# print "save3", file2
-            plik = open_file(file2, vfsman)
-# print "save4"
-            plik.write(data.encode('utf-8'))
-# print "save5"
+            plik = default_storage.fs.open(automount(file2),"w")
+            plik.write(data)
             plik.close()
-# print "save6"
             buf = 'OK'
         except:
             buf = 'ERROR: ' + str(sys.exc_info()[0])
             if plik:
                 plik.close()
     return HttpResponse(buf)
-
-

@@ -20,6 +20,8 @@
 import os
 import sys
 import platform
+import fs.expose.django_storage
+from fs.mountfs import MountFS
 
 APPSET_NAME = "Pytigon"
 
@@ -186,6 +188,8 @@ else:
         },
     }
 
+DEFAULT_FILE_STORAGE = 'fs.expose.django_storage.FSStorage'
+DEFAULT_FILE_STORAGE_FS = MountFS()
 
 try:
     from schserw.settings_local import *

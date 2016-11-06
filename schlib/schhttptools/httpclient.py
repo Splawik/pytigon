@@ -201,8 +201,8 @@ class HttpClient:
             for key, value in self.http.cookies.items():
                 COOKIES[key] = value
 
-        if self.ret_content_type and 'text/html' in self.ret_content_type and 'utf-8' in self.ret_content_type:
-            if "traceback" in str(self.content):
+        if self.ret_content_type and 'text/' in self.ret_content_type: # and 'utf-8' in self.ret_content_type:
+            if "Traceback" in str(self.content) and 'copy-and-paste'in str(self.content):
                 if HTTP_ERROR_FUNC:
                     BLOCK = True
                     HTTP_ERROR_FUNC(parent, self.content)

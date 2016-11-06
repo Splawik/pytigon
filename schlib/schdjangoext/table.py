@@ -85,7 +85,7 @@ class Table:
         return schjson.dumps({'rec': self.Auto(col_name, col_names, rec)})
 
     def _exec(self, value=None):
-        ret = self.Exec(value)
+        ret = self.exec_command(value)
         if ret.__class__ == dict:
             return schjson.dumps(ret)
         else:

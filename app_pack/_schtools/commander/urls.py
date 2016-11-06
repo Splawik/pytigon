@@ -21,6 +21,10 @@ urlpatterns = [
     
     
     
+    
+    
+    
+    
     url('form/FileManager/$', views.view_filemanager, {}),
     url('form/Move/$', views.view_move, {}),
     url('form/Copy/$', views.view_copy, {}),
@@ -28,6 +32,7 @@ urlpatterns = [
     url('form/Rename/$', views.view_rename, {}),
     url('form/NewFile/$', views.view_newfile, {}),
     url('form/Delete/$', views.view_delete, {}),
+    url('form/Setup/$', views.view_setup, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'commander', views)

@@ -9,7 +9,10 @@
     script language=python
         from base64 import b32encode, b32decode
         from schlib.schtools.schhtmlgen import Html as Hgen
+        from schlib.schtasks.task import get_process_manager
         from PIL import Image
+        from tools.models import Parameter
+        from schlib.schtools.tools import extend_fun_to
 
         def init_form(self):
             self.panels_dir=[]
@@ -20,15 +23,26 @@
                 self.panels_dir.append([pos+1, 0, "/", False])
                 self.panels_state.append(None)
 
-            paths = wx.StandardPaths.Get()
-            self.panels_dir[0][2] = paths.GetDocumentsDir()
-            self.panels_dir[1][2] = paths.GetLocalDataDir()
-            self.panels_dir[2][2] = paths.GetUserLocalDataDir()
-            self.panels_dir[3][2] = paths.GetUserLocalDataDir()
-
+            x = [ None, None, None, None ]
+            for base_key in [ 'commander/{{request.user.username}}/path', 'commander/all/path']:
+                print(base_key)
+                test  = True
+                for i in range(4):
+                    if not x[i]:
+                        objs = Parameter.objects.filter(key=base_key+str(i))
+                        if len(objs)>0:
+                            x[i] = objs[0].value
+                        else:
+                            test = False
+                if test:
+                    break
+            for i in range(0,4):
+                if x[i]:
+                    self.panels_dir[i][2] = x[i]
+                    
             self.panels_to_refresh=[]
             
-            aTable = [
+            self.aTable = [
                     (0, wx.WXK_F1,  self.on_help),
                     (0, wx.WXK_F2,  self.on_rename),
                     (0, wx.WXK_F3,  self.on_view),
@@ -37,24 +51,24 @@
                     (0, wx.WXK_F6,  self.on_move),
                     (0, wx.WXK_F7,  self.on_mkdir),
                     (0, wx.WXK_F8,  self.on_delete),
-                    (0, wx.WXK_F9,  self.on_test),
+                    (0, wx.WXK_F9,  self.on_setup),
                     (0, wx.WXK_F10, self.on_user_menu),
+                    (0, wx.WXK_F11, self.on_newfile),
                     (0, wx.WXK_TAB, self.on_tab),
                     (0, wx.WXK_BACK, self.on_back),
                     (0, wx.WXK_HOME, lambda event: self.CMD.goto_first_row()),
                     (0, wx.WXK_END, lambda event: self.CMD.goto_last_row())
                      ]
+            self.set_acc_key_tab(self, self.aTable)
 
             self.CMD.GetTable().can_append=False
-            #self.CMD.set_acc_key_tab(aTable)
-            self.set_acc_key_tab(self, aTable)
-
             self.CMD.Bind(wx.EVT_CHAR, self.on_char)
             self.CMD.DisableCellEditControl()
             self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"//")
             self.CMD.GetTable().refresh(0)
 
             self.PANELS.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
+            self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
             self.refresh_html()
             Image.init()
             self.edit_img_win = None
@@ -62,13 +76,52 @@
             self.PANELS.Body.filter_url = self.filter_url
             self.child_win = None
 
+            self.t1 = wx.Timer(self)
+            self.t1_status = 0
+
+            self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
+
+            self.waiting_proc = []
+            self.proc_mannager = get_process_manager('127.0.0.2:8000')
+
+        def on_timer(self, event):
+            for pos in self.waiting_proc:
+                end = False
+                info = self.proc_mannager.thread_info(pos[0])
+                if info:
+                    if info.status in (2,3):
+                        end = True
+                else:
+                    end = True
+                if end:
+                    pos[1]()
+                    self.waiting_proc.remove(pos)
+            if len(self.waiting_proc)==0:
+                self.t1.Stop()
+                self.t1_status = 0
+
+
+        def _process_task(self, ret, panels_to_refresh):
+            if 'process' in ret:
+                def _refresh():
+                    self.CMD.GetTable().clear_state()
+                    if panels_to_refresh in (1,3):
+                        self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+                    if panels_to_refresh in (1,3):
+                        self.panels_to_refresh.append(self.panels_dir[self.tab2][2])
+                    self._refresh_panels()
+                self.waiting_proc.append((ret['process'], _refresh))
+                if self.t1_status==0:
+                    self.t1_status = 1
+                    self.t1.Start(250)
+
         def child_closed(self):
             self.child_win = None
 
         def refresh_after_ok(self):
             self._refresh_panels()
 
-        def _transformItem(self, item):
+        def _transform_item(self, item):
             from schlib.schfs.vfstools import replace_dot
             item2 = replace_dot(item)
             if len(item2)>32:
@@ -97,7 +150,7 @@
             p = Hgen("p")
             p.setattr("bgcolor='%s' width='100%%' border='0'" % color)
 
-            item2 = self._transformItem(item)
+            item2 = self._transform_item(item)
 
             a = p.append("a", "href='%s'" % str(nr))
             if len(item2)>32:
@@ -156,14 +209,18 @@
                         self.tab2 = self.tab
                         self.tab = i
                         self.change_panel()
-            else:
+            elif chr(evt.KeyCode).isalpha() or chr(evt.KeyCode).isdigit():
                 if not self.child_win:
                     okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
                     self.child_win = okno.Body
+                    self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.aTable[:-4])
+                    if hasattr(self.CMD, 'grid_aTable'):
+                        self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.CMD.grid_aTable)
                     self.child_win.refr()
                     self.child_win.Show()
-
-                wx.CallAfter(self.child_win.StartKey, evt.KeyCode)
+                wx.CallAfter(self.child_win.start_key, evt.KeyCode)
+            else:
+                evt.Skip()
 
         def _refresh_panels(self):
             for panel in self.panels_dir:
@@ -192,23 +249,14 @@
         def on_help(self, event):
             pass
 
-        def on_rename(self, event):
-            win = self.new_child_page("/schcommander/table/FileManager/rename")
-
-        def rename(self, name):
-            ret = self.CMD.GetTable().RunCmd("RENAME", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
-            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
-            self._refresh_panels()
-
         def on_view(self, evt):
-            #print "OnView"
             pass
 
         def get_name_and_ext(self, row=None):
             if row==None:
                 row = self.CMD.GetGridCursorRow()
             rec = self.CMD.GetTable().get_rec(row)
-            file_name = rec[0].decode('utf-8')
+            file_name = rec[0] #.decode('utf-8')
             href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+file_name+"/"
             href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+file_name+"/"
             try:
@@ -262,51 +310,64 @@
             row = self.CMD.GetGridCursorRow()
             return self.exec_editor(row)
 
-        def on_copy(self, evt):
-            win = self.new_child_page("/schcommander/table/FileManager/copy")
+
+        def on_rename(self, event):
+            win = self.new_child_page("/commander/table/form/Rename")
+
+        def rename(self, name):
+            ret = self.CMD.GetTable().run_cmd("RENAME", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
+            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            self._refresh_panels()
 
         def copy(self, path2, cmd):
-            ret = self.CMD.GetTable().RunCmd(cmd, (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(path2)), 1)
-            self.CMD.GetTable().ClearState()
-            if 'thread' in ret:
-                if ret['thread'] != None:
-                    from apptools.schthreadwindow import EVT_THREAD_INFO
-                    wx.GetApp().GetTopWindow().Bind(EVT_THREAD_INFO, self.OnCmdFinish)
-                    self.panels_to_refresh.append(path2)
-                    if cmd == 'MOVE':
-                        self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            ret = self.CMD.GetTable().run_cmd(cmd, (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(path2)), 1)
+            if cmd=='MOVE':
+                self._process_task(ret, 3)
+            else:
+                self._process_task(ret, 2)
 
-        def on_cmd_finish(self, evt):
-            self._refresh_panels()
-            evt.Skip()
+        def on_copy(self, evt):
+            d=self.panels_dir[self.tab2][2]
+            for i in range(4):
+                if not i in (self.tab, self.tab2):
+                    d += ";" + self.panels_dir[i][2]
+
+            win = self.new_child_page("/commander/form/Copy/", param={'dir': d, })
+
+            @extend_fun_to(win.Body)
+            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
+                print("ON_OK", self, ctrl, attr_dict)
+                print("DEST", self.dest.GetValue())
+
 
         def on_move(self, evt):
-            win = self.new_child_page("/schcommander/table/FileManager/move")
-            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            d=self.panels_dir[self.tab2][2]
+            for i in range(4):
+                if not i in (self.tab, self.tab2):
+                    d += ";" + self.panels_dir[i][2]
+            win = self.new_child_page("/commander/form/Move/", param={'dir': d, })
 
+        def newfile(self, name):
+            pass
 
+        def on_newfile(self, evt):
+            win = self.new_child_page("/commander/form/NewFile/", param={'dir': self.panels_dir[self.tab][2], })
+    
         def mk_dir(self, name):
-            ret = self.CMD.GetTable().RunCmd("MKDIR", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
+            ret = self.CMD.GetTable().run_cmd('MKDIR', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
             self.panels_to_refresh.append(self.panels_dir[self.tab][2])
             self._refresh_panels()
 
         def on_mkdir(self, evt):
             win = self.new_child_page("/commander/form/MkDir/", param={'dir': self.panels_dir[self.tab][2], })
-            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
-
 
         def on_delete(self, evt):
-            ret = self.CMD.GetTable().RunCmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode('TRASH')), 1)
-            self.CMD.GetTable().clear_state()
-            if 'thread' in ret:
-                if ret['thread'] != None:
-                    from apptools.schthreadwindow import EVT_THREAD_INFO
-                    wx.GetApp().GetTopWindow().Bind(EVT_THREAD_INFO, self.OnCmdFinish)
-                    self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+            ret = self.CMD.GetTable().run_cmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(b'TRASH')), 1)
+            self._process_task(ret, 1)
 
-        def on_test(self, evt):
-            pass
-
+        def on_setup(self, evt):
+            win = self.new_child_page("/commander/form/Setup/", param={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })
+    
         def on_user_menu(self, evt):
             pass
 
@@ -315,7 +376,6 @@
             self.tab2 = self.tab
             self.tab =i
             self.change_panel()
-
 
         def on_select_cell(self, evt):
             row = evt.GetRow()

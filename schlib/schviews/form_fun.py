@@ -89,8 +89,10 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 user_dict = f.process_empty(request, param)
             else:
                 user_dict = f.process_empty(request)
-            c = RequestContext(request, {'form': f, 'app_pack': app_pack})
-            c.update(user_dict)
+            #c = RequestContext(request, {'form': f, 'app_pack': app_pack})
+            #c.update(user_dict)
+            user_dict['form'] = f
+            user_dict['app_pack'] = app_pack
         else:
             user_dict = {'form': f,  'app_pack': app_pack}
             if object_id:

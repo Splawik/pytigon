@@ -92,8 +92,8 @@ class HttpClientProcessManager(btask.ProcessManager):
         ret = self.http.get(None, "/tasks/wait_for_result")
         return self.http.to_python()
 
-def get_process_manager():
+def get_process_manager(href=None):
     if not btask._PROCESS_MANAGER:
-        btask._PROCESS_MANAGER=HttpClientProcessManager('http://127.0.0.1:8080')
+        btask._PROCESS_MANAGER=HttpClientProcessManager(href if href else 'http://127.0.0.1:8080')
     return btask._PROCESS_MANAGER
 

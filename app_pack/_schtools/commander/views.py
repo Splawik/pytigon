@@ -22,10 +22,8 @@ import sys
 import datetime
 
 from schlib.schfs.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
-from schlib.schfs.zip import VfsPluginZip
-from schlib.schfs.vfs import VfsManager, get_dir
-
-
+from tools.models import Parameter
+import django.contrib.auth
  
 
 PFORM = form_with_perms('commander') 
@@ -57,6 +55,15 @@ class Copy(forms.Form):
     
     
     
+    def preprocess_request(self, request):
+        if 'dir' in request.POST:
+            dirs = request.POST['dir'].split(';')
+            choices = [ [pos, pos] for pos in dirs ]
+            self.data =  { 'dest': choices[0][0], }
+            self.fields['dest'].choices = choices
+            return None
+        else:
+            return request.POST
 
 def view_copy(request, *argi, **argv):
     return PFORM(request, Copy, 'commander/formcopy.html', {})
@@ -118,6 +125,49 @@ class Delete(forms.Form):
 
 def view_delete(request, *argi, **argv):
     return PFORM(request, Delete, 'commander/formdelete.html', {})
+
+
+class Setup(forms.Form):
+    path1 = forms.CharField(label='Path 1', required=False, max_length=None, min_length=None)
+    path2 = forms.CharField(label='Path 2', required=False, max_length=None, min_length=None)
+    path3 = forms.CharField(label='Path 3', required=False, max_length=None, min_length=None)
+    path4 = forms.CharField(label='Path 4', required=False, max_length=None, min_length=None)
+    glob = forms.BooleanField(label='Default for all users', required=False, )
+    
+    def process(self, request, queryset=None):
+    
+        paths = [ self.cleaned_data['path1'], self.cleaned_data['path2'], self.cleaned_data['path3'], self.cleaned_data['path4'] ]
+        glob = self.cleaned_data['glob']
+        
+        u = django.contrib.auth.get_user(request)
+        
+        if glob:
+            base_key = 'commander/all/path'
+        else:
+            base_key = 'commander/%s/path' % u.username
+        
+        for i in range(4):
+            objs = Parameter.objects.filter(key=base_key+str(i))
+            if len(objs)>0:
+                param = objs[0]
+            else:
+                param = Parameter()
+                param.key = base_key + str(i)
+            param.value = paths[i]
+            param.save()
+        
+        return { "OK": True }
+    
+    def preprocess_request(self, request):
+        if 'dir' in request.POST:
+            panels = request.POST['dir'].split(';')
+            self.data =  { 'path1': panels[0], 'path2': panels[1], 'path3': panels[2], 'path4': panels[3], }
+            return None
+        else:
+            return request.POST
+    
+def view_setup(request, *argi, **argv):
+    return PFORM(request, Setup, 'commander/formsetup.html', {})
 
 
 

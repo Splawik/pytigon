@@ -2,7 +2,6 @@
 
 % extends "plugin_form.html"
 
-
 % load exfiltry
 % load exsyntax
 
@@ -13,53 +12,55 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            self['SEARCH'].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-            self['SEARCH'].Bind(wx.EVT_KEY_UP, self.OnKeyUp)
-            self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearch)
-            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
+            self.SEARCH.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+            self.SEARCH.Bind(wx.EVT_KEY_UP, self.on_key_up)
+            self.Bind(wx.EVT_TEXT_ENTER, self.on_do_search)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.on_exit)
             self.search_txt = ""
+            self._grid = None
+            self._table = None
             tab = self._get_tab()
             if tab:
                 tab.filter_by(1)
                 if tab.key:
                     self.search_txt = tab.key
-                    self['SEARCH'].SetValue(tab.key)
-                    self['SEARCH'].SetInsertionPointEnd()
-            self['SEARCH'].SetFocus()
-            self.SearchText()
-
+                    self.SEARCH.SetValue(tab.key)
+                    self.SEARCH.SetInsertionPointEnd()
+            self.SEARCH.SetFocus()
+            self.search_text()
 
         def _get_grid(self):
-            ppanel = self.get_parent_panel()
-            if ppanel:
-                grid = self.get_parent_panel().LastControlWithFocus
-                if grid:
-                    if grid.__class__.__name__ == 'GRID':
-                        return grid
-                    else:
-                        return grid.GetParent()
-            return None
+            if not self._grid:
+                ppanel = self.get_parent_panel()
+                if ppanel:
+                    grid = self.get_parent_panel().LastControlWithFocus
+                    if grid:
+                        if grid.__class__.__name__ == 'GRID':
+                            self._grid = grid
+                        else:
+                            self._grid = grid.GetParent()
+            return self._grid
 
         def _get_tab(self):
-            g = self._get_grid()
-            if g:
-                return g.GetTable()
-            else:
-                return None
+            if not self._table:
+                g = self._get_grid()
+                if g:
+                    self._table = g.GetTable()
+            return self._table
 
-        def StartKey(self, key):
-            v = self['SEARCH'].GetValue()
+        def start_key(self, key):
+            v = self.SEARCH.GetValue()
             self.search_txt = v+chr(key)
-            self['SEARCH'].SetValue(self.search_txt)
-            self['SEARCH'].SetInsertionPointEnd()
-            self.SearchText()
+            self.SEARCH.SetValue(self.search_txt)
+            self.SEARCH.SetInsertionPointEnd()
+            self.search_text()
 
         def clear(self):
-            self['SEARCH'].SetValue("")
-            self['SEARCH'].SetInsertionPointEnd()
-            self.SearchText()
+            self.SEARCH.SetValue("")
+            self.SEARCH.SetInsertionPointEnd()
+            self.search_text()
 
-        def SearchText(self, txt=None):
+        def search_text(self, txt=None):
             if txt!=None:
                 text = txt
             else:
@@ -69,36 +70,34 @@
                 tab.filter(text)
             return True
 
-        def OnDoSearch(self, event):
-            self.SearchText()
+        def on_do_search(self, event):
+            self.search_text()
 
-        def OnKeyDown(self, event):
+        def on_key_down(self, event):
             if event.KeyCode in (wx.WXK_UP, wx.WXK_DOWN, wx.WXK_HOME, wx.WXK_END):
-                grid = self._get_grid()
-                grid.ProcessEvent(event)
-            elif event.KeyCode in (wx.WXK_F4,):
                 grid = self._get_grid()
                 grid.ProcessEvent(event)
             elif event.KeyCode in (wx.WXK_RETURN,):
                 grid = self._get_grid()
                 grid.ProcessEvent(event)
                 #self.clear()
-                self.SearchText("")
+                self.search_text("")
                 self.any_parent_command('cancel', True)
 
             else:
                 event.Skip()
 
-        def OnKeyUp(self, event):
-            value = self['SEARCH'].GetValue()
+        def on_key_up(self, event):
+            value = self.SEARCH.GetValue()
             if value!=self.search_txt:
                 self.search_txt=value
-                self.SearchText()
+                self.search_text()
 
             event.Skip()
 
-        def OnExit(self, event):
+        def on_exit(self, event):
             self.any_parent_command('cancel', True)
+
 
 %% content
     table width=100%,,,height=100%

@@ -1232,47 +1232,68 @@ class SchHtmlWindow(ScrolledPanel):
         else:
             self.acc_tabs[win] = [tab,]
 
-    def _build_acc_tab(self):
+    def _build_acc_tab(self, to_win=None):
+        ret = []
+        if to_win:
+            obj=to_win
+        else:
+            obj=self
         for win in self.acc_tabs.keys():
             tab = []
             for pos in self.acc_tabs[win]:
                 tab += pos
-            self._set_acc_key_tab(win, tab)
+            ret.append((win,tab))
+            #obj._set_acc_key_tab(win, tab)
+        obj._set_acc_key_tab(ret)
 
-    def _set_acc_key_tab(self, win, tab):
+
+    #def _set_acc_key_tab(self, win, tab):
+    def _set_acc_key_tab(self, tabs):
         tab2 = []
-        id_start = self.get_evt_ind()
-        for pos in tab:
-            tab2.append((pos[0], pos[1], self.get_evt_ind()))
 
-        if wx.Platform == '__WXMSW__':
-            win.SetAcceleratorTable(wx.AcceleratorTable(tab2))
-            def on_command(event):
-                id = event.GetId()
-                ind = id - id_start - 1
-                print("on_command:", id, ind)
-                if ind >= 0 and ind < len(tab):
-                    cmd = tab[ind][2]
-                    cmd(event)
-                else:
-                    event.Skip()
+        for tab_pos in tabs:
+            win = tab_pos[0]
+            tab = tab_pos[1]
 
-            win.Bind(wx.EVT_MENU, on_command)
-        else:
-            self.SetAcceleratorTable(wx.AcceleratorTable(tab2))
-            if not self.acc_tab:
-                self.acc_tab = []
+            id_start = self.get_evt_ind()
             for pos in tab:
-                self.acc_tab.append(list(pos)+[win,])
+                tab2.append((pos[0], pos[1], self.get_evt_ind()))
 
-            if not win.acc_tab:
-                win.Bind(wx.EVT_KEY_DOWN, self.on_acc_key_down)
-                win.acc_tab = True
+            if wx.Platform == '__WXMSW__':
+                win.SetAcceleratorTable(wx.AcceleratorTable(tab2))
+                tab2 = []
+                def on_command(event):
+                    id = event.GetId()
+                    ind = id - id_start - 1
+                    print("on_command:", id, ind)
+                    if ind >= 0 and ind < len(tab):
+                        cmd = tab[ind][2]
+                        cmd(event)
+                    else:
+                        event.Skip()
+
+                win.Bind(wx.EVT_MENU, on_command)
+            else:
+                if not self.acc_tab:
+                    self.acc_tab = []
+                for pos in tab:
+                    self.acc_tab.append(list(pos)+[win,])
+
+                if not win.acc_tab:
+                    win.Bind(wx.EVT_KEY_DOWN, self.on_acc_key_down)
+                    win.acc_tab = True
+
+
+        if wx.Platform != '__WXMSW__':
+            self.SetAcceleratorTable(wx.AcceleratorTable(tab2))
+
+
+
 
     def on_acc_key_down(self, event):
         if event.KeyCode == 307:
             return
-
+        print(event)
         for a in self.acc_tab:
             if event.KeyCode == a[1]:
                 if ( not event.AltDown() ) and (a[0] & wx.ACCEL_ALT ):

@@ -20,7 +20,7 @@
 import schlib.schtasks.base_task as btask
 from schlib.schtasks.http_task_client import HttpClientProcessManager
 
-def get_process_manager():
+def get_process_manager(href=None):
     if not btask._PROCESS_MANAGER:
-        btask._PROCESS_MANAGER=HttpClientProcessManager('http://127.0.0.1:8080')
+        btask._PROCESS_MANAGER=HttpClientProcessManager(href if href else 'http://127.0.0.1:8080')
     return btask._PROCESS_MANAGER
