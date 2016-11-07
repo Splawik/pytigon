@@ -12,7 +12,7 @@
         from schlib.schtasks.task import get_process_manager
         from PIL import Image
         from tools.models import Parameter
-        from schlib.schtools.tools import extend_fun_to
+        from schlib.schtools.tools import extend_fun_to, bencode, bdecode
 
         def init_form(self):
             self.panels_dir=[]
@@ -312,19 +312,19 @@
 
 
         def on_rename(self, event):
-            win = self.new_child_page("/commander/table/form/Rename")
+            win = self.new_child_page("/commander/form/Rename/")
 
-        def rename(self, name):
-            ret = self.CMD.GetTable().run_cmd("RENAME", (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
-            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
-            self._refresh_panels()
+            commander_form = self
 
-        def copy(self, path2, cmd):
-            ret = self.CMD.GetTable().run_cmd(cmd, (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(path2)), 1)
-            if cmd=='MOVE':
-                self._process_task(ret, 3)
-            else:
-                self._process_task(ret, 2)
+            @extend_fun_to(win.Body)
+            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
+                ret = commander_form.CMD.GetTable().run_cmd('RENAME', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
+                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
+                commander_form._refresh_panels()
+                def _exit():
+                    self.any_parent_command('cancel', True)
+                wx.CallAfter(_exit)
+
 
         def on_copy(self, evt):
             d=self.panels_dir[self.tab2][2]
@@ -333,34 +333,65 @@
                     d += ";" + self.panels_dir[i][2]
 
             win = self.new_child_page("/commander/form/Copy/", param={'dir': d, })
+            
+            commander_form = self
 
             @extend_fun_to(win.Body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                print("ON_OK", self, ctrl, attr_dict)
-                print("DEST", self.dest.GetValue())
-
+                ret = commander_form.CMD.GetTable().run_cmd('COPY', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
+                commander_form._process_task(ret, 2)
+                def _exit():
+                    self.any_parent_command('cancel', True)
+                wx.CallAfter(_exit)
 
         def on_move(self, evt):
             d=self.panels_dir[self.tab2][2]
             for i in range(4):
                 if not i in (self.tab, self.tab2):
                     d += ";" + self.panels_dir[i][2]
-            win = self.new_child_page("/commander/form/Move/", param={'dir': d, })
 
-        def newfile(self, name):
-            pass
+            win = self.new_child_page("/commander/form/Move/", param={'dir': d, })
+            
+            commander_form = self
+            
+            @extend_fun_to(win.Body)
+            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
+                ret = commander_form.CMD.GetTable().run_cmd('MOVE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
+                commander_form._process_task(ret, 3)                
+                def _exit():
+                    self.any_parent_command('cancel', True)
+                wx.CallAfter(_exit)
+
 
         def on_newfile(self, evt):
-            win = self.new_child_page("/commander/form/NewFile/", param={'dir': self.panels_dir[self.tab][2], })
+            win = self.new_child_page("/commander/form/NewFile/")
+
+            commander_form = self
+
+            @extend_fun_to(win.Body)
+            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
+                ret = commander_form.CMD.GetTable().run_cmd('NEWFILE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
+                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
+                commander_form._refresh_panels()
+                def _exit():
+                    self.any_parent_command('cancel', True)
+                wx.CallAfter(_exit)
     
-        def mk_dir(self, name):
-            ret = self.CMD.GetTable().run_cmd('MKDIR', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(name)), 1)
-            self.panels_to_refresh.append(self.panels_dir[self.tab][2])
-            self._refresh_panels()
 
         def on_mkdir(self, evt):
-            win = self.new_child_page("/commander/form/MkDir/", param={'dir': self.panels_dir[self.tab][2], })
+            win = self.new_child_page("/commander/form/MkDir/")
 
+            commander_form = self
+
+            @extend_fun_to(win.Body)
+            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
+                ret = commander_form.CMD.GetTable().run_cmd('MKDIR', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
+                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
+                commander_form._refresh_panels()
+                def _exit():
+                    self.any_parent_command('cancel', True)
+                wx.CallAfter(_exit)
+   
         def on_delete(self, evt):
             ret = self.CMD.GetTable().run_cmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(b'TRASH')), 1)
             self._process_task(ret, 1)

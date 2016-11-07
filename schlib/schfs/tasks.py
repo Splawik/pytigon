@@ -17,7 +17,7 @@ def filesystemcmd(cproxy, *args, **kwargs):
     print(param)
     cmd = param['cmd']
     files = param['files'].decode('utf-8').split(';')
-    dest = param['dest'].decode('utf-8')
+    dest = param['dest'].decode('utf-8')+"/"
     if cmd == 'DELETE':
         for f in files:
             try:
@@ -30,19 +30,21 @@ def filesystemcmd(cproxy, *args, **kwargs):
     elif cmd == 'COPY':
         for f in files:
             try:
+                name = f.rsplit('/',1)[-1]
                 if default_storage.fs.isfile(f):
-                    default_storage.fs.remove(f)
+                    default_storage.fs.copy(f, dest+name, overwrite=True)
                 else:
-                    default_storage.fs.removedir(f, recursive=True, force=True)
+                    default_storage.fs.copydir(f, dest+name, overwrite=True, ignore_errors=True)
             except:
                 pass
     elif cmd == 'MOVE':
         for f in files:
             try:
+                name = f.rsplit('/',1)[-1]
                 if default_storage.fs.isfile(f):
-                    default_storage.fs.copy(f, dest, overwrite=True)
+                    default_storage.fs.move(f, dest+name, overwrite=True)
                 else:
-                    default_storage.fs.copydir(f, dest, overwrite=True, ignore_errors=True)
+                    default_storage.fs.movedir(f, dest+name, overwrite=True, ignore_errors=True)
             except:
                 pass
     cproxy.log("finish")

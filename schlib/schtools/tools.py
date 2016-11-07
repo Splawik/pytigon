@@ -21,6 +21,7 @@ import os
 import zipfile
 import re
 import types
+from base64 import b32encode, b32decode
 
 def split_tag(s, start, end):
     i1 = s.find(start)
@@ -135,3 +136,16 @@ def extend_fun_to(ctrl):
         setattr(ctrl, func.__name__, types.MethodType(func, ctrl))
         return func
     return fun
+
+
+def bencode(s):
+    if type(s)==str:
+        return b32encode(s.encode('utf-8')).decode('utf-8')
+    else:
+        return b32encode(s).decode('utf-8')
+
+def bdecode(s):
+    if type(s)==str:
+        return b32decode(s.encode('utf-8')).decode('utf-8')
+    else:
+        return b32decode(s).decode('utf-8')

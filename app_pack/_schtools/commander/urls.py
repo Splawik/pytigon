@@ -12,10 +12,6 @@ urlpatterns = [
     url('open/(?P<file_name>.*)/$', views.open, {}),
     url('save/(?P<file_name>.*)/$', views.save, {}),
     url('open_page/(?P<file_name>.*)/(?P<page>\d+)/$', views.open_page, {}),
-     url(r'^copy', TemplateView.as_view(template_name='commander/copy.html'), {}), 
-     url(r'^move', TemplateView.as_view(template_name='commander/move.html'), {}), 
-     url(r'^mkdir', TemplateView.as_view(template_name='commander/mkdir.html'), {}), 
-     url(r'^mkdir', TemplateView.as_view(template_name='commander/rename.html'), {}), 
     
     
     

@@ -45,6 +45,15 @@ class Move(forms.Form):
     
     
     
+    def preprocess_request(self, request):
+        if 'dir' in request.POST:
+            dirs = request.POST['dir'].split(';')
+            choices = [ [pos, pos] for pos in dirs ]
+            self.data =  { 'dest': choices[0][0], }
+            self.fields['dest'].choices = choices
+            return None
+        else:
+            return request.POST
 
 def view_move(request, *argi, **argv):
     return PFORM(request, Move, 'commander/formmove.html', {})

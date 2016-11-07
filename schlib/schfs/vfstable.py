@@ -20,6 +20,7 @@
 from base64 import b32encode, b32decode
 import binascii
 from schlib.schtools import schjson
+from schlib.schtools.tools import bencode, bdecode
 import sys
 from schlib.schdjangoext.table import Table
 from schlib.schfs.vfstools import replace_dot
@@ -217,7 +218,8 @@ class VfsTable(Table):
         DEL(source_folder, files);
         MKDIR(source_folder, folder_name);
         MOVE(source_folder, dest_folder, files, mask):
-        RENAME(source_folder, old_name, new_name);
+        RENAME(source_path, new_name);
+        NEWFILE(source_path, new_name);
         """
 
         print(value)
@@ -232,17 +234,20 @@ class VfsTable(Table):
             _id = task_manager.put('system', parm["cmd"], "@schlib.schfs:filesystemcmd", user_parm = parm)
             c = { 'process': _id }
         elif value[0] == 'MKDIR':
-            path = b32decode(value[2][0])
-            name = b32decode(value[2][1])
-            f = get_dir(path, vfsman)
-            f.mk_dir(name)
+            path = bdecode(value[2][0])
+            name = bdecode(value[2][1])
+            default_storage.fs.makedir(path+"/"+name)
+            c = {}
+        elif value[0] == 'NEWFILE':
+            path = bdecode(value[2][0])
+            name = bdecode(value[2][1])
+            default_storage.fs.createfile(path+"/"+name)
             c = {}
         elif value[0] == 'RENAME':
-            oldname = b32decode(value[1][0]).split('/')[-1]
-            path = b32decode(value[2][0])
-            name = b32decode(value[2][1])
-            f = get_dir(path, vfsman)
-            f.rename(oldname, name)
+            source = bdecode(value[1][0])
+            path = bdecode(value[2][0])
+            name = bdecode(value[2][1])
+            default_storage.fs.rename(source, path+"/"+name)
             c = {}
         else:
             c = { }
