@@ -49,6 +49,6 @@ int WINAPI WinMain(
     strcat(bufor2, lpCmdLine);
     execl(bufor, bufor, bufor2, NULL);
     
-	return 0;
+    return 0;
 }
 

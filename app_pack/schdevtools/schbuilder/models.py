@@ -19,6 +19,8 @@ from wiki.models import *
 
 from commander.models import *
 
+from tasks.models import *
+
 
 
 import os.path

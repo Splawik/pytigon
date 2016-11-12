@@ -16,3 +16,5 @@ openpyxl
 httpie
 cffi
 Pillow
+fs
+PyDispatcher

@@ -13,6 +13,8 @@
         from PIL import Image
         from tools.models import Parameter
         from schlib.schtools.tools import extend_fun_to, bencode, bdecode
+        from schcli.guilib.tools import bitmap_from_href
+        from wx.lib import platebtn
 
         def init_form(self):
             self.panels_dir=[]
@@ -67,54 +69,62 @@
             self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"//")
             self.CMD.GetTable().refresh(0)
 
-            self.PANELS.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
-            self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
+            self.PANELS.Body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
+
             self.refresh_html()
             Image.init()
             self.edit_img_win = None
             wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)
             self.PANELS.Body.filter_url = self.filter_url
             self.child_win = None
-
-            self.t1 = wx.Timer(self)
-            self.t1_status = 0
-
-            self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
-
             self.waiting_proc = []
-            self.proc_mannager = get_process_manager('127.0.0.2:8000')
 
-        def on_timer(self, event):
-            for pos in self.waiting_proc:
-                end = False
-                info = self.proc_mannager.thread_info(pos[0])
-                if info:
-                    if info.status in (2,3):
-                        end = True
-                else:
-                    end = True
-                if end:
-                    pos[1]()
-                    self.waiting_proc.remove(pos)
-            if len(self.waiting_proc)==0:
-                self.t1.Stop()
-                self.t1_status = 0
+            self._make_process_info_button()
+
+        def _make_process_info_button(self):
+            page = self.TabWindow.GetParent()
+            notebook = page.GetParent()
+            id = notebook.GetPageIndex(page)
+
+            b = bitmap_from_href("client://actions/media-record.png", 0)
+            image = wx.ImageFromBitmap(b)
+            image = image.Scale(16, 12, wx.IMAGE_QUALITY_HIGH)
+            bmp = wx.BitmapFromImage(image)
+
+            self.pbutton = platebtn.PlateButton(notebook, wx.ID_ANY, "", bmp, style=platebtn.PB_STYLE_NOBG|platebtn.PB_STYLE_SQUARE)
+            self.pbutton.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
+            self.pbutton.Disable()
+
+            notebook.AddControlToPage(id, self.pbutton)
+            self.pbutton.Bind(wx.EVT_BUTTON, self.on_pbutton)
 
 
-        def _process_task(self, ret, panels_to_refresh):
-            if 'process' in ret:
-                def _refresh():
+        def on_pbutton(self, event):
+            wx.GetApp().GetTopWindow().new_main_page("/tasks/form/TaskListForm/?schtml=1", "Task list")
+
+        def handle_process_info(self, info_tab, **argv):
+            for pos2 in self.waiting_proc:
+                id = pos2[0]
+                panels_to_refresh = pos2[1]
+                test = True
+                for pos in info_tab:
+                    if id == pos.id:
+                        if pos.status in (0,1):
+                            test = False
+                        break
+                if test:
                     self.CMD.GetTable().clear_state()
                     if panels_to_refresh in (1,3):
                         self.panels_to_refresh.append(self.panels_dir[self.tab][2])
                     if panels_to_refresh in (1,3):
                         self.panels_to_refresh.append(self.panels_dir[self.tab2][2])
                     self._refresh_panels()
-                self.waiting_proc.append((ret['process'], _refresh))
-                if self.t1_status==0:
-                    self.t1_status = 1
-                    self.t1.Start(250)
+                    self.waiting_proc.remove(pos2)
 
+            if len(self.waiting_proc)==0:
+                self.unreg_signal_handler('PROCESS_INFO')
+                self.pbutton.Disable()
+            
         def child_closed(self):
             self.child_win = None
 
@@ -133,7 +143,8 @@
                     item2 = '...'+item[-27:]
             return item2
 
-        def on_set_focus(self, evt):
+        def on_panels_set_focus(self, evt):
+            print("ON_SET_FOCUS")
             self.CMD.SetFocus()
 
         def show_item(self, nr, item):
@@ -339,7 +350,10 @@
             @extend_fun_to(win.Body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('COPY', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
-                commander_form._process_task(ret, 2)
+                if 'process' in ret:
+                    commander_form.waiting_proc.append((ret['process'], 2))
+                    commander_form.pbutton.Enable()
+                    commander_form.reg_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
                 def _exit():
                     self.any_parent_command('cancel', True)
                 wx.CallAfter(_exit)
@@ -357,7 +371,10 @@
             @extend_fun_to(win.Body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('MOVE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
-                commander_form._process_task(ret, 3)                
+                if 'process' in ret:
+                    commander_form.waiting_proc.append((ret['process'], 3))
+                    commander_form.pbutton.Enable()
+                    commander_form.reg_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
                 def _exit():
                     self.any_parent_command('cancel', True)
                 wx.CallAfter(_exit)
@@ -394,7 +411,10 @@
    
         def on_delete(self, evt):
             ret = self.CMD.GetTable().run_cmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(b'TRASH')), 1)
-            self._process_task(ret, 1)
+            if 'process' in ret:
+                self.waiting_proc.append((ret['process'], 1))
+                self.pbutton.Enable()
+                self.reg_signal_handler(self.handle_process_info, 'PROCESS_INFO')
 
         def on_setup(self, evt):
             win = self.new_child_page("/commander/form/Setup/", param={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })

@@ -22,7 +22,6 @@ import wx.grid as gridlib
 import copy
 import schlib.schtools.createparm as createparm
 from .gridtablebase import SchGridTableBase
-import datetime
 
 
 class DataSource(SchGridTableBase):
@@ -468,9 +467,6 @@ class DataSource(SchGridTableBase):
         if parm:
             x.append(parm)
         ret = self.proxy.exec(x)
-        if 'thread' in ret:
-            if ret['thread'] != None:
-                wx.GetApp().AppendThread(ret['thread'])
         return ret
 
 

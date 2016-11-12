@@ -85,13 +85,6 @@ class AppNotebook(aui.AuiNotebook):
                 self.GetParent().GetParent().after_close(self)
                 event.Veto()
 
-        def _close():
-            self.panel.Hide()
-            wx.GetApp().GetTopWindow()._mgr.Update()
-
-        if len(self._tabs._pages)==1:
-            wx.CallAfter(_close)
-
     def on_changed(self, event):
         sel = event.GetSelection()
         old_sel = event.GetOldSelection()
@@ -124,6 +117,18 @@ class AppNotebook(aui.AuiNotebook):
         page = self.GetPage(sel)
         if page == self.last_active:
             self.last_active = None
+
+        def _close():
+            self.panel.Hide()
+            wx.GetApp().GetTopWindow()._mgr.Update()
+            for pane_name in ["desktop", "Panel", "Menu", "Header", "Footer"]:
+                pane_info = wx.GetApp().GetTopWindow()._mgr.GetPane(pane_name)
+                if pane_info.IsShown():
+                    pane_info.window.SetFocus()
+
+        if len(self._tabs._pages)==1:
+            wx.CallAfter(_close)
+
         return aui.AuiNotebook.DeletePage(self, sel)
 
     def on_dclick(self, event):
@@ -225,5 +230,11 @@ class AppNotebook(aui.AuiNotebook):
         evt.Skip()
 
 
-    def Hide(self):
-        print("Hide 0")
+    #def Hide(self):
+    #    print("Hide 0")
+
+    def Freeze(self):
+        pass
+
+    def Thaw(self):
+        pass

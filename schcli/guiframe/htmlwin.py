@@ -42,6 +42,7 @@ from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 from schlib.schtools.data import is_null
 from schcli.guilib.schevent import *
+from pydispatch import dispatcher
 
 import wx.lib.agw.ribbon as RB
 
@@ -172,7 +173,43 @@ class SchHtmlWindow(ScrolledPanel):
         #self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
         self.GetParent().register_signal(self, "refresh_controls")
         self.GetParent().register_signal(self, "child_canceled")
+        self._signal_handlers = []
+        #dispatcher.connect(self.handle_timer, "TIMER", sender=dispatcher.Any )
+        #self.reg_signal_handler(self.handle_timer, "TIMER")
 
+    def SetFocus(self):
+        if self.LastControlWithFocus:
+            self.LastControlWithFocus.SetFocus()
+        else:
+            wx.CallAfter(self.Navigate, None)
+
+        #return super().SetFocus()
+
+
+
+    def reg_signal_handler(self, fun, signal):
+        for pos in self._signal_handlers:
+            if pos[1] == signal:
+                break
+        dispatcher.connect(fun, signal, sender=dispatcher.Any )
+        self._signal_handlers.append((fun, signal))
+
+    def unreg_signal_handler(self, signal):
+        i = 0
+        test = None
+        for pos in  self._signal_handlers:
+            if pos[1] == signal:
+                test = pos
+                break
+            i+=1
+        if test:
+            dispatcher.disconnect(pos[0], pos[1], sender=dispatcher.Any)
+            del self._signal_handlers[i]
+
+    #def handle_timer(self, sender):
+    #    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    #    print(sender)
+    #    print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
 
     def refresh_controls(self):
         if hasattr(self, "refresh_after_ok"):
@@ -194,9 +231,9 @@ class SchHtmlWindow(ScrolledPanel):
             parent_panel.last_clicked.ret_ok(id, title)
         self.any_parent_command('on_ok', None)
 
-    def navigate(self, ctrl, back = False):
+    def Navigate(self, ctrl, back = False):
         next = False
-        children = [ child for child in self.GetChildren() if child.AcceptsFocus() ]
+        children = [ child for child in self.GetChildren() if child.CanAcceptFocus() ]
         if back:
             widgets = reversed(children)
         else:
@@ -217,12 +254,13 @@ class SchHtmlWindow(ScrolledPanel):
                 self.LastControlWithFocus = children[0]
 
     def on_focus(self, event):
-        print("on_focus?????", self.LastControlWithFocus)
+        #print("on_focus?????", self.LastControlWithFocus)
         if self.LastControlWithFocus:
             self.LastControlWithFocus.SetFocus()
         else:
-            self.navigate(None)
-
+            wx.CallAfter(self.Navigate, None)
+            #self.Navigate(None)
+        #event.Skip()
     #def SetFocus(self):
     #    self.on_focus(None)
 
@@ -651,7 +689,7 @@ class SchHtmlWindow(ScrolledPanel):
                     self.hover_obj.gparent.refresh()
             if obj:
                 if obj != self.hover_obj and obj.can_hover():
-                    print("redraw")
+                    #print("redraw")
                     obj.gparent.set_hover(True)
                     obj.gparent.refresh()
         self.hover_obj = obj
@@ -702,8 +740,13 @@ class SchHtmlWindow(ScrolledPanel):
         self.closing=True
         if hasattr(self, 'on_close'):
             self.on_close()
+
+        for pos in self._signal_handlers:
+            dispatcher.disconnect(pos[0], pos[1], sender=dispatcher.Any)
+
         self.GetParent().unregister_signal(self, "refresh_controls")
         self.GetParent().unregister_signal(self, "child_canceled")
+
         gc.collect()
 
     def any_parent_command(
@@ -1265,7 +1308,7 @@ class SchHtmlWindow(ScrolledPanel):
                 def on_command(event):
                     id = event.GetId()
                     ind = id - id_start - 1
-                    print("on_command:", id, ind)
+                    #print("on_command:", id, ind)
                     if ind >= 0 and ind < len(tab):
                         cmd = tab[ind][2]
                         cmd(event)
@@ -1293,7 +1336,7 @@ class SchHtmlWindow(ScrolledPanel):
     def on_acc_key_down(self, event):
         if event.KeyCode == 307:
             return
-        print(event)
+        #print(event)
         for a in self.acc_tab:
             if event.KeyCode == a[1]:
                 if ( not event.AltDown() ) and (a[0] & wx.ACCEL_ALT ):

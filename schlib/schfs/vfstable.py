@@ -228,8 +228,11 @@ class VfsTable(Table):
         if value[0] in thread_commands:
             parm = {}
             parm["cmd"] = value[0]
-            parm["files"] = b32decode(value[1][0])
-            parm["dest"] = b32decode(value[2][1])
+            if value[1][1]:
+                parm["files"] = [ bdecode(v) for v in value[1][1] ]
+            else:
+                parm["files"] = [ bdecode(value[1][0]), ]
+            parm["dest"] = bdecode(value[2][1])
             task_manager = get_process_manager(self.task_href if self.task_href else '127.0.0.1:8080')
             _id = task_manager.put('system', parm["cmd"], "@schlib.schfs:filesystemcmd", user_parm = parm)
             c = { 'process': _id }

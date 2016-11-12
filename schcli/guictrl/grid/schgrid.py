@@ -89,9 +89,9 @@ class SchTableGrid(wx.grid.Grid):
                               wx.grid.GridCellTextEditor())
         self.RegisterDataType('string', wx.grid.GridCellStringRenderer(),
                               wx.grid.GridCellTextEditor())
-        self.RegisterDataType('datetime', wx.grid.GridCellStringRenderer(),
+        self.RegisterDataType('datetime', wx.grid.GridCellDateTimeRenderer(),
                               wx.grid.GridCellTextEditor())
-        self.RegisterDataType('date', wx.grid.GridCellStringRenderer(),
+        self.RegisterDataType('date', wx.grid.GridCellDateTimeRenderer(),
                               popupdata.DatePopupDataCellEditor())
         #self.RegisterDataType('date', wx.grid.GridCellStringRenderer(),
         #                      wx.grid.GridCellTextEditor())

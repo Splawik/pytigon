@@ -4,6 +4,7 @@
 # it under the terms of the GNU Lesser General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
 # version.
+
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
@@ -29,7 +30,7 @@ import wx
 import wx.html2
 import datetime
 import time
-#import agw.aui as aui
+    #import agw.aui as aui
 from wx.lib.agw import aui
 
 from schcli.guilib.art_provider import ArtProviderFromIcon
@@ -42,7 +43,9 @@ from schcli.toolbar import toolbar_interface
 from schlib.schfs.vfstools import get_temp_filename
 from schlib.schtools.cc import compile
 from schlib.schtools.tools import split2
+from schlib.schtasks.task import get_process_manager
 from tempfile import NamedTemporaryFile
+from pydispatch import dispatcher
 
 import six
 
@@ -62,6 +65,12 @@ class SChMainPanel(wx.Window):
 
     def GetMenuBar(self):
         return self.GetParent().GetMenuBar()
+
+    def Freeze(self):
+        pass
+
+    def Thaw(self):
+        pass
 
 
 class SchAppFrame(wx.Frame):
@@ -151,12 +160,12 @@ class SchAppFrame(wx.Frame):
         wx.GetApp().SetTopWindow(self)
 
 
-        self.SetMinSize(wx.Size(400, 300))
+        self.SetMinSize(wx.Size(800, 700))
 
         if 'tree' in gui_style:
-            s = wx.BoxSizer(wx.HORIZONTAL)
+            self._sizer = wx.BoxSizer(wx.HORIZONTAL)
         else:
-            s = wx.BoxSizer(wx.VERTICAL)
+            self._sizer = wx.BoxSizer(wx.VERTICAL)
 
         if 'standard' in gui_style:
             if len(wx.GetApp().get_tab(self.toolbar_bar_lp))>1:
@@ -164,30 +173,34 @@ class SchAppFrame(wx.Frame):
                 self.toolbar_interface = schstandardtoolbar.ToolBarInterface(self, gui_style)
                 self.create_tool_bar()
                 self.toolbar_interface.realize_bar()
-            s.Add(self._panel, 1, wx.EXPAND)
+            self._sizer.Add(self._panel, 1, wx.EXPAND)
             self._mgr.Update()
         elif 'modern' in gui_style:
             from schcli.toolbar.schmoderntoolbar import RibbonInterface
             self.toolbar_interface = RibbonInterface(self, gui_style)
             self.create_tool_bar()
             self.toolbar_interface.realize_bar()
-            s.Add(self.toolbar_interface.get_bar(), 0, wx.EXPAND)
-            s.Add(self._panel, 1, wx.EXPAND)
+            self._sizer.Add(self.toolbar_interface.get_bar(), 0, wx.EXPAND)
+            self._sizer.Add(self._panel, 1, wx.EXPAND)
         elif 'tree' in gui_style:
             from schcli.toolbar.schtreetoolbar import TreeInterface
-            leftPanel = wx.Panel(self._panel, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN, size=wx.Size(400, 250))
-            self.toolbar_interface = TreeInterface(leftPanel, gui_style)
+            #leftPanel = wx.Panel(self._panel, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN, size=wx.Size(400, 250))
+            #self.toolbar_interface = TreeInterface(leftPanel, gui_style)
+            self.toolbar_interface = TreeInterface(self._panel, gui_style)
             self.create_tool_bar()
             self.toolbar_interface.realize_bar()
-            leftBox = wx.BoxSizer(wx.VERTICAL)
-            leftBox.Add(self.toolbar_interface.get_bar(), 1, wx.EXPAND)
-            leftPanel.SetSizer(leftBox)
-            self._mgr.AddPane(leftPanel, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
-            s.Add(self._panel, 1, wx.EXPAND)
-        else:
-            s.Add(self._panel, 1, wx.EXPAND)
 
-        self.SetSizer(s)
+            #leftBox = wx.BoxSizer(wx.VERTICAL)
+            #leftBox.Add(self.toolbar_interface.get_bar(), 1, wx.EXPAND)
+            #leftPanel.SetSizer(leftBox)
+
+            #self._mgr.AddPane(leftPanel, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
+            self._mgr.AddPane(self.toolbar_interface.bar, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
+            self._sizer.Add(self._panel, 1, wx.EXPAND)
+        else:
+            self._sizer.Add(self._panel, 1, wx.EXPAND)
+
+        self.SetSizer(self._sizer)
 
         if len(wx.GetApp().get_tab(2))>1:
             self.menu_bar_lp = 2
@@ -254,24 +267,26 @@ class SchAppFrame(wx.Frame):
         self._perspectives.append(perspective_notoolbar)
 
         self.aTable = [
-                  (wx.ACCEL_ALT, wx.WXK_PAGEUP, ID_PrevTab),
-                  (wx.ACCEL_ALT, wx.WXK_PAGEDOWN, ID_NextTab),
+            (wx.ACCEL_ALT, wx.WXK_PAGEUP, ID_PrevTab),
+            (wx.ACCEL_ALT, wx.WXK_PAGEDOWN, ID_NextTab),
 
-                  (wx.ACCEL_ALT, wx.WXK_LEFT, ID_GotoPanel),
-                  (wx.ACCEL_ALT, wx.WXK_RIGHT, ID_GotoDesktop),
-                  (wx.ACCEL_ALT, wx.WXK_UP, ID_GotoHeader),
-                  (wx.ACCEL_CTRL, ord('W'), ID_CloseTab),
-                  (wx.ACCEL_CTRL, ord('N'), ID_WEB_NEW_WINDOW),
-                  (wx.ACCEL_CTRL, wx.WXK_TAB, ID_NextTab),
-                  (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_TAB, ID_PrevTab),
-                  (wx.ACCEL_CTRL, wx.WXK_F6, ID_NextTab),
-                  (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_F6, ID_PrevTab),
-                  (wx.ACCEL_ALT, ord('h'), ID_PrevTab),
-                  (wx.ACCEL_ALT, ord('l'), ID_NextTab),
-                  (wx.ACCEL_ALT, ord('k'), ID_PrevPage),
-                  (wx.ACCEL_ALT, ord('j'), ID_NextPage),
-                  (wx.ACCEL_ALT, wx.WXK_BACK, ID_WEB_BACK),
-                  (0, wx.WXK_F5, ID_RefreshTab)]
+            (wx.ACCEL_ALT, wx.WXK_LEFT, ID_GotoPanel),
+            (wx.ACCEL_ALT, ord('t'), ID_GotoPanel),
+            (wx.ACCEL_ALT, wx.WXK_RIGHT, ID_GotoDesktop),
+            (wx.ACCEL_ALT, ord('d'), ID_GotoDesktop),
+            (wx.ACCEL_ALT, wx.WXK_UP, ID_GotoHeader),
+            (wx.ACCEL_CTRL, ord('w'), ID_CloseTab),
+            (wx.ACCEL_CTRL, ord('n'), ID_WEB_NEW_WINDOW),
+            (wx.ACCEL_CTRL, wx.WXK_TAB, ID_NextTab),
+            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_TAB, ID_PrevTab),
+            (wx.ACCEL_CTRL, wx.WXK_F6, ID_NextTab),
+            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_F6, ID_PrevTab),
+            (wx.ACCEL_ALT, ord('h'), ID_PrevTab),
+            (wx.ACCEL_ALT, ord('l'), ID_NextTab),
+            (wx.ACCEL_ALT, ord('k'), ID_PrevPage),
+            (wx.ACCEL_ALT, ord('j'), ID_NextPage),
+            (wx.ACCEL_ALT, wx.WXK_BACK, ID_WEB_BACK),
+            (0, wx.WXK_F5, ID_RefreshTab)]
 
         home_dir = wx.GetApp().get_working_dir()
 
@@ -320,7 +335,7 @@ class SchAppFrame(wx.Frame):
         self._mgr.Update()
 
         self.t1 = wx.Timer(self)
-        self.t1.Start(25)
+        self.t1.Start(250)
 
         self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
@@ -362,6 +377,7 @@ class SchAppFrame(wx.Frame):
         self.bind_command(self.on_show_status_bar, id=ID_ShowStatusBar)
 
         self.Bind(wx.EVT_IDLE, self.on_idle)
+        #self.Bind(wx.EVT_SIZE, self.on_size)
 
         if self.menu_bar:
             self.SetMenuBar(self.menu_bar)
@@ -381,12 +397,16 @@ class SchAppFrame(wx.Frame):
             wx.EVT_MENU(self, ID_TASKBAR_CLOSE, self.on_close)
 
         #wx.lib.inspection.InspectionTool().Show()
-
         self.SetExtraStyle(wx.WS_EX_PROCESS_UI_UPDATES)
         wx.UpdateUIEvent.SetUpdateInterval(50)
         wx.UpdateUIEvent.SetMode(wx.UPDATE_UI_PROCESS_SPECIFIED)
         wx.CallAfter(self.UpdateWindowUI)
+        self._proc_mannager = None
+        self.Layout()
 
+    #def on_size(self, event):
+    #    print("on_size", event.GetSize())
+    #    event.Skip()
 
     def on_idle(self, event):
         for obj in self.idle_objects:
@@ -532,18 +552,18 @@ class SchAppFrame(wx.Frame):
                 if id >= 0:
                     panel = win.GetPage(id)
                     panel.cancel(True)
-                self.after_close(win)
+                #self.after_close(win)
                 return
             win = win.GetParent()
 
 
-    def after_close(self, win):
-        count = win.GetPageCount()
-        if count < 1:
-            apppanel = win.GetPanel()
-            if apppanel:
-                apppanel.Hide()
-                self._mgr.Update()
+    #def after_close(self, win):
+    #    count = win.GetPageCount()
+    #    if count < 1:
+    #        apppanel = win.GetPanel()
+    #        if apppanel:
+    #            apppanel.Hide()
+    #            self._mgr.Update()
 
     def on_refresh_tab(self, evt):
         desktop = wx.GetApp().GetTopWindow().desktop
@@ -692,7 +712,7 @@ class SchAppFrame(wx.Frame):
 
         if refr:
             self._mgr.GetPane(_panel).Show()
-            self._mgr.Update()
+        self._mgr.Update()
 
         return okno.new_child_page(address_or_parser, None, parametry)
         #return okno.new_child_page(address_or_parser, None, parametry)
@@ -740,6 +760,13 @@ class SchAppFrame(wx.Frame):
         if platform.system() == "Windows":
             wx.html2.WebView.New("messageloop")
 
+        x = dispatcher.getReceivers(signal='PROCESS_INFO')
+        if len(x)>0:
+            if not self._proc_mannager:
+                self._proc_mannager = get_process_manager()
+            x = self._proc_mannager.list_threads(all=False)
+            dispatcher.send('PROCESS_INFO',self, x)
+        #print(wx.Window.FindFocus())
 
     def _append_command(self, typ, command):
         #self.command.append((self._id, typ, command))
@@ -961,7 +988,13 @@ class SchAppFrame(wx.Frame):
             panel.window.SetFocus()
 
     def on_goto_panel(self, event):
-        self.on_goto('Panel')
+        panel = self._mgr.GetPane('Panel')
+        if panel.IsShown():
+            self.on_goto('Panel')
+        else:
+            panel = self._mgr.GetPane('Menu')
+            if panel and panel.IsShown():
+                panel.window.SetFocus()
 
     def on_goto_head(self, event):
         self.on_goto('Header')

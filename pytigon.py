@@ -494,7 +494,7 @@ class SchApp(App, _BASE_APP):
 
     def on_exit(self):
         if self.task_manager:
-            if len(self.task_manager.list_threads(all=True))>0:
+            if len(self.task_manager.list_threads(all=False))>0:
                 dlg = wx.MessageDialog(None, "There are background tasks - kill?", "Warning", wx.YES_NO | wx.ICON_QUESTION)
                 result = dlg.ShowModal()
                 if result == wx.ID_YES:

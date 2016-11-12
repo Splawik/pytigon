@@ -32,15 +32,26 @@ class SChAuiBaseManager(aui.framemanager.AuiManager):
 
     def Update(self):
         if '__WXGTK__' in wx.PlatformInfo:
-            wx.CallAfter(self.DoUpdate)
+            def _fun():
+                self.DoUpdate()
+                if self._frame:
+                    self._frame.Refresh()
+            wx.CallAfter(_fun)
         else:
             super().Update()
+
 
     def OnRender(self, event):
         if self._frame and self._frame.GetHandle():
             super().OnRender(event)
         else:
             event.Skip()
+
+    def OnLeftDown(self, event):
+        part = self.HitTest(*event.GetPosition())
+        if not part.type in [0,1]:
+            super().OnLeftDown(event)
+
 
 
 class SChAuiManager(SChAuiBaseManager):
@@ -59,5 +70,3 @@ class SChAuiManager(SChAuiBaseManager):
         except:
             ret = None
         return ret
-
-

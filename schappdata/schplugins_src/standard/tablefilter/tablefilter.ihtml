@@ -16,6 +16,7 @@
             self.SEARCH.Bind(wx.EVT_KEY_UP, self.on_key_up)
             self.Bind(wx.EVT_TEXT_ENTER, self.on_do_search)
             self.EXIT.Bind(wx.EVT_BUTTON, self.on_exit)
+            #self.SEARCH.Bind(wx.EVT_SET_FOCUS, self.on_search_set_focus)
             self.search_txt = ""
             self._grid = None
             self._table = None
@@ -28,6 +29,10 @@
                     self.SEARCH.SetInsertionPointEnd()
             self.SEARCH.SetFocus()
             self.search_text()
+            self.SEARCH.SetInsertionPointEnd()
+
+        def SetFocus(self):
+            pass
 
         def _get_grid(self):
             if not self._grid:

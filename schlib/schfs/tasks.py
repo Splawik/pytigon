@@ -16,8 +16,8 @@ def filesystemcmd(cproxy, *args, **kwargs):
     param = kwargs['user_parm']
     print(param)
     cmd = param['cmd']
-    files = param['files'].decode('utf-8').split(';')
-    dest = param['dest'].decode('utf-8')+"/"
+    files = param['files'] #.decode('utf-8').split(';')
+    dest = param['dest'] + "/" #.decode('utf-8')+"/"
     if cmd == 'DELETE':
         for f in files:
             try:

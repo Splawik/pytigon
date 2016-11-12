@@ -176,6 +176,7 @@ class TreeInterface(ToolbarInterface):
         ToolbarInterface.__init__(self, parent, gui_style)
         self.toolbars = None
 
+
     def create_page(self, title):
         if title in self.pages:
             page = self.pages[title]
@@ -287,6 +288,11 @@ class SchTreeBar(CT.CustomTreeCtrl):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         wx.GetApp().GetTopWindow().idle_objects.append(self)
 
+    def CanAcceptFocus(self):
+        return True
+
+    def CanAcceptFocusFromKeyboard(self):
+        return self.CanAcceptFocus()
 
     def on_command(self, event):
         event.Skip()
@@ -324,8 +330,8 @@ class SchTreeBar(CT.CustomTreeCtrl):
             self.image_id += 1
         else:
             item = self.AppendItem(elem, title if self.show_titles else '')
-        item.Attr().SetBackgroundColour(self.bg)
-        item.Attr().SetBorderColour(self.bg)
+        #item.Attr().SetBackgroundColour(self.bg)
+        #item.Attr().SetBorderColour(self.bg)
         return item
 
     def get_max_width(self, respect_expansion_state=True):
@@ -399,3 +405,7 @@ class SchTreeBar(CT.CustomTreeCtrl):
             del page.page_interface.bar.pages[page.GetLabel()]
 
 
+    def OnKeyDown(self, event):
+        self._dirty = True
+        super().OnKeyDown(event)
+        #event.Skip()

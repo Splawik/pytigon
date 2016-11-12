@@ -250,7 +250,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
             if not self.style:
                 self.style=0
 
-        def AcceptsFocus(self):
+        def CanAcceptFocus(self):
             return False
 
         if is_close_button:
@@ -1402,7 +1402,7 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
     def OnDrawItem(self, dc, rect, n):
         self._calc_or_draw(n, dc, rect, False)
 
-    def AcceptsFocus(self):
+    def CanAcceptFocus(self):
         return False
 
     def GetBestSize(self):
@@ -1445,6 +1445,9 @@ class HTML(htmlsash.SchSashWindow, SchBaseCtrl):
 
     #def GetBestSize(self):
     #    return self.best_size
+
+    def CanAcceptFocus(self):
+        return False
 
     def SetValue(self, value):
         self._set_value(value)
@@ -1716,12 +1719,13 @@ class DATETIMEPICKER(POPUPHTML):
 
         POPUPHTML.__init__(self, *args, **kwds)
 
+        self.to_masked(autoformat='EUDATE24HRTIMEYYYYMMDD.HHMM')
+
         if self.value:
             self.set_rec(self.value, [self.value,])
         else:
-            self.set_rec(wx.DateTime.Today().FormatISODate(), [wx.DateTime.Today().FormatISODate(),], False)
-
-        self.to_masked(autoformat='EUDATE24HRTIMEYYYYMMDD.HHMM')
+            now = datetime.datetime.now().isoformat().replace('T',' ').replace('-','.')[:16]
+            self.set_rec(now, [now,], False)
 
     def GetValue(self):
         value = self.get_rec()
@@ -1730,7 +1734,7 @@ class DATETIMEPICKER(POPUPHTML):
             if value.__class__ in (tuple,list) and len(value)>1:
                 return value[1][0]
             else:
-                return [datetime.datetime.strptime(value2, "%Y-%m-%d %H:%M"),]
+                return [datetime.datetime.strptime(value2, "%Y.%m.%d %H:%M"),]
         return None
 
     def GetBestSize(self):
@@ -1972,7 +1976,7 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
 
 class ListBoxNoFocus(wx.ListBox):
 
-    def AcceptsFocus(self):
+    def CanAcceptFocus(self):
         return False
 
 
@@ -2102,7 +2106,7 @@ class _SELECT2(ComboCtrl,  SchBaseCtrl):
         self.button1 = None
         self.button2 = None
 
-        self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
+        #self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
         if self.item_str:
@@ -2117,9 +2121,9 @@ class _SELECT2(ComboCtrl,  SchBaseCtrl):
     def on_key_down_base(self, event):
         if event.GetKeyCode() == wx.WXK_TAB:
             if event.ShiftDown():
-                self.GetParent().GetParent().navigate(self.GetParent(), True)
+                self.GetParent().GetParent().Navigate(self.GetParent(), True)
             else:
-                self.GetParent().GetParent().navigate(self.GetParent(), False)
+                self.GetParent().GetParent().Navigate(self.GetParent(), False)
         elif event.GetKeyCode() == wx.WXK_F2:
             self.button1.on_click(event)
         elif event.GetKeyCode() == wx.WXK_INSERT:
@@ -2136,8 +2140,8 @@ class _SELECT2(ComboCtrl,  SchBaseCtrl):
     def GetValue(self):
         return self.item_id
 
-    def OnSetFocus(self, event):
-        event.Skip()
+    #def OnSetFocus(self, event):
+    #    event.Skip()
 
     def OnChar(self, event):
         c = event.GetUnicodeKey()

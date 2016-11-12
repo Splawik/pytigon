@@ -33,14 +33,14 @@ class SchBaseCtrl(object):
         self.accept_focus = True
         self.acc_tab = False
 
-    def AcceptsFocus(self):
+    def CanAcceptFocus(self):
         if self.IsShown() and self.IsEnabled():
             return self.accept_focus
         else:
             return False
 
-    def AcceptsFocusFromKeyboard(self):
-        return self.AcceptsFocus()
+    def CanAcceptFocusFromKeyboard(self):
+        return self.CanAcceptFocus()
 
     def init_base(self, args, kwds):
         self.parent = args[0]
@@ -176,9 +176,9 @@ class SchBaseCtrl(object):
             wx.CallAfter(self.GetParent().close_with_delay)
         elif event.GetKeyCode() == wx.WXK_TAB:
             if event.ShiftDown():
-                self.GetParent().navigate(self, True)
+                self.GetParent().Navigate(self, True)
             else:
-                self.GetParent().navigate(self, False)
+                self.GetParent().Navigate(self, False)
         else:
             event.Skip()
 
