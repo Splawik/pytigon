@@ -824,7 +824,7 @@ def main_init(argv):
             app.title = row[1].data
         elif row[0].data == 'plugins':
             if row[1].data and row[1].data != "":
-                app.plugins = row[1].data.split(';')
+                    app.plugins = row[1].data.split(';')
                 #app.plugins = [pos for pos in row[1].data.split(';') if not pos.startswith('riot:')]
         elif row[0].data == 'riot_elements':
             app.riot_elements = [pos for pos in row[1].data.split(';') if pos]
@@ -865,7 +865,7 @@ def main_init(argv):
     return (ready_to_run, nogui)
 
 
-def main():
+def main_run():
     app = wx.GetApp()
     app.locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     app.locale.AddCatalogLookupPathPrefix(SCR_PATH + '/schcli/locale')
@@ -940,14 +940,14 @@ def usage():
     --password=password
     """)
 
-if __name__ == '__main__':
-    ready_to_run, nogui = main_init(sys.argv[1:])
+def main(argv):
+    ready_to_run, nogui = main_init(argv)
     if ready_to_run:
         if nogui:
             while(True):
                 time.sleep(100)
         else:
-            main()
+            main_run()
             print("FINISH_0")
             if platform.system() == "Windows":
                 #gc.collect()
@@ -959,3 +959,6 @@ if __name__ == '__main__':
                 #sys.exit()
                 #os._exit(0)
             print("FINISH_1")
+
+if __name__ == '__main__':
+   main(sys.argv[1:])

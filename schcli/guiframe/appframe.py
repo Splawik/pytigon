@@ -225,10 +225,12 @@ class SchAppFrame(wx.Frame):
         s_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         s_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Panel", "Tools").CaptionVisible(True).Left().MinSize((400,
-                          s_dy / 2)).BestSize((s_dx / 2 - 50, s_dy - 100)).Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Header", "Header").CaptionVisible(False).Top().Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Footer", "Footer").CaptionVisible(False).Bottom().Show())
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Panel", "Tools").CaptionVisible(True).
+            Left().MinSize((400, s_dy / 2)).BestSize((s_dx / 2 - 50, s_dy - 100)).Show())
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Header", "Header").CaptionVisible(False).
+            Top().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Footer", "Footer").CaptionVisible(False).
+            Bottom().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
         self._mgr.AddPane(self.desktop, self.panel("desktop", "desktop").CenterPane().Show())
 
         perspective_notoolbar = self._mgr.SavePerspective()
@@ -312,6 +314,7 @@ class SchAppFrame(wx.Frame):
                                     if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins) or x in auto_plugins:
                                         if '.__' in mod_name:
                                             break
+                                        print(mod_name)
                                         mod = __import__(mod_name)
                                         mod_path = mod_name.split('.')
                                         mod2 = getattr(mod, mod_path[1])
@@ -623,7 +626,7 @@ class SchAppFrame(wx.Frame):
                 pdict.update(parametry)
 
             if ('schtml' in pdict and pdict['schtml'].strip() != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
-                ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page")
+                ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page", panel=panel)
                 if address.startswith('http://') or address.startswith('https://') or address.startswith('file://'):
                     def _ret_fun():
                         ret.Body.WEB.go(address)

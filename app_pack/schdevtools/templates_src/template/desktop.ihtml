@@ -60,4 +60,3 @@
     .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
     .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
     .}
-

@@ -653,6 +653,8 @@ def input_to_ctrltab(parent, attrs):
         attrs_ret['width'] = str(width_text)
     if 'maxlength' in attrs and type in ('text', ):
         attrs_ret['maxlength'] = str(is_null(attrs['maxlength'], '80'))
+    elif 'max_length' in attrs and type in ('text', ):
+        attrs_ret['maxlength'] = str(is_null(attrs['max_length'], '80'))
     else:
         if 'size' in attrs:
             attrs_ret['maxlength'] = str(int(is_null(attrs['size'], '80')))

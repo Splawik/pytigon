@@ -47,10 +47,10 @@ def init_plugin(
     class CrustShell(py.crust.Crust, SchBaseCtrl):
 
         def __init__(self, *args, **kwds):
-            SChBaseCtrl.__init__(self, args, kwds)
+            SchBaseCtrl.__init__(self, args, kwds)
             if 'name' in kwds:
                 del kwds['name']
-            kwds['locals'] = {'self': self}
+            kwds['locals'] = {'self': self, 'app': wx.GetApp(),'topwin': wx.GetApp().GetTopWindow(), 'wx': wx }
             py.crust.Crust.__init__(self, *args, **kwds)
 
 

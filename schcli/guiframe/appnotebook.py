@@ -123,7 +123,7 @@ class AppNotebook(aui.AuiNotebook):
             wx.GetApp().GetTopWindow()._mgr.Update()
             for pane_name in ["desktop", "Panel", "Menu", "Header", "Footer"]:
                 pane_info = wx.GetApp().GetTopWindow()._mgr.GetPane(pane_name)
-                if pane_info.IsShown():
+                if pane_info.IsOk() and pane_info.IsShown():
                     pane_info.window.SetFocus()
 
         if len(self._tabs._pages)==1:

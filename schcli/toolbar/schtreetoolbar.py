@@ -64,12 +64,7 @@ class TreeInterface(ToolbarInterface):
 
         class Panel(object):
 
-            def __init__(
-                self,
-                page_interface,
-                title,
-                type=TYPE_TOOLBAR,
-                ):
+            def __init__(self, page_interface, title, type=TYPE_TOOLBAR):
                 self.page_interface = page_interface
                 self.page = page_interface.page
                 self.label = title

@@ -20,5 +20,15 @@
         [ hybrid | 0 ]
         [ title  | Developer tools ]
         [ start_page | devtools ]
-        [ plugins | standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview; ]
+        [ plugins | standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell; ]
 
+
+%% toolbars_start
+    tr
+        td
+        td
+        td...Python shell
+        td...1
+        td...client://apps/utilities-terminal.png
+        td...html
+        td...Terminal,^standard/shell/shell.html?schtml=1

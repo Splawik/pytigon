@@ -269,10 +269,10 @@ class SChAppSet( models.Model):
 
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     title = models.CharField('Title', null=False, blank=False, editable=True, max_length=255)
-    ext_apps = models.CharField('Extern applications', null=True, blank=True, editable=True, max_length=255)
-    plugins = models.CharField('Plugins', null=True, blank=True, editable=True, max_length=255)
+    ext_apps = models.CharField('Extern applications', null=True, blank=True, editable=True, max_length=4096)
+    plugins = models.CharField('Plugins', null=True, blank=True, editable=True, max_length=4096)
     gui_type = models.CharField('Gui type', null=False, blank=False, editable=True, choices=Gui_CHOICES,max_length=32)
-    gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=255)
+    gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
     is_hybrid = models.BooleanField('Is hybrid', null=False, blank=False, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )

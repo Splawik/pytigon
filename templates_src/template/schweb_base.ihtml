@@ -74,7 +74,7 @@
                 th...Ikona
                 th...Command
                 th...Dana
-            %% toolbars_start
+
 
         % ifchanged module_title
             tr
@@ -95,6 +95,10 @@
                 td
                 td
                 td
+
+        % if forloop.first:
+            %% toolbars_start
+
         tr
             td
             td
