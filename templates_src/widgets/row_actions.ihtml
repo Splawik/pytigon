@@ -1,6 +1,6 @@
 % if standard_web_browser:
     % for pos in actions:
-        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
+        a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}}
             % if browser_type == 'mobile':
                 % if not pos.icon:
                     {{pos.title}}
@@ -16,12 +16,12 @@
             ul class=dropdown-menu pull-right
                 % for pos in actions2:
                     li style=margin:4px
-                        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style_in_menu|safe}}
+                        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|safe}}
                             {{pos.title}}
 % else:
     % for pos in actions|add:actions2:
         % if pos.icon:
-            a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}},,,src=fa://{{pos.icon.0}}?size=1
+            a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}},,,src=fa://{{pos.icon.0}}?size=1
         % else:
-            a href={{path}}{{pos.url|safe}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.style|safe}}
+            a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}}
 

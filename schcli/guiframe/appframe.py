@@ -195,7 +195,7 @@ class SchAppFrame(wx.Frame):
             #leftPanel.SetSizer(leftBox)
 
             #self._mgr.AddPane(leftPanel, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
-            self._mgr.AddPane(self.toolbar_interface.bar, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
+            self._mgr.AddPane(self.toolbar_interface.bar, self.panel("menu", _("Menu")).CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
             self._sizer.Add(self._panel, 1, wx.EXPAND)
         else:
             self._sizer.Add(self._panel, 1, wx.EXPAND)
@@ -225,13 +225,13 @@ class SchAppFrame(wx.Frame):
         s_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         s_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Panel", "Tools").CaptionVisible(True).
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("panel", _("Tools")).CaptionVisible(True).
             Left().MinSize((400, s_dy / 2)).BestSize((s_dx / 2 - 50, s_dy - 100)).Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Header", "Header").CaptionVisible(False).
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("header", _("Header")).CaptionVisible(False).
             Top().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("Footer", "Footer").CaptionVisible(False).
+        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("footer", _("Footer")).CaptionVisible(False).
             Bottom().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
-        self._mgr.AddPane(self.desktop, self.panel("desktop", "desktop").CenterPane().Show())
+        self._mgr.AddPane(self.desktop, self.panel("desktop", _("Desktop")).CenterPane().Show())
 
         perspective_notoolbar = self._mgr.SavePerspective()
 
@@ -251,7 +251,7 @@ class SchAppFrame(wx.Frame):
 
         for ii in range(len(all_panes)):
             if not all_panes[ii].IsToolbar():
-                if all_panes[ii].name != 'Menu':
+                if all_panes[ii].name != 'menu':
                     all_panes[ii].Hide()
 
         ##if self.desktop.GetPageCount() > 0:
@@ -360,6 +360,7 @@ class SchAppFrame(wx.Frame):
         if self.toolbar_interface:
             self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_EXIT, wx.EVT_UPDATE_UI)
             self.toolbar_interface.bind(self.on_update_ui_true, ID_WEB_NEW_WINDOW, wx.EVT_UPDATE_UI)
+            self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_OPEN, wx.EVT_UPDATE_UI)
 
         self.bind_command(self.on_next_tab, id=ID_NextTab)
         self.bind_command(self.on_prev_tab, id=ID_PrevTab)
@@ -602,31 +603,48 @@ class SchAppFrame(wx.Frame):
         return None
 
     def new_main_page(self, address_or_parser, title="", parametry=None, panel="desktop"):
-        #print(address_or_parser)
-        #win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
-        #win.Body.WEB.go(wx.GetApp().base_address + l[1])
 
         if type(address_or_parser) == str:
             address = address_or_parser
         else:
             address = address_or_parser.address
 
-        if not address.startswith('^'):
-            parm = split2(address,'?')
-            pdict = {}
-            if len(parm)==2:
-                parm2 = parm[1].split(',')
-                parm3 = [ pos.split('=') for pos in parm2 ]
-                for pos in parm3:
-                    if len(pos)==2:
-                        pdict[pos[0]]=pos[1]
-                    else:
-                        pdict[pos[0]]=None
-            if parametry and type(parametry)==dict:
-                pdict.update(parametry)
+        pdict = {}
+        parm = split2(address,'?')
+        if len(parm)==2:
+            parm2 = parm[1].split(',')
+            parm3 = [ pos.split('=') for pos in parm2 ]
+            for pos in parm3:
+                if len(pos)==2:
+                    pdict[pos[0]]=pos[1]
+                else:
+                    pdict[pos[0]]=None
+        if parametry and type(parametry)==dict:
+            pdict.update(parametry)
 
-            if ('schtml' in pdict and pdict['schtml'].strip() != '1') or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
-                ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page", panel=panel)
+        if 'schtml' in pdict:
+            _panel = pdict['schtml']
+        else:
+            _panel = panel
+
+        if _panel == "desktop2" or _panel == '1':
+            _panel = 'desktop'
+
+        if panel=='pscript':
+            http = wx.GetApp().get_http(self)
+            http.get(self, address)
+            ptr = http.str()
+            exec(ptr)
+            http.clear_ptr()
+            return
+
+        if not address.startswith('^'):
+            if (not _panel or _panel.startswith('browser')) or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
+                if '_' in _panel:
+                    _panel = _panel.split('_')[1]
+                else:
+                    _panel = 'desktop'
+                ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page", panel=_panel)
                 if address.startswith('http://') or address.startswith('https://') or address.startswith('file://'):
                     def _ret_fun():
                         ret.Body.WEB.go(address)
@@ -649,10 +667,6 @@ class SchAppFrame(wx.Frame):
             else:
                 return self.toolbar_interface.create_html_win(None, address_or_parser, parametry)
 
-        if panel == "Desktop2":
-            _panel = 'desktop'
-        else:
-            _panel = panel
 
         n = self._mgr.GetPane(_panel).window
         #sel = n.GetSelection()
@@ -675,7 +689,7 @@ class SchAppFrame(wx.Frame):
         okno = NotebookPage(n)
         #if panel == "Desktop2":
         #error in AGW
-        if panel == "__Desktop2":
+        if panel == "desktop2":
             if title is None:
                 #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
                 if isinstance(address_or_parser, six.string_types):
@@ -844,7 +858,7 @@ class SchAppFrame(wx.Frame):
             self.tbIcon = None
 
     def on_open(self, event):
-        self.new_main_page(wx.GetApp().base_address + '/commander/form/FileManager/', "Commander", None, "Panel")
+        self.new_main_page(wx.GetApp().base_address + '/commander/form/FileManager/', "Commander", None, "panel")
 
 
     def on_close(self, event):
@@ -863,7 +877,7 @@ class SchAppFrame(wx.Frame):
         event.Skip()
 
     def on_show_elem(self, event):
-        nazwa = ["Header", "Panel", "Footer", "tb1", "tb2"][event.GetId() - ID_ShowHeader]
+        nazwa = ["header", "panel", "footer", "tb1", "tb2"][event.GetId() - ID_ShowHeader]
 
         panel = self._mgr.GetPane(nazwa)
 
@@ -889,28 +903,26 @@ class SchAppFrame(wx.Frame):
                 parm = None
         else:
             parm = None
-        if len(l) > 3:
-            panel = l[3]
-        else:
-            panel = "desktop"
 
         if l[1] != None and l[1][0] == ' ':
             l[1] = (l[1])[1:]
         if parm != None and parm[0] == ' ':
             parm = parm[1:]
 
-        if panel=='pscript':
-            http = wx.GetApp().get_http(self)
-            http.get(self, l[1])
-            ptr = http.str()
-            exec(ptr)
-            http.clear_ptr()
-        else:
-            if 'schtml=1' in l[1] and not wx.GetApp().is_hybrid:
-                self.new_main_page(l[1], l[0], parm, panel)
-            else:
-                win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
-                win.Body.WEB.go(wx.GetApp().base_address + l[1])
+        return self.new_main_page(l[1], l[0], parm)
+
+        #if panel=='pscript':
+        #    http = wx.GetApp().get_http(self)
+        #    http.get(self, l[1])
+        #    ptr = http.str()
+        #    exec(ptr)
+        #    http.clear_ptr()
+        #else:
+        #    #if 'schtml=1' in l[1] and not wx.GetApp().is_hybrid:
+        #    self.new_main_page(l[1], l[0], parm, panel)
+        #    #else:
+        #    #    win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
+        #    #    win.Body.WEB.go(wx.GetApp().base_address + l[1])#
 
     def _on_python(self, command):
         exec(command)
@@ -991,19 +1003,19 @@ class SchAppFrame(wx.Frame):
             panel.window.SetFocus()
 
     def on_goto_panel(self, event):
-        panel = self._mgr.GetPane('Panel')
+        panel = self._mgr.GetPane('panel')
         if panel.IsShown():
-            self.on_goto('Panel')
+            self.on_goto('panel')
         else:
-            panel = self._mgr.GetPane('Menu')
+            panel = self._mgr.GetPane('menu')
             if panel and panel.IsShown():
                 panel.window.SetFocus()
 
     def on_goto_head(self, event):
-        self.on_goto('Header')
+        self.on_goto('header')
 
     def on_goto_footer(self, event):
-        self.on_goto('Footer')
+        self.on_goto('footer')
 
     def on_goto_desktop(self, event):
         self.desktop.SetFocus()

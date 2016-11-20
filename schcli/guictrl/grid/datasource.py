@@ -36,7 +36,6 @@ class DataSource(SchGridTableBase):
         self.last_page = None
         self.max_count = self.proxy.get_max_count()
         self.rec_count = self.max_count
-        self.last_row_count = self.max_count
 
         self.default_rec = self.proxy.GetDefaultRec()
 
@@ -46,6 +45,8 @@ class DataSource(SchGridTableBase):
         self.can_append = 1
         self.read_only = False
         self.is_valid = True
+
+        self.last_row_count = self.max_count + self.can_append
 
     def invalidate(self):
         self.is_valid = False
@@ -65,7 +66,6 @@ class DataSource(SchGridTableBase):
         #0 - no store, cursor - pos 1
         #1 - store, if out of range - pos 1
         #2 - store, if out of range - pos = max
-#        print "Refresh"
         self.commit()
         self.append_count = 0
         self.last_page_id = -1
@@ -120,7 +120,6 @@ class DataSource(SchGridTableBase):
 
                         if len(nowaStrona) < 256 and self.rec_count != strona * 256 + len(nowaStrona):
                             self.refr_count(self.proxy.GetCount()+self.can_append+self.append_count,2)
-                            #self.refr_count(self.GetNumberRows(), 2)f
                         return self.get_rec(nr_rec)
                     else:
                         self.refr_count(self.proxy.GetCount(), 2)
@@ -222,7 +221,7 @@ class DataSource(SchGridTableBase):
             return SchGridTableBase.GetAttr(self, row, col, kind)
 
 
-    def GetIlRec(self):
+    def get_rec_count(self):
         return self.rec_count
 
     def _get_number_rows(self):
@@ -252,7 +251,7 @@ class DataSource(SchGridTableBase):
         else:
             return dict()
 
-    def _GetValue(self, row, col):
+    def GetValue(self, row, col):
 
         if row < self.rec_count:
             if row in self.rec_to_update:
@@ -267,12 +266,11 @@ class DataSource(SchGridTableBase):
                 else:
                     ret = rec[col + 1]
                     if ret.__class__ == tuple or ret.__class__ == list:
-                        return str(ret[0])
+                        ret = ret[0]
+                    if type(ret) == str:
+                        return ret
                     else:
-                        if type(ret) not in (str, bool):
-                            return str(ret)
-                        else:
-                            return ret
+                        return str(ret)
             else:
                 return ""
         else:
@@ -280,10 +278,6 @@ class DataSource(SchGridTableBase):
                 return str((self.rec_to_instert)[row][col + 1])
             else:
                 return ""
-
-    def GetValue(self, row, col):
-        value = self._GetValue(row, col)
-        return value
 
 
     def SetValue(self, row, col, value):
@@ -345,6 +339,8 @@ class DataSource(SchGridTableBase):
         #    print("GetTypeName:", col, self.GetColTypes())
         #    ret = None
         #return ret
+        #print(col, self.GetColTypes()[col + 1])
+
         try:
             return self.GetColTypes()[col + 1]
         except:

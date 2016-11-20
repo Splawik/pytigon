@@ -32,12 +32,7 @@ from  wx.grid import GridCellEditor
 
 class PopupDataCellControl(popuphtml.DataPopupControl):
 
-    def __init__(
-        self,
-        href,
-        *args,
-        **kwds
-        ):
+    def __init__(self,href,*args,**kwds):
         self.href = href
         self.defaultvalue = None
         popuphtml.DataPopupControl.__init__(self, *args, **kwds)
@@ -61,13 +56,7 @@ class PopupDataCellEditor(GridCellEditor):
     address = property(get_address, set_address)
 
 
-    def Create(
-        self,
-        parent,
-        id,
-        evt_handler,
-        ):
-
+    def Create(self,parent,id,evt_handler):
         self.Parent = parent
         self._tc = PopupDataCellControl(self.address, parent, id)
         self._tc.DismissObject = self
@@ -91,12 +80,7 @@ class PopupDataCellEditor(GridCellEditor):
     def PaintBackground(self, rect, attr):
         pass
 
-    def BeginEdit(
-        self,
-        row,
-        col,
-        grid,
-        ):
+    def BeginEdit(self, row, col, grid):
 
         self.grid = grid
         self.start_value = None
@@ -110,7 +94,6 @@ class PopupDataCellEditor(GridCellEditor):
         else:
             self.start_value = str(value)
 
-        print(">>>>>", self.start_value)
         self._tc.focus_in(self.start_value)
         if self.start_value:
             self._tc.set_rec(self.start_value, (self.start_value, ))
@@ -118,13 +101,7 @@ class PopupDataCellEditor(GridCellEditor):
         self._tc.GetTextCtrl().SetSelection(0, -1)
         self._tc.GetTextCtrl().SetFocus()
 
-    def EndEdit(
-        self,
-        row,
-        col,
-        grid,
-        old_value
-        ):
+    def EndEdit(self, row, col, grid, old_value):
         self._tc.focus_out(self._tc.GetValue())
         changed = False
         value = self._tc.GetValue()
@@ -165,7 +142,6 @@ class PopupDataCellEditor(GridCellEditor):
             self._tc.SetInsertionPointEnd()
         else:
             evt.Skip()
-
 
     def StartingClick(self):
         print("START CLICK")

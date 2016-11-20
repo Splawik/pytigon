@@ -274,17 +274,12 @@ class DataPopupControl(ComboCtrl):
             def _after():
                 self.html.refresh_html()
                 self.html.SetFocus()
-                #print("X1")
                 self.html.on_size(None)
-                #self.html.Body.on_erase_background(None)
-                #self.html.Body.init_page()
-                #self.html.Body.draw_background()
                 self.html.Body.init_page()
-                #wx.CallAfter(self.html.Body.refr, self.start_value)
-                #print("X2")
-                self.html.Body.refr(self.start_value)
-                #print("X3")
-                self.html.Body.Show()
+                def _after2():
+                    self.html.Body.refr(self.start_value)
+                    self.html.Body.Show()
+                wx.CallAfter(_after2)
                 wx.EndBusyCursor()
             wx.CallAfter(_after)
 

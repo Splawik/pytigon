@@ -9,7 +9,6 @@
     script language=python
         def init_form(self):
             from schcli.guilib.schevent import ID_RetValue
-            print("X1")
             self.find_value = ""
             self.listclick=False
             self.retlist = None
@@ -18,8 +17,8 @@
 
             self.list1.Bind(wx.EVT_LISTBOX, self.on_list_selected)
             self.list1.Bind(wx.EVT_LISTBOX_DCLICK, self.on_list_ret)
-            #self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
-            #self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+            self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
+            self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
 
             self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
             aTable = [(0, wx.WXK_RETURN, ID_RetValue),]

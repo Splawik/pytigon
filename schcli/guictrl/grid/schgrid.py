@@ -25,7 +25,7 @@ from schcli.guilib import schevent
 
 
 from .renderers import ExtStringRenderer, IconAndStringRenderer, \
-    MultiLineStringRenderer
+    MultiLineStringRenderer, DateTimeRenderer
 import schlib.schtools.tools as tools
 from wx.grid import PyGridTableBase, GridCellAttr, GridTableMessage, \
     GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
@@ -89,9 +89,9 @@ class SchTableGrid(wx.grid.Grid):
                               wx.grid.GridCellTextEditor())
         self.RegisterDataType('string', wx.grid.GridCellStringRenderer(),
                               wx.grid.GridCellTextEditor())
-        self.RegisterDataType('datetime', wx.grid.GridCellDateTimeRenderer(),
+        self.RegisterDataType('datetime', DateTimeRenderer(),
                               wx.grid.GridCellTextEditor())
-        self.RegisterDataType('date', wx.grid.GridCellDateTimeRenderer(),
+        self.RegisterDataType('date', DateTimeRenderer(),
                               popupdata.DatePopupDataCellEditor())
         #self.RegisterDataType('date', wx.grid.GridCellStringRenderer(),
         #                      wx.grid.GridCellTextEditor())
@@ -590,7 +590,7 @@ class SchTableGrid(wx.grid.Grid):
             row = self.GetGridCursorRow()
             if row >= 0:
                 self.DeleteRows(row, 1)
-                if row < self.GetTable().GetIlRec():
+                if row < self.GetTable().get_rec_count():
                     self.SetGridCursor(row + 1, 0)
                     self.MakeCellVisible(row + 1, 0)
         if evt.KeyCode == wx.WXK_F4 or evt.KeyCode == wx.WXK_RETURN\

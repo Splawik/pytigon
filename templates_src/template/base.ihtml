@@ -127,7 +127,7 @@
 
             % if standard_web_browser:
                 </div>
-        % else
+        % else:
             %% row_edit_start
                 % if standard_web_browser == 1 or standard_web_browser == 2:
                     <div id="Dialog">
@@ -156,7 +156,7 @@
                 jQuery('#ModalLabel').html('{{title}}')
 
         %% dialog_end
-    % else
+    % else:
         % if form_grid:
         % else:
             {{ block.super }}

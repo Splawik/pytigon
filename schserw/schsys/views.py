@@ -21,7 +21,6 @@ from schlib.schdjangoext.dbtable import DbTable
 from django.http import HttpResponse, HttpResponseRedirect
 from schlib.schtools import schjson
 from base64 import b32decode
-#from django.shortcuts import render_to_response
 from schlib.schviews.viewtools import render_to_response
 from django.template import RequestContext
 from django.http import Http404
@@ -85,12 +84,7 @@ messageList = {
     }
 
 
-def message(
-    request,
-    titleid,
-    messageid,
-    id,
-    ):
+def message(request,titleid,messageid,id):
     global messageList
     title = messageList[titleid]
     if id != '0':
@@ -101,13 +95,7 @@ def message(
     return render_to_response('schsys/message.html', context=c, request=request)
 
 
-def tbl(
-    request,
-    app,
-    tab,
-    value=None,
-    template_name=None,
-    ):
+def tbl(request,app,tab,value=None,template_name=None,):
     if request.POST:
         p = request.POST.copy()
         d = {}
@@ -270,7 +258,6 @@ def plugin_template(request, template_name):
     if not APP:
         import wx
         APP = wx.GetApp()
-    #c = RequestContext(request)
     c = {'app':  APP }
     return render_to_response(template_name, context=c, request=request)
 

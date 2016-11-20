@@ -121,7 +121,7 @@ class AppNotebook(aui.AuiNotebook):
         def _close():
             self.panel.Hide()
             wx.GetApp().GetTopWindow()._mgr.Update()
-            for pane_name in ["desktop", "Panel", "Menu", "Header", "Footer"]:
+            for pane_name in ["desktop", "panel", "menu", "header", "footer"]:
                 pane_info = wx.GetApp().GetTopWindow()._mgr.GetPane(pane_name)
                 if pane_info.IsOk() and pane_info.IsShown():
                     pane_info.window.SetFocus()
@@ -137,7 +137,7 @@ class AppNotebook(aui.AuiNotebook):
             mp, adr = wx.GetApp().read_html(self, '/schwiki/help/' + wiki_from_str(txt) + '/view/', None)
             if not txt.startswith('?'):
                 wiki = wiki_from_str(txt)
-                wx.GetApp().GetTopWindow().new_main_page(mp, '?: ' + wiki, panel='Desktop2')
+                wx.GetApp().GetTopWindow().new_main_page(mp, '?: ' + wiki, panel='desktop2')
         except:
             pass
 

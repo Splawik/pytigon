@@ -19,7 +19,9 @@
 
 from . import table
 from django.db import models
+import django.apps.registry
 from schlib.schtools import schjson
+
 
 __COLMAP__ = {
     'AutoField': 'string',
@@ -99,7 +101,7 @@ class DbTable(table.Table):
             'x': self.conw_x,
             }
 
-        self.Class = models.get_model(app, tab)
+        self.Class = django.apps.registry.apps.get_model(app, tab)
         self.ColLength = self._get_col_length()
         self.ColNames = self._get_col_names()
         self.ColTypes = self._get_col_types()

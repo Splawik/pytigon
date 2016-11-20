@@ -24,21 +24,6 @@ from .gridtablebase import SchGridTableBase
 from schlib.schhtml.htmlviewer import tdata_from_html
 from schcli.guilib.tools import colour_to_html
 
-#def _cmp(rec1, rec2, tabsort):
-#    for pos in tabsort:
-#        if rec1[0].data.strip() == '-':
-#            return 1
-#        if rec2[0].data.strip() == '-':
-#            return -1
-#        if pos > 0:
-#            x = cmp(rec1[pos - 1].data.lower(), rec2[pos - 1].data.lower())
-#        else:
-#            x = -1 * cmp(rec1[-1 * pos - 1].data.lower(), rec2[-1 * pos
-#                          - 1].data.lower())
-#        if x != 0:
-#            return x
-#    return 0
-
 
 class KeyForRec:
     def __init__(self, rec, tabsort):
@@ -46,7 +31,6 @@ class KeyForRec:
         self.tabsort = tabsort
 
     def __lt__(self, other):
-    #def __cmp__(self, other):
         if self.rec[0].data.strip() == '-':
             return 1
         if other.rec[0].data.strip() == '-':
@@ -65,19 +49,10 @@ class KeyForRec:
 def make_key(tabsort):
     return lambda rec: KeyForRec(rec, tabsort)
 
-#def make_cmp_fun(tabsort):
-#    return lambda rec1, rec2: _cmp(rec1, rec2, tabsort)
-
 
 class PageData(object):
 
-    def __init__(
-        self,
-        parent,
-        page_len,
-        count,
-        first_page,
-        ):
+    def __init__(self, parent, page_len, count, first_page):
         self.count = count
         self.page_len = page_len
         self.pages = {}
@@ -159,8 +134,6 @@ class SimpleDataTable(SchGridTableBase):
             self.simple_data = True
         self.attrs = {}
         self.enabled = False
-        #print(self.data)
-#        self.last_row_count = self.count
 
     def replace_tab(self, new_tab):
         SchGridTableBase.replace_tab(self, new_tab)
@@ -191,7 +164,6 @@ class SimpleDataTable(SchGridTableBase):
             else:
                 col2 = col
             attrs = []
-            ret = {}
             td = self.data[row][col2]
             attrs.append(td.attr)
             childs = td.childs
@@ -211,12 +183,7 @@ class SimpleDataTable(SchGridTableBase):
         except:
             return []
 
-    def SetValue(
-        self,
-        row,
-        col,
-        value,
-        ):
+    def SetValue(self,row,col,value):
         try:
             self.data[row][col] = value
         except IndexError:
@@ -232,24 +199,14 @@ class SimpleDataTable(SchGridTableBase):
     def GetTypeName(self, row, col):
         return self.dataTypes[col]
 
-    def CanGetValueAs(
-        self,
-        row,
-        col,
-        type_name,
-        ):
+    def CanGetValueAs(self,row,col,type_name):
         col_type = self.dataTypes[col].split(':')[0]
         if type_name == col_type:
             return True
         else:
             return False
 
-    def CanSetValueAs(
-        self,
-        row,
-        col,
-        type_name,
-        ):
+    def CanSetValueAs(self,row,col,type_name):
         return self.CanGetValueAs(row, col, type_name)
 
     def sort(self, column, append):
@@ -286,12 +243,7 @@ class SimpleDataTable(SchGridTableBase):
         except:
             return None
 
-    def GetAttr(
-        self,
-        row,
-        col,
-        kind,
-        ):
+    def GetAttr(self,row,col,kind):
         if row >= self.GetNumberRows():
             attr = self.attr_normal
             attr.IncRef()
@@ -353,7 +305,6 @@ class SimpleDataTable(SchGridTableBase):
                 return False
         else:
             return False
-
 
     def GetNumberCols(self):
         if len(self.colLabels) > 0:

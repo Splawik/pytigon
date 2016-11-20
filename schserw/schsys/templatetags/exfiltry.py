@@ -236,8 +236,9 @@ def getfield(value, attr):
 @register.filter(name='getfields')
 def getfields(value):
     ret = []
-    for f in value._meta.fields:
-        ret.append(f)
+    if value and hasattr(value, '_meta'):
+        for f in value._meta.fields:
+            ret.append(f)
     return ret
 
 

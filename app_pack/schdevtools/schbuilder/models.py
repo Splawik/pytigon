@@ -167,10 +167,16 @@ View_CHOICES = (
 
 Url_CHOICES = (
     ("Default","-"),
-    ("shtml","shtml"),
+    ("desktop","desktop"),
     ("panel","panel"),
+    ("header","header"),
+    ("footer","footer"),
     ("script","script"),
     ("pscript","pscript"),
+    ("browser","browser"),
+    ("browser_panel","prowser_panel"),
+    ("browser_header","browser_header"),
+    ("browser_footer","browser_footer"),
     
     )
 
@@ -945,18 +951,12 @@ class SChAppMenu( models.Model):
         return self.parent.get_urls(main=False)
     
     def get_url_type_ext(self):
-        if self.url_type=='shtml':
-            return '?schtml=1'
-        elif self.url_type=='panel':
-            return '?schtml=1,,panel'
-        elif self.url_type=='script':
-            return '?script=1'
-        elif self.url_type=='pscript':
-            return '?schtml=1,,pscript'
-        elif self.url_type=='-':
-            return ""
+        if self.url_type in [None, '-']:
+            return "?schtml=desktop"
+        elif self.url_type == 'browser':
+            return ''
         else:
-            return ""
+            return '?schtml='+self.url_type
     
     def clean_url(self):
         return self.url.replace('$', '')

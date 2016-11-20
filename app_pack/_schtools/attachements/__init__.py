@@ -6,6 +6,6 @@ Title = _('Attachements')
 Perms = True
 Index = ''
 Urls  = (
-    ('table/Attachements/-/form/list?schtml=1',_('Attachements'),'wiki.change_attachements','client://status/mail-attachment.png'),
+    ('table/Attachements/-/form/list?schtml=shtml',_('Attachements'),'wiki.change_attachements','client://status/mail-attachment.png'),
 )
 UserParam = {}

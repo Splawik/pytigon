@@ -151,17 +151,38 @@ STANDARD_ICON = {
 NEW_WIN_ACTIONS = ['pdf', 'odf',]
 
 
+def restructure(attrs):
+    data = [x.replace("='","=").split('=') for x in (attrs.replace('"',"'").strip()+" ").split("' ") if x]
+    c=s=d=""
+    for pos in data:
+        if pos[0]=='class':
+            c=pos[1]
+        elif pos[0]=='style':
+            s=pos[1]
+        else:
+            if d:
+                d+=" "
+            if len(pos)==2:
+                d+= "%s='%s'" % (pos[0], pos[1])
+            elif len(pos)==1:
+                d+=pos[0]
+
+    return (d, c, s)
+
+
 class Action:
     def __init__(self, actions_str, context, d):
-        #actions_str: action,title,name,target,style,param,url
+        #actions_str: action,title,name,target,attrs,param,url
         self.d = d
         self.context = context
         self.action = ""
         self.title = ""
         self.name = ""
         self.target = ""
-        self.style = ""
-        self.style_in_menu = ""
+        self.attrs = ""
+        self.attrs_in_menu = ""
+        self.tag_class = ""
+        self.tag_style = ""
         self.url = ""
         self.param = ""
 
@@ -194,7 +215,7 @@ class Action:
                 if len(pos)>3:
                     self.target = pos[3].strip()
                     if len(pos)>4:
-                        self.style = pos[4].strip()
+                        self.attrs = pos[4].strip()
                         if len(pos)>5:
                             self.parm = pos[5].strip()
                             if len(pos)>6:
@@ -223,22 +244,24 @@ class Action:
                 self.target = '_blank'
 
                 
-        if not self.style :
+        if not self.attrs :
             if action2 in STANDARD_DESC:
-                self.style = STANDARD_DESC[action2][1]
+                self.attrs = STANDARD_DESC[action2][1]
             else:
-                self.style = STANDARD_DESC['default'][1]
+                self.attrs = STANDARD_DESC['default'][1]
         else:
-            if self.style[0]=='+':
+            if self.attrs[0]=='+':
                 if action2 in STANDARD_DESC:
-                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC[action2][1].split('|')[0])
+                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC[action2][1].split('|')[0])
                 else:
-                    self.style = add_2_attribute_str(self.style[1:] , STANDARD_DESC['default'][1].split('|')[0])
+                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC['default'][1].split('|')[0])
 
-        if '|' in self.style:
-            x = self.style.split('|')
-            self.style = x[0]
-            self.style_in_menu = x[1]
+        if '|' in self.attrs:
+            x = self.attrs.split('|')
+            self.attrs, self.tag_class, self.tag_style = restructure(x[0])
+            self.attrs_in_menu = x[1]
+        else:
+            self.attrs, self.tag_class, self.tag_style = restructure(self.attrs)
 
         if not self.url:
             if action == 'field_up':
@@ -267,19 +290,16 @@ class Action:
                 self.icon = [ pos[1].strip().split(':::')[1], 'edit']
 
         if self.icon and context['browser_type']=='mobile':
-            self.style = self.style + " data-iconpos='notext' data-icon='%s' " % self.icon[1]
+            self.attrs = self.attrs + " data-iconpos='notext' data-icon='%s' " % self.icon[1]
 
 
     def format(self, s):
         return s.format(**self.d)
 
-    #def __str__(self):
-    #    return self.action + "|" + self.title + "|" + self.name + "|" + self.target + "|" + self.style + "|" + self.style_in_menu + "|" + self.url
-
 
 def actions_dict(
     context,
-    actions_str, # action,title,name,target,style,url
+    actions_str, # action,title,name,target,attrs,url
     ):
     d = standard_dict(context, {})
     if 'object' in context:
@@ -386,11 +406,11 @@ def action_fun(
     title="",
     name="",
     target="",
-    style="",
+    attrs="",
     param="",
     url=""
     ):
-    action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, name, target, style, param, url)
+    action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, name, target, attrs, param, url)
     t = Template(action_str)
     output2 = t.render(context)
     #t = get_template('widgets/action.html')
@@ -405,9 +425,9 @@ def button(
     title="",
     name="",
     target="",
-    style=''
+    attrs=''
     ):
-    ret = action_fun(context, 'button', title, name, target, style, "", url)
+    ret = action_fun(context, 'button', title, name, target, attrs, "", url)
     return ret
 
 
@@ -416,7 +436,7 @@ def new_row_base(
     title="",
     name="",
     target='',
-    style='',
+    attrs='',
     param='-',
     url="",
     action="new_row"
@@ -425,7 +445,7 @@ def new_row_base(
         url2=url
     else:
         url2='../../../%s/add' % param
-    ret = action_fun(context, action, title, name, target, style, param, url2)
+    ret = action_fun(context, action, title, name, target, attrs, param, url2)
     if title and title[0] == '+':
         description = title[1:]
         title = ""
@@ -441,12 +461,12 @@ def new_row(
     title="",
     name="",
     target='',
-    style='',
+    attrs='',
     param='-',
     url="",
     action="new_row"
     ):
-    return new_row_base(context, title, name, target, style, param, url, action)
+    return new_row_base(context, title, name, target, attrs, param, url, action)
 
 
 @inclusion_tag('widgets/new_row.html')
@@ -455,12 +475,12 @@ def new_row_inline(
     title="",
     name="",
     target='',
-    style='',
+    attrs='',
     param='-',
     url="",
     action="new_row/inline"
     ):
-    return new_row_base(context, title, name, target, style, param, url, action)
+    return new_row_base(context, title, name, target, attrs, param, url, action)
 
 
 @inclusion_tag('widgets/list_action.html')
@@ -471,10 +491,10 @@ def list_action(
     title="",
     name="",
     target='_blank',
-    style='',
+    attrs='',
     url=""
     ):
-    ret = action_fun(context, action, title, name, target, style, "", url if url else "../../../action/%s" % action)
+    ret = action_fun(context, action, title, name, target, attrs, "", url if url else "../../../action/%s" % action)
     return ret
 
 
@@ -483,13 +503,13 @@ def wiki_button(
     context,
     subject,
     wiki_description,
-    style="",
+    attrs="",
     target='_self',
     url=""
     ):
     wiki_name = wiki_from_str(wiki_description)
     wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
-    return action_fun(context, "wiki", wiki_description, wiki_name, target, style, "", url if url else wiki_url)
+    return action_fun(context, "wiki", wiki_description, wiki_name, target, attrs, "", url if url else wiki_url)
 
 
 @inclusion_tag('widgets/wiki_link.html')
@@ -497,11 +517,11 @@ def wiki_link(
     context,
     subject,
     wiki_description,
-    style="",
+    attrs="",
     target='_self',
     url=""
     ):
-    return wiki_button(context, subject, wiki_description, style, target, url)
+    return wiki_button(context, subject, wiki_description, attrs, target, url)
 
 
 class ExprNode(template.Node):

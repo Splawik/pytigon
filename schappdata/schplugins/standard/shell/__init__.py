@@ -40,7 +40,8 @@ def init_plugin(
             SchBaseCtrl.__init__(self, args, kwds)
             if 'name' in kwds:
                 del kwds['name']
-            kwds['locals'] = {'self': self}
+            #kwds['locals'] = {'self': self}
+            kwds['locals'] = {'self': self, 'app': wx.GetApp(),'topwin': wx.GetApp().GetTopWindow(), 'wx': wx }
             py.shell.Shell.__init__(self, *args, **kwds)
 
 
@@ -54,7 +55,20 @@ def init_plugin(
             py.crust.Crust.__init__(self, *args, **kwds)
 
 
+    class SliceShell(py.sliceshell.SlicesShell, SchBaseCtrl):
+
+        def __init__(self, *args, **kwds):
+            SchBaseCtrl.__init__(self, args, kwds)
+            if 'name' in kwds:
+                del kwds['name']
+            kwds['locals'] = {'self': self, 'app': wx.GetApp(),'topwin': wx.GetApp().GetTopWindow(), 'wx': wx }
+            kwds['showPySlicesTutorial'] = False
+            py.sliceshell.SlicesShell.__init__(self, *args, **kwds)
+
+
+
     schcli.guictrl.schctrl.SHELL = Shell
     schcli.guictrl.schctrl.CRUST_SHELL = CrustShell
+    schcli.guictrl.schctrl.SLICE_SHELL = SliceShell
 
 

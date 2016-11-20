@@ -591,19 +591,11 @@ class LISTBOX(wx.ListBox, SchBaseCtrl):
         for s in self.sel:
             self.SetSelection(s)
 
-        #print "X1"
-        #self.EnsureVisible(1)
-        #print "X2"
-        #self.SetSize((200,200))
-        #print self.GetSize()
-
     def FindAndSelect(self, item):
-        #print("X3", item)
         l = self.GetStrings()
         for i in range(len(l)):
             if l[i].startswith(item):
                 self.SetSelection(i)
-                #print("X4", i)
                 return
 
     def BlockRefresh(self, block=True):
@@ -640,7 +632,6 @@ class LIST(wx.ListCtrl, SchBaseCtrl):
         kwds["size"]=wx.Size(-1,-1)
 
         wx.ListCtrl.__init__(self, *args, **kwds)
-
 
         tdata = self.get_tdata()
         l = 0

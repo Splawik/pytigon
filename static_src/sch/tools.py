@@ -14,7 +14,7 @@ def evalJSFromHtml(html):
 
 
 def mount_html(elem, html_txt):
-    if window.COMPONENT_INIT:
+    if window.COMPONENT_INIT and len(window.COMPONENT_INIT)>0:
         elem.empty()
         res = Vue.compile("<div>"+html_txt+"</div>")
         if elem and elem.length>0:

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-10-31 20:43:15
+// Transcrypt'ed from Python, 2016-11-19 15:36:13
 
 	var __all__ = {};
 	var __world__ = __all__;
@@ -2584,7 +2584,7 @@ function pytigon () {
 						jQuery.each (scripts, eval_fun);
 					};
 					var mount_html = function (elem, html_txt) {
-						if (window.COMPONENT_INIT) {
+						if (window.COMPONENT_INIT && len (window.COMPONENT_INIT) > 0) {
 							elem.empty ();
 							var res = Vue.compile (('<div>' + html_txt) + '</div>');
 							if (elem && elem.length > 0) {

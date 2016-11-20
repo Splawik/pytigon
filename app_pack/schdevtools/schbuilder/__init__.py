@@ -6,6 +6,6 @@ Title = _('Pytigon builder')
 Perms = True
 Index = ''
 Urls  = (
-    ('table/SChAppSet/-/form/list?schtml=1',_('Applications set'),'schbuilder.change_schappset','client://status/folder-open.png'),
+    ('table/SChAppSet/-/form/list?schtml=desktop',_('Applications set'),'schbuilder.change_schappset','client://status/folder-open.png'),
 )
 UserParam = {}

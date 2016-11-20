@@ -1234,7 +1234,7 @@ class SchHtmlWindow(ScrolledPanel):
                                            param=self.get_parm_obj(), panel=x[1:])
                     else:
                         self.new_main_page(mp, is_null(mp.title, title),
-                                           param=self.get_parm_obj(), panel='Desktop2')
+                                           param=self.get_parm_obj(), panel='desktop2')
                     return
                 if target == '_parent':
                     self.any_parent_command('on_cancel', None)
