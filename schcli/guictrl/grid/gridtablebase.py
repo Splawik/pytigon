@@ -89,7 +89,6 @@ class SchGridTableBase(PyGridTableBase):
     def GetNumberRows(self):
         count = self._get_number_rows()
         #self.last_row_count = count
-        print(count)
         return count
 
     def GetNumberCols(self):

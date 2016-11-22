@@ -204,7 +204,10 @@ class DateTimeRenderer(PyGridCellRenderer):
         text = grid.GetCellValue(row, col)
         dc.SetFont(attr.GetFont())
         if not self.best_size:
-            self.best_size = dc.GetTextExtent(text[:16])
+            if text:
+                self.best_size = dc.GetTextExtent(text[:16])
+            else:
+                return wx.Size(0,0)
         return wx.Size(self.best_size[0],self.best_size[1])
 
     def Clone(self):

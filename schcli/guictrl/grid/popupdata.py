@@ -60,7 +60,6 @@ class PopupDataCellEditor(GridCellEditor):
         self.Parent = parent
         self._tc = PopupDataCellControl(self.address, parent, id)
         self._tc.DismissObject = self
-        print(dir(self))
         self.SetControl(self._tc)
         self.evtHandler = evt_handler
 
@@ -105,7 +104,6 @@ class PopupDataCellEditor(GridCellEditor):
         self._tc.focus_out(self._tc.GetValue())
         changed = False
         value = self._tc.GetValue()
-        print("<<<<<", value)
         if str(value) != str(self.start_value):
             changed = True
             grid.GetTable().SetValue(row, col, value)  # update the table

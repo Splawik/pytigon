@@ -81,9 +81,9 @@ class SchAppFrame(wx.Frame):
     def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE |
                  wx.CLIP_CHILDREN | wx.WANTS_CHARS, name="MainWindow"):
 
-    #def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.RESIZE_BORDER | wx.CLIP_CHILDREN,
-    #             name="MainWindow"):
-
+        """
+        Constructor
+        """
 
         self.gui_style = gui_style
 
@@ -433,6 +433,12 @@ class SchAppFrame(wx.Frame):
         event.Skip()
 
     def on_update_ui_true(self, event):
+        """
+        on_update_ui_true
+
+        *x1
+        *x2
+        """
         event.Enable(True)
 
     def on_pane_activated(self, event):

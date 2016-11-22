@@ -475,7 +475,7 @@ class SchTableGrid(wx.grid.Grid):
                             break
             else:
                 if self.typ == self.GET_ID:
-                    print("self.action('get')")
+                    #print("self.action('get')")
                     self.action('get')
 
     def OnLUp(self, event):

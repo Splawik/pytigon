@@ -1305,17 +1305,18 @@ class SchHtmlWindow(ScrolledPanel):
             if wx.Platform == '__WXMSW__':
                 win.SetAcceleratorTable(wx.AcceleratorTable(tab2))
                 tab2 = []
-                def on_command(event):
-                    id = event.GetId()
-                    ind = id - id_start - 1
-                    #print("on_command:", id, ind)
-                    if ind >= 0 and ind < len(tab):
-                        cmd = tab[ind][2]
-                        cmd(event)
-                    else:
-                        event.Skip()
+                def make_fun(tab, id_start):
+                    def on_command(event):
+                        id = event.GetId()
+                        ind = id - id_start - 1
+                        if ind >= 0 and ind < len(tab):
+                            cmd = tab[ind][2]
+                            cmd(event)
+                        else:
+                            event.Skip()
+                    return on_command
 
-                win.Bind(wx.EVT_MENU, on_command)
+                win.Bind(wx.EVT_MENU, make_fun(tab, id_start))
             else:
                 if not self.acc_tab:
                     self.acc_tab = []
@@ -1336,7 +1337,6 @@ class SchHtmlWindow(ScrolledPanel):
     def on_acc_key_down(self, event):
         if event.KeyCode == 307:
             return
-        #print(event)
         for a in self.acc_tab:
             if event.KeyCode == a[1]:
                 if ( not event.AltDown() ) and (a[0] & wx.ACCEL_ALT ):
