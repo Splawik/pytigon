@@ -953,15 +953,8 @@ def main(argv):
             main_run()
             print("FINISH_0")
             if platform.system() == "Windows":
-                #gc.collect()
                 wx.html2.WebView.New("messageloop")
-                print("FINISH_0.1")
-                #os._exit(0)
                 wx.html2.WebView.New("end")
-                print("FINISH_0.2")
-                #sys.exit()
-                #os._exit(0)
-            print("FINISH_1")
 
 if __name__ == '__main__':
    main(sys.argv[1:])
