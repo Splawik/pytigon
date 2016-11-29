@@ -18,7 +18,7 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from base64 import b32encode, b32decode
 import os.path
 
@@ -33,8 +33,8 @@ def init_plugin(
     accel,
     ):
     from .editor import CodeEditor
-    from schcli.guictrl.schctrl import SchBaseCtrl
-    import schcli.guictrl.schctrl
+    from schcli.guictrl.ctrl import SchBaseCtrl
+    import schcli.guictrl.ctrl
 
 
     class Styledtext(CodeEditor, SchBaseCtrl):
@@ -129,7 +129,7 @@ def init_plugin(
 
         def load_from_url(self, url, ext):
             self.set_ext(ext)
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             http.get(self, url)
             txt = http.str()
             self.AddText(txt)
@@ -187,6 +187,6 @@ def init_plugin(
         def on_can_paste(self, event):
             event.Enable(self.can_paste())
 
-    schcli.guictrl.schctrl.STYLEDTEXT = Styledtext
+    schcli.guictrl.ctrl.STYLEDTEXT = Styledtext
 
 

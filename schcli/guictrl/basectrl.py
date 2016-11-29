@@ -207,7 +207,7 @@ class SchBaseCtrl(object):
                 else:
                     tables = self.load_data_from_server(self.src).decode('utf-8')
 
-                self.tdatabuf = tdata_from_html(tables, wx.GetApp().HTTP)
+                self.tdatabuf = tdata_from_html(tables, wx.GetApp().http)
 
     def get_tdata(self):
         if self.tdata:
@@ -239,7 +239,7 @@ class SchBaseCtrl(object):
     def get_parent_form(self):
         parent = self.GetParent()
         while(parent!=None):
-            if type(parent).__name__ == 'SchHtmlWindow':
+            if type(parent).__name__ == 'SchForm':
                 return parent
             parent = parent.GetParent()
         return None

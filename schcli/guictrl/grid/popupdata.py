@@ -217,8 +217,8 @@ class ListPopupCellEditor(PopupDataCellEditor):
             self._tc.popup.html.choices = self.choices
             self._tc.popup.html.refr()
         else:
-            self._tc.sash.Body.choices = self.choices
-            self._tc.sash.Body.refr()
+            self._tc.sash.body.choices = self.choices
+            self._tc.sash.body.refr()
 
     def set_rec(
         self,

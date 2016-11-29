@@ -34,7 +34,7 @@
             self.start_id = start_id
                 
         def transfer(self):
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             parm = { 'id': "{{object.id}}", 'id_start': self.start_id } 
             http.post(self, "/tasks/get_messages", parm=parm)
             s = http.str()
@@ -64,7 +64,7 @@
             
                 parm = { 'id': '{{object.id}}', 'message': value + "\n" }
 
-                http = wx.GetApp().HTTP
+                http = wx.GetApp().http
 
                 http.post(self, "/tasks/put_message", parm=parm)
                 s = http.str()

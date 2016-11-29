@@ -17,6 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""
+SchNotebook object used as a top window in panels: 'desktop', 'panel', 'header' and 'footer'
+"""
+
 import wx
 import wx.lib.agw.aui as aui
 from wx.lib.agw.aui import framemanager
@@ -25,17 +29,19 @@ from schcli.guiframe.manager import SChAuiBaseManager
 from wx.lib.agw.aui.aui_constants import *
 
 
-class AppNotebook(aui.AuiNotebook):
+class SchNotebook(aui.AuiNotebook):
+    """SchNotebook class"""
 
-    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=0, agwStyle=AUI_NB_DEFAULT_STYLE, name="AuiNotebook"):
-    #def __init__(self, *args, **keyw):
-        #keyw['style'] |= wx.WANTS_CHARS
-        #aui.AuiNotebook.__init__(self, *args, **keyw)
-        #self._mgr = SChAuiBaseManager()
-        #styla |= wx.WANTS_CHARS
+    def __init__(self, parent, pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS):
+        """Constructor
 
-
+        Args:
+            parent: parent window
+            pos: position of window
+            size: size of window
+            style: see wx.Window style
+        """
         self._curpage = -1
         self._tab_id_counter = AuiBaseTabCtrlId
         self._dummy_wnd = None
@@ -47,36 +53,28 @@ class AppNotebook(aui.AuiNotebook):
         self._textCtrl = None
         self._tabBounds = (-1, -1)
 
-        wx.Panel.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS, name=name)
+        self.panel = None
+        self.active = False
+        self.closing = False
+        self.last_active = None
 
-        #aui.AuiNotebook.__init__(self, parent, id, pos, size, style|wx.BORDER_NONE|wx.TAB_TRAVERSAL|wx.WANTS_CHARS, name=name)
-
-        #from . import framemanager
+        wx.Panel.__init__(self, parent, wx.ID_ANY, pos, size, style, name="SchNotebook")
         self._mgr = SChAuiBaseManager()
 
         self._tabs = aui.AuiTabContainer(self)
-
-        self.InitNotebook(agwStyle)
-
-
+        self.InitNotebook(AUI_NB_DEFAULT_STYLE)
 
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.on_closing)
         self.Bind(aui.EVT_AUINOTEBOOK_TAB_DCLICK, self.on_dclick)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.on_changed)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.on_changing)
         self.Bind(wx.EVT_NAVIGATION_KEY, self.on_navigete)
-        self.panel = None
-        self.active = False
-        self.closing = False
-        self.last_active = None
+
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
 
 
     def on_closing(self, event):
-        #if len(self._tabs._pages)==1:
-        #    self._mgr.ClosePane(self.panel)
-
         idn = event.GetSelection()
         if idn >= 0:
             page = self.GetPage(idn)
@@ -161,17 +159,14 @@ class AppNotebook(aui.AuiNotebook):
         if page:
             page.activate_page()
 
-    def add_and_split(
-        self,
-        notebook,
-        page,
-        title,
-        direction,
-        ):
+    def add_and_split(self, page, title, direction):
+        """Add page to the notebook and split notebook window
 
-        #p = notebook.AddPage(page, title, True)
-        #notebook.Split(1, direction)
-        #return
+        Args:
+            page - page to be added
+            title - title of new tab
+            direction - split direction: wx.LEFT, wx.TOP, wx.RIGHT, wx.Bottom
+        """
 
         self.closing = False
         if self.GetPageCount() < 1:
@@ -228,10 +223,6 @@ class AppNotebook(aui.AuiNotebook):
         forward = evt.GetDirection()
         self.activate_page(self.GetCurrentPage())
         evt.Skip()
-
-
-    #def Hide(self):
-    #    print("Hide 0")
 
     def Freeze(self):
         pass

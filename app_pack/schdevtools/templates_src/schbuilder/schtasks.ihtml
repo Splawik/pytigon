@@ -9,7 +9,7 @@
     % if form_list
         script language=python
             def init_form(self):
-                self['tabsort'].grid.default_command = 'fields'
+                self.tabsort.grid.default_command = 'fields'
                 
             def signal_from_child(self, child, signal):
                 if signal=='set_bitmap_list':

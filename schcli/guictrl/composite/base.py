@@ -18,7 +18,7 @@
 #version: "0.1a"
 
 import wx
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guictrl.basectrl import SchBaseCtrl
 
 
 class COMPOSITE_PANEL(wx.Panel, SchBaseCtrl):

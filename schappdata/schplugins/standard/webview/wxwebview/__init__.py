@@ -84,9 +84,9 @@ def init_plugin_web_view(
     ):
     import wx.html2
     from schlib.schindent.indent_tools import norm_html
-    from schcli.guictrl.schctrl import SchBaseCtrl
-    import schcli.guictrl.schctrl
-    from schcli.guilib import schevent
+    from schcli.guictrl.ctrl import SchBaseCtrl
+    import schcli.guictrl.ctrl
+    from schcli.guilib import event
     try:
         from urllib.parse import quote as escape
     except:
@@ -265,8 +265,8 @@ def init_plugin_web_view(
         def on_source(self, event):
             okno = self.GetParent().new_main_page('^standard/editor/editor.html',
                     self.GetParent().GetTab().title + ' - page source', None)
-            okno.Body['EDITOR'].SetValue(norm_html(self.GetPageSource()))
-            okno.Body['EDITOR'].GotoPos(0)
+            okno.body['EDITOR'].SetValue(norm_html(self.GetPageSource()))
+            okno.body['EDITOR'].GotoPos(0)
 
         def on_edit(self, event):
             self.edit = not self.edit
@@ -302,5 +302,5 @@ def init_plugin_web_view(
 
         return wb
 
-    schcli.guictrl.schctrl.HTML2 = Html2
+    schcli.guictrl.ctrl.HTML2 = Html2
 

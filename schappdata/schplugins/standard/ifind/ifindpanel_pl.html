@@ -18,11 +18,11 @@
             self.SEARCH.SetFocus()
         def calculate_best_size(self):
             x, y = self.base_calculate_best_size()
-            if self.TabWindow and self.TabWindow.ParentTab:
-                x = self.TabWindow.ParentTab.Body.GetSize().GetWidth()
+            if self.page and self.page.parent_page:
+                x = self.page.parent_page.body.GetSize().GetWidth()
             return (x, y)
         def SearchText(self, regex=False, back=False, corectSelection=False, next=False):
-            editor = self.get_parent_panel()['EDITOR']
+            editor = self.get_parent_form().EDITOR
             text = self.SEARCH.GetValue()
             flags = wx.stc.STC_FIND_MATCHCASE
             if regex:
@@ -60,7 +60,7 @@
         def Search(self):
             self.SearchText()
         def OnExit(self, event):
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 </script>
 {% endblock %}
 {% block content %}

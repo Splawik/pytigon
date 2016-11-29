@@ -5,15 +5,14 @@
 {% block pythoncodeinit %}
         
         def init_form(self):
-            self['save_btn'].Disable()
+            self.save_btn.Disable()
             self.modified = False
             self.tuser = wx.Timer(self)
             self.tuser.Start(1000)
             self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
-            self['EDITOR'].SetSavePoint()
+            self.EDITOR.SetSavePoint()
             self._insert_txt.Bind(wx.EVT_BUTTON, self.on_insert_click)
-            self['save_btn'].Bind(wx.EVT_BUTTON, self.on_click)
-            #self['EDITOR'].Bind(wx.EVT_KEY_DOWN, self.on_editor_key_down)
+            self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
             atab=self.get_acc_tab()
             atab.append((0, wx.WXK_INSERT, self.on_panel_focus))
             atab.append((wx.ACCEL_ALT, ord('I'), self.on_panel_focus))

@@ -19,39 +19,38 @@
 #version: "0.1a"
 
 """
-    Top window
+This module contains SchAppFrame class. When pytigon application starts, new top frame window (class SchAppFrame) is created.
+During the initialisation process all defined for application plugins are started.
 """
 
 import os
 import sys
 import platform
+from tempfile import NamedTemporaryFile
+from pydispatch import dispatcher
 
 import wx
 import wx.html2
 import datetime
-import time
-    #import agw.aui as aui
 from wx.lib.agw import aui
 
-from schcli.guilib.art_provider import ArtProviderFromIcon
-from schcli.guilib.schevent import * #@UnusedWildImport
-from schcli.guiframe.appnotebook import AppNotebook
-from schcli.guiframe.appnotebookpage import NotebookPage
-from schcli.guiframe.manager import SChAuiManager
-from schcli.guilib.tools import bitmap_from_href
-from schcli.toolbar import toolbar_interface
 from schlib.schfs.vfstools import get_temp_filename
 from schlib.schtools.cc import compile
 from schlib.schtools.tools import split2
 from schlib.schtasks.task import get_process_manager
-from tempfile import NamedTemporaryFile
-from pydispatch import dispatcher
 
-import six
+from schcli.guilib.art_provider import ArtProviderFromIcon
+from schcli.guilib.event import * #@UnusedWildImport
+from schcli.guiframe.notebook import SchNotebook
+from schcli.guiframe.notebookpage import SchNotebookPage
+from schcli.guiframe.manager import SChAuiManager
+from schcli.guilib.tools import bitmap_from_href
+from schcli.toolbar import toolbar_interface
 
 _ = wx.GetTranslation
 
-class SChMainPanel(wx.Window):
+
+class _SChMainPanel(wx.Window):
     def __init__(self, app_frame, *argi, **argv):
         argv['name'] = 'schmainpanel'
         if 'style' in argv:
@@ -78,24 +77,51 @@ class SchAppFrame(wx.Frame):
         This is main window of pytigon application
     """
 
-    def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE |
-                 wx.CLIP_CHILDREN | wx.WANTS_CHARS, name="MainWindow"):
+    def __init__(self, gui_style="tree(toolbar,statusbar)", title="", pos=wx.DefaultPosition, size=wx.DefaultSize,
+                 style=wx.DEFAULT_FRAME_STYLE | wx.CLIP_CHILDREN | wx.WANTS_CHARS,):
+        """Constructor
 
+        Args:
+            gui_style - there is string with some key words. If specyfied key word exist some functionality of
+            SChAppFrame are turned on.
+
+            List of key words:
+
+                dialog - application with one form
+
+                one_form - some as dialog
+
+                tray - application have system tray icon with some actions
+
+                statusbar - show the status bar
+
+                tree - menu in tree form
+
+                standard - standard for platform interface
+
+                modern - replace standard toolbar with ribbon bar
+
+                toolbar - show the tool bar
+
+            title - the window title
+
+            pos - the window position
+
+            size - the window size
+
+            style - see wx.Frame constructor
         """
-        Constructor
-        """
+
+        wx.Frame.__init__(self, None, wx.ID_ANY, title, pos, size, style, "MainWindow")
+        #self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
+
+        self._id = wx.ID_HIGHEST
+        self._perspectives = []
+        self._menu_bar_lp = 0
+        self._toolbar_bar_lp = 1
+        self._proc_mannager = None
 
         self.gui_style = gui_style
-
-        wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
-        #self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
-        self._id = wx.ID_HIGHEST
-        #self._id = 32000
-
-        self._perspectives = []
-        #self._mgr.SetManagedWindow(self)
-
-        self.x = 0
         self.idle_objects = []
         self.gui_style = gui_style
         self.command = {}
@@ -103,15 +129,15 @@ class SchAppFrame(wx.Frame):
         self.active_pane = None
         self.active_page = None
         self.active_child_ctrl = None
+
         self.toolbar_interface = None
         self.menubar_interface = None
         self.statusbar_interface = None
+
         self.menu_bar = None
+
         self.destroy_fun_tab = []
         self.after_init = False
-
-        self.menu_bar_lp = 0
-        self.toolbar_bar_lp = 1
 
         self.sys_command = dict({"EXIT": self.on_exit, "ABOUT": self.on_about})
 
@@ -120,8 +146,7 @@ class SchAppFrame(wx.Frame):
         else:
             hide_on_single_page = False
 
-
-        self._panel = SChMainPanel(self, self)
+        self._panel = _SChMainPanel(self, self)
         self._mgr = SChAuiManager()
         self._mgr.SetManagedWindow(self._panel)
 
@@ -131,24 +156,19 @@ class SchAppFrame(wx.Frame):
 
         self._mgr.SetAGWFlags(self._mgr.GetAGWFlags() ^ aui.AUI_MGR_ALLOW_ACTIVE_PANE)
 
-        self.desktop = self.create_notebook_ctrl(hide_on_single_page)
+        self.desktop = self._create_notebook_ctrl(hide_on_single_page)
         self.get_dock_art().SetMetric(aui.AUI_DOCKART_PANE_BORDER_SIZE, 0)
-
-        self.Bind(aui.EVT_AUI_PANE_ACTIVATED, self.on_pane_activated)
 
         wx.ArtProvider.Push(ArtProviderFromIcon())
 
         icon = wx.Icon()
         b = wx.Bitmap(wx.Image(wx.GetApp().scr_path + '/schappdata/media/schweb.png'))
         icon.CopyFromBitmap(b)
-
         self.SetIcon(icon)
 
         if 'tray' in gui_style:
-            #TODO
             self.tbIcon = wx.adv.TaskBarIcon()
             self.tbIcon.SetIcon(icon, "SCSkrypt")
-            #self.tbIcon = None
         else:
             self.tbIcon = None
 
@@ -159,8 +179,7 @@ class SchAppFrame(wx.Frame):
 
         wx.GetApp().SetTopWindow(self)
 
-
-        self.SetMinSize(wx.Size(800, 700))
+        self.setup_frame()
 
         if 'tree' in gui_style:
             self._sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -168,34 +187,26 @@ class SchAppFrame(wx.Frame):
             self._sizer = wx.BoxSizer(wx.VERTICAL)
 
         if 'standard' in gui_style:
-            if len(wx.GetApp().get_tab(self.toolbar_bar_lp))>1:
-                from schcli.toolbar import schstandardtoolbar
-                self.toolbar_interface = schstandardtoolbar.ToolBarInterface(self, gui_style)
-                self.create_tool_bar()
+            if len(wx.GetApp().get_tab(self._toolbar_bar_lp))>1:
+                from schcli.toolbar import standardtoolbar
+                self.toolbar_interface = standardtoolbar.ToolBarInterface(self, gui_style)
+                self._create_tool_bar()
                 self.toolbar_interface.realize_bar()
             self._sizer.Add(self._panel, 1, wx.EXPAND)
             self._mgr.Update()
         elif 'modern' in gui_style:
-            from schcli.toolbar.schmoderntoolbar import RibbonInterface
+            from schcli.toolbar.moderntoolbar import RibbonInterface
             self.toolbar_interface = RibbonInterface(self, gui_style)
-            self.create_tool_bar()
+            self._create_tool_bar()
             self.toolbar_interface.realize_bar()
             self._sizer.Add(self.toolbar_interface.get_bar(), 0, wx.EXPAND)
             self._sizer.Add(self._panel, 1, wx.EXPAND)
         elif 'tree' in gui_style:
-            from schcli.toolbar.schtreetoolbar import TreeInterface
-            #leftPanel = wx.Panel(self._panel, style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN, size=wx.Size(400, 250))
-            #self.toolbar_interface = TreeInterface(leftPanel, gui_style)
+            from schcli.toolbar.treetoolbar import TreeInterface
             self.toolbar_interface = TreeInterface(self._panel, gui_style)
-            self.create_tool_bar()
+            self._create_tool_bar()
             self.toolbar_interface.realize_bar()
-
-            #leftBox = wx.BoxSizer(wx.VERTICAL)
-            #leftBox.Add(self.toolbar_interface.get_bar(), 1, wx.EXPAND)
-            #leftPanel.SetSizer(leftBox)
-
-            #self._mgr.AddPane(leftPanel, self.panel("Menu", "Menu").CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
-            self._mgr.AddPane(self.toolbar_interface.bar, self.panel("menu", _("Menu")).CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
+            self._mgr.AddPane(self.toolbar_interface.bar, self._create_pane_info("menu", _("Menu")).CaptionVisible(True).MinimizeButton(True).CloseButton(False).Left().BestSize((250, 40)).MinSize((250, 40)).Show())
             self._sizer.Add(self._panel, 1, wx.EXPAND)
         else:
             self._sizer.Add(self._panel, 1, wx.EXPAND)
@@ -203,18 +214,16 @@ class SchAppFrame(wx.Frame):
         self.SetSizer(self._sizer)
 
         if len(wx.GetApp().get_tab(2))>1:
-            self.menu_bar_lp = 2
+            self._menu_bar_lp = 2
         else:
             if wx.GetApp().menu_always:
-                self.menu_bar_lp = 1
+                self._menu_bar_lp = 1
 
-        if self.menu_bar_lp>0:
-            from schcli.toolbar import schmenubar
-
+        if self._menu_bar_lp>0:
+            from schcli.toolbar import menubar
             self.menu_bar = wx.MenuBar()
-            self.menubar_interface = schmenubar.MenuInterface(self.menu_bar, gui_style)
-            self.create_menu_bar()
-
+            self.menubar_interface = menubar.MenuInterface(self.menu_bar, gui_style)
+            self._create_menu_bar()
 
         if not self.menubar_interface:
             self.menubar_interface = toolbar_interface.BarNullInterface()
@@ -222,17 +231,17 @@ class SchAppFrame(wx.Frame):
         if not self.toolbar_interface:
             self.toolbar_interface = toolbar_interface.BarNullInterface()
 
+
         s_dx = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
         s_dy = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)
 
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("panel", _("Tools")).CaptionVisible(True).
+        self._mgr.AddPane(self._create_notebook_ctrl(), self._create_pane_info("panel", _("Tools")).CaptionVisible(True).
             Left().MinSize((400, s_dy / 2)).BestSize((s_dx / 2 - 50, s_dy - 100)).Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("header", _("Header")).CaptionVisible(False).
+        self._mgr.AddPane(self._create_notebook_ctrl(), self._create_pane_info("header", _("Header")).CaptionVisible(False).
             Top().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
-        self._mgr.AddPane(self.create_notebook_ctrl(), self.panel("footer", _("Footer")).CaptionVisible(False).
+        self._mgr.AddPane(self._create_notebook_ctrl(), self._create_pane_info("footer", _("Footer")).CaptionVisible(False).
             Bottom().MinSize((s_dx, s_dy / 10)).BestSize((s_dx, s_dy/5)).Show())
-        self._mgr.AddPane(self.desktop, self.panel("desktop", _("Desktop")).CenterPane().Show())
-
+        self._mgr.AddPane(self.desktop, self._create_pane_info("desktop", _("Desktop")).CenterPane().Show())
         perspective_notoolbar = self._mgr.SavePerspective()
 
         if 'toolbar' in gui_style and 'standard' in gui_style:
@@ -254,44 +263,91 @@ class SchAppFrame(wx.Frame):
                 if all_panes[ii].name != 'menu':
                     all_panes[ii].Hide()
 
-        ##if self.desktop.GetPageCount() > 0:
         self._mgr.GetPane("desktop").Show()
-        #else:
-        #    self._mgr.GetPane("desktop").Hide()
 
         perspective_default = self._mgr.SavePerspective()
 
         size = self.desktop.GetPageCount()
         for i in range(size): #@UnusedVariable
             self.desktop.DeletePage(0)
+
         self._perspectives.append(perspective_default)
         self._perspectives.append(perspective_all)
         self._perspectives.append(perspective_notoolbar)
 
-        self.aTable = [
-            (wx.ACCEL_ALT, wx.WXK_PAGEUP, ID_PrevTab),
-            (wx.ACCEL_ALT, wx.WXK_PAGEDOWN, ID_NextTab),
+        self.init_acc_keys()
+        self.init_plugins()
+        self.SetAcceleratorTable(wx.AcceleratorTable(self.aTable))
 
-            (wx.ACCEL_ALT, wx.WXK_LEFT, ID_GotoPanel),
-            (wx.ACCEL_ALT, ord('t'), ID_GotoPanel),
-            (wx.ACCEL_ALT, wx.WXK_RIGHT, ID_GotoDesktop),
-            (wx.ACCEL_ALT, ord('d'), ID_GotoDesktop),
-            (wx.ACCEL_ALT, wx.WXK_UP, ID_GotoHeader),
-            (wx.ACCEL_CTRL, ord('w'), ID_CloseTab),
-            (wx.ACCEL_CTRL, ord('n'), ID_WEB_NEW_WINDOW),
-            (wx.ACCEL_CTRL, wx.WXK_TAB, ID_NextTab),
-            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_TAB, ID_PrevTab),
-            (wx.ACCEL_CTRL, wx.WXK_F6, ID_NextTab),
-            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_F6, ID_PrevTab),
-            (wx.ACCEL_ALT, ord('h'), ID_PrevTab),
-            (wx.ACCEL_ALT, ord('l'), ID_NextTab),
-            (wx.ACCEL_ALT, ord('k'), ID_PrevPage),
-            (wx.ACCEL_ALT, ord('j'), ID_NextPage),
-            (wx.ACCEL_ALT, wx.WXK_BACK, ID_WEB_BACK),
-            (0, wx.WXK_F5, ID_RefreshTab)]
+        self._mgr.Update()
 
+        self.t1 = wx.Timer(self)
+        self.t1.Start(250)
+
+        self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
+        self.Bind(aui.EVT_AUI_PANE_ACTIVATED, self.on_pane_activated)
+        self.Bind(wx.EVT_IDLE, self.on_idle)
+        self.Bind(wx.EVT_MENU_RANGE, self.on_show_elem, id=ID_ShowHeader, id2=ID_ShowToolbar2)
+
+        if 'tray' in gui_style:
+            self.Bind(wx.EVT_CLOSE, self.on_taskbar_hide)
+        else:
+            self.Bind(wx.EVT_CLOSE, self.on_close)
+
+        self._panel.Bind(wx.EVT_CHILD_FOCUS, self.on_child_focus)
+
+        self.bind_command(self.on_open, id=wx.ID_OPEN)
+        self.bind_command(self.on_exit, id=wx.ID_EXIT)
+
+        if self.toolbar_interface:
+            self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_EXIT, wx.EVT_UPDATE_UI)
+            self.toolbar_interface.bind(self.on_update_ui_true, ID_WEB_NEW_WINDOW, wx.EVT_UPDATE_UI)
+            self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_OPEN, wx.EVT_UPDATE_UI)
+
+        self.bind_command(self.on_next_tab, id=ID_NextTab)
+        self.bind_command(self.on_prev_tab, id=ID_PrevTab)
+        self.bind_command(self.on_next_page, id=ID_NextPage)
+        self.bind_command(self.on_prev_page, id=ID_PrevPage)
+        self.bind_command(self.on_close_tab, id=ID_CloseTab)
+        self.bind_command(self.on_refresh_tab, id=ID_RefreshTab)
+
+        self.bind_command(self.on_goto_desktop, id=ID_GotoDesktop)
+        self.bind_command(self.on_goto_head, id=ID_GotoHeader)
+        self.bind_command(self.on_goto_panel, id=ID_GotoPanel)
+        self.bind_command(self.on_goto_footer, id=ID_GotoFooter)
+
+        self.bind_command(self.on_command, id=ID_WEB_NEW_WINDOW)
+
+        self.bind_command(self.on_show_status_bar, id=ID_ShowStatusBar)
+
+        if self.menu_bar:
+            self.SetMenuBar(self.menu_bar)
+
+        if self.tbIcon:
+            wx.adv.EVT_TASKBAR_LEFT_DCLICK(self.tbIcon, self.on_taskbar_toogle)
+            wx.adv.EVT_TASKBAR_RIGHT_UP(self.tbIcon, self.on_taskbar_show_menu)
+
+            self.menu_tray = wx.Menu()
+            self.menu_tray.Append(ID_TASKBAR_SHOW, _('Show It'))
+            wx.EVT_MENU(self, ID_TASKBAR_SHOW, self.on_taskbar_show)
+            self.menu_tray.Append(ID_TASKBAR_HIDE, _('Minimize It'))
+            wx.EVT_MENU(self, ID_TASKBAR_HIDE, self.on_taskbar_hide)
+            self.menu_tray.AppendSeparator()
+            self.menu_tray.Append(ID_TASKBAR_CLOSE, _('Close It'))
+            wx.EVT_MENU(self, ID_TASKBAR_CLOSE, self.on_close)
+
+        self.SetExtraStyle(wx.WS_EX_PROCESS_UI_UPDATES)
+        wx.UpdateUIEvent.SetUpdateInterval(50)
+        wx.UpdateUIEvent.SetMode(wx.UPDATE_UI_PROCESS_SPECIFIED)
+        wx.CallAfter(self.UpdateWindowUI)
+        self.Layout()
+
+
+    def setup_frame(self):
+        self.SetMinSize(wx.Size(800, 700))
+
+    def init_plugins(self):
         home_dir = wx.GetApp().get_working_dir()
-
         dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/"]
         auto_plugins = wx.GetApp().config['Global settings']['auto_plugins'].split(';')
         for dirname in dirnames:
@@ -333,84 +389,28 @@ class SchAppFrame(wx.Frame):
                                     print(sys.exc_info()[0])
                                     print(traceback.print_exc())
 
-        self.SetAcceleratorTable(wx.AcceleratorTable(self.aTable))
+    def init_acc_keys(self):
+        self.aTable = [
+            (wx.ACCEL_ALT, wx.WXK_PAGEUP, ID_PrevTab),
+            (wx.ACCEL_ALT, wx.WXK_PAGEDOWN, ID_NextTab),
 
-        self._mgr.Update()
-
-        self.t1 = wx.Timer(self)
-        self.t1.Start(250)
-
-        self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
-
-        if 'tray' in gui_style:
-            self.Bind(wx.EVT_CLOSE, self.on_taskbar_hide)
-        else:
-            self.Bind(wx.EVT_CLOSE, self.on_close)
-
-        self._panel.Bind(wx.EVT_CHILD_FOCUS, self.on_child_focus)
-
-        #self.Bind(wx.EVT_MAXIMIZE, self.on_maximize)
-
-
-        #self.bind_command(self.on_command)
-
-        self.bind_command(self.on_open, id=wx.ID_OPEN)
-        self.bind_command(self.on_exit, id=wx.ID_EXIT)
-
-        if self.toolbar_interface:
-            self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_EXIT, wx.EVT_UPDATE_UI)
-            self.toolbar_interface.bind(self.on_update_ui_true, ID_WEB_NEW_WINDOW, wx.EVT_UPDATE_UI)
-            self.toolbar_interface.bind(self.on_update_ui_true, wx.ID_OPEN, wx.EVT_UPDATE_UI)
-
-        self.bind_command(self.on_next_tab, id=ID_NextTab)
-        self.bind_command(self.on_prev_tab, id=ID_PrevTab)
-        self.bind_command(self.on_next_page, id=ID_NextPage)
-        self.bind_command(self.on_prev_page, id=ID_PrevPage)
-        self.bind_command(self.on_close_tab, id=ID_CloseTab)
-        self.bind_command(self.on_refresh_tab, id=ID_RefreshTab)
-
-        self.bind_command(self.on_goto_desktop, id=ID_GotoDesktop)
-        self.bind_command(self.on_goto_head, id=ID_GotoHeader)
-        self.bind_command(self.on_goto_panel, id=ID_GotoPanel)
-        self.bind_command(self.on_goto_footer, id=ID_GotoFooter)
-
-
-        self.bind_command(self.on_command, id=ID_WEB_NEW_WINDOW)
-
-        self.Bind(wx.EVT_MENU_RANGE, self.on_show_elem, id=ID_ShowHeader, id2=ID_ShowToolbar2)
-        self.bind_command(self.on_show_status_bar, id=ID_ShowStatusBar)
-
-        self.Bind(wx.EVT_IDLE, self.on_idle)
-        #self.Bind(wx.EVT_SIZE, self.on_size)
-
-        if self.menu_bar:
-            self.SetMenuBar(self.menu_bar)
-
-        #tray icon
-        if self.tbIcon:
-            wx.adv.EVT_TASKBAR_LEFT_DCLICK(self.tbIcon, self.on_taskbar_toogle)
-            wx.adv.EVT_TASKBAR_RIGHT_UP(self.tbIcon, self.on_taskbar_show_menu)
-
-            self.menu_tray = wx.Menu()
-            self.menu_tray.Append(ID_TASKBAR_SHOW, _('Show It'))
-            wx.EVT_MENU(self, ID_TASKBAR_SHOW, self.on_taskbar_show)
-            self.menu_tray.Append(ID_TASKBAR_HIDE, _('Minimize It'))
-            wx.EVT_MENU(self, ID_TASKBAR_HIDE, self.on_taskbar_hide)
-            self.menu_tray.AppendSeparator()
-            self.menu_tray.Append(ID_TASKBAR_CLOSE, _('Close It'))
-            wx.EVT_MENU(self, ID_TASKBAR_CLOSE, self.on_close)
-
-        #wx.lib.inspection.InspectionTool().Show()
-        self.SetExtraStyle(wx.WS_EX_PROCESS_UI_UPDATES)
-        wx.UpdateUIEvent.SetUpdateInterval(50)
-        wx.UpdateUIEvent.SetMode(wx.UPDATE_UI_PROCESS_SPECIFIED)
-        wx.CallAfter(self.UpdateWindowUI)
-        self._proc_mannager = None
-        self.Layout()
-
-    #def on_size(self, event):
-    #    print("on_size", event.GetSize())
-    #    event.Skip()
+            (wx.ACCEL_ALT, wx.WXK_LEFT, ID_GotoPanel),
+            (wx.ACCEL_ALT, ord('t'), ID_GotoPanel),
+            (wx.ACCEL_ALT, wx.WXK_RIGHT, ID_GotoDesktop),
+            (wx.ACCEL_ALT, ord('d'), ID_GotoDesktop),
+            (wx.ACCEL_ALT, wx.WXK_UP, ID_GotoHeader),
+            (wx.ACCEL_CTRL, ord('w'), ID_CloseTab),
+            (wx.ACCEL_CTRL, ord('n'), ID_WEB_NEW_WINDOW),
+            (wx.ACCEL_CTRL, wx.WXK_TAB, ID_NextTab),
+            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_TAB, ID_PrevTab),
+            (wx.ACCEL_CTRL, wx.WXK_F6, ID_NextTab),
+            (wx.ACCEL_CTRL | wx.ACCEL_SHIFT, wx.WXK_F6, ID_PrevTab),
+            (wx.ACCEL_ALT, ord('h'), ID_PrevTab),
+            (wx.ACCEL_ALT, ord('l'), ID_NextTab),
+            (wx.ACCEL_ALT, ord('k'), ID_PrevPage),
+            (wx.ACCEL_ALT, ord('j'), ID_NextPage),
+            (wx.ACCEL_ALT, wx.WXK_BACK, ID_WEB_BACK),
+            (0, wx.WXK_F5, ID_RefreshTab)]
 
     def on_idle(self, event):
         for obj in self.idle_objects:
@@ -433,12 +433,7 @@ class SchAppFrame(wx.Frame):
         event.Skip()
 
     def on_update_ui_true(self, event):
-        """
-        on_update_ui_true
-
-        *x1
-        *x2
-        """
+        """Bind wx.EVT_UPDATE_UI to this event when you want action to be always enabled"""
         event.Enable(True)
 
     def on_pane_activated(self, event):
@@ -459,55 +454,35 @@ class SchAppFrame(wx.Frame):
 
         event.Skip()
 
-    def on_maximize(self, event):
-        self.SetWindowStyle(wx.RESIZE_BORDER | wx.CLIP_CHILDREN)
-        event.Skip()
-
-    def on_restore(self, event):
-        self.SetWindowStyle(wx.DEFAULT_FRAME_STYLE | wx.CLIP_CHILDREN)
-        event.Skip()
-
     def get_frame_manager(self):
+        """returns frame manager - aui.framemanager.AuiManager derived object"""
         return self._mgr
 
     def get_dock_art(self):
+        """return art provider related to the asociated frame manager"""
         return self._mgr.GetArtProvider()
 
     def SetActive(self, notebook, tab):
         if tab:
             tab.SetFocus()
 
-    def create_notebook_ctrl(self, hideSingleTab=True):
-        #if hideSingleTab:
-        #    style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS | aui.AUI_NB_HIDE_ON_SINGLE_TAB
-        #else:
+    def _create_notebook_ctrl(self, hideSingleTab=True):
         style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
-                #| aui.AUI_NB_DRAW_DND_TAB
-        #if hideSingleTab:
-        #    if hasattr(aui, 'AUI_NB_HIDE_ON_SINGLE_TAB'):
-        #        style ^= aui.AUI_NB_HIDE_ON_SINGLE_TAB
-        n = AppNotebook(self._panel, -1, wx.Point(0, 0), wx.Size(0,
-            0), style=style)
+        n = SchNotebook(self._panel, wx.Point(0, 0), wx.Size(0,0), style=style)
         n.SetAGWWindowStyleFlag(style)
-        #n.SetArtProvider(aui.ChromeTabArt())
         n.SetArtProvider(aui.VC71TabArt())
-        #n.SetArtProvider(aui.VC8TabArt())
-        #n.SetArtProvider(aui.FF2TabArt())
-        #if hasattr(aui, 'VC71TabArt'):
-        #    n.SetArtProvider(aui.VC71TabArt())
         return n
 
-    def panel(self, name, caption):
+    def _create_pane_info(self, name, caption):
         return aui.AuiPaneInfo().Name(name).Caption(caption)
 
-    def is_exiting(self):
-        return False
 
-    def on_page_event(self, direction):
+    def _on_page_event(self, direction):
+        """scroll active form"""
         w = wx.Window.FindFocus()
         parent = w
         while parent:
-            if parent.__class__.__name__=='SchHtmlWindow':
+            if parent.__class__.__name__=='SchForm':
                 if hasattr(parent, "on_page_event"):
                     parent.on_page_event(direction)
                     return
@@ -525,14 +500,16 @@ class SchAppFrame(wx.Frame):
                 parent = parent.GetParent()
 
     def on_next_page(self, evt):
+        """scroll active form one page down"""
         self.on_page_event(1)
 
     def on_prev_page(self, evt):
+        """scroll active form one page up"""
         self.on_page_event(-1)
 
     def on_next_tab(self, evt):
+        """select a next tab in desktop notebook"""
         desktop = wx.GetApp().GetTopWindow().desktop
-        #id = desktop.GetSelection()
         id = desktop.GetPageIndex(desktop.GetCurrentPage())
         idn = 0
         if id != None and id >= 0:
@@ -543,6 +520,7 @@ class SchAppFrame(wx.Frame):
         return
 
     def on_prev_tab(self, evt):
+        """select a previous tab in desktop notebook"""
         desktop = wx.GetApp().GetTopWindow().desktop
         id = desktop.GetSelection()
         idn = 0
@@ -554,28 +532,27 @@ class SchAppFrame(wx.Frame):
         return
 
     def on_close_tab(self, evt):
-        #win = wx.Window_FindFocus()
+        """close active tab in active notebook"""
         win = wx.Window.FindFocus()
         while win:
-            if win.__class__.__name__ == 'AppNotebook':
+            if win.__class__.__name__ == 'SchNotebook':
                 id = win.GetSelection()
                 if id >= 0:
                     panel = win.GetPage(id)
-                    panel.cancel(True)
-                #self.after_close(win)
+                    panel.close_child_page(True)
                 return
             win = win.GetParent()
 
-
-    #def after_close(self, win):
-    #    count = win.GetPageCount()
-    #    if count < 1:
-    #        apppanel = win.GetPanel()
-    #        if apppanel:
-    #            apppanel.Hide()
-    #            self._mgr.Update()
+    def after_close(self, win):
+        count = win.GetPageCount()
+        if count < 1:
+            apppanel = win.GetPanel()
+            if apppanel:
+                apppanel.Hide()
+                self._mgr.Update()
 
     def on_refresh_tab(self, evt):
+        """Refresh content of active form"""
         desktop = wx.GetApp().GetTopWindow().desktop
         idn = desktop.GetSelection()
         if idn >= 0:
@@ -583,6 +560,7 @@ class SchAppFrame(wx.Frame):
             panel.refresh_html()
 
     def get_active_ctrl(self):
+        """Get active widget"""
         ctrl = None
         idn = self.desktop.GetSelection()
         if idn >= 0:
@@ -592,12 +570,12 @@ class SchAppFrame(wx.Frame):
                 if count > 0:
                     htmlwin = panel.get_page(count - 1)
                     if htmlwin:
-                        #print("CTRL", htmlwin)
                         ctrl = htmlwin.get_last_control_with_focus()
                 return ctrl
         return None
 
     def get_active_panel(self):
+        """get active form"""
         idn = self.desktop.GetSelection()
         if idn >= 0:
             panel = self.desktop.GetPage(idn)
@@ -608,7 +586,18 @@ class SchAppFrame(wx.Frame):
                     return htmlwin
         return None
 
-    def new_main_page(self, address_or_parser, title="", parametry=None, panel="desktop"):
+    def new_main_page(self, address_or_parser, title="", parameters=None, panel="desktop"):
+        """Open a new page in main
+
+        Args:
+            address_or_parser: can be: address of http page (str type) or
+            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            title - new tab title
+            parameters - parameters of http request
+            panel - options are: 'desktop', 'panel', 'header', 'footer'
+        Returns:
+            created form :class:'~schcli.guiframe.htmlsash.SchPage'
+        """
 
         if type(address_or_parser) == str:
             address = address_or_parser
@@ -625,8 +614,8 @@ class SchAppFrame(wx.Frame):
                     pdict[pos[0]]=pos[1]
                 else:
                     pdict[pos[0]]=None
-        if parametry and type(parametry)==dict:
-            pdict.update(parametry)
+        if parameters and type(parameters)==dict:
+            pdict.update(parameters)
 
         if 'schtml' in pdict:
             _panel = pdict['schtml']
@@ -653,11 +642,11 @@ class SchAppFrame(wx.Frame):
                 ret =  self.new_main_page("^standard/webview/widget_web.html", "Empty page", panel=_panel)
                 if address.startswith('http://') or address.startswith('https://') or address.startswith('file://'):
                     def _ret_fun():
-                        ret.Body.WEB.go(address)
+                        ret.body.WEB.go(address)
                     wx.CallAfter(_ret_fun)
                 else:
                     def _ret_fun():
-                        ret.Body.WEB.go(wx.GetApp().base_address + address)
+                        ret.body.WEB.go(wx.GetApp().base_address + address)
                     wx.CallAfter(_ret_fun)
                 return ret
 
@@ -669,13 +658,12 @@ class SchAppFrame(wx.Frame):
         if panel.startswith("toolbar"):
             name = panel[7:]
             if name[0:1] == '_':
-                return self.toolbar_interface.create_html_win(name[1:], address_or_parser, parametry)
+                return self.toolbar_interface.create_html_win(name[1:], address_or_parser, parameters)
             else:
-                return self.toolbar_interface.create_html_win(None, address_or_parser, parametry)
+                return self.toolbar_interface.create_html_win(None, address_or_parser, parameters)
 
 
         n = self._mgr.GetPane(_panel).window
-        #sel = n.GetSelection()
 
         if not self._mgr.GetPane(_panel).IsShown():
             refr = True
@@ -692,55 +680,36 @@ class SchAppFrame(wx.Frame):
                 self._mgr.Update()
             return False
 
-        okno = NotebookPage(n)
-        #if panel == "Desktop2":
-        #error in AGW
+        page = SchNotebookPage(n)
         if panel == "desktop2":
             if title is None:
-                #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
-                if isinstance(address_or_parser, six.string_types):
-                    n.add_and_split(n, okno, "", wx.RIGHT)
+                if type(address_or_parser)==str:
+                    n.add_and_split(page, "", wx.RIGHT)
                 else:
-                    n.add_and_split(n, okno, address_or_parser.title, wx.RIGHT)
+                    n.add_and_split(page, address_or_parser.title, wx.RIGHT)
             else:
-                #n.add_and_split(okno, title2, wx.RIGHT)
-                n.add_and_split(n, okno, title2, wx.RIGHT)
+                n.add_and_split(page, title2, wx.RIGHT)
         else:
             if title is None:
-                #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
-                if isinstance(address_or_parser, six.string_types):
-                    n.AddPage(okno, "", True)
+                if type(address_or_parser)==str:
+                    n.AddPage(page, "", True)
                 else:
-                    n.AddPage(okno, address_or_parser.title, True)
+                    n.AddPage(page, address_or_parser.title, True)
             else:
-                n.AddPage(okno, title2, True)
+                n.AddPage(page, title2, True)
 
-
-        #if platform.system() == "Linux":
-        #    okno.SetSize(0,0)
-
-        #if address_or_parser.__class__ == str or address_or_parser.__class__ == unicode:
-        if isinstance(address_or_parser, six.string_types):
+        if type(address_or_parser)==str:
             address = address_or_parser
         else:
             address = address_or_parser.address
 
-
-        #okno.SetSize(10000,10000)
-
-        #self.Refresh()
-        #self.Update()
-
-        okno.http = wx.GetApp().get_http_for_adr(address)
+        page.http = wx.GetApp().get_http_for_adr(address)
 
         if refr:
             self._mgr.GetPane(_panel).Show()
         self._mgr.Update()
 
-        return okno.new_child_page(address_or_parser, None, parametry)
-        #return okno.new_child_page(address_or_parser, None, parametry)
-        #wx.CallAfter(okno.new_child_page, address_or_parser, None, parametry)
-        #return
+        return page.new_child_page(address_or_parser, None, parameters)
 
     def on_taskbar_hide(self, event):
         self.Hide()
@@ -758,14 +727,15 @@ class SchAppFrame(wx.Frame):
         self.Show()
 
     def bind_command(self, fun, id=wx.ID_ANY):
+        """bind command event, unlike wxPython Bind this function bind command to menu and toolbar interface"""
         self.Bind(wx.EVT_MENU, fun, id=id)
         self.toolbar_interface.bind(fun, id)
 
     def get_menu_bar(self):
+        """return toolbar interface"""
         return self.toolbar_interface
 
     def on_child_focus(self, event):
-        #print("on_child_focus:", event)
         pane = self._mgr.GetPane(event.GetWindow())
         if pane.IsOk():
             if self.active_pane:
@@ -789,18 +759,13 @@ class SchAppFrame(wx.Frame):
                 self._proc_mannager = get_process_manager()
             x = self._proc_mannager.list_threads(all=False)
             dispatcher.send('PROCESS_INFO',self, x)
-        #print(wx.Window.FindFocus())
 
     def _append_command(self, typ, command):
-        #self.command.append((self._id, typ, command))
-        #self._id = self._id + 1
-        #return self._id-1
         id = wx.NewId()
         self.command[id] = (typ, command)
         return id
 
-
-    def create_bars(self, bar, tab):
+    def _create_bars(self, bar, tab):
         for row in tab:
             if len(row[0].data) > 0:
                 pos = 1
@@ -819,29 +784,33 @@ class SchAppFrame(wx.Frame):
                     panel = page.create_panel(row[1].data)
                 if pos == 3:
                     try:
-                        bitmap = (wx.GetApp().IMAGES)[int(row[4].data)]
+                        bitmap = (wx.GetApp().images)[int(row[4].data)]
                     except:
                         if row[4].data != "":
                             bitmap = bitmap_from_href(row[4].data)
                         else:
-                            bitmap = (wx.GetApp().IMAGES)[0]
+                            bitmap = (wx.GetApp().images)[0]
                     idn = self._append_command(row[5].data, row[6].data)
                     panel.append(idn, row[2].data, bitmap)
             bar.bind(self.on_command)
 
-
-
-    def create_menu_bar(self):
-        tab = wx.GetApp().get_tab(self.menu_bar_lp)[1:]
+    def _create_menu_bar(self):
+        tab = wx.GetApp().get_tab(self._menu_bar_lp)[1:]
         bar = self.menubar_interface
-        return self.create_bars(bar, tab)
+        return self._create_bars(bar, tab)
 
-    def create_tool_bar(self):
-        tab = wx.GetApp().get_tab(self.toolbar_bar_lp)[1:]
+    def _create_tool_bar(self):
+        tab = wx.GetApp().get_tab(self._toolbar_bar_lp)[1:]
         bar = self.toolbar_interface
-        return self.create_bars(bar, tab)
+        return self._create_bars(bar, tab)
 
     def bind_to_toolbar(self, funct, id):
+        """bind function to toolbar button
+
+        Args:
+            funct - function (event handler) to bind
+            id - toolbar button id
+        """
         if 'toolbar' in self.gui_style:
             self.toolbar_interface.bind(funct, id)
 
@@ -852,45 +821,35 @@ class SchAppFrame(wx.Frame):
         return statusbar
 
 
-    def on_exit(self, event=None):
-        print("Timer stop 0")
+
+
+    def _exit(self, event=None):
         self.t1.Stop()
-        print("Timer stop 1")
         wx.GetApp().on_exit()
         self._mgr.UnInit()
-        self.Destroy()
         if self.tbIcon:
             self.tbIcon.RemoveIcon()
             self.tbIcon = None
+        self.Destroy()
 
     def on_open(self, event):
         self.new_main_page(wx.GetApp().base_address + '/commander/form/FileManager/', "Commander", None, "panel")
 
+    def on_exit(self, event=None):
+        self._exit()
 
     def on_close(self, event):
-        #print "############################ on close"
-        #for f in self.destroy_fun_tab:
-        #    wx.CallAfter(f)
-
-        #self._mgr.UnInit()
-        #self.Destroy()
-        #if self.tbIcon:
-        #    self.tbIcon.RemoveIcon()
-        #    self.tbIcon = None
-
-
-        self.on_exit()
+        self._exit()
         event.Skip()
 
     def on_show_elem(self, event):
-        nazwa = ["header", "panel", "footer", "tb1", "tb2"][event.GetId() - ID_ShowHeader]
-
-        panel = self._mgr.GetPane(nazwa)
-
+        name = ["header", "panel", "footer", "tb1", "tb2"][event.GetId() - ID_ShowHeader]
+        panel = self._mgr.GetPane(name)
         panel.Show(not panel.IsShown())
         self._mgr.Update()
 
     def count_shown_panels(self, count_toolbars=True):
+        """count visible panels"""
         count = 0
         for panel in self._mgr.GetAllPanes():
             if panel.IsShown():
@@ -899,7 +858,8 @@ class SchAppFrame(wx.Frame):
         return count
 
     def on_show_status_bar(self, event):
-        pass
+        if not self.statusbar:
+            self._create_status_bar()
 
     def _on_html(self, command):
         l = command.split(',')
@@ -917,19 +877,6 @@ class SchAppFrame(wx.Frame):
 
         return self.new_main_page(l[1], l[0], parm)
 
-        #if panel=='pscript':
-        #    http = wx.GetApp().get_http(self)
-        #    http.get(self, l[1])
-        #    ptr = http.str()
-        #    exec(ptr)
-        #    http.clear_ptr()
-        #else:
-        #    #if 'schtml=1' in l[1] and not wx.GetApp().is_hybrid:
-        #    self.new_main_page(l[1], l[0], parm, panel)
-        #    #else:
-        #    #    win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", l[0])
-        #    #    win.Body.WEB.go(wx.GetApp().base_address + l[1])#
-
     def _on_python(self, command):
         exec(command)
 
@@ -938,10 +885,7 @@ class SchAppFrame(wx.Frame):
 
     def on_command(self, event):
         id = event.GetId()
-        #print("on_command:", id)
-        #if id - wx.ID_HIGHEST >= 0 and id - wx.ID_HIGHEST < len(self.command):
         if id in self.command:
-            #cmd = (self.command)[id - wx.ID_HIGHEST]
             cmd = self.command[id]
             if cmd[0] == 'html':
                 return self._on_html(cmd[1])
@@ -951,11 +895,11 @@ class SchAppFrame(wx.Frame):
                 return self._on_sys(cmd[1])
         else:
             if id == ID_Reset:
-                from schcli.toolbar.schmoderntoolbar import RibbonInterface
+                from schcli.toolbar.moderntoolbar import RibbonInterface
                 old_toolbar = self.toolbar_interface
                 sizer = self.GetSizer()
                 self.toolbar_interface = RibbonInterface(self, self.gui_style)
-                self.create_tool_bar()
+                self._create_tool_bar()
                 self.toolbar_interface.realize_bar()
                 sizer.Replace(old_toolbar.get_bar(), self.toolbar_interface.get_bar())
                 self.toolbar_interface.get_bar().SetSize(old_toolbar.get_bar().GetSize())
@@ -963,22 +907,16 @@ class SchAppFrame(wx.Frame):
                 return
             elif id == ID_WEB_NEW_WINDOW:
                 win = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", "Empty page")
-                win.Body.new_child_page("^standard/webview/gotopanel.html", title="Go")
+                win.body.new_child_page("^standard/webview/gotopanel.html", title="Go")
                 return
         event.Skip()
 
     def on_about(self):
-        msg = """This is a program \"Pytigon\"
-
-""" + """Autor: Sławomir Chołaj
-
-""" + \
-            "The program uses the library wxpython " + wx.VERSION_STRING + "!"
-
+        msg = "Pytigon runtime\nSławomir Chołaj\nslawomir.cholaj@gmail.com\n\n" + \
+              "The program uses wxpython library version:" + wx.VERSION_STRING
         dlg = wx.MessageDialog(self, msg, "Pytigon", wx.OK | wx.ICON_INFORMATION) % wx.GetApp().title
         dlg.ShowModal()
         dlg.Destroy()
-
 
     def on_key_down(self, event):
         for a in self.aTable:
@@ -993,14 +931,18 @@ class SchAppFrame(wx.Frame):
                 return
         event.Skip()
 
+    #def get_start_position(self):
+    #    self.x = self.x + 20
+    #    x = self.x
+    #    pt = self.ClientToScreen(wx.Point(0, 0))
+    #    return wx.Point(pt.x + x, pt.y + x)
 
-    def get_start_position(self):
-        self.x = self.x + 20
-        x = self.x
-        pt = self.ClientToScreen(wx.Point(0, 0))
-        return wx.Point(pt.x + x, pt.y + x)
+    def goto_panel(self, panel_name):
+        """Activate panel
 
-    def on_goto(self, panel_name):
+        Args:
+            panel_name: name of panel to activate
+        """
         panel = self._mgr.GetPane(panel_name)
         if panel.window.GetPageCount() > 0:
             if not panel.IsShown():
@@ -1011,51 +953,49 @@ class SchAppFrame(wx.Frame):
     def on_goto_panel(self, event):
         panel = self._mgr.GetPane('panel')
         if panel.IsShown():
-            self.on_goto('panel')
+            self.goto_panel('panel')
         else:
             panel = self._mgr.GetPane('menu')
             if panel and panel.IsShown():
                 panel.window.SetFocus()
 
     def on_goto_head(self, event):
-        self.on_goto('header')
+        self.goto_panel('header')
 
     def on_goto_footer(self, event):
-        self.on_goto('footer')
+        self.goto_panel('footer')
 
     def on_goto_desktop(self, event):
         self.desktop.SetFocus()
 
-    #def show_pdf2(self, page):
-    #    http = wx.GetApp().get_http(self)
-    #    http.Get(self, str(page), user_agent='webkit')
-    #    p = http.Ptr()
-    #    f = NamedTemporaryFile(delete=False)
-    #    f.write(p)
-    #    name = f.name
-    #    f.close()
-    #    http.ClearPtr()
-    #    okno = self.new_main_page('^standard/pdfviewer/pdfviewer.html', page, None)
-    #    #okno.Body['PDFVIEWER'].LoadFile(name, True)
-
     def show_pdf(self, page):
+        """show pdf downloaded from web server
+
+        Args:
+            page: web page address
+        """
         http = wx.GetApp().get_http(self)
         http.get(self, str(page)) #, user_agent='webkit')
-        okno = self.open_binary_data(http, page)
+        form_frame = self._open_binary_data(http, page)
 
         def _after_init():
-            okno.Body.WEB.execute_javascript("document.title = '%s';" % page)
+            form_frame.body.WEB.execute_javascript("document.title = '%s';" % page)
         wx.CallAfter(_after_init)
 
-        return okno
+        return form_frame
 
 
     def show_odf(self, page):
+        """show odf document downloaded from web server
+
+        Args:
+            page: web page address
+        """
         http = wx.GetApp().get_http(self)
         http.get(self, str(page)) #, user_agent='webkit')
-        return self.open_binary_data(http, page)
+        return self._open_binary_data(http, page)
     
-    def open_binary_data(self, http_ret, page):
+    def _open_binary_data(self, http_ret, page):
         if 'application/vnd.oasis.opendocument' in http_ret.ret_content_type:
 
             cd = http_ret.http.headers.get('content-disposition')
@@ -1067,10 +1007,9 @@ class SchAppFrame(wx.Frame):
                         
             postfix = name.split('_')[-1][-12:]
             fname = get_temp_filename(postfix)
-            f = open(fname, "wb")        
-            f.write(p)
-            f.close()
-                    
+            with open(fname, "wb") as f:
+                f.write(p)
+
             file_name = fname
             if not name:
                 name = file_name
@@ -1078,7 +1017,7 @@ class SchAppFrame(wx.Frame):
                 wx.GetApp().download_files = []
             wx.GetApp().download_files.append( (file_name, name, datetime.datetime.now() ) )
     
-            return self.new_main_page('^standard/odf_view/odf_view.html', name, parametry=name)
+            return self.new_main_page('^standard/odf_view/odf_view.html', name, parameters=name)
         elif 'application/pdf' in http_ret.ret_content_type:
             p = http_ret.ptr()
             f = NamedTemporaryFile(delete=False)
@@ -1086,7 +1025,7 @@ class SchAppFrame(wx.Frame):
             name = f.name
             f.close()
             href = "http://127.0.0.2/static/vanillajs_plugins/pdfjs/web/viewer.html?file="+name
-            return self.new_main_page(href, name, parametry={ 'schtml': 0 } )
+            return self.new_main_page(href, name, parameters={ 'schtml': 0 } )
 
         elif 'zip' in http_ret.ret_content_type:
             p = http_ret.ptr()
@@ -1094,6 +1033,6 @@ class SchAppFrame(wx.Frame):
             f.write(p)
             name = f.name
             f.close()
-            return self.new_main_page('^standard/html_print/html_print.html', name, parametry=name)
+            return self.new_main_page('^standard/html_print/html_print.html', name, parameters=name)
 
         return True

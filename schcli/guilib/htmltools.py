@@ -19,7 +19,7 @@
 
 import wx
 import platform
-import schcli.guictrl.schctrl
+import schcli.guictrl.ctrl
 
 
 class HtmlErrorDialog(wx.Dialog):
@@ -57,9 +57,9 @@ class HtmlErrorDialog(wx.Dialog):
 
 
         if wx.Platform == '__WXMSW__':
-            self.label = schcli.guictrl.schctrl.HTML2(self, size=(800,600), name="webbrowser", backend="wxWebViewIE")
+            self.label = schcli.guictrl.ctrl.HTML2(self, size=(800, 600), name="webbrowser", backend="wxWebViewIE")
         else:
-            self.label = schcli.guictrl.schctrl.HTML2(self, size=(800,600), name="webbrowser")
+            self.label = schcli.guictrl.ctrl.HTML2(self, size=(800, 600), name="webbrowser")
         #self.label = schcli.guictrl.schctrl.HTML(self, size=(800,600), name="webbrowser", data=text)
         try:
             sizer.Add(self.label.wb, 0, wx.ALIGN_CENTRE | wx.ALL, 5)

@@ -1,6 +1,7 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-11-19 15:36:13
+// Transcrypt'ed from Python, 2016-11-26 10:55:02
 
+	var __symbols__ = ['__py3.5__', '__esv5__'];
 	var __all__ = {};
 	var __world__ = __all__;
 	
@@ -45,6 +46,9 @@
 	};
 	__all__.__init__ = __init__;
 	
+	
+	
+	
 	// Since we want to assign functions, a = b.f should make b.f produce a bound function
 	// So __get__ should be called by a property rather then a function
 	// Factory __get__ creates one of three curried functions for func
@@ -77,43 +81,54 @@
 		}
 	}
 	__all__.__get__ = __get__;
-			
-	// Class creator function
-	var __class__ = function (name, bases, extra) {
-		// Create class functor
-		var cls = function () {
-			var args = [] .slice.apply (arguments);
-			return cls.__new__ (args);
-		};
 		
-		// Copy methods, properties and static attributes from base classes to new class object
-		for (var index = bases.length - 1; index >= 0; index--) {	// Reversed order, since class vars of first base should win
-			var base = bases [index];
-			for (var attrib in base) {
-				var descrip = Object.getOwnPropertyDescriptor (base, attrib);
+	// Mother of all metaclasses		
+	var py_metatype = {
+		__name__: 'type',
+		__bases__: [],
+		
+		// Overridable class creation worker
+		__new__: function (meta, name, bases, attribs) {
+			// Create the class cls, a functor, which the class creator function will return
+			var cls = function () {						// If cls is called with arg0, arg1, etc, it calls its __new__ method with [arg0, arg1, etc]
+				var args = [] .slice.apply (arguments);	// It has a __new__ method, not yet but at call time, since it is copied from the parent in the loop below
+				return cls.__new__ (args);				// Each Python class directly or indirectly derives from object, which has the __new__ method
+			};											// If there are no bases in the Python source, the compiler generates [object] for this parameter
+			
+			// Copy all methods, including __new__, properties and static attributes from base classes to new cls object
+			// The new class object will simply be the prototype of its instances
+			// JavaScript prototypical single inheritance will do here, since any object has only one class
+			// This has nothing to do with Python multiple inheritance, that is implemented explictly in the copy loop below
+			for (var index = bases.length - 1; index >= 0; index--) {	// Reversed order, since class vars of first base should win
+				var base = bases [index];
+				for (var attrib in base) {
+					var descrip = Object.getOwnPropertyDescriptor (base, attrib);
+					Object.defineProperty (cls, attrib, descrip);
+				}			
+			}
+			
+			// Add class specific attributes to the created cls object
+			cls.__metaclass__ = meta;
+			cls.__name__ = name;
+			cls.__bases__ = bases;
+			
+			// Add own methods, properties and own static attributes to the created cls object
+			for (var attrib in attribs) {
+				var descrip = Object.getOwnPropertyDescriptor (attribs, attrib);
 				Object.defineProperty (cls, attrib, descrip);
 			}
+			// Return created cls object
+			return cls;
 		}
-		
-		// Add class specific attributes to class object
-		cls.__name__ = name;
-		cls.__bases__ = bases;
-		
-		// Add own methods, properties and static attributes to class object
-		for (var attrib in extra) {
-			var descrip = Object.getOwnPropertyDescriptor (extra, attrib);
-			Object.defineProperty (cls, attrib, descrip);
-		}
-				
-		// Return class object
-		return cls;
 	};
-	__all__.__class__ = __class__;
+	py_metatype.__metaclass__ = py_metatype;
+	__all__.py_metatype = py_metatype;
 	
-	// Create mother of all classes		
-	var object = __all__.__class__ ('object', [], {
+	// Mother of all classes
+	var object = {
 		__init__: function (self) {},
-			
+		
+		__metaclass__: py_metatype,	// By default, all classes have metaclass type, since they derive from object
 		__name__: 'object',
 		__bases__: [],
 			
@@ -124,19 +139,31 @@
 			// The descriptor produced by __get__ will return the right method flavor
 			var instance = Object.create (this, {__class__: {value: this, enumerable: true}});
 			
+
 			// Call constructor
 			this.__init__.apply (null, [instance] .concat (args));
-			
-			// Return instance			
+
+			// Return constructed instance
 			return instance;
 		}	
-	});
+	};
 	__all__.object = object;
+	
+	// Class creator facade function, calls class creation worker
+	var __class__ = function (name, bases, attribs, meta) {			// Parameter meta is optional
+		if (meta == undefined) {
+			meta = bases [0] .__metaclass__;
+		}
+				
+		return meta.__new__ (meta, name, bases, attribs);
+	}
+	__all__.__class__ = __class__;
 	
 	// Define __pragma__ to preserve '<all>' and '</all>', since it's never generated as a function, must be done early, so here
 	var __pragma__ = function () {};
 	__all__.__pragma__ = __pragma__;
-	__nest__ (
+	
+		__nest__ (
 		__all__,
 		'org.transcrypt.__base__', {
 			__all__: {
@@ -144,8 +171,9 @@
 				__init__: function (__all__) {
 					var __Envir__ = __class__ ('__Envir__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
+							self.interpreter_name = 'python';
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.5.222';
+							self.transpiler_version = '3.6.3';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -166,24 +194,47 @@
 				__init__: function (__all__) {
 					var Exception = __class__ ('Exception', [object], {
 						get __init__ () {return __get__ (this, function (self) {
-							var args = tuple ([].slice.apply (arguments).slice (1));
-							self.args = args;
+							var kwargs = {};
+							if (arguments.length) {
+								var __ilastarg0__ = arguments.length - 1;
+								if (arguments [__ilastarg0__] && arguments [__ilastarg0__].__class__ == __kwargdict__) {
+									var __allkwargs0__ = arguments [__ilastarg0__--];
+									for (var __attrib0__ in __allkwargs0__) {
+										switch (__attrib0__) {
+											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
+											default: kwargs [__attrib0__] = __allkwargs0__ [__attrib0__];
+										}
+									}
+									kwargs.__class__ = null;
+								}
+								var args = tuple ([].slice.apply (arguments).slice (1, __ilastarg0__ + 1));
+							}
+							else {
+								var args = tuple ();
+							}
+							self.__args__ = args;
+							try {
+								self.stack = kwargs.error.stack;
+							}
+							catch (__except0__) {
+								self.stack = 'No stack trace available';
+							}
 						});},
 						get __repr__ () {return __get__ (this, function (self) {
-							if (len (self.args)) {
-								return '{}{}'.format (self.__class__.__name__, repr (tuple (self.args)));
+							if (len (self.__args__)) {
+								return '{}{}'.format (self.__class__.__name__, repr (tuple (self.__args__)));
 							}
 							else {
 								return '{}()'.format (self.__class__.__name__);
 							}
 						});},
 						get __str__ () {return __get__ (this, function (self) {
-							if (len (self.args) > 1) {
-								return str (tuple (self.args));
+							if (len (self.__args__) > 1) {
+								return str (tuple (self.__args__));
 							}
 							else {
-								if (len (self.args)) {
-									return str (self.args [0]);
+								if (len (self.__args__)) {
+									return str (self.__args__ [0]);
 								}
 								else {
 									return '';
@@ -191,14 +242,35 @@
 							}
 						});}
 					});
-					var StopIteration = __class__ ('StopIteration', [object], {
-						get __init__ () {return __get__ (this, function (self) {
-							Exception.__init__ (self, 'Iterator exhausted');
+					var IterableError = __class__ ('IterableError', [Exception], {
+						get __init__ () {return __get__ (this, function (self, error) {
+							Exception.__init__ (self, "Can't iterate over non-iterable", __kwargdict__ ({error: error}));
+						});}
+					});
+					var StopIteration = __class__ ('StopIteration', [Exception], {
+						get __init__ () {return __get__ (this, function (self, error) {
+							Exception.__init__ (self, 'Iterator exhausted', __kwargdict__ ({error: error}));
 						});}
 					});
 					var ValueError = __class__ ('ValueError', [Exception], {
+						get __init__ () {return __get__ (this, function (self, error) {
+							Exception.__init__ (self, 'Erroneous value', __kwargdict__ ({error: error}));
+						});}
+					});
+					var KeyError = __class__ ('KeyError', [Exception], {
+						get __init__ () {return __get__ (this, function (self, error) {
+							Exception.__init__ (self, 'Invalid key', __kwargdict__ ({error: error}));
+						});}
 					});
 					var AssertionError = __class__ ('AssertionError', [Exception], {
+						get __init__ () {return __get__ (this, function (self, message, error) {
+							if (message) {
+								Exception.__init__ (self, message, __kwargdict__ ({error: error}));
+							}
+							else {
+								Exception.__init__ (self, __kwargdict__ ({error: error}));
+							}
+						});}
 					});
 					var __sort__ = function (iterable, key, reverse) {
 						if (typeof key == 'undefined' || (key != null && key .__class__ == __kwargdict__)) {;
@@ -238,7 +310,7 @@
 								}
 								else {
 								}
-								return key (a) > key (b);
+								return (key (a) > key (b) ? 1 : -(1));
 							}));
 						}
 						else {
@@ -270,8 +342,8 @@
 						}
 						else {
 						}
-						if (type (iterable) == dict) {
-							var result = copy (iterable.keys ());
+						if (py_typeof (iterable) == dict) {
+							var result = copy (iterable.py_keys ());
 						}
 						else {
 							var result = copy (iterable);
@@ -305,6 +377,7 @@
 					};
 					var __Terminal__ = __class__ ('__Terminal__', [object], {
 						get __init__ () {return __get__ (this, function (self) {
+							self.buffer = '';
 							try {
 								self.element = document.getElementById ('__terminal__');
 							}
@@ -312,8 +385,8 @@
 								self.element = null;
 							}
 							if (self.element) {
-								self.buffer = '';
 								self.element.style.overflowX = 'auto';
+								self.element.style.boxSizing = 'border-box';
 								self.element.style.padding = '5px';
 								self.element.innerHTML = '_';
 							}
@@ -338,16 +411,16 @@
 							else {
 								var args = tuple ();
 							}
+							self.buffer = '{}{}{}'.format (self.buffer, sep.join (function () {
+								var __accu0__ = [];
+								var __iterable0__ = args;
+								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+									var arg = __iterable0__ [__index0__];
+									__accu0__.append (str (arg));
+								}
+								return __accu0__;
+							} ()), end).__getslice__ (-(4096), null, 1);
 							if (self.element) {
-								self.buffer = '{}{}{}'.format (self.buffer, sep.join (function () {
-									var __accu0__ = [];
-									var __iterable0__ = args;
-									for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
-										var arg = __iterable0__ [__index0__];
-										__accu0__.append (str (arg));
-									}
-									return __accu0__;
-								} ()), end).__getslice__ (-(4096), null, 1);
 								self.element.innerHTML = self.buffer.py_replace ('\n', '<br>');
 								self.element.scrollTop = self.element.scrollHeight;
 							}
@@ -378,14 +451,8 @@
 							}
 							else {
 							}
-							self.print ('{}_'.format (question), __kwargdict__ ({end: ''}));
-							try {
-								var answer = window.prompt (question);
-							}
-							catch (__except0__) {
-								console.log ('Error: Blocking input not yet implemented outside browser');
-							}
-							self.buffer = self.buffer.__getslice__ (0, -(1), 1);
+							self.print ('{}'.format (question), __kwargdict__ ({end: ''}));
+							var answer = window.prompt ('\n'.join (self.buffer.py_split ('\n').__getslice__ (-(16), null, 1)));
 							self.print (answer);
 							return answer;
 						});}
@@ -394,6 +461,8 @@
 					__pragma__ ('<all>')
 						__all__.AssertionError = AssertionError;
 						__all__.Exception = Exception;
+						__all__.IterableError = IterableError;
+						__all__.KeyError = KeyError;
 						__all__.StopIteration = StopIteration;
 						__all__.ValueError = ValueError;
 						__all__.__Terminal__ = __Terminal__;
@@ -409,8 +478,8 @@
 	);
 
 	// Initialize non-nested modules __base__ and __standard__ and make its names available directly and via __all__
-	// It can't do that itself, because it is a regular Python module
-	// The compiler recognizes its their namesand generates them inline rather than nesting them
+	// They can't do that itself, because they're regular Python modules
+	// The compiler recognizes their names and generates them inline rather than nesting them
 	// In this way it isn't needed to import them everywhere
 	 	
 	// __base__
@@ -423,6 +492,7 @@
 	__nest__ (__all__, '', __init__ (__all__.org.transcrypt.__standard__));
 	
 	var Exception = __all__.Exception;
+	var IterableError = __all__.IterableError;
 	var StopIteration = __all__.StopIteration;
 	var ValueError = __all__.ValueError;
 	var AssertionError = __all__.AssertionError;
@@ -433,10 +503,10 @@
 	var map = __all__.map;
 	var filter = __all__.filter;
 	
-	
 	__all__.print = __all__.__terminal__.print;
 	__all__.input = __all__.__terminal__.input;
 	
+	var __terminal__ = __all__.__terminal__;
 	var print = __all__.print;
 	var input = __all__.input;
 
@@ -469,14 +539,9 @@
 	__all__.property = property;
 	
 	// Assert function, call to it only generated when compiling with --dassert option
-	function assert (condition, message) {
+	function assert (condition, message) {	// Message may be undefined
 		if (!condition) {
-			if (message != undefined) {
-				throw AssertionError (message);
-			}
-			else {
-				throw AssertionError ();
-			}
+			throw AssertionError (message, new Error ());
 		}
 	}
 	
@@ -494,13 +559,6 @@
 	}
 	__all__.__merge__ = __merge__;
 	
-	/* Not needed anymore?
-	// Make console.log understand apply
-	console.log.apply = function () {
-		print ([] .slice.apply (arguments) .slice (1));
-	};
-	*/
-
 	// Manipulating attributes by name
 	
 	var dir = function (obj) {
@@ -539,11 +597,15 @@
 	// In general many Transcrypt compound types feature a deliberate blend of Python and JavaScript facilities, facilitating efficient integration with JavaScript libraries
 	// If only Python objects and Python dicts are dealt with in a certain context, the more pythonic 'hasattr' is preferred for the objects as opposed to 'in' for the dicts
 	var __in__ = function (element, container) {
-		if (type (container) == dict) {
-			return container.keys () .indexOf (element) > -1;                                   // The keys of parameter 'element' are in an array
+		if (py_typeof (container) == dict) {		// Currently only implemented as an augmented JavaScript object
+			return container.hasOwnProperty (element);
 		}
-		else {
-			return container.indexOf ? container.indexOf (element) > -1 : element in container; // Parameter 'element' itself is an array, string or object
+		else {										// Parameter 'element' itself is an array, string or a plain, non-dict JavaScript object
+			return (
+				container.indexOf ?					// If it has an indexOf
+				container.indexOf (element) > -1 :	// it's an array or a string,
+				container.hasOwnProperty (element)	// else it's a plain, non-dict JavaScript object
+			);
 		}
 	}
 	__all__.__in__ = __in__;
@@ -576,27 +638,36 @@
 		}
 	}
 	__all__.len = len;
-	
 
 	// General conversions
 	
-	function __ (any) {				// Truthyness, __ ([1, 2, 3]) returns [1, 2, 3], needed for nonempty selection: l = list1 or list2]
+	function __i__ (any) {	//	Conversion to iterable
+		return py_typeof (any) == dict ? any.py_keys () : any;		
+	}
+	
+	function __t__ (any) {	// Conversion to truthyness, __ ([1, 2, 3]) returns [1, 2, 3], needed for nonempty selection: l = list1 or list2]
 		return (['boolean', 'number'] .indexOf (typeof any) >= 0 || any instanceof Function || len (any)) ? any : false;
 		// JavaScript functions have a length attribute, denoting the number of parameters
 		// Python objects are JavaScript functions, but their length doesn't matter, only their existence
 		// By the term 'any instanceof Function' we make sure that Python objects aren't rejected when their length equals zero
 	}
-	__all__.__ = __;
+	__all__.__t__ = __t__;
 	
 	var bool = function (any) {		// Always truly returns a bool, rather than something truthy or falsy
-		return !!__ (any);
+		return !!__t__ (any);
 	}
 	bool.__name__ = 'bool'			// So it can be used as a type with a name
 	__all__.bool = bool;
 	
 	var float = function (any) {
-		if (isNaN (any)) {
-			throw ('ValueError');	// !!! Turn into real value error
+		if (any == 'inf') {
+			return Infinity;
+		}
+		else if (any == '-inf') {
+			return -Infinity;
+		}
+		else if (isNaN (any)) {
+			throw ValueError (new Error ());
 		}
 		else {
 			return +any;
@@ -611,32 +682,28 @@
 	int.__name__ = 'int';
 	__all__.int = int;
 	
-	var type = function (anObject) {
-		try {
-			var result = anObject.__class__;
-			return result;
-		}
-		catch (exception) {
-			var aType = typeof anObject;
-			if (aType == 'boolean') {
-				return bool;
+	var py_typeof = function (anObject) {
+		var aType = typeof anObject;
+		if (aType == 'object') {	// Directly trying '__class__ in anObject' turns out to wreck anObject in Chrome if its a primitive
+			try {
+				return anObject.__class__;
 			}
-			else if (aType == 'number') {
-				if (anObject % 1 == 0) {
-					return int;
-				}
-				else {
-					return float;
-				}				
-			}
-			else {
+			catch (exception) {
 				return aType;
 			}
 		}
+		else {
+			return (	// Odly, the braces are required here
+				aType == 'boolean' ? bool :
+				aType == 'string' ? str :
+				aType == 'number' ? (anObject % 1 == 0 ? int : float) :
+				null
+			);
+		}
 	}
-	__all__.type = type;
+	__all__.py_typeof = py_typeof;
 	
-	var isinstance = function (anObject, classinfo) {
+	var isinstance = function (anObject, classinfo) {		
 		function isA (queryClass) {
 			if (queryClass == classinfo) {
 				return true;
@@ -648,17 +715,28 @@
 			}
 			return false;
 		}
-		try {
+		
+		if (classinfo instanceof Array) {	// Assume in most cases it isn't, then making it recursive rather than two functions saves a call
+			for (var index = 0; index < classinfo.length; index++) {
+				var aClass = classinfo [index];
+				if (isinstance (anObject, aClass)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		try {					// Most frequent use case first
 			return '__class__' in anObject ? isA (anObject.__class__) : anObject instanceof classinfo;
 		}
-		catch (exception) {
-			console.log (exception);
-			console.dir (anObject);
+		catch (exception) {		// Using isinstance on primitives asumed rare
+			var aType = py_typeof (anObject);
+			return aType == classinfo || (aType == bool && classinfo == int);
 		}
 	};
 	__all__.isinstance = isinstance;
 	
-	// Repr function uses __repr__ method, then __str__ then toString
+	// Repr function uses __repr__ method, then __str__, then toString
 	var repr = function (anObject) {
 		try {
 			return anObject.__repr__ ();
@@ -667,9 +745,12 @@
 			try {
 				return anObject.__str__ ();
 			}
-			catch (exception) {	// It was a dict in Python, so an Object in JavaScript
+			catch (exception) {	// anObject has no __repr__ and no __str__
 				try {
-					if (anObject.constructor == Object) {
+					if (anObject == null) {
+						return 'None'
+					}
+					else if (anObject.constructor == Object) {
 						var result = '{';
 						var comma = false;
 						for (var attrib in anObject) {
@@ -704,6 +785,7 @@
 				}
 				catch (exception) {
 					console.log ('ERROR: Could not evaluate repr (<object of type ' + typeof anObject + '>)');
+					console.log (exception);
 					return '???';
 				}
 			}
@@ -755,45 +837,53 @@
  	}
 	__all__.round = round;
 		
-	// Iterator protocol functions
+	// BEGIN unified iterator model
 	
-	function wrap_py_next () {		// Add as 'next' method to make Python iterator JavaScript compatible
-		var result = this.__next__ ();
-		return {value: result, done: result == undefined};		
+	function __jsUsePyNext__ () {		// Add as 'next' method to make Python iterator JavaScript compatible
+		try {
+			var result = this.__next__ ();
+			return {value: result, done: false};
+		}
+		catch (exception) {
+			return {value: undefined, done: true};
+		}
 	}
 	
-	function wrap_js_next () {		// Add as '__next__' method to make JavaScript iterator Python compatible
+	function __pyUseJsNext__ () {		// Add as '__next__' method to make JavaScript iterator Python compatible
 		var result = this.next ();
 		if (result.done) {
-			throw StopIteration ();
+			throw StopIteration (new Error ());
 		}
 		else {
 			return result.value;
 		}
 	}
 	
-	function py_iter (iterable) {	// Produces universal iterator with Python '__next__' as well as JavaScript 'next'
-		if ('__iter__' in iterable) {	// It's a Python iterable (incl. JavaScript Arrays and strings)
-			var iterator = iterable.__iter__ ();
-			iterator.next = wrap_py_next;
-			return iterator;
+	function py_iter (iterable) {					// Alias for Python's iter function, produces a universal iterator / iterable, usable in Python and JavaScript
+		if (typeof iterable == 'string' || '__iter__' in iterable) {	// JavaScript Array or string or Python iterable (string has no 'in')
+			var result = iterable.__iter__ ();							// Iterator has a __next__
+			result.next = __jsUsePyNext__;								// Give it a next
 		}
-		else if ('selector' in iterable) { // Assume it's a JQuery iterator
-			var iterator = list (iterable) .__iter__ ();
-			iterator.next = wrap_py_next;
-			return iterator;
+		else if ('selector' in iterable) { 								// Assume it's a JQuery iterator
+			var result = list (iterable) .__iter__ ();					// Has a __next__
+			result.next = __jsUsePyNext__;								// Give it a next
 		}
-		else if ('next' in iterable) {	// It's a JavaScript generator
-			// It should have an iterator field, but doesn't in Chrome
-			// So we just return the generator itself, which is both an iterable and an iterator
-			iterable.__next__ = wrap_js_next;
-			return iterable;
+		else if ('next' in iterable) {									// It's a JavaScript iterator already,  maybe a generator, has a next and may have a __next__
+			var result = iterable
+			if (! ('__next__' in result)) {								// If there's no danger of recursion
+				result.__next__ = __pyUseJsNext__;						// Give it a __next__
+			}
+		}
+		else if (Symbol.iterator in iterable) {							// It's a JavaScript iterable such as a typed array, but not an iterator
+			var result = iterable [Symbol.iterator] ();					// Has a next
+			result.__next__ = __pyUseJsNext__;							// Give it a __next__
 		}
 		else {
-			return null;
+			throw IterableError (new Error ());	// No iterator at all
 		}
+		result [Symbol.iterator] = function () {return result;};
+		return result;
 	}
-	__all__.py_iter = py_iter;
 	
 	function py_next (iterator) {				// Called only in a Python context, could receive Python or JavaScript iterator
 		try {									// Primarily assume Python iterator, for max speed
@@ -802,52 +892,49 @@
 		catch (exception) {						// JavaScript iterators are the exception here
 			var result = iterator.next ();
 			if (result.done) {
-				throw StopIteration ();
+				throw StopIteration (new Error ());
 			}
 			else {
 				return result.value;
 			}
 		}	
 		if (result == undefined) {
-			throw StopIteration ();
+			throw StopIteration (new Error ());
 		}
-		return result;
+		else {
+			return result;
+		}
 	}
-	__all__.py_next = py_next;
-	
-	function __SeqIterator__ (iterable) {
+		
+	function __PyIterator__ (iterable) {
 		this.iterable = iterable;
 		this.index = 0;
 	}
 	
-	__all__.__SeqIterator__ = __SeqIterator__;
-	
-	__SeqIterator__.prototype.__iter__ = function () {
-		return this;
+	__PyIterator__.prototype.__next__ = function () {
+		if (this.index < this.iterable.length) {
+			return this.iterable [this.index++];
+		}
+		else {
+			throw StopIteration (new Error ());
+		}
 	}
 	
-	__SeqIterator__.prototype.__next__ = function () {
-		return this.iterable [this.index++];
-	}
-	
-	__SeqIterator__.prototype.next = wrap_py_next;
-	
-	function __KeyIterator__ (iterable) {
+	function __JsIterator__ (iterable) {
 		this.iterable = iterable;
 		this.index = 0;
 	}
 
-	__all__.__KeyIterator__ = __KeyIterator__;
-	
-	__KeyIterator__.prototype.__iter__ = function () {
-		return this;
+	__JsIterator__.prototype.next = function () {
+		if (this.index < this.iterable.py_keys.length) {
+			return {value: this.index++, done: false};
+		}
+		else {
+			return {value: undefined, done: true};
+		}
 	}
 	
-	__KeyIterator__.prototype.__next__ = function () {
-		return this.iterable.keys () [this.index++];
-	}
-			
-	__KeyIterator__.prototype.next = wrap_py_next;
+	// END unified iterator model
 	
 	// Reversed function for arrays
 	var py_reversed = function (iterable) {
@@ -989,9 +1076,7 @@
 	}
 	*/
 	
-	Array.prototype.__iter__ = function () {
-		return new __SeqIterator__ (this);
-	}
+	Array.prototype.__iter__ = function () {return new __PyIterator__ (this);}
 	
 	Array.prototype.__getslice__ = function (start, stop, step) {
 		if (start < 0) {
@@ -1004,7 +1089,10 @@
 		else if (stop < 0) {
 			stop = this.length + stop;
 		}
-		
+		else if (stop > this.length) {
+			stop = this.length;
+		}
+			
 		var result = list ([]);
 		for (var index = start; index < stop; index += step) {
 			result.push (this [index]);
@@ -1084,7 +1172,7 @@
 	Array.prototype.remove = function (element) {
 		var index = this.indexOf (element);
 		if (index == -1) {
-			throw ('KeyError');
+			throw KeyError (new Error ());
 		}
 		this.splice (index, 1);
 	};
@@ -1250,7 +1338,7 @@
 		return this.union (other) .difference (this.intersection (other));
 	};
 	
-	Array.prototype.update = function () {	// O (n)
+	Array.prototype.py_update = function () {	// O (n)
 		var updated = [] .concat.apply (this.slice (), arguments) .sort ();		
 		this.clear ();
 		for (var i = 0; i < updated.length; i++) {
@@ -1296,99 +1384,6 @@
 		return this.issuperset (other) && !this.issubset (other);
 	}
 	
-	// Dict extensions to object
-	
-	function __keyIterator__ () {
-		return new __KeyIterator__ (this);
-	}
-	
-	function __keys__ () {
-		var keys = []
-		for (var attrib in this) {
-			if (!__specialattrib__ (attrib)) {
-				keys.push (attrib);
-			}     
-		}
-		return keys;
-	}
-		
-	function __items__ () {
-		var items = []
-		for (var attrib in this) {
-			if (!__specialattrib__ (attrib)) {
-				items.push ([attrib, this [attrib]]);
-			}     
-		}
-		return items;
-	}
-		
-	function __del__ (key) {
-		delete this [key];
-	}
-	
-	function __clear__ () {
-		for (var attrib in this) {
-			delete this [attrib];
-		}
-	}
-	
-	function __setdefault__ (aKey, aDefault) {
-		var result = this [aKey];
-		if (result != undefined) {
-			return result;
-		}
-		var val = aDefault == undefined ? null : aDefault;
-		this [aKey] = val;
-		return val;
-	}
-	
-	function __pop__ (aKey, aDefault) {
-		var result = this [aKey];
-		if (result != undefined) {
-			delete this [aKey];
-			return result;
-		}
-		return aDefault;
-	}	
-	
-	function __update__(aDict) {
-		for (var aKey in aDict) {
-			this [aKey] = aDict [aKey];
-		}
-	}
-	
-	function dict (objectOrPairs) {
-		if (!objectOrPairs || objectOrPairs instanceof Array) {	// It's undefined or an array of pairs
-			var instance = {};
-			if (objectOrPairs) {
-				for (var index = 0; index < objectOrPairs.length; index++) {
-					var pair = objectOrPairs [index];
-					instance [pair [0]] = pair [1];
-				}
-			}
-		}
-		else {													// It's a JavaScript object literal
-			var instance = objectOrPairs;
-		}
-			
-		// Trancrypt interprets e.g. {aKey: 'aValue'} as a Python dict literal rather than a JavaScript object literal
-		// So dict literals rather than bare Object literals will be passed to JavaScript libraries
-		// Some JavaScript libraries call all enumerable callable properties of an object that's passed to them
-		// So the properties of a dict should be non-enumerable
-		Object.defineProperty (instance, '__class__', {value: dict, enumerable: false, writable: true});
-		Object.defineProperty (instance, 'keys', {value: __keys__, enumerable: false});
-		Object.defineProperty (instance, '__iter__', {value: __keyIterator__, enumerable: false});
-		Object.defineProperty (instance, 'items', {value: __items__, enumerable: false});		
-		Object.defineProperty (instance, 'del', {value: __del__, enumerable: false});
-		Object.defineProperty (instance, 'clear', {value: __clear__, enumerable: false});
-		Object.defineProperty (instance, 'setdefault', {value: __setdefault__, enumerable: false});
-		Object.defineProperty (instance, 'py_pop', {value: __pop__, enumerable: false});
-		Object.defineProperty (instance, 'update', {value: __update__, enumerable: false});
-		return instance;
-	}
-	__all__.dict = dict;
-	dict.__name__ = 'dict';
-	
 	// String extensions
 	
 	function str (stringable) {
@@ -1396,7 +1391,12 @@
 			return stringable.__str__ ();
 		}
 		catch (exception) {
-			return new String (stringable);
+			try {
+				return repr (stringable)
+			}
+			catch (exception) {
+				return String (stringable);	// No new, so no permanent String object but a primitive in a temporary 'just in time' wrapper
+			}
 		}
 	}
 	__all__.str = str;	
@@ -1404,12 +1404,10 @@
 	String.prototype.__class__ = str;	// All strings are str
 	str.__name__ = 'str';
 	
-	String.prototype.__iter__ = function () {
-		return new __SeqIterator__ (this);
-	}
+	String.prototype.__iter__ = function () {new __PyIterator__ (this);}
 		
 	String.prototype.__repr__ = function () {
-		return (this.indexOf ('\'') == -1 ? '\'' + this + '\'' : '"' + this + '"') .replace ('\t', '\\t') .replace ('\n', '\\n');
+		return (this.indexOf ('\'') == -1 ? '\'' + this + '\'' : '"' + this + '"') .py_replace ('\t', '\\t') .py_replace ('\n', '\\n');
 	};
 	
 	String.prototype.__str__ = function () {
@@ -1469,13 +1467,13 @@
 					key = autoIndex++;
 				}
 				if (key == +key) {	// So key is numerical
-					return args [key] == undefined ? match : args [key];
+					return args [key] == undefined ? match : str (args [key]);
 				}
 				else {				// Key is a string
 					for (var index = 0; index < args.length; index++) {
 						// Find first 'dict' that has that key and the right field
 						if (typeof args [index] == 'object' && args [index][key] != undefined) {
-							return args [index][key];	// Return that field field
+							return str (args [index][key]);	// Return that field field
 						}
 					}
 					return match;
@@ -1581,6 +1579,114 @@
 	}
 	
 	String.prototype.__rmul__ = String.prototype.__mul__;
+
+		
+	// Dict extensions to object
+	
+	function __keys__ () {
+		var keys = []
+		for (var attrib in this) {
+			if (!__specialattrib__ (attrib)) {
+				keys.push (attrib);
+			}     
+		}
+		return keys;
+	}
+		
+	function __items__ () {
+		var items = []
+		for (var attrib in this) {
+			if (!__specialattrib__ (attrib)) {
+				items.push ([attrib, this [attrib]]);
+			}     
+		}
+		return items;
+	}
+		
+	function __del__ (key) {
+		delete this [key];
+	}
+	
+	function __clear__ () {
+		for (var attrib in this) {
+			delete this [attrib];
+		}
+	}
+	
+	function __getdefault__ (aKey, aDefault) {	// Each Python object already has a function called __get__, so we call this one __getdefault__
+		var result = this [aKey];
+		return result == undefined ? (aDefault == undefined ? null : aDefault) : result;
+	}
+	
+	function __setdefault__ (aKey, aDefault) {
+		var result = this [aKey];
+		if (result != undefined) {
+			return result;
+		}
+		var val = aDefault == undefined ? null : aDefault;
+		this [aKey] = val;
+		return val;
+	}
+	
+	function __pop__ (aKey, aDefault) {
+		var result = this [aKey];
+		if (result != undefined) {
+			delete this [aKey];
+			return result;
+		}
+		return aDefault;
+	}	
+	
+	function __update__ (aDict) {
+		for (var aKey in aDict) {
+			this [aKey] = aDict [aKey];
+		}
+	}
+	
+	function dict (objectOrPairs) {
+		if (!objectOrPairs || objectOrPairs instanceof Array) {	// It's undefined or an array of pairs
+			var instance = {};
+			if (objectOrPairs) {
+				for (var index = 0; index < objectOrPairs.length; index++) {
+					var pair = objectOrPairs [index];
+					instance [pair [0]] = pair [1];
+				}
+			}
+		}
+		else {													// It's a JavaScript object literal
+			var instance = objectOrPairs;
+		}
+		
+		// Trancrypt interprets e.g. {aKey: 'aValue'} as a Python dict literal rather than a JavaScript object literal
+		// So dict literals rather than bare Object literals will be passed to JavaScript libraries
+		// Some JavaScript libraries call all enumerable callable properties of an object that's passed to them
+		// So the properties of a dict should be non-enumerable
+		Object.defineProperty (instance, '__class__', {value: dict, enumerable: false, writable: true});
+		Object.defineProperty (instance, 'py_keys', {value: __keys__, enumerable: false});
+		Object.defineProperty (instance, '__iter__', {value: function () {new __PyIterator__ (this.py_keys ());}, enumerable: false});
+		Object.defineProperty (instance, Symbol.iterator, {value: function () {new __JsIterator__ (this.py_keys ());}, enumerable: false});
+		Object.defineProperty (instance, 'py_items', {value: __items__, enumerable: false});		
+		Object.defineProperty (instance, 'py_del', {value: __del__, enumerable: false});
+		Object.defineProperty (instance, 'py_clear', {value: __clear__, enumerable: false});
+		Object.defineProperty (instance, 'py_get', {value: __getdefault__, enumerable: false});
+		Object.defineProperty (instance, 'py_setdefault', {value: __setdefault__, enumerable: false});
+		Object.defineProperty (instance, 'py_pop', {value: __pop__, enumerable: false});
+		Object.defineProperty (instance, 'py_update', {value: __update__, enumerable: false});
+		return instance;
+	}
+
+	__all__.dict = dict;
+	dict.__name__ = 'dict';
+
+	// Docstring setter
+
+	function __setdoc__ (docString) {
+		this.__doc__ = docString;
+		return this;
+	}
+	
+	// Python classes, methods and functions are all translated to JavaScript functions
+	Object.defineProperty (Function.prototype, '__setdoc__', {value: __setdoc__, enumerable: false});
 		
 	// General operator overloading, only the ones that make most sense in matrix and complex operations
 	
@@ -1608,6 +1714,31 @@
 		}
 		else {
 			return Math.pow (a, b);
+		}
+	};	
+	__all__.pow = __pow__;
+	
+	var __jsmod__ = function (a, b) {
+		if (typeof a == 'object' && '__mod__' in a) {
+			return a.__mod__ (b);
+		}
+		else if (typeof b == 'object' && '__rpow__' in b) {
+			return b.__rmod__ (a);
+		}
+		else {
+			return a % b;
+		}
+	}
+	
+	var __mod__ = function (a, b) {
+		if (typeof a == 'object' && '__mod__' in a) {
+			return a.__mod__ (b);
+		}
+		else if (typeof b == 'object' && '__rpow__' in b) {
+			return b.__rmod__ (a);
+		}
+		else {
+			return ((a % b) + b) % b;
 		}
 	};	
 	__all__.pow = __pow__;
@@ -1770,13 +1901,13 @@
 	};
 	__all__.__setslice__ = __setslice__;
 
-	var __call__ = function (/* <callee>, <params>* */) {
+	var __call__ = function (/* <callee>, <this>, <params>* */) {
 		var args = [] .slice.apply (arguments)
-		if (typeof args [0] == 'object' && '__call__' in args [0]) {
-			return args [0] .__call__ .apply (null,  args.slice (1));
+		if (typeof args [0] == 'object' && '__call__' in args [0]) {		// Overloaded
+			return args [0] .__call__ .apply (args [1], args.slice (2));
 		}
-		else {
-			return args [0] .apply (null, args.slice (1));
+		else {																// Native
+			return args [0] .apply (args [1], args.slice (2));
 		}		
 	};
 	__all__.__call__ = __call__;
@@ -2671,7 +2802,7 @@ function pytigon () {
 						};
 						req.onload = _onload;
 						req.open ('POST', url, true);
-						req.setRequestHeader ('X-CSRFToken', Cookies.get ('csrftoken'));
+						req.setRequestHeader ('X-CSRFToken', Cookies.py_get ('csrftoken'));
 						if (data.length) {
 							req.setRequestHeader ('Content-type', 'application/x-www-form-urlencoded');
 							req.setRequestHeader ('Content-length', data.length);
@@ -2881,7 +3012,6 @@ function pytigon () {
 		}
 	);
 	(function () {
-		var __symbols__ = ['__esv5__'];
 		var Page = __init__ (__world__.page).Page;
 		var TabMenuItem = __init__ (__world__.tabmenuitem).TabMenuItem;
 		var get_menu = __init__ (__world__.tabmenu).get_menu;

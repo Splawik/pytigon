@@ -17,27 +17,22 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
+class Signal:
+    def __init__(self):
+        self._signals={}
 
+    def register_signal(self, obj, signal):
+        if signal not in self._signals:
+            self._signals[signal] = []
+        if not obj in self._signals[signal]:
+            self._signals[signal].append(obj)
 
-def replace_colors(win, html):
-    c_caption = \
-        wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTION).GetAsString(wx.C2S_HTML_SYNTAX)
-    c_text = \
-        wx.SystemSettings.GetColour(wx.SYS_COLOUR_INACTIVECAPTIONTEXT).GetAsString(wx.C2S_HTML_SYNTAX)
-    return html.replace('#E9E0E2', c_caption).replace('#090002', c_text)
+    def unregister_signal(self, obj, signal):
+        if obj in self._signals[signal]:
+            id = self._signals[signal].index(obj)
+            del self._signals[signal][id]
 
-
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
-    from schcli.guiframe.form import install_pre_process_lib
-    install_pre_process_lib(replace_colors)
-
-
+    def signal(self, signal, *argi, **argv):
+        if signal in self._signals:
+            for obj in self._signals[signal]:
+                getattr(obj, signal)(*argi, **argv)

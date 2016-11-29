@@ -18,7 +18,7 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from autocomplete import TextCtrlAutoComplete
 from schcli.guilib.tools import bitmap_from_art_id, bitmaps_from_art_id, colour_to_html
 from wx.lib.agw import flatmenu as FM
@@ -413,8 +413,8 @@ class StandardButtons(object):
 
     def address_refr(self, panel):
         if self.address_bar:
-            if panel is not None and hasattr(panel.Body, 'WEB'):
-                ctrl = panel.Body.WEB
+            if panel is not None and hasattr(panel.body, 'WEB'):
+                ctrl = panel.body.WEB
                 if hasattr(ctrl, 'GetStatus'):
                     status = ctrl.GetStatus()
                     if status['progress'] >= 0:
@@ -481,7 +481,7 @@ class StandardButtons(object):
         okno = \
             wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
                 , name)
-        okno.Body.WEB.Go(page)
+        okno.body.WEB.Go(page)
         return True
 
 

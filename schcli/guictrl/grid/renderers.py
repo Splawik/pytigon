@@ -22,7 +22,7 @@ import textwrap
 import wx
 from  wx.grid import PyGridCellRenderer
 
-from schcli.guilib.schimage import SchImage
+from schcli.guilib.image import SchImage
 
 if wx.version()>='2.9.5.81':
     PyGridCellRenderer = wx.grid.GridCellRenderer

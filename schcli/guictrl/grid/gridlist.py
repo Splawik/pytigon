@@ -66,7 +66,7 @@ class PageData(object):
         else:
             addr = href + '?page=' + str(nr + 1)
         html = self.parent.load_data_from_server(addr).decode('utf-8')
-        tab = tdata_from_html(html, wx.GetApp().HTTP)
+        tab = tdata_from_html(html, wx.GetApp().http)
         if tab:
             return tab[1:]
         else:

@@ -29,8 +29,8 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    from schcli.guictrl.schctrl import SchBaseCtrl
-    import schcli.guictrl.schctrl
+    from schcli.guictrl.ctrl import SchBaseCtrl
+    import schcli.guictrl.ctrl
     from .printframework import HtmlPreviewCanvas
 
 
@@ -41,6 +41,6 @@ def init_plugin(
             HtmlPreviewCanvas.__init__(self, *args, **kwds)
 
 
-    schcli.guictrl.schctrl.HTMLPRINT = Htmlprint
+    schcli.guictrl.ctrl.HTMLPRINT = Htmlprint
 
 

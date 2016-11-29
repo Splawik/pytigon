@@ -18,7 +18,7 @@
                 return
             event.Skip()
         def on_new_page(self, event):
-            from schcli.guilib.schevent import ID_WEB_NEW_WINDOW
+            from schcli.guilib.event import ID_WEB_NEW_WINDOW
             wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
 </script>
 {% endblock %}

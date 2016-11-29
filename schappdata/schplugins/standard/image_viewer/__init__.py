@@ -20,8 +20,8 @@
 import wx
 from io import BytesIO
 from PIL import Image
-from schcli.guilib.schpil import piltoimage
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guilib.pil import piltoimage
+from schcli.guictrl.basectrl import SchBaseCtrl
 
 
 def init_plugin(
@@ -33,7 +33,7 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    import schcli.guictrl.schctrl
+    import schcli.guictrl.ctrl
 
 
     class Imageviewer(wx.ScrolledWindow, SchBaseCtrl):
@@ -95,7 +95,7 @@ def init_plugin(
 
         def load_from_url(self, url, ext):
             self.set_ext(ext)
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             http.get(self, url)
             txt = http.ptr()
             io = BytesIO(txt)
@@ -126,7 +126,6 @@ def init_plugin(
             self.url = url
 
         def on_save(self, event):
-# print "OnSave" http = wx.GetApp().HTTP
             http = wx.GetApp().get_http(self)
             if self.href:
                 http.post(self, self.href, {'data': self.GetText()})
@@ -149,6 +148,6 @@ def init_plugin(
             self.Paste()
 
 
-    schcli.guictrl.schctrl.IMAGEVIEWER = Imageviewer
+    schcli.guictrl.ctrl.IMAGEVIEWER = Imageviewer
 
 

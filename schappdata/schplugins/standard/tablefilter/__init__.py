@@ -29,8 +29,8 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    import schcli.guictrl.grid.schgrid
-    old_on_key_down = schcli.guictrl.grid.schgrid.SchTableGrid.on_key_down
+    import schcli.guictrl.grid.grid
+    old_on_key_down = schcli.guictrl.grid.grid.SchTableGrid.on_key_down
 
     def on_key_down(self, event):
 # key = event.GetKeyCode() print "OnKeyDown", event.KeyCode,
@@ -56,11 +56,11 @@ def init_plugin(
                 win = win.GetParent()
             p = win.NewChildPage('^standard/tablefilter/addfilter.html',
                                  title='Add')
-            p.Body.StyleSubtract()
+            p.body.StyleSubtract()
         else:
             if old_on_key_down:
                 old_on_key_down(self, event)
 
-    schcli.guictrl.grid.schgrid.SchTableGrid.OnKeyDown = on_key_down
+    schcli.guictrl.grid.grid.SchTableGrid.OnKeyDown = on_key_down
 
 

@@ -35,7 +35,7 @@ class SchImage:
 
     def __init__(self, address, ilosc=0):
         try:
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             (status, ur) = http.get(self, address)
             if status == 404:
                 print("I can't load image from:", address)

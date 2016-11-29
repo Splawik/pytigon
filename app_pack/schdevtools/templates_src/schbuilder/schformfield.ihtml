@@ -9,14 +9,14 @@
         script language=python
             def Init(self):
                 self.retdate = None
-                self['param'].EventObject=self
+                self.param.EventObject=self
 
             def OnBeforeButtonClick(self):
-                self['param'].set_new_href('/schbuilder/field_param/edit/'+self['type'].GetValue()+'/')
+                self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
     %else
         script language=python
             def init_form(self):
-                self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
+                self.add_field.Bind(wx.EVT_BUTTON, self.OnClick)
 
             def signal_from_child(self, child, signal):
                 if signal=='set_bitmap_list':

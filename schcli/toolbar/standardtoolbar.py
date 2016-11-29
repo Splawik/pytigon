@@ -26,9 +26,9 @@ import wx.lib.agw.aui.aui_utilities
 
 from schcli.toolbar.basetoolbar import ToolbarInterface, TYPE_TOOLBAR, \
     TYPE_BUTTONBAR, TYPE_PANELBAR
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guictrl.basectrl import SchBaseCtrl
 
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 
 
 _ = wx.GetTranslation

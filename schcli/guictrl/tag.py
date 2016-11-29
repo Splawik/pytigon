@@ -21,7 +21,7 @@ import types
 import wx.html
 import schlib.schhttptools.htmltab as htmltab
 import schlib.schhttptools.list_parser as list_parser
-import schcli.guictrl.schctrl as schctrl
+import schcli.guictrl.ctrl as schctrl
 import traceback
 try:
     from urllib.parse import unquote
@@ -36,7 +36,7 @@ from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map, \
     register_tag_preprocess_map
 from schlib.schhtml.atom import AtomList, Atom
 from schlib.schhtml.htmltools import superstrip
-from .schbasectrl import SchBaseCtrl
+from .basectrl import SchBaseCtrl
 from schlib.schhttptools.htmltab import Td
 from schlib.schtools.data import is_null
 

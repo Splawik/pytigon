@@ -8,7 +8,7 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            from schcli.guilib.schevent import ID_RetValue
+            from schcli.guilib.event import ID_RetValue
             self.find_value = ""
             self.listclick=False
             self.retlist = None
@@ -57,9 +57,9 @@
             if hasattr(self,'choices'):
                 self.list1.Clear()
                 for item in self.choices:
-                    self['list1'].Append(item[0])
+                    self.list1.Append(item[0])
                 self.listclick=False
-                self['list1'].FindAndSelect(self.FindValueStr())
+                self.list1.FindAndSelect(self.FindValueStr())
 
         def OnNavigationKey(self, event):
             id = self.list1.GetSelection()

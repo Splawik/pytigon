@@ -30,8 +30,8 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    from schcli.guictrl.schctrl import SchBaseCtrl
-    import schcli.guictrl.schctrl
+    from schcli.guictrl.ctrl import SchBaseCtrl
+    import schcli.guictrl.ctrl
 
 
     class Console(wx.Panel):
@@ -58,6 +58,6 @@ def init_plugin(
             box.Fit(self)
 
 
-    schcli.guictrl.schctrl.CONSOLE = Console
+    schcli.guictrl.ctrl.CONSOLE = Console
 
 

@@ -16,13 +16,13 @@
     script language=python
         {% block pythoncodeinit %}
         def init_form(self):
-            self['save_btn'].Bind(wx.EVT_BUTTON, self.on_click)
-            self['save_btn'].Disable()
+            self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
+            self.save_btn.Disable()
             self.modified = False
             self.tuser = wx.Timer(self)
             self.tuser.Start(1000)
             self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
-            self['EDITOR'].SetSavePoint()
+            self.EDITOR.SetSavePoint()
             self.set_acc_key_tab(self,self.get_acc_tab())
             #self.Bind(wx.EVT_MENU, self.on_click, id=ID_SAVE)
             #self.EDITOR.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
@@ -96,7 +96,7 @@
 
 
         def can_close(self):
-            if self['EDITOR'].GetModify():
+            if self.EDITOR.GetModify():
                 dlg = wx.MessageDialog(self, 'Content has been changed, save?',
                                              'Warning!',
                                               wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT
@@ -118,18 +118,18 @@
             self.save()
 
         def save(self):
-            self['EDITOR'].save()
-            self['EDITOR'].SetSavePoint()
+            self.EDITOR.save()
+            self.EDITOR.SetSavePoint()
 
         def set_modified(self, modified):
             self.modified = modified
             if modified:
-                self['save_btn'].Enable()
+                self.save_btn.Enable()
             else:
-                self['save_btn'].Disable()
+                self.save_btn.Disable()
 
         def on_timer_user(self, event):
-            modified = self['EDITOR'].GetModify()
+            modified = self.EDITOR.GetModify()
             if modified != self.modified:
                 self.set_modified(modified)
 

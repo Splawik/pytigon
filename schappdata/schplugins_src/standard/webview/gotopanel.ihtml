@@ -5,18 +5,18 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            self['GOHREF'].Bind(wx.EVT_TEXT_ENTER, self.OnGoTo)
-            self['GO'].Bind(wx.EVT_BUTTON, self.OnGoTo)
-            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
+            self.GOHREF.Bind(wx.EVT_TEXT_ENTER, self.OnGoTo)
+            self.GO.Bind(wx.EVT_BUTTON, self.OnGoTo)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
             self.GOHREF.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-            self['GO'].SetDefault()
+            self.GO.SetDefault()
 
         def go(self):
-            web = self.get_parent_panel()['WEB']
-            value = self['GOHREF'].GetValue()
+            web = self.get_parent_form().WEB
+            value = self.GOHREF.GetValue()
             web.go(value)
             web.clear_history()
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 
         def OnGoTo(self, event):
             self.go()
@@ -29,7 +29,7 @@
                 event.Skip()
 
         def OnExit(self, event):
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 
 %% content
     table width=100%,,,height=100%

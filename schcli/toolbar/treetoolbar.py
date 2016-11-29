@@ -21,11 +21,11 @@ import wx
 import sys
 
 from wx.lib.agw import customtreectrl as CT
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from schcli.toolbar.basetoolbar import ToolbarInterface, TYPE_TOOLBAR, \
     TYPE_BUTTONBAR, TYPE_PANELBAR
-from schcli.guilib.schevent import *
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guilib.event import *
+from schcli.guictrl.basectrl import SchBaseCtrl
 
 _ = wx.GetTranslation
 

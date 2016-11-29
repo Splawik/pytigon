@@ -24,7 +24,7 @@ from tempfile import NamedTemporaryFile
 from base64 import decodebytes, b64encode, b64decode
 import urllib
 from schcli.guilib.tools import get_colour
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from schlib.schtools.tools import split2
 
 import os
@@ -81,66 +81,66 @@ class BaseWebBrowser(object):
 
 
     def on_check_can_goforward(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             test = self.can_go_forward()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_goback(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             test =  self.can_go_back()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_stop(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             test =  self.can_stop()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_refresh(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             test =  self.can_refresh()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_addbookmark(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             test =  self.can_addbookmark()
             event.Enable(test)
         else:
             event.Skip()
 
     def _on_back(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             self.on_back(None)
         else:
             event.Skip()
 
     def _on_forward(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             self.on_forward(None)
         else:
             event.Skip()
 
     def _on_stop(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             self.on_stop(None)
         else:
             event.Skip()
 
     def _on_refresh(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             self.on_refresh(None)
         else:
             event.Skip()
 
     def _on_addbookmark(self, event):
-        if self.get_parent_form().get_tab().is_active():
+        if self.get_parent_form().get_page().is_active():
             self.on_addbookmark(None)
         else:
             event.Skip()
@@ -170,7 +170,7 @@ class BaseWebBrowser(object):
             wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
 
     def on_key_l(self, event):
-        self.get_parent_form().GetParent().Body.new_child_page("^standard/webview/gotopanel.html", title="Go")
+        self.get_parent_form().GetParent().body.new_child_page("^standard/webview/gotopanel.html", title="Go")
 
     def accept_page(self, page):
         self.status['address'] = page
@@ -186,7 +186,7 @@ class BaseWebBrowser(object):
             okno = \
                 wx.GetApp().GetTopWindow().new_main_page('^standard/pdfviewer/pdfviewer.html'
                     , page, None)
-            okno.Body['PDFVIEWER'].LoadFile(name, True)
+            okno.body['PDFVIEWER'].LoadFile(name, True)
             return False
         else:
             return True
@@ -229,15 +229,15 @@ class BaseWebBrowser(object):
         okno = \
             wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
                 , '')
-        return okno.Body.WEB
+        return okno.body.WEB
 
     def new_win(self, bstr_url):
         okno = \
             wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
                 , bstr_url)
-        #okno.Body.WEB.test_ctrl = False
-        okno.Body.WEB.go(bstr_url)
-        #okno.Body.WEB.test_ctrl = True
+        #okno.body.WEB.test_ctrl = False
+        okno.body.WEB.go(bstr_url)
+        #okno.body.WEB.test_ctrl = True
         return True
 
     def new_child(self, bstr_url):
@@ -257,8 +257,8 @@ class BaseWebBrowser(object):
                             dx = int(pos2[1])
                         if pos2[0] == 'bestheight':
                             dy = int(pos2[1])
-        okno.Body.SetBestSize((dx, dy))
-        okno.Body.WEB.Go(bstr_url)
+        okno.body.SetBestSize((dx, dy))
+        okno.body.WEB.Go(bstr_url)
         return True
 
     def set_title(self, title):

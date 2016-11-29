@@ -30,10 +30,10 @@ def init_plugin_sch_web(
     accel,
     base_web_browser,
     ):
-    from schcli.guictrl.schctrl import SChBaseCtrl
-    import schcli.guictrl.schctrl
-    from schcli.guilib import schevent
-    from schcli.guiframe import htmlwin
+    from schcli.guictrl.ctrl import SChBaseCtrl
+    import schcli.guictrl.ctrl
+    from schcli.guilib import event
+    from schcli.guiframe import form
 # from schclilib.httpeasy import conwert_local_path_fun, local_media_path,
 # get_cookie_str
     from urllib.parse import quote as escape
@@ -59,7 +59,7 @@ def init_plugin_sch_web(
     """
 
 
-    class Html2(htmlwin.SChSashWindow, SChBaseCtrl, base_web_browser):
+    class Html2(form.SChSashWindow, SChBaseCtrl, base_web_browser):
 
         logged = False
 
@@ -68,9 +68,9 @@ def init_plugin_sch_web(
             self.redirect_to_html = [None, None]
             self.redirect_to_local = True
             SChBaseCtrl.__init__(self, args, kwds)
-            htmlwin.SChSashWindow.__init__(self, args[0], self.href, None,
-                    name=kwds['name'])
-            self.Body.set_css(init_css_str)
+            form.SChSashWindow.__init__(self, args[0], self.href, None,
+                                        name=kwds['name'])
+            self.body.set_css(init_css_str)
             self.GetParent().any_parent_command('set_handle_info', 'browser', self)
             self.GetParent().any_parent_command('show_info')
 
@@ -107,8 +107,8 @@ def init_plugin_sch_web(
                 if self.redirect_to_local and '127.0.0.2' in url:
                     policy_decision.ignore()
                     self.url = url
-                    evt = schevent.RefrParmEvent(schevent.userEVT_REFRPARM,
-                            self.GetId())
+                    evt = event.RefrParmEvent(event.userEVT_REFRPARM,
+                                              self.GetId())
                     self.GetEventHandler().AddPendingEvent(evt)
                     return True
                 else:
@@ -250,7 +250,7 @@ def init_plugin_sch_web(
         def go(self, url):
             print('GO')
             url2 = self.transform_url(url)
-            self.GetParent().GetParent().Body.GetItem('WEB').LoadURL(url2)
+            self.GetParent().GetParent().body.GetItem('WEB').LoadURL(url2)
 
         def on_char(self, event):
             if event.GetKeyCode() == wx.WXK_RETURN:
@@ -285,6 +285,6 @@ def init_plugin_sch_web(
             return self.get_status()
 
 
-    schcli.guictrl.schctrl.HTML2 = Html2
+    schcli.guictrl.ctrl.HTML2 = Html2
 
 

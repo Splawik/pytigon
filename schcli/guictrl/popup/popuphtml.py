@@ -200,9 +200,9 @@ class DataPopupControl(ComboCtrl):
 
         _href = href + "dialog/|value" if self.dialog_with_value else href + "dialog/"
         self.sash = self.GetParent().new_child_page(str(_href), "Select", parm)
-        self.sash.Body.old_any_parent_command = self.sash.Body.any_parent_command
-        self.sash.Body.any_parent_command = self.any_parent_command
-        self.sash.Body.parent_combo = self
+        self.sash.body.old_any_parent_command = self.sash.body.any_parent_command
+        self.sash.body.any_parent_command = self.any_parent_command
+        self.sash.body.parent_combo = self
 
     def get_last_control_with_focus(self):
         return self
@@ -261,31 +261,31 @@ class DataPopupControl(ComboCtrl):
         self.rec_value = []
 
     def on_create(self, parent):
-        from schcli.guiframe.htmlsash import SchSashWindow
+        from schcli.guiframe.page import SchPage
         href = self.href + "dialog/|value" if self.dialog_with_value else self.href + "dialog/"
-        self.html = SchSashWindow(parent, href, self, size=self.size)
-        self.html.Body.parent_combo = self
+        self.html = SchPage(parent, href, self, size=self.size)
+        self.html.body.parent_combo = self
         return self.html
 
     def on_popoup(self):
         if self.html:
             wx.BeginBusyCursor()
-            self.html.Body.Hide()
+            self.html.body.Hide()
             def _after():
                 self.html.refresh_html()
                 self.html.SetFocus()
                 self.html.on_size(None)
-                self.html.Body.init_page()
+                self.html.body.init_page()
                 def _after2():
-                    self.html.Body.refr(self.start_value)
-                    self.html.Body.Show()
+                    self.html.body.refr(self.start_value)
+                    self.html.body.Show()
                 wx.CallAfter(_after2)
                 wx.EndBusyCursor()
             wx.CallAfter(_after)
 
     def Dismiss(self):
         if self.sash:
-            self.sash.Body.old_any_parent_command("on_cancel", None)
+            self.sash.body.old_any_parent_command("on_cancel", None)
             self.sash = None
         else:
             super().Dismiss()

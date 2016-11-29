@@ -69,20 +69,20 @@
             self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"//")
             self.CMD.GetTable().refresh(0)
 
-            self.PANELS.Body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
+            self.PANELS.body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
 
             self.refresh_html()
             Image.init()
             self.edit_img_win = None
             wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)
-            self.PANELS.Body.filter_url = self.filter_url
+            self.PANELS.body.filter_url = self.filter_url
             self.child_win = None
             self.waiting_proc = []
 
             self._make_process_info_button()
 
         def _make_process_info_button(self):
-            page = self.TabWindow.GetParent()
+            page = self.page.GetParent()
             notebook = page.GetParent()
             id = notebook.GetPageIndex(page)
 
@@ -122,7 +122,7 @@
                     self.waiting_proc.remove(pos2)
 
             if len(self.waiting_proc)==0:
-                self.unreg_signal_handler('PROCESS_INFO')
+                self.unreg_application_signal_handler('PROCESS_INFO')
                 self.pbutton.Disable()
             
         def child_closed(self):
@@ -223,7 +223,7 @@
             elif chr(evt.KeyCode).isalpha() or chr(evt.KeyCode).isdigit():
                 if not self.child_win:
                     okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
-                    self.child_win = okno.Body
+                    self.child_win = okno.body
                     self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.aTable[:-4])
                     if hasattr(self.CMD, 'grid_aTable'):
                         self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.CMD.grid_aTable)
@@ -310,12 +310,12 @@
                     else:
                         href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
                         okno = self.new_main_page("^standard/hexview/viewer.html", name, None)
-            ed = okno.Body["EDITOR"]
+            ed = okno.body.EDITOR
             ed.load_from_url(href, ext)
             if hasattr(ed, 'GotoPos'):
                 ed.GotoPos(0)
             if hasattr(ed, 'set_save_path'):
-                okno.Body["EDITOR"].set_save_path(href2)
+                okno.body.EDITOR.set_save_path(href2)
 
         def on_edit(self, evt):
             row = self.CMD.GetGridCursorRow()
@@ -327,13 +327,13 @@
 
             commander_form = self
 
-            @extend_fun_to(win.Body)
+            @extend_fun_to(win.body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('RENAME', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
                 commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
                 commander_form._refresh_panels()
                 def _exit():
-                    self.any_parent_command('cancel', True)
+                    self.any_parent_command('on_child_form_cancel')
                 wx.CallAfter(_exit)
 
 
@@ -347,15 +347,15 @@
             
             commander_form = self
 
-            @extend_fun_to(win.Body)
+            @extend_fun_to(win.body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('COPY', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
                 if 'process' in ret:
                     commander_form.waiting_proc.append((ret['process'], 2))
                     commander_form.pbutton.Enable()
-                    commander_form.reg_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
+                    commander_form.reg_application_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
                 def _exit():
-                    self.any_parent_command('cancel', True)
+                    self.any_parent_command('on_child_form_cancel')
                 wx.CallAfter(_exit)
 
         def on_move(self, evt):
@@ -368,15 +368,15 @@
             
             commander_form = self
             
-            @extend_fun_to(win.Body)
+            @extend_fun_to(win.body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('MOVE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
                 if 'process' in ret:
                     commander_form.waiting_proc.append((ret['process'], 3))
                     commander_form.pbutton.Enable()
-                    commander_form.reg_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
+                    commander_form.reg_application_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
                 def _exit():
-                    self.any_parent_command('cancel', True)
+                    self.any_parent_command('on_child_form_cancel')
                 wx.CallAfter(_exit)
 
 
@@ -385,13 +385,13 @@
 
             commander_form = self
 
-            @extend_fun_to(win.Body)
+            @extend_fun_to(win.body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('NEWFILE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
                 commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
                 commander_form._refresh_panels()
                 def _exit():
-                    self.any_parent_command('cancel', True)
+                    self.any_parent_command('on_child_form_cancel')
                 wx.CallAfter(_exit)
     
 
@@ -400,13 +400,13 @@
 
             commander_form = self
 
-            @extend_fun_to(win.Body)
+            @extend_fun_to(win.body)
             def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
                 ret = commander_form.CMD.GetTable().run_cmd('MKDIR', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
                 commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
                 commander_form._refresh_panels()
                 def _exit():
-                    self.any_parent_command('cancel', True)
+                    self.any_parent_command('on_child_form_cancel')
                 wx.CallAfter(_exit)
    
         def on_delete(self, evt):
@@ -414,7 +414,7 @@
             if 'process' in ret:
                 self.waiting_proc.append((ret['process'], 1))
                 self.pbutton.Enable()
-                self.reg_signal_handler(self.handle_process_info, 'PROCESS_INFO')
+                self.reg_application_signal_handler(self.handle_process_info, 'PROCESS_INFO')
 
         def on_setup(self, evt):
             win = self.new_child_page("/commander/form/Setup/", param={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })

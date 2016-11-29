@@ -82,7 +82,7 @@ class SchThreadWindow(wx.Panel):
         return self.closed
 
     def timer(self):
-        http = wx.GetApp().HTTP
+        http = wx.GetApp().http
         http.get(self, 'http://local.net/schsys/thread_short_info/'
                   + self.thread_name)
         info_json = http.str()
@@ -110,7 +110,7 @@ class SchThreadWindow(wx.Panel):
         wx.GetApp().GetTopWindow().new_main_page(address, 'aplikacja')
 
     def on_kill(self, event):
-        http = wx.GetApp().HTTP
+        http = wx.GetApp().http
         http.get(self, 'http://local.net/schsys/thread_kill/'
                   + self.thread_name)
         http.clear_ptr()

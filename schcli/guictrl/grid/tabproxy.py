@@ -21,7 +21,7 @@ import wx
 import wx.html
 import wx.grid as gridlib
 from .datasource import *
-from .schgrid import *
+from .grid import *
 import sys
 from schlib.schtools import schjson
 

@@ -30,8 +30,8 @@ def init_plugin(
     accel,
     ):
     import wx.py as py
-    from schcli.guictrl.schctrl import SchBaseCtrl
-    import schcli.guictrl.schctrl
+    from schcli.guictrl.ctrl import SchBaseCtrl
+    import schcli.guictrl.ctrl
 
 
     class Shell(py.shell.Shell, SchBaseCtrl):
@@ -67,8 +67,8 @@ def init_plugin(
 
 
 
-    schcli.guictrl.schctrl.SHELL = Shell
-    schcli.guictrl.schctrl.CRUST_SHELL = CrustShell
-    schcli.guictrl.schctrl.SLICE_SHELL = SliceShell
+    schcli.guictrl.ctrl.SHELL = Shell
+    schcli.guictrl.ctrl.CRUST_SHELL = CrustShell
+    schcli.guictrl.ctrl.SLICE_SHELL = SliceShell
 
 

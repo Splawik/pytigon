@@ -20,8 +20,8 @@
 import wx
 from schlib.schtools import schjson
 from autocomplete import TextCtrlAutoComplete
-from schcli.guictrl.schctrl import SchBaseCtrl
-import schcli.guictrl.schctrl
+from schcli.guictrl.ctrl import SchBaseCtrl
+import schcli.guictrl.ctrl
 
 #import urllib.request, urllib.parse, urllib.error
 
@@ -169,6 +169,6 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    schcli.guictrl.schctrl.AUTOCOMPLETE = Autocomplete
+    schcli.guictrl.ctrl.AUTOCOMPLETE = Autocomplete
 
 

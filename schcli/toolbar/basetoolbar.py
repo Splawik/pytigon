@@ -18,9 +18,9 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from schcli.toolbar.standardtoolbarbuttons import StandardButtons
-from schcli.guiframe.htmlsash import SchSashWindow
+from schcli.guiframe.page import SchPage
 import wx
 
 _ = wx.GetTranslation
@@ -159,7 +159,7 @@ class ToolbarInterface(object):
         self,
         toolbar_page,
         address_or_parser,
-        parametry,
+        parameters,
         ):
         if not toolbar_page:
             u_name = 'main'
@@ -182,9 +182,9 @@ class ToolbarInterface(object):
 
             dy = self.bar.get_bar_height() + 5
 
-            htmlsash2 = SchSashWindow(panel, address_or_parser, parametry,
-                                      size=wx.Size(900, dy), pos=wx.Point(2,2))
-            best = htmlsash2.Body.calculate_best_size()
+            htmlsash2 = SchPage(panel, address_or_parser, parameters,
+                                size=wx.Size(900, dy), pos=wx.Point(2,2))
+            best = htmlsash2.body.calculate_best_size()
             htmlsash2.SetSize(wx.Size(best[0], best[1]))
             sizer.Replace(htmlsash, htmlsash2)
             self.user_panels[u_name] = htmlsash2
@@ -207,10 +207,10 @@ class ToolbarInterface(object):
             bar_size = self.bar.GetSize()
             dy = self.bar.get_bar_height() + 3
             dx = self.bar.get_bar_width() + 3
-            htmlsash = SchSashWindow(panel, address_or_parser, parametry,
-                                     size=wx.Size(dx, dy))
+            htmlsash = SchPage(panel, address_or_parser, parameters,
+                               size=wx.Size(dx, dy))
 
-            best = htmlsash.Body.calculate_best_size()
+            best = htmlsash.body.calculate_best_size()
             htmlsash.SetSize(wx.Size(best[0], best[1]))
             panel.SetSize(wx.Size(best[0], best[1]))
             controls = (htmlsash, )

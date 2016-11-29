@@ -41,12 +41,14 @@ def pil_to_image(pil):
 
 def piltoimage(pil, alpha=True):
     if alpha:
-        image = wx.EmptyImage(*pil.size)
+        #image = wx.EmptyImage(*pil.size)
+        image = wx.Image(*pil.size)
         image.SetData(pil.convert('RGB').tobytes())
         #image.SetAlphaData(pil.convert('RGBA').tostring()[3::4])
         image.SetAlphaBuffer(pil.convert('RGBA').tobytes()[3::4])
     else:
-        image = wx.EmptyImage(pil.size[0], pil.size[1])
+        #image = wx.EmptyImage(pil.size[0], pil.size[1])
+        image = wx.Image(pil.size[0], pil.size[1])
         new_image = pil.convert('RGB')
         data = new_image.tobytes()
         image.SetData(data)

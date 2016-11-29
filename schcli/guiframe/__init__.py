@@ -21,12 +21,12 @@
 """
 Hierarchia okien aplikacji:
   appframe.SChAppFrame
-    self.Desktop = appframe.AppNotebook
-      appframe.AppNotebook
-        appnotebookpage.NotebookPage
+    self.Desktop = appframe.SchNotebook
+      appframe.SchNotebook
+        appnotebookpage.SchNotebookPage
             SChSashWindow (spełnia funkcję ParmObj)
-              self.Header = SChHtmlWindow
-              self.Body = SChHtmlWindow
-              self.Footer = SChHtmlWindow
-              self.Panel = SChHtmlWindow
+              self.header = SChFrame
+              self.body = SChFrame
+              self.footer = SChFrame
+              self.panel = SChFrame
 """

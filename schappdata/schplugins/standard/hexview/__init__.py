@@ -33,12 +33,12 @@ def init_plugin(
     accel,
     ):
     import schcli
-    import schcli.guictrl.schctrl
+    import schcli.guictrl.ctrl
 
-    class Hexviewer(schcli.guictrl.schctrl.STYLEDTEXT):
+    class Hexviewer(schcli.guictrl.ctrl.STYLEDTEXT):
 
         def __init__(self, *args, **kwds):
-            schcli.guictrl.schctrl.STYLEDTEXT.__init__(self, *args, **kwds)
+            schcli.guictrl.ctrl.STYLEDTEXT.__init__(self, *args, **kwds)
             if self.src:
                 self.SetExt(self.src)
             self.last_clipboard_state = False
@@ -64,7 +64,7 @@ def init_plugin(
 
         def load_from_url(self, url, ext):
             self.set_ext('txt')
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             http.get(self, url + '0/')
             txt = http.str()
             self.print_hex(txt)
@@ -75,6 +75,6 @@ def init_plugin(
             pass
 
 
-    schcli.guictrl.schctrl.HEXVIEWER = Hexviewer
+    schcli.guictrl.ctrl.HEXVIEWER = Hexviewer
 
 

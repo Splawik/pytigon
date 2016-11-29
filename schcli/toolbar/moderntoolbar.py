@@ -21,7 +21,7 @@
 import wx
 import wx.lib.agw.ribbon as RB
 from wx.lib.agw.ribbon import art
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from schcli.toolbar.basetoolbar import ToolbarInterface, TYPE_TOOLBAR, \
     TYPE_BUTTONBAR, TYPE_PANELBAR
 

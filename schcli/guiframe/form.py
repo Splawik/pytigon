@@ -17,63 +17,47 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-
 import gc
-try:
-    from wx.adv import SashLayoutWindow
-except:
-    from wx import SashLayoutWindow
-
-#from schcli.guilib.schevent import EVT_USER_FIRST
-from schlib.schtools import createparm
 import sys
-#from urlparse import urlparse
-from schlib.schhttptools.schhtml_parser import ShtmlParser
 import types
-from schlib.schindent.indent_tools import norm_html
+import math
+
+import wx
+from wx.adv import SashLayoutWindow
+from wx.lib.scrolledpanel import ScrolledPanel
+import wx.lib.agw.ribbon as RB
+
+from schlib.schtools import createparm
+from schlib.schhttptools.schhtml_parser import ShtmlParser
 from schlib.schhttptools import schhtml_parser
-#from tempfile import NamedTemporaryFile
 from schlib.schtools.schpath import norm_path, clean_href
 from schlib.schtools.encode import encode_utf
-import math
-from wx.lib.scrolledpanel import ScrolledPanel
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 from schlib.schtools.data import is_null
-from schcli.guilib.schevent import *
-from pydispatch import dispatcher
 
-import wx.lib.agw.ribbon as RB
+from schcli.guilib.event import *
 
+_ = wx.GetTranslation
 
-import six
-
-# from guilib.schevent import * typeEVT_SHOW1 = wx.NewEventType() EVT_SHOW1 =
-# wx.PyEventBinder(typeEVT_SHOW1, 1)
-
-_pre_process_lib = []
+_INIT_CSS_STR = None
+_PRE_PRECESS_LIB = []
 
 
 def install_pre_process_lib(fun):
-    global _pre_process_lib
-    _pre_process_lib.append(fun)
-
-
-init_css_str = None
-lp = 0
+    global _PRE_PRECESS_LIB
+    _PRE_PRECESS_LIB.append(fun)
 
 
 def _get_css():
-    global init_css_str
-    if init_css_str == None:
-        f = open(wx.GetApp().scr_path + '/schappdata/icss/form.icss', 'r')
-        init_css_str = f.read()
-        f.close()
-    return init_css_str
+    global _INIT_CSS_STR
+    if _INIT_CSS_STR == None:
+        with open(wx.GetApp().scr_path + '/schappdata/icss/form.icss', 'r') as f:
+            _INIT_CSS_STR = f.read()
+    return _INIT_CSS_STR
 
 
-class SchHtmlWindow(ScrolledPanel):
+class SchForm(ScrolledPanel):
     """Html window"""
 
     @property
@@ -84,56 +68,37 @@ class SchHtmlWindow(ScrolledPanel):
     def bestsize(self, x):
         self._bestsize = x
 
-    def __init__(self,  parent, id, style, hscroll=False,  vscroll=False):
+    def __init__(self,  parent, hscroll=False,  vscroll=False):
+        """Constructor
+        """
         self._bestsize = None
+        self._scroll_xy = (0, 0)
+        self._act_scroll_xy = (0, 0)
+        self._enabled_controls = False
+        self._last_size = (-1, -1)
+        self._best_virtual_size = None
+        self._block = False
+        self._dc_buf = None
+        self._dc_buf_x = 0
+        self._dc_buf_y = 0
+
         self.no_vscrollbar = not vscroll
         self.no_hscrollbar = not hscroll
-        #if 'style' in kwds:
-        #    if not kwds['style'] & wx.ALWAYS_SHOW_SB:
-        #        self.no_vscrollbar = True
-        #    kwds['style    '] = wx.TAB_TRAVERSAL | wx.WANTS_CHARS \
-        #                    | wx.NO_FULL_REPAINT_ON_RESIZE
-        #kwds['style'] = wx.VSCROLL
-        #self.no_vscrollbar = True
-
-        #style |= wx.TAB_TRAVERSAL
-
-        ScrolledPanel.__init__(self, parent, id, style=wx.WANTS_CHARS)
-        try:
-            self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
-        except:
-            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-
         self.address = None
-        self.EffectiveUrl = ""
-        self.ActiveCtrl = None
-        self.BaseUrl = None
-        self.no_background = False
         self.script = None
-        self.clientObj = None
-        self.controls = {}
-        self.Parametry = None
+        self.parameters = None
         self.page_source = '<html></html>'
         self.script = None
         self.bestsize = None
         self.hover_obj = None
         self.cursor_type = 0
-        self._scroll_xy = (0, 0)
-        self._act_scroll_xy = (0, 0)
-        self._enabled_controls = False
         self.wxdc = None
         self.after_init = False
         self.update_controls = False
-        self._last_size = (-1, -1)
-        self._best_virtual_size = None
         self.obj_action_dict = {}
         self.obj_id_dict = {}
-        self._block = False
-        self._dc_buf = None
-        self._dc_buf_x = 0
-        self._dc_buf_y = 0
-        self.LastControlWithFocus = None
-        self.TabWindow = None
+        self.last_control_with_focus = None
+        self.page = None
         self.html_type = 'body'
         self.init_css_str = None
         self.evt_ind = -1
@@ -141,9 +106,16 @@ class SchHtmlWindow(ScrolledPanel):
         self.acc_tabs = {}
         self.acc_tab = None
         self.last_clicked = None
+        self.t1 = None
+
+        ScrolledPanel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
+        try:
+            self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
+        except:
+            self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+
 
         self.SetupScrolling(hscroll, vscroll, rate_y=1)
-        self.register_signal(self, 'Refr')
 
         self.SetAcceleratorTable(wx.AcceleratorTable(wx.GetApp().GetTopWindow().aTable))
 
@@ -155,81 +127,31 @@ class SchHtmlWindow(ScrolledPanel):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.on_erase_background)
         self.Bind(wx.EVT_SET_FOCUS, self.on_focus)
 
-        #self.Bind(wx.EVT_MENU, self.on_back, id=ID_WEB_BACK)
-        #self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_go_back)
-        #self.GetApp().GetTopWindow().toolbar_interface.bind()
-
-        #self.t0 = wx.Timer(self)
-        #self.t0.Start(1000)
-        self.t1 = None
         self.EnableScrolling(False, False)
-        #wx.GetApp().GetTopWindow().toolbar_interface.bind(self.on_back, ID_WEB_BACK)
-        #wx.GetApp().GetTopWindow().toolbar_interface.bind(self.on_check_can_go_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
-        #wx.GetApp().GetTopWindow().toolbar_interface.bind(self.on_check_can_go_back, -1, wx.EVT_UPDATE_UI)
 
-        #self.bind_to_active(self.on_back, ID_WEB_BACK)
-        #self.bind_to_active(self.on_check_can_go_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
-        #self.bind_to_active(self.on_forward, ID_WEB_FORWARD)
-        #self.bind_to_active(self.on_check_can_go_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
+        self.GetParent().register_signal(self, 'refr')
         self.GetParent().register_signal(self, "refresh_controls")
         self.GetParent().register_signal(self, "child_canceled")
-        self._signal_handlers = []
-        #dispatcher.connect(self.handle_timer, "TIMER", sender=dispatcher.Any )
-        #self.reg_signal_handler(self.handle_timer, "TIMER")
 
     def SetFocus(self):
-        if self.LastControlWithFocus:
-            self.LastControlWithFocus.SetFocus()
+        if self.last_control_with_focus:
+            self.last_control_with_focus.SetFocus()
         else:
             wx.CallAfter(self.Navigate, None)
-
-        #return super().SetFocus()
-
-
-
-    def reg_signal_handler(self, fun, signal):
-        for pos in self._signal_handlers:
-            if pos[1] == signal:
-                break
-        dispatcher.connect(fun, signal, sender=dispatcher.Any )
-        self._signal_handlers.append((fun, signal))
-
-    def unreg_signal_handler(self, signal):
-        i = 0
-        test = None
-        for pos in  self._signal_handlers:
-            if pos[1] == signal:
-                test = pos
-                break
-            i+=1
-        if test:
-            dispatcher.disconnect(pos[0], pos[1], sender=dispatcher.Any)
-            del self._signal_handlers[i]
-
-    #def handle_timer(self, sender):
-    #    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    #    print(sender)
-    #    print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
 
     def refresh_controls(self):
         if hasattr(self, "refresh_after_ok"):
             self.refresh_after_ok()
 
     def child_canceled(self):
-        #self.GetParent().disable_setfocus = False
-        #if hasattr(self.GetParent(), 'LastControlWithFocus'):
-        #    self.GetParent().LastControlWithFocus.SetFocus()
-        #    print("FOCUS:", self.GetParent().LastControlWithFocus)
         if hasattr(self, "child_closed"):
             self.child_closed()
 
-    def ret_ok(self, id, title):
-        #self.GetParent().disable_setfocus = False
-        #print("ret_ok:", id, title)
-        #parent_panel = self.get_parent_panel()
-        if parent_panel and parent_panel.last_clicked and hasattr(parent_panel.last_clicked,"ret_ok"):
-            parent_panel.last_clicked.ret_ok(id, title)
-        self.any_parent_command('on_ok', None)
+    #def ret_ok(self, id, title):
+    #    parent_form = self.get_parent_form()
+    #    if parent_form and parent_form.last_clicked and hasattr(parent_form.last_clicked,"ret_ok"):
+    #        parent_form.last_clicked.ret_ok(id, title)
+    #    self.any_parent_command('on_child_form_ok')
 
     def Navigate(self, ctrl, back = False):
         next = False
@@ -241,29 +163,23 @@ class SchHtmlWindow(ScrolledPanel):
         for w in widgets:
             if next or not ctrl:
                 w.SetFocus()
-                self.LastControlWithFocus = w
+                self.last_control_with_focus = w
                 return
             if w==ctrl:
                 next = True
         if children and len(children)>0:
             if back:
                 children[-1].SetFocus()
-                self.LastControlWithFocus = children[-1]
+                self.last_control_with_focus = children[-1]
             else:
                 children[0].SetFocus()
-                self.LastControlWithFocus = children[0]
+                self.last_control_with_focus = children[0]
 
     def on_focus(self, event):
-        #print("on_focus?????", self.LastControlWithFocus)
-        if self.LastControlWithFocus:
-            self.LastControlWithFocus.SetFocus()
+        if self.last_control_with_focus:
+            self.last_control_with_focus.SetFocus()
         else:
             wx.CallAfter(self.Navigate, None)
-            #self.Navigate(None)
-        #event.Skip()
-    #def SetFocus(self):
-    #    self.on_focus(None)
-
 
     def bind_to_ctrl(self, ctrl, id, fun, fun2=None):
         if fun2:
@@ -271,30 +187,6 @@ class SchHtmlWindow(ScrolledPanel):
         ctrl.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, fun, id=id)
         ctrl.Bind(RB.EVT_RIBBONTOOLBAR_CLICKED, fun, id=id)
         ctrl.Bind(wx.EVT_MENU, fun, id=id)
-
-    def bind_to_active(self, fun, id, e=None):
-        self.get_parent().bind_to_active(fun, id, e)
-
-#    def on_check_can_go_back(self, event):
-#        if not self.closing:
-#            test = len(self.get_parent().href_list) > 1
-#            event.Enable(test)
-#        else:
-#            event.Skip()
-
-#    def on_check_can_go_back(self, event):
-#        if not self.closing:
-#            test = len(self.get_parent().href_list_forward) > 1
-#            event.Enable(test)
-#        else:
-#            event.Skip()
-
-    def print(self, *argi, **argv):
-        if '/edit/' in self.EffectiveUrl:
-            return print(*argi, **argv)
-
-    def signal_from_child(self, child, signal):
-        pass
 
     def scroll_child_into_view(self, child):
         if child.GetParent() == self:
@@ -306,21 +198,13 @@ class SchHtmlWindow(ScrolledPanel):
             if cr.y < 0 and sppu_y > 0:
                 new_vs_y = vs_y + cr.y / sppu_y
             if cr.bottom > clntsz.height and sppu_y > 0:
-                diff = math.ceil((1.0 * (cr.bottom - clntsz.height + 1))
-                                 / sppu_y)
+                diff = math.ceil((1.0 * (cr.bottom - clntsz.height + 1)) / sppu_y)
                 if cr.y - diff * sppu_y > 0:
                     new_vs_y = vs_y + diff
                 else:
                     new_vs_y = vs_y + cr.y / sppu_y
             if new_vs_y != -1:
                 self.Scroll(-1, new_vs_y)
-
-    def get_parent(self):
-        win = ScrolledPanel.GetParent(self)
-        if win.__class__ == SashLayoutWindow:
-            return win.GetParent()
-        else:
-            return win
 
     def set_css(self, css_str):
         self.init_css_str = css_str
@@ -344,42 +228,27 @@ class SchHtmlWindow(ScrolledPanel):
             return (dx, dy)
 
     def _calculate_size(self, width):
-
-        psize = self.GetParent().GetParent().GetSize()
         dc = wx.ClientDC(self)
         wxdc = DcDc(dc, calc_only=True, width=width, height=-1)
-        self.get_parent().restart_ctrl_lp()
+        self.GetParent().restart_ctrl_lp()
         p = HtmlViewerParser(dc=wxdc, calc_only=True,
                              init_css_str=self.get_css(), css_type=1)
-        p.set_http_object(wx.GetApp().HTTP)
+        p.set_http_object(wx.GetApp().http)
         p.set_parent_window(self)
         p.feed(self.page_source)
         (dx, dy) = p.get_max_sizes()
         p.close()
-        self.remove_old_ctrls()
+        self.GetParent().remove_old_ctrls()
         return (dx, dy)
 
-    def remove_old_ctrls(self):
-        self.get_parent().remove_old_ctrls()
-        #self.controls = {}
-
     def calculate_best_size(self):
-        if '/edit/' in self.EffectiveUrl:
-            pass
-        #if not self.bestsize:
-        if True:
-            psize = self.GetParent().GetParent().GetClientSize()
-            if self.bestsize:
-                (dx, dy) = self._calculate_size(self.bestsize[0])
-            else:
-                (dx, dy) = self._calculate_size((psize[0] * 3) / 4)
-            #print "calculate_best_size2: ", dx, dy+8
-            self.bestsize = (dx, dy + 8)
-            #self.bestsize = (dx, dy)
-            return self.bestsize
-        #else:
-        #    self.print("calculate_best:", self.bestsize)
-        #    return self.bestsize
+        psize = self.GetParent().GetParent().GetClientSize()
+        if self.bestsize:
+            (dx, dy) = self._calculate_size(self.bestsize[0])
+        else:
+            (dx, dy) = self._calculate_size((psize[0] * 3) / 4)
+        self.bestsize = (dx, dy + 8)
+        return self.bestsize
 
     def html_updatet(self, dc, size):
         w = size.GetWidth()
@@ -393,13 +262,13 @@ class SchHtmlWindow(ScrolledPanel):
             else:
                 self.wxdc = DcDc(dc, calc_only=False, width=w - 1 - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y),
                                  height=-1)
-            self.get_parent().restart_ctrl_lp()
+            self.GetParent().restart_ctrl_lp()
             p = HtmlViewerParser(dc=self.wxdc, calc_only=False,
                                  init_css_str=self.get_css(), css_type=1)
-            p.set_http_object(wx.GetApp().HTTP)
+            p.set_http_object(wx.GetApp().http)
             p.set_parent_window(self)
             p.feed(self.page_source)
-            self.remove_old_ctrls()
+            self.GetParent().remove_old_ctrls()
             self.obj_action_dict = p.obj_action_dict
             self.obj_id_dict = p.obj_id_dict
             if not self.no_vscrollbar:
@@ -425,14 +294,6 @@ class SchHtmlWindow(ScrolledPanel):
             self.update_controls = False
 
 
-    def on_erase_background(self, event):
-        #rect = self.GetRect()
-        #if not rect[2]==1 and not rect[3]==1:
-        #   print(rect)
-        self.draw_background()
-        #event.Skip()
-
-
     def draw_background(self, refresh_all=False, size=None):
         if self._block:
             return
@@ -448,15 +309,7 @@ class SchHtmlWindow(ScrolledPanel):
                 == y:
             dc.SetDeviceOrigin(-1 * x, -1 * y)
             rect = self.GetRect()
-            dc.Blit(
-                x,
-                y,
-                rect.GetWidth(),
-                rect.GetHeight(),
-                self._dc_buf,
-                x,
-                y,
-            )
+            dc.Blit(x,y,rect.GetWidth(),rect.GetHeight(),self._dc_buf,x,y)
         else:
             rect = self.GetRect()
             if rect.GetWidth() < 1 or rect.GetHeight() < 1:
@@ -475,32 +328,21 @@ class SchHtmlWindow(ScrolledPanel):
             else:
                 self.wxdc.dc = dc2
                 self.wxdc.play()
-
-
-            dc.Blit(
-                x,
-                y,
-                rect.GetWidth(),
-                rect.GetHeight(),
-                dc2,
-                x,
-                y,
-            )
+            dc.Blit(x,y,rect.GetWidth(),rect.GetHeight(),dc2,x,y)
             self._dc_buf = dc2
             self._dc_buf_x = x
             self._dc_buf_y = y
         self._block = False
 
+    def on_erase_background(self, event):
+        self.draw_background()
+
     def append_ctrl(self, ctrl):
         name = ctrl.GetName()
-        while name in self.controls:
-            name += '$'
-        self.controls[name] = ctrl
-        if not '$' in name:
-            try:
-                setattr(self, name, ctrl)
-            except:
-                pass
+        try:
+            setattr(self, name, ctrl)
+        except:
+            pass
         self.GetParent().append_ctrl(ctrl)
 
     def enable_ctrls(self, ctrls):
@@ -519,18 +361,13 @@ class SchHtmlWindow(ScrolledPanel):
         wx.ScrolledWindow.Scroll(self, self._scroll_xy[0], self._scroll_xy[1])
 
     def enable(self, enable=True):
-        ret = super(SchHtmlWindow, self).Enable(enable)
+        ret = super(SchForm, self).Enable(enable)
         if enable:
             wx.CallAfter(self.restore_scroll_pos)
         return ret
 
     def set_best_size(self, bestsize):
         self.bestsize = bestsize
-        if '/edit/' in self.EffectiveUrl:
-            pass
-
-
-        #print "set_best_size:", self.bestsize
 
     def on_opening_url(self, type, url):
         if hasattr(self, 'filter_url'):
@@ -543,12 +380,10 @@ class SchHtmlWindow(ScrolledPanel):
             if base.startswith('http://127.0.0.2'):
                 if url.startswith('/app_media'):
                     if ':' in wx.GetApp().root_path:
-                        url2 = wx.GetApp().root_path + '/app_pack' \
-                               + url.replace('/app_media', '')
+                        url2 = wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
                         url2 = norm_path(url2)
                     else:
-                        url2 = 'file://' + wx.GetApp().root_path + '/app_pack' \
-                               + url.replace('/app_media', '')
+                        url2 = 'file://' + wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
                         url2 = norm_path(url2)
             else:
                 url2 = base + url
@@ -579,71 +414,42 @@ class SchHtmlWindow(ScrolledPanel):
         self.t1.Start(time * 1000)
         self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
-    #def on_can_back(self, event):
-    #    print("on_can_back")
-    #    event.Enable(False)
-
-    #def on_back(self, event):
-    #    self.back()
-
-    #def back(self):
-    #    href_list = self.get_parent().href_list
-    #    if len(href_list)>1:
-    #        del href_list[-1]
-    #        href, attr = href_list[-1]
-    #        if attr:
-    #            self.href_clicked(self, attr)
-    #        else:
-    #            self.href_clicked(self, {'href': href, 'target': '_self'})
-    #        del href_list[-1]
-
-
-
     def close_with_delay(self):
         self.cancel(True)
 
-    #def on_timer0(self, event):
-    #    pos0 = wx.GetMousePosition()
-    #    pos1 = self.GetScreenPosition()
-    #    x = pos0.x - pos1.x
-    #    y = pos0.y - pos1.y
-    #    self.redraw_html_elems((x, y))
-
     def on_timer(self, event):
-        if self.TabWindow:
-            if not self.TabWindow.exists:
+        if self.page:
+            if not self.page.exists:
                 self.t1.Stop()
                 return
         self.GetParent().refresh_html()
 
     def cancel(self, cancel):
-        if self.TabWindow:
-            self.TabWindow.exists = False
+        if self.page:
+            self.page.exists = False
         if self.t1:
             self.t1.Stop()
-        if self.TabWindow:
-            self.TabWindow.GetParent().cancel(True)
+        if self.page:
+            self.page.GetParent().on_child_form_cancel()
 
     def set_htm_type(self, html_type):
         self.html_type = html_type
 
-    def get_parent_panel(self):
-        if self.get_tab():
-            parent_tab = self.get_tab().get_parent_tab()
-            if parent_tab:
-                return parent_tab.ActiveWin
+    def get_parent_form(self):
+        if self.get_page():
+            parent_page = self.get_page().get_parent_page()
+            if parent_page:
+                return parent_page.active_form
         return None
 
-    def get_tab(self):
-        return self.TabWindow
+    def get_page(self):
+        return self.page
 
     def on_right_up(self, evt):
-        okno = self.new_main_page('^standard/editor/editor.html',
-                                  self.get_tab().title + ' - page source', None)
-        #okno.Body['EDITOR'].SetValue(norm_html(self.page_source))
+        okno = self.new_main_page('^standard/editor/editor.html', self.get_page().title + ' - '+_('page source'), None)
         def init_ctrl():
-            okno.Body['EDITOR'].SetValue(self.page_source.tostream().getvalue())
-            okno.Body['EDITOR'].GotoPos(0)
+            okno.body.EDITOR.SetValue(self.page_source.tostream().getvalue())
+            okno.body.EDITOR.GotoPos(0)
         wx.CallAfter(init_ctrl)
 
     def _get_obj_for_redraw(self, pos, type=0):
@@ -689,7 +495,6 @@ class SchHtmlWindow(ScrolledPanel):
                     self.hover_obj.gparent.refresh()
             if obj:
                 if obj != self.hover_obj and obj.can_hover():
-                    #print("redraw")
                     obj.gparent.set_hover(True)
                     obj.gparent.refresh()
         self.hover_obj = obj
@@ -711,7 +516,6 @@ class SchHtmlWindow(ScrolledPanel):
         pos2 = (pos[0]+self._act_scroll_xy[0], pos[1]+self._act_scroll_xy[1])
         if 'href' in self.obj_action_dict:
             for obj in self.obj_action_dict['href']:
-                #print("href:", obj, obj.rendered_rects)
                 for r in obj.rendered_rects:
                     rect = wx.Rect(r[0], r[1], r[2], r[3])
                     if rect.Contains(pos2):
@@ -720,16 +524,12 @@ class SchHtmlWindow(ScrolledPanel):
                         return
         evt.Skip()
 
-    def register_signal(self, obj, signal):
-        if hasattr(self.GetParent(), 'register_signal'):
-            self.GetParent().register_signal(obj, signal)
-
     def CanClose(self):
         ret = True
         if hasattr(self, 'can_close'):
             ret = self.can_close()
         else:
-            widgets = list(self.get_widgets().values())
+            widgets = list(self.GetParent().get_widgets().values())
             for w in widgets:
                 if hasattr(w, 'CanClose'):
                     if not w.CanClose():
@@ -740,21 +540,9 @@ class SchHtmlWindow(ScrolledPanel):
         self.closing=True
         if hasattr(self, 'on_close'):
             self.on_close()
-
-        for pos in self._signal_handlers:
-            dispatcher.disconnect(pos[0], pos[1], sender=dispatcher.Any)
-
-        self.GetParent().unregister_signal(self, "refresh_controls")
-        self.GetParent().unregister_signal(self, "child_canceled")
-
         gc.collect()
 
-    def any_parent_command(
-            self,
-            command,
-            *args,
-            **kwds
-    ):
+    def any_parent_command(self, command, *args, **kwds):
         parent = self.GetParent()
         while parent != None:
             if hasattr(parent, command):
@@ -765,7 +553,6 @@ class SchHtmlWindow(ScrolledPanel):
 
     def set_address_parm(self, address):
         """page address for refr_obj in format http://adres?zmienna1|zmienna2,zmienna"""
-
         if address:
             elementy = address.split('|')
             if elementy[0][-1] == '/':
@@ -775,11 +562,9 @@ class SchHtmlWindow(ScrolledPanel):
                 if len(elementy) > 1:
                     address2 = address2 + '|' + elementy[1]
             self.address = address2
-            self.EffectiveUrl = address2
 
     def get_parm_obj(self):
         """Get parent object width method get_par"""
-
         parent = self
         while parent != None:
             if hasattr(parent, 'get_parm'):
@@ -816,9 +601,8 @@ class SchHtmlWindow(ScrolledPanel):
                     strona = mp.get_footer()
                 else:
                     strona = mp.get_body()
-                if self.show_page(strona, self.Parametry):
+                if self.show_page(strona, self.parameters):
                     self.init_page()
-
 
     def on_size(self, event):
         if event.GetSize() == (0, 0) or event.GetSize() == (20, 20):
@@ -836,41 +620,10 @@ class SchHtmlWindow(ScrolledPanel):
         self.wxdc = None
         self.draw_background()
 
-    def __getitem__(self, key):
-        if key in self.controls:
-            return self.controls[key]
-        try:
-            ret = super(SchHtmlWindow, self).__getitem__(self, key)
-            return ret
-        except:
-            print("key error:", key)
-            return None
-
-            #return ScrolledPanel.__getitem__(self, key)
-
-    def get_item(self, key):
-        if key.startswith('PARENT_'):
-            parentpanel = self.get_parent_panel()
-            if parentpanel:
-                return getattr(parentpanel, key[7:])
-            else:
-                return None
-        else:
-            return self.get_widgets()[key]
-
-    def item_exist(self, key):
-        if key in self.get_widgets() or key.startswith('PARENT_'):
-            return True
-        else:
-            return False
-
-    def get_widgets(self):
-        return self.controls
-
     def pre_process_page(self, page):
-        global _pre_process_lib
+        global _PRE_PRECESS_LIB
         page2 = page
-        for fun in _pre_process_lib:
+        for fun in _PRE_PRECESS_LIB:
             page2 = fun(self, page2)
         return page2
 
@@ -893,14 +646,14 @@ class SchHtmlWindow(ScrolledPanel):
             print('#######################################################')
 
 
-    def show_page(self, page_and_script, parametry=None):
-        if self.TabWindow and self.TabWindow.exists == False:
+    def show_page(self, page_and_script, parameters=None):
+        if self.page and self.page.exists == False:
             return False
         self.page_source = self.pre_process_page(page_and_script[0])
         if self.page_source == '$$$':
             self.t2 = wx.CallLater(10000, self.close_with_delay)
             return False
-        self.Parametry = parametry
+        self.parameters = parameters
         if not self.script:
             self.script = str(page_and_script[1])
             if self.script and len(self.script) > 1:
@@ -920,20 +673,8 @@ class SchHtmlWindow(ScrolledPanel):
                         script = script + line[tab:] + '\n'
                 d = {'wx': wx}
                 self.exec_code(script, d)
-                #try:
-                ##    exec (script, d)
-                #except:
-                #    print('### ERROR IN SCRIPT ###################################')
-                #    print(script)
-                #    print('#######################################################')
-                #    import traceback
-                #
-                #    print(sys.exc_info()[0])
-                #    print(traceback.print_exc())
-                #    print('#######################################################')
 
                 for key in d:
-                    self.clientObj = d
                     if not key.startswith('__'):
                         if hasattr(d[key], '__call__'):
                             fun = d[key]
@@ -946,28 +687,13 @@ class SchHtmlWindow(ScrolledPanel):
                             setattr(self, key, method)
                         else:
                             setattr(self, key, d[key])
-            else:
-                self.clientObj = None
-
-        widgets = self.get_widgets()
-        for key in widgets:
-            try:
-                if key == 'Parent':
-                    setattr(self, 'FormParent', widgets[key])
-                else:
-                    setattr(self, key, widgets[key])
-            except:
-                print('setattr error:', key, widgets[key].__class__.__name__)
         return True
 
-    def go(self, address):
-        return html.HtmlWindow.load_page('http://' + address)
 
     def init_page(self):
         if not self.after_init:
             if hasattr(self, 'init_form'):
                 wx.CallAfter(self.init_form)
-                #self.init_form()
             self.after_init = True
         else:
             if hasattr(self, 'reinit'):
@@ -977,68 +703,28 @@ class SchHtmlWindow(ScrolledPanel):
         wx.CallAfter(self._build_acc_tab)
 
 
-    def new_local_child_page(
-            self,
-            address,
-            title='',
-            parametry=None,
-    ):
+    def new_local_child_page(self,address,title='',parameters=None):
         return self.new_child_page('http://local.net/' + address, title,
-                                   parametry)
+                                   parameters)
 
-    def new_plugin_child_page(
-            self,
-            path,
-            address,
-            title='',
-            parametry=None,
-    ):
+    def new_plugin_child_page(self,path,address,title='',parameters=None):
         p = path.split('/')
         address2 = 'schappdata/schplugins/' + p[-3] + '/' + p[-2] + '/' + address
-        return self.new_local_child_page(address2, title, parametry)
+        return self.new_local_child_page(address2, title, parameters)
 
-    def new_child_page(
-            self,
-            address_or_parser,
-            title='',
-            param=None,
-    ):
+    def new_child_page(self,address_or_parser,title='',param=None):
         self._scroll_xy = self.GetViewStart()
-        self.get_parm_obj().ActiveWin = self
-        self.GetParent().ActiveWin = self
-        if hasattr(self.GetParent(), 'LastControlWithFocus'):
-            self.LastControlWithFocus = self.GetParent().LastControlWithFocus
+        self.get_parm_obj().active_form = self
+        self.GetParent().active_form= self
+        if hasattr(self.GetParent(), 'last_control_with_focus'):
+            self.last_control_with_focus = self.GetParent().last_control_with_focus
         else:
-            self.LastControlWithFocus = None
+            self.last_control_with_focus = None
         self.GetParent().disable_setfocus = True
-        return self.any_parent_command('new_child_page', address_or_parser, title,
-                                       param)
+        return self.any_parent_command('new_child_page', address_or_parser, title,param)
 
-    def new_main_page(
-            self,
-            address_or_parser,
-            title=None,
-            param=None,
-            panel='desktop',
-    ):
-        return self.any_parent_command('new_main_page', address_or_parser, title,
-                                       param, panel)
-
-    def ok(self):
-        pass
-
-    def anuluj(self):
-        pass
-
-    #def zapisz(self):
-    #    pass
-
-    #def AcceptsFocus(self):
-    #    return True
-
-    #def AcceptsFocusFromKeyboard(self):
-    #    return self.AcceptsFocus()
-
+    def new_main_page(self,address_or_parser,title=None,param=None,panel='desktop'):
+        return self.any_parent_command('new_main_page', address_or_parser, title,param, panel)
 
     def goto_href(self, href):
         ref = href[1:]
@@ -1059,14 +745,7 @@ class SchHtmlWindow(ScrolledPanel):
                     dy = -1
                 self.Scroll(dx, dy)
 
-    def href_clicked(
-            self,
-            ctrl,
-            attr_dict,
-            upload=False,
-            fields=False,
-            params=None,
-    ):
+    def href_clicked(self,ctrl,attr_dict,upload=False,fields=False,params=None):
         self.last_clicked = ctrl
 
         if 'href' in attr_dict:
@@ -1087,15 +766,14 @@ class SchHtmlWindow(ScrolledPanel):
             if href and hasattr(self, 'filter_url'):
                 f = self.filter_url(target, href)
                 if f != None:
-                    if isinstance(f, six.string_types):
-                    #if f.__class__ in (str, unicode):
+                    if type(f)==str:
                         href = clean_href(f)
                     else:
                         return f
 
             if href == None:
                 if target == '_parent':
-                    self.any_parent_command('on_cancel', None)
+                    self.any_parent_command('on_child_form_cancel')
                     return
                 if target == '_refresh':
                     self.any_parent_command('send_refr_obj')
@@ -1168,8 +846,8 @@ class SchHtmlWindow(ScrolledPanel):
                     edit_name = href
                 okno = self.new_main_page('^standard/editor/editor.html', href,
                                           None)
-                okno.Body['EDITOR'].SetValue(s)
-                okno.Body['EDITOR'].GotoPos(0)
+                okno.body['EDITOR'].SetValue(s)
+                okno.body['EDITOR'].GotoPos(0)
             else:
                 if 'application' in http.ret_content_type:
                     wx.GetApp().GetTopWindow().open_binary_data(http, href)
@@ -1206,8 +884,6 @@ class SchHtmlWindow(ScrolledPanel):
                         href = attr_dict['href']
                     else:
                         href = None
-                    #self.get_parent().href_list.append((href, attr_dict))
-                    self.get_parent().reg_href(href, attr_dict)
 
                     if self.GetParent().address_or_parser.__class__.__name__ == 'ShtmlParser':
                         self.GetParent().address_or_parser.address = adr2
@@ -1216,11 +892,11 @@ class SchHtmlWindow(ScrolledPanel):
 
                     return
                 if target == '_blank':
-                    self.GetParent().ActiveCtrl = ctrl
+                    self.GetParent().active_ctrl = ctrl
                     win = self.new_child_page(mp, is_null(mp.title, title),
                                               param=self.get_parm_obj())
                     if win:
-                        win.Body.set_address_parm(str(adr2))
+                        win.body.set_address_parm(str(adr2))
                     return
                 if target == '_top':
                     self.new_main_page(mp, is_null(mp.title, title),
@@ -1237,13 +913,13 @@ class SchHtmlWindow(ScrolledPanel):
                                            param=self.get_parm_obj(), panel='desktop2')
                     return
                 if target == '_parent':
-                    self.any_parent_command('on_cancel', None)
+                    self.any_parent_command('on_child_form_cancel')
                     return
                 if target == '_refresh':
                     self.GetParent().refresh_html()
                     return
                 if target == '_parent_refr':
-                    self.any_parent_command('on_ok', None)
+                    self.any_parent_command('on_child_form_ok')
                     return
                 if target == 'message':
                     dlg = wx.MessageDialog(self, s, is_null(mp.title, title),
@@ -1261,6 +937,9 @@ class SchHtmlWindow(ScrolledPanel):
                     tool_bars = main_window.toolbar_interface.get_toolbars()
                     exec (script.replace('\r', ''))
                     return
+
+    def signal_from_child(self, child, signal):
+        pass
 
     def get_evt_ind(self):
         if self.evt_ind == -1:
@@ -1286,11 +965,8 @@ class SchHtmlWindow(ScrolledPanel):
             for pos in self.acc_tabs[win]:
                 tab += pos
             ret.append((win,tab))
-            #obj._set_acc_key_tab(win, tab)
         obj._set_acc_key_tab(ret)
 
-
-    #def _set_acc_key_tab(self, win, tab):
     def _set_acc_key_tab(self, tabs):
         tab2 = []
 
@@ -1327,12 +1003,8 @@ class SchHtmlWindow(ScrolledPanel):
                     win.Bind(wx.EVT_KEY_DOWN, self.on_acc_key_down)
                     win.acc_tab = True
 
-
         if wx.Platform != '__WXMSW__':
             self.SetAcceleratorTable(wx.AcceleratorTable(tab2))
-
-
-
 
     def on_acc_key_down(self, event):
         if event.KeyCode == 307:

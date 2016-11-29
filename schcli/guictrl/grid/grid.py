@@ -21,7 +21,7 @@ import wx
 import wx.grid
 import traceback
 from schcli.guictrl.grid import popupdata
-from schcli.guilib import schevent
+from schcli.guilib import event
 
 
 from .renderers import ExtStringRenderer, IconAndStringRenderer, \

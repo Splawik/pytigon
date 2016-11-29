@@ -19,9 +19,9 @@
 
 import wx
 
-from schcli.guilib.schevent import *
+from schcli.guilib.event import *
 from schcli.toolbar.basetoolbar import ToolbarInterface
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guictrl.basectrl import SchBaseCtrl
 
 class MenuInterface(ToolbarInterface):
 

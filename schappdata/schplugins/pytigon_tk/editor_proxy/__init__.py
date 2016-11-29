@@ -37,7 +37,7 @@ def init_plugin(
         p = "/schcommander/table/FileManager/open/%s/" % b32encode(path.encode('utf-8')).decode('utf-8')
         p_save = p.replace('/open/','/save/')
         p_save_as = "/schcommander/table/FileManager/save/{{file}}/"
-        ed = okno.Body["EDITOR"]
+        ed = okno.body["EDITOR"]
         ed.load_from_url(p, "py")
         ed.set_save_path(p_save, p_save_as)
         ed.GotoPos(0)

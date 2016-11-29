@@ -20,7 +20,7 @@
 import wx
 from io import StringIO
 from PIL import Image
-from schcli.guilib.schpil import piltoimage
+from schcli.guilib.pil import piltoimage
 # from  wx.lib import scrolledpanel
 
 
@@ -33,8 +33,8 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    from schcli.guictrl.schctrl import SChBaseCtrl
-    import schcli.guictrl.schctrl
+    from schcli.guictrl.ctrl import SChBaseCtrl
+    import schcli.guictrl.ctrl
 
 
     class Videoviewer(wx.ScrolledWindow):
@@ -95,7 +95,7 @@ def init_plugin(
 
         def load_from_url(self, url, ext):
             self.SetExt(ext)
-            http = wx.GetApp().HTTP
+            http = wx.GetApp().http
             http.get(self, url)
             txt = http.ptr()
             io = StringIO(txt)
@@ -126,7 +126,6 @@ def init_plugin(
             self.url = url
 
         def on_save(self, event):
-# print "OnSave" http = wx.GetApp().HTTP
             http = wx.GetApp().get_http(self)
             if self.href:
                 http.post(self, self.href, {'data': self.GetText()})
@@ -149,6 +148,6 @@ def init_plugin(
             self.Paste()
 
 
-    schcli.guictrl.schctrl.VIDEOVIEWER = Videoviewer
+    schcli.guictrl.ctrl.VIDEOVIEWER = Videoviewer
 
 

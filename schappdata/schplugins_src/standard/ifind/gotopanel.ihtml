@@ -16,13 +16,13 @@
             self.GOLINE.SetValue('')
 
         def on_go_to(self, event):
-            editor = self.get_parent_panel()['EDITOR']
+            editor = self.get_parent_form().EDITOR
             value = self.GOLINE.GetValue()
             editor.GotoLine(int(value)-1)
             self.on_exit(event)
 
         def on_exit(self, event):
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 
 %% content
     table width=100%,,,height=100%

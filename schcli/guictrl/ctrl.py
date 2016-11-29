@@ -62,12 +62,12 @@ from wx.lib import ticker, masked, colourselect, filebrowsebutton
 from schlib.schtools import createparm
 from schlib.schhttptools.schhtml_parser import ShtmlParser
 
-from schcli.guilib import schevent
-from schcli.guictrl.grid import schgrid, datasource, tabproxy
-from schcli.guiframe import htmlwin, htmlsash
+from schcli.guilib import event
+from schcli.guictrl.grid import grid, datasource, tabproxy
+from schcli.guiframe import form, page
 
-from schcli.guictrl.grid.schgridlist import SimpleDataTable
-from schcli.guictrl.grid.schgridpanel import SchGridPanel
+from schcli.guictrl.grid.gridlist import SimpleDataTable
+from schcli.guictrl.grid.gridpanel import SchGridPanel
 from schcli.guictrl.popup.popuphtml import DataPopupControl
 
 import wx.lib.imagebrowser
@@ -77,7 +77,7 @@ import wx.lib.buttons  as  buttons
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 
-from schcli.guictrl.schbasectrl import SchBaseCtrl
+from schcli.guictrl.basectrl import SchBaseCtrl
 from schcli.guictrl.button.toolbarbutton import BitmapTextButton
 from schcli.guilib.tools import bitmap_from_href
 
@@ -256,7 +256,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
         if is_close_button:
             def on_exit(self, event):
                 def fun():
-                    self.GetParent().any_parent_command('cancel', True)
+                    self.GetParent().any_parent_command('on_child_form_cancel')
                 wx.CallAfter(fun)
         else:
             def on_click(self, event):
@@ -737,9 +737,9 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         #    #print tdata
         #    print "######################################################"
 
-        self.grid = schgrid.SchTableGrid(table, "", self, typ=schgrid.SchTableGrid.VIEW, style= wx.TAB_TRAVERSAL|wx.FULL_REPAINT_ON_RESIZE )
+        self.grid = grid.SchTableGrid(table, "", self, typ=grid.SchTableGrid.VIEW, style=wx.TAB_TRAVERSAL | wx.FULL_REPAINT_ON_RESIZE)
 
-        self.get_parent_form().register_signal(self, "refresh_controls")
+        self.GetParent().get_page().register_signal(self, "refresh_controls")
         self.create_toolbar(self.grid)
         #wx.CallAfter(self.CreateToolbar, self.grid)
         self.Bind(wx.EVT_CLOSE, self.on_close)
@@ -747,7 +747,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         self._table = table
 
     def on_close(self, event):
-        self.get_parent_form().unregister_signal(self, "refresh_controls")
+        self.GetParent().get_page().unregister_signal(self, "refresh_controls")
         event.Skip()
 
     def GetMinSize(self):
@@ -794,7 +794,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
 
     def refresh_controls(self):
         self.GetParent().enable_ctrls((self,))
-        ret = self.GetParent().get_tab()._refresh_html()
+        ret = self.GetParent().get_page()._refresh_html()
         self.GetParent().enable_ctrls(None)
         return ret
 
@@ -832,7 +832,7 @@ class RADIOBUTTON(wx.RadioButton, SchBaseCtrl):
         if 'name' in kwds:
             name = kwds['name']
             #print "RADIOBUTTON", name
-            if not parent.item_exist(name.split('__')[0]):
+            if not hasattr(parent,name.split('__')[0]):
                 if 'style' in kwds:
                     kwds['style'] |= wx.RB_GROUP
                 else:
@@ -1374,7 +1374,7 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
             wxdc2 = wxdc
 
         p = HtmlViewerParser(dc=wxdc2, calc_only=calc_only, init_css_str=init_css_str)
-        p.set_http_object(wx.GetApp().HTTP)
+        p.set_http_object(wx.GetApp().http)
         p.set_parent_window(self)
         try:
             p.feed(value)
@@ -1419,10 +1419,10 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
                 nr=0
             self.SetSelection(nr)
 
-class HTML(htmlsash.SchSashWindow, SchBaseCtrl):
+class HTML(page.SchPage, SchBaseCtrl):
     def __init__(self, *args, **kwds):
         SchBaseCtrl.__init__(self, args, kwds)
-        htmlsash.SchSashWindow.__init__(self, args[0], self.src, None, name=kwds['name'])
+        page.SchPage.__init__(self, args[0], self.src, None, name=kwds['name'])
         if self.src:
             value = self.load_string_from_server(self.src)
             self._set_value(value, False)
@@ -1430,9 +1430,9 @@ class HTML(htmlsash.SchSashWindow, SchBaseCtrl):
             self._set_value(self.param['data'], False)
         else:
             self._value = None
-        self.Body.Refresh()
-        self.Body.Update()
-        #self.best_size = self.Body._calculate_size(kwds['size'].GetWidth())
+        self.body.Refresh()
+        self.body.Update()
+        #self.best_size = self.body._calculate_size(kwds['size'].GetWidth())
 
     #def GetBestSize(self):
     #    return self.best_size
@@ -1452,26 +1452,15 @@ class HTML(htmlsash.SchSashWindow, SchBaseCtrl):
         mp.process(self._value)
         mp.address = None
         body = mp.get_body()
-        self.Body.show_page(body)
+        self.body.show_page(body)
         if refresh:
-            self.Body.wxdc = None
-            self.Body.draw_background()
+            self.body.wxdc = None
+            self.body.draw_background()
 
     def GetValue(self):
         return self._value
 
 
-#class HTML100(htmlsash.SchSashWindow, SchBaseCtrl):
-#
-#    def __init__(self, *args, **kwds):
-#        SchBaseCtrl.__init__(self, args, kwds)
-#        htmlsash.SchSashWindow.__init__(self, args[0], self.src, None, name=kwds['name'])
-#        self.Body.Refresh()
-#        self.Body.Update()
-#        if 'data' in self.param and len(self.param['data'])>0:
-#            self._set_value(self.param['data'], False)
-#        else:
-#            self._value = None
 
 
 PDFVIEWER = None
@@ -1517,12 +1506,12 @@ class NOTEBOOK(wx.Notebook, SchBaseCtrl):
         wx.Notebook.__init__(self, *args, **kwds)
         if self.tdata:
             for row in self.tdata:
-                h = htmlsash.SchSashWindow(self, row[1].data, {})
+                h = page.SchPage(self, row[1].data, {})
                 self.AddPage(h,row[0].data)
                 self.childs.append(h)
 
 
-class GRID(schgrid.SchTableGrid, SchBaseCtrl):
+class GRID(grid.SchTableGrid, SchBaseCtrl):
 
     def __init__(self, *args, **kwds):
         #self.obj = SchBaseCtrl(self, args, kwds)
@@ -1796,23 +1785,23 @@ class CHOICE(POPUPHTML):
     def on_ext_button_click(self, event):
         ret = self.alternate_button_click()
         if self.sash:
-            self.sash.Body.choices = self.choices
-            wx.CallAfter(self.sash.Body.refr)
+            self.sash.body.choices = self.choices
+            wx.CallAfter(self.sash.body.refr)
         else:
-            self.popup.html.Body.choices = self.choices
-            wx.CallAfter(self.sash.Body.refr)
+            self.popup.html.body.choices = self.choices
+            wx.CallAfter(self.sash.body.refr)
         return ret
 
 
     def OnButtonClick(self):
         if self.simpleDialog:
             ret = POPUPHTML.OnButtonClick(self)
-            self.popup.html.Body.choices = self.choices
-            wx.CallAfter(self.popup.html.Body.refr)
+            self.popup.html.body.choices = self.choices
+            wx.CallAfter(self.popup.html.body.refr)
         else:
             ret = POPUPHTML.OnButtonClick(self)
-            self.sash.Body.choices = self.choices
-            wx.CallAfter(self.popup.html.Body.refr)
+            self.sash.body.choices = self.choices
+            wx.CallAfter(self.popup.html.body.refr)
         return ret
 
     def GetValue(self):
@@ -1916,7 +1905,7 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
         mp.process("<html><body>" + self.param['data'].decode('utf-8') +"</body></html>")
         mp.address = None
         if not self.html:
-            self.html=htmlsash.SchSashWindow(self.GetPane(), mp, {})
+            self.html=page.SchPage(self.GetPane(), mp, {})
             self.html.init_frame()
             self.html.activate_page()
             width = self._size[0] if self._size[0] > 0 else 400
@@ -1973,7 +1962,7 @@ class ListBoxNoFocus(wx.ListBox):
 
 class Select2Popup(wx.MiniFrame):
     def __init__(self, parent, id, title, pos, size, style, combo, href_id):
-        from schcli.guiframe.htmlsash import SchSashWindow
+        from schcli.guiframe.page import SchPage
         self.combo = combo
         self.point = pos
         self.href_id = href_id
@@ -2012,7 +2001,7 @@ class Select2Popup(wx.MiniFrame):
             self.Hide()
             self.combo.SetFocus()
         else:
-            #LayoutAlgorithm().LayoutWindow(self.html, self.html.Body)
+            #LayoutAlgorithm().LayoutWindow(self.html, self.html.body)
             pass
         event.Skip()
 

@@ -19,7 +19,7 @@
 
 import os
 import wx
-import schcli.guictrl.schctrl
+import schcli.guictrl.ctrl
 import platform
 
 class SchBrowserFrame(wx.Frame):
@@ -88,7 +88,7 @@ class SchBrowserFrame(wx.Frame):
                                     print(traceback.print_exc())
 
         app = wx.GetApp()
-        ctrl = schcli.guictrl.schctrl.HTML2(self, name='schbrowser', size=(400,300))
+        ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
         ctrl.load_url(app.base_address+"/")
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.Bind(wx.EVT_IDLE, self.on_idle)

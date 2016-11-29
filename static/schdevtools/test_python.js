@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var Test = __class__ ('Test', [object], {
 			get __init__ () {return __get__ (this, function (self) {
 				self.value = 0;

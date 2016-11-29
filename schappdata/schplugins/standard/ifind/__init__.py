@@ -29,8 +29,8 @@ def init_plugin(
     toolbar,
     accel,
     ):
-    import schcli.guictrl.schctrl
-    old_on_key_pressed = schcli.guictrl.schctrl.STYLEDTEXT.on_key_pressed
+    import schcli.guictrl.ctrl
+    old_on_key_pressed = schcli.guictrl.ctrl.STYLEDTEXT.on_key_pressed
 
     def on_key_pressed(self, event):
         key = event.GetKeyCode()
@@ -47,6 +47,6 @@ def init_plugin(
             if old_on_key_pressed:
                 old_on_key_pressed(self, event)
 
-    schcli.guictrl.schctrl.STYLEDTEXT.on_key_pressed = on_key_pressed
+    schcli.guictrl.ctrl.STYLEDTEXT.on_key_pressed = on_key_pressed
 
 

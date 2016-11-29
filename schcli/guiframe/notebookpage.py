@@ -17,35 +17,34 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""This module contains SchNotebookPage. It represent one tab window in SchNotebook. One SchNotebookPage can manage
+multiple SchPage windows.
+"""
+
 import wx
-try:
-    from schcli.guiframe import htmlsash
-except:
-    pass
-import wx.lib.resizewidget as rw
-import time
+from schcli.guiframe import page
 
-class NotebookPage(wx.Window):
+class SchNotebookPage(wx.Window):
+    """SchNotebookPage represent one tab pytigon applications"""
 
-    """HtmlPanel represent one tab pytigon applications"""
-
-    def __init__(self, *args, **kwds):
-        kwds['style'] = wx.TAB_TRAVERSAL | wx.WANTS_CHARS
-        kwds['name'] = 'NotebookPage'
-        wx.Window.__init__(self, *args, **kwds)
+    def __init__(self, parent):
+        """Constructor"""
+        wx.Window.__init__(self, parent, style=wx.TAB_TRAVERSAL | wx.WANTS_CHARS, name='SchNotebookPage')
         try:
             self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         except:
             self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-        self.child_panels = []
-        self.bestx = -1
-        self.orient = None
-        self.http = None
         self._start_pos = None
         self._start_pos_x_y_dx_dy = None
         self._last_x_y_dx_dy = None
         self._best_x_y_dx_dy = None
         self._layout_style = 0
+
+        self.child_panels = []
+        self.bestx = -1
+        self.orient = None
+        self.http = None
+        self.reverse_style = True
 
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.on_erase_background)
@@ -56,18 +55,15 @@ class NotebookPage(wx.Window):
 
         self.SetWindowStyleFlag(wx.WANTS_CHARS)
 
-        self.reverse_style = True
-
-
     def on_set_focus(self, evt):
         if self.get_page_count() > 0:
             self.get_page(-1).SetFocus()
 
     def get_app_http(self):
+        """Returns  :class:`~schlib.schhttptools.httpclient.HttpClient` object connected to this object"""
         return self.http
 
     def on_erase_background(self, evt):
-        #evt.Skip()
         if not wx.GetApp().GetTopWindow():
             return
         dc = wx.ClientDC(self)
@@ -75,16 +71,10 @@ class NotebookPage(wx.Window):
         margin = self.get_margins()
         if hasattr(wx.GetApp().GetTopWindow(), 'desktop'):
             tabs_count = len(wx.GetApp().GetTopWindow().desktop._mgr.GetAllPanes())
-            if self.get_page_count() and tabs_count > 2 or self.get_page_count() > 1\
-                 or wx.GetApp().GetTopWindow().count_shown_panels(count_toolbars=False)\
-                 > 1 and self.get_page_count() > 0:
-                #try:
-                #    (dx, dy) = self.get_page(-1).GetSizeTuple()
-                #except:
+            if self.get_page_count() and tabs_count > 2 or self.get_page_count() > 1 or \
+                wx.GetApp().GetTopWindow().count_shown_panels(count_toolbars=False) > 1 and self.get_page_count() > 0:
+
                 (dx, dy) = self.get_page(-1).GetSize()
-                #try:
-                #    (x, y) = self.get_page(-1).GetPositionTuple()
-                #except:
                 (x, y) = self.get_page(-1).GetPosition()
                 x = x - margin / 2
                 y = y - margin / 2
@@ -106,16 +96,14 @@ class NotebookPage(wx.Window):
                         dc.DrawLine(x - margin, y, x - margin, y + dy)
                         dc.DrawLine(x - 5 * margin, y, x - 5 * margin, y + dy)
                         for i in range(-4, 5, 2):
-                            dc.DrawLine(x - 5 * margin + 2, y + dy / 2 + margin
-                                         * i, (x - margin) - 1, y + dy / 2
-                                         + margin * i)
+                            dc.DrawLine(x - 5 * margin + 2, y + dy / 2 + margin * i, (x - margin) - 1,
+                                        y + dy / 2 + margin * i)
                     if self._layout_style in (2, 3):
                         dc.DrawLine(x, y - margin, x + dx, y - margin)
                         dc.DrawLine(x, y - 5 * margin, x + dx, y - 5 * margin)
                         for i in range(-4, 5, 2):
-                            dc.DrawLine(x + dx / 2 + margin * i, y - 5 * margin
-                                         + 2, x + dx / 2 + margin * i, (y
-                                         - margin) - 1)
+                            dc.DrawLine(x + dx / 2 + margin * i, y - 5 * margin + 2, x + dx / 2 + margin * i,
+                                        (y - margin) - 1)
 
     def on_left_down(self, event):
         self._start_pos = event.GetPosition()
@@ -139,16 +127,14 @@ class NotebookPage(wx.Window):
             dx = pos[0] - self._start_pos[0]
             dy = pos[1] - self._start_pos[1]
             if self.reverse_style:
-                #dx = -1 * dx
                 dy = -1 * dy
-            self._best_x_y_dx_dy = (self._start_pos_x_y_dx_dy[0] + dx,
-                                    self._start_pos_x_y_dx_dy[1] + dy,
-                                    self._start_pos_x_y_dx_dy[2],
-                                    self._start_pos_x_y_dx_dy[3])
+            self._best_x_y_dx_dy = (self._start_pos_x_y_dx_dy[0] + dx, self._start_pos_x_y_dx_dy[1] + dy,
+                                    self._start_pos_x_y_dx_dy[2], self._start_pos_x_y_dx_dy[3])
             self._layout()
         event.Skip()
 
     def get_xy(self, size=None, page=-1):
+        """get best point whitch divide window for place new SchPage window"""
         if size == None:
             size = self.GetSize()
         if self._best_x_y_dx_dy:
@@ -169,6 +155,7 @@ class NotebookPage(wx.Window):
         return self._last_x_y_dx_dy
 
     def get_margins(self):
+        """get margin size between child windows"""
         return 2
 
     def _set_dimensions(self, page, x, y, width, height, dx, dy):
@@ -231,24 +218,28 @@ class NotebookPage(wx.Window):
             self.Refresh()
 
     def get_page_count(self):
+        """Get number of child schFrameForm objects"""
         return len(self.child_panels)
 
     def get_page(self, nr):
+        """return child SchPage object
+
+        Args:
+            nr: number of page
+        """
         return self.child_panels[nr]
 
-    def add_page(
-        self,
-        page,
-        text,
-        select,
-        image_id=-1,
-        ):
+    def add_page( self, page):
+        """Append child SchPage object
+
+        Args:
+            page - SchPage object
+        """
         if self.get_page_count() > 0:
             if page.disable_parent:
-                self.get_page(-1).enable_panels(False)
+                self.get_page(-1).enable_forms(False)
         self.child_panels.append(page)
         self._layout()
-        #wx.CallAfter(self._layout)
 
     def on_size(self, event):
         size = event.GetSize()
@@ -256,13 +247,13 @@ class NotebookPage(wx.Window):
         self._layout(size)
         event.Skip()
 
-    def on_ok(self, event):
-        self.cancel(False)
+    def close_no_del(self, close_without_refresh=True):
+        """Close last in hierarchy child form.
 
-    def on_cancel(self, event):
-        self.cancel(True)
-
-    def close_no_del(self, cancel):
+        Args:
+            close_without_refresh - if True parent form of closing form shoud be refreshed,
+            if False refresh is not needed.
+        """
         ret = 0
         count = self.get_page_count()
         if count > 0:
@@ -271,10 +262,10 @@ class NotebookPage(wx.Window):
                 del self.child_panels[-1]
                 win.Destroy()
                 if count>1:
-                    self.get_page(-1).enable_panels(True)
+                    self.get_page(-1).enable_forms(True)
                     self._layout()
                     self.get_page(-1).set_focus()
-                    if cancel:
+                    if close_without_refresh:
                         self.get_page(-1).signal('child_canceled')
                     else:
                         self.get_page(-1).signal('refresh_controls')
@@ -284,11 +275,17 @@ class NotebookPage(wx.Window):
             else:
                 return True
 
+    def close_child_page(self, close_without_refresh=True):
+        """Close last in hierarchy child form. If there is only one form, besides closing form,
+        this SchNotebookPage is also closed
 
-    def cancel(self, cancel):
+        Args:
+            close_without_refresh - if True parent form of closing form shoud be refreshed,
+            if False refresh is not needed.
+        """
         sel = self.GetParent().GetSelection()
         if sel>=0:
-            ret = self.close_no_del(cancel)
+            ret = self.close_no_del(close_without_refresh)
             if not ret:
                 p = self.GetParent()
                 p.DeletePage(sel)
@@ -296,13 +293,21 @@ class NotebookPage(wx.Window):
         else:
             return False
 
+    def on_child_form_ok(self):
+        """function called by child SchForm object when OK is pushed and data in parent form shoud be refreshed"""
+        self.close_child_page(False)
 
-    def select_tab(self):
-        n = self.GetParent()
-        src_idx = self.GetParent()._tabs.GetIdxFromWindow(self)
-        sel = n.GetSelection()
-        if sel != src_idx:
-            n.SetSelection(src_idx)
+    def on_child_form_cancel(self):
+        """function called by child SchForm object when Cancel is pushed and data in parent form doesn't need be refreshed"""
+        self.close_child_page(True)
+
+
+    #def select_tab(self):
+    #    n = self.GetParent()
+    #    src_idx = self.GetParent()._tabs.GetIdxFromWindow(self)
+    #    sel = n.GetSelection()
+    #    if sel != src_idx:
+    #        n.SetSelection(src_idx)
 
     def activate_page(self):
         if self.get_page_count() > 0:
@@ -314,31 +319,35 @@ class NotebookPage(wx.Window):
         if self.get_page_count() > 0:
             self.get_page(-1).deactivate_page()
 
-    def refresh_html(self):
-        pass
+    #def refresh_html(self):
+    #    pass
 
 
-    def new_child_page(
-        self,
-        address_or_parser,
-        title='',
-        parametry=None,
-        ):
-        h = htmlsash.SchSashWindow(self, address_or_parser, parametry)
+    def new_child_page(self, address_or_parser, title='', parameters=None):
+        """Append a new page
+
+        Args:
+            address_or_parser: can be: address of http page (str type) or
+            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+
+            title - new page title
+            parameters - dict
+        """
+        h = page.SchPage(self, address_or_parser, parameters)
         if self.get_page_count() > 0:
-            h.ParentTab = self.get_page(-1)
+            h.parent_page = self.get_page(-1)
         nr = 0
-        if h.Header != None:
+        if h.header != None:
             nr = nr + 4
-        if h.Footer != None:
+        if h.footer != None:
             nr = nr + 2
-        if h.Panel != None:
+        if h.panel != None:
             nr = nr + 1
         if title and title != '':
             title2 = title
         else:
             title2 = h.get_title()
-        self.add_page(h, title2, True, nr)
+        self.add_page(h) #, title2, True, nr)
         def init_page():
             h.init_frame()
             h.activate_page()
@@ -347,20 +356,25 @@ class NotebookPage(wx.Window):
         wx.CallAfter(init_page)
         return h
 
-    def new_main_page(
-        self,
-        address_or_parser,
-        title='',
-        param=None,
-        panel='desktop',
-        ):
+    def new_main_page(self, address_or_parser, title='', parameters=None, panel='desktop'):
+        """Create new top
+
+        Args:
+            address_or_parser: can be: address of http page (str type) or
+            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+
+            title - new page title
+
+            parameters - dict
+
+            panel - can be: 'desktop', 'panel', 'header' or 'footer'
+        """
         if panel == None:
-            pp = \
-                self.GetParent().GetParent().GetParent()._mgr.GetPane(self.GetParent())
+            pp = self.GetParent().GetParent().GetParent()._mgr.GetPane(self.GetParent())
             panel = pp.name
             return wx.GetApp().GetTopWindow().new_main_page(address_or_parser,
-                    title, param, pp.name)
+                    title, parameters, pp.name)
         else:
             return wx.GetApp().GetTopWindow().new_main_page(address_or_parser,
-                    title, param, panel)
+                    title, parameters, panel)
 
