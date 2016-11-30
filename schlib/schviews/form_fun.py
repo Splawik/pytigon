@@ -40,16 +40,17 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 app_pack = app.split('.')[0]
             break
 
+    if request.POST or request.FILES:
+        f = form_class(request.POST, request.FILES)
+    else:
+        f = form_class()
 
-    f = form_class(request.POST, request.FILES)
     if hasattr(f, "preprocess_request"):
         post = f.preprocess_request(request)
     else:
         post = request.POST
 
-    #if request.POST:
     if post:
-        #f = form_class(request.POST, request.FILES)
         if hasattr(f, "init"):
             f.init(request)
         if f.is_valid():

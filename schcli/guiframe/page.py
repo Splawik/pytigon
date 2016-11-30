@@ -17,8 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-""" SchPage is a container for 4 SchForm classes: body, header, footer and panel. Only "body" object is obligatory.
+
+"""SchPage is a container for 4 SchForm classes: body, header, footer and panel. Only "body" object is obligatory.
 """
+
 
 import wx
 try:
@@ -32,9 +34,12 @@ from schlib.schhttptools.schhtml_parser import ShtmlParser
 from schcli.guiframe.form import SchForm
 from schcli.guilib.event import *
 
+
 class SchPage(wx.Window, Signal):
+    """SchPage class"""
+
     def __init__(self, parent, address_or_parser, parameters):
-        """Contructor:
+        """Contructor
 
         Args:
             parent - parent window
@@ -42,6 +47,7 @@ class SchPage(wx.Window, Signal):
             :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
             parameters: dict
         """
+
         self._active = True
         self._ctrl_dict_old = {}
         self._ctrl_dict = {}

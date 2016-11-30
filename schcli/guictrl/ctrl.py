@@ -1422,7 +1422,7 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
 class HTML(page.SchPage, SchBaseCtrl):
     def __init__(self, *args, **kwds):
         SchBaseCtrl.__init__(self, args, kwds)
-        page.SchPage.__init__(self, args[0], self.src, None, name=kwds['name'])
+        page.SchPage.__init__(self, args[0], self.src, None)
         if self.src:
             value = self.load_string_from_server(self.src)
             self._set_value(value, False)
