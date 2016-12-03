@@ -31,9 +31,9 @@
             pass
         def _get_grid(self):
             if not self._grid:
-                ppanel = self.get_parent_panel()
+                ppanel = self.get_parent_form()
                 if ppanel:
-                    grid = self.get_parent_panel().LastControlWithFocus
+                    grid = self.get_parent_form().last_control_with_focus
                     if grid:
                         if grid.__class__.__name__ == 'GRID':
                             self._grid = grid
@@ -76,7 +76,7 @@
                 grid.ProcessEvent(event)
                 #self.clear()
                 self.search_text("")
-                self.any_parent_command('cancel', True)
+                self.any_parent_command('on_child_form_cancel')
             else:
                 event.Skip()
         def on_key_up(self, event):
@@ -86,7 +86,7 @@
                 self.search_text()
             event.Skip()
         def on_exit(self, event):
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 </script>
 {% endblock %}
 {% block content %}

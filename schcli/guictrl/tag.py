@@ -322,7 +322,6 @@ class CtrlTag(TableTag):
             return CompositeChildTag(self, parser, tag, attrs)
 
         if tag[:3] + '*' in self.child_tags:
-            print("tag:", tag)
             return self.class_from_tag_name(tag[:3] + '*')(self, parser, tag,
                     attrs)
         elif tag == 'ul':
@@ -522,8 +521,7 @@ class CtrlTag(TableTag):
                 if parent.update_controls:
                     if obj and hasattr(obj, 'process_refr_data'):
                         obj.process_refr_data(parent, **self.kwargs)
-                    if not (hasattr(obj, 'is_ctrl_block')
-                             and obj.is_ctrl_block()):
+                    if not (hasattr(obj, 'is_ctrl_block') and obj.is_ctrl_block()):
                         if value != None and (valuetype == 'data' or valuetype
                                  == 'str'):
                             obj.SetValue(value)
@@ -556,16 +554,6 @@ def table_to_ctrltab(parent, attrs):
 
 
 register_tag_preprocess_map('table', table_to_ctrltab)
-
-
-def ul_to_ctrlerrorlist(parent, attrs):
-    if 'class' in attrs:
-        if attrs['class'] == 'errorlist':
-            return ('ctrlerrorlist', attrs)
-    return ('ul', attrs)
-
-
-register_tag_preprocess_map('ul', ul_to_ctrlerrorlist)
 
 
 def input_to_ctrltab(parent, attrs):
@@ -792,6 +780,8 @@ def ul_convert(parent, attrs):
     if 'class' in attrs:
         if 'root' in attrs['class']:
             return ('ldata', attrs)
+        if attrs['class'] == 'errorlist':
+            return ('ctrlerrorlist', attrs)
     return ('ul', attrs)
 
 register_tag_preprocess_map('ul', ul_convert)

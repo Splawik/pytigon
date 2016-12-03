@@ -36,15 +36,15 @@ def init_plugin(
 
     class Console(wx.Panel):
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
             if 'name' in kwds:
                 name = kwds['name']
                 del kwds['name']
             else:
                 name = 'CONSOLE'
-            self.obj = SchBaseCtrl(self, args, kwds)
+            self.obj = SchBaseCtrl(self, parent, kwds)
 
-            wx.Panel.__init__(self, args[0], name=name)
+            wx.Panel.__init__(self, parent, name=name)
             html = wx.html.HtmlWindow(self)
             html.SetPage('Hello world Hello world Hello world Hello world Hello world Hello world'
                          )

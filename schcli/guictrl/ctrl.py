@@ -84,7 +84,7 @@ from schcli.guilib.tools import bitmap_from_href
 from schcli.guictrl.composite.base import COMPOSITE_PANEL
 
 
-def SELECT(*args, **kwds):
+def SELECT(parent, **kwds):
     size = 1
     multiple = False
 
@@ -102,23 +102,23 @@ def SELECT(*args, **kwds):
 
     if size == 1:
         kwds['readonly'] = True
-        return DBCHOICE(*args, **kwds)
+        return DBCHOICE(parent, **kwds)
     else:
         kwds['length'] = size
-        return HTMLLISTBOX(*args, **kwds)
+        return HTMLLISTBOX(parent, **kwds)
 
 
-def BUTTON(*args, **kwds):
+def BUTTON(parent, **kwds):
     if 'src' in kwds:
-        ctrl = BITMAPBUTTON(*args, **kwds)
+        ctrl = BITMAPBUTTON(parent, **kwds)
     else:
-        ctrl = SIMPLE_BUTTON(*args, **kwds)
+        ctrl = SIMPLE_BUTTON(parent, **kwds)
     return ctrl
 
 def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False, icon_size=2):
     class BUTTONCLASS(base_class, SchBaseCtrl):
-        def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
+        def __init__(self, parent, **kwds):
+            SchBaseCtrl.__init__(self, parent, kwds)
             if is_bitmap_button:
                 self._set_bitmap()
                 if base_class == buttons.GenBitmapButton or base_class == BitmapTextButton:
@@ -171,7 +171,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
             else:
                 self.fields = None
 
-            base_class.__init__(self, *args, **kwds)
+            base_class.__init__(self, parent, **kwds)
 
             if self.defaultvalue:
                 self.SetDefault()
@@ -211,8 +211,8 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                     #print(self.src)
                     self.bmp = bitmap_from_href(self.src, icon_size)
 
-        def process_refr_data(self, *args, **kwds):
-            self.init_base(args, kwds)
+        def process_refr_data(self, parent, **kwds):
+            self.init_base(parent, kwds)
 
             if is_bitmap_button:
                 self._set_bitmap()
@@ -263,7 +263,8 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
                 upload = False
                 if self.valuetype == 'upload':
                     upload = True
-                self.get_parent_form().href_clicked(self, { 'href': self.href, 'target': self.target}, upload, self.fields, self.param)
+                #self.get_parent_form().href_clicked(self, { 'href': self.href, 'target': self.target}, upload, self.fields, self.param)
+                self.get_parent_form().href_clicked(self, {'href': self.href, 'target': self.target}, upload, self.fields)
 
     return BUTTONCLASS
 
@@ -285,8 +286,8 @@ CLOSEBUTTON = _make_button_class(BitmapTextButton, is_bitmap_button=True, is_clo
 
 def _make_menu_button_class(base_class):
     class _MENUBUTTON(base_class):
-        def __init__(self,  *args, **kwds):
-            base_class.__init__(self, *args, **kwds)
+        def __init__(self,  parent, **kwds):
+            base_class.__init__(self, parent, **kwds)
             ldata = self.get_ldata()
             self._menu = None
             self.href_dict = {}
@@ -325,8 +326,8 @@ MENUTOOLBARBUTTON = _make_menu_button_class(GENBITMAPBUTTONTXT)
 
 class CHECKBOX(wx.CheckBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if 'checked' in kwds:
             del kwds['checked']
             checked = True
@@ -349,12 +350,12 @@ class CHECKBOX(wx.CheckBox, SchBaseCtrl):
             else:
                 kwds['style'] = wx.ALIGN_RIGHT
 
-        wx.CheckBox.__init__(self, *args, **kwds)
+        wx.CheckBox.__init__(self, parent, **kwds)
         if checked:
             self.SetValue(True)
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         if 'checked' in kwds:
             del kwds['checked']
             checked = True
@@ -388,8 +389,8 @@ class CHECKBOX(wx.CheckBox, SchBaseCtrl):
 
 class CHECKLISTBOX(wx.CheckListBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         tdata = self.get_tdata()
         if tdata:
             choices = []
@@ -401,10 +402,10 @@ class CHECKLISTBOX(wx.CheckListBox, SchBaseCtrl):
             kwds['style'] |= wx.WANTS_CHARS
         else:
             kwds['style'] = wx.WANTS_CHARS
-        wx.CheckListBox.__init__(self, *args, **kwds)
+        wx.CheckListBox.__init__(self, parent, **kwds)
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         self.Clear()
         tdata = self.get_tdata()
         if tdata:
@@ -473,9 +474,9 @@ ArtIDs = [ "wx.ART_ADD_BOOKMARK",
 
 class BITMAPCOMBOBOX(BitmapComboBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        BitmapComboBox.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        BitmapComboBox.__init__(self, parent, **kwds)
         self.init_default_icons = False
         self.accept_focus = False
 
@@ -536,21 +537,21 @@ class BITMAPCOMBOBOX(BitmapComboBox, SchBaseCtrl):
 
 class GAUGE(wx.Gauge, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.Gauge.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.Gauge.__init__(self, parent, **kwds)
 
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         if self.value:
             self.SetValue(self.value)
 
 
 class LISTBOX(wx.ListBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         self._norefresh = False
         self.retvalues = []
         self.sel = []
@@ -586,7 +587,7 @@ class LISTBOX(wx.ListBox, SchBaseCtrl):
             style = style | wx.LB_MULTIPLE
             kwds["style"] = style
 
-        wx.ListBox.__init__(self, *args, **kwds)
+        wx.ListBox.__init__(self, parent, **kwds)
 
         for s in self.sel:
             self.SetSelection(s)
@@ -622,8 +623,8 @@ class LISTBOX(wx.ListBox, SchBaseCtrl):
 
 class LIST(wx.ListCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
 
         if "style" in kwds:
             kwds["style"] = kwds["style"] | wx.LC_REPORT
@@ -631,7 +632,7 @@ class LIST(wx.ListCtrl, SchBaseCtrl):
             kwds["style"] = wx.LC_REPORT
         kwds["size"]=wx.Size(-1,-1)
 
-        wx.ListCtrl.__init__(self, *args, **kwds)
+        wx.ListCtrl.__init__(self, parent, **kwds)
 
         tdata = self.get_tdata()
         l = 0
@@ -669,8 +670,8 @@ class LIST(wx.ListCtrl, SchBaseCtrl):
                     for i in range(1, l):
                         self.SetStringItem(index, i, row[i].data)
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         tdata = self.get_tdata()
         return self.do_refresh(tdata)
 
@@ -685,8 +686,8 @@ class TABLE(SchGridPanel, SchBaseCtrl):
 
     table_lp = property(get_table_lp, set_table_lp)
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)        
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if self.param and 'table_lp' in self.param:
             self.table_lp = int(self.param['table_lp'])
         else:
@@ -698,9 +699,9 @@ class TABLE(SchGridPanel, SchBaseCtrl):
             name = 'LIST'
 
         if 'size' in kwds:
-            SchGridPanel.__init__(self, args[0], size=kwds['size'],  name=name)
+            SchGridPanel.__init__(self, parent, size=kwds['size'],  name=name)
         else:
-            SchGridPanel.__init__(self, args[0], name=name)
+            SchGridPanel.__init__(self, parent, name=name)
 
 
         tdata = self.get_tdata()
@@ -754,8 +755,8 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         return SchGridPanel.GetMinSize(self)
     
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         tdata = self.get_tdata()
         return self.do_refresh(tdata)
 
@@ -801,8 +802,8 @@ class TABLE(SchGridPanel, SchBaseCtrl):
 
 class RADIOBOX(wx.RadioBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         tdata = self.get_tdata()
         if tdata:
             choices = []
@@ -811,7 +812,7 @@ class RADIOBOX(wx.RadioBox, SchBaseCtrl):
                 choices.append(row[0].data)
 
             kwds["choices"] = choices
-        wx.RadioBox.__init__(self, *args, **kwds)
+        wx.RadioBox.__init__(self, parent, **kwds)
 
     def Refresh(self):
         self.Clear()
@@ -825,10 +826,9 @@ class RADIOBOX(wx.RadioBox, SchBaseCtrl):
 
 class RADIOBUTTON(wx.RadioButton, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
         #print "RADIOBUTTON!!!!!!!!!!!!!!!!!!!!!"
-        SchBaseCtrl.__init__(self, args, kwds)
-        parent = args[0]
+        SchBaseCtrl.__init__(self, parent, kwds)
         if 'name' in kwds:
             name = kwds['name']
             #print "RADIOBUTTON", name
@@ -849,7 +849,7 @@ class RADIOBUTTON(wx.RadioButton, SchBaseCtrl):
         else:
             self.value = None
 
-        wx.RadioButton.__init__(self, *args, **kwds)
+        wx.RadioButton.__init__(self, parent, **kwds)
         if checked:
             self.SetValue(True)
 
@@ -873,44 +873,44 @@ class RADIOBUTTON(wx.RadioButton, SchBaseCtrl):
 
 class SLIDER(wx.Slider, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.Slider.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.Slider.__init__(self, parent, **kwds)
 
 
 class SPINBUTTON(wx.SpinButton, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.SpinButton.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.SpinButton.__init__(self, parent, **kwds)
 
 
 class SPIN(wx.SpinCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.SpinCtrl.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.SpinCtrl.__init__(self, parent, **kwds)
 
 
 class STATICTEXT(wx.StaticText, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.StaticText.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.StaticText.__init__(self, parent, **kwds)
         if self.label:
             self.SetLabel(self.label)
 
 
 class ERRORLIST(BitmapTextButton, SchBaseCtrl):
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
 
         self.bmp = bitmap_from_href("client://status/dialog-error.png",1)
 
         kwds["style"] = wx.NO_BORDER
         kwds["bitmap"] = self.bmp
 
-        BitmapTextButton.__init__(self, *args, **kwds)
+        BitmapTextButton.__init__(self, parent, **kwds)
         if self.ldata:
             self.SetToolTip(wx.ToolTip(self.ldata[0][0]))
         else:
@@ -920,11 +920,11 @@ class ERRORLIST(BitmapTextButton, SchBaseCtrl):
 
 class TEXT(SchBaseCtrl, wx.TextCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if self.param and 'param' in self.param and 'PROCESS_ENTER' in self.param['param']:
             kwds['style']=wx.TE_PROCESS_ENTER        
-        wx.TextCtrl.__init__(self, *args, **kwds)
+        wx.TextCtrl.__init__(self, parent, **kwds)
         if self.hidden:
             self.Enable(False)
         if self.maxlength:
@@ -943,15 +943,15 @@ class TEXT(SchBaseCtrl, wx.TextCtrl):
 
 class SEARCH(wx.SearchCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if wx.Platform in ['__WXGTK__',]:
             kwds['size']=(200, 28)
         else:
             kwds['size']=(200, -1)
         kwds['style']=wx.TE_PROCESS_ENTER
         #|wx.WANTS_CHARS
-        wx.SearchCtrl.__init__(self, *args, **kwds)
+        wx.SearchCtrl.__init__(self, parent, **kwds)
         #self.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.OnCancel)
 
         if wx.Platform in ['__WXGTK__', '__WXMSW__']:
@@ -966,13 +966,13 @@ class SEARCH(wx.SearchCtrl, SchBaseCtrl):
 
 class PASSWORD(TEXT, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
         if "style" in kwds:
             kwds["style"] = kwds["style"] | wx.TE_PASSWORD
         else:
             kwds["style"] = wx.TE_PASSWORD
 
-        TEXT.__init__(self, *args, **kwds)
+        TEXT.__init__(self, parent, **kwds)
 
 
 class TREE(wx.TreeCtrl, SchBaseCtrl):
@@ -990,11 +990,11 @@ class TREE(wx.TreeCtrl, SchBaseCtrl):
                 self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Normal)
                 self.SetItemImage(child, self.fileidxmark, wx.TreeItemIcon_Selected)
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         kwds["style"] = wx.TR_HIDE_ROOT | wx.TR_DEFAULT_STYLE
         # | wx.WANTS_CHARS
-        wx.TreeCtrl.__init__(self, *args, **kwds)
+        wx.TreeCtrl.__init__(self, parent, **kwds)
 
         isz = (16, 16)
         il = wx.ImageList(isz[0], isz[1])
@@ -1026,18 +1026,18 @@ class TREE(wx.TreeCtrl, SchBaseCtrl):
 
 class COLOURSELECT(colourselect.ColourSelect, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if 'name' in kwds:
             del kwds['name']
-        colourselect.ColourSelect.__init__(self, id=-1, *args, **kwds)
+        colourselect.ColourSelect.__init__(self, parent, id=-1, **kwds)
 
 
 class GENERICDIR(wx.GenericDirCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.GenericDirCtrl.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.GenericDirCtrl.__init__(self, parent, **kwds)
 
 
 class TREELIST(TreeListCtrl, SchBaseCtrl):
@@ -1067,9 +1067,9 @@ class TREELIST(TreeListCtrl, SchBaseCtrl):
     #def GetParent(self):
     #    return self._parent
     
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        #self._parent =  args[0]
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        #self._parent =  parent[0]
         #kwds["style"] = wx.TR_HIDE_ROOT | wx.TR_DEFAULT_STYLE
         #kwds["style"] = wx.TR_DEFAULT_STYLE
         #try:
@@ -1077,7 +1077,7 @@ class TREELIST(TreeListCtrl, SchBaseCtrl):
         #except:
         #kwds["style"] = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT
         kwds['agwStyle'] = wx.TR_HIDE_ROOT
-        TreeListCtrl.__init__(self, *args, **kwds)
+        TreeListCtrl.__init__(self, parent, **kwds)
 
         isz = (16, 16)
         il = wx.ImageList(isz[0], isz[1])
@@ -1114,25 +1114,25 @@ class TREELIST(TreeListCtrl, SchBaseCtrl):
 
 class CALENDAR(CalendarCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         try:
-            CalendarCtrl.__init__(self, style=wx.adv.CAL_MONDAY_FIRST | wx.adv.CAL_SHOW_HOLIDAYS | wx.adv.CAL_SEQUENTIAL_MONTH_SELECTION, *args, **kwds)
+            CalendarCtrl.__init__(self, parent, style=wx.adv.CAL_MONDAY_FIRST | wx.adv.CAL_SHOW_HOLIDAYS | wx.adv.CAL_SEQUENTIAL_MONTH_SELECTION, **kwds)
         except:
-            CalendarCtrl.__init__(self, style=wx.calendar.CAL_MONDAY_FIRST | wx.calendar.CAL_SHOW_HOLIDAYS | wx.calendar.CAL_SEQUENTIAL_MONTH_SELECTION, *args, **kwds)
+            CalendarCtrl.__init__(self, parent, style=wx.calendar.CAL_MONDAY_FIRST | wx.calendar.CAL_SHOW_HOLIDAYS | wx.calendar.CAL_SEQUENTIAL_MONTH_SELECTION, **kwds)
 
 class EDITABLELISTBOX(EditableListBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        EditableListBox.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        EditableListBox.__init__(self, parent, **kwds)
 
 
 class FILEBROWSEBUTTON(filebrowsebutton.FileBrowseButton, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        filebrowsebutton.FileBrowseButton.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        filebrowsebutton.FileBrowseButton.__init__(self, parent, **kwds)
 
     def GetValue(self):
         return '@'+super(FILEBROWSEBUTTON, self).GetValue()
@@ -1164,22 +1164,22 @@ class IMAGEBROWSEBUTTON(FILEBROWSEBUTTON, SchBaseCtrl):
 
 class MASKTEXT(masked.TextCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if self.valuetype:
             if self.src:
                 if self.src.startswith('!'):
                     kwds['autoformat'] = self.src[1:]
                 else:
                     kwds['mask'] = self.src
-        masked.TextCtrl.__init__(self, *args, **kwds)
+        masked.TextCtrl.__init__(self, parent, **kwds)
         self._autofit = False
 
 
 class NUM(wx.SpinCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         if self.param and 'param' in self.param and 'PROCESS_ENTER' in self.param['param']:
             kwds['style']=wx.TE_PROCESS_ENTER
         if self.readonly:
@@ -1188,13 +1188,13 @@ class NUM(wx.SpinCtrl, SchBaseCtrl):
                 style = kwds["style"]
             style = style | wx.TE_READONLY
             kwds["style"] = style      
-        wx.SpinCtrl.__init__(self, *args, **kwds)
+        wx.SpinCtrl.__init__(self, parent, **kwds)
 
 
 class KWOTA(masked.NumCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         prec = 2
         width = 10
         if 'prec' in kwds:
@@ -1207,26 +1207,26 @@ class KWOTA(masked.NumCtrl, SchBaseCtrl):
         kwds["integerWidth"] = width
         kwds["fractionWidth"] = prec
 
-        masked.NumCtrl.__init__(self, *args, **kwds)
+        masked.NumCtrl.__init__(self, parent, **kwds)
 
 
 class TIME(masked.TimeCtrl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        masked.TimeCtrl.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        masked.TimeCtrl.__init__(self, parent, **kwds)
 
 
 class STYLEDTEXT(wx.TextCtrl, SchBaseCtrl):
-        def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
+        def __init__(self, parent, **kwds):
+            SchBaseCtrl.__init__(self, parent, kwds)
             if "style" in kwds:
                 style = kwds["style"]
                 style = style | wx.TE_MULTILINE
                 kwds["style"] = style
             else:
                 kwds["style"] = wx.TE_MULTILINE
-            wx.TextCtrl.__init__(self, *args, **kwds)
+            wx.TextCtrl.__init__(self, parent, **kwds)
             if 'data' in self.param:
                 self.SetValue(self.param['data'].encode('utf-8'))
 
@@ -1243,7 +1243,7 @@ class STYLEDTEXT(wx.TextCtrl, SchBaseCtrl):
 AUTOCOMPLETE = STYLEDTEXT
 STANDARDSTYLEDTEXT = STYLEDTEXT
 
-def TEXTAREA(*args, **kwds):
+def TEXTAREA(parent, **kwds):
     if 'param' in kwds:
         if 'data' in kwds['param']:
             data = kwds['param']['data'].replace('\r', '')
@@ -1253,19 +1253,19 @@ def TEXTAREA(*args, **kwds):
 
     if "src" in kwds:
         if kwds['src'] in ('c', 'python', 'html'):
-            ret=STYLEDTEXT(*args, **kwds)
+            ret=STYLEDTEXT(parent, **kwds)
         else:
-            ret=AUTOCOMPLETE(*args, **kwds)
+            ret=AUTOCOMPLETE(parent, **kwds)
     else:
-        ret=STYLEDTEXT(*args, **kwds)
+        ret=STYLEDTEXT(parent, **kwds)
     return ret
 
 
 class TICKER(ticker.Ticker, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        ticker.Ticker.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        ticker.Ticker.__init__(self, parent, **kwds)
 
     def SetValue(self, value):
         self.SetText(value)
@@ -1291,8 +1291,8 @@ p { cellpadding:1; border:0; width:100%; }
 
 class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         self.choices = []
         self.getItemFunct = None
 
@@ -1313,7 +1313,7 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
             for row in tdata:
                 self.AppendHtml(row[0].data)
 
-        wx.VListBox.__init__(self, *args, **kwds)
+        wx.VListBox.__init__(self, parent, **kwds)
 
         self.SetItemCount(len(self.choices))
         i=0
@@ -1399,8 +1399,8 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
     def GetBestSize(self):
         return (400, 200)
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
         self.choices = []
         tdata = self.get_tdata()
         if tdata:
@@ -1420,9 +1420,9 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
             self.SetSelection(nr)
 
 class HTML(page.SchPage, SchBaseCtrl):
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
-        page.SchPage.__init__(self, args[0], self.src, None)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
+        page.SchPage.__init__(self, parent, self.src, None)
         if self.src:
             value = self.load_string_from_server(self.src)
             self._set_value(value, False)
@@ -1470,9 +1470,9 @@ if wx.Platform == '__WXMSW2__':
 
     class PDFVIEWER(PDFWindow, SchBaseCtrl):
 
-        def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
-            PDFWindow.__init__(self, *args, **kwds)
+        def __init__(self, parent, **kwds):
+            SchBaseCtrl.__init__(self, parent, kwds)
+            PDFWindow.__init__(self, parent, **kwds)
             if self.href != None:
                 self.LoadFile(self.href)
                 self.SetSize((800, 600))
@@ -1484,9 +1484,9 @@ try:
 
     class MEDIA(wx.media.MediaCtrl, SchBaseCtrl):
 
-        def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
-            wx.media.MediaCtrl.__init__(self, *args, **kwds)
+        def __init__(self, parent, **kwds):
+            SchBaseCtrl.__init__(self, parent, kwds)
+            wx.media.MediaCtrl.__init__(self, parent, **kwds)
             if self.href != None:
                 if not self.Load(self.href):
                     print("error:", self.href)
@@ -1500,10 +1500,10 @@ except:
 
 class NOTEBOOK(wx.Notebook, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         self.childs = []
-        wx.Notebook.__init__(self, *args, **kwds)
+        wx.Notebook.__init__(self, parent, **kwds)
         if self.tdata:
             for row in self.tdata:
                 h = page.SchPage(self, row[1].data, {})
@@ -1513,10 +1513,9 @@ class NOTEBOOK(wx.Notebook, SchBaseCtrl):
 
 class GRID(grid.SchTableGrid, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        #self.obj = SchBaseCtrl(self, args, kwds)
-        SchBaseCtrl.__init__(self, args, kwds)
-        parent = args[0]
+    def __init__(self, parent, **kwds):
+        #self.obj = SchBaseCtrl(self, parent, kwds)
+        SchBaseCtrl.__init__(self, parent, kwds)
         parm = createparm.create_parm(self.src, parent.get_parm_obj())
         if parm:
             self.proxy = tabproxy.DataProxy(wx.GetApp().get_http(parent), str(parm[0]))
@@ -1535,12 +1534,16 @@ class GRID(grid.SchTableGrid, SchBaseCtrl):
 
         #schgrid.SChTableGrid.__init__(self, table, self.src, *args, **kwds)
 
-        super().__init__(table, self.src, *args, **kwds)
+        super().__init__(table, self.src, parent, **kwds)
 
-        self.GetParent().any_parent_command("register_refr_obj", self)
+        #self.GetParent().any_parent_command("register_refr_obj", self)
+        #self.GetParent().get_page().register_signal(self, 'refr')
 
-    def process_refr_data(self, *args, **kwds):
-        self.init_base(args, kwds)
+
+
+
+    def process_refr_data(self, parent, **kwds):
+        self.init_base(parent, kwds)
 
 
         parm = createparm.create_parm(self.src, self.GetParent().get_parm_obj())
@@ -1553,7 +1556,7 @@ class GRID(grid.SchTableGrid, SchBaseCtrl):
         table = datasource.DataSource(self.proxy)
         self.SetTable(table)
 
-    def RefrObj(self):
+    def refr_obj(self):
         if self.GetParent().IsShown():
             parm = createparm.create_parm(self.src, self.GetParent().get_parm_obj())
             if parm:
@@ -1574,10 +1577,10 @@ class GRID(grid.SchTableGrid, SchBaseCtrl):
 
 class UPDATEGRIDBUTTON(wx.Button, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        #self.obj = SchBaseCtrl(self, args, kwds)
-        SchBaseCtrl.__init__(self, args, kwds)
-        wx.Button.__init__(self, *args, **kwds)
+    def __init__(self, parent, **kwds):
+        #self.obj = SchBaseCtrl(self, parent, kwds)
+        SchBaseCtrl.__init__(self, parent, kwds)
+        wx.Button.__init__(self, parent, **kwds)
 
         self.Bind(wx.EVT_BUTTON, self.OnClick, self)
         self.Enable()
@@ -1595,16 +1598,16 @@ class UPDATEGRIDBUTTON(wx.Button, SchBaseCtrl):
 
 class POPUPHTML(DataPopupControl, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
         '''Obowi\xc4\x85zkowy parametr: href - adres bazowy
         href + "dialog" - adres pod kt\xc3\xb3rym wy\xc5\x9bwietli si\xc4\x99 okienko dialogowe
         href+ "test?value=" - adres pod kt\xc3\xb3rym znajduje si\xc4\x99 lista warto\xc5\x9bci
                              spe\xc5\x82niaj\xc4\x85ca warunek
       '''
 
-        #self.obj = SchBaseCtrl(self, args, kwds)
-        SchBaseCtrl.__init__(self, args, kwds)
-        DataPopupControl.__init__(self, *args, **kwds)
+        #self.obj = SchBaseCtrl(self, parent, kwds)
+        SchBaseCtrl.__init__(self, parent, kwds)
+        DataPopupControl.__init__(self, parent, **kwds)
         if self.param:
             if 'IN_NEW_WIN' in self.param:
                 self.simpleDialog=False
@@ -1618,7 +1621,7 @@ class POPUPHTML(DataPopupControl, SchBaseCtrl):
 if platform.system() == "Linux":
     class DATEPICKER(POPUPHTML):
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
             kwds['href'] = "/schsys/datedialog/"
 
             if "style" in kwds:
@@ -1631,7 +1634,7 @@ if platform.system() == "Linux":
             else:
                 kwds['size'] = wx.Size(150, -1)
 
-            POPUPHTML.__init__(self, *args, **kwds)
+            POPUPHTML.__init__(self, parent, **kwds)
 
             if self.value:
                 self.set_rec(self.value, [self.value,])
@@ -1654,15 +1657,15 @@ if platform.system() == "Linux":
             return (130, dy)
 else:
     class DATEPICKER(DatePickerCtrl, SchBaseCtrl):
-        def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
+        def __init__(self, parent, **kwds):
+            SchBaseCtrl.__init__(self, parent, kwds)
             #if 'size' in kwds:
             kwds['size']=(120,-1)
             try:
                 kwds['style']= wx.adv.DP_DROPDOWN | wx.adv.DP_SHOWCENTURY | wx.adv.DP_ALLOWNONE
             except:
                 kwds['style']= wx.DP_DROPDOWN | wx.DP_SHOWCENTURY | wx.DP_ALLOWNONE
-            DatePickerCtrl.__init__(self, *args, **kwds)
+            DatePickerCtrl.__init__(self, parent, **kwds)
 
         def SetValue(self, value):
             if value:
@@ -1684,7 +1687,7 @@ else:
 
 class DATETIMEPICKER(POPUPHTML):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
         kwds['href'] = "/schsys/datedialog/"
 
         if "style" in kwds:
@@ -1697,7 +1700,7 @@ class DATETIMEPICKER(POPUPHTML):
         else:
             kwds['size'] = wx.Size(200, -1)
 
-        POPUPHTML.__init__(self, *args, **kwds)
+        POPUPHTML.__init__(self, parent, **kwds)
 
         self.to_masked(autoformat='EUDATE24HRTIMEYYYYMMDD.HHMM')
 
@@ -1724,7 +1727,7 @@ class DATETIMEPICKER(POPUPHTML):
 
 class CHOICE(POPUPHTML):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
 
         if not ('href' in kwds or 'href' in kwds):
             kwds['href'] = "/schsys/listdialog/"
@@ -1740,7 +1743,7 @@ class CHOICE(POPUPHTML):
             kwds['size'] = wx.Size(250, -1)
 
         kwds['dialog_with_value'] = False
-        POPUPHTML.__init__(self, *args, **kwds)
+        POPUPHTML.__init__(self, parent, **kwds)
 
         choices = None
         self._norefresh = False
@@ -1828,13 +1831,13 @@ class DBCHOICE(CHOICE):
         return None
 
 class DBCHOICE_EXT(POPUPHTML):
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
         if 'style' in kwds:
             kwds['style'] = kwds['style'] | wx.CB_READONLY
         else:
             kwds['style'] = wx.CB_READONLY
 
-        POPUPHTML.__init__(self, *args, **kwds)
+        POPUPHTML.__init__(self, parent, **kwds)
 
 
     def SetValue(self, value):
@@ -1870,8 +1873,8 @@ class DBCHOICE_EXT(POPUPHTML):
 
 class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         kwds['label'] = self.label
         kwds['style'] = wx.CP_DEFAULT_STYLE|wx.CP_NO_TLW_RESIZE
         if 'size' in kwds:
@@ -1886,7 +1889,7 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
         if 'collapse_height' in self.param:
             self._size[1] = int(self.param['collapse_height'])
 
-        wx.CollapsiblePane.__init__(self, *args, **kwds)
+        wx.CollapsiblePane.__init__(self, parent, **kwds)
         try:
             self.GetPane().SetBackgroundStyle(wx.BG_STYLE_ERASE)
         except:
@@ -1943,14 +1946,14 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
         if not self.html:
             pass
 
-    def process_refr_data(self, *args, **kwds):
+    def process_refr_data(self, parent, **kwds):
         if 'param' in kwds:
             self.param = kwds['param']
             if 'data' in self.param and self.param['data'].strip():
                 self.Show(True)
                 self.set_html(self.param['data'])
         #print("----------------------------------------------")
-        #print(self, args, kwds)
+        #print(self, parent, kwds)
         #print("----------------------------------------------")
 
 
@@ -2059,9 +2062,9 @@ class Select2Popup(wx.MiniFrame):
 
 class _SELECT2(ComboCtrl,  SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
+    def __init__(self, parent, **kwds):
 
-        SchBaseCtrl.__init__(self, args, kwds)
+        SchBaseCtrl.__init__(self, parent, kwds)
 
         if "style" in kwds:
             kwds['style'] |= wx.TE_PROCESS_ENTER
@@ -2077,7 +2080,7 @@ class _SELECT2(ComboCtrl,  SchBaseCtrl):
 
         kwds['size'] = (445, -1)
 
-        ComboCtrl.__init__(self, *args, **kwds)
+        ComboCtrl.__init__(self, parent, **kwds)
 
         if self.GetTextCtrl():
             self.GetTextCtrl().SetForegroundColour(wx.Colour(0, 0, 0))
@@ -2188,9 +2191,9 @@ def button_from_parm(parent, param):
     return button
 
 
-def SELECT2(*args, **kwds):
+def SELECT2(parent, **kwds):
     data = kwds['param']['data']
-    panel = COMPOSITE_PANEL(*args, size=(500, -1))
+    panel = COMPOSITE_PANEL(parent, size=(500, -1))
     ctrl = _SELECT2(panel, **kwds)
     button1 = button_from_parm(panel, param=data[1]['childs'][0])
     button2 = button_from_parm(panel, param=data[1]['childs'][1])
@@ -2216,20 +2219,20 @@ def SELECT2(*args, **kwds):
     return panel
 
 
-def COMPOSITE(*args, **kwds):
+def COMPOSITE(parent, **kwds):
     cls = kwds['param']['class'].upper()
     if cls in globals():
-        return globals()[cls](*args, **kwds)
+        return globals()[cls](parent, **kwds)
 
-def RIOT(*args, **kwds):
-    http = wx.GetApp().get_http(args[0])
-    http.get(args[0], "/schsys/widget_web?browser_type=1")
+def RIOT(parent, **kwds):
+    http = wx.GetApp().get_http(parent)
+    http.get(parent, "/schsys/widget_web?browser_type=1")
     buf = http.str()
     http.clear_ptr()
     elem = kwds['param']['riot_elem']
     buf=buf.replace('</body>', "<%s></%s><script>riot.mount('*');</script></body>" % (elem, elem))
     url='http://127.0.0.2/data?'+ b64encode(buf.encode('utf-8')).decode('utf-8')
     #kwds['url'] = url
-    obj =  HTML2(*args, **kwds)
+    obj =  HTML2(parent, **kwds)
     obj.load_url(url)
     return obj

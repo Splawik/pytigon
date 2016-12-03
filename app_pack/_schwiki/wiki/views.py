@@ -53,7 +53,7 @@ template_start = """
 
 
 def view_page(request, subject, page_name):
-
+    
     path, sep, page_name = page_name.rpartition('+')
     if path:
         path_list = path.split('+')
@@ -72,7 +72,7 @@ def view_page(request, subject, page_name):
     except Page.DoesNotExist:
         content = None
     c = RequestContext(request, {'page_name': page_name, 'subject': subject, 'content': content, 'wiki_path': path, 'wiki_path_list': path_list,
-                       'title': '?: ' + page_name, 'app_pack': ''})
+                       'title': '?: ' + page_name})
     if page:
         if page.page_type != 'W':
             if page.base_template:
@@ -82,7 +82,7 @@ def view_page(request, subject, page_name):
             content2 = ( template_start % base_template ) + page.content
             t = Template(content2)
             return HttpResponse(t.render(c))
-
+    
     t = Template(template_start_wiki)
     return HttpResponse(t.render(c))
     

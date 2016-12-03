@@ -198,18 +198,18 @@ def init_plugin_cef(
 
         logged = False
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
             cef_init()
 
             wx.GetApp().web_ctrl = self
 
-            SchBaseCtrl.__init__(self, args, kwds)
+            SchBaseCtrl.__init__(self, parent, kwds)
             if 'style' in kwds:
                 kwds['style'] |= wx.WANTS_CHARS
             else:
                 kwds['style'] = wx.WANTS_CHARS
 
-            CEFControl.__init__(self, *args, **kwds)
+            CEFControl.__init__(self, parent, **kwds)
 
             self.client_handler = ClientHandler(self)
             self.browser.SetClientHandler(self.client_handler)

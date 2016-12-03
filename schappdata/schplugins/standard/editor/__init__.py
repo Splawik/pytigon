@@ -39,11 +39,11 @@ def init_plugin(
 
     class Styledtext(CodeEditor, SchBaseCtrl):
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
             self.href = None
-            SchBaseCtrl.__init__(self, args, kwds)
+            SchBaseCtrl.__init__(self, parent, kwds)
             kwds['style'] = wx.TE_PROCESS_ENTER
-            CodeEditor.__init__(self, *args, **kwds)
+            CodeEditor.__init__(self, parent, **kwds)
             if self.src:
                 self.set_ext(self.src)
             self.last_clipboard_state = False

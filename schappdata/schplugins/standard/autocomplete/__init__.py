@@ -69,8 +69,8 @@ class DbDict(object):
 
 class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
 
-    def __init__(self, *args, **kwds):
-        SchBaseCtrl.__init__(self, args, kwds)
+    def __init__(self, parent, **kwds):
+        SchBaseCtrl.__init__(self, parent, kwds)
         self.dynamic_choices = DbDict(self.src)
         if 'style' in kwds:
             style = kwds['style']
@@ -83,8 +83,7 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
 # = wx.Size(size[0],30) else: kwds["size"] = wx.Size(-1, 30)
 
         kwds['choices'] = self.dynamic_choices
-        TextCtrlAutoComplete.__init__(self, colNames=('label', 'value'),
-                                      *args, **kwds)
+        TextCtrlAutoComplete.__init__(self, parent, colNames=('label', 'value'), **kwds)
         self.SetEntryCallback(self.set_dynamic_choices)
         self.SetMatchFunction(self.match)
         if 'data' in self.param:

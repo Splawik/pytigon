@@ -207,8 +207,8 @@ class ToolbarInterface(object):
             bar_size = self.bar.GetSize()
             dy = self.bar.get_bar_height() + 3
             dx = self.bar.get_bar_width() + 3
-            htmlsash = SchPage(panel, address_or_parser, parameters,
-                               size=wx.Size(dx, dy))
+            htmlsash = SchPage(panel, address_or_parser, parameters, size=wx.Size(dx, dy))
+            #htmlsash = SchPage(panel, address_or_parser, parameters)
 
             best = htmlsash.body.calculate_best_size()
             htmlsash.SetSize(wx.Size(best[0], best[1]))

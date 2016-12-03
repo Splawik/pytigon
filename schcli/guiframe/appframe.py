@@ -501,11 +501,11 @@ class SchAppFrame(wx.Frame):
 
     def on_next_page(self, evt):
         """scroll active form one page down"""
-        self.on_page_event(1)
+        self._on_page_event(1)
 
     def on_prev_page(self, evt):
         """scroll active form one page up"""
-        self.on_page_event(-1)
+        self._on_page_event(-1)
 
     def on_next_tab(self, evt):
         """select a next tab in desktop notebook"""
@@ -1036,3 +1036,6 @@ class SchAppFrame(wx.Frame):
             return self.new_main_page('^standard/html_print/html_print.html', name, parameters=name)
 
         return True
+
+    def get_main_panel(self):
+        return self._panel

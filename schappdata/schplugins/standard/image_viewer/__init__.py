@@ -38,11 +38,11 @@ def init_plugin(
 
     class Imageviewer(wx.ScrolledWindow, SchBaseCtrl):
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
 # self.obj = SChBaseCtrl(self, args, kwds) kwds['label']=wx.EmptyBitmap(2,2)
             print("X1")
-            SchBaseCtrl.__init__(self, args, kwds)
-            wx.ScrolledWindow.__init__(self, *args, **kwds)
+            SchBaseCtrl.__init__(self, parent, kwds)
+            wx.ScrolledWindow.__init__(self, parent, **kwds)
             self.static_bitmap = wx.StaticBitmap(self)
             if self.src:
                 self.set_ext(self.src)
@@ -50,8 +50,7 @@ def init_plugin(
             mainframe.bind_to_toolbar(self.on_copy, id=wx.ID_COPY)
             mainframe.bind_to_toolbar(self.on_cut, id=wx.ID_CUT)
             mainframe.bind_to_toolbar(self.on_paste, id=wx.ID_PASTE)
-            a_table = [(0, wx.WXK_F2, self.on_save), (wx.ACCEL_CTRL, ord('S'),
-                       self.on_save)]
+            a_table = [(0, wx.WXK_F2, self.on_save), (wx.ACCEL_CTRL, ord('S'), self.on_save)]
             self.set_acc_key_tab(a_table)
             self.resize_to_win = True
             self.Bind(wx.EVT_SIZE, self.on_size)

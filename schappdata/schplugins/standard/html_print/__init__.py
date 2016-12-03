@@ -37,8 +37,8 @@ def init_plugin(
     class Htmlprint(HtmlPreviewCanvas, SchBaseCtrl):
 
         def __init__(self, *args, **kwds):
-            SchBaseCtrl.__init__(self, args, kwds)
-            HtmlPreviewCanvas.__init__(self, *args, **kwds)
+            SchBaseCtrl.__init__(self, parent, kwds)
+            HtmlPreviewCanvas.__init__(self, parent, **kwds)
 
 
     schcli.guictrl.ctrl.HTMLPRINT = Htmlprint

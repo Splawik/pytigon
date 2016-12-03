@@ -63,12 +63,12 @@ def init_plugin_sch_web(
 
         logged = False
 
-        def __init__(self, *args, **kwds):
+        def __init__(self, parent, **kwds):
             base_web_browser.__init__(self)
             self.redirect_to_html = [None, None]
             self.redirect_to_local = True
-            SChBaseCtrl.__init__(self, args, kwds)
-            form.SChSashWindow.__init__(self, args[0], self.href, None,
+            SChBaseCtrl.__init__(self, parent, kwds)
+            form.SChSashWindow.__init__(self, parent, self.href, None,
                                         name=kwds['name'])
             self.body.set_css(init_css_str)
             self.GetParent().any_parent_command('set_handle_info', 'browser', self)

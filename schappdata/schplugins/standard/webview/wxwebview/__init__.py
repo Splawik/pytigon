@@ -97,9 +97,9 @@ def init_plugin_web_view(
 
         logged = False
 
-        def Init(self, *args, **kwds):
+        def Init(self, parent, **kwds):
             kwds['style'] = wx.TRANSPARENT_WINDOW| wx.WANTS_CHARS
-            SchBaseCtrl.__init__(self, args, kwds)
+            SchBaseCtrl.__init__(self, parent, kwds)
             base_web_browser.__init__(self)
 
             self.loaded = True
@@ -283,7 +283,7 @@ def init_plugin_web_view(
             self.ClearHistory()
 
 
-    def Html2(*args, **kwds):
+    def Html2(parent, **kwds):
         kwds2 = {}
         kwds2['name'] = kwds['name']
         kwds2['size'] = kwds['size']
@@ -296,9 +296,9 @@ def init_plugin_web_view(
 
         if 'url' in kwds:
             kwds2['url'] = kwds['url']
-        wb = wx.html2.WebView.New(*args, **kwds2)
+        wb = wx.html2.WebView.New(parent, **kwds2)
         wb.__class__ = type('BrowserCtrl',(wb.__class__,BaseBrowser),{})
-        wb.Init(*args, **kwds)
+        wb.Init(parent, **kwds)
 
         return wb
 

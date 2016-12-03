@@ -39,11 +39,11 @@ def init_plugin(
 
     class Videoviewer(wx.ScrolledWindow):
 
-        def __init__(self, *args, **kwds):
-            self.obj = SChBaseCtrl(self, args, kwds)
+        def __init__(self, parent, **kwds):
+            self.obj = SChBaseCtrl(self, parent, kwds)
 # kwds['label']=wx.EmptyBitmap(2,2)
 
-            wx.ScrolledWindow.__init__(self, *args, **kwds)
+            wx.ScrolledWindow.__init__(self, parent, **kwds)
             self.static_bitmap = wx.StaticBitmap(self)
             if self.src:
                 self.SetExt(self.src)

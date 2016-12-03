@@ -158,7 +158,7 @@ class ToolBarInterface(ToolbarInterface):
             if wx.Platform != '__WXMSW__':
                 self.page.SetArtProvider(SchAuiToolBarArt())
             nr = len(self.bar.toolbars) + 1
-            self.bar.parent._mgr.AddPane(self.page, self.bar.parent.panel('tb'
+            self.bar.parent._mgr.AddPane(self.page, self.bar.parent._create_pane_info('tb'
                      + str(nr), 'Toolbar '
                      + str(nr)).ToolbarPane().Top().LeftDockable(False).RightDockable(False).Row(1))
 
@@ -233,8 +233,7 @@ class ToolBarInterface(ToolbarInterface):
         for c in controls:
             c.SetMinSize((350, c.GetSize()[1]))
             self.bar_tmp.AddControl(c)
-        self.frame._mgr.AddPane(self.bar_tmp, self.frame.Panel('tb99',
-                                'Toolbar 99'
+        self.frame._mgr.AddPane(self.bar_tmp, self.frame.Panel('tb99','Toolbar 99'
                                 ).ToolbarPane().Top().LeftDockable(False).RightDockable(False).Row(2))
         self.bar_tmp.Realize()
 

@@ -276,7 +276,7 @@ class DataPopupControl(ComboCtrl):
                 self.html.refresh_html()
                 self.html.SetFocus()
                 self.html.on_size(None)
-                self.html.body.init_page()
+                self.html.body.init()
                 def _after2():
                     self.html.body.refr(self.start_value)
                     self.html.body.Show()

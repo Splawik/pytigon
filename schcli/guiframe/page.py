@@ -38,7 +38,7 @@ from schcli.guilib.event import *
 class SchPage(wx.Window, Signal):
     """SchPage class"""
 
-    def __init__(self, parent, address_or_parser, parameters):
+    def __init__(self, parent, address_or_parser, parameters, pos=(0,0), size=wx.DefaultSize):
         """Contructor
 
         Args:
@@ -70,7 +70,7 @@ class SchPage(wx.Window, Signal):
         self.active_ctrl = None
 
         Signal.__init__(self)
-        wx.Window.__init__(self,parent,-1,(0,0),(0,0),style= wx.WANTS_CHARS,name='SchPage')
+        wx.Window.__init__(self,parent,-1,pos,size,style= wx.WANTS_CHARS,name='SchPage')
 
         self.exists = True
 
@@ -112,10 +112,8 @@ class SchPage(wx.Window, Signal):
             topwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
             topwin.SetAlignment(wx.adv.LAYOUT_TOP)
             topwin.SetSashVisible(wx.adv.SASH_BOTTOM, True)
-            self.header = SchForm(topwin)
-            self.header.set_htm_type('header')
-            self.header.page = self
-            self.header.show_page(header)
+            self.header = SchForm(topwin, page=self, form_type="header")
+            self.header.show_form(header)
             dy = self.header.calculate_best_size()[1]
             topwin.SetDefaultSize((1000, dy))
             self._top_window = topwin
@@ -124,15 +122,12 @@ class SchPage(wx.Window, Signal):
             self._top_window = None
 
         if footer[0]:
-            bottomwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition,
-                    (1000, 5), wx.adv.SW_3D)
+            bottomwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (1000, 5), wx.adv.SW_3D)
             bottomwin.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
             bottomwin.SetAlignment(wx.adv.LAYOUT_BOTTOM)
             bottomwin.SetSashVisible(wx.adv.SASH_TOP, True)
-            self.footer = SchForm(bottomwin)
-            self.footer.set_htm_type('footer')
-            self.footer.page = self
-            self.footer.show_page(footer)
+            self.footer = SchForm(bottomwin, page=self, form_type="footer")
+            self.footer.show_form(footer)
             bottomwin.SetDefaultSize((1000, self.footer.calculate_best_size()[1]))
             self._bottom_window = bottomwin
             winids.append(bottomwin.GetId())
@@ -140,15 +135,12 @@ class SchPage(wx.Window, Signal):
             self._bottom_window = None
 
         if panel[0]:
-            leftwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (5,
-                    100), wx.adv.SW_3D)
+            leftwin = wx.adv.SashLayoutWindow(self, -1, wx.DefaultPosition, (5, 100), wx.adv.SW_3D)
             leftwin.SetOrientation(wx.adv.LAYOUT_VERTICAL)
             leftwin.SetAlignment(wx.adv.LAYOUT_LEFT)
             leftwin.SetSashVisible(wx.adv.SASH_RIGHT, True)
-            self.panel = SchForm(leftwin)
-            self.panel.SetHtmType('panel')
-            self.panel.page = self
-            self.panel.show_page(panel)
+            self.panel = SchForm(leftwin, page=self, form_type="panel")
+            self.panel.show_form(panel)
             xy = self.panel.calculate_best_size()
             leftwin.SetDefaultSize(xy)
             self._left_window = leftwin
@@ -156,15 +148,14 @@ class SchPage(wx.Window, Signal):
         else:
             self._left_window = None
 
-        self.body = SchForm(self, hscroll, vscroll)
+        self.body = SchForm(self, self, hscroll, vscroll)
         self.body.set_htm_type('body')
-        self.body.page = self
         attrs = mp.get_body_attrs()
         if 'width' in attrs and 'height' in attrs:
             w = attrs['width']
             h = attrs['height']
             self.body.bestsize = (int(w) * 4 / 3, int(h) * 4 / 3)
-        self.body.show_page(body, parameters)
+        self.body.show_form(body, parameters)
         self.body.set_address_parm(self.address)
         if 'refresh' in mp.var:
             self.body.refresh_time(int(mp.var['refresh']))
@@ -239,8 +230,8 @@ class SchPage(wx.Window, Signal):
         for name in self._ctrl_dict_old:
             win = self._ctrl_dict_old[name]
             win.Destroy()
-            if name in self.body.controls:
-                del self.body.controls[name]
+            #if name in self.body.controls:
+            #   del self.body.controls[name]
         self._ctrl_dict_old = {}
 
     def __getitem__(self, key):
@@ -251,13 +242,13 @@ class SchPage(wx.Window, Signal):
 
     def init_frame(self):
         if self.header:
-            self.header.init_page()
+            self.header.init()
         if self.footer:
-            self.footer.init_page()
+            self.footer.init()
         if self.panel:
-            self.panel.init_page()
+            self.panel.init()
 
-        self.body.init_page()
+        self.body.init()
 
     def get_parent_page(self):
         """Return parent wxPage object"""
@@ -316,26 +307,26 @@ class SchPage(wx.Window, Signal):
         config = mp.var
         self.title = mp.title
         if self.header:
-            if not self.header.show_page("""<html encoding="utf-8">""" + header + '</html>'):
+            if not self.header.show_form("""<html encoding="utf-8">""" + header + '</html>'):
                 return False
         if self.body:
-            if not self.body.show_page(body, self.parameters):
+            if not self.body.show_form(body, self.parameters):
                 return False
         if self.footer:
-            if not self.footer.show_page("""<html encoding="utf-8">""" + footer + '</html>'):
+            if not self.footer.show_form("""<html encoding="utf-8">""" + footer + '</html>'):
                 return False
         if self.panel:
-            if not self.panel.show_page("""<html encoding="utf-8">""" + panel + '</html>'):
+            if not self.panel.show_form("""<html encoding="utf-8">""" + panel + '</html>'):
                 return False
         if self.header:
-            self.header.init_page()
+            self.header.init()
         if self.footer:
-            self.footer.init_page()
+            self.footer.init()
         if self.panel:
-            self.panel.init_page()
+            self.panel.init()
 
         self.body.Refresh()
-        self.body.init_page()
+        self.body.init()
         return True
 
     def CanClose(self):
@@ -479,6 +470,7 @@ class SchPage(wx.Window, Signal):
             return (dx,dy)
         dx = 0
         dy = 0
+
         if self.header:
             (x, y) = self.header.calculate_best_size()
             dy = dy + y

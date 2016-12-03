@@ -47,7 +47,9 @@
 
 %%pythoncode
     % if form_edit:
-        %%pythoncode_editform
+        %% pythoncode_for_edit
+    % else:
+        %% pythoncode_for_table
 
 %% submenu
     % if not app_manager.appname or start_page:

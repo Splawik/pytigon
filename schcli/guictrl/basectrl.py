@@ -17,33 +17,28 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Base class for all widgets"""
+
 import wx
 from schlib.schhtml.htmlviewer import tdata_from_html
 try:
     from urllib.parse import unquote
 except:
     from urllib import unquote
-
+from schlib.schhttptools.list_parser import TreeParser
 
 class SchBaseCtrl(object):
 
-    def __init__(self, args, kwds):
+    def __init__(self, parent, kwds):
+        """Constructor"""
         self.unique_name = None
-        self.init_base(args, kwds)
+        self.init_base(parent, kwds)
         self.accept_focus = True
         self.acc_tab = False
+        self.get_parent_form().signal_from_child(self, '__init__')
 
-    def CanAcceptFocus(self):
-        if self.IsShown() and self.IsEnabled():
-            return self.accept_focus
-        else:
-            return False
-
-    def CanAcceptFocusFromKeyboard(self):
-        return self.CanAcceptFocus()
-
-    def init_base(self, args, kwds):
-        self.parent = args[0]
+    def init_base(self, parent, kwds):
+        self.parent = parent
         self.ldatabuf = None
 
         self.tag = None
@@ -153,15 +148,6 @@ class SchBaseCtrl(object):
             for fun in ctrl_process[self.tag]:
                 fun(self)
 
-    def set_unique_name(self, name):
-        self.unique_name = name
-
-    def get_unique_name(self):
-        return self.unique_name
-
-    def set_acc_key_tab(self, tab):
-        return self.GetParent().set_acc_key_tab(self, tab)
-
     def after_create(self):
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_down_base)
         if self.onload:
@@ -170,6 +156,28 @@ class SchBaseCtrl(object):
 
         if hasattr(self, "__ext_init__"):
             self.__ext_init__()
+
+        self.get_parent_form().signal_from_child(self, 'after_create')
+
+
+    def CanAcceptFocus(self):
+        if self.IsShown() and self.IsEnabled():
+            return self.accept_focus
+        else:
+            return False
+
+    def CanAcceptFocusFromKeyboard(self):
+        return self.CanAcceptFocus()
+
+
+    def set_unique_name(self, name):
+        self.unique_name = name
+
+    def get_unique_name(self):
+        return self.unique_name
+
+    def set_acc_key_tab(self, tab):
+        return self.GetParent().set_acc_key_tab(self, tab)
 
     def on_key_down_base(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
@@ -222,7 +230,7 @@ class SchBaseCtrl(object):
         if not self.ldata:
             if self.src:
                 lista = self.LoadDataFromServer(self.src)
-                mp = list_parser.TreeParser()
+                mp = TreeParser()
                 mp.feed(lista)
                 mp.close()
                 self.ldatabuf = mp.TreeParent[0][1]
@@ -237,9 +245,10 @@ class SchBaseCtrl(object):
         return self.ldatabuf
 
     def get_parent_form(self):
-        parent = self.GetParent()
+        parent = self.parent
         while(parent!=None):
             if type(parent).__name__ == 'SchForm':
                 return parent
             parent = parent.GetParent()
         return None
+
