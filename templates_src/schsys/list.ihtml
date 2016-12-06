@@ -12,7 +12,7 @@
             self.find_value = ""
             self.listclick=False
             self.retlist = None
-            self.list1.BlockRefresh()
+            self.list1.block_refresh()
             self.list1.SetFocus()
 
             self.list1.Bind(wx.EVT_LISTBOX, self.on_list_selected)
@@ -32,7 +32,7 @@
             self.retlist = self.choices[id]
             self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
 
-        def FindValueStr(self):
+        def find_value_str(self):
             return self.find_value
 
         def OnLDown(self, event):
@@ -59,7 +59,7 @@
                 for item in self.choices:
                     self.list1.Append(item[0])
                 self.listclick=False
-                self.list1.FindAndSelect(self.FindValueStr())
+                self.list1.find_and_select(self.find_value_str())
 
         def OnNavigationKey(self, event):
             id = self.list1.GetSelection()

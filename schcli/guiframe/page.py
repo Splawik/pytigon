@@ -545,3 +545,6 @@ class SchPage(wx.Window, Signal):
             None or "default" (defautl)
         """
         self.vertical_position = position
+
+    def close(self):
+        self.GetParent().on_child_form_cancel()

@@ -22,14 +22,24 @@ class _ModelSelect2WidgetExt(ModelSelect2Widget):
         self.href1 = href1
         self.href2 = href2
 
-    def render(self, name, value, attrs=None, choices=()):
-        x = super().render(name, value, attrs, choices)
+    #def render(self, name, value, attrs=None, choices=()):
+    #    x = super().render(name, value, attrs, choices)
+    #    if len(self.choices.queryset)>0:
+    #        txt = str(self.choices.queryset[0])
+    #    else:
+    #        txt=""
+    #    buttons2 = buttons % (self.href1, self.href2)
+    #    return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" % (value, txt, x, buttons2))
+
+    def render(self, name, value, attrs=None):
+        x = super().render(name, value, attrs)
         if len(self.choices.queryset)>0:
             txt = str(self.choices.queryset[0])
         else:
             txt=""
         buttons2 = buttons % (self.href1, self.href2)
         return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" % (value, txt, x, buttons2))
+
 
 
 class ForeignKey(models.ForeignKey):

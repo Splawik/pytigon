@@ -91,7 +91,7 @@ def _req_post(req, url, data, complete):
 
     req.open("POST", url, True)
 
-    req.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'))
+    req.setRequestHeader("X-CSRFToken", Cookies.js_get('csrftoken'))
 
     if data.length:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")

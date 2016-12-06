@@ -168,7 +168,7 @@ class SchAppFrame(wx.Frame):
 
         if 'tray' in gui_style:
             self.tbIcon = wx.adv.TaskBarIcon()
-            self.tbIcon.SetIcon(icon, "SCSkrypt")
+            self.tbIcon.SetIcon(icon, "Pytigon")
         else:
             self.tbIcon = None
 

@@ -17,30 +17,24 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import types
-import wx.html
-import schlib.schhttptools.htmltab as htmltab
-import schlib.schhttptools.list_parser as list_parser
-import schcli.guictrl.ctrl as schctrl
-import traceback
-try:
-    from urllib.parse import unquote
-except:
-    from urllib import unquote
+"""This module extends schlib.html module of additional class designed to implement widgets in the form.
+"""
 
+from urllib.parse import unquote
 from base64 import b64decode
 
-from schlib.schhtml.tags.table_tags import TableTag, TdTag
-from schlib.schhtml.tags.p_tags import Par
-from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map, \
-    register_tag_preprocess_map
-from schlib.schhtml.atom import AtomList, Atom
+from schlib.schhtml.tags.table_tags import TableTag #, TdTag
+from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map, register_tag_preprocess_map
 from schlib.schhtml.htmltools import superstrip
-from .basectrl import SchBaseCtrl
 from schlib.schhttptools.htmltab import Td
 from schlib.schtools.data import is_null
 
-Atrybuty = (
+import wx
+
+import schcli.guictrl.ctrl as schctrl
+
+
+_ATTRIBUTES = (
     'name',
     'href',
     'label',
@@ -61,14 +55,6 @@ Atrybuty = (
     )
 
 
-def _my_import(name):
-    mod = __import__(name)
-    components = name.split('.')
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
-
-
 class TreeList(object):
 
     def __init__(self):
@@ -83,13 +69,7 @@ class TreeList(object):
 
 class TreeUl(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags += ['li']
         self.childs = []
@@ -110,18 +90,11 @@ class TreeUl(BaseHtmlElemParser):
             return TreeLi(self, parser, tag, attrs)
         else:
             return None
-            #return BaseHtmlElemParser.handle_starttag(self, parser, tag, attrs)
 
 
 class TreeLi(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs,):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child = None
 
@@ -131,36 +104,23 @@ class TreeLi(BaseHtmlElemParser):
             self.child[2] = self.attrs
             self.parent.append_to_tree(self.child)
         else:
-            self.parent.append_to_tree([superstrip(''.join(self.data)), [],
-                                       self.attrs])
+            self.parent.append_to_tree([superstrip(''.join(self.data)), [],self.attrs])
 
     def append_to_tree(self, elem):
         self.child = elem
 
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self,parser,tag,attrs):
         if tag == 'ul':
             return TreeUl(self, parser, tag, attrs)
         elif tag == 'a' or tag == 'ctrlbutton':
             self.attrs['href'] = attrs['href']
         else:
             return None
-            #return BaseHtmlElemParser.handle_starttag(self, parser, tag, attrs)
 
 
 class Data(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.data = None
 
@@ -179,13 +139,7 @@ class Data(BaseHtmlElemParser):
 
 class OptionTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
 
     def close(self):
@@ -203,14 +157,17 @@ class OptionTag(BaseHtmlElemParser):
 
 
 class CompositeChildTag(BaseHtmlElemParser):
+    """Class handle ctrlcomposite tag"""
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
+        """Constructor
+
+        Args:
+            parent - parent tag
+            parser - html parser object
+            tag - tag
+            attrs - attrs
+        """
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.composite_data = {}
         self.composite_data['tag'] = tag
@@ -236,14 +193,18 @@ class CompositeChildTag(BaseHtmlElemParser):
 
 
 class CtrlTag(TableTag):
+    """Class which handle all tags startings with 'ctrl'"""
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
+        """Constructor
+
+        Args:
+            parent - parent tag
+            parser - html parser object
+            tag - tag
+            attrs - attrs
+        """
+
         TableTag.__init__(self, parent, parser, tag, attrs)
 
         self.list = None
@@ -261,7 +222,6 @@ class CtrlTag(TableTag):
         if self.parser.parse_only:
             return
         self._calc_relative_size()
-        #self.list = None
 
         if self.tag == 'ctrlcheckbox':
             pass
@@ -302,18 +262,12 @@ class CtrlTag(TableTag):
 
             self.height = self._norm_sizes([self.attrs['height']], height)[0]
 
-
     def handle_data(self, data):
         if self.tag == 'ctrlcheckbox':
             pass
         return BaseHtmlElemParser.handle_data(self, data)
 
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self,parser,tag,attrs):
 
         if self.tag == 'ctrlcheckbox':
             pass
@@ -339,7 +293,6 @@ class CtrlTag(TableTag):
             else:
                 return None
         else:
-# return self.class_from_tag_name(tag)(self, parser, tag, attrs)
             return None
 
     def calc_col_sizes(self):
@@ -411,15 +364,7 @@ class CtrlTag(TableTag):
                 x2 = self.obj.GetSize()
         return (self.height, False)
 
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self,dc,style,x,y,dx,dy):
         dc2 = dc.subdc(x, y, self.width, self.height)
         cont = True
         while cont:
@@ -433,8 +378,6 @@ class CtrlTag(TableTag):
         value = None
         width = -1
         height = -1
-
-
         if 'name' in self.attrs:
             name_reg = is_null(self.attrs['name'], '')
             parent = self.parent
@@ -456,12 +399,13 @@ class CtrlTag(TableTag):
                 tmp = name + '__' + str(i)
                 i += 1
             name = tmp
-        for atrybut in Atrybuty:
+        for atrybut in _ATTRIBUTES:
             if atrybut in self.attrs:
                 if self.attrs[atrybut] == None:
                     self.kwargs[atrybut] = ''
                 else:
                     self.kwargs[atrybut] = self.attrs[atrybut]
+
         valuetype = 'data'
         if 'valuetype' in self.attrs:
             if self.attrs['valuetype'] == 'ref':
@@ -477,7 +421,6 @@ class CtrlTag(TableTag):
                     value = eval(self.attrs['value'])
                 except:
                     print("Value error:", self.attrs['value'])
-                    #value = eval(self.attrs['value'])
                     value = None
         else:
             value = None
@@ -495,10 +438,9 @@ class CtrlTag(TableTag):
         except:
             return True
 
-
         if len(self.tdata) > 0:
             self.kwargs['tdata'] = self.tdata
-        self.kwargs['param'] = self.attrs
+        self.kwargs['param'] = dict(self.attrs)
         self.kwargs['param']['table_lp'] = str(self.parser.table_lp)
         self.kwargs['param']['tag'] = tag.lower()
         if self.data2 != None:
@@ -509,9 +451,6 @@ class CtrlTag(TableTag):
             l = self.list.get_list()
             self.kwargs['ldata'] = l
 
-        #if self.tag == 'ctrlcomposite':
-        #    self.kwargs['param'] = self.data2
-
         obj = None
         if parent:
             gparent = parent.GetParent()
@@ -520,10 +459,9 @@ class CtrlTag(TableTag):
             if obj:
                 if parent.update_controls:
                     if obj and hasattr(obj, 'process_refr_data'):
-                        obj.process_refr_data(parent, **self.kwargs)
+                        obj.process_refr_data(**self.kwargs)
                     if not (hasattr(obj, 'is_ctrl_block') and obj.is_ctrl_block()):
-                        if value != None and (valuetype == 'data' or valuetype
-                                 == 'str'):
+                        if value != None and (valuetype == 'data' or valuetype == 'str'):
                             obj.SetValue(value)
                 parent.append_ctrl(obj)
             else:
@@ -531,14 +469,11 @@ class CtrlTag(TableTag):
                 if not obj:
                      print('ERROR:', self.classObj)
                 obj.set_unique_name(name)
-                if value != None and (valuetype == 'data' or valuetype == 'str'
-                                      ):
+                if value != None and (valuetype == 'data' or valuetype == 'str'):
                     obj.SetValue(value)
-
                 obj.after_create()
                 parent.append_ctrl(obj)
             self.obj = obj
-
 
 register_tag_map('ctr*', CtrlTag)
 
@@ -551,7 +486,6 @@ def table_to_ctrltab(parent, attrs):
         if 'listctrl' in attrs['class']:
             return ('ctrllist', attrs)
     return ('table', attrs)
-
 
 register_tag_preprocess_map('table', table_to_ctrltab)
 
@@ -670,7 +604,6 @@ def input_to_ctrltab(parent, attrs):
             attrs_ret[attr] = attrs[attr]
     return ('ctrl' + ret, attrs_ret)
 
-
 register_tag_preprocess_map('input', input_to_ctrltab)
 
 
@@ -696,13 +629,11 @@ def textarea_to_ctrltab(parent, attrs):
         attrs_ret['name'] = attrs['name']
     return ('ctrltextarea', attrs_ret)
 
-
 register_tag_preprocess_map('textarea', textarea_to_ctrltab)
 
 
 def select_to_ctrltab(parent, attrs):
     return ('ctrlselect', attrs)
-
 
 register_tag_preprocess_map('select', select_to_ctrltab)
 
@@ -724,7 +655,6 @@ def a_to_button(parent, attrs):
                     pass
                 return ('ctrlbutton', attrs)
     return ('a', attrs)
-
 
 register_tag_preprocess_map('a', a_to_button)
 
@@ -766,7 +696,6 @@ def error_span_to_error(parent, attrs):
 register_tag_preprocess_map('span', error_span_to_error)
 
 
-
 def error_p_to_error(parent, attrs):
     if 'class' in attrs and attrs['class'] == 'help-block':
         return ('comment', attrs)
@@ -787,17 +716,14 @@ def ul_convert(parent, attrs):
 register_tag_preprocess_map('ul', ul_convert)
 
 
-#<p id="error_1_id_integer_field" class="help-block"><strong>To pole jest wymagane.</strong></p>
-
-
-def register_riot_elem(name):
+def register_component_elem(name):
     def _convert(parent, attrs):
-        attrs['riot_elem'] = name
-        return ('ctrlriot', attrs)
+        attrs['component_elem'] = name
+        return ('ctrlcomponent', attrs)
     register_tag_preprocess_map(name, _convert)
 
 
 def init_riot_tags(riot_elements):
     for pos in riot_elements:
         name = pos.split('/')[-1]
-        register_riot_elem(name)
+        register_component_elem(name)

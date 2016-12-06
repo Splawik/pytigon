@@ -20,6 +20,7 @@
 """Base class for all widgets"""
 
 import wx
+
 from schlib.schhtml.htmlviewer import tdata_from_html
 try:
     from urllib.parse import unquote
@@ -32,13 +33,15 @@ class SchBaseCtrl(object):
     def __init__(self, parent, kwds):
         """Constructor"""
         self.unique_name = None
-        self.init_base(parent, kwds)
+        self.init_base(kwds, parent)
         self.accept_focus = True
         self.acc_tab = False
         self.get_parent_form().signal_from_child(self, '__init__')
 
-    def init_base(self, parent, kwds):
-        self.parent = parent
+    def init_base(self, kwds, parent=None):
+        if parent:
+            self.parent = parent
+
         self.ldatabuf = None
 
         self.tag = None
@@ -140,15 +143,15 @@ class SchBaseCtrl(object):
             del kwds['style']
         else:
             self.style=None
-            #kwds['style'] = eval(str(style))
 
-        print(self.tag)
         ctrl_process = wx.GetApp().ctrl_process
         if self.tag in ctrl_process:
             for fun in ctrl_process[self.tag]:
                 fun(self)
 
     def after_create(self):
+        """Function called immediately after object create"""
+
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_down_base)
         if self.onload:
             d = {'wx': wx, 'self': self}
@@ -177,6 +180,11 @@ class SchBaseCtrl(object):
         return self.unique_name
 
     def set_acc_key_tab(self, tab):
+        """Set accelerator table for widget
+
+        Args:
+            tab - list or tuple of accelerator elements. Each emement has structure: (flag, keycode, callback fun)
+        """
         return self.GetParent().set_acc_key_tab(self, tab)
 
     def on_key_down_base(self, event):
@@ -245,6 +253,7 @@ class SchBaseCtrl(object):
         return self.ldatabuf
 
     def get_parent_form(self):
+        """Get parent wxForm parent object"""
         parent = self.parent
         while(parent!=None):
             if type(parent).__name__ == 'SchForm':
@@ -252,3 +261,9 @@ class SchBaseCtrl(object):
             parent = parent.GetParent()
         return None
 
+    def get_parent_page(self):
+        form = self.get_parent_form()
+        if form:
+            return form.get_parent_page()
+        else:
+            return None

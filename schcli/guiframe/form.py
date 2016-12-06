@@ -154,7 +154,6 @@ class SchForm(ScrolledPanel):
         if hasattr(self, "child_closed"):
             self.child_closed()
 
-
     def Navigate(self, ctrl, back = False):
         next = False
         children = [ child for child in self.GetChildren() if child.CanAcceptFocus() ]
@@ -459,17 +458,24 @@ class SchForm(ScrolledPanel):
     def set_htm_type(self, form_type):
         self.form_type = form_type
 
-    def get_parent_form(self):
-        """return parent in hierarchy SchFrame object"""
-        if self.get_page():
-            parent_page = self.get_page().get_parent_page()
-            if parent_page:
-                return parent_page.active_form
-        return None
+    def get_gparent_page(self):
+        """return grand parent SChPage object in hierarchy"""
+        page = self.get_parent_page()
+        if page:
+            return page.get_parent_page()
+        else:
+            return None
 
-    def get_page(self):
-        """return parent SchPage object"""
+    def get_parent_page(self):
+        """return parent SChPage object in hierarchy"""
         return self.page
+
+    def get_parent_form(self):
+        """return parent SchFrame object in hierarchy"""
+        gpage = self.get_gparent_page()
+        if gpage:
+            return gpage.active_form
+        return None
 
     def on_right_up(self, evt):
         okno = self.new_main_page('^standard/editor/editor.html', self.get_page().title + ' - '+_('page source'), None)
@@ -986,7 +992,7 @@ class SchForm(ScrolledPanel):
                     exec (script.replace('\r', ''))
                     return
 
-    def signal_from_child(self, child, signal):
+    def signal_from_child(self, child_object, signal):
         pass
 
     def get_evt_ind(self):
@@ -1001,8 +1007,7 @@ class SchForm(ScrolledPanel):
 
         Args:
             win - window which handle accelerator keys
-            tab - list or tuple of accelerator elements. Each
-            callback functions
+            tab - list or tuple of accelerator elements. Each emement has structure: (flag, keycode, callback fun)
         """
         if win in self.acc_tabs:
             self.acc_tabs[win].append(tab)

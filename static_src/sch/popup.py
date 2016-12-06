@@ -1,5 +1,7 @@
-from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html
-from tbl import datatable_refresh, datatable_onresize
+from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html,\
+    get_table_type
+
+from tbl import datatable_refresh, datatable_onresize, init_table
 
 
 def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):

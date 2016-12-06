@@ -21,100 +21,31 @@ import wx
 import six
 from .basebrowser import BaseWebBrowser
 
-if wx.Platform == '__WXMSW__':
-    #try:
-    #if six.PY2:
-    if False:
-        from .cef import init_plugin_cef    
-        def init_plugin(
-            app,
-            mainframe,
-            desktop,
-            mgr,
-            menubar,
-            toolbar,
-            accel,
-            ):
-            return init_plugin_cef(
-                app,
-                mainframe,
-                desktop,
-                mgr,
-                menubar,
-                toolbar,
-                accel,
-                BaseWebBrowser,
-                )
-    #except:
+
+def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
+    import schcli.guictrl.ctrl
+    from base64 import b64encode
+
+    if wx.Platform == '__WXMSW__':
+        #from .cef import init_plugin_cef
+        #return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
+        from .wxwebview import init_plugin_web_view
+        ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
     else:
-        import wx.html2
+        #from .cef import init_plugin_cef
+        #return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
         from .wxwebview import init_plugin_web_view
+        ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
 
+    def Component(parent, **kwds):
+        http = wx.GetApp().get_http(parent)
+        http.get(parent, "/schsys/widget_web?browser_type=1")
+        buf = http.str()
+        http.clear_ptr()
+        elem = kwds['param']['component_elem']
+        url = 'http://127.0.0.2/data?' + b64encode(buf.encode('utf-8')).decode('utf-8')
+        obj = schcli.guictrl.ctrl.HTML2(parent, **kwds)
+        obj.load_url(url)
+        return obj
 
-        def init_plugin(
-            app,
-            mainframe,
-            desktop,
-            mgr,
-            menubar,
-            toolbar,
-            accel,
-            ):
-            return init_plugin_web_view(
-                app,
-                mainframe,
-                desktop,
-                mgr,
-                menubar,
-                toolbar,
-                accel,
-                BaseWebBrowser,
-                )
-else:
-    if True:
-        import wx.html2
-        from .wxwebview import init_plugin_web_view
-
-        def init_plugin(
-            app,
-            mainframe,
-            desktop,
-            mgr,
-            menubar,
-            toolbar,
-            accel,
-            ):
-            return init_plugin_web_view(
-                app,
-                mainframe,
-                desktop,
-                mgr,
-                menubar,
-                toolbar,
-                accel,
-                BaseWebBrowser,
-                )
-
-
-
-    if False:
-        from .cef import init_plugin_cef
-        def init_plugin(
-            app,
-            mainframe,
-            desktop,
-            mgr,
-            menubar,
-            toolbar,
-            accel,
-            ):
-            return init_plugin_cef(
-                app,
-                mainframe,
-                desktop,
-                mgr,
-                menubar,
-                toolbar,
-                accel,
-                BaseWebBrowser,
-                )
+    schcli.guictrl.ctrl.COMPONENT = Component

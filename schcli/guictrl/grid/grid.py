@@ -729,7 +729,12 @@ class SchTableGrid(wx.grid.Grid):
                     p = akcja[command]
                     id = p[3]['data-id']
                     title = p[3]['data-text']
-                    self.GetParent().get_parent_form().ret_ok(id, title)
+                    #self.GetParent().get_parent_form().ret_ok(id, title)
+                    #self.GetParent().signal_from_child(self, 'set_bitmap_list')
+                    page = self.GetParent().get_parent_page().get_parent_page()
+                    if page:
+                        page.signal('return_row', id=id, title=title)
+                        wx.CallAfter(self.GetParent().get_parent_page().close)
                     return 1
                 else:
                     ret = self.GetParent().GetParent().href_clicked(self, akcja[command][3])

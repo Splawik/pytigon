@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2016-11-26 10:55:02
+// Transcrypt'ed from Python, 2016-12-06 16:58:02
 
 	var __symbols__ = ['__py3.5__', '__esv5__'];
 	var __all__ = {};
@@ -1953,8 +1953,10 @@ function pytigon () {
 					var ajax_submit = __init__ (__world__.tools).ajax_submit;
 					var handle_class_click = __init__ (__world__.tools).handle_class_click;
 					var mount_html = __init__ (__world__.tools).mount_html;
+					var get_table_type = __init__ (__world__.tools).get_table_type;
 					var datatable_refresh = __init__ (__world__.tbl).datatable_refresh;
 					var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
+					var init_table = __init__ (__world__.tbl).init_table;
 					var refresh_fragment = function (data_item_to_refresh, fun, only_table) {
 						if (typeof fun == 'undefined' || (fun != null && fun .__class__ == __kwargdict__)) {;
 							var fun = null;
@@ -2339,7 +2341,9 @@ function pytigon () {
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.datatable_refresh = datatable_refresh;
 						__all__.fragment_init = fragment_init;
+						__all__.get_table_type = get_table_type;
 						__all__.handle_class_click = handle_class_click;
+						__all__.init_table = init_table;
 						__all__.mount_html = mount_html;
 						__all__.on_cancel_inline = on_cancel_inline;
 						__all__.on_delete_ok = on_delete_ok;
@@ -2802,7 +2806,7 @@ function pytigon () {
 						};
 						req.onload = _onload;
 						req.open ('POST', url, true);
-						req.setRequestHeader ('X-CSRFToken', Cookies.py_get ('csrftoken'));
+						req.setRequestHeader ('X-CSRFToken', Cookies.get ('csrftoken'));
 						if (data.length) {
 							req.setRequestHeader ('Content-type', 'application/x-www-form-urlencoded');
 							req.setRequestHeader ('Content-length', data.length);
