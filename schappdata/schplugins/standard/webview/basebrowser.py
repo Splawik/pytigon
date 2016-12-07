@@ -81,66 +81,66 @@ class BaseWebBrowser(object):
 
 
     def on_check_can_goforward(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             test = self.can_go_forward()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_goback(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             test =  self.can_go_back()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_stop(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             test =  self.can_stop()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_refresh(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             test =  self.can_refresh()
             event.Enable(test)
         else:
             event.Skip()
 
     def on_check_can_addbookmark(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             test =  self.can_addbookmark()
             event.Enable(test)
         else:
             event.Skip()
 
     def _on_back(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             self.on_back(None)
         else:
             event.Skip()
 
     def _on_forward(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             self.on_forward(None)
         else:
             event.Skip()
 
     def _on_stop(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             self.on_stop(None)
         else:
             event.Skip()
 
     def _on_refresh(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             self.on_refresh(None)
         else:
             event.Skip()
 
     def _on_addbookmark(self, event):
-        if self.get_parent_form().get_page().is_active():
+        if self.get_parent_form().get_parent_page().is_active():
             self.on_addbookmark(None)
         else:
             event.Skip()

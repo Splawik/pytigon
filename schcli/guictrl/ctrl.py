@@ -1322,7 +1322,7 @@ class HTMLLISTBOX(wx.VListBox, SchBaseCtrl):
         tdata = self.get_tdata()
         if tdata:
             for row in tdata:
-                self.AppendHtml(row[0].data)
+                self.append_html(row[0].data)
 
         wx.VListBox.__init__(self, parent, **kwds)
 
