@@ -88,6 +88,7 @@ class SchForm(ScrolledPanel):
         self._dc_buf = None
         self._dc_buf_x = 0
         self._dc_buf_y = 0
+        self._lock = False
 
         self.no_vscrollbar = not vscroll
         self.no_hscrollbar = not hscroll
@@ -242,15 +243,18 @@ class SchForm(ScrolledPanel):
     def _calculate_size(self, width):
         dc = wx.ClientDC(self)
         wxdc = DcDc(dc, calc_only=True, width=width, height=-1)
-        self.GetParent().restart_ctrl_lp()
         p = HtmlViewerParser(dc=wxdc, calc_only=True,
                              init_css_str=self.get_css(), css_type=1)
         p.set_http_object(wx.GetApp().http)
         p.set_parent_window(self)
-        p.feed(self.page_source)
+        if not self._lock:
+            self._lock = True
+            self.GetParent().restart_ctrl_lp()
+            p.feed(self.page_source)
+            self.GetParent().remove_old_ctrls()
+            self._lock = False
         (dx, dy) = p.get_max_sizes()
         p.close()
-        self.GetParent().remove_old_ctrls()
         return (dx, dy)
 
     def calculate_best_size(self):
@@ -275,13 +279,16 @@ class SchForm(ScrolledPanel):
             else:
                 self.wxdc = DcDc(dc, calc_only=False, width=w - 1 - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y),
                                  height=-1)
-            self.GetParent().restart_ctrl_lp()
             p = HtmlViewerParser(dc=self.wxdc, calc_only=False,
                                  init_css_str=self.get_css(), css_type=1)
             p.set_http_object(wx.GetApp().http)
             p.set_parent_window(self)
-            p.feed(self.page_source)
-            self.GetParent().remove_old_ctrls()
+            if not self._lock:
+                self._lock = True
+                self.GetParent().restart_ctrl_lp()
+                p.feed(self.page_source)
+                self.GetParent().remove_old_ctrls()
+                self._lock = False
             self.obj_action_dict = p.obj_action_dict
             self.obj_id_dict = p.obj_id_dict
             if not self.no_vscrollbar:
