@@ -16,25 +16,22 @@
 #copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
-#from django.db import models
+
+import os
+import os.path
 
 from django.apps import apps
 from django.db.models import Max, Min
 from django.http import HttpResponse
-#from django.shortcuts import render_to_response
 from django.template.response import TemplateResponse
 from django.template import loader, RequestContext, Context
 from django.views import generic
 from django.core import serializers
 
-import os
-import os.path
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
 from schlib.schtools import schjson
 from schlib.schhttptools.htmltab import SimpleTabParserBase
-from django.utils import six
-import io
 
 
 def transform_template_name(obj, request, template_name):
@@ -114,7 +111,7 @@ class LocalizationTemplateResponse(TemplateResponse):
                     templates.append(pos.replace('.html','_'+lang+'.html'))
                     templates.append(pos)
                 return loader.select_template(templates)
-            elif isinstance(template, six.string_types):
+            elif type(template) == str:
                 return TemplateResponse.resolve_template(self, [template.replace('.html','_'+lang+'.html'), template])
             else:
                 return template

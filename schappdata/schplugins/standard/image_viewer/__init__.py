@@ -20,7 +20,7 @@
 import wx
 from io import BytesIO
 from PIL import Image
-from schcli.guilib.pil import piltoimage
+from schcli.guilib.image import pil_to_image
 from schcli.guictrl.basectrl import SchBaseCtrl
 
 
@@ -72,7 +72,7 @@ def init_plugin(
                     resized = True
                 else:
                     pil2 = self.pil
-                img = piltoimage(pil2)
+                img = pil_to_image(pil2)
                 self.static_bitmap.SetBitmap(img.ConvertToBitmap())
                 if not resized:
                     self.SetVirtualSize(wx.Size(img.GetWidth(),
@@ -114,7 +114,7 @@ def init_plugin(
                 resized = True
             else:
                 pil2 = self.pil
-            img = piltoimage(pil2)
+            img = pil_to_image(pil2)
             self.static_bitmap.SetBitmap(img.ConvertToBitmap())
             if not resized:
                 self.SetVirtualSize(wx.Size(img.GetWidth(), img.GetHeight()))

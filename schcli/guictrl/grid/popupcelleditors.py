@@ -23,11 +23,8 @@ import string
 import datetime
 from pdb import set_trace
 from schlib.schtools import schjson
-import six
-
 
 from  wx.grid import GridCellEditor
-#    PyGridCellEditor = wx.grid.GridCellEditor
 
 
 class PopupDataCellControl(popuphtml.DataPopupControl):
@@ -80,7 +77,6 @@ class PopupDataCellEditor(GridCellEditor):
         pass
 
     def BeginEdit(self, row, col, grid):
-
         self.grid = grid
         self.start_value = None
         value = grid.GetTable().GetValue(row, col)
@@ -88,7 +84,7 @@ class PopupDataCellEditor(GridCellEditor):
         if value.__class__ == datetime.date:
             self.start_value = value.isoformat()
 
-        if isinstance(value, six.text_type):
+        if type(value)==str:
             self.start_value = value
         else:
             self.start_value = str(value)
@@ -145,12 +141,10 @@ class PopupDataCellEditor(GridCellEditor):
         print("START CLICK")
         pass
 
-
     def Clone(self):
         ret = PopupDataCellEditor()
         ret.SetParameters(self.param)
         return ret
-
 
     def set_parameters(self, params):
         self.param = params
@@ -169,8 +163,6 @@ class DatePopupDataCellEditor(PopupDataCellEditor):
         evt_handler,
         ):
         PopupDataCellEditor.Create(self, parent, id, evt_handler)
-        #self._tc.GetTextCtrl().SetCtrlParameters(mask='###')
-        #self._tc.GetTextCtrl().SetCtrlParameters(autoformat='EUDATEYYYYMMDD.')
         self._tc.to_masked(autoformat='EUDATEYYYYMMDD.')
 
     def Clone(self):
@@ -186,12 +178,7 @@ class ListPopupCellEditor(PopupDataCellEditor):
         PopupDataCellEditor.__init__(self)
         self.address = '/schsys/listdialog/'
 
-    def Create(
-        self,
-        parent,
-        id,
-        evt_handler,
-        ):
+    def Create(self, parent, id, evt_handler):
         PopupDataCellEditor.Create(self, parent, id, evt_handler)
         self._tc.SetEventObject(self)
 
@@ -201,12 +188,7 @@ class ListPopupCellEditor(PopupDataCellEditor):
         ret.SetParameters(self.param)
         return ret
 
-    def BeginEdit(
-        self,
-        row,
-        col,
-        grid,
-        ):
+    def BeginEdit(self, row, col, grid):
         typ = grid.GetTable().GetTypeName(row, col)
         id = typ.find(':')
         self.choices = schjson.loads(typ[id + 1:])
@@ -217,15 +199,10 @@ class ListPopupCellEditor(PopupDataCellEditor):
             self._tc.popup.html.choices = self.choices
             self._tc.popup.html.refr()
         else:
-            self._tc.sash.body.choices = self.choices
-            self._tc.sash.body.refr()
+            self._tc.page.body.choices = self.choices
+            self._tc.page.body.refr()
 
-    def set_rec(
-        self,
-        value,
-        value_rec,
-        dismiss=True,
-        ):
+    def set_rec(self, value, value_rec, dismiss=True):
         ret = ''
         if len(value) > 2 and value[1] == ':':
             return value

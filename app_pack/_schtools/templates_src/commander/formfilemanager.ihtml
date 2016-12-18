@@ -13,7 +13,7 @@
         from PIL import Image
         from tools.models import Parameter
         from schlib.schtools.tools import extend_fun_to, bencode, bdecode
-        from schcli.guilib.tools import bitmap_from_href
+        from schcli.guilib.image import bitmap_from_href
         from wx.lib import platebtn
 
         def init_form(self):
@@ -81,6 +81,15 @@
 
             self._make_process_info_button()
 
+            self.GetParent().register_signal(self, "child_closed_with_ok")
+            self.GetParent().register_signal(self, "child_canceled")
+
+        def child_closed_with_ok(self):
+            self._refresh_panels()
+
+        def child_canceled(self):
+            self.child_win = None
+
         def _make_process_info_button(self):
             page = self.page.GetParent()
             notebook = page.GetParent()
@@ -97,7 +106,6 @@
 
             notebook.AddControlToPage(id, self.pbutton)
             self.pbutton.Bind(wx.EVT_BUTTON, self.on_pbutton)
-
 
         def on_pbutton(self, event):
             wx.GetApp().GetTopWindow().new_main_page("/tasks/form/TaskListForm/?schtml=1", "Task list")
@@ -125,12 +133,6 @@
                 self.unreg_application_signal_handler('PROCESS_INFO')
                 self.pbutton.Disable()
             
-        def child_closed(self):
-            self.child_win = None
-
-        def refresh_after_ok(self):
-            self._refresh_panels()
-
         def _transform_item(self, item):
             from schlib.schfs.vfstools import replace_dot
             item2 = replace_dot(item)

@@ -19,85 +19,38 @@
 
 import wx
 import wx.grid
-import traceback
-from schcli.guictrl.grid import popupdata
-from schcli.guilib import event
 
+from wx.grid import GridCellAttr, GridTableMessage, GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
 
-from .renderers import ExtStringRenderer, IconAndStringRenderer, \
-    MultiLineStringRenderer, DateTimeRenderer
-import schlib.schtools.tools as tools
-from wx.grid import PyGridTableBase, GridCellAttr, GridTableMessage, \
-    GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
+from schcli.guictrl.grid import popupcelleditors
+from schcli.guictrl.grid.renderers import ExtStringRenderer, IconAndStringRenderer, DateTimeRenderer
 
-# from tempfile import NamedTemporaryFile
-#
-
+_ = wx.GetTranslation
 
 class SchTableGrid(wx.grid.Grid):
 
-    sort_color = 'ORANGE'
-    bar_color = wx.Colour(230, 230, 255)
+    SORT_COLOR = 'ORANGE'
+
     GET_ID = 0
     VIEW = 1
     EDIT = 2
 
-    def __init__(
-        self,
-        table,
-        address,
-        parent,
-        typ=EDIT,
-        id=-1,
-        pos=wx.DefaultPosition,
-        size=wx.DefaultSize,
-        style=wx.WANTS_CHARS | wx.TAB_TRAVERSAL,
-        name=wx.PanelNameStr,
-        ):
-
-#
-# style= wx.TAB_TRAVERSAL | wx.SIMPLE_BORDER,
+    def __init__(self,table,address,parent,typ=EDIT,pos=wx.DefaultPosition,size=wx.DefaultSize,
+            style=wx.WANTS_CHARS | wx.TAB_TRAVERSAL,name=wx.PanelNameStr):
 
         self.address = address
-        wx.grid.Grid.__init__(
-            self,
-            parent,
-            id,
-            pos,
-            size,
-            style,
-            name,
-            )
-# wx.grid.Grid.__init__(self, parent, id, pos, size)
+        wx.grid.Grid.__init__(self, parent, wx.ID_ANY, pos, size, style, name)
 
-        self.SetScrollLineY(1)
-        self.RegisterDataType('s', IconAndStringRenderer(),
-                              wx.grid.GridCellTextEditor())
-# self.RegisterDataType("x", ExtStringRenderer(),
-# popupdata.GenericPopupCellEditor()) self.RegisterDataType("y",
-# ExtStringRenderer(), popupdata.ListPopupCellEditor())
-# self.RegisterDataType("f", ExtStringRenderer(),
-# popupdata.GenericPopupCellEditor())
-
-        self.RegisterDataType('x', ExtStringRenderer(),
-                              popupdata.GenericPopupCellEditor())
-        self.RegisterDataType('y', ExtStringRenderer(),
-                              popupdata.ListPopupCellEditor())
-        self.RegisterDataType('f', ExtStringRenderer(),
-                              popupdata.GenericPopupCellEditor())
-        self.RegisterDataType('str', wx.grid.GridCellStringRenderer(),
-                              wx.grid.GridCellTextEditor())
-        self.RegisterDataType('string', wx.grid.GridCellStringRenderer(),
-                              wx.grid.GridCellTextEditor())
-        self.RegisterDataType('datetime', DateTimeRenderer(),
-                              wx.grid.GridCellTextEditor())
-        self.RegisterDataType('date', DateTimeRenderer(),
-                              popupdata.DatePopupDataCellEditor())
-        #self.RegisterDataType('date', wx.grid.GridCellStringRenderer(),
-        #                      wx.grid.GridCellTextEditor())
-        self.RegisterDataType('int', ExtStringRenderer(),
-                              popupdata.GenericPopupCellEditor())
-        self.RegisterDataType('bool', wx.grid.GridCellBoolRenderer(),  wx.grid.GridCellBoolEditor())
+        self.RegisterDataType('s', IconAndStringRenderer(), wx.grid.GridCellTextEditor())
+        self.RegisterDataType('x', ExtStringRenderer(), popupcelleditors.GenericPopupCellEditor())
+        self.RegisterDataType('y', ExtStringRenderer(), popupcelleditors.ListPopupCellEditor())
+        self.RegisterDataType('f', ExtStringRenderer(), popupcelleditors.GenericPopupCellEditor())
+        self.RegisterDataType('str', wx.grid.GridCellStringRenderer(), wx.grid.GridCellTextEditor())
+        self.RegisterDataType('string', wx.grid.GridCellStringRenderer(), wx.grid.GridCellTextEditor())
+        self.RegisterDataType('datetime', DateTimeRenderer(), wx.grid.GridCellTextEditor())
+        self.RegisterDataType('date', DateTimeRenderer(), popupcelleditors.DatePopupDataCellEditor())
+        self.RegisterDataType('int', ExtStringRenderer(), popupcelleditors.GenericPopupCellEditor())
+        self.RegisterDataType('bool', wx.grid.GridCellBoolRenderer(), wx.grid.GridCellBoolEditor())
 
         if hasattr(table, 'proxy'):
             self.SetTable(table, True)
@@ -137,93 +90,40 @@ class SchTableGrid(wx.grid.Grid):
                 self.AutoSizeColumns(False)
                 self.AutoSizeRows(True)
 
-        try:
-            self.SetSelectionMode(wx.grid.Grid.GridSelectRows)
-        except:
-            self.SetSelectionMode(wx.grid.Grid.wxGridSelectRows)
-        
+        self.SetSelectionMode(wx.grid.Grid.GridSelectRows)
+
+        self.typ = typ
+        self.readonly = False
+        self.panel = None
+        self.oldrow = -1
+        self.default_command = 'edit'
+        self.last_action = ''
+
+        self.SetRowLabelSize(1)
+        self.SetSize((400, 300))
+        self.SelectRow(0)
+        self.SetScrollLineY(1)
+
         self.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_select_cell)
         self.Bind(wx.grid.EVT_GRID_CELL_LEFT_CLICK, self.on_cell_left_click)
-
         self.Bind(wx.grid.EVT_GRID_CELL_LEFT_DCLICK, self.on_cell_left_dclick)
         self.Bind(wx.grid.EVT_GRID_RANGE_SELECT, self.on_range_selected)
         self.Bind(wx.grid.EVT_GRID_CMD_LABEL_LEFT_CLICK, self.on_label_left_click)
         self.Bind(wx.grid.EVT_GRID_CMD_LABEL_RIGHT_CLICK, self.on_label_right_click)
         self.Bind(wx.grid.EVT_GRID_CMD_LABEL_LEFT_DCLICK, self.on_label_left_dclick)
         self.Bind(wx.grid.EVT_GRID_CMD_CELL_RIGHT_CLICK, self.on_cell_right_click)
-
-
-        #self.Bind(schevent.EVT_REFRPARM, self.begin_edit)
         self.Bind(wx.EVT_MENU, self.begin_edit)
-
-        #self.Bind(wx.EVT_RIGHT_UP, self.on_right_up)
-        #self.Bind(wx.grid.EVT_GRID_EDITOR_HIDDEN, self.on_hide_editor)
-        #try:
-        #    wx.grid.EVT_GRID_CMD_CELL_CHANGED(self, -1, self.on_cell_change)
         self.Bind(wx.grid.EVT_GRID_CMD_CELL_CHANGED, self.on_cell_change)
-        #except:
-        #    wx.grid.EVT_GRID_CELL_CHANGE(self, self.on_cell_change)
-
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGING, self.on_cell_change)
-
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
-        self.GetGridWindow().Bind(wx.EVT_LEFT_UP, self.OnLUp)
 
         column_label_window = self.GetGridColLabelWindow()
-        #wx.EVT_PAINT(column_label_window, self.on_column_header_paint)
         self.Bind(wx.EVT_PAINT, self.on_column_header_paint, column_label_window)
 
-# self.SelectRow(0)
-#
-# self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigate)
-        self.BlockEvent = False
-        self.typ = typ
-        self.readonly = False
-        self.process_get = False
-        self.LastAction = ''
-        self.SetRowLabelSize(1)
-        self.panel = None
-        self.oldrow = -1
-# if size==wx.DefaultSize: size2 = self.GetBestSize()
-        self.SetSize((400, 300))
-        
-        self.default_command = 'edit'
-
-# self.SetDefaultCellBackgroundColour(wx.Colour(255,0,0))
-# self.SetGridLineColour(wx.Colour(255,0,0))
-#
-# self.SetSize(size2) print "BestSize:", size2 self.AutoSizeRows(True)
-# self.ForceRefresh()
-#
-# def SetGridCursor(self, row, col): #print "SetGridCursor:", row, col if
-# row==1: x = x /0 return wx.grid.Grid.SetGridCursor(self, row, col)
-#
-# def SelectRow(self, row): #print "SelectRow:", row if row==1: x = x /0 return
-# wx.grid.Grid.SelectRow(self, row)
-#
-        self.SelectRow(0)
-
-        #aTable = [
-        #    #(0, wx.WXK_F2,  self.OnExtButtonClick),
-        #    (wx.ACCEL_ALT, ord('J'), self.on_key_j),
-        #    (wx.ACCEL_ALT, ord('K'), self.on_key_k),
-        #    #(wx.ACCEL_CTRL, ord('N'), self.on_new),
-        #    (wx.ACCEL_ALT, ord('L'), self.on_key_l),
-        #    (wx.ACCEL_ALT, ord('H'), self.on_key_h),
-
-        #    ]
-        ##print("TEST", self.GetParent())
-        ##self.GetParent().set_acc_key_tab(self, aTable)
-        ##self.set_acc_key_tab(aTable)
-
-        #if hasattr(self, 'set_acc_key_tab'):
-        #    self.set_acc_key_tab(aTable)
-        #else:
-        #    self.GetParent().set_acc_key_tab(aTable)
-
+        self.GetGridWindow().Bind(wx.EVT_LEFT_UP, self.on_l_up)
 
     def begin_edit(self, event=None):
-        if event==None:
+        if event is None:
             self.GetEventHandler().AddPendingEvent(wx.CommandEvent(wx.EVT_MENU.typeId))
         else:
             wx.CallAfter(self.EnableCellEditControl, enable=True)
@@ -243,7 +143,7 @@ class SchTableGrid(wx.grid.Grid):
     def get_html_parent(self):
         parent = self.GetParent()
         while parent != None:
-            if parent.__class__.__name__ == 'SChHtmlWindow':
+            if parent.__class__.__name__ == 'SchForm':
                 return parent
             parent = parent.GetParent()
         return None
@@ -252,10 +152,8 @@ class SchTableGrid(wx.grid.Grid):
         if self.typ == self.VIEW or self.readonly:
             return True
         if self.GetTable().data_changed():
-            msg = 'Data not saved, save now?'
-            dlg = wx.MessageDialog(self, msg, 'SCSkr Question', wx.YES_NO
-                                    | wx.YES_DEFAULT | wx.CANCEL
-                                    | wx.ICON_QUESTION)
+            msg = _('Data not saved, save now?')
+            dlg = wx.MessageDialog(self, msg, _('Pytigon'), wx.YES_NO|wx.YES_DEFAULT|wx.CANCEL|wx.ICON_QUESTION)
             ret = dlg.ShowModal()
             if ret == wx.ID_CANCEL:
                 dlg.Destroy()
@@ -298,7 +196,6 @@ class SchTableGrid(wx.grid.Grid):
     def on_cell_change(self, evt):
         row = evt.GetRow()
         col = evt.GetCol()
-        #print("on_cell_change:", row, col)
         name = self.GetTable().GetColNames()[evt.GetCol() + 1]
         autocols = self.GetTable().GetAutoCols()
         if name in autocols:
@@ -339,16 +236,13 @@ class SchTableGrid(wx.grid.Grid):
     def on_column_header_paint(self, evt):
         w = self.GetGridColLabelWindow()
         dc = wx.PaintDC(w)
-# dc.SetBrush(wx.Brush(wx.RED)) return
         client_rect = w.GetClientRect()
-# dc.DrawRectangle(0,0,clientRect.GetWidth(), clientRect.GetHeight()) return
         font = wx.NORMAL_FONT
-        tot_col_size = -self.GetViewStart()[0]\
-             * self.GetScrollPixelsPerUnit()[0]
+        tot_col_size = -self.GetViewStart()[0] * self.GetScrollPixelsPerUnit()[0]
         fs = font.GetPointSize()
         fs2 = int(0.8 * fs)
         for col in range(self.GetNumberCols()):
-            dc.SetBrush(wx.Brush(self.sort_color, wx.TRANSPARENT))
+            dc.SetBrush(wx.Brush(self.SORT_COLOR, wx.TRANSPARENT))
             dc.SetTextForeground(wx.BLACK)
             col_size = self.GetColSize(col)
             rect = (tot_col_size, 0, col_size, 32)
@@ -358,10 +252,8 @@ class SchTableGrid(wx.grid.Grid):
             dc.DrawLine(rect[0], rect[1] + 1, rect[0] + rect[2], rect[1] + 1)
             dc.DrawLine(rect[0], rect[1] + 1, rect[0], rect[1] + rect[3])
             dc.SetPen(wx.GREY_PEN)
-            dc.DrawLine(rect[0], (rect[1] + rect[3]) - 1, rect[0] + rect[2],
-                        (rect[1] + rect[3]) - 1)
-            dc.DrawLine((rect[0] + rect[2]) - 1, rect[1], (rect[0] + rect[2])
-                         - 1, rect[1] + rect[3])
+            dc.DrawLine(rect[0], (rect[1] + rect[3]) - 1, rect[0] + rect[2], (rect[1] + rect[3]) - 1)
+            dc.DrawLine((rect[0] + rect[2]) - 1, rect[1], (rect[0] + rect[2]) - 1, rect[1] + rect[3])
             dc.SetPen(wx.BLACK_PEN)
             tot_col_size += col_size
             srt = self.GetTable().get_sort_nr(col)
@@ -369,13 +261,11 @@ class SchTableGrid(wx.grid.Grid):
                 font.SetWeight(wx.BOLD)
                 left = rect[0] + 3
                 top = rect[1] + 3
-                dc.SetBrush(wx.Brush(self.sort_color, wx.SOLID))
+                dc.SetBrush(wx.Brush(self.SORT_COLOR, wx.SOLID))
                 if srt > 0:
-                    dc.DrawPolygon([(left, top), (left + 6, top), (left + 3, top
-                                    + 4)])
+                    dc.DrawPolygon([(left, top), (left + 6, top), (left + 3, top + 4)])
                 else:
-                    dc.DrawPolygon([(left + 3, top), (left + 6, top + 4),
-                                   (left, top + 4)])
+                    dc.DrawPolygon([(left + 3, top), (left + 6, top + 4), (left, top + 4)])
                 if srt < 0:
                     srt = srt * -1
                 dc.SetFont(wx.SMALL_FONT)
@@ -387,45 +277,14 @@ class SchTableGrid(wx.grid.Grid):
                 else:
                     font.SetPointSize(fs)
                 dc.SetFont(font)
-                #print ">", self.GetColLabelValue(col), rect
                 dc.DrawLabel('%s' % self.GetColLabelValue(col), rect, alignment=wx.ALIGN_CENTER)
-                #dc.DrawRectangle(rect)
-                
-                #self.DrawTextRectangle(
-                #    dc,
-                #    '%s' % self.GetColLabelValue(col),
-                #    rect,
-                #    wx.ALIGN_CENTER,
-                #    wx.ALIGN_CENTER,
-                #    wx.HORIZONTAL,
-                #    )
             else:
                 font.SetWeight(wx.NORMAL)
                 font.SetPointSize(fs)
                 dc.SetFont(font)
-
-                #print ">", self.GetColLabelValue(col), rect
                 dc.DrawLabel('%s' % self.GetColLabelValue(col), rect, alignment=wx.ALIGN_CENTER)
-                #dc.DrawRectangle(rect)
-
-                #self.DrawTextRectangle(
-                #    dc,
-                #    '%s' % self.GetColLabelValue(col),
-                #    rect,
-                #    wx.ALIGN_CENTER,
-                #    wx.ALIGN_CENTER,
-                #    wx.HORIZONTAL,
-                #    )
-
-# print "OnPaint"
 
     def on_select_cell(self, evt):
-
-        #print("OnSelectCell", evt.GetRow(), evt.GetCol())
-
-        if self.BlockEvent == True:
-            evt.Skip()
-            return
         newrow = evt.GetRow()
         if self.oldrow != newrow:
             if self.panel:
@@ -441,8 +300,7 @@ class SchTableGrid(wx.grid.Grid):
                     self.GetTable().sel_row(row)
                 if self.GetGridCursorRow() == evt.GetTopRow():
                     self.SelectRow(evt.GetBottomRow())
-                    self.SetGridCursor(evt.GetBottomRow(),
-                                       self.GetGridCursorCol())
+                    self.SetGridCursor(evt.GetBottomRow(), self.GetGridCursorCol())
                 else:
                     self.SelectRow(evt.GetTopRow())
                     self.SetGridCursor(evt.GetTopRow(), self.GetGridCursorCol())
@@ -475,10 +333,9 @@ class SchTableGrid(wx.grid.Grid):
                             break
             else:
                 if self.typ == self.GET_ID:
-                    #print("self.action('get')")
                     self.action('get')
 
-    def OnLUp(self, event):
+    def on_l_up(self, event):
         pass
 
     def on_cell_left_dclick(self, evt):
@@ -498,11 +355,8 @@ class SchTableGrid(wx.grid.Grid):
                     else:
                         self.action(self.default_command)
         else:
-            #self.EnableCellEditControl(enable=True)
             self.SetGridCursor(evt.GetRow(), evt.GetCol())
-            #wx.CallAfter(self.EnableCellEditControl, enable=True)
             self.begin_edit()
-
 
     def on_key_j(self, evt):
         row = self.GetGridCursorRow()
@@ -524,9 +378,9 @@ class SchTableGrid(wx.grid.Grid):
         if col+1 < self.GetTable().GetNumberCols():
             self.MoveCursorRight(False)
 
-
     def on_key_down(self, evt):
-        if evt.KeyCode in (wx.WXK_UP,wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT) and not evt.AltDown() and not evt.ControlDown() and not evt.ShiftDown():
+        if evt.KeyCode in (wx.WXK_UP,wx.WXK_DOWN, wx.WXK_LEFT, wx.WXK_RIGHT) and not evt.AltDown() and \
+                not evt.ControlDown() and not evt.ShiftDown():
             row = self.GetGridCursorRow()
             col =  self.GetGridCursorCol()
             if evt.KeyCode ==  wx.WXK_DOWN:
@@ -565,7 +419,7 @@ class SchTableGrid(wx.grid.Grid):
                 else:
                     self.action('get')
                 return
-            if evt.ControlDown():  # the edit control needs this key
+            if evt.ControlDown():
                 evt.Skip()
                 return
             self.DisableCellEditControl()
@@ -601,18 +455,13 @@ class SchTableGrid(wx.grid.Grid):
             parm = dict()
             parm['rec'] = rec
             self.GetHtmlParent().ActiveCtrl = self
-            okno = self.GetHtmlParent().new_child_page(self.address + '../'
-                     + str(rec[0]) + '/edit/', '', param=parm)
+            okno = self.GetHtmlParent().new_child_page(self.address + '../' + str(rec[0]) + '/edit/', '', param=parm)
             return
         if evt.KeyCode == wx.WXK_HOME and not evt.ControlDown():
             self.goto_first_row()
-# row = self.GetGridCursorRow() self.SetGridCursor(row, 0)
-# self.MakeCellVisible(row, 0)
             return
         if evt.KeyCode == wx.WXK_END and not evt.ControlDown():
             self.goto_last_row()
-# row = self.GetGridCursorRow() self.SetGridCursor(row, self.GetNumberCols() -
-# 1) self.MakeCellVisible(row, self.GetNumberCols() - 1)
             return
         if evt.KeyCode == wx.WXK_SPACE:
             row = self.GetGridCursorRow()
@@ -621,22 +470,15 @@ class SchTableGrid(wx.grid.Grid):
                 if row < self.GetNumberRows() - 1:
                     self.SetGridCursor(row + 1, self.GetGridCursorCol())
                 return
-
-# if evt.KeyCode == ord('F') or evt.KeyCode == ord('f'):
-# self.GetTable().Filter() row = self.GetGridCursorRow() if row >= 0:
-# self.GetTable().SelRow(row) return
-
         if (evt.KeyCode == ord('S') or evt.KeyCode == ord('s')) and evt.ControlDown():
             self.GetTable().commit()
             self.GetTable().refresh(True)
             evt.Skip()
             return
-
         if (evt.KeyCode == ord('R') or evt.KeyCode == ord('r')) and evt.ControlDown():
             self.GetTable().refresh(True)
             evt.Skip()
             return
-
 
         evt.Skip()
         return
@@ -652,23 +494,13 @@ class SchTableGrid(wx.grid.Grid):
     def accepts_focus(self):
         return True
 
-
-    def refr_count(
-        self,
-        old_count,
-        count,
-        store_pos=0,
-        ):
+    def refr_count(self, old_count, count, store_pos=0):
         dy = old_count - count
         if dy != 0:
             if dy > 0:
-                msg = GridTableMessage(self.GetTable(),
-                                       GRIDTABLE_NOTIFY_ROWS_DELETED, count, dy)
-                #print("del dy:", dy)
+                msg = GridTableMessage(self.GetTable(), GRIDTABLE_NOTIFY_ROWS_DELETED, count, dy)
             else:
-                msg = GridTableMessage(self.GetTable(),
-                                       GRIDTABLE_NOTIFY_ROWS_APPENDED, -1 * dy)
-                #print("append dy:", -1 * dy)
+                msg = GridTableMessage(self.GetTable(), GRIDTABLE_NOTIFY_ROWS_APPENDED, -1 * dy)
             try:
                 self.ProcessTableMessage(msg)
             except:
@@ -690,7 +522,6 @@ class SchTableGrid(wx.grid.Grid):
                         self.MakeCellVisible(count - 1 + self.CanAppend, 0)
         if count>0:
             self.AutoSizeColumns(True)
-
 
     def on_label_left_click(self, evt):
         if evt.GetCol() >= 0:
@@ -724,17 +555,15 @@ class SchTableGrid(wx.grid.Grid):
         akcja = self.GetTable().get_actions(self.GetGridCursorRow())
         if akcja and command in akcja:
             if akcja[command][0] == 'openurl':
-                self.LastAction = command
+                self.last_action = command
                 if command=='get_row':
                     p = akcja[command]
                     id = p[3]['data-id']
                     title = p[3]['data-text']
-                    #self.GetParent().get_parent_form().ret_ok(id, title)
-                    #self.GetParent().signal_from_child(self, 'set_bitmap_list')
                     page = self.GetParent().get_parent_page().get_parent_page()
                     if page:
-                        page.signal('return_row', id=id, title=title)
-                        wx.CallAfter(self.GetParent().get_parent_page().close)
+                        page.signal('return_updated_row', id=id, title=title)
+                        wx.CallAfter(self.GetParent().get_parent_form().cancel)
                     return 1
                 else:
                     ret = self.GetParent().GetParent().href_clicked(self, akcja[command][3])

@@ -40,14 +40,14 @@ from schlib.schhttptools.schhtml_parser import ShtmlParser
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 
-from schcli.guictrl.grid import grid, datasource, tabproxy
+from schcli.guictrl.grid import grid, gridtable_from_proxy, tabproxy
 from schcli.guiframe import page
-from schcli.guilib.tools import bitmap_from_href
+from schcli.guilib.image import bitmap_from_href
 
-from schcli.guictrl.grid.gridlist import SimpleDataTable
+from schcli.guictrl.grid.gridtable_from_html_table import SimpleDataTable
 from schcli.guictrl.grid.gridpanel import SchGridPanel
 from schcli.guictrl.popup.popuphtml import DataPopupControl
-from schcli.guictrl.popup.select2 import SelectBase
+from schcli.guictrl.popup.select2 import Select2Base
 from schcli.guictrl.basectrl import SchBaseCtrl
 from schcli.guictrl.button.toolbarbutton import BitmapTextButton
 
@@ -669,14 +669,14 @@ class TABLE(SchGridPanel, SchBaseCtrl):
             table = None
 
         self.grid = grid.SchTableGrid(table, "", self, typ=grid.SchTableGrid.VIEW, style=wx.TAB_TRAVERSAL | wx.FULL_REPAINT_ON_RESIZE)
-        self.get_parent_page().register_signal(self, "refresh_controls")
+        #self.get_parent_page().register_signal(self, "refresh_controls")
         self.create_toolbar(self.grid)
-        self.Bind(wx.EVT_CLOSE, self.on_close)
+        #self.Bind(wx.EVT_CLOSE, self.on_close)
         self._table = table
 
-    def on_close(self, event):
-        self.get_parent_page().unregister_signal(self, "refresh_controls")
-        event.Skip()
+    #def on_close(self, event):
+    #    self.get_parent_page().unregister_signal(self, "refresh_controls")
+    #    event.Skip()
 
     def GetMinSize(self):
         return SchGridPanel.GetMinSize(self)
@@ -691,12 +691,12 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         self._table.replace_tab(tdata)
         self.grid.AutoSizeColumns(False)
         self.grid.AutoSizeRows(True)
-        if self.grid.LastAction == 'insert':
+        if self.grid.last_action == 'insert':
             newRow = self.grid.GetGridCursorRow() + 1
             if newRow < self.grid.GetTable().GetNumberRows():
                 self.grid.SetGridCursor(newRow, 0)
                 self.grid.MakeCellVisible(newRow, 0)
-        if self.grid.LastAction == 'edit':
+        if self.grid.last_action == 'edit':
             if oldRow < self.grid.GetTable().GetNumberRows():
                 self.grid.SetGridCursor(oldRow, 0)
                 self.grid.MakeCellVisible(oldRow, 0)
@@ -707,11 +707,11 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         return self.do_refresh(tdata)
 
 
-    def refresh_controls(self):
-        self.get_parent_form().enable_ctrls((self,))
-        ret = self.get_parent_page()._refresh_html()
-        self.get_parent_form().enable_ctrls(None)
-        return ret
+    #def refresh_controls(self):
+    #    self.get_parent_form().enable_ctrls((self,))
+    #    ret = self.get_parent_page()._refresh_html()
+    #    self.get_parent_form().enable_ctrls(None)
+    #    return ret
 
 
 class RADIOBOX(wx.RadioBox, SchBaseCtrl):
@@ -1497,7 +1497,7 @@ class GRID(grid.SchTableGrid, SchBaseCtrl):
         else:
 
             self.proxy = tabproxy.DataProxy(wx.GetApp().get_http(parent), str(self.src))
-        table = datasource.DataSource(self.proxy)
+        table = gridtable_from_proxy.DataSource(self.proxy)
 
         if self.readonly:
             kwds['typ']=self.VIEW
@@ -1518,7 +1518,7 @@ class GRID(grid.SchTableGrid, SchBaseCtrl):
         else:
 
             self.proxy = tabproxy.DataProxy(wx.GetApp().get_http(self), str(self.src))
-        table = datasource.DataSource(self.proxy)
+        table = gridtable_from_proxy.DataSource(self.proxy)
         self.SetTable(table)
 
     def refr_obj(self):
@@ -1770,12 +1770,12 @@ class CHOICE(POPUPHTML):
 
     def on_ext_button_click(self, event):
         ret = self.alternate_button_click()
-        if self.sash:
-            self.sash.body.choices = self.choices
-            wx.CallAfter(self.sash.body.refr)
+        if self.page:
+            self.page.body.choices = self.choices
+            wx.CallAfter(self.page.body.refr)
         else:
             self.popup.html.body.choices = self.choices
-            wx.CallAfter(self.sash.body.refr)
+            wx.CallAfter(self.page.body.refr)
         return ret
 
 
@@ -1786,7 +1786,7 @@ class CHOICE(POPUPHTML):
             wx.CallAfter(self.popup.html.body.refr)
         else:
             ret = POPUPHTML.OnButtonClick(self)
-            self.sash.body.choices = self.choices
+            self.page.body.choices = self.choices
             wx.CallAfter(self.popup.html.body.refr)
         return ret
 
@@ -1965,8 +1965,8 @@ class CompositePanel(wx.Panel, SchBaseCtrl):
 
 def SELECT2(parent, **kwds):
     data = kwds['param']['data']
-    panel = CompositePanel(parent, size=(500, -1))
-    ctrl = SelectBase(panel, **kwds)
+    panel = CompositePanel(parent, size=(460, -1))
+    ctrl = Select2Base(panel, **kwds)
     button1 = button_from_parm(panel, param=data[1]['childs'][0])
     button2 = button_from_parm(panel, param=data[1]['childs'][1])
     ctrl.init(button1, button2)

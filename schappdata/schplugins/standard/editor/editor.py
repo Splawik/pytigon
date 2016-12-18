@@ -25,7 +25,7 @@ import wx.stc as stc
 import keyword
 # import images
 import six
-from schcli.guilib.event import *
+from schcli.guilib.events import *
 
 from schlib.schindent.indent_tools import norm_html, indent_html
 if wx.Platform == '__WXMSW__':

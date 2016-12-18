@@ -19,133 +19,46 @@
 
 import wx
 
-from schcli.guilib.event import *
-from schcli.toolbar.basetoolbar import ToolbarInterface
-from schcli.guictrl.basectrl import SchBaseCtrl
-
-class MenuInterface(ToolbarInterface):
-
-    class Page(object):
-        
-        class Panel(object):
-
-            def __init__(self, page, title):
-                self.page = page
-                if False and title == page.title:
-                    self.panel = self.page.page
-                else:
-                    self.panel = wx.Menu()
-                    try:
-                        self.page.page.AppendMenu(wx.ID_ANY, title, self.panel)
-                    except:
-                        self.page.page.Append(self.panel, title)
-
-            def add_separator(self):
-                pass
-
-            def append(
-                self,
-                id,
-                title,
-                bitmap=None,
-                ):
-                if bitmap:
-                    item = wx.MenuItem(self.panel, id=id, text=title)
-                    if type(bitmap) == tuple:
-                        item.SetBitmap(bitmap[0])
-                    self.panel.AppendItem(item)
-                else:
-                    self.panel.Append(id, title)
-
-            def add_tool(self, id, title, bitmap=None):
-                return self.append(id, title, bitmap)
-
-            def add_button(self, id, title, bitmap=None):
-                return self.append(id, title, bitmap)
-
-        def __init__(self, bar, title):
-            self.bar = bar
-            self.title = title
-            #sprawdzić
-            if title != 'file':
-                self.page = self.bar.bar
-            else:
-                self.page = wx.Menu()
-                self.bar.bar.Append(self.page, title)
+from schcli.guilib.events import *
+from schcli.toolbar.basetoolbar import ToolbarBar, ToolbarPage, ToolbarPanel, ToolbarButton
 
 
-        def create_panel(self, title, type=None):
-            return self.Panel(self, title)
+class MenuToolbarButton(ToolbarButton, wx.MenuItem):
+    def __init__(self, parent_panel, id, title, bitmap=None, bitmap_disabled=None,  kind=ToolbarButton.TYPE_SIMPLE):
+        wx.MenuItem.__init__(self, parentMenu=parent_panel, id=id, text=title)
+        if bitmap and bitmap.IsOk():
+            self.SetBitmap(bitmap)
 
 
-    def __init__(self, bar, gui_style):
-        self.bar = bar
-        self.gui_style = gui_style
-        self.parent=wx.GetApp().GetTopWindow()
-        self.toolbars = {}
-        self.pages = {}
-        self.main_page = None
-        ToolbarInterface.__init__(self, self.parent, gui_style)
-        self.event_object = self.parent
+class MenuToolbarPanel(ToolbarPanel, wx.Menu):
+    def __init__(self, parent_page, title, kind=ToolbarPanel.TYPE_PANEL_TOOLBAR):
+        wx.Menu.__init__(self)
+        ToolbarPanel.__init__(self, parent_page, title, kind)
+        self.parent_page.parent_bar.Append(self, title)
 
-        self.parent.Bind(wx.EVT_UPDATE_UI, self.on_update_ui)
-        self.parent.Bind(wx.EVT_MENU, self.on_command)
-        self.block_events = False
+    def create_button(self, id, title, bitmap=None, bitmap_disabled=None, kind=ToolbarButton.TYPE_SIMPLE):
+        b = MenuToolbarButton(self, id, title, bitmap, bitmap_disabled, kind)
+        self.Append(b)
+        return b
 
-    def on_update_ui(self, event):        
-        if self.block_events:
-            return 
-        id = event.GetId()
-        if id and ((id >= ID_START and id < ID_END) or (id >= wx.ID_LOWEST and id < wx.ID_HIGHEST )):
-            self.block_events = True
-            event.Enable(False)
-            win = wx.Window.FindFocus()
-            if win and win != self.event_object and issubclass(type(win), SchBaseCtrl):
-                win.ProcessEvent(event)
-            self.block_events = False
 
-    def on_command(self, event):
-        win = wx.Window.FindFocus()
-        if win and win != self.event_object and issubclass(type(win), SchBaseCtrl):
-            win.ProcessEvent(event)
-        else:
-            event.Skip()
+class MenuToolbarPage(ToolbarPage):
+    def __init__(self, parent_bar, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
+        ToolbarPage.__init__(self, parent_bar, title, kind)
 
-    def get_toolbars(self):
-        return self.toolbars
+    def create_panel(self, title, kind=ToolbarPanel.TYPE_PANEL_TOOLBAR):
+        m =  MenuToolbarPanel(self, title, kind)
+        return m
 
-    def create_page(self, title):
-        if title in self.pages:
-            page = self.pages[title]
-        else:
-            page = self.Page(self, title)
-            self.pages[title] = page
-        if not self.main_page:
-            self.main_page=page
-        return page
 
-    def bind(
-        self,
-        fun,
-        id=wx.ID_ANY,
-        e = None
-        ):
-        if e:
-            self.parent.Bind(e, fun, id=id)
-        else:
-            self.parent.Bind(wx.EVT_MENU, fun, id=id)
+class MenuToolbarBar(ToolbarBar, wx.MenuBar):
+    def __init__(self, parent, gui_style):
+        wx.MenuBar.__init__(self)
+        ToolbarBar.__init__(self, parent, gui_style)
 
-    def un_bind(
-        self,
-        id,
-        e=None
-        ):
-        if e:
-            self.parent.Unbind(e, id=id)
-        else:
-            self.parent.Unbind(wx.EVT_MENU, id=id)
+    def create_page(self, title, kind):
+        return MenuToolbarPage(self, title, kind)
 
     def update_bar(self, obj):
         obj.SetMenuBar(self.bar)
-
 

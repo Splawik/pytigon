@@ -24,7 +24,7 @@ from tempfile import NamedTemporaryFile
 from base64 import decodebytes, b64encode, b64decode
 import urllib
 from schcli.guilib.tools import get_colour
-from schcli.guilib.event import *
+from schcli.guilib.events import *
 from schlib.schtools.tools import split2
 
 import os

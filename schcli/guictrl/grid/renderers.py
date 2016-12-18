@@ -17,21 +17,19 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import textwrap
+"""Module contains helper classes for grid renderers"""
 
+import textwrap
 import wx
-from  wx.grid import PyGridCellRenderer
 
 from schcli.guilib.image import SchImage
 
-if wx.version()>='2.9.5.81':
-    PyGridCellRenderer = wx.grid.GridCellRenderer
 
-
-class ExtStringRenderer(PyGridCellRenderer):
+class ExtStringRenderer(wx.grid.GridCellRenderer):
 
     def __init__(self):
-        PyGridCellRenderer.__init__(self)
+        """Enhanced version of string renderer"""
+        wx.grid.GridCellRenderer.__init__(self)
 
     def Draw(self,grid,attr,dc,rect,row,col,is_selected):
         rect2 = wx.Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2)
@@ -42,8 +40,7 @@ class ExtStringRenderer(PyGridCellRenderer):
             else:
                 dc.SetBrush(wx.Brush(attr.GetBackgroundColour(), wx.SOLID))
         else:
-            dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE),
-                        wx.SOLID))
+            dc.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE), wx.SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
         (h_align, v_align) = attr.GetAlignment()
@@ -80,6 +77,7 @@ class ExtStringRenderer(PyGridCellRenderer):
 
 
 class MultiLineStringRenderer(ExtStringRenderer):
+    """Multiline string renderer"""
 
     def __init__(self, width):
         self.width = width
@@ -105,7 +103,7 @@ class MultiLineStringRenderer(ExtStringRenderer):
 
 
 class IconAndStringRenderer(MultiLineStringRenderer):
-
+    """String renderer extended for rendering icons"""
     def __init__(self):
         MultiLineStringRenderer.__init__(self, 50)
         self.cache = {}
@@ -163,9 +161,11 @@ class IconAndStringRenderer(MultiLineStringRenderer):
                 return MultiLineStringRenderer.GetBestSize(self,grid,attr,dc,row,col)
 
 
-class DateTimeRenderer(PyGridCellRenderer):
+class DateTimeRenderer(wx.grid.GridCellRenderer):
+    """DateTime renderer"""
+
     def __init__(self):
-        PyGridCellRenderer.__init__(self)
+        wx.grid.GridCellRenderer.__init__(self)
         self.best_size=None
 
     def Draw(self,grid,attr,dc,rect,row,col,is_selected):

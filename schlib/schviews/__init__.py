@@ -39,6 +39,8 @@ from django.conf.urls import url
 from django.db.models import CharField
 from django.db.models import  Q
 
+from schlib.schviews.actions import new_row_action, update_row_action
+
 from .viewtools import transform_template_name, LocalizationTemplateResponse, ExtTemplateResponse
 from .form_fun import form_with_perms
 from .perms import make_perms_test_fun
@@ -739,7 +741,13 @@ class GenericRows(object):
                 else:
                     self.object.save()
                 form.save_m2m()
-                return super(generic.edit.ModelFormMixin, self).form_valid(form)
+
+                if self.object:
+                    return update_row_action(request, int(self.object.id), str(self.object))
+                else:
+                    return super(generic.edit.ModelFormMixin, self).form_valid(form)
+
+                #return super(generic.edit.ModelFormMixin, self).form_valid(form)
 
 
         fun = make_perms_test_fun(self.base_perm % 'change',
@@ -881,7 +889,11 @@ class GenericRows(object):
                 else:
                     self.object.save()
                 form.save_m2m()
-                return super(generic.edit.ModelFormMixin, self).form_valid(form)
+
+                if self.object:
+                    return new_row_action(request, int(self.object.id), str(self.object))
+                else:
+                    return super(generic.edit.ModelFormMixin, self).form_valid(form)
 
             def get_context_data(self, **kwargs):
                 nonlocal parent_class

@@ -137,9 +137,6 @@ class SchForm(ScrolledPanel):
 
         self.EnableScrolling(False, False)
 
-        self.GetParent().register_signal(self, 'refr')
-        self.GetParent().register_signal(self, "refresh_controls")
-        self.GetParent().register_signal(self, "child_canceled")
 
     def SetFocus(self):
         if self.last_control_with_focus:
@@ -147,13 +144,6 @@ class SchForm(ScrolledPanel):
         else:
             wx.CallAfter(self.Navigate, None)
 
-    def refresh_controls(self):
-        if hasattr(self, "refresh_after_ok"):
-            self.refresh_after_ok()
-
-    def child_canceled(self):
-        if hasattr(self, "child_closed"):
-            self.child_closed()
 
     def Navigate(self, ctrl, back = False):
         next = False
@@ -397,26 +387,26 @@ class SchForm(ScrolledPanel):
         """Set the best size for this form"""
         self.bestsize = bestsize
 
-    def on_opening_url(self, type, url):
-        if hasattr(self, 'filter_url'):
-            f = self.filter_url(type, url)
-            if f != None:
-                return f
-        if url.startswith('/'):
-            url2 = url
-            base = wx.GetApp().base_address
-            if base.startswith('http://127.0.0.2'):
-                if url.startswith('/app_media'):
-                    if ':' in wx.GetApp().root_path:
-                        url2 = wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
-                        url2 = norm_path(url2)
-                    else:
-                        url2 = 'file://' + wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
-                        url2 = norm_path(url2)
-            else:
-                url2 = base + url
-            return url2
-        return True
+    #def on_opening_url(self, type, url):
+    #    if hasattr(self, 'filter_url'):
+    #        f = self.filter_url(type, url)
+    #        if f != None:
+    #            return f
+    #    if url.startswith('/'):
+    #        url2 = url
+    #        base = wx.GetApp().base_address
+    #        if base.startswith('http://127.0.0.2'):
+    #            if url.startswith('/app_media'):
+    #                if ':' in wx.GetApp().root_path:
+    #                    url2 = wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
+    #                    url2 = norm_path(url2)
+    #                else:
+    #                    url2 = 'file://' + wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
+    #                    url2 = norm_path(url2)
+    #        else:
+    #            url2 = base + url
+    #        return url2
+    #    return True
 
     def on_left_down(self, evt):
         parent = self.GetParent()
@@ -443,8 +433,8 @@ class SchForm(ScrolledPanel):
         self.t1.Start(time * 1000)
         self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
-    def close_with_delay(self):
-        wx.CallAfter(self.cancel, True)
+    #def close_with_delay(self):
+    #    wx.CallAfter(self.cancel, True)
 
     def on_timer(self, event):
         if self.page:
@@ -453,7 +443,7 @@ class SchForm(ScrolledPanel):
                 return
         self.GetParent().refresh_html()
 
-    def cancel(self, cancel):
+    def cancel(self):
         """Close this form without saving its content"""
         if self.page:
             self.page.exists = False
@@ -461,6 +451,14 @@ class SchForm(ScrolledPanel):
             self.t1.Stop()
         if self.page:
             self.page.GetParent().on_child_form_cancel()
+
+    def ok(self):
+        if self.page:
+            self.page.exists = False
+        if self.t1:
+            self.t1.Stop()
+        if self.page:
+            self.page.GetParent().on_child_form_ok()
 
     def set_htm_type(self, form_type):
         self.form_type = form_type
@@ -485,7 +483,7 @@ class SchForm(ScrolledPanel):
         return None
 
     def on_right_up(self, evt):
-        okno = self.new_main_page('^standard/editor/editor.html', self.get_page().title + ' - '+_('page source'), None)
+        okno = self.new_main_page('^standard/editor/editor.html', self.get_parent_page().title + ' - '+_('page source'), None)
         def init_ctrl():
             okno.body.EDITOR.SetValue(self.page_source.tostream().getvalue())
             okno.body.EDITOR.GotoPos(0)
@@ -618,11 +616,10 @@ class SchForm(ScrolledPanel):
             parent = parent.GetParent()
         return None
 
-    def refr(self):
-        """Refresh form"""
-        self.refr_obj(refr_always=True)
-
-    def refr_obj(self, refr_always=False):
+    def refr(self, refr_always=False):
+        #"""Refresh form"""
+        #self.refr_obj(refr_always=True)
+        #def refr_obj(self, refr_always=False):
         """Refresh html content"""
 
         if refr_always or self.GetParent().IsShown():
@@ -758,8 +755,7 @@ class SchForm(ScrolledPanel):
 
 
     def new_local_child_page(self,address,title='',parameters=None):
-        return self.new_child_page('http://local.net/' + address, title,
-                                   parameters)
+        return self.new_child_page('http://local.net/' + address, title, parameters)
 
     def new_plugin_child_page(self,path,address,title='',parameters=None):
         p = path.split('/')
@@ -995,8 +991,8 @@ class SchForm(ScrolledPanel):
                     desktop = (main_window.desktop, )
                     mgr = main_window._mgr
                     menu_bar = main_window.get_menu_bar()
-                    tool_bars = main_window.toolbar_interface.get_toolbars()
-                    exec (script.replace('\r', ''))
+                    tool_bars = main_window.get_tool_bar()
+                    exec (script.elem.text.replace('\r', ''))
                     return
 
     def signal_from_child(self, child_object, signal):

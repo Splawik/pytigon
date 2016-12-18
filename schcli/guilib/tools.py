@@ -18,13 +18,15 @@
 #version: "0.1a"
 
 import wx
-from io import StringIO, BytesIO
-#from .art_provider import ArtProviderFromIcon
+from io import BytesIO
 
-size_default = -1
-size_small = 0
-size_medium = 1
-size_large = 2
+_ = wx.GetTranslation
+
+
+SIZE_DEFAULT = -1
+SIZE_SMALL = 0
+SIZE_MEDIUM = 1
+SIZE_LARGE = 2
 
 def norm_colour2(c):
     x = int(c)
@@ -33,13 +35,7 @@ def norm_colour2(c):
     else:
         return x
 
-
-def norm_colour(
-    r,
-    g,
-    b,
-    proc,
-    ):
+def norm_colour(r,g,b,proc):
     if proc > 1:
         y = (255, 255, 255)
         dx = 2 - proc
@@ -57,7 +53,6 @@ def norm_colour(
 def colour_to_html(colour):
     return wx.Colour(colour.Red(), colour.Green(), colour.Blue()).GetAsString(wx.C2S_HTML_SYNTAX)
 
-
 def get_colour(wx_id, proc=None):
     c1 = wx.SystemSettings.GetColour(wx_id)
     if not proc:
@@ -66,7 +61,6 @@ def get_colour(wx_id, proc=None):
         x = norm_colour(c1.Red(), c1.Green(), c1.Blue(), proc)
         c2 = wx.Colour(x[0], x[1], x[2])
         return colour_to_html(c2)
-
 
 def standard_tab_colour():
     return (
@@ -77,7 +71,6 @@ def standard_tab_colour():
         ('color_body', get_colour(wx.SYS_COLOUR_3DFACE)),
         ('color_body_1_1', get_colour(wx.SYS_COLOUR_3DFACE, 1.1)),
         ('color_body_1_3', get_colour(wx.SYS_COLOUR_3DFACE, 1.3)),
-        #('color_body_1_5', get_colour(wx.SYS_COLOUR_3DFACE, 1.5)),
         ('color_body_1_5', get_colour(wx.SYS_COLOUR_3DFACE, 0)),
         ('color_body_1_8', get_colour(wx.SYS_COLOUR_3DFACE, 1.8)),
         ('color_higlight', get_colour(wx.SYS_COLOUR_3DHIGHLIGHT)),
@@ -91,65 +84,4 @@ def standard_tab_colour():
         ('color_background_1_5', get_colour(wx.SYS_COLOUR_3DFACE, 1.5)),
         ('color_info', get_colour(wx.SYS_COLOUR_INFOBK, 1.5)),
         )
-
-
-def bitmap_from_art_id(bmp, size):
-    #return ArtProviderFromIcon.GetBitmap(bmp, wx.ART_OTHER, size)
-    return wx.ArtProvider.GetBitmap(bmp, wx.ART_OTHER)
-
-
-def bitmaps_from_art_id(bmp, size):
-    bitmap = wx.ArtProvider.GetBitmap(bmp, wx.ART_OTHER, size)
-    img = bitmap.ConvertToImage()
-    bitmap_disabled = wx.Bitmap(img.ConvertToGreyscale().AdjustChannels(1, 1, 1, 0.3))
-    return (bitmap, bitmap_disabled)
-
-
-def bitmap_from_href(href, size_type=size_default):
-    size_type2 = size_type
-    if '?' in href:
-        x = href.split('?')
-        href2 = x[0]
-        if '=' in x[1]:
-            try:
-                size_type2 = int(x[1].split('=')[1])
-            except:
-                size_type2 = 1
-    else:
-        href2 = href
-    if size_type2 == size_small:
-        icon_size = 16
-    elif size_type2 == size_medium:
-        icon_size = 22
-    else:
-        icon_size = 32
-    if href2[:3] == 'wx.':
-        #bmp = ArtProviderFromIcon.GetBitmap(eval(href2), wx.ART_TOOLBAR, (icon_size,
-        #                               icon_size))
-        bmp = wx.ArtProvider.GetBitmap(eval(href2), wx.ART_TOOLBAR, (icon_size,
-                                       icon_size))
-    elif href.startswith('client://'):
-        image = wx.Image(wx.GetApp().scr_path + '/schappdata/media/%dx%d/' % (icon_size,
-                         icon_size) + href2[9:])
-        bmp = wx.Bitmap(image)
-    elif href.startswith('fa://'):
-        if '.png' in href.lower():
-            suffix = ''
-        else:
-            suffix = '.png'
-        image = wx.Image(wx.GetApp().scr_path + '/static/fonts/font-awesome/fonts/%dx%d/' % (icon_size,icon_size) + href2[5:].replace('fa-','')+suffix)
-        image = image.AdjustChannels(1, 1, 1, 0.55)
-        bmp = wx.Bitmap(image)
-    else:
-        http = wx.GetApp().get_http(None)
-        if http.get(None, str(href))[0]!=404:
-            s = http.ptr()
-            http.clear_ptr()
-            stream = BytesIO(s)
-            bmp = wx.Bitmap(wx.Image(stream))
-        else:
-            bmp = wx.Bitmap()
-            print("bitmap_from_href: can't read from href:", href)
-    return bmp
-
 

@@ -66,12 +66,16 @@ _RET_OK_SHTML = """
     <meta name="target" content="code" />
 </head>
 <body>
-    <script language=python>self.ret_ok(%s,"%s");</script>
+    <script language=python>
+page = self.get_parent_page().get_parent_page()
+if page:
+    page.signal('return_row', id=%s, title="%s")
+    </script>
 </body>
 """
 
 def ret_ok(request, id, title):
-    if request.META['HTTP_USER_AGENT'].startswith('Py'):
+    if request.META['HTTP_USER_AGENT'].lower().startswith('py'):
         return HttpResponse(_RET_OK_SHTML % (id, title))
     else:
         return HttpResponse(_RET_OK_HTML % (id, title))

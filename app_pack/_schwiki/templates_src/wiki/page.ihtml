@@ -49,8 +49,8 @@
                     wx.CallAfter(self.scroll)
                 return self.base_on_size(event)
 
-            def cancel(self, cancel):
-                can_close = True
+            def can_close(self):
+                q = True
                 if self.content_src.GetModify():
                     dlg = wx.MessageDialog(self, 'Content has been changed, cancel?',
                                                  'Warning!',
@@ -58,10 +58,9 @@
                                         )
                     ret = dlg.ShowModal()
                     if ret != wx.ID_YES:
-                        can_close = False
+                        q = False
                     #dlg.Destroy()
-                if can_close:
-                    return self.base_cancel(cancel)
+                return q
 
  
 %% vscroll

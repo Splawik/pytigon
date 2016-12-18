@@ -268,7 +268,7 @@ class SchNotebookPage(wx.Window):
                     if close_without_refresh:
                         self.get_page(-1).signal('child_canceled')
                     else:
-                        self.get_page(-1).signal('refresh_controls')
+                        self.get_page(-1).signal('child_closed_with_ok')
                     return True
                 else:
                     return False

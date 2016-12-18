@@ -20,8 +20,7 @@
 import wx
 from io import StringIO
 from PIL import Image
-from schcli.guilib.pil import piltoimage
-# from  wx.lib import scrolledpanel
+from schcli.guilib.image import piltoimage
 
 
 def init_plugin(

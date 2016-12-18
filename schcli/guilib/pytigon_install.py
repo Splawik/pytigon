@@ -11,9 +11,8 @@ import sys
 import datetime
 from shutil import move
 
-from subprocess import call, Popen, PIPE, STDOUT
+from subprocess import call, Popen, PIPE
 
-#from django.conf import settings
 from schlib.schtools.tools import extractall
 
 _ = wx.GetTranslation
@@ -30,13 +29,7 @@ def make_page_title(wiz_pg, title):
 
 class TitledPage(WizardPageSimple):
 
-    def __init__(
-        self,
-        parent,
-        lp,
-        title,
-        ):
-
+    def __init__(self,parent,lp,title):
         WizardPageSimple.__init__(self, parent)
         self.sizer = make_page_title(self, title)
         self.lp = lp
@@ -44,14 +37,7 @@ class TitledPage(WizardPageSimple):
 
 class InstallWizard(Wizard):
 
-    def __init__(
-        self,
-        file_name,
-        zip_file,
-        app_name,
-        licence_txt,
-        readme_txt,
-        ):
+    def __init__(self,file_name,zip_file,app_name,licence_txt,readme_txt):
 
         Wizard.__init__(self, None, -1, 'Install app')
         self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.on_wiz_page_changing)
@@ -107,48 +93,43 @@ class InstallWizard(Wizard):
         test_update = True
         root_path = wx.GetApp().root_path
         extract_to = root_path + '/app_pack/' + self.app_name
-        #try:
-        if True:
-            if not os.path.exists(root_path + '/app_pack'):
-                os.mkdir(root_path + '/app_pack')
-            if not os.path.exists(extract_to):
-                os.mkdir(extract_to)
-                test_update = False
-            zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
-            zipname2 = os.path.join(extract_to, zipname+".zip")
-            if test_update:
-                backup_zip = zipfile.ZipFile(zipname2, 'a')
-                exclude = ['.*settings_local.py.*',]
-            else:
-                backup_zip = None
-                exclude = None
-            extractall(self.zip_file, extract_to, backup_zip=backup_zip, exclude=exclude, backup_exts=['py', 'txt', 'wsgi', 'ihtml', 'htlm', 'css', 'js',])
-            if backup_zip:
-                backup_zip.close()
-            self.zip_file.close()
-            src_db = os.path.join(extract_to, self.app_name+".db")
-            if os.path.exists(src_db):
-                dest_path_db = os.path.join( os.path.join(os.path.expanduser("~"), ".pytigon"), self.app_name)
-                if not os.path.exists(dest_path_db):
-                    os.mkdir(dest_path_db)
-                dest_db = os.path.join(dest_path_db,self.app_name+".db")
-                if not os.path.exists(dest_db):
-                    move(src_db, dest_db )
+        if not os.path.exists(root_path + '/app_pack'):
+            os.mkdir(root_path + '/app_pack')
+        if not os.path.exists(extract_to):
+            os.mkdir(extract_to)
+            test_update = False
+        zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
+        zipname2 = os.path.join(extract_to, zipname+".zip")
+        if test_update:
+            backup_zip = zipfile.ZipFile(zipname2, 'a')
+            exclude = ['.*settings_local.py.*',]
+        else:
+            backup_zip = None
+            exclude = None
+        extractall(self.zip_file, extract_to, backup_zip=backup_zip, exclude=exclude, backup_exts=['py', 'txt', 'wsgi', 'ihtml', 'htlm', 'css', 'js',])
+        if backup_zip:
+            backup_zip.close()
+        self.zip_file.close()
+        src_db = os.path.join(extract_to, self.app_name+".db")
+        if os.path.exists(src_db):
+            dest_path_db = os.path.join( os.path.join(os.path.expanduser("~"), ".pytigon"), self.app_name)
+            if not os.path.exists(dest_path_db):
+                os.mkdir(dest_path_db)
+            dest_db = os.path.join(dest_path_db,self.app_name+".db")
+            if not os.path.exists(dest_db):
+                move(src_db, dest_db )
 
-            base_path = root_path+"/app_pack/"+self.app_name+"/"
+        base_path = root_path+"/app_pack/"+self.app_name+"/"
 
-            if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(root_path+"/global_db_settings.py"):
-                p=Popen([sys.executable, base_path + 'manage.py', 'dumpdata', '--format', 'json', '--database', 'local', '--indent', '4', '--exclude', 'contenttypes', '--exclude', 'auth' ], stdout=PIPE, stdin=PIPE)
-                output = p.communicate()[0]
-                x = open(base_path + 'install_data.json', "wb")
-                x.write(output)
-                x.close()
-                call([sys.executable, base_path + 'manage.py', 'syncdb'])
-                call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
-            return True
-        #except:
-        #    pass
-        return False
+        if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(root_path+"/global_db_settings.py"):
+            p=Popen([sys.executable, base_path + 'manage.py', 'dumpdata', '--format', 'json', '--database', 'local', '--indent', '4', '--exclude', 'contenttypes', '--exclude', 'auth' ], stdout=PIPE, stdin=PIPE)
+            output = p.communicate()[0]
+            x = open(base_path + 'install_data.json', "wb")
+            x.write(output)
+            x.close()
+            call([sys.executable, base_path + 'manage.py', 'syncdb'])
+            call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
+        return True
 
 
 def install(pti, app_name):

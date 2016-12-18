@@ -16,7 +16,7 @@
                 if url=='close':
                     page = self.GetParent().GetParent().GetParent()
                     win = wx.GetApp().GetTopWindow()
-                    win.toolbar_interface.remove_page(page)
+                    win.toolbar_interface.remove_page(page.title)
                     return True
                 else:
                     id = self.app_list.GetValue()

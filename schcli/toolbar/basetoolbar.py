@@ -18,152 +18,200 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.event import *
+
+from schcli.guilib.events import *
 from schcli.toolbar.standardtoolbarbuttons import StandardButtons
 from schcli.guiframe.page import SchPage
-import wx
 
 _ = wx.GetTranslation
 
-TYPE_TOOLBAR = 0
-TYPE_BUTTONBAR = 1
-TYPE_PANELBAR = 2
+
+class BaseHtmlPanel():
+    def __init__(self, page, real_panel):
+        self.page = page
+        self.real_panel = real_panel
+        self.html_page = None
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.real_panel.SetSizer(self.sizer)
+
+    def get_width(self):
+        return 0
+
+    def get_height(self):
+        return 0
+
+    def get_window(self):
+        return self.real_panel
+
+    def set_page(self, html_page):
+        if self.html_page:
+            self.sizer.Replace(self.html_page, html_page)
+            self.html_page.Destroy()
+        else:
+            self.sizer.Add(html_page, 0, wx.LEFT | wx.TOP | wx.EXPAND | wx.RIGHT, 2)
+
+        self.html_page = html_page
+
+        self.sizer.Fit(self.real_panel)
 
 
-class ToolbarInterface(object):
+class ToolbarButton():
 
-    class Page(object):
+    TYPE_SIMPLE = 0
+    TYPE_DROPDOWN = 1
+    TYPE_HYBRID = 2
+    TYPE_TOOGLE = 3
+    TYPE_PANEL = 4
+    TYPE_SEPARATOR = 5
 
-        class Panel(object):
-
-            def __init__(
-                self,
-                page,
-                title,
-                type=TYPE_TOOLBAR,
-                ):
-                self.page = page
-                self.panel = wx.Menu()
-                self.page.page.AppendMenu(wx.ID_ANY, title, self.panel)
-
-            def append(
-                self,
-                id,
-                title,
-                bitmap=None,
-                ):
-                if bitmap:
-                    item = wx.MenuItem(self.panel, id=id, text=title)
-                    item.SetBitmap(bitmap)
-                    self.panel.AppendItem(item)
-                else:
-                    self.panel.Append(id, title)
-
-            def add_tool(
-                self,
-                id,
-                title,
-                bitmap_id,
-                size,
-                ):
-                pass
-
-            def add_hybrid_tool(
-                self,
-                id,
-                title,
-                bitmap_id,
-                size,
-                ):
-                pass
-
-            def add_button(
-                self,
-                id,
-                title,
-                bitmap_id,
-                size,
-                ):
-                pass
-
-            def add_panel(
-                self,
-                id,
-                title,
-                bitmap_id,
-                size,
-                ):
-                pass
-
-            def add_separator(self):
-                pass
+    def __init__(self, parent_panel, id, title, bitmap = None, bitmap_disabled = None, kind=TYPE_SIMPLE):
+        self.parent_panel = parent_panel
+        self.id = id
+        self.title = title
+        self.bitmap = bitmap
+        if bitmap_disabled is None and bitmap is not None:
+            self.bitmap_disabled = wx.NullBitmap
+        else:
+            self.bitmap_disabled = bitmap_disabled
+        self.kind = kind
 
 
-        def __init__(
-            self,
-            bar,
-            title,
-            type=TYPE_TOOLBAR,
-            ):
-            self.bar = bar
-            self.page = wx.Menu()
-            self.bar.bar.Append(self.page, title)
+class ToolbarPanel(object):
 
-        def create_panel(self, title):
-            return self.Panel(self, title)
+    TYPE_PANEL_BUTTONBAR = 0
+    TYPE_PANEL_TOOLBAR = 1
+    TYPE_PANEL_PANELBAR = 2
+
+    def __init__(self, parent_page, title, kind=TYPE_PANEL_BUTTONBAR):
+        self.parent_page = parent_page
+        self.title = title
+        self.kind = kind
+        self.buttons = []
+
+    def _transform_bitmaps_parm(self, bitmaps):
+        b = [None, None]
+        if len(bitmaps)>0:
+            b[0] = bitmaps[0]
+        if len(bitmaps)>1:
+            b[1] = bitmaps[1]
+        return b
+
+    def create_button(self, id, title, bitmap=None, bitmap_disabled=None, kind=ToolbarButton.TYPE_SIMPLE):
+        return ToolbarButton(self, id, title, bitmap, bitmap_disabled, kind)
+
+    def append(self, id, title, bitmap=None, bitmap_disabled=None, kind=ToolbarButton.TYPE_SIMPLE):
+        button = self.create_button(id, title, bitmap, bitmap_disabled, kind)
+        self.buttons.append(button)
+        return button
+
+    def add_simple_tool(self, id, title, bitmaps):
+        b = self._transform_bitmaps_parm(bitmaps)
+        return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_SIMPLE)
+
+    def add_dropdown_tool(self, id, title, bitmaps):
+        b = self._transform_bitmaps_parm(bitmaps)
+        return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_DROPDOWN)
+
+    def add_hybrid_tool(self, id, title, bitmaps):
+        b = self._transform_bitmaps_parm(bitmaps)
+        return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_HYBRID)
+
+    def add_toogle_tool(self, id, title, bitmaps):
+        b = self._transform_bitmaps_parm(bitmaps)
+        return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_TOOGLE)
+
+    def add_separator(self):
+        pass
 
 
+class ToolbarPage(object):
+    TYPE_PAGE_NORMAL = 0
+
+    def __init__(self, parent_bar, title, kind=TYPE_PAGE_NORMAL):
+        self.parent_bar = parent_bar
+        self.title = title
+        self.kind = kind
+        self.panels = []
+
+    def create_panel(self, title, kind):
+        return self.ToolbarPanel(self, title, kind=ToolbarPanel.TYPE_PANEL_BUTTONBAR)
+
+    def create_html_panel(self, title):
+        return None
+
+    def append(self, title, kind=ToolbarPanel.TYPE_PANEL_BUTTONBAR):
+        p = self.create_panel(title, kind)
+        self.panels.append(p)
+        return p
+
+
+class ToolbarBar(object):
     def __init__(self, parent, gui_style):
         self.parent = parent
         self.main_page = None
         self.gui_style = gui_style
+
         self.toolbars = {}
+        self.pages = []
+        self.user_panels = {}
+
         self.standard_buttons = StandardButtons(self, gui_style)
         self.standard_buttons.create_file_panel(self.main_page)
         self.standard_buttons.create_edit_panel(self.main_page)
         self.standard_buttons.create_operations_panel(self.main_page)
         self.standard_buttons.create_browse_panel(self.main_page)
         self.standard_buttons.create_address_panel(self.main_page)
-        self.user_panels = {}
 
-    def create_page(self, title):
-        page = self.Page(self, title)
-        if not self.main_page:
-            self.main_page = page
-        return page
+    def create_page(self, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
+        return self.ToolbarPage(self, title, kind)
 
-    def create_panel_in_main_page(self, title, type):
+    def remove_page(self, title):
+        for page in self.pages:
+            if page.title == title:
+                self.pages.remove(page)
+                break
+        for key, panel in self.user_panels.items():
+            if panel.page.title == title:
+                del self.user_panels[key]
+                return
+
+    def append(self, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
+        for page in self.pages:
+            if page.title == title and page.kind == kind:
+                return page
+        p = self.create_page(title, kind)
         if not self.main_page:
-            self.create_page('main')
-        return self.main_page.create_panel(title, type)
-    
-    def bind(
-        self,
-        fun,
-        id=wx.ID_ANY,
-        e=None
-        ):
-        print("###################### BIND")
+            self.main_page = p
+        self.pages.append(p)
+        return p
+
+    def create(self):
+        pass
+
+    def close(self):
+        pass
+
+    def create_panel_in_main_page(self, title, kind):
+        if not self.main_page:
+            self.append(_("main"))
+        return self.main_page.create_panel(title, kind)
+
+    def bind(self, fun, id=wx.ID_ANY, e=None):
         if e:
             self.parent.Bind(e, fun, id=id)
         else:
             self.parent.Bind(wx.EVT_MENU, fun, id=id)
 
-    def update_bar(self, obj):
-        obj.SetMenuBar(self.bar)
+    def un_bind(self, id=wx.ID_ANY, e=None):
+        if e:
+            self.parent.Unbind(e, id=id)
+        else:
+            self.parent.Unbind(wx.EVT_MENU, id=id)
 
-    def get_bar(self):
-        return self.bar
-
-    def create_html_win(
-        self,
-        toolbar_page,
-        address_or_parser,
-        parameters,
-        ):
+    def create_html_win(self, toolbar_page, address_or_parser, parameters):
         if not toolbar_page:
             u_name = 'main'
-            page_name = 'main'
+            page_name = _('main')
             panel_name = 'main'
         else:
             u_name = toolbar_page
@@ -174,61 +222,30 @@ class ToolbarInterface(object):
             else:
                 page_name = toolbar_page.replace('_', ' ')
                 panel_name = page_name
+
         if u_name in self.user_panels:
-            htmlsash = self.user_panels[u_name]
-            bar_size = self.bar.GetSize()
-            panel = htmlsash.GetParent()
-            sizer = panel.GetSizer()
-
-            dy = self.bar.get_bar_height() + 5
-
-            htmlsash2 = SchPage(panel, address_or_parser, parameters,
-                                size=wx.Size(900, dy), pos=wx.Point(2,2))
-            best = htmlsash2.body.calculate_best_size()
-            htmlsash2.SetSize(wx.Size(best[0], best[1]))
-            sizer.Replace(htmlsash, htmlsash2)
-            self.user_panels[u_name] = htmlsash2
-            htmlsash.Destroy()
-            self.bar.update()
-            if hasattr(self.bar._pages, 'page'):
-                for page in self.bar._pages:
-                    if page.page.GetLabel() == page_name:
-                        self.bar.SetActivePage(page.page)
-            return htmlsash2
-        if toolbar_page:
-            page = self.create_page(page_name)
-            self.bar.SetActivePage(page.page)
-            bar = page.create_panel(panel_name, TYPE_PANELBAR)
+            panel = self.user_panels[u_name]
         else:
-            bar = self.create_panel_in_main_page('Tools', TYPE_PANELBAR)
-            self.bar.SetActivePage(self.main_page.page)
-        if hasattr(bar, 'panel'):
-            panel = bar.panel
-            bar_size = self.bar.GetSize()
-            dy = self.bar.get_bar_height() + 3
-            dx = self.bar.get_bar_width() + 3
-            htmlsash = SchPage(panel, address_or_parser, parameters, size=wx.Size(dx, dy))
-            #htmlsash = SchPage(panel, address_or_parser, parameters)
+            if page_name in self.pages:
+                page = self.pages[page]
+            else:
+                page = self.append(page_name)
+            panel = page.create_html_panel(panel_name)
 
-            best = htmlsash.body.calculate_best_size()
-            htmlsash.SetSize(wx.Size(best[0], best[1]))
-            panel.SetSize(wx.Size(best[0], best[1]))
-            controls = (htmlsash, )
-            bar.add_panel(controls)
-            self.bar.update()
-            self.user_panels[u_name] = htmlsash
-            return htmlsash
+        if panel:
+            dx = panel.get_width() + 3
+            dy = panel.get_height() + 5
+
+            page2 = SchPage(panel.get_window(), address_or_parser, parameters, size=wx.Size(dx, dy), pos=wx.Point(2, 2))
+            best = page2.body.calculate_best_size()
+            page2.SetSize(wx.Size(best[0], best[1]))
+            panel.set_page(page2)
+            self.user_panels[u_name] = panel
+            page2.body.toolbar_interface = self
+            page2.body.toolbar_interface_page = page
+            return page2
+
         return None
 
-    def remove_page(self, page):
-        label = page.GetLabel()
-        if label in self.user_panels:
-            del self.user_panels[label]
-        else:
-            label2 = label + '__'
-            for key in self.user_panels:
-                if key.startswith(label2):
-                    del self.user_panels[key]
-                    break
-        self.bar.remove_page(page)
-
+    def new_child_page(self,address_or_parser,title='',param=None):
+        return wx.GetApp().GetTopWindow().new_main_page(address_or_parser, title,param)

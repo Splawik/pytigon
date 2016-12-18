@@ -18,9 +18,10 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.event import *
+from schcli.guilib.events import *
 from autocomplete import TextCtrlAutoComplete
-from schcli.guilib.tools import bitmap_from_art_id, bitmaps_from_art_id, colour_to_html
+from schcli.guilib.image import bitmaps_from_art_id
+from schcli.guilib.tools import colour_to_html
 from wx.lib.agw import flatmenu as FM
 
 _ = wx.GetTranslation
@@ -143,7 +144,7 @@ class StandardButtons(object):
         self.toolbar_interface = toolbar_interface
         self.gui_style = gui_style
         self.ti = self.toolbar_interface
-        self.tbs = self.ti.get_toolbars()
+        self.tbs = self.ti.toolbars
         self._object_list = {}
         self.webobject = None
         self.file = True if 'file' in self.gui_style else False
@@ -152,12 +153,9 @@ class StandardButtons(object):
         self.browse = True if 'browse' in self.gui_style else False
         self.nav = True if 'nav' in self.gui_style else False
         self.address_bar = True if 'address_bar' in self.gui_style else False
-        self.bg = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
-        self.bg_info = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
-        self.bg_h = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+        self.bg = colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
+        self.bg_info = colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
+        self.bg_h = colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
         self.progress = 0
         self.info = ''
         self.address_txt = ''
@@ -169,22 +167,21 @@ class StandardButtons(object):
             self.tbs['file'] = {}
             self.tbs['file']['bar'] = bar
             if 'exit' in self.gui_style:
-                self.tbs['file']['exit'] = bar.add_tool(wx.ID_EXIT, _('Exit'),
-                        #bitmaps_from_art_id(wx.ART_QUIT, wx.Size(32, 32)))
+                self.tbs['file']['exit'] = bar.add_simple_tool(wx.ID_EXIT, _('Exit'),
                         bitmaps_from_art_id(wx.ART_QUIT, wx.Size(32, 32)))
             test = False
             if 'open' in self.gui_style:
                 bar.add_separator()
-                self.tbs['file']['open'] = bar.add_tool(wx.ID_OPEN, _('Open'),
+                self.tbs['file']['open'] = bar.add_simple_tool(wx.ID_OPEN, _('Open'),
                         bitmaps_from_art_id(wx.ART_FILE_OPEN, wx.Size(32, 32)))
                 test = True
             if 'save' in self.gui_style:
                 if not test:
                     bar.add_separator()
-                self.tbs['file']['save'] = bar.add_tool(wx.ID_SAVE, _('Save'),
+                self.tbs['file']['save'] = bar.add_simple_tool(wx.ID_SAVE, _('Save'),
                         bitmaps_from_art_id(wx.ART_FILE_SAVE, wx.Size(32, 32)))
                 if 'save_as' in self.gui_style:
-                    self.tbs['file']['save_as'] = bar.add_tool(wx.ID_SAVEAS,
+                    self.tbs['file']['save_as'] = bar.add_simple_tool(wx.ID_SAVEAS,
                             _('Save as'), bitmaps_from_art_id(wx.ART_FILE_SAVE_AS,
                             wx.Size(32, 32)))
                 test = True
@@ -204,13 +201,12 @@ class StandardButtons(object):
     def create_edit_panel(self, toolbar_page):
         if self.clipboard:
             self.tbs['clipboard'] = {}
-            bar = self.ti.create_panel_in_main_page(_('Clipboard'),
-                    TYPE_BUTTONBAR)
+            bar = self.ti.create_panel_in_main_page(_('Clipboard'), TYPE_BUTTONBAR)
             bar.Refr = self.clipboard_refr
             self.tbs['clipboard']['bar'] = bar
-            self.tbs['clipboard']['copy'] = bar.add_button(wx.ID_COPY, _('Copy'), bitmaps_from_art_id(wx.ART_COPY, wx.Size(32, 32)))
-            self.tbs['clipboard']['cut'] = bar.add_button(wx.ID_CUT, _('Cut'), bitmaps_from_art_id(wx.ART_CUT, wx.Size(32, 32)))
-            self.tbs['clipboard']['paste'] = bar.add_button(wx.ID_PASTE, _('Paste'), bitmaps_from_art_id(wx.ART_PASTE, wx.Size(32, 32)))
+            self.tbs['clipboard']['copy'] = bar.add_simple_tool(wx.ID_COPY, _('Copy'), bitmaps_from_art_id(wx.ART_COPY, wx.Size(32, 32)))
+            self.tbs['clipboard']['cut'] = bar.add_simple_tool(wx.ID_CUT, _('Cut'), bitmaps_from_art_id(wx.ART_CUT, wx.Size(32, 32)))
+            self.tbs['clipboard']['paste'] = bar.add_simple_tool(wx.ID_PASTE, _('Paste'), bitmaps_from_art_id(wx.ART_PASTE, wx.Size(32, 32)))
 
     def create_operations_panel(self, toolbar_page):
         if self.operations:
@@ -218,44 +214,42 @@ class StandardButtons(object):
             bar = self.ti.CreatePanelInMainPage(_('Operations'),
                     TYPE_TOOLBAR)
             self.tbs['operations']['bar'] = bar
-            self.tbs['operations']['undo'] = bar.add_tool(wx.ID_UNDO, _('Undo'),
+            self.tbs['operations']['undo'] = bar.add_simple_tool(wx.ID_UNDO, _('Undo'),
                     bitmaps_from_art_id(wx.ART_UNDO, wx.Size(32, 32)))
-            self.tbs['operations']['redo'] = bar.add_tool(wx.ID_REDO, _('Redo'),
+            self.tbs['operations']['redo'] = bar.add_simple_tool(wx.ID_REDO, _('Redo'),
                     bitmaps_from_art_id(wx.ART_REDO, wx.Size(32, 32)))
             self.tbs['operations']['find'] = bar.add_hybrid_tool(ID_FIND, _('Find'),
                     bitmaps_from_art_id(wx.ART_FIND, wx.Size(32, 32)))
             bar.AddSeparator()
-            self.tbs['operations']['filemanager'] = bar.add_tool(wx.ID_ANY,
-                    _('File manager'), bitmaps_from_art_id(wx.ART_FOLDER_OPEN,
-                    wx.Size(32, 32)))
-            self.tbs['operations']['editor'] = bar.add_tool(wx.ID_ANY, _('Editor'),
+            self.tbs['operations']['filemanager'] = bar.add_simple_tool(wx.ID_ANY,
+                    _('File manager'), bitmaps_from_art_id(wx.ART_FOLDER_OPEN, wx.Size(32, 32)))
+            self.tbs['operations']['editor'] = bar.add_simple_tool(wx.ID_ANY, _('Editor'),
                     bitmaps_from_art_id(wx.ART_NORMAL_FILE, wx.Size(32, 32)))
             self.ti.bind_dropdown(self.OnFind, ID_FIND)
 
     def create_browse_panel(self, toolbar_page):
         if self.browse or self.nav:
             self.tbs['browser'] = {}
-            bar = self.ti.create_panel_in_main_page(_('Browser'),
-                    TYPE_BUTTONBAR)
+            bar = self.ti.create_panel_in_main_page(_('Browser'), TYPE_BUTTONBAR)
             bar.Refr = self.web_refr
             self.webobject = None
             self.tbs['browser']['bar'] = bar
-            self.tbs['browser']['back'] = bar.add_button(ID_WEB_BACK, _('Back'),
+            self.tbs['browser']['back'] = bar.add_simple_tool(ID_WEB_BACK, _('Back'),
                     bitmaps_from_art_id(wx.ART_GO_BACK, wx.Size(32, 32)))
-            self.tbs['browser']['forward'] = bar.add_button(ID_WEB_FORWARD,
+            self.tbs['browser']['forward'] = bar.add_simple_tool(ID_WEB_FORWARD,
                     _('Forward'), bitmaps_from_art_id(wx.ART_GO_FORWARD, wx.Size(32,
                     32)))
             if self.browse:
-                self.tbs['browser']['stop'] = bar.add_button(ID_WEB_STOP, _('Stop'),
+                self.tbs['browser']['stop'] = bar.add_simple_tool(ID_WEB_STOP, _('Stop'),
                         bitmaps_from_art_id(wx.ART_CROSS_MARK, wx.Size(32, 32)))
-                self.tbs['browser']['refresh'] = bar.add_button(ID_WEB_REFRESH,
+                self.tbs['browser']['refresh'] = bar.add_simple_tool(ID_WEB_REFRESH,
                         _('Refresh'), bitmaps_from_art_id(wx.ART_GO_TO_PARENT,
                         wx.Size(32, 32)))
                 self.tbs['browser']['addbookmark'] = \
-                    bar.add_button(ID_WEB_ADDBOOKMARK, _('Add bookmark'),
+                    bar.add_simple_tool(ID_WEB_ADDBOOKMARK, _('Add bookmark'),
                                   bitmaps_from_art_id(wx.ART_ADD_BOOKMARK, wx.Size(32,
                                   32)))
-                self.tbs['browser']['newpage'] = bar.add_button(ID_WEB_NEW_WINDOW,
+                self.tbs['browser']['newpage'] = bar.add_simple_tool(ID_WEB_NEW_WINDOW,
                         _('New page'), bitmaps_from_art_id(wx.ART_NEW, wx.Size(32, 32)))
         else:
             self.tbs['browser'] = {}
@@ -289,49 +283,6 @@ class StandardButtons(object):
         else:
             self.tbs['browser']['address'] = EmpytControl()
             self.web_info = None
-
-    # def connect_object_to_panel(self, panel, object):
-    #     return
-    #     self._object_list[panel] = object
-    #     if object:
-    #         if panel == 'file':
-    #             pass
-    #         elif panel == 'clipboard':
-    #             pass
-    #         elif panel == 'operations':
-    #             pass
-    #         elif panel == '_browser':
-    #             if object:
-    #                 self.webobject = object
-    #                 if hasattr(object,"on_back"): self.ti.Bind(object.on_back, ID_WEB_BACK)
-    #                 if hasattr(object,"on_can_back"): self.ti.Bind(object.on_can_back, ID_WEB_BACK, wx.EVT_UPDATE_UI)
-    #                 if hasattr(object,"on_forward"): self.ti.Bind(object.on_forward, ID_WEB_FORWARD)
-    #                 if hasattr(object,"on_can_forward"): self.ti.Bind(object.on_can_forward, ID_WEB_FORWARD, wx.EVT_UPDATE_UI)
-    #                 if hasattr(object,"on_stop"): self.ti.Bind(object.on_stop, ID_WEB_STOP)
-    #                 if hasattr(object,"on_refresh"): self.ti.Bind(object.on_refresh, ID_WEB_REFRESH)
-    #                 if hasattr(object,"on_add_bookmark"): self.ti.Bind(object.on_add_bookmark, ID_WEB_ADDBOOKMARK)
-    #                 if hasattr(object,"on_source"): self.ti.Bind(object.on_source, ID_WEB_SOURCE, wx.EVT_MENU)
-    #                 if hasattr(object,"on_edit"): self.ti.Bind(object.on_edit, ID_WEB_EDIT, wx.EVT_MENU)
-    #             else:
-    #                 self.webobject = None
-    #                 self.ti.UnBind(ID_WEB_BACK)
-    #                 self.ti.UnBind(ID_WEB_FORWARD)
-    #                 self.ti.UnBind(ID_WEB_STOP)
-    #                 self.ti.UnBind(ID_WEB_REFRESH)
-    #                 self.ti.UnBind(ID_WEB_ADDBOOKMARK)
-    #                 # self.ti.un_bind(ID_WEB_NEW_WINDOW)
-    #                 self.ti.UnBind(ID_WEB_SOURCE, wx.EVT_MENU)
-    #         else:
-    #             pass
-
-    #def on_update_ui(self, event):
-    #    ctrl = wx.GetApp().GetTopWindow().GetActiveCtrl()  # ActiveChildCtrl
-    #    p = wx.GetApp().GetTopWindow().get_active_panel()
-    #    self.clipboard_refr(ctrl)
-    #    self.opeartions_refr(ctrl)
-    #    self.web_refr(self.webobject)
-    #    self.address_refr(p)
-    #    event.Skip()
 
     def load_page(self, address):
         if 'browser' in self._object_list and self._object_list['browser']:

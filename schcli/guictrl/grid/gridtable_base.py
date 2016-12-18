@@ -18,18 +18,13 @@
 #version: "0.1a"
 
 import wx
-from wx.grid import PyGridTableBase, GridCellAttr, GridTableMessage, \
-    GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
+from wx.grid import GridCellAttr, GridTableMessage, GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
 
 
-if wx.version()>='2.9.5.81':
-    PyGridTableBase=wx.grid.GridTableBase
-
-
-class SchGridTableBase(PyGridTableBase):
+class SchGridTableBase(wx.grid.GridTableBase):
 
     def __init__(self):
-        PyGridTableBase.__init__(self)
+        wx.grid.GridTableBase.__init__(self)
         self.can_append = 0
         self.append_count = 0
         self.read_only = True
@@ -38,9 +33,10 @@ class SchGridTableBase(PyGridTableBase):
         self.rec_to_delete = []
         self.rec_selected = []
         self.tabsort = []
-        self.filter_id = -1
+        self.filter_id = None
         self.key = None
         self.sel_mask = []
+
         self.sel_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK)
         self.attr_insert = GridCellAttr()
         self.attr_insert.SetBackgroundColour('PALE GREEN')
@@ -53,11 +49,13 @@ class SchGridTableBase(PyGridTableBase):
         self.attr_sel.SetBackgroundColour(self.sel_colour)
         self.attr_sel.SetFont(wx.Font(8, wx.ROMAN, wx.ITALIC, wx.NORMAL, True))
         self.attr_normal = GridCellAttr()
+
         self.data = []
         self.data_org = None
         self.last_row_count = 0
         self.auto_size = 'simple'
         self.no_actions = False
+
         self.init_data_base()
 
     def init_data_base(self):
@@ -86,59 +84,11 @@ class SchGridTableBase(PyGridTableBase):
     def _get_number_rows(self):
         return len(self.data) + self.can_append + self.append_count
 
-    def GetNumberRows(self):
-        count = self._get_number_rows()
-        #self.last_row_count = count
-        return count
-
-    def GetNumberCols(self):
-        if len(self.data) > 0:
-            return len(self.data[0]) - 1
-        else:
-            return 0
-
-    def IsEmptyCell(self, row, col):
-        try:
-            return not self.data[row][col]
-        except IndexError:
-            return True
-
     def get_rec(self, row):
         try:
             return self.data[row]
         except IndexError:
             return []
-
-    def GetValue(self, row, col):
-        try:
-            return self.get_rec(row)[col]
-        except IndexError:
-            return ''
-
-    def GetColLabelValue(self, col):
-        return 'COL_' + str(col)
-
-    def GetTypeName(self, row, col):
-        return self.GetValue(row, col).__class__.__name__
-
-    def CanGetValueAs(
-        self,
-        row,
-        col,
-        type_name,
-        ):
-        if self.GetTypeName(row, col) == type_name:
-            return True
-        else:
-            return False
-
-    def CanSetValueAs(
-        self,
-        row,
-        col,
-        type_name,
-        ):
-        return self.CanGetValueAs(row, col, type_name)
 
     def get_sort_nr(self, col):
         c = col + 1
@@ -174,44 +124,6 @@ class SchGridTableBase(PyGridTableBase):
         if row in self.rec_selected:
             return True
         return False
-
-    def xxx(self):
-        sel = False
-        for filter in self.sel_mask:
-            if filter[0] == '+':
-                if self.filter_cmp(self.get_rec(row), filter[1:]):
-                    sel = True
-            else:
-                if self.filter_cmp(self.get_rec(row), filter[1:]):
-                    sel = False
-        return sel
-
-    def GetAttr(
-        self,
-        row,
-        col,
-        kind,
-        ):
-        if row < (self.GetNumberRows() - self.can_append) - self.append_count:
-            if row in self.rec_to_update:
-                attr = self.attr_update
-                attr.IncRef()
-                return attr
-            elif row in self.rec_to_delete:
-                attr = self.attr_del
-                attr.IncRef()
-                return attr
-            elif self._is_sel(row):
-                attr = self.attr_sel
-                attr.IncRef()
-            else:
-                attr = self.attr_normal
-                attr.IncRef()
-            return attr
-        else:
-            attr = self.attr_insert
-            attr.IncRef()
-            return attr
 
     def sel_row(self, row):
         if row < self.GetNumberRows():
@@ -263,7 +175,7 @@ class SchGridTableBase(PyGridTableBase):
         return self.read_only
 
     def filter_cmp(self, pos, key):
-        if self.filter_id >= 0:
+        if self.filter_id is not None:
             if str(pos[self.filter_id]).startswith(key):
                 return True
             else:
@@ -307,7 +219,7 @@ class SchGridTableBase(PyGridTableBase):
         self.rec_to_delete = []
         self.rec_selected = []
         self.tabsort = []
-        self.filter_id = -1
+        self.filter_id = None
         self.key = None
         self.sel_mask = []
 
@@ -335,7 +247,7 @@ class SchGridTableBase(PyGridTableBase):
         self.rec_to_delete = []
         self.rec_selected = []
         self.tabsort = []
-        self.filter_id = -1
+        self.filter_id = None
         self.key = None
         self.sel_mask = []
         return tableandstate
@@ -374,3 +286,62 @@ class SchGridTableBase(PyGridTableBase):
 
     def enable(self, en):
         pass
+
+    def GetNumberRows(self):
+        count = self._get_number_rows()
+        return count
+
+    def GetNumberCols(self):
+        if len(self.data) > 0:
+            return len(self.data[0]) - 1
+        else:
+            return 0
+
+    def IsEmptyCell(self, row, col):
+        try:
+            return not self.data[row][col]
+        except IndexError:
+            return True
+
+    def GetValue(self, row, col):
+        try:
+            return self.get_rec(row)[col]
+        except IndexError:
+            return ''
+
+    def GetColLabelValue(self, col):
+        return 'COL_' + str(col)
+
+    def GetTypeName(self, row, col):
+        return self.GetValue(row, col).__class__.__name__
+
+    def CanGetValueAs(self, row, col, type_name):
+        if self.GetTypeName(row, col) == type_name:
+            return True
+        else:
+            return False
+
+    def CanSetValueAs(self, row, col, type_name):
+        return self.CanGetValueAs(row, col, type_name)
+
+    def GetAttr(self,row,col,kind):
+        if row < (self.GetNumberRows() - self.can_append) - self.append_count:
+            if row in self.rec_to_update:
+                attr = self.attr_update
+                attr.IncRef()
+                return attr
+            elif row in self.rec_to_delete:
+                attr = self.attr_del
+                attr.IncRef()
+                return attr
+            elif self._is_sel(row):
+                attr = self.attr_sel
+                attr.IncRef()
+            else:
+                attr = self.attr_normal
+                attr.IncRef()
+            return attr
+        else:
+            attr = self.attr_insert
+            attr.IncRef()
+            return attr

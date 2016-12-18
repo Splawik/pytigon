@@ -8,7 +8,7 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            from schcli.guilib.event import ID_RetValue
+            from schcli.guilib.events import ID_RETVALUE
             self.find_value = ""
             self.listclick=False
             self.retlist = None
@@ -19,13 +19,33 @@
             self.list1.Bind(wx.EVT_LISTBOX_DCLICK, self.on_list_ret)
             self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
             self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+            self.list1.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
 
             self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
-            aTable = [(0, wx.WXK_RETURN, ID_RetValue),]
+            aTable = [(0, wx.WXK_RETURN, ID_RETVALUE),]
             self.SetAcceleratorTable(wx.AcceleratorTable(aTable))
-            self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RetValue)
+            self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RETVALUE)
 
             self.refr()
+
+        def on_key_down(self, event):
+            print("on_key_down", event)
+            if event.KeyCode == wx.WXK_ESCAPE:
+                self.OnExit(event)
+            elif event.KeyCode == wx.WXK_DOWN or (event.AltDown() and event.KeyCode == ord('J')):
+                id = self.list1.GetSelection()
+                if id != wx.NOT_FOUND:
+                    if id < self.list1.GetCount()-1:
+                        self.list1.SetSelection(id+1)
+            elif event.KeyCode == wx.WXK_UP or (event.AltDown() and event.KeyCode == ord('K')):
+                id = self.list1.GetSelection()
+                if id != wx.NOT_FOUND:
+                    if id > 0:
+                        self.list1.SetSelection(id-1)
+            elif event.KeyCode == wx.WXK_TAB:
+                return self.OnExit(event)
+            else:
+                event.Skip()
 
         def OnExit(self, event):
             id = self.list1.GetSelection()

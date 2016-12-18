@@ -27,12 +27,12 @@ try:
     from wx.adv import LayoutAlgorithm
 except:
     from wx import LayoutAlgorithm
-from schcli.guilib import event
+from schcli.guilib import events
 from schcli.guilib.signal import Signal
 from schlib.schtools import createparm
 from schlib.schhttptools.schhtml_parser import ShtmlParser
 from schcli.guiframe.form import SchForm
-from schcli.guilib.event import *
+from schcli.guilib.events import *
 
 
 class SchPage(wx.Window, Signal):
@@ -160,12 +160,17 @@ class SchPage(wx.Window, Signal):
         if 'refresh' in mp.var:
             self.body.refresh_time(int(mp.var['refresh']))
 
-        if winids:
+        if  winids:
             self.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self.on_sash_drag, id=min(winids), id2=max(winids))
 
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.body.Bind(wx.EVT_CHILD_FOCUS, self.on_child_focus)
         self.Bind(wx.EVT_SET_FOCUS, self.on_set_focus)
+
+        self.register_signal(self, "child_closed_with_ok")
+
+    def child_closed_with_ok(self):
+        wx.CallAfter(self.refresh_html)
 
     def reg_application_signal_handler(self, fun, signal):
         """register callback function for signal
@@ -498,13 +503,13 @@ class SchPage(wx.Window, Signal):
             self._last_size = self.GetSize()
         if not (enable==False and not self.disable_parent):
             if self.header:
-                self.header.Enable(enable)
+                self.header.enable(enable)
             if self.body:
-                self.body.Enable(enable)
+                self.body.enable(enable)
             if self.footer:
-                self.footer.Enable(enable)
+                self.footer.enable(enable)
             if self.panel:
-                self.panel.Enable(enable)
+                self.panel.enable(enable)
 
     def change_notebook_page_title(self, new_title):
         """Change a title of notebook witch contain this SchPage object"""

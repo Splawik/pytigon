@@ -6,7 +6,7 @@ Title = _('Simple scripts')
 Perms = True
 Index = ''
 Urls  = (
-    ('table/Scripts/-/form/list?schtml=shtml',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
+    ('table/Scripts/-/form/list?schtml=desktop',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
 )
 UserParam = {}
 def AdditionalUrls():

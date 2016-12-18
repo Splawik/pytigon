@@ -17,7 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-"""Base class for all widgets"""
+"""Module contains SchBaseCtrl class"""
 
 import wx
 
@@ -29,7 +29,7 @@ except:
 from schlib.schhttptools.list_parser import TreeParser
 
 class SchBaseCtrl(object):
-
+    """Base class for all widgets"""
     def __init__(self, parent, kwds):
         """Constructor"""
         self.unique_name = None
@@ -189,7 +189,8 @@ class SchBaseCtrl(object):
 
     def on_key_down_base(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
-            wx.CallAfter(self.GetParent().close_with_delay)
+            wx.CallAfter(self.GetParent().cancel)
+            #wx.CallAfter(self.GetParent().close_with_delay)
         elif event.GetKeyCode() == wx.WXK_TAB:
             if event.ShiftDown():
                 self.GetParent().Navigate(self, True)

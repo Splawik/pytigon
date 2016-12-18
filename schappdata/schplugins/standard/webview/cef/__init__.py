@@ -38,7 +38,7 @@ def init_plugin_cef(
     from schlib.schindent.indent_tools import norm_html
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
-    from schcli.guilib import event
+    from schcli.guilib import events
     try:
         from urllib.parse import quote as escape
     except:

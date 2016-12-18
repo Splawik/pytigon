@@ -17,10 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx.grid as gridlib
 import wx
-from schlib.schhttptools import htmltab
-from .gridtablebase import SchGridTableBase
+
+from .gridtable_base import SchGridTableBase
 from schlib.schhtml.htmlviewer import tdata_from_html
 from schcli.guilib.tools import colour_to_html
 
@@ -123,8 +122,7 @@ class SimpleDataTable(SchGridTableBase):
                 self.colLabels[0].data = l[0]
 
         if self.per_page > 0:
-            self.data = PageData(self._parent, int(self.per_page), self.count,
-                                 tab[1:self.per_page + 1])
+            self.data = PageData(self._parent, int(self.per_page), self.count, tab[1:self.per_page + 1])
             self.simple_data = False
             if self.count > 128:
                 self.auto_size = 'short'
@@ -142,20 +140,12 @@ class SimpleDataTable(SchGridTableBase):
 
     def refresh_page_data(self, tab):
         old_data = self.data
-        self.data = PageData(old_data.parent, int(self.per_page), int(len(tab)
-                              - 1), tab[1:self.per_page + 1])
+        self.data = PageData(old_data.parent, int(self.per_page), int(len(tab) - 1), tab[1:self.per_page + 1])
 
     def enable(self, enabled):
         self.enabled = enabled
         if not self.simple_data:
             self.data.count = self.count
-
-    def GetValue(self, row, col):
-        try:
-            ret = self.data[row][col].data
-            return ret
-        except IndexError:
-            return ''
 
     def get_action_list(self, row, col=None):
         try:
@@ -182,32 +172,6 @@ class SimpleDataTable(SchGridTableBase):
             return attrs
         except:
             return []
-
-    def SetValue(self,row,col,value):
-        try:
-            self.data[row][col] = value
-        except IndexError:
-            self.data.append([''] * self.GetNumberCols())
-            self.SetValue(row, col, value)
-            msg = gridlib.GridTableMessage(self,
-                    gridlib.GRIDTABLE_NOTIFY_ROWS_APPENDED, 1)
-            self.GetView().ProcessTableMessage(msg)
-
-    def GetColLabelValue(self, col):
-        return self.colLabels[col].data
-
-    def GetTypeName(self, row, col):
-        return self.dataTypes[col]
-
-    def CanGetValueAs(self,row,col,type_name):
-        col_type = self.dataTypes[col].split(':')[0]
-        if type_name == col_type:
-            return True
-        else:
-            return False
-
-    def CanSetValueAs(self,row,col,type_name):
-        return self.CanGetValueAs(row, col, type_name)
 
     def sort(self, column, append):
         SchGridTableBase.sort(self, column, append)
@@ -243,6 +207,15 @@ class SimpleDataTable(SchGridTableBase):
         except:
             return None
 
+    def filter_cmp(self, pos, key):
+        if self.filter_id >= 0:
+            if str(pos[self.filter_id].data).upper().startswith(key.upper()):
+                return True
+            else:
+                return False
+        else:
+            return False
+
     def GetAttr(self,row,col,kind):
         if row >= self.GetNumberRows():
             attr = self.attr_normal
@@ -275,14 +248,14 @@ class SimpleDataTable(SchGridTableBase):
             bgcolor = colour_to_html(self.sel_colour)
             strong = 's'
         key = ''
-        key = key + (bgcolor if bgcolor else '_')
-        key = key + (color if color else '_')
-        key = key + (strong if strong else '_')
+        key += bgcolor if bgcolor else '_'
+        key += color if color else '_'
+        key += strong if strong else '_'
         if key:
             if key in self.attrs:
                 attr = self.attrs[key]
             else:
-                attr = gridlib.GridCellAttr()
+                attr = wx.grid.GridCellAttr()
                 if bgcolor:
                     attr.SetBackgroundColour(bgcolor)
                 if color:
@@ -297,15 +270,6 @@ class SimpleDataTable(SchGridTableBase):
         attr.IncRef()
         return attr
 
-    def filter_cmp(self, pos, key):
-        if self.filter_id >= 0:
-            if str(pos[self.filter_id].data).upper().startswith(key.upper()):
-                return True
-            else:
-                return False
-        else:
-            return False
-
     def GetNumberCols(self):
         if len(self.colLabels) > 0:
             if self.no_actions:
@@ -315,3 +279,34 @@ class SimpleDataTable(SchGridTableBase):
         else:
             return 0
 
+    def GetValue(self, row, col):
+        try:
+            ret = self.data[row][col].data
+            return ret
+        except IndexError:
+            return ''
+
+    def SetValue(self,row,col,value):
+        try:
+            self.data[row][col] = value
+        except IndexError:
+            self.data.append([''] * self.GetNumberCols())
+            self.SetValue(row, col, value)
+            msg = wx.grid.GridTableMessage(self,wx.grid.GRIDTABLE_NOTIFY_ROWS_APPENDED, 1)
+            self.GetView().ProcessTableMessage(msg)
+
+    def GetColLabelValue(self, col):
+        return self.colLabels[col].data
+
+    def GetTypeName(self, row, col):
+        return self.dataTypes[col]
+
+    def CanGetValueAs(self,row,col,type_name):
+        col_type = self.dataTypes[col].split(':')[0]
+        if type_name == col_type:
+            return True
+        else:
+            return False
+
+    def CanSetValueAs(self,row,col,type_name):
+        return self.CanGetValueAs(row, col, type_name)

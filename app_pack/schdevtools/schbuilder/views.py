@@ -228,15 +228,10 @@ def gen(request, pk):
     if not os.path.exists(base_path):
         object_list.append((datetime.datetime.now().time().isoformat(), 'mkdir:', base_path))
         os.mkdir(base_path)
-    if not os.path.exists(base_path+"/templates"):
         os.mkdir(base_path+"/templates")
-    if not os.path.exists(base_path+"/templates/template"):
         os.mkdir(base_path+"/templates/template")
-    if not os.path.exists(base_path+"/templates_src"):
         os.mkdir(base_path+"/templates_src")
-    if not os.path.exists(base_path+"/templates_src/template"):
         os.mkdir(base_path+"/templates_src/template")
-    if not os.path.exists(base_path+"/apache"):
         os.mkdir(base_path+"/apache")
     
     apps = appset.schapp_set.all()

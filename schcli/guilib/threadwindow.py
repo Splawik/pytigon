@@ -42,13 +42,7 @@ class ThreadEvent(wx.PyCommandEvent):
 
 class SchThreadWindow(wx.Panel):
 
-    def __init__(
-        self,
-        manager,
-        thread_name,
-        *args,
-        **kwds
-        ):
+    def __init__(self,manager,thread_name,*args,**kwds):
 
         wx.Panel.__init__(self, *args, **kwds)
         self.thread_name = thread_name
@@ -89,8 +83,7 @@ class SchThreadWindow(wx.Panel):
         info = schjson.loads(info_json)
         http.clear_ptr()
 
-        #if info.__class__ in (str, unicode) and info == '$$$':
-        if isinstance(info, six.string_types) and info == '$$$':
+        if type(info)==str and info == '$$$':
             self.closed = True
             evt = ThreadEvent(schEVT_THREAD_INFO, -1)
             evt.set_info(self.thread_name)
@@ -102,8 +95,7 @@ class SchThreadWindow(wx.Panel):
                     self.gauge.SetValue(int(progress))
                 if 'description' in info:
                     description = info['description']
-                    self.html.SetPage("<body bgcolor='#eec'>" + description
-                                       + '</body>')
+                    self.html.SetPage("<body bgcolor='#eec'>" + description + '</body>')
 
     def on_expand(self, event):
         address = 'http://local.net/schsys/thread_long_info/' + self.thread_name

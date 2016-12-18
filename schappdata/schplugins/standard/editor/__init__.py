@@ -18,7 +18,7 @@
 #version: "0.1a"
 
 import wx
-from schcli.guilib.event import *
+from schcli.guilib.events import *
 from base64 import b32encode, b32decode
 import os.path
 

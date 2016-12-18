@@ -315,10 +315,10 @@ class SchApp(App, _BASE_APP):
             return ret
 
         if app and app != '':
-            self.images = image.SchImage('/' + app + '/site_media/app.png', 0)
+            self.images = image.SchImage('/' + app + '/site_media/app.png')
             self.http.get(self, '/' + app + '/')
         else:
-            self.images = image.SchImage('/site_media/app.png', 0)
+            self.images = image.SchImage('/site_media/app.png')
             self.http.get(self, '/')
         ret_str = self.http.str()
         self.mp = htmltab.SimpleTabParser()
@@ -543,7 +543,7 @@ def login(base_href, auth_type = None):
                 dlg.Destroy()
                 return True
             else:
-                dlg.message.SetLabel(_('Failed login attempt! Http error: %s') % ret)
+                dlg.message.SetLabel(_('Failed login attempt! http error: %s') % ret)
     dlg.Destroy()
     return False
 

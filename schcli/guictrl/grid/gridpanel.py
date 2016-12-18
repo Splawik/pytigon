@@ -18,12 +18,14 @@
 #version: "0.1a"
 
 import wx
-import wx.lib.scrolledpanel as scrolled
-from schcli.guilib.tools import bitmap_from_href
+
+from schcli.guilib.image import bitmap_from_href
+
 _ = wx.GetTranslation
 
-class SchGridPanel(wx.Panel):
 
+class SchGridPanel(wx.Panel):
+    """Panel for grid widget with toolbar"""
     def __init__(self, *args, **argv):
         self.grid = None
         self.icon_size = 2
@@ -45,11 +47,7 @@ class SchGridPanel(wx.Panel):
         if id_str in self._bitmaps:
             value = self._bitmaps[id_str]
             return bitmap_from_href(value, self.icon_size)
-        try:
-            ret = wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
-        except:
-            ret = wx.ArtProvider_GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
-        return ret
+        return wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
 
     def _add_action(self, akcja):
         test = False
@@ -63,7 +61,6 @@ class SchGridPanel(wx.Panel):
             else:
                 title = ''
             if not name in ('insert', 'edit', 'delete', 'new', 'get_row', 'view_row') and not name in self.commands:
-
                 if name in self._bitmaps:
                     b = self._get_bmp(name)
                 else:
@@ -71,16 +68,7 @@ class SchGridPanel(wx.Panel):
                         b = bitmap_from_href(akcja['src'])
                     else:
                         b = bitmap_from_href("fa://fa-chevron-right?size=1")
-
-                self.toolbar.AddTool(
-                    self.lp,
-                    label,
-                    b,
-                    wx.NullBitmap,
-                    wx.ITEM_NORMAL,
-                    label,
-                    title,
-                    )
+                self.toolbar.AddTool(self.lp,label,b,wx.NullBitmap,wx.ITEM_NORMAL,label,title)
                 self.commands.append(name)
                 test = True
                 self.lp+=1
@@ -89,10 +77,7 @@ class SchGridPanel(wx.Panel):
     def create_toolbar(self, grid):
         self.GetParent().signal_from_child(self, 'set_bitmap_list')
         self.grid = grid
-        if self.vertical:
-            self.spanel = wx.ScrolledWindow(self, style=wx.VSCROLL)
-        else:
-            self.spanel = wx.ScrolledWindow(self, style=wx.HSCROLL)
+        self.spanel = wx.ScrolledWindow(self, style=wx.VSCROLL if self.vertical else wx.HSCROLL)
         self.commands = []
         self.lp = 101
         (standard, akcje) = grid.get_action_list()
@@ -180,7 +165,6 @@ class SchGridPanel(wx.Panel):
     def on_tool_click(self, event):
         id = event.GetId()
         self.grid.action(self.commands[id - 101])
-
 
     def refresh(self, row):
         if self.grid.GetTable().GetNumberRows() > 0:

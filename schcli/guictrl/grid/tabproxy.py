@@ -17,37 +17,25 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-import wx.html
-import wx.grid as gridlib
-from .datasource import *
-from .grid import *
 import sys
+
+import wx
+
 from schlib.schtools import schjson
 
-
-cmd_info = 1
-cmd_page = 2
-cmd_count = 3
-cmd_sync = 4
-cmd_auto = 5
-cmd_recasstr = 6
-cmd_exec = 7
+_ = wx.GetTranslation
 
 
-class string(str):
-    pass
+CMD_INFO = 1
+CMD_PAGE = 2
+CMD_COUNT = 3
+CMD_SYNC = 4
+CMD_AUTO = 5
+CMD_RECASSTR = 6
+CMD_EXEC = 7
 
 
-class double(float):
-    pass
-
-
-class choice(str):
-    pass
-
-
-def ProcessPostParm(obj):
+def process_post_parm(obj):
     ret = {}
     for (key, value) in list(obj.items()):
         ret[key] = schjson.dumps(value)
@@ -62,21 +50,19 @@ class DataProxy:
         self.tabaddress = tabaddress
         self.tabaddress0 = self.tabaddress
         self.parm = ""
-
         self.parent = None
+        self.http = http
+        self.col_types2 = []
+        self.parm = dict()
+        self.is_valid = True
 
-        self.Http = http
-
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_info, }))
-
-        ret = schjson.loads(self.Http.str())
-
-        self.Http.clear_ptr()
+        self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_INFO, }))
+        ret = schjson.loads(self.http.str())
+        self.http.clear_ptr()
 
         self.col_names = ret["ColNames"]
         self.col_types = ret["ColTypes"]
         self.default_rec = ret["DefaultRec"]
-
         self.col_size = ret["ColLength"]
 
         for i in range(0, len(self.col_size)):
@@ -85,15 +71,13 @@ class DataProxy:
 
         self.auto_cols = ret["AutoCols"]
 
-        self.col_types2 = []
         for col in self.col_types:
             self.col_types2.append(col.split(":")[0])
-        self.tab_conw = {"long": self.conw_long, "string": self.conw_none, "double": self.conw_float, "bool": self.conw_bool,
-                        "choice": self.conw_none, "x": self.conw_none}
-        self.parm = dict()
-        self.is_valid = True
 
-    def SetParent(self, parent):
+        self.tab_conw = {"long": self.conw_long, "string": self.conw_none, "double": self.conw_float,
+            "bool": self.conw_bool, "choice": self.conw_none, "x": self.conw_none}
+
+    def set_parent(self, parent):
         self.parent = parent
 
     def set_address(self, address):
@@ -148,38 +132,82 @@ class DataProxy:
         (self.parm)[key] = value
 
     def get_page(self, nrPage):
-        c = {'cmd': cmd_page, 'nr': nrPage}
+        c = {'cmd': CMD_PAGE, 'nr': nrPage}
         if self.parm:
             for (key, value) in list(self.parm.items()):
                 c[key] = value
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
+        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
 
-        #try:
-        if True:
-            page = schjson.loads(self.Http.str())
-
-            try:
-                retpage = page["page"]
-            except:
-                retpage = None
-                from schlib.schhttptools.htmltools import HtmlErrorDialog
-                dlg = HtmlErrorDialog(wx.GetApp().GetTopWindow(), -1, "Sample Dialog", self.Http.str(), size=(800, 600),
-                                      style=wx.DEFAULT_DIALOG_STYLE)
-                dlg.CenterOnScreen()
-                val = dlg.ShowModal()
-                if val == wx.ID_CANCEL:
-                    sys.exit()
-        #except:
-        #    retpage = None
-
-        self.Http.clear_ptr()
+        page = schjson.loads(self.http.str())
+        try:
+            retpage = page["page"]
+        except:
+            retpage = None
+            from schlib.schhttptools.httperror import http_error
+            http_error(wx.GetApp().GetTopWindow(), self.http.str())
+        self.http.clear_ptr()
         return retpage
 
-    def GetRecAsStr(self, nrRec):
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm({'cmd': cmd_recasstr, 'nr': nrRec}))
-        ret = schjson.loads(self.Http.str())
 
-        self.Http.clear_ptr()
+    def get_max_count(self):
+        return self.max_count
+
+    def get_count(self):
+        parm = {'cmd': CMD_COUNT}
+        if 'value' in self.parm:
+            parm['value']=self.parm['value']
+        self.http.post(self.parent, self.tabaddress, process_post_parm(parm))
+        s = self.http.str()
+        ret = schjson.loads(s)
+        self.http.clear_ptr()
+        self.max_count = int(ret["count"])
+        return self.max_count
+
+    def sync_data(self, listaRecUpdate, listaRecInsert, listaRecDelete):
+        update = schjson.dumps(listaRecUpdate)
+        insert = schjson.dumps(listaRecInsert)
+        delete = schjson.dumps(listaRecDelete)
+        c = {'cmd': CMD_SYNC, 'update': update, 'insert': insert, 'delete': delete}
+        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        self.http.clear_ptr()
+
+    def auto_update(self, col_name, col_names, rec):
+        """Return transformed row after current row is changed"""
+
+        col_name2 = schjson.dumps(col_name)
+        col_names2 = schjson.dumps(col_names)
+        rec2 = schjson.dumps(rec)
+
+        c = {'cmd': CMD_AUTO, 'col_name': col_name2, 'col_names': col_names2, "rec": rec2}
+
+        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        ret = schjson.loads(self.http.str())
+        self.http.clear_ptr()
+        if ret == None:
+            return rec
+        else:
+            return ret["rec"]
+
+    def clone(self):
+        c = DataProxy(self.http, self.tabaddress)
+        c.set_address_parm(self.get_address_parm())
+        return c
+
+    def exec(self, parm):
+        c = {'cmd': CMD_EXEC, 'value': parm}
+        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        ret = schjson.loads(self.http.str())
+        self.http.clear_ptr()
+        return ret
+
+    def get_default_rec(self):
+        return self.default_rec
+
+    def GetRecAsStr(self, nrRec):
+        self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_RECASSTR, 'nr': nrRec}))
+        ret = schjson.loads(self.http.str())
+
+        self.http.clear_ptr()
 
         return ret["recasstr"]
 
@@ -189,9 +217,6 @@ class DataProxy:
     def GetAutoCols(self):
         return self.auto_cols
 
-    def GetDefaultRec(self):
-        return self.default_rec
-
     def GetColTypes(self):
         return self.col_types
 
@@ -200,65 +225,3 @@ class DataProxy:
 
     def GetColIcons(self):
         return None
-
-    def get_max_count(self):
-        return self.max_count
-
-    def GetCount(self):
-        parm = {'cmd': cmd_count}
-        if 'value' in self.parm:
-            parm['value']=self.parm['value']
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(parm))
-        #print "Count:", self.Http.Str()
-        s = self.Http.str()
-        #print(s)
-        ret = schjson.loads(s)
-        #ret = schjson.loads(self.Http.Str())
-        self.Http.clear_ptr()
-        self.max_count = int(ret["count"])
-        return self.max_count
-        #return int(ret["count"])
-
-    def sync_data(self, listaRecUpdate, listaRecInsert, listaRecDelete):
-        update = schjson.dumps(listaRecUpdate)
-        insert = schjson.dumps(listaRecInsert)
-        delete = schjson.dumps(listaRecDelete)
-
-        c = {'cmd': cmd_sync, 'update': update, 'insert': insert, 'delete': delete}
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
-        self.Http.clear_ptr()
-
-    def GetAttr(self, row, col, kind):
-        return None
-
-    def auto_update(self, col_name, col_names, rec):
-        """po zmianie pozycji w kolumnie o nazwie col_name funkcja przetwarza aktualny rekord
-      w wyniku zwracaj\xc4\x85 rekord przetworzony"""
-
-        col_name2 = schjson.dumps(col_name)
-        col_names2 = schjson.dumps(col_names)
-        rec2 = schjson.dumps(rec)
-
-        c = {'cmd': cmd_auto, 'col_name': col_name2, 'col_names': col_names2, "rec": rec2}
-
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
-        ret = schjson.loads(self.Http.str())
-        self.Http.clear_ptr()
-        if ret == None:
-            return rec
-        else:
-            return ret["rec"]
-
-    def clone(self):
-        c = DataProxy(self.Http, self.tabaddress)
-        c.set_address_parm(self.get_address_parm())
-        return c
-
-    def exec(self, parm):
-        c = {'cmd': cmd_exec, 'value': parm}
-        self.Http.post(self.parent, self.tabaddress, ProcessPostParm(c))
-        #self.Http.ClearPtr()
-        #print "Exec ret:", self.Http.Str()
-        ret = schjson.loads(self.Http.str())
-        self.Http.clear_ptr()
-        return ret

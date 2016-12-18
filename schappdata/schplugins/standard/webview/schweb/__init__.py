@@ -32,7 +32,7 @@ def init_plugin_sch_web(
     ):
     from schcli.guictrl.ctrl import SChBaseCtrl
     import schcli.guictrl.ctrl
-    from schcli.guilib import event
+    from schcli.guilib import events
     from schcli.guiframe import form
 # from schclilib.httpeasy import conwert_local_path_fun, local_media_path,
 # get_cookie_str
@@ -107,8 +107,8 @@ def init_plugin_sch_web(
                 if self.redirect_to_local and '127.0.0.2' in url:
                     policy_decision.ignore()
                     self.url = url
-                    evt = event.RefrParmEvent(event.userEVT_REFRPARM,
-                                              self.GetId())
+                    evt = events.RefrParmEvent(events.userEVT_REFRPARM,
+                                               self.GetId())
                     self.GetEventHandler().AddPendingEvent(evt)
                     return True
                 else:

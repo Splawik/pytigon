@@ -17,26 +17,29 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""
+Module contains helper classes for popup widgets.
+
+Popup widgets interact with server.
+
+Server api:
+
+  test(value)
+      return element based on value criteria or empty string if no element meets criteria
+      returned element is in format: (element id, string representation of element)
+
+  dialog(value)
+      return html form to choose element
+      returned element is in format: (element id, string representation of element)
+"""
+
 from base64 import b32encode
 import wx
-from schlib.schtools import schjson
-try:
-    from wx import ComboCtrl
-except:
-    from wx.combo import ComboCtrl
+from wx import ComboCtrl
 from wx.lib import masked
 
+from schlib.schtools import schjson
 
-from wx.adv import LayoutAlgorithm
-
-"""server interface
-  test(value)
-      return "uzupełnienie wartości kontrolki lub pusty ciąg znaków"
-  dialog(value)
-      return "strona html opisująca dialog"
-
-  rekord: (key:rec), rec[0]: id
-"""
 
 class DataPopup(wx.ComboPopup):
     def __init__(self, size, combo, href):
@@ -87,6 +90,7 @@ class DataPopup(wx.ComboPopup):
 class DataPopupControl(ComboCtrl):
 
     def __init__(self, *args, **kwds):
+        """Constructor"""
         if "style" in kwds:
             kwds['style'] |= wx.TE_PROCESS_ENTER
         else:
@@ -103,7 +107,7 @@ class DataPopupControl(ComboCtrl):
         self.html = None
         self.rec_value = []
         self.event_object = None
-        self.sash = None
+        self.page = None
         self.popup = None
         self.start_value = ""
 
@@ -123,8 +127,6 @@ class DataPopupControl(ComboCtrl):
         self.http.get(self, str(self.href) + "size/")
         self.size = schjson.loads(self.http.str())
         self.http.clear_ptr()
-
-        #self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
 
         self.simpleDialog = True
         if self.GetTextCtrl():
@@ -152,16 +154,11 @@ class DataPopupControl(ComboCtrl):
             return self.win
         return ComboCtrl.GetTextCtrl(self)
 
-    def _SetFocus(self):
-        if self.GetTextCtrl():
-            self.GetTextCtrl().SetFocus()
-        else:
-            self.SetFocus()
 
     def KillFocus(self):
         value = ComboCtrl.GetValue(self)
-        #if self.readonly:
-        #    self.focus_out(value)
+        if self.readonly:
+            self.focus_out(value)
 
     def any_parent_command(self, command, *args, **kwds):
         parent = self
@@ -171,10 +168,10 @@ class DataPopupControl(ComboCtrl):
             parent = parent.GetParent()
         return None
 
-    def on_setfocus(self, event):
-        value = ComboCtrl.GetValue(self)
-        self.focus_in(value)
-        event.Skip()
+    #def on_setfocus(self, event):
+    #    value = ComboCtrl.GetValue(self)
+    #    self.focus_in(value)
+    #    event.Skip()
 
     def alternate_button_click(self):
         if self.event_object:
@@ -188,6 +185,7 @@ class DataPopupControl(ComboCtrl):
                 self.event_object.OnButtonClick()
 
     def run_ext_dialog(self):
+        """Run extended version of form to choose element"""
         self.GetTextCtrl().SetFocus()
 
         parm = dict()
@@ -199,10 +197,10 @@ class DataPopupControl(ComboCtrl):
             href = self.href
 
         _href = href + "dialog/|value" if self.dialog_with_value else href + "dialog/"
-        self.sash = self.GetParent().new_child_page(str(_href), "Select", parm)
-        self.sash.body.old_any_parent_command = self.sash.body.any_parent_command
-        self.sash.body.any_parent_command = self.any_parent_command
-        self.sash.body.parent_combo = self
+        self.page = self.GetParent().new_child_page(str(_href), "Select", parm)
+        self.page.body.old_any_parent_command = self.page.body.any_parent_command
+        self.page.body.any_parent_command = self.any_parent_command
+        self.page.body.parent_combo = self
 
     def get_last_control_with_focus(self):
         return self
@@ -222,7 +220,6 @@ class DataPopupControl(ComboCtrl):
                 self.http.clear_ptr()
                 if ret != 1:
                     if ret == 2:
-                        self.forceFocus = False
                         self.OnButtonClick()
                     else:
                         self.clear_rec()
@@ -233,9 +230,17 @@ class DataPopupControl(ComboCtrl):
         return True if parm=='value' else False
 
     def get_parm(self, parm):
+        """For param = 'value' return field value b32 encoded
+        """
         return b32encode(ComboCtrl.GetValue(self).encode('utf-8')) if parm=='value' else None
 
     def set_rec(self, value, value_rec, dismiss=False):
+        """Set field value
+
+        Args:
+            value: element id
+            value_rec: element
+        """
         value2 = value
         if self.event_object:
             if hasattr(self.event_object, "set_rec"):
@@ -253,9 +258,11 @@ class DataPopupControl(ComboCtrl):
             parent.on_popup_control_change_value(self)
 
     def get_rec(self):
+        """Get element selected in field"""
         return self.rec_value
 
     def clear_rec(self):
+        """Clear field"""
         self.start_value = ""
         self.SetValue(self.clear_str)
         self.rec_value = []
@@ -263,7 +270,6 @@ class DataPopupControl(ComboCtrl):
     def on_create(self, parent):
         from schcli.guiframe.page import SchPage
         href = self.href + "dialog/|value" if self.dialog_with_value else self.href + "dialog/"
-        #self.html = SchPage(parent, href, self, size=self.size)
         self.html = SchPage(parent, href, self)
         self.html.body.parent_combo = self
         return self.html
@@ -285,15 +291,20 @@ class DataPopupControl(ComboCtrl):
             wx.CallAfter(_after)
 
     def Dismiss(self):
-        if self.sash:
-            self.sash.body.old_any_parent_command("on_cancel", None)
-            self.sash = None
+        if self.page:
+            self.page.body.old_any_parent_command("on_cancel", None)
+            self.page = None
         else:
             super().Dismiss()
         self.SetFocus()
 
 
     def set_new_href(self, href):
+        """Set new base address to server service
+
+        Args:
+            href - new address
+        """
         self.href = href
 
         href3 = self.href.split(';')
