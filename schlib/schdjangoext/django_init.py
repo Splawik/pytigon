@@ -17,10 +17,12 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.apps.config import AppConfig, MODELS_MODULE_NAME
 
-from django.utils.module_loading import module_has_submodule
 from importlib import import_module
+
+from django.apps.config import AppConfig, MODELS_MODULE_NAME
+from django.utils.module_loading import module_has_submodule
+
 
 class AppConfigMod(AppConfig):
     def __init__(self, *argi, **argv):

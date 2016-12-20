@@ -119,8 +119,6 @@ if any(s.startswith('--rpc') for s in sys.argv):
 else:
     RPC = False
 
-if platform.system() == "Windows":
-    wx.html2.WebView.New("start:"+wx.html2.__file__.replace('html2.py', 'cefclient.exe'))
 
 #import gc
 #gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
@@ -560,19 +558,6 @@ def _main_init(argv):
     app_title = _("Pytigon")
     embeded_browser = False
 
-    app = SchApp()
-
-    #if len(argv)==1 and '.ptig' in argv[0].lower():
-    #    if zipfile.is_zipfile(argv[0]):
-    #        argv2 = argv
-    #        pass
-    #    else:
-    #        with open(argv[0],"rt") as f:
-    #            buf = f.read()
-    #            argv2 = buf.split(' ')
-    #else:
-    #    argv2 = argv
-
     try:
         (opts, args) = getopt.getopt(argv, 'h:dmp', [
             'help',
@@ -594,13 +579,14 @@ def _main_init(argv):
             ])
     except getopt.GetoptError:
         usage()
-        sys.exit(2)
+        return (None, None)
 
+    app = SchApp()
 
     for (opt, arg) in opts:
         if opt in ('-h', '--help'):
             usage()
-            sys.exit()
+            return (0, 0)
         elif opt == '-d':
             global _DEBUG
             _DEBUG = 1
@@ -917,12 +903,12 @@ def main(argv):
             while(True):
                 time.sleep(100)
         else:
+            if platform.system() == "Windows":
+                wx.html2.WebView.New("start:" + wx.html2.__file__.replace('html2.py', 'cefclient.exe'))
             _main_run()
             if platform.system() == "Windows":
                 wx.html2.WebView.New("messageloop")
                 wx.html2.WebView.New("end")
-    else:
-        sys.exit(0)
 
 
 if __name__ == '__main__':

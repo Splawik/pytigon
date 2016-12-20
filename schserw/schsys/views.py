@@ -17,19 +17,20 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from schlib.schdjangoext.dbtable import DbTable
-from django.http import HttpResponse, HttpResponseRedirect
-from schlib.schtools import schjson
 from base64 import b32decode
-from schlib.schviews.viewtools import render_to_response
-from django.template import RequestContext
-from django.http import Http404
+
 from django.conf import settings
-from schlib.schmodels import import_model
-from schlib.schtasks.base_task import get_process_manager
+from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.core.urlresolvers import reverse
-from django.contrib import messages
+from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect
+
+from schlib.schdjangoext.tools import import_model
+from schlib.schtable.dbtable import DbTable
+from schlib.schtools import schjson
+from schlib.schviews.viewtools import render_to_response
+
 
 def change_password(request):
     old_password = request.POST.get("current_password", "")

@@ -17,6 +17,30 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""
+Module contains base classes for toolbars and menu:
+Class hierary:
+ToolbarBar
+    ToolbarPage
+        ToolbarPanel
+            ToolbarButton
+            ToolbarButton
+            ...
+        ToolbarPanel
+        ....
+        BaseHtmlPanel
+    ....
+
+One ToolbarBar can contains many ToolbarPage objects, one ToolbarPage can contains many ToolbarPanel objects etc.
+
+There are real toolbars and menus, which are base on those abstract classes:
+- MenuToolbarBar
+- GenericToolbarBar
+- StandardToolbarBar
+- ModernToolbarBar
+- TreeToolbarBar
+"""
+
 import wx
 
 from schcli.guilib.events import *
@@ -56,6 +80,7 @@ class BaseHtmlPanel():
 
 
 class ToolbarButton():
+    """Toolbar button"""
 
     TYPE_SIMPLE = 0
     TYPE_DROPDOWN = 1
@@ -65,6 +90,22 @@ class ToolbarButton():
     TYPE_SEPARATOR = 5
 
     def __init__(self, parent_panel, id, title, bitmap = None, bitmap_disabled = None, kind=TYPE_SIMPLE):
+        """Constructor, creating a new toolbar button
+
+        Args:
+            parent_panel - parent ToolbarPanel object
+            id - An integer by which the tool may be identified
+            title - button title
+            bitmap - button bitmap
+            bitmap_disabled - button bitmap used when button is disabled
+            kind - type of button, may be:
+                TYPE_SIMPLE = 0
+                TYPE_DROPDOWN = 1
+                TYPE_HYBRID = 2
+                TYPE_TOOGLE = 3
+                TYPE_PANEL = 4
+                TYPE_SEPARATOR = 5
+        """
         self.parent_panel = parent_panel
         self.id = id
         self.title = title
@@ -77,12 +118,23 @@ class ToolbarButton():
 
 
 class ToolbarPanel(object):
+    """Toolbar panel"""
 
     TYPE_PANEL_BUTTONBAR = 0
     TYPE_PANEL_TOOLBAR = 1
     TYPE_PANEL_PANELBAR = 2
 
     def __init__(self, parent_page, title, kind=TYPE_PANEL_BUTTONBAR):
+        """Constructor, creating a new toolbar panel
+
+        Args:
+            parent_page - parent ToolbarPage object
+            title - panel title
+            kind - type of panel, may be:
+                TYPE_PANEL_BUTTONBAR = 0
+                TYPE_PANEL_TOOLBAR = 1
+                TYPE_PANEL_PANELBAR = 2
+        """
         self.parent_page = parent_page
         self.title = title
         self.kind = kind
@@ -97,56 +149,133 @@ class ToolbarPanel(object):
         return b
 
     def create_button(self, id, title, bitmap=None, bitmap_disabled=None, kind=ToolbarButton.TYPE_SIMPLE):
+        """Function return new ToolbarButton, shoud be derived. In derived class shoud return ToolbarButton
+        derived object.
+
+        Args: see ToolbarButton contructor
+        """
         return ToolbarButton(self, id, title, bitmap, bitmap_disabled, kind)
 
     def append(self, id, title, bitmap=None, bitmap_disabled=None, kind=ToolbarButton.TYPE_SIMPLE):
+        """Append button to panel.
+
+        Args: see ToolbarButton contructor
+        """
         button = self.create_button(id, title, bitmap, bitmap_disabled, kind)
         self.buttons.append(button)
         return button
 
     def add_simple_tool(self, id, title, bitmaps):
+        """Append simple tool to toolbar.
+
+        Args:
+            id - an integer by which the tool may be identified
+            title - button title
+            bitmaps - list of bitmaps, can contains 0, 1 or 2 bitmaps
+                first bitmap is used for tool in normal state, second for disabled tool.
+        """
         b = self._transform_bitmaps_parm(bitmaps)
         return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_SIMPLE)
 
     def add_dropdown_tool(self, id, title, bitmaps):
+        """Append simple tool to toolbar.
+
+        Args:
+            id - an integer by which the tool may be identified
+            title - button title
+            bitmaps - list of bitmaps, can contains 0, 1 or 2 bitmaps
+                first bitmap is used for tool in normal state, second for disabled tool.
+        """
         b = self._transform_bitmaps_parm(bitmaps)
         return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_DROPDOWN)
 
     def add_hybrid_tool(self, id, title, bitmaps):
+        """Append hybrid tool to toolbar.
+
+        Args:
+            id - an integer by which the tool may be identified
+            title - button title
+            bitmaps - list of bitmaps, can contains 0, 1 or 2 bitmaps
+                first bitmap is used for tool in normal state, second for disabled tool.
+        """
         b = self._transform_bitmaps_parm(bitmaps)
         return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_HYBRID)
 
     def add_toogle_tool(self, id, title, bitmaps):
+        """Append toogle tool to toolbar.
+
+        Args:
+            id - an integer by which the tool may be identified
+            title - button title
+            bitmaps - list of bitmaps, can contains 0, 1 or 2 bitmaps
+                first bitmap is used for tool in normal state, second for disabled tool.
+        """
         b = self._transform_bitmaps_parm(bitmaps)
         return self.append(id, title, b[0], b[1], kind = ToolbarButton.TYPE_TOOGLE)
 
     def add_separator(self):
+        """Append separator to toolbar."""
         pass
 
 
 class ToolbarPage(object):
+    """Toolbar page"""
+
     TYPE_PAGE_NORMAL = 0
 
     def __init__(self, parent_bar, title, kind=TYPE_PAGE_NORMAL):
+        """Constructor, creating a new ToolbarPage page.
+
+        Args:
+            parent_bar - parent ToolbarBar object
+            title - page title
+            kind - type of page, may be:
+                TYPE_PAGE_NORMAL = 0
+        """
         self.parent_bar = parent_bar
         self.title = title
         self.kind = kind
         self.panels = []
 
     def create_panel(self, title, kind):
+        """Function return new ToolbarPanel, shoud be derived. In derived class shoud return ToolbarPanel
+        derived object.
+
+        Args: see ToolbarPanel contructor
+        """
         return self.ToolbarPanel(self, title, kind=ToolbarPanel.TYPE_PANEL_BUTTONBAR)
 
     def create_html_panel(self, title):
+        """Function shoud be overwriten in derived class.
+        In derived class shoud return BaseHtmlPanel derived object.
+
+        Args: see BaseHtmlPanel contructor
+        """
         return None
 
     def append(self, title, kind=ToolbarPanel.TYPE_PANEL_BUTTONBAR):
+        """Append new ToolbarPanel to page.
+
+        Args:
+            title - panel title
+            kind - see ToolbarPanel constructor
+
+        """
         p = self.create_panel(title, kind)
         self.panels.append(p)
         return p
 
 
 class ToolbarBar(object):
+    """Toolbar bar"""
+
     def __init__(self, parent, gui_style):
+        """Constructor, ToolbarBar is base class for all menus and toolbars connected to top frame window.
+
+        Args:
+            parent - parent window - top wx.Frame derived object
+            gui_style - string description of gui interface. Base on this string standard toolbar elements are created.
+        """
         self.parent = parent
         self.main_page = None
         self.gui_style = gui_style
@@ -163,9 +292,19 @@ class ToolbarBar(object):
         self.standard_buttons.create_address_panel(self.main_page)
 
     def create_page(self, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
+        """Function return new ToolbarPage, shoud be derived. In derived class shoud return ToolbarPage
+        derived object.
+
+        Args: see ToolbarPage contructor
+        """
         return self.ToolbarPage(self, title, kind)
 
     def remove_page(self, title):
+        """Remove page witch specified title from toolbar
+
+        Args:
+            title: title of removed page
+        """
         for page in self.pages:
             if page.title == title:
                 self.pages.remove(page)
@@ -176,6 +315,10 @@ class ToolbarBar(object):
                 return
 
     def append(self, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
+        """Append page to toolbar.
+
+        Args: see ToolbarPage constructor
+        """
         for page in self.pages:
             if page.title == title and page.kind == kind:
                 return page
@@ -186,29 +329,52 @@ class ToolbarBar(object):
         return p
 
     def create(self):
+        """Create toolbar"""
         pass
 
     def close(self):
+        """Close toolbar"""
         pass
 
     def create_panel_in_main_page(self, title, kind):
+        """Create panel in a main page
+
+        Args:
+            title - new panels title
+            kind - type of new panel - see ToolbarPanel constructor.
+        """
         if not self.main_page:
             self.append(_("main"))
         return self.main_page.create_panel(title, kind)
 
     def bind(self, fun, id=wx.ID_ANY, e=None):
+        """Bind event handler to toolbar
+
+        Args:
+            fun - handler function
+            id - identifier of event
+            e - type of event
+        """
         if e:
             self.parent.Bind(e, fun, id=id)
         else:
             self.parent.Bind(wx.EVT_MENU, fun, id=id)
 
     def un_bind(self, id=wx.ID_ANY, e=None):
+        """Unbind event handler from toolbar."""
         if e:
             self.parent.Unbind(e, id=id)
         else:
             self.parent.Unbind(wx.EVT_MENU, id=id)
 
     def create_html_win(self, toolbar_page, address_or_parser, parameters):
+        """Create html page in toolbar. Not all toolbars may be used
+
+        Args:
+            toolbar_page - name of toolbar page
+            address_or_parser - addres of http page
+            parameters - parameters for http request
+        """
         if not toolbar_page:
             u_name = 'main'
             page_name = _('main')
@@ -248,4 +414,5 @@ class ToolbarBar(object):
         return None
 
     def new_child_page(self,address_or_parser,title='',param=None):
+        """Crate new chid page, for toolbar child page is transfered to desktop window"""
         return wx.GetApp().GetTopWindow().new_main_page(address_or_parser, title,param)

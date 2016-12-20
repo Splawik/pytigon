@@ -13,36 +13,32 @@
 #Pytigon - wxpython and django application framework
 
 #author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
+#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import os
-import django
+import traceback
+import sys
 
-setup_old = django.setup
+def import_model(app, tab):
+    try:
+        m = '%s.models' % str(app)
+        module = None
+        models = None
+        for tmp in sys.modules:
+            if m in tmp:
+                module = sys.modules[tmp]
+                models = module
+                break
+        if not module:
+            module = __import__('%s.models' % str(app))
+        if module:
+            if not models:
+                models = getattr(module, 'models')
+            model = getattr(models, tab)
+            return model
+        return None
+    except:
+        traceback.print_exc()
 
-def setup(*argi, **argv):
-    import schserw.schsys.initdjango
-    schserw.schsys.initdjango.init_django()
-    setup_old(*argi, **argv)
-
-django.setup = setup
-
-def cmd(arg, from_main=False):
-    if from_main:
-        argv = arg
-    else:
-        argv=['manage.py', arg]
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
-    from django.core.management import execute_from_command_line
-    execute_from_command_line(argv)
-
-
-def syncdb():
-    cmd('syncdb')
-
-
-def help():
-    cmd('help')
 

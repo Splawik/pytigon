@@ -19,7 +19,8 @@
 
 import wx
 
-"""Module contains all user defined events"""
+"""Module contains all user defined events
+"""
 
 
 ID_START = wx.NewId()

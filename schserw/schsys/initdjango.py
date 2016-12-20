@@ -23,7 +23,7 @@ import mimetypes
 from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
 from django.forms.widgets import HiddenInput
-import schlib.schmodels.fields
+#import schlib.schmodels.fields
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
 from copy import deepcopy
 from django.contrib.auth import get_permission_codename

@@ -17,9 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from . import table
-from django.db import models
+
 import django.apps.registry
+
+from schlib.schtable import table
 from schlib.schtools import schjson
 
 
@@ -87,12 +88,12 @@ __COLSIZE__ = {
 class DbTable(table.Table):
 
     def __init__(self, app, tab):
-        self.AutoCols = []
-        self.ForeignKeyParm = dict()
-        self.App = app
-        self.Tab = tab
+        self.auto_cols = []
+        self.foreign_key_parm = dict()
+        self.app = app
+        self.tab = tab
 
-        self.TabConw = {
+        self.tab_conw = {
             'long': self.conw_long,
             'string': self.conw_none,
             'double': self.conw_float,
@@ -101,13 +102,12 @@ class DbTable(table.Table):
             'x': self.conw_x,
             }
 
-        self.Class = django.apps.registry.apps.get_model(app, tab)
-        self.ColLength = self._get_col_length()
-        self.ColNames = self._get_col_names()
-        self.ColTypes = self._get_col_types()
-        self.DefaultRec = self._get_default_rec()
-        self.Query = None
-
+        self.model_class = django.apps.registry.apps.get_model(app, tab)
+        self.col_length = self._get_col_length()
+        self.col_names = self._get_col_names()
+        self.col_types = self._get_col_types()
+        self.default_rec = self._get_default_rec()
+        self.query = None
 
     def conw_long(self, l):
         if l:
@@ -139,7 +139,7 @@ class DbTable(table.Table):
 
     def _get_col_names(self):
         n = []
-        for col in self.Class._meta.fields:
+        for col in self.model_class._meta.fields:
             if col.verbose_name:
                 n.append(col.verbose_name)
             else:
@@ -149,18 +149,18 @@ class DbTable(table.Table):
     def _get_default_rec(self):
         n = []
         global __COLINIT__
-        for col in self.Class._meta.fields:
+        for col in self.model_class._meta.fields:
             n.append(__COLINIT__[col.__class__.__name__])
         return n
 
     def _get_col_types(self):
         n = []
         global __COLMAP__
-        for col in self.Class._meta.fields:
+        for col in self.model_class._meta.fields:
             if type(col).__name__ in ('ForeignKey', 'HiddenForeignKey'):
-                pos = 'x:/%s/table/%s/%s/dict/' % (self.App, self.Tab, col.name)
-                if col.name[:-2] in self.ForeignKeyParm:
-                    pos = pos + '|' + self.ForeignKeyParm
+                pos = 'x:/%s/table/%s/%s/dict/' % (self.app, self.tab, col.name)
+                if col.name[:-2] in self.foreign_key_parm:
+                    pos = pos + '|' + self.foreign_key_parm
                 n.append(pos)
             else:
                 if col.choices:
@@ -169,18 +169,11 @@ class DbTable(table.Table):
                     n.append(__COLMAP__[col.__class__.__name__])
         return n
 
-    def _get_col_types2(self):
-        ret = self._GetColTypes()
-        for i in range(len(ret)):
-            if ret[i][0] == 'x':
-                ret[i] = 'x'
-        return ret
-
     def _get_col_length(self):
         global __COLMAP__
         global __COLSIZE__
         ret = []
-        for col in self.Class._meta.fields:
+        for col in self.model_class._meta.fields:
             size = __COLSIZE__[col.__class__.__name__]
             if size == 0:
                 if col.choices:
@@ -204,7 +197,7 @@ class DbTable(table.Table):
             if item[0] == '-':
                 item = item[1:]
                 znak = True
-            for col in self.Class._meta.fields:
+            for col in self.model_class._meta.fields:
                 if col.verbose_name:
                     colname0 = col.verbose_name
                 else:
@@ -216,26 +209,21 @@ class DbTable(table.Table):
                     sortobj = sortobj.order_by(colname1)
         return sortobj
 
-    def page(
-        self,
-        nr,
-        sort=None,
-        value=None,
-        ):
+    def page(self,nr,sort=None,value=None):
         if value and value != '':
-            if hasattr(self.Class, 'simple_query'):
-                data = self.Class.simple_query(value)
+            if hasattr(self.model_class, 'simple_query'):
+                data = self.model_class.simple_query(value)
             else:
-                data = self.Class.objects.all()
+                data = self.model_class.objects.all()
         else:
-            data = self.Class.objects.all()
+            data = self.model_class.objects.all()
         if sort:
             data = self._set_sort(data, sort)
         tab = []
         data = data[nr * 256:(nr + 1) * 256]
         for rec in data:
             row = []
-            for field in self.Class._meta.fields:
+            for field in self.model_class._meta.fields:
                 value = field.value_from_object(rec)
                 if field.choices:
                     if value in dict(field.choices):
@@ -243,8 +231,7 @@ class DbTable(table.Table):
                     else:
                         value = ''
                 else:
-                    if type(field).__name__ in ('ForeignKey', 'HiddenForeignKey'
-                            ):
+                    if type(field).__name__ in ('ForeignKey', 'HiddenForeignKey'):
                         value2 = getattr(rec, field.name)
                         if value2:
                             value2 = str(value2.id) + ':' + str(value2)
@@ -259,18 +246,16 @@ class DbTable(table.Table):
 
 
     def rec_as_str(self, nr):
-        obj = self.Class.objects.get(id=nr)
+        obj = self.model_class.objects.get(id=nr)
         return str(obj)
 
-
     def count(self, v):
-        return self.Class.objects.count()
-
+        return self.model_class.objects.count()
 
     def insert_rec(self, rec):
         i = 1
-        obj = self.Class()
-        for field in self.Class._meta.fields[1:]:
+        obj = self.model_class()
+        for field in self.model_class._meta.fields[1:]:
             if field.choices:
                 field.save_form_data(obj, rec[i].split(':')[0])
             else:
@@ -278,9 +263,7 @@ class DbTable(table.Table):
                     if rec[i] == '' or rec[i] == None:
                         field.save_form_data(obj, None)
                     else:
-                        field.save_form_data(obj,
-                                field.rel.to.objects.get(id=int(rec[i].split(':'
-                                )[0])))
+                        field.save_form_data(obj, field.rel.to.objects.get(id=int(rec[i].split(':')[0])))
                 else:
                     field.save_form_data(obj, rec[i])
             i = i + 1
@@ -289,8 +272,8 @@ class DbTable(table.Table):
 
     def update_rec(self, rec):
         i = 1
-        obj = self.Class.objects.get(id=rec[0])
-        for field in self.Class._meta.fields[1:]:
+        obj = self.model_class.objects.get(id=rec[0])
+        for field in self.model_class._meta.fields[1:]:
             if field.choices:
                 field.save_form_data(obj, rec[i].split(':')[0])
             else:
@@ -299,23 +282,17 @@ class DbTable(table.Table):
                         field.save_form_data(obj, None)
                     else:
                         field.save_form_data(obj,
-                                field.rel.to.objects.get(id=int(rec[i].split(':'
-                                )[0])))
+                                field.rel.to.objects.get(id=int(rec[i].split(':')[0])))
                 else:
                     field.save_form_data(obj, rec[i])
             i = i + 1
         obj.save()
 
     def delete_rec(self, nr):
-        obj = self.Class.objects.get(id=nr)
+        obj = self.model_class.objects.get(id=nr)
         obj.delete()
 
-    def auto(
-        self,
-        col_name,
-        col_names,
-        rec,
-        ):
+    def auto(self,col_name,col_names,rec):
         pass
 
 

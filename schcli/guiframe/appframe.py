@@ -124,7 +124,7 @@ class SchAppFrame(wx.Frame):
         self.idle_objects = []
         self.gui_style = gui_style
         self.command = {}
-        self.command_enabled_always = []
+        #self.command_enabled_always = []
         self.last_pane = None
         self.active_pane = None
         self.active_page = None
@@ -299,11 +299,11 @@ class SchAppFrame(wx.Frame):
         self.bind_command(self.on_open, id=wx.ID_OPEN)
         self.bind_command(self.on_exit, id=wx.ID_EXIT)
 
-        if self.toolbar_interface:
-            self.toolbar_interface.bind_ui(self.on_update_ui_command, wx.ID_ANY)
+        #if self.toolbar_interface:
+            #self.toolbar_interface.bind_ui(self.on_update_ui_command, wx.ID_ANY)
 
-            for pos in [wx.ID_EXIT, ID_WEB_NEW_WINDOW, wx.ID_OPEN]:
-                self.command_enabled_always.append(pos)
+            #for pos in [wx.ID_EXIT, ID_WEB_NEW_WINDOW, wx.ID_OPEN]:
+            #    self.command_enabled_always.append(pos)
 
         self.bind_command(self.on_next_tab, id=ID_NEXTTAB)
         self.bind_command(self.on_prev_tab, id=ID_PREVTAB)
@@ -429,21 +429,21 @@ class SchAppFrame(wx.Frame):
 
         event.Skip()
 
-    def on_update_ui_command(self, event):
-        """Bind wx.EVT_UPDATE_UI to this event when you want action to be always enabled"""
-        id = event.GetId()
-        if id in self.command:
-            event.Enable(True)
-        else:
-            if id in self.command_enabled_always:
-                event.Enable(True)
-            else:
-                if id < 0:
-                    event.Enable(True)
-                else:
-                    #event.Enable(False)
-                    event.Enable(True)
-                    #event.Skip()
+    #def on_update_ui_command(self, event):
+    #    """Bind wx.EVT_UPDATE_UI to this event when you want action to be always enabled"""
+    #    id = event.GetId()
+    #    if id in self.command:
+    #        event.Enable(True)
+    #    else:
+    #        if id in self.command_enabled_always:
+    #            event.Enable(True)
+    #        else:
+    #            if id < 0:
+    #                event.Enable(True)
+    #            else:
+    #                #event.Enable(False)
+    #                event.Enable(True)
+    #                #event.Skip()
 
     def on_pane_activated(self, event):
         active_pane = event.GetPane()

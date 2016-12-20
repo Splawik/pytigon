@@ -17,10 +17,13 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 from schlib.schindent.indent_style import ConwertToHtml
 
-SimpleCloseElem = ['br', 'meta', 'input']
-AutoCloseDjangoElem = [
+
+SIMPLE_CLOSE_ELEM = ['br', 'meta', 'input']
+
+AUTO_CLOSE_DJANGO_ELEM = [
     'for',
     'if',
     'ifequal',
@@ -31,21 +34,25 @@ AutoCloseDjangoElem = [
     'with',
     ]
 
-NoAutoCloseDjangoElem = [
+NO_AUTO_CLOSE_DJANGO_ELEM = [
     'else',
     ]
 
 
-
 def ihtml_to_html(file_name, input_str=None, lang='en'):
-    conwert = ConwertToHtml(file_name, SimpleCloseElem, AutoCloseDjangoElem, NoAutoCloseDjangoElem, input_str, lang)
+    """Convert ihtml syntax to html
+
+    Args:
+        file_name - template file name
+        input_str - input string with ihtml content
+        lang - language
+    """
+    conwert = ConwertToHtml(file_name, SIMPLE_CLOSE_ELEM, AUTO_CLOSE_DJANGO_ELEM, NO_AUTO_CLOSE_DJANGO_ELEM,
+        input_str, lang)
     try:
         conwert.process()
         return conwert.to_str()
     except:
-        #import traceback
         import sys
         print(sys.exc_info())
-        #print(traceback.print_exc())
         return ""
-

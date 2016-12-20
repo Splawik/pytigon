@@ -17,24 +17,24 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from base64 import b32encode, b32decode
 import binascii
-from schlib.schtools import schjson
-from schlib.schtools.tools import bencode, bdecode
-import sys
-from schlib.schdjangoext.table import Table
-from schlib.schfs.vfstools import replace_dot
-from django.http import HttpResponse
-from django.core.cache import cache
-from django.core.files.storage import default_storage
-
-from fs.opener import fsopendir
-
-import fs.path
-from schlib.schtools.data import is_null
-from schlib.schtasks.task import get_process_manager
 import datetime
 import re
+import sys
+from base64 import b32encode, b32decode
+
+import fs.path
+from django.core.cache import cache
+from django.core.files.storage import default_storage
+from django.http import HttpResponse
+from fs.opener import fsopendir
+
+from schlib.schfs.vfstools import replace_dot
+from schlib.schtable.table import Table
+from schlib.schtasks.task import get_process_manager
+from schlib.schtools import schjson
+from schlib.schtools.data import is_null
+from schlib.schtools.tools import bdecode
 
 
 def automount(path):
@@ -67,11 +67,11 @@ class VfsTable(Table):
     def __init__(self, folder):
         self.var_count = -1
         self.folder = replace_dot(folder).replace('%20', ' ')
-        self.AutoCols = []
-        self.ColLength = [10, 10, 10]
-        self.ColNames = ['ID', 'Name', 'Size', 'Created']
-        self.ColTypes = ['int', 'str', 'int', 'datetime']
-        self.DefaultRec = ['', 0, None]
+        self.auto_cols = []
+        self.col_length = [10, 10, 10]
+        self.col_names = ['ID', 'Name', 'Size', 'Created']
+        self.col_types = ['int', 'str', 'int', 'datetime']
+        self.default_rec = ['', 0, None]
         self.task_href = None
 
     def set_task_href(self, href):
@@ -125,7 +125,7 @@ class VfsTable(Table):
                         '',
                         (info['created_time'], ',,#f00,s'),
                         info,
-                        {'edit': ('tableurl', '../../%s//' % id, 'Change folder')},
+                        {'edit': ('tableurl', '../../%s//' % id, _('Change folder'))},
                     ])
             else:
                 files.append((p, pos))
@@ -143,21 +143,13 @@ class VfsTable(Table):
                     (size, '>,' + self._size_to_color(size)),
                     (ctime, ',' + self._time_to_color(ctime)),
                     info,
-                    {'edit': ('command', '../../%s//' % id, 'Open file')},
+                    {'edit': ('command', '../../%s//' % id, _('Open file'))},
                     ])
         return elements
 
-    def page(
-        self,
-        nr,
-        sort=None,
-        value=None,
-        ):
+    def page(self,nr,sort=None,value=None):
         key = 'FOLDER_' + b32encode(self.folder.encode('utf-8')).decode('utf-8') + '_TAB'
-
-        #tabvalue = cache.get(key + '::' + is_null(value, ''))
         tabvalue = None
-
         if tabvalue:
             tab = tabvalue
         else:
@@ -173,10 +165,10 @@ class VfsTable(Table):
                     id = 0
                     znak = 0
                     if pos[0] == '-':
-                        id = self.ColNames.index(pos[1:])
+                        id = self.col_names.index(pos[1:])
                         znak = -1
                     else:
-                        id = self.ColNames.index(pos)
+                        id = self.col_names.index(pos)
                         znak = 1
                     ts.append((id, znak))
             tab.sort(cmp=lambda x, y: str_cmp(x, y, ts))
@@ -204,16 +196,11 @@ class VfsTable(Table):
     def delete_rec(self, nr):
         pass
 
-    def auto(
-        self,
-        col_name,
-        col_names,
-        rec,
-        ):
+    def auto(self,col_name,col_names,rec):
         pass
 
     def exec_command(self, value):
-        """format pliku exec:
+        """exec:
         COPY(source_folder, dest_folder, files, mask);
         DEL(source_folder, files);
         MKDIR(source_folder, folder_name);
@@ -221,8 +208,6 @@ class VfsTable(Table):
         RENAME(source_path, new_name);
         NEWFILE(source_path, new_name);
         """
-
-        print(value)
 
         thread_commands = ('COPY', 'MOVE', 'DELETE')
         if value[0] in thread_commands:
@@ -284,7 +269,6 @@ def vfsopen(request, file):
             file2 = b32decode(file).decode('utf-8')
         except:
             file2 = b32decode(file.encode('utf-8')).decode('utf-8')
-
 
         plik = default_storage.fs.open(automount(file2),'rb')
         buf = plik.read()

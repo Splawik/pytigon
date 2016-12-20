@@ -16,29 +16,3 @@
 #copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
-
-import traceback
-import sys
-
-def import_model(app, tab):
-    try:
-        m = '%s.models' % str(app)
-        module = None
-        models = None
-        for tmp in sys.modules:
-            if m in tmp:                
-                module = sys.modules[tmp]
-                models = module
-                break
-        if not module:
-            module = __import__('%s.models' % str(app))
-        if module:
-            if not models:
-                models = getattr(module, 'models')
-            model = getattr(models, tab)
-            return model
-        return None
-    except:        
-        traceback.print_exc()
-
-

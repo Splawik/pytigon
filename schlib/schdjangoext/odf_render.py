@@ -18,22 +18,23 @@ import xml.dom.minidom
 from schlib.schodf.odf_process import DocTransform
 
 """
-Składnia:
-    Pierwszy znak w komórce arkusza:
-        * - wynik w postaci tekstowej
-        : - wynik jako liczba
-        @ lub $ - wynik jako formuła
-    Pierwszy znak w notatce:
-        !   - przeniesienie wyrażenia do poziomu aktualnej komórki 
-              element przed komórką oddzielony od elementu za komórką znakiem @
-              !{% for i in lista %}@{%endfor%}
-        !!  - przeniesienie wyrażenia do poziomu aktualnego wiersza 
-        !!! - przeniesienie wyrażenia do poziomu aktualnego arkusza
+Syntax:
+    First char in spreadsheet cell:
+        * - result in text format
+        : - result as number
+        @ or $ - result as formula
+    First char in note:
+        !   - move expression to current cell
+              element before cell and element after cell separated by char: '@'
+              example:
+              !{% for i in list %}@{%endfor%}
+        !!  - move expression to current row
+        !!! - move expression to current sheet
         
-    W dowolnym miejscu składnia zgodna z django:
-        {{zmienna}}, {% blok %} itp. 
-    Dodatkowo wyrażenie: _start_ zamieniane jest na: {{
-                         _end_ zamieniane jest na: }}
+    Syntax compatibile with django:
+        {{var}}, {% block %} etc.
+    There are aliases: '_start_' is alias for '{{'
+                       '_end_' is alias for '}}'
 """
 
 template_dirs = getattr(settings, 'TEMPLATES')[0]['DIRS']
@@ -55,38 +56,26 @@ def oo_dict(template_name):
         ret.append((element.getAttribute("table:name"), element.getAttribute("table:name")))
     return ret
 
+
 class DefaultTbl(object):
   def __init__(self):
-    self.Row = -1
-    self.Col = -1
+    self.row = -1
+    self.col = -1
 
   def IncRow(self, row=1):
-      self.Row = self.Row+row
-      #return ""
-      #return self.Row
+      self.row = self.row+row
 
   def IncCol(self, col=1):
-      self.Col = self.Col + col
-      #return self.Col
-      #return ""
+      self.col = self.col + col
 
   def SetCol(self, col):
-    self.Col=col
+    self.col=col
 
   def SetRow(self, row):
-    self.Row=row
+    self.row=row
 
 
-def render_odf(
-    template_name,
-    dictionary=None,
-    context_instance=None,
-    mimetype=None,
-    tabele=None,
-    debug=None,
-    ):
-
-
+def render_odf(template_name, context_instance=None, debug=None):
     if not 'tbl' in context_instance:
         context = { 'tbl':  DefaultTbl(), }
     else:
@@ -129,15 +118,8 @@ def render_odf(
     return ret2
 
 
-def render_to_response_odf(
-    template_name,
-    dictionary=None,
-    context_instance=None,
-    mimetype=None,
-    tabele=None,
-    debug=None,
-    ):
-    s = render_odf(template_name, dictionary, context_instance, mimetype, tabele, debug)
+def render_to_response_odf(template_name, context_instance=None, debug=None):
+    s = render_odf(template_name, context_instance, debug)
     if not s[0]:
         response = None
     else:
@@ -145,7 +127,6 @@ def render_to_response_odf(
             name = s[1].split('_')[1]
         else:
             name = s[1]
-
         response = HttpResponse()
         response['Content-Disposition'] = 'attachment; filename=%s'% name
         response['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'                        

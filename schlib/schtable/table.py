@@ -17,40 +17,37 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 from schlib.schtools import schjson
-cmd_info = 1
-cmd_page = 2
-cmd_count = 3
-cmd_sync = 4
-cmd_auto = 5
-cmd_recasstr = 6
-cmd_exec = 7
+
+CMD_INFO = 1
+CMD_PAGE = 2
+CMD_COUNT = 3
+CMD_SYNC = 4
+CMD_AUTO = 5
+CMD_RECASSTR = 6
+CMD_EXEC = 7
 
 
 class Table:
-
+    """Base class for server table interface"""
     def __init__(self):
-        self.AutoCols = []
-        self.ColLength = [0]
-        self.ColNames = ['ID']
-        self.ColTypes = ['int']
-        self.DefaultRec = [0]
+        self.auto_cols = []
+        self.col_length = [0]
+        self.col_names = ['ID']
+        self.col_types = ['int']
+        self.default_rec = [0]
 
     def _info(self):
         return schjson.dumps({
-            'AutoCols': self.AutoCols,
-            'ColLength': self.ColLength,
-            'ColNames': self.ColNames,
-            'ColTypes': self.ColTypes,
-            'DefaultRec': self.DefaultRec,
+            'auto_cols': self.auto_cols,
+            'col_length': self.col_length,
+            'col_names': self.col_names,
+            'col_types': self.col_types,
+            'default_rec': self.default_rec,
             })
 
-    def _page(
-        self,
-        nr,
-        sort=None,
-        value=None,
-        ):
+    def _page(self,nr,sort=None,value=None):
         return schjson.dumps({'page': self.page(nr, sort, value)})
 
     def _rec_as_str(self, nr):
@@ -59,12 +56,7 @@ class Table:
     def _count(self, value=None):
         return schjson.dumps({'count': self.count(value)})
 
-    def _sync(
-        self,
-        update,
-        insert,
-        delete,
-        ):
+    def _sync(self,update,insert,delete):
         if len(update) > 0:
             for rec in update:
                 self.update_rec(rec)
@@ -76,13 +68,8 @@ class Table:
                 self.insert_rec(rec)
         return 'OK'
 
-    def _auto(
-        self,
-        col_name,
-        col_names,
-        rec,
-        ):
-        return schjson.dumps({'rec': self.Auto(col_name, col_names, rec)})
+    def _auto(self,col_name,col_names,rec):
+        return schjson.dumps({'rec': self.auto(col_name, col_names, rec)})
 
     def _exec(self, value=None):
         ret = self.exec_command(value)
@@ -91,12 +78,7 @@ class Table:
         else:
             return ret
 
-    def page(
-        self,
-        nr,
-        sort=None,
-        value=None,
-        ):
+    def page(self,nr,sort=None,value=None):
         pass
 
     def count(self, value):
@@ -114,12 +96,7 @@ class Table:
     def delete_rec(self, nr):
         pass
 
-    def auto(
-        self,
-        col_name,
-        col_names,
-        rec,
-        ):
+    def auto(self,col_name,col_names,rec):
         pass
 
     def exec_command(self, value):
@@ -132,9 +109,9 @@ class Table:
             cmd = cmd_page
             cmd_dict = {}
             cmd_dict['nr'] = 0
-        if cmd == cmd_info:
+        if cmd == CMD_INFO:
             return self._info()
-        if cmd == cmd_page:
+        if cmd == CMD_PAGE:
             if 'value' in cmd_dict:
                 value = cmd_dict['value']
             else:
@@ -143,22 +120,21 @@ class Table:
                 return self._page(int(cmd_dict['nr']), cmd_dict['sort'], value=value)
             else:
                 return self._page(int(cmd_dict['nr']), value=value)
-        if cmd == cmd_count:
+        if cmd == CMD_COUNT:
             if 'value' in cmd_dict:
                 value = cmd_dict['value']
             else:
                 value = None
             return self._count(value)
-        if cmd == cmd_sync:
+        if cmd == CMD_SYNC:
             return self._sync(schjson.loads(cmd_dict['update']),
                               schjson.loads(cmd_dict['insert']),
                               schjson.loads(cmd_dict['delete']))
-        if cmd == cmd_auto:
-            return self._auto(cmd_dict['col_name'], cmd_dict['col_names'],
-                              cmd_dict['rec'])
-        if cmd == cmd_recasstr:
+        if cmd == CMD_AUTO:
+            return self._auto(cmd_dict['col_name'], cmd_dict['col_names'], cmd_dict['rec'])
+        if cmd == CMD_RECASSTR:
             return self._rec_as_str(int(cmd_dict['nr']))
-        if cmd == cmd_exec:
+        if cmd == CMD_EXEC:
             if 'value' in cmd_dict:
                 value = cmd_dict['value']
             else:
@@ -168,11 +144,11 @@ class Table:
 
 
 def str_cmp(x, y, ts):
-    (id, znak) = ts[0]
+    (id, s) = ts[0]
     if x[id] > y[id]:
-        return znak
+        return s
     if x[id] < y[id]:
-        return -1 * znak
+        return -1 * s
     if len(ts) > 1:
         return str_cmp(x, y, ts[1:])
     else:
@@ -181,30 +157,18 @@ def str_cmp(x, y, ts):
 
 class TablePy(Table):
 
-    def __init__(
-        self,
-        table,
-        col_names,
-        col_typ,
-        col_length,
-        default_rec,
-        ):
-        self.Tab = table
-        self.AutoCols = []
-        self.ColLength = col_length
-        self.ColNames = ['ID'] + col_names
-        self.ColTypes = ['int'] + col_typ
-        self.DefaultRec = [0] + default_rec
+    def __init__(self,table,col_names,col_typ,col_length,default_rec):
+        self.tab = table
+        self.auto_cols = []
+        self.col_length = col_length
+        self.col_names = ['ID'] + col_names
+        self.col_types = ['int'] + col_typ
+        self.default_rec = [0] + default_rec
 
-    def page(
-        self,
-        nr,
-        sort=None,
-        value=None,
-        ):
+    def page(self,nr,sort=None,value=None):
         tab = []
         i = 0
-        tab2 = self.Tab[nr * 256:(nr + 1) * 256]
+        tab2 = self.tab[nr * 256:(nr + 1) * 256]
         for rec in tab2:
             tab.append([nr * 256 + i] + rec)
             i += 1
@@ -214,35 +178,30 @@ class TablePy(Table):
             for pos in s:
                 if pos != '':
                     id = 0
-                    znak = 0
+                    ss = 0
                     if pos[0] == '-':
-                        id = self.ColNames.index(pos[1:])
-                        znak = -1
+                        id = self.col_names.index(pos[1:])
+                        ss = -1
                     else:
-                        id = self.ColNames.index(pos)
-                        znak = 1
-                    ts.append((id, znak))
+                        id = self.col_names.index(pos)
+                        ss = 1
+                    ts.append((id, ss))
             tab.sort(cmp=lambda x, y: str_cmp(x, y, ts))
         return tab
 
     def count(self, value=None):
-        return len(self.Tab)
+        return len(self.tab)
 
     def insert_rec(self, rec):
-        self.Tab.append(rec[1:])
+        self.tab.append(rec[1:])
 
     def update_rec(self, rec):
-        self.Tab[rec[0]] = rec[1:]
+        self.tab[rec[0]] = rec[1:]
 
     def delete_rec(self, nr):
-        self.Tab.pop(nr)
+        self.tab.pop(nr)
 
-    def auto(
-        self,
-        col_name,
-        col_names,
-        rec,
-        ):
+    def auto(self,col_name,col_names,rec):
         pass
 
 

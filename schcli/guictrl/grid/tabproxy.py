@@ -60,16 +60,16 @@ class DataProxy:
         ret = schjson.loads(self.http.str())
         self.http.clear_ptr()
 
-        self.col_names = ret["ColNames"]
-        self.col_types = ret["ColTypes"]
-        self.default_rec = ret["DefaultRec"]
-        self.col_size = ret["ColLength"]
+        self.col_names = ret["col_names"]
+        self.col_types = ret["col_types"]
+        self.default_rec = ret["default_rec"]
+        self.col_size = ret["col_length"]
 
         for i in range(0, len(self.col_size)):
             if (self.col_size)[i] > 32:
                 (self.col_size)[i] = 32
 
-        self.auto_cols = ret["AutoCols"]
+        self.auto_cols = ret["auto_cols"]
 
         for col in self.col_types:
             self.col_types2.append(col.split(":")[0])

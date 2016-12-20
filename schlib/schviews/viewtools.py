@@ -157,7 +157,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
     def render(self):
         if self.context_data['view'].doc_type()=='odf':
             self['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'
-            file_out, file_in = render_odf(self.template_name, None, Context(self.resolve_context(self.context_data)))
+            file_out, file_in = render_odf(self.template_name, Context(self.resolve_context(self.context_data)))
             if file_out:
                 f = open(file_out,"rb")
                 self.content = f.read()

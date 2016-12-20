@@ -160,43 +160,75 @@ class StandardButtons(object):
         self.info = ''
         self.address_txt = ''
 
+    def make_ui_handler(self, fun_name, event_id, propagete=False):
+        def on_update_ui(event):
+            win = wx.Window.FindFocus()
+            while(win):
+                if hasattr(win, fun_name):
+                    if getattr(win, fun_name)():
+                        event.Enable(True)
+                        return
+                if propagete:
+                    win=win.GetParent()
+                else:
+                    break
+            event.Enable(False)
+
+        self.toolbar_interface.parent.Bind(wx.EVT_UPDATE_UI, on_update_ui, id=event_id)
+
+    def make_handler(self, fun_name, event_id, propagate=False):
+        def on_command(event):
+            win = wx.Window.FindFocus()
+            while(win):
+                if hasattr(win, fun_name):
+                    getattr(win, fun_name)()
+                if propagate:
+                    win = win.GetParent()
+                else:
+                    break
+        self.toolbar_interface.bind(on_command, id=event_id)
+
+    def make_handlers(self, event_id, fun_name, fun_name2=None, propagate=False):
+        self.make_handler(fun_name, event_id, propagate)
+        if fun_name2:
+            self.make_ui_handler(fun_name2, event_id, propagate)
+
     def create_file_panel(self, toolbar_page):
         if self.file:
-            bar = self.ti.create_panel_in_main_page(_('File'),
-                    TYPE_TOOLBAR)
+            bar = self.ti.create_panel_in_main_page(_('File'), TYPE_TOOLBAR)
             self.tbs['file'] = {}
             self.tbs['file']['bar'] = bar
             if 'exit' in self.gui_style:
                 self.tbs['file']['exit'] = bar.add_simple_tool(wx.ID_EXIT, _('Exit'),
-                        bitmaps_from_art_id(wx.ART_QUIT, wx.Size(32, 32)))
+                    bitmaps_from_art_id(wx.ART_QUIT, wx.Size(32, 32)))
             test = False
             if 'open' in self.gui_style:
                 bar.add_separator()
                 self.tbs['file']['open'] = bar.add_simple_tool(wx.ID_OPEN, _('Open'),
-                        bitmaps_from_art_id(wx.ART_FILE_OPEN, wx.Size(32, 32)))
+                    bitmaps_from_art_id(wx.ART_FILE_OPEN, wx.Size(32, 32)))
                 test = True
             if 'save' in self.gui_style:
                 if not test:
                     bar.add_separator()
                 self.tbs['file']['save'] = bar.add_simple_tool(wx.ID_SAVE, _('Save'),
-                        bitmaps_from_art_id(wx.ART_FILE_SAVE, wx.Size(32, 32)))
+                    bitmaps_from_art_id(wx.ART_FILE_SAVE, wx.Size(32, 32)))
+                self.make_handlers(wx.ID_SAVE, 'Save', 'CanSave', propagate=True)
                 if 'save_as' in self.gui_style:
-                    self.tbs['file']['save_as'] = bar.add_simple_tool(wx.ID_SAVEAS,
-                            _('Save as'), bitmaps_from_art_id(wx.ART_FILE_SAVE_AS,
-                            wx.Size(32, 32)))
+                    self.tbs['file']['save_as'] = bar.add_simple_tool(wx.ID_SAVEAS, _('Save as'),
+                        bitmaps_from_art_id(wx.ART_FILE_SAVE_AS, wx.Size(32, 32)))
+                    self.make_handlers(wx.ID_SAVEAS, 'SaveAs', 'CanSaveAs', propagate=True)
                 test = True
             if 'print' in self.gui_style:
                 if test:
                     bar.add_separator()
-                    self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT,
-                            _('Print'), bitmaps_from_art_id(wx.ART_PRINT, wx.Size(32,
-                            32)))
+                    self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT, _('Print'),
+                        bitmaps_from_art_id(wx.ART_PRINT, wx.Size(32, 32)))
                     bar.add_separator()
                 else:
-                    self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT,
-                            _('Print'), bitmaps_from_art_id(wx.ART_PRINT, wx.Size(32,
-                            32)))
-                self.ti.bind_dropdown(self.OnPrint, ID_PRINT)
+                    self.tbs['file']['print'] = bar.AddHybridTool(ID_PRINT, _('Print'),
+                        bitmaps_from_art_id(wx.ART_PRINT, wx.Size(32, 32)))
+                self.make_handlers(ID_PRINT, 'Print', 'CanPrint', propagate=True)
+                self.ti.bind_dropdown(self.on_print, ID_PRINT)
 
     def create_edit_panel(self, toolbar_page):
         if self.clipboard:
@@ -204,15 +236,21 @@ class StandardButtons(object):
             bar = self.ti.create_panel_in_main_page(_('Clipboard'), TYPE_BUTTONBAR)
             bar.Refr = self.clipboard_refr
             self.tbs['clipboard']['bar'] = bar
-            self.tbs['clipboard']['copy'] = bar.add_simple_tool(wx.ID_COPY, _('Copy'), bitmaps_from_art_id(wx.ART_COPY, wx.Size(32, 32)))
-            self.tbs['clipboard']['cut'] = bar.add_simple_tool(wx.ID_CUT, _('Cut'), bitmaps_from_art_id(wx.ART_CUT, wx.Size(32, 32)))
-            self.tbs['clipboard']['paste'] = bar.add_simple_tool(wx.ID_PASTE, _('Paste'), bitmaps_from_art_id(wx.ART_PASTE, wx.Size(32, 32)))
+            self.tbs['clipboard']['copy'] = bar.add_simple_tool(wx.ID_COPY, _('Copy'),
+                bitmaps_from_art_id(wx.ART_COPY, wx.Size(32, 32)))
+            self.tbs['clipboard']['cut'] = bar.add_simple_tool(wx.ID_CUT, _('Cut'),
+                bitmaps_from_art_id(wx.ART_CUT, wx.Size(32, 32)))
+            self.tbs['clipboard']['paste'] = bar.add_simple_tool(wx.ID_PASTE, _('Paste'),
+                bitmaps_from_art_id(wx.ART_PASTE, wx.Size(32, 32)))
+
+            self.make_handlers(wx.ID_COPY, 'Copy', 'CanCopy')
+            self.make_handlers(wx.ID_CUT, 'Cut', 'CanCut')
+            self.make_handlers(wx.ID_PASTE, 'Paste', 'CanPaste')
 
     def create_operations_panel(self, toolbar_page):
         if self.operations:
             self.tbs['operations'] = {}
-            bar = self.ti.CreatePanelInMainPage(_('Operations'),
-                    TYPE_TOOLBAR)
+            bar = self.ti.CreatePanelInMainPage(_('Operations'), TYPE_TOOLBAR)
             self.tbs['operations']['bar'] = bar
             self.tbs['operations']['undo'] = bar.add_simple_tool(wx.ID_UNDO, _('Undo'),
                     bitmaps_from_art_id(wx.ART_UNDO, wx.Size(32, 32)))
@@ -225,7 +263,11 @@ class StandardButtons(object):
                     _('File manager'), bitmaps_from_art_id(wx.ART_FOLDER_OPEN, wx.Size(32, 32)))
             self.tbs['operations']['editor'] = bar.add_simple_tool(wx.ID_ANY, _('Editor'),
                     bitmaps_from_art_id(wx.ART_NORMAL_FILE, wx.Size(32, 32)))
-            self.ti.bind_dropdown(self.OnFind, ID_FIND)
+            self.ti.bind_dropdown(self.on_find, ID_FIND)
+
+            self.make_handlers(wx.ID_UNDO, 'Undo', 'CanUndo')
+            self.make_handlers(wx.ID_REDO, 'Redo', 'CanRedo')
+            self.make_handlers(ID_FIND, 'Find', 'CanFind')
 
     def create_browse_panel(self, toolbar_page):
         if self.browse or self.nav:
@@ -235,22 +277,26 @@ class StandardButtons(object):
             self.webobject = None
             self.tbs['browser']['bar'] = bar
             self.tbs['browser']['back'] = bar.add_simple_tool(ID_WEB_BACK, _('Back'),
-                    bitmaps_from_art_id(wx.ART_GO_BACK, wx.Size(32, 32)))
-            self.tbs['browser']['forward'] = bar.add_simple_tool(ID_WEB_FORWARD,
-                    _('Forward'), bitmaps_from_art_id(wx.ART_GO_FORWARD, wx.Size(32,
-                    32)))
+                bitmaps_from_art_id(wx.ART_GO_BACK, wx.Size(32, 32)))
+            self.tbs['browser']['forward'] = bar.add_simple_tool(ID_WEB_FORWARD, _('Forward'),
+                bitmaps_from_art_id(wx.ART_GO_FORWARD, wx.Size(32,32)))
+            self.make_handlers(ID_WEB_BACK, 'WebBack', 'CanWebBack', propagate=True)
+            self.make_handlers(ID_WEB_FORWARD, 'WebForward', 'CanWebForward', propagate=True)
+
             if self.browse:
                 self.tbs['browser']['stop'] = bar.add_simple_tool(ID_WEB_STOP, _('Stop'),
-                        bitmaps_from_art_id(wx.ART_CROSS_MARK, wx.Size(32, 32)))
-                self.tbs['browser']['refresh'] = bar.add_simple_tool(ID_WEB_REFRESH,
-                        _('Refresh'), bitmaps_from_art_id(wx.ART_GO_TO_PARENT,
-                        wx.Size(32, 32)))
-                self.tbs['browser']['addbookmark'] = \
-                    bar.add_simple_tool(ID_WEB_ADDBOOKMARK, _('Add bookmark'),
-                                  bitmaps_from_art_id(wx.ART_ADD_BOOKMARK, wx.Size(32,
-                                  32)))
-                self.tbs['browser']['newpage'] = bar.add_simple_tool(ID_WEB_NEW_WINDOW,
-                        _('New page'), bitmaps_from_art_id(wx.ART_NEW, wx.Size(32, 32)))
+                    bitmaps_from_art_id(wx.ART_CROSS_MARK, wx.Size(32, 32)))
+                self.tbs['browser']['refresh'] = bar.add_simple_tool(ID_WEB_REFRESH, _('Refresh'),
+                    bitmaps_from_art_id(wx.ART_GO_TO_PARENT, wx.Size(32, 32)))
+                self.tbs['browser']['addbookmark'] =  bar.add_simple_tool(ID_WEB_ADDBOOKMARK, _('Add bookmark'),
+                    bitmaps_from_art_id(wx.ART_ADD_BOOKMARK, wx.Size(32,32)))
+                self.tbs['browser']['newpage'] = bar.add_simple_tool(ID_WEB_NEW_WINDOW, _('New page'),
+                    bitmaps_from_art_id(wx.ART_NEW, wx.Size(32, 32)))
+
+                self.make_handlers(ID_WEB_STOP, 'WebStop', 'CanWebStop', propagate=True)
+                self.make_handlers(ID_WEB_REFRESH, 'WebRefresh', 'CanWebRefresh', propagate=True)
+                self.make_handlers(ID_WEB_ADDBOOKMARK, 'WebAddBookmark', 'CanWebAddBookmark', propagate=True)
+                self.make_handlers(ID_WEB_NEW_WINDOW, 'WebNewWindow', 'CanWebNewWindow', propagate=True)
         else:
             self.tbs['browser'] = {}
             self.tbs['browser']['bar'] = EmptyBar()
