@@ -40,7 +40,6 @@ def superstrip(s):
 
 
 class HtmlModParser(Parser):
-
     def __init__(self, url=None):
         Parser.__init__(self)
         if url:
@@ -49,7 +48,6 @@ class HtmlModParser(Parser):
 
 
 class HtmlProxyParser(Parser):
-
     def __init__(self, tag):
         Parser.__init__(self)
         

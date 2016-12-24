@@ -36,7 +36,8 @@ import wx.lib.platebtn as platebtn
 import wx.lib.buttons  as  buttons
 
 from schlib.schtools import createparm
-from schlib.schhttptools.schhtml_parser import ShtmlParser
+from schlib.schparser.html_parsers import ShtmlParser
+
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 

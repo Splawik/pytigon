@@ -328,7 +328,7 @@ class SchNotebookPage(wx.Window):
 
         Args:
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
 
             title - new page title
             parameters - dict
@@ -361,7 +361,7 @@ class SchNotebookPage(wx.Window):
 
         Args:
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
 
             title - new page title
 

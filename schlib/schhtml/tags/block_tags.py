@@ -24,24 +24,16 @@
 #    from HTMLParser import HTMLParser, HTMLParseError
 
 
-from schlib.schhtml.basehtmltags import BaseHtmlElemParser, BaseHtmlAtomParser, \
-    register_tag_map
+from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map
 from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, \
-    RenderCellSpacing, RenderPadding, RenderMargin, get_size
-from schlib.schhtml.basedc import SubDc
+    RenderPadding, RenderMargin, get_size
 from .p_tags import ParBase
 from schlib.schhtml.htmltools import HtmlProxyParser
 
 
 class BodyTag(ParBase):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         ParBase.__init__(self, parent, parser, tag, attrs)
         self.child_tags += [
             'p',
@@ -220,14 +212,12 @@ class BodyTag(ParBase):
                     else:
                         w = width
                     child.set_width(w)
-                    if w + self.extra_space[0] + self.extra_space[1]\
-                         > self._maxwidth:
-                        self._maxwidth = w + self.extra_space[0]\
-                             + self.extra_space[1]
+                    if w + self.extra_space[0] + self.extra_space[1] > self._maxwidth:
+                        self._maxwidth = w + self.extra_space[0] + self.extra_space[1]
                     dy = child.get_height()
                     child.set_height(dy)
                     if not self.dc.paging or dy <= self.height - self.footer_height - self.y\
-                         or self.new_page != 2:
+                            or self.new_page != 2:
                         (dy, cont) = child.render(self.dc_page.subdc(0, self.y,
                                 self.width, dy))
                         self.new_page = 2
@@ -239,24 +229,15 @@ class BodyTag(ParBase):
                     if self.y > self._maxheight:
                         self._maxheight = self.y
 
-
 register_tag_map('body', BodyTag)
 
 
 class FormTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = parent.child_tags
-        self.child_tags += [
-            'table',
-        ]
+        self.child_tags += [ 'table', ]
         self.fields = None
         self.field_names = {}
         self.upload = None
@@ -273,12 +254,7 @@ class FormTag(BaseHtmlElemParser):
     def handle_data(self, data):
         pass
 
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self, parser, tag, attrs):
         obj = BaseHtmlElemParser.handle_starttag(self, parser, tag, attrs)
         if obj:
             obj.parent = self.parent

@@ -17,16 +17,16 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 try:
     import cairo
 except:
     pass
-
-from math import pi
-from .basedc import BaseDc, BaseDcInfo
 import io
 from math import pi
-from base64 import b32decode
+
+from schcli.schhtml.basedc import BaseDc, BaseDcInfo
+
 # A4 mm width, height = 2100, 2970
 #
 # A4 cale width, height = 8.28, 11.69
@@ -35,15 +35,7 @@ from base64 import b32decode
 
 class CairoDc(BaseDc):
 
-    def __init__(
-        self,
-        ctx=None,
-        calc_only=False,
-        width=-1,
-        height=-1,
-        output_name=None,
-        scale=1.0,
-        ):
+    def __init__(self, ctx=None, calc_only=False, width=-1, height=-1, output_name=None, scale=1.0):
         BaseDc.__init__(self, calc_only, width, height, output_name, scale)
         if self.width >= 0:
             width2 = self.width
@@ -105,8 +97,6 @@ class CairoDc(BaseDc):
         self.ctx.move_to(x*self.scale, y*self.scale)
         self.last_move_to = (x*self.scale, y*self.scale)
 
-# ------ Base graphics methods
-
     def start_page(self):
         self.ctx.show_page()
         BaseDc.start_page(self)
@@ -125,8 +115,6 @@ class CairoDc(BaseDc):
             self.ctx.fill()
         BaseDc.fill(self)
 
-# ------ Base graphics methods 2
-
     def set_color(
         self,
         r,
@@ -135,7 +123,6 @@ class CairoDc(BaseDc):
         a=255,
         ):
         self.ctx.set_source_rgb(r / 256.0, g / 256.0, b / 256.0)
-# print "set_color:", r,g,b if r==g==b==8: r = g/0
         BaseDc.set_color(self, r, g, b, a)
 
     def set_line_width(self, width):
@@ -162,38 +149,17 @@ class CairoDc(BaseDc):
         BaseDc.set_style(self, style)
         return style_tab
 
-# ------ Base graphics methods 3
-
-    def add_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_line(self, x, y, dx, dy):
         self._move_to(x, y)
         self.ctx.line_to((x + dx)*self.scale, (y + dy)*self.scale)
         self.last_move_to = ((x + dx)*self.scale, (y + dy)*self.scale)
         BaseDc.add_line(self, x, y, dx, dy)
 
-    def add_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_rectangle(self, x, y, dx, dy):
         self.ctx.rectangle(x*self.scale, y*self.scale, dx*self.scale, dy*self.scale)
         BaseDc.add_rectangle(self, x, y, dx, dy)
 
-    def add_rounded_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        ):
+    def add_rounded_rectangle(self, x, y, dx, dy, radius):
         degrees = pi / 180.0
         self.ctx.new_sub_path()
         self.ctx.arc(((x + dx) - radius)*self.scale, (y + radius)*self.scale, radius*self.scale, -90 * degrees, 0
@@ -205,41 +171,14 @@ class CairoDc(BaseDc):
         self.ctx.arc((x + radius)*self.scale, (y + radius)*self.scale, radius*self.scale, 180 * degrees, 270
                       * degrees)
         self.ctx.close_path()
-        BaseDc.add_rounded_rectangle(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            radius,
-            )
+        BaseDc.add_rounded_rectangle(self, x, y, dx, dy, radius)
 
-    def add_arc(
-        self,
-        x,
-        y,
-        radius,
-        angle1,
-        angle2,
-        ):
+    def add_arc(self, x, y, radius, angle1, angle2):
         self.ctx.arc(x*self.scale, y*self.scale, radius*self.scale, ((2 * pi) * angle1) / 360, ((2 * pi)
                       * angle2) / 360)
-        BaseDc.add_arc(
-            self,
-            x,
-            y,
-            radius,
-            angle1,
-            angle2,
-            )
+        BaseDc.add_arc(self, x, y, radius, angle1, angle2)
 
-    def add_ellipse(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_ellipse(self, x, y, dx, dy):
         self.ctx.save()
         self.ctx.translate((x + dx / 2)*self.scale, (y + dy / 2)*self.scale)
         self.ctx.scale(self.scale*dx / 2.0, self.scale*dy / 2.0)
@@ -267,27 +206,13 @@ class CairoDc(BaseDc):
             self.last_move_to = pos0
         BaseDc.add_spline(self, xytab)
 
-# ------ Base graphics methods 3
-
-    def draw_text(
-        self,
-        x,
-        y,
-        txt,
-        ):
+    def draw_text(self, x, y, txt):
         sizes = self.ctx.text_extents(txt)[:4]
-# print sizes[0]
         self.ctx.move_to((x - sizes[0] / 2)*self.scale, y*self.scale)
         self.ctx.show_text(txt)
         BaseDc.draw_text(self, x, y, txt)
 
-    def draw_rotated_text(
-        self,
-        x,
-        y,
-        txt,
-        angle,
-        ):
+    def draw_rotated_text(self, x, y, txt, angle):
         self.ctx.save()
         self.ctx.move_to(x*self.scale, y*self.scale)
         self.ctx.rotate(((2 * pi) * angle) / 360)
@@ -299,36 +224,18 @@ class CairoDc(BaseDc):
 # preserve img scale 3 - scale to dx or dy - preserve img scale, fit fool image
 # 4 - repeat x 5 - repeat y 6 - repeat x and y
 
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
+    def draw_image(self, x, y, dx, dy, scale, png_data):
         try:
-# png_stream = cStringIO.StringIO(b32decode(png_data))
             png_stream = io.StringIO(png_data)
             surface = cairo.ImageSurface.create_from_png(png_stream)
         except:
             surface = cairo.ImageSurface.create_from_png('sleeptimer.png')
-            print('No:', png_name)
         w = surface.get_width()
         h = surface.get_height()
         self.ctx.save()
         self.ctx.rectangle(x, y, dx, dy)
         self.ctx.clip()
-        (x_scale, y_scale) = self._scale_image(
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            w,
-            h,
-            )
+        (x_scale, y_scale) = self._scale_image(x, y, dx, dy, scale, w, h)
         if scale < 4:
             self.ctx.scale(x_scale, y_scale)
             self.ctx.set_source_surface(surface, x / x_scale, y / y_scale)
@@ -343,29 +250,15 @@ class CairoDc(BaseDc):
                 while delta_x < dx:
                     if scale == 5 and delta_x > 0:
                         break
-                    self.ctx.set_source_surface(surface, x + delta_x, y
-                             + delta_y)
-# print "paint2"
+                    self.ctx.set_source_surface(surface, x + delta_x, y + delta_y)
                     self.ctx.paint()
                     delta_x += w
                 delta_y += h
         self.ctx.restore()
-        BaseDc.draw_image(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            png_data,
-            )
-
-
-# --------------------------------------------------------------------------
+        BaseDc.draw_image(self, x, y, dx, dy, scale, png_data)
 
 
 class CairoDcInfo(BaseDcInfo):
-
     def __init__(self, dc):
         BaseDcInfo.__init__(self, dc)
 
@@ -397,7 +290,6 @@ class CairoDcInfo(BaseDcInfo):
 
     def get_img_size(self, png_data):
         try:
-# png_stream = cStringIO.StringIO(b32decode(png_data))
             png_stream = io.StringIO(png_data)
             surface = cairo.ImageSurface.create_from_png(png_stream)
         except:

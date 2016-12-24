@@ -17,35 +17,23 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import zipfile
 import io
 import json
 
-import six
 
 class BaseDc(object):
 
-    def __init__(
-        self,
-        calc_only=False,
-        width=-1,
-        height=-1,
-        output_name=None,
-        scale=1.0,
-        ):
+    def __init__(self,calc_only=False,width=-1,height=-1,output_name=None,scale=1.0):
         self.x = 0
         self.y = 0
         self.gparent = None
         self.dc_info = None
-# self.dc_info = BaseDCInfo(self)
 
         self.store = []
         self.rec = True
         self.calc_only = calc_only
-
-# self.default_height = 3508 self.default_width = 2480
-#
-# self.default_height = 842 self.default_width = 595
 
         self.default_height = 595
         self.default_width = 842
@@ -64,15 +52,7 @@ class BaseDc(object):
         pass
 
     def state(self):
-        rec = [
-            len(self.pages),
-            self.width,
-            self.height,
-            self.base_font_size,
-            self.paging,
-            self._maxwidth,
-            self._maxheight,
-            ]
+        rec = [len(self.pages),self.width,self.height,self.base_font_size,self.paging,self._maxwidth,self._maxheight]
         if self.dc_info:
             rec.append(self.dc_info.styles)
         else:
@@ -127,25 +107,10 @@ class BaseDc(object):
             (r, g, b) = [int(n, 16) for n in (r, g, b)]
         return (r, g, b)
 
-    def subdc(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        reg_max=True,
-        ):
-        return SubDc(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            reg_max,
-            )
+    def subdc(self,x,y,dx,dy,reg_max=True,):
+        return SubDc(self,x,y,dx,dy,reg_max)
 
     def get_dc_info(self):
-# return BaseDCInfo(self)
         return self.dc_info
 
     def record(self, name, args=None):
@@ -217,16 +182,7 @@ class BaseDc(object):
             self.rec = rec
         zf.close()
 
-    def _scale_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        image_w,
-        image_h,
-        ):
+    def _scale_image(self,x,y,dx,dy,scale,image_w,image_h):
         if scale < 4:
             x_scale = 1
             y_scale = 1
@@ -263,8 +219,6 @@ class BaseDc(object):
         if len(self.store) > 0:
             self.pages.append(self.store)
 
-# ---------------------------------------------
-
     def start_page(self):
         if len(self.store) > 0:
             self.pages.append(self.store)
@@ -283,8 +237,6 @@ class BaseDc(object):
     def draw(self, *args):
         self.record('draw', args)
 
-# ---------------------------------------------
-
     def set_color(self, *args):
         self.record('set_color', args)
 
@@ -294,8 +246,6 @@ class BaseDc(object):
     def set_style(self, *args):
         self.last_style = args[0]
         self.record('set_style', args)
-
-# ---------------------------------------------
 
     def add_line(self, *args):
         self.record('add_line', args)
@@ -327,15 +277,7 @@ class BaseDc(object):
     def draw_image(self, *args):
         self.record('draw_image', args)
 
-#  ---------------------------------------------
-
-    def draw_atom_line(
-        self,
-        x,
-        y,
-        line,
-        ):
-# if x==0 and y==0: x = y/x
+    def draw_atom_line(self,x,y,line):
         self.last_style = 'None'
         dx = 0
         test = 0
@@ -348,11 +290,9 @@ class BaseDc(object):
                 self.add_line((x + dx) - 1, y + line.dy_up + 2, obj.dx
                                - obj.dx_space + 1, 0)
                 self.draw()
-            #if obj.data.__class__ in (str, unicode):
-            if isinstance(obj.data, six.string_types):
+            if type(obj.data)==str:
                 ret = False
                 if obj.parent and hasattr(obj.parent, 'draw_atom'):
-# print obj.parent
                     ret = obj.parent.draw_atom(
                         self,
                         obj.style,
@@ -361,12 +301,9 @@ class BaseDc(object):
                         obj.get_width(),
                         obj.get_height(),
                         )
-# ret = obj.parent.draw_atom(self, obj.style, x+dx, y+line.dy_up-obj.dy_up)
                 if not ret:
-# self.draw_text(x+dx,y+line.dy_up, obj.data)
                     self.draw_text(x + dx, y + line.dy_up, obj.data)
             else:
-# print "basedc:draw_atom_line:", obj.data.__class__ try:
                 obj.data.draw_atom(
                     self,
                     obj.style,
@@ -375,50 +312,13 @@ class BaseDc(object):
                     obj.get_width(),
                     obj.get_height(),
                     )
-# except: print "basedc:draw_atom_line:", obj.data.__class__
             dx += obj.dx
 
 
-# def new_path(self): self.record("new_path")
-#
-# def stroke(self): self.record("stroke")
-#
-# def fill(self): self.record("fill")
-#
-# def draw(self): self.record("draw")
-#
-# def set_pen(self, *args): self.record("set_pen", args)
-#
-# def set_brush(self, *args): self.record("set_brush", args)
-#
-# def move_to(self, *args): self.record("move_to", args)
-#
-# def line_to(self, *args): self.record("line_to", args)
-#
-# def show_text(self, *args): self.record("show_text", args)
-#
-# def set_style(self, *args): self.last_style = args[0] self.record("set_style",
-# args)
-#
-# def draw_atom_line(self, *args): #self.record("draw_atom_line", args) pass
-#
-# def rectangle(self, *args): self.record("rectangle", args)
-#
-# def draw_rect(self, *args): self.record("draw_rect", args)
-#
-# def draw_line(self, *args): self.record("draw_line", args)
-#
-# def draw_image(self, *args): self.record("draw_image", args)
-
-
 class BaseDcInfo(object):
-
     def __init__(self, dc):
         self.dc = dc
         self.styles = []
-
-# p = '%s;%s;%d;%d;%d;%d' % (color, font_family, font_size, font_style,
-# font_weight, text_decoration) id = self.get_style_id(p)
 
     def get_text_width(self, txt, style):
         return 12 * len(txt)
@@ -443,12 +343,7 @@ class BaseDcInfo(object):
             optsize = maxsize
         return (optsize, minsize, maxsize)
 
-    def get_multiline_text_height(
-        self,
-        txt,
-        width,
-        style='default',
-        ):
+    def get_multiline_text_height(self,txt,width,style='default'):
         lines = []
         line = ''
         line_ok = ''
@@ -490,7 +385,6 @@ class BaseDcInfo(object):
 
 
 def convert_fun_arg(fn):
-
     def fun(self, *args, **kwargs):
         dx = 0
         dy = 0
@@ -537,15 +431,7 @@ def convert_fun_arg(fn):
 
 class SubDc(object):
 
-    def __init__(
-        self,
-        parent,
-        x,
-        y,
-        dx,
-        dy,
-        reg_max=True,
-        ):
+    def __init__(self,parent,x,y,dx,dy,reg_max=True):
         self.x = parent.x + x
         self.y = parent.y + y
         self.dx = dx
@@ -557,22 +443,8 @@ class SubDc(object):
         if reg_max:
             self._parent.test_point(self.x + self.dx, self.y + self.dy)
 
-    def subdc(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        reg_max=True,
-        ):
-        return SubDc(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            reg_max,
-            )
+    def subdc(self,x,y,dx,dy,reg_max=True,):
+        return SubDc(self,x,y,dx,dy,reg_max)
 
     def get_size(self):
         return [self.dx, self.dy]
@@ -607,58 +479,24 @@ class SubDc(object):
                     else:
                         fun()
 
-# ===========================================================================
-
     @convert_fun_arg
-    def add_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_line(self,x,y,dx,dy):
         return self._parent.add_line(x, y, dx, dy)
 
     @convert_fun_arg
-    def add_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_rectangle(self,x,y,dx,dy):
         return self._parent.add_rectangle(x, y, dx, dy)
 
     @convert_fun_arg
-    def add_rounded_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        ):
+    def add_rounded_rectangle(self, x, y, dx, dy, radius):
         return self._parent.add_rounded_rectangle(x, y, dx, dy, radius)
 
     @convert_fun_arg
-    def add_arc(
-        self,
-        x,
-        y,
-        radius,
-        angle1,
-        angle2,
-        ):
+    def add_arc(self, x, y, radius, angle1, angle2):
         return self._parent.add_arc(x, y, radius, angle1, angle2)
 
     @convert_fun_arg
-    def add_ellipse(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_ellipse(self, x, y, dx, dy):
         return self._parent.add_ellipse(x, y, dx, dy)
 
     def add_polygon(self, xytab):
@@ -674,61 +512,27 @@ class SubDc(object):
         return self._parent.add_spline(xytab2, close)
 
     @convert_fun_arg
-    def draw_text(
-        self,
-        x,
-        y,
-        txt,
-        ):
+    def draw_text(self, x, y, txt):
         return self._parent.draw_text(x, y, txt)
 
     @convert_fun_arg
-    def draw_rotated_text(
-        self,
-        x,
-        y,
-        txt,
-        angle,
-        ):
+    def draw_rotated_text(self, x, y, txt, angle):
         return self._parent.draw_rotated_text(x, y, txt, angle)
 
     @convert_fun_arg
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
-        return self._parent.draw_text(
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            png_data,
-            )
+    def draw_image(self, x, y, dx, dy, scale, png_data):
+        return self._parent.draw_text(x, y, dx, dy, scale, png_data)
 
     @convert_fun_arg
-    def draw_atom_line(
-        self,
-        x,
-        y,
-        line,
-        ):
+    def draw_atom_line(self, x, y, line):
         return self._parent.draw_atom_line(x, y, line)
 
 
 class NullDc(object):
-
     def __init__(self, ref_dc):
         self._ref_dc = ref_dc
         self._maxwidth = 0
         self._maxheight = 0
-
-# self.dc_info = NullDCInfo(None)
 
     def __getattribute__(self, attr):
         if attr.startswith('_'):
@@ -754,74 +558,26 @@ class NullDc(object):
         if y > self._maxheight:
             self._maxheight = y
 
-    def subdc(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        reg_max=True,
-        ):
-        return SubDc(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            reg_max,
-            )
+    def subdc(self, x, y, dx, dy, reg_max=True):
+        return SubDc(self, x, y, dx, dy, reg_max)
 
-#  ===========================================================================
-
-    def add_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_line(self, x, y, dx, dy):
         self.test_point(x + dx, y + dy)
         return None
 
-    def add_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_rectangle(self, x, y, dx, dy):
         self.test_point(x + dx, y + dy)
         return None
 
-    def add_rounded_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        ):
+    def add_rounded_rectangle(self, x, y, dx, dy, radius):
         self.test_point(x + dx, y + dy)
         return None
 
-    def add_arc(
-        self,
-        x,
-        y,
-        radius,
-        angle1,
-        angle2,
-        ):
+    def add_arc(self, x, y, radius, angle1, angle2):
         self.test_point(x + radius, y + radius)
         return None
 
-    def add_ellipse(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_ellipse(self, x, y, dx, dy):
         self.test_point(x + dx, y + dy)
         return None
 
@@ -835,44 +591,20 @@ class NullDc(object):
             self.test_point(pos[0], pos[1])
         return None
 
-# TODO x+width(txt), y+width(txt)
-
-    def draw_text(
-        self,
-        x,
-        y,
-        txt,
-        ):
+    def draw_text(self, x, y, txt):
         self.test_point(x, y)
         return None
 
-# TODO x+width(txt) sin(angle)?, y+width(txt) sin(angle)?
-
-    def draw_rotated_text(
-        self,
-        x,
-        y,
-        txt,
-        angle,
-        ):
+    def draw_rotated_text(self, x, y, txt, angle):
         self.test_point(x, y)
         return None
 
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
+    def draw_image(self, x, y, dx, dy, scale, png_data):
         self.test_point(x + dx, y + dy)
         return None
 
 
 class NullDcinfo(object):
-
     def __init__(self, dc):
         pass
 
@@ -888,12 +620,7 @@ class NullDcinfo(object):
     def get_multiline_text_width(self, txt, style='default'):
         return 100
 
-    def get_multiline_text_height(
-        self,
-        txt,
-        width,
-        style='default',
-        ):
+    def get_multiline_text_height(self, txt, width, style='default'):
         return (100, [])
 
     def get_extents(self, word, style):

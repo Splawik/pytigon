@@ -17,20 +17,18 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import os
+import codecs
+
 from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.utils._os import safe_join
-#from django.template.loader import BaseLoader
 from django.template.loaders.base  import Loader as BaseLoader
-#from django.template.base import Loader as BaseLoader
 import django.template.loaders.filesystem
-import os
-import codecs
 
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 
 class FSLoader(django.template.loaders.filesystem.Loader):
-
     is_usable = True
 
     def load_template_source(self, template_name, template_dirs=None):
@@ -38,6 +36,7 @@ class FSLoader(django.template.loaders.filesystem.Loader):
 
 
 class Loader(BaseLoader):
+    """Loader compile ihtml file to standard html file and based on language load related compiled template"""
 
     is_usable = True
 
@@ -85,7 +84,8 @@ class Loader(BaseLoader):
                                                 with codecs.open(filepath2, 'w', encoding='utf-8') as f:
                                                     f.write(ret)
                                             else:
-                                                with codecs.open(filepath2.replace('.html', '_'+lang+".html"), 'w', encoding='utf-8') as f:
+                                                with codecs.open(filepath2.replace('.html', '_'+lang+".html"),
+                                                        'w', encoding='utf-8') as f:
                                                     f.write(ret)
                                         except:
                                             import traceback

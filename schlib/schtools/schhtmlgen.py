@@ -17,12 +17,11 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import collections
-import six
 
 
 class Html(object):
-
     def __init__(self, name, attr=None):
         self.name = name
         self.attr = attr
@@ -36,7 +35,7 @@ class Html(object):
         self.attr = attr
 
     def append(self, elem, attr=None):
-        if isinstance(elem, six.string_types):
+        if type(elem) == str:
             helem = Html(elem, attr)
         else:
             helem = elem

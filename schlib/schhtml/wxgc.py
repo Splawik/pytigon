@@ -18,35 +18,19 @@
 #version: "0.1a"
 
 import wx
-from .basedc import BaseDc, BaseDcInfo
+from schlib.schhtml.basedc import BaseDc, BaseDcInfo
 import io
-import six
-# import cairo as C import cairo
-#
-# A4 mm width, height = 2100, 2970
-#
-# A4 cale width, height = 8.28, 11.69
-#
-# A4 - 300dpi width, height = 2480, 3508
 
 
 class GraphicsContextDc(BaseDc):
 
-    def __init__(
-        self,
-        ctx=None,
-        calc_only=False,
-        width=-1,
-        height=-1,
-        output_name=None,
-        ):
+    def __init__(self, ctx=None, calc_only=False, width=-1, height=-1, output_name=None):
         BaseDc.__init__(self, calc_only, width, height, output_name)
         self.dc_info = GraphicsContextDcinfo(self)
         self.type = None
         if self.calc_only:
             self.surf = wx.EmptyBitmap(10, 10, 32)
             dc = wx.MemoryDC(self.surf)
-# dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
             dc.Clear()
             self.ctx = self._make_gc(dc)
             if width < 0:
@@ -73,9 +57,6 @@ class GraphicsContextDc(BaseDc):
                 dc.Clear()
                 self.ctx = self._make_gc(dc)
         self.path = None
-# self.ctx.SetAntialiasMode(wx.ANTIALIAS_DEFAULT) print
-# dir(self.ctx.GetNativeContext()) .set_antialias(True)
-
         self.colour = wx.Colour(0, 0, 0)
         self.line_width = 1
         self._move_x = 0
@@ -96,8 +77,6 @@ class GraphicsContextDc(BaseDc):
             if self.type in ('png', ):
                 image = self.surf.ConvertToImage()
                 image.SaveFile(self.output_name, wx.BITMAP_TYPE_PNG)
-
-# --------------------------------------------------------------------------
 
     def new_page(self):
         BaseDc.new_page(self)
@@ -141,43 +120,15 @@ class GraphicsContextDc(BaseDc):
         self.ctx.DrawText(txt, self._move_x, self._move_y - dy_up)
         BaseDc.show_text(self, txt)
 
-    def set_pen(
-        self,
-        r,
-        g,
-        b,
-        a=255,
-        width=1,
-        ):
+    def set_pen(self, r, g, b, a=255, width=1):
         pen = wx.Pen(wx.Colour(r, g, b, a))
         self.ctx.SetPen(pen)
-        BaseDc.set_pen(
-            self,
-            r,
-            g,
-            b,
-            a,
-            width,
-            )
+        BaseDc.set_pen(self, r, g, b, a, width)
 
-    def set_brush(
-        self,
-        r,
-        g,
-        b,
-        a=255,
-        ):
+    def set_brush(self, r, g, b, a=255):
         brush = wx.Brush(wx.Colour(r, g, b, a))
         self.ctx.SetBrush(brush)
         BaseDc.set_brush(self, r, g, b, a)
-
-# def set_line_width(self, width): self.ctx.SetPen(wx.Pen(wx.Colour(0,0,0),
-# width)) self.ctx.set_line_width(width) self.line_width = width
-# BaseDC.set_line_width(self, width)
-#
-# def set_source_rgb(self, r, b, g): #print r,b,g
-# #self.ctx.SetPen(wx.Pen(wx.Colour(r,b,g), 1)) self.colour = wx.Colour(r,b,g)
-# #self.ctx.set_source_rgb(r, b, g) BaseDC.set_source_rgb(self, r, b, g)
 
     def set_style(self, style):
         if style == self.last_style:
@@ -213,28 +164,13 @@ class GraphicsContextDc(BaseDc):
         else:
             font_style = wx.DEFAULT
         font.SetPointSize((self.base_font_size * int(style_tab[2])) / 100.0)
-# font.SetPixelSize(self.base_font_size*int(style_tab[2])/100.0)
-#
-# self.ctx.set_font_size(self.base_font_size*int(style_tab[2])/100.0)
-#
-# font_style = wx.DECORATIVE
-#
-# font = wx.Font(self.base_font_size*int(style_tab[2])/100, font_style, slant,
-# weight, False) font = wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.FONTWEIGHT_NORMAL,
-# False) font = wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False,  u'Sans')
         self.ctx.SetFont(font)
         (r, g, b) = self.rgbfromhex(style_tab[0])
         self.ctx.SetPen(wx.Pen(wx.Colour(r, g, b)))
-# self.ctx.set_source_rgb(r/256.0,g/256.0,b/256.0)
         BaseDc.set_style(self, style)
         return style_tab
 
-    def draw_atom_line(
-        self,
-        x,
-        y,
-        line,
-        ):
+    def draw_atom_line(self, x, y, line):
         dx = 0
         test = 0
         for obj in line.objs:
@@ -245,8 +181,7 @@ class GraphicsContextDc(BaseDc):
                     self.move_to(x + dx, y + line.dy_up + line.dy_down)
                     self.line_to(x + dx + obj.dx, y + line.dy_up + line.dy_down)
                     self.stroke()
-            if obj.data.__class__ in (str, unicode):
-            if isinstance(obj.data, six.string_types):
+            if type(obj.data)==str:
                 ret = False
                 if obj.parent and hasattr(obj.parent, 'draw_atom'):
                     ret = obj.parent.draw_atom(self, obj.style, x + dx, (y
@@ -255,29 +190,14 @@ class GraphicsContextDc(BaseDc):
                     self.move_to(x + dx, y + line.dy_up)
                     self.show_text(obj.data)
             else:
-                obj.data.draw_atom(self, obj.style, x + dx, (y + line.dy_up)
-                                    - obj.dy_up)
+                obj.data.draw_atom(self, obj.style, x + dx, (y + line.dy_up) - obj.dy_up)
             dx += obj.dx
 
-# self.stroke()
-
-    def rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def rectangle(self, x, y, dx, dy):
         self.path.AddRectangle(x, y, dx, dy)
         BaseDc.rectangle(self, x, y, dx, dy)
 
-    def draw_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_line(self, x, y, dx, dy):
         self.path.MoveToPoint(x, y)
         self.path.AddLineToPoint(x + dx, y + dy)
         BaseDc.draw_line(self, x, y, dx, dy)
@@ -286,32 +206,12 @@ class GraphicsContextDc(BaseDc):
 # preserve img scale 3 - scale to dx or dy - preserve img scale, fit fool image
 # 4 - repeat x 5 - repeat y 6 - repeat x and y
 
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
-
-# image = wx.Image(png_name) try: image = wx.Image(png_name) except: image =
-# wx.Image("sleeptimer.png") print "No:", png_name
-
+    def draw_image(self, x, y, dx, dy, scale, png_data):
         png_stream = io.StringIO(png_data)
         image = wx.ImageFromStream(png_stream)
         w = image.GetWidth()
         h = image.GetHeight()
-        (x_scale, y_scale) = self._scale_image(
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            w,
-            h,
-            )
+        (x_scale, y_scale) = self._scale_image(x, y, dx, dy, scale, w, h)
         if scale < 4:
             image.Rescale(w * x_scale, h * y_scale)
             bmp = image.ConvertToBitmap()
@@ -332,18 +232,7 @@ class GraphicsContextDc(BaseDc):
                     self.ctx.DrawBitmap(bmp, x + delta_x, y + delta_y, w, h)
                     delta_x += w
                 delta_y += h
-        BaseDc.draw_image(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            png_data,
-            )
-
-
-# --------------------------------------------------------------------------
+        BaseDc.draw_image(self, x, y, dx, dy, scale, png_data)
 
 
 class GraphicsContextDcinfo(BaseDcInfo):

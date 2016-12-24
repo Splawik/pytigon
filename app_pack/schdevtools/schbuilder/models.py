@@ -2,11 +2,10 @@
 
 import django
 from django.db import models
-from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
+from schlib.schdjangoext.fields import *
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from django.utils.encoding import python_2_unicode_compatible
 
 import os, os.path
 import sys
@@ -26,7 +25,7 @@ from tasks.models import *
 import os.path
 from schlib.schhtml.htmltools import superstrip
 import inspect
-from schlib.schtools.schpath import norm_path
+from schlib.schfs.vfstools import norm_path
 from django.template import engines
 
 field_default = {'null':False,'blank':False,'editable':True,}
@@ -258,7 +257,6 @@ FileType_CHOICES = (
 
 
 
-@python_2_unicode_compatible
 class SChAppSet( models.Model):
     
     class Meta:
@@ -326,7 +324,6 @@ class SChAppSet( models.Model):
 admin.site.register(SChAppSet)
 
 
-@python_2_unicode_compatible
 class SChApp( models.Model):
     
     class Meta:
@@ -447,7 +444,6 @@ class SChApp( models.Model):
 admin.site.register(SChApp)
 
 
-@python_2_unicode_compatible
 class SChChoice( models.Model):
     
     class Meta:
@@ -473,7 +469,6 @@ class SChChoice( models.Model):
 admin.site.register(SChChoice)
 
 
-@python_2_unicode_compatible
 class SChChoiceItem( models.Model):
     
     class Meta:
@@ -499,7 +494,6 @@ class SChChoiceItem( models.Model):
 admin.site.register(SChChoiceItem)
 
 
-@python_2_unicode_compatible
 class SChTable( models.Model):
     
     class Meta:
@@ -544,7 +538,6 @@ class SChTable( models.Model):
 admin.site.register(SChTable)
 
 
-@python_2_unicode_compatible
 class SChField( models.Model):
     
     class Meta:
@@ -673,7 +666,6 @@ class SChField( models.Model):
 admin.site.register(SChField)
 
 
-@python_2_unicode_compatible
 class SChView( models.Model):
     
     class Meta:
@@ -767,7 +759,6 @@ class SChView( models.Model):
 admin.site.register(SChView)
 
 
-@python_2_unicode_compatible
 class SChStatic( models.Model):
     
     class Meta:
@@ -795,7 +786,6 @@ class SChStatic( models.Model):
 admin.site.register(SChStatic)
 
 
-@python_2_unicode_compatible
 class SChTemplate( models.Model):
     
     class Meta:
@@ -908,7 +898,6 @@ class SChTemplate( models.Model):
 admin.site.register(SChTemplate)
 
 
-@python_2_unicode_compatible
 class SChAppMenu( models.Model):
     
     class Meta:
@@ -967,7 +956,6 @@ class SChAppMenu( models.Model):
 admin.site.register(SChAppMenu)
 
 
-@python_2_unicode_compatible
 class SChForm( models.Model):
     
     class Meta:
@@ -995,7 +983,6 @@ class SChForm( models.Model):
 admin.site.register(SChForm)
 
 
-@python_2_unicode_compatible
 class SChFormField( models.Model):
     
     class Meta:
@@ -1063,7 +1050,6 @@ class SChFormField( models.Model):
 admin.site.register(SChFormField)
 
 
-@python_2_unicode_compatible
 class SChTask( models.Model):
     
     class Meta:
@@ -1093,7 +1079,6 @@ class SChTask( models.Model):
 admin.site.register(SChTask)
 
 
-@python_2_unicode_compatible
 class SChFiles( models.Model):
     
     class Meta:

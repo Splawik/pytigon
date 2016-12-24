@@ -17,13 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
 
-from zipfile import ZipFile, ZIP_STORED, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_DEFLATED
 import re
 import shutil
 import xml.dom.minidom
+
 from schlib.schfs.vfstools import delete_from_zip
+
 
 def _enumerate_childs(node, tab=None):
     if tab == None:
@@ -38,7 +39,6 @@ def _enumerate_childs(node, tab=None):
 
 
 class DocTransform:
-
     def __init__(self, file_name_in, file_name_out=None):
         self.file_name_in = file_name_in
         if file_name_out == None:
@@ -116,15 +116,11 @@ class DocTransform:
 
             if element.getAttribute('office:value-type') == 'string':
                 for child in _enumerate_childs(element):  # .childNodes:
-                    if child and child.firstChild and hasattr(child.firstChild,
-                            'data'):
-                        if child.firstChild.data and len(child.firstChild.data)\
-                             > 0 and (child.firstChild.data[0] == '*'
-                                       or child.firstChild.data[0] == ':'
-                                       or child.firstChild.data[0] == '@'
-                                       or child.firstChild.data[0] == '$'):
-                            if child.firstChild.data[0] == ':'\
-                                 or child.firstChild.data[0] == '*':
+                    if child and child.firstChild and hasattr(child.firstChild, 'data'):
+                        if child.firstChild.data and len(child.firstChild.data) > 0 and \
+                                (child.firstChild.data[0] == '*' or child.firstChild.data[0] == ':' or
+                                child.firstChild.data[0] == '@' or child.firstChild.data[0] == '$'):
+                            if child.firstChild.data[0] == ':' or child.firstChild.data[0] == '*':
                                 new_cell = doc.createElement('table:table-cell')
                                 if child.firstChild.data[0] == ':':
                                     new_cell.setAttribute('office:value-type',
@@ -138,55 +134,41 @@ class DocTransform:
                                     new_text = doc.createElement('text:p')
                                     new_text.appendChild(doc.createTextNode(str(child.firstChild.data[1:])))
                                 if debug:
-                                    new_annotate = \
-                                        doc.createElement('office:annotation')
+                                    new_annotate = doc.createElement('office:annotation')
                                     new_text_a = doc.createElement('text:p')
                                     new_text_a.appendChild(doc.createTextNode(child.firstChild.data[2:-1]))
                                     new_annotate.appendChild(new_text_a)
                                 new_cell.appendChild(new_text)
                                 if debug:
                                     new_cell.appendChild(new_annotate)
-                                new_cell.setAttribute('table:style-name',
-                                        element.getAttribute('table:style-name'
-                                        ))
+                                new_cell.setAttribute('table:style-name', element.getAttribute('table:style-name'))
                                 new_cell2 = doc.createElement('tmp')
                                 new_cell2.appendChild(new_cell)
                                 new_cell2.appendChild(doc.createTextNode(self.nr_col()))
-                                element.parentNode.replaceChild(new_cell2,
-                                        element)
-                            if child.firstChild.data[0] == '@'\
-                                 or child.firstChild.data[0] == '$':
+                                element.parentNode.replaceChild(new_cell2,element)
+                            if child.firstChild.data[0] == '@' or child.firstChild.data[0] == '$':
                                 new_cell = doc.createElement('table:table-cell')
-                                new_cell.setAttribute('office:value-type',
-                                        'float')
+                                new_cell.setAttribute('office:value-type', 'float')
                                 new_cell.setAttribute('office:value', '0')
                                 if child.firstChild.data[0] == '@':
-                                    new_cell.setAttribute('table:formula',
-                                            'oooc:='
-                                             + child.firstChild.data[1:])
+                                    new_cell.setAttribute('table:formula', 'oooc:=' + child.firstChild.data[1:])
                                 else:
-                                    new_cell.setAttribute('table:formula',
-                                            'msoxl:='
-                                             + child.firstChild.data[1:])
+                                    new_cell.setAttribute('table:formula', 'msoxl:=' + child.firstChild.data[1:])
                                 new_text = doc.createElement('text:p')
                                 if debug:
-                                    new_annotate = \
-                                        doc.createElement('office:annotation')
+                                    new_annotate = doc.createElement('office:annotation')
                                     new_text_a = doc.createElement('text:p')
-                                    new_text_a.appendChild(doc.createTextNode(child.firstChild.data[1:].replace('^'
-                                            , '')))
+                                    new_text_a.appendChild(doc.createTextNode(child.firstChild.data[1:].\
+                                            replace('^', '')))
                                     new_annotate.appendChild(new_text_a)
                                 new_cell.appendChild(new_text)
                                 if debug:
                                     new_cell.appendChild(new_annotate)
-                                new_cell.setAttribute('table:style-name',
-                                        element.getAttribute('table:style-name'
-                                        ))
+                                new_cell.setAttribute('table:style-name', element.getAttribute('table:style-name'))
                                 new_cell2 = doc.createElement('tmp')
                                 new_cell2.appendChild(new_cell)
                                 new_cell2.appendChild(doc.createTextNode(self.nr_col()))
-                                element.parentNode.replaceChild(new_cell2,
-                                        element)
+                                element.parentNode.replaceChild(new_cell2, element)
 
         elementy = doc.getElementsByTagName('table:table-row')
         for element in elementy:
@@ -217,18 +199,10 @@ class DocTransform:
                     new_cell = doc.createElement('tmp')
                     element.parentNode.replaceChild(new_cell, element)
 
-
-
-
     def process_template(self, doc_str, context):
         pass
 
-    def process(
-        self,
-        context,
-        debug,
-        ):
-
+    def process(self, context, debug):
         shutil.copyfile(self.file_name_in, self.file_name_out)
         z = ZipFile(self.file_name_out, 'r')
         doc_content = z.read('content.xml').decode('utf-8')
@@ -237,16 +211,15 @@ class DocTransform:
         if delete_from_zip(self.file_name_out, 'content.xml')==0:
             return
 
-        doc = xml.dom.minidom.parseString(doc_content.replace('&apos;', "'"
-                ).replace('_start_', '{{').replace('_end_', '}}'))
+        doc = xml.dom.minidom.parseString(doc_content.replace('&apos;', "'").\
+                replace('_start_', '{{').replace('_end_', '}}'))
         
         if self.doc_type==1:
             self.spreadsheet_process(doc, debug)
         if self.doc_type==2:
             self.doc_process(doc, debug)
         
-        doc_str = doc.toxml().replace('<tmp>', ''
-                ).replace('</tmp>', '')
+        doc_str = doc.toxml().replace('<tmp>', '').replace('</tmp>', '')
 
         p = re.compile('\^(.*?\(.*?\))')
         doc_str = p.sub(r'${\1}', doc_str)
@@ -255,7 +228,6 @@ class DocTransform:
         x = self.process_template(doc_str, context)
         if not x:
             x = doc_str
-
 
         z = ZipFile(self.file_name_out, 'a', ZIP_DEFLATED)
         z.writestr('content.xml', x.encode('utf-8'))

@@ -30,13 +30,10 @@ from wx.lib.scrolledpanel import ScrolledPanel
 import wx.lib.agw.ribbon as RB
 
 from schlib.schtools import createparm
-from schlib.schhttptools.schhtml_parser import ShtmlParser
-from schlib.schhttptools import schhtml_parser
-from schlib.schtools.schpath import norm_path, clean_href
-from schlib.schtools.encode import encode_utf
+from schlib.schparser.html_parsers import ShtmlParser
+from schlib.schtools.tools import clean_href, is_null
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
-from schlib.schtools.data import is_null
 
 _ = wx.GetTranslation
 
@@ -767,7 +764,7 @@ class SchForm(ScrolledPanel):
 
         Args:
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
             title - new page title
             parameters: dict
         """
@@ -923,8 +920,8 @@ class SchForm(ScrolledPanel):
 
                 s = http.str()
                 http.clear_ptr()
-                mp = schhtml_parser.ShtmlParser()
-                mp.process(s, encode_utf(adr2))
+                mp = ShtmlParser()
+                mp.process(s, adr2)
                 if 'target' in mp.var:
                     target = mp.var['target']
                 http.clear_ptr()

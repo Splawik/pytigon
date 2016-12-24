@@ -17,40 +17,27 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import django.db.models.fields
-#from mptt.models import TreeForeignKey
 import mimetypes
 from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
-from django.forms.widgets import HiddenInput
-#import schlib.schmodels.fields
-django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
 from copy import deepcopy
 from django.contrib.auth import get_permission_codename
 from django.forms.forms import BaseForm
+
+django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
+
 BaseForm._old_html_output = BaseForm._html_output
-
-
-#models.TreeForeignKey = TreeForeignKey
-#models.GTreeForeignKey = TreeForeignKey
 
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
 models.TreeModel = models.Model
 
-def _html_output(
-    self,
-    normal_row,
-    error_row,
-    row_ender,
-    help_text_html,
-    errors_on_separate_row,
-    ):
-    normal_row2 = normal_row.replace('<th>', "<th align='left'><em>"
-                                     ).replace('</th>', '</em></th>')
-    return self._old_html_output(normal_row2, error_row, row_ender,
-                                 help_text_html, errors_on_separate_row)
 
+def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
+    normal_row2 = normal_row.replace('<th>', "<th align='left'><em>").replace('</th>', '</em></th>')
+    return self._old_html_output(normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row)
 
 BaseForm._html_output = _html_output
 
@@ -65,7 +52,6 @@ def widget_attrs(self, widget):
             max2 = self.max_length
     if self.max_length is not None and isinstance(widget, (TextInput, PasswordInput)):
         return {'max_length': str(self.max_length), 'size': str(max2)}
-
 
 django.forms.fields.CharField.widget_attrs = widget_attrs
 
@@ -101,7 +87,6 @@ def widget_attrs2(self, widget):
     return {'class': 'jqcalendar', 'maxlength': '10', 'size': '10'}
 
 
-#django.forms.fields.DateField.widget_attrs = widget_attrs2
 from django.forms.widgets import Select
 
 

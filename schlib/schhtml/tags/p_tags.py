@@ -18,23 +18,13 @@
 #version: "0.1a"
 
 from schlib.schhtml.basehtmltags import BaseHtmlAtomParser, register_tag_map
-from schlib.schhtml.atom import AtomList
 from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, \
     RenderCellSpacing, RenderCellPadding, RenderPadding, RenderMargin, get_size
-from collections import deque
-import sys
-import traceback
 
 
 class ParBase(BaseHtmlAtomParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlAtomParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = [
             'br',
@@ -206,13 +196,7 @@ class Par(ParBase):
 
 class ParArray(ParBase):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         self.lp = 1
         ParBase.__init__(self, parent, parser, tag, attrs)
         self.start = True
@@ -253,13 +237,7 @@ class ParArray(ParBase):
 
 class Li(ParBase):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         ParBase.__init__(self, parent, parser, tag, attrs)
         if type(parent)==Ul:
             self.level = parent.level
@@ -270,13 +248,7 @@ class Li(ParBase):
 
 class Ul(ParArray):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         ParArray.__init__(self, parent, parser, tag, attrs)
         self.childs=[]
         self.level = 1

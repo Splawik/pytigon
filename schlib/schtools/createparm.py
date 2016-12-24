@@ -17,13 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 try:
     from urllib.parse import urlencode
 except:
     from urllib import urlencode
 
-class DictParm:
 
+class DictParm:
     def __init__(self, d):
         self.Dict = d
 
@@ -72,8 +73,7 @@ def create_parm(address, dic, no_encode=False):
                             if en[pos2].__class__ == list:
                                 en[pos2].append(conwert_parm(dic.get_parm(pos)))
                             else:
-                                en[pos2] = [en[pos2],
-                                        conwert_parm(dic.get_parm(pos))]
+                                en[pos2] = [en[pos2], conwert_parm(dic.get_parm(pos))]
                         else:
                             en[pos2] = conwert_parm(dic.get_parm(pos))
                     else:

@@ -17,16 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
-
-#try:
-#    from html.parser import HTMLParser
-#    HTMLParseError = None
-#except:
-#    from HTMLParser import HTMLParser, HTMLParseError
-from schlib.schhtml.parser import Parser
 
 import io
+from schlib.schhtml.parser import Parser
 
 
 def _convert_strings(lines):
@@ -167,6 +160,7 @@ def reformat_js(tabkod):
                              
     return tabkod3
 
+
 def file_norm_tab(file_in, file_out):
     if file_in and file_out:
         tabkod = norm_tab(x1)
@@ -175,16 +169,15 @@ def file_norm_tab(file_in, file_out):
         return True
     return False
 
+
 def convert_js(stream_in, stream_out):
     if stream_in and stream_out:
         tabkod = norm_tab(stream_in)
         tabkod = reformat_js(tabkod)
         for pos in tabkod:
-            stream_out.write((' ' * 4) * pos[0] + pos[1].replace('\n', ''
-                             ).replace('};', '}').replace(';;', ';') + '\n')
+            stream_out.write((' ' * 4) * pos[0] + pos[1].replace('\n', '').replace('};', '}').replace(';;', ';') + '\n')
         return True
     return False
-
 
 
 class NormParser(Parser):
@@ -217,7 +210,6 @@ class NormParser(Parser):
     def handle_endtag(self, tag):
         self.tab -= 1
 
-
     def handle_startendtag(self, tag, lattrs):
         self.handle_starttag(tag, lattrs)
         self.handle_endtag(tag)
@@ -228,24 +220,10 @@ class NormParser(Parser):
             self.txt.write(self._remove_spaces(data).replace('\n', '\\n'))
 
     def process(self, data):
-        #try:
         self.feed(data)
-        #except HTMLParseError as error:
-        #    lines = data.split('\n')
-        #    print(error)
-        #    print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        #    print(lines[error.lineno - 2])
-        #    print((lines[error.lineno - 1])[:error.offset] + '!!!'\
-        #         + (lines[error.lineno - 1])[error.offset:])
-        #    print(lines[error.lineno])
-        #    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-        #    print(data)
-        #    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-        #return self.txt.getvalue()[1:] + '\n'
 
 
 class IndentHtmlParser(NormParser):
-
     def _print_attr(self, attr):
         ret = ''
         for pos in attr:
@@ -280,12 +258,9 @@ class IndentHtmlParser(NormParser):
 
 
 def norm_html(txt):
-    #try:
-        n = NormParser()
-        ret = n.process(txt)
-    #except:
-    #    ret = txt
-        return ret
+    n = NormParser()
+    ret = n.process(txt)
+    return ret
 
 
 def indent_html(txt):
@@ -302,14 +277,6 @@ def indent_html(txt):
 
 
 if __name__ == '__main__':
-    
-    #f_in = open('./test/input2.js', 'r')    
-    #f_out = open('./test/output.js', 'w')
-    
-    #convert_js(f_in, f_out)
-    #f_in.close()
-    #f_out.close()
-    
     if False:
         print("x1")
         f_in = open('./test/test11.html', 'r')    

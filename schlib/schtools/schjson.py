@@ -17,6 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
+"""Helper class for json encoder"""
+
+
 try:
     import json
 except:
@@ -26,11 +30,8 @@ try:
 except:
     from urllib import quote_plus, unquote_plus
     
-import datetime
-
 
 class ComplexEncoder(json.JSONEncoder):
-
     complex_types = (
         'list',
         'unicode',
@@ -55,14 +56,39 @@ def as_complex(dct):
 
 
 def dumps(obj):
+    """Encode python object to json format. Return enquoted json string
+
+    Args:
+        obj - python object to encode
+    """
     return quote_plus(json.dumps(obj, cls=ComplexEncoder))
 
+
 def loads(json_str):
+    """Load json str and return decoded structure.
+
+    Args:
+        json_str: enquoted json encoded string
+
+    """
     return json.loads(unquote_plus(json_str), object_hook=as_complex)
 
+
 def json_dumps(obj):
+    """Encode python object to json format. Return encoded string.
+
+    Args:
+        obj - python object to encode
+    """
     return json.dumps(obj, cls=ComplexEncoder)
 
+
 def json_loads(json_str):
+    """Load json str and return decoded structure.
+
+    Args:
+        json_str: json encoded string
+
+    """
     return json.loads(json_str, object_hook=as_complex)
 

@@ -20,12 +20,14 @@
 from django.conf import settings
 
 
-"""
-wiki:
+"""Module contains helper functions to handling wiki.
+
+Wiki:
   [[Wiki word]] link
   [[^Wiki word]] link w nowym oknie
   [[(nowy panel)Wiki word]] 
 """
+
 
 def wiki_from_str(wiki_value):
     if wiki_value.startswith('?'):

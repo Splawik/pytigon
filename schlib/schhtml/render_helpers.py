@@ -17,11 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import six
-
 
 class RenderBase(object):
-
     def __init__(self, parent):
         self.parent = parent
         self.rendered_attribs = None
@@ -50,22 +47,12 @@ class RenderBase(object):
 
 
 class RenderBackground(RenderBase):
-
     def __init__(self, parent):
         RenderBase.__init__(self, parent)
         self.rendered_attribs = ('bgcolor', 'background-color',
                                  'background-image', 'background')
 
-    def background(
-        self,
-        dc,
-        bgcolor,
-        image,
-        repeat,
-        attachment,
-        x,
-        y,
-        ):
+    def background(self, dc, bgcolor, image, repeat, attachment, x, y):
         if dc.calc_only:
             return
         if bgcolor:
@@ -92,32 +79,12 @@ class RenderBackground(RenderBase):
                     pass
                 else:
                     style = 6
-            dc.draw_image(
-                0,
-                0,
-                dc.dx,
-                dc.dy,
-                style,
-                image,
-                )
+            dc.draw_image(0, 0, dc.dx, dc.dy, style, image)
 
-    def handle_render(
-        self,
-        dc,
-        attr_name,
-        value,
-        ):
+    def handle_render(self, dc, attr_name, value):
         if attr_name == 'background-image':
             img_name = value.replace('url(', '').replace(')', '')
-            self.background(
-                dc,
-                None,
-                img_name,
-                None,
-                None,
-                None,
-                None,
-                )
+            self.background(dc, None, img_name, None, None, None, None)
         elif attr_name == 'background':
             tab_attr = value.split(' ')
             attr_nr = 0
@@ -165,26 +132,11 @@ class RenderBackground(RenderBase):
                         continue
                     attr_nr += 1
                 break
-            self.background(
-                dc,
-                background_color,
-                background_image,
-                background_repeat,
-                background_attachment,
-                background_position_x,
-                background_position_y,
-                )
+            self.background(dc, background_color, background_image, background_repeat,
+                    background_attachment, background_position_x, background_position_y,)
         else:
             if '#' in value:
-                self.background(
-                    dc,
-                    value,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    )
+                self.background(dc, value, None, None, None, None, None)
         return dc
 
 
@@ -193,20 +145,11 @@ class RenderBorder(RenderBase):
     def __init__(self, parent):
         RenderBase.__init__(self, parent)
         self.rendered_attribs = ('border-top', 'border-right', 'border-bottom', 'border-left', 'border')
-        #self.rendered_attribs = ('border', )
 
     def handle_get_size(self, border):
         return sizes_from_attr(border)
 
-# try: b=int(border) except: try: ret="" for z in border: if z.isdigit(): ret+=z
-# b=int(ret) except: b=1 return [b,b,b,b]
-
-    def handle_render(
-        self,
-        dc,
-        attr_name,
-        border,
-        ):
+    def handle_render(self, dc, attr_name, border):
         p = self.handle_get_size(border)
         b = p[0]        
         if b > 0:
@@ -235,21 +178,10 @@ class RenderBorder(RenderBase):
         return dc.subdc(b, b, dc.dx - 2 * b, dc.dy - 2 * b)
 
 
-#  class RenderCellSpacing(RenderBase): def __init__(self, parent):
-# RenderBase.__init__(self, parent) self.rendered_attribs = ('cellspacing',)
-#
-# def handle_get_size(self, spacing): s=int(spacing) return s
-#
-# def handle_render(self, dc, attr_name, spacing): c=int(spacing) return
-# dc.subdc(c, c, dc.dx-2*c, dc.dy-2*c)
-
-
 class RenderPaddingMargin(RenderBase):
 
     def __init__(self, parent):
         RenderBase.__init__(self, parent)
-
-# self.rendered_attribs = ('cellpadding', 'cellspacing', 'padding', 'margins')
 
     def handle_get_size(self, padding):
         return sizes_from_attr(padding)
@@ -261,8 +193,7 @@ class RenderPaddingMargin(RenderBase):
         padding,
         ):
         p = self.handle_get_size(padding)
-        return dc.subdc(p[0], p[2], (dc.dx - p[0]) - p[1], (dc.dy - p[2])
-                         - p[3])
+        return dc.subdc(p[0], p[2], (dc.dx - p[0]) - p[1], (dc.dy - p[2]) - p[3])
 
 
 class RenderCellPadding(RenderPaddingMargin):
@@ -293,19 +224,8 @@ class RenderMargin(RenderPaddingMargin):
         self.rendered_attribs = ('margins', )
 
 
-# class RenderPadding(RenderBase): def __init__(self, parent):
-# RenderBase.__init__(self, parent) self.rendered_attribs = ('padding',)
-#
-# def handle_get_size(self, padding): p=int(padding) return p
-#
-# def handle_render(self, dc, attr_name, padding): c=int(padding) return
-# dc.subdc(c, c, dc.dx-2*c, dc.dy-2*c)
-
-
 def sizes_from_attr(attr_value):
-    #if attr_value.__class__ in (str, unicode):
-    #if attr_value.__class__ in six.class_types:
-    if isinstance(attr_value, six.string_types):
+    if type(attr_value)==str:
         v = attr_value.strip().replace('px', '').replace('em', '')
         try:
             size = int(v)

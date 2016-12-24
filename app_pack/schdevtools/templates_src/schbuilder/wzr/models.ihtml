@@ -6,7 +6,6 @@ from schlib.schdjangoext.fields import *
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from django.utils.encoding import python_2_unicode_compatible
 
 import os, os.path
 import sys
@@ -29,7 +28,6 @@ from {{app_item}}.models import *
 {% endif %}
 
 {% for table in tables %}
-@python_2_unicode_compatible
 class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%if table.proxy_model %}{{table.proxy_model}}{% else %} models.Model{% endif %}{%endif%}):
     {% if table.doc %}"""{% for line in table.doc.splitlines %}
     {{line|safe}}{% endfor %}

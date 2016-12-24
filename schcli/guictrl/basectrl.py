@@ -26,7 +26,7 @@ try:
     from urllib.parse import unquote
 except:
     from urllib import unquote
-from schlib.schhttptools.list_parser import TreeParser
+from schlib.schparser.html_parsers import TreeParser
 
 class SchBaseCtrl(object):
     """Base class for all widgets"""
@@ -242,7 +242,7 @@ class SchBaseCtrl(object):
                 mp = TreeParser()
                 mp.feed(lista)
                 mp.close()
-                self.ldatabuf = mp.TreeParent[0][1]
+                self.ldatabuf = mp.tree_parent[0][1]
 
     def get_ldata(self):
         if self.ldata:

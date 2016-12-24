@@ -27,10 +27,7 @@ def comment_remover(text):
             return ""
         else:
             return s
-    pattern = re.compile(
-        r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"',
-        re.DOTALL | re.MULTILINE
-    )
+    pattern = re.compile(r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"', re.DOTALL | re.MULTILINE)
     return re.sub(pattern, replacer, text)
 
 class CssPos(object):
@@ -65,12 +62,7 @@ class CssPos(object):
             for pos in attrs:
                 self.attrs[pos] = attrs[pos]
 
-    def _get_dict_from_parent(
-        self,
-        key,
-        ret_attrs,
-        obj,
-        ):
+    def _get_dict_from_parent(self, key, ret_attrs, obj):
         if key in self.parents:
             if obj.get_parent():
                 attr = self.parents[key].get_dict(obj.get_parent())
@@ -89,10 +81,6 @@ class CssPos(object):
                 self._get_dict_from_parent('#' + obj.get_id(), ret_attrs, obj)
                 self._get_dict_from_parent(obj.get_tag() + '.' + obj.get_id(),
                         ret_attrs, obj)
-# else: if obj.get_cls(): self._get_dict_from_parent("."+obj.get_cls(),
-# ret_attrs, obj) self._get_dict_from_parent(obj.get_tag()+"."+obj.get_cls(),
-# ret_attrs, obj) else: self._get_dict_from_parent(obj.get_tag(), ret_attrs,
-# obj)
         return ret_attrs
 
     def test_print(self, indent):
@@ -188,7 +176,6 @@ class Css(object):
             self._hadle_section(pos)
 
     def test_print(self):
-        printed = True
         tmp = CssPos([''], {})
         tmp.parents = self.csspos_dict
         tmp.test_print(0)
@@ -198,5 +185,4 @@ class Css(object):
         tmp.parents = self.csspos_dict
         ret = tmp.get_dict(obj)
         return ret
-
 

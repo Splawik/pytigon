@@ -17,16 +17,16 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-# -*- coding: utf-8 -*-
 
 from django.http import HttpResponse
-#from django.shortcuts import render_to_response
-from schlib.schviews.viewtools import render_to_response
 from django.template import RequestContext
 from django.template import loader
+from django.conf import settings
+
+from schlib.schviews.viewtools import render_to_response
+
 from .perms import make_perms_url_test_fun
 from .viewtools import render_to_response_ext
-from django.conf import settings
 
 
 def form(request, app_name, form_class, template_name, object_id=None, form_end=False, param=None, mimetype=None):
@@ -71,15 +71,9 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 else:
                     doc_type = 'html'
                 return render_to_response_ext(request, template_name2, context=user_dict, doc_type=doc_type)
-                #if doc_type= 'html':
-                #    return render_to_response(template_name2, context_instance=c)
-                #elif doc_type= 'pdf':
-
         else:
-            #c = RequestContext(request, {'form': f})
             return render_to_response(template_name2, context={'form': f}, request=request)
     else:
-        #f = form_class()
         if hasattr(f, "init"):
             f.init(request)
         if object_id:
@@ -90,15 +84,12 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 user_dict = f.process_empty(request, param)
             else:
                 user_dict = f.process_empty(request)
-            #c = RequestContext(request, {'form': f, 'app_pack': app_pack})
-            #c.update(user_dict)
             user_dict['form'] = f
             user_dict['app_pack'] = app_pack
         else:
             user_dict = {'form': f,  'app_pack': app_pack}
             if object_id:
                 user_dict.update({'object_id': object_id})
-            #c = RequestContext(request, user_dict)
             if param:
                 user_dict.update(param)
         return render_to_response(template_name2, context=user_dict, request=request)
@@ -106,22 +97,9 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
 def form_with_perms(app):
     return make_perms_url_test_fun(app, form)
 
-def list_and_form(
-    request,
-    queryset,
-    form_class,
-    template_name,
-    table_always=True,
-    paginate_by=None,
-    page=None,
-    allow_empty=True,
-    extra_context=None,
-    context_processors=None,
-    template_object_name='obj',
-    mimetype=None,
-    param=None,
-    ):
-
+def list_and_form(request, queryset, form_class, template_name, table_always=True, paginate_by=None, page=None,
+        allow_empty=True, extra_context=None, context_processors=None, template_object_name='obj',
+        mimetype=None, param=None,):
     queryset2 = queryset
     if request.POST:
         new_data = request.POST.copy()
@@ -135,19 +113,10 @@ def list_and_form(
                 extra_context.update({'form': f})
             else:
                 extra_context = {'form': f}
-            return list(
-                request=request,
-                queryset=queryset2,
-                paginate_by=paginate_by,
-                page=page,
-                allow_empty=allow_empty,
-                template_loader=loader,
-                template_name=template_name,
-                extra_context=extra_context,
-                context_processors=context_processors,
-                template_object_name=template_object_name,
-                mimetype=mimetype,
-                )
+            return list(request=request, queryset=queryset2, paginate_by=paginate_by, page=page,
+                    allow_empty=allow_empty, template_loader=loader, template_name=template_name,
+                    extra_context=extra_context, context_processors=context_processors,
+                    template_object_name=template_object_name, mimetype=mimetype,)
     else:
         f = form_class()
         if table_always:
@@ -162,21 +131,11 @@ def list_and_form(
                 else:
                     queryset2 = f.ProcessEmpty(request, queryset)
 
-            return list(
-                request=request,
-                queryset=queryset2,
-                paginate_by=paginate_by,
-                page=page,
-                allow_empty=allow_empty,
-                template_loader=loader,
-                template_name=template_name,
-                extra_context=extra_context,
-                context_processors=context_processors,
-                template_object_name=template_object_name,
-                mimetype=mimetype,
-                )
+            return list(request=request, queryset=queryset2, paginate_by=paginate_by, page=page,
+                    allow_empty=allow_empty, template_loader=loader, template_name=template_name,
+                    extra_context=extra_context, context_processors=context_processors,
+                    template_object_name=template_object_name, mimetype=mimetype,)
 
-    #c = RequestContext(request, {'form': f})
     return render_to_response(template_name, context={'form': f}, request=request)
 
 

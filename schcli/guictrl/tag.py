@@ -26,8 +26,8 @@ from base64 import b64decode
 from schlib.schhtml.tags.table_tags import TableTag #, TdTag
 from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map, register_tag_preprocess_map
 from schlib.schhtml.htmltools import superstrip
-from schlib.schhttptools.htmltab import Td
-from schlib.schtools.data import is_null
+from schlib.schparser.html_parsers import Td
+from schlib.schtools.tools import is_null
 
 import wx
 

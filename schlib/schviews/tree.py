@@ -18,15 +18,8 @@
 #version: "0.1a"
 
 
-
 class MakeTreeFromObject(object):
-
-    def __init__(
-        self,
-        model,
-        callback,
-        field_name=None,
-        ):
+    def __init__(self, model, callback, field_name=None):
         self.model = model
         self.callback = callback
         self.field_name = field_name
@@ -101,5 +94,3 @@ class MakeTreeFromObject(object):
 
     def gen_shtml(self):
         return self._gen('', '')
-
-

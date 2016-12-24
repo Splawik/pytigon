@@ -17,10 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from schlib.schindent.indent_tools import indent_html
-
 class LoginToSession(object):
-
     def process_request(self, request):
         if 'sessionid' in request.GET:
             from django.contrib.sessions.models import Session
@@ -33,23 +30,18 @@ class LoginToSession(object):
             user = User.objects.get(pk=uid)
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            #request.session['HYBRID_BROWSER'] = True
             if 'client_param' in request.GET:
                 parm = request.GET['client_param']
                 if parm != '':
                     request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
-                    #request.session['client_param'] = parm
 
 
 class ViewRequests(object):
-
     def process_request(self, request):
         print(request.method, request.path)
-        #print(request.method, request.path, request.META )
 
 
 class ViewPost(object):
-
     def process_request(self, request):
         try:
             if request.method == 'POST':

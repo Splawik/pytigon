@@ -31,27 +31,15 @@ from schlib.schtable.dbtable import DbTable
 from schlib.schtools import schjson
 from schlib.schviews.viewtools import render_to_response
 
+APP = None
 
-def change_password(request):
-    old_password = request.POST.get("current_password", "")
-    new_password = request.POST.get("new_password", "")
-    confirm_password = request.POST.get("confirm_password", ".")
-    if new_password == confirm_password:
-        user = authenticate(username=request.user, password=old_password)
-        if user is not None and user.is_active:
-            user.set_password(new_password)
-            user.save()
-            return HttpResponseRedirect(reverse('start')+"schsys/do_logout?schtml=1")
-        else:
-            messages.add_message(request, messages.ERROR, 'Bad old password')
-            return HttpResponseRedirect(reverse('start'))
-    else:
-        messages.add_message(request, messages.ERROR, 'Bad confirmed password')
-        return HttpResponseRedirect(reverse('start'))
-
-
-def ok(request):
-    return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /><meta name="RETURN" content="RETURN_OK" /></head><body>OK</body>""")
+_RET_OK = """
+<head>
+    <meta name="TARGET" content="_parent_refr" />
+    <meta name="RETURN" content="RETURN_OK" />
+</head>
+<body>OK</body>
+"""
 
 _RET_OK_HTML = """
 <head>
@@ -75,6 +63,35 @@ if page:
 </body>
 """
 
+MESSAGE_LIST = {
+    'null': '',
+    'error': 'Program error',
+    'warning': 'Program warning',
+}
+
+
+def change_password(request):
+    old_password = request.POST.get("current_password", "")
+    new_password = request.POST.get("new_password", "")
+    confirm_password = request.POST.get("confirm_password", ".")
+    if new_password == confirm_password:
+        user = authenticate(username=request.user, password=old_password)
+        if user is not None and user.is_active:
+            user.set_password(new_password)
+            user.save()
+            return HttpResponseRedirect(reverse('start')+"schsys/do_logout?schtml=1")
+        else:
+            messages.add_message(request, messages.ERROR, 'Bad old password')
+            return HttpResponseRedirect(reverse('start'))
+    else:
+        messages.add_message(request, messages.ERROR, 'Bad confirmed password')
+        return HttpResponseRedirect(reverse('start'))
+
+
+def ok(request):
+    return HttpResponse(_RET_OK)
+
+
 def ret_ok(request, id, title):
     if request.META['HTTP_USER_AGENT'].lower().startswith('py'):
         return HttpResponse(_RET_OK_SHTML % (id, title))
@@ -82,20 +99,13 @@ def ret_ok(request, id, title):
         return HttpResponse(_RET_OK_HTML % (id, title))
 
 
-messageList = {
-    'null': '',
-    'error': 'Program error',
-    'warning': 'Program warning',
-    }
-
-
 def message(request,titleid,messageid,id):
-    global messageList
-    title = messageList[titleid]
+    global MESSAGE_LIST
+    title = MESSAGE_LIST[titleid]
     if id != '0':
-        message = messageList[messageid] % id
+        message = MESSAGE_LIST[messageid] % id
     else:
-        message = messageList[messageid]
+        message = MESSAGE_LIST[messageid]
     c =  {'title': title.decode('utf-8'), 'message': message.decode('utf-8')}
     return render_to_response('schsys/message.html', context=c, request=request)
 
@@ -174,13 +184,7 @@ def listdialog(request, akcja):
     return HttpResponse('')
 
 
-def treedialog(
-    request,
-    app,
-    tab,
-    id,
-    akcja,
-    ):
+def treedialog(request, app, tab, id, akcja):
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -203,28 +207,14 @@ def treedialog(
                 id2 = obj.parent.id
                 if id2 and id2 > 0:
                     parent_pk = id2
-        c = {
-            'value': value,
-            'app': app,
-            'tab': tab,
-            'pk': id,
-            'parent_pk': parent_pk,
-            'model': model,
-            'object': obj,
-            }
+        c = {'value': value, 'app': app, 'tab': tab, 'pk': id, 'parent_pk': parent_pk, 'model': model, 'object': obj,}
         return render_to_response('schsys/get_from_tree.html', context=c, request=request)
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
 
 
-def tabdialog(
-    request,
-    app,
-    tab,
-    id,
-    akcja,
-    ):
+def tabdialog(request, app, tab, id, akcja):
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -242,21 +232,12 @@ def tabdialog(
         obj = None
         if int(id) >= 0:
             obj = model.objects.get(id=id)
-        c = {
-            'value': value,
-            'app': app,
-            'tab': tab,
-            'id': id,
-            'model': model,
-            'obj': obj,
-            }
+        c = {'value': value, 'app': app, 'tab': tab, 'id': id, 'model': model, 'obj': obj,}
         return render_to_response('schsys/get_from_tab.html', context=c, request=request)
     if akcja == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
 
-
-APP = None
 
 def plugin_template(request, template_name):
     global APP
@@ -267,16 +248,13 @@ def plugin_template(request, template_name):
     return render_to_response(template_name, context=c, request=request)
 
 
-
 def plugins(request, app, plugin_name):
     f = None
     try:
-        f = open(settings.STATIC_ROOT + '/' + app + '/' + plugin_name + '.zip',
-                 'rb')
+        f = open(settings.STATIC_ROOT + '/' + app + '/' + plugin_name + '.zip', 'rb')
     except:
         try:
-            f = open(settings.ROOT_PATH + '/app_pack/' + app + '/schplugins/'
-                      + plugin_name + '.zip', 'rb')
+            f = open(settings.ROOT_PATH + '/app_pack/' + app + '/schplugins/' + plugin_name + '.zip', 'rb')
         except:
             raise Http404
     s = f.read()

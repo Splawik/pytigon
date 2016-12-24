@@ -17,107 +17,15 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import os
-import zipfile
-import re
+
 import types
 from base64 import b32encode, b32decode
 
-def split_tag(s, start, end):
-    i1 = s.find(start)
-    if i1 >= 0:
-        i2 = s.find(end, i1)
-        if i2 >= 0:
-            return (s[:i1], s[i1 + len(start):i2], s[i2 + len(end):])
-    return (s, None, '')
-
-def _clear_content(b):
-    return b.replace(b' ', b'').replace(b'\n', b'').replace(b'\t', b'').replace(b'\r',b'')
-
-def cmp_txt_str_content(b1, b2):
-    _b1 = _clear_content(b1)
-    _b2 = _clear_content(b2)
-    if _b1==_b2:
-        return True
-    else:
-        return False
-
-def extractall(
-    zip_file,
-    path=None,
-    members=None,
-    pwd=None,
-    exclude=None,
-    backup_zip=None,
-    backup_exts=None,
-    ):
-    if members is None:
-        members = zip_file.namelist()
-    for zipinfo in members:
-        if zipinfo.endswith('/') or zipinfo.endswith('\\'):
-            if not os.path.exists(path + '/' + zipinfo):
-                os.makedirs(path + '/' + zipinfo)
-        else:
-            test=True
-            if exclude:
-                for pos in exclude:
-                    if re.match(pos, zipinfo, re.I) != None:
-                        test=False
-                        break
-            if test:
-                if backup_zip:
-                    if not backup_exts or zipinfo.split('.')[-1] in backup_exts:
-                        out_name = os.path.join(path, zipinfo)
-                        if os.path.exists(out_name):
-                            bytes = zip_file.read(zipinfo, pwd)
-                            with open(out_name, 'rb') as f:
-                                bytes2 = f.read()
-                            if not cmp_txt_str_content(bytes, bytes2):
-                                backup_zip.writestr(zipinfo, bytes2)
-                zip_file.extract(zipinfo, path, pwd)
-
-
-class ZipWriter:
-    def __init__(self, filename, basepath="", exclude=[]):
-        self.filename = filename
-        self.basepath = basepath
-        self.base_len = len(self.basepath)
-        self.zip_file = zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED)
-        self.exclude = exclude
-
-    def close(self):
-        self.zip_file.close()
-
-    def write(self, file_name, name_in_zip=None):
-        test = True
-        for pos in self.exclude:
-            if re.match(pos, file_name, re.I) != None:
-                test=False
-                break
-        if test:
-            f = open(file_name, "rb")
-            data = f.read()
-            f.close()
-            if name_in_zip:
-                self.zip_file.writestr(name_in_zip, data)
-            else:
-                self.zip_file.writestr(file_name[self.base_len:], data)
-
-    def toZip(self, file):
-        if os.path.isfile(file):
-            self.write(file)
-        else:
-            self.addFolderToZip(file)
-
-    def addFolderToZip(self, folder):
-        for file in os.listdir(folder):
-            full_path = os.path.join(folder, file)
-            if os.path.isfile(full_path):
-                self.write(full_path)
-            elif os.path.isdir(full_path):
-                self.addFolderToZip(full_path)
 
 def split2(txt, sep):
+    """split txt to two part based on first occurrence of sep in txt. If sep doesn't exist in txt,
+    returned second part is ''
+    """
     id = txt.find(sep)
     if id>=0:
         return (txt[:id], txt[id+len(sep):])
@@ -125,27 +33,59 @@ def split2(txt, sep):
         return (txt,"")
 
 
-def open_and_create_dir(filename, mode):
-    if not os.path.exists(os.path.dirname(filename)):
-        os.makedirs(os.path.dirname(filename))
-    return open(filename, mode)
+def extend_fun_to(obj):
+    """Function decorator - extend obj with defined function.
 
+    Args:
+        obj - obj which shoud be extended
 
-def extend_fun_to(ctrl):
+    Example:
+        class A:
+            pass
+
+        a = A()
+
+        @extend_fun_to(a):
+        def test(self, s):
+            print(s)
+
+        a.test("Hello world!")
+    """
     def fun(func):
-        setattr(ctrl, func.__name__, types.MethodType(func, ctrl))
+        setattr(obj, func.__name__, types.MethodType(func, obj))
         return func
     return fun
 
 
 def bencode(s):
+    """encode string s by b32encode function"""
     if type(s)==str:
         return b32encode(s.encode('utf-8')).decode('utf-8')
     else:
         return b32encode(s).decode('utf-8')
 
+
 def bdecode(s):
+    """decode string encoded by bencode function"""
     if type(s)==str:
         return b32decode(s.encode('utf-8')).decode('utf-8')
     else:
         return b32decode(s).decode('utf-8')
+
+
+def clean_href(href):
+    """return href.replace('\n', '').strip()"""
+    return href.replace('\n', '').strip()
+
+
+def is_null(value, value2):
+    """
+    if value:
+        return value
+    else:
+        return value2
+    """
+    if value:
+        return value
+    else:
+        return value2

@@ -31,7 +31,7 @@ from django.core import serializers
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
 from schlib.schtools import schjson
-from schlib.schhttptools.htmltab import SimpleTabParserBase
+from schlib.schparser.html_parsers import SimpleTabParserBase
 
 
 def transform_template_name(obj, request, template_name):
@@ -41,17 +41,8 @@ def transform_template_name(obj, request, template_name):
         return template_name
 
 
-def change_pos(
-    request,
-    app,
-    tab,
-    pk,
-    forward=True,
-    field=None,
-    callback_fun=None
-    ):
+def change_pos(request, app, tab, pk, forward=True, field=None, callback_fun=None):
     model = apps.get_model(app, tab)
-    #obj = lookup_object(model, pk, None, None)
     obj = model.objects.get(id=pk)
     if field:
         query = model.objects.extra(where=[field + '_id=%s'],
@@ -72,7 +63,6 @@ def change_pos(
             HttpResponse('NO')
     if object_id_2 == None:
         return HttpResponse('NO')
-    #obj2 = lookup_object(model, object_id_2, None, None)
     obj2 = model.objects.get(id=object_id_2)
     tmp_id = obj.id
     obj.id = obj2.id
@@ -84,13 +74,7 @@ def change_pos(
     return HttpResponse('YES')
 
 
-def duplicate_row(
-    request,
-    app,
-    tab,
-    pk,
-    field=None,
-    ):
+def duplicate_row(request, app, tab, pk, field=None):
     model = apps.get_model(app, tab)
     obj = model.objects.get(id=pk)
     if obj:
@@ -98,7 +82,6 @@ def duplicate_row(
         obj.save()
         return HttpResponse('YES')
     return HttpResponse('NO')
-
 
 
 class LocalizationTemplateResponse(TemplateResponse):
@@ -122,8 +105,6 @@ class LocalizationTemplateResponse(TemplateResponse):
 class ExtTemplateResponse(LocalizationTemplateResponse):
     def __init__(self, request, template, context=None, content_type=None, status=None, mimetype=None,
                  current_app=None, charset=None, using=None):
-
-
         if context and 'view' in context and context['view'].doc_type()=='pdf':
             template2 = []
             if 'template_name' in context:
@@ -176,7 +157,6 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                     self.content = zip_stream.getvalue()
                 else:
                     self['Content-Type'] = 'application/pdf'
-                    #self['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
                     pdf_stream = stream_from_html(self.content, stream_type='pdf')
                     self.content = pdf_stream.getvalue()
             elif self.context_data['view'].doc_type()=='json':
@@ -188,7 +168,6 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
 
                 row_title = mp.tables[-1][0]
                 tab = mp.tables[-1][1:]
-
 
                 if ':' in row_title[0]:
                     x = row_title[0].split(':')
@@ -246,14 +225,11 @@ def render_to_response_ext(request, template_name, context, doc_type='html'):
     return ExtTemplateView.as_view(template_name=template_name)(request, **context)
     
 
-
 def dict_to_template(template_name):
     def _dict_to_template(func):
         def inner(request, *args, **kwargs):
             v = func(request, *args, **kwargs)
             return render_to_response(template_name, v, request=request)
-            #content = loader.render_to_string(template_name, v, request) #, using=using)
-            #return HttpResponse(content) #, content_type, status)
         return inner
     return _dict_to_template
 

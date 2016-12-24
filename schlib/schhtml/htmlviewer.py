@@ -17,32 +17,25 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contains classes for render html content"""
+
 import sys
 import traceback
-import tempfile
-
-from .htmltools import superstrip, HtmlModParser
-from .html_tags import HtmlTag
-from schlib.schhtml.basehtmltags import get_tag_preprocess_map
-from .basedc import NullDc, BaseDc
-
-#from .cairodc import CairoDc, get_PdfCairoDc
-# from wxdc import GraphicsContextDC
-#from .wxdc import DcDc
-# from wxgc import GraphicsContextDC
-
-from .htmltools import superstrip
-from tempfile import NamedTemporaryFile
 import os
-from .css import Css
-from schlib.schhttptools.httpclient import HttpClient
 import io
+from tempfile import NamedTemporaryFile
 
+from schlib.schhtml.htmltools import HtmlModParser
+from schlib.schhtml.html_tags import HtmlTag
+from schlib.schhtml.basedc import NullDc, BaseDc
+from schlib.schhtml.css import Css
+
+from schlib.schhtml.basehtmltags import get_tag_preprocess_map
+from schlib.schhttptools.httpclient import HttpClient
 from schlib.schhtml.pdfdc import PdfDc
 
-#run_cairo = True
 
-init_css_str_base = \
+INIT_CSS_STR_BASE = \
     """
     body {font-family:sans-serif;font-size:100%; padding:2;}
     table {border:5;vertical-align:top; padding:2;}
@@ -67,19 +60,39 @@ init_css_str_base = \
 
 class HtmlViewerParser(HtmlModParser):
 
-    def __init__(
-        self,
-        dc=None,
-        dc_info=None,
-        url=None,
-        calc_only=False,
-        parse_only=False,
-        init_css_str=None,
-        css_type=0,
-        ):
+    CSS_TYPE_STANDARD = 0
+    CSS_TYPE_INDENT = 1
+
+    def __init__(self, dc=None, dc_info=None, url=None, calc_only=False,
+                 parse_only=False, init_css_str=None,css_type=CSS_TYPE_STANDARD):
+        """Constructor
+
+        Args:
+            dc - Device context onto which graphics and text can be drawn
+            dc_info - information related to device context, dervied from BaseDcInfo. If None embeded in dc info
+            is used.
+            calc_only - do not render - calc only.
+            parse_only - do not render - parse only.
+
+            init_css_str - css for rendered html. If None: standard css is used (INIT_CSS_STR_BASE variable)
+
+            css_type - if CSS_TYPE_STANDARD: simplified version of css, if CSS_TYPE_INDENT: simplified and in
+            icss format ( brackets replaced with indentations )
+        """
         self.tag_parser = None
         self.url = url
         self.parse_only = parse_only
+        self.obj_id_dict = {}
+        self.obj_action_dict = {}
+        self.parent_window = None
+        self._max_width = 0
+        self._max_height = 0
+        self.lp = 1
+        self.table_lp = 0
+        self.http = None
+        self.tdata_tab = []
+        self.debug = False
+
         if self.parse_only:
             self.calc_only = True
         else:
@@ -97,79 +110,74 @@ class HtmlViewerParser(HtmlModParser):
             self.dc_info = self.dc.get_dc_info()
         self.css = Css()
         if init_css_str:
-            if css_type == 0:
+            if css_type == self.CSS_TYPE_STANDARD:
                 self.css.parse_str(init_css_str)
             else:
                 self.css.parse_indent_str(init_css_str)
         else:
-            if css_type == 0:
-                self.css.parse_str(init_css_str_base)
+            if css_type == self.CSS_TYPE_STANDARD:
+                self.css.parse_str(INIT_CSS_STR_BASE)
             else:
-                self.css.parse_indent_str(init_css_str_base)
-        self.obj_id_dict = {}
-        self.obj_action_dict = {}
+                self.css.parse_indent_str(INIT_CSS_STR_BASE)
 
-# self.preprocess_dict = {}
-
-        self.parent_window = None
-        self._max_width = 0
-        self._max_height = 0
-        self.lp = 1
-        self.table_lp = 0
-        self.http = None
-        self.tdata_tab = []
         HtmlModParser.__init__(self, url)
-        self.debug = False
-        if self.debug:
-            print("html")
-# def add_preprocess_pos(self, src_tag, tst_fun): self.preprocess_dict[src_tag]
-# = tst_fun
 
-    def register_tdata(
-        self,
-        tdata,
-        tag,
-        attrs,
-        ):
+    def register_tdata(self,tdata,tag,attrs):
+        """Function used to collect table rows by child tags
+
+        Args:
+            tdata - list of rows
+            tag - name of tag
+            attrs - tag attributes
+        """
         self.tdata_tab.append((tdata, tag, attrs))
 
     def set_http_object(self, http):
+        """Set http connector which is used for retrieve resources from server (mainly images)
+
+        Args:
+            http - http conector, HttpClient or derived class.
+        """
         self.http = http
 
     def get_http_object(self):
+        """return http connector"""
         if not self.http:
             self.http = HttpClient(self.url)
         return self.http
 
     def set_max_rendered_size(self, width, height):
+        """Set maximum rendered size
+
+        Args:
+            width
+            height
+        """
         self._max_width = width
         self._max_height = height
 
     def get_max_rendered_size(self):
+        """get maximum rendered size"""
         return (self._max_width, self._max_height)
 
     def set_parent_window(self, win):
+        """Set parent window
+
+        Args:
+            win - Windows - wx.Window or dervied class
+        """
         self.parent_window = win
 
     def get_parent_window(self):
+        """Get parent window if set, else None"""
         return self.parent_window
 
-    def reg_id_obj(
-        self,
-        id,
-        dc,
-        obj,
-        ):
+    def reg_id_obj(self, id, dc, obj):
         self.obj_id_dict[id] = obj
         obj.last_rendered_dc = dc
         obj.rendered_rects.append((dc.x, dc.y, dc.dx, dc.dy))
 
-    def reg_action_obj(
-        self,
-        action,
-        dc,
-        obj,
-        ):
+    def reg_action_obj(self,action,dc,obj):
         if action in self.obj_action_dict:
             self.obj_action_dict[action].append(obj)
         else:
@@ -178,9 +186,6 @@ class HtmlViewerParser(HtmlModParser):
         obj.rendered_rects.append((dc.x, dc.y, dc.dx, dc.dy))
 
     def handle_starttag(self, tag, attrs):
-        #if tag.lower() in ('img', 'image', 'input', 'br', 'link'):
-        #    return self.handle_startendtag(tag, attrs)
-        #else:
         return self._handle_starttag(tag, attrs)
 
     def _handle_starttag(self, tag, attrs):
@@ -248,13 +253,14 @@ class HtmlViewerParser(HtmlModParser):
             traceback.print_exception(exc_type, exc_value, exc_tb)
 
     def close(self):
+        """Close conected to this class device context"""
         if self.dc:
             self.dc.close()
 
     def get_max_sizes(self):
+        """Get maximum size basend on rendered html page"""
         sizes = self.dc.get_max_sizes()
         sizes2 = self.get_max_rendered_size()
-        # print "GetMaxSizes:", sizes, sizes2
         return (max(sizes[0], sizes2[0]), max(sizes[1], sizes2[1]))
 
     def print_obj(self, obj, start=True):
@@ -274,18 +280,7 @@ class HtmlViewerParser(HtmlModParser):
                     parent = parent.parent
                 print('|   '*tab, "/", obj.tag, "(", obj.height, ")")
 
-def stream_from_html(
-    html,
-    input_stream=None,
-    css=None,
-    #width=2480,
-    #height=3508,
-    width=int(210*72/25.4),
-    height=int(297*72/25.4),
-    stream_type='pdf'
-    ):
-
-
+def stream_from_html(html,input_stream=None,css=None,width=int(210*72/25.4),height=int(297*72/25.4),stream_type='pdf'):
     if '<html'.encode('ascii') in html:
         html2 = html.decode('utf-8')
     else:
@@ -302,63 +297,40 @@ def stream_from_html(
         result = input_stream
     else:
         result = io.BytesIO()
-        #result = tempfile.TemporaryFile()
 
-    surf=None
     if stream_type=='pdf':
-        #surf = cairo.PDFSurface(result, width, height)
-        #ctx = cairo.Context(surf)
-        #dc = CairoDc(ctx=ctx, calc_only=False, width=width, height=height)
-        #dc = get_PdfCairoDc(result, width, height)
-        #tempfile.gettempdir()
-        #result = tempfile.TemporaryFile()
-        result_buf = tempfile.NamedTemporaryFile(delete=False)
+        result_buf = NamedTemporaryFile(delete=False)
         pdf_name = result_buf.name
         result_buf.close()
-
-
         dc = PdfDc(calc_only=False, width=width2, height=height2, output_name=pdf_name)
-        #dc = get_PdfCairoDc(pdf_name, width, height)
     else:
-        #dc = CairoDc(calc_only=False, width=width, height=height,
-        #             output_name='c:\\temp\\test.pdf')
         from schlib.schhtml.cairodc import CairoDc
         dc = CairoDc(calc_only=False, width=width2, height=height2)
-        #dc = DcDc(calc_only=False, width=width, height=height)
-        #dc = DcDc(calc_only=False, width=width, height=height,
-        #          output_name='test.png')
 
     dc.set_paging(True)
     p = HtmlViewerParser(dc=dc, calc_only=False)
     p.feed(html2)
     p.close()
     if stream_type=='pdf':
-        #dc.surf.finish()
-
-        #dc.close()
-        f = open(pdf_name,"rb")
-        result.write(f.read())
-        f.close()
+        with open(pdf_name,"rb") as f:
+            result.write(f.read())
         os.unlink(pdf_name)
     else:
-        f = NamedTemporaryFile(delete=False)
-        name = f.name
-        f.close()
-        
+        with NamedTemporaryFile(delete=False) as f:
+            name = f.name
+
         dc.end_page()
         dc.save(name)
         
-        f = open(name,"rb")
-        buf = f.read()
-        result.write(buf)
-        f.close()
+        with open(name,"rb") as f:
+            buf = f.read()
+            result.write(buf)
 
         os.unlink(name)
     return result
 
 
 def tdata_from_html(html, http):
-    #dc = DcDc(calc_only=True, width=-1, height=-1)
     dc = PdfDc(calc_only=True, width=-1, height=-1)
     p = HtmlViewerParser(dc=dc, parse_only=True)
     p.set_http_object(http)

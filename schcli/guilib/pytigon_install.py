@@ -13,7 +13,7 @@ from shutil import move
 
 from subprocess import call, Popen, PIPE
 
-from schlib.schtools.tools import extractall
+from schlib.schfs.vfstools import extractall
 
 _ = wx.GetTranslation
 

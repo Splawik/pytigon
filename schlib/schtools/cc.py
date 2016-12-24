@@ -17,15 +17,18 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import os
 import ctypes
 import platform
 
-_libtcc=None
+
+_LIBTCC=None
+
 
 def load_libtcc(base_path):
-    global _libtcc
-    if _libtcc:
+    global _LIBTCC
+    if _LIBTCC:
         return True
 
     if platform.system() == "Linux":
@@ -33,15 +36,17 @@ def load_libtcc(base_path):
     else:
         file_and_path_to_tcclib = base_path + "/ext_prg/tcc/libtcc.dll"
     try:
-        _libtcc=ctypes.cdll.LoadLibrary(file_and_path_to_tcclib)
+        _LIBTCC=ctypes.cdll.LoadLibrary(file_and_path_to_tcclib)
     except:
-        _libtcc = None
+        _LIBTCC = None
         return False
     return True
+
 
 def _req0(funname,retval):
     if retval!=0:
         raise ValueError("%s returned error code %s." % (funname,retval))
+
 
 def compile(path_c, base_path):
     for f in os.listdir(path_c):
@@ -49,11 +54,9 @@ def compile(path_c, base_path):
             src = path_c + "/" + f
             if load_libtcc(base_path):
                 os.chdir(base_path+"/ext_prg/tcc/")
-                tccstate=_libtcc.tcc_new()
-                _req0("set_output_type", _libtcc.tcc_set_output_type(tccstate,2))
-                _req0("add_file", _libtcc.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
-                _req0("add_file", _libtcc.tcc_add_file(tccstate,src.encode('utf-8')))
-                _req0("output_file", _libtcc.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
-                _libtcc.tcc_delete(tccstate)
-
-
+                tccstate=_LIBTCC.tcc_new()
+                _req0("set_output_type", _LIBTCC.tcc_set_output_type(tccstate,2))
+                _req0("add_file", _LIBTCC.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
+                _req0("add_file", _LIBTCC.tcc_add_file(tccstate,src.encode('utf-8')))
+                _req0("output_file", _LIBTCC.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
+                _LIBTCC.tcc_delete(tccstate)

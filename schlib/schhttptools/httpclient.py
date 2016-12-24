@@ -20,9 +20,8 @@
 from django.conf import settings
 import requests
 
-from schlib.schfs.vfstools import replace_dot
+from schlib.schfs.vfstools import norm_path
 from schlib.schtools.schjson import json_loads
-from schlib.schtools.encode import decode_utf
 import threading
 
 def init_embeded_django():
@@ -97,7 +96,7 @@ class HttpClient:
 
         self.content = ""
         if address_str[0]=='^':
-            address = 'http://127.0.0.2/schplugins/'+decode_utf(address_str[1:])
+            address = 'http://127.0.0.2/schplugins/'+address_str[1:]
         else:
             address = address_str
 
@@ -106,8 +105,9 @@ class HttpClient:
         else:
             adr = address
 
-        adr = replace_dot(adr)
-        adr = adr.replace(' ', '%20')
+        #adr = replace_dot(adr)
+        adr = norm_path(adr)
+        #adr = adr.replace(' ', '%20')
         print(">>>>>>>>", adr)
 
         if not post_request and not '?' in adr:

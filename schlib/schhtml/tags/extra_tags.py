@@ -18,23 +18,14 @@
 #version: "0.1a"
 
 from schlib.schhtml.basehtmltags import BaseHtmlAtomParser, register_tag_map
-from schlib.schhtml.atom import AtomList, Atom
+from schlib.schhtml.atom import Atom
 from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, \
     RenderCellSpacing, RenderCellPadding, get_size
-from collections import deque
-import sys
-import traceback
 
 
 class VectorImg(BaseHtmlAtomParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlAtomParser.__init__(self, parent, parser, tag, attrs)
         self.gparent = parent.gparent
         self.render_helpers = [RenderCellSpacing(self), RenderBorder(self),
@@ -62,17 +53,7 @@ class VectorImg(BaseHtmlAtomParser):
     def handle_data(self, data):
         self.draw_txt += data
 
-# def render(self, dc):
-
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self, dc, style, x, y, dx, dy):
         self.reg_id(dc)
         self.reg_end()
         dc2 = dc.subdc(x, y, self.width, self.height, True)

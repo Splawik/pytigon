@@ -17,6 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 from django.http import HttpResponse
 
 _NEW_ROW_OK_HTML = """

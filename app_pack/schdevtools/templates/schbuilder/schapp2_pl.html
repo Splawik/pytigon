@@ -11,10 +11,9 @@
                 return None
             else:
                 if url=='close':
-                    #page = self.GetParent().GetParent().GetParent()
-                    #win = wx.GetApp().GetTopWindow()
-                    #win.toolbar_interface.remove_page(page.title)
-                    self.toolbar_interface.remove_page(self.toolbar_interface_page.title)
+                    page = self.GetParent().GetParent().GetParent()
+                    win = wx.GetApp().GetTopWindow()
+                    win.toolbar_interface.remove_page(page.title)
                     return True
                 else:
                     id = self.app_list.GetValue()

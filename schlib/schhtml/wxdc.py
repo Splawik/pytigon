@@ -18,29 +18,11 @@
 #version: "0.1a"
 
 import wx
-from .basedc import BaseDc, BaseDcInfo
+from schlib.schhtml.basedc import BaseDc, BaseDcInfo
 import io
-from base64 import b32decode
-# import cairo as C import cairo
-#
-# A4 mm width, height = 2100, 2970
-#
-# A4 cale width, height = 8.28, 11.69
-#
-# A4 - 300dpi width, height = 2480, 3508
-
 
 class DcDc(BaseDc):
-
-    def __init__(
-        self,
-        dc=None,
-        calc_only=False,
-        width=-1,
-        height=-1,
-        output_name=None,
-        scale = 1.0,
-        ):
+    def __init__(self, dc=None, calc_only=False, width=-1, height=-1, output_name=None, scale= 1.0):
         BaseDc.__init__(self, calc_only, width, height, output_name, scale)
         self.dc_info = DcDcinfo(self)
         if self.width >= 0:
@@ -84,15 +66,11 @@ class DcDc(BaseDc):
         self._fill = False
         self._draw = False
         self._preserve = False
-        self.transparent_brush = wx.Brush(wx.Colour(255, 255, 255),
-                style=wx.TRANSPARENT)
-        self.transparent_pen = wx.Pen(wx.Colour(255, 255, 255), width=0,
-                                      style=wx.TRANSPARENT)
-        #self._last_pen = wx.Pen(wx.Colour(0, 0, 0), 1.0*self.scale, style=wx.SOLID)
+        self.transparent_brush = wx.Brush(wx.Colour(255, 255, 255), style=wx.TRANSPARENT)
+        self.transparent_pen = wx.Pen(wx.Colour(255, 255, 255), width=0, style=wx.TRANSPARENT)
         self._last_pen = None
         self._last_brush = wx.Brush(wx.Colour(255, 255, 255), style=wx.SOLID)
         self._last_pen_color = (0, 0, 0, 255)
-        #self._last_line_width = 1.0*scale
         self._last_line_width = -1
         self._last_brush_color = (255, 255, 255, 255)
 
@@ -124,8 +102,6 @@ class DcDc(BaseDc):
         for fun_arg in self._fun_stack:
             fun_arg[0](*fun_arg[1])
 
-# ------ Base graphics methods
-
     def start_page(self):
         self.dc.StartPage()
         BaseDc.start_page(self)
@@ -141,8 +117,7 @@ class DcDc(BaseDc):
         if self._last_pen_color != self._color or self._last_line_width\
              != self._line_width:
             self._last_pen = wx.Pen(wx.Colour(self._color[0], self._color[1],
-                                    self._color[2]), (self._line_width+0.49)*self.scale,
-                                    style=wx.SOLID)
+                    self._color[2]), (self._line_width+0.49)*self.scale, style=wx.SOLID)
             self._last_pen_color = self._color
             self._last_line_width = self._line_width
         self.dc.SetPen(self._last_pen)
@@ -157,9 +132,7 @@ class DcDc(BaseDc):
         self._fill = True
         self.dc.SetPen(self.transparent_pen)
         if self._last_brush_color != self._color:
-            self._last_brush = wx.Brush(wx.Colour(self._color[0],
-                                        self._color[1], self._color[2]),
-                                        style=wx.SOLID)
+            self._last_brush = wx.Brush(wx.Colour(self._color[0], self._color[1], self._color[2]), style=wx.SOLID)
             self._last_brush_color = self._color
         self.dc.SetBrush(self._last_brush)
         self._draw_and_fill()
@@ -168,15 +141,7 @@ class DcDc(BaseDc):
             self._fun_stack = []
         return BaseDc.fill(self, preserve)
 
-# ------ Base graphics methods 2
-
-    def set_color(
-        self,
-        r,
-        g,
-        b,
-        a=255,
-        ):
+    def set_color(self, r, g, b, a=255):
         self._color = (r, g, b, a)
         BaseDc.set_color(self, r, g, b, a)
 
@@ -217,88 +182,33 @@ class DcDc(BaseDc):
             font.SetFamily(wx.DECORATIVE)
         else:
             font_style = wx.DEFAULT
-        font.SetPointSize((self.scale * (self.base_font_size * 72) * int(style_tab[2])) / (96
-                           * 100.0))
+        font.SetPointSize((self.scale * (self.base_font_size * 72) * int(style_tab[2])) / (96 * 100.0))
         self.dc.SetFont(font)
         (r, g, b) = self.rgbfromhex(style_tab[0])
         self.dc.SetTextForeground(wx.Colour(r, g, b))
         self.set_color(r, g, b)
-# self.dc.SetPen(wx.Pen(wx.Colour(r, g, b)))
         BaseDc.set_style(self, style)
         return style_tab
 
-# ------ Base graphics methods 3
-
-    def add_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_line(self, x, y, dx, dy):
         self._add(self.dc.DrawLine, (x*self.scale, y*self.scale, (x + dx)*self.scale, (y + dy)*self.scale))
         BaseDc.add_line(self, x, y, dx, dy)
 
-    def add_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_rectangle(self, x, y, dx, dy):
         self._add(self.dc.DrawRectangle, (x*self.scale, y*self.scale, dx*self.scale, dy*self.scale))
         BaseDc.add_rectangle(self, x, y, dx, dy)
 
-    def add_rounded_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        ):
-        self._add(self.dc.DrawRoundedRectangle, (x*self.scale, y*self.scale, dx*self.scale, dy*self.scale, radius*self.scale))
-        BaseDc.add_rounded_rectangle(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            radius,
-            )
+    def add_rounded_rectangle(self, x, y, dx, dy, radius):
+        self._add(self.dc.DrawRoundedRectangle, (x*self.scale, y*self.scale, dx*self.scale,
+                dy*self.scale, radius*self.scale))
+        BaseDc.add_rounded_rectangle(self, x, y, dx, dy, radius)
 
-    def add_arc(
-        self,
-        x,
-        y,
-        radius,
-        angle1,
-        angle2,
-        ):
-        self._add(self.dc.DrawEllipticArc, (
-            (x + radius)*self.scale,
-            (y + radius)*self.scale,
-            radius*2*self.scale,
-            radius*2*self.scale,
-            (360 - angle1)*self.scale,
-            (360 - angle2)*self.scale,
-            ))
-        BaseDc.add_arc(
-            self,
-            x,
-            y,
-            radius,
-            angle1,
-            angle2,
-            )
+    def add_arc(self, x, y, radius, angle1, angle2):
+        self._add(self.dc.DrawEllipticArc, ((x + radius)*self.scale, (y + radius)*self.scale,
+            radius * 2 * self.scale, radius * 2 * self.scale, (360 - angle1)*self.scale, (360 - angle2)*self.scale,))
+        BaseDc.add_arc(self, x, y, radius, angle1, angle2)
 
-    def add_ellipse(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_ellipse(self, x, y, dx, dy):
         self._add(self.dc.DrawEllipse, (x*self.scale, y*self.scale, dx*self.scale, dy*self.scale))
         BaseDc.add_ellipse(self, x, y, dx, dy)
 
@@ -316,26 +226,13 @@ class DcDc(BaseDc):
         self._add(self._spline, (self, tabpoints))
         BaseDc.add_spline(self, xytab)
 
-# ------ Base graphics methods 4
-
-    def draw_text(
-        self,
-        x,
-        y,
-        txt,
-        ):
+    def draw_text(self, x, y, txt):
         (w, h, d, e) = self.dc.GetFullTextExtent(txt)
         dy_up = h - d
         self.dc.DrawText(txt, x*self.scale, y*self.scale - dy_up)
         BaseDc.draw_text(self, x, y, txt)
 
-    def draw_rotated_text(
-        self,
-        x,
-        y,
-        txt,
-        angle,
-        ):
+    def draw_rotated_text(self, x, y, txt, angle):
         (w, h, d, e) = self.dc.GetFullTextExtent(txt)
         dy_up = h - d
         self.dc.DrawRotatedText(txt, x*self.scale + dy_up, y*self.scale, 360 - angle)
@@ -345,33 +242,12 @@ class DcDc(BaseDc):
 # preserve img scale 3 - scale to dx or dy - preserve img scale, fit fool image
 # 4 - repeat x 5 - repeat y 6 - repeat x and y
 
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
-
-# image = wx.Image(png_name) try: image = wx.Image(png_name) except: image =
-# wx.Image("sleeptimer.png") print "No:", png_name
-#
-# png_stream = cStringIO.StringIO(b32decode(png_data))
+    def draw_image(self, x, y, dx, dy, scale, png_data,):
         png_stream = io.BytesIO(png_data)
         image = wx.ImageFromStream(png_stream)
         w = image.GetWidth()
         h = image.GetHeight()
-        (x_scale, y_scale) = self._scale_image(
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            w,
-            h,
-            )
+        (x_scale, y_scale) = self._scale_image(x, y, dx, dy, scale, w, h)
         if scale < 4:
             image.Rescale(w * x_scale, h * y_scale)
             bmp = image.ConvertToBitmap()
@@ -392,19 +268,10 @@ class DcDc(BaseDc):
                     self.dc.DrawBitmap(bmp, x + delta_x, y + delta_y)
                     delta_x += w
                 delta_y += h
-        BaseDc.draw_image(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            png_data,
-            )
+        BaseDc.draw_image(self, x, y, dx, dy, scale, png_data)
 
 
 class DcDcinfo(BaseDcInfo):
-
     def __init__(self, dc):
         BaseDcInfo.__init__(self, dc)
 
@@ -436,11 +303,8 @@ class DcDcinfo(BaseDcInfo):
 
     def get_img_size(self, png_data):
         try:
-# png_stream = cStringIO.StringIO(b32decode(png_data))
             png_stream = io.BytesIO(png_data)
             image = wx.Image(png_stream)
-            #image = wx.ImageFromStream(png_stream)
-            
         except:
             image = None
         if image:

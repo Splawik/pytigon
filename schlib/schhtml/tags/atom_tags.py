@@ -17,39 +17,19 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from schlib.schhtml.basehtmltags import BaseHtmlAtomParser, register_tag_map
-from schlib.schhtml.atom import AtomList, Atom, NullAtom, BrAtom
-from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, \
-    RenderCellSpacing, RenderCellPadding, get_size
-from collections import deque
-import sys
-import traceback
 import io
-from base64 import b32encode
+
+from schlib.schhtml.basehtmltags import BaseHtmlAtomParser, register_tag_map
+from schlib.schhtml.atom import Atom, NullAtom, BrAtom
 
 
 class AtomTag(BaseHtmlAtomParser):
-
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlAtomParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = parent.child_tags + ['a', 'p', 'calc', 'big', 'strong', 'span', 'div']
         self.gparent = parent.gparent
 
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self, dc, style, x, y, dx, dy):
         parent = self.parent
         while parent:
             if type(parent)==Atag:
@@ -64,13 +44,7 @@ class AtomTag(BaseHtmlAtomParser):
 
 class BrTag(AtomTag):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         AtomTag.__init__(self, parent, parser, tag, attrs)
 
     def close(self):
@@ -81,13 +55,7 @@ class BrTag(AtomTag):
 
 class Atag(AtomTag):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         AtomTag.__init__(self, parent, parser, tag, attrs)
         self.no_wrap = True
 
@@ -96,19 +64,9 @@ class Atag(AtomTag):
         self.make_atom_list()
         return ret
 
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self, dc, style, x, y, dx, dy):
         self.reg_action('href', dc.subdc(x, y, dx, dy))
         return False
-
-
 
     def close(self):
         atom = NullAtom()
@@ -123,50 +81,23 @@ class Atag(AtomTag):
 
 class ImgDraw(object):
 
-    def __init__(
-        self,
-        img_tag,
-        image,
-        width,
-        height,
-        ):
+    def __init__(self, img_tag, image, width, height):
         self.img_tag = img_tag
         self.image = image
         self.width = width
         self.height = height
 
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self, dc, style, x, y, dx, dy):
         http = self.img_tag.parser.http
         if self.image:
-            dc.draw_image(
-                x,
-                y,
-                self.width,
-                self.height,
-                0,
-                self.image,
-                )
+            dc.draw_image(x, y, self.width, self.height, 0, self.image,)
         else:
             print('null_img')
 
 
 class ImgTag(AtomTag):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         AtomTag.__init__(self, parent, parser, tag, attrs)
 
         if 'src' in attrs:
@@ -190,7 +121,6 @@ class ImgTag(AtomTag):
             if img:
                 img_name = self.src.lower()
                 if '.png' in img_name:
-# self.img = b32encode(img)
                     self.img = img
                 else:
                     print(img_name)
@@ -199,20 +129,9 @@ class ImgTag(AtomTag):
                     image = PIL.Image.open(stream)
                     output = io.BytesIO()
                     image.save(output, "PNG")
-                    #image = wx.ImageFromStream(stream)
-                    #output = io.BytesIO()
-                    #try:
-                    #    image.SaveStream(output, wx.BITMAP_TYPE_PNG)
-                    #except:
-                    #    image.SaveFile(output, wx.BITMAP_TYPE_PNG)
-
-# self.img = b32encode(output.getvalue())
                     self.img = output.getvalue()
             else:
                 self.img = None
-            #if self.img:
-            #    self.dx = self.img.GetWidth()
-            #    self.dy = self.img.GetHeight()
 
     def close(self):
         if self.img:
@@ -227,9 +146,6 @@ class ImgTag(AtomTag):
             self.make_atom_list()
             self.atom_list.append_atom(img_atom)
             self.parent.append_atom_list(self.atom_list)
-            #print "img_tag", self.parent
-            #for pos in self.parent.atom_list.atom_list:
-            #    print "X1:", pos
 
 class ParCalc(AtomTag):
     def handle_data(self, data):
@@ -244,10 +160,6 @@ class ParCalc(AtomTag):
             parent = parent.parent
         data2 = str(eval(data))
         return AtomTag.handle_data(self, data2)
-
-    #def render(self, dc):
-    #    print "???????????????????????????????????????????"
-    #    return AtomTag.render(self, dc)
 
 
 register_tag_map('br', BrTag)

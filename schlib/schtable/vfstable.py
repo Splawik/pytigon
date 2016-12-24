@@ -23,18 +23,18 @@ import re
 import sys
 from base64 import b32encode, b32decode
 
+
 import fs.path
 from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from fs.opener import fsopendir
 
-from schlib.schfs.vfstools import replace_dot
+from schlib.schfs.vfstools import norm_path
 from schlib.schtable.table import Table
 from schlib.schtasks.task import get_process_manager
 from schlib.schtools import schjson
-from schlib.schtools.data import is_null
-from schlib.schtools.tools import bdecode
+from schlib.schtools.tools import bdecode, is_null
 
 
 def automount(path):
@@ -66,7 +66,9 @@ class VfsTable(Table):
 
     def __init__(self, folder):
         self.var_count = -1
-        self.folder = replace_dot(folder).replace('%20', ' ')
+        #self.folder = replace_dot(folder).replace('%20', ' ')
+        self.folder = norm_path(folder)
+
         self.auto_cols = []
         self.col_length = [10, 10, 10]
         self.col_names = ['ID', 'Name', 'Size', 'Created']
@@ -257,7 +259,8 @@ def vfstable_view(request, folder, value=None):
         folder2 = b32decode(folder.encode('utf-8')).decode('utf-8')
     else:
         folder2 = '/'
-    folder2 = replace_dot(folder2)
+    #folder2 = replace_dot(folder2)
+    folder2 = norm_path(folder2)
     tabview = VfsTable(folder2)
     retstr = tabview.command(d)
     return HttpResponse(retstr)

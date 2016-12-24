@@ -29,13 +29,7 @@ from .tags.extra_tags import *
 
 class HtmlTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['head', 'body', 'script']
         self.width = 2480
@@ -61,14 +55,7 @@ class HtmlTag(BaseHtmlElemParser):
 
 
 class HeaderTag(BaseHtmlElemParser):
-
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['style', 'link']
 
@@ -78,23 +65,10 @@ class HeaderTag(BaseHtmlElemParser):
 
 
 class CommentTag(BaseHtmlElemParser):
-
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
 
-
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self, parser, tag, attrs):
         return None
 
     def close(self):

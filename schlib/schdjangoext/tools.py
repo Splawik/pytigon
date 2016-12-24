@@ -21,6 +21,7 @@ import traceback
 import sys
 
 def import_model(app, tab):
+    """import model module for specified application and return module instance."""
     try:
         m = '%s.models' % str(app)
         module = None

@@ -2,22 +2,14 @@
 
 # -*- coding: utf-8 -*-
 
-from django.utils.translation import ugettext_lazy as _
-
-import os
-import sys
-import datetime
-import time
-
 from django.core.files.storage import default_storage
 
-
 def filesystemcmd(cproxy, *args, **kwargs):
+    """bacground tasks related to file system"""
     param = kwargs['user_parm']
-    print(param)
     cmd = param['cmd']
-    files = param['files'] #.decode('utf-8').split(';')
-    dest = param['dest'] + "/" #.decode('utf-8')+"/"
+    files = param['files']
+    dest = param['dest'] + "/"
     if cmd == 'DELETE':
         for f in files:
             try:

@@ -21,12 +21,12 @@ from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth.views import login
 from django.views.generic import TemplateView
+import django.contrib.auth.views
 
 import schserw.schsys.views
-import django.contrib.auth.views
-import schlib.schtools.dbtools
 
-defparm= "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
+
+DEFPARAM = "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
 color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
 color_higlight:FFFFFF,color_shadow:A0A0A0,color_background_0_5:787878,color_background_0_8:C0C0C0,\
 color_background_0_9:D8D8D8,color_background:F0F0F0,color_background_1_1:F1F1F1,\
@@ -39,8 +39,7 @@ def sch_login(request, *argi, **argv):
     if parm != '':
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
     else:
-        request.session['client_param'] = dict([pos.split(':') for pos in defparm.split(',')])
-
+        request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
     return ret
 
 
@@ -55,7 +54,6 @@ urlpatterns = [
 
     url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': START_PATH}),
-
     url(r'^change_password/$', schserw.schsys.views.change_password),
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
@@ -66,8 +64,6 @@ urlpatterns = [
     url(r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$', schserw.schsys.views.tabdialog),
     url(r'^table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', schserw.schsys.views.tbl),
 
-    url(r'^db/field/open/(?P<file>.*)/$', schlib.schtools.dbtools.open_db_field),
-    url(r'^db/field/save/(?P<file>.*)/$', schlib.schtools.dbtools.save_db_field),
     url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
     url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>[\w_]+)/$',schserw.schsys.views.plugins),
 ]

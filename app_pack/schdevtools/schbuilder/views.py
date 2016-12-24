@@ -25,7 +25,6 @@ import shutil
 import json
 from base64 import b32decode
 from schlib.schviews.viewtools import change_pos, duplicate_row
-from schlib.schtools.tools import ZipWriter
 import codecs
 import six
 import signal, os, ctypes 
@@ -37,7 +36,7 @@ import io
 import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
-from schlib.schtools.tools import open_and_create_dir
+from schlib.schfs.vfstools import ZipWriter, open_and_create_dir
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]

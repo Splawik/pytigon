@@ -1,3 +1,23 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+#Pytigon - wxpython and django application framework
+
+#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+#license: "LGPL 3.0"
+#version: "0.1a"
+
+
 from lxml import etree
 import io
 import re
@@ -43,7 +63,6 @@ class Parser:
         self._tree = tree
         self._crawl_tree(self._tree)
 
-
     def from_html(self, html_txt):
         parser = etree.HTMLParser(remove_blank_text=True, remove_comments=True, remove_pis=True)
         return etree.parse(io.StringIO(html_txt), parser).getroot()
@@ -77,6 +96,7 @@ def content_tostring(elem):
         tab.append(elem.tail)
     return "".join(tab)
 
+
 class Elem():
     def __init__(self, elem, tostring_fun = tostring):
         self.elem = elem
@@ -104,11 +124,6 @@ class Elem():
 
     def super_strip(self, s):
         s = re.sub(r"(( )*(\\n)*)*", "", s)
-        #line = re.sub(r"</?\[\d+>", "", line)
-        #while '  ' in s:
-        #    s=s.replace('  ', ' ')
-        #while '\\n \\n' in s:
-        #    s=s.replace('\\n \\n', '\\n')
         return s.strip()
 
     def tostream(self, output=None, elem=None, tab=0):

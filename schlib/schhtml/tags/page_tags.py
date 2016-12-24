@@ -17,22 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
 
 from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map
-from schlib.schhtml.htmltools import superstrip
 import io
 
 
 class Page(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['header', 'footer']
         self.body = parent
@@ -49,13 +41,7 @@ class Page(BaseHtmlElemParser):
 
 class NewPage(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.body = parent
 
@@ -68,22 +54,11 @@ class NewPage(BaseHtmlElemParser):
 
 class HeaderFooter(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.data = io.StringIO()
 
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self, parser, tag, attrs):
         self.data.write('<' + tag)
         for pos in attrs:
             if attrs[pos] != None:

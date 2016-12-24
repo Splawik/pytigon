@@ -18,7 +18,13 @@ import xml.dom.minidom
 from schlib.schodf.odf_process import DocTransform
 
 """
-Syntax:
+The module enables the dynamic creation of documents in a ods format (https://en.wikipedia.org/wiki/OpenDocument).
+Process of documents creation begins with the creation of the template. It is also in ods format.
+Template is a normal static document supplemented with dynamic structures placed in comments to the selected cells.
+The syntax of these additional comments is consistent with django. There are additional syntax elements
+to control the place where dynamic structures are activated.
+
+Additional syntax:
     First char in spreadsheet cell:
         * - result in text format
         : - result as number
@@ -76,6 +82,18 @@ class DefaultTbl(object):
 
 
 def render_odf(template_name, context_instance=None, debug=None):
+    """Render odf file content, save rendered file and return its name
+
+    Args:
+        template_name - name of template. Template is odf file with special syntax.
+        context_instance - see django.template.Context
+        debug - if True - print some additional information to console
+
+    Returns:
+        (output_file_name, template_name)
+        output_file_name is the name of temporary file with rendered content
+        template_name - real path to template odf file
+    """
     if not 'tbl' in context_instance:
         context = { 'tbl':  DefaultTbl(), }
     else:
@@ -119,6 +137,16 @@ def render_odf(template_name, context_instance=None, debug=None):
 
 
 def render_to_response_odf(template_name, context_instance=None, debug=None):
+    """Render odf file content, save it to HttpResponse (see django.http.HttpResponse)
+
+    Args:
+        template_name - name of template. Template is odf file with special syntax.
+        context_instance - see django.template.Context
+        debug - if True - print some additional information to console
+
+    Returns:
+        HttpResponse object
+    """
     s = render_odf(template_name, context_instance, debug)
     if not s[0]:
         response = None

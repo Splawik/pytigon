@@ -18,10 +18,10 @@
 #version: "0.1a"
 
 import os
-import fpdf
-from .basedc import BaseDc, BaseDcInfo
+from schlib.schhtml.basedc import BaseDc, BaseDcInfo
 import io
 import PIL
+import fpdf
 
 from schlib.schfs.vfstools import get_temp_filename
 
@@ -54,7 +54,6 @@ class PDFSurface:
 
         self.pdf.set_font('sans-serif','', 11)
 
-
     def get_dc(self):
         return self.pdf
 
@@ -63,15 +62,7 @@ class PDFSurface:
 
 class PdfDc(BaseDc):
 
-    def __init__(
-        self,
-        dc=None,
-        calc_only=False,
-        width=-1,
-        height=-1,
-        output_name=None,
-        scale=1.0,
-        ):
+    def __init__(self, dc=None, calc_only=False, width=-1, height=-1, output_name=None, scale=1.0):
         BaseDc.__init__(self, calc_only, width, height, output_name, scale)
         if self.width >= 0:
             width2 = self.width
@@ -141,8 +132,6 @@ class PdfDc(BaseDc):
         for fun_arg in self._fun_stack:
             fun_arg[0](*fun_arg[1])
 
-# ------ Base graphics methods
-
     def start_page(self):
         self.dc.add_page()
         BaseDc.start_page(self)
@@ -178,15 +167,7 @@ class PdfDc(BaseDc):
             self._fun_stack = []
         return BaseDc.fill(self, preserve)
 
-# ------ Base graphics methods 2
-
-    def set_color(
-        self,
-        r,
-        g,
-        b,
-        a=255,
-        ):
+    def set_color(self, r, g, b, a=255):
         self._color = (r, g, b, a)
         BaseDc.set_color(self, r, g, b, a)
 
@@ -217,72 +198,22 @@ class PdfDc(BaseDc):
         BaseDc.set_style(self, style)
         return style_tab
 
-
-
-# ------ Base graphics methods 3
-
-    def add_line(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_line(self, x, y, dx, dy):
         self._add(self.dc.line, (x*self.scale, y*self.scale, (x + dx)*self.scale, (y + dy)*self.scale))
         BaseDc.add_line(self, x, y, dx, dy)
 
-    def add_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_rectangle(self, x, y, dx, dy):
         self._add(self._rect, (x*self.scale, y*self.scale, dx*self.scale, dy*self.scale))
         BaseDc.add_rectangle(self, x, y, dx, dy)
 
-    def add_rounded_rectangle(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        ):
+    def add_rounded_rectangle(self, x, y, dx, dy, radius):
         self._add(self._rect_rounded, (x*self.scale, y*self.scale, dx*self.scale, dy*self.scale))
-        BaseDc.add_rounded_rectangle(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            radius,
-            )
+        BaseDc.add_rounded_rectangle(self, x, y, dx, dy, radius)
 
-    def add_arc(
-        self,
-        x,
-        y,
-        radius,
-        angle1,
-        angle2,
-        ):
-        BaseDc.add_arc(
-            self,
-            x,
-            y,
-            radius,
-            angle1,
-            angle2,
-            )
+    def add_arc(self, x, y, radius, angle1, angle2):
+        BaseDc.add_arc(self, x, y, radius, angle1, angle2)
 
-    def add_ellipse(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def add_ellipse(self, x, y, dx, dy):
         BaseDc.add_ellipse(self, x, y, dx, dy)
 
     def add_polygon(self, xytab):
@@ -291,25 +222,12 @@ class PdfDc(BaseDc):
     def add_spline(self, xytab, close):
         BaseDc.add_spline(self, xytab)
 
-# ------ Base graphics methods 4
-
-    def draw_text(
-        self,
-        x,
-        y,
-        txt,
-        ):
+    def draw_text(self, x, y, txt):
         dx, dx_space, dy_up, dy_down = self.dc_info.get_extents(txt)
         self.dc.text(x*self.scale, y*self.scale - dy_down - 2, txt)
         BaseDc.draw_text(self, x, y, txt)
 
-    def draw_rotated_text(
-        self,
-        x,
-        y,
-        txt,
-        angle,
-        ):
+    def draw_rotated_text(self, x, y, txt, angle):
         (w, h, d, e) = self.dc_info.get_extents(txt)
         BaseDc.draw_rotated_text(self, x, y, txt)
 
@@ -317,29 +235,11 @@ class PdfDc(BaseDc):
 # preserve img scale 3 - scale to dx or dy - preserve img scale, fit fool image
 # 4 - repeat x 5 - repeat y 6 - repeat x and y
 
-    def draw_image(
-        self,
-        x,
-        y,
-        dx,
-        dy,
-        scale,
-        png_data,
-        ):
-
+    def draw_image(self, x, y, dx, dy, scale, png_data):
         png_stream = io.BytesIO(png_data)
         image = PIL.Image.open(png_stream)
         w, h = image.size
-
-        (x_scale, y_scale) = self._scale_image(
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            w,
-            h,
-            )
+        (x_scale, y_scale) = self._scale_image(x, y, dx, dy, scale, w, h,)
         if scale < 4:
             if scale!=0:
                 image.thumbnail((w * x_scale, h * y_scale), Image.ANTIALIAS)
@@ -349,29 +249,7 @@ class PdfDc(BaseDc):
             os.remove(file_name)
         else:
             pass
-            #delta_x = 0
-            #delta_y = 0
-            #while delta_y < dy:
-            #    if scale == 4 and delta_y > 0:
-            #        break
-            #    delta_x = 0
-            #    bmp = image.ConvertToBitmap()
-            #    while delta_x < dx:
-            #        if scale == 5 and delta_x > 0:
-            #            break
-            #        self.dc.DrawBitmap(bmp, x + delta_x, y + delta_y)
-            #        delta_x += w
-            #    delta_y += h
-        BaseDc.draw_image(
-            self,
-            x,
-            y,
-            dx,
-            dy,
-            scale,
-            png_data,
-            )
-
+        BaseDc.draw_image(self, x, y, dx, dy, scale, png_data)
 
     def _polygon(self, points):
         old_point = None
@@ -405,9 +283,7 @@ class PdfDc(BaseDc):
             return self.dc.rect(x, y, dx, dy, 'DF')
 
 
-
 class PdfDcInfo(BaseDcInfo):
-
     def __init__(self, dc):
         BaseDcInfo.__init__(self, dc)
 

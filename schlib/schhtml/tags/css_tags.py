@@ -18,18 +18,11 @@
 #version: "0.1a"
 
 from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map
-from schlib.schhtml.htmltools import superstrip
 
 
 class Css(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
 
     def close(self):
@@ -41,13 +34,7 @@ register_tag_map('style', Css)
 
 class CssLink(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
 
     def close(self):

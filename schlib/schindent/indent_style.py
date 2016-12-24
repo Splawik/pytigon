@@ -17,23 +17,20 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-#from __future__ import unicode_literals
 
 import os
 import os.path
 import sys
 import io
 import re
-from .indent_tools import convert_js
 import gettext
 import codecs
 import subprocess
 import itertools
-import uuid
 import tempfile
 
-#from pythonjs.python_to_pythonjs import main as python_to_pythonjs
-#from pythonjs.pythonjs import main as pythonjs_to_javascript
+from .indent_tools import convert_js
+
 
 PY_TO_JS = None
 
@@ -65,7 +62,6 @@ def iter_lines(f, f_name, lang):
     else:
         base_path = "./"
     locale_path = os.path.join(base_path,"locale")
-    #print("locale_path:", locale_path)
 
     tab_translate = []
 
@@ -102,7 +98,6 @@ def iter_lines(f, f_name, lang):
                 if not word2 in tab_translate:
                     tab_translate.append(word2)
                 ret = t.gettext(word2)
-                #print(word, "["+word2+"]", ret, t, locale_path, lang)
                 if strtest != None:
                     return strtest+ret+strtest
                 else:
@@ -112,7 +107,6 @@ def iter_lines(f, f_name, lang):
            gt = translate
     else:
         gt = translate
-
 
     for line in f:
         if len(line.lstrip())==0:
@@ -139,7 +133,6 @@ def iter_lines(f, f_name, lang):
         line3 = line2.strip()
         if len(line3)>0 and ( line3[0]=='[' or line3[-1]==']' or '|' in line3 ):
             if line3[0]=='[' and (line3[-1]=='|' or (line3[-1]==']' and '|' in line3)):
-                #print("INLINE:", line3)
                 if line3[1]=='[':
                     in_table = 2
                 else:
@@ -159,16 +152,7 @@ def iter_lines(f, f_name, lang):
         p.close()
 
 class ConwertToHtml:
-
-    def __init__(
-        self,
-        file_name,
-        simple_close_elem,
-        auto_close_elem,
-        no_auto_close_elem,
-        input_str = None,
-        lang='en'
-        ):
+    def __init__(self, file_name, simple_close_elem, auto_close_elem, no_auto_close_elem, input_str = None, lang='en'):
         self.file_name = file_name
         self.input_str = input_str
         self.code = []
@@ -255,12 +239,7 @@ class ConwertToHtml:
                     code = self._transform_elem(code)
         return [(n, code, html, 0)]
 
-    def _status_close(
-        self,
-        status,
-        line,
-        next_line,
-        ):
+    def _status_close(self, status, line, next_line):
         if status == 0:
             return 0
         if status == 1:
@@ -282,13 +261,10 @@ class ConwertToHtml:
             if line[1][0] == '%':
                 if line[1][1] == '%':
                     if next_line[0] <= line[0]:
-                        self.output.append([line[0], '{% block '
-                                 + (line[1])[2:].lstrip() + ' %}'
-                                 + (line[2] if line[2] else '')
-                                 + '{% endblock %}', line[3]])
+                        self.output.append([line[0], '{% block ' + (line[1])[2:].lstrip() + ' %}' +
+                                (line[2] if line[2] else '') + '{% endblock %}', line[3]])
                     else:
-                        self.output.append([line[0], '{% block '
-                                 + (line[1])[2:].lstrip() + ' %}', line[3]])
+                        self.output.append([line[0], '{% block ' + (line[1])[2:].lstrip() + ' %}', line[3]])
                         if line[2]:
                             self.output.append([line[0], line[2], line[3]])
                         self.bufor.append([line[0], '{% endblock %}', line[3]])
@@ -314,19 +290,16 @@ class ConwertToHtml:
                     if line[2] or not self._get_elem(line[1])\
                          in self.simple_close_elem:
                         s = line[2] if line[2] else ''
-                        self.output.append([line[0], '<' + line[1] + '>' + s
-                                 + '</' + self._get_elem(line[1]) + '>',
+                        self.output.append([line[0], '<' + line[1] + '>' + s + '</' + self._get_elem(line[1]) + '>',
                                 self._status_close(line[3], line, next_line)])
                     else:
-                        self.output.append([line[0], '<' + line[1] + ' />',
-                                line[3]])
+                        self.output.append([line[0], '<' + line[1] + ' />', line[3]])
                 else:
                     self.output.append([line[0], '<' + line[1] + '>', line[3]])
                     if line[2]:
                         self.output.append([line[0], line[2], line[3]])
                     self.bufor.append([line[0], '</' + self._get_elem(line[1])
-                                       + '>', self._status_close(line[3], line,
-                                      next_line)])
+                            + '>', self._status_close(line[3], line, next_line)])
         else:
             self.output.append([line[0], line[2], line[3]])
 
@@ -354,8 +327,7 @@ class ConwertToHtml:
         cont = False
         indent_pos = 0
         for _line in iter_lines(file, self.file_name, self.lang):
-            line = _line.replace('\n', '').replace('\r', '').replace('\t',
-                    '        ')
+            line = _line.replace('\n', '').replace('\r', '').replace('\t', '        ')
             if line.replace(' ', '') == '%else' or line.replace(' ', '') == '%else:':
                 line = ' ' + line
             if '!!!' in line:
@@ -383,9 +355,8 @@ class ConwertToHtml:
                         test = 0
                     if test > 1:
                         if not cont:
-                            l = line.replace('\n', '').replace('\r', ''
-                                    ).replace('\t', '        ').replace('<<<',
-                                    '').rstrip()
+                            l = line.replace('\n', '').replace('\r', '').replace('\t', '        ').\
+                                    replace('<<<','').rstrip()
                             buf.write(l)
                         if test == 2:
                             buf2 = io.StringIO()
@@ -413,8 +384,7 @@ class ConwertToHtml:
                         buf2 = None
                         test = 0
                 else:
-                    buf.write(line.replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip() + '\n')
+                    buf.write(line.replace('\n', '').replace('\r', '' ).replace('\t', '        ').rstrip() + '\n')
             if cont or not test:
                 cont = False
                 if '>>>' in line:
@@ -424,8 +394,7 @@ class ConwertToHtml:
                     else:
                         buf0 = line[:pos + 3].replace('>>>', '.|||')
                     buf = io.StringIO()
-                    buf.write(line[pos + 3:].replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip())
+                    buf.write(line[pos + 3:].replace('\n', '').replace('\r', '' ).replace('\t', '        ').rstrip())
                     test = 1
                 elif '{:}' in line:
                     indent_pos = self._space_count(line)
@@ -435,8 +404,7 @@ class ConwertToHtml:
                     else:
                         buf0 = line[:pos + 4].replace('{:}', '.|||')
                     buf = io.StringIO()
-                    buf.write(line[pos + 4:].replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip())
+                    buf.write(line[pos + 4:].replace('\n', '').replace('\r', '').replace('\t', '        ').rstrip())
                     test = 2
                 elif '===>' in line:
                     indent_pos = self._space_count(line)
@@ -446,16 +414,14 @@ class ConwertToHtml:
                     else:
                         buf0 = line[:pos + 4].replace('===>', '.|||')
                     buf = io.StringIO()
-                    buf.write(line[pos + 4:].replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip())
+                    buf.write(line[pos + 4:].replace('\n', '').replace('\r', '').replace('\t', '        ').rstrip())
                     test = 3
                 elif 'script language=python' in line:
                     indent_pos = self._space_count(line)
                     pos = line.find('script language=python')
                     buf0 = line + '...|||'
                     buf = io.StringIO()
-                    buf.write(line[pos + 22:].replace('\n', '').replace('\r', ''
-                              ).replace('\t', '        ').rstrip())
+                    buf.write(line[pos + 22:].replace('\n', '').replace('\r', '').replace('\t', '        ').rstrip())
                     test = 3
                 elif 'pscript' in line:
                     indent_pos = self._space_count(line)
@@ -472,12 +438,9 @@ class ConwertToHtml:
                     pos = line.rfind(':')
                     buf0 = line + '...|||'
                     buf = io.StringIO()
-                    #buf.write(line[pos + 6:].replace('\n', '').replace('\r', ''
-                    #          ).replace('\t', '        ').rstrip())
                     test = 5
                 else:
-                    l = line.replace('\n', '').replace('\r', '').replace('\t',
-                            '        ').rstrip()
+                    l = line.replace('\n', '').replace('\r', '').replace('\t', '        ').rstrip()
                     x = self._pre_process_line(l)
                     for pos in x:
                         if pos:
@@ -524,11 +487,10 @@ class ConwertToHtml:
                             output = output + '\n'
                         elif line[2] == 4 and nextline and nextline[0] > line[0]:
                             output = output + '\n'
-                        elif line[1] and nextline[1] and not (line[1].strip().startswith('<') or line[1].strip().startswith('{')) \
-                            and not (nextline[1].strip().startswith('<') or nextline[1].strip().startswith('{')):
-
+                        elif line[1] and nextline[1] and not (line[1].strip().startswith('<') or
+                                line[1].strip().startswith('{')) and not (nextline[1].strip().startswith('<') or
+                                nextline[1].strip().startswith('{')):
                             output = output + '\n'
-
                 ret = output
                 ret = ret.replace('|||', '\n')
                 return ret
@@ -540,16 +502,12 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
         conwert.process()
         return conwert.to_str()
     except:
-        #import traceback
         import sys
         print(sys.exc_info())
-        #print(traceback.print_exc())
         return ""
 
 
-
 def py2js(script, module_path):
-
     error = False
     tempdir = tempfile.gettempdir()
 
@@ -563,8 +521,6 @@ def py2js(script, module_path):
     f.close()
 
     import transcrypt
-    #transcrypt.__path__._path[0]
-    #transcrypt_lib = os.path.join(os.path.dirname(__file__), "../../ext_lib/transcrypt")
     transcrypt_lib = transcrypt.__path__._path[0]
     cmd = [sys.executable, os.path.join(transcrypt_lib, "__main__.py"), '-n', 'pytigon_module.py' ]
 
@@ -601,12 +557,8 @@ def py2js(script, module_path):
     else:
         old_path = None
 
-    proc = subprocess.Popen(cmd,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            universal_newlines=True
-                            )
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, universal_newlines=True)
     ret, stderr_value = proc.communicate() #script)
 
     if stderr_value:
@@ -644,22 +596,13 @@ def py_to_js(script, module_path):
                 continue
         out_tab.append(line[tab:])
 
-    script2 = "\n".join(out_tab)
-#    try:
     code = py2js(script, module_path)
-    #a = python_to_pythonjs(script2, module_path=module_path)
-#    except Exception as e:
-#        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-#        print(e)
-#        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
     return code
 
 
-
 def pjsx_to_js(script, module_path):
     tabrepl = []
-    script2 = ""
     if '"""' in script:
         if jsx:
             ret = []
@@ -682,9 +625,6 @@ def pjsx_to_js(script, module_path):
             return None
     else:
         script2 = script
-    #print("==============================")
-    #print(script2)
-    #print("==============================")
     script2 = script2.replace('{{', 'xxyyzz22').replace('}}', 'xxyyzz33' )
 
     spaces = sum( 1 for _ in itertools.takewhile(str.isspace,script2) )
@@ -697,5 +637,4 @@ def pjsx_to_js(script, module_path):
         code = code.replace('xxyyzz11', '(\n'+pos2+')', 1)
 
     code = code.replace('xxyyzz22', '{{').replace('xxyyzz33', '}}')
-    #return code.replace('"{{','{').replace('}}"', '}')
     return code

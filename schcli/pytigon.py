@@ -72,14 +72,14 @@ from schcli.guilib import pytigon_install
 from schcli.guilib.logindialog import LoginDialog
 from schcli.guiframe import appframe
 from schcli.guilib.threadwindow import SchThreadManager
-from schlib.schtools.tools import extractall
-from schlib.schhttptools import htmltab
+from schlib.schfs.vfstools import extractall
+from schlib.schparser.html_parsers import SimpleTabParser
 from schcli.guilib.tools import standard_tab_colour, colour_to_html
 from schlib.schhttptools import httpclient
 from schcli.guilib.httperror import http_error
 from schcli.guiframe import browserframe
 from schlib.schtools import createparm
-from schlib.schhttptools.schhtml_parser import ShtmlParser
+from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
 
 
@@ -319,7 +319,7 @@ class SchApp(App, _BASE_APP):
             self.images = image.SchImage('/site_media/app.png')
             self.http.get(self, '/')
         ret_str = self.http.str()
-        self.mp = htmltab.SimpleTabParser()
+        self.mp = SimpleTabParser()
         self.mp.feed(ret_str)
         self.mp.close()
         self.http.clear_ptr()
@@ -332,7 +332,7 @@ class SchApp(App, _BASE_APP):
         else:
             self.http.get(self, '/')
         ret = self.http.str()
-        self.mp = htmltab.SimpleTabParser()
+        self.mp = SimpleTabParser()
         self.mp.feed(ret)
         self.mp.close()
         self.http.clear_ptr()
@@ -385,10 +385,10 @@ class SchApp(App, _BASE_APP):
         Args:
             win: wx.Window derived object
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
             parameters: dict
 
-        Returns :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser' object
+        Returns :class:'~schlib.schparser.html_parsers.ShtmlParser' object
         """
         if type(address_or_parser)==str:
             http = self.get_http(win)
@@ -433,7 +433,7 @@ class SchApp(App, _BASE_APP):
             nr: table number
 
         Returns:
-            table - :class:'~schlib.schhttptools.htmltab.SimpleTabParser' object
+            table - :class:'~schlib.schparser.html_parsers.SimpleTabParser' object
 
         """
         return self.mp.tables[nr]

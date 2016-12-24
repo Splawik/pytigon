@@ -17,9 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 from django.contrib.auth.backends import RemoteUserBackend
 
 class RemoteUserBackendMod(RemoteUserBackend):
-
     def clean_username(self, username):
         return username.lower().replace('\\','_').strip()

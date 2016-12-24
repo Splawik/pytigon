@@ -1,4 +1,4 @@
-3#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -17,12 +17,78 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import io
-from schlib.schhtml.htmltools import HtmlModParser
-from schlib.schhtml.parser import Parser, Elem, Script, tostring
+
+from schlib.schhtml.parser import Parser, content_tostring, Elem, Script, tostring
+from schlib.schhtml.htmltools import Td
+
+
+class SimpleTabParserBase(Parser):
+    """Parses html for tables. Found tables save to self.tables variable"""
+    def __init__(self):
+        Parser.__init__(self)
+        self.tables = []
+
+    def _preprocess(self, td):
+        return content_tostring(td).strip()
+
+    def feed(self, html_txt):
+        self.init(html_txt)
+        for elem in self._tree.iterfind(".//table"):
+            table = []
+            for elem2 in elem.iterfind(".//tr"):
+                tr = []
+                for elem3 in elem2.iterfind(".//th"):
+                    tr.append(self._preprocess(elem3))
+                for elem3 in elem2.iterfind(".//td"):
+                    tr.append(self._preprocess(elem3))
+                table.append(tr)
+            self.tables.append(table)
+
+
+class SimpleTabParser(SimpleTabParserBase):
+    """Like SimpleTabParserBase but td saves as Td object. SimpleTabParserBase saves td as string"""
+    def _preprocess(self, td):
+        return Td(content_tostring(td).strip(), td.attrib)
+
+
+class TreeParser(Parser):
+    """Parses html for ul. Found ul save to self.list variable"""
+    def __init__(self):
+        self.tree_parent = [['TREE', []]]
+        self.list = self.tree_parent
+        self.stack = []
+        self.attr_to_li = []
+        self.enable_data_read = False
+        Parser.__init__(self)
+
+    def handle_starttag(self, tag, attrs):
+        self.attr_to_li += attrs
+        if tag == 'ul':
+            self.stack.append(self.list)
+            self.list = self.list[-1][1]
+            self.enable_data_read = False
+        else:
+            if tag == 'li':
+                self.enable_data_read = True
+                self.list.append(['', [], []])
+                self.attr_to_li = []
+
+    def handle_endtag(self, tag):
+        if tag == 'ul':
+            self.list = self.stack.pop()
+        if tag == 'li':
+            self.list[-1][2] = self.attr_to_li
+            self.attr_to_li = []
+        self.enable_data_read = False
+
+    def handle_data(self, data):
+        if self.enable_data_read:
+            self.list[-1][0] = self.list[-1][0] + data.rstrip(' \n')
 
 
 class ShtmlParser(Parser):
+    """Parser for SchPage window. Divides the page into parts: header, footer, panel, body and script. Reads variables
+    from meta tag"""
     def __init__(self):
         super().__init__()
         self.address = None
@@ -96,18 +162,23 @@ class ShtmlParser(Parser):
         return self._title
 
     def get_body(self):
+        """Get body fragment"""
         return (Elem(self._data[0]), Script(self._data[1]))
 
     def get_header(self):
+        """Get header fragment"""
         return (Elem(self._data[2]), Script(self._data[3]))
 
     def get_footer(self):
+        """Get footer fragment"""
         return (Elem(self._data[4]), Script(self._data[5]))
 
     def get_panel(self):
+        """Get panel fragment"""
         return (Elem(self._data[6]), Script(self._data[7]))
 
     def get_body_attrs(self):
+        """Get body attributes"""
         b = self._tree.find('.//body')
         if b != None:
             return b.attrib

@@ -17,7 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from .atom import AtomList
+
+from schlib.schhtml.atom import AtomList
 
 
 class BaseHtmlElemParser(object):
@@ -29,13 +30,7 @@ class BaseHtmlElemParser(object):
     def height(self, x):
         self._height = x
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
         self._height = -1
         self.parent = parent
         self.parser = parser
@@ -139,8 +134,7 @@ class BaseHtmlElemParser(object):
         text_decoration = self.get_atrr('text-decoration')
         if not color[0] == '#':
             color = '#000'
-        if not font_family in ('serif', 'sans-serif', 'monospace', 'cursive',
-                               'fantasy'):
+        if not font_family in ('serif', 'sans-serif', 'monospace', 'cursive', 'fantasy'):
             font_family = 'sans-serif'
         if not '%' in font_size:
             font_size = 100
@@ -161,14 +155,7 @@ class BaseHtmlElemParser(object):
             text_decoration = 1
         else:
             text_decoration = 0
-        p = '%s;%s;%d;%d;%d;%d' % (
-            color,
-            font_family,
-            font_size,
-            font_style,
-            font_weight,
-            text_decoration,
-            )
+        p = '%s;%s;%d;%d;%d;%d' % (color,font_family,font_size,font_style,font_weight,text_decoration,)
         id = self.dc_info.get_style_id(p)
         return id
 
@@ -198,12 +185,7 @@ class BaseHtmlElemParser(object):
         else:
             return None
 
-    def handle_starttag(
-        self,
-        parser,
-        tag,
-        attrs,
-        ):
+    def handle_starttag(self,parser,tag,attrs):
         if tag in self.child_tags or tag=='comment':
             if tag=='script':
                 print("tag:", tag)
@@ -213,8 +195,7 @@ class BaseHtmlElemParser(object):
             else:
                 return None
         elif tag[:3] + '*' in self.child_tags:
-            return self.class_from_tag_name(tag[:3] + '*')(self, parser, tag,
-                    attrs)
+            return self.class_from_tag_name(tag[:3] + '*')(self, parser, tag, attrs)
         else:
             if tag.startswith('_') and tag in tag_class_map:
                 return self.class_from_tag_name(tag)(self, parser, tag, attrs)
@@ -292,8 +273,7 @@ class BaseHtmlElemParser(object):
             return [self.width, self.width, self.width]
         else:
             if 'width' in self.attrs:
-                (parent_width, parent_min, parent_max) = \
-                    self.parent.get_client_width()
+                (parent_width, parent_min, parent_max) = self.parent.get_client_width()
                 width = self._norm_sizes([self.attrs['width']], parent_width)[0]
                 min = self._norm_sizes([self.attrs['width']], parent_min)[0]
                 max = self._norm_sizes([self.attrs['width']], parent_max)[0]
@@ -321,8 +301,7 @@ class BaseHtmlElemParser(object):
             return self.calc_height()
 
     def calc_width(self):
-        """return:
-        bestwidth, minwidth, maxwidth"""
+        """return: bestwidth, minwidth, maxwidth"""
         return (-1, -1, -1)
 
     def calc_height(self):
@@ -334,14 +313,7 @@ class BaseHtmlElemParser(object):
 
 
 class BaseHtmlAtomParser(BaseHtmlElemParser):
-
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self,parent,parser,tag,attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.atom_list = None
         self.atom_dy = 0.5
@@ -351,9 +323,6 @@ class BaseHtmlAtomParser(BaseHtmlElemParser):
             self.pre = True
         else:
             self.pre = False
-
-
-
 
     def make_atom_list(self):
         if not self.atom_list:
@@ -389,13 +358,7 @@ class BaseHtmlAtomParser(BaseHtmlElemParser):
 
 class AnyTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['a', 'p', 'pre','div']
 

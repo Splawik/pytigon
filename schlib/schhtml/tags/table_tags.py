@@ -17,11 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from schlib.schhtml.basehtmltags import BaseHtmlElemParser, BaseHtmlAtomParser, \
-    register_tag_map
-from schlib.schhtml.atom import AtomList, Atom
-from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, \
-    RenderCellSpacing, RenderCellPadding, get_size, sizes_from_attr
+
+from schlib.schhtml.basehtmltags import BaseHtmlElemParser, BaseHtmlAtomParser, register_tag_map
+from schlib.schhtml.atom import  Atom
+from schlib.schhtml.render_helpers import RenderBackground, RenderBorder, get_size, sizes_from_attr
 from collections import deque
 from .p_tags import Par
 from .block_tags import BodyTag
@@ -29,15 +28,7 @@ from .block_tags import BodyTag
 
 class TdRef(object):
 
-    def __init__(
-        self,
-        tdref,
-        parent,
-        col,
-        col_to_parent,
-        row_to_parent,
-        rowspan=0,
-        ):
+    def __init__(self, tdref, parent, col, col_to_parent, row_to_parent, rowspan=0):
         self.parent = parent
         self.col = col
         self.col_to_parent = col_to_parent
@@ -90,6 +81,7 @@ class TdEmptyTag(object):
     def to_obj_tab(self):
         return {}
 
+
 class TrRef(object):
 
     def __init__(self, row, attrs):
@@ -109,13 +101,7 @@ class TrRef(object):
 
 class TableTag(BaseHtmlAtomParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlAtomParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['tr', 'caption', 'li', 'ctr*']
         self.caption = None
@@ -263,14 +249,7 @@ class TableTag(BaseHtmlAtomParser):
         if self.subtab:
             self.calc_col_sizes()
             self.height = self.get_height()
-            self.atom = Atom(
-                self,
-                self.width,
-                0,
-                self.height,
-                0,
-                None,
-                )
+            self.atom = Atom(self, self.width, 0, self.height, 0, None)
             self.make_atom_list()
             self.atom_list.append_atom(self.atom)
             self.parent.append_atom_list(self.atom_list)
@@ -316,14 +295,7 @@ class TableTag(BaseHtmlAtomParser):
             row[i] = pos
             if pos.colspan > 1:
                 for j in range(1, pos.colspan):
-                    row[i + j] = TdRef(
-                        pos,
-                        self,
-                        i + j,
-                        j,
-                        0,
-                        pos.rowspan,
-                        )
+                    row[i + j] = TdRef(pos, self, i + j, j, 0, pos.rowspan)
             i += pos.colspan
             if pos.rowspan > rowspan:
                 rowspan = pos.rowspan
@@ -347,14 +319,7 @@ class TableTag(BaseHtmlAtomParser):
                             col_to_parent = tr[i].col_to_parent
                         else:
                             col_to_parent = 0
-                        self.tr_queue[j][i] = TdRef(
-                            tr[i],
-                            self,
-                            i,
-                            col_to_parent,
-                            j + 1,
-                            0,
-                            )
+                        self.tr_queue[j][i] = TdRef(tr[i], self, i, col_to_parent, j + 1, 0)
         if self.width >= 0 and len(self.tr_queue) == 0:
             if not self.sizes_ok and self.col_count > 0:
                 if not self.sizes:
@@ -482,47 +447,37 @@ class TableTag(BaseHtmlAtomParser):
                 dc_parm.set_color(rgb[0], rgb[1], rgb[2], 255)
                 dc_parm.set_line_width(self.border[0])
                 if self.subtab:
-                    dc_parm.add_line(self.padding[0] + brd1, self.padding[2]
-                                      + brd1, 0, ((dc_parm.dy - self.padding[2])
-                                      - self.padding[3]) - brd)
-                    dc_parm.add_line((dc_parm.dx - 1 * self.padding[1]) - brd2,
-                                     self.padding[2] + brd1, 0, ((dc_parm.dy
-                                      - self.padding[2]) - self.padding[3])
-                                      - brd)
+                    dc_parm.add_line(self.padding[0] + brd1, self.padding[2] + brd1, 0,
+                            ((dc_parm.dy - self.padding[2]) - self.padding[3]) - brd)
+                    dc_parm.add_line((dc_parm.dx - 1 * self.padding[1]) - brd2, self.padding[2] + brd1, 0,
+                            ((dc_parm.dy - self.padding[2]) - self.padding[3]) - brd)
                 else:
                     if not self.start:
                         if self.end:
-                            dc_parm.add_line(self.padding[0] + brd1, -1 * brd2,
-                                    0, dc_parm.dy - self.padding[3])
-                            dc_parm.add_line((self.width - 1 * self.padding[1])
-                                     - brd2, -1 * brd2, 0, dc_parm.dy
-                                     - self.padding[3])
+                            dc_parm.add_line(self.padding[0] + brd1, -1 * brd2, 0, dc_parm.dy - self.padding[3])
+                            dc_parm.add_line((self.width - 1 * self.padding[1]) - brd2, -1 * brd2, 0,
+                                    dc_parm.dy - self.padding[3])
                         else:
-                            dc_parm.add_line(self.padding[0] + brd1, -1 * brd2,
-                                    0, dc_parm.dy)
-                            dc_parm.add_line((self.width - 1 * self.padding[1])
-                                     - brd2, -1 * brd2, 0, dc_parm.dy)
+                            dc_parm.add_line(self.padding[0] + brd1, -1 * brd2, 0, dc_parm.dy)
+                            dc_parm.add_line((self.width - 1 * self.padding[1]) - brd2, -1 * brd2, 0, dc_parm.dy)
                 dc_parm.draw()
-            dc = dc_parm.subdc(self.border[0] + self.padding[0], 0,
-                               (((dc_parm.dx - self.border[0]) - self.border[1])
-                                - self.padding[0]) - self.padding[1],
-                               dc_parm.dy)
+            dc = dc_parm.subdc(self.border[0] + self.padding[0], 0, (((dc_parm.dx - self.border[0]) - self.border[1]) -
+                    self.padding[0]) - self.padding[1], dc_parm.dy)
         else:
             dc = dc_parm
         if self.start:
             if self.border[2] > 0:
                 dc_parm.set_color(rgb[0], rgb[1], rgb[2], 255)
                 dc.set_line_width(self.border[0])
-                dc.add_line(-1 * brd2, self.padding[2] + brd1, ((self.width
-                             - self.padding[0]) - self.padding[1]) - brd, 0)
+                dc.add_line(-1 * brd2, self.padding[2] + brd1, ((self.width - self.padding[0]) -
+                        self.padding[1]) - brd, 0)
                 dc.draw()
             self.start = False
             if not self.subtab:
                 self.height = -1
                 return (self.border[2] + self.padding[2], True)
             else:
-                dc = dc.subdc(0, self.padding[2] + self.border[2], dc.dx, dc.dy
-                               - self.padding[2])
+                dc = dc.subdc(0, self.padding[2] + self.border[2], dc.dx, dc.dy - self.padding[2])
         size = self._iter()
         y = 0
         for row_id in range(0, size):
@@ -557,24 +512,14 @@ class TableTag(BaseHtmlAtomParser):
             if self.border[0] > 0:
                 dc_parm.set_color(rgb[0], rgb[1], rgb[2], 255)
                 dc.set_line_width(self.border[0])
-                dc_parm.add_line(self.padding[0] + brd1, (dc_parm.dy
-                                  - self.padding[3]) - brd2, ((self.width
-                                  - self.padding[0]) - self.padding[1]) - brd,
-                                 0)
+                dc_parm.add_line(self.padding[0] + brd1, (dc_parm.dy - self.padding[3]) - brd2,
+                        ((self.width - self.padding[0]) - self.padding[1]) - brd, 0)
                 dc_parm.draw()
             y += self.border[3] + self.padding[3]
         self.height = -1
         return (y, cont)
 
-    def draw_atom(
-        self,
-        dc,
-        style,
-        x,
-        y,
-        dx,
-        dy,
-        ):
+    def draw_atom(self, dc, style, x, y, dx, dy):
         if not self.sizes:
             return
         self.calc_col_sizes()
@@ -590,13 +535,7 @@ class TableTag(BaseHtmlAtomParser):
 
 class TrTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.child_tags = ['td', 'th']
         self.td_list = []
@@ -625,13 +564,7 @@ class TrTag(BaseHtmlElemParser):
 
 class TdTag(Par):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs):
         Par.__init__(self, parent, parser, tag, attrs)
         self.border = [0, 0, 0, 0]
         self.padding = [0, 0, 0, 0]
@@ -677,13 +610,7 @@ class TdTag(Par):
 
 class CaptionTag(BaseHtmlElemParser):
 
-    def __init__(
-        self,
-        parent,
-        parser,
-        tag,
-        attrs,
-        ):
+    def __init__(self, parent, parser, tag, attrs,):
         BaseHtmlElemParser.__init__(self, parent, parser, tag, attrs)
         self.td_list = []
 

@@ -42,7 +42,7 @@ else:
 print(sys.argv[1:])
 
 from schlib.schhttptools import httpclient
-from schlib.schhttptools import htmltab
+from schlib.schparser.html_parsers import SimpleTabParserBase
 
 def usage():
     print("pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password app_set:/view_name")
@@ -97,7 +97,7 @@ http = httpclient.HttpClient("http://127.0.0.2")
 
 ret, newaddr = http.get(None, '/')
 ret_str = http.str()
-mp = htmltab.SimpleTabParserBase()
+mp = SimpleTabParserBase()
 mp.feed(ret_str)
 mp.close()
 csrf_token = ""

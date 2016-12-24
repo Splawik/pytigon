@@ -17,22 +17,21 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from threading import Thread
+"""Diango channels based server"""
+
 from multiprocessing import Process
 import socket
 import datetime
 import sys
 import threading
 
-from django.utils import six
-from django.utils.encoding import get_system_encoding
+import django
 
 from channels import DEFAULT_CHANNEL_LAYER, channel_layers
 from channels.asgi import get_channel_layer
 from channels.handler import ViewConsumer
 from channels.worker import Worker
 
-import django
 import schserw.schsys.initdjango
 
 
@@ -47,24 +46,16 @@ class WorkerThread(threading.Thread):
 
 def log_action(protocol, action, details):
     msg = "[%s] " % datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-    # HTTP requests
     if protocol == "http" and action == "complete":
         msg += "HTTP %(method)s %(path)s %(status)s [%(time_taken).2f, %(client)s]\n" % details
-        # Utilize terminal colors, if available
     elif protocol == "websocket" and action == "connected":
         msg += "WebSocket CONNECT %(path)s [%(client)s]\n" % details
     elif protocol == "websocket" and action == "disconnected":
         msg += "WebSocket DISCONNECT %(path)s [%(client)s]\n" % details
-
     sys.stderr.write(msg)
 
 
 def _run(addr, port, prod):
-    quit_command = 'CTRL-BREAK' if sys.platform == 'win32' else 'CONTROL-C'
-    now = datetime.datetime.now().strftime('%B %d, %Y - %X')
-    if six.PY2:
-        now = now.decode(get_system_encoding())
-
     if prod:
         channel_layer = get_channel_layer()
     else:
@@ -76,9 +67,6 @@ def _run(addr, port, prod):
             worker = WorkerThread(channel_layer)
             worker.daemon = True
             worker.start()
-
-    # Launch server in 'main' thread. Signals are disabled as it's still
-    # actually a subthread under the autoreloader.
     try:
         from daphne.server import Server
         server = Server(
@@ -102,7 +90,15 @@ class ServProc():
         self.proc.terminate()
 
 def run_server(address, port, prod=True):
+    """Run django chanels server
 
+    Args:
+        address - adres to bind http server
+        port - tcp ip port, on which server start running
+        prod - if True - start server in production mode, in production mode workers shoud be running in external
+        processes (with redis for example). If prod == False - server is runing in development mode, 4 workers are
+        started in the some process.
+    """
     django.setup()
     schserw.schsys.initdjango.init_django()
 
@@ -119,6 +115,7 @@ def run_server(address, port, prod=True):
             break
         except:
             pass
+
     print("Server started")
 
     return ServProc(proc)

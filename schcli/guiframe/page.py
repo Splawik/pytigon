@@ -30,7 +30,7 @@ except:
 from schcli.guilib import events
 from schcli.guilib.signal import Signal
 from schlib.schtools import createparm
-from schlib.schhttptools.schhtml_parser import ShtmlParser
+from schlib.schparser.html_parsers import ShtmlParser
 from schcli.guiframe.form import SchForm
 from schcli.guilib.events import *
 
@@ -44,7 +44,7 @@ class SchPage(wx.Window, Signal):
         Args:
             parent - parent window
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
             parameters: dict
         """
 
@@ -204,7 +204,7 @@ class SchPage(wx.Window, Signal):
 
         Args:
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
             parameters: dict
         """
         mp, adr = wx.GetApp().read_html(self, address_or_parser, parameters)
@@ -287,7 +287,7 @@ class SchPage(wx.Window, Signal):
 
         Args:
             address_or_parser: can be: address of http page (str type) or
-            :class:'~schlib.schhttptools.schhtml_parser.ShtmlParser'
+            :class:'~schlib.schparser.html_parsers.ShtmlParser'
             parameters: dict
         """
         self.address_or_parser = address_or_parser
