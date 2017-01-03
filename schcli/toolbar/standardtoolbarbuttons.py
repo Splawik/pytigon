@@ -296,7 +296,7 @@ class StandardButtons(object):
                 self.make_handlers(ID_WEB_STOP, 'WebStop', 'CanWebStop', propagate=True)
                 self.make_handlers(ID_WEB_REFRESH, 'WebRefresh', 'CanWebRefresh', propagate=True)
                 self.make_handlers(ID_WEB_ADDBOOKMARK, 'WebAddBookmark', 'CanWebAddBookmark', propagate=True)
-                self.make_handlers(ID_WEB_NEW_WINDOW, 'WebNewWindow', 'CanWebNewWindow', propagate=True)
+                self.make_handlers(ID_WEB_NEW_WINDOW, 'WebNewWindow', "IsFocusable", propagate=None)
         else:
             self.tbs['browser'] = {}
             self.tbs['browser']['bar'] = EmptyBar()

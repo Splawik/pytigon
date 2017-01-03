@@ -17,43 +17,34 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from __future__ import unicode_literals
 
-from base64 import b64encode, b64decode
+from base64 import b64encode
 import io
-from schlib.schhtml.parser import Parser
+import re
+import itertools
+import html
 
 from django import template
 from django.utils.translation import gettext_lazy as _
-import re
 from django.template.loader import get_template
 from django.template import Context, Template, RequestContext
-
-
 from django.conf import settings
-from schlib.schtools.wiki import wiki_from_str
 from django.utils import six
 from django.utils.safestring import mark_safe
-
 from django.forms.widgets import CheckboxSelectMultiple
-
 from django.template.base import token_kwargs, TemplateSyntaxError
-
 from django.template.base import Node
-
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, MultiField, Field, Hidden
-from crispy_forms.bootstrap import (
-    PrependedAppendedText, AppendedText, PrependedText, InlineRadios,
-    Tab, TabHolder, AccordionGroup, Accordion, Alert, InlineCheckboxes,
+from crispy_forms.bootstrap import PrependedAppendedText, AppendedText, PrependedText, InlineRadios,\
+    Tab, TabHolder, AccordionGroup, Accordion, Alert, InlineCheckboxes, \
     FieldWithButtons, StrictButton
-)
 
 
-import itertools
+from schlib.schhtml.parser import Parser
+from schlib.schtools.wiki import wiki_from_str
 
-import html
 
 register = template.Library()
 
@@ -297,10 +288,7 @@ class Action:
         return s.format(**self.d)
 
 
-def actions_dict(
-    context,
-    actions_str, # action,title,name,target,attrs,url
-    ):
+def actions_dict(context, actions_str):
     d = standard_dict(context, {})
     if 'object' in context:
         if hasattr(context['object'], '_meta'):
@@ -368,29 +356,23 @@ class RowActionNode(Node):
         c = Context(d)
         return t.render(c)
 
+
 @register.tag
 def row_actions(parser, token):
     nodelist = parser.parse(('endrow_actions',))
     parser.delete_first_token()
     return RowActionNode(nodelist)
 
+
 @inclusion_tag('widgets/view_row.html')
-def view_row(
-    context,
-    description,
-    target='',
-    ):
+def view_row(context, description, target=''):
     href = "../../../%s/_/view/" % context['object'].id
     ret = action_fun(context, 'view_row', description, 'view_row', target, "", "", href)
     return ret
 
 
 @inclusion_tag('widgets/get_row.html')
-def get_row(
-    context,
-    description,
-    target='',
-    ):
+def get_row(context, description, target=''):
     href = ""
     ret = action_fun(context, 'get_row', description, 'get_row', target, "", "", href)
     ret['id'] = context['object'].id
@@ -399,48 +381,21 @@ def get_row(
 
 # ACTIONS
 
-#@inclusion_tag('widgets/action.html')
-def action_fun(
-    context,
-    action,
-    title="",
-    name="",
-    target="",
-    attrs="",
-    param="",
-    url=""
-    ):
+def action_fun(context, action, title="", name="", target="", attrs="", param="", url=""):
     action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, name, target, attrs, param, url)
     t = Template(action_str)
     output2 = t.render(context)
-    #t = get_template('widgets/action.html')
     d = actions_dict(context, output2)
     return standard_dict(context, d)
 
 
 @inclusion_tag('widgets/button.html')
-def button(
-    context,
-    url,
-    title="",
-    name="",
-    target="",
-    attrs=''
-    ):
+def button(context, url, title="", name="", target="", attrs=''):
     ret = action_fun(context, 'button', title, name, target, attrs, "", url)
     return ret
 
 
-def new_row_base(
-    context,
-    title="",
-    name="",
-    target='',
-    attrs='',
-    param='-',
-    url="",
-    action="new_row"
-    ):
+def new_row_base(context, title="", name="", target='', attrs='', param='-', url="", action="new_row"):
     if url:
         url2=url
     else:
@@ -456,76 +411,34 @@ def new_row_base(
 
 
 @inclusion_tag('widgets/new_row.html')
-def new_row(
-    context,
-    title="",
-    name="",
-    target='',
-    attrs='',
-    param='-',
-    url="",
-    action="new_row"
-    ):
+def new_row(context, title="", name="", target='', attrs='', param='-', url="", action="new_row"):
     return new_row_base(context, title, name, target, attrs, param, url, action)
 
 
 @inclusion_tag('widgets/new_row.html')
-def new_row_inline(
-    context,
-    title="",
-    name="",
-    target='',
-    attrs='',
-    param='-',
-    url="",
-    action="new_row/inline"
-    ):
+def new_row_inline(context, title="", name="", target='', attrs='', param='-', url="", action="new_row/inline"):
     return new_row_base(context, title, name, target, attrs, param, url, action)
 
 
 @inclusion_tag('widgets/list_action.html')
-def list_action(
-    context,
-    action,
-    id,
-    title="",
-    name="",
-    target='_blank',
-    attrs='',
-    url=""
-    ):
+def list_action(context, action, id, title="", name="", target='_blank', attrs='', url=""):
     ret = action_fun(context, action, title, name, target, attrs, "", url if url else "../../../action/%s" % action)
     return ret
 
 
 @inclusion_tag('widgets/wiki_button.html')
-def wiki_button(
-    context,
-    subject,
-    wiki_description,
-    attrs="",
-    target='_self',
-    url=""
-    ):
+def wiki_button(context, subject, wiki_description, attrs="", target='_self', url=""):
     wiki_name = wiki_from_str(wiki_description)
     wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
     return action_fun(context, "wiki", wiki_description, wiki_name, target, attrs, "", url if url else wiki_url)
 
 
 @inclusion_tag('widgets/wiki_link.html')
-def wiki_link(
-    context,
-    subject,
-    wiki_description,
-    attrs="",
-    target='_self',
-    url=""
-    ):
+def wiki_link(context, subject, wiki_description, attrs="", target='_self', url=""):
     return wiki_button(context, subject, wiki_description, attrs, target, url)
 
 
 class ExprNode(template.Node):
-
     def __init__(self, expr_string, var_name, safe=True, escape=False):
         self.expr_string = expr_string
         self.var_name = var_name
@@ -553,11 +466,7 @@ class ExprNode(template.Node):
                         context[self.var_name] = eval(self.expr_string, d)
                 return ''
             else:
-                #try:
                 val = eval(self.expr_string, d)
-                #except:
-                #    #val = '!!!' + str(sys.exc_info()[1]) + ": " + self.expr_string
-                #    val =self.expr_string
                 if val != None:
                     if self.safe:
                         ret =  mark_safe2(str(val))
@@ -615,7 +524,6 @@ def do_expr_safe(parser, token):
 do_expr_safe = register.tag('expr_safe', do_expr_safe)
 
 
-
 def do_expr_escape(parser, token):
     try:
         (tag_name, arg) = token.contents.split(None, 1)
@@ -634,6 +542,37 @@ def do_expr_escape(parser, token):
 
 do_expr_escape = register.tag('expr_escape', do_expr_escape)
 
+
+def build_eval(parser, token):
+    bits = token.contents.split()
+    if len(bits) != 2:
+        raise template.TemplateSyntaxError('eval takes one argument')
+    (tag, val_expr) = bits
+    return EvalObject(val_expr)
+
+
+class GetContext:
+    def __init__(self, context):
+        self.context = context
+
+    def __getitem__(self, key):
+        if key in self.context:
+            return self.context.get(key)
+        else:
+            return None
+
+
+class EvalObject(template.Node):
+    def __init__(self, val_expr):
+        self.val_expr = val_expr
+
+    def render(self, context):
+        output = eval(self.val_expr, {'this': GetContext(context)})
+        context['eval'] = output
+        return ''
+
+
+register.tag('eval', build_eval)
 
 
 #
@@ -695,24 +634,7 @@ class SumNode(template.Node):
     def render(self, context):
         try:
             if not self.parm:
-                context[self.var_name] = [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    ]
+                context[self.var_name] = [0,]*16
                 return ''
             clist = list(context)
             clist.reverse()
@@ -804,17 +726,19 @@ def css_link(context, href):
 def link(context, href, rel, typ):
     return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ})
 
+
 @inclusion_tag('widgets/component.html')
 def component(context, name):
     return standard_dict(context, {'href': "components/"+name+".js",})
+
 
 @inclusion_tag('widgets/paginator.html')
 def paginator(context):
     return context
 
+
 @inclusion_tag('widgets/paginator.html')
 def paginator2(context):
-
     context['page_range'] = []
 
     if 'paginator' in context and 'page_obj' in context:
@@ -851,9 +775,7 @@ def htmlwidget_js(context):
     for pos in html_widget_tab:
         tab2.append('widgets/html_widgets/'+pos+'_js.html') 
         
-    return standard_dict(context, {
-        'html_widget_tab': tab2,
-        })
+    return standard_dict(context, {'html_widget_tab': tab2,})
 
 
 class HtmlWidgetNode(template.Node):
@@ -913,13 +835,11 @@ def do_html_widget(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable "
-                                  "assignment" % bits[0])
+        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
     if not 'id' in extra_context or not 'class' in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" %
-                                  (bits[0], remaining_bits[0]))
+        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
     nodelist = parser.parse(('endhtmlwidget',))
     parser.delete_first_token()
     return HtmlWidgetNode("widgets/html_widget.html", None, None, nodelist, extra_context=extra_context)
@@ -931,31 +851,22 @@ def do_html_widget(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable "
-                                  "assignment" % bits[0])
+        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
     if not 'id' in extra_context or not 'class' in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" %
-                                  (bits[0], remaining_bits[0]))
+        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
     nodelist = parser.parse(('endwidget',))
     parser.delete_first_token()
     return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
 
 
 @inclusion_tag('widgets/checkboxselectmultiple.html')
-def checkboxselectmultiple(
-    context,
-    field,
-    only_field=False
-    ):
+def checkboxselectmultiple(context, field, only_field=False):
     field.field.widget = CheckboxSelectMultiple(choices=field.field.choices)
     field.field.widget.attrs['class'] = "list-group"
 
-    return standard_dict(context, {
-        'field': field,
-        'only_field': only_field
-        })
+    return standard_dict(context, {'field': field, 'only_field': only_field})
 
 
 class Form(Node):
@@ -979,17 +890,11 @@ class Form(Node):
                     form.helper.label_class = 'col-lg-3'
                     form.helper.field_class = 'col-lg-9'
                 elif self.form_class == 'col2':
-                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
                     form.helper.field_div_class = 'col-xs-6'
-                    #form.helper.form_class = 'col-xs-6'
-                    #form.helper.label_class = 'col-xs-6'
-                    #form.helper.field_class = 'col-xs-6'
-                    #form.helper.wrapper_classes = { 'field_name': "selected" }
                 else:
                     form.helper.form_class = 'form-inline'
                     form.helper.form_show_labels = False
                     form.helper.field_template = 'bootstrap3/layout/inline_field.html'
-
         if output:
             print(output)
             form.helper.layout = eval("Layout("+output.replace('[[', '{{').replace(']]', '}}')+")")
@@ -1045,20 +950,22 @@ class FormItemNode(Node):
             content = str(context['form'][self.field_name])
 
         if self.tag:
-            elem0 = """ <%s class="%s form-control" name="%s" id="id_%s"> """ % (self.tag, self.field_name, self.field_name, self.field_name)
+            elem0 = """ <%s class="%s form-control" name="%s" id="id_%s"> """ % \
+                    (self.tag, self.field_name, self.field_name, self.field_name)
             elem1 = "</%s>" % self.tag
         else:
             elem0 = ""
             elem1 = ""
 
-        ret = """ <div id="div_id_%s" class="form-group">
-            <label for="id_%s" class="control-label">%s</label>
-            <div class="controls">
-            %s%s%s
-            </div></div>
+        ret = """
+            <div id="div_id_%s" class="form-group">
+                <label for="id_%s" class="control-label">%s</label>
+                <div class="controls">%s%s%s</div>
+            </div>
         """ % (self.field_name, self.field_name, title, elem0, content, elem1)
 
         return ret
+
 
 @register.tag
 def form_item(parser, token):
@@ -1084,7 +991,6 @@ def form2columns(context, fields):
 @inclusion_tag('widgets/frame.html')
 def frame(context, id, href, height):
     return standard_dict(context, {'id': id, 'href': href, 'height': height })
-
 
 
 _collapse_str = """
@@ -1125,11 +1031,9 @@ def collapse(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable "
-                                  "assignment" % bits[0])
+        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" %
-                                  (bits[0], remaining_bits[0                                                                                                                                                                                                                                                                                                                        ]))
+        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
     nodelist = parser.parse(('endcollapse',))
     parser.delete_first_token()
     return CollapseNode(nodelist, extra_context=extra_context)
@@ -1141,70 +1045,14 @@ def do_html_widget(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable "
-                                  "assignment" % bits[0])
+        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
     if not 'id' in extra_context or not 'class' in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" %
-                                  (bits[0], remaining_bits[0]))
+        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
     nodelist = parser.parse(('endwidget',))
     parser.delete_first_token()
     return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
-
-if False:
-    class ComponentNode(template.Node):
-        def __init__(self, template_name, nodelist, extra_context=None):
-            self.nodelist = nodelist
-            self.template_name = template_name
-            self.extra_context = extra_context or {}
-
-
-        def __repr__(self):
-            return "<ComponentNode>"
-
-
-        def render(self, context):
-            values = dict([(key, val.resolve(context)) for key, val in
-                           six.iteritems(self.extra_context)])
-            context.update(values)
-
-            if not 'create_div' in context:
-                context['create_div'] = True
-            if not 'param' in context:
-                context['param'] = 'null'
-            if not 'class' in context:
-                context['class'] = None
-            if context['class'] and '/' in context['class']:
-                x = context['class'].split('/')
-                context['class'] = x[1]
-                context['module'] = x[0]
-
-            data = self.nodelist.render(context)
-            t = Template(data)
-            data2 = t.render(context)
-            context['data'] = mark_safe(data2)
-            t = get_template(self.template_name)
-            return mark_safe(t.render(context))
-
-
-    @register.tag('component')
-    def component(parser, token):
-        bits = token.split_contents()
-        remaining_bits = bits[1:]
-        extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
-        if not extra_context:
-            raise TemplateSyntaxError("%r expected at least one variable "
-                                      "assignment" % bits[0])
-        if not 'id' in extra_context:
-            raise TemplateSyntaxError("id and class parameters are required")
-        if remaining_bits:
-            raise TemplateSyntaxError("%r received an invalid token: %r" %
-                                      (bits[0], remaining_bits[0]))
-        nodelist = parser.parse(('endcomponent',))
-        parser.delete_first_token()
-        return ComponentNode("widgets/component.html", nodelist, extra_context=extra_context)
-
 
 
 class RecurseTreeNode(template.Node):
@@ -1229,7 +1077,6 @@ class RecurseTreeNode(template.Node):
 
     def render(self, context):
         queryset = self.queryset_var.resolve(context)
-        #roots = cache_tree_children(queryset)
 
         roots = queryset.filter(parent=None)
 

@@ -17,20 +17,19 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
+from base64 import b64encode, b64decode
+
 from django import template
 from django.core.urlresolvers import reverse
 from django.forms.widgets import HiddenInput, CheckboxSelectMultiple
-
-from schlib.schtools.wiki import wiki_from_str, make_href, wikify
-
 from django.template.loader import get_template
 from django.template import Context, Template
 from django.db.models.query import QuerySet
 from django.db.models import Count, Min, Sum, Avg
 
-from base64 import b64encode, b64decode
-
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schtools.wiki import wiki_from_str, make_href, wikify
 
 register = template.Library()
 
@@ -171,40 +170,6 @@ def errormessage(value):
 @register.filter(name='feval')
 def template_eval(value):
     return eval(value)
-
-
-def build_eval(parser, token):
-    bits = token.contents.split()
-    if len(bits) != 2:
-        raise template.TemplateSyntaxError('eval takes one argument')
-    (tag, val_expr) = bits
-    return EvalObject(val_expr)
-
-
-class GetContext:
-
-    def __init__(self, context):
-        self.context = context
-
-    def __getitem__(self, key):
-        if key in self.context:
-            return self.context.get(key)
-        else:
-            return None
-
-
-class EvalObject(template.Node):
-
-    def __init__(self, val_expr):
-        self.val_expr = val_expr
-
-    def render(self, context):
-        output = eval(self.val_expr, {'this': GetContext(context)})
-        context['eval'] = output
-        return ''
-
-
-register.tag('eval', build_eval)
 
 
 @register.filter(name='one_line_block')
@@ -415,7 +380,6 @@ def readonly_transform(value, arg):
 
 @register.filter(name='childs')
 def childs(value):
-    #set_name = value._meta.module_name
     set_name = value._meta.model_name
     if hasattr(value, set_name + '_set'):
         o = getattr(value, set_name + '_set')
@@ -486,9 +450,11 @@ def d_isoformat(value):
 def choices_from_field(obj, field):
     return obj._meta.get_field(field).choices
 
+
 @register.filter(name='is_')
 def is_(value):
     return value.startswith('_')
+
 
 @register.filter(name='to_int')
 def to_int(value):

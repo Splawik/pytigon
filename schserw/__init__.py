@@ -17,7 +17,3 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-#import locale
-# locale.setlocale(locale.LC_ALL, 'Polish_Poland.1250')
-# locale.setlocale(locale.LC_ALL, 'Polish_Poland.1250')
-

@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import uuid
+from urllib.parse import urlparse
 
 from django.conf import settings 
 from django.core.urlresolvers import get_script_prefix
@@ -24,8 +26,6 @@ from django.contrib.auth.models import Permission
 
 from schlib.schdjangoext.django_init import get_app_name
 
-import uuid
-from urllib.parse import urlparse
 
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
 # python client 3 - python client -> web client
@@ -35,10 +35,6 @@ mobiles = """sony,symbian,nokia,samsung,mobile,windows ce,epoc,opera mini,nitro,
 up.link,audiovox,blackberry,ericsson,panasonic,philips,sanyo,sharp,sie-,portalmmm,blazer,avantgo,danger,palm,series60,
 palmsource,pocketpc,smartphone,rover,ipaq,au-mic,alcatel,ericy,up.link,docomo,vodafone/,wap1.,wap2.,plucker,480x640,sec,
 fennec,android,google wireless transcoder,nintendo,webtv,playstation""".replace('\n','').replace('\r','').split(',')
-
-#for test
-#mobiles.append('midori')
-#mobiles.append('chrome')
 
 def test_mobile(request):
     if "HTTP_X_OPERAMINI_FEATURES" in request.META:
@@ -57,14 +53,10 @@ def test_mobile(request):
 
 def test_tablet(request):
     s = request.META["HTTP_USER_AGENT"].lower()
-    print("-----------------------------------------------")
-    print(s)
-    print("-----------------------------------------------")
     if 'tablet' in s:
         return True
     else:
         return False
-
 
 
 def standard_web_browser(request):
@@ -115,8 +107,8 @@ def default_template(b_type):
     return "template/%s.html" % b_type
 
 
-class AppManager:
 
+class AppManager:
     def __init__(self, request):
         self.request = request
 
@@ -156,7 +148,7 @@ class AppManager:
         for _app in settings.INSTALLED_APPS:
             if apps:
                 test = False
-                name = _app if type(_app)==str else _app.name
+                name = _app if type(_app) == str else _app.name
                 if name.startswith(app_set):
                     test = True
                 else:
@@ -191,15 +183,7 @@ class AppManager:
                         user_param = module2.UserParam
                     else:
                         user_param = {}
-                    ret.append((
-                        title,
-                        perms,
-                        index,
-                        appname,
-                        module_title,
-                        elementy[0],
-                        user_param,
-                        ))
+                    ret.append((title, perms, index, appname, module_title, elementy[0], user_param))
             except:
                 pass
         return ret
@@ -231,36 +215,16 @@ class AppManager:
                         module2 = module
                     if module2:
                         for pos in module2.Urls:
-                            ret.append((
-                                module_title,
-                                app_title,
-                                app_name,
-                                app_name + '/' + pos[0],
-                                pos[1],
-                                pos[2],
-                                pos[3],
-                                app[1],
-                                user_param,
-                                ))
+                            ret.append((module_title, app_title, app_name, app_name + '/' + pos[0], pos[1],
+                                        pos[2], pos[3], app[1], user_param,))
                         if hasattr(module2, 'AdditionalUrls'):
                             if callable(module2.AdditionalUrls):
                                 urls2 = module2.AdditionalUrls()
                             else:
                                 urls2 = module2.AdditionalUrls
                         for pos in urls2:
-                            ret.append((
-                                module_title,
-                                app_title,
-                                app_name,
-                                app_name + '/' + pos[0],
-                                pos[1],
-                                pos[2],
-                                pos[3],
-                                app[1],
-                                user_param,
-                                ))
-
-
+                            ret.append((module_title, app_title, app_name, app_name + '/' + pos[0], pos[1], pos[2],
+                                        pos[3], app[1], user_param,))
                 except:
                     pass
         return ret
@@ -413,10 +377,6 @@ def sch_standard(request):
         d_template2 = d_template2.replace('.html', '_'+lng+'.html')
 
     ret = {
-        #'application_template': 'traditional',
-        #'application_template': 'simple',
-        #'application_template': 'mobile',
-        #'application_template': 'tablet',
         'standard_web_browser': standard,
         'app_manager': AppManager(request),
         'form_edit': form_edit,
@@ -440,16 +400,11 @@ def sch_standard(request):
         'show_title_bar': show_title_bar,
         'get': get,
         'settings': settings,
-        #'uuid': str(uuid.uuid1()),
         'uuid': uuid(request.path),
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         }
     if 'client_param' in request.session:
-        #print(type(request.session['client_param']))
-        #print(request.session['client_param'])
         ret.update(request.session['client_param'])
     return ret
 
-def sch_html_widget(request):
-    return {'html_widget_dict': [] }

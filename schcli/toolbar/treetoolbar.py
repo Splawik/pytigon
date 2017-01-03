@@ -23,6 +23,8 @@ from wx.lib.agw.ribbon import art
 
 from schcli.guilib.events import *
 from schcli.toolbar.basetoolbar import BaseHtmlPanel, ToolbarBar, ToolbarPage, ToolbarPanel, ToolbarButton
+from schcli.guictrl.basectrl import SchBaseCtrl
+
 
 _ = wx.GetTranslation
 
@@ -213,7 +215,7 @@ class TreeToolbarBar(ToolbarBar, CT.CustomTreeCtrl):
                         enable = False
                         win = wx.Window.FindFocus()
                         if win and issubclass(type(win), SchBaseCtrl):
-                            if  win.ProcessEvent(event):
+                            if win.ProcessEvent(event):
                                 if event.GetEnabled():
                                     enable = True
                         if enable:

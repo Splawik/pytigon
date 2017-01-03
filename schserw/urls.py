@@ -17,56 +17,49 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import platform
 
+import importlib
+import traceback
 
 from django.conf.urls import url, include
 from django.conf import settings
 from django.contrib import admin
-
-import os
-import importlib
-
-import traceback
 from django.views.generic import TemplateView
-from schlib.schdjangoext.django_init import AppConfigMod
 from django.conf.urls.static import static
 
-import schserw.schsys.views
 import django.views.i18n
 import django.conf.urls.i18n
 import django_select2.urls
 
-import schlib.schindent.indent_style
+from schlib.schdjangoext.django_init import AppConfigMod
 
-#import warnings
-#warnings.simplefilter('error', DeprecationWarning)
+import schserw.schsys.views
+
 
 urlpatterns = [
-    #url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start'),
-    #url(r'^'+settings.URL_ROOT_FOLDER+'/$', TemplateView.as_view(template_name='schapp/index.html'), name='start'),
-    url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url(r'schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
     url(r'schsys/i18n/', include(django.conf.urls.i18n)),
     url(r'admin/', include(admin.site.urls)),
-    url(r'^site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^select2/', include(django_select2.urls)),
+    url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
+    url(r'site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+    url(r'select2/', include(django_select2.urls)),
 ]
 
 if len(settings.APP_PACKS) > 0:
     for app_pack in settings.APP_PACKS:
         if app_pack.startswith('_'):
             continue
-        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'), {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
+        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'),
+                {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
         urlpatterns.append(u)
 
-    u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),  {'app_packs': settings.APP_PACKS }, name='start')
+    u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),
+          {'app_packs': settings.APP_PACKS }, name='start')
 
     urlpatterns.append(u)
 else:
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
     urlpatterns.append(u)
-
 
 if settings.DEBUG:
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
@@ -94,33 +87,3 @@ for app in settings.INSTALLED_APPS:
             print(pos)
             traceback.print_exc()
 
-#if settings.DEBUG:
-#    for dir in settings.STATICFILES_DIRS:
-#        for root, dirs, files in os.walk(dir+'_src'):
-#            for file_name in files:
-#                if file_name.lower().endswith('.py') or file_name.lower().endswith('.pjsx'):
-#                    src = os.path.join(root, file_name)
-#                    (base, ext) = os.path.splitext(file_name)
-#                    dest_base_path = root.replace('_src','')
-#                    dest = os.path.join(dest_base_path, base+".js")
-#
-#                    if not os.path.exists(dest_base_path):
-#                        os.makedirs(dest_base_path)
-#
-#                    if os.path.exists(dest):
-#                        if os.path.getmtime(dest) >= os.path.getmtime(src):
-#                            continue
-#                    with open(src, "rt") as f:
-#                        code = f.read()
-#                        #try:
-#                        if True:
-#                            if file_name.lower().endswith('.py'):
-#                                codejs = schlib.schindent.indent_style.py_to_js(code, root)
-#                            else:
-#                                codejs = schlib.schindent.indent_style.pjsx_to_js(code, root)
-#                            if codejs:
-#                                with open(dest, "wt", encoding='utf-8') as f2:
-#                                    f2.write(codejs)
-#                        #except:
-#                        #    print("compile error - file:", src)
-#

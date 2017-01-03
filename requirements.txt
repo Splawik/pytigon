@@ -16,5 +16,5 @@ openpyxl
 httpie
 cffi
 Pillow
-fs
+fs<2.0
 PyDispatcher

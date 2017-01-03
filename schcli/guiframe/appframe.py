@@ -429,21 +429,6 @@ class SchAppFrame(wx.Frame):
 
         event.Skip()
 
-    #def on_update_ui_command(self, event):
-    #    """Bind wx.EVT_UPDATE_UI to this event when you want action to be always enabled"""
-    #    id = event.GetId()
-    #    if id in self.command:
-    #        event.Enable(True)
-    #    else:
-    #        if id in self.command_enabled_always:
-    #            event.Enable(True)
-    #        else:
-    #            if id < 0:
-    #                event.Enable(True)
-    #            else:
-    #                #event.Enable(False)
-    #                event.Enable(True)
-    #                #event.Skip()
 
     def on_pane_activated(self, event):
         active_pane = event.GetPane()

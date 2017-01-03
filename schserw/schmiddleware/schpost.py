@@ -59,5 +59,6 @@ class BeautyHtml():
             if type(response.content)==str:
                 response.content = "\n".join([ line for line in response.content.split('\n') if line.strip()])
             elif type(response.content)==bytes:
-                response.content = "\n".join([ line for line in response.content.decode('utf-8').split('\n') if line.strip()])
+                response.content = \
+                    "\n".join([ line for line in response.content.decode('utf-8').split('\n') if line.strip()])
         return response

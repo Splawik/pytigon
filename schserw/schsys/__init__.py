@@ -18,45 +18,8 @@
 #version: "0.1a"
 
 
-#import schserw.schsys.initdjango
-#django_ok = initdjango.init_django()
-
-def decode(var):
-    if var.__class__ == str:
-        return var.decode('utf-8')
-    else:
-        return var
-
-
-def encode(var):
-    if var.__class__ == str:
-        return var.encode('utf-8')
-    else:
-        return var
-
-
-def decode_table(tab, list_to_decode):
-    ret = []
-    for row in tab:
-        r = []
-        for i in range(len(row)):
-            if i in list_to_decode:
-                if row[i]:
-                    r.append(decode(row[i]))
-                else:
-                    r.append('')
-            else:
-                r.append(row[i])
-        ret.append(r)
-    return ret
-
-
 ModuleTitle = 'System'
 Title = 'System tools'
 Perms = True
 Index = 'index'
-Urls = (
-         #('../admin?schtml=1', 'Administracja', 'auth.add_user', 'client://categories/applications-other.png'),
-         #('../admin/password_change?schtml=1', 'Zmień hasło', None, 'client://categories/applications-other.png'),
-         #('do_logout?schtml=1', 'Wyloguj się', None, 'client://categories/applications-other.png')
-)
+Urls = ()

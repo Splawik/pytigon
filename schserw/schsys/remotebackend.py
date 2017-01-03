@@ -17,9 +17,13 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contain RemoteUserBackend class"""
 
 from django.contrib.auth.backends import RemoteUserBackend
 
 class RemoteUserBackendMod(RemoteUserBackend):
+    """Backend for apache authorization"""
+
     def clean_username(self, username):
+        """Replace '\' in username. For username in format: domain\user cleaned version is domain_users."""
         return username.lower().replace('\\','_').strip()

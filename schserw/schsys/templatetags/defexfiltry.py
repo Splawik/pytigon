@@ -17,14 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 from django import template
-#from django.core.urlresolvers import reverse
-#from django.forms.widgets import HiddenInput, CheckboxSelectMultiple
-
-#from schlib.schtools.wiki import wiki_from_str, make_href, wikify
-
-#from django.template.loader import get_template
-#from django.template import Context, Template
 
 register = template.Library()
 
@@ -37,4 +31,3 @@ def translate(s, lng):
             return s.replace('.html', "_"+lng+".html")
     else:
         return s
-

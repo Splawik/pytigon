@@ -19,8 +19,6 @@
 
 import os
 import sys
-import platform
-import fs.expose.django_storage
 from fs.mountfs import MountFS
 
 APPSET_NAME = "Pytigon"
@@ -87,8 +85,6 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'schserw.schsys.context_processors.sch_standard',
-                'schserw.schsys.context_processors.sch_html_widget',
-
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
                 'django.template.context_processors.debug',
@@ -123,7 +119,7 @@ MIDDLEWARE_CLASSES = [
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
-    ]
+]
 
 #if not DEBUG:
 MIDDLEWARE_CLASSES.append('whitenoise.middleware.WhiteNoiseMiddleware')

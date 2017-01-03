@@ -23,7 +23,6 @@ import mimetypes
 from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
 from copy import deepcopy
-from django.contrib.auth import get_permission_codename
 from django.forms.forms import BaseForm
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
@@ -55,11 +54,7 @@ def widget_attrs(self, widget):
 
 django.forms.fields.CharField.widget_attrs = widget_attrs
 
-mimetypes.add_type('image/svg+xml', '.svg')
-
-
 class FormProxy(object):
-
     def __init__(self, form):
         self.form = form
 
@@ -75,101 +70,13 @@ class FormProxy(object):
         self.form.fields = tmp_fields
         return ret
 
-
 def fields_as_table(self):
     return FormProxy(self)
-
 
 django.forms.models.ModelForm.fields_as_table = fields_as_table
 
 
-def widget_attrs2(self, widget):
-    return {'class': 'jqcalendar', 'maxlength': '10', 'size': '10'}
-
-
-from django.forms.widgets import Select
-
-
-class SchSelect(Select):
-
-    queryset = None
-
-    def render(
-        self,
-        name,
-        value,
-        attrs=None,
-        choices=(),
-        ):
-        if value:
-            strvalue = str(self.queryset.get(id=value))
-            ret = \
-                '<CTRLPOPUPHTML WIDTH="200" href="/%s/table/%s/as_dict/" STRVALUE="%s:%s"></CTRLPOPUPHTML>'\
-                 % (self.queryset.model._meta.app_label,
-                    self.queryset.model._meta.object_name, value, strvalue)
-        else:
-            ret = \
-                '<CTRLPOPUPHTML WIDTH="200" href="/%s/table/%s/as_dict/"></CTRLPOPUPHTML>'\
-                 % (self.queryset.model._meta.app_label,
-                    self.queryset.model._meta.object_name)
-        return ret
-
-
-old___init__ = django.forms.models.ModelChoiceField.__init__
-
-
-def __init2__(
-    self,
-    queryset,
-    empty_label='---------',
-    cache_choices=False,
-    required=True,
-    widget=None,
-    label=None,
-    initial=None,
-    help_text=None,
-    to_field_name=None,
-    *args,
-    **kwargs
-    ):
-    ret = old___init__(
-        self,
-        queryset,
-        empty_label,
-        cache_choices,
-        required,
-        SchSelect,
-        label,
-        initial,
-        help_text,
-        to_field_name,
-        args,
-        kwargs,
-        )
-    self.widget.queryset = queryset
-    return ret
-
-
-
-#class HiddenForeignKey(models.ForeignKey):
-#
-#    def formfield(self, **kwargs):
-#        field = models.ForeignKey.formfield(self, **kwargs)
-#        field.widget = HiddenInput()
-#        field.widget.choices = None
-#        return field
-
-#models.HiddenForeignKey = HiddenForeignKey
-
-
-def _get_builtin_permissions_mod(opts):
-    """Returns (codename, name) for all permissions in the given opts."""
-
-    perms = []
-    for action in ('add', 'change', 'delete', 'list'):
-        perms.append((get_permission_codename(action, opts),
-            'Can %s %s' % (action, opts.verbose_name_raw)))
-    return perms
+mimetypes.add_type('image/svg+xml', '.svg')
 
 
 def init_django():
