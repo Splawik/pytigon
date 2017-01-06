@@ -2,11 +2,10 @@
 
 import django
 from django.db import models
-from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
+from schlib.schdjangoext.fields import *
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from django.utils.encoding import python_2_unicode_compatible
 
 import os, os.path
 import sys
@@ -20,7 +19,6 @@ from datetime import datetime
 
 
 
-@python_2_unicode_compatible
 class Log( models.Model):
     
     class Meta:

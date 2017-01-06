@@ -18,7 +18,6 @@
 #version: "0.1a"
 
 import wx
-import six
 from .basebrowser import BaseWebBrowser
 
 

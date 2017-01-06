@@ -1,4 +1,4 @@
-3#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -12,10 +12,14 @@
 
 #Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+#author: "Sławomir Chołaj (slawomir.cholaj@gmail.com)"
+#copyright: "Copyright (C) ????/2012 Sławomir Chołaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
+
+"""Generic templates
+
+"""
 
 
 import collections
@@ -109,8 +113,17 @@ def view_editor(request, pk, app, tab, model, template_name, field_edit_name, po
 
 
 class GenericTable(object):
+    """GenericTable"""
 
     def __init__(self, urlpatterns, app, views_module=None):
+        """Constructor
+
+        Args:
+            urlpatterns -
+            app - application
+            views_module - module
+
+        """
         self.urlpatterns = urlpatterns
         self.app = app
         self.base_url = get_script_prefix()
@@ -837,10 +850,31 @@ class GenericRows(object):
         return self._append(url, fun)
 
 def generic_table(urlpatterns, app, tab, title='', title_plural='', template_name=None, extra_context=None,
-            queryset=None, views_module=None,):
+            queryset=None, views_module=None):
+    """Make urls for generic table
+
+    Args:
+        urlpatterns
+        app
+        tab
+        title
+        title_plural
+        template_name
+        extra_context
+        queryset
+        views_module
+    """
     GenericTable(urlpatterns, app, views_module).new_rows(tab, None, title, title_plural, template_name, extra_context,
             queryset).list().detail().edit().add().delete().editor().tree().gen()
 
+
 def generic_table_start(urlpatterns, app, views_module=None):
+    """Start generic table urls
+
+    Args:
+        urlpatterns
+        app
+        views_module
+    """
     return GenericTable(urlpatterns, app, views_module)
 

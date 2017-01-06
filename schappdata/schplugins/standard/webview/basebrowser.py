@@ -16,21 +16,20 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-import wx.lib.agw.toasterbox as TB
-import six
-
 from tempfile import NamedTemporaryFile
 from base64 import decodebytes, b64encode, b64decode
 import urllib
+import os
+
+import wx
+
 from schcli.guilib.tools import get_colour
 from schcli.guilib.events import *
 from schlib.schtools.tools import split2
 
-import os
+JAVASCRIPT_CODE = "var pdf_ptr=base64toBlob(\"%s\", 'application/pdf'); PDFView.open(URL.createObjectURL(pdf_ptr), 0);"
 
 class BaseWebBrowser(object):
-
     LOAD_CONNECT = 0
     LOAD_START = 1
     LOAD_FINISH_OK = 2
@@ -39,46 +38,27 @@ class BaseWebBrowser(object):
     def __init__(self):
         self.progress = -1
         self.href = ''
-        self.status = {
-            'stat': -1,
-            'progress': -1,
-            'txt': None,
-            'address': None,
-            }
-
-        #if hasattr(self.get_parent_form().GetParent(), 'handleInfo'):
-        #    self.get_parent_form().GetParent().handleInfo['browser'] = self
-
+        self.status = {'stat': -1, 'progress': -1, 'txt': None, 'address': None,}
         aTable = [
-                #(0, wx.WXK_F2,  self.OnExtButtonClick),
                 (wx.ACCEL_ALT, ord('J'), self.on_key_j),
                 (wx.ACCEL_ALT, ord('K'), self.on_key_k),
                 (wx.ACCEL_CTRL, ord('N'), self.on_key_n),
                 (wx.ACCEL_CTRL, ord('L'), self.on_key_l),
-                #(wx.ACCEL_CTRL, ord('H'), self.on_key_h),
-                #(wx.ACCEL_CTRL, ord('L'), self.on_key_l),
-                
                  ]
         self.set_acc_key_tab(aTable)
         self.last_status_txt = ''
-
         self.pdf = None
-
 
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_goback, id=ID_WEB_BACK)
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_goforward, id=ID_WEB_FORWARD)
-
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_stop, id=ID_WEB_STOP)
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_refresh, id=ID_WEB_REFRESH)
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_addbookmark, id=ID_WEB_ADDBOOKMARK)
-
         self.Bind(wx.EVT_MENU, self._on_back, id=ID_WEB_BACK)
         self.Bind(wx.EVT_MENU, self._on_forward, id=ID_WEB_FORWARD)
-
         self.Bind(wx.EVT_MENU, self._on_stop, id=ID_WEB_STOP)
         self.Bind(wx.EVT_MENU, self._on_refresh, id=ID_WEB_REFRESH)
         self.Bind(wx.EVT_MENU, self._on_addbookmark, id=ID_WEB_ADDBOOKMARK)
-
 
     def on_check_can_goforward(self, event):
         if self.get_parent_form().get_parent_page().is_active():
@@ -164,10 +144,7 @@ class BaseWebBrowser(object):
         self.execute_javascript("window.scrollBy(0,-50);")
 
     def on_key_n(self, event):
-        try:
-            wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, id=ID_WEB_NEW_WINDOW))
-        except:
-            wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
+        wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, id=ID_WEB_NEW_WINDOW))
 
     def on_key_l(self, event):
         self.get_parent_form().GetParent().body.new_child_page("^standard/webview/gotopanel.html", title="Go")
@@ -183,14 +160,11 @@ class BaseWebBrowser(object):
             name = f.name
             f.close()
             http.clear_ptr()
-            okno = \
-                wx.GetApp().GetTopWindow().new_main_page('^standard/pdfviewer/pdfviewer.html'
-                    , page, None)
+            okno = wx.GetApp().GetTopWindow().new_main_page('^standard/pdfviewer/pdfviewer.html', page, None)
             okno.body['PDFVIEWER'].LoadFile(name, True)
             return False
         else:
             return True
-
 
     def status_text(self, txt):
         if txt and txt != '':
@@ -216,7 +190,6 @@ class BaseWebBrowser(object):
         if status == self.LOAD_FINISH_FAILED:
             self.status_text_error('Error in load page: ' + url)
 
-
     def progress_changed(self, progress):
         self.progress = progress
         if progress < 100:
@@ -226,23 +199,16 @@ class BaseWebBrowser(object):
             self.status['progress'] = -1
 
     def new_win0(self):
-        okno = \
-            wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
-                , '')
+        okno = wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html', '')
         return okno.body.WEB
 
     def new_win(self, bstr_url):
-        okno = \
-            wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html'
-                , bstr_url)
-        #okno.body.WEB.test_ctrl = False
+        okno = wx.GetApp().GetTopWindow().new_main_page('^standard/webview/widget_web.html', bstr_url)
         okno.body.WEB.go(bstr_url)
-        #okno.body.WEB.test_ctrl = True
         return True
 
     def new_child(self, bstr_url):
-        okno = self.get_parent_form().any_parent_command('new_child_page',
-                '^standard/webview/widget_web.html')
+        okno = self.get_parent_form().any_parent_command('new_child_page', '^standard/webview/widget_web.html')
         dx = 800
         dy = 600
         if 'bestwidth' in bstr_url or 'bestheight' in bstr_url:
@@ -275,7 +241,6 @@ class BaseWebBrowser(object):
     def get_status(self):
         return self.status
 
-
     def go(self, href):
         find = False
         href2 = href.strip()
@@ -288,8 +253,8 @@ class BaseWebBrowser(object):
             if url[-4:].lower()=='.pdf':
                 self.pdf = url
                 x = '/' if wx.Platform == '__WXMSW__' else ''
-                return self.go("file://"+x+os.path.join(wx.GetApp().root_path, "static/pdfjs/web/viewer.html").replace('\\','/'))
-
+                return self.go("file://"+x+os.path.join(wx.GetApp().root_path, "static/pdfjs/web/viewer.html").
+                               replace('\\','/'))
             if '://' in url:
                 self.load_url(url)
             else:
@@ -304,16 +269,10 @@ class BaseWebBrowser(object):
             if href2=="":
                 pass
             else:
-                if six.PY2:
-                    q = urllib.quote(href2)
-                else:
-                    q = urllib.parse.quote(href2)
-
+                q = urllib.parse.quote(href2)
                 self.load_url('https://www.google.pl/search?q=' + q)
 
-    # callbacks
     def on_key_pressed(self, event):
-        #print("OnKeyPressed:basebrowser")
         event.Skip()
 
     def on_status_message(self, event):
@@ -324,7 +283,6 @@ class BaseWebBrowser(object):
 
     def on_load_start(self, event):
         self.set_status(self.LOAD_START, event.GetString())
-
 
     def on_load_end(self, event):
         self.set_status(self.LOAD_FINISH_OK, event.GetString())
@@ -340,8 +298,7 @@ class BaseWebBrowser(object):
                 buf = b64encode(x.read())
                 x.close()
                 self.pdf = None
-                cmd = "var pdf_ptr=base64toBlob(\"%s\", 'application/pdf'); PDFView.open(URL.createObjectURL(pdf_ptr), 0);" % buf.decode('utf-8')
-                #cmd = "PDFView.open(\"%s\", 0);" % self.pdf
+                cmd = JAVASCRIPT_CODE % buf.decode('utf-8')
                 self.execute_javascript(cmd)
                 self.pdf = None
             else:
@@ -349,22 +306,17 @@ class BaseWebBrowser(object):
                 self.execute_javascript(cmd)
                 self.pdf = None
 
-
-
     def on_load_error(self, event):
         self.set_status(self.LOAD_FINISH_FAILED, event.GetString())
-   
-        
+
     def on_title_changed(self, event):
         event.Skip()
         title = event.GetString()
         if title.startswith(':'):
             if title != ":":
-                #print("on_title_changed:", title)
                 self.run_command_from_js(title[1:])
         else:
             self.set_title(title)
-        
 
     def on_progress(self, event):
         pass
@@ -372,9 +324,6 @@ class BaseWebBrowser(object):
     def on_add_bookmark(self, event):
         if hasattr(self.get_parent_form(), 'addbookmark_event'):
             self.get_parent_form().addbookmark_event()
-
-
-# abstract method
 
     def get_parent_form(self):
         return None
@@ -396,7 +345,6 @@ class BaseWebBrowser(object):
 
     def on_refresh(self, event):
         pass
-
 
     def can_go_back(self):
         pass
@@ -422,10 +370,8 @@ class BaseWebBrowser(object):
     def on_source(self, event):
         pass
 
-
     def on_edit(self, event):
         pass
-
 
     def value_to_elem(self, selector, s):
         buf = urllib.parse.quote(s.decode('utf-8'), safe='~@#$&()*!+=:;,.?/\'')
@@ -436,7 +382,6 @@ class BaseWebBrowser(object):
         buf = urllib.parse.quote(s.decode('utf-8'), safe='~@#$&()*!+=:;,.?/\'')
         cmd = "%s = decodeURI(\"%s\");" % (var, buf)
         self.execute_javascript(cmd.encode('utf-8'))
-
 
     def run_command_from_js(self, cmd):
         l = split2(cmd, '??')
@@ -488,7 +433,6 @@ class BaseWebBrowser(object):
 
     def clear_history(self):
         pass
-
 
     def _local_request(self, uri, parm=None):
         http = wx.GetApp().get_http(self)

@@ -59,7 +59,6 @@
                     self.page_nr.SetValue(self.htmlprint.preview.GetCurrentPage())
             except:
                 self.page_nr.SetValue(self.htmlprint.preview.GetCurrentPage())
-                
 
         def OnSave(self, event):
             self.htmlprint.save()

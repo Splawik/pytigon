@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var _vseditor = function (resolve, reject) {
 			var base_path = window.BASE_PATH + 'static/vanillajs_plugins/vs';
 			var _on_loadjs0 = function () {

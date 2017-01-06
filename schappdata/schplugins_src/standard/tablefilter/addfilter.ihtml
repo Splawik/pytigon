@@ -5,24 +5,24 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            self.ADDFILTER.Bind(wx.EVT_TEXT_ENTER, self.OnAddFilter)
-            self.ADD.Bind(wx.EVT_BUTTON, self.OnAddFilter)
-            self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
+            self.ADDFILTER.Bind(wx.EVT_TEXT_ENTER, self.on_add_filter)
+            self.ADD.Bind(wx.EVT_BUTTON, self.on_add_filter)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.on_exit)
             self.select = True
             grid = self.get_parent_form().last_control_with_focus.GetParent()
-            grid.GetTable().FilterBy(1)
+            grid.GetTable().filter_by(1)
 
-        def OnAddFilter(self, event):
+        def on_add_filter(self, event):
             grid = self.get_parent_form().last_control_with_focus.GetParent()
             value = self.ADDFILTER.GetValue()
             if self.select:
                 mask = '+'+value
             else:
                 mask = '-'+value
-            grid.GetTable().AppendSelMask(mask)
-            self.OnExit(event)
+            grid.GetTable().append_sel_mask(mask)
+            self.on_exit(event)
 
-        def OnExit(self, event):
+        def on_exit(self, event):
             self.any_parent_command('Cancel', True)
 
         def StyleSubtract(self):

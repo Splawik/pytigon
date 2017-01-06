@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var _codeeditor = function (resolve, reject) {
 			var base_path = window.BASE_PATH + 'static/vanillajs_plugins/ace/src-min';
 			var _on_loadjs = function () {
@@ -24,7 +23,7 @@
 					var _on_input = function (e) {
 						var f = jQuery (':focus');
 						if (f.length > 0) {
-							var tag = f.get (0).nodeName.toLowerCase ();
+							var tag = f.py_get (0).nodeName.toLowerCase ();
 						}
 						else {
 							tag == '';

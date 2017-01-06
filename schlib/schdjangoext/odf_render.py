@@ -1,22 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
-import os.path
-
-from django.template import Template
-from django.http import HttpResponse
-from django.conf import settings
-#from django.template.base import TemplateDoesNotExist
-from django.template.exceptions import TemplateDoesNotExist
-
-from schlib.schfs.vfstools import get_temp_filename
-from zipfile import ZipFile
-import xml.dom.minidom
-
-from schlib.schodf.odf_process import DocTransform
-
 """
 The module enables the dynamic creation of documents in a ods format (https://en.wikipedia.org/wiki/OpenDocument).
 Process of documents creation begins with the creation of the template. It is also in ods format.
@@ -42,6 +26,19 @@ Additional syntax:
     There are aliases: '_start_' is alias for '{{'
                        '_end_' is alias for '}}'
 """
+
+import os.path
+from zipfile import ZipFile
+import xml.dom.minidom
+
+from django.template import Template
+from django.http import HttpResponse
+from django.conf import settings
+from django.template.exceptions import TemplateDoesNotExist
+
+from schlib.schfs.vfstools import get_temp_filename
+from schlib.schodf.odf_process import DocTransform
+
 
 template_dirs = getattr(settings, 'TEMPLATES')[0]['DIRS']
 

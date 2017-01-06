@@ -18,6 +18,9 @@
 #version: "0.1a"
 
 
+"""Module contains many additional fields for django models.
+"""
+
 from itertools import chain
 import collections
 
@@ -60,7 +63,9 @@ class _ModelSelect2WidgetExt(ModelSelect2Widget):
 
 
 class ForeignKey(models.ForeignKey):
-
+    """Extended version of django models.ForeignKey class. Class allows you to add new objects and
+    selecting existing objects in better way.
+    """
     def __init__(self, *args, **kwargs):
         if 'search_fields' in kwargs:
             self.search_fields = kwargs['search_fields']
@@ -99,7 +104,7 @@ class ForeignKey(models.ForeignKey):
 
 
 class HiddenForeignKey(models.ForeignKey):
-
+    """Version of django models.ForeignKey class with hidden widget."""
     def formfield(self, **kwargs):
         field = models.ForeignKey.formfield(self, **kwargs)
         field.widget = HiddenInput()
@@ -108,8 +113,14 @@ class HiddenForeignKey(models.ForeignKey):
 
 
 class ManyToManyFieldAlternateRel(models.ManyToManyField):
-
+    """Extended version of django models.ManyToManyField class."""
     def __init__(self,to,queryset_field,**kwargs):
+        """Constructor
+
+        Args:
+            to - related model
+            queryset_field - field
+        """
         models.ManyToManyField.__init__(self, to, **kwargs)
         self.queryset_field = queryset_field
 
@@ -158,11 +169,14 @@ class CheckboxSelectMultipleWithIcon(CheckboxSelectMultiple):
 
 
 class ModelMultipleChoiceFieldWidthIcon(forms.ModelMultipleChoiceField):
-
     widget = CheckboxSelectMultipleWithIcon
 
 
 class ManyToManyFieldWidthIcon(models.ManyToManyField):
+    """Extended version of django django models.ManyToManyField.
+    If label contains contains '|' its value split to two parts. First part should be image address, second
+    part should be a label.
+    """
 
     def formfield(self, **kwargs):
         db = kwargs.pop('using', None)
@@ -223,10 +237,18 @@ class RadioSelectWithIcon(RadioSelect):
 
 
 class ModelChoiceFieldWidthIcon(forms.ModelChoiceField):
+    """Extended version of django django models.ManyToManyField.
+    If label contains contains '|' its value split to two parts. First part should be image address, second
+    part should be a label.
+    """
     widget = RadioSelectWithIcon
 
 
 class ForeignKeyWidthIcon(models.ForeignKey):
+    """Extended version of django django models.ForeignKey.
+    If label contains contains '|' its value split to two parts. First part should be image address, second
+    part should be a label.
+    """
     def formfield(self, **kwargs):
         db = kwargs.pop('using', None)
         defaults = {'form_class': ModelChoiceFieldWidthIcon,
@@ -237,7 +259,6 @@ class ForeignKeyWidthIcon(models.ForeignKey):
 
 
 class RadioInputTree(RadioChoiceInput):
-
     def __str__(self):
         if 'id' in self.attrs:
             label_for = ' for="%s_%s"' % (self.attrs['id'], self.index)
@@ -323,7 +344,6 @@ class RadioSelectExt(RadioSelect):
 
 
 class ModelChoiceFieldExt(forms.ModelChoiceField):
-
     widget = RadioSelectExt
 
     def __init__(self, queryset, empty_label="---------", required=True, widget=None, label=None, initial=None,
@@ -335,7 +355,8 @@ class ModelChoiceFieldExt(forms.ModelChoiceField):
 
 
 class ForeignKeyExt(models.ForeignKey):
-
+    """Extended version of models.ForeignKey
+    """
     def formfield(self, **kwargs):
         db = kwargs.pop('using', None)
         defaults = {

@@ -26,7 +26,6 @@ import json
 from base64 import b32decode
 from schlib.schviews.viewtools import change_pos, duplicate_row
 import codecs
-import six
 import signal, os, ctypes 
 from schlib.schtasks.base_task import get_process_manager
 from django.core.management import call_command
@@ -125,7 +124,7 @@ def template_to_i_file(base_path, template, file_name, context):
         print(sys.exc_info()[0])
         print(traceback.print_exc())
     try:
-        if isinstance(txt_in, six.text_type):
+        if type(txt_in)==str:
             txt2 = txt_in.replace('$$'+'$', txt)
         else:
             txt2 = txt_in.decode('utf-8').replace('$$'+'$', txt)
@@ -136,7 +135,7 @@ def template_to_i_file(base_path, template, file_name, context):
         print(traceback.print_exc())
 
     f = open(base_path+"/"+file_name,"wb")
-    if isinstance(txt_in, six.text_type):
+    if type(txt_in)==str:
         f.write(txt2.encode('utf-8'))
     else:
         f.write(txt2.encode('utf-8'))
@@ -145,7 +144,7 @@ def template_to_i_file(base_path, template, file_name, context):
 def str_to_file(base_path, buf, file_name):
     f = open(base_path+"/"+file_name,"wb")
     if buf:
-        if isinstance(buf, six.text_type):
+        if type(buf)==str:
             f.write(buf.encode('utf-8'))
         else:
             f.write(buf)
@@ -753,7 +752,7 @@ def installer(request, pk):
     buf += "PACK PROGRAM FILES TO: " + zip_path+appset.name+".ptig\n"
     
     p = os.path.expanduser("~")
-    if isinstance(p, six.text_type):
+    if type(p)==str:
         db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db")
     else:
         db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db").decode("cp1250")

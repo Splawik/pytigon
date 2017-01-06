@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var _htmleditor = function (resolve, reject) {
 			var base_path = window.BASE_PATH + 'static/bootstrap_plugins/summernote';
 			var _on_loadjs = function () {

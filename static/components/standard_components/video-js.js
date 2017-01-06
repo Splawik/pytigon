@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var _video = function (resolve, reject) {
 			var base_path = window.BASE_PATH + 'static/vanillajs_plugins/video-js';
 			var _on_loadjs = function () {

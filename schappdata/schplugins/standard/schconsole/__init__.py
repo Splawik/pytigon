@@ -21,21 +21,11 @@ import wx
 import wx.html
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
 
-
     class Console(wx.Panel):
-
         def __init__(self, parent, **kwds):
             if 'name' in kwds:
                 name = kwds['name']
@@ -43,20 +33,15 @@ def init_plugin(
             else:
                 name = 'CONSOLE'
             self.obj = SchBaseCtrl(self, parent, kwds)
-
             wx.Panel.__init__(self, parent, name=name)
             html = wx.html.HtmlWindow(self)
-            html.SetPage('Hello world Hello world Hello world Hello world Hello world Hello world'
-                         )
-# size = html.GetInternalRepresentation() html.SetSize((size.GetWidth()+20,
-# size.GetHeight()+20) )
+            html.SetPage('Hello world Hello world Hello world Hello world Hello world Hello world')
             text = wx.TextCtrl(self)
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(html, 1, wx.EXPAND)
             box.Add(text, 0, wx.EXPAND)
             self.SetSizer(box)
             box.Fit(self)
-
 
     schcli.guictrl.ctrl.CONSOLE = Console
 

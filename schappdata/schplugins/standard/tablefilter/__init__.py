@@ -17,50 +17,33 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import wx
 
-
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     import schcli.guictrl.grid.grid
     old_on_key_down = schcli.guictrl.grid.grid.SchTableGrid.on_key_down
 
     def on_key_down(self, event):
-# key = event.GetKeyCode() print "OnKeyDown", event.KeyCode,
-# int(wx.WXK_NUMPAD_ADD), int(ord('-'))
-
         if (event.KeyCode == ord('F') or event.KeyCode == ord('f')) and event.ControlDown():
-# print __file__
             win = self.GetParent()
-            while not hasattr(win, 'NewChildPage'):
+            while not hasattr(win, 'new_child_page'):
                 win = win.GetParent()
-            win.NewChildPage('^standard/tablefilter/tablefilter.html',
-                             title='Filter')
+            win.new_child_page('^standard/tablefilter/tablefilter.html', title='Filter')
         elif event.KeyCode == wx.WXK_NUMPAD_ADD or event.KeyCode == 61:
             win = self.GetParent()
-            while not hasattr(win, 'NewChildPage'):
+            while not hasattr(win, 'new_child_page'):
                 win = win.GetParent()
-            win.NewChildPage('^standard/tablefilter/addfilter.html', title='Add'
+            win.new_child_page('^standard/tablefilter/addfilter.html', title='Add'
                              )
-        elif event.KeyCode == wx.WXK_NUMPAD_SUBTRACT or event.KeyCode == ord('-'
-                ):
+        elif event.KeyCode == wx.WXK_NUMPAD_SUBTRACT or event.KeyCode == ord('-'):
             win = self.GetParent()
-            while not hasattr(win, 'NewChildPage'):
+            while not hasattr(win, 'new_child_page'):
                 win = win.GetParent()
-            p = win.NewChildPage('^standard/tablefilter/addfilter.html',
-                                 title='Add')
+            p = win.new_child_page('^standard/tablefilter/addfilter.html', title='Add')
             p.body.StyleSubtract()
         else:
             if old_on_key_down:
                 old_on_key_down(self, event)
 
-    schcli.guictrl.grid.grid.SchTableGrid.OnKeyDown = on_key_down
-
-
+    schcli.guictrl.grid.grid.SchTableGrid.on_key_down = on_key_down

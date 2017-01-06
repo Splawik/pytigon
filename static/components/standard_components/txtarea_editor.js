@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var mounted = function () {
 			var txtarea = jQuery (this.$el);
 			txtarea.addClass ('vue');

@@ -17,18 +17,17 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
+import os
+
 import wx
-#from schlib.schhtml.wxgc import GraphicsContextDc
+
 from schlib.schhtml.wxdc import DcDc
 from schlib.schhtml.cairodc import CairoDc
 from schlib.schhtml.htmlviewer import HtmlViewerParser
 from schlib.schhtml.cairodc import CairoDc
 
-#from wx.lib.wxcairo import ContextFromDC
 
-import os
-
-# ----------------------------------------------------------------------
 class HtmlCanvas(object):
 
     def __init__(self, zip_name):
@@ -74,25 +73,9 @@ class HtmlCanvas(object):
 
 
 class MyPrintout(wx.Printout):
-
     def __init__(self, canvas):
         wx.Printout.__init__(self)
         self.canvas = canvas
-
-#    def OnBeginDocument(self, start, end):
-#        return super(MyPrintout, self).OnBeginDocument(start, end)
-
-#    def OnEndDocument(self):
-#        super(MyPrintout, self).OnEndDocument()
-
-#    def OnBeginPrinting(self):
-#        super(MyPrintout, self).OnBeginPrinting()
-
-#    def OnEndPrinting(self):
-#        super(MyPrintout, self).OnEndPrinting()
-
-#    def OnPreparePrinting(self):
-#        super(MyPrintout, self).OnPreparePrinting()
 
     def HasPage(self, page):
         if page <= self.canvas.page_count:
@@ -111,41 +94,26 @@ class MyPrintout(wx.Printout):
         margin_y = 0
         max_x = max_x + 2 * margin_x
         max_y = max_y + 2 * margin_y
-        try:
-            (w, h) = dc.GetSizeTuple()
-        except:
-            (w, h) = dc.GetSize()
-        
-        
+        (w, h) = dc.GetSize()
         scale_x = 1.0 * w / max_x
         scale_y = 1.0 * h / max_y
         actual_scale = min(scale_x, scale_y)
         pos_x = (w - self.canvas.getWidth() * actual_scale) / 2.0
         pos_y = (h - self.canvas.getHeight() * actual_scale) / 2.0
-        #dc.SetUserScale(actual_scale, actual_scale)
-        
         dc.SetDeviceOrigin(int(pos_x), int(pos_y))
         dc.Clear()
         self.canvas.set_page(page)
         self.canvas.DoDrawing(dc, True, actual_scale)
-
         return True
 
 
-#
-# ----------------------------------------------------------------------
-
 class HtmlPreviewCanvas(wx.PreviewCanvas):
-
     def __init__(self, parent, **argv):
         self.canvas = HtmlCanvas(parent.Parametry)
         self.printData = wx.PrintData()
-# self.printData.SetPaperId(wx.PAPER_LETTER)
         self.printData.SetPaperId(wx.PAPER_A4)
         self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
         self.printData.SetOrientation(wx.PORTRAIT)
-        #self.printData.SetOrientation(wx.LANDSCAPE)
-# print dir(self.printData)
 
         data = wx.PrintDialogData(self.printData)
         printout = MyPrintout(self.canvas)
@@ -157,7 +125,6 @@ class HtmlPreviewCanvas(wx.PreviewCanvas):
             name = 'htmlpreview'
         wx.PreviewCanvas.__init__(self, self.preview, parent, name=name)
 
-# print dir(self) print "-----------------------" print dir(self.preview)
         self.preview.SetCanvas(self)
         self.preview.SetZoom(100)
 
@@ -171,7 +138,6 @@ class HtmlPreviewCanvas(wx.PreviewCanvas):
 
     def Print(self):
         pdd = wx.PrintDialogData(self.printData)
-        #pdd.SetToPage(2)
         printer = wx.Printer(pdd)
         printout = MyPrintout(self.canvas)
 

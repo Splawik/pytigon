@@ -1,5 +1,4 @@
 
-		var __symbols__ = ['__esv5__'];
 		var _marker = dict ({'props': list (['x', 'y', 'txt']), 'template': ''});
 		Vue.component ('sch-marker', _marker);
 		var _leaflet = function (resolve, reject) {

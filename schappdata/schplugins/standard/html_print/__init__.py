@@ -17,22 +17,13 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import wx
 
-
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
     from .printframework import HtmlPreviewCanvas
-
 
     class Htmlprint(HtmlPreviewCanvas, SchBaseCtrl):
 
@@ -40,7 +31,4 @@ def init_plugin(
             SchBaseCtrl.__init__(self, parent, kwds)
             HtmlPreviewCanvas.__init__(self, parent, **kwds)
 
-
     schcli.guictrl.ctrl.HTMLPRINT = Htmlprint
-
-

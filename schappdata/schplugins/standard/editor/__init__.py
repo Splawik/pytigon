@@ -17,21 +17,16 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-from schcli.guilib.events import *
+
 from base64 import b32encode, b32decode
 import os.path
 
+import wx
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+from schcli.guilib.events import *
+
+
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     from .editor import CodeEditor
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
@@ -41,28 +36,26 @@ def init_plugin(
 
         def __init__(self, parent, **kwds):
             self.href = None
+
             SchBaseCtrl.__init__(self, parent, kwds)
             kwds['style'] = wx.TE_PROCESS_ENTER
+
             CodeEditor.__init__(self, parent, **kwds)
             if self.src:
                 self.set_ext(self.src)
             self.last_clipboard_state = False
-            #mainframe.bind_to_toolbar(self.on_copy, id=wx.ID_COPY)
-            #mainframe.bind_to_toolbar(self.on_cut, id=wx.ID_CUT)
-            #mainframe.bind_to_toolbar(self.on_paste, id=wx.ID_PASTE)
 
             self.GetParent().bind_to_ctrl(self, wx.ID_COPY, self._on_copy, self.on_can_copy)
             self.GetParent().bind_to_ctrl(self, wx.ID_CUT, self._on_cut, self.on_can_cut)
             self.GetParent().bind_to_ctrl(self, wx.ID_PASTE, self._on_paste, self.on_can_paste)
 
-            a_table = [(0, wx.WXK_F2, self.on_save), (wx.ACCEL_CTRL, ord('S'),
-                       self.on_save)]
+            a_table = [(0, wx.WXK_F2, self.on_save), (wx.ACCEL_CTRL, ord('S'), self.on_save)]
             self.set_acc_key_tab(a_table)
+
             if 'data' in self.param:
                 self.SetValue(self.param['data'])
 
             self.href_save = None
-
 
             self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save, id=wx.ID_SAVE)
             self.Bind(wx.EVT_MENU, self.on_save2, id=wx.ID_SAVE)
@@ -121,7 +114,6 @@ def init_plugin(
             self.href_save = href_save
 
         def SetValue(self, value):
-# if  value.__class__ == str: x = x / 0 self.AddTextUTF8(value.encode('cp1250'))
             self.AddText(self.preprocess(value))
 
         def GetValue(self):
@@ -143,8 +135,7 @@ def init_plugin(
         def save(self):
             http = wx.GetApp().get_http(self)
             if self.href:
-                http.post(self, self.href, {'data': self.GetText().encode('utf-8'
-                         )})
+                http.post(self, self.href, {'data': self.GetText().encode('utf-8')})
             http.clear_ptr()
 
         def can_copy(self):
@@ -156,9 +147,6 @@ def init_plugin(
         def can_cut(self):
             return self.can_copy()
 
-# if self.GetSelectionEnd() - self.GetSelectionStart() != 0: return True else:
-# return False
-
         def can_paste(self):
             if self.last_clipboard_state or CodeEditor.CanPaste(self):
                 self.last_clipboard_state = True
@@ -167,15 +155,12 @@ def init_plugin(
                 return False
 
         def _on_copy(self, event):
-            print("COPY")
             self.Copy()
 
         def _on_cut(self, event):
-            print("CUT")
             self.Cut()
 
         def _on_paste(self, event):
-            print("PASTE")
             self.Paste()
 
         def on_can_copy(self, event):

@@ -24,23 +24,11 @@ from schcli.guilib.image import pil_to_image
 from schcli.guictrl.basectrl import SchBaseCtrl
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
     import schcli.guictrl.ctrl
 
-
     class Imageviewer(wx.ScrolledWindow, SchBaseCtrl):
-
         def __init__(self, parent, **kwds):
-# self.obj = SChBaseCtrl(self, args, kwds) kwds['label']=wx.EmptyBitmap(2,2)
-            print("X1")
             SchBaseCtrl.__init__(self, parent, kwds)
             wx.ScrolledWindow.__init__(self, parent, **kwds)
             self.static_bitmap = wx.StaticBitmap(self)
@@ -55,19 +43,16 @@ def init_plugin(
             self.resize_to_win = True
             self.Bind(wx.EVT_SIZE, self.on_size)
             self.pil = None
-            print("X2")
 
         def on_size(self, event):
             if self.pil:
                 size = self.GetParent().GetSize()
                 resized = False
-                if self.resize_to_win and (self.pil.size[0] > size[0]
-                         or self.pil.size[1] > size[1]):
+                if self.resize_to_win and (self.pil.size[0] > size[0] or self.pil.size[1] > size[1]):
                     delta1 = (self.pil.size[0] * 1.0) / size[0]
                     delta2 = (self.pil.size[1] * 1.0) / size[1]
                     delta = delta1 if delta1 > delta2 else delta2
-                    pos = (int(self.pil.size[0] / delta), int(self.pil.size[1]
-                            / delta))
+                    pos = (int(self.pil.size[0] / delta), int(self.pil.size[1] / delta))
                     pil2 = self.pil.resize(pos, Image.BICUBIC)
                     resized = True
                 else:
@@ -75,8 +60,7 @@ def init_plugin(
                 img = pil_to_image(pil2)
                 self.static_bitmap.SetBitmap(img.ConvertToBitmap())
                 if not resized:
-                    self.SetVirtualSize(wx.Size(img.GetWidth(),
-                                        img.GetHeight()))
+                    self.SetVirtualSize(wx.Size(img.GetWidth(), img.GetHeight()))
                     self.SetScrollRate(20, 20)
             event.Skip()
 
@@ -101,15 +85,11 @@ def init_plugin(
             self.pil = Image.open(io)
             size = self.GetParent().GetSize()
             resized = False
-            if self.resize_to_win and (self.pil.size[0] > size[0]
-                                        or self.pil.size[1] > size[1]):
+            if self.resize_to_win and (self.pil.size[0] > size[0] or self.pil.size[1] > size[1]):
                 delta1 = (self.pil.size[0] * 1.0) / size[0]
                 delta2 = (self.pil.size[1] * 1.0) / size[1]
                 delta = delta1 if delta1 > delta2 else delta2
-                pos = (int(self.pil.size[0] / delta), int(self.pil.size[1]
-                        / delta))
-# pos = (size[0]-5, size[1]-5) pil2 = self.pil.resize(pos, Image.ANTIALIAS) pil2
-# = self.pil.resize(pos, Image.BILINEAR)
+                pos = (int(self.pil.size[0] / delta), int(self.pil.size[1] / delta))
                 pil2 = self.pil.resize(pos, Image.BICUBIC)
                 resized = True
             else:
@@ -119,8 +99,6 @@ def init_plugin(
             if not resized:
                 self.SetVirtualSize(wx.Size(img.GetWidth(), img.GetHeight()))
                 self.SetScrollRate(20, 20)
-
-# self.AddText(txt)
             http.clear_ptr()
             self.url = url
 
@@ -128,14 +106,7 @@ def init_plugin(
             http = wx.GetApp().get_http(self)
             if self.href:
                 http.post(self, self.href, {'data': self.GetText()})
-# txt = http.Ptr() print "Save result:", txt
             http.clear_ptr()
-
-# def CanCopy(self): if self.GetSelectionEnd() - self.GetSelectionStart() != 0:
-# return True else: return False
-#
-# def CanPaste(self): if self.last_clipboard_state or CodeEditor.CanPaste(self):
-# self.last_clipboard_state = True return True else: return False
 
         def on_copy(self, event):
             self.Copy()
@@ -145,7 +116,6 @@ def init_plugin(
 
         def on_paste(self, event):
             self.Paste()
-
 
     schcli.guictrl.ctrl.IMAGEVIEWER = Imageviewer
 

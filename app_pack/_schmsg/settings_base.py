@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import six
 from schlib.schdjangoext.django_init import get_app_config
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
@@ -75,7 +74,7 @@ if setup_databases:
         AUTHENTICATION_BACKENDS = db_setup[1]
 else:
     p = os.path.expanduser("~")
-    if isinstance(p, six.text_type):
+    if type(p) == str:
         _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
     else:
         _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")

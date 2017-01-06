@@ -20,18 +20,9 @@
 import wx
 import string
 import binascii
-import wx.stc as stc
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     import schcli
     import schcli.guictrl.ctrl
 
@@ -58,7 +49,8 @@ def init_plugin(
                 h = hex[0 + i * 32:32 + i * 32]
                 hh = " ".join([a+b for a,b in zip(h[::2],h[1::2])])
                 b = binascii.unhexlify(h)
-                p = b.decode('utf-8', 'replace').replace('\n','.').replace('\r','.').replace('\t','.').replace("'", '.').replace("\"","")
+                p = b.decode('utf-8', 'replace').replace('\n','.').replace('\r','.').replace('\t','.').\
+                    replace("'", '.').replace("\"","")
                 pp = ''.join([x if x in string.printable else '.' for x in p])
                 self.AddText(hh + ' | ' + pp + '\n')
 

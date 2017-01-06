@@ -21,15 +21,7 @@
 from . import schtest
 import wx
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     print("tcc plugin - start testing")
     print(schtest.silnia(10))
     print(schtest.passed("test2"))

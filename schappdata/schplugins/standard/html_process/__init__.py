@@ -17,6 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import wx
 
 
@@ -28,15 +29,7 @@ def replace_colors(win, html):
     return html.replace('#E9E0E2', c_caption).replace('#090002', c_text)
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     from schcli.guiframe.form import install_pre_process_lib
     install_pre_process_lib(replace_colors)
 

@@ -17,17 +17,14 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
-#print "X", wx.SystemSettings, "Y"
-#import wx.SystemSettings
-GetColour=wx.SystemSettings.GetColour
-import wx.stc as stc
 import keyword
-# import images
-import six
+
+import wx
+import wx.stc as stc
+
 from schcli.guilib.events import *
 
-from schlib.schindent.indent_tools import norm_html, indent_html
+
 if wx.Platform == '__WXMSW__':
     faces = {
         'times': 'Times New Roman',
@@ -57,40 +54,7 @@ else:
         }
 
 
-if False:
-
-    if wx.Platform == '__WXMSW__':
-        faces = {
-            'times': 'Courier New',
-            'mono': 'Courier New',
-            'helv': 'Courier New',
-            'other': 'Courier New',
-            'size': 10,
-            'size2': 8,
-            }
-    elif wx.Platform == '__WXMAC__':
-        faces = {
-            'times': 'Courier New',
-            'mono': 'Courier New',
-            'helv': 'Courier New',
-            'other': 'Courier New',
-            'size': 12,
-            'size2': 10,
-            }
-    else:
-        faces = {
-            'times': 'Terminus',
-            'mono': 'Terminus',
-            'helv': 'Terminus',
-            'other': 'Terminus',
-            'size': 10,
-            'size2': 8,
-            }
-
-
-
 class CodeEditor(stc.StyledTextCtrl):
-
     def __init__(self, *args, **kwds):
         stc.StyledTextCtrl.__init__(self, *args, **kwds)
         self.CmdKeyAssign(ord('B'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
@@ -105,97 +69,53 @@ class CodeEditor(stc.StyledTextCtrl):
         self.SetMarginMask(2, stc.STC_MASK_FOLDERS)
         self.SetMarginSensitive(2, True)
         self.SetMarginWidth(2, 12)
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN, stc.STC_MARK_BOXMINUS,
-                          'white', '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDER, stc.STC_MARK_BOXPLUS, 'white'
-                          , '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERSUB, stc.STC_MARK_VLINE, 'white'
-                          , '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERTAIL, stc.STC_MARK_LCORNER,
-                          'white', '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND,
-                          stc.STC_MARK_BOXPLUSCONNECTED, 'white', '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID,
-                          stc.STC_MARK_BOXMINUSCONNECTED, 'white', '#808080')
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL, stc.STC_MARK_TCORNER,
-                          'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN, stc.STC_MARK_BOXMINUS, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDER, stc.STC_MARK_BOXPLUS, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERSUB, stc.STC_MARK_VLINE, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERTAIL, stc.STC_MARK_LCORNER, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND, stc.STC_MARK_BOXPLUSCONNECTED, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID, stc.STC_MARK_BOXMINUSCONNECTED, 'white', '#808080')
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL, stc.STC_MARK_TCORNER, 'white', '#808080')
         self.SetMarginType(2, stc.STC_MARGIN_SYMBOL)
         self.Bind(stc.EVT_STC_UPDATEUI, self.on_update_ui)
         self.Bind(stc.EVT_STC_MARGINCLICK, self.on_margin_click)
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
 
-
-        #self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_save, id=wx.ID_SAVE)
-        #self.Bind(wx.EVT_MENU, self.on_save2, id=wx.ID_SAVE)
-
-
-        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d'
-                           % faces)
+        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d' % faces)
         self.StyleClearAll()
-        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d'
-                           % faces)
-        try:
-            col = GetColour(wx.SYS_COLOUR_GRAYTEXT)
-        except:
-            col = GetColour(wx.SYS_COLOUR_GRAYTEXT)
+        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, 'face:%(helv)s,size:%(size)d' % faces)
+        col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
         colstr = col.GetAsString(wx.C2S_HTML_SYNTAX)
-        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, 'fore:#000000,back:%s'
-                           % colstr)
+        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, 'fore:#000000,back:%s' % colstr)
         self.StyleSetSpec(stc.STC_STYLE_CONTROLCHAR, 'face:%(other)s' % faces)
-        self.StyleSetSpec(stc.STC_STYLE_BRACELIGHT,
-                          'fore:#000000,back:#DDDDFF,bold')
-        self.StyleSetSpec(stc.STC_STYLE_BRACEBAD,
-                          'fore:#000000,back:#FFCCCC,bold')
-        self.StyleSetSpec(stc.STC_P_DEFAULT,
-                          'fore:#000000,face:%(helv)s,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_COMMENTLINE,
-                          'fore:#007F00,face:%(other)s,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_NUMBER, 'fore:#007F7F,size:%(size)d'
-                           % faces)
-        self.StyleSetSpec(stc.STC_P_STRING,
-                          'fore:#7F007F,face:%(helv)s,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_CHARACTER,
-                          'fore:#7F007F,face:%(helv)s,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_WORD, 'fore:#00007F,bold,size:%(size)d'
-                           % faces)
-        self.StyleSetSpec(stc.STC_P_TRIPLE, 'fore:#7F0000,size:%(size)d'
-                           % faces)
-        self.StyleSetSpec(stc.STC_P_TRIPLEDOUBLE, 'fore:#7F0000,size:%(size)d'
-                           % faces)
-        self.StyleSetSpec(stc.STC_P_CLASSNAME,
-                          'fore:#0000FF,bold,underline,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_DEFNAME, 'fore:#007F7F,bold,size:%(size)d'
-                           % faces)
+        self.StyleSetSpec(stc.STC_STYLE_BRACELIGHT, 'fore:#000000,back:#DDDDFF,bold')
+        self.StyleSetSpec(stc.STC_STYLE_BRACEBAD, 'fore:#000000,back:#FFCCCC,bold')
+        self.StyleSetSpec(stc.STC_P_DEFAULT, 'fore:#000000,face:%(helv)s,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_COMMENTLINE, 'fore:#007F00,face:%(other)s,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_NUMBER, 'fore:#007F7F,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_STRING, 'fore:#7F007F,face:%(helv)s,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_CHARACTER, 'fore:#7F007F,face:%(helv)s,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_WORD, 'fore:#00007F,bold,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_TRIPLE, 'fore:#7F0000,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_TRIPLEDOUBLE, 'fore:#7F0000,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_CLASSNAME, 'fore:#0000FF,bold,underline,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_DEFNAME, 'fore:#007F7F,bold,size:%(size)d' % faces)
         self.StyleSetSpec(stc.STC_P_OPERATOR, 'bold,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_IDENTIFIER,
-                          'fore:#000000,face:%(helv)s,size:%(size)d' % faces)
-        self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, 'fore:#7F7F7F,size:%(size)d'
-                           % faces)
+        self.StyleSetSpec(stc.STC_P_IDENTIFIER, 'fore:#000000,face:%(helv)s,size:%(size)d' % faces)
+        self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, 'fore:#7F7F7F,size:%(size)d' % faces)
         self.StyleSetSpec(stc.STC_P_STRINGEOL,
-                          'GetCurrentPosfore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d'
-                           % faces)
+                          'GetCurrentPosfore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d' % faces)
         self.SetCaretForeground('#D00000')
         self.SetCaretWidth(2)
-        self.SetSelBackground(True,
-                              GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-        self.SetSelForeground(True,
-                              GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
+        self.SetSelBackground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+        self.SetSelForeground(True, wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHTTEXT))
         b1 = wx.ArtProvider.GetBitmap(wx.ART_FIND, wx.ART_MENU, (16, 16))
-        b2 = wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE, wx.ART_MENU,
-                                      (16, 16))
+        b2 = wx.ArtProvider.GetBitmap(wx.ART_FIND_AND_REPLACE, wx.ART_MENU, (16, 16))
         self.RegisterImage(1, b1)
         self.RegisterImage(2, b2)
 
         self._last_flag = None
         self._last_text = None
-
-    #def on_save2(self, event):
-    #    self.save()
-    #    self.SetSavePoint()
-
-    #def on_check_can_save(self, event):
-    #    modified = self.GetModify()
-    #    event.Enable(modified)
 
     def set_ext(self, ext):
         if ext in EditorObjectMap:
@@ -220,18 +140,15 @@ class CodeEditor(stc.StyledTextCtrl):
             self.CallTipCancel()
         key = event.GetKeyCode()
         if key == 70 and event.ControlDown():
-            #print('XXXXXXXXXXXXXXXXX')
             pass
         elif key == 32 and event.ControlDown():
             pos = self.GetCurrentPos()
             if event.ShiftDown():
-                if hasattr(self.GetParent(), 'OnInfoCmd'):
-                    self.GetParent().OnInfoCmd(self, pos)
+                if hasattr(self.GetParent(), 'on_info_cmd'):
+                    self.GetParent().on_info_cmd(self, pos)
             else:
-# self.CallTipSetBackground("yellow") self.CallTipShow(pos, '''lots of of text:
-# blah, blah, blah''')
-                if hasattr(self.GetParent(), 'OnAutoCompCmd'):
-                    self.GetParent().OnAutoCompCmd(self, pos)
+                if hasattr(self.GetParent(), 'on_auto_comp_cmd'):
+                    self.GetParent().on_auto_comp_cmd(self, pos)
         elif key == wx.WXK_NUMPAD_ENTER or key == wx.WXK_RETURN:
             self._enter_key()
         elif key == wx.WXK_ESCAPE:
@@ -240,7 +157,6 @@ class CodeEditor(stc.StyledTextCtrl):
             self.on_find_next(event)
         else:
             event.Skip()
-
 
     def _enter_key(self):
         (line, space_len) = self.GetCurLine()
@@ -264,14 +180,12 @@ class CodeEditor(stc.StyledTextCtrl):
         if caret_pos > 0:
             char_before = self.GetCharAt(caret_pos - 1)
             style_before = self.GetStyleAt(caret_pos - 1)
-        if char_before and chr(char_before) in '[]{}()' and style_before\
-             == stc.STC_P_OPERATOR:
+        if char_before and chr(char_before) in '[]{}()' and style_before == stc.STC_P_OPERATOR:
             brace_at_caret = caret_pos - 1
         if brace_at_caret < 0:
             char_after = self.GetCharAt(caret_pos)
             style_after = self.GetStyleAt(caret_pos)
-            if char_after and chr(char_after) in '[]{}()' and style_after\
-                 == stc.STC_P_OPERATOR:
+            if char_after and chr(char_after) in '[]{}()' and style_after == stc.STC_P_OPERATOR:
                 brace_at_caret = caret_pos
         if brace_at_caret >= 0:
             brace_opposite = self.BraceMatch(brace_at_caret)
@@ -286,8 +200,7 @@ class CodeEditor(stc.StyledTextCtrl):
                 self.FoldAll()
             else:
                 line_clicked = self.LineFromPosition(evt.GetPosition())
-                if self.GetFoldLevel(line_clicked)\
-                     & stc.STC_FOLDLEVELHEADERFLAG:
+                if self.GetFoldLevel(line_clicked) & stc.STC_FOLDLEVELHEADERFLAG:
                     if evt.GetShift():
                         self.SetFoldExpanded(line_clicked, True)
                         self.Expand(line_clicked, True, True, 1)
@@ -324,14 +237,7 @@ class CodeEditor(stc.StyledTextCtrl):
                         self.HideLines(line_num + 1, last_child)
             line_num = line_num + 1
 
-    def expand(
-        self,
-        line,
-        do_expand,
-        force=False,
-        vis_levels=0,
-        level=-1,
-        ):
+    def expand(self, line, do_expand, force=False, vis_levels=0, level=-1):
         last_child = self.GetLastChild(line, level)
         line = line + 1
         while line <= last_child:
@@ -362,7 +268,7 @@ class CodeEditor(stc.StyledTextCtrl):
         return line
 
     def preprocess(self, txt):
-        if isinstance(txt, six.string_types):
+        if type(txt)==str:
             return txt.replace('\t', ' ' * 4)
         else:
             return txt.replace(b'\t', b' ' * 4)
@@ -388,7 +294,6 @@ class CodeEditor(stc.StyledTextCtrl):
         return ret
 
 class PYTHON_EditorObject(object):
-
     def set_up_editor(self, editor):
         editor.SetLexer(stc.STC_LEX_PYTHON)
         editor.SetKeyWords(0, ' '.join(keyword.kwlist))
@@ -406,12 +311,25 @@ class PYTHON_EditorObject(object):
 
 
 htmlKeywords = \
-    'a abbr acronym address applet area b base basefont bdo big blockquote body br button caption center cite code col colgroup dd del dfn dir div dl dt em fieldset font form frame frameset h1 h2 h3 h4 h5 h6 head hr html i iframe img input ins isindex kbd label legend li link map menu meta noframes noscript object ol optgroup option p param pre q s samp script select small span strike strong style sub sup table tbody td textarea tfoot th thead title tr tt u ul var xml xmlns abbr accept-charset accept accesskey action align alink alt archive axis background bgcolor border cellpadding cellspacing char charoff charset checked cite class classid clear codebase codetype color cols colspan compact content coords data datafld dataformatas datapagesize datasrc datetime declare defer dir disabled enctype event face for frame frameborder headers height href hreflang hspace http-equiv id ismap label lang language leftmargin link longdesc marginwidth marginheight maxlength media method multiple name nohref noresize noshade nowrap object onblur onchange onclick ondblclick onfocus onkeydown onkeypress onkeyup onload onmousedown onmousemove onmouseover onmouseout onmouseup onreset onselect onsubmit onunload profile prompt readonly rel rev rows rowspan rules scheme scope selected shape size span src standby start style summary tabindex target text title topmargin type usemap valign value valuetype version vlink vspace width text password checkbox radio submit reset file hidden image public !doctype'
+    'a abbr acronym address applet area b base basefont bdo big blockquote body br button caption center cite code ' \
+    'col colgroup dd del dfn dir div dl dt em fieldset font form frame frameset h1 h2 h3 h4 h5 h6 head hr html i ' \
+    'iframe img input ins isindex kbd label legend li link map menu meta noframes noscript object ol optgroup ' \
+    'option p param pre q s samp script select small span strike strong style sub sup table tbody td textarea tfoot ' \
+    'th thead title tr tt u ul var xml xmlns abbr accept-charset accept accesskey action align alink alt archive ' \
+    'axis background bgcolor border cellpadding cellspacing char charoff charset checked cite class classid clear ' \
+    'codebase codetype color cols colspan compact content coords data datafld dataformatas datapagesize datasrc ' \
+    'datetime declare defer dir disabled enctype event face for frame frameborder headers height href hreflang ' \
+    'hspace http-equiv id ismap label lang language leftmargin link longdesc marginwidth marginheight maxlength ' \
+    'media method multiple name nohref noresize noshade nowrap object onblur onchange onclick ondblclick onfocus ' \
+    'onkeydown onkeypress onkeyup onload onmousedown onmousemove onmouseover onmouseout onmouseup onreset onselect ' \
+    'onsubmit onunload profile prompt readonly rel rev rows rowspan rules scheme scope selected shape size span src ' \
+    'standby start style summary tabindex target text title topmargin type usemap valign value valuetype version ' \
+    'vlink vspace width text password checkbox radio submit reset file hidden image public !doctype'
+
 djangoKeywords = '%% if else for'
 
 
 class HTML_LIKE_PYTHON_EditorObject(PYTHON_EditorObject):
-
     def set_up_editor(self, editor):
         PYTHON_EditorObject.set_up_editor(self, editor)
         editor.SetKeyWords(0, htmlKeywords)
@@ -431,7 +349,6 @@ class HTML_LIKE_PYTHON_EditorObject(PYTHON_EditorObject):
 class HTML_EditorObject(object):
 
     def set_up_editor(self, editor):
-# editor.SetLexer(stc.STC_LEX_PYTHON)
         editor.SetKeyWords(0, htmlKeywords)
         editor.SetIndent(4)
         editor.SetIndentationGuides(True)
@@ -445,11 +362,6 @@ class WIKI_EditorObject(object):
 
     def set_up_editor(self, editor):
         editor.SetLexer(stc.STC_LEX_MARKDOWN)
-        #editor.StyleSetSpec(stc.STC_P_COMMENTLINE,
-        #                    'fore:#0000FF,back:#E0E0FF,bold,face:%(other)s,size:%(size)d'
-        #                     % faces)
-        #editor.StyleSetSpec(stc.STC_P_WORD, 'fore:#404040,size:%(size)d'
-        #                     % faces)
         editor.SetIndent(4)
         editor.SetIndentationGuides(True)
         editor.SetBackSpaceUnIndents(True)

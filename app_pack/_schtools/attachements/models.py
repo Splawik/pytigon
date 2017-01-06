@@ -2,11 +2,10 @@
 
 import django
 from django.db import models
-from schlib.schdjangoext.fields import ForeignKey, HiddenForeignKey
+from schlib.schdjangoext.fields import *
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from django.utils.encoding import python_2_unicode_compatible
 
 import os, os.path
 import sys
@@ -27,7 +26,6 @@ def upload_path_fun(obj, filename):
 
 
 
-@python_2_unicode_compatible
 class Attachements( models.Model):
     
     class Meta:

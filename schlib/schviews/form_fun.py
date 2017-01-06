@@ -17,6 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contains views for form processing
+
+"""
+
 
 from django.http import HttpResponse
 from django.template import RequestContext
@@ -30,8 +34,19 @@ from .viewtools import render_to_response_ext
 
 
 def form(request, app_name, form_class, template_name, object_id=None, form_end=False, param=None, mimetype=None):
-    template_name2 = template_name
+    """Function make new form views
 
+    Args:
+        request
+        app_name
+        form_class
+        template_name
+        object_id
+        form_end
+        param
+        mimetype
+    """
+    template_name2 = template_name
     app_pack = ""
     for app in settings.APPS:
         if '.' in app and app_name in app:
@@ -99,7 +114,25 @@ def form_with_perms(app):
 
 def list_and_form(request, queryset, form_class, template_name, table_always=True, paginate_by=None, page=None,
         allow_empty=True, extra_context=None, context_processors=None, template_object_name='obj',
-        mimetype=None, param=None,):
+        mimetype=None, param=None):
+    """List form
+
+    Args:
+        request
+        queryset
+        form_class
+        template_name
+        table_always
+        paginate_by
+        page
+        allow_empty
+        extra_context
+        context_processors
+        template_object_name
+        mimetype
+        param
+    """
+
     queryset2 = queryset
     if request.POST:
         new_data = request.POST.copy()

@@ -17,17 +17,17 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import wx
-from schlib.schtools import schjson
 from autocomplete import TextCtrlAutoComplete
+
+from schlib.schtools import schjson
+
 from schcli.guictrl.ctrl import SchBaseCtrl
 import schcli.guictrl.ctrl
 
-#import urllib.request, urllib.parse, urllib.error
-
 
 class DbDict(object):
-
     def __init__(self, href):
         self.href = href
         self.tab = ['']
@@ -42,7 +42,6 @@ class DbDict(object):
             self.tab = []
         self.tab2 = []
         for pos in self.tab:
-# self.tab2.append((pos['label'], pos['value']))
             self.tab2.append((pos['value'], ))
         self.tab = self.tab2
         http.clear_ptr()
@@ -68,7 +67,6 @@ class DbDict(object):
 
 
 class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
-
     def __init__(self, parent, **kwds):
         SchBaseCtrl.__init__(self, parent, kwds)
         self.dynamic_choices = DbDict(self.src)
@@ -79,22 +77,12 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
         else:
             kwds['style'] = wx.TE_MULTILINE | wx.TE_PROCESS_ENTER
 
-# if kwds.has_key("size"): size = kwds["size"] print "size:", size kwds["size"]
-# = wx.Size(size[0],30) else: kwds["size"] = wx.Size(-1, 30)
-
         kwds['choices'] = self.dynamic_choices
         TextCtrlAutoComplete.__init__(self, parent, colNames=('label', 'value'), **kwds)
         self.SetEntryCallback(self.set_dynamic_choices)
         self.SetMatchFunction(self.match)
         if 'data' in self.param:
             self.SetValue(self.param['data'].encode('utf-8'))
-
-# self.SetSelectCallback(self.select_callback)
-#
-# def onListItemSelected (self, event): print "onListItemSelected" return
-# TextCtrlAutoComplete.onListItemSelected(self, event)
-#
-# def select_callback(self, value): self.SetValue(value)
 
     def SetValue(self, value):
         if value.__class__ == str:
@@ -104,24 +92,12 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
 
     def on_key_down(self, event):
         kc = event.GetKeyCode()
-# sel = self.dropdownlistbox.GetFirstSelected() if kc == wx.WXK_DOWN : if sel <
-# (self.dropdownlistbox.GetItemCount () - 1) : self.dropdownlistbox.Select(
-# sel+1 ) self._listItemVisible() self._showDropDown ()
-# self._setValueFromSelected2() elif kc == wx.WXK_UP : if sel > 0 :
-# self.dropdownlistbox.Select( sel - 1 ) self._listItemVisible()
-# self._showDropDown () self._setValueFromSelected2()
         if kc in (wx.WXK_LEFT, wx.WXK_RIGHT):
             event.Skip()
         else:
             super(Autocomplete, self).onKeyDown(event)
 
     def match(self, text, choice):
-        """Demonstrate \"smart\" matching feature, by ignoring http:// and www. when \
-doing
-        matches.
-
-"""
-
         t = text.lower()
         c = choice.lower()
         if c.startswith(t):
@@ -159,15 +135,5 @@ doing
             self.SetValue(itemtext)
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     schcli.guictrl.ctrl.AUTOCOMPLETE = Autocomplete
-
-

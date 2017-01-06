@@ -19,8 +19,6 @@
 
 import wx
 import os
-from base64 import b64decode
-from schlib.schtools.tools import split2
 import tempfile
 import platform
 
@@ -72,29 +70,17 @@ class WebViewMemoryHandler(wx.html2.WebViewHandler):
 
 
 
-def init_plugin_web_view(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    base_web_browser,
-    ):
+def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, base_web_browser):
     import wx.html2
     from schlib.schindent.indent_tools import norm_html
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
-    from schcli.guilib import events
     try:
         from urllib.parse import quote as escape
     except:
         from urllib import quote as escape
 
-
     class BaseBrowser(SchBaseCtrl, base_web_browser):
-
         logged = False
 
         def Init(self, parent, **kwds):
@@ -113,10 +99,7 @@ def init_plugin_web_view(
                 self.GetParent().any_parent_command('set_handle_info', 'browser', self)
 
             self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
-
-
             self.Bind(wx.html2.EVT_WEBVIEW_LOADED, self.on_web_view_loaded, self)
-            #self.Bind(wx.html2.EVT_WEBVIEW_ERROR, self.on_web_view_error, self)
             self.Bind(wx.html2.EVT_WEBVIEW_NEWWINDOW, self.on_new_window, self)
             self.Bind(wx.html2.EVT_WEBVIEW_TITLE_CHANGED, self.on_title_changed, self)
             self.Bind(wx.html2.EVT_WEBVIEW_NAVIGATING, self.on_navigating, self)
@@ -134,17 +117,9 @@ def init_plugin_web_view(
 
             if hasattr(self.GetParent(), 'any_parent_command'):
                 self.GetParent().any_parent_command('show_info')
-
-
-            #self.SetZoomType(wx.html2.WEBVIEW_ZOOM_TYPE_LAYOUT)
-            #self.SetZoomType(wx.html2.WEBVIEW_ZOOM_TYPE_TEXT)
-            #self.SetZoom(wx.html2.WEBVIEW_ZOOM_MEDIUM)
-            #self.SetZoom(wx.html2.WEBVIEW_ZOOM_SMALL)
             self.afetr_init()
 
-
         def on_setfocus(self, event):
-            print("on_setfocus")
             event.Skip()
 
         def on_killfocus(self, event):
@@ -152,16 +127,8 @@ def init_plugin_web_view(
             event.Skip()
 
         def on_destroy(self, event):
-            #self.SetHandleEvent(False)
-            #if platform.system() == "Windows":
-            #    if self.IsBusy():
-            #        self.Stop()
-            #    while self.IsBusy():
-            #        wx.html2.WebView.New("messageloop")
-            #    print("X1")
             self.loaded=False
             event.Skip()
-
 
         def on_navigating(self, event):
             url = event.GetURL()
@@ -180,16 +147,10 @@ def init_plugin_web_view(
 
         def on_error(self, event):
             message = "%s\n, %s" % ( event.GetURL(),event.GetString())
-            #dlg = wx.MessageDialog(self, event.GetString(), "Webview error",  wx.OK | wx.ICON_WARNING)
-            #dlg.ShowModal()
-            #dlg.Destroy()
-
             self.show_error("WebView error", message+"\n"+event.GetString())
-
             event.Skip()
 
-        def on_web_view_loaded(self, event):            
-
+        def on_web_view_loaded(self, event):
             self.page_loaded = True
 
             ev = wx.CommandEvent()
@@ -208,7 +169,6 @@ def init_plugin_web_view(
             print("on_web_view_error:", event.GetURL())
             event.Skip()
 
-
         def on_new_window(self, event):
             url = event.GetURL()
             if url.startswith('http://127.0.0.2/?:'):
@@ -219,7 +179,6 @@ def init_plugin_web_view(
                 self.new_win(event.GetURL())
                 event.Skip()
 
-
         def progress_change(self, progress, max_progress):
             if max_progress == 0:
                 max_progress = 100
@@ -228,7 +187,6 @@ def init_plugin_web_view(
             else:
                 progress2 = 100
             return self.progress_changed(progress2)
-
 
         def load_url(self, url):
             if not self.local and url.startswith('http://127.0.0.2'):
@@ -281,7 +239,6 @@ def init_plugin_web_view(
 
         def clear_history(self):
             self.ClearHistory()
-
 
     def Html2(parent, **kwds):
         kwds2 = {}

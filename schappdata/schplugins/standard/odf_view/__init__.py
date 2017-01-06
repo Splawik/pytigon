@@ -20,15 +20,6 @@
 import wx
 
 
-def init_plugin(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    ):
-    
+def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     pass
 

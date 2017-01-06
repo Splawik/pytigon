@@ -2,7 +2,6 @@ from threading import Thread
 from subprocess import Popen, PIPE 
 from signal import SIGINT
 import sys
-import six
 import datetime
 import importlib
 from schlib.schtasks.term_tools import ansi_to_txt
@@ -93,7 +92,7 @@ class CommunicationProxy():
 
 def run_func(func, cproxy, args, kwargs):
     status = 0
-    if isinstance(func, six.string_types) and not func.startswith('@'):
+    if type(func)==str and not func.startswith('@'):
         if func[0]=='>':
             status = 1
             if func[1]=='>':
@@ -147,7 +146,7 @@ def run_func(func, cproxy, args, kwargs):
         
     else:
         param = None
-        if isinstance(func, six.string_types) and func.startswith('@'):
+        if type(func)==str and func.startswith('@'):
             x = func[1:].split(':')
             app_name = x[0]
             y = x[1].split('#')

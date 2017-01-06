@@ -20,7 +20,6 @@
 import wx
 import wx.html
 from schlib.schtools import schjson
-import six
 
 
 schEVT_THREAD_INFO = wx.NewEventType()

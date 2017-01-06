@@ -17,27 +17,15 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
 import wx
 
-
-def init_plugin_sch_web(
-    app,
-    mainframe,
-    desktop,
-    mgr,
-    menubar,
-    toolbar,
-    accel,
-    base_web_browser,
-    ):
+def init_plugin_sch_web(app, mainframe, desktop, mgr, menubar, toolbar, accel, base_web_browser,):
     from schcli.guictrl.ctrl import SChBaseCtrl
     import schcli.guictrl.ctrl
     from schcli.guilib import events
     from schcli.guiframe import form
-# from schclilib.httpeasy import conwert_local_path_fun, local_media_path,
-# get_cookie_str
     from urllib.parse import quote as escape
-    from tempfile import NamedTemporaryFile
     init_css_str = \
         """
         body {font-family:sans-serif;font-size:100%; padding:2;}
@@ -58,7 +46,6 @@ def init_plugin_sch_web(
         li {cellpadding:5; width:95%; }
     """
 
-
     class Html2(form.SChSashWindow, SChBaseCtrl, base_web_browser):
 
         logged = False
@@ -74,7 +61,6 @@ def init_plugin_sch_web(
             self.GetParent().any_parent_command('set_handle_info', 'browser', self)
             self.GetParent().any_parent_command('show_info')
 
-# self.Bind(schevent.EVT_REFRPARM, self._redirect_to_local)
             self.source_mod = False
 
         def on_souce_mod(self, event):
@@ -94,14 +80,7 @@ def init_plugin_sch_web(
             http.clear_ptr()
             self.redirect_to_local = True
 
-        def _navigation(
-            self,
-            web_view,
-            frame,
-            request,
-            navigation_action,
-            policy_decision,
-            ):
+        def _navigation(self, web_view, frame, request, navigation_action, policy_decision):
             url = request.get_uri()
             if self.accept_page(url):
                 if self.redirect_to_local and '127.0.0.2' in url:
@@ -123,14 +102,7 @@ def init_plugin_sch_web(
                 policy_decision.ignore()
                 return True
 
-        def _navigation_new(
-            self,
-            web_view,
-            frame,
-            request,
-            navigation_action,
-            policy_decision,
-            ):
+        def _navigation_new(self, web_view, frame, request, navigation_action, policy_decision):
             url = request.get_uri()
             if self.new_win(url):
                 policy_decision.ignore()
@@ -141,12 +113,7 @@ def init_plugin_sch_web(
         def _create_new(self, web_view, frame):
             return self.new_win0().ctrl
 
-        def _link(
-            self,
-            web_view,
-            title,
-            uri,
-            ):
+        def _link(self, web_view, title, uri):
             if title and title != '':
                 return self.status_text(title)
             if uri and uri != '':
@@ -160,14 +127,7 @@ def init_plugin_sch_web(
             http.clear_ptr()
             return s
 
-        def _load_resource(
-            self,
-            web_view,
-            web_frame,
-            web_resource,
-            request,
-            response,
-            ):
+        def _load_resource(self, web_view, web_frame, web_resource, request, response):
             url = request.get_uri()
             if '127.0.0.2' in url:
                 request.set_uri('about:blank')
@@ -218,12 +178,7 @@ def init_plugin_sch_web(
             elif s == self.WEBKIT_LOAD_FAILED:
                 self.set_status(self.LOAD_FINISH_FAILED, url)
 
-        def _title(
-            self,
-            web_view,
-            frame,
-            title,
-            ):
+        def _title(self, web_view, frame, title,):
             if title and title != '':
                 self.title(title)
 
@@ -262,11 +217,9 @@ def init_plugin_sch_web(
             self.GetParent().any_parent_command('set_status_text2', txt)
 
         def on_new_window(self, event):
-# print "OnNewWindow", event
             event.Skip()
 
         def on_add_bookmark(self, event):
-# print "OnAddBookmark", event
             event.Skip()
 
         def can_go_back(self):
@@ -283,7 +236,6 @@ def init_plugin_sch_web(
 
         def get_status(self):
             return self.get_status()
-
 
     schcli.guictrl.ctrl.HTML2 = Html2
 

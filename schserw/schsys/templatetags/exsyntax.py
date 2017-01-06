@@ -29,7 +29,6 @@ from django.utils.translation import gettext_lazy as _
 from django.template.loader import get_template
 from django.template import Context, Template, RequestContext
 from django.conf import settings
-from django.utils import six
 from django.utils.safestring import mark_safe
 from django.forms.widgets import CheckboxSelectMultiple
 from django.template.base import token_kwargs, TemplateSyntaxError
@@ -790,9 +789,8 @@ class HtmlWidgetNode(template.Node):
         return "<HtmlWidgetNode>"
 
     def render(self, context):
-        values = dict([(key, val.resolve(context)) for key, val in
-                       six.iteritems(self.extra_context)])
-                               
+        values = dict([(key, val.resolve(context)) for key, val in self.extra_context.items()])
+
         context.update(values)
         
         data = self.nodelist.render(context)   

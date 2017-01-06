@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import six
 from urllib.parse import urlparse
 from schlib.schdjangoext.django_init import get_app_config
 
@@ -38,6 +37,7 @@ if not DEBUG:
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
+
 app_pack_folders = []
 base_apps_path = os.path.join(_lp, '..')
 for ff in os.listdir(base_apps_path):
@@ -63,7 +63,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
 
-
 PACKS = []
 
 for app in APPS:
@@ -87,7 +86,7 @@ for app in APPS:
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
 p = os.path.expanduser("~")
-if isinstance(p, six.text_type):
+if type(p)==str:
     _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 else:
     _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")
