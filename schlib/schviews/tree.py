@@ -19,7 +19,23 @@
 
 
 class MakeTreeFromObject(object):
+    """Define tree widget based on django model"""
     def __init__(self, model, callback, field_name=None):
+        """Constructor
+
+        Args:
+            model - django model
+            callback - callback function
+                fun(id, obj):
+                    Args:
+                        id -
+                            for 0 function should return True if there is child element or False in the opposite
+                                situation
+                            for 1 function should return object name
+                            for 2 function should return list of actions for object
+                        obj - object
+            field_name - name of tree field.
+        """
         self.model = model
         self.callback = callback
         self.field_name = field_name
@@ -90,7 +106,9 @@ class MakeTreeFromObject(object):
         return ret
 
     def gen_html(self):
+        """Gen and return html for tree widget"""
         return self._gen("<ul id='browser' class='filetree'>", '</ul>')
 
     def gen_shtml(self):
+        """Gen and return shtml for tree widget"""
         return self._gen('', '')

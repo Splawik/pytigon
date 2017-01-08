@@ -214,7 +214,14 @@ class ThreadStatus(object):
 
 
 class ProcessManager():
+    """Process manager"""
+
     def __init__(self, num_threads):
+        """Constructor
+
+        Args:
+            num_threads - number of threads
+        """
         self.num_threads = num_threads
         self.workers = []
         self.process_list = {}
@@ -285,6 +292,18 @@ class ProcessManager():
 
 
     def put(self, request_or_username, title, func, *args, **kwargs):
+        """Put function to task queue. Function will be run in background
+
+        Args:
+            request_or_username - django request object or username who running function in background
+            title - title of background task
+            func - fuction to be run in background
+            *args - function arguments
+            **kwargs - function arguments
+
+        Returns:
+            Background task id
+        """
         global _ID
         _ID = _ID+1
 
@@ -301,11 +320,23 @@ class ProcessManager():
         return _ID
 
     def put_message(self, id, message):
+        """Send message to background task
+
+        Args:
+            id - task id
+            message - message string
+        """
         iid = int(id)
         if iid in self.process_list:
             self.process_list[iid].input_queue.put(message)
       
     def get_messages(self, id, id_start=0):
+        """Get messages from thread
+
+        Args:
+            id - thread id
+            id_start - start from message nr: id_start, default 0
+        """
         iid = int(id)
         iid_start = int(id_start)
 
@@ -318,12 +349,22 @@ class ProcessManager():
         return ret
 
     def pop_messages(self, id):
+        """Get messages from thread and remove its from thread queue
+
+        Args:
+            id - thread id
+        """
         iid = int(id)
         ret = self.get_messages(iid)
         self.cur.execute("delete from where Id = ?;", (iid,) )
         return ret
     
     def kill_thread(self, id):
+        """Kill thread
+
+        Args:
+            id - thread id
+        """
         iid = int(id)
         if iid in self.process_list:
             p = self.process_list[iid]
@@ -331,11 +372,21 @@ class ProcessManager():
                 p.input_queue.put("^C")
 
     def remove_thread(self, id):
+        """Kill thread and return thread messages
+
+        Args:
+            id - thread id
+        """
         iid = int(id)
         self.kill_thread(iid)
         self.get_messages(iid)
     
     def list_threads(self, all=False):
+        """Return threads list
+
+        Args:
+            all - if True, return all threads, if False, return only active threads
+        """
         ret = []
         for key in self.process_list:
             p = self.process_list[key]
@@ -344,6 +395,11 @@ class ProcessManager():
         return ret
  
     def thread_info(self, id):
+        """Return thread informations
+
+        Args:
+            id - thread id
+        """
         iid = int(id)
         if iid in self.process_list:
             return self.process_list[iid]
@@ -351,6 +407,8 @@ class ProcessManager():
             return None
 
     def kill_all(self):
+        """Kill all threads"""
+
         while not self.task_queue.empty():
             self.task_queue.get()
 
@@ -369,6 +427,7 @@ class ProcessManager():
 
 
     def wait_for_result(self):
+        """wait for any message from threads"""
         if self.manager:
             self._wait_completion()
             tasks = self.list_threads(all=True)
@@ -385,6 +444,7 @@ def get_base_process_manager():
     return ProcessManager(2)
 
 def get_process_manager():
+    """Return process manager object"""
     global _PROCESS_MANAGER
     if not _PROCESS_MANAGER:
         _PROCESS_MANAGER=get_base_process_manager()

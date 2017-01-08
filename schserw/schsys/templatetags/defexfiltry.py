@@ -18,12 +18,20 @@
 #version: "0.1a"
 
 
+"""Module contains filteres which are automatically loaded"""
+
 from django import template
 
 register = template.Library()
 
 @register.filter(name='translate')
 def translate(s, lng):
+    """Translate template name based on language.
+
+    Args:
+        s - name to convert
+        lng - two letters language code
+    """
     if lng:
         if lng=='en':
             return s

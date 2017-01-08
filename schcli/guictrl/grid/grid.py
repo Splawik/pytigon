@@ -545,19 +545,19 @@ class SchTableGrid(wx.grid.Grid):
         message.ShowModal()
 
     def action_exists(self, command):
-        akcja = self.GetTable().get_actions(self.GetGridCursorRow())
-        if akcja and command in akcja:
+        action = self.GetTable().get_actions(self.GetGridCursorRow())
+        if action and command in action:
             return True
         else:
             return False
 
     def action(self, command):
-        akcja = self.GetTable().get_actions(self.GetGridCursorRow())
-        if akcja and command in akcja:
-            if akcja[command][0] == 'openurl':
+        action = self.GetTable().get_actions(self.GetGridCursorRow())
+        if action and command in action:
+            if action[command][0] == 'openurl':
                 self.last_action = command
                 if command=='get_row':
-                    p = akcja[command]
+                    p = action[command]
                     id = p[3]['data-id']
                     title = p[3]['data-text']
                     page = self.GetParent().get_parent_page().get_parent_page()
@@ -566,19 +566,19 @@ class SchTableGrid(wx.grid.Grid):
                         wx.CallAfter(self.GetParent().get_parent_form().cancel)
                     return 1
                 else:
-                    ret = self.GetParent().GetParent().href_clicked(self, akcja[command][3])
+                    ret = self.GetParent().GetParent().href_clicked(self, action[command][3])
                     ret = 1
                     return ret
 
-            if akcja[command][0] == 'tableurl':
-                self.GetTable().proxy.set_address(akcja[command][1])
+            if action[command][0] == 'tableurl':
+                self.GetTable().proxy.set_address(action[command][1])
                 if hasattr(self.GetParent(), 'table_url'):
-                    self.GetParent().table_url(akcja[command][1])
+                    self.GetParent().table_url(action[command][1])
                 self.GetTable().refresh(True)
 
-            if akcja[command][0] == 'command':
+            if action[command][0] == 'command':
                 if hasattr(self.GetParent(), 'table_command'):
-                    self.GetParent().table_command(akcja[command][1])
+                    self.GetParent().table_command(action[command][1])
 
     def get_action_list(self, row=0):
         akcje = self.GetTable().get_action_list(row)
@@ -588,9 +588,9 @@ class SchTableGrid(wx.grid.Grid):
             return (not self.readonly, None)
 
     def get_actions(self, row=0):
-        akcja = self.GetTable().get_actions(row)
-        if akcja:
-            return (not self.readonly, list(akcja.items()))
+        action = self.GetTable().get_actions(row)
+        if action:
+            return (not self.readonly, list(action.items()))
         else:
             return (not self.readonly, None)
 

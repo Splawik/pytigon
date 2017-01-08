@@ -17,12 +17,21 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+
+"""Module contains standard context processors
+
+"""
+
+
 import uuid
 from urllib.parse import urlparse
 
 from django.conf import settings 
 from django.core.urlresolvers import get_script_prefix
-from django.contrib.auth.models import Permission
+try:
+    from django.contrib.auth.models import Permission
+except:
+    pass
 
 from schlib.schdjangoext.django_init import get_app_name
 
@@ -284,6 +293,65 @@ def uuid(path):
 
 
 def sch_standard(request):
+    """Content processor function
+
+    Args:
+        requst - django reuqest
+
+    Returns dict with vars:
+        standard_web_browser - 0 - wxPython client, 1 - standard browser, 2 - hybrid (webkit embeded in wxPython
+        application, 3 - webkit in wxPython frame (no hybrid), 5 - render only content (for javascript ajax)
+
+        app_manager - AppManager(request)
+
+        form_edit - True if request in edit mode
+
+        form_add - True if request in new form mode,
+
+        form_delete - True if request in delete mode
+
+        form_ext -  True if request in form mode
+
+        form_list - True if request in list view mode
+
+        readonly - True if readonly mode
+
+        ro - '_' in readonly mode else ''
+
+        form_info - True if request in form info mode
+
+        form_grid - True if request in form grid mode
+
+        URL_ROOT_FOLDER - url root folder
+
+        URL_BASE - url base folder
+
+        show_form - True if request in show form mode
+
+        browser_type - 'desktop_standard', 'tablet_standard', 'smartfon_standard', 'schweb'
+
+        application_type - 'standard',
+
+        default_template - default template for browser
+
+        default_template2 - default template for browser
+
+        appset_name - appset name
+
+        appset_title - appset title
+
+        show_title_bar - show title bar
+
+        get - True if request in get mode
+
+        settings - settings module
+
+        uuid - uniquie id
+
+        lang: two letters language
+
+        DEBUG: settings.DEBUG
+    """
     standard = standard_web_browser(request)
 
     r = urlparse(request.path)

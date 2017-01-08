@@ -17,6 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Standard python template filters
+
+"""
 
 from base64 import b64encode, b64decode
 
@@ -36,6 +39,8 @@ register = template.Library()
 
 @register.filter(name='class_name')
 def class_name(value):
+    """Returns class name of value"""
+
     ret = ''
     try:
         ret = value.__class__.__name__
@@ -46,6 +51,8 @@ def class_name(value):
 
 @register.filter(name='class_dir')
 def class_dir(value):
+    """Returns dir(value)"""
+
     ret = ''
     try:
         ret = str(dir(value)).replace('\n', '')
@@ -56,6 +63,7 @@ def class_dir(value):
 
 @register.filter(name='is_hidden')
 def is_hidden(value):
+    """Test if value._is_hidden()"""
     if value._is_hidden():
         return True
     else:
@@ -64,12 +72,15 @@ def is_hidden(value):
 
 @register.filter(name='urlencode_shash')
 def urlencode_shash(value):
+    """return urllib.parse.quote(value, '')"""
     import urllib.request, urllib.parse, urllib.error
     return urllib.parse.quote(value, '')
 
 
 @register.filter(name='bencode')
 def bencode(value):
+    """Returns b64encode(value)"""
+
     if value:
         return b64encode(value.encode('utf-8'))
     else:
@@ -78,20 +89,25 @@ def bencode(value):
 
 @register.filter(name='bdecode')
 def bdecode(value):
+    """Returns b64decode(value)"""
+
     return b64decode(value.encode('utf-8')).decode('utf-8')
 
 
 @register.filter(name='subtract')
 def subtract(value, arg):
+    """Returns int(value) - int(arg)"""
     return int(value) - int(arg)
 
 
 @register.filter(name='multiply')
 def multiply(value, arg):
+    """Returns int(value) * int(arg)"""
     return int(value) * int(arg)
 
 @register.filter(name='fmultiply')
 def fmultiply(value, arg):
+    """return fvalue * float"""
     try:
         ret = float(value) * float(arg)
     except:
@@ -101,10 +117,13 @@ def fmultiply(value, arg):
 
 @register.filter(name='divide')
 def divide(value, arg):
+    """Return int(value) / int(arg)"""
     return int(value) / int(arg)
+
 
 @register.filter(name='fdivide')
 def fdivide(value, arg):
+    """Returns float(value) / float(arg)"""
     if float(arg) != 0:
         return float(value) / float(arg)
     else:
@@ -112,21 +131,25 @@ def fdivide(value, arg):
 
 @register.filter(name='range')
 def frange(value):
+    """Returns list(range(int(value)))"""
     return list(range(int(value)))
 
 
 @register.filter(name='get')
 def get(value, argv):
+    """Returns value[int(argv)]"""
     return value[int(argv)]
 
 
 @register.filter(name='getvalue')
 def getvalue(value, argv):
+    """Returns value[argv]"""
     return value[argv]
 
 
 @register.filter(name='date_inc')
 def date_inc(value, arg):
+    """Increment date value by timedelta(int(arg))"""
     import datetime
     try:
         (date, time) = value.split()
@@ -139,6 +162,7 @@ def date_inc(value, arg):
 
 @register.filter(name='date_dec')
 def date_dec(value, arg):
+    """Decrement date value by timedelta(int(arg))"""
     import datetime
     try:
         (y, m, d) = value.split('-')
@@ -150,6 +174,7 @@ def date_dec(value, arg):
 
 @register.filter(name='onlyclass')
 def onlyclass(value, arg):
+    """Filter from list of objects (value) position with arg class"""
     ret = []
     for obj in value:
         if obj.__class__.__name__ == arg:
@@ -161,6 +186,7 @@ def onlyclass(value, arg):
 
 @register.filter(name='errormessage')
 def errormessage(value):
+    """Returns True if value.endswith('!')"""
     if value.endswith('!'):
         return True
     else:
@@ -169,37 +195,41 @@ def errormessage(value):
 
 @register.filter(name='feval')
 def template_eval(value):
+    """Returns eval(value)"""
     return eval(value)
 
 
 @register.filter(name='one_line_block')
 def one_line_block(value):
-    return value.replace('        ', ' ').replace('    ', ' ').replace('  ', ' '
-            ).replace('\n', '').replace('\t', '')
+    """Clean value by removing unnecessary spaces and characters: '\n', '\t' """
+    return value.replace('        ', ' ').replace('    ', ' ').replace('  ', ' ').replace('\n', '').replace('\t', '')
 
 
 @register.filter(name='arg')
 def arg_fun(value, arg):
+    """Replace first '%s' in value with arg"""
     return value.replace('%s', arg, 1)
 
 
 @register.filter(name='dir')
 def f_dir(value):
+    """Returns dir(value)"""
     return dir(value)
 
 
 @register.filter(name='getfield')
 def getfield(value, attr):
+    """Returns getattr(value, attr)"""
     try:
         obj = getattr(value, attr)
     except:
         obj = None
-        pass
     return obj
 
 
 @register.filter(name='getfields')
 def getfields(value):
+    """Returns fields for model (value) without many_to_many fields"""
     ret = []
     if value and hasattr(value, '_meta'):
         for f in value._meta.fields:
@@ -209,6 +239,7 @@ def getfields(value):
 
 @register.filter(name='getallfields')
 def getallfields(value):
+    """Returns all fields for model (value)"""
     ret = []
     for f in value._meta.fields + value._meta.many_to_many:
         ret.append(f)
@@ -217,6 +248,7 @@ def getallfields(value):
 
 @register.filter(name='tostr')
 def tostr(value):
+    """Converts value to str"""
     return str(value)
 
 

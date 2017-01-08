@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Functions to protect access to views.
+"""
 
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -78,6 +80,15 @@ def make_perms_url_test_fun(app_name, fun, if_block_view=default_block):
 
 
 def make_perms_test_fun(perm, fun, if_block_view=default_block):
+    """Protect views by the authorization system
+
+    Args:
+        perm - name of permision
+        fun - function to be protected
+        if_block_view - views which should be called when access to fun is blocked. Default default_block fun is
+            called.
+    """
+
     def perms_test(request, *args, **kwargs):
         user = request.user
         if not user.is_authenticated():

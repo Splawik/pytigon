@@ -58,10 +58,10 @@ urlpatterns = [
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
 
-    url(r'^datedialog/(?P<akcja>\w+)/$', schserw.schsys.views.datedialog),
-    url(r'^listdialog/(?P<akcja>\w+)/$', schserw.schsys.views.listdialog),
-    url(r'^treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$',schserw.schsys.views.treedialog),
-    url(r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<akcja>\w+)/$', schserw.schsys.views.tabdialog),
+    url(r'^datedialog/(?P<action>\w+)/$', schserw.schsys.views.datedialog),
+    url(r'^listdialog/(?P<action>\w+)/$', schserw.schsys.views.listdialog),
+    url(r'^treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<action>\w+)/$',schserw.schsys.views.treedialog),
+    url(r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<action>\w+)/$', schserw.schsys.views.tabdialog),
     url(r'^table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', schserw.schsys.views.tbl),
 
     url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),

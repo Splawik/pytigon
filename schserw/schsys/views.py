@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contains base views for pytigon applications"""
+
 from base64 import b32decode
 
 from django.conf import settings
@@ -71,6 +73,11 @@ MESSAGE_LIST = {
 
 
 def change_password(request):
+    """Change password view
+
+    Args:
+        request - django request
+    """
     old_password = request.POST.get("current_password", "")
     new_password = request.POST.get("new_password", "")
     confirm_password = request.POST.get("confirm_password", ".")
@@ -89,17 +96,36 @@ def change_password(request):
 
 
 def ok(request):
+    """If form is OK redirect to this view
+
+    Args:
+        request - django request
+    """
     return HttpResponse(_RET_OK)
 
 
 def ret_ok(request, id, title):
+    """If form is OK redirect to this view
+
+    Args:
+        request - django request
+        id
+        title
+    """
     if request.META['HTTP_USER_AGENT'].lower().startswith('py'):
         return HttpResponse(_RET_OK_SHTML % (id, title))
     else:
         return HttpResponse(_RET_OK_HTML % (id, title))
 
 
-def message(request,titleid,messageid,id):
+def message(request, titleid, messageid, id):
+    """View to show messages
+
+    Args:
+        titleid - title id
+        messageid - message id
+        id - id
+    """
     global MESSAGE_LIST
     title = MESSAGE_LIST[titleid]
     if id != '0':
@@ -110,7 +136,15 @@ def message(request,titleid,messageid,id):
     return render_to_response('schsys/message.html', context=c, request=request)
 
 
-def tbl(request,app,tab,value=None,template_name=None,):
+def tbl(request, app, tab, value=None, template_name=None):
+    """View to show table
+
+    Args:
+        app - application name
+        tab - table name
+        value
+        template_name - template name
+    """
     if request.POST:
         p = request.POST.copy()
         d = {}
@@ -128,7 +162,12 @@ def tbl(request,app,tab,value=None,template_name=None,):
     return HttpResponse(retstr)
 
 
-def datedialog(request, akcja):
+def datedialog(request, action):
+    """View to show date dialog
+
+    Args:
+        action - 'size', 'dialog' or 'test'
+    """
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -137,9 +176,9 @@ def datedialog(request, akcja):
         value = b32decode(p['value'].encode('ascii'))
     else:
         value = ''
-    if akcja == 'size':
+    if action == 'size':
         return HttpResponse(schjson.dumps((280, 200)))
-    if akcja == 'dialog':
+    if action == 'dialog':
         if value.__class__ == int:
             import datetime
             d = datetime.date.today()
@@ -147,7 +186,7 @@ def datedialog(request, akcja):
             value = d
         c = {'value': value}
         return render_to_response('schsys/date.html', context=c, request=request)
-    if akcja == 'test':
+    if action == 'test':
         if value.__class__ == int:
             import datetime
             d = datetime.date.today()
@@ -161,7 +200,12 @@ def datedialog(request, akcja):
     return HttpResponse('')
 
 
-def listdialog(request, akcja):
+def listdialog(request, action):
+    """View to show list with options
+
+    Args:
+        action - 'size', 'dialog' or 'test'
+    """
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -173,18 +217,26 @@ def listdialog(request, akcja):
     else:
         value = ''
 
-    if akcja == 'size':
+    if action == 'size':
         return HttpResponse(schjson.dumps((250, 300)))
-    if akcja == 'dialog':
+    if action == 'dialog':
         c = {'value': value}
         ret = render_to_response('schsys/list.html', context=c, request=request)
         return ret
-    if akcja == 'test':
+    if action == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
 
 
-def treedialog(request, app, tab, id, akcja):
+def treedialog(request, app, tab, id, action):
+    """View to show tree based on table
+
+    Args:
+        app - application name
+        tab - table name
+        id
+        action - 'size', 'dialog' or 'test'
+    """
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -195,9 +247,9 @@ def treedialog(request, app, tab, id, akcja):
             value = ''
     else:
         value = ''
-    if akcja == 'size':
+    if action == 'size':
         return HttpResponse(schjson.dumps((450, 400)))
-    if akcja == 'dialog':
+    if action == 'dialog':
         model = import_model(app, tab)
         obj = None
         parent_pk = -1
@@ -209,12 +261,21 @@ def treedialog(request, app, tab, id, akcja):
                     parent_pk = id2
         c = {'value': value, 'app': app, 'tab': tab, 'pk': id, 'parent_pk': parent_pk, 'model': model, 'object': obj,}
         return render_to_response('schsys/get_from_tree.html', context=c, request=request)
-    if akcja == 'test':
+    if action == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
 
 
-def tabdialog(request, app, tab, id, akcja):
+def tabdialog(request, app, tab, id, action):
+    """View to show tab dialog
+
+    Args:
+        request - dialog request
+        app - application name
+        tab - table name
+        id
+        action - 'size', 'dialog' or 'test'
+    """
     if request.POST or request.GET:
         if request.POST:
             p = request.POST.copy()
@@ -225,21 +286,27 @@ def tabdialog(request, app, tab, id, akcja):
             value = ''
     else:
         value = ''
-    if akcja == 'size':
+    if action == 'size':
         return HttpResponse(schjson.dumps((450, 400)))
-    if akcja == 'dialog':
+    if action == 'dialog':
         model = import_model(app, tab)
         obj = None
         if int(id) >= 0:
             obj = model.objects.get(id=id)
         c = {'value': value, 'app': app, 'tab': tab, 'id': id, 'model': model, 'obj': obj,}
         return render_to_response('schsys/get_from_tab.html', context=c, request=request)
-    if akcja == 'test':
+    if action == 'test':
         return HttpResponse(schjson.dumps((2, None, (None, ))))
     return HttpResponse('')
 
 
 def plugin_template(request, template_name):
+    """Render plugin template
+
+    Args:
+        request - django request
+        template_name - template name
+    """
     global APP
     if not APP:
         import wx

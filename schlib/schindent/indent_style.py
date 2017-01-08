@@ -497,6 +497,14 @@ class ConwertToHtml:
 
 
 def ihtml_to_html_base(file_name, input_str=None, lang='en'):
+    """Convert file in ihtml format and return standard html
+
+    Args:
+        file_name - ihtml file name
+        input_str - if not None - convert input_str instead input file
+    Returns:
+        converted html string
+    """
     conwert = ConwertToHtml(file_name, ['br', 'meta', 'input'], [], [], input_str, lang)
     try:
         conwert.process()
@@ -508,6 +516,12 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
 
 
 def py2js(script, module_path):
+    """Compile python script to javascript script
+
+    Args:
+        script - python script source
+        module_path - path for target script
+    """
     error = False
     tempdir = tempfile.gettempdir()
 
@@ -586,6 +600,12 @@ def py2js(script, module_path):
 
 
 def py_to_js(script, module_path):
+    """Compile python script to javascript. Additional indentation are removed from python scrip before compile.
+
+    Args:
+        script - python script source
+        module_path - path for target script
+    """
     tab = -1
     out_tab = []
     for line in script.split('\n'):

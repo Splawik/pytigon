@@ -851,19 +851,6 @@ class GenericRows(object):
 
 def generic_table(urlpatterns, app, tab, title='', title_plural='', template_name=None, extra_context=None,
             queryset=None, views_module=None):
-    """Make urls for generic table
-
-    Args:
-        urlpatterns
-        app
-        tab
-        title
-        title_plural
-        template_name
-        extra_context
-        queryset
-        views_module
-    """
     GenericTable(urlpatterns, app, views_module).new_rows(tab, None, title, title_plural, template_name, extra_context,
             queryset).list().detail().edit().add().delete().editor().tree().gen()
 
@@ -872,9 +859,9 @@ def generic_table_start(urlpatterns, app, views_module=None):
     """Start generic table urls
 
     Args:
-        urlpatterns
-        app
-        views_module
+        urlpatterns - urlpatterns object defined in urls.py
+        app - name of app
+        views_module - imported views.py module
     """
     return GenericTable(urlpatterns, app, views_module)
 

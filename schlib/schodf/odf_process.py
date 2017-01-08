@@ -17,6 +17,9 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contain class and functions for odf file transformations.
+
+"""
 
 from zipfile import ZipFile, ZIP_DEFLATED
 import re
@@ -39,7 +42,15 @@ def _enumerate_childs(node, tab=None):
 
 
 class DocTransform:
+    """Transformate odf file"""
+
     def __init__(self, file_name_in, file_name_out=None):
+        """Constructor
+
+        Args:
+            file_name_in - input file name
+            file_name_out - output file name - if none output file name is composed from input file name.
+        """
         self.file_name_in = file_name_in
         if file_name_out == None:
             self.file_name_out = file_name_in.replace('_', '')
@@ -203,6 +214,12 @@ class DocTransform:
         pass
 
     def process(self, context, debug):
+        """Transform input file
+
+        Args:
+            context - python dict with variables used for transformation
+            debut - print debug information
+        """
         shutil.copyfile(self.file_name_in, self.file_name_out)
         z = ZipFile(self.file_name_out, 'r')
         doc_content = z.read('content.xml').decode('utf-8')

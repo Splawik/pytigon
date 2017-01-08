@@ -59,6 +59,7 @@ INIT_CSS_STR_BASE = \
 """
 
 class HtmlViewerParser(HtmlModParser):
+    """Html renderer"""
 
     CSS_TYPE_STANDARD = 0
     CSS_TYPE_INDENT = 1
@@ -280,7 +281,18 @@ class HtmlViewerParser(HtmlModParser):
                     parent = parent.parent
                 print('|   '*tab, "/", obj.tag, "(", obj.height, ")")
 
-def stream_from_html(html,input_stream=None,css=None,width=int(210*72/25.4),height=int(297*72/25.4),stream_type='pdf'):
+def stream_from_html(html, output_stream=None, css=None, width=int(210*72/25.4), height=int(297*72/25.4),
+        stream_type='pdf'):
+    """Render html string
+
+    Args:
+        html - html string to be rendered
+        output_stream - output stream, if None new io.BytesIO() stream will be created
+        css - css string
+        width - default value 210*72/25.4
+        height - default value 297*72/25.4
+        stream_type - 'zip' or 'pdf', default pdf.
+    """
     if '<html'.encode('ascii') in html:
         html2 = html.decode('utf-8')
     else:
@@ -293,8 +305,8 @@ def stream_from_html(html,input_stream=None,css=None,width=int(210*72/25.4),heig
         width2 = width
         height2 = height
 
-    if input_stream:
-        result = input_stream
+    if output_stream:
+        result = output_stream
     else:
         result = io.BytesIO()
 

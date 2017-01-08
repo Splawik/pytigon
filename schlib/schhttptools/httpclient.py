@@ -17,6 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+"""Module contains classed for define http client
+
+"""
+
 from django.conf import settings
 import requests
 
@@ -68,8 +72,14 @@ def schurljoin(base, address):
 
 
 class HttpClient:
+    """Http client class"""
 
     def __init__(self, address):
+        """Constructor
+
+        Args:
+            address: base address for http requests
+        """
         self.base_address = address
         self.http = None
         self.content = ""
@@ -80,9 +90,29 @@ class HttpClient:
         pass
 
     def post(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None):
+        """Prepare post request to the http server
+
+        Args:
+            parent - parent wx.Window derived object
+            address_str - request address
+            param - python dict with request parameters
+            upload - True or False
+            credentials - default False
+            user_agent - default None
+        """
         return self.get(parent, address_str, parm, upload, credentials, user_agent, True)
 
     def get(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, post_request=False):
+        """Prepare get request to the http server
+
+        Args:
+            parent - parent wx.Window derived object
+            address_str - request address
+            param - python dict with request parameters
+            upload - True or False
+            credentials - default False
+            user_agent - default None
+        """
         global COOKIES
         global BLOCK
         if BLOCK:
@@ -219,9 +249,11 @@ class HttpClient:
 
 
     def ptr(self):
+        """Return request content"""
         return self.content
 
     def str(self):
+        """Return request content converted to string"""
         decode = 'utf-8'
         if self.ret_content_type:
             if 'text' in self.ret_content_type:
@@ -238,6 +270,7 @@ class HttpClient:
         return ret
 
     def to_python(self):
+        """Return request content in json format converted to python object"""
         return json_loads(self.str())
 
     def clear_ptr(self):
@@ -245,7 +278,15 @@ class HttpClient:
 
 
 class AppHttp(HttpClient):
+    """Extended version of HttpClient"""
+
     def __init__(self, address, app):
+        """Constructor
+
+        Args:
+            address - base request address
+            app - application name
+        """
         HttpClient.__init__(self, address)
         self.app = app
 

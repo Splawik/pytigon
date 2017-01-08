@@ -49,13 +49,13 @@ class SchGridPanel(wx.Panel):
             return bitmap_from_href(value, self.icon_size)
         return wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (32, 32))
 
-    def _add_action(self, akcja):
+    def _add_action(self, action):
         test = False
-        if 'name' in akcja:
-            name = akcja['name']
-            label = akcja['data']
-            if 'title' in akcja:
-                title = akcja['title']
+        if 'name' in action:
+            name = action['name']
+            label = action['data']
+            if 'title' in action:
+                title = action['title']
                 if not label:
                     label = title
             else:
@@ -64,8 +64,8 @@ class SchGridPanel(wx.Panel):
                 if name in self._bitmaps:
                     b = self._get_bmp(name)
                 else:
-                    if 'src' in akcja:
-                        b = bitmap_from_href(akcja['src'])
+                    if 'src' in action:
+                        b = bitmap_from_href(action['src'])
                     else:
                         b = bitmap_from_href("fa://fa-chevron-right?size=1")
                 self.toolbar.AddTool(self.lp,label,b,wx.NullBitmap,wx.ITEM_NORMAL,label,title)
@@ -124,8 +124,8 @@ class SchGridPanel(wx.Panel):
                 self.commands.append('view_row')
                 self.lp += 3
             if akcje:
-                for akcja in akcje:
-                    self._add_action(akcja)
+                for action in akcje:
+                    self._add_action(action)
             self.toolbar.Realize()
             self.toolbar.Bind(wx.EVT_TOOL, self.on_tool_click)
 
@@ -172,11 +172,11 @@ class SchGridPanel(wx.Panel):
             akcje_dict = {}
             test = False
             if akcje:
-                for akcja in akcje:
-                    if not 'name' in akcja:
+                for action in akcje:
+                    if not 'name' in action:
                         continue
-                    akcje_dict[akcja['name']] = akcje
-                    if self._add_action(akcja):
+                    akcje_dict[action['name']] = akcje
+                    if self._add_action(action):
                         test = True
             if test:
                 self.toolbar.Realize()
