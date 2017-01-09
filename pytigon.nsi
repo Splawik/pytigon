@@ -36,8 +36,8 @@ Section "pytigon - server"
 
   SectionIn 1 2 3
   
-  SetOutPath $INSTDIR\ext_lib_cli_win
-  File /r  /x __pycache__ /x *.pyc /x *.pyo ext_lib_cli_win\*.*
+  SetOutPath $INSTDIR\ext_lib
+  File /r  /x __pycache__ /x *.pyc /x *.pyo ext_lib\*.*
   SetOutPath $INSTDIR\ext_prg
   File /r  /x __pycache__ /x *.pyc /x *.pyo ext_prg\*.*
   SetOutPath $INSTDIR\schlib
@@ -95,16 +95,21 @@ Section "pytigon - client"
   File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schwiki\*.*
   SetOutPath $INSTDIR\app_pack\schdevtools
   File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\schdevtools\*.*
-
+  SetOutPath $PROFILE\.pytigon
+  File /r install\.pytigon\*.*
 
   SetOutPath $INSTDIR
   File pytigon.py
+  File pytigon.ini
   File pytigon_task.py
   File wsgi.py
+  File asgi.py
   File pytigon.exe
   File pytigon_cmd.exe
   File pytigon_splash.jpeg
+  File pytigon.png
   File pytigon.ico
+  File manage.py
 
   WriteRegStr HKCU "Software\pytigon" "" $INSTDIR
   WriteRegDWORD HKCU "SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION" "python.exe" 0x2AF9

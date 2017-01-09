@@ -41,7 +41,7 @@ int main(int argi, char **argv)
     
     if(key(bufor)!=1) get_program_path(bufor,256);
     chdir(bufor);
-    strcat(bufor, "\\ppython\\python.exe");
+    strcat(bufor, "\\python\\python.exe");
     strcpy(bufor2, "pytigon.py ");
     lpCmdLine[0]=0;
     for(int i = 1; i < argi; i++)

@@ -406,8 +406,10 @@ class SchPage(wx.Window, Signal):
         self.body.Refresh()
 
     def on_size(self, event):
-        LayoutAlgorithm().LayoutWindow(self, self.body)
-        self.body.Refresh()
+        def _on_size():
+            LayoutAlgorithm().LayoutWindow(self, self.body)
+            self.body.Refresh()
+        wx.CallAfter(_on_size)
         if event:
             event.Skip()
 

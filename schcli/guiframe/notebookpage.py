@@ -244,7 +244,9 @@ class SchNotebookPage(wx.Window):
     def on_size(self, event):
         size = event.GetSize()
         self.bestx = -1
-        self._layout(size)
+        #self._layout(size)
+        if size:
+            wx.CallAfter(self._layout, size)
         event.Skip()
 
     def close_no_del(self, close_without_refresh=True):

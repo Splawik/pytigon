@@ -7,10 +7,10 @@
                 <script language="python">
             def Init(self):
                 self.retdate = None
-                self['param'].EventObject=self
+                self.param.EventObject=self
             def OnBeforeButtonClick(self):
-                print('/schbuilder/field_param/edit/'+self['type'].GetValue()+'/')
-                self['param'].set_new_href('/schbuilder/field_param/edit/'+self['type'].GetValue()+'/')
+                print('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
+                self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
 </script>
           {% else %}
                 <script language="python">
