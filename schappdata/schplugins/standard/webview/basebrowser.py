@@ -484,3 +484,16 @@ class BaseWebBrowser(object):
         #toaster.Play()
         print("ERROR: ", title)
         print(description)
+
+    def WebBack(self):
+        return self.on_back(None)
+
+    def WebForward(self):
+        return self.on_forward(None)
+
+    def CanWebBack(self):
+        return self.can_go_back()
+
+    def CanWebForward(self):
+        return self.can_go_forward()
+

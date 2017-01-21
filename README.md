@@ -50,9 +50,9 @@ Instalation
 
    - In the selected folder run command: 
      
-     git clone https://github.com/Splawik/pytigon.git 
+     `git clone https://github.com/Splawik/pytigon.git 
      cd pytigon
-     bash install.sh
+     bash install.sh`
      
    - Install wxPython-Phoenix 
      ( `https://wiki.wxpython.org/How to install wxPython`_ )

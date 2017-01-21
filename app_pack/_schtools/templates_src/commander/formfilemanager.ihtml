@@ -134,8 +134,8 @@
                 self.pbutton.Disable()
             
         def _transform_item(self, item):
-            from schlib.schfs.vfstools import replace_dot
-            item2 = replace_dot(item)
+            from schlib.schfs.vfstools import norm_path
+            item2 = norm_path(item)
             if len(item2)>32:
                 x = item2[-28:]
                 id = x.find('/')

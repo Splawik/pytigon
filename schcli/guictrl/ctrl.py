@@ -1205,10 +1205,16 @@ class TIME(masked.TimeCtrl, SchBaseCtrl):
         value
     """
 
+
     def __init__(self, parent, **kwds):
         SchBaseCtrl.__init__(self, parent, kwds)
         masked.TimeCtrl.__init__(self, parent, **kwds)
 
+
+        #self.SetEmptyBackgroundColour(wx.Colour(1,0,0))
+        #self.SetValidBackgroundColour("Red")
+        #self.SetInvalidBackgroundColour(wx.Colour(1,0,0))
+        #self._validBackgroundColour = wx.Colour(1,0,0)
 
 class STYLEDTEXT(wx.TextCtrl, SchBaseCtrl):
     """STYLEDTEXT handle ctrlstyledtext tag
@@ -1623,6 +1629,7 @@ if platform.system() == "Linux":
 
             self.to_masked(autoformat='EUDATEYYYYMMDD.')
 
+
         def GetValue(self):
             value = self.get_rec()
             if type(value) == tuple and len(value)>0:
@@ -1684,12 +1691,25 @@ class DATETIMEPICKER(POPUPHTML):
         POPUPHTML.__init__(self, parent, **kwds)
 
         self.to_masked(autoformat='EUDATE24HRTIMEYYYYMMDD.HHMM')
+        #self.win.SetValidBackgroundColour("Red")
+        #self.win.SetValidBackgroundColour(wx.Colour(1,0,0))
+        self.win.SetValidBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
         if self.value:
             self.set_rec(self.value, [self.value,])
         else:
             now = datetime.datetime.now().isoformat().replace('T',' ').replace('-','.')[:16]
             self.set_rec(now, [now,], False)
+
+    #def SetValue(self, value):
+    def set_rec(self, value, value_rec, dismiss=False):
+        print(value, value_rec)
+        if len(value)==16:
+            return super().set_rec(value.replace('-', '.'), value_rec, dismiss)
+        elif len(value)==10:
+            return super().set_rec(value.replace('-', '.')+' 00:00', value_rec, dismiss)
+        else:
+            return super().set_rec('0000.00.00 00:00', value_rec, dismiss)
 
     def GetValue(self):
         value = self.get_rec()
@@ -1929,7 +1949,6 @@ class COLLAPSIBLE_PANEL(wx.CollapsiblePane, SchBaseCtrl):
     def GetBestSize(self):
         ret = wx.CollapsiblePane.GetBestSize(self)
         if self.IsExpanded():
-            print(self._height, ret[0], ret[1]+self._height)
             return (ret[0], ret[1]+self._height)
         elif not self.IsShown():
             return (0,0)

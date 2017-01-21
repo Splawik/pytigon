@@ -20,7 +20,7 @@
 import wx
 import types
 from base64 import b32encode, b32decode
-from schcli.guilib.tools import bitmap_from_href
+from schcli.guilib.image import bitmap_from_href
 
 def init_plugin(
     app,
@@ -63,6 +63,6 @@ def init_plugin(
     page = toolbar.create_page("page2")
     panel = page.create_panel("special")
     panel.append(idn, "test", bitmap)
-    toolbar.realize_bar()
+    toolbar.create()
 
 

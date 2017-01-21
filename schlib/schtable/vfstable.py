@@ -22,7 +22,7 @@ import datetime
 import re
 import sys
 from base64 import b32encode, b32decode
-
+import gettext
 
 import fs.path
 from django.core.cache import cache
@@ -36,6 +36,7 @@ from schlib.schtasks.task import get_process_manager
 from schlib.schtools import schjson
 from schlib.schtools.tools import bdecode, is_null
 
+_ = gettext.gettext
 
 def automount(path):
     lpath = path.lower()

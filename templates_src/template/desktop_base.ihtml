@@ -10,6 +10,8 @@
     % load django_select2_tags
 
 %% js_scripts_base
+    {% jscript_link 'system/browser-polyfill.min.js' %}
+
     % if request.get_host == '127.0.0.2':
         {% jscript_link 'sch/schXMLHttpRequest.js' %}
     {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}

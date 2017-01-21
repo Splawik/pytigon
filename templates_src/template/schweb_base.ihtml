@@ -228,7 +228,7 @@
                         %% form_content
                             table class=filter_form_frame,,,width=100%,,,bgcolor=#fff:::tr:::td
                                 % for field in form
-                                    table class=filter_form,,,border=1
+                                    table class=filter_form,,,border=0
                                         tr
                                             td
                                                 {{ field|as_crispy_field:"sch_bootstrap"}}

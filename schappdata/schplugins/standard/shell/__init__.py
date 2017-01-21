@@ -20,6 +20,7 @@
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     import wx.py as py
+    import wx
     from schcli.guictrl.ctrl import SchBaseCtrl
     import schcli.guictrl.ctrl
 

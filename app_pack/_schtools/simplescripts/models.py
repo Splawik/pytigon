@@ -3,6 +3,7 @@
 import django
 from django.db import models
 from schlib.schdjangoext.fields import *
+import schlib.schdjangoext.fields as ext_models
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
