@@ -39,7 +39,7 @@ import schserw.schsys.views
 urlpatterns = [
     url(r'schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
     url(r'schsys/i18n/', include(django.conf.urls.i18n)),
-    url(r'admin/', include(admin.site.urls)),
+    url(r'admin/', admin.site.urls),
     url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url(r'site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'select2/', include(django_select2.urls)),

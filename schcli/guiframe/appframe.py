@@ -46,6 +46,8 @@ from schcli.guiframe.notebookpage import SchNotebookPage
 from schcli.guiframe.manager import SChAuiManager
 from schcli.guilib.image import bitmap_from_href
 
+from schcli.guiframe.baseframe import SchBaseFrame
+
 _ = wx.GetTranslation
 
 
@@ -71,7 +73,7 @@ class _SChMainPanel(wx.Window):
         pass
 
 
-class SchAppFrame(wx.Frame):
+class SchAppFrame(SchBaseFrame):
     """
         This is main window of pytigon application
     """
@@ -111,7 +113,7 @@ class SchAppFrame(wx.Frame):
             style - see wx.Frame constructor
         """
 
-        wx.Frame.__init__(self, None, wx.ID_ANY, title, pos, size, style, "MainWindow")
+        SchBaseFrame.__init__(self, None, gui_style, wx.ID_ANY, title, pos, size, style, "MainWindow")
         #self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
 
         self._id = wx.ID_HIGHEST
@@ -347,47 +349,6 @@ class SchAppFrame(wx.Frame):
     def setup_frame(self):
         self.SetMinSize(wx.Size(800, 700))
 
-    def init_plugins(self):
-        home_dir = wx.GetApp().get_working_dir()
-        dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/"]
-        auto_plugins = wx.GetApp().config['Global settings']['auto_plugins'].split(';')
-        for dirname in dirnames:
-            for ff in os.listdir(dirname):
-                if os.path.isdir(os.path.join(dirname, ff)):
-                    dirname2 = os.path.join(dirname, ff)
-                    pliki = []
-                    for f in os.listdir(dirname2):
-                        pliki.append(f)
-                    pliki.sort()
-
-                    for f in pliki:
-                        try_run=2
-                        while try_run>0:
-                            try:
-                                if os.path.isdir(os.path.join(dirname2, f)):
-                                    p = dirname2.split('/')
-                                    mod_name = p[-2] + "." + p[-1] + "." + f
-                                    x = p[-1] + '/' + f
-                                    if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins) or x in auto_plugins:
-                                        if '.__' in mod_name:
-                                            break
-                                        mod = __import__(mod_name)
-                                        mod_path = mod_name.split('.')
-                                        mod2 = getattr(mod, mod_path[1])
-                                        mod3 = getattr(mod2, mod_path[2])
-                                        destroy = mod3.init_plugin(wx.GetApp(), self, self.desktop, self._mgr, self.get_menu_bar(), self.toolbar_interface, self.aTable)
-                                        if destroy != None:
-                                            self.destroy_fun_tab.append(destroy)
-                                break
-                            except:
-                                try_run = try_run - 1
-                                if try_run == 1:
-                                    compile(os.path.join(dirname2, f), wx.GetApp().scr_path)
-                                else:
-                                    import traceback
-                                    print("Error load plugin: ", mod_name)
-                                    print(sys.exc_info()[0])
-                                    print(traceback.print_exc())
 
     def init_acc_keys(self):
         self.aTable = [

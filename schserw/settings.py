@@ -107,7 +107,7 @@ TEMPLATES = [
     },
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,7 +122,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 #if not DEBUG:
-MIDDLEWARE_CLASSES.append('whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 INSTALLED_APPS = [
     'django.contrib.auth',

@@ -5,7 +5,7 @@ ldap3
 django_python3_ldap
 django_select2
 whitenoise
-transcrypt
+transcrypt<3.6.4
 fpdf
 html5lib
 lxml

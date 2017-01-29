@@ -17,3 +17,7 @@ pip-delete-this-directory.txt
 
 /app_pack/schdevtools/schbuilder/migrations
 migrations/
+
+# PyCharm ide
+.idea/
+

@@ -91,7 +91,7 @@ def make_perms_test_fun(perm, fun, if_block_view=default_block):
 
     def perms_test(request, *args, **kwargs):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             user = get_anonymous()
             if not user:
                 user = request.user

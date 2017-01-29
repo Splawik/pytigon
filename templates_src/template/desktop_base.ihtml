@@ -8,6 +8,10 @@
 
 % comment:
     % load django_select2_tags
+    <script src="http://localhost:1337/vorlon.js"></script>
+
+
+
 
 %% js_scripts_base
     {% jscript_link 'system/browser-polyfill.min.js' %}

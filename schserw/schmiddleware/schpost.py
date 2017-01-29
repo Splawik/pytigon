@@ -18,7 +18,10 @@
 #version: "0.1a"
 
 class LoginToSession(object):
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         if 'sessionid' in request.GET:
             from django.contrib.sessions.models import Session
             from django.contrib.auth.models import User
@@ -34,7 +37,7 @@ class LoginToSession(object):
                 parm = request.GET['client_param']
                 if parm != '':
                     request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
-
+        return self.get_response(request)
 
 class ViewRequests(object):
     def process_request(self, request):

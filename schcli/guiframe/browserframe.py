@@ -22,7 +22,9 @@ import wx
 import schcli.guictrl.ctrl
 import platform
 
-class SchBrowserFrame(wx.Frame):
+from schcli.guiframe.baseframe import SchBaseFrame
+
+class SchBrowserFrame(SchBaseFrame):
     """
         This is main window of pytigon application
     """
@@ -35,8 +37,12 @@ class SchBrowserFrame(wx.Frame):
         self.destroy_fun_tab = []
         self.idle_objects = []
         self.after_init = False
+        self.desktop = None
+        self._mgr = None
+        self.toolbar_interface = None
+        self.aTable = None
 
-        wx.Frame.__init__(self, parent, id, title, pos, size, style | wx.WANTS_CHARS, name)
+        SchBaseFrame.__init__(self, parent, id, gui_style, title, pos, size, style | wx.WANTS_CHARS, name)
         wx.GetApp().SetTopWindow(self)
 
         if platform.system() == "Windows":
@@ -45,53 +51,25 @@ class SchBrowserFrame(wx.Frame):
 
             self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
-        home_dir = wx.GetApp().get_working_dir()
-
-        dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/"]
-
-        for dirname in dirnames:
-            for ff in os.listdir(dirname):
-                if os.path.isdir(os.path.join(dirname, ff)):
-                    dirname2 = os.path.join(dirname, ff)
-                    pliki = []
-                    for f in os.listdir(dirname2):
-                        pliki.append(f)
-                    pliki.sort()
-
-                    for f in pliki:
-                        try_run=2
-                        while try_run>0:
-                            try:
-                                if os.path.isdir(os.path.join(dirname2, f)):
-                                    p = dirname2.split('/')
-                                    mod_name = p[-2] + "." + p[-1] + "." + f
-                                    x = p[-1] + '/' + f
-                                    if p[-1] == 'auto' or (wx.GetApp().plugins and x in wx.GetApp().plugins):
-                                        if '.__' in mod_name:
-                                            break
-                                        mod = __import__(mod_name)
-                                        mod_path = mod_name.split('.')
-                                        mod2 = getattr(mod, mod_path[1])
-                                        mod3 = getattr(mod2, mod_path[2])
-                                        destroy = mod3.init_plugin(wx.GetApp(), self, None, None, None, None, None)
-                                        if destroy != None:
-                                            self.destroy_fun_tab.append(destroy)
-                                break
-                            except:
-                                try_run = try_run - 1
-                                if try_run == 1:
-                                    compile(os.path.join(dirname2, f), wx.GetApp().scr_path)
-                                else:
-                                    import traceback
-                                    print("Error load plugin: ", mod_name)
-                                    print(sys.exc_info()[0])
-                                    print(traceback.print_exc())
-
         app = wx.GetApp()
-        ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
-        ctrl.load_url(app.base_address+"/")
+        self.init_plugins()
+        self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+        self.ctrl.load_url(app.base_address+"/")
         self.Bind(wx.EVT_CLOSE, self.on_close)
         self.Bind(wx.EVT_IDLE, self.on_idle)
+        self.Bind(wx.EVT_SIZE, self.on_size)
+        wx.CallAfter(self.SetSize, (800,600))
+
+
+    def on_size(self, event):
+        if event:
+            self.ctrl.SetSize(event.GetSize())
+            event.Skip()
+        else:
+            self.ctrl.SetSize(self.GetSize())
+
+    def get_menu_bar(self):
+        return None
 
     def on_idle(self, event):
         for obj in self.idle_objects:
