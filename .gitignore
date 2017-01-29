@@ -18,6 +18,36 @@ pip-delete-this-directory.txt
 /app_pack/schdevtools/schbuilder/migrations
 migrations/
 
-# PyCharm ide
 .idea/
 
+.gitignore
+
+global_db_settings.py
+
+# pytigon installation files
+*.ptig
+
+# font cache
+*.pkl
+
+app_pack/schbhp/
+app_pack/schdocs/
+app_pack/scheditor/
+app_pack/schhomemonitoring/
+app_pack/schintranet/
+app_pack/schit/
+app_pack/schmicroerp/
+app_pack/schodf/
+app_pack/schpolb/
+app_pack/schpytigondemo/
+app_pack/schpytigondoc/
+app_pack/schwebtrapper/
+app_pack/standard_components/
+
+ext_lib_cli_lin/
+ext_prg/
+install/
+last_error.html
+python/
+static_src/sch/__javascript__/
+tools/pytigon.xml

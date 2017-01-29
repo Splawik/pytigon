@@ -1,0 +1,15 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "plugin_form.html" %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            pass
+</script>
+{% endblock %}
+{% block form_title %}
+        Python shell
+{% endblock %}
+{% block body %}
+        <CTRLSHELL NAME="SHELL" WIDTH="100%" HEIGHT="100%" keymap="standard"></CTRLSHELL>
+{% endblock %}
+
