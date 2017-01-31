@@ -10,11 +10,12 @@ import os
 import sys
 import datetime
 from shutil import move
+import configparser
 
 from subprocess import call, Popen, PIPE
 
 from schlib.schfs.vfstools import extractall
-
+from schcli.guilib.tools import create_desktop_shortcut
 _ = wx.GetTranslation
 
 def make_page_title(wiz_pg, title):
@@ -65,7 +66,9 @@ class InstallWizard(Wizard):
         self.GetPageAreaSizer().Add(page1)
 
     def run(self):
-        return self.RunWizard(self.page1)
+        ret = self.RunWizard(self.page1)
+        wx.CallAfter(self.Destroy)
+        return ret
 
     def on_wiz_page_changing(self, event):
         if event.GetPage().lp == 2 and event.GetDirection():
@@ -129,6 +132,21 @@ class InstallWizard(Wizard):
             x.close()
             call([sys.executable, base_path + 'manage.py', 'syncdb'])
             call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
+
+        ini_file = os.path.join(extract_to, "install.ini")
+        created = False
+        if os.path.exists(ini_file):
+            config = configparser.ConfigParser()
+            config.read(ini_file)
+            if 'INSTALL' in config.sections():
+                install = config['INSTALL']
+                title = install.get('Title', self.app_name)
+                parameters = install.get('Parameters', '')
+                create_desktop_shortcut(self.app_name, title, parameters)
+
+        if not created:
+            create_desktop_shortcut(self.app_name, self.app_name)
+
         return True
 
 

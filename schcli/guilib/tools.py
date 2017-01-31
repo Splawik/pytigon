@@ -17,6 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import platform
+import os
 import wx
 from io import BytesIO
 
@@ -85,3 +87,59 @@ def standard_tab_colour():
         ('color_info', get_colour(wx.SYS_COLOUR_INFOBK, 1.5)),
         )
 
+
+def get_desktop_folder():
+    if platform.system() == "Windows":
+        import win32com.client
+        ws = win32com.client.Dispatch("wscript.shell")
+        return ws.SpecialFolders("Desktop")
+        #from win32com.shell import shell, shellcon
+        #return shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOP, None, 0)
+    else:
+        with open(os.path.expanduser("~/.config/user-dirs.dirs"), "rt") as f:
+            for line in f:
+                if 'XDG_DESKTOP_DIR' in line:
+                    return os.path.expanduser(line.split('=')[1].split('#')[0].strip().replace('$HOME','~').replace('"',''))
+        return os.path.expanduser("~/Desktop")
+
+
+def get_pytigon_path():
+    base_path = __file__.replace("tools.py", "")
+    if base_path == "":
+        base_path = os.getcwd()
+    pytigon_path = os.path.normpath(os.path.join(base_path, "../.."))
+    return pytigon_path
+
+
+DESKTOP_STR = """[Desktop Entry]
+Type=Application
+Name=%s
+Exec=%s/python/bin/python %s/pytigon.py %s
+Categories=Other
+NoDisplay=true
+MimeType=application/pytigon
+Terminal=false
+X-KeepTerminal=false
+Icon=%s/pytigon.svg
+"""
+
+def create_desktop_shortcut(app_name, title=None, parameters = ""):
+    title2 = title
+    parameters2 = parameters
+    if parameters2 == "":
+        parameters2 = app_name
+    if platform.system() == "Windows":
+        import win32com.client
+        ws = win32com.client.Dispatch("wscript.shell")
+        scut = ws.CreateShortcut(title2 +'.lnk')
+        scut.Description = title2
+        scut.TargetPath = os.path.join(get_pytigon_path(), "python/python")
+        scut.Arguments = os.path.join(get_pytigon_path(), "pytigon.py")  + " " + parameters2
+        scut.Save()
+    else:
+        fname = os.path.join(get_desktop_folder(), app_name+".desktop")
+        if not os.path.exists(fname):
+            pytigon_path = get_pytigon_path()
+            desktop_str2 = DESKTOP_STR % (title2, pytigon_path, pytigon_path, parameters2, pytigon_path)
+            with open(fname,"wt") as f:
+                f.write(desktop_str2)
