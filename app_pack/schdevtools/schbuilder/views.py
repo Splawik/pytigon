@@ -234,8 +234,19 @@ def gen(request, pk):
     
     apps = appset.schapp_set.all()
     
-    template_to_file(base_path, "license", "LICENSE.txt", {'appset': appset})
-    template_to_file(base_path, "readme", "README.txt",  {'appset': appset})
+    #template_to_file(base_path, "license", "LICENSE.txt", {'appset': appset})
+    #template_to_file(base_path, "readme", "README.txt",  {'appset': appset})
+    with open(os.path.join(base_path, "README.txt"), "wt") as f:
+        if appset.readme_file:
+            f.write(appset.readme_file)
+    with open(os.path.join(base_path, "LICENSE.txt"), "wt") as f:
+        if appset.license_file:
+            f.write(appset.license_file)
+    with open(os.path.join(base_path, "install.ini"), "wt") as f:
+        if appset.install_file:
+            f.write(appset.install_file)
+    
+    
     template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset})
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})

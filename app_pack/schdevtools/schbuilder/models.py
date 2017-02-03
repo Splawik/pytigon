@@ -287,6 +287,9 @@ class SChAppSet( models.Model):
     tablet_gui_type = models.CharField('Gui type for tablet', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
     user_param = models.TextField('User parameter', null=True, blank=True, editable=True, )
     custom_tags = models.TextField('Custom tags', null=True, blank=True, editable=True, )
+    readme_file = models.TextField('readme.txt', null=True, blank=True, editable=False, )
+    license_file = models.TextField('license.txt', null=True, blank=True, editable=False, )
+    install_file = models.TextField('install.ini', null=True, blank=True, editable=False, )
     
 
     def get_ext_apps(self):

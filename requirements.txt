@@ -18,3 +18,4 @@ cffi
 Pillow
 fs<2.0
 PyDispatcher
+pypyodbc

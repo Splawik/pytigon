@@ -158,7 +158,7 @@ class SimpleDataTable(SchGridTableBase):
             attrs.append(td.attr)
             childs = td.childs
             if childs:
-                for sys_id in childs:
+                for sys_id in sorted(list(childs)):
                     a = childs[sys_id].attrs
                     txt = ''
                     for atom in childs[sys_id].atom_list.atom_list:

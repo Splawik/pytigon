@@ -17,6 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import collections
 import wx
 
 from schcli.guilib.image import bitmap_from_href
@@ -32,6 +33,7 @@ class SchGridPanel(wx.Panel):
         wx.Panel.__init__(self, *args, **argv)
         self.vertical = False
         self._bitmaps = {'edit': 'wx.ART_FILE_OPEN', 'edit_inline': 'wx.ART_FILE_OPEN', 'delete': 'wx.ART_DELETE', 'view_row': 'wx.ART_INFORMATION'}
+        self._menu_buttons = collections.OrderedDict()
 
     def set_bitmap(self, action, path):
         self._bitmaps[action] = path
@@ -68,7 +70,18 @@ class SchGridPanel(wx.Panel):
                         b = bitmap_from_href(action['src'])
                     else:
                         b = bitmap_from_href("fa://fa-chevron-right?size=1")
-                self.toolbar.AddTool(self.lp,label,b,wx.NullBitmap,wx.ITEM_NORMAL,label,title)
+                if '(' in label and ')' in label:
+                    x = label.split('(')
+                    label1 = x[0]
+                    label2 = x[1].split(')')[0]
+                    if not label2 in self._menu_buttons:
+                        self.toolbar.AddTool(self.lp2, label2, b, wx.NullBitmap, wx.ITEM_NORMAL, label2, title)
+                        self._menu_buttons[label2] = []
+                        self.lp2 += 1
+                    tab_menu = self._menu_buttons[label2]
+                    tab_menu.append((self.lp, label1))
+                else:
+                    self.toolbar.AddTool(self.lp,label,b,wx.NullBitmap,wx.ITEM_NORMAL,label,title)
                 self.commands.append(name)
                 test = True
                 self.lp+=1
@@ -80,6 +93,7 @@ class SchGridPanel(wx.Panel):
         self.spanel = wx.ScrolledWindow(self, style=wx.VSCROLL if self.vertical else wx.HSCROLL)
         self.commands = []
         self.lp = 101
+        self.lp2 = 201
         (standard, akcje) = grid.get_action_list()
         if standard or akcje and len(akcje) > 0:
             if self.vertical:
@@ -128,6 +142,7 @@ class SchGridPanel(wx.Panel):
                     self._add_action(action)
             self.toolbar.Realize()
             self.toolbar.Bind(wx.EVT_TOOL, self.on_tool_click)
+            self.Bind(wx.EVT_MENU, self.on_tool_click)
 
             self.toolbar.SetSize(self.toolbar.GetBestSize())
             if self.vertical:
@@ -164,7 +179,16 @@ class SchGridPanel(wx.Panel):
 
     def on_tool_click(self, event):
         id = event.GetId()
-        self.grid.action(self.commands[id - 101])
+        if id>200:
+            id2 = id - 201
+            tab_menu = list(self._menu_buttons.values())[id2]
+            menu = wx.Menu()
+            for pos in tab_menu:
+                menu.Append(pos[0], pos[1])
+            self.PopupMenu(menu)
+            menu.Destroy()
+        else:
+            self.grid.action(self.commands[id - 101])
 
     def refresh(self, row):
         if self.grid.GetTable().GetNumberRows() > 0:

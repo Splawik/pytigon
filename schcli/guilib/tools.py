@@ -90,11 +90,10 @@ def standard_tab_colour():
 
 def get_desktop_folder():
     if platform.system() == "Windows":
-        import win32com.client
-        ws = win32com.client.Dispatch("wscript.shell")
+        from comtypes.client import CreateObject
+        from comtypes.gen import IWshRuntimeLibrary
+        ws = CreateObject("WScript.Shell")
         return ws.SpecialFolders("Desktop")
-        #from win32com.shell import shell, shellcon
-        #return shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOP, None, 0)
     else:
         with open(os.path.expanduser("~/.config/user-dirs.dirs"), "rt") as f:
             for line in f:
@@ -129,12 +128,16 @@ def create_desktop_shortcut(app_name, title=None, parameters = ""):
     if parameters2 == "":
         parameters2 = app_name
     if platform.system() == "Windows":
-        import win32com.client
-        ws = win32com.client.Dispatch("wscript.shell")
-        scut = ws.CreateShortcut(title2 +'.lnk')
+        from comtypes.client import CreateObject
+        from comtypes.gen import IWshRuntimeLibrary
+        ws = CreateObject("WScript.Shell")
+        fname = os.path.join(get_desktop_folder(), app_name+".lnk")
+        icon_name = os.path.join(get_pytigon_path(), 'pytigon.ico')
+        scut = ws.CreateShortcut(fname).QueryInterface(IWshRuntimeLibrary.IWshShortcut)
         scut.Description = title2
-        scut.TargetPath = os.path.join(get_pytigon_path(), "python/python")
+        scut.TargetPath = os.path.join(get_pytigon_path(), "python\pythonw.exe")
         scut.Arguments = os.path.join(get_pytigon_path(), "pytigon.py")  + " " + parameters2
+        scut.IconLocation = icon_name
         scut.Save()
     else:
         fname = os.path.join(get_desktop_folder(), app_name+".desktop")

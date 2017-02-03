@@ -80,3 +80,6 @@
                     li:::a class=btn btn-primary btn-sm,,,href=urls_code/form/editor..._(User Url)
                     li:::a class=btn btn-primary btn-sm,,,href=tasks_code/form/editor..._(User Tasks)
                     li:::a class=btn btn-primary btn-sm,,,href=doc/form/editor..._(Doc)
+                    li:::a class=btn btn-primary btn-sm,,,href=readme_file/form/editor...readme.txt
+                    li:::a class=btn btn-primary btn-sm,,,href=license_file/form/editor...license.txt
+                    li:::a class=btn btn-primary btn-sm,,,href=install_file/form/editor...install.ini
