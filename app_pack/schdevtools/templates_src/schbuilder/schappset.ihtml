@@ -32,7 +32,7 @@
                 def app_process():
                     cmd = wx.GetApp().scr_path+"/pytigon.py"
                     appset = href.split('_')[-1].split('?')[0]
-                    arg = "-a "+appset
+                    arg = " "+appset
                     subprocess.call([sys.executable, cmd, arg], shell=False)
                 threading.Thread(target = app_process).start()
                 return True
@@ -77,7 +77,7 @@
         field_edit/readme_file,readme.txt(install),readme_txt,_top
         field_edit/license_file,license.txt(install),license_txt,_top
         field_edit/install_file,install.ini(install),install_ini,_top
-
+        field_edit/encoded_zip,encoded zip file(install),encoded_zip,_top
 
 %% row_edit
     % form:

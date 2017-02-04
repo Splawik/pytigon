@@ -23,7 +23,8 @@ import datetime
 
 import shutil
 import json
-from base64 import b32decode
+import zipfile
+import base64
 from schlib.schviews.viewtools import change_pos, duplicate_row
 import codecs
 import signal, os, ctypes 
@@ -220,7 +221,6 @@ def gen(request, pk):
     appset = models.SChAppSet.objects.get(id=pk)
     base_path = settings.ROOT_PATH+"/app_pack/"+appset.name
     src_path = settings.ROOT_PATH+"/app_pack/schdevtools/"
-    object_list = []
     object_list = []
     
     if not os.path.exists(base_path):
@@ -459,6 +459,12 @@ def gen(request, pk):
                     
         if file_name and len(file_content)>0:
             output(file_name, file_append, file_content)
+    
+    if appset.encoded_zip:
+        bcontent = base64.decodebytes(appset.encoded_zip.encode('utf-8'))
+        bstream = io.BytesIO(bcontent)
+        with zipfile.ZipFile(bstream, "r") as izip:
+            izip.extractall(base_path)
         
     object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
         
@@ -808,14 +814,21 @@ def installer(request, pk):
 
 def restart_server(request):
     
-    if 'mod_wsgi.process_group' in request.environ:
-        if request.environ['mod_wsgi.process_group'] != '':
-            os.kill(os.getpid(), signal.SIGINT)
-            print("restart_1")
+    if platform.system() == "Linux":
+        if 'mod_wsgi.process_group' in request.environ:
+            if request.environ['mod_wsgi.process_group'] != '':
+                os.kill(os.getpid(), signal.SIGINT)
+                print("restart_1")
         else:
-            ctypes.windll.libhttpd.ap_signal_parent(1)
-            print("restart_2")
-    return HttpResponse('<html><body>Hello world</body></html>')
+            try:
+                import uwsgi
+                uwsgi.reload()
+            except:
+                pass
+    else:
+        ctypes.windll.libhttpd.ap_signal_parent(1)
+        print("restart_2")
+    return HttpResponse('<html><body>Restarted</body></html>')
     
 
 

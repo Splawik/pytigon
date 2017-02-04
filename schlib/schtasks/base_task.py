@@ -47,8 +47,10 @@ def enqueue_error(process, input_queue, output_queue, id, status):
         s = process.stderr.readline()
         if s:
             if type(s) == bytes:
+                print('X1', id)
                 output_queue.put((id, 'log', s.decode('utf-8'), {}))
             else:
+                print('X2', id)
                 output_queue.put((id, 'log', s, {}))
         if process.returncode is None:
             process.poll()
@@ -56,6 +58,7 @@ def enqueue_error(process, input_queue, output_queue, id, status):
             input_queue.put("^C")
             s = process.stdout.read()
             if s:
+                print('X3', id)
                 output_queue.put((id, 'log', s, {}))
             break
 
@@ -67,6 +70,7 @@ def write_to_output_queue(txt, output_queue, id, status):
         s2 = txt
     if status==3:
         s2 = ansi_to_txt(s2)
+    print('X4', id)
     output_queue.put((id, 'log', s2, {}))
 
 
@@ -77,6 +81,7 @@ class CommunicationProxy():
         self.output_queue = output_queue
 
     def log(self, msg):
+        print('X5', id)
         self.output_queue.put((self.id, 'log', msg, {}))
 
     def add_task(self, request_or_username, title, func, user_parm):
@@ -118,25 +123,26 @@ def run_func(func, cproxy, args, kwargs):
         except:
             print("cmd error:", cmd)
 
-        t1 = Thread(target=enqueue_error, args=(p, cproxy.input_queue, cproxy.output_queue, id, status), name="enqueue_error")
+        print(id, type(id))
+        t1 = Thread(target=enqueue_error, args=(p, cproxy.input_queue, cproxy.output_queue, cproxy.id, status), name="enqueue_error")
         t1.daemon = True
         t1.start()
 
-        t2 = Thread(target=enqueue_input, args=(p, cproxy.input_queue, cproxy.output_queue, id, status), name="enqueue_input")
+        t2 = Thread(target=enqueue_input, args=(p, cproxy.input_queue, cproxy.output_queue, cproxy.id, status), name="enqueue_input")
         t2.daemon = True
         t2.start()
 
         while 1:
             s = p.stdout.readline()
             if s:
-                write_to_output_queue(s, cproxy.output_queue, id, status)
+                write_to_output_queue(s, cproxy.output_queue, cproxy.id, status)
             if p.returncode is None:
                 p.poll()
             else:
                 cproxy.input_queue.put("^C")
                 s = p.stdout.read()
                 if s:
-                    write_to_output_queue(s, cproxy.output_queue, id, status)
+                    write_to_output_queue(s, cproxy.output_queue, cproxy.id, status)
                 break
 
         t1.join()

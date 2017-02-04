@@ -290,6 +290,7 @@ class SChAppSet( models.Model):
     readme_file = models.TextField('readme.txt', null=True, blank=True, editable=False, )
     license_file = models.TextField('license.txt', null=True, blank=True, editable=False, )
     install_file = models.TextField('install.ini', null=True, blank=True, editable=False, )
+    encoded_zip = models.TextField('Encoded zip file', null=True, blank=True, editable=False, )
     
 
     def get_ext_apps(self):

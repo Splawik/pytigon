@@ -40,7 +40,7 @@
             s = http.str()
             http.clear_ptr()
             lines = self.schjson.loads(s)
-            self.cmd.AppendTexts(lines)
+            self.cmd.append_texts(lines)
             for line in lines:
                 if line!="":
                     if line.startswith('$$$'):

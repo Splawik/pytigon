@@ -1,0 +1,26 @@
+[Added Associations]
+audio/x-wav=sound-juicer.desktop;
+application/octet-stream=gedit.desktop;
+application/x-font-otf=org.gnome.font-viewer.desktop;
+text/html=gedit.desktop;
+application/x-deb=ubuntu-software-center.desktop;
+application/vnd.oasis.opendocument.spreadsheet=gedit.desktop;
+application/zip=gedit.desktop;
+application/x-ms-dos-executable=wine.desktop;
+video/mp4=org.gnome.Totem.desktop;
+x-content/ebook-reader=calibre-gui.desktop;
+text/plain=vlc.desktop;totem.desktop;gedit.desktop;geany.desktop;
+application/text=vlc.desktop;
+inode/directory=pcmanfm.desktop;
+image/jpeg=nomacs.desktop;
+application/vnd.debian.binary-package=kde4-gdebi-kde.desktop;
+
+[Default Applications]
+application/x-ms-dos-executable=wine.desktop
+x-content/ebook-reader=calibre-gui.desktop
+inode/directory=pcmanfm.desktop
+image/jpeg=nomacs.desktop
+text/plain=geany.desktop
+application/pytigon=pytigon.desktop
+
+[Removed Associations]

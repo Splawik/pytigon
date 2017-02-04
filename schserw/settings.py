@@ -187,6 +187,8 @@ else:
 DEFAULT_FILE_STORAGE = 'fs.expose.django_storage.FSStorage'
 DEFAULT_FILE_STORAGE_FS = MountFS()
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
+
 try:
     from schserw.settings_local import *
 except:
