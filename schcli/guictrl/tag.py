@@ -251,7 +251,6 @@ class CtrlTag(TableTag):
                 (width2, height) = self.get_parent_window().GetParent().GetParent().GetSize()
 
             m = self._get_parent_pseudo_margins()
-
             height = (height - m[2]) - m[3] - 3
             if '99.9%' in self.attrs['height']:
                 height -= wx.Button.GetDefaultSize()[1]

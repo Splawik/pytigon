@@ -64,6 +64,9 @@ class HttpErrorDialog(wx.Dialog):
         sizer.Fit(self)
         self.label.load_str(text)
 
+    def set_acc_key_tab(self, ctrl, tab):
+        pass
+
 
 def http_error(parent, content):
     """Show form with error content returned by http server

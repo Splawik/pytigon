@@ -907,10 +907,9 @@ class SchForm(ScrolledPanel):
                     edit_name = title
                 else:
                     edit_name = href
-                okno = self.new_main_page('^standard/editor/editor.html', href,
-                                          None)
-                okno.body['EDITOR'].SetValue(s)
-                okno.body['EDITOR'].GotoPos(0)
+                okno = self.new_main_page('^standard/editor/editor.html', href, None)
+                okno.body.EDITOR.SetValue(s)
+                okno.body.EDITOR.GotoPos(0)
             else:
                 if 'application' in http.ret_content_type:
                     wx.GetApp().GetTopWindow().open_binary_data(http, href)

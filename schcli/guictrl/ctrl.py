@@ -697,7 +697,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
             if newRow < self.grid.GetTable().GetNumberRows():
                 self.grid.SetGridCursor(newRow, 0)
                 self.grid.MakeCellVisible(newRow, 0)
-        if self.grid.last_action == 'edit':
+        else: # self.grid.last_action == 'edit':
             if oldRow < self.grid.GetTable().GetNumberRows():
                 self.grid.SetGridCursor(oldRow, 0)
                 self.grid.MakeCellVisible(oldRow, 0)

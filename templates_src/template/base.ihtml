@@ -187,7 +187,8 @@
 
         %% list_page
 	        %% list_content_start
-	            <div class="panel panel-content">
+	            % if standard_web_browser:
+	                <div class="panel panel-content">
             %% list_content_header
                 div
                     div class=table,,,width=100%
@@ -283,7 +284,8 @@
 	        %% list_content_footer
 
 	        %% list_content_end
-	            </div>
+	            % if standard_web_browser:
+	                </div>
 
         %% list_page_footer
 

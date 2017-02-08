@@ -25,6 +25,7 @@ import shutil
 import json
 import zipfile
 import base64
+import platform
 from schlib.schviews.viewtools import change_pos, duplicate_row
 import codecs
 import signal, os, ctypes 

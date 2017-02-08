@@ -73,15 +73,21 @@
         </table>
 {% endblock %}
 {% block list_content_header %}
-        {% widget class='menu' id='add_field' title='New field' %}
-                {% for item in object_list.model|choices_from_field:"type" %}
-                        <li>
-                                <a class="btn btn-primary btn-sm" href="../../{{item.0}}/add">
-                                        {{item.0}}
-                                </a>
-                        </li>
-                {% endfor %}
-        {% endwidget %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                {% widget class='menu' id='add_field' title='New field' %}
+                                        {% for item in object_list.model|choices_from_field:"type" %}
+                                                <li>
+                                                        <a class="btn btn-primary btn-sm" href="../../{{item.0}}/add">
+                                                                {{item.0}}
+                                                        </a>
+                                                </li>
+                                        {% endfor %}
+                                {% endwidget %}
+                        </td>
+                </tr>
+        </table>
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
