@@ -355,11 +355,9 @@ class CtrlTag(TableTag):
     def render(self, dc):
         if dc.rec:
             if self.obj:
-                self.obj.SetSize(dc.x + self.padding[0], dc.y
-                                        + self.padding[2], (self.width
-                                        - self.padding[0]) - self.padding[1],
-                                       (self.height - self.padding[2])
-                                        - self.padding[3])
+                self.obj.SetSize(dc.x + self.padding[0], dc.y + self.padding[2],
+                                 (self.width - self.padding[0]) - self.padding[1],
+                                 (self.height - self.padding[2]) - self.padding[3])
                 x2 = self.obj.GetSize()
         return (self.height, False)
 
@@ -569,8 +567,8 @@ def input_to_ctrltab(parent, attrs):
         width_text = 10 * int(is_null(attrs['size'], 20))
         if width_text > 400:
             width_text = 8 * int(is_null(attrs['size'], 20))
-        if width_text > 500:
-            width_text = 500
+        if width_text > 480:
+            width_text = 480
         attrs_ret['width'] = str(width_text)
     if 'maxlength' in attrs and type in ('text', ):
         attrs_ret['maxlength'] = str(is_null(attrs['maxlength'], '80'))
@@ -610,7 +608,10 @@ def textarea_to_ctrltab(parent, attrs):
     attrs_ret = {}
     if not 'width' in attrs:
         if 'cols' in attrs:
-            attrs_ret['width'] = str(7 * int(is_null(attrs['cols'], '80')))
+            width = 7 * int(is_null(attrs['cols'], '80'))
+            if width > 480:
+                width = 480
+            attrs_ret['width'] = str(width)
         else:
             attrs_ret['width'] = '100%'
     else:

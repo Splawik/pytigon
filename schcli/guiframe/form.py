@@ -263,7 +263,7 @@ class SchForm(ScrolledPanel):
             if self.no_vscrollbar:
                 self.wxdc = DcDc(dc, calc_only=False, width=w - 1, height=-1)
             else:
-                self.wxdc = DcDc(dc, calc_only=False, width=w - 1 - wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y),
+                self.wxdc = DcDc(dc, calc_only=False, width=w - 1 - wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X),
                                  height=-1)
             p = HtmlViewerParser(dc=self.wxdc, calc_only=False,
                                  init_css_str=self.get_css(), css_type=1)
