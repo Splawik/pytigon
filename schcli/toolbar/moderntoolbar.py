@@ -137,8 +137,8 @@ class ModernToolbarPanel(ToolbarPanel, RB.RibbonPanel):
 
 class ModernToolbarPage(ToolbarPage, RB.RibbonPage):
     def __init__(self, parent_bar, title, kind=ToolbarPage.TYPE_PAGE_NORMAL):
-        RB.RibbonPage.__init__(self, parent_bar, wx.ID_ANY, title)
         ToolbarPage.__init__(self, parent_bar, title, kind)
+        RB.RibbonPage.__init__(self, parent_bar, wx.ID_ANY, self.title)
 
     def create_panel(self, title, kind=ToolbarPanel.TYPE_PANEL_TOOLBAR):
         return ModernToolbarPanel(self, title, kind)

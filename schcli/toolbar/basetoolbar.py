@@ -233,7 +233,8 @@ class ToolbarPage(object):
                 TYPE_PAGE_NORMAL = 0
         """
         self.parent_bar = parent_bar
-        self.title = title
+        self.name = title
+        self.title = _(title)
         self.kind = kind
         self.panels = []
 
@@ -320,7 +321,7 @@ class ToolbarBar(object):
         Args: see ToolbarPage constructor
         """
         for page in self.pages:
-            if page.title == title and page.kind == kind:
+            if page.name == title and page.kind == kind:
                 return page
         p = self.create_page(title, kind)
         if not self.main_page:
@@ -344,7 +345,7 @@ class ToolbarBar(object):
             kind - type of new panel - see ToolbarPanel constructor.
         """
         if not self.main_page:
-            self.append(_("main"))
+            self.append('main tools')
         return self.main_page.create_panel(title, kind)
 
     def bind(self, fun, id=wx.ID_ANY, e=None):
@@ -376,9 +377,9 @@ class ToolbarBar(object):
             parameters - parameters for http request
         """
         if not toolbar_page:
-            u_name = 'main'
-            page_name = _('main')
-            panel_name = 'main'
+            u_name = 'main tools'
+            page_name = _('main tools')
+            panel_name = 'main tools'
         else:
             u_name = toolbar_page
             names = toolbar_page.split('__')

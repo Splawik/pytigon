@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: pytigon\n"
@@ -9,471 +10,355 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.3\n"
-"X-Poedit-Basepath: .\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"X-Poedit-SearchPath-0: ..\\..\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: ..\../pytigon.py:326
+#: ./schcli/guilib/pytigon_install.py:47
 msgid "Program description"
 msgstr "Nazwa programu"
 
-#: ..\../pytigon.py:328
+#: ./schcli/guilib/pytigon_install.py:49
 msgid "License"
 msgstr "Licencja"
 
-#: ..\../pytigon.py:329
+#: ./schcli/guilib/pytigon_install.py:50
 msgid "Run"
 msgstr "Uruchom"
 
-#: ..\../pytigon.py:340
+#: ./schcli/guilib/pytigon_install.py:61
 msgid "Accept"
 msgstr "Akceptuj"
 
-#: ..\../pytigon.py:342
+#: ./schcli/guilib/pytigon_install.py:63
 msgid "Run the installed program or cancel"
 msgstr "Uruchom zainstalowany programu lub anuluj"
 
-#: ..\../pytigon.py:354
+#: ./schcli/guilib/pytigon_install.py:77
 msgid "You must accept the license or cancel the installation!"
 msgstr "Musisz zaakceptować licencję albo przerwać instalację!"
 
-#: ..\../pytigon.py:355 ..\../pytigon.py:362 ..\../pytigon.py:367
-#: ..\../pytigon.py:423
+#: ./schcli/guilib/pytigon_install.py:78 ./schcli/guilib/pytigon_install.py:85
+#: ./schcli/guilib/pytigon_install.py:90
+#: ./schcli/guilib/pytigon_install.py:168
 msgid "Installation"
 msgstr "Instalacja"
 
-#: ..\../pytigon.py:362 ..\../pytigon.py:423
+#: ./schcli/guilib/pytigon_install.py:85
+#: ./schcli/guilib/pytigon_install.py:168
 msgid "Installation error!"
 msgstr "Błąd instalacji"
 
-#: ..\../pytigon.py:366
+#: ./schcli/guilib/pytigon_install.py:89
 msgid "Program installed, use the uninstaller!"
 msgstr "Program zainstalowany, użyj deinstalatora!"
 
-#: ..\../pytigon.py:435
-msgid "Pytigon system"
-msgstr "System Pytigon"
-
-#: ..\../pytigon.py:507
+#: ./schcli/pytigon.py:636
 msgid "select the application to run"
 msgstr "Wybierz aplikację do uruchomienia"
 
-#: ..\../pytigon.py:668
+#: ./schcli/pytigon.py:512
 msgid "Pytigon - login"
 msgstr "Pytigon - logowanie"
 
-#: ..\../pytigon.py:686
+#: ./schcli/pytigon.py:537
 msgid "Failed login attempt!"
 msgstr "Nieudana próba logowania"
 
-#: ..\../guilib/logindialog.py:53
+#: ./schcli/guilib/logindialog.py:39
 msgid "User name:"
 msgstr "Nazwa użytkownika:"
 
-#: ..\../guilib/logindialog.py:55
+#: ./schcli/guilib/logindialog.py:41
 msgid "Password:"
 msgstr "Hasło"
 
-#: ..\../locale/pl/pygettext.py:23
-#, python-format
-msgid ""
-"pygettext -- Python equivalent of xgettext(1)\n"
-"\n"
-"Many systems (Solaris, Linux, Gnu) provide extensive tools that ease the\n"
-"internationalization of C programs. Most of these tools are independent of\n"
-"the programming language and can be used from within Python programs.\n"
-"Martin von Loewis' work[1] helps considerably in this regard.\n"
-"\n"
-"There's one problem though; xgettext is the program that scans source code\n"
-"looking for message strings, but it groks only C (or C++). Python\n"
-"introduces a few wrinkles, such as dual quoting characters, triple quoted\n"
-"strings, and raw strings. xgettext understands none of this.\n"
-"\n"
-"Enter pygettext, which uses Python's standard tokenize module to scan\n"
-"Python source code, generating .pot files identical to what GNU xgettext[2]\n"
-"generates for C and C++ code. From there, the standard GNU tools can be\n"
-"used.\n"
-"\n"
-"A word about marking Python strings as candidates for translation. GNU\n"
-"xgettext recognizes the following keywords: gettext, dgettext, dcgettext,\n"
-"and gettext_noop. But those can be a lot of text to include all over your\n"
-"code. C and C++ have a trick: they use the C preprocessor. Most\n"
-"internationalized C source includes a #define for gettext() to _() so that\n"
-"what has to be written in the source is much less. Thus these are both\n"
-"translatable strings:\n"
-"\n"
-"    gettext(\"Translatable String\")\n"
-"    _(\"Translatable String\")\n"
-"\n"
-"Python of course has no preprocessor so this doesn't work so well.  Thus,\n"
-"pygettext searches only for _() by default, but see the -k/--keyword flag\n"
-"below for how to augment this.\n"
-"\n"
-" [1] http://www.python.org/workshops/1997-10/proceedings/loewis.html\n"
-" [2] http://www.gnu.org/software/gettext/gettext.html\n"
-"\n"
-"NOTE: pygettext attempts to be option and feature compatible with GNU\n"
-"xgettext where ever possible. However some options are still missing or are\n"
-"not fully implemented. Also, xgettext's use of command line switches with\n"
-"option arguments is broken, and in these cases, pygettext just defines\n"
-"additional switches.\n"
-"\n"
-"Usage: pygettext [options] inputfile ...\n"
-"\n"
-"Options:\n"
-"\n"
-"    -a\n"
-"    --extract-all\n"
-"        Extract all strings.\n"
-"\n"
-"    -d name\n"
-"    --default-domain=name\n"
-"        Rename the default output file from messages.pot to name.pot.\n"
-"\n"
-"    -E\n"
-"    --escape\n"
-"        Replace non-ASCII characters with octal escape sequences.\n"
-"\n"
-"    -D\n"
-"    --docstrings\n"
-"        Extract module, class, method, and function docstrings.  These do\n"
-"        not need to be wrapped in _() markers, and in fact cannot be for\n"
-"        Python to consider them docstrings. (See also the -X option).\n"
-"\n"
-"    -h\n"
-"    --help\n"
-"        Print this help message and exit.\n"
-"\n"
-"    -k word\n"
-"    --keyword=word\n"
-"        Keywords to look for in addition to the default set, which are:\n"
-"        %(DEFAULTKEYWORDS)s\n"
-"\n"
-"        You can have multiple -k flags on the command line.\n"
-"\n"
-"    -K\n"
-"    --no-default-keywords\n"
-"        Disable the default set of keywords (see above).  Any keywords\n"
-"        explicitly added with the -k/--keyword option are still recognized.\n"
-"\n"
-"    --no-location\n"
-"        Do not write filename/lineno location comments.\n"
-"\n"
-"    -n\n"
-"    --add-location\n"
-"        Write filename/lineno location comments indicating where each\n"
-"        extracted string is found in the source.  These lines appear before\n"
-"        each msgid.  The style of comments is controlled by the -S/--style\n"
-"        option.  This is the default.\n"
-"\n"
-"    -o filename\n"
-"    --output=filename\n"
-"        Rename the default output file from messages.pot to filename.  If\n"
-"        filename is `-' then the output is sent to standard out.\n"
-"\n"
-"    -p dir\n"
-"    --output-dir=dir\n"
-"        Output files will be placed in directory dir.\n"
-"\n"
-"    -S stylename\n"
-"    --style stylename\n"
-"        Specify which style to use for location comments.  Two styles are\n"
-"        supported:\n"
-"\n"
-"        Solaris  # File: filename, line: line-number\n"
-"        GNU      #: filename:line\n"
-"\n"
-"        The style name is case insensitive.  GNU style is the default.\n"
-"\n"
-"    -v\n"
-"    --verbose\n"
-"        Print the names of the files being processed.\n"
-"\n"
-"    -V\n"
-"    --version\n"
-"        Print the version of pygettext and exit.\n"
-"\n"
-"    -w columns\n"
-"    --width=columns\n"
-"        Set width of output to columns.\n"
-"\n"
-"    -x filename\n"
-"    --exclude-file=filename\n"
-"        Specify a file that contains a list of strings that are not be\n"
-"        extracted from the input files.  Each string to be excluded must\n"
-"        appear on a line by itself in the file.\n"
-"\n"
-"    -X filename\n"
-"    --no-docstrings=filename\n"
-"        Specify a file that contains a list of files (one per line) that\n"
-"        should not have their docstrings extracted.  This is only useful in\n"
-"        conjunction with the -D option above.\n"
-"\n"
-"If `inputfile' is -, standard input is read.\n"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:179
-#, python-format
-msgid ""
-"# SOME DESCRIPTIVE TITLE.\n"
-"# Copyright (C) YEAR ORGANIZATION\n"
-"# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.\n"
-"#\n"
-"msgid \"\"\n"
-"msgstr \"\"\n"
-"\"Project-Id-Version: PACKAGE VERSION\\n\"\n"
-"\"POT-Creation-Date: %(time)s\\n\"\n"
-"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
-"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
-"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
-"\"MIME-Version: 1.0\\n\"\n"
-"\"Content-Type: text/plain; charset=CHARSET\\n\"\n"
-"\"Content-Transfer-Encoding: ENCODING\\n\"\n"
-"\"Generated-By: pygettext.py %(version)s\\n\"\n"
-"\n"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:427
-#, python-format
-msgid "*** %(file)s:%(lineno)s: Seen unexpected token \"%(token)s\""
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:478
-#, python-format
-msgid "# File: %(filename)s, line: %(lineno)d"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:485
-#, python-format
-msgid " %(filename)s:%(lineno)d"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:562
-#, python-format
-msgid "Invalid value for --style: %s"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:570
-#, python-format
-msgid "pygettext.py (xgettext for Python) %s"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:576
-#, python-format
-msgid "--width argument must be an integer: %s"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:604
-#, python-format
-msgid "Can't read --exclude-file: %s"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:623
-msgid "Reading standard input"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:628
-#, python-format
-msgid "Working on %s"
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:665
-#, python-format
-msgid "*** Seen unexpected token \"%(token)s\""
-msgstr ""
-
-#: ..\../locale/pl/pygettext.py:666
-msgid "morethanonestring"
-msgstr ""
-
-#: ..\../toolbar/schmoderntoolbar.py:412 ..\../toolbar/schtreetoolbar.py:182
-msgid "Tools main"
-msgstr "Narzędzia główne"
-
-#: ..\../toolbar/standardtoolbarbuttons.py:166
+#: ./schcli/toolbar/standardtoolbarbuttons.py:198
 msgid "File"
 msgstr "Plik"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:171
+#: ./schcli/toolbar/standardtoolbarbuttons.py:202
 msgid "Exit"
 msgstr "Wyjście"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:177
+#: ./schcli/toolbar/standardtoolbarbuttons.py:207
 msgid "Open"
 msgstr "Otwórz"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:183
+#: ./schcli/toolbar/standardtoolbarbuttons.py:213
 msgid "Save"
 msgstr "Zapisz"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:186
+#: ./schcli/toolbar/standardtoolbarbuttons.py:217
 msgid "Save as"
 msgstr "Zapisz jako"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:193
-#: ..\../toolbar/standardtoolbarbuttons.py:198
-#: ..\../toolbar/standardtoolbarbuttons.py:486
+#: ./schcli/toolbar/standardtoolbarbuttons.py:224
+#: ./schcli/toolbar/standardtoolbarbuttons.py:228
+#: ./schcli/toolbar/standardtoolbarbuttons.py:487
 msgid "Print"
 msgstr "Drukuj"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:205
+#: ./schcli/toolbar/standardtoolbarbuttons.py:236
 msgid "Clipboard"
 msgstr "Schowek"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:209
+#: ./schcli/toolbar/standardtoolbarbuttons.py:239
 msgid "Copy"
 msgstr "Kopiuj"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:211
+#: ./schcli/toolbar/standardtoolbarbuttons.py:241
 msgid "Cut"
 msgstr "Wytnij"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:213
+#: ./schcli/toolbar/standardtoolbarbuttons.py:243
 msgid "Paste"
 msgstr "Wklej"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:219
+#: ./schcli/toolbar/standardtoolbarbuttons.py:253
 msgid "Operations"
 msgstr "Operacje"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:222
+#: ./schcli/toolbar/standardtoolbarbuttons.py:255
 msgid "Undo"
 msgstr "Cofnij"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:224
+#: ./schcli/toolbar/standardtoolbarbuttons.py:257
 msgid "Redo"
 msgstr "Wznów"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:226
-#: ..\../toolbar/standardtoolbarbuttons.py:494
+#: ./schcli/toolbar/standardtoolbarbuttons.py:259
+#: ./schcli/toolbar/standardtoolbarbuttons.py:495
 msgid "Find"
 msgstr "Znajdź"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:230
+#: ./schcli/toolbar/standardtoolbarbuttons.py:263
 msgid "File manager"
 msgstr "Menadżer plików"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:232
+#: ./schcli/toolbar/standardtoolbarbuttons.py:264
 msgid "Editor"
 msgstr "Edytor"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:239
+#: ./schcli/toolbar/standardtoolbarbuttons.py:275
 msgid "Browser"
 msgstr "Przeglądarka"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:244
+#: ./schcli/toolbar/standardtoolbarbuttons.py:279
 msgid "Back"
 msgstr "Wstecz"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:247
+#: ./schcli/toolbar/standardtoolbarbuttons.py:281
 msgid "Forward"
 msgstr "Do przodu"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:249
+#: ./schcli/toolbar/standardtoolbarbuttons.py:287
 msgid "Stop"
 msgstr "Stop"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:252
+#: ./schcli/toolbar/standardtoolbarbuttons.py:289
 msgid "Refresh"
 msgstr "Odśwież"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:255
+#: ./schcli/toolbar/standardtoolbarbuttons.py:291
 msgid "Add bookmark"
 msgstr "Dodaj zakładkę"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:259
+#: ./schcli/toolbar/standardtoolbarbuttons.py:293
 msgid "New page"
 msgstr "Nowa strona"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:266
+#: ./schcli/toolbar/standardtoolbarbuttons.py:306
 msgid "Address"
 msgstr "Adres"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:487
+#: ./schcli/toolbar/standardtoolbarbuttons.py:488
 msgid "Print preview"
 msgstr "Podgląd wydruku"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:488
+#: ./schcli/toolbar/standardtoolbarbuttons.py:489
 msgid "Printer settings"
 msgstr "Ustawienia drukarki"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:495
+#: ./schcli/toolbar/standardtoolbarbuttons.py:496
 msgid "Replace"
 msgstr "Zamień"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:509
+#: ./schcli/toolbar/standardtoolbarbuttons.py:510
 msgid "View"
 msgstr "Widok"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:509
+#: ./schcli/toolbar/standardtoolbarbuttons.py:510
 msgid "Zoom"
 msgstr "Powiększenie"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:509
+#: ./schcli/toolbar/standardtoolbarbuttons.py:510
 msgid "Block elements"
 msgstr "Zablokowane elementy"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:510
+#: ./schcli/toolbar/standardtoolbarbuttons.py:511
 msgid "View elements"
 msgstr "Pokaż elementy"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:510
+#: ./schcli/toolbar/standardtoolbarbuttons.py:511
 msgid "View page source"
 msgstr "Pokaż źródło strony"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:511
+#: ./schcli/toolbar/standardtoolbarbuttons.py:512
 msgid "Edit page"
 msgstr "Edytuj stronę"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:512
+#: ./schcli/toolbar/standardtoolbarbuttons.py:513
 msgid "History"
 msgstr "Historia"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:512
+#: ./schcli/toolbar/standardtoolbarbuttons.py:513
 msgid "Show history panel"
 msgstr "Pokaż panel historii"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:513
+#: ./schcli/toolbar/standardtoolbarbuttons.py:514
 msgid "Clear history"
 msgstr "Wyczyść historię przeglądania"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:514
+#: ./schcli/toolbar/standardtoolbarbuttons.py:515
 msgid "Bookmarks"
 msgstr "Zakładki"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:514
+#: ./schcli/toolbar/standardtoolbarbuttons.py:515
 msgid "Add to bookmarks"
 msgstr "Dodaj zakładkę"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:515
+#: ./schcli/toolbar/standardtoolbarbuttons.py:516
 msgid "Show bookmarks panel"
 msgstr "Pokaż panel zakładek"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:516
+#: ./schcli/toolbar/standardtoolbarbuttons.py:517
 msgid "Downloads"
 msgstr "Pobieranie"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:516
-#: ..\../toolbar/standardtoolbarbuttons.py:518
+#: ./schcli/toolbar/standardtoolbarbuttons.py:517
+#: ./schcli/toolbar/standardtoolbarbuttons.py:519
 msgid "Show download panel"
 msgstr "Pokaż panel pobierania"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:516
-#: ..\../toolbar/standardtoolbarbuttons.py:518
-#: ..\../toolbar/standardtoolbarbuttons.py:520
+#: ./schcli/toolbar/standardtoolbarbuttons.py:517
+#: ./schcli/toolbar/standardtoolbarbuttons.py:519
+#: ./schcli/toolbar/standardtoolbarbuttons.py:521
 msgid "Options"
 msgstr "Opcje"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:518
+#: ./schcli/guiframe/appframe.py:240
+#: ./schcli/toolbar/standardtoolbarbuttons.py:519
 msgid "Tools"
 msgstr "Narzędzia"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:520
+#: ./schcli/toolbar/standardtoolbarbuttons.py:521
 msgid "General"
 msgstr "Główne"
 
-#: ..\../toolbar/standardtoolbarbuttons.py:520
+#: ./schcli/toolbar/standardtoolbarbuttons.py:521
 msgid "Black list"
 msgstr "Czarna lista"
+
+#: ./schcli/guictrl/grid/grid.py:155
+msgid "Data not saved, save now?"
+msgstr ""
+
+#: ./schcli/guictrl/grid/grid.py:156 ./schcli/pytigon.py:558
+msgid "Pytigon"
+msgstr ""
+
+#: ./schcli/guictrl/grid/gridpanel.py:110
+#: ./schcli/guictrl/grid/gridpanel.py:114
+#: ./schcli/guictrl/grid/gridpanel.py:115
+msgid "Edit"
+msgstr ""
+
+#: ./schcli/guictrl/grid/gridpanel.py:119
+#: ./schcli/guictrl/grid/gridpanel.py:123
+#: ./schcli/guictrl/grid/gridpanel.py:124
+msgid "Delete"
+msgstr ""
+
+#: ./schcli/guictrl/grid/gridpanel.py:128
+msgid "view_row"
+msgstr ""
+
+#: ./schcli/guictrl/grid/gridpanel.py:132
+#: ./schcli/guictrl/grid/gridpanel.py:133
+msgid "View row"
+msgstr ""
+
+#: ./schcli/guictrl/popup/select2.py:224 ./schcli/guictrl/popup/select2.py:227
+msgid "Select item"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:218
+msgid "Menu"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:242
+msgid "Header"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:244
+msgid "Footer"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:246
+msgid "Desktop"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:334
+msgid "Show It"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:336
+msgid "Minimize It"
+msgstr ""
+
+#: ./schcli/guiframe/appframe.py:339
+msgid "Close It"
+msgstr ""
+
+#: ./schcli/guiframe/form.py:482
+msgid "page source"
+msgstr ""
+
+#: ./schcli/guilib/httperror.py:55
+msgid "Continue"
+msgstr ""
+
+#: ./schcli/guilib/httperror.py:58
+msgid "Break"
+msgstr ""
+
+#: ./schcli/guilib/httperror.py:59
+msgid "The Break button breaks the application"
+msgstr ""
+
+#: ./schcli/guilib/httperror.py:89
+msgid "Error message"
+msgstr ""
+
+#: ./schcli/guilib/image.py:238
+msgid "The exception while loading image from:"
+msgstr ""
+
+#: ./schcli/pytigon.py:504
+msgid "There are background tasks - kill?"
+msgstr ""
+
+#: ./schcli/pytigon.py:504
+msgid "Warning"
+msgstr ""
+
+#: ./schcli/pytigon.py:544
+msgid "Failed login attempt! http error: %s"
+msgstr ""
+
+#: ./schcli/pytigon.py:630
+msgid "Application pack: '%s' does not exists"
+msgstr ""
+
+#: ./schcli/toolbar/basetoolbar.py:381
+msgid "main tools"
+msgstr "Narzędzia główne"
