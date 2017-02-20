@@ -69,7 +69,7 @@ class Page( models.Model):
         if self.page_type == 'W':
             if self.content_src:
                 #content = wikify(markdown.markdown(self.content_src, extensions=['tables', 'codehilite']))
-                content = markdown.markdown(self.content_src, extensions=['tables', 'codehilite'])
+                content = markdown.markdown(self.content_src, extras=['tables', 'codehilite'])
             else:
                 content = ""
             t = Template(template_content % content)

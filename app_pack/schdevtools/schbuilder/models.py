@@ -1123,5 +1123,51 @@ class SChFiles( models.Model):
 admin.site.register(SChFiles)
 
 
+class SChLocale( models.Model):
+    
+    class Meta:
+        verbose_name = _("Locale")
+        verbose_name_plural = _("Locales")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schbuilder'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    parent = ext_models.HiddenForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
+    
+
+    
+admin.site.register(SChLocale)
+
+
+class SChTranslate( models.Model):
+    
+    class Meta:
+        verbose_name = _("Translate")
+        verbose_name_plural = _("Translate")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schbuilder'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    parent = ext_models.HiddenForeignKey(SChLocale, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
+    description = models.CharField('Description', null=False, blank=False, editable=True, max_length=1024)
+    translation = models.CharField('Translation', null=True, blank=True, editable=True, max_length=1024)
+    status = models.CharField('Status', null=True, blank=True, editable=False, max_length=16)
+    
+
+    
+admin.site.register(SChTranslate)
+
+
 
 

@@ -38,6 +38,10 @@ import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schfs.vfstools import ZipWriter, open_and_create_dir
+from ext_lib.pygettext import main as gtext
+import polib
+import locale
+
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -206,6 +210,46 @@ def run_python_shell_task(request, base_path, appset_name):
     id = run_python_shell_task_base(request, base_path, appset_name)
     new_url = "../../schsys/thread/%d/edit/" % id
     return HttpResponseRedirect(new_url)
+
+
+def make_messages(src_path, path, name, outpath=None):
+    backup_argv = sys.argv
+    
+    sys.argv = [None, '-a', '-d', name, '-p', path]
+
+    for root, dirs, files in os.walk(src_path):
+        for f in files:
+            if f.endswith('.py'):
+                p = os.path.join(root, f)
+                sys.argv.append(p)
+    gtext()
+
+    wzr_filename = os.path.join(path, name+'.pot')
+    for pos in os.scandir(path):
+        if pos.is_dir():
+            lang = pos.name
+            ftmp = os.path.join(path, lang)
+            if outpath:
+                ftmp = os.path.join(ftmp, outpath)
+            filename = os.path.join(ftmp, name + '.po')
+            old_filename = filename.replace('.po', '.bak')
+            mo_filename = filename.replace('.po', '.mo')
+            try:
+                os.remove(old_filename)
+            except:
+                pass
+            try:
+                os.rename(filename, old_filename)
+            except:
+                pass
+            wzr = polib.pofile(wzr_filename)
+            po = polib.pofile(old_filename)
+            po.merge(wzr)
+            po.save(filename)
+            po.save_as_mofile(mo_filename)
+
+    sys.argv = backup_argv
+
      
 
 
@@ -869,6 +913,110 @@ def update(request):
     
     return HttpResponse("GIT PULL", content_type="text/plain")
     
+    
+
+@dict_to_template('schbuilder/v_translate_sync.html')
+
+
+
+
+def translate_sync(request, pk):
+    
+    locale_obj = models.SChLocale.objects.get(id=pk)
+    app_pack = locale_obj.parent
+    
+    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
+    
+    app_path = os.path.join(base_path, app_pack.name)
+    locale_path = os.path.join(app_path, 'locale')
+    lang_path = os.path.join(locale_path, locale_obj.name)
+    msg_path = os.path.join(lang_path, 'LC_MESSAGES')
+    po_path = os.path.join(msg_path, 'django.po')
+    
+    if not os.path.exists(po_path):
+        if not os.path.isdir(locale_path):
+            os.mkdir(locale_path)
+        if not os.path.isdir(lang_path):
+            os.mkdir(lang_path)
+        if not os.path.isdir(msg_path):
+            os.mkdir(msg_path)
+        
+        po_init = """#\nmsgid ""\nmsgstr ""\n"Project-Id-Version: pytigon\\n"\n"Language: %s\\n"\n"MIME-Version: 1.0\\n"\n"Content-Type: text/plain; charset=UTF-8\\n"\n"Content-Transfer-Encoding: 8bit\\n"\n"""
+        if locale_obj.name in locale.locale_alias:
+            locale_str = locale.locale_alias[locale_obj.name].split('.')[0]
+        else:
+            locale_str = locale_obj.name
+        
+        po_init2 = po_init % locale_str
+        with open(po_path, "wt") as f:
+            f.write(po_init2)
+        
+        
+    po = polib.pofile(po_path)
+    
+    locale_obj.schtranslate_set.update(status='#')
+    
+    inserted = 0
+    updated = 0
+    save = False
+    
+    for entry in po:
+        print(entry.msgid, entry.msgstr, entry.msgctxt)
+        t = locale_obj.schtranslate_set.filter(description=entry.msgid)
+        if len(t)>0:
+            obj = t[0]
+            updated += 1
+            if obj.translation:
+                entry.msgstr =  obj.translation
+                save = True
+        else:
+            obj = models.SChTranslate()
+            obj.description = entry.msgid
+            obj.parent = locale_obj
+            obj.translation = entry.msgstr
+            inserted += 1    
+        if obj.translation:
+            obj.status = 'OK'
+        else:
+            obj.status = ''
+        obj.save()
+    
+    if save:
+        po.save(po_path)
+    
+    
+    return { 'object_list': [[ updated, inserted ],] }
+    
+    
+
+@dict_to_template('schbuilder/v_locale_gen.html')
+
+
+
+
+def locale_gen(request, pk):
+    
+    app_pack = models.SChAppSet.objects.get(id=pk)
+    
+    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
+    app_path = os.path.join(base_path, app_pack.name)
+    locale_path = os.path.join(app_path, 'locale')
+    
+    make_messages(app_path, locale_path, 'django', 'LC_MESSAGES')
+    
+    template_path = os.path.join(app_path, "templates")
+    
+    to_remove = []
+    for root, dirs, files in os.walk(template_path):
+        for f in files:
+            if f.endswith('.html'):
+                p = os.path.join(root, f)
+                to_remove.append(p)
+    
+    for pos in to_remove:
+        os.unlink(pos)
+    
+    return { 'object_list': [[ 'OK' ],] }
     
 
 

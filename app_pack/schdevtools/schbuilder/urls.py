@@ -28,6 +28,12 @@ urlpatterns = [
     gen_row_action('SChFormField', 'field_down', views.change_pos_form_field, {'app':'schbuilder', 'tab':'SChFormField', 'forward':True, 'field': 'parent'}),
     gen_row_action('SChView', 'template_edit3', views.template_edit3),
     gen_tab_action('SChAppSet', 'update', views.update),
+    gen_row_action('SChLocale', 'translate_sync', views.translate_sync),
+    gen_row_action('SChAppSet', 'locale_gen', views.locale_gen),
+    
+    
+    
+    
     
     
     
@@ -76,6 +82,8 @@ gen.standard('SChForm', _('Form'), _('Form'))
 gen.standard('SChFormField', _('Form field'), _('Form field'))
 gen.standard('SChTask', _('SChTask'), _('SChTask'))
 gen.standard('SChFiles', _('SChFiles'), _('SChFiles'))
+gen.standard('SChLocale', _('Locale'), _('Locales'))
+gen.standard('SChTranslate', _('Translate'), _('Translate'))
 
 gen.for_field('SChAppSet', 'schapp_set', _('SChApp'), _('SChApp'))
 gen.for_field('SChApp', 'schchoice_set', _('SChChoice'), _('SChChoice'))
@@ -90,3 +98,5 @@ gen.for_field('SChApp', 'schform_set', _('Form'), _('Form'))
 gen.for_field('SChForm', 'schformfield_set', _('Form field'), _('Form field'))
 gen.for_field('SChApp', 'schtask_set', _('SChTask'), _('SChTask'))
 gen.for_field('SChApp', 'schfiles_set', _('SChFiles'), _('SChFiles'))
+gen.for_field('SChAppSet', 'schlocale_set', _('Locale'), _('Locales'))
+gen.for_field('SChLocale', 'schtranslate_set', _('Translate'), _('Translate'))

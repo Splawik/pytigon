@@ -40,7 +40,6 @@ def make_messages(src_path, path, name, outpath=None):
             po.save(filename)
             po.save_as_mofile(mo_filename)
 
-
 if len(ARGV) < 2:
     make_messages('./schcli', './schcli/locale', 'pytigon')
 else:

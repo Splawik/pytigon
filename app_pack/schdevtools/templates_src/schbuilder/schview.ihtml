@@ -27,10 +27,13 @@
         {{ block.super }}
 
 %% list_content_header
-    % widget class='menu' id='new_view' title=_("&New view"):
-        % for pos in object_list|module_obj:"View_CHOICES"
-            li
-                a href={{request.path}}../../../../{{pos.0}}/add...{{pos.1}}
+    table width=100%
+        tr
+            td
+                % widget class='menu' id='new_view' title=_("&New view"):
+                    % for pos in object_list|module_obj:"View_CHOICES"
+                        li
+                            a href={{request.path}}../../../../{{pos.0}}/add...{{pos.1}}
         
 %% list_row_header
     th...Name
