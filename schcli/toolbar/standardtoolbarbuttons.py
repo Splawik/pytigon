@@ -21,7 +21,7 @@ import wx
 from schcli.guilib.events import *
 from autocomplete import TextCtrlAutoComplete
 from schcli.guilib.image import bitmaps_from_art_id
-from schcli.guilib.tools import colour_to_html
+from schcli.guilib.tools import colour_to_html, find_focus_in_form
 from wx.lib.agw import flatmenu as FM
 
 _ = wx.GetTranslation
@@ -162,7 +162,8 @@ class StandardButtons(object):
 
     def make_ui_handler(self, fun_name, event_id, propagete=False):
         def on_update_ui(event):
-            win = wx.Window.FindFocus()
+            #win = wx.Window.FindFocus()
+            win = find_focus_in_form()
             while(win):
                 if hasattr(win, fun_name):
                     if getattr(win, fun_name)():
@@ -178,7 +179,8 @@ class StandardButtons(object):
 
     def make_handler(self, fun_name, event_id, propagate=False):
         def on_command(event):
-            win = wx.Window.FindFocus()
+            #win = wx.Window.FindFocus()
+            win = find_focus_in_form()
             while(win):
                 if hasattr(win, fun_name):
                     getattr(win, fun_name)()
@@ -192,6 +194,10 @@ class StandardButtons(object):
         self.make_handler(fun_name, event_id, propagate)
         if fun_name2:
             self.make_ui_handler(fun_name2, event_id, propagate)
+        else:
+            def on_update_ui(event):
+                event.Enable(True)
+            self.toolbar_interface.parent.Bind(wx.EVT_UPDATE_UI, on_update_ui, id=event_id)
 
     def create_file_panel(self, toolbar_page):
         if self.file:
@@ -296,7 +302,7 @@ class StandardButtons(object):
                 self.make_handlers(ID_WEB_STOP, 'WebStop', 'CanWebStop', propagate=True)
                 self.make_handlers(ID_WEB_REFRESH, 'WebRefresh', 'CanWebRefresh', propagate=True)
                 self.make_handlers(ID_WEB_ADDBOOKMARK, 'WebAddBookmark', 'CanWebAddBookmark', propagate=True)
-                self.make_handlers(ID_WEB_NEW_WINDOW, 'WebNewWindow', "IsFocusable", propagate=None)
+                self.make_handlers(ID_WEB_NEW_WINDOW, 'WebNewWindow', propagate=None)
         else:
             self.tbs['browser'] = {}
             self.tbs['browser']['bar'] = EmptyBar()

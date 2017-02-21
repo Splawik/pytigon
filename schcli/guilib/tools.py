@@ -146,3 +146,23 @@ def create_desktop_shortcut(app_name, title=None, parameters = ""):
             desktop_str2 = DESKTOP_STR % (title2, pytigon_path, pytigon_path, parameters2, pytigon_path)
             with open(fname,"wt") as f:
                 f.write(desktop_str2)
+
+
+LAST_FOCUS_CTRL_IN_FORM = None
+
+def find_focus_in_form():
+    global LAST_FOCUS_CTRL_IN_FORM
+    win_focus = wx.Window.FindFocus()
+    win = win_focus
+    while win:
+        if win.__class__.__name__ == 'SchForm':
+            LAST_FOCUS_CTRL_IN_FORM = win_focus
+            return win_focus
+        win = win.GetParent()
+    if LAST_FOCUS_CTRL_IN_FORM and LAST_FOCUS_CTRL_IN_FORM.IsBeingDeleted():
+        LAST_FOCUS_CTRL_IN_FORM
+        return None
+    else:
+        return LAST_FOCUS_CTRL_IN_FORM
+
+

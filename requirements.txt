@@ -20,4 +20,5 @@ fs<2.0
 PyDispatcher
 pypyodbc
 daphne
+polib
 
