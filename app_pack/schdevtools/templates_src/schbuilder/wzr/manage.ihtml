@@ -17,4 +17,11 @@ init_paths()
 from schlib.schdjangoext.django_manage import *
 
 if __name__ == "__main__":
-    cmd(sys.argv, from_main=True)
+    if sys.argv[-1] == 'install':
+        from schlib.schtools.install import install
+        install()
+    elif sys.argv[-1] == 'export_to_local_db':
+        from schlib.schtools.install import export_to_local_db
+        export_to_local_db()
+    else:
+        cmd(sys.argv, from_main=True)

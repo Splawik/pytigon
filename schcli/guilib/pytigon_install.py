@@ -12,7 +12,10 @@ import datetime
 from shutil import move
 import configparser
 
-from subprocess import call, Popen, PIPE
+from subprocess import call
+#, Popen, PIPE
+
+from django.conf import settings
 
 from schlib.schfs.vfstools import extractall
 from schcli.guilib.tools import create_desktop_shortcut
@@ -94,13 +97,17 @@ class InstallWizard(Wizard):
 
     def install(self):
         test_update = True
-        root_path = wx.GetApp().root_path
-        extract_to = root_path + '/app_pack/' + self.app_name
-        if not os.path.exists(root_path + '/app_pack'):
-            os.mkdir(root_path + '/app_pack')
+        #root_path = wx.GetApp().root_path
+        #extract_to = root_path + '/app_pack/' + self.app_name
+
+        extract_to = os.path.join(settings.APP_PACK_PATH, self.app_name)
+
+        if not os.path.exists(settings.APP_PACK_PATH):
+            os.mkdir(settings.APP_PACK_PATH)
         if not os.path.exists(extract_to):
             os.mkdir(extract_to)
             test_update = False
+
         zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
         zipname2 = os.path.join(extract_to, zipname+".zip")
         if test_update:
@@ -113,25 +120,34 @@ class InstallWizard(Wizard):
         if backup_zip:
             backup_zip.close()
         self.zip_file.close()
+
+
         src_db = os.path.join(extract_to, self.app_name+".db")
         if os.path.exists(src_db):
-            dest_path_db = os.path.join( os.path.join(os.path.expanduser("~"), ".pytigon"), self.app_name)
+            dest_path_db = os.path.join(settings.DATA_PATH, self.app_name)
+
+            if not os.path.exists(settings.DATA_PATH):
+                os.mkdir(settings.DATA_PATH)
             if not os.path.exists(dest_path_db):
                 os.mkdir(dest_path_db)
             dest_db = os.path.join(dest_path_db,self.app_name+".db")
             if not os.path.exists(dest_db):
-                move(src_db, dest_db )
+                move(src_db, os.path.join(dest_path_db,self.app_name+".new") )
+            else:
+                os.rename(dest_db, os.path.join(dest_path_db,self.app_name+".old"))
 
-        base_path = root_path+"/app_pack/"+self.app_name+"/"
+            call([sys.executable, os.path.join(extract_to, 'manage.py'), 'install'])
 
-        if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(root_path+"/global_db_settings.py"):
-            p=Popen([sys.executable, base_path + 'manage.py', 'dumpdata', '--format', 'json', '--database', 'local', '--indent', '4', '--exclude', 'contenttypes', '--exclude', 'auth' ], stdout=PIPE, stdin=PIPE)
-            output = p.communicate()[0]
-            x = open(base_path + 'install_data.json', "wb")
-            x.write(output)
-            x.close()
-            call([sys.executable, base_path + 'manage.py', 'syncdb'])
-            call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
+            #base_path = root_path+"/app_pack/"+self.app_name+"/"
+            #
+            #if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(root_path+"/global_db_settings.py"):
+            #    p=Popen([sys.executable, base_path + 'manage.py', 'dumpdata', '--format', 'json', '--database', 'local', '--indent', '4', '--exclude', 'contenttypes', '--exclude', 'auth' ], stdout=PIPE, stdin=PIPE)
+            #    output = p.communicate()[0]
+            #    x = open(base_path + 'install_data.json', "wb")
+            #    x.write(output)
+            #    x.close()
+            #    call([sys.executable, base_path + 'manage.py', 'syncdb'])
+            #    call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
 
         ini_file = os.path.join(extract_to, "install.ini")
         created = False

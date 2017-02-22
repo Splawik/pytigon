@@ -33,7 +33,10 @@ def cmd(arg, from_main=False):
     if from_main:
         argv = arg
     else:
-        argv=['manage.py', arg]
+        if type(arg) == str:
+            argv=['manage.py', arg]
+        else:
+            argv=['manage.py',] + arg
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
     from django.core.management import execute_from_command_line
     execute_from_command_line(argv)

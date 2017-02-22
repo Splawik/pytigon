@@ -1,22 +1,21 @@
 # pytigon
 
 upstream django {
-    #server 127.0.0.1:29000; # for a web port socket (we'll use this first)
     server unix:///var/tmp/pytigon.sock;
 }
 
 server {
     listen      8080;
-    server_name 192.168.1.10 pytigon.tk www.pytigon.tk;
+    server_name yourdomain.com;
     charset     utf-8;
 
     # max upload size
     client_max_body_size 75M;   # adjust to taste
 
     # Django media
-    location /media2  {
-        alias /path/to/your/mysite/media;  # your Django project's media files - amend as required
-    }
+    #location /media2  {
+    #    alias /path/to/your/mysite/media;  # your Django project's media files - amend as required
+    #}
 
     location /static {
         alias /var/www/pytigon/static; # your Django project's static files - amend as required

@@ -364,13 +364,13 @@ class ConwertToHtml:
                             x = self._pre_process_line(buf0 + buf2.getvalue())
                         elif test == 3:
                             x = self._pre_process_line(buf0.replace('pscript', 'script language=python') + buf.getvalue())
-                        elif test == 4:
-                            v = buf.getvalue()
-                            codejs = pjsx_to_js(v, None)
-                            x = self._pre_process_line(buf0 + codejs)
-                        elif test == 5:
-                            codejs = pjsx_to_js('"""'+buf.getvalue()+'"""', None)
-                            x = self._pre_process_line(buf0 + codejs)
+                        #elif test == 4:
+                        #    v = buf.getvalue()
+                        #    codejs = pjsx_to_js(v, None)
+                        #    x = self._pre_process_line(buf0 + codejs)
+                        #elif test == 5:
+                        #    codejs = pjsx_to_js('"""'+buf.getvalue()+'"""', None)
+                        #    x = self._pre_process_line(buf0 + codejs)
                         else:
                             x = self._pre_process_line(buf0 + buf.getvalue())
                         for pos in x:
@@ -510,8 +510,9 @@ def ihtml_to_html_base(file_name, input_str=None, lang='en'):
         conwert.process()
         return conwert.to_str()
     except:
-        import sys
+        import sys, traceback
         print(sys.exc_info())
+        traceback.print_exc()
         return ""
 
 

@@ -821,29 +821,17 @@ def installer(request, pk):
     
     buf += "ADDING DATABASE FILES\n"
     
-    if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(settings.ROOT_PATH+"/global_db_settings.py"):
+    if 'local' in settings.DATABASES:
+        db_profile = 'local'
+    else:
+        db_profile = 'default'
+    
+    if 'local' in settings.DATABASES:
         if os.path.exists(db_name):
             os.rename(db_name, db_name+"."+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+".bak")
-        buf += "SYNC DATABASE FILE\n"
-        p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'syncdb', '--database', 'local', '--noinput'], stdout=PIPE, stderr=STDOUT)
-        output = p.communicate()[0]
-        buf+=output.decode('utf-8')
-        buf += "CREATE AUTO LOGIN ACCOUNT\n"
-        p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'shell'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-        script = b"""from django.contrib.auth.models import User; User.objects._db='local'; User.objects.create_superuser('auto', '', 'anawa')"""
-        output = p.communicate(input=script)[0]
-        buf+=output.decode('utf-8')
-    else:
-        if not os.path.exists(db_name):
-            buf += "SYNC DATABASE FILE\n"
-            p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'syncdb', '--noinput'], stdout=PIPE, stderr=STDOUT)
-            output = p.communicate()[0]
-            buf+=output.decode('utf-8')
-            buf += "CREATE AUTO LOGIN ACCOUNT\n"
-            p=Popen([settings.PYTHON_CONSOLE, base_path + 'manage.py', 'shell'], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-            script = b"""from django.contrib.auth.models import User; User.objects.create_superuser('auto', '', 'anawa')"""
-            output = p.communicate(input=script)[0]
-            buf+=output.decode('utf-8')
+    
+        from subprocess import call
+        call([sys.executable, os.path.join(base_path, 'manage.py'), 'export_to_local_db'])
     
     zip.write(db_name, name_in_zip=appset.name+".db")
     zip.close()

@@ -522,7 +522,7 @@ class StandardButtons(object):
              (_('Show bookmarks panel'), ID_SHOW_BOOKMARKS))),
             (_('Downloads'), ((_('Show download panel'), ID_SHOW_DOWNLOAD), (_('Options')
              , ID_DOWNLOAD_OPTIONS))),
-            (_('Tools'), ((_('Show download panel'), ID_SHOW_DOWNLOAD), (_('Options'),
+            (_('Tools'), ((_('Show download panel'), ID_SHOW_DOWNLOAD), x(_('Options'),
              ID_DOWNLOAD_OPTIONS))),
             (_('Options'), ((_('General'), ID_GENERAL_OPTIONS), (_('Black list'),
              ID_DOWNLOAD_OPTIONS))),
