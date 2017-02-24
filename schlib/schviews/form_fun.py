@@ -73,6 +73,8 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                 user_dict = f.process(request, param)
             else:
                 user_dict = f.process(request)
+            if not issubclass(type(user_dict), dict):
+                return user_dict
             user_dict.update({'form': f})
             if object_id:
                 user_dict.update({'object_id': object_id})

@@ -7,5 +7,7 @@ Perms = True
 Index = ''
 Urls  = (
     ('table/SChAppSet/-/form/list?schtml=desktop',_('Applications set'),'schbuilder.change_schappset','client://status/folder-open.png'),
+    ('form/Installer/',_('Make installer'),None,'client://categories/applications-internet.png'),
+    ('form/Install/',_('Install app'),None,'client://devices/drive-optical.png'),
 )
 UserParam = {}

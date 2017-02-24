@@ -912,7 +912,7 @@ class SchForm(ScrolledPanel):
                 okno.body.EDITOR.GotoPos(0)
             else:
                 if 'application' in http.ret_content_type:
-                    wx.GetApp().GetTopWindow().open_binary_data(http, href)
+                    wx.GetApp().GetTopWindow()._open_binary_data(http, href)
                     http.clear_ptr()
                     return
 

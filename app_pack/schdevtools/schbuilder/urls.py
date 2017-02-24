@@ -30,6 +30,7 @@ urlpatterns = [
     gen_tab_action('SChAppSet', 'update', views.update),
     gen_row_action('SChLocale', 'translate_sync', views.translate_sync),
     gen_row_action('SChAppSet', 'locale_gen', views.locale_gen),
+    url('download_installer/(?P<name>\w+)/$', views.download_installer, {}),
     
     
     
@@ -61,6 +62,10 @@ urlpatterns = [
     
     
     
+    
+    
+    url('form/Installer/$', views.view_installer, {}),
+    url('form/Install/$', views.view_install, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)

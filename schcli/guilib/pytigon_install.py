@@ -97,8 +97,6 @@ class InstallWizard(Wizard):
 
     def install(self):
         test_update = True
-        #root_path = wx.GetApp().root_path
-        #extract_to = root_path + '/app_pack/' + self.app_name
 
         extract_to = os.path.join(settings.APP_PACK_PATH, self.app_name)
 
@@ -137,17 +135,6 @@ class InstallWizard(Wizard):
                 os.rename(dest_db, os.path.join(dest_path_db,self.app_name+".old"))
 
             call([sys.executable, os.path.join(extract_to, 'manage.py'), 'install'])
-
-            #base_path = root_path+"/app_pack/"+self.app_name+"/"
-            #
-            #if os.path.exists(base_path+"global_db_settings.py") or os.path.exists(root_path+"/global_db_settings.py"):
-            #    p=Popen([sys.executable, base_path + 'manage.py', 'dumpdata', '--format', 'json', '--database', 'local', '--indent', '4', '--exclude', 'contenttypes', '--exclude', 'auth' ], stdout=PIPE, stdin=PIPE)
-            #    output = p.communicate()[0]
-            #    x = open(base_path + 'install_data.json', "wb")
-            #    x.write(output)
-            #    x.close()
-            #    call([sys.executable, base_path + 'manage.py', 'syncdb'])
-            #    call([sys.executable, base_path + 'manage.py', 'loaddata', base_path + 'install_data.json'])
 
         ini_file = os.path.join(extract_to, "install.ini")
         created = False

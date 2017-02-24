@@ -1,6 +1,13 @@
 apt install python3.5
 apt install python3.5-dev
 apt install virtualenv
+apt install git
+apt install libxml2-dev
+apt install libxslt1-dev
+apt install zlib1g-dev
+apt install libffi-dev
+apt install libjpeg-dev
+
 
 cd /var
 mkdir www

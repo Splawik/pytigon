@@ -49,9 +49,15 @@ def install():
             new_db = True
             os.rename(db_path_new, db_path)
 
-        cmd(['migrate', '--database', db_profile])
+        try:
+            cmd(['migrate', '--database', db_profile])
+        except:
+            print("Migration for database: " + db_profile + " - fails")
         if db_profile != 'default':
-            cmd(['migrate', '--database', 'default'])
+            try:
+                cmd(['migrate', '--database', 'default'])
+            except:
+                print("Migration for database: defautl - fails")
 
         if old_db:
             pass

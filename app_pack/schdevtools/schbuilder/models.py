@@ -44,7 +44,7 @@ field_defaults = {
     'FloatField': {},
     'ImageField': {},
     'IntegerField': {},
-    'IPAddressField': {},
+    'GenericIPAddressField': {},
     'NullBooleanField': {},
     'PositiveIntegerField': {},
     'PositiveSmallIntegerField': {},
@@ -98,6 +98,16 @@ widgets = [
     "jscript_link '<<href>>'",
     "css_link '<<href>>'",
     ]
+    
+    
+def apppack():
+    ret = []
+    for ff in os.listdir(settings.APP_PACK_PATH):
+        if os.path.isdir(os.path.join(settings.APP_PACK_PATH, ff)):
+            if not ff.startswith('_'):
+                ret.append([ff, ff])
+    return ret
+
 
 
 
@@ -115,7 +125,7 @@ Field_CHOICES = (
     ("FloatField","FloatField"),
     ("ImageField","ImageField"),
     ("IntegerField","IntegerField"),
-    ("IPAddressField","IPAddressField"),
+    ("GenericIPAddressField","GenericIPAddressField"),
     ("NullBooleanField","NullBooleanField"),
     ("PositiveIntegerField","PositiveIntegerField"),
     ("PositiveSmallIntegerField","PositiveSmallIntegerField"),

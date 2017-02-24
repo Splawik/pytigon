@@ -34,6 +34,8 @@ import wx.html2
 import datetime
 from wx.lib.agw import aui
 
+from django.conf import settings
+
 from schlib.schfs.vfstools import get_temp_filename
 from schlib.schtools.cc import compile
 from schlib.schtools.tools import split2
@@ -993,7 +995,16 @@ class SchAppFrame(SchBaseFrame):
             name = f.name
             f.close()
             return self.new_main_page('^standard/html_print/html_print.html', name, parameters=name)
+        else:
+            cd = http_ret.http.headers.get('content-disposition')
+            if cd:
+                name = cd.split('filename=')[1].replace('\"',"")
+            else:
+                name = "data.dat"
 
+            p = http_ret.ptr()
+            with open(os.path.join(os.path.join(settings.DATA_PATH, 'download'), name), "wb") as f:
+                f.write(p)
         return True
 
     def get_main_panel(self):

@@ -32,7 +32,16 @@ import signal, os, ctypes
 from schlib.schtasks.base_task import get_process_manager
 from django.core.management import call_command
 from django.db import transaction
+from django.urls import reverse
+
+from schlib.schfs.vfstools import extractall
+import zipfile
+import configparser
+
 from subprocess import call, Popen, PIPE, STDOUT
+
+from schlib.schtools.process import py_run
+
 import io
 import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
@@ -252,7 +261,93 @@ def make_messages(src_path, path, name, outpath=None):
 
      
 
+PFORM = form_with_perms('schbuilder') 
 
+
+class Installer(forms.Form):
+    name = forms.ChoiceField(label='Application package name', required=True, choices=models.apppack)
+    
+    def process(self, request, queryset=None):
+    
+        name = self.cleaned_data['name']
+        return installer(request, name)
+    
+
+def view_installer(request, *argi, **argv):
+    return PFORM(request, Installer, 'schbuilder/forminstaller.html', {})
+
+
+class Install(forms.Form):
+    install_file = forms.FileField(label='Install file (*.ptig)', required=True, )
+    
+    def process(self, request, queryset=None):
+    
+        ret = []
+        
+        install_file = request.FILES['install_file']
+        
+        name = install_file.name.split('.')[0]
+        ret.append("Install file: " + name)
+        zip_file = zipfile.ZipFile(install_file.file)
+        
+        test_update = True
+        
+        extract_to = os.path.join(settings.APP_PACK_PATH, name)
+        ret.append("install to: " + extract_to)
+        
+        if not os.path.exists(settings.APP_PACK_PATH):
+            os.mkdir(settings.APP_PACK_PATH)
+        if not os.path.exists(extract_to):
+            os.mkdir(extract_to)
+            test_update = False
+        
+        zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
+        zipname2 = os.path.join(extract_to, zipname+".zip")
+        if test_update:
+            backup_zip = zipfile.ZipFile(zipname2, 'a')
+            exclude = ['.*settings_local.py.*',]
+        else:
+            backup_zip = None
+            exclude = None
+        
+        extractall(zip_file, extract_to, backup_zip=backup_zip, exclude=exclude, backup_exts=['py', 'txt', 'wsgi', 'ihtml', 'htlm', 'css', 'js',])
+        
+        if backup_zip:
+            backup_zip.close()
+        zip_file.close()
+        
+        src_db = os.path.join(extract_to, name+".db")
+        if os.path.exists(src_db):
+            ret.append("Synchronize database:")
+            dest_path_db = os.path.join(settings.DATA_PATH, name)
+        
+            if not os.path.exists(settings.DATA_PATH):
+                os.mkdir(settings.DATA_PATH)
+            if not os.path.exists(dest_path_db):
+                os.mkdir(dest_path_db)
+            dest_db = os.path.join(dest_path_db, name+".db")
+            if not os.path.exists(dest_db):
+                move(src_db, os.path.join(dest_path_db, name+".new") )
+            else:
+                os.rename(dest_db, os.path.join(dest_path_db, name+".old"))
+        
+            (ret_code, output, err) = py_run([os.path.join(extract_to, 'manage.py'), 'install'])
+        
+            if output:
+                for pos in output:
+                    ret.append(pos)
+            if err:
+                ret.append("ERRORS:")
+                for pos in err:
+                    ret.append(pos)
+        
+        ini_file = os.path.join(extract_to, "install.ini")
+        
+        return { "object_list": ret }
+    
+
+def view_install(request, *argi, **argv):
+    return PFORM(request, Install, 'schbuilder/forminstall.html', {})
 
 
 
@@ -800,44 +895,53 @@ def template_edit2(request, pk):
 
 def installer(request, pk):
     
-    buf = ""
+    buf = []
     
-    appset = models.SChAppSet.objects.get(id=pk)
+    try:
+        pki = int(pk)
+        appset = models.SChAppSet.objects.get(id=pki)
+        name = appset.name
+    except:
+        name = pk
     
-    base_path = settings.ROOT_PATH+"/app_pack/"+appset.name+"/"
-    zip_path = settings.ROOT_PATH+"/app_pack/"
+    base_path = os.path.join(settings.APP_PACK_PATH, name)
+    zip_path = os.path.join(settings.DATA_PATH, 'temp')
     
     exclude=[".*\.pyc", ".*__pycache__.*"]
-    zip = ZipWriter(zip_path+appset.name+".ptig", base_path, exclude=exclude)
+    zip = ZipWriter(os.path.join(zip_path, name+".ptig"), base_path, exclude=exclude)
     zip.toZip(base_path)
     
-    buf += "PACK PROGRAM FILES TO: " + zip_path+appset.name+".ptig\n"
+    buf.append("PACK PROGRAM FILES TO: " + zip_path + name + ".ptig")
     
-    p = os.path.expanduser("~")
-    if type(p)==str:
-        db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db")
-    else:
-        db_name = os.path.join(p, ".pytigon/"+appset.name+"/"+appset.name+".db").decode("cp1250")
+    db_name = os.path.join(os.path.join(settings.DATA_PATH, name), name+".db")
     
-    buf += "ADDING DATABASE FILES\n"
-    
-    if 'local' in settings.DATABASES:
-        db_profile = 'local'
-    else:
-        db_profile = 'default'
+    buf.append("ADDING DATABASE FILES")
     
     if 'local' in settings.DATABASES:
         if os.path.exists(db_name):
             os.rename(db_name, db_name+"."+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+".bak")
     
-        from subprocess import call
-        call([sys.executable, os.path.join(base_path, 'manage.py'), 'export_to_local_db'])
-    
-    zip.write(db_name, name_in_zip=appset.name+".db")
+        (code, output, err) = py_run([os.path.join(base_path, 'manage.py'), 'export_to_local_db'])
+        
+        buf.append("Export to local db:")
+        if output:
+            for pos in output:
+                buf.append(pos)
+        
+        if err:
+            buf.append("ERRORS:")
+            for pos in err:
+                buf.append(pos)
+            
+    zip.write(db_name, name_in_zip=name+".db")
     zip.close()
-    buf += "END\n"
     
-    return { 'object_list': buf.split('\n') }
+    buf.append("END")
+    
+    url = reverse('start')+'schbuilder/download_installer/'+name+'/'
+    
+    return { 'object_list': buf, 'name': name, 'url': url }
+    
     
 
 
@@ -1005,6 +1109,22 @@ def locale_gen(request, pk):
         os.unlink(pos)
     
     return { 'object_list': [[ 'OK' ],] }
+    
+
+
+
+
+
+
+def download_installer(request, name):
+    
+    installer = os.path.join(os.path.join(settings.DATA_PATH, 'temp'), name+".ptig")
+    if os.path.exists(installer):
+        with open(installer, 'rb') as zip_file:
+            response = HttpResponse(zip_file, content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="%s"' %  name+".ptig"
+            return response
+    return HttpResponse(_("No installer file to download"))
     
 
 
