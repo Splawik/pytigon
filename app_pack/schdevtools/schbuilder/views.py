@@ -41,6 +41,7 @@ import configparser
 from subprocess import call, Popen, PIPE, STDOUT
 
 from schlib.schtools.process import py_run
+from shutil import move
 
 import io
 import schlib.schindent.indent_style
