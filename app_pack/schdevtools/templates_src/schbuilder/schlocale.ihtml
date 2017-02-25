@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "translate": "fa://flag-checkered.png",
+                    "translate_sync": "client://actions/view-refresh.png"
+                }
+                child.set_bitmaps(bitmaps)
+
+
+%% all
+    %with edit_vscroll=True table_type='datatable'
+        {{ block.super }}
+
+%% list_content_actions
+    % new_row _("New locale")
+
+%% list_row_header
+    th...Name
+
+
+%% list_row
+    td...{{object.name}}
+
+
+%% list_row_actions
+    % row_actions: ===>
+        edit
+        |
+        field_list/schtranslate_set,Locale,locale
+        translate_sync,_("Sync translate messages")
+
