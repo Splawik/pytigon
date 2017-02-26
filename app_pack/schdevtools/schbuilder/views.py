@@ -26,31 +26,26 @@ import json
 import zipfile
 import base64
 import platform
-from schlib.schviews.viewtools import change_pos, duplicate_row
+import polib
+import locale
 import codecs
-import signal, os, ctypes 
-from schlib.schtasks.base_task import get_process_manager
-from django.core.management import call_command
+import signal
+import os
+import io
+import ctypes 
+
 from django.db import transaction
 from django.urls import reverse
 
-from schlib.schfs.vfstools import extractall
-import zipfile
-import configparser
-
-from subprocess import call, Popen, PIPE, STDOUT
-
-from schlib.schtools.process import py_run
-from shutil import move
-
-import io
+from schlib.schviews.viewtools import change_pos, duplicate_row
+from schlib.schtasks.base_task import get_process_manager
 import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
-from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schfs.vfstools import ZipWriter, open_and_create_dir
+from schlib.schtools.install import extract_ptig
+from schlib.schtools.process import py_run
+
 from ext_lib.pygettext import main as gtext
-import polib
-import locale
 
  
 _template="""
@@ -283,67 +278,10 @@ class Install(forms.Form):
     
     def process(self, request, queryset=None):
     
-        ret = []
-        
         install_file = request.FILES['install_file']
-        
         name = install_file.name.split('.')[0]
-        ret.append("Install file: " + name)
         zip_file = zipfile.ZipFile(install_file.file)
-        
-        test_update = True
-        
-        extract_to = os.path.join(settings.APP_PACK_PATH, name)
-        ret.append("install to: " + extract_to)
-        
-        if not os.path.exists(settings.APP_PACK_PATH):
-            os.mkdir(settings.APP_PACK_PATH)
-        if not os.path.exists(extract_to):
-            os.mkdir(extract_to)
-            test_update = False
-        
-        zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
-        zipname2 = os.path.join(extract_to, zipname+".zip")
-        if test_update:
-            backup_zip = zipfile.ZipFile(zipname2, 'a')
-            exclude = ['.*settings_local.py.*',]
-        else:
-            backup_zip = None
-            exclude = None
-        
-        extractall(zip_file, extract_to, backup_zip=backup_zip, exclude=exclude, backup_exts=['py', 'txt', 'wsgi', 'ihtml', 'htlm', 'css', 'js',])
-        
-        if backup_zip:
-            backup_zip.close()
-        zip_file.close()
-        
-        src_db = os.path.join(extract_to, name+".db")
-        if os.path.exists(src_db):
-            ret.append("Synchronize database:")
-            dest_path_db = os.path.join(settings.DATA_PATH, name)
-        
-            if not os.path.exists(settings.DATA_PATH):
-                os.mkdir(settings.DATA_PATH)
-            if not os.path.exists(dest_path_db):
-                os.mkdir(dest_path_db)
-            dest_db = os.path.join(dest_path_db, name+".db")
-            if not os.path.exists(dest_db):
-                move(src_db, os.path.join(dest_path_db, name+".new") )
-            else:
-                os.rename(dest_db, os.path.join(dest_path_db, name+".old"))
-        
-            (ret_code, output, err) = py_run([os.path.join(extract_to, 'manage.py'), 'install'])
-        
-            if output:
-                for pos in output:
-                    ret.append(pos)
-            if err:
-                ret.append("ERRORS:")
-                for pos in err:
-                    ret.append(pos)
-        
-        ini_file = os.path.join(extract_to, "install.ini")
-        
+        ret = extract_ptig(zip_file, name)
         return { "object_list": ret }
     
 

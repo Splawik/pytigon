@@ -7,18 +7,11 @@ except:
 
 import zipfile
 import os
-import sys
-import datetime
-from shutil import move
 import configparser
 
-from subprocess import call
-#, Popen, PIPE
-
-from django.conf import settings
-
-from schlib.schfs.vfstools import extractall
+from schlib.schtools.install import extract_ptig
 from schcli.guilib.tools import create_desktop_shortcut
+
 _ = wx.GetTranslation
 
 def make_page_title(wiz_pg, title):
@@ -32,7 +25,6 @@ def make_page_title(wiz_pg, title):
 
 
 class TitledPage(WizardPageSimple):
-
     def __init__(self,parent,lp,title):
         WizardPageSimple.__init__(self, parent)
         self.sizer = make_page_title(self, title)
@@ -40,9 +32,7 @@ class TitledPage(WizardPageSimple):
 
 
 class InstallWizard(Wizard):
-
     def __init__(self,file_name,zip_file,app_name,licence_txt,readme_txt):
-
         Wizard.__init__(self, None, -1, 'Install app')
         self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.on_wiz_page_changing)
         self.zip_file = zip_file
@@ -96,46 +86,7 @@ class InstallWizard(Wizard):
         event.Skip()
 
     def install(self):
-        test_update = True
-
-        extract_to = os.path.join(settings.APP_PACK_PATH, self.app_name)
-
-        if not os.path.exists(settings.APP_PACK_PATH):
-            os.mkdir(settings.APP_PACK_PATH)
-        if not os.path.exists(extract_to):
-            os.mkdir(extract_to)
-            test_update = False
-
-        zipname = datetime.datetime.now().isoformat('_')[:19].replace(':','').replace('-','')
-        zipname2 = os.path.join(extract_to, zipname+".zip")
-        if test_update:
-            backup_zip = zipfile.ZipFile(zipname2, 'a')
-            exclude = ['.*settings_local.py.*',]
-        else:
-            backup_zip = None
-            exclude = None
-        extractall(self.zip_file, extract_to, backup_zip=backup_zip, exclude=exclude, backup_exts=['py', 'txt', 'wsgi', 'ihtml', 'htlm', 'css', 'js',])
-        if backup_zip:
-            backup_zip.close()
-        self.zip_file.close()
-
-
-        src_db = os.path.join(extract_to, self.app_name+".db")
-        if os.path.exists(src_db):
-            dest_path_db = os.path.join(settings.DATA_PATH, self.app_name)
-
-            if not os.path.exists(settings.DATA_PATH):
-                os.mkdir(settings.DATA_PATH)
-            if not os.path.exists(dest_path_db):
-                os.mkdir(dest_path_db)
-            dest_db = os.path.join(dest_path_db,self.app_name+".db")
-            if not os.path.exists(dest_db):
-                move(src_db, os.path.join(dest_path_db,self.app_name+".new") )
-            else:
-                os.rename(dest_db, os.path.join(dest_path_db,self.app_name+".old"))
-
-            call([sys.executable, os.path.join(extract_to, 'manage.py'), 'install'])
-
+        extract_ptig(self.zip_file, self.app_name)
         ini_file = os.path.join(extract_to, "install.ini")
         created = False
         if os.path.exists(ini_file):

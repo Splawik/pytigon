@@ -20,7 +20,6 @@
 import platform
 import os
 import wx
-from io import BytesIO
 
 _ = wx.GetTranslation
 
