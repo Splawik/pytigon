@@ -9,6 +9,8 @@ import zipfile
 import os
 import configparser
 
+from django.conf import settings
+
 from schlib.schtools.install import extract_ptig
 from schcli.guilib.tools import create_desktop_shortcut
 
@@ -86,6 +88,7 @@ class InstallWizard(Wizard):
         event.Skip()
 
     def install(self):
+        extract_to = os.path.join(settings.APP_PACK_PATH, self.app_name)
         extract_ptig(self.zip_file, self.app_name)
         ini_file = os.path.join(extract_to, "install.ini")
         created = False

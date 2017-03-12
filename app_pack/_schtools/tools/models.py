@@ -34,6 +34,8 @@ class Parameter( models.Model):
         
     
 
+    type = models.CharField('Parameter type', null=True, blank=True, editable=True, max_length=16)
+    subtype = models.CharField('Parameter subtype', null=True, blank=True, editable=True, max_length=16)
     key = models.CharField('Key', null=False, blank=False, editable=True, max_length=64)
     value = models.CharField('Value', null=False, blank=False, editable=True, max_length=64)
     

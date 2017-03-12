@@ -29,3 +29,23 @@ import datetime
 
 
 
+
+@dict_to_json
+
+def set_param(request, **argv):
+    
+    return HttpRequest("")
+    
+
+
+
+
+@dict_to_json
+
+def get_param(request, **argv):
+    
+    return HttpRequest("")
+    
+
+
+

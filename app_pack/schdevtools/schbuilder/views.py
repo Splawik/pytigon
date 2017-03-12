@@ -282,6 +282,11 @@ class Install(forms.Form):
         name = install_file.name.split('.')[0]
         zip_file = zipfile.ZipFile(install_file.file)
         ret = extract_ptig(zip_file, name)
+        
+        extract_to = os.path.join(settings.APP_PACK_PATH, name)
+        (ret_code, output, err) = py_run([os.path.join(extract_to, 'manage.py'), 'post_installation'])
+        
+        
         return { "object_list": ret }
     
 
@@ -845,6 +850,20 @@ def installer(request, pk):
     
     base_path = os.path.join(settings.APP_PACK_PATH, name)
     zip_path = os.path.join(settings.DATA_PATH, 'temp')
+    
+    
+    buf.append("COMPILE TEMPLETE FILES:")
+    
+    (code, output, err) = py_run([os.path.join(base_path, 'manage.py'), 'compile_templates'])
+    
+    if output:
+        for pos in output:
+            buf.append(pos)
+    
+    if err:
+        buf.append("ERRORS:")
+        for pos in err:
+            buf.append(pos)
     
     exclude=[".*\.pyc", ".*__pycache__.*"]
     zip = ZipWriter(os.path.join(zip_path, name+".ptig"), base_path, exclude=exclude)

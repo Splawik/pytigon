@@ -290,7 +290,6 @@ class SchAppFrame(SchBaseFrame):
 
         self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
         self.Bind(aui.EVT_AUI_PANE_ACTIVATED, self.on_pane_activated)
-        self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_MENU_RANGE, self.on_show_elem, id=ID_SHOWHEADER, id2=ID_SHOWTOOLBAR2)
 
         if 'tray' in gui_style:
@@ -346,6 +345,7 @@ class SchAppFrame(SchBaseFrame):
         wx.UpdateUIEvent.SetMode(wx.UPDATE_UI_PROCESS_SPECIFIED)
         wx.CallAfter(self.UpdateWindowUI)
         self.Layout()
+        wx.CallAfter(self.Bind, wx.EVT_IDLE, self.on_idle)
 
 
     def setup_frame(self):
@@ -387,7 +387,10 @@ class SchAppFrame(SchBaseFrame):
                     for page in app.start_pages:
                         url_page = page.split(';')
                         if len(url_page) == 2:
-                            self._on_html(_(url_page[0]) + ',' + app.base_address + url_page[1])
+                            self._on_html(_(url_page[0]) + ',' + app.base_address + "/" + url_page[1])
+                        elif len(url_page) == 1:
+                            self._on_html(',' + app.base_address + "/" + url_page[0])
+
                 wx.CallAfter(start_pages)
 
         event.Skip()
@@ -836,7 +839,11 @@ class SchAppFrame(SchBaseFrame):
         if parm != None and parm[0] == ' ':
             parm = parm[1:]
 
-        return self.new_main_page(l[1], l[0], parm)
+        if l[0]:
+            return self.new_main_page(l[1], l[0], parm)
+        else:
+            return self.new_main_page(l[1], l[0], parm, panel='pscript')
+
 
     def _on_python(self, command):
         exec(command)

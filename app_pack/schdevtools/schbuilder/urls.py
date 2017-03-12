@@ -62,6 +62,7 @@ urlpatterns = [
     
     
     
+     url(r'^devtools', TemplateView.as_view(template_name='schbuilder/devtools.html'), {}), 
     
     
     url('form/Installer/$', views.view_installer, {}),

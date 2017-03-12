@@ -410,6 +410,15 @@ class ToolbarBar(object):
             self.user_panels[u_name] = panel
             page2.body.toolbar_interface = self
             page2.body.toolbar_interface_page = page
+
+            def init_page():
+                page2.init_frame()
+                page2.activate_page()
+                #wx.GetApp().GetTopWindow()._mgr.GetPane("desktop").Show()
+                page2.Update()
+
+            wx.CallAfter(init_page)
+
             return page2
 
         return None

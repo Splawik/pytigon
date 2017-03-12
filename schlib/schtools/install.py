@@ -162,7 +162,7 @@ def extract_ptig(zip_file, name):
         else:
             os.rename(dest_db, os.path.join(dest_path_db, name + ".old"))
 
-        (ret_code, output, err) = py_run([os.path.join(extract_to, 'manage.py'), 'install'])
+        (ret_code, output, err) = py_run([os.path.join(extract_to, 'manage.py'), 'post_installation'])
 
         if output:
             for pos in output:

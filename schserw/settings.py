@@ -49,7 +49,7 @@ TIME_ZONE = 'Europe/Warsaw'
 LANGUAGE_CODE = 'pl'
 USE_I18N = True
 SITE_ID = 1
-LANGUAGES = (('pl', 'Polish'), ('en', 'English'))
+LANGUAGES = [['en', 'English'], ['pl', 'Polish']]
 LOGIN_REDIRECT_URL = '/'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 

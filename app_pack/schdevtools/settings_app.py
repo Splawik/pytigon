@@ -30,7 +30,7 @@ ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if not DEBUG:
-    URL_ROOT_FOLDER='devtools'
+    URL_ROOT_FOLDER='schbuilder/devtools'
 
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'

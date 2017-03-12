@@ -7,7 +7,10 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            pass
+            self.path = "{{request.path}}"
+            http = wx.GetApp().get_http(self)
+            http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+
 
         def filter_url(self, type, url):
             if url and url[0:1]=='.':
@@ -17,6 +20,10 @@
                     page = self.GetParent().GetParent().GetParent()
                     win = wx.GetApp().GetTopWindow()
                     win.toolbar_interface.remove_page(page.title)
+
+                    http = wx.GetApp().get_http(self)
+                    http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+
                     return True
                 else:
                     id = self.app_list.GetValue()

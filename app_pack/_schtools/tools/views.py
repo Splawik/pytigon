@@ -55,3 +55,47 @@ def autocomplete_search(request, type):
 
 
 
+
+
+
+def set_user_param(request, **argv):
+    
+    key = request.POST.get('param', None)
+    value = request.POST.get('value', None)
+    user =  request.user.username
+    
+    p = models.Parameter.objects.filter(type='sys_user', subtype=user, key=key)
+    if len(p)>0:
+        obj = p[0]
+    else:
+        obj = models.Parameter()
+        obj.type = 'sys_user'
+        obj.subtype = user
+        obj.key = key
+    
+    obj.value = value
+    obj.save()
+    
+    return HttpResponse("OK")
+    
+
+
+
+
+
+
+def get_user_param(request, **argv):
+    
+    key = request.POST.get('param', None)
+    user =  request.user.username
+    
+    p = models.Parameter.objects.filter(type='sys_user', subtype=user, key=key)
+    if len(p)>0:
+        obj = p[0]
+        return HttpResponse(obj.value)
+    else:
+        return HttpResponse("")
+    
+
+
+
