@@ -45,11 +45,11 @@ class SchBrowserFrame(SchBaseFrame):
         SchBaseFrame.__init__(self, parent, id, gui_style, title, pos, size, style | wx.WANTS_CHARS, name)
         wx.GetApp().SetTopWindow(self)
 
-        if platform.system() == "Windows":
-            self.t1 = wx.Timer(self)
-            self.t1.Start(25)
+        #if platform.system() == "Windows":
+        #    self.t1 = wx.Timer(self)
+        #    self.t1.Start(25)
 
-            self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
+        #    self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
 
         app = wx.GetApp()
         self.init_plugins()
@@ -93,14 +93,14 @@ class SchBrowserFrame(SchBaseFrame):
 
 
     def on_close(self, event):
-        if platform.system() == "Windows":
-            self.t1.Stop()
+        #if platform.system() == "Windows":
+        #    self.t1.Stop()
         event.Skip()
 
 
     def set_acc_key_tab(self, win, tab):
         pass
 
-    if platform.system() == "Windows":
-        def on_timer(self, evt):
-            wx.html2.WebView.New("messageloop")
+    #if platform.system() == "Windows":
+    #    def on_timer(self, evt):
+    #        wx.html2.WebView.New("messageloop")

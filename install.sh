@@ -10,10 +10,10 @@ if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     ./configure --disable-static
     make
 else 
-    curl -o python-3.5.1-embed-win32.zip https://www.python.org/ftp/python/3.5.1/python-3.5.1-embed-win32.zip
+    curl -o python-3.6.0-embed-win32.zip https://www.python.org/ftp/python/3.6.0/python-3.6.0-embed-win32.zip
     mkdir python
-    unzip python-3.5.1-embed-win32.zip -d ./python
-    rm python-3.5.1-embed-win32.zip
+    unzip python-3.6.0-embed-win32.zip -d ./python
+    rm python-3.6.9-embed-win32.zip
     unzip ./python/python35.zip -d ./python/Lib
     rm ./python/python35.zip
     curl -o ./python/get-pip.py https://bootstrap.pypa.io/get-pip.py

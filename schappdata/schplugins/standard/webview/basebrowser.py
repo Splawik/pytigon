@@ -439,10 +439,11 @@ class BaseWebBrowser(object):
         http.get(self, uri, user_agent='embeded', parm=parm)
         s = http.ptr()
         http.clear_ptr()
+        print("*****************************************************************************************", uri)
         return s
 
     def _get_http_file(self, uri):
-        print("uri:", uri)
+        #print("uri:", uri)
         if uri.startswith('http://127.0.0.2'):
             if uri.startswith('http://127.0.0.2/data') and '?' in uri:
                 data = split2(uri, '?')

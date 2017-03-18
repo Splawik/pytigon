@@ -20,6 +20,8 @@
 import wx
 from .cefcontrol import initCEF, shutdownCEF, loop, CEFControl, quit
 from schcli.guilib.tools import get_colour
+from cefpython3 import cefpython as cef
+import os
 
 CEF_INITIATED = False
 TIMER = None
@@ -69,11 +71,151 @@ def init_plugin_cef(
     class NullClientHandler:
         pass
 
+    class WebRequestClient:
+
+        _resourceHandler = None
+        _data = b""
+        _dataLength = -1
+        _response = None
+
+        def OnUploadProgress(self, web_request, current, total):
+            pass
+
+        def OnDownloadProgress(self, web_request, current, total):
+            pass
+
+        def OnDownloadData(self, web_request, data):
+            if type(data) == str:
+                self._data += data.encode('utf-8')
+            else:
+                self._data += data
+
+        def OnRequestComplete(self, web_request):
+            self._response = web_request.GetResponse()
+            self._data = self._resourceHandler._clientHandler._OnResourceResponse(
+                self._resourceHandler._browser,
+                self._resourceHandler._frame,
+                web_request.GetRequest(),
+                web_request.GetRequestStatus(),
+                web_request.GetRequestError(),
+                web_request.GetResponse(),
+                self._data)
+
+            if self._data:
+                self._dataLength = len(self._data)
+            #else:
+            #    self._dataLength = 0
+                #self._data = b' '
+            self._resourceHandler._responseHeadersReadyCallback.Continue()
+
+    class ResourceHandler:
+        _resourceHandlerId = None
+        _clientHandler = None
+        _browser = None
+        _frame = None
+        _request = None
+        _responseHeadersReadyCallback = None
+        _webRequest = None
+        _webRequestClient = None
+        _offsetRead = 0
+
+        def ProcessRequest(self, request, callback):
+            #url = request.GetUrl()
+            #if '127.0.0.2' in url:
+            #    request.SetUrl(url.replace('http:', 'memory:'))
+            self._responseHeadersReadyCallback = callback
+            self._webRequestClient = WebRequestClient()
+            self._webRequestClient._resourceHandler = self
+            request.SetFlags(cef.Request.Flags["AllowCachedCredentials"] | cef.Request.Flags["AllowCookies"])
+            self._webRequest = cef.WebRequest.Create(request, self._webRequestClient)
+            return True
+
+        def GetResponseHeaders(self, response, response_length_out, redirect_url_out):
+            wrcResponse = self._webRequestClient._response
+            response.SetStatus(wrcResponse.GetStatus())
+            response.SetStatusText(wrcResponse.GetStatusText())
+            response.SetMimeType(wrcResponse.GetMimeType())
+            if wrcResponse.GetHeaderMultimap():
+                response.SetHeaderMultimap(wrcResponse.GetHeaderMultimap())
+            response_length_out[0] = self._webRequestClient._dataLength
+            if not response_length_out[0]:
+                pass
+
+        def ReadResponse(self, data_out, bytes_to_read, bytes_read_out, callback):
+            if self._offsetRead < self._webRequestClient._dataLength:
+                dataChunk = self._webRequestClient._data[ self._offsetRead:(self._offsetRead + bytes_to_read)]
+                self._offsetRead += len(dataChunk)
+                data_out[0] = dataChunk
+                bytes_read_out[0] = len(dataChunk)
+                return True
+            self._clientHandler._ReleaseStrongReference(self)
+            return False
+
+        def CanGetCookie(self, cookie):
+            # Return true if the specified cookie can be sent
+            # with the request or false otherwise. If false
+            # is returned for any cookie then no cookies will
+            # be sent with the request.
+            return True
+
+        def CanSetCookie(self, cookie):
+            # Return true if the specified cookie returned
+            # with the response can be set or false otherwise.
+            return True
+
+        def Cancel(self):
+            # Request processing has been canceled.
+            pass
+
+
+
+
     class ClientHandler:
         mainBrowser = None
 
         def __init__(self, htmlwin):
             self.htmlwin = htmlwin
+
+        def GetResourceHandler(self, browser, frame, request):
+            if request.GetUrl().startswith("http://127.0.0.2/") or request.GetUrl().startswith("memory://127.0.0.2/"):
+                print(request.GetUrl())
+                resHandler = ResourceHandler()
+                resHandler._clientHandler = self
+                resHandler._browser = browser
+                resHandler._frame = frame
+                resHandler._request = request
+                self._AddStrongReference(resHandler)
+                return resHandler
+            else:
+                return None
+
+        def _OnResourceResponse(self, browser, frame, request, requestStatus, requestError, response, data):
+            if request.GetUrl().startswith("http://127.0.0.2/") or request.GetUrl().startswith("memory://127.0.0.2/"):
+                uri = request.GetUrl()
+                data, file_name = self.htmlwin._get_http_file(uri)
+                if file_name:
+                    with open(file_name, "rb") as f:
+                        data = f.read()
+
+            if type(data) == str:
+                return data.encode('utf-8')
+            else:
+                return data
+
+        _resourceHandlers = {}
+        _resourceHandlerMaxId = 0
+
+        def _AddStrongReference(self, resHandler):
+            self._resourceHandlerMaxId += 1
+            resHandler._resourceHandlerId = self._resourceHandlerMaxId
+            self._resourceHandlers[resHandler._resourceHandlerId] = resHandler
+
+        def _ReleaseStrongReference(self, resHandler):
+            if resHandler._resourceHandlerId in self._resourceHandlers:
+                del self._resourceHandlers[resHandler._resourceHandlerId]
+            else:
+                print("_ReleaseStrongReference() FAILED: resource handler " \
+                      "not found, id = %s" % (resHandler._resourceHandlerId))
 
         def OnAddressChange(self, browser, frame, url):
             event = wx.CommandEvent()
@@ -108,7 +250,7 @@ def init_plugin_cef(
             if self.htmlwin: self.htmlwin.on_load_start(event)
             if self.htmlwin: self.htmlwin.progress_changed(0)
 
-        def _OnLoadEnd(self, browser, frame, httpStatusCode):
+        def OnLoadEnd(self, browser, frame, http_code):
             if frame == browser.GetMainFrame():
                 event = wx.CommandEvent()
                 event.SetString(frame.GetUrl())
@@ -140,9 +282,12 @@ def init_plugin_cef(
 
         #def OnBeforeResourceLoad(self, browser, request, redirectUrl, streamReader, response, loadFlags):
         def OnBeforeResourceLoad(self, browser, frame, request):
+            return False
+
+        def ___OnBeforeResourceLoad(self, browser, frame, request):
             if self.htmlwin: self.htmlwin.loading += 1
             url = request.GetUrl()
-            #print("|||", url)
+            print("|||", url)
             if url.startswith('static://') or url.startswith('file://'):
                 rp =  wx.GetApp().root_path
                 rp += url.replace('static://', '/').replace('file://', '/')
@@ -268,10 +413,10 @@ def init_plugin_cef(
             self.loaded = True
             #self.browser.GetMainFrame().LoadUrl(url.replace('file:///',''))
             #self.browser.GetMainFrame().LoadUrl(url)
-            if wx.Platform == '__WXMSW__':
-                self.browser.GetMainFrame().LoadUrl(url.replace("file:///",''))
-            else:
-                self.browser.GetMainFrame().LoadUrl(url)
+            #if wx.Platform == '__WXMSW__':
+            #    self.browser.GetMainFrame().LoadUrl(url.replace("file:///",''))
+            #else:
+            self.browser.GetMainFrame().LoadUrl(url)
 
         def _static_prefix(self):
             rp =  wx.GetApp().root_path

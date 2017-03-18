@@ -111,19 +111,22 @@ def initCEF(settings=None):
     sys.excepthook = ExceptHook
     if not settings:
         settings = {
-            "debug": True,
+            "debug": False,
             "log_severity": cef.LOGSEVERITY_INFO,
-            "log_file": GetApplicationPath("debug.log"),
-            "release_dcheck_enabled": True,
+            #"log_file": GetApplicationPath("debug.log"),
+            #"release_dcheck_enabled": True,
+            #"log_severity": cef.LOGSEVERITY_DISABLE,
+            #'cache_path': 'c:/temp/',
             "locales_dir_path": cef.GetModuleDirectory()+"/locales",
             "resources_dir_path": cef.GetModuleDirectory(),
             #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/cefclient.exe",
             #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess_32bit.exe",
             "browser_subprocess_path": cef.GetModuleDirectory() + "/subprocess",
             #'no_sandbox': True,
-            "unique_request_context_per_browser": True,
+            #"unique_request_context_per_browser": True,
             "downloads_enabled": True,
-            "remote_debugging_port": 0,
+            #"single_process": True,
+            "remote_debugging_port": -1,
             "context_menu": {
                 "enabled": True,
                 "navigation": True, # Back, Forward, Reload
