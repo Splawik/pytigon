@@ -47,26 +47,18 @@ def init_plugin_cef(
     from tempfile import NamedTemporaryFile
 
     def cef_init():
-        print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         global CEF_INITIATED, TIMER
         if not CEF_INITIATED:
-            print("A1")
-            print("A2")
             CEF_INITIATED = True
             frame = wx.GetApp().GetTopWindow()
             TIMER = wx.Timer(frame)
             def on_timer(event):
                 loop()
-                print("A7")
-            print("A3")
 
             frame.on_cef_timer = on_timer
-            #frame.Bind(wx.EVT_TIMER, frame.on_cef_timer, TIMER)
             frame.Bind(wx.EVT_TIMER, on_timer, TIMER)
             TIMER.Start(25)
-            print("A4")
             initCEF()
-            print("OOOOOOOOOOOOOOOOOOOOOK")
 
     def cef_shutdown():
         print("#####################################################################################################")
@@ -110,14 +102,13 @@ def init_plugin_cef(
             if self.htmlwin: self.htmlwin.on_title_changed(event)
 
         def OnLoadStart(self, browser, frame):
-            print("START")
             if self.htmlwin: self.htmlwin.loading += 1
             event = wx.CommandEvent()
             event.SetString(frame.GetUrl())
             if self.htmlwin: self.htmlwin.on_load_start(event)
             if self.htmlwin: self.htmlwin.progress_changed(0)
 
-        def OnLoadEnd(self, browser, frame, httpStatusCode):
+        def _OnLoadEnd(self, browser, frame, httpStatusCode):
             if frame == browser.GetMainFrame():
                 event = wx.CommandEvent()
                 event.SetString(frame.GetUrl())
@@ -125,25 +116,22 @@ def init_plugin_cef(
                     self.htmlwin.on_load_end(event)
                     self.htmlwin.progress_changed(100)
             if self.htmlwin: self.htmlwin.loading -= 1
-            print("END", self.htmlwin.loading)
 
-        def OnLoadError(self, browser, frame, errorCode, failedURL, errorText):
+        def OnLoadError(self, browser, frame, error_code, error_text_out, failed_url):
             event = wx.CommandEvent()
-            #event.SetString(failedURL)
-            #print(failedURL)
+            #event.SetString(error_text_out)
+            print(error_text_out)
             if self.htmlwin:
                 self.htmlwin.on_load_error(event)
                 self.htmlwin.progress_changed(100)
             if self.htmlwin: self.htmlwin.loading -= 1
-            print("ERROR")
 
         def OnTooltip(self, browser, text):
             event = wx.CommandEvent()
             event.SetString(text[0])
             if self.htmlwin: self.htmlwin.on_status_message(event)
 
-        def OnBeforeBrowse(self, browser, frame, request, isRedirect):
-            print(">>>", request.GetUrl())
+        def OnBeforeBrowse(self, browser, frame, request, is_redirect):
             if wx.GetKeyState(wx.WXK_CONTROL):
                 if self.htmlwin: self.htmlwin.new_win(request.GetUrl())
                 return True
@@ -248,15 +236,12 @@ def init_plugin_cef(
 
         #def on_destroy(self, event):
         def on_close(self, event):
-            print("X1")
             #del self.browser
             self.browser.StopLoad()
-            print("X2")
             while self.loading:
                 wx.Yield()
-            #quit()
+            quit()
             self.client_handler.htmlwin = None
-            print("X3")
             #del self.browser
             #if self.loaded:
             #self.browser.StopLoad()
@@ -282,7 +267,6 @@ def init_plugin_cef(
         def load_url(self, url):
             self.loaded = True
             #self.browser.GetMainFrame().LoadUrl(url.replace('file:///',''))
-            print("load_url:", url)
             #self.browser.GetMainFrame().LoadUrl(url)
             if wx.Platform == '__WXMSW__':
                 self.browser.GetMainFrame().LoadUrl(url.replace("file:///",''))

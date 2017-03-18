@@ -26,10 +26,12 @@ def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
     from base64 import b64encode
 
     if wx.Platform == '__WXMSW__':
-        #from .cef import init_plugin_cef
-        #return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
-        from .wxwebview import init_plugin_web_view
-        ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
+        #from cefpython3 import cefpython as cef
+        from .cef import init_plugin_cef
+        return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
+        #from .wxwebview import init_plugin_web_view
+        #ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
+        pass
     else:
         #from .cef import init_plugin_cef
         #return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)

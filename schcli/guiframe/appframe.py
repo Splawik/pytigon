@@ -30,7 +30,7 @@ from tempfile import NamedTemporaryFile
 from pydispatch import dispatcher
 
 import wx
-import wx.html2
+#import wx.html2
 import datetime
 from wx.lib.agw import aui
 
@@ -714,8 +714,8 @@ class SchAppFrame(SchBaseFrame):
         event.Skip()
 
     def on_timer(self, evt):
-        if platform.system() == "Windows":
-            wx.html2.WebView.New("messageloop")
+        #if platform.system() == "Windows":
+        #    wx.html2.WebView.New("messageloop")
 
         x = dispatcher.getReceivers(signal='PROCESS_INFO')
         if len(x)>0:

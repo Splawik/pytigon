@@ -6,7 +6,11 @@
 import platform
 import os, sys
 #from cefpython import cefpython_py35 as cefpython
-from cefpython3 import cefpython as cefpython
+
+import wx
+from cefpython3 import cefpython as cef
+
+#from cefpython3 import cefpython as cefpython
 
 import wx
 
@@ -42,7 +46,7 @@ def ExceptHook(excType, excValue, traceObject):
             traceObject))
     errorFile = GetApplicationPath("error.log")
     try:
-        appEncoding = cefpython.g_applicationSettings["string_encoding"]
+        appEncoding = cef.g_applicationSettings["string_encoding"]
     except:
         appEncoding = "utf-8"
     if type(errorMsg) == bytes:
@@ -52,7 +56,7 @@ def ExceptHook(excType, excValue, traceObject):
             fp.write("\n[%s] %s\n" % (
                     time.strftime("%Y-%m-%d %H:%M:%S"), errorMsg))
     except:
-        print("cefpython: WARNING: failed writing to error file: %s" % (
+        print("cef: WARNING: failed writing to error file: %s" % (
                 errorFile))
     # Convert error message to ascii before printing, otherwise
     # you may get error like this:
@@ -60,8 +64,8 @@ def ExceptHook(excType, excValue, traceObject):
     errorMsg = errorMsg.encode("ascii", errors="replace")
     errorMsg = errorMsg.decode("ascii", errors="replace")
     print("\n"+errorMsg+"\n")
-    cefpython.QuitMessageLoop()
-    cefpython.Shutdown()
+    cef.QuitMessageLoop()
+    cef.Shutdown()
     os._exit(1)
 
 #-------------------------------------------------------------------------------
@@ -76,9 +80,9 @@ class CEFControl(wx.Control):
         kwargs['style'] = wx.WANTS_CHARS
         wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
         self.url = url
-        windowInfo = cefpython.WindowInfo()
+        windowInfo = cef.WindowInfo()
         windowInfo.SetAsChild(self.GetHandle())
-        self.browser = cefpython.CreateBrowserSync(windowInfo,
+        self.browser = cef.CreateBrowserSync(windowInfo,
             browserSettings={"plugins_disabled": False}, navigateUrl=url)
 
         self.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
@@ -94,30 +98,28 @@ class CEFControl(wx.Control):
      #   self.browser.CloseBrowser()
 
     def OnSetFocus(self, event):
-        cefpython.WindowUtils.OnSetFocus(self.GetHandle(), 0, 0, 0)
+        cef.WindowUtils.OnSetFocus(self.GetHandle(), 0, 0, 0)
         event.Skip()
 
 
     def OnSize(self, event):
-        cefpython.WindowUtils.OnSize(self.GetHandle(), 0, 0, 0)
+        cef.WindowUtils.OnSize(self.GetHandle(), 0, 0, 0)
 
 #-------------------------------------------------------------------------------
-print("==============================")
-print( cefpython.GetModuleDirectory() )
 
 def initCEF(settings=None):
     sys.excepthook = ExceptHook
     if not settings:
         settings = {
             "debug": True,
-            "log_severity": cefpython.LOGSEVERITY_INFO,
+            "log_severity": cef.LOGSEVERITY_INFO,
             "log_file": GetApplicationPath("debug.log"),
             "release_dcheck_enabled": True,
-            "locales_dir_path": cefpython.GetModuleDirectory()+"/locales",
-            "resources_dir_path": cefpython.GetModuleDirectory(),
+            "locales_dir_path": cef.GetModuleDirectory()+"/locales",
+            "resources_dir_path": cef.GetModuleDirectory(),
             #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/cefclient.exe",
             #"browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess_32bit.exe",
-            "browser_subprocess_path": cefpython.GetModuleDirectory() + "/subprocess",
+            "browser_subprocess_path": cef.GetModuleDirectory() + "/subprocess",
             #'no_sandbox': True,
             "unique_request_context_per_browser": True,
             "downloads_enabled": True,
@@ -133,14 +135,13 @@ def initCEF(settings=None):
             "ignore_certificate_errors": True,
             #"single_process": True,
         }
-    cefpython.Initialize(settings)
+    cef.Initialize(settings)
 
 def shutdownCEF():
-    cefpython.Shutdown()
+    cef.Shutdown()
 
 def loop():
-    print("loop")
-    cefpython.MessageLoopWork()
+    cef.MessageLoopWork()
 
 def quit():
-    cefpython.QuitMessageLoop()
+    cef.QuitMessageLoop()

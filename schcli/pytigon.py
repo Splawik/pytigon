@@ -36,6 +36,7 @@ import getopt
 import configparser
 
 
+
 if platform.system() == "Windows":
     #grouping pytigon applicactions in the windows taskbar
     import ctypes
@@ -64,9 +65,14 @@ if platform.system() == "Windows":
 else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
 
-
 import wx
-import wx.html2
+
+#from cefpython3 import cefpython as cef
+#print(cef)
+
+#import wx.html2
+
+
 from schcli.guilib import image
 from schcli.guilib import pytigon_install
 from schcli.guilib.logindialog import LoginDialog
@@ -81,6 +87,7 @@ from schcli.guiframe import browserframe
 from schlib.schtools import createparm
 from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
+
 
 
 def install_0():
@@ -903,12 +910,12 @@ def main(argv):
             while(True):
                 time.sleep(100)
         else:
-            if platform.system() == "Windows":
-                wx.html2.WebView.New("start:" + wx.html2.__file__.replace('html2.py', 'cefclient.exe'))
+            #if platform.system() == "Windows":
+            #    wx.html2.WebView.New("start:" + wx.html2.__file__.replace('html2.py', 'cefclient.exe'))
             _main_run()
-            if platform.system() == "Windows":
-                wx.html2.WebView.New("messageloop")
-                wx.html2.WebView.New("end")
+            #if platform.system() == "Windows":
+            #    wx.html2.WebView.New("messageloop")
+            #    wx.html2.WebView.New("end")
 
 
 if __name__ == '__main__':
