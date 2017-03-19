@@ -19,34 +19,17 @@
 
 import wx
 from .basebrowser import BaseWebBrowser
-import sys
 
 def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
     import schcli.guictrl.ctrl
     from base64 import b64encode
 
-    if wx.Platform == '__WXMSW__':
-        #from cefpython3 import cefpython as cef
+    try:
         from .cef import init_plugin_cef
         return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
-        #from .wxwebview import init_plugin_web_view
-        #ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
-        pass
-    else:
-        from .cef import init_plugin_cef
-        from cefpython3 import cefpython as cef
-
-        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
-        #settings = {}
-        #cef.Initialize(settings=settings)
-
-        #cef_init()
-
-        return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
-
-        #from .wxwebview import init_plugin_web_view
-        #ret = init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
-        #pass
+    except:
+        from .wxwebview import init_plugin_web_view
+        return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
 
     def Component(parent, **kwds):
         http = wx.GetApp().get_http(parent)

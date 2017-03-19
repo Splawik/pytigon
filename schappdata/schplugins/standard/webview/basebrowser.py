@@ -466,6 +466,9 @@ class BaseWebBrowser(object):
             elif '/site_media/' in uri and not '?' in uri:
                 path = wx.GetApp().cwd+uri.replace('http://127.0.0.2', '').replace('site_media', 'media')
                 return (None, path)
+            elif uri.startswith('http://127.0.0.2/?:'):
+                self.run_command_from_js(uri.replace('http://127.0.0.2/?:', ''))
+                return ("", None)
             else:
                 s = self._local_request(uri2)
                 return (s, None)
