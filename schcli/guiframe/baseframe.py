@@ -34,7 +34,8 @@ class SchBaseFrame(wx.Frame):
     def __init__(self, parent, gui_style="tree(toolbar,statusbar)", id= -1, title="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE |
                  wx.CLIP_CHILDREN | wx.WANTS_CHARS, name="MainWindow"):
         wx.Frame.__init__(self, None, wx.ID_ANY, title, pos, size, style, "MainWindow")
-
+        self.run_on_close = []
+        self.Bind(wx.EVT_CLOSE, self.on_close)
 
     def init_plugins(self):
         home_dir = wx.GetApp().get_working_dir()
@@ -77,3 +78,8 @@ class SchBaseFrame(wx.Frame):
                                     print("Error load plugin: ", mod_name)
                                     print(sys.exc_info()[0])
                                     print(traceback.print_exc())
+
+    def on_close(self, event):
+        for fun in self.run_on_close:
+            fun(self)
+        event.Skip()

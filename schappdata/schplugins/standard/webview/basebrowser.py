@@ -439,11 +439,9 @@ class BaseWebBrowser(object):
         http.get(self, uri, user_agent='embeded', parm=parm)
         s = http.ptr()
         http.clear_ptr()
-        print("*****************************************************************************************", uri)
         return s
 
     def _get_http_file(self, uri):
-        #print("uri:", uri)
         if uri.startswith('http://127.0.0.2'):
             if uri.startswith('http://127.0.0.2/data') and '?' in uri:
                 data = split2(uri, '?')
@@ -455,10 +453,6 @@ class BaseWebBrowser(object):
                 else:
                     uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
             elif uri.startswith('http://127.0.0.2/file/'):
-                #p=open(uri.replace('http://127.0.0.2/file/',''),"rb")
-                #x = p.read()
-                #p.close()
-                #return (x,None)
                 return (None, uri.replace('http://127.0.0.2/file/',''))
             else:
                 uri2 = uri

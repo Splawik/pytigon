@@ -803,6 +803,7 @@ class SchAppFrame(SchBaseFrame):
         self._exit()
 
     def on_close(self, event):
+        super().on_close(event)
         self._exit()
         event.Skip()
 

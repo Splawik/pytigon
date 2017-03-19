@@ -17,10 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import os
 import wx
 import schcli.guictrl.ctrl
-import platform
 
 from schcli.guiframe.baseframe import SchBaseFrame
 
@@ -41,32 +39,32 @@ class SchBrowserFrame(SchBaseFrame):
         self._mgr = None
         self.toolbar_interface = None
         self.aTable = None
+        self.ctrl = None
 
         SchBaseFrame.__init__(self, parent, id, gui_style, title, pos, size, style | wx.WANTS_CHARS, name)
         wx.GetApp().SetTopWindow(self)
 
-        #if platform.system() == "Windows":
-        #    self.t1 = wx.Timer(self)
-        #    self.t1.Start(25)
-
-        #    self.Bind(wx.EVT_TIMER, self.on_timer, self.t1)
-
-        app = wx.GetApp()
         self.init_plugins()
-        self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
-        self.ctrl.load_url(app.base_address+"/")
-        self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Show()
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_SIZE, self.on_size)
+        self.Bind(wx.EVT_SHOW, self.on_show)
         wx.CallAfter(self.SetSize, (800,600))
 
+    def on_show(self, event):
+        if event.Show and not self.ctrl:
+            app = wx.GetApp()
+            self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=self.GetClientSize())
+            self.ctrl.load_url(app.base_address+"/")
 
     def on_size(self, event):
         if event:
-            self.ctrl.SetSize(event.GetSize())
+            if self.ctrl:
+                self.ctrl.SetSize(event.GetSize())
             event.Skip()
         else:
-            self.ctrl.SetSize(self.GetSize())
+            if self.ctrl:
+                self.ctrl.SetSize(self.GetSize())
 
     def get_menu_bar(self):
         return None
@@ -85,22 +83,10 @@ class SchBrowserFrame(SchBaseFrame):
                         if len(url_page) == 2:
                             self._on_html(_(url_page[0]) + ',' + app.base_address
                                             + url_page[1])
-                            # sch
-                            #pass
                 wx.CallAfter(start_pages)
 
         event.Skip()
 
-
-    def on_close(self, event):
-        #if platform.system() == "Windows":
-        #    self.t1.Stop()
-        event.Skip()
-
-
     def set_acc_key_tab(self, win, tab):
         pass
 
-    #if platform.system() == "Windows":
-    #    def on_timer(self, evt):
-    #        wx.html2.WebView.New("messageloop")
