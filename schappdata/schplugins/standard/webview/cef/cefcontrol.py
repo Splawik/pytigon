@@ -271,10 +271,18 @@ class ClientHandler:
 
 
 class FocusHandler(object):
-    def OnGotFocus(self, browser, **_):
+    def __init__(self, parent):
+        self.parent = parent
+
+    def OnGotFocus(self, browser):
         if platform.system() != "Windows":
             browser.SetFocus(True)
 
+    def OnSetFocus(self, browser, source):
+        if self.parent.url and self.parent.IsEnabled():
+            return False
+        else:
+            return True
 
 class CEFControl(wx.Control):
     def __init__(self, parent, url="", size=(-1, -1), *args, **kwargs):
@@ -312,7 +320,7 @@ class CEFControl(wx.Control):
         (width, height) = self.GetClientSize()
         window_info.SetAsChild(self.GetHandle(), [0, 0, width, height])
         self.browser = cef.CreateBrowserSync(window_info, url = self.url)
-        self.browser.SetClientHandler(FocusHandler())
+        self.browser.SetClientHandler(FocusHandler(self))
 
         if self.url:
             self.browser.GetMainFrame().LoadUrl(self.url)
@@ -321,6 +329,7 @@ class CEFControl(wx.Control):
 
     def load_url(self, url):
         if self.browser:
+            self.url = url
             self.browser.GetMainFrame().LoadUrl(url)
         else:
             self.url = url
