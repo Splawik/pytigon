@@ -345,7 +345,7 @@ class CEFControl(wx.Control):
         if not self.browser:
             return
         if platform.system() == "Windows":
-            cef.WindowUtils.OnSize(self.browser_panel.GetHandle(), 0, 0, 0)
+            cef.WindowUtils.OnSize(self.GetHandle(), 0, 0, 0)
         else:
             (x, y) = (0, 0)
             (width, height) = event.GetSize()
