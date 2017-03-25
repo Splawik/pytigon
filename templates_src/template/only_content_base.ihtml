@@ -2,6 +2,8 @@
 
 % extends default_template2
 
+%% page_start
+
 %% page_head
     head
         meta charset=utf-8
@@ -35,4 +37,8 @@
 %% page_footer
 
 %% body_end
+
+%% page_end
+
+
 
