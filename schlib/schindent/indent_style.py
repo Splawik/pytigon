@@ -360,6 +360,17 @@ class ConwertToHtml:
                             convert_js(buf, buf2)
                             x = self._pre_process_line(buf0 + buf2.getvalue())
                         elif test == 3:
+                            x = self._pre_process_line(buf0.replace('pscript', 'script language=python') + buf.getvalue())
+                            #v = buf.getvalue()
+                            #codejs = py_to_js(v, None)
+                            #x = self._pre_process_line(
+                            #    buf0.replace('pscript', 'script').replace(' language=python', '') + codejs)
+                        elif test == 4:
+                            v = buf.getvalue()
+                            codejs = py_to_js(v, None)
+                            x = self._pre_process_line(
+                                buf0.replace('pscript', 'script').replace(' language=python', '') + codejs)
+                        elif test == 5:
                             v = buf.getvalue()
                             codejs = py_to_js(v, None)
                             x = self._pre_process_line(
