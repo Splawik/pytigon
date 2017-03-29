@@ -9,5 +9,10 @@
 %% messages
 
 %% tabs
-    <component>
+    div id=comp
+        <component>
 
+%% js_script_body
+    .new Vue({
+    .    el: '#comp'
+    .})

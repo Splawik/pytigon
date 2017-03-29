@@ -2024,8 +2024,8 @@ def COMPONENT(parent, **kwds):
     buf = http.str()
     http.clear_ptr()
 
-    x = """<sch-vseditor width="800px" height="600px" value="SGVsbG8gV29ybGQh"></sch-vseditor>"""
-    buf = buf.replace("<component>", kwds['param']['data'] + "Hello world!" + x)
+    #x = """<sch-vseditor width="800px" height="600px" value="SGVsbG8gV29ybGQh"></sch-vseditor>"""
+    buf = buf.replace("<component>", kwds['param']['data'] + "Hello world!")
 
     #elem = kwds['param']['component_elem']
     #buf=buf.replace('</body>', "<%s></%s><script>riot.mount('*');</script></body>" % (elem, elem))

@@ -58,3 +58,12 @@ class Html(object):
         return ret
 
 
+def make_start_tag(tag, attrs):
+    ret = '<' + tag
+    for pos in attrs:
+        if attrs[pos] != None:
+            ret += ' ' + pos + '="' + attrs[pos] + '"'
+        else:
+            ret += ' ' + pos
+    ret += '>'
+    return ret

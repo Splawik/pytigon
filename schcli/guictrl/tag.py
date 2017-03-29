@@ -28,7 +28,7 @@ from schlib.schhtml.basehtmltags import BaseHtmlElemParser, register_tag_map, re
 from schlib.schhtml.htmltools import superstrip
 from schlib.schparser.html_parsers import Td
 from schlib.schtools.tools import is_null
-
+from schlib.schtools.schhtmlgen import make_start_tag
 import wx
 
 import schcli.guictrl.ctrl as schctrl
@@ -480,11 +480,14 @@ register_tag_map('ctr*', CtrlTag)
 class ComponentTag(CtrlTag):
     def __init__(self, parent, parser, tag, attrs):
         super().__init__(parent, parser, tag, attrs)
-        self.data.append("<" + attrs['_tag'] + ">")
+        self.data.append(make_start_tag(attrs['_tag'], attrs))
+        self.count = 1
+        self._close_tag = None
 
     def close(self):
-        if not self.parent is self:
-            return super().close()
+        #self.count -= 1
+        #if self.count < 0:
+        return super().close()
 
     def handle_starttag(
         self,
@@ -492,15 +495,25 @@ class ComponentTag(CtrlTag):
         tag,
         attrs,
         ):
-        self.data.append("<" + tag + ">")
+        if '_tag' in attrs:
+            tag2 = attrs['_tag']
+        else:
+            tag2 = tag
+        self.data.append(make_start_tag(tag2, attrs))
+        if not self._close_tag:
+            self._close_tag = self.close_tag
+        self.count += 1
         return self
 
     def handle_endtag(self, tag):
         self.data.append("</" + tag + ">")
-        if self.parent is self:
-            return super().super().handle_endtag(tag)
-        else:
+        self.count -= 1
+        if self.count == 0:
+            if self._close_tag:
+                self.close_tag = self._close_tag
             return super().handle_endtag(tag)
+        else:
+            return self
 
 register_tag_map('_component', ComponentTag)
 
