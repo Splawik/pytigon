@@ -557,6 +557,7 @@ def _main_init(argv):
     embed_diango = True
     app_title = _("Pytigon")
     embeded_browser = False
+    extern_app_set = False
 
     try:
         (opts, args) = getopt.getopt(argv, 'h:dmp', [
@@ -602,7 +603,7 @@ def _main_init(argv):
             if arg != 'embeded':
                 CWD_PATH = ROOT_PATH + '/app_pack/_schremote'
             address = arg
-            test_app_set = True
+            extern_app_set = True
         elif opt == '--hybrid':
             app.is_hybrid = True
         elif opt == '--nogui':
@@ -629,6 +630,8 @@ def _main_init(argv):
             if not os.path.exists(os.path.join(CWD_PATH,"settings_app.py")):
                 print(_("Application pack: '%s' does not exists") %  args[0].strip())
                 return (None, None)
+    elif extern_app_set:
+        pass
     else:
         choices = [ ff for ff in os.listdir(ROOT_PATH + '/app_pack/') if not ff.startswith('_') ]
 
@@ -762,7 +765,7 @@ def _main_init(argv):
                     app.plugins = row[1].data.split(';')
         elif row[0].data == 'riot_elements':
             app.riot_elements = [pos for pos in row[1].data.split(';') if pos]
-            schcli.guictrl.tag.init_riot_tags(app.riot_elements)
+            #schcli.guictrl.tag.init_riot_tags(app.riot_elements)
 
     if server_only:
         app.gui_style = 'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'

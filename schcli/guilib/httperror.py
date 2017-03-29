@@ -41,9 +41,6 @@ class HttpErrorDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
 
-        #if wx.Platform == '__WXMSW__':
-        #    self.label = schcli.guictrl.ctrl.HTML2(self, size=(800, 600), name="webbrowser", backend="wxWebViewIE")
-        #else:
         self.label = schcli.guictrl.ctrl.HTML2(self, size=(800, 600), name="webbrowser")
 
         try:
@@ -62,7 +59,8 @@ class HttpErrorDialog(wx.Dialog):
         sizer.Add(btnsizer, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.SetSizer(sizer)
         sizer.Fit(self)
-        self.label.load_str(text)
+        wx.CallAfter(self.label.load_str, text)
+        #self.label.load_str(text)
 
     def set_acc_key_tab(self, ctrl, tab):
         pass

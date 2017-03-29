@@ -50,6 +50,6 @@ int main(int argi, char **argv)
     }
     strcat(bufor2, lpCmdLine);
     execl(bufor, bufor, bufor2, NULL);
-	return 0;
+    return 0;
 }
 

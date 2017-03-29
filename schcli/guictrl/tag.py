@@ -430,6 +430,8 @@ class CtrlTag(TableTag):
         try:
             if tag.upper().startswith('CTRL'):
                 self.classObj = getattr(schctrl, tag[4:].upper())
+            elif tag.startswith('_'):
+                self.classObj = getattr(schctrl, tag[1:].upper())
             else:
                 self.classObj = getattr(schctrl, tag.upper())
         except:
@@ -473,6 +475,34 @@ class CtrlTag(TableTag):
             self.obj = obj
 
 register_tag_map('ctr*', CtrlTag)
+
+
+class ComponentTag(CtrlTag):
+    def __init__(self, parent, parser, tag, attrs):
+        super().__init__(parent, parser, tag, attrs)
+        self.data.append("<" + attrs['_tag'] + ">")
+
+    def close(self):
+        if not self.parent is self:
+            return super().close()
+
+    def handle_starttag(
+        self,
+        parser,
+        tag,
+        attrs,
+        ):
+        self.data.append("<" + tag + ">")
+        return self
+
+    def handle_endtag(self, tag):
+        self.data.append("</" + tag + ">")
+        if self.parent is self:
+            return super().super().handle_endtag(tag)
+        else:
+            return super().handle_endtag(tag)
+
+register_tag_map('_component', ComponentTag)
 
 
 def table_to_ctrltab(parent, attrs):
@@ -716,14 +746,26 @@ def ul_convert(parent, attrs):
 register_tag_preprocess_map('ul', ul_convert)
 
 
-def register_component_elem(name):
-    def _convert(parent, attrs):
-        attrs['component_elem'] = name
-        return ('ctrlcomponent', attrs)
-    register_tag_preprocess_map(name, _convert)
+def component_convert(parent, attrs):
+    #if 'class' in attrs:
+    #    if 'root' in attrs['class']:
+    #        return ('ldata', attrs)
+    #    if attrs['class'] == 'errorlist':
+    #        return ('ctrlerrorlist', attrs)
+    return ('_component', attrs)
+
+register_tag_preprocess_map('*-*', component_convert)
 
 
-def init_riot_tags(riot_elements):
-    for pos in riot_elements:
-        name = pos.split('/')[-1]
-        register_component_elem(name)
+
+#def init_riot_tags(riot_elements):
+#    for pos in riot_elements:
+#        name = pos.split('/')[-1]
+#        register_component_elem(name)
+
+
+#def register_component_elem(name):
+#    def _convert(parent, attrs):
+#        attrs['component_elem'] = name
+#        return ('ctrlcomponent', attrs)
+#    register_tag_preprocess_map(name, _convert)

@@ -2,4 +2,12 @@
 
 %extends 'template/desktop.html'|translate:lang
 
-%% body
+%% nav
+
+%% body_ini
+
+%% messages
+
+%% tabs
+    <component>
+

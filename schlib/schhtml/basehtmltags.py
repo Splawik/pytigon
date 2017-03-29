@@ -17,6 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import fnmatch
 
 from schlib.schhtml.atom import AtomList
 
@@ -373,15 +374,38 @@ def register_tag_map(tag, cls):
     tag_class_map[tag] = cls
 
 
-tag_preprocess_map = {}
+class TagPreprocesor():
+    def __init__(self):
+        self.tag_preprocess_map = {}
+        self.tag_wildcards_preprocess_map = []
 
+    def register(self, tag, fun):
+        if '?' in tag or '*' in tag:
+            self.tag_wildcards_preprocess_map.append([tag.lower(), fun])
+        else:
+            self.tag_preprocess_map[tag.lower()] = fun
+
+    def get_handler(self, tag):
+        if tag in self.tag_preprocess_map:
+            return self.tag_preprocess_map[tag.lower()]
+        else:
+            for pos in self.tag_wildcards_preprocess_map:
+                if fnmatch.fnmatch(tag.lower(), pos[0]):
+                    return pos[1]
+        return None
+
+
+#tag_preprocess_map = {}
+TAG_PREPROCESS_MAP = TagPreprocesor()
 
 def register_tag_preprocess_map(tag, fun):
-    tag_preprocess_map[tag] = fun
+    global TAG_PREPROCESS_MAP
+    TAG_PREPROCESS_MAP.register(tag, fun)
+    #tag_preprocess_map[tag] = fun
 
 
 def get_tag_preprocess_map():
-    global tag_preprocess_map
-    return tag_preprocess_map
+    global TAG_PREPROCESS_MAP
+    return TAG_PREPROCESS_MAP
 
 

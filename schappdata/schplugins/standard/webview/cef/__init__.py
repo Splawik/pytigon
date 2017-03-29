@@ -97,9 +97,12 @@ def init_plugin_cef(
             return rpp
 
 
-        def load_str(self, data):
+        def load_str(self, data, base=None):
             if self.browser:
-                self.browser.GetMainFrame().LoadString(data,self._static_prefix())
+                if base:
+                    self.browser.GetMainFrame().LoadString(data, base)
+                else:
+                    self.browser.GetMainFrame().LoadString(data,self._static_prefix())
 
         def on_back(self, event):
             if self.browser:

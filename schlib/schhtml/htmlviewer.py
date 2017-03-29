@@ -201,8 +201,13 @@ class HtmlViewerParser(HtmlModParser):
 
             tmap = get_tag_preprocess_map()
             tag2 = tag.lower()
-            if tag2 in tmap:
-                (tag2, attrs) = tmap[tag2](self.tag_parser, attrs)
+            #if tag2 in tmap:
+            #    (tag2, attrs) = tmap[tag2](self.tag_parser, attrs)
+
+            handler = tmap.get_handler(tag)
+            if handler:
+                attrs['_tag'] = tag
+                (tag2, attrs) = handler(self.tag_parser, attrs)
 
             if self.tag_parser:
                 obj = self.tag_parser.handle_starttag(self, tag2, attrs)
