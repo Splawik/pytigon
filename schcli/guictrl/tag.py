@@ -760,25 +760,7 @@ register_tag_preprocess_map('ul', ul_convert)
 
 
 def component_convert(parent, attrs):
-    #if 'class' in attrs:
-    #    if 'root' in attrs['class']:
-    #        return ('ldata', attrs)
-    #    if attrs['class'] == 'errorlist':
-    #        return ('ctrlerrorlist', attrs)
     return ('_component', attrs)
 
 register_tag_preprocess_map('*-*', component_convert)
 
-
-
-#def init_riot_tags(riot_elements):
-#    for pos in riot_elements:
-#        name = pos.split('/')[-1]
-#        register_component_elem(name)
-
-
-#def register_component_elem(name):
-#    def _convert(parent, attrs):
-#        attrs['component_elem'] = name
-#        return ('ctrlcomponent', attrs)
-#    register_tag_preprocess_map(name, _convert)

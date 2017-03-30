@@ -220,7 +220,6 @@ class SchApp(App, _BASE_APP):
         self.csrf_token = None
         self.title = None
         self.plugins = None
-        self.riot_elements = None
         self.extern_data = {}
 
         self.thread_manager = None
@@ -763,9 +762,6 @@ def _main_init(argv):
         elif row[0].data == 'plugins':
             if row[1].data and row[1].data != "":
                     app.plugins = row[1].data.split(';')
-        elif row[0].data == 'riot_elements':
-            app.riot_elements = [pos for pos in row[1].data.split(';') if pos]
-            #schcli.guictrl.tag.init_riot_tags(app.riot_elements)
 
     if server_only:
         app.gui_style = 'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'

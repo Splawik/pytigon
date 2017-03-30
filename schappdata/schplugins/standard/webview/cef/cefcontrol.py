@@ -27,6 +27,37 @@ from cefpython3 import cefpython as cef
 CEF_INITIATED = False
 TIMER = None
 
+class KeyEvent():
+    def __init__(self, event):
+        self.event = event
+        m = event['modifiers']
+        if m & 2:
+            self.shift_down = True
+        else:
+            self.shift_down = False
+        if m & 4:
+            self.control_down = True
+        else:
+            self.control_down = False
+        if m & 8:
+            self.alt_down = True
+        else:
+            self.alt_down = False
+
+        self.KeyCode = event['windows_key_code']
+
+    def AltDown(self):
+        return self.alt_down
+
+    def ControlDown(self):
+        return self.control_down
+
+    def ShiftDown(self):
+        return self.shift_down
+
+    def Skip(self):
+        pass
+
 
 def cef_close(frame):
     global CEF_INITIATED, TIMER
@@ -269,6 +300,25 @@ class ClientHandler:
     def OnBeforeResourceLoad(self, browser, frame, request):
         return False
 
+class KeyboardHandler(object):
+    def __init__(self, parent):
+        self.parent = parent
+
+    def OnKeyEvent(self, browser, event, event_handle):
+
+        m = event['modifiers']
+        t = event['type']
+        if t==0 and m>2:
+            ev = KeyEvent(event)
+            p = self.parent
+            while(p):
+                if hasattr(p, 'on_acc_key_down'):
+                    p.on_acc_key_down(ev)
+                p = p.GetParent()
+
+        print("B1", event)
+        return False
+
 
 class FocusHandler(object):
     def __init__(self, parent):
@@ -321,6 +371,7 @@ class CEFControl(wx.Control):
         window_info.SetAsChild(self.GetHandle(), [0, 0, width, height])
         self.browser = cef.CreateBrowserSync(window_info, url = self.url)
         self.browser.SetClientHandler(FocusHandler(self))
+        self.browser.SetClientHandler(KeyboardHandler(self))
 
         if self.url:
             self.browser.GetMainFrame().LoadUrl(self.url)

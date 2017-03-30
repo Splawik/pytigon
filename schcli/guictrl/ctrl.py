@@ -2018,22 +2018,17 @@ def COMPOSITE(parent, **kwds):
     if cls in globals():
         return globals()[cls](parent, **kwds)
 
+
 def COMPONENT(parent, **kwds):
     http = wx.GetApp().get_http(parent)
     http.get(parent, "/schsys/widget_web?browser_type=1")
     buf = http.str()
     http.clear_ptr()
 
-    #x = """<sch-vseditor width="800px" height="600px" value="SGVsbG8gV29ybGQh"></sch-vseditor>"""
-    buf = buf.replace("<component>", kwds['param']['data'] + "Hello world!")
+    buf = buf.replace("<component>", kwds['param']['data'])
 
-    #elem = kwds['param']['component_elem']
-    #buf=buf.replace('</body>', "<%s></%s><script>riot.mount('*');</script></body>" % (elem, elem))
-    #url='http://127.0.0.2/data?'+ b64encode(buf.encode('utf-8')).decode('utf-8')
-    #kwds['url'] = url
     if HTML2:
         obj =  HTML2(parent, **kwds)
-        #obj.load_url(url)
         obj.load_str(buf, "http://127.0.0.2")
         return obj
     else:

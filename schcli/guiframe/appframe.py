@@ -887,7 +887,7 @@ class SchAppFrame(SchBaseFrame):
         dlg.ShowModal()
         dlg.Destroy()
 
-    def on_key_down(self, event):
+    def on_acc_key_down(self, event):
         for a in self.aTable:
             if event.KeyCode == a[1]:
                 if event.AltDown() and (a[0] & wx.ACCEL_ALT == 0):
