@@ -79,9 +79,7 @@ def inclusion_tag(file_name):
         def func2(context, *argi, **argv):
             ret = func(context, *argi, **argv)
             t = get_template(file_name)
-            c = Context(context)
-            c.update(ret)
-            return t.render(c)
+            return t.render(ret, context.request)
         return register.simple_tag(takes_context=True, name=getattr(func, '_decorated_function', func).__name__)(func2)
     return dec
 
@@ -352,8 +350,8 @@ class RowActionNode(Node):
         output2 = t.render(context).replace('\n',';')
         t = get_template('widgets/row_actions.html')
         d = actions_dict(context, output2)
-        c = Context(d)
-        return t.render(c)
+        return t.render(d, request = d['request'])
+        return t.render(d, request = d['request'])
 
 
 @register.tag

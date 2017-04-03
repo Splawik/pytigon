@@ -29,7 +29,7 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if not DEBUG:
+if PRODUCTION_VERSION:
     URL_ROOT_FOLDER='_schremote'
 
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'

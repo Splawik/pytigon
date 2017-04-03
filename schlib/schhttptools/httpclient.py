@@ -179,6 +179,8 @@ class HttpClient:
         headers = {}
         if user_agent:
             headers['User-Agent'] = user_agent
+        headers['Referer'] = adr
+
 
         HTTP_LOCK.acquire()
         try:

@@ -648,7 +648,9 @@ def _main_init(argv):
             return (None, None)
 
     sys.path.insert(0,CWD_PATH)
-    httpclient.init_embeded_django()
+
+    if not extern_app_set:
+        httpclient.init_embeded_django()
 
     if address == 'http://127.0.0.2':
         embed_diango = True

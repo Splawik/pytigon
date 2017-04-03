@@ -26,9 +26,11 @@ APPSET_NAME = "Pytigon"
 if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv):
     DEBUG = True
     DB_DEBUG = True
+    PRODUCTION_VERSION = False
 else:
     DEBUG = False
     DB_DEBUG = False
+    PRODUCTION_VERSION = True
 
 SHOW_LOGIN_WIN = True
 
@@ -59,13 +61,10 @@ URL_ROOT_FOLDER = ''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
-if DEBUG:
-    STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
-else:
-    STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
+STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 
 if not DEBUG:
-    STATIC_ROOT  = STATICFILES_DIRS[0]
+    STATIC_ROOT = STATICFILES_DIRS[0]
 
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 
@@ -123,7 +122,6 @@ MIDDLEWARE = [
     #'schserw.schmiddleware.schpost.BeautyHtml',
 ]
 
-#if not DEBUG:
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 INSTALLED_APPS = [
@@ -171,17 +169,17 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
 
-if DEBUG:
+if PRODUCTION_VERSION:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgiref.inmemory.ChannelLayer",
+            "BACKEND": "asgi_redis.RedisChannelLayer",
             "ROUTING": "schserw.routing.channel_routing",
         },
     }
 else:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgi_redis.RedisChannelLayer",
+            "BACKEND": "asgiref.inmemory.ChannelLayer",
             "ROUTING": "schserw.routing.channel_routing",
         },
     }

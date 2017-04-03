@@ -108,7 +108,7 @@ class SchNotebookPage(wx.Window):
     def on_left_down(self, event):
         self._start_pos = event.GetPosition()
         self._start_pos_x_y_dx_dy = self._last_x_y_dx_dy
-        self.SetCursor(wx.StockCursor(wx.CURSOR_SIZING))
+        self.SetCursor(wx.Cursor(wx.CURSOR_SIZING))
         self.CaptureMouse()
         event.Skip()
 
@@ -118,7 +118,7 @@ class SchNotebookPage(wx.Window):
             self._start_pos_x_y_dx_dy = None
             self._best_x_y_dx_dy = None
             self.ReleaseMouse()
-            self.SetCursor(wx.StockCursor(wx.CURSOR_ARROW))
+            self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         event.Skip()
 
     def on_move(self, event):

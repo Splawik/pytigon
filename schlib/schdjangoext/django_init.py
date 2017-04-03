@@ -28,8 +28,12 @@ class AppConfigMod(AppConfig):
     def __init__(self, *argi, **argv):
         super().__init__(*argi, **argv)
 
-    def import_models(self, all_models):
-        self.models = all_models
+    def import_models(self, all_models = None):
+        if all_models == None:
+            self.models = self.apps.all_models[self.label]
+        else:
+            self.models = all_models
+
         if module_has_submodule(self.module, MODELS_MODULE_NAME):
             for _mod in self.models:
                 mod = self.models[_mod]
