@@ -20,6 +20,8 @@
 import sys
 from subprocess import Popen, PIPE
 
+from schlib.schtools.tools import get_executable
+
 def py_run(cmd):
     """run python script
 
@@ -34,7 +36,7 @@ def py_run(cmd):
     example:
         py_run(["manage.py", "help"])
     """
-    process = Popen([sys.executable,]+cmd, stdout=PIPE, stderr=PIPE)
+    process = Popen([get_executable(),]+cmd, stdout=PIPE, stderr=PIPE)
     (output, err) = process.communicate()
     exit_code = process.wait()
     if output:

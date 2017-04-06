@@ -29,6 +29,7 @@ import subprocess
 #import itertools
 #import tempfile
 from schlib.schdjangoext.tools import gettempdir
+from schlib.schtools.tools import get_executable
 
 from .indent_tools import convert_js
 
@@ -537,9 +538,6 @@ def py2js(script, module_path):
         module_path - path for target script
     """
 
-    if not sys.executable:
-        return ""
-
     error = False
     tempdir = gettempdir()
 
@@ -554,7 +552,7 @@ def py2js(script, module_path):
 
     import transcrypt
     transcrypt_lib = transcrypt.__path__._path[0]
-    cmd = [sys.executable, os.path.join(transcrypt_lib, "__main__.py"), '-n', 'pytigon_module.py']
+    cmd = [get_executable(), os.path.join(transcrypt_lib, "__main__.py"), '-n', 'pytigon_module.py']
 
     def process_output(line):
         if line.startswith('Error in program'):

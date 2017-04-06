@@ -19,6 +19,10 @@
 
 
 import types
+import sys
+import os
+import platform
+
 from base64 import b32encode, b32decode
 
 
@@ -89,3 +93,15 @@ def is_null(value, value2):
         return value
     else:
         return value2
+
+def get_executable():
+    x = sys.executable
+    p = x.replace('\\','/').split('/')[-1]
+    if 'python' in p:
+        return x
+    else:
+        if platform.system() == "Windows":
+            return os.__file__[:-9] + 'python.exe'
+        else:
+            return os.__file__[:-6].replace('/lib/python', '/bin/python')
+
