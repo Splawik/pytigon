@@ -19,6 +19,9 @@
 
 import traceback
 import sys
+import os
+
+from django.conf import settings
 
 def import_model(app, tab):
     """import model module for specified application and return module instance."""
@@ -43,3 +46,5 @@ def import_model(app, tab):
         traceback.print_exc()
 
 
+def gettempdir():
+    return os.path.join(settings.DATA_PATH, "temp")

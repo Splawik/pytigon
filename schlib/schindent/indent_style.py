@@ -26,8 +26,9 @@ import re
 import gettext
 import codecs
 import subprocess
-import itertools
-import tempfile
+#import itertools
+#import tempfile
+from schlib.schdjangoext.tools import gettempdir
 
 from .indent_tools import convert_js
 
@@ -535,8 +536,12 @@ def py2js(script, module_path):
         script - python script source
         module_path - path for target script
     """
+
+    if not sys.executable:
+        return ""
+
     error = False
-    tempdir = tempfile.gettempdir()
+    tempdir = gettempdir()
 
     cwd = os.getcwd()
     os.chdir(tempdir)

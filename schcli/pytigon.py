@@ -780,7 +780,7 @@ def _main_init(argv):
             'csrfmiddlewaretoken': app.csrf_token,
             'username': username,
             'password': password,
-            'next': '/schsys/ok',
+            'next': httpclient.join_http_path(address, '/schsys/ok'),
             'client_param': app._get_parm_for_server(),
             })
         ret_str = app.http.str()

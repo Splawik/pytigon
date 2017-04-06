@@ -292,3 +292,9 @@ class AppHttp(HttpClient):
         HttpClient.__init__(self, address)
         self.app = app
 
+
+def join_http_path(base, ext):
+    if base.endswith('/') and ext.startswith('/'):
+        return base+ext[1:]
+    else:
+        return base + ext

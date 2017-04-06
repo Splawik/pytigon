@@ -23,6 +23,7 @@ import tempfile
 import email.generator
 import zipfile
 
+from schlib.schdjangoext.tools import gettempdir
 
 def norm_path(url):
     """Normalize url"""
@@ -74,9 +75,9 @@ def get_temp_filename(base_name=None):
     """
     boundary = email.generator._make_boundary()
     if base_name:
-        return os.path.join(tempfile.gettempdir(),boundary+"_"+base_name)
+        return os.path.join(gettempdir(),boundary+"_"+base_name)
     else:
-        return os.path.join(tempfile.gettempdir(),boundary)
+        return os.path.join(gettempdir(),boundary)
 
 
 def delete_from_zip(zip_name, del_file_name):
