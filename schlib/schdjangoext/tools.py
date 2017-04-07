@@ -47,4 +47,4 @@ def import_model(app, tab):
 
 
 def gettempdir():
-    return os.path.join(settings.DATA_PATH, "temp")
+    return settings.TEMP_PATH

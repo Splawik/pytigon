@@ -37,6 +37,7 @@ SHOW_LOGIN_WIN = True
 SERW_PATH = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = SERW_PATH + '/..'
 DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
+TEMP_PATH = os.path.join(DATA_PATH, "temp")
 APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')
 
 sys.path.append(SERW_PATH)
