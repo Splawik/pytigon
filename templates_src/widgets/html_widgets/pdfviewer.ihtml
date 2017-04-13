@@ -1,0 +1,21 @@
+% load exfiltry
+% load exsyntax
+
+%% all
+    %% js_standard
+
+    %% widget_content
+        % if standard_browser
+            <iframe src="/static/pdfjs/web/viewer.html?file={{file}}" width="{{width}}" height="{{height}}"></iframe>
+        % else
+            <iframe src="{{file}}" width="{{width}}" height="{{height}}"></iframe>
+        
+    %% js
+        {% link "pdfjs/web/locale/locale.properties" "resource" "application/l10n" %}
+        {% jscript_link "pdfjs/web/l10n.js" %}
+        {% jscript_link "pdfjs/build/pdf.js" %}
+        {% jscript_link "pdfjs/web/debugger.js" %}
+        {% jscript_link "pdfjs/web/viewer.js" %}
+
+
+    %% js2

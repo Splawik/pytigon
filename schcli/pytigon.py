@@ -643,10 +643,8 @@ def _main_init(argv):
             prg_name2 = prg_name.split('.')[0]
             if not pytigon_install.install(args[0], prg_name2):
                 return (None, None)i
-            #CWD_PATH = ROOT_PATH + '/app_pack/' + prg_name2
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
         else:
-            #CWD_PATH = ROOT_PATH + '/app_pack/' + args[0].strip()
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + args[0].strip()
             if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
                 print(_("Application pack: '%s' does not exists") % args[0].strip())
