@@ -30,8 +30,7 @@ ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION:
-    {% if appset.start_page %}URL_ROOT_FOLDER='{{appset.start_page}}'{% else %}URL_ROOT_FOLDER='{{appset.name}}'{% endif %}
-
+    URL_ROOT_FOLDER='{{appset.name}}'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
