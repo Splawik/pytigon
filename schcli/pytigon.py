@@ -642,7 +642,7 @@ def _main_init(argv):
             prg_name = args[0].split('/')[-1].split('\\')[-1]
             prg_name2 = prg_name.split('.')[0]
             if not pytigon_install.install(args[0], prg_name2):
-                return (None, None)i
+                return (None, None)
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
         else:
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + args[0].strip()

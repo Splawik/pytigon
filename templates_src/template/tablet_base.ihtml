@@ -18,7 +18,7 @@
 %% menu_start
     header class=main-header win-header
 
-        a href={%url 'start'|append_str:app_pack %},,,class=logo,,,style=white-space:nowrap;text-align: center;
+        a href={{URL_BASE}}/{{app_pack}},,,class=logo,,,style=white-space:nowrap;text-align: center;
             span class=logo-mini
                 % if appset_title|length > 5:
                     small...{{appset_title|truncatechars:7}}
@@ -57,12 +57,12 @@
                                         li...date joined: {{user.date_joined|isoformat}}
                             li class=user-footer
                                 div class=pull-left
-                                    a class=system_menu btn btn-default btn-flat,,,href=#,,,action={%url 'start' %}admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                    a class=system_menu btn btn-default btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
                                 div class=pull-left
                                     a href=#,,,class=btn btn-default btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
                     li class=dropdown user user-menu
-                        a class=system_menu,,,href=#,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=_(Logout)
+                        a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
                             span class=fa fa-power-off
 
                     li
@@ -115,7 +115,7 @@
         <ul class="treeview-menu">
 
 
-    <li><a href="{%url 'start' %}{{url}}" class='menu-href'><i class="fa fa-angle-double-right"></i>{{opis}}</a></li>
+    <li><a href="{{URL_BASE}}{{url}}" class='menu-href'><i class="fa fa-angle-double-right"></i>{{opis}}</a></li>
 
     % if forloop.last
         </ul></li>

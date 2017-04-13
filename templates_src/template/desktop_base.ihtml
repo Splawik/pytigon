@@ -187,14 +187,14 @@
                             span class=caret
                         ul class=dropdown-menu
                             li
-                                a class=system_menu,,,href=#,,,action={%url 'start' %}schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
+                                a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
                             li role=separator,,,class=divider
                             li
                                 a href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
                             li
-                                a class=system_menu,,,href=#,,,action={%url 'start' %}admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                a class=system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
             li
-                a class=system_menu,,,href=#,,,action={%url 'start'|append_str:app_pack %},,,id=logo_href
+                a class=system_menu,,,href=#,,,action={{URL_BASE}}/{{app_pack}},,,id=logo_href
                     h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
                         {{appset_title}}
         % else:
@@ -222,9 +222,9 @@
             </div>
         <div id="{{app_name}}" class="tab-pane tab-tab">
     % if url|is_menu_checked:request.get_full_path:
-        <a href="{%url 'start' %}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        <a href="{{URL_BASE}}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % else
-        <a href="{%url 'start' %}{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        <a href="{{URL_BASE}}{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % if forloop.last
         </div>
 
