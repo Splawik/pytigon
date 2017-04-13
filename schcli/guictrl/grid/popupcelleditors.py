@@ -154,7 +154,7 @@ class DatePopupDataCellEditor(PopupDataCellEditor):
 
     def __init__(self):
         PopupDataCellEditor.__init__(self)
-        self.address = '/schsys/datedialog/'
+        self.address = wx.GetApp().make_href('/schsys/datedialog/')
 
     def Create(
         self,
@@ -176,7 +176,7 @@ class ListPopupCellEditor(PopupDataCellEditor):
 
     def __init__(self):
         PopupDataCellEditor.__init__(self)
-        self.address = '/schsys/listdialog/'
+        self.address = wx.GetApp().make_href('/schsys/listdialog/')
 
     def Create(self, parent, id, evt_handler):
         PopupDataCellEditor.Create(self, parent, id, evt_handler)
@@ -217,7 +217,7 @@ class GenericPopupCellEditor(PopupDataCellEditor):
 
     def __init__(self):
         PopupDataCellEditor.__init__(self)
-        self.address = '/schsys/datedialog/'
+        self.address = wx.GetApp().make_href('/schsys/datedialog/')
 
     def Clone(self):
         ret = GenericPopupCellEditor()

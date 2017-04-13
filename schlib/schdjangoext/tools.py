@@ -45,6 +45,11 @@ def import_model(app, tab):
     except:
         traceback.print_exc()
 
-
 def gettempdir():
     return settings.TEMP_PATH
+
+def make_href(href):
+    if settings.URL_ROOT_FOLDER and href.startswith('/'):
+        return "/" + settings.URL_ROOT_FOLDER + href
+    else:
+        return href

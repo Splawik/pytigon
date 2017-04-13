@@ -13,6 +13,7 @@ from django.views.generic import TemplateView
 from schlib.schviews.form_fun import form_with_perms
 from schlib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
 from schlib.schviews.viewtools import render_to_response
+from schlib.schdjangoext.tools import make_href
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -828,7 +829,9 @@ def template_edit2(request, pk):
         id = template.id
     else:
         id = templates[0].id
-    new_url = "/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id)
+            
+    new_url = make_href("/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id))
+    
     return HttpResponseRedirect(new_url)
     
 

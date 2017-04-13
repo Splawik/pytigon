@@ -10,19 +10,19 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 """SchPage is a container for 4 SchForm classes: body, header, footer and panel. Only "body" object is obligatory.
 """
 
-
 import wx
+
 try:
     from wx.adv import LayoutAlgorithm
 except:
@@ -38,7 +38,7 @@ from schcli.guilib.events import *
 class SchPage(wx.Window, Signal):
     """SchPage class"""
 
-    def __init__(self, parent, address_or_parser, parameters, pos=(0,0), size=wx.DefaultSize):
+    def __init__(self, parent, address_or_parser, parameters, pos=(0, 0), size=wx.DefaultSize):
         """Contructor
 
         Args:
@@ -70,7 +70,7 @@ class SchPage(wx.Window, Signal):
         self.active_ctrl = None
 
         Signal.__init__(self)
-        wx.Window.__init__(self,parent,-1,pos,size,style= wx.WANTS_CHARS,name='SchPage')
+        wx.Window.__init__(self, parent, -1, pos, size, style=wx.WANTS_CHARS, name='SchPage')
 
         self.exists = True
 
@@ -79,6 +79,7 @@ class SchPage(wx.Window, Signal):
             print('ERROR READ HTML:', address_or_parser, parameters)
 
         self.address = mp.address
+
         header = mp.get_header()
         body = mp.get_body()
         footer = mp.get_footer()
@@ -160,7 +161,7 @@ class SchPage(wx.Window, Signal):
         if 'refresh' in mp.var:
             self.body.refresh_time(int(mp.var['refresh']))
 
-        if  winids:
+        if winids:
             self.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self.on_sash_drag, id=min(winids), id2=max(winids))
 
         self.Bind(wx.EVT_SIZE, self.on_size)
@@ -182,7 +183,7 @@ class SchPage(wx.Window, Signal):
         for pos in self._signal_handlers:
             if pos[1] == signal:
                 break
-        dispatcher.connect(fun, signal, sender=dispatcher.Any )
+        dispatcher.connect(fun, signal, sender=dispatcher.Any)
         self._signal_handlers.append((fun, signal))
 
     def unreg_application_signal_handler(self, signal):
@@ -190,11 +191,11 @@ class SchPage(wx.Window, Signal):
         """
         i = 0
         test = None
-        for pos in  self._signal_handlers:
+        for pos in self._signal_handlers:
             if pos[1] == signal:
                 test = pos
                 break
-            i+=1
+            i += 1
         if test:
             dispatcher.disconnect(pos[0], pos[1], sender=dispatcher.Any)
             del self._signal_handlers[i]
@@ -235,7 +236,7 @@ class SchPage(wx.Window, Signal):
         for name in self._ctrl_dict_old:
             win = self._ctrl_dict_old[name]
             win.Destroy()
-            #if name in self.body.controls:
+            # if name in self.body.controls:
             #   del self.body.controls[name]
         self._ctrl_dict_old = {}
 
@@ -431,7 +432,7 @@ class SchPage(wx.Window, Signal):
         return self.item_exist(param)
 
     def get_parm(self, param):
-        ctrl=self.get_item(param)
+        ctrl = self.get_item(param)
         if ctrl:
             return ctrl.GetValue()
         else:
@@ -472,7 +473,7 @@ class SchPage(wx.Window, Signal):
             dx = self._last_size.GetWidth()
             dy = self._last_size.GetHeight()
             self._last_size = None
-            return (dx,dy)
+            return (dx, dy)
         dx = 0
         dy = 0
 
@@ -499,9 +500,9 @@ class SchPage(wx.Window, Signal):
         Params:
             enable - if True enable forms, if False - disable forms
         """
-        if enable==False:
+        if enable == False:
             self._last_size = self.GetSize()
-        if not (enable==False and not self.disable_parent):
+        if not (enable == False and not self.disable_parent):
             if self.header:
                 self.header.enable(enable)
             if self.body:
@@ -539,7 +540,6 @@ class SchPage(wx.Window, Signal):
             page_source: new text content
         """
         self.body.set_page(page_source)
-
 
     def set_vertical_position(self, position):
         """Position of child form

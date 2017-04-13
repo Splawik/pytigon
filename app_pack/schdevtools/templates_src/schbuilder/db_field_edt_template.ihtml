@@ -132,13 +132,13 @@
                                 %for pos in object.get_blocks
                                     li...{{pos|safe}}
                 td
-                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
+                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{URL_BASE}}{{save_path}}
                         DATA...{{txt|bencode}}
 
 %% content
     % if standard_web_browser
         %% edit_area
-            code_editor id=ace_editor,,,value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
+            code_editor id=ace_editor,,,value={{txt|bencode}},,,href={{URL_BASE}}{{save_path}},,,title={{title}}
     % else:
         {{ block.super }}
 

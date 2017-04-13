@@ -30,17 +30,16 @@ ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION:
-    URL_ROOT_FOLDER='schbuilder/devtools'
-
+    URL_ROOT_FOLDER='schdevtools'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
 PACKS = []
+
 from fs.osfs import OSFS
 DEFAULT_FILE_STORAGE_FS.mountdir('pytigon', OSFS(ROOT_PATH))
-
 
 for app in APPS:
     if '.' in app:

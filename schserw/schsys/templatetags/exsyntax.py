@@ -814,12 +814,21 @@ class HtmlWidgetNode(template.Node):
 
         t = Template(data)
         tdata = t.render(context)
-        
-        context['data'] = tdata
 
         template = get_template(self.template_name)
-        output = template.render(context)
-        
+
+        context_dict = {}
+        for c in context.dicts:
+            context_dict.update(c)
+        context_dict['data'] = tdata
+
+        #tdata = t.render(context_dict)
+
+        #output = template.render(context)
+        output = template.render(context_dict)
+
+
+
         context.pop()
         
         return mark_safe(output)

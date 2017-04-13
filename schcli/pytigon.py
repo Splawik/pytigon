@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 """This is the main Pytigon client moudule. Function :func:`~schcli.pytigon.main` create SchApp object, witch extends wxPython wx.App.
 Function :func:`~schcli.pytigon.main` process pytigon command line arguments. Module supports:
@@ -35,14 +35,14 @@ import zipfile
 import getopt
 import configparser
 
-
 if platform.system() == "Windows":
-    #grouping pytigon applicactions in the windows taskbar
+    # grouping pytigon applicactions in the windows taskbar
     import ctypes
+
     myappid = 'slawomir_cholaj.pytigon.main.01'
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-CWD_PATH = os.path.join(os.getcwd(),'..')
+CWD_PATH = os.path.join(os.getcwd(), '..')
 SCR_PATH = os.path.dirname(__file__)
 if SCR_PATH == '':
     SCR_PATH = CWD_PATH
@@ -57,6 +57,7 @@ sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
 
 from schlib import init_paths
+
 init_paths()
 
 if platform.system() == "Windows":
@@ -81,10 +82,11 @@ from schlib.schtools import createparm
 from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
 
-
+from schserw import settings as schserw_settings
+print(schserw_settings.APP_PACK_PATH)
 
 def install_0():
-    #function create pytigon system folders if they do not exist.
+    # function create pytigon system folders if they do not exist.
     home_dir = os.path.join(os.path.expanduser('~'), '.pytigon/')
     if not os.path.exists(home_dir):
         os.mkdir(home_dir)
@@ -94,8 +96,8 @@ def install_0():
         ini.write(' ')
         ini.close()
 
-install_0()
 
+install_0()
 
 INSPECTION = False
 if any(s.startswith('--inspection') for s in sys.argv):
@@ -109,28 +111,28 @@ _TRACE = False
 if any(s.startswith('--trace') for s in sys.argv):
     _TRACE = True
 
-
 if any(s.startswith('--rpc') for s in sys.argv):
     import wxreactor
+
     wxreactor.install()
     from twisted.internet import reactor
     from twisted.web import xmlrpc, server
+
     RPC = True
 else:
     RPC = False
 
-
-#import gc
-#gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
-#gc.disable()
+# import gc
+# gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
+# gc.disable()
 
 wx.RegisterId(10000)
 _ = wx.GetTranslation
 wx.outputWindowClass = None
 
-
 if INSPECTION:
     import wx.lib.mixins.inspection
+
     App = wx.lib.mixins.inspection.InspectableApp
 
     if _TRACE:
@@ -155,22 +157,24 @@ if INSPECTION:
             caller_line_no = caller.f_lineno
             caller_filename = caller.f_code.co_filename
             print('Call to %s on line %s of %s from line %s of %s' % \
-                (func_name, func_line_no, func_filename,
-                 caller_line_no, caller_filename))
+                  (func_name, func_line_no, func_filename,
+                   caller_line_no, caller_filename))
             return
+
 
         sys.settrace(trace_calls)
 
 else:
     App = wx.App
 
-
 if RPC:
-    _BASE_APP=xmlrpc.XMLRPC
+    _BASE_APP = xmlrpc.XMLRPC
 else:
     class _base:
         pass
-    _BASE_APP= _base
+
+
+    _BASE_APP = _base
 
 
 class SchApp(App, _BASE_APP):
@@ -247,7 +251,6 @@ class SchApp(App, _BASE_APP):
 
         self.ctrl_process = {}
 
-
     def register_ctrl_process_fun(self, tag, fun):
         """Register function, which is called when widget connected to the specified tag is created.
 
@@ -267,12 +270,12 @@ class SchApp(App, _BASE_APP):
         if tag in self.ctrl_process:
             self.ctrl_process[tag].append(fun)
         else:
-            self.ctrl_process[tag] = [fun,]
+            self.ctrl_process[tag] = [fun, ]
 
     # some XML-RPC function calls for twisted server
     def xmlrpc_stop(self):
         """Closes the wx application."""
-        self.frame.Close() # Sending closing event
+        self.frame.Close()  # Sending closing event
         return 'Shutdown initiated'
 
     def xmlrpc_title(self, title):
@@ -294,6 +297,7 @@ class SchApp(App, _BASE_APP):
 
     def _init2(self, address, app):
         self.base_address = address
+        self.base_app = app
         if app and app != '':
             href = "/" + app + "/"
         else:
@@ -326,6 +330,8 @@ class SchApp(App, _BASE_APP):
         return ret
 
     def _re_init(self, address, app):
+        self.base_address = address
+        self.base_app = app
         if app and app != '':
             self.http.get(self, '/' + app + '/')
         else:
@@ -335,6 +341,12 @@ class SchApp(App, _BASE_APP):
         self.mp.feed(ret)
         self.mp.close()
         self.http.clear_ptr()
+
+    def make_href(self, href):
+        if self.base_app and href.startswith('/'):
+            return '/' + self.base_app + href
+        else:
+            return href
 
     def SetTopWindow(self, frame):
         wx.App.SetTopWindow(self, frame)
@@ -389,7 +401,7 @@ class SchApp(App, _BASE_APP):
 
         Returns :class:'~schlib.schparser.html_parsers.ShtmlParser' object
         """
-        if type(address_or_parser)==str:
+        if type(address_or_parser) == str:
             http = self.get_http(win)
 
             if parameters and type(parameters) == dict:
@@ -420,7 +432,7 @@ class SchApp(App, _BASE_APP):
                 mp = ShtmlParser()
                 mp.process('<html><body></body></html>')
                 mp.address = None
-        return (mp,adr)
+        return (mp, adr)
 
     def get_tab(self, nr):
         """Return setup tab
@@ -437,17 +449,17 @@ class SchApp(App, _BASE_APP):
         """
         return self.mp.tables[nr]
 
-    #def get_active_window(self):
+    # def get_active_window(self):
     #    return self.GetTopWindow()
 
-    #def get_main_windows(self):
+    # def get_main_windows(self):
     #    return [self.GetTopWindow()]
 
-    #def append_thread(self, thread_address):
+    # def append_thread(self, thread_address):
     #    if self.thread_manager:
     #        self.thread_manager.append(thread_address)
 
-    #def timer(self):
+    # def timer(self):
     #    if self.thread_manager:
     #        self.thread_manager.timer()
 
@@ -478,11 +490,11 @@ class SchApp(App, _BASE_APP):
                 if not os.path.exists(home_dir + plugins_cache + str(app_name)):
                     os.mkdir(home_dir + plugins_cache + str(app_name))
                     ini = open(home_dir + plugins_cache + str(app_name)
-                                + '/__init__.py', 'w')
+                               + '/__init__.py', 'w')
                     ini.write(' ')
                     ini.close()
                 if not os.path.exists(home_dir + plugins_cache + str(plugin)
-                                       + '.zip'):
+                                              + '.zip'):
                     http = wx.GetApp().http
                     http.get(self, '/schsys/plugins/' + str(plugin) + '/')
                     z_data = http.ptr()
@@ -499,14 +511,15 @@ class SchApp(App, _BASE_APP):
 
     def on_exit(self):
         if self.task_manager:
-            if len(self.task_manager.list_threads(all=False))>0:
-                dlg = wx.MessageDialog(None, _("There are background tasks - kill?"), _("Warning"), wx.YES_NO | wx.ICON_QUESTION)
+            if len(self.task_manager.list_threads(all=False)) > 0:
+                dlg = wx.MessageDialog(None, _("There are background tasks - kill?"), _("Warning"),
+                                       wx.YES_NO | wx.ICON_QUESTION)
                 result = dlg.ShowModal()
                 if result == wx.ID_YES:
                     self.task_manager.kill_all()
 
 
-def login(base_href, auth_type = None):
+def login(base_href, auth_type=None):
     """Show login form"""
     dlg = LoginDialog(None, 101, _("Pytigon - login"))
 
@@ -515,11 +528,11 @@ def login(base_href, auth_type = None):
         username = dlg.text1.GetValue()
         password = dlg.text2.GetValue()
 
-        parm = { 'username': username,
-                 'password': password,
-                 'next': '/schsys/ok',
-                 'client_param': wx.GetApp()._get_parm_for_server(),
-        }
+        parm = {'username': username,
+                'password': password,
+                'next': '/schsys/ok',
+                'client_param': wx.GetApp()._get_parm_for_server(),
+                }
 
         if auth_type == None:
             wx.GetApp().http.post(wx.GetApp(), '/schsys/do_login/', parm, credentials=(username, password))
@@ -557,11 +570,12 @@ def _main_init(argv):
     app_title = _("Pytigon")
     embeded_browser = False
     extern_app_set = False
+    app_name = ''
 
     try:
         (opts, args) = getopt.getopt(argv, 'h:dmp', [
             'help',
-            #'app_set=',
+            # 'app_set=',
             'hybrid',
             'syncdb',
             'loaddb',
@@ -576,7 +590,7 @@ def _main_init(argv):
             'param=',
             'inspection',
             'trace',
-            ])
+        ])
     except getopt.GetoptError:
         usage()
         return (None, None)
@@ -600,8 +614,15 @@ def _main_init(argv):
             embeded_browser = True
         elif opt == '--href':
             if arg != 'embeded':
-                CWD_PATH = ROOT_PATH + '/app_pack/_schremote'
-            address = arg
+                CWD_PATH = schserw_settings.APP_PACK_PATH + '/_schremote'
+
+            if '/' in arg:
+                x = arg.replace('//', '$$$').split('/', 1)
+                address = x[0].replace('$$$', '//')
+                app_name = x[1]
+            else:
+                address = arg
+
             extern_app_set = True
         elif opt == '--hybrid':
             app.is_hybrid = True
@@ -616,23 +637,24 @@ def _main_init(argv):
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 
-
-    if len(args)>0:
+    if len(args) > 0:
         if '.ptig' in args[0].lower():
             prg_name = args[0].split('/')[-1].split('\\')[-1]
             prg_name2 = prg_name.split('.')[0]
             if not pytigon_install.install(args[0], prg_name2):
-                return (None, None)
-            CWD_PATH = ROOT_PATH + '/app_pack/' + prg_name2
+                return (None, None)i
+            #CWD_PATH = ROOT_PATH + '/app_pack/' + prg_name2
+            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
         else:
-            CWD_PATH = ROOT_PATH + '/app_pack/' + args[0].strip()
-            if not os.path.exists(os.path.join(CWD_PATH,"settings_app.py")):
-                print(_("Application pack: '%s' does not exists") %  args[0].strip())
+            #CWD_PATH = ROOT_PATH + '/app_pack/' + args[0].strip()
+            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + args[0].strip()
+            if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
+                print(_("Application pack: '%s' does not exists") % args[0].strip())
                 return (None, None)
     elif extern_app_set:
         pass
     else:
-        choices = [ ff for ff in os.listdir(ROOT_PATH + '/app_pack/') if not ff.startswith('_') ]
+        choices = [ff for ff in os.listdir(schserw_settings.APP_PACK_PATH + "/") if not ff.startswith('_')]
 
         dlg = wx.SingleChoiceDialog(None,
                                     _('select the application to run')
@@ -640,14 +662,14 @@ def _main_init(argv):
                                     wx.CHOICEDLG_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
             dlg.GetStringSelection()
-            CWD_PATH = ROOT_PATH + '/app_pack/' + dlg.GetStringSelection()
+            CWD_PATH = schserw_settings.APP_PACK_PATH + '/' + dlg.GetStringSelection()
             dlg.Destroy()
         else:
             dlg.Destroy()
             wx.Yield()
             return (None, None)
 
-    sys.path.insert(0,CWD_PATH)
+    sys.path.insert(0, CWD_PATH)
 
     if not extern_app_set:
         httpclient.init_embeded_django()
@@ -688,7 +710,6 @@ def _main_init(argv):
         for a in apps:
             settings.INSTALLED_APPS.append(a)
 
-    app_name = ''
     port = 0
     if server_only:
         port = 80
@@ -716,7 +737,6 @@ def _main_init(argv):
                 test = False
             except:
                 port += 1
-
 
         server = run_server(address, port, prod=False)
         address = 'http://' + address + ':' + str(port)
@@ -758,12 +778,12 @@ def _main_init(argv):
         elif row[0].data == 'csrf_token':
             app.csrf_token = row[1].data
         elif 'start_page' in row[0].data:
-            app.start_pages.extend([x for x in row[1].data.split(';') if x ])
+            app.start_pages.extend([x for x in row[1].data.split(';') if x])
         elif row[0].data == 'title':
             app.title = row[1].data
         elif row[0].data == 'plugins':
             if row[1].data and row[1].data != "":
-                    app.plugins = row[1].data.split(';')
+                app.plugins = row[1].data.split(';')
 
     if server_only:
         app.gui_style = 'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
@@ -776,13 +796,13 @@ def _main_init(argv):
         ready_to_run = False
         username = 'auto'
         password = 'anawa'
-        app.http.post(app, '/schsys/do_login/', {
+        app.http.post(app, "/" + app_name + '/schsys/do_login/' if app_name else '/schsys/do_login/', {
             'csrfmiddlewaretoken': app.csrf_token,
             'username': username,
             'password': password,
-            'next': httpclient.join_http_path(address, '/schsys/ok'),
+            'next': address + "/" + app_name + '/schsys/ok' if app_name else  address + '/schsys/ok',
             'client_param': app._get_parm_for_server(),
-            })
+        })
         ret_str = app.http.str()
         if 'RETURN_OK' in ret_str:
             app.authorized = True
@@ -821,7 +841,7 @@ def _main_run():
             app.title,
             wx.DefaultPosition,
             wx.Size(800, 700),
-            )
+        )
 
     frame.CenterOnScreen()
 
@@ -833,6 +853,7 @@ def _main_run():
 
     def idle_fun():
         wx.GetApp().web_ctrl.OnIdle(None)
+
     httpclient.set_http_idle_func(idle_fun)
 
     if app.task_manager:
@@ -900,10 +921,11 @@ def main(argv):
     ready_to_run, nogui = _main_init(argv)
     if ready_to_run:
         if nogui:
-            while(True):
+            while (True):
                 time.sleep(100)
         else:
             _main_run()
 
+
 if __name__ == '__main__':
-   main(sys.argv[1:])
+    main(sys.argv[1:])

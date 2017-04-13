@@ -876,7 +876,7 @@ class TEXT(SchBaseCtrl, wx.TextCtrl):
     def __init__(self, parent, **kwds):
         SchBaseCtrl.__init__(self, parent, kwds)
         if self.param and 'param' in self.param and 'PROCESS_ENTER' in self.param['param']:
-            kwds['style']=wx.TE_PROCESS_ENTER        
+            kwds['style']=wx.TE_PROCESS_ENTER
         wx.TextCtrl.__init__(self, parent, **kwds)
         if self.hidden:
             self.Enable(False)
@@ -1170,7 +1170,7 @@ class NUM(wx.SpinCtrl, SchBaseCtrl):
             if "style" in kwds:
                 style = kwds["style"]
             style = style | wx.TE_READONLY
-            kwds["style"] = style      
+            kwds["style"] = style
         wx.SpinCtrl.__init__(self, parent, **kwds)
 
 
@@ -1456,7 +1456,7 @@ class HTML(page.SchPage, SchBaseCtrl):
         if not '<html' in value:
             self._value = "<html><body>%s</body></html>" % value
         else:
-            self._value = value        
+            self._value = value
         mp = ShtmlParser()
         mp.process(self._value)
         mp.address = None
@@ -1610,7 +1610,7 @@ if platform.system() == "Linux":
         """
 
         def __init__(self, parent, **kwds):
-            kwds['href'] = "/schsys/datedialog/"
+            kwds['href'] = wx.GetApp().make_href("/schsys/datedialog/")
 
             if "style" in kwds:
                 kwds["style"] = kwds["style"] | wx.WANTS_CHARS
@@ -1678,7 +1678,7 @@ class DATETIMEPICKER(POPUPHTML):
     """
 
     def __init__(self, parent, **kwds):
-        kwds['href'] = "/schsys/datedialog/"
+        kwds['href'] = wx.GetApp().make_href("/schsys/datedialog/")
 
         if "style" in kwds:
             kwds["style"] = kwds["style"] | wx.WANTS_CHARS
@@ -1738,7 +1738,7 @@ class CHOICE(POPUPHTML):
     def __init__(self, parent, **kwds):
 
         if not ('href' in kwds or 'href' in kwds):
-            kwds['href'] = "/schsys/listdialog/"
+            kwds['href'] = wx.GetApp().make_href("/schsys/listdialog/")
 
         if "style" in kwds:
             kwds["style"] = kwds["style"] | wx.WANTS_CHARS
@@ -2021,7 +2021,7 @@ def COMPOSITE(parent, **kwds):
 
 def COMPONENT(parent, **kwds):
     http = wx.GetApp().get_http(parent)
-    http.get(parent, "/schsys/widget_web?browser_type=1")
+    http.get(parent, wx.GetApp().make_href("/schsys/widget_web?browser_type=1"))
     buf = http.str()
     http.clear_ptr()
 

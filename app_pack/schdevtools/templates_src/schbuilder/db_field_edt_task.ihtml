@@ -15,7 +15,7 @@
     table width=100%
         tr
             td
-    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{save_path}}
+    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{URL_BASE}}{{save_path}}
         DATA...{{txt|bencode}}
 
     % comment:
@@ -25,5 +25,5 @@
                     .def {{object.name}}(id, input_queue, output_queue, *args, **kwargs):
             tr
                 td
-                    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{save_path}}
+                    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{URL_BASE}}{{save_path}}
                         DATA...{{txt|bencode}}

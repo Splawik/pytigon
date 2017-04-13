@@ -155,7 +155,7 @@
             table width=800
                 tr
                     td
-            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{save_path}}
+            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{URL_BASE}}{{save_path}}
                 DATA...{{txt|bencode}}
 
 
@@ -163,7 +163,7 @@
 %% content
     % if standard_web_browser
         %% edit_area
-            summernote value={{txt|bencode}},,,href={{save_path}},,,title={{title}}
+            summernote value={{txt|bencode}},,,href={{URL_BASE}}{{save_path}},,,title={{title}}
     % else:
         {{ block.super }}
 
