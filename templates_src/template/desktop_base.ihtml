@@ -154,6 +154,8 @@
         {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
         {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
 
+
+    %% theme_css_links_spec
         {% css_link 'themes/default.css' %}
         {% css_link 'themes/material.css' %}
 

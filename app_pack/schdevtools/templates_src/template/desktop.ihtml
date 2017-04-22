@@ -50,9 +50,6 @@
     {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
     {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
 
-    {% css_link 'themes/default.css' %}
-    {% css_link 'themes/material.css' %}
-
 
 %% fragment_init
     .function base_fragment_init() {

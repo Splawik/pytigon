@@ -9,9 +9,9 @@
 %% ext_js_scripts
     {% jscript_link 'themes/AdminLTE/js/app.js' %}
 
-%% css_links
+%% theme_css_links
     {{block.super}}
-    {% css_link 'themes/AdminLTE/css/modAdminLTE.css' %}
+    {% css_link 'themes/AdminLTE/css/AdminLTE.css' %}
     {% css_link 'themes/AdminLTE/css/skins/skin-blue.min.css' %}
 
 

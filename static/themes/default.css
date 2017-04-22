@@ -57,12 +57,12 @@ div.ext_padding { padding: 0px 14px; }
 }
 
 .tabsort > tbody > tr > td {
-	padding: 8px;
+    padding: 8px;
     vertical-align: middle;
 }
 
 .tabsort th {
-	padding: 8px;
+    padding: 8px;
 }
 
 .col_right {
@@ -208,8 +208,8 @@ div.indent {
 }
 
 tr:not(:hover) div.td_action * {
-	opacity: 0.25;
-	filter:alpha(opacity=25);
+    opacity: 0.25;
+    filter:alpha(opacity=25);
 }
 
 .td_information {
@@ -219,13 +219,13 @@ tr:not(:hover) div.td_action * {
 }
 
 tr:not(:hover) div.td_information * {
-	opacity: 0.4;
-	filter:alpha(opacity=40);
+    opacity: 0.4;
+    filter:alpha(opacity=40);
 }
 
 
 tr td.td_information  .btn.btn-sm {
-	padding: 5px 8px;
+    padding: 5px 8px;
 }
 
 li.topmenu_right:last-child { float:right; }
@@ -442,11 +442,11 @@ div.second_row {
     background: none repeat scroll 0% 0% #FFFFF8 !important;
     width: 100%;
     margin-top: -14px;
-	padding: 0px 5px !important;
+    padding: 0px 5px !important;
 }
 
 tr.second_row {
-	position: relative;
+    position: relative;
 }
 */
 
@@ -508,4 +508,8 @@ ul.desktop-logo  {
     position: relative;
     height: 0px;
     z-index: 1000;
+}
+
+.dropdown, .dropup {
+    position: relative !important;
 }

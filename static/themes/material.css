@@ -1,10 +1,10 @@
 #tabs > li.topmenu.active {
-    background-color: #8ba;	
+    background-color: #8ba; 
 }
 
 
-.menu-content {	
-    background-color: #8ba;	
+.menu-content { 
+    background-color: #8ba; 
 }
 
 
@@ -95,8 +95,8 @@ form.form-inline .form-control {
 }
 
 
-form.form-inline div.checkbox input.checkboxinput  {	
-	margin-right: 5px;
+form.form-inline div.checkbox input.checkboxinput  {    
+    margin-right: 5px;
 }
 
 body {
@@ -167,4 +167,17 @@ form.form-inline .form-group {
 
 div.shadow-z-2 .close {
     padding: 8px;
+}
+
+
+.btn-primary {
+    background-color: transparent;
+}
+
+.btn-danger {
+    background-color: transparent;
+}
+
+.btn {
+    border: 0px solid transparent; 
 }
