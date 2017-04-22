@@ -222,9 +222,9 @@
             </div>
         <div id="{{app_name}}" class="tab-pane tab-tab">
     % if url|is_menu_checked:request.get_full_path:
-        <a href="{{URL_BASE}}{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        <a href="{{URL_BASE}}/{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % else
-        <a href="{{URL_BASE}}{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        <a href="{{URL_BASE}}/{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % if forloop.last
         </div>
 

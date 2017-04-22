@@ -1,7 +1,7 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-01-28 11:33:17
+// Transcrypt'ed from Python, 2017-04-21 21:57:48
 
-	var __symbols__ = ['__py3.5__', '__esv5__'];
+	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
 	var __world__ = __all__;
 	
@@ -2738,38 +2738,36 @@ function pytigon () {
 							elem.html (html_txt);
 						}
 					};
+					var save_as = function (blob, file_name) {
+						var url = window.URL.createObjectURL (blob);
+						var anchor_elem = document.createElement ('a');
+						anchor_elem.style = 'display: none';
+						anchor_elem.href = url;
+						anchor_elem.download = file_name;
+						document.body.appendChild (anchor_elem);
+						anchor_elem.click ();
+						document.body.removeChild (anchor_elem);
+						var _ = function () {
+							window.URL.revokeObjectURL (url);
+						};
+						setTimeout (_, 1000);
+					};
 					var download_binary_file = function (buf, content_disposition) {
-						var l = buf.length;
-						var buffer = new ArrayBuffer (l);
-						var view = new Uint8Array (buffer);
-						for (var i = 0; i < l; i++) {
-							view [i] = buf.charCodeAt (i);
-						}
-						var mimetype = 'text/html';
-						if (__in__ ('odf', content_disposition) || __in__ ('ods', content_disposition)) {
-							var mimetype = 'application/vnd.oasis.opendocument.formula';
-						}
-						else {
-							if (__in__ ('pdf', content_disposition)) {
-								var mimetype = 'application/pdf';
-							}
-							else {
-								if (__in__ ('zip', content_disposition)) {
-									var mimetype = 'application/x-compressed';
-								}
-								else {
-									if (__in__ ('xls', content_disposition)) {
-										var mimetype = 'application/excel';
-									}
-								}
+						var file_name = 'temp.dat';
+						var var_list = content_disposition.py_split (';');
+						var __iterable0__ = var_list;
+						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							var pos = __iterable0__ [__index0__];
+							if (__in__ ('filename', pos)) {
+								var file_name = pos.py_split ('=') [1];
+								break;
 							}
 						}
-						var blob = new Blob (list ([view]), dict ({'type': mimetype}));
-						var blobURL = window.URL.createObjectURL (blob);
-						window.open (blobURL);
+						save_as (buf, file_name);
 					};
 					var ajax_get = function (url, complete) {
 						var req = new XMLHttpRequest ();
+						req.responseType = 'blob';
 						var _onload = function () {
 							var disp = req.getResponseHeader ('Content-Disposition');
 							if (disp && __in__ ('attachment', disp)) {
@@ -2777,7 +2775,12 @@ function pytigon () {
 								complete (null);
 							}
 							else {
-								complete (req.responseText);
+								var reader = new FileReader ();
+								var _on_reader_load = function () {
+									complete (reader.result);
+								};
+								reader.onload = _on_reader_load;
+								reader.readAsText (req.response);
 							}
 						};
 						req.onload = _onload;
@@ -2794,6 +2797,7 @@ function pytigon () {
 					};
 					window.ajax_load = ajax_load;
 					var _req_post = function (req, url, data, complete) {
+						req.responseType = 'blob';
 						var _onload = function () {
 							var disp = req.getResponseHeader ('Content-Disposition');
 							if (disp && __in__ ('attachment', disp)) {
@@ -2801,7 +2805,12 @@ function pytigon () {
 								complete (null);
 							}
 							else {
-								complete (req.responseText);
+								var reader = new FileReader ();
+								var _on_reader_load = function () {
+									complete (reader.result);
+								};
+								reader.onload = _on_reader_load;
+								reader.readAsText (req.response);
 							}
 						};
 						req.onload = _onload;
@@ -3010,6 +3019,7 @@ function pytigon () {
 						__all__.load_many_js = load_many_js;
 						__all__.mount_html = mount_html;
 						__all__.on_load_js = on_load_js;
+						__all__.save_as = save_as;
 					__pragma__ ('</all>')
 				}
 			}

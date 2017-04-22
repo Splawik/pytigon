@@ -115,7 +115,7 @@
         <ul class="treeview-menu">
 
 
-    <li><a href="{{URL_BASE}}{{url}}" class='menu-href'><i class="fa fa-angle-double-right"></i>{{opis}}</a></li>
+    <li><a href="{{URL_BASE}}/{{url}}" class='menu-href'><i class="fa fa-angle-double-right"></i>{{opis}}</a></li>
 
     % if forloop.last
         </ul></li>

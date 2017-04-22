@@ -18,7 +18,7 @@
                     td
                         div class=panel panel-default,,,style=width:300px
                             div class=panel-body
-                                form action={{URL_BASE}}/schsys/do_login/?next={{URL_BASE}}/{{app_pack}},,,method=post,,,name=signin
+                                form action={{URL_BASE}}/schsys/do_login/?next={{URL_BASE}},,,method=post,,,name=signin
                                     h3 class=panel-title
                                         ._(Login)
                                     br

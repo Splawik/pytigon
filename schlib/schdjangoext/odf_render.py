@@ -154,7 +154,7 @@ def render_to_response_odf(template_name, context_instance=None, debug=None):
             name = s[1]
         response = HttpResponse()
         response['Content-Disposition'] = 'attachment; filename=%s'% name
-        response['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'                        
+        response['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'
         f = open(s[0],'rb')
         response.content = f.read()
         f.close()

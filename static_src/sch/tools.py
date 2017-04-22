@@ -31,36 +31,62 @@ def mount_html(elem, html_txt):
     else:
         elem.html(html_txt)
 
+def save_as(blob, file_name):
+    url = window.URL.createObjectURL(blob)
+
+    anchor_elem = document.createElement("a")
+    anchor_elem.style = "display: none"
+    anchor_elem.href = url
+    anchor_elem.download = file_name
+
+    document.body.appendChild(anchor_elem)
+    anchor_elem.click()
+
+    document.body.removeChild(anchor_elem)
+
+    def _():
+        window.URL.revokeObjectURL(url)
+
+    setTimeout(_, 1000)
+
+
 def download_binary_file(buf, content_disposition):
-    l = buf.length
-    buffer = __new__(ArrayBuffer(l))
-    view = __new__(Uint8Array(buffer))
-    for i in range(l):
-        view[i] = buf.charCodeAt(i)
-    mimetype = 'text/html'
-    if 'odf' in content_disposition or 'ods' in content_disposition:
-        mimetype = 'application/vnd.oasis.opendocument.formula'
-    elif 'pdf' in content_disposition:
-        mimetype = 'application/pdf'
-    elif 'zip' in content_disposition:
-        mimetype = 'application/x-compressed'
-    elif 'xls' in content_disposition:
-        mimetype = 'application/excel'
-    blob = __new__(Blob([view], {'type': mimetype }))
-    blobURL = window.URL.createObjectURL(blob)
-    window.open(blobURL)
+    #mimetype = 'text/html'
+    #if 'odf' in content_disposition or 'ods' in content_disposition:
+    #    mimetype = 'application/vnd.oasis.opendocument.formula'
+    #elif 'pdf' in content_disposition:
+    #    mimetype = 'application/pdf'
+    #elif 'zip' in content_disposition:
+    #    mimetype = 'application/x-compressed'
+    #elif 'xls' in content_disposition:
+    #    mimetype = 'application/excel'
+
+    file_name = "temp.dat"
+    var_list = content_disposition.split(';')
+    for pos in var_list:
+        if 'filename' in pos:
+            file_name = pos.split('=')[1]
+            break
+
+    save_as(buf, file_name)
 
 
 def ajax_get(url, complete):
     req = __new__(XMLHttpRequest())
-
+    req.responseType = "blob"
     def _onload():
         disp = req.getResponseHeader('Content-Disposition')
         if disp and 'attachment' in disp:
             download_binary_file(req.response, disp)
             complete(None)
         else:
-            complete(req.responseText)
+            reader = __new__(FileReader())
+
+            def _on_reader_load():
+                complete(reader.result)
+
+            reader.onload = _on_reader_load
+            reader.readAsText(req.response)
 
     req.onload = _onload
 
@@ -80,13 +106,21 @@ def ajax_load(elem, url, complete):
 window.ajax_load = ajax_load
 
 def _req_post(req, url, data, complete):
+    req.responseType = "blob"
     def _onload():
         disp = req.getResponseHeader('Content-Disposition')
         if disp and 'attachment' in disp:
             download_binary_file(req.response, disp)
             complete(None)
         else:
-            complete(req.responseText)
+            reader = __new__(FileReader())
+
+            def _on_reader_load():
+                complete(reader.result)
+
+            reader.onload = _on_reader_load
+            reader.readAsText(req.response)
+
     req.onload = _onload
 
     req.open("POST", url, True)
