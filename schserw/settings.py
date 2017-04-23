@@ -36,14 +36,41 @@ SHOW_LOGIN_WIN = True
 
 SERW_PATH = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = SERW_PATH + '/..'
-DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
-TEMP_PATH = os.path.join(DATA_PATH, "temp")
-APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')
 
 sys.path.append(SERW_PATH)
 sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/ext_lib')
 sys.path.append(ROOT_PATH + '/schappdata/schplugins')
+
+from schlib.schtools.platform_info import platform_name
+
+if platform_name()=='Android':
+    from os import environ
+    p1 = p2 = None
+    if 'SECONDARY_STORAGE' in environ:
+        p1 = os.path.join(environ['SECONDARY_STORAGE'], ".pytigon")
+    if 'EXTERNAL_STORAGE' in environ:
+        p2 = os.path.join(environ['EXTERNAL_STORAGE'], ".pytigon")
+    if p1:
+        if os.path.exists(p2):
+            DATA_PATH = p2
+        else:
+            DATA_PATH = p1
+    else:
+        DATA_PATH = p2
+else:
+    DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
+
+if not os.path.exists(DATA_PATH):
+    from schlib.schtools.install_init import init
+    init(DATA_PATH)
+
+TEMP_PATH = os.path.join(DATA_PATH, "temp")
+
+if platform_name()=='Android':
+    APP_PACK_PATH = os.path.join(DATA_PATH, 'app_pack')
+else:
+    APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')
 
 ADMINS = []
 MANAGERS = ADMINS

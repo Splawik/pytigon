@@ -20,7 +20,10 @@
 import os
 from schlib.schhtml.basedc import BaseDc, BaseDcInfo
 import io
-import PIL
+try:
+    import PIL
+except:
+    pass
 import fpdf
 
 from schlib.schfs.vfstools import get_temp_filename

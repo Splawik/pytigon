@@ -100,3 +100,25 @@ td .content_get {
 .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
     border-left-color: #FDFD8C !important;
 }
+
+/*
+.main-header .sidebar-toggle {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.main-header .logo {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 5px;
+}
+
+.navbar .navbar-nav > li > a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.main-header .navbar {
+    min-height: 30px;
+}
+*/

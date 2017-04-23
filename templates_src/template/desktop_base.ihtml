@@ -196,7 +196,7 @@
                             li
                                 a class=system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
             li
-                a class=system_menu,,,href=#,,,action={{URL_BASE}}/{{app_pack}},,,id=logo_href
+                a class=system_menu,,,href=#,,,action={{URL_BASE}},,,id=logo_href
                     h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
                         {{appset_title}}
         % else:

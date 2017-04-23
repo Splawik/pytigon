@@ -18,7 +18,7 @@
 %% menu_start
     header class=main-header win-header
 
-        a href={{URL_BASE}}/{{app_pack}},,,class=logo,,,style=white-space:nowrap;text-align: center;
+        a href={{URL_BASE}},,,class=logo,,,style=white-space:nowrap;text-align: center;
             span class=logo-mini
                 % if appset_title|length > 5:
                     small...{{appset_title|truncatechars:7}}

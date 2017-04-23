@@ -31,15 +31,15 @@ sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION:
     URL_ROOT_FOLDER='_schall'
-
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
+PACKS = []
 
 app_pack_folders = []
-base_apps_path = os.path.join(_lp, '..')
+base_apps_path = APP_PACK_PATH
 for ff in os.listdir(base_apps_path):
     if os.path.isdir( os.path.join(base_apps_path,ff)):
         if not ff.startswith('_'):
@@ -63,7 +63,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
 
-PACKS = []
 
 for app in APPS:
     if '.' in app:
@@ -85,11 +84,7 @@ for app in APPS:
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
-p = os.path.expanduser("~")
-if type(p)==str:
-    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
-else:
-    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")
+_NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
 DATABASES = {
     'default':  {
