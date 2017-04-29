@@ -11,7 +11,7 @@
 
 %% theme_css_links
     {{block.super}}
-    {% css_link 'themes/AdminLTE/css/AdminLTE.css' %}
+    {% css_link 'themes/AdminLTE/css/AdminLTE_mod.css' %}
     {% css_link 'themes/AdminLTE/css/skins/skin-blue.min.css' %}
 
 

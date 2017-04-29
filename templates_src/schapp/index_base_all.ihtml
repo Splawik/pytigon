@@ -1,13 +1,22 @@
 % extends "base.html"
 
+%% body_start
+    <body bgcolor="#{{color_body_1_5}}" class="login_background">
+
 %% body
-    div style=padding:10px;
-        div class=jumbotron
-            h1...Application list
-            div class=table-responsive
-                table class=table table-striped
-                    % for app_pack in app_packs:
-                        tr
-                            td...{{app_pack}}
-                            td
-                                a class=btn btn-primary btn-lg,,,href={{URL_BASE}}/{{app_pack}}/,,,role=button...goto web page
+    div class=wrapper container
+        header
+            h2 class=text-primary txt3d,,,style=color:gold;
+                .Pytigon - application list
+            h2
+
+        div class=row
+            % for app_pack in app_packs:
+                div class=col-xs-12 col-sm-6 col-md-4 col-lg-3
+                    div class=jumbotron
+                        p...{{app_pack.0}}
+                        small...{{app_pack.1}}
+                        p
+                            a class=btn btn-primary btn-lg,,,href={{URL_BASE}}/{{app_pack.0}}/,,,role=button
+                                i class=fa fa-play
+                                .run

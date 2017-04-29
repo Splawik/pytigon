@@ -17,12 +17,12 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth.views import login
 from django.views.generic import TemplateView
 import django.contrib.auth.views
-
+from django.http import HttpResponseRedirect
+from schlib.schdjangoext.tools import make_href
 import schserw.schsys.views
 
 
@@ -40,20 +40,18 @@ def sch_login(request, *argi, **argv):
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
     else:
         request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
-    return ret
+    path = request.GET.get("next", "/")
+    if path == "":
+        path = "/"
+    return HttpResponseRedirect(make_href(path))
 
-
-if settings.URL_ROOT_FOLDER:
-    START_PATH = '/' + settings.URL_ROOT_FOLDER +'/'
-else:
-    START_PATH = '/'
 
 urlpatterns = [
     url(r'^ok/$', schserw.schsys.views.ok, name='ok'),
     url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', schserw.schsys.views.ret_ok, name='ret_ok'),
 
     url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
-    url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': START_PATH}),
+    url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': make_href("/")}),
     url(r'^change_password/$', schserw.schsys.views.change_password),
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),

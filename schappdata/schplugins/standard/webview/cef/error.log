@@ -767,3 +767,392 @@ wx._core.wxAssertionError: C++ assertion "!wxMouseCapture::stack.empty()" failed
 
 RuntimeError: wrapped C/C++ object of type AuiTabCtrl has been deleted
 
+
+[2017-03-18 23:55:43] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 106, in OnSize
+    cef.WindowUtils.OnSize(self.GetHandle(), 0, 0, 0)
+
+AttributeError: type object 'WindowUtils' has no attribute 'OnSize'
+
+
+[2017-03-19 00:22:02] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 91, in runcode
+    exec(code, self.locals)
+
+  File "<input>", line 1, in <module>
+
+TypeError: 'cefpython_py35.PyBrowser' object is not callable
+
+
+[2017-03-19 00:22:14] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:15] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:17] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:19] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:20] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:21] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:21] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:22:21] Traceback (most recent call last):
+
+  File "/usr/lib/python3.5/code.py", line 64, in runsource
+    code = self.compile(source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 168, in __call__
+    return _maybe_compile(self.compiler, source, filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 99, in _maybe_compile
+    raise err1
+
+  File "/usr/lib/python3.5/codeop.py", line 87, in _maybe_compile
+    code1 = compiler(source + "\n", filename, symbol)
+
+  File "/usr/lib/python3.5/codeop.py", line 133, in __call__
+    codeob = compile(source, filename, symbol, self.flags, 1)
+
+  File "<input>", line 1
+
+    obj.browser()
+
+                ^
+
+SyntaxError: multiple statements found while compiling a single statement
+
+
+[2017-03-19 00:38:22] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 113, in OnSize
+    elif LINUX:
+
+NameError: name 'LINUX' is not defined
+
+
+[2017-03-19 09:44:53] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/pytigon.py", line 24, in <module>
+    main(sys.argv[1:])
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 915, in main
+    _main_run()
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 822, in _main_run
+    wx.Size(800, 700),
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 56, in __init__
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 345, in __init__
+    CEFControl.__init__(self, parent, **kwds)
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 100, in __init__
+    self.embed_browser()
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 104, in embed_browser
+    (width, height) = self.browser_panel.GetClientSize()
+
+AttributeError: 'Html2' object has no attribute 'browser_panel'
+
+
+[2017-03-19 09:45:21] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/pytigon.py", line 24, in <module>
+    main(sys.argv[1:])
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 915, in main
+    _main_run()
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 822, in _main_run
+    wx.Size(800, 700),
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 56, in __init__
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 345, in __init__
+    CEFControl.__init__(self, parent, **kwds)
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 100, in __init__
+    self.embed_browser()
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/cefcontrol.py", line 105, in embed_browser
+    window_info.SetAsChild(self.browser_panel.GetHandle(), [0, 0, width, height])
+
+AttributeError: 'Html2' object has no attribute 'browser_panel'
+
+
+[2017-03-19 09:49:36] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/pytigon.py", line 24, in <module>
+    main(sys.argv[1:])
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 915, in main
+    _main_run()
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 822, in _main_run
+    wx.Size(800, 700),
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 56, in __init__
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 348, in __init__
+    self.browser.SetClientHandler(self.client_handler)
+
+AttributeError: 'Html2' object has no attribute 'browser'
+
+
+[2017-03-19 09:49:49] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/pytigon.py", line 24, in <module>
+    main(sys.argv[1:])
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 915, in main
+    _main_run()
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 822, in _main_run
+    wx.Size(800, 700),
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 56, in __init__
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 348, in __init__
+    self.browser.SetClientHandler(self.client_handler)
+
+AttributeError: 'Html2' object has no attribute 'browser'
+
+
+[2017-03-19 09:49:55] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/pytigon.py", line 24, in <module>
+    main(sys.argv[1:])
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 915, in main
+    _main_run()
+
+  File "/home/sch/prj/pytigon/schcli/pytigon.py", line 822, in _main_run
+    wx.Size(800, 700),
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 56, in __init__
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 348, in __init__
+    self.browser.SetClientHandler(self.client_handler)
+
+AttributeError: 'Html2' object has no attribute 'browser'
+
+
+[2017-03-19 10:01:15] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/../ext_lib_cli_lin/wx/core.py", line 2968, in <lambda>
+    lambda event: event.callable(*event.args, **event.kw) )
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 66, in init_browser
+    self.ctrl.load_url(app.base_address+"/")
+
+NameError: name 'app' is not defined
+
+
+[2017-03-19 10:05:21] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 67, in on_created
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+RecursionError: maximum recursion depth exceeded in comparison
+
+
+[2017-03-19 10:06:19] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/browserframe.py", line 68, in on_created
+    self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=(400, 300))
+
+RecursionError: maximum recursion depth exceeded in comparison
+
+
+[2017-03-19 11:11:53] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/../schappdata/schplugins/standard/webview/cef/__init__.py", line 390, in on_close
+    wx.Yield()
+
+wx._core.wxAssertionError: C++ assertion "Assert failure" failed at /home/sch/prj/src/wxPython_Phoenix-3.0.3.dev2864+4fc5f9e/ext/wxWidgets/src/common/evtloopcmn.cpp(110) in Yield(): wxYield called recursively
+
+
+[2017-03-19 11:44:09] Traceback (most recent call last):
+
+  File "/home/sch/prj/pytigon/schcli/guiframe/appframe.py", line 878, in on_command
+    win.body.new_child_page("^standard/webview/gotopanel.html", title="Go")
+
+AttributeError: 'bool' object has no attribute 'body'
+

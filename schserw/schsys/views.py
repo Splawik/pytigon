@@ -32,6 +32,7 @@ from schlib.schdjangoext.tools import import_model
 from schlib.schtable.dbtable import DbTable
 from schlib.schtools import schjson
 from schlib.schviews.viewtools import render_to_response
+from schlib.schdjangoext.tools import make_href
 
 APP = None
 
@@ -86,13 +87,13 @@ def change_password(request):
         if user is not None and user.is_active:
             user.set_password(new_password)
             user.save()
-            return HttpResponseRedirect(reverse('start')+"schsys/do_logout?schtml=1")
+            return HttpResponseRedirect(make_href("/schsys/do_logout?schtml=1"))
         else:
             messages.add_message(request, messages.ERROR, 'Bad old password')
-            return HttpResponseRedirect(reverse('start'))
+            return HttpResponseRedirect(make_href('/'))
     else:
         messages.add_message(request, messages.ERROR, 'Bad confirmed password')
-        return HttpResponseRedirect(reverse('start'))
+        return HttpResponseRedirect(make_href('/'))
 
 
 def ok(request):
@@ -328,3 +329,6 @@ def plugins(request, app, plugin_name):
     f.close()
     return HttpResponse(s, mimetype='application/zip')
 
+
+def favicon(request):
+    return HttpResponseRedirect(make_href("/static/favicon.ico"))

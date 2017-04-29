@@ -20,6 +20,7 @@
 
 import importlib
 import traceback
+import os
 
 from django.conf.urls import url, include
 from django.conf import settings
@@ -43,7 +44,20 @@ urlpatterns = [
     url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url(r'site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'select2/', include(django_select2.urls)),
+    url(r'^favicon.ico', schserw.schsys.views.favicon),
 ]
+
+def app_description(app_pack):
+    file_name = os.path.join(os.path.join(settings.APP_PACK_PATH, app_pack), 'settings_app.py')
+    try:
+        with open(file_name, "rt") as f:
+            txt = f.read()
+            for pos in txt.split('\n'):
+                if pos.startswith('APPSET_TITLE'):
+                    return pos.split('=')[1].split('\"')[1]
+        return app_pack
+    except:
+        return app_pack
 
 if len(settings.APP_PACKS) > 0:
     for app_pack in settings.APP_PACKS:
@@ -53,8 +67,10 @@ if len(settings.APP_PACKS) > 0:
                 {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
         urlpatterns.append(u)
 
+    app_packs = [ (pos, app_description(pos)) for pos in settings.APP_PACKS ]
+
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),
-          {'app_packs': settings.APP_PACKS }, name='start')
+          {'app_packs': app_packs }, name='start')
 
     urlpatterns.append(u)
 else:

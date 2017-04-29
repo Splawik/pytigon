@@ -420,6 +420,15 @@ def sch_standard(request):
     else:
         url_base = ''
 
+    url_app_base = url_base
+
+    if len(settings.APP_PACKS) > 0:
+        for app_pack in settings.APP_PACKS:
+            if not app_pack.startswith('_'):
+                if ('/'+app_pack+'/') in request.path:
+                    url_app_base =  url_base + "/" + app_pack
+                    break
+
     lng = request.LANGUAGE_CODE[:2].lower()
 
     b_type = browser_type(request)
@@ -458,6 +467,7 @@ def sch_standard(request):
         'form_grid': form_grid,
         'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
+        'URL_APP_BASE': url_app_base,
         'show_form': show_form,
         'browser_type': b_type,
         'application_type': b_type2,
