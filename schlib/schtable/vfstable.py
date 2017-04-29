@@ -28,7 +28,8 @@ import fs.path
 from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
-from fs.opener import fsopendir
+#from fs.opener import fsopendir
+from fs.osfs import OSFS
 
 from schlib.schfs.vfstools import norm_path
 from schlib.schtable.table import Table
@@ -47,7 +48,8 @@ def automount(path):
         syspath = default_storage.fs.getsyspath(pp, allow_none=True)
         if syspath:
             zip_name = 'zip://'+default_storage.fs.getsyspath(pp)
-            default_storage.fs.mountdir(pp[1:], fsopendir(zip_name))
+            #default_storage.fs.mountdir(pp[1:], fsopendir(zip_name))
+            default_storage.fs.add_fs(pp[1:], OSFS(zip_name))
     return path
 
 

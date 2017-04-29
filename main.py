@@ -2,6 +2,9 @@
 import os
 import sys
 
+from schlib import init_paths
+init_paths()
+
 base_path = __file__.replace("main.py", "")
 if base_path == "":
     base_path = "./"
@@ -16,11 +19,9 @@ sys.path.insert(0,base_path)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
-from schlib import init_paths
-init_paths()
-
 from schlib.schdjangoext.django_manage import *
 
 if __name__ == "__main__":
-    argv = ['main.py', 'runserver',  '5000', '--noasgi',  '--noreload', '--nothreading']
+    #argv = ['main.py', 'runserver',  '5000', '--noasgi',  '--noreload', '--nothreading']
+    argv = ['main.py', 'runserver',  '5000',  '--noreload', '--nothreading']
     cmd(argv, from_main=True)

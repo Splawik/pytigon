@@ -23,27 +23,40 @@ import os
 
 
 def init_paths():
+    from schlib.schtools.platform_info import platform_name
+    
     base_path = __file__.replace("__init__.py", "")
 
     if base_path == "":
         base_path = "./"
 
-    if platform.system() == "Windows":
-        p = base_path + "../python/lib/site-packages"
+    pname = platform_name()
+
+    if pname == 'Android':
+        p = base_path + "../android"
+        p2 = base_path + "../ext_lib"
+        p = os.path.abspath(p)
+        p2 = os.path.abspath(p2)
+        sys.path.insert(0, p)
+        sys.path.append(p2)
     else:
-        p = base_path + "../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])
+        if pname == "Windows":
+            p = base_path + "../python/lib/site-packages"
+        else:
+            platform_name
+            p = base_path + "../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])
 
-    p2 = base_path + "../ext_lib"
+        p2 = base_path + "../ext_lib"
 
-    p = os.path.abspath(p)
-    p2 = os.path.abspath(p2)
-    sys.path.insert(0, p)
-    sys.path.append(p2)
+        p = os.path.abspath(p)
+        p2 = os.path.abspath(p2)
+        sys.path.insert(0, p)
+        sys.path.append(p2)
 
-    tmp = []
-    for pos in sys.path:
-        if not pos in tmp:
-            if not '.zip' in pos:
-                tmp.append(pos)
-    sys.path = tmp
+        tmp = []
+        for pos in sys.path:
+            if not pos in tmp:
+                if not '.zip' in pos:
+                    tmp.append(pos)
+        sys.path = tmp
 

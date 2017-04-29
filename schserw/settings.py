@@ -28,7 +28,7 @@ if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--
     DB_DEBUG = True
     PRODUCTION_VERSION = False
 else:
-    DEBUG = False
+    DEBUG = True
     DB_DEBUG = False
     PRODUCTION_VERSION = True
 
@@ -68,7 +68,7 @@ if not os.path.exists(DATA_PATH):
 TEMP_PATH = os.path.join(DATA_PATH, "temp")
 
 if platform_name()=='Android':
-    APP_PACK_PATH = os.path.join(DATA_PATH, 'app_pack')
+    APP_PACK_PATH = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_pack')
 else:
     APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')
 
@@ -162,9 +162,12 @@ INSTALLED_APPS = [
     'schserw.schsys',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'django_select2',
-    'channels',
+    'django_select2',    
     ]
+
+if platform_name()!='Android':
+    INSTALLED_APPS.append('channels')
+
 
 HIDE_APPS = []
 
@@ -197,7 +200,7 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
 
-if PRODUCTION_VERSION:
+if PRODUCTION_VERSION and platform_name()!='Android':
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "asgi_redis.RedisChannelLayer",
@@ -212,7 +215,7 @@ else:
         },
     }
 
-DEFAULT_FILE_STORAGE = 'fs.expose.django_storage.FSStorage'
+DEFAULT_FILE_STORAGE = 'django_storage.FSStorage'
 DEFAULT_FILE_STORAGE_FS = MountFS()
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
