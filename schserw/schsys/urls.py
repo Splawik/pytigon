@@ -40,9 +40,11 @@ def sch_login(request, *argi, **argv):
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
     else:
         request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
-    path = request.GET.get("next", "/")
+    path = request.GET.get("next", "")
     if path == "":
-        path = "/"
+        path = request.POST.get("next", "")
+        if path == "":
+            path = "/"
     return HttpResponseRedirect(make_href(path))
 
 

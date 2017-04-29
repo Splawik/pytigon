@@ -901,7 +901,6 @@ class Form(Node):
                     form.helper.form_show_labels = False
                     form.helper.field_template = 'bootstrap3/layout/inline_field.html'
         if output:
-            print(output)
             form.helper.layout = eval("Layout("+output.replace('[[', '{{').replace(']]', '}}')+")")
         t = Template("""{% load crispy_forms_tags %}{% crispy form %}""")
         return t.render(context)

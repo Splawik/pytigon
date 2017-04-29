@@ -83,7 +83,6 @@ from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
 
 from schserw import settings as schserw_settings
-print(schserw_settings.APP_PACK_PATH)
 
 def install_0():
     # function create pytigon system folders if they do not exist.
