@@ -10,40 +10,35 @@
 %% login
     % if not user.is_authenticated
         % if settings.SHOW_LOGIN_WIN
-            table width=100%
-                tr
-                    td colspan=3,,,style=height:50px
-                tr
-                    td width=50%
-                    td
-                        div class=panel panel-default,,,style=width:300px
-                            div class=panel-body
-                                form action={{URL_BASE}}/schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
-                                    h3 class=panel-title
-                                        ._(Login)
-                                    br
-                                    br
-                                    {% csrf_token %}
-                                    div class=form-group label-floating
-                                        div class=input-group
-                                            span class=input-group-addon glyphicon glyphicon-user
-                                            label class=control-label,,,for=username_ ..._(User name)
-                                            input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=
-                                    br
-                                    div class=form-group label-floating
-                                        div class=input-group
-                                            span class=input-group-addon glyphicon glyphicon-eye-close
-                                            label class=control-label,,,for=password_..._(Password)
-                                            input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=
-                                    br
-                                    div class=form-group
-                                        table width=100%
-                                            td width=50%...&nbsp
-                                            td
-                                                button type=submit,,,class=btn btn-default btn-raised btn-lg...OK
-                                            td width=50%...&nbsp
-                    td width=50%
+            div class=container login-container
+                div class=row align-items-center
+                    div class=col
+                    div class=col
+                        div
+                            h2 style=padding: 0px 0px 20px 5px; margin: 5px 0px;,,,class=txt3d text-white
+                                {{appset_title}}
 
+                        div class=card card-inverse login-card
+                            div class=card-header..._(Login)
+                            div class=card-block
+                                form class=login-form,,,action={{URL_BASE}}/schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
+                                    {% csrf_token %}
+                                    div class=form-group
+                                        label class=control-label,,,for=username_ ..._(User name)
+                                        div class=input-group
+                                            span class=input-group-addon fa fa-user
+                                            input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=
+                                    div class=form-group
+                                        label class=control-label,,,for=password_..._(Password)
+                                        div class=input-group
+                                            span class=input-group-addon fa fa-key
+                                            input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=
+                                    div class=row
+                                        div class=col
+                                        div class=col
+                                            button type=submit,,,class=btn btn-primary ...OK
+                                        div class=col
+                    div class=col
 
 
 %% change_password
@@ -67,7 +62,7 @@
                                 input class=form-control,,,name=confirm_password,,,type=password
                         div class=modal-footer
                             button href=#,,,class=btn,,,data-dismiss=modal...Cancel
-                            button type=submit,,,class=btn btn-default...OK
+                            button type=submit,,,class=btn btn-secondary...OK
 
 %% messages
     % if messages:
@@ -186,9 +181,8 @@
         %% list_page_header
 
         %% list_page
-	        %% list_content_start
-	            % if standard_web_browser:
-	                <div class="panel panel-content">
+            %% list_content_start
+                % if standard_web_browser:
             %% list_content_header
                 div
                     div class=table,,,width=100%
@@ -196,7 +190,7 @@
                             div class=tr row list_content_header_first_row
                                 div class=td col-sm-12 hidden-xs text-center
                                     %% list_content_title
-                                        h4 style=white-space:nowrap;,,,class=txt3d...{{title|wiki_href|safe}}
+                                        h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
                         %%list_content_header_two_row
                             div class=tr row list_content_header_two_row
                                 div class=td col-md-12 col-sm-12,,,colspan=3
@@ -206,9 +200,8 @@
                                             %% form_filter
                                                 %if form
                                                     %% form_content
-                                                        div class=inline-form-body
-                                                            {{ form.non_field_errors }}
-                                                            % inline_form:
+                                                        {{ form.non_field_errors }}
+                                                        % inline_form:
                                                         %% form_content_button
                                                             button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
                                                                 span class=fa fa-refresh
@@ -218,7 +211,7 @@
                                     div class=dropdown
                                         % if standard_web_browser and object_list:
                                             % if table_type == 'datatable':
-                                                button type=button,,,class=btn btn-default dropdown-toggle,,,data-toggle=dropdown
+                                                button type=button,,,class=btn btn-secondary btn-sm,,,data-toggle=dropdown
                                                     span class=fa fa-bars
                                                 ul class=dropdown-menu
                                                     li:::a href=../odf/list,,,target=_blank...=> ods
@@ -281,11 +274,10 @@
                         % if table_type == 'scrolled':
                             </div>
 
-	        %% list_content_footer
+            %% list_content_footer
 
-	        %% list_content_end
-	            % if standard_web_browser:
-	                </div>
+            %% list_content_end
+                % if standard_web_browser:
 
         %% list_page_footer
 

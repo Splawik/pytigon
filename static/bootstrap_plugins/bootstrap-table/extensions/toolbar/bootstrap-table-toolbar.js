@@ -70,7 +70,7 @@
 
         htmlForm.push('<div class="form-group">');
         htmlForm.push('<div class="col-sm-offset-9 col-sm-3">');
-        htmlForm.push(sprintf('<button type="button" id="btnCloseAvd%s" class="btn btn-default" >%s</button>', "_" + that.options.idTable, searchText));
+        htmlForm.push(sprintf('<button type="button" id="btnCloseAvd%s" class="btn btn-secondary" >%s</button>', "_" + that.options.idTable, searchText));
         htmlForm.push('</div>');
         htmlForm.push('</div>');
         htmlForm.push('</form>');
@@ -131,7 +131,7 @@
             html = [];
 
         html.push(sprintf('<div class="columns columns-%s btn-group pull-%s" role="group">', this.options.buttonsAlign, this.options.buttonsAlign));
-        html.push(sprintf('<button class="btn btn-default%s' + '" type="button" name="advancedSearch" aria-label="advanced search" title="%s">', that.options.iconSize === undefined ? '' : ' btn-' + that.options.iconSize, that.options.formatAdvancedSearch()));
+        html.push(sprintf('<button class="btn btn-secondary%s' + '" type="button" name="advancedSearch" aria-label="advanced search" title="%s">', that.options.iconSize === undefined ? '' : ' btn-' + that.options.iconSize, that.options.formatAdvancedSearch()));
         html.push(sprintf('<i class="%s %s"></i>', that.options.iconsPrefix, that.options.icons.advancedSearchIcon))
         html.push('</button></div>');
 

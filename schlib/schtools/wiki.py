@@ -60,7 +60,7 @@ def make_href(wiki_value, new_win=True, section=None, btn = False, path=None):
         p = ''
 
     if btn:
-        btn_str = "class='btn btn-default' label='%s'" % wiki_value
+        btn_str = "class='btn btn-secondary' label='%s'" % wiki_value
     else:
         btn_str = "class='schbtn' label='%s' " % wiki_value
 

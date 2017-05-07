@@ -2,7 +2,7 @@
 
 %% action_widget_content
     % if standard_web_browser:
-        a href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}},,,class={% block action_class %}{% if action.target == '_top' %}popup{% endif %} btn btn-default ladda-button {% endblock %}{{action.tag_class}},,,name={{action.name}},,,title={{action.title}},,,target={% ifnotequal action.target '_top' %}{{action.target}}{%else%}_top{% endifnotequal %},,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,{{action.attrs|safe}}
+        a href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}},,,class={% block action_class %}{% if action.target == '_top' %}popup{% endif %} btn ladda-button {% endblock %}{{action.tag_class}},,,name={{action.name}},,,title={{action.title}},,,target={% ifnotequal action.target '_top' %}{{action.target}}{%else%}_top{% endifnotequal %},,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,{{action.attrs|safe}}
             span class=ladda-label
                 %% description
                     {{action.title}}

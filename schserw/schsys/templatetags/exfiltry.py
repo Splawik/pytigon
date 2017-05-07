@@ -22,6 +22,7 @@
 """
 
 from base64 import b64encode, b64decode
+import datetime
 
 from django import template
 from django.core.urlresolvers import reverse
@@ -30,6 +31,7 @@ from django.template.loader import get_template
 from django.template import Context, Template
 from django.db.models.query import QuerySet
 from django.db.models import Count, Min, Sum, Avg
+from django.utils.safestring import mark_safe
 
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.wiki import wiki_from_str, make_href, wikify
@@ -150,7 +152,6 @@ def getvalue(value, argv):
 @register.filter(name='date_inc')
 def date_inc(value, arg):
     """Increment date value by timedelta(int(arg))"""
-    import datetime
     try:
         (date, time) = value.split()
         (y, m, d) = date.split('-')
@@ -163,7 +164,6 @@ def date_inc(value, arg):
 @register.filter(name='date_dec')
 def date_dec(value, arg):
     """Decrement date value by timedelta(int(arg))"""
-    import datetime
     try:
         (y, m, d) = value.split('-')
         return (datetime.datetime(int(y), int(m), int(d))
@@ -444,13 +444,16 @@ def replace(value, replace_str):
     else:
         return value
 
-
 @register.filter(name='append_str')
 def append_str(value, s):
     if s==None or s=="":
         return value
     else:
         return value + str(s)
+
+@register.filter(name='css_hack', is_safe=True)
+def css_hack(value):
+    return value+'?'+datetime.datetime.now().isoformat()
 
 @register.filter(name='isoformat')
 def isoformat(value):

@@ -6,12 +6,6 @@
 % load exsyntax
 % load crispy_forms_tags
 
-% comment:
-    % load django_select2_tags
-    <script src="http://localhost:1337/vorlon.js"></script>
-
-
-
 
 %% js_scripts_base
     {% jscript_link 'system/browser-polyfill.min.js' %}
@@ -22,6 +16,7 @@
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
     {% jscript_link 'vanillajs_plugins/js.cookie.js' %}
+    {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
 
     {% jscript_link 'jquery/js/jquery-2.1.4.js' %}
 
@@ -44,16 +39,10 @@
     {% jscript_link 'jquery_plugins/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js' %}
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
-
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
-    % comment:
-        {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}
-
-    {% jscript_link 'bootstrap_plugins/bootstrap3-dialog/js/bootstrap-dialog.min.js' %}
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
-
     {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
 
 
@@ -61,8 +50,6 @@
     {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
-
-    {% jscript_link 'bootstrap_plugins/tabdrop/js/bootstrap-tabdrop.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
 
     %% ext_js_scripts
@@ -71,13 +58,10 @@
     {% jscript_link 'sch/inline_dialog.js' %}
 
     %% theme_js_scripts
-        {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
-        {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
 
 %% jquery_init
     %% fragment_init
         .function base_fragment_init() {
-        .    $.material.init();
         .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
         .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
         .}
@@ -93,6 +77,7 @@
 %% jquery_ready
     .pytigon.jquery_ready();
     .base_fragment_init();
+
 
 %% jquery_ready_end
   });
@@ -119,47 +104,31 @@
 
 
 %% css_links
+    {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
+    {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
     %% botstrap_css
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
-        {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
-
-    % comment:
-        {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
-
-    {% css_link 'bootstrap_plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css' %}
-    {% css_link 'bootstrap_plugins/tabdrop/css/tabdrop.css' %}
-
+    {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css' %}
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
-
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.min.css' %}
 
-    {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
-
     {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
-    % comment:
-        {% import_django_select2_css %}
+    {% css_link 'themes/select2-bootstrap.css' %}
 
     {{ form.media.css }}
 
-    {% css_link 'themes/select2-bootstrap.css' %}
-
     %% theme_css_links
-        {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
-        {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
-
 
     %% theme_css_links_spec
         {% css_link 'themes/default.css' %}
-        {% css_link 'themes/material.css' %}
-
-    {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
+        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
 
 %% css_start
     <style type="text/css">
@@ -169,9 +138,10 @@
 
 
 %% login_header
-    div
-        h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
-            {{appset_title}}
+    % comment:
+        div
+            h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d text-white
+                {{appset_title}}
 
 %% login_footer
 
@@ -181,10 +151,11 @@
 %% topmenu_start
     ul class=nav nav-tabs desktop-logo
         % if request.get_host != '127.0.0.2':
+          % comment:
             %if user.is_authenticated:
                 li
                     div class=dropdown
-                        button class=btn btn-default dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown
+                        button class=btn btn-secondary dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown
                             span class=fa fa-power-off
                             span class=caret
                         ul class=dropdown-menu
@@ -226,7 +197,7 @@
     % if url|is_menu_checked:request.get_full_path:
         <a href="{{URL_BASE}}/{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % else
-        <a href="{{URL_BASE}}/{{url}}" class="btn btn-default btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        <a href="{{URL_BASE}}/{{url}}" class="btn btn-secondary btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
     % if forloop.last
         </div>
 
@@ -268,10 +239,10 @@
 
 %% body_body
     % if application_type == 'modern':
-        div class=tab-pane refr_target refr_object win-content page
+        div class=container-fluid tab-pane refr_target refr_object win-content page
             {{block.super}}
     % else:
-        div id=body_body,,,class=tab-pane refr_target refr_object win-content page
+        div id=body_body,,,class=container-fluid tab-pane refr_target refr_object win-content page
             {{block.super}}
 
 %% body_end
@@ -283,45 +254,48 @@
 
 %% body_init
     img src=/static/images/ajax-loader.gif,,,id=loading-indicator,,,style=display:none
+
     div class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
-        div class=modal-dialog {% block modal_dialog_class %}{% endblock %}
+        div class=modal-dialog {% block modal_dialog_class %}{% endblock %},,,role=document
             div class=modal-content
                 div class=modal-header
-                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
-                        .x
-                    h4 class=modal-title,,,id=ModalLabel...{{title}}
-                div class=modal-body 
-                    div class=dialog-data refr_target
+                    h5 class=modal-title,,,id=ModalLabel...{{title}}
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
+                        span aria-hidden=true...&times;
+                div class=modal-body
+                    div container-fluid
+                            div class=dialog-data refr_target
                 div class=modal-footer
                     %% content_start_ok_cancel
-                        button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
+                        button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Cancel)
                         button type=button,,,class=btn btn-primary,,,onclick=javascript:on_edit_ok(jQuery(this).parent().parent().find('form:first'));return false;..._(OK)
-
 
     div class=dialog-form-info modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelInfo
         div class=modal-dialog
             div class=modal-content
                 div class=modal-header
-                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
-                        .x
-                    h4 class=modal-title,,,id=ModalLabelInfo...{{title}}
+                    h5 class=modal-title,,,id=ModalLabelInfo...{{title}}
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
+                        span aria-hidden=true...&times;
                 div class=modal-body
-                    div class=dialog-data-info
+                    div container-fluid
+                        div class=dialog-data-info
                 div class=modal-footer
-                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
+                    button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Close)
 
 
     div class=dialog-form-delete modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelDelete,,,title={{title}}
         div class=modal-dialog
             div class=modal-content
                 div class=modal-header
-                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
-                        .x
-                    h4 class=modal-title,,,id=ModalLabelDelete...{{title}}
+                    h5 class=modal-title,,,id=ModalLabelDelete...{{title}}
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
+                        span aria-hidden=true...&times;
                 div class=modal-body
-                    div class=dialog-data-delete
+                    div container-fluid
+                        div class=dialog-data-delete
                 div class=modal-footer
-                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Cancel)
+                    button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Cancel)
                     button type=button,,,class=btn btn-danger,,,onclick=javascript:on_delete_ok($(this).parent().parent().find('form:first'));return false;..._(OK)
 
 
@@ -329,14 +303,15 @@
         div class=modal-dialog modal-lg
             div class=modal-content
                 div class=modal-header
-                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-hidden=true
-                        .x
-                    h4 class=modal-title,,,id=ModalLabelError...Error
+                    h5 class=modal-title,,,id=ModalLabeError...{{title}}
+                    button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
+                        span aria-hidden=true...&times;
                 div class=modal-body
+                    div container-fluid
                         div id=dialog-data-error,,,class=alert alert-danger alert-dismissable
 
                 div class=modal-footer
-                    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)
+                    button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Close)
 
 
 
@@ -358,7 +333,6 @@
         .data-id-field="cid"
     % else:
         .class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
-
 
 
 %% row_edit_form

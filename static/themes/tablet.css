@@ -1,58 +1,17 @@
-.navbar .navbar-nav > li > a {
-    color: inherit;
-    padding-top: 20px;
-    padding-bottom: 10px;
+/* main */
+
+section.content {
+    background-color: #fff;
+    margin: 0px;
+    padding: 0px;
+    min-height: 100%;
 }
+
+
+/* top navbar */
 
 #tabs2 {
-    background: transparent;
-}
-
-.nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
-    color: #aaa !important;
-}
-
-body {
-    margin-top: 0px;
-}
-
-
-.content {
-    min-height: 250px !important;
-    padding: 1px !important;
-    margin: 0px !important;
-    margin-left: 0px !important;
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-}
-
-td .content {
-    min-height: 50px !important;
-}
-
-td .content_get {
-    min-height: 250px !important;
-}
-
-.control-sidebar .nav-tabs {
-    background: transparent;
-}
-
-.tab-content {
-    background-color: transparent;
-}
-
-.dropdown-menu {
-    border: 0;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26) !important;
-}
-
-#tabs2 li.active a {
-    color: #000 !important;
-}
-
-.sidebar-menu .treeview-menu > li > a > .fa {
-    display: none;
+    border-bottom: 0px;
 }
 
 #tab_tabs2 {
@@ -63,62 +22,129 @@ td .content_get {
     right: 200px;
 }
 
-.skin-blue .main-header .navbar .nav > li > a {
-    color: #fff !important;
+#tab_tabs2 > ul > li {
+    position: relative;
+}
+
+#tab_tabs2 > ul > li > a {
+    color: #000; 
+}
+
+#tab_tabs2 li button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+header.main-header nav.navbar div.navbar-collapse {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: auto;
+    height: 100%;   
+    font-size: 15px;
+}
+
+header.main-header nav.navbar div.navbar-collapse > ul {
+    height: 100%;
+}
+
+header.main-header nav.navbar div.navbar-collapse > ul > li {
+    padding: 12px 12px;
+    height: 100%;
+}
+
+header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-toggle:hover  {
+    background-color: rgba(0, 0, 0, .1); 
+}
+
+header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle {
+    color: #fff !important; 
+}
+
+header.main-header nav.navbar {
+    padding: 0px !important;
+}
+
+.main-header .sidebar-toggle {
+    height: 100%;
+    padding: 15px;
+    position: absolute;
+    width: 40px;
+    margin: 0px;
+}
+
+.main-header .nav-item .nav-link {
+    padding-right: 10px;
+    padding-left: 4px;
+}
+
+.main-header .nav-link {
+    padding-right: 10px;
+    padding-left: 6px;
+}
+
+.main-header a.nav-link {
+    background-color: transparent !important; 
+    white-space: nowrap;
+}
+
+.main-header a.active {
+    background-color: #fff !important;
+}
+
+.main-header .nav-item .close {
+    margin-top: 2px;
+    margin-right: 2px;
+}
+
+.main-header .navbar-collapse div.card {
+    width: 400px;
+}
+
+.main-header .navbar-collapse div.card p{
+    font-size: 14px;
 }
 
 
-.navbar.navbar .dropdown-menu li > a:hover, .navbar-default.navbar .dropdown-menu li > a:hover, .navbar.navbar .dropdown-menu li > a:focus, .navbar-default.navbar .dropdown-menu li > a:focus {
-    color: #000 !important;
-    background-color: #eee;
+/* Tab - close button on tab */
+#tabs2 button.close {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    font-size: 18px;
+    padding: 0px 3px;
+    margin-top: 0px; 
+    margin-right: 0px;
+    box-shadow: none; 
+}
+
+#tabs2 li.nav-item a.nav-link {
+    padding: 8px;
+    padding-right: 12px;
+    text-transform: none;
+}
+
+.nav-tabs > li > a.active, .nav-tabs > li > a.active:focus {
+    border: medium none;
+    box-shadow: 0px -4px 0px #FDFD8C inset !important;
 }
 
 
-.navbar.navbar .dropdown-menu .active > a, .navbar-default.navbar .dropdown-menu .active > a {
-    background-color: #bbb;
+/* sidebar menu */
+ul.sidebar-menu ul.treeview-menu {
+    padding-left: 25px !important;
 }
 
-#tabs2 .dropdown-menu a {
-
-    color: #000 !important;
-}
-
-/*
-.btn-primary {
-    background-color: transparent !important;
-    border-color: #ddd !important;
-
-.btn-primary:hover, .btn-primary:focus  {
-    border-color: #adadad !important;
-}
-*/
-
-#tabs2 {
-    border-bottom: 0px;
+body.sidebar-collapse ul.sidebar-menu ul.treeview-menu {
+    padding-left: 0px !important;
 }
 
 .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a {
     border-left-color: #FDFD8C !important;
 }
 
-/*
-.main-header .sidebar-toggle {
-    padding-top: 5px;
-    padding-bottom: 5px;
+section.sidebar ul.sidebar-menu li.treeview ul.treeview-menu {
+    margin-top: -1px;
 }
 
-.main-header .logo {
-    height: 30px;
-    line-height: 30px;
-    padding: 0 5px;
-}
-
-.navbar .navbar-nav > li > a {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.main-header .navbar {
-    min-height: 30px;
-}
-*/

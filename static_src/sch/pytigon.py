@@ -208,8 +208,8 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
     if can_popup():
         def _local_fun():
             nonlocal menu_id
-            jQuery("#tabs").tabdrop()
-            jQuery("#tabs2").tabdrop()
+            #jQuery("#tabs").tabdrop()
+            #jQuery("#tabs2").tabdrop()
             if window.APPLICATION_TEMPLATE != 'traditional':
                 pos = jQuery(".menu-href.btn-warning")
                 if pos.length > 0:

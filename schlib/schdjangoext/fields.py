@@ -110,10 +110,10 @@ class RadioChoiceInput(ChoiceInput):
 
 BUTTONS="""
 <div class="input-group-btn">
-    <button type="button" name ="get_tbl_value" class="btn btn-default btn-flat foreignkey_button get_tbl_value" href='%s'>
+    <button type="button" name ="get_tbl_value" class="btn btn-secondary btn-flat foreignkey_button get_tbl_value" href='%s'>
       <span class="fa-table fa"></span>
     </button>s
-    <button type="button" name="new_tbl_value" class="btn btn-default btn-flat foreignkey_button new_tbl_value" href='%s'>
+    <button type="button" name="new_tbl_value" class="btn btn-secondary btn-flat foreignkey_button new_tbl_value" href='%s'>
       <span class="fa-plus fa"></span>
     </button>
 </div>

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-04-21 21:57:48
+// Transcrypt'ed from Python, 2017-05-07 19:18:36
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2482,7 +2482,7 @@ function pytigon () {
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
 							self.titles [title2] = menu_item;
-							jQuery ('#tabs2').append (vsprintf ("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, _id])));
+							jQuery ('#tabs2').append (vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, _id])));
 							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;
@@ -3253,8 +3253,6 @@ function pytigon () {
 			window.LANG = lang;
 			if (can_popup ()) {
 				var _local_fun = function () {
-					jQuery ('#tabs').tabdrop ();
-					jQuery ('#tabs2').tabdrop ();
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
 						var pos = jQuery ('.menu-href.btn-warning');
 						if (pos.length > 0) {

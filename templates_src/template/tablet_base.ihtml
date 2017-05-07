@@ -12,13 +12,12 @@
 %% theme_css_links
     {{block.super}}
     {% css_link 'themes/AdminLTE/css/AdminLTE_mod.css' %}
-    {% css_link 'themes/AdminLTE/css/skins/skin-blue.min.css' %}
-
+    {% css_link 'themes/tablet.css' %}
 
 %% menu_start
     header class=main-header win-header
 
-        a href={{URL_BASE}},,,class=logo,,,style=white-space:nowrap;text-align: center;
+        a href={{URL_BASE}},,,class=logo text-white,,,style=white-space:nowrap;text-align: center;
             span class=logo-mini
                 % if appset_title|length > 5:
                     small...{{appset_title|truncatechars:7}}
@@ -31,57 +30,59 @@
                 % else:
                     {{appset_title}}
 
-        nav class=navbar navbar-static-top,,,role=navigation
+        nav class=navbar navbar-toggleable-md bg-primary
+
             a href=#,,,class=sidebar-toggle,,,data-toggle=offcanvas,,,role=button
                 span class=sr-only...Toggle navigation
 
             % if not NO_TABS and application_type == 'modern':
-                div class=navbar-custom-menu tabbable,,,id=tab_tabs2
-                    ul class=nav nav-tabs,,,id=tabs2
+                div class=navbar-nav tabbable,,,id=tab_tabs2
+                    ul class=nav nav-tabs,,,role=tablist,,,id=tabs2
 
-            div class=navbar-custom-menu
-                ul class=nav navbar-nav
+            div class=navbar-collapse align-self-end
+                ul class=nav
                     %% drop_down_blocks
-                    li class=dropdown user user-menu
+                    li class=nav-item dropdown user user-menu
                         a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
                             span class=fa fa-user
                             span class=hidden-xs...{{user.username}}
-                        ul class=dropdown-menu
-                            li class=user-header
-                                    ul style=text-align:left;padding-left:5px;
-                                        li...username: {{user.username}}
-                                        li...first name: {{user.first_name}}
-                                        li...last name: {{user.last_name}}
-                                        li...email: {{user.email}}
-                                        li...last login: {{user.last_login|isoformat}}
-                                        li...date joined: {{user.date_joined|isoformat}}
-                            li class=user-footer
-                                div class=pull-left
-                                    a class=system_menu btn btn-default btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
-                                div class=pull-left
-                                    a href=#,,,class=btn btn-default btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                        div class=dropdown-menu dropdown-menu-right
+                            div class=card
+                                div class=card-block
+                                    p...username: {{user.username}}
+                                    p...first name: {{user.first_name}}
+                                    p...last name: {{user.last_name}}
+                                    p...email: {{user.email}}
+                                    p...last login: {{user.last_login|isoformat}}
+                                    p...date joined: {{user.date_joined|isoformat}}
+                                div class=card-footer
+                                    div class=pull-left
+                                        a class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                    div class=pull-right
+                                        a href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
-                    li class=dropdown user user-menu
+                    li class=nav-item dropdown user user-menu
                         a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
                             span class=fa fa-power-off
 
-                    li
-                        a href=#,,,data-toggle=control-sidebar
-                            i class=fa fa-gears
-
-    aside class=control-sidebar control-sidebar-dark
-        ul class=nav nav-tabs nav-justified control-sidebar-tabs
-            li class=active
-                a href=#control-sidebar-home-tab,,,data-toggle=tab
-                    i class=fa fa-home
-            li
-                a href=#control-sidebar-settings-tab,,,data-toggle=tab
-                    i class=fa fa-gears
-        div class=tab-content
-            div class=tab-pane active,,,id=control-sidebar-home-tab
-                .TAB1
-            div class=tab-pane,,,id=control-sidebar-settings-tab
-                .TAB2
+                    % comment:
+                        li class=nav-item
+                            a href=#,,,data-toggle=control-sidebar
+                                i class=fa fa-gears
+    % comment:
+        aside class=control-sidebar control-sidebar-dark
+            ul class=nav nav-tabs nav-justified control-sidebar-tabs
+                li class=nav-item active
+                    a class=nav-link,,,href=#control-sidebar-home-tab,,,data-toggle=tab
+                        i class=fa fa-home
+                li class=nav-item
+                    a class=nav-link,,,href=#control-sidebar-settings-tab,,,data-toggle=tab
+                        i class=fa fa-gears
+            div class=tab-content
+                div class=tab-pane active,,,id=control-sidebar-home-tab
+                    .TAB1
+                div class=tab-pane,,,id=control-sidebar-settings-tab
+                    .TAB2
     div class=control-sidebar-bg
 
 
@@ -112,10 +113,13 @@
                 <span>{{app_name}}</span>
             <i class="fa fa-angle-left pull-right"></i>
         </a>
+
         <ul class="treeview-menu">
 
-
-    <li><a href="{{URL_BASE}}/{{url}}" class='menu-href'><i class="fa fa-angle-double-right"></i>{{opis}}</a></li>
+    % if opis|length > 20:
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-angle-double-right"></i>{{opis|truncatechars:20}}</a></li>
+    % else:
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-angle-double-right"></i>{{opis|truncatechars:21}}</a></li>
 
     % if forloop.last
         </ul></li>

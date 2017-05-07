@@ -37,8 +37,8 @@
         }
 
         if (this.options.showToggleBtn && this.options.showColumns) {
-            var showbtn = "<button class='btn btn-default hidden' id='showAllBtn'><span class='glyphicon glyphicon-resize-full icon-zoom-in'></span></button>",
-                hidebtn = "<button class='btn btn-default' id='hideAllBtn'><span class='glyphicon glyphicon-resize-small icon-zoom-out'></span></button>";
+            var showbtn = "<button class='btn btn-secondary hidden' id='showAllBtn'><span class='glyphicon glyphicon-resize-full icon-zoom-in'></span></button>",
+                hidebtn = "<button class='btn btn-secondary' id='hideAllBtn'><span class='glyphicon glyphicon-resize-small icon-zoom-out'></span></button>";
 
             $btnGroup.append(showbtn + hidebtn);
 

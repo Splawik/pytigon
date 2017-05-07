@@ -53,7 +53,7 @@
 
       if (!$btnAutoRefresh.length) {
         $btnAutoRefresh = $([
-          sprintf('<button class="btn btn-default auto-refresh %s" ', this.options.autoRefreshStatus ? 'enabled' : ''),
+          sprintf('<button class="btn btn-secondary auto-refresh %s" ', this.options.autoRefreshStatus ? 'enabled' : ''),
           'type="button" ',
           sprintf('title="%s">', this.options.formatAutoRefresh()),
           sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.autoRefresh),

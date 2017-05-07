@@ -3,7 +3,7 @@
 
 %% action_widget_content
     % if standard_web_browser:
-        a href={{action.url}},,,class=btn btn-default ladda-button get_row,,,name={{action.name}},,,title={{action.title}},,,data-role=button,,,data-inline=true,,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}}
+        a href={{action.url}},,,class=btn btn-secondary ladda-button get_row,,,name={{action.name}},,,title={{action.title}},,,data-role=button,,,data-inline=true,,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}}
             span class=fa fa-level-down ladda-label
                 %% description
                     {{action.title}}

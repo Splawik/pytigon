@@ -1,3 +1,36 @@
+/* Top menu */
+
+#tabs2 li.nav-item {
+/*    height: 25px; */
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+#tabs2 li.nav-item a.nav-link {
+    padding-top: 5px !important;
+    padding-bottom: 0px !important;
+    text-transform: none;
+}
+
+.nav-tabs > li > a.active, .nav-tabs > li > a.active:focus {
+    border: medium none;
+    box-shadow: 0px -3px 0px #FFFF8D inset;
+    color: #FFFF8D;
+}
+
+#tabs2 button.close {
+    top: 4px;
+}
+
+
+
+
+
+
+
+
+
+/*
 #tabs > li.topmenu.active {
     background-color: #8ba; 
 }
@@ -34,6 +67,7 @@
     vertical-align: top;
 }
 */
+/*
 .td_action .btn, .td_information .btn {
     margin: 0px 0px 0px 0px;
     vertical-align: top;
@@ -48,11 +82,24 @@ form.form-inline div.checkbox input.checkboxinput {
     margin-right: 0px;
 }
 
-
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus {
+.nav-tabs > li > a.active, .nav-tabs > li > a.active:focus {
     border: medium none;
     box-shadow: 0px -2px 0px #FFFF8D inset;
     color: #FFFF8D;
+}
+
+#tab_tabs2 {
+    height: 50px;
+    overflow: auto;
+}
+
+#tabs2 {
+    bottom: 0px;
+    position: absolute;
+}
+
+#tabs2 li.nav-item {
+    height: 25px;
 }
 
 .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
@@ -74,13 +121,17 @@ form.form-inline .form-control {
     color: #666 !important;
 }
 
+*/
+
+/*
 #tabs2 button.close {
     position: relative;
     left: -2px;
     margin-left: -26px;
     top: 3px;
-}
+}*/
 
+/*
 #tabs2 {
     background: #88BBAA;
 }
@@ -181,3 +232,4 @@ div.shadow-z-2 .close {
 .btn {
     border: 0px solid transparent; 
 }
+*/

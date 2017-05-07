@@ -52,7 +52,7 @@
 
             if (!$print.length) {
                 $print = $([
-                    '<button class="bs-print btn btn-default' + sprintf(' btn-%s"', this.options.iconSize) + ' name="print" title="print" type="button">',
+                    '<button class="bs-print btn btn-secondary' + sprintf(' btn-%s"', this.options.iconSize) + ' name="print" title="print" type="button">',
                     sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.print),
                     '</button>'].join('')).appendTo($btnGroup);
 

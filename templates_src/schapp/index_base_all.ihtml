@@ -1,4 +1,4 @@
-% extends "base.html"
+% extends default_template
 
 %% body_start
     <body bgcolor="#{{color_body_1_5}}" class="login_background">

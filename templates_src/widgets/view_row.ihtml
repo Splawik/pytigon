@@ -1,8 +1,8 @@
 {# -*- coding: utf-8 -*- #}
 %extends "widgets/action.html"
 
-%% class
-    .popup_info btn btn-sm btn-info
+%% action_class
+    .popup_info btn btn-sm btn-outline-info
 
 %% action_widget_content
     % with standard_web_browser=True

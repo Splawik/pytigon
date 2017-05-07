@@ -91,14 +91,14 @@ def mark_safe2(x):
         return x
 
 STANDARD_DESC = { #title, attrs, 
-    'default': ('Default', "class='btn btn-sm' data-role='button' data-inline='true' data-mini='true' "),
-    'edit': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'edit2': (_('Update'), "class='popup btn btn-sm btn-primary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'default': ('Default', "class='btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' "),
+    'edit': (_('Update'), "class='popup btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'edit2': (_('Update'), "class='popup btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
     'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
     'delete2': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'field_list': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_action': (_('Default'), "class='popup_inline btn btn-sm' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_action': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 
@@ -869,7 +869,7 @@ def do_html_widget(parser, token):
 @inclusion_tag('widgets/checkboxselectmultiple.html')
 def checkboxselectmultiple(context, field, only_field=False):
     field.field.widget = CheckboxSelectMultiple(choices=field.field.choices)
-    field.field.widget.attrs['class'] = "list-group"
+    field.field.widget.attrs['class'] = "list-group row"
 
     return standard_dict(context, {'field': field, 'only_field': only_field})
 
@@ -892,10 +892,10 @@ class Form(Node):
             if self.form_class:
                 if self.form_class == 'form-horizontal':
                     form.helper.form_class = self.form_class
-                    form.helper.label_class = 'col-lg-3'
-                    form.helper.field_class = 'col-lg-9'
+                    form.helper.label_class = 'col-sm-3'
+                    form.helper.field_class = 'col-sm-9'
                 elif self.form_class == 'col2':
-                    form.helper.field_div_class = 'col-xs-6'
+                    form.helper.field_div_class = 'col-md-6'
                 else:
                     form.helper.form_class = 'form-inline'
                     form.helper.form_show_labels = False

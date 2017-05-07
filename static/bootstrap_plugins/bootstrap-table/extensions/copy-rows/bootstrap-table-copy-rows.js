@@ -45,13 +45,13 @@
         if (this.options.clickToSelect || this.options.singleSelect) {
 
             if (this.options.copyBtn) {
-                var copybtn = "<button class='btn btn-default' id='copyBtn'><span class='glyphicon glyphicon-copy icon-pencil'></span></button>";
+                var copybtn = "<button class='btn btn-secondary' id='copyBtn'><span class='glyphicon glyphicon-copy icon-pencil'></span></button>";
                 $btnGroup.append(copybtn);
                 $btnGroup.find('#copyBtn').click(function () { that.copyColumnsToClipboard(); });
             }
 
             if (this.options.copyWHiddenBtn) {
-                var copyhiddenbtn = "<button class='btn btn-default' id='copyWHiddenBtn'><span class='badge'><span class='glyphicon glyphicon-copy icon-pencil'></span></span></button>";
+                var copyhiddenbtn = "<button class='btn btn-secondary' id='copyWHiddenBtn'><span class='badge'><span class='glyphicon glyphicon-copy icon-pencil'></span></span></button>";
                 $btnGroup.append(copyhiddenbtn);
                 $btnGroup.find('#copyWHiddenBtn').click(function () { that.copyColumnsToClipboardWithHidden(); });
             }

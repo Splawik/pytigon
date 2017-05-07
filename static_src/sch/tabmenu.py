@@ -30,8 +30,8 @@ class TabMenu:
         title2 = jQuery.trim(title)
         menu_item = TabMenuItem(_id, title2, href, data)
         self.titles[title2] = menu_item
-
-        jQuery('#tabs2').append(vsprintf("<li id='li_%s'><a href='#%s' data-toggle='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, _id]))
+        #jQuery('#tabs2').append(vsprintf("<li id='li_%s'>                  <a href='#%s'                          data-toggle='tab'           >%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, _id]))
+        jQuery('#tabs2').append(vsprintf("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, _id]))
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
         window.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))

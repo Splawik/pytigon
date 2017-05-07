@@ -6,32 +6,16 @@
 % load exsyntax
 
 
+
 %% menu_start
-    <nav class="navbar navbar-default win-header" role="navigation">
-        <div class="navbar-header">
-            <button id="main_menu_toogle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            %if user.is_authenticated:
-                div class=dropdown,,,style=display: inline-block;float: left;padding: 10px 0px;margins:0px
-                    button class=btn btn-default dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown,,,style=color: rgba(255, 255, 255, 0.84);
-                        span class=fa fa-power-off
-                        span class=caret
-                    ul class=dropdown-menu
-                        li
-                            a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
-                        li role=separator,,,class=divider
-                        li
-                            a href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
-                        li
-                            a class=system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
-            <a class="navbar-brand" href="#" style="padding: 12px"><span class="label label-info" style="padding: 10px; "><strong>{{appset_title}}</strong></span></a>
-        </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
+    <nav class="navbar navbar-toggleable-sm navbar-inverse bg-inverse">
+
+        button class=navbar-toggler navbar-toggler-right,,,type=button,,,data-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
+            span class=navbar-toggler-icon
+
+        a class=navbar-brand,,,href=#...{{appset_title}}
+        <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
+            <ul class="navbar-nav mr-auto">
 
 %% topmenu_start
 
@@ -40,33 +24,36 @@
 %% topmenu_end
 
 %% submenu
-  % ifchanged app_name
-    % if not forloop.first
-        </ul></li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            % if app_name in request.get_full_path
-                <strong>{{app_name}}</strong>
-            % else
-                {{app_name}}
-            <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-    % else
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            % if app_name in request.get_full_path
-                <strong>{{app_name}}</strong>
-            % else
-                {{app_name}}
-            <b class="caret"></b></a>
-            <ul class="dropdown-menu">
+    % ifchanged app_name
+        % if not forloop.first
+            </div></li>
+        <li class="nav-item dropdown">
+            a href=#,,,class=nav-link dropdown-toggle,,,data-toggle=dropdown
+                % if app_name in request.get_full_path
+                    <strong>{{app_name}}</strong>
+                % else
+                    {{app_name}}
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-  <li><a href="{{URL_BASE}}/{{url}}" class='menu-href'>{{opis}}</a></li>
+    a class=dropdown-item,,,href={{URL_BASE}}/{{url}}...{{opis}}
 
   % if forloop.last
-        </ul></li>
+        </div></li>
 
 %% menu_end
-  </ul></div></nav>
+    %if user.is_authenticated:
+        </ul>
+        ul class=navbar-nav
+            li class=nav-item dropdown
+                a class=nav-link dropdown-toggle,,,href=# id=system_menu,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                    i class=fa fa-user-plus
+                    .System
+
+                div class=dropdown-menu,,,aria-labelledby=navbarDropdownMenuLink
+                    a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
+                    a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                    a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+
+    </ul></div></nav>
 
 

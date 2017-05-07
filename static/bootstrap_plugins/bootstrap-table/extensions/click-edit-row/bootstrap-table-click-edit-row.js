@@ -27,7 +27,7 @@
     function clikcToEdit(evt, tarNode){
         var txt = [], table = evt,
             submit = '<button type="button" class="btn btn-primary btn-sm editable-submit"><i class="glyphicon glyphicon-ok"></i></button>',
-            cancel = '<button type="button" class="btn btn-default btn-sm editable-cancel"><i class="glyphicon glyphicon-remove"></i></button>';
+            cancel = '<button type="button" class="btn btn-secondary btn-sm editable-cancel"><i class="glyphicon glyphicon-remove"></i></button>';
 
         var replaceData = function(){
             txt = [];
