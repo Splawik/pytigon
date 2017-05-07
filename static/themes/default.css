@@ -26,6 +26,23 @@ div.content-wrapper {
     overflow-y: scroll;
 }
 
+.app_chose_title {
+    color: gold !important;
+    text-align: center;
+    margin: 10px;
+}
+
+.app_chose {
+    margin: 10px 5px;
+    box-shadow: 5px 5px 2px #112233;
+}
+
+.app_chose a {
+    padding: 10px 40px;
+    margin: 10px 0px;
+}
+
+
 /* login form */
 .login-card {
     width: 300px;

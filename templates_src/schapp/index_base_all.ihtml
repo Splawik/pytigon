@@ -6,17 +6,16 @@
 %% body
     div class=wrapper container
         header
-            h2 class=text-primary txt3d,,,style=color:gold;
+            h2 class=text-primary txt3d app_chose_title
                 .Pytigon - application list
-            h2
 
         div class=row
             % for app_pack in app_packs:
-                div class=col-xs-12 col-sm-6 col-md-4 col-lg-3
-                    div class=jumbotron
-                        p...{{app_pack.0}}
-                        small...{{app_pack.1}}
-                        p
-                            a class=btn btn-primary btn-lg,,,href={{URL_BASE}}/{{app_pack.0}}/,,,role=button
+                div class=col-xs-12 col-sm-6 col-md-6 col-lg-4
+                    div class=card app_chose rounded
+                        div class=card-block
+                            h4 class=card-title...{{app_pack.0}}
+                            h6 class=card-subtitle...{{app_pack.1}}
+                            a class=card-link btn btn-success btn-lg,,,href={{URL_BASE}}/{{app_pack.0}}/,,,role=button
                                 i class=fa fa-play
                                 .run

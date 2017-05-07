@@ -15,7 +15,7 @@
                     div class=col
                     div class=col
                         div
-                            h2 style=padding: 0px 0px 20px 5px; margin: 5px 0px;,,,class=txt3d text-white
+                            h2 style=padding: 0px 0px 20px 5px; margin: 5px 0px; color:gold,,,class=txt3d
                                 {{appset_title}}
 
                         div class=card card-inverse login-card

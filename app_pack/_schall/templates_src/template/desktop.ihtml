@@ -6,23 +6,5 @@
 % load exsyntax
 % load crispy_forms_tags
 
-
-%% theme_js_scripts
-    {% jscript_link 'themes/bootstrap-material-design/js/ripples.min.js' %}
-    {% jscript_link 'themes/bootstrap-material-design/js/material.min.js' %}
-
-
-%% theme_css_links
-    {% css_link 'themes/bootstrap-material-design/css/bootstrap-material-design.min.css' %}
-    {% css_link 'themes/bootstrap-material-design/css/ripples.min.css' %}
-    {% css_link 'themes/default.css' %}
-    {% css_link 'themes/material.css' %}
-
-
-%% fragment_init
-    .function base_fragment_init() {
-    .    $.material.init();
-    .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
-    .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
-    .}
-
+%% botstrap_css2
+    {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
