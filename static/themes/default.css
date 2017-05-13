@@ -1,4 +1,4 @@
-/* main settings */
+box-shadow/* main settings */
 div.content-wrapper {
     background-color: #fff;
 }
@@ -193,9 +193,10 @@ div.td_information a.btn {
 
 
 /* form */
+/*
 .dialog-form input[type="checkbox"] {
     margin-left: -35px;
-}
+} */
 
 
 .bootstrap-datetimepicker-widget {
@@ -204,3 +205,7 @@ div.td_information a.btn {
 }
 
 
+.dropdown-menu {
+    box-shadow: 5px 5px 2px #112233 !important;
+    border: 1px solid !important;
+}
