@@ -125,9 +125,15 @@ header.main-header nav.navbar {
     text-transform: none;
 }
 
-.nav-tabs > li > a.active, .nav-tabs > li > a.active:focus {
+/*.nav-tabs > li > a.active, .nav-tabs > li > a.active:focus {
     border: medium none;
     box-shadow: 0px -4px 0px #FDFD8C inset !important;
+}*/
+
+.nav-tabs > li > a {
+    border: medium none;
+    box-shadow: none !important;
+    margin-bottom: -2px !important;
 }
 
 
