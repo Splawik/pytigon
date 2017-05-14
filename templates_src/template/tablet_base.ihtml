@@ -7,92 +7,28 @@
 
 
 %% ext_js_scripts
-    {% jscript_link 'themes/AdminLTE/js/app.js' %}
+    {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
 
 %% theme_css_links
     {{block.super}}
-    {% css_link 'themes/AdminLTE/css/AdminLTE_mod.css' %}
-    {% css_link 'themes/tablet.css' %}
+    {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
+
 
 %% menu_start
-    header class=main-header win-header
-
-        a href={{URL_BASE}},,,class=logo text-white,,,style=white-space:nowrap;text-align: center;
-            span class=logo-mini
-                % if appset_title|length > 5:
-                    small...{{appset_title|truncatechars:7}}
-                % else:
-                    {{appset_title}}
-
-            span class=logo-lg
-                % if appset_title|length > 20:
-                    small...{{appset_title}}
-                % else:
-                    {{appset_title}}
-
-        nav class=navbar navbar-toggleable-md bg-primary
-
-            a href=#,,,class=sidebar-toggle,,,data-toggle=offcanvas,,,role=button
-                span class=sr-only...Toggle navigation
-
-            % if not NO_TABS and application_type == 'modern':
-                div class=navbar-nav tabbable,,,id=tab_tabs2
-                    ul class=nav nav-tabs,,,role=tablist,,,id=tabs2
-
-            div class=navbar-collapse align-self-end
-                ul class=nav
-                    %% drop_down_blocks
-                    li class=nav-item dropdown user user-menu
-                        a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
-                            span class=fa fa-user
-                            span class=hidden-xs...{{user.username}}
-                        div class=dropdown-menu dropdown-menu-right
-                            div class=card
-                                div class=card-block
-                                    p...username: {{user.username}}
-                                    p...first name: {{user.first_name}}
-                                    p...last name: {{user.last_name}}
-                                    p...email: {{user.email}}
-                                    p...last login: {{user.last_login|isoformat}}
-                                    p...date joined: {{user.date_joined|isoformat}}
-                                div class=card-footer
-                                    div class=pull-left
-                                        a class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
-                                    div class=pull-right
-                                        a href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
-
-                    li class=nav-item dropdown user user-menu
-                        a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
-                            span class=fa fa-power-off
-
-                    % comment:
-                        li class=nav-item
-                            a href=#,,,data-toggle=control-sidebar
-                                i class=fa fa-gears
-    % comment:
-        aside class=control-sidebar control-sidebar-dark
-            ul class=nav nav-tabs nav-justified control-sidebar-tabs
-                li class=nav-item active
-                    a class=nav-link,,,href=#control-sidebar-home-tab,,,data-toggle=tab
-                        i class=fa fa-home
-                li class=nav-item
-                    a class=nav-link,,,href=#control-sidebar-settings-tab,,,data-toggle=tab
-                        i class=fa fa-gears
-            div class=tab-content
-                div class=tab-pane active,,,id=control-sidebar-home-tab
-                    .TAB1
-                div class=tab-pane,,,id=control-sidebar-settings-tab
-                    .TAB2
     div class=control-sidebar-bg
 
 
 %% topmenu_start
 
+
 %% topmenu
+
 
 %% topmenu_end
 
+
 %% submenu_start
+
 
 %% submenu
     % ifchanged app_name
@@ -114,38 +50,91 @@
             <i class="fa fa-angle-left pull-right"></i>
         </a>
 
-        <ul class="treeview-menu">
+        <ul class="treeview-menu sidebar-submenu">
 
     % if opis|length > 20:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-angle-double-right"></i>{{opis|truncatechars:20}}</a></li>
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis|truncatechars:20}}</a></li>
     % else:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-angle-double-right"></i>{{opis|truncatechars:21}}</a></li>
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis|truncatechars:21}}</a></li>
 
     % if forloop.last
         </ul></li>
 
+
 %% submenu_end
+
 
 %% menu_end
 
+
 %% menu
-    aside class=main-sidebar
+    aside class=main-sidebar collapse show,,,id=menu
         section class=sidebar
             ul class=sidebar-menu
+                li class=bg-primary
+                    a href={{URL_BASE}},,,class=logo text-white,,,style=white-space:nowrap;text-align: center;
+                        span class=logo-lg
+                            % if appset_title|length > 20:
+                                small...{{appset_title}}
+                            % else:
+                                {{appset_title}}
                 {{block.super}}
 
 
 %% body_start
     % if form_ext or not show_form:
         %if user.is_authenticated:
-            <body class="hold-transition skin-blue sidebar-mini" bgcolor="#{{color_body}}">
+            <body bgcolor="#{{color_body}}">
         % else:
             {{block.super}}
+        <div class="content-wrapper">
 
 %% body_init
-    <div class="content-wrapper">
-        <section class="content">
-            {{block.super}}
+    <section class="content" id="panel">
+
+    header class=main-header win-header bg-primary
+
+        nav class=navbar navbar-toggleable-md bg-primary
+            img src=/static/img/material-loader.gif,,,id=loading-indicator,,,style=display:none
+            a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
+                span class=fa fa-bars
+
+            % if not NO_TABS and application_type == 'modern':
+                div class=navbar-nav tabbable,,,id=tab_tabs2
+                    ul class=nav nav-tabs,,,role=tablist,,,id=tabs2
+
+            div class=navbar-collapse align-self-end
+                ul class=nav
+                    %% drop_down_blocks
+                    li class=nav-item dropdown user user-menu
+                        a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
+                            span class=fa fa-user
+                            span class=hidden-xs...{{user.username}}
+                        div class=dropdown-menu dropdown-menu-right
+                            div class=dropdown-block
+                                p...username:
+                                    strong...{{user.username}}
+                                p...first name:
+                                    strong...{{user.first_name}}
+                                p...last name:
+                                    strong...{{user.last_name}}
+                                p...email:
+                                    strong...{{user.email}}
+                                p...last login:
+                                    strong...{{user.last_login|isoformat}}
+                                p...date joined:
+                                    strong...{{user.date_joined|isoformat}}
+                            div class=dropdown-footer
+                                div class=pull-left
+                                    a class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                div class=pull-right
+                                    a href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+
+                    li class=nav-item dropdown user user-menu
+                        a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
+                            span class=fa fa-power-off
+    {{block.super}}
+
 
 %% tabs
     % if application_type != 'modern':
@@ -158,3 +147,20 @@
                 {{block.super}}
     </section></div>
 
+
+%% body_end
+    % if form_ext or not show_form:
+        .<script>
+        .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+        .    var obj1_off =  { 'width': '256px' };
+        .    var obj1_on =  { 'width': '0px' };
+        .    var obj2_off =  { 'margin-left': '256px' };
+        .    var obj2_on =  { 'margin-left': '0px' };
+        .    var obj1 = jQuery('#menu');
+        .    var obj2 = jQuery('#panel');
+        .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast');
+        .</script>
+    {{block.super}}
+
+
+%% loading-indicator:

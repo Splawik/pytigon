@@ -44,3 +44,6 @@
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+    % comment:
+        {% css_link 'themes/bootswatch/material.min.css' %}
+

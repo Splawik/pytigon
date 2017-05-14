@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-05-07 19:18:36
+// Transcrypt'ed from Python, 2017-05-14 09:12:28
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2429,6 +2429,7 @@ function pytigon () {
 						jQuery (window).resize (resize_win);
 						resize_win ();
 					};
+					window.icons = dict ({'refresh': 'fa-refresh', 'toggle': 'fa-toggle-on fa-lg', 'columns': 'fa-th-list', 'detailOpen': 'fa-plus-square', 'detailClose': 'fa-minus-square'});
 					__pragma__ ('<all>')
 						__all__.resize_win = resize_win;
 						__all__.stick_header = stick_header;
@@ -2999,6 +3000,22 @@ function pytigon () {
 						}
 						window.history.pushState (data2, title, url2);
 					};
+					var animate_combo = function (button, obj1, obj2, obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed) {
+						var _animate = function () {
+							if (button.hasClass ('on')) {
+								button.removeClass ('on');
+								obj1.animate (obj1_style_off, speed);
+								obj2.animate (obj2_style_off, speed);
+							}
+							else {
+								button.addClass ('on');
+								obj1.animate (obj1_style_on, speed);
+								obj2.animate (obj2_style_on, speed);
+							}
+						};
+						button.click (_animate);
+					};
+					window.animate_combo = animate_combo;
 					__pragma__ ('<all>')
 						__all__.LOADED_FILES = LOADED_FILES;
 						__all__._req_post = _req_post;
@@ -3006,6 +3023,7 @@ function pytigon () {
 						__all__.ajax_load = ajax_load;
 						__all__.ajax_post = ajax_post;
 						__all__.ajax_submit = ajax_submit;
+						__all__.animate_combo = animate_combo;
 						__all__.can_popup = can_popup;
 						__all__.corect_href = corect_href;
 						__all__.download_binary_file = download_binary_file;

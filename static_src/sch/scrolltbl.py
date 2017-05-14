@@ -62,3 +62,10 @@ def stick_header():
     resize_win()
 
 
+window.icons = {
+    'refresh': 'fa-refresh',
+    'toggle': 'fa-toggle-on fa-lg',
+    'columns': 'fa-th-list',
+    'detailOpen': 'fa-plus-square',
+    'detailClose': 'fa-minus-square'
+}

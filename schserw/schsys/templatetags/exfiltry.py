@@ -453,7 +453,7 @@ def append_str(value, s):
 
 @register.filter(name='css_hack', is_safe=True)
 def css_hack(value):
-    return value+'?'+datetime.datetime.now().isoformat()
+    return mark_safe(value+'?'+datetime.datetime.now().isoformat())
 
 @register.filter(name='isoformat')
 def isoformat(value):

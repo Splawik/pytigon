@@ -54,6 +54,17 @@
         .data-toolbar="#{{uuid}}_toolbar"
         .data-locale="pl-PL"
         .data-show-columns="true"
+        .data-icons-prefix="fa"
         .data-id-field="cid"
+
+        .data-icons = {
+        .    paginationSwitchDown: 'fa-chevron-down',
+        .    paginationSwitchUp: 'fa-chevron-up',
+        .    refresh: 'fa-refresh',
+        .    toggle: 'fa-list-alt',
+        .    columns: 'fa-th',
+        .    detailOpen: 'fa-plus',
+        .    detailClose: 'fa-minus'
+        .}
     % else:
         .class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"

@@ -28,7 +28,6 @@
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
 
-
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
@@ -128,7 +127,7 @@
 
     %% theme_css_links_spec
         {% css_link 'themes/default.css' %}
-        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
+        {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
 
 %% css_start
     <style type="text/css">
@@ -253,7 +252,8 @@
 
 
 %% body_init
-    img src=/static/images/ajax-loader.gif,,,id=loading-indicator,,,style=display:none
+    %% loading-indicator:
+        img src=/static/images/ajax-loader.gif,,,id=loading-indicator,,,style=display:none
 
     div class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
         div class=modal-dialog {% block modal_dialog_class %}{% endblock %},,,role=document
@@ -329,6 +329,8 @@
         .data-toolbar="#{{uuid}}_toolbar"
         .data-locale="pl-PL"
         .data-show-columns="true"
+        .data-icons-prefix="fa"
+        .data-icons="icons"
         .data-mobile-responsive="true"
         .data-id-field="cid"
     % else:
