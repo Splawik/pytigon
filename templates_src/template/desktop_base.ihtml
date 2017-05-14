@@ -107,9 +107,6 @@
     {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
-    %% botstrap_css
-        {% css_link 'bootstrap/css/bootstrap.min.css' %}
-
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css' %}
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
@@ -123,11 +120,17 @@
 
     {{ form.media.css }}
 
+
+    %% botstrap_css
+        {% css_link 'bootstrap/css/bootstrap.min.css' %}
+
     %% theme_css_links
 
     %% theme_css_links_spec
-        {% css_link 'themes/default.css' %}
+        {% css_link 'themes/default.css'|css_hack %}
         {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
+
+
 
 %% css_start
     <style type="text/css">

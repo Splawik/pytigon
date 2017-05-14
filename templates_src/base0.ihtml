@@ -24,13 +24,6 @@
 
             % if standard_web_browser:
                 % if not show_form:
-                    %%js_scripts
-                        %% js_scripts_base
-
-
-                %% js_extrascipts
-
-                % if not show_form:
                     %% css_links
                     %% css_start
                         <style type="text/css">
@@ -38,12 +31,20 @@
                     %% css_end
                         </style>
 
+                % if not show_form:
+                    %%js_scripts
+                        %% js_scripts_base
+
+
+                %% js_extrascipts
+
+
             % else
                 %% pythoncode
                 %% icss
 
-            %% extrahead
             %% extrastyle
+            %% extrahead
 
     %% body_start
         <body bgcolor="#{{color_body}}" border="1">

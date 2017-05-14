@@ -207,15 +207,16 @@
                                                                 span class=fa fa-refresh
                         %%list_content_header_third_row
                             div class=tr row list_content_header_third_row
-                                div class={% if table_type == 'datatable'%}x{% else %}td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar
+                                div class={% if table_type == 'datatable'%}tabsort_panel{% else %}td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar
                                     div class=dropdown
                                         % if standard_web_browser and object_list:
                                             % if table_type == 'datatable':
-                                                button type=button,,,class=btn btn-secondary btn-sm dropdown-toggle,,,data-toggle=dropdown
-                                                    span class=fa fa-bars
-                                                ul class=dropdown-menu
-                                                    li class=dropdown-item:::a href=../odf/list,,,target=_blank...=> ods
-                                                    li class=dropdown-item:::a href=../pdf/list,,,target=_blank...=> pdf
+                                                div class=dropdown
+                                                    button type=button,,,class=btn btn-secondary btn-sm dropdown-toggle,,,data-toggle=dropdown
+                                                        span class=fa fa-bars
+                                                    div class=dropdown-menu
+                                                        a href=../odf/list,,,class=dropdown-item,,,target=_blank...=> ods
+                                                        a href=../pdf/list,,,class=dropdown-item,,,target=_blank...=> pdf
                                         %% list_content_actions
                                 % if is_paginated and table_type != 'datatable':
                                     div class=td col-sm-4 col-xs-7 text-right,,,align=right

@@ -127,6 +127,7 @@ header.main-header nav.navbar {
     position: absolute;
     width: 50px;
     margin: 0px;
+    top: 0px;
 }
 
 .main-header .nav-item .nav-link {
@@ -196,7 +197,8 @@ header.main-header nav.navbar {
 .nav-tabs > li > a {
     border: medium none;
     box-shadow: none !important;
-    margin-bottom: -2px !important;
+    margin-bottom: -3px !important;
+    outline: 0px;
 }
 
 

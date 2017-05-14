@@ -13,11 +13,10 @@
     % if actions2:
         div class=btn-group dropdown
             button class=btn btn-sm btn-outline-primary,,,data-toggle=dropdown...<span class="fa fa-bars fa-lg"></span>
-            ul class=dropdown-menu pull-right
+            div class=dropdown-menu dropdown-menu-right
                 % for pos in actions2:
-                    li style=margin:4px
-                        a href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|safe}}
-                            {{pos.title}}
+                    a class=dropdown-item,,,href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|safe}}
+                        {{pos.title}}
 % else:
     % for pos in actions|add:actions2:
         % if pos.icon:
