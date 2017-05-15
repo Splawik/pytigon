@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-05-14 09:12:28
+// Transcrypt'ed from Python, 2017-05-15 20:28:00
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2768,20 +2768,32 @@ function pytigon () {
 					};
 					var ajax_get = function (url, complete) {
 						var req = new XMLHttpRequest ();
-						req.responseType = 'blob';
+						var process_blob = false;
+						try {
+							req.responseType = 'blob';
+							var process_blob = true;
+						}
+						catch (__except0__) {
+							// pass;
+						}
 						var _onload = function () {
-							var disp = req.getResponseHeader ('Content-Disposition');
-							if (disp && __in__ ('attachment', disp)) {
-								download_binary_file (req.response, disp);
-								complete (null);
+							if (process_blob) {
+								var disp = req.getResponseHeader ('Content-Disposition');
+								if (disp && __in__ ('attachment', disp)) {
+									download_binary_file (req.response, disp);
+									complete (null);
+								}
+								else {
+									var reader = new FileReader ();
+									var _on_reader_load = function () {
+										complete (reader.result);
+									};
+									reader.onload = _on_reader_load;
+									reader.readAsText (req.response);
+								}
 							}
 							else {
-								var reader = new FileReader ();
-								var _on_reader_load = function () {
-									complete (reader.result);
-								};
-								reader.onload = _on_reader_load;
-								reader.readAsText (req.response);
+								complete (req.response);
 							}
 						};
 						req.onload = _onload;
@@ -2798,20 +2810,32 @@ function pytigon () {
 					};
 					window.ajax_load = ajax_load;
 					var _req_post = function (req, url, data, complete) {
-						req.responseType = 'blob';
+						var process_blob = false;
+						try {
+							req.responseType = 'blob';
+							var process_blob = true;
+						}
+						catch (__except0__) {
+							// pass;
+						}
 						var _onload = function () {
-							var disp = req.getResponseHeader ('Content-Disposition');
-							if (disp && __in__ ('attachment', disp)) {
-								download_binary_file (req.response, disp);
-								complete (null);
+							if (process_blob) {
+								var disp = req.getResponseHeader ('Content-Disposition');
+								if (disp && __in__ ('attachment', disp)) {
+									download_binary_file (req.response, disp);
+									complete (null);
+								}
+								else {
+									var reader = new FileReader ();
+									var _on_reader_load = function () {
+										complete (reader.result);
+									};
+									reader.onload = _on_reader_load;
+									reader.readAsText (req.response);
+								}
 							}
 							else {
-								var reader = new FileReader ();
-								var _on_reader_load = function () {
-									complete (reader.result);
-								};
-								reader.onload = _on_reader_load;
-								reader.readAsText (req.response);
+								complete (req.response);
 							}
 						};
 						req.onload = _onload;

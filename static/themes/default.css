@@ -4,6 +4,10 @@ not(.login_background) div.content-wrapper {
     background-color: #fff;
 }
 
+.login_background div.content-wrapper {
+    background: transparent;
+}
+
 .login_background {
     /* IE10+ */ 
     background-image: -ms-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%);

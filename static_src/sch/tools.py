@@ -73,20 +73,29 @@ def download_binary_file(buf, content_disposition):
 
 def ajax_get(url, complete):
     req = __new__(XMLHttpRequest())
-    req.responseType = "blob"
+    process_blob = False
+    try:
+        req.responseType = "blob"
+        process_blob = True
+    except:
+        pass
     def _onload():
-        disp = req.getResponseHeader('Content-Disposition')
-        if disp and 'attachment' in disp:
-            download_binary_file(req.response, disp)
-            complete(None)
+        nonlocal process_blob
+        if process_blob:
+            disp = req.getResponseHeader('Content-Disposition')
+            if disp and 'attachment' in disp:
+                download_binary_file(req.response, disp)
+                complete(None)
+            else:
+                reader = __new__(FileReader())
+
+                def _on_reader_load():
+                    complete(reader.result)
+
+                reader.onload = _on_reader_load
+                reader.readAsText(req.response)
         else:
-            reader = __new__(FileReader())
-
-            def _on_reader_load():
-                complete(reader.result)
-
-            reader.onload = _on_reader_load
-            reader.readAsText(req.response)
+            complete(req.response)
 
     req.onload = _onload
 
@@ -106,20 +115,29 @@ def ajax_load(elem, url, complete):
 window.ajax_load = ajax_load
 
 def _req_post(req, url, data, complete):
-    req.responseType = "blob"
+    process_blob = False
+    try:
+        req.responseType = "blob"
+        process_blob = True
+    except:
+        pass
     def _onload():
-        disp = req.getResponseHeader('Content-Disposition')
-        if disp and 'attachment' in disp:
-            download_binary_file(req.response, disp)
-            complete(None)
+        nonlocal process_blob
+        if process_blob:
+            disp = req.getResponseHeader('Content-Disposition')
+            if disp and 'attachment' in disp:
+                download_binary_file(req.response, disp)
+                complete(None)
+            else:
+                reader = __new__(FileReader())
+
+                def _on_reader_load():
+                    complete(reader.result)
+
+                reader.onload = _on_reader_load
+                reader.readAsText(req.response)
         else:
-            reader = __new__(FileReader())
-
-            def _on_reader_load():
-                complete(reader.result)
-
-            reader.onload = _on_reader_load
-            reader.readAsText(req.response)
+            complete(req.response)
 
     req.onload = _onload
 
