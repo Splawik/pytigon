@@ -34,6 +34,14 @@ div.content {
     margin-left: 0px;
 }
 
+#tab_tabs2 {
+    float: left;
+    bottom: 0px;
+    position: absolute;
+    left: 52px;
+    right: 200px;
+}
+
 .logo {
     background-color: rgba(0,0,0,0.1    ) !important;
     //width: 256px;
@@ -64,32 +72,6 @@ div.content {
   border: none;
   min-height: 50px;
   border-radius: 0;
-}
-
-#tabs2 {
-    border-bottom: 0px;
-}
-
-#tab_tabs2 {
-    float: left;
-    bottom: 0px;
-    position: absolute;
-    left: 52px;
-    right: 200px;
-}
-
-#tab_tabs2 > ul > li {
-    position: relative;
-}
-
-#tab_tabs2 > ul > li > a {
-    color: #000; 
-}
-
-#tab_tabs2 li button {
-    position: absolute;
-    top: 0px;
-    right: 0px;
 }
 
 header.main-header nav.navbar div.navbar-collapse {
@@ -170,36 +152,7 @@ header.main-header nav.navbar {
 }
 
 
-.main-header .nav-tabs .nav-link {
-    border-top-right-radius: 0.15rem;
-    border-top-left-radius: 0.15rem;
-}
 
-
-/* Tab - close button on tab */
-#tabs2 button.close {
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    font-size: 18px;
-    padding: 0px 3px;
-    margin-top: 0px; 
-    margin-right: 0px;
-    box-shadow: none; 
-}
-
-#tabs2 li.nav-item a.nav-link {
-    padding: 8px;
-    padding-right: 12px;
-    text-transform: none;
-}
-
-.nav-tabs > li > a {
-    border: medium none;
-    box-shadow: none !important;
-    margin-bottom: -3px !important;
-    outline: 0px;
-}
 
 
 /* sidebar menu */

@@ -148,46 +148,74 @@
 %% login_footer
 
 %% menu_start
-    <div>
+    <div class="desktop_content">
 
 %% topmenu_start
-    ul class=nav nav-tabs desktop-logo
-        % if request.get_host != '127.0.0.2':
-          % comment:
-            %if user.is_authenticated:
+    % comment:
+        ul class=nav nav-tabs desktop-logo,,,role=tablist
+            % if request.get_host != '127.0.0.2':
+            % else:
                 li
-                    div class=dropdown
-                        button class=btn btn-secondary dropdown-toggle,,,type=button,,,id=quit_menu,,,data-toggle=dropdown
-                            span class=fa fa-power-off
-                            span class=caret
-                        ul class=dropdown-menu
-                            li
-                                a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
-                            li role=separator,,,class=divider
-                            li
-                                a href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
-                            li
-                                a class=system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
-            li
-                a class=system_menu,,,href=#,,,action={{URL_BASE}},,,id=logo_href
-                    h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d
+                    div style=width:5px; height:10px;
+    div id=logo_place
+        a href={{URL_BASE}},,,class=logo,,,style=white-space:nowrap;text-align: center;
+            span class=logo-lg
+                % if appset_title|length > 20:
+                    small...{{appset_title}}
+                % else:
+                    strong
                         {{appset_title}}
-        % else:
-            li
-                div style=width:5px; height:10px;
-    <ul class="nav nav-tabs win-header" id='tabs'>
+
+    <ul class="nav nav-tabs win-header" id='tabs' role='tablist'>
 
 %% topmenu
     %if forloop.first:
-        li class=topmenu
-            a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top,,,class=first_pos...{{title}}
+        li class=nav-item topmenu
+            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top
+                % if user_param.icon:
+                    <i class="fa {{user_param.icon}}"></i>
+                {{title}}
     %else:
-        li class=topmenu
-            a data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top...{{title}}
+        li class=nav-item topmenu
+            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top
+                % if user_param.icon:
+                    <i class="fa {{user_param.icon}}"></i>
+                {{title}}
 
 
 %%topmenu_end
     </ul>
+
+    ul class=nav drop_down_blocks
+        %% drop_down_blocks
+        li class=nav-item dropdown user user-menu
+            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
+                span class=fa fa-user
+                span class=hidden-xs...{{user.username}}
+            div class=dropdown-menu dropdown-menu-right
+                div class=dropdown-block
+                    p...username:
+                        strong...{{user.username}}
+                    p...first name:
+                        strong...{{user.first_name}}
+                    p...last name:
+                        strong...{{user.last_name}}
+                    p...email:
+                        strong...{{user.email}}
+                    p...last login:
+                        strong...{{user.last_login|isoformat}}
+                    p...date joined:
+                        strong...{{user.date_joined|isoformat}}
+                div class=dropdown-footer
+                    div class=pull-left
+                        a class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                    div class=pull-right
+                        a href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+
+        li class=nav-item dropdown user user-menu
+            a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
+                span class=fa fa-power-off
+
     <div id="menu" class="tab-content menu-content win-header">
 
 
@@ -195,11 +223,20 @@
     % ifchanged app_name
         % if not forloop.first
             </div>
-        <div id="{{app_name}}" class="tab-pane tab-tab">
+            <div id="{{app_name}}" class="tab-pane tab-tab" role="tabpanel">
+        % else:
+            <div id="{{app_name}}" class="tab-pane tab-tab active" role="tabpanel">
+
     % if url|is_menu_checked:request.get_full_path:
-        <a href="{{URL_BASE}}/{{url}}" class="btn btn-warning btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        a href={{URL_BASE}}/{{url}},,,class=btn btn-warning btn-sm btn-raised menu-href ladda-button,,,data-style=zoom-in
+            %if icon:
+                <i class="fa {{icon}}"></i>
+            {{opis}}
     % else
-        <a href="{{URL_BASE}}/{{url}}" class="btn btn-secondary btn-sm btn-raised menu-href ladda-button" data-style="zoom-in">{{opis}}</a>
+        a href={{URL_BASE}}/{{url}},,,class=btn btn-secondary btn-sm btn-raised menu-href ladda-button,,,data-style=zoom-in
+            %if icon:
+                <i class="fa {{icon}}"></i>
+            {{opis}}
     % if forloop.last
         </div>
 
@@ -217,11 +254,16 @@
 %% body_start
     %% body_start_0
         % if not show_form:
-            %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
-                <body bgcolor="#{{color_body_1_5}}" class="login_background">
+            % if standard_web_browser:
+                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+                    <body class="login_background">
+                % else:
+                    <body>
             % else:
-                <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}" class="skin-blue">
-
+                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+                    <body bgcolor="#{{color_body_1_5}}" class="login_background">
+                % else:
+                    <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
     %% form_bar
 
 

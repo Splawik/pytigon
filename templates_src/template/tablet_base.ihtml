@@ -95,7 +95,11 @@
     header class=main-header win-header bg-primary
 
         nav class=navbar navbar-toggleable-md bg-primary
-            img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
+            % if ie:
+                img src=/static/img/reload.gif,,,id=loading-indicator,,,style=display:none
+            else:
+                img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
+
             a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
                 span class=fa fa-bars
 

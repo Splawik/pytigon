@@ -264,7 +264,83 @@ div.td_action div.dropdown-menu {
 }
 
 
+/* Tab - close button on tab */
+
+#tabs2 {
+    border-bottom: 0px;
+}
+
+
+#tab_tabs2 > ul > li {
+    position: relative;
+}
+
+#tab_tabs2 > ul > li > a {
+    color: #000; 
+}
+
+#tab_tabs2 li button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+
+#tabs2 button.close {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    font-size: 18px;
+    padding: 0px 3px;
+    margin-top: 0px; 
+    margin-right: 0px;
+    box-shadow: none; 
+}
+
+#tabs2 li.nav-item a.nav-link {
+    padding: 8px;
+    padding-right: 12px;
+    text-transform: none;
+}
+
+.main-header .nav-tabs > li > a {
+    border: medium none;
+    box-shadow: none !important;
+    margin-bottom: -3px !important;
+    outline: 0px;
+}
+
+.main-header .nav-tabs .nav-link {
+    border-top-right-radius: 0.15rem;
+    border-top-left-radius: 0.15rem;
+}
+
+
 /* hacks */
 .dialog-data .checkbox {
     margin-left: -8px;
+}
+
+div.table {
+    margin-bottom: 0rem;
+}
+
+
+.bootstrap-table .fixed-table-toolbar .btn-group, .bootstrap-table .fixed-table-toolbar .bs-bars,
+.bootstrap-table .fixed-table-toolbar .search  {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.bootstrap-table .fixed-table-toolbar {
+    margin-bottom: 5px;
+}
+
+.bootstrap-table fixed-table-pagination div.pagination, .bootstrap-table .fixed-table-pagination .pagination-detail {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.bootstrap-table .fixed-table-toolbar .dropdown {
+    display: inline;
 }

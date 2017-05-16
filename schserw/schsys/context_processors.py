@@ -67,6 +67,12 @@ def test_tablet(request):
     else:
         return False
 
+def test_ie(request):
+    if 'edge' in request.META['HTTP_USER_AGENT'].lower() or 'trident' in request.META['HTTP_USER_AGENT'].lower():
+        return True
+    else:
+        return False
+
 
 def standard_web_browser(request):
     if 'browser_type' in request.GET:
@@ -353,6 +359,7 @@ def sch_standard(request):
         DEBUG: settings.DEBUG
     """
     standard = standard_web_browser(request)
+    ie = test_ie(request)
 
     r = urlparse(request.path)
     rr = r.path.split('/')
@@ -470,6 +477,7 @@ def sch_standard(request):
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
         'browser_type': b_type,
+        'ie': ie,
         'application_type': b_type2,
         'default_template': d_template,
         'default_template2': d_template2,
