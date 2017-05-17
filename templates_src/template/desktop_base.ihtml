@@ -298,7 +298,10 @@
 
 %% body_init
     %% loading-indicator:
-        img src=/static/images/ajax-loader.gif,,,id=loading-indicator,,,style=display:none
+            % if ie:
+                img src=/static/img/reload.gif,,,id=loading-indicator,,,style=display:none
+            % else:
+                img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
 
     div class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
         div class=modal-dialog {% block modal_dialog_class %}{% endblock %},,,role=document

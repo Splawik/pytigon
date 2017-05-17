@@ -271,15 +271,15 @@ div.td_action div.dropdown-menu {
 }
 
 
-#tab_tabs2 > ul > li {
+#tabs2 > li {
     position: relative;
 }
 
-#tab_tabs2 > ul > li > a {
+#tabs2 > li > a {
     color: #000; 
 }
 
-#tab_tabs2 li button {
+#tabs2 li button {
     position: absolute;
     top: 0px;
     right: 0px;

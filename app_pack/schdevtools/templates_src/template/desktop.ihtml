@@ -39,8 +39,9 @@
     .component_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "test",  ] 
 
 %% botstrap_css
-    {% css_link 'themes/bootswatch/cosmo.bootstrap.min.css' %}
+    {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
     % comment:
+        {% css_link 'themes/bootswatch/cosmo.bootstrap.min.css' %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
         {% css_link 'themes/bootswatch/cosmo.bootstrap.min.css' %}
 

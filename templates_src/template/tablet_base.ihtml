@@ -97,7 +97,7 @@
         nav class=navbar navbar-toggleable-md bg-primary
             % if ie:
                 img src=/static/img/reload.gif,,,id=loading-indicator,,,style=display:none
-            else:
+            % else:
                 img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
 
             a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
