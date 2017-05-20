@@ -39,7 +39,9 @@
 
     {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
-    {% jscript_link 'bootstrap_plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}
+
+    {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
+
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
     {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
@@ -107,8 +109,8 @@
     {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
-    {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}
-    {% css_link 'bootstrap_plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker-standalone.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
+
     {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
 
@@ -276,7 +278,7 @@
     % else
         div class=tabbable win-content
             div id=tab_tabs2
-                ul class=nav nav-tabs,,,id=tabs2
+                ul class=nav nav-tabs win-header,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
         {{block.super}}
 
@@ -311,7 +313,7 @@
                     button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
                         span aria-hidden=true...&times;
                 div class=modal-body
-                    div container-fluid
+                    div class=container-fluid
                             div class=dialog-data refr_target
                 div class=modal-footer
                     %% content_start_ok_cancel
@@ -326,7 +328,7 @@
                     button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
                         span aria-hidden=true...&times;
                 div class=modal-body
-                    div container-fluid
+                    div class=container-fluid
                         div class=dialog-data-info
                 div class=modal-footer
                     button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Close)
@@ -340,7 +342,7 @@
                     button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
                         span aria-hidden=true...&times;
                 div class=modal-body
-                    div container-fluid
+                    div class=container-fluid
                         div class=dialog-data-delete
                 div class=modal-footer
                     button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Cancel)
@@ -355,7 +357,7 @@
                     button type=button,,,class=close,,,data-dismiss=modal,,,aria-label=Close
                         span aria-hidden=true...&times;
                 div class=modal-body
-                    div container-fluid
+                    div class=container-fluid
                         div id=dialog-data-error,,,class=alert alert-danger alert-dismissable
 
                 div class=modal-footer

@@ -310,7 +310,11 @@ def on_get_row(elem):
     jQuery(elem).closest(".refr_source").remove()
 
 
+FIRST_INIT = True
+
 def fragment_init(elem=None):
+    nonlocal FIRST_INIT
+
     if elem:
         elem2 = elem
     else:
@@ -321,14 +325,61 @@ def fragment_init(elem=None):
     handle_class_click(elem, 'get_row', on_get_row)
 
     d = elem2.find('.dateinput')
-    d.wrap( "<div class='input-group date'></div>" )
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>")
-    d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True})
+    d.bootstrapMaterialDatePicker( {'format' : 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': True });
 
     d = elem2.find('.datetimeinput')
-    d.wrap( "<div class='input-group date datetime'></div>" )
-    d.after("<span class='input-group-addon'><span class='glyphicon glyphicon-time'></span></span>")
-    d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True})
+    d.bootstrapMaterialDatePicker( {'format' : 'YYYY.MM.DD HH:mm', 'lang': 'pl', 'switchOnClick': True  });
+
+    if FIRST_INIT:
+        def iterate_material_icons():
+            font_map = {
+                'clear': 'remove',
+                'chevron_left': 'chevron-left',
+                'chevron_right': 'chevron-right',
+                'keyboard_arrow_up': 'chevron-up',
+                'keyboard_arrow_down': 'chevron-down',
+            }
+            jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
+
+        jQuery('i.material-icons').each(iterate_material_icons)
+        FIRST_INIT = False
+
+    if 1==2:
+        icons = {
+            'time': 'fa fa-clock-o',
+            'date': 'fa fa-calendar',
+            'up': 'fa fa-chevron-up',
+            'down': 'fa fa-chevron-down',
+            'previous': 'fa fa-chevron-left',
+            'next': 'fa fa-chevron-right',
+            'today': 'fa fa-calendar-check-o',
+            'clear': 'fa fa-trash',
+            'close': 'fa fa-times'
+        }
+
+        d = elem2.find('.dateinput')
+        d.wrap( "<div class='input-group date' data-target-input='nearest'></div>" )
+        d.after("<span class='input-group-addon'><span class='fa fa-callendar'></span></span>")
+
+        d.parent().uid()
+        id = d.parent().attr('id')
+        d.addClass('datetimepicker-input')
+        d.attr('data-target', id)
+        d.find('.input-group-addon').attr('data-target', id)
+
+        d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
+
+        d = elem2.find('.datetimeinput')
+        d.wrap( "<div class='input-group date datetime' data-target-input='nearest'></div>" )
+        d.after("<span class='input-group-addon'><span class='fa fa-clock-o'></span></span>")
+
+        d.parent().uid()
+        id = d.parent().attr('id')
+        d.addClass('datetimepicker-input')
+        d.attr('data-target', id)
+        d.find('.input-group-addon').attr('data-target', id)
+
+        d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
 
     elem2.find('.win-content').bind('resize', datatable_onresize)
 

@@ -1,3 +1,5 @@
+__pragma__ ('alias', 'jquery_is', 'is')
+
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
 #target:
@@ -228,7 +230,18 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
             def _on_menu_click(e):
                 if window.APPLICATION_TEMPLATE != 'traditional':
                     e.preventDefault()
-                    _on_menu_href(this)
+
+                    toggler = jQuery('#topmenu').find('.navbar-toggler');
+                    if toggler and toggler.jquery_is(":visible"):
+                        obj = this
+                        def _on_collapse():
+                            _on_menu_href(obj)
+                            jQuery('#navbar-ex1-collapse').off('hidden.bs.collapse', _on_collapse)
+
+                        jQuery('#navbar-ex1-collapse').on('hidden.bs.collapse', _on_collapse)
+                        jQuery('#navbar-ex1-collapse').collapse('hide')
+                    else:
+                        _on_menu_href(this)
             jQuery('body').on('click', 'a.menu-href', _on_menu_click)
 
             def _on_submit(e):
@@ -270,6 +283,7 @@ def _on_menu_href(elem, title=None):
     if window.APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
+
         menu = get_menu()
         classname = jQuery(elem).attr("class")
         if classname and 'btn' in classname:

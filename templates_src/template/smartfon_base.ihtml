@@ -8,7 +8,7 @@
 
 
 %% menu_start
-    <nav class="navbar navbar-toggleable-sm navbar-inverse bg-primary" id="topmenu">
+    <nav class="navbar navbar-toggleable-sm navbar-inverse bg-primary win-header" id="topmenu">
 
         button class=navbar-toggler navbar-toggler-right,,,type=button,,,data-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
             span class=navbar-toggler-icon
@@ -41,7 +41,7 @@
         </div></li>
 
 %% menu_end
-    %if user.is_authenticated:
+    % if user.is_authenticated:
         </ul>
         ul class=navbar-nav
             li class=nav-item dropdown
@@ -53,7 +53,9 @@
                     a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
                     a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
                     a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+    % else:
+        </ul>
 
-    </ul></div></nav>
+    </div></nav>
 
 

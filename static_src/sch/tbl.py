@@ -3,28 +3,19 @@ __pragma__ ('alias', 'jquery_is', 'is')
 from scrolltbl import stick_header
 from tools import ajax_post, ajax_post
 
+
 def datetable_set_height():
     if jQuery(this).hasClass('table_get'):
         return
     if not jQuery(this).jquery_is(':visible'):
         return
+
     elem = jQuery(this).closest(".tabsort_panel")
 
-    dy_table = elem.height()
+    table_offset = elem.offset().top
     dy_win = jQuery(window).height()
 
-    dy_body1 = 0
-
-    def _local_fun():
-        nonlocal dy_body1
-        dy_body1 += jQuery(this).height()
-
-    jQuery('.win-header').each(_local_fun)
-
-    dy_body2 = jQuery('.win-content').height()
-    dy_body = dy_body1+dy_body2
-
-    dy = dy_table + (dy_win-dy_body)
+    dy = dy_win - table_offset
 
     if dy<200: dy = 200
 

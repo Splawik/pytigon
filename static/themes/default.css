@@ -344,3 +344,33 @@ div.table {
 .bootstrap-table .fixed-table-toolbar .dropdown {
     display: inline;
 }
+
+
+.dtp > .dtp-content {
+    max-height: 530px;
+}
+
+div.bootstrap-datetimepicker-widget .collapse.in {
+    display: block;
+}
+
+
+div.bootstrap-datetimepicker-widget a {
+    padding: 0px;
+    margin: 0px;
+}
+
+div.bootstrap-datetimepicker-widget spam {
+    padding: 0px;
+    margin: 0px;
+}
+
+/*
+div.bootstrap-datetimepicker-widget .btn {
+    height: 10px;
+}
+
+div.bootstrap-datetimepicker-widget a {
+    height: 10px;
+}
+*/

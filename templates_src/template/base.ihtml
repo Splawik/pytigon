@@ -271,8 +271,8 @@
 
                             %% list_table_footer
 
-                    %if standard_web_browser == 1  or standard_web_browser == 2 or standard_web_browser == 5:
-                        % if table_type == 'scrolled':
+                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        %if table_type == 'scrolled' or not table_type:
                             </div>
 
             %% list_content_footer
