@@ -23,7 +23,7 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 
-THEMES = ['smartfon_modern', 'tablet_standard', 'tablet_standard']
+THEMES = ['tablet_modern', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
@@ -39,7 +39,7 @@ MEDIA_ROOT =  os.path.join(_lp,  'media')
 PACKS = []
 
 from fs.osfs import OSFS
-DEFAULT_FILE_STORAGE_FS.mountdir('pytigon', OSFS(ROOT_PATH))
+DEFAULT_FILE_STORAGE_FS.mount('pytigon', OSFS(ROOT_PATH))
 
 for app in APPS:
     if '.' in app:

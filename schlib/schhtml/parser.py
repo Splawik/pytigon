@@ -17,8 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-
-from lxml import etree
+try:
+    from lxml import etree
+except:
+    pass
 import io
 import re
 

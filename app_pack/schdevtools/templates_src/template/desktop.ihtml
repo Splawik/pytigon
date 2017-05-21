@@ -12,11 +12,15 @@
     {{block.super}}
     {% jscript_link 'vue/vue.js' %}
     
-
+    {% jscript_link 'schdevtools/test_javascript.js' %}
+    {% jscript_link 'schdevtools/test_python.js' %}
+    
 
 %% extrastyle
     {{block.super}}
-
+    {% css_link 'schdevtools/style.css' %}
+    {% css_link 'schdevtools/test_icss.css' %}
+    
 
 %% body_footer
     {{block.super}}
@@ -40,8 +44,3 @@
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
-    % comment:
-        {% css_link 'themes/bootswatch/cosmo.bootstrap.min.css' %}
-        {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
-        {% css_link 'themes/bootswatch/cosmo.bootstrap.min.css' %}
-
