@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-05-20 23:52:19
+// Transcrypt'ed from Python, 2017-05-21 09:57:05
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2309,18 +2309,17 @@ function pytigon () {
 						handle_class_click (elem, 'get_tbl_value', on_get_tbl_value);
 						handle_class_click (elem, 'new_tbl_value', on_new_tbl_value);
 						handle_class_click (elem, 'get_row', on_get_row);
+						var format = dict ({'weekStart': 1, 'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true});
 						var d = elem2.find ('.dateinput');
-						d.bootstrapMaterialDatePicker (dict ({'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true}));
+						d.bootstrapMaterialDatePicker (format);
+						format ['format'] = 'YYYY.MM.DD HH:mm';
 						var d = elem2.find ('.datetimeinput');
-						d.bootstrapMaterialDatePicker (dict ({'format': 'YYYY.MM.DD HH:mm', 'lang': 'pl', 'switchOnClick': true}));
-						if (FIRST_INIT) {
-							var iterate_material_icons = function () {
-								var font_map = dict ({'clear': 'remove', 'chevron_left': 'chevron-left', 'chevron_right': 'chevron-right', 'keyboard_arrow_up': 'chevron-up', 'keyboard_arrow_down': 'chevron-down'});
-								jQuery (this).removeClass ('material-icons').addClass ('fa').addClass ('fa-' + font_map [this.textContent]).empty ();
-							};
-							jQuery ('i.material-icons').each (iterate_material_icons);
-							FIRST_INIT = false;
-						}
+						d.bootstrapMaterialDatePicker (format);
+						var iterate_material_icons = function () {
+							var font_map = dict ({'clear': 'eraser', 'chevron_left': 'chevron-left', 'chevron_right': 'chevron-right', 'keyboard_arrow_up': 'chevron-up', 'keyboard_arrow_down': 'chevron-down'});
+							jQuery (this).removeClass ('material-icons').addClass ('fa').addClass ('fa-' + font_map [this.textContent]).empty ();
+						};
+						jQuery ('i.material-icons').each (iterate_material_icons);
 						if (1 == 2) {
 							var icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times'});
 							var d = elem2.find ('.dateinput');

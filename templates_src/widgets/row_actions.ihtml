@@ -1,3 +1,6 @@
+% load exfiltry
+% load exsyntax
+
 % if standard_web_browser:
     % for pos in actions:
         a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}}
@@ -15,7 +18,7 @@
             button class=btn btn-sm btn-outline-primary,,,data-toggle=dropdown...<span class="fa fa-bars fa-lg"></span>
             div class=dropdown-menu dropdown-menu-right
                 % for pos in actions2:
-                    a class=dropdown-item,,,href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|safe}}
+                    a test=True,,,href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}
                         {{pos.title}}
 % else:
     % for pos in actions|add:actions2:

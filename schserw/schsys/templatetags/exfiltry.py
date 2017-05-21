@@ -776,3 +776,24 @@ def aggregate(objects, field_name):
         return x[field+'__count']
     return 0
 
+
+@register.filter(name='append_class_to_attrs')
+def append_class_to_attrs(obj, arg):
+    if obj:
+        ret = ""
+        test = False
+        for pos in [ x.split('=') for x in obj.split(' ') ]:
+            if pos[0]=='class':
+                test = True
+                ret += "%s='%s' " % ('class', pos[1].replace('"',"").replace("'","") +" "+arg+" ")
+            else:
+                if len(pos)==2:
+                    ret += "%s='%s' " % pos
+                else:
+                    ret += pos[0] + ' '
+        if not test:
+            ret += "%s='%s' " % ('class', arg + " ")
+        return ret[:-1]
+    else:
+        return "class='%s'" % arg
+

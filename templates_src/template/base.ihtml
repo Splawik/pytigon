@@ -187,12 +187,12 @@
                 div
                     div class=table,,,width=100%
                         %%list_content_header_first_row
-                            div class=tr row list_content_header_first_row
+                            div class=tr row list_content_header list_content_header_first_row
                                 div class=td col-sm-12 hidden-xs text-center
                                     %% list_content_title
                                         h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
                         %%list_content_header_two_row
-                            div class=tr row list_content_header_two_row
+                            div class=tr row list_content_header list_content_header_two_row
                                 div class=td col-md-12 col-sm-12,,,colspan=3
                                     %% list_filter_form
                                         form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
@@ -206,7 +206,7 @@
                                                             button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
                                                                 span class=fa fa-refresh
                         %%list_content_header_third_row
-                            div class=tr row list_content_header_third_row
+                            div class=tr row list_content_header list_content_header_third_row
                                 div class={% if table_type == 'datatable'%}tabsort_panel{% else %}td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar
                                     div class=dropdown
                                         % if standard_web_browser and object_list:

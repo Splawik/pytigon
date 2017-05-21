@@ -93,6 +93,10 @@ div.login-container > .row {
     padding-right: 5px;
 }
 
+.form-inline  .datetimeinput {
+    width: 8.2rem !important;
+}
+
 .refresh-button {
     position: absolute !important;
     right: 3px;
@@ -152,7 +156,7 @@ table.table-striped tbody tr:hover {
     background-color: rgba(0,0,0,0.05);
 }
 
-.tabsort_panel .btn {
+.tabsort_panel .btn, .list_content_header .btn {
     box-shadow: none;
     border: none !important;
     text-transform: none;    
@@ -165,7 +169,7 @@ table.table-striped tbody tr:hover {
     background-color: rgba(255,255,255,0.7);
 }
 
-.tabsort_panel .btn:not(:hover) {
+.tabsort_panel .btn:not(:hover), .list_content_header .btn:not(:hover) {
    background-color: transparent;
 }
 
@@ -350,6 +354,38 @@ div.table {
     max-height: 530px;
 }
 
+
+table.dtp-picker-days tbody tr td:nth-child(6) a, table.dtp-picker-days tbody tr td:nth-child(7) a {
+    color: #d00;
+}
+
+div.dtp-buttons button {
+    margin: 0px 5px;
+}
+
+/* materia theme hack */
+.btn.dropdown-toggle::before {
+    display: none;
+    width: 0;
+    height: 0;
+    margin-left: 0.3em;
+    vertical-align: middle;
+    content: none;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+
+/*
+div.bootstrap-datetimepicker-widget .btn {
+    height: 10px;
+}
+
+div.bootstrap-datetimepicker-widget a {
+    height: 10px;
+}
+
 div.bootstrap-datetimepicker-widget .collapse.in {
     display: block;
 }
@@ -365,12 +401,17 @@ div.bootstrap-datetimepicker-widget spam {
     margin: 0px;
 }
 
-/*
-div.bootstrap-datetimepicker-widget .btn {
-    height: 10px;
+*/
+
+form.TableFiltr label {
+    font-style:italic;
 }
 
-div.bootstrap-datetimepicker-widget a {
-    height: 10px;
+form.TableFiltr label::after {
+    content: ":";
 }
-*/
+
+div.td_action .btn-secondary:after, div.td_information .btn-secondary:after {
+    background-image: radial-gradient(circle, #eee 10%, transparent 10.01%) !important;
+}
+

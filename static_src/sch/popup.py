@@ -324,25 +324,32 @@ def fragment_init(elem=None):
     handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
     handle_class_click(elem, 'get_row', on_get_row)
 
+    format = {
+        'weekStart': 1,
+        'format' : 'YYYY.MM.DD',
+        'lang': 'pl',
+        'switchOnClick': True,
+    }
+
     d = elem2.find('.dateinput')
-    d.bootstrapMaterialDatePicker( {'format' : 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': True });
+    d.bootstrapMaterialDatePicker(format)
+
+    format['format'] = 'YYYY.MM.DD HH:mm'
 
     d = elem2.find('.datetimeinput')
-    d.bootstrapMaterialDatePicker( {'format' : 'YYYY.MM.DD HH:mm', 'lang': 'pl', 'switchOnClick': True  });
+    d.bootstrapMaterialDatePicker(format)
 
-    if FIRST_INIT:
-        def iterate_material_icons():
-            font_map = {
-                'clear': 'remove',
-                'chevron_left': 'chevron-left',
-                'chevron_right': 'chevron-right',
-                'keyboard_arrow_up': 'chevron-up',
-                'keyboard_arrow_down': 'chevron-down',
-            }
-            jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
+    def iterate_material_icons():
+        font_map = {
+            'clear': 'eraser',
+            'chevron_left': 'chevron-left',
+            'chevron_right': 'chevron-right',
+            'keyboard_arrow_up': 'chevron-up',
+            'keyboard_arrow_down': 'chevron-down',
+        }
+        jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
 
-        jQuery('i.material-icons').each(iterate_material_icons)
-        FIRST_INIT = False
+    jQuery('i.material-icons').each(iterate_material_icons)
 
     if 1==2:
         icons = {

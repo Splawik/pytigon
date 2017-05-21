@@ -166,18 +166,3 @@ ul.sidebar-menu ul.treeview-menu {
 }
 
 
-
-
-
-/* materia theme hack */
-.btn.dropdown-toggle::before {
-    display: none;
-    width: 0;
-    height: 0;
-    margin-left: 0.3em;
-    vertical-align: middle;
-    content: none;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-}
