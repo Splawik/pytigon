@@ -6,5 +6,5 @@
 % load exsyntax
 % load crispy_forms_tags
 
-%% botstrap_css2
+%% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

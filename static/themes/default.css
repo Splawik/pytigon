@@ -64,9 +64,14 @@ div.login-container > .row {
     height: 80vh;
 }
 
-.login-card input, .login-card span {
+.login-card input {
+    color: black !important;
+}
+
+.login-card span {
     color: white !important;
 }
+
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {

@@ -23,7 +23,7 @@ except:
 APPSET_TITLE = "Pytigon"
 APPSET_NAME = "_schall"
 
-THEMES = ['tablet_modern', 'tablet_modern', 'tablet_standard']
+THEMES = ['tablet_modern', 'tablet_modern', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp

@@ -306,8 +306,11 @@ class SChAppSet( models.Model):
     
 
     def get_ext_apps(self):
-        l=self.ext_apps.split(',')
         ret = []
+        if self.ext_apps:
+            l=self.ext_apps.split(',')
+        else:
+            return ret
         for a in l:
             if a !='':
                 ret.append(a)
