@@ -19,8 +19,13 @@
 
 try:
     from lxml import etree
+    LXML = True
 except:
-    pass
+    import xml.etree.ElementTree as etree
+    from naivehtmlparser import NaiveHTMLParser
+    LXML = False
+
+
 import io
 import re
 
@@ -66,15 +71,27 @@ class Parser:
         self._crawl_tree(self._tree)
 
     def from_html(self, html_txt):
-        parser = etree.HTMLParser(remove_blank_text=True, remove_comments=True, remove_pis=True)
-        return etree.parse(io.StringIO(html_txt), parser).getroot()
+        global LXML
+        if LXML:
+            parser = etree.HTMLParser(remove_blank_text=True, remove_comments=True, remove_pis=True)
+            return etree.parse(io.StringIO(html_txt), parser).getroot()
+        else:
+            parser = NaiveHTMLParser()
+            root = parser.feed(html_txt)
+            parser.close()
+            return root
+
 
     def init(self, html_txt):
         if type(html_txt) == Elem:
             self._tree = self.from_html("<html></html>")
             self._tree.append(html_txt.elem)
         else:
-            self._tree = self.from_html(html_txt)
+            try:
+                self._tree = self.from_html(html_txt)
+            except:
+                print(html_txt)
+                self._tree = None
 
     def feed(self, html_txt):        
         self.init(html_txt)
@@ -84,8 +101,14 @@ class Parser:
         self._tree = None
 
 
+
+
 def tostring(elem):
-    return etree.tostring(elem,encoding='unicode', method="html", pretty_print=True)
+    global LXML
+    if LXML:
+        return etree.tostring(elem,encoding='unicode', method="html", pretty_print=True)
+    else:
+        return etree.tostring(elem,encoding='unicode', method="html")
 
 
 def content_tostring(elem):
@@ -144,7 +167,11 @@ class Elem():
                     output.write(",,,")
                 output.write(key)
                 output.write('=')
-                output.write(value.replace('\n', '\\n'))
+                if type(value)==str:
+                    output.write(value.replace('\n', '\\n'))
+                else:
+                    output.write(str(value).replace('\n', '\\n'))
+
                 first=False
             if elem.text:
                 x = self.super_strip(elem.text.replace('\n','\\n'))

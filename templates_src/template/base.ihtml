@@ -35,7 +35,7 @@
                                             input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=
                                     div class=row
                                         div class=col
-                                        div class=col
+                                        div class=col div_content_center
                                             button type=submit,,,class=btn btn-primary ...OK
                                         div class=col
                     div class=col

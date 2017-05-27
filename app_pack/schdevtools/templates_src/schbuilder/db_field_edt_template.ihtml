@@ -121,13 +121,12 @@
                                         %for pos in object.get_django_tags
                                             li...{{pos}}
 
-                        li ...widgets
+                        li...widgets
                             ul
                                 %for pos in object.get_template_widgets
                                     li...{{pos|safe}}
 
-
-                        li ...blocks
+                        li...blocks
                             ul
                                 %for pos in object.get_blocks
                                     li...{{pos|safe}}
