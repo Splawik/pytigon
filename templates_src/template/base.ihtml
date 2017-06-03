@@ -224,7 +224,7 @@
                                             {% paginator %}
 
             %% list_content_body
-                % if standard_web_browser:
+                % if standard_web_browser and table_type == 'datatable':
                     button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in browser_type %}active{% endif %},,,data-toggle=button
                         i class=fa fa-times
                 div class=tabsort_panel

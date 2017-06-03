@@ -310,16 +310,22 @@ def history_push_state(title, url, data=None):
     window.history.pushState(data2, title, url2)
 
 
-def animate_combo(button, obj1, obj2,  obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed):
+def animate_combo(button, obj1, obj2,  obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed, end=None):
+    if end:
+        end2 = end
+    else:
+        def end2():
+            pass
+
     def _animate():
         if button.hasClass("on"):
             button.removeClass("on")
             obj1.animate(obj1_style_off, speed)
-            obj2.animate(obj2_style_off, speed)
+            obj2.animate(obj2_style_off, speed, 'swing', end2)
         else:
             button.addClass("on")
             obj1.animate(obj1_style_on, speed)
-            obj2.animate(obj2_style_on, speed)
+            obj2.animate(obj2_style_on, speed, 'swing', end2)
 
     button.click(_animate)
 

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-06-03 10:54:00
+// Transcrypt'ed from Python, 2017-06-03 14:01:42
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2728,6 +2728,7 @@ function pytigon () {
 					var datatable_onresize = function () {
 						jQuery ('.datatable:not(.table_get)').each (datetable_set_height);
 					};
+					window.datatable_onresize = datatable_onresize;
 					__pragma__ ('<use>' +
 						'scrolltbl' +
 						'tools' +
@@ -3068,17 +3069,28 @@ function pytigon () {
 						}
 						window.history.pushState (data2, title, url2);
 					};
-					var animate_combo = function (button, obj1, obj2, obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed) {
+					var animate_combo = function (button, obj1, obj2, obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed, end) {
+						if (typeof end == 'undefined' || (end != null && end .__class__ == __kwargdict__)) {;
+							var end = null;
+						};
+						if (end) {
+							var end2 = end;
+						}
+						else {
+							var end2 = function () {
+								// pass;
+							};
+						}
 						var _animate = function () {
 							if (button.hasClass ('on')) {
 								button.removeClass ('on');
 								obj1.animate (obj1_style_off, speed);
-								obj2.animate (obj2_style_off, speed);
+								obj2.animate (obj2_style_off, speed, 'swing', end2);
 							}
 							else {
 								button.addClass ('on');
 								obj1.animate (obj1_style_on, speed);
-								obj2.animate (obj2_style_on, speed);
+								obj2.animate (obj2_style_on, speed, 'swing', end2);
 							}
 						};
 						button.click (_animate);

@@ -10,6 +10,10 @@ div.content {
 .tabsort_panel {
   margin-top: 0.5rem; }
 
+a.navbar-brand {
+  transform: rotate(-5deg);
+  width: 200px; }
+
 #topmenu {
   margin-bottom: 2px;
   position: relative; }

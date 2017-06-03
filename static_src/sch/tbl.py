@@ -114,3 +114,5 @@ def init_table(table, table_type):
 
 def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)
+
+window.datatable_onresize = datatable_onresize
