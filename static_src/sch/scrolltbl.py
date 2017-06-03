@@ -69,3 +69,4 @@ window.icons = {
     'detailOpen': 'fa-plus-square',
     'detailClose': 'fa-minus-square'
 }
+

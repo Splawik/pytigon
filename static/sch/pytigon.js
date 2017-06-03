@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-05-21 09:57:05
+// Transcrypt'ed from Python, 2017-06-03 10:54:00
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2625,7 +2625,11 @@ function pytigon () {
 						if (dy < 200) {
 							var dy = 200;
 						}
-						jQuery (this).bootstrapTable ('resetView', dict ({'height': dy - 10}));
+						var panel = elem.find ('.fixed-table-toolbar');
+						if (!(panel.is (':visible'))) {
+							dy += panel.height ();
+						}
+						jQuery (this).bootstrapTable ('resetView', dict ({'height': dy - 5}));
 					};
 					var datatable_refresh = function (table) {
 						table.bootstrapTable ('refresh');
@@ -2697,6 +2701,27 @@ function pytigon () {
 							}
 							else {
 								table.bootstrapTable (dict ({'onLoadSuccess': onLoadSuccess, 'rowStyle': _rowStyle, 'queryParams': queryParams, 'ajax': datatable_ajax}));
+							}
+							var table_panel = jQuery (table).closest ('.content');
+							var btn = table_panel.find ('.tabsort-toolbar-expand');
+							if (btn) {
+								var _handle_toolbar_expand = function (elem) {
+									var panel = table_panel.find ('.fixed-table-toolbar');
+									if (jQuery (this).hasClass ('active')) {
+										panel.show ();
+										datatable_onresize ();
+									}
+									else {
+										panel.hide ();
+										datatable_onresize ();
+									}
+								};
+								table_panel.on ('click', '.tabsort-toolbar-expand', _handle_toolbar_expand);
+								if (btn.hasClass ('active')) {
+									var panel = table_panel.find ('.fixed-table-toolbar');
+									panel.hide ();
+									datatable_onresize ();
+								}
 							}
 						}
 					};

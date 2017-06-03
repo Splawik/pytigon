@@ -224,6 +224,9 @@
                                             {% paginator %}
 
             %% list_content_body
+                % if standard_web_browser:
+                    button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in browser_type %}active{% endif %},,,data-toggle=button
+                        i class=fa fa-times
                 div class=tabsort_panel
                     % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                         %if table_type == 'scrolled' or not table_type:

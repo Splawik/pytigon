@@ -1,0 +1,77 @@
+@import 'default_main'
+@import 'default_win_tabs'
+@import 'default_bootstrap_table'
+@import 'default_dropdown_menu'
+@import 'default_inline_form'
+@import 'default_login_form'
+@import 'default_controls'
+@import 'default_txt3d'
+
+.dialog-data .checkbox 
+    margin-left: -8px
+
+div.table 
+    margin-bottom: 0rem
+
+.bootstrap-table .fixed-table-toolbar .btn-group, .bootstrap-table .fixed-table-toolbar .bs-bars,
+.bootstrap-table .fixed-table-toolbar .search  
+    margin-top: 0px !important
+    margin-bottom: 0px !important
+
+.bootstrap-table .fixed-table-toolbar 
+    margin-bottom: 5px
+
+.bootstrap-table fixed-table-pagination div.pagination, .bootstrap-table .fixed-table-pagination .pagination-detail 
+    margin-top: 0px !important
+    margin-bottom: 0px !important
+
+.bootstrap-table .fixed-table-toolbar .dropdown 
+    display: inline
+
+.dtp > .dtp-content 
+    max-height: 530px
+
+table.dtp-picker-days tbody tr td:nth-child(6) a, table.dtp-picker-days tbody tr td:nth-child(7) a 
+    color: #d00
+
+div.dtp-buttons button 
+    margin: 0px 5px
+
+.btn.dropdown-toggle::before 
+    display: none
+    width: 0
+    height: 0
+    margin-left: 0.3em
+    vertical-align: middle
+    content: none
+    border-top: none
+    border-right: none
+    border-left: none
+
+div.td_action .btn-secondary:after, div.td_information .btn-secondary:after 
+    background-image: radial-gradient(circle, #eee 10%, transparent 10.01%) !important
+
+.div_content_center 
+    text-align: center
+
+.tabsort-toolbar-expand 
+    position: absolute
+    top: 5px
+    left: 5px
+    z-index: 999
+    transform: rotate(0deg)
+    transition: .3s
+    background: transparent !important
+
+.tabsort-toolbar-expand.active 
+    transform: rotate(315deg) !important
+    transition: .3s !important
+
+.tab-pane.container-fluid 
+    padding-right: 5px !important
+    padding-left: 5px !important
+
+
+/* for firefox */
+a, button
+   outline: 0 !important;

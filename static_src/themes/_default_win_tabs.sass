@@ -1,0 +1,36 @@
+/* Tab - close button on tab */
+
+#tabs2
+    border-bottom: 0px
+    
+    li
+        position: relative
+
+        a     
+            color: #000 
+            border: medium none
+            box-shadow: none !important
+            margin-bottom: -3px !important
+            outline: 0px
+
+        button 
+            position: absolute
+            top: 0px
+            right: 0px
+
+            &.close 
+                position: absolute
+                right: 2px
+                top: 2px
+                font-size: 18px
+                padding: 0px 3px
+                margin-top: 0px 
+                margin-right: 0px
+                box-shadow: none 
+
+        &.nav-item a.nav-link 
+            padding: 8px
+            padding-right: 12px
+            text-transform: none
+            border-top-right-radius: 0.15rem
+            border-top-left-radius: 0.15rem

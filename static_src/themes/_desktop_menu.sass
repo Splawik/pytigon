@@ -1,0 +1,112 @@
+$indigo: #3F51B5 
+$orange: #FF9800
+$green: #4CAF50
+$red: #F44336
+$blue_gray: #607D8B
+$teal: #009688
+
+.menu-content 
+    background-color: #eee
+    margin-bottom: 3px
+
+    a.menu-href 
+        padding: 10px
+        margin: 5px 5px
+
+#logo_place 
+    position: absolute
+    text-align: center
+    left: 0px
+    top: 0px
+    width: 200px
+    padding: 5px
+    font-size: 1.2rem
+
+    a 
+        color: gold
+        white-space: nowrap
+        text-align: center
+        width: 200px
+        height: 30px
+        display: block
+        text-decoration: none !important
+    
+#tabs 
+    padding-left: 200px
+    background: black
+    height: 40px
+
+    .nav-item 
+        background-color: rgba(255,255,255,0.25)
+
+    li.nav-item a 
+        color: white
+        white-space: nowrap
+        height: 41px
+        box-shadow: none
+
+    li a.active
+        color: white
+
+    .nav-link.active, .nav-item.show .nav-link 
+        background-color: #eee !important
+        border-color: #ddd #ddd transparent
+
+    li.nav-item:nth-child(1) a.active 
+        background-color: $indigo !important
+
+    li.nav-item:nth-child(2) a.active 
+        background-color: $orange !important
+
+    li.nav-item:nth-child(3) a.active 
+        background-color: $green !important
+
+    li.nav-item:nth-child(4) a.active 
+        background-color: $red !important
+
+    li.nav-item:nth-child(5) a.active 
+        background-color: $blue_gray !important
+
+    li.nav-item:nth-child(6) a.active 
+        background-color: $teal !important
+
+
+#menu 
+    div.tab-tab 
+        border-bottom: white
+        border-bottom-style: solid
+        border-bottom-width: 2px
+        padding-right: 420px
+        overflow-x: auto
+        overflow-y: hidden    
+        color: white
+        
+        a.btn 
+            background-color: rgba(255,255,255,0.1)
+            border: none
+            color: white
+            box-shadow: none
+            text-transform: none !important        
+            font-size: 0.7rem
+        
+            &:hover 
+                background-color: rgba(255,255,255,0.2)
+                border: none
+        
+    div.tab-tab:nth-child(1) 
+        background-color: $indigo !important
+
+    div.tab-tab:nth-child(2) 
+        background-color: $orange !important
+
+    div.tab-tab:nth-child(3) 
+        background-color: $green !important
+
+    div.tab-tab:nth-child(4) 
+        background-color: $red !important
+
+    div.tab-tab:nth-child(5) 
+        background-color: $blue_gray !important
+
+    div.tab-tab:nth-child(6) 
+        background-color: $teal !important

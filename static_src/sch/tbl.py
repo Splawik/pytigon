@@ -19,7 +19,11 @@ def datetable_set_height():
 
     if dy<200: dy = 200
 
-    jQuery(this).bootstrapTable("resetView", {"height": dy-10})
+    panel = elem.find('.fixed-table-toolbar')
+    if not panel.jquery_is(':visible'):
+        dy += panel.height()
+
+    jQuery(this).bootstrapTable("resetView", {"height": dy-5})
 
 
 def datatable_refresh(table):
@@ -88,6 +92,25 @@ def init_table(table, table_type):
             table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'height': 350, 'rowStyle': _rowStyle,  'queryParams': queryParams,  'ajax': datatable_ajax })
         else:
             table.bootstrapTable({'onLoadSuccess': onLoadSuccess, 'rowStyle': _rowStyle, 'queryParams': queryParams, 'ajax': datatable_ajax })
+
+        table_panel = jQuery(table).closest('.content')
+        btn = table_panel.find('.tabsort-toolbar-expand')
+        if btn:
+            def _handle_toolbar_expand(elem):
+                panel = table_panel.find('.fixed-table-toolbar')
+                if jQuery(this).hasClass('active'):
+                    panel.show()
+                    datatable_onresize()
+                else:
+                    panel.hide()
+                    datatable_onresize()
+
+            table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand)
+            if btn.hasClass('active'):
+                panel = table_panel.find('.fixed-table-toolbar')
+                panel.hide()
+                datatable_onresize()
+
 
 def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)
