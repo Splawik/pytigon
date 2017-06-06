@@ -396,8 +396,6 @@ def jquery_ready():
             page_init('body_body')
 
 
-
-
 def _on_popstate(e):
     if e.state:
         window.PUSH_STATE = False

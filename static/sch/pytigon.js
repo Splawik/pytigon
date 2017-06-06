@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-06-03 14:01:42
+// Transcrypt'ed from Python, 2017-06-05 22:32:44
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};
@@ -2343,6 +2343,16 @@ function pytigon () {
 						}
 						elem2.find ('.win-content').bind ('resize', datatable_onresize);
 						jQuery ('.selectpicker').selectpicker ();
+						var _on_blur = function (e) {
+							if (e ['type'] == 'focus' || this.value.length > 0) {
+								var test = true;
+							}
+							else {
+								var test = false;
+							}
+							jQuery (this).parents ('.form-group').toggleClass ('focused', test);
+						};
+						elem2.find ('.label-floating .form-control').on ('focus blur', _on_blur).trigger ('blur');
 						if (window.BASE_FRAGMENT_INIT) {
 							window.BASE_FRAGMENT_INIT ();
 						}

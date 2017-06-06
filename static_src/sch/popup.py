@@ -1,3 +1,5 @@
+__pragma__ ('alias', 'jquery_type', 'type')
+
 from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html,\
     get_table_type
 
@@ -391,6 +393,17 @@ def fragment_init(elem=None):
     elem2.find('.win-content').bind('resize', datatable_onresize)
 
     jQuery('.selectpicker').selectpicker()
+
+
+    def _on_blur(e):
+        if e['type'] == 'focus' or this.value.length > 0:
+            test = True
+        else:
+            test = False
+        jQuery(this).parents('.form-group').toggleClass('focused',test)
+
+    elem2.find('.label-floating .form-control').on('focus blur', _on_blur).trigger('blur')
+
 
     #if window.RIOT_INIT:
     #    _id = jQuery(elem).uid()

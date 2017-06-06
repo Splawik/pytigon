@@ -44,9 +44,11 @@
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
+    % comment:
+        {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
+        {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
 
-    {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
-    {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
+
     {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
 
 
@@ -66,8 +68,8 @@
 %% jquery_init
     %% fragment_init
         .function base_fragment_init() {
-        .    jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
-        .    jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
+        .    //jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
+        .    //jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
         .}
     %% component_init
         .component_init = null
@@ -113,8 +115,9 @@
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
+    % comment:
+        {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
-    {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}

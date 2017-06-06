@@ -16,7 +16,7 @@ openpyxl
 httpie
 cffi
 Pillow
-fs<2.0
+fs
 PyDispatcher
 pypyodbc
 daphne

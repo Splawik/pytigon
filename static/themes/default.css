@@ -47,23 +47,23 @@ not(.login_background) div.content-wrapper {
       border-top-left-radius: 0.15rem; }
 
 /* bootstrap-table */
-.tabsort_panel .table td {
+.tabsort_panel .table td, .table .table td {
   padding-top: 0.25rem;
   padding-right: 0.75rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
   vertical-align: middle; }
 
-.tabsort_panel table.table-striped tbody tr:nth-of-type(odd) {
+.tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table table.table-striped tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.02); }
 
-.tabsort_panel table.table-striped tbody tr:nth-of-type(even) {
+.tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table table.table-striped tbody tr:nth-of-type(even) {
   background-color: transparent; }
 
-.tabsort_panel table.table-striped tbody tr:hover {
+.tabsort_panel table.table-striped tbody tr:hover, .table table.table-striped tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.05); }
 
-.tabsort_panel .btn, .tabsort_panel .list_content_header .btn {
+.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table .btn, .table .list_content_header .btn {
   box-shadow: none;
   border: none !important;
   text-transform: none;
@@ -71,38 +71,38 @@ not(.login_background) div.content-wrapper {
   color: black;
   background-color: rgba(0, 0, 0, 0.05); }
 
-.tabsort_panel table .btn {
+.tabsort_panel table .btn, .table table .btn {
   background-color: rgba(255, 255, 255, 0.7); }
 
-.tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover) {
+.tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table .btn:not(:hover), .table .list_content_header .btn:not(:hover) {
   background-color: transparent; }
 
-.tabsort_panel div.td_action .btn {
+.tabsort_panel div.td_action .btn, .table div.td_action .btn {
   box-shadow: none;
   border: none;
   text-transform: none;
   color: #006040; }
 
-.tabsort_panel div.td_action .btn:not(:hover) {
+.tabsort_panel div.td_action .btn:not(:hover), .table div.td_action .btn:not(:hover) {
   background-color: transparent; }
 
-.tabsort_panel tr:not(:hover) div.td_action .btn {
+.tabsort_panel tr:not(:hover) div.td_action .btn, .table tr:not(:hover) div.td_action .btn {
   opacity: 0.33;
   filter: alpha(opacity=33); }
 
-.tabsort_panel .td_information {
+.tabsort_panel .td_information, .table .td_information {
   width: 100%;
   height: 100%; }
 
-.tabsort_panel tr:not(:hover) div.td_information * {
+.tabsort_panel tr:not(:hover) div.td_information *, .table tr:not(:hover) div.td_information * {
   opacity: 0.66;
   filter: alpha(opacity=66); }
 
-.tabsort_panel tr td.td_information .btn.btn-sm {
+.tabsort_panel tr td.td_information .btn.btn-sm, .table tr td.td_information .btn.btn-sm {
   padding: 5px 8px;
   box-shadow: none; }
 
-.tabsort_panel div.td_information a.btn {
+.tabsort_panel div.td_information a.btn, .table div.td_information a.btn {
   box-shadow: none; }
 
 /* dropdown menu */
@@ -134,7 +134,7 @@ not(.login_background) div.content-wrapper {
   padding-right: 8px; }
 
 .form-inline .form-group .numberinput {
-  width: 90px;
+  width: 100px;
   padding-left: 5px;
   padding-right: 5px; }
 
@@ -159,6 +159,9 @@ not(.login_background) div.content-wrapper {
 
 form.TableFiltr label::after {
   content: ":"; }
+
+form.TableFiltr label.nocolon::after {
+  content: "" !important; }
 
 /* login form */
 .login_background {
@@ -220,6 +223,49 @@ div.login-container > .row {
   font-size: 24px;
   line-height: 1.33;
   border-radius: 35px; }
+
+label.upload p {
+  padding: 0px;
+  margin: 0px;
+  text-transform: none; }
+
+label.upload i {
+  padding: 0px 10px; }
+
+.checkboxinput {
+  margin-right: 10px; }
+
+.label-floating .form-group {
+  display: flex;
+  height: 55px; }
+
+.label-floating .control-label {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.4;
+  pointer-events: none;
+  position: absolute;
+  transform: translate3d(0, 22px, 0) scale(1);
+  transform-origin: left top;
+  transition: 240ms;
+  top: -10px; }
+
+.label-floating.focused .control-label {
+  opacity: 1;
+  transform: scale(0.75); }
+
+.label-floating.focused .form-control::-webkit-input-placeholder {
+  color: #bbb; }
+
+.label-floating .form-control {
+  align-self: flex-end; }
+
+.label-floating .form-control::-webkit-input-placeholder {
+  color: transparent;
+  transition: 240ms; }
+
+.label-floating .form-control:focus::-webkit-input-placeholder {
+  transition: none; }
 
 .txt3d {
   font-weight: 900;
@@ -297,3 +343,6 @@ div.td_action .btn-secondary:after, div.td_information .btn-secondary:after {
 /* for firefox */
 a, button {
   outline: 0 !important; }
+
+.tabsort_panel {
+  margin-top: 5px !important; }

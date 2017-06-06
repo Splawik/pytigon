@@ -25,3 +25,47 @@
     line-height: 1.33
     border-radius: 35px
 
+label.upload
+    p
+        padding: 0px;
+        margin: 0px;
+        text-transform: none;
+    i
+        padding: 0px 10px;
+
+.checkboxinput
+    margin-right: 10px;
+
+
+.label-floating
+    .form-group
+        display: flex
+        height: 55px
+
+    .control-label
+        font-size: 12px
+        font-weight: 400
+        opacity: 0.4
+        pointer-events: none
+        position: absolute
+        transform: translate3d(0, 22px, 0) scale(1)
+        transform-origin: left top
+        transition: 240ms
+        top: -10px
+
+    &.focused .control-label
+        opacity: 1
+        transform: scale(0.75)
+
+    &.focused .form-control::-webkit-input-placeholder
+        color: #bbb
+
+    .form-control
+        align-self: flex-end
+
+    .form-control::-webkit-input-placeholder
+        color: transparent
+        transition: 240ms
+
+    .form-control:focus::-webkit-input-placeholder
+        transition: none
