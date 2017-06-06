@@ -47,23 +47,23 @@ not(.login_background) div.content-wrapper {
       border-top-left-radius: 0.15rem; }
 
 /* bootstrap-table */
-.tabsort_panel .table td, .table .table td {
+.tabsort_panel .table td, .table_panel .table td {
   padding-top: 0.25rem;
   padding-right: 0.75rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
   vertical-align: middle; }
 
-.tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table table.table-striped tbody tr:nth-of-type(odd) {
+.tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table_panel table.table-striped tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.02); }
 
-.tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table table.table-striped tbody tr:nth-of-type(even) {
+.tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table_panel table.table-striped tbody tr:nth-of-type(even) {
   background-color: transparent; }
 
-.tabsort_panel table.table-striped tbody tr:hover, .table table.table-striped tbody tr:hover {
+.tabsort_panel table.table-striped tbody tr:hover, .table_panel table.table-striped tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.05); }
 
-.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table .btn, .table .list_content_header .btn {
+.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
   box-shadow: none;
   border: none !important;
   text-transform: none;
@@ -71,38 +71,38 @@ not(.login_background) div.content-wrapper {
   color: black;
   background-color: rgba(0, 0, 0, 0.05); }
 
-.tabsort_panel table .btn, .table table .btn {
+.tabsort_panel table .btn, .table_panel table .btn {
   background-color: rgba(255, 255, 255, 0.7); }
 
-.tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table .btn:not(:hover), .table .list_content_header .btn:not(:hover) {
+.tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
   background-color: transparent; }
 
-.tabsort_panel div.td_action .btn, .table div.td_action .btn {
+.tabsort_panel div.td_action .btn, .table_panel div.td_action .btn {
   box-shadow: none;
   border: none;
   text-transform: none;
   color: #006040; }
 
-.tabsort_panel div.td_action .btn:not(:hover), .table div.td_action .btn:not(:hover) {
+.tabsort_panel div.td_action .btn:not(:hover), .table_panel div.td_action .btn:not(:hover) {
   background-color: transparent; }
 
-.tabsort_panel tr:not(:hover) div.td_action .btn, .table tr:not(:hover) div.td_action .btn {
+.tabsort_panel tr:not(:hover) div.td_action .btn, .table_panel tr:not(:hover) div.td_action .btn {
   opacity: 0.33;
   filter: alpha(opacity=33); }
 
-.tabsort_panel .td_information, .table .td_information {
+.tabsort_panel .td_information, .table_panel .td_information {
   width: 100%;
   height: 100%; }
 
-.tabsort_panel tr:not(:hover) div.td_information *, .table tr:not(:hover) div.td_information * {
+.tabsort_panel tr:not(:hover) div.td_information *, .table_panel tr:not(:hover) div.td_information * {
   opacity: 0.66;
   filter: alpha(opacity=66); }
 
-.tabsort_panel tr td.td_information .btn.btn-sm, .table tr td.td_information .btn.btn-sm {
+.tabsort_panel tr td.td_information .btn.btn-sm, .table_panel tr td.td_information .btn.btn-sm {
   padding: 5px 8px;
   box-shadow: none; }
 
-.tabsort_panel div.td_information a.btn, .table div.td_information a.btn {
+.tabsort_panel div.td_information a.btn, .table_panel div.td_information a.btn {
   box-shadow: none; }
 
 /* dropdown menu */
@@ -146,7 +146,8 @@ not(.login_background) div.content-wrapper {
   right: 3px;
   bottom: 3px;
   height: 100%;
-  min-height: 45px; }
+  min-height: 45px;
+  margin-right: 10px; }
 
 .form-inline input, .form-inline select {
   font-size: 14px; }
@@ -186,7 +187,7 @@ div.login-container > .row {
   height: 80vh; }
 
 .login-card {
-  width: 300px;
+  min-width: 250px;
   background: #224466;
   box-shadow: 5px 5px 2px #112233; }
   .login-card card-header {
