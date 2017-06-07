@@ -3,7 +3,7 @@ div.content {
 
 #loading-indicator {
   position: absolute;
-  top: 2px;
+  top: 0.5rem;
   right: 130px;
   width: 48px; }
 
@@ -16,7 +16,7 @@ a.navbar-brand {
 #topmenu {
   margin-bottom: 2px;
   position: relative;
-  padding: 0.1rem 0.5rem; }
+  padding: 0.5rem 0.5rem; }
   #topmenu div.dropdown-menu a {
     padding: 0.7rem 1.5rem; }
   #topmenu ul.navbar-nav li.nav-item a {

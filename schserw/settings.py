@@ -195,7 +195,7 @@ ALLOWED_HOSTS = ['*',]
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
