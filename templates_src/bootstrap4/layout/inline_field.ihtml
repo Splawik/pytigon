@@ -1,0 +1,24 @@
+!!!
+{% load exfiltry %}
+
+{% load crispy_forms_field %}
+
+{% if field.is_hidden %}
+    {{ field }}
+{% else %}
+    {% if field|is_checkbox %}
+        <div id="div_{{ field.auto_id }}" class="checkbox">
+            <label for="{{ field.id_for_label }}" class="{% if field.field.required %} requiredField{% endif %}">
+                {% crispy_field field 'class' 'checkbox' %}
+                <small>{{ field.label|safe }}</small>
+            </label>
+        </div>
+    {% else %}
+        <div id="div_{{ field.auto_id }}" class="form-group {%if field.field|class_name != 'FileField' %}label-floating{% endif %}">
+            <label for="{{ field.id_for_label }}" class="control-label {% if field.field.required %} requiredField{% endif %}">
+                {{ field.label|safe }}
+            </label>
+            {% crispy_field field  %}
+        </div>
+    {% endif %}
+{% endif %}

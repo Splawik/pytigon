@@ -1,0 +1,107 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.path = "{{request.path}}"
+            http = wx.GetApp().get_http(self)
+            http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+        def filter_url(self, type, url):
+            if url and url[0:1]=='.':
+                return None
+            else:
+                if url=='close':
+                    page = self.GetParent().GetParent().GetParent()
+                    win = wx.GetApp().GetTopWindow()
+                    win.toolbar_interface.remove_page(page.title)
+                    http = wx.GetApp().get_http(self)
+                    http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+                    return True
+                else:
+                    id = self.app_list.GetValue()
+                    if id:
+                        url2 = "../../../../../SChApp/" + id +"/" + url
+                        return url2
+                    else:
+                        dlg = wx.MessageDialog(self, 'Select application!', 'A Message Box', wx.OK | wx.ICON_INFORMATION )
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                        return True
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=320 form_height=50 show_title_bar=1 title="Applications" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_start %}
+        <body class="toolbar">
+{% endblock %}
+{% block body %}
+        <p height="5px"></p>
+        <table class="toolbar" bgcolor="#fff">
+                <tr>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT name="close_btn" label="Close" SRC="client://emblems/emblem-unreadable.png" href="close"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td width="160">
+                                <table width="160">
+                                        <tr>
+                                                <td>Wybierz aplikację:</td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <select name="app_list" id="id_app_list" width="150">
+                                                                {% for item in object_list %}
+                                                                        {% if forloop.first %}
+                                                                                <option value="{{item.id}}" selected="selected">
+                                                                                        {{item.name}}
+                                                                                </option>
+                                                                          {% else %}
+                                                                                <option value="{{item.id}}">
+                                                                                        {{item.name}}
+                                                                                </option>
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                        </select>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                        <td width="20"></td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="tabele" label="Table" SRC="client://mimetypes/x-office-spreadsheet.png" href="schtable_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="choices" label="Choices" SRC="client://categories/applications-games.png" href="schchoice_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="views" label="Views" SRC="client://mimetypes/text-x-generic-template.png" href="schview_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="forms" label="Forms" SRC="client://mimetypes/x-office-document.png" href="schform_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="menu" label="Menu" SRC="client://actions/tab-new.png" href="schappmenu_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="tasks" label="Tasks" SRC="client://apps/utilities-terminal.png" href="schtask_set/-/form/list"></CTRLNOBG_BUTTON_TXT>
+                        </td>
+                        <td width="20"></td>
+                        <td cellpadding="0">
+                                {% widget class='menu' id='user_action' title='User action' style='toolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="schtemplate_set/-/form/list">Templates</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="schfiles_set/-/form/list">Custom files</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="model_code/form/editor">User Models</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="view_code/form/editor">User View</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="urls_code/form/editor">User Url</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="tasks_code/form/editor">User Tasks</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="doc/form/editor">Doc</a></li>
+                                {% endwidget %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

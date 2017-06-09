@@ -1,0 +1,310 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pytigon\n"
+"POT-Creation-Date: 2013-12-20 09:37+0100\n"
+"PO-Revision-Date: 2013-12-20 09:38+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/__init__.py:4
+msgid "main tools"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/__init__.py:5
+msgid "Pytigon builder"
+msgstr "Projektant dla aplikacji Pytigon"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/__init__.py:9
+msgid "Applications set"
+msgstr "Paczka aplikacji"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:264
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:265
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:71
+msgid "SChAppSet"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:335
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:336
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:72
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:88
+msgid "SChApp"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:455
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:456
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:73
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:89
+msgid "SChChoice"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:480
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:481
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:74
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:90
+msgid "SChChoiceItem"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:505
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:506
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:75
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:91
+msgid "SChTable"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:549
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:550
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:76
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:92
+msgid "SChField"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:692
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:693
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:77
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:93
+msgid "SChView"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:785
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:78
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:94
+msgid "Static file"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:786
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:78
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:94
+msgid "Static files"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:812
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:813
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:79
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:95
+msgid "SChTemplate"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:924
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:925
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:80
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:96
+msgid "SChAppMenu"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:982
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:983
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:81
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:97
+msgid "Form"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1009
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1010
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:82
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:98
+msgid "Form field"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1076
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1077
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:83
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:99
+msgid "SChTask"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1105
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1106
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:84
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:100
+msgid "SChFiles"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1129
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:85
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:101
+msgid "Locale"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1130
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:85
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:101
+msgid "Locales"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1151
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/models.py:1152
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:86
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/schbuilder/urls.py:102
+msgid "Translate"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:1
+msgid "New application set"
+msgstr "Nowa paczka aplikacji"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:2
+msgid "Import"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:3
+msgid "Restart server"
+msgstr "Restartuj serwer"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:4
+msgid "Select application!"
+msgstr "Wybierz aplikację!"
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:5
+msgid "A Message Box"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:6
+msgid "Applications"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:7
+msgid "Table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:8
+msgid "Choices"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:9
+msgid "Views"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:10
+msgid "Templates"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:11
+msgid "Menu"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:12
+msgid "Urls"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:13
+msgid "User Models"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:14
+msgid "User View"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:15
+msgid "User Url"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:16
+msgid "Forms"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:17
+msgid "Doc"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:18
+msgid "Tables"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:19
+msgid "New table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:20
+msgid "Table list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:21
+msgid "New choice"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:22
+msgid "Name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:23
+msgid "Description"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:24
+msgid "Choice list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:25
+msgid "New view"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:26
+msgid "New template"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:27
+msgid "New menu item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:28
+msgid "New wiki item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:29
+msgid "Menu item list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:30
+msgid "Tasks"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:31
+msgid "Custom files"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:32
+msgid "User Tasks"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:33
+msgid "Fields"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:34
+msgid "Update server from git"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:35
+msgid "&New view"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:36
+msgid "Open in toolbar"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:37
+msgid "New application"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:38
+msgid "New locale"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:39
+msgid "Sync translate messages"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:40
+msgid "New form"
+msgstr ""
+
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schdevtools/translate.py:41
+msgid "New task"
+msgstr ""

@@ -1,0 +1,37 @@
+{% extends 'template/desktop_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'vue/vue.js' %}
+        {% jscript_link 'schdevtools/test_javascript.js' %}
+        {% jscript_link 'schdevtools/test_python.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+        {% css_link 'schdevtools/style.css' %}
+        {% css_link 'schdevtools/test_icss.css' %}
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        {% component 'standard_components/code_editor' %}
+        {% component 'standard_components/d3' %}
+        {% component 'standard_components/leaflet' %}
+        {% component 'standard_components/video-js' %}
+        {% component 'standard_components/code_editor' %}
+        {% component 'standard_components/handsontable' %}
+        {% component 'standard_components/pivottable' %}
+        {% component 'standard_components/summernote' %}
+        {% component 'standard_components/txtarea_editor' %}
+        {% component 'standard_components/plotly' %}
+        {% component 'schdevtools/test' %}
+{% endblock %}
+{% block component_init %}
+        component_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "test",  ]
+{% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+{% endblock %}
+
