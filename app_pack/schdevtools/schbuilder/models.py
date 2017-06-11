@@ -908,7 +908,7 @@ class SChTemplate( models.Model):
     
     def get_blocks(self):
         ret=[]
-        form_path = norm_path(os.path.dirname(__file__)+"/../../../templates_src/form.ihtml")
+        form_path = os.path.join(os.path.dirname(__file__)+"/../../../templates_src/form.ihtml")
         f = open(form_path, "rt")
         buf = f.read()
         f.close()

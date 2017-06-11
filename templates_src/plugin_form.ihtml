@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-%extends 'base.html'
+%extends 'base0.html'
 %load exfiltry
 %load exsyntax
 
@@ -15,6 +15,10 @@
 %%jquery_ready
 
 %%extrastyle
+
+%%body
+    % with NO_CHECK_AUTH=True:
+        {{ block.super }}
 
 %% content
     %% table_list

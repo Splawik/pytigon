@@ -4,6 +4,8 @@ import os
 import sys
 from urllib.parse import urlparse
 from schlib.schdjangoext.django_init import get_app_config
+from schlib.schtools.platform_info import platform_name
+
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
 _rp = _lp+"/../.."
@@ -29,9 +31,8 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION:
+if PRODUCTION_VERSION and platform_name()!='Android':
     URL_ROOT_FOLDER='_schremote'
-
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
@@ -59,11 +60,7 @@ for app in APPS:
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
-p = os.path.expanduser("~")
-if type(p)==str:
-    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME, APPSET_NAME))
-else:
-    _NAME = os.path.join(p, ".pytigon/%s/%s.db" % (APPSET_NAME,APPSET_NAME)).decode("cp1250")
+_NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
 DATABASES = {
     'default':  {

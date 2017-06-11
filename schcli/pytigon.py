@@ -478,8 +478,11 @@ class SchApp(App, _BASE_APP):
         if p:
             sys.path.append(home_dir)
             for plugin in p:
+                if not '/' in plugin:
+                    continue
                 if plugin == '' or plugin.startswith('standard/'):
                     continue
+                print(plugin)
                 app_name = plugin.split('/')[0]
                 plugin_name = plugin.split('/')[1]
                 if plugin_name == 'install':
@@ -615,10 +618,12 @@ def _main_init(argv):
             if arg != 'embeded':
                 CWD_PATH = schserw_settings.APP_PACK_PATH + '/_schremote'
 
+            tmp = arg.replace('//', '$$$')
             if '/' in arg:
-                x = arg.replace('//', '$$$').split('/', 1)
+                x = tmp.split('/', 1)
                 address = x[0].replace('$$$', '//')
-                app_name = x[1]
+                if len(x)>1:
+                    app_name = x[1]
             else:
                 address = arg
 
@@ -788,10 +793,20 @@ def _main_init(argv):
 
     ready_to_run = True
 
+    username = 'auto'
+    password = 'anawa'
+
+    if extern_app_set:
+        app.http.get("", "http://127.0.0.2/")
+        app.http.post("", "http://127.0.0.2/schsys/do_login/", {
+            'username': username,
+            'password': password,
+            'next': "http://127.0.0.2/schsys/ok",
+            'client_param': app._get_parm_for_server()
+        })
+
     if not app.authorized and autologin:
         ready_to_run = False
-        username = 'auto'
-        password = 'anawa'
         app.http.post(app, "/" + app_name + '/schsys/do_login/' if app_name else '/schsys/do_login/', {
             'csrfmiddlewaretoken': app.csrf_token,
             'username': username,

@@ -1,1 +1,1 @@
-APPS=[]
+APPS=['schremote',]

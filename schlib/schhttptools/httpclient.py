@@ -47,6 +47,7 @@ def init_embeded_django():
 
 
 BLOCK = False
+COOKIES_EMBEDED = {}
 COOKIES = {}
 HTTP_LOCK = threading.Lock()
 
@@ -114,6 +115,7 @@ class HttpClient:
             user_agent - default None
         """
         global COOKIES
+        global COOKIES_EMBEDED
         global BLOCK
         if BLOCK:
             while BLOCK:
@@ -138,6 +140,12 @@ class HttpClient:
         #adr = replace_dot(adr)
         adr = norm_path(adr)
         #adr = adr.replace(' ', '%20')
+
+        if adr.startswith("http://127.0.0.2/"):
+            cookies = COOKIES_EMBEDED
+        else:
+            cookies = COOKIES
+
         print(">>>>>>>>", adr)
 
         if not post_request and not '?' in adr:
@@ -186,8 +194,8 @@ class HttpClient:
         try:
 
             if post_request:
-                if 'csrftoken' in COOKIES:
-                    parm['csrfmiddlewaretoken'] = COOKIES['csrftoken']
+                if 'csrftoken' in cookies:
+                    parm['csrfmiddlewaretoken'] = cookies['csrftoken']
                 if upload:
                     files = {}
                     for key, value in parm.items():
@@ -196,19 +204,19 @@ class HttpClient:
                     for key in files:
                         del parm[key]
                     if credentials:
-                        self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                        self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
                     else:
-                        self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=COOKIES)
+                        self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=cookies)
                 else:
                     if credentials:
-                        self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                        self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
                     else:
-                        self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
+                        self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=cookies)
             else:
                 if credentials:
-                    self.http = requests.get(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=COOKIES)
+                    self.http = requests.get(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
                 else:
-                    self.http = requests.get(adr, data=parm, headers=headers, allow_redirects=True, cookies=COOKIES)
+                    self.http = requests.get(adr, data=parm, headers=headers, allow_redirects=True, cookies=cookies)
         finally:
             HTTP_LOCK.release()
 
@@ -227,11 +235,11 @@ class HttpClient:
         if self.http.history:
             for r in self.http.history:
                 for key, value in r.cookies.items():
-                    COOKIES[key] = value
+                    cookies[key] = value
 
         if self.http.cookies:
             for key, value in self.http.cookies.items():
-                COOKIES[key] = value
+                cookies[key] = value
 
         if self.ret_content_type and 'text/' in self.ret_content_type: # and 'utf-8' in self.ret_content_type:
             if "Traceback" in str(self.content) and 'copy-and-paste'in str(self.content):
