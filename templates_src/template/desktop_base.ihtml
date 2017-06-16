@@ -18,10 +18,7 @@
     {% jscript_link 'vanillajs_plugins/js.cookie.js' %}
     {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
 
-    % comment:
-        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
-
-    {% jscript_link 'jquery/js/jquery-2.1.4.js' %}
+    {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 
     {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
     % comment:

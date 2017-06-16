@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 
-THEMES = ['tablet_modern', 'tablet_standard', 'smartfon_standard']
+THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp

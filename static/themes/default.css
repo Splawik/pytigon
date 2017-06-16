@@ -147,7 +147,9 @@ not(.login_background) div.content-wrapper {
   bottom: 3px;
   height: 100%;
   min-height: 45px;
-  margin-right: 10px; }
+  margin-right: 10px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem; }
 
 .form-inline input, .form-inline select {
   font-size: 14px; }

@@ -337,6 +337,9 @@ def _on_menu_href(elem, title=None):
                 jQuery('#loading-indicator').show()
             ajax_get(href2, _on_new_win)
             jQuery('.navbar-ex1-collapse').collapse('hide')
+
+        jQuery(".auto-hide").trigger("click")
+
         return False
 
 

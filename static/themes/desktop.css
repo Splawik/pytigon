@@ -115,6 +115,10 @@
   background-color: #fff;
   padding-top: 10 px; }
 
+body {
+  overflow-x: hidden;
+  overflow-y: auto; }
+
 .desktop_content {
   padding: 0px; }
 

@@ -68,7 +68,10 @@
 
 
 %% menu
-    aside class=main-sidebar collapse show,,,id=menu
+    a href=#,,,class=sidebar-toggle {% if 'smartfon' in browser_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
+        span class=fa fa-bars
+
+    aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
         section class=sidebar
             ul class=sidebar-menu
                 li class=bg-primary
@@ -100,8 +103,10 @@
             % else:
                 img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
 
-            a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
-                span class=fa fa-bars
+            % comment:
+                a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
+                    span class=fa fa-bars
+
 
             % if not NO_TABS and application_type == 'modern':
                 div class=navbar-nav tabbable,,,id=tab_tabs2
@@ -154,16 +159,30 @@
 
 %% body_end
     % if form_ext or not show_form:
-        .<script>
-        .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
-        .    var obj1_off =  { 'width': '256px' };
-        .    var obj1_on =  { 'width': '0px' };
-        .    var obj2_off =  { 'margin-left': '256px' };
-        .    var obj2_on =  { 'margin-left': '0px' };
-        .    var obj1 = jQuery('#menu');
-        .    var obj2 = jQuery('#panel');
-        .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-        .</script>
+        % if True:
+            .<script>
+            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+            .    var obj1_off =  { 'width': '256px' };
+            .    var obj1_on =  { 'width': '0px' };
+            .    var obj2_off =  { 'margin-left': '256px' };
+            .    var obj2_on =  { 'margin-left': '0px' };
+            .    var obj1 = jQuery('#menu');
+            .    var obj2 = jQuery('#panel');
+            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
+            .</script>
+
+        % if False:
+            .<script>
+            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+            .    var obj1_off =  { 'width': '256px' };
+            .    var obj1_on =  { 'width': '0px' };
+            .    var obj2_off =  { 'margin-left': '0px' };
+            .    var obj2_on =  { 'margin-left': '0px' };
+            .    var obj1 = jQuery('#menu');
+            .    var obj2 = jQuery('#panel');
+            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
+            .</script>
+
     {{block.super}}
 
 

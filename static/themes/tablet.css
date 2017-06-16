@@ -84,13 +84,13 @@ header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle
 header.main-header nav.navbar {
   padding: 0px !important; }
 
-.main-header .sidebar-toggle {
-  height: 100%;
+.sidebar-toggle {
   padding: 15px 20px;
   position: absolute;
   width: 50px;
   margin: 0px;
-  top: 0px; }
+  top: 0px;
+  z-index: 9999; }
 
 .main-header .nav-item .nav-link {
   padding-right: 10px;
