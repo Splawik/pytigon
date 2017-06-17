@@ -106,17 +106,11 @@ not(.login_background) div.content-wrapper {
   box-shadow: none; }
 
 /* dropdown menu */
-.dropdown-menu {
-  padding: 10px; }
-
-.dropdown-block {
-  width: 400px; }
-
-.dropdown-footer {
-  width: 400px; }
-
-.dropdown-block p {
-  font-size: 16px; }
+.user-menu div.dropdown-menu {
+  padding: 10px;
+  width: 25rem; }
+  .user-menu div.dropdown-menu .dropdown-block p {
+    font-size: 0.8rem; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
@@ -269,6 +263,10 @@ label.upload i {
 
 .label-floating .form-control:focus::-webkit-input-placeholder {
   transition: none; }
+
+.btn-file {
+  cursor: pointer;
+  cursor: hand; }
 
 .txt3d {
   font-weight: 900;

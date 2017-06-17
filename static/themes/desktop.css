@@ -132,10 +132,8 @@ body {
   padding: 9px;
   background: black;
   height: 38px; }
-
-.drop_down_blocks li {
-  padding: 0px 16px; }
-
-.drop_down_blocks li a {
-  color: white;
-  text-decoration: none !important; }
+  .drop_down_blocks > li {
+    padding: 0px 16px; }
+    .drop_down_blocks > li > a {
+      color: white;
+      text-decoration: none !important; }

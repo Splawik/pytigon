@@ -163,7 +163,7 @@
                 li
                     div style=width:5px; height:10px;
     div id=logo_place
-        a href={{URL_BASE}},,,class=logo,,,style=white-space:nowrap;text-align: center;
+        a href={{URL_BASE}}/,,,class=logo,,,style=white-space:nowrap;text-align: center;
             span class=logo-lg
                 % if appset_title|length > 20:
                     small...{{appset_title}}
