@@ -91,6 +91,18 @@ def standard_web_browser(request):
             return 1
 
 
+def client_type(request):
+    if standard_web_browser(request):
+        if test_mobile(request):
+            if test_tablet(request):
+                return "tablet"
+            else:
+                return "smartfon"
+        else:
+            return "desktop"
+    else:
+        return "schweb"
+
 def browser_type(request):
     if hasattr(settings, 'THEMES'):
         themes = settings.THEMES
@@ -439,6 +451,8 @@ def sch_standard(request):
     lng = request.LANGUAGE_CODE[:2].lower()
 
     b_type = browser_type(request)
+    c_type = client_type(request)
+
     x = b_type.split('_')
     b_type = x[0]
     if len(x)>1:
@@ -477,6 +491,7 @@ def sch_standard(request):
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
         'browser_type': b_type,
+        'client_type': c_type,
         'ie': ie,
         'application_type': b_type2,
         'default_template': d_template,

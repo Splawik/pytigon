@@ -106,11 +106,13 @@ not(.login_background) div.content-wrapper {
   box-shadow: none; }
 
 /* dropdown menu */
-.user-menu div.dropdown-menu {
-  padding: 10px;
-  width: 25rem; }
-  .user-menu div.dropdown-menu .dropdown-block p {
-    font-size: 0.8rem; }
+.user-menu {
+  white-space: nowrap; }
+  .user-menu div.dropdown-menu {
+    padding: 10px;
+    width: 22rem; }
+    .user-menu div.dropdown-menu .dropdown-block p {
+      font-size: 0.8rem; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {

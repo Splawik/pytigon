@@ -4,6 +4,8 @@ import os
 import sys
 from urllib.parse import urlparse
 from schlib.schdjangoext.django_init import get_app_config
+from schlib.schtools.platform_info import platform_name
+
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
 _rp = _lp+"/../.."
@@ -29,14 +31,12 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION:
+if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0]:
     URL_ROOT_FOLDER='_schall'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
-
-PACKS = []
 
 app_pack_folders = []
 base_apps_path = APP_PACK_PATH
@@ -63,6 +63,8 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
 
+
+PACKS = []
 
 for app in APPS:
     if '.' in app:

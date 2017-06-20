@@ -68,7 +68,7 @@
 
 
 %% menu
-    a href=#,,,class=sidebar-toggle {% if 'smartfon' in browser_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
+    button class=sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
         span class=fa fa-bars
 
     aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
@@ -118,7 +118,7 @@
                     li class=nav-item dropdown user user-menu
                         a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
                             span class=fa fa-user
-                            span class=hidden-xs...{{user.username}}
+                            span class=hidden-sm-down...{{user.username}}
                         div class=dropdown-menu dropdown-menu-right
                             div class=dropdown-block
                                 p...username:
@@ -135,9 +135,9 @@
                                     strong...{{user.date_joined|isoformat}}
                             div class=dropdown-footer
                                 div class=pull-left
-                                    a class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                    button class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
                                 div class=pull-right
-                                    a href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                                    button href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
                     li class=nav-item dropdown user user-menu
                         a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
@@ -159,24 +159,23 @@
 
 %% body_end
     % if form_ext or not show_form:
-        % if True:
+        % if 'smartfon' in client_type:
+            .<script>
+            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+            .    var obj1_off =  { 'width': '256px' };
+            .    var obj1_on =  { 'width': '0px' };
+            .    var obj2_off =  { 'margin-left': '256px', 'margin-right': '-256px' };
+            .    var obj2_on =  { 'margin-left': '0px', 'margin-right': '0px' };
+            .    var obj1 = jQuery('#menu');
+            .    var obj2 = jQuery('#panel');
+            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
+            .</script>
+        % else:
             .<script>
             .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
             .    var obj1_off =  { 'width': '256px' };
             .    var obj1_on =  { 'width': '0px' };
             .    var obj2_off =  { 'margin-left': '256px' };
-            .    var obj2_on =  { 'margin-left': '0px' };
-            .    var obj1 = jQuery('#menu');
-            .    var obj2 = jQuery('#panel');
-            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-            .</script>
-
-        % if False:
-            .<script>
-            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
-            .    var obj1_off =  { 'width': '256px' };
-            .    var obj1_on =  { 'width': '0px' };
-            .    var obj2_off =  { 'margin-left': '0px' };
             .    var obj2_on =  { 'margin-left': '0px' };
             .    var obj1 = jQuery('#menu');
             .    var obj2 = jQuery('#panel');

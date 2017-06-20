@@ -188,7 +188,7 @@
                     div class=table,,,width=100%
                         %%list_content_header_first_row
                             div class=tr row list_content_header list_content_header_first_row
-                                div class=td col-sm-12 hidden-xs text-center
+                                div class=td col-sm-12 hidden-sm-down text-center
                                     %% list_content_title
                                         h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
                         %%list_content_header_two_row
@@ -225,7 +225,7 @@
 
             %% list_content_body
                 % if standard_web_browser and table_type == 'datatable':
-                    button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in browser_type %}active{% endif %},,,data-toggle=button
+                    button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
                         i class=fa fa-times
                 div class=tabsort_panel
                     % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:

@@ -31,7 +31,7 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android':
+if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0]:
     URL_ROOT_FOLDER='_schremote'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
