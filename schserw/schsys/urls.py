@@ -18,7 +18,10 @@
 #version: "0.1a"
 
 from django.conf.urls import url
+
 from django.contrib.auth.views import login
+from django.contrib.auth import authenticate, login as login2
+
 from django.views.generic import TemplateView
 import django.contrib.auth.views
 from django.http import HttpResponseRedirect
@@ -34,7 +37,22 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
 
 def sch_login(request, *argi, **argv):
-    ret = login(request, *argi, **argv)
+    #print("PATH:", request.path)
+    #print("POST:", request.POST)
+    #print("GET:", request.GET)
+    ret = None
+    if 'user' in request.GET:
+        username = request.GET['user']
+        if username == 'auto':
+            if 'password' in request.GET:
+                password = request.GET['password']
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    ret = login2(request, user)
+                    request.session['autologin'] = True
+    if ret == None:
+        ret = login(request, *argi, **argv)
+
     parm = request.POST.get('client_param', '')
     if parm != '':
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])

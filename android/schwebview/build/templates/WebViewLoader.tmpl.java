@@ -24,7 +24,7 @@ public class WebViewLoader {
                 Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            PythonActivity.mActivity.loadUrl("http://127.0.0.1:{{ args.port }}/");
+                            PythonActivity.mActivity.loadUrl("http://127.0.0.1:{{ args.port }}/schsys/do_login/?next=&user=auto&password=anawa");
                             Log.v(TAG, "Loaded webserver in webview");
                         }
                     };
@@ -34,7 +34,7 @@ public class WebViewLoader {
             } else {
                 Log.v(TAG, "Could not ping localhost:{{ args.port }}");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(330);
                 } catch(InterruptedException e) {
                     Log.v(TAG, "InterruptedException occurred when sleeping");
                 }

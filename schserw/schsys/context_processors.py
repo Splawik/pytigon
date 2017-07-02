@@ -504,6 +504,7 @@ def sch_standard(request):
         'uuid': uuid(request.path),
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
+        'autologin': request.session.get('autologin', False),
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

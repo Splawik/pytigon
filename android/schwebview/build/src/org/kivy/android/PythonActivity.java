@@ -57,12 +57,23 @@ import android.app.Dialog;
 import java.lang.CharSequence;
 import java.lang.System;
 import android.widget.ListView;
- 
 
-public class PythonActivity extends Activity {
+import android.webkit.WebChromeClient;
+import android.webkit.ValueCallback;
+import android.net.Uri;
+
+import im.delight.android.webview.AdvancedWebView;
+import android.annotation.SuppressLint;
+
+public class PythonActivity extends Activity  implements AdvancedWebView.Listener {
     // This activity is modified from a mixture of the SDLActivity and
     // PythonActivity in the SDL2 bootstrap, but removing all the SDL2
     // specifics.
+
+
+    //private ValueCallback<Uri> mUploadMessage;
+    //private final static int FILECHOOSER_RESULTCODE=1;
+
 
     private static final String TAG = "PythonActivity";
 
@@ -72,13 +83,69 @@ public class PythonActivity extends Activity {
     public static boolean mBrokenLibraries;
 
     protected static ViewGroup mLayout;
-    protected static WebView mWebView;
+    protected static AdvancedWebView mWebView;
 
     protected static Thread mPythonThread;
 
     private ResourceManager resourceManager = null;
     private Bundle mMetaData = null;
     private PowerManager.WakeLock mWakeLock = null;
+
+
+    @SuppressLint("NewApi")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWebView.onResume();
+        // ...
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    protected void onPause() {
+        mWebView.onPause();
+        // ...
+        super.onPause();
+    }
+
+    //@Override
+    //protected void onDestroy() {
+    //    mWebView.onDestroy();
+    //    // ...
+    //    super.onDestroy();
+    //}
+/*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        mWebView.onActivityResult(requestCode, resultCode, intent);
+        // ...
+    }
+*/
+
+    /*
+    @Override
+    public void onBackPressed() {
+        if (!mWebView.onBackPressed()) { return; }
+        // ...
+        super.onBackPressed();
+    }*/
+
+    @Override
+    public void onPageStarted(String url, Bitmap favicon) { }
+
+    @Override
+    public void onPageFinished(String url) { }
+
+    @Override
+    public void onPageError(int errorCode, String description, String failingUrl) { }
+
+    @Override
+    public void onDownloadRequested(String url, String suggestedFilename, String mimeType, long contentLength, String contentDisposition, String userAgent) { }
+
+    @Override
+    public void onExternalPageRequest(String url) { }
+
 
     public static void initialize() {
         // The static nature of the singleton and Android quirkyness force us to initialize everything here
@@ -88,116 +155,104 @@ public class PythonActivity extends Activity {
         mBrokenLibraries = false;
     }
 
-    public Dialog onCreateDialogSingleChoice() {
+    public List<String> getApps() {
+        List<String> apps = new ArrayList<String>();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                
-            List<String> apps = new ArrayList<String>();
-        
-            String p1 = System.getenv("SECONDARY_STORAGE");
-            String p2 = System.getenv("EXTERNAL_STORAGE");
-            String data_path;
+        String p1 = System.getenv("SECONDARY_STORAGE");
+        String p2 = System.getenv("EXTERNAL_STORAGE");
+        String data_path;
 
-            if (p1 != null )
-            {        
-                File storage_file1 = new File(p1);
-                File storage_file2 = new File(p2);
+        if (p1 != null )
+        {
+            File storage_file1 = new File(p1);
+            File storage_file2 = new File(p2);
 
-                File pytigon_file1 = new File(storage_file1, "pytigon");
-                File pytigon_file2 = new File(storage_file2, "pytigon");
+            File pytigon_file1 = new File(storage_file1, "pytigon");
+            File pytigon_file2 = new File(storage_file2, "pytigon");
 
-                if(pytigon_file1.isDirectory()) {
-                    if(pytigon_file2.isDirectory()) {
-                        data_path = pytigon_file2.getPath();
-                    }
-                    else {
-                        data_path = pytigon_file1.getPath();
-                    }
-                }    
-                else {
+            if(pytigon_file1.isDirectory()) {
+                if(pytigon_file2.isDirectory()) {
                     data_path = pytigon_file2.getPath();
                 }
+                else {
+                    data_path = pytigon_file1.getPath();
+                }
             }
-            else
-            { File storage_file3 = new File(p2);
-               File pytigon_file3 = new File(storage_file3, "pytigon");
-               if(pytigon_file3.isDirectory()) {
-                    data_path = pytigon_file3.getPath();
-               }
-               else {
-                    final Thread pythonThread = new Thread(new PythonMain(), "PythonThread");
-                    PythonActivity.mPythonThread = pythonThread;
-                    pythonThread.start();
-                    return null;
-               }
-                
+            else {
+                data_path = pytigon_file2.getPath();
             }
-            
-            File pytigon_file = new File(data_path);
-            File app_pack_file = new File(pytigon_file, "app_pack");
-            
-            if(app_pack_file.isDirectory()) {    
-                File[] files = app_pack_file.listFiles();
-                for (File inFile : files) {
-                    if (inFile.isDirectory()) {
-                        
-                        if (! inFile.getName().startsWith("_")) {
-                            apps.add(inFile.getName());
-                        }
-                    }
-                }    
-            }        
-            if (apps.size()>1) {
-                final String[] list_items = new String[apps.size() ];
-                apps.toArray( list_items );
-                
-                builder.setTitle("Select app")
-                .setSingleChoiceItems(list_items, 0, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        
-                    }
-                })
-
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        
-                        ListView lw = ((AlertDialog)dialog).getListView();
-                        String checkedItem = list_items[lw.getCheckedItemPosition()];                                                
-                        PythonActivity.nativeSetEnv("PYTIGON_APP", checkedItem);
-                        
-                        if (mWebView != null) {
-                            mWebView.loadUrl("file:///" + mActivity.getFilesDir().getAbsolutePath() + "/_load2.html");
-                        }
-
-                        
-                        final Thread pythonThread = new Thread(new PythonMain(), "PythonThread");
-                        PythonActivity.mPythonThread = pythonThread;
-                        pythonThread.start();
-
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        PythonActivity.mActivity.finish();
-                    }
-                });
-                return builder.create();                
-            }
-            else
-            {
+        }
+        else
+        {  File storage_file3 = new File(p2);
+           File pytigon_file3 = new File(storage_file3, "pytigon");
+           if(pytigon_file3.isDirectory()) {
+                data_path = pytigon_file3.getPath();
+           }
+           else {
                 final Thread pythonThread = new Thread(new PythonMain(), "PythonThread");
                 PythonActivity.mPythonThread = pythonThread;
                 pythonThread.start();
                 return null;
+           }
+        }
+
+        File pytigon_file = new File(data_path);
+        File app_pack_file = new File(pytigon_file, "app_pack");
+
+        if(app_pack_file.isDirectory()) {
+            File[] files = app_pack_file.listFiles();
+            for (File inFile : files) {
+                if (inFile.isDirectory()) {
+
+                    if (! inFile.getName().startsWith("_") && ! inFile.getName().startsWith("schdevtools")) {
+                        apps.add(inFile.getName());
+                    }
+                }
             }
+        }
+        return apps;
+    }
+
+    public Dialog onCreateDialogSingleChoice(List<String> apps) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final String[] list_items = new String[apps.size() ];
+        apps.toArray( list_items );
+
+        builder.setTitle("Select app").setSingleChoiceItems(list_items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        })
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                ListView lw = ((AlertDialog)dialog).getListView();
+                String checkedItem = list_items[lw.getCheckedItemPosition()];
+                PythonActivity.nativeSetEnv("PYTIGON_APP", checkedItem);
+
+                if (mWebView != null) {
+                    mWebView.loadUrl("file:///" + mActivity.getFilesDir().getAbsolutePath() + "/_load2.html");
+                }
+
+
+                final Thread pythonThread = new Thread(new PythonMain(), "PythonThread");
+                PythonActivity.mPythonThread = pythonThread;
+                pythonThread.start();
+
+            }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                PythonActivity.mActivity.finish();
+            }
+        });
+        return builder.create();
     }
     
-    
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "My oncreate running");
@@ -208,8 +263,8 @@ public class PythonActivity extends Activity {
 
         this.mActivity = this;
 
-        Log.v("Python", "Device: " + android.os.Build.DEVICE);
-        Log.v("Python", "Model: " +  android.os.Build.MODEL);
+        Log.v("Pytigon", "Device: " + android.os.Build.DEVICE);
+        Log.v("Pytigon", "Model: " +  android.os.Build.MODEL);
         super.onCreate(savedInstanceState);
 
         PythonActivity.initialize();
@@ -250,31 +305,45 @@ public class PythonActivity extends Activity {
            return;
         }
 
-
-        Dialog dialog = onCreateDialogSingleChoice();
-        if (dialog != null) {
-            dialog.show();
-        }
-        
         // Set up the webview
-        mWebView = new WebView(this);
+        //mWebView = new WebView(this);
+
+        Log.v("Pytigon", "W1");
+
+        mWebView = new AdvancedWebView(this);
+        Log.v("Pytigon", "W2");
+        
+        mWebView.setListener(this, this);
+
+
+        //registerActivityResultListener(mWebView);
+
+
+        Log.v("Pytigon", "W3");
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.loadUrl("file:///" + mActivity.getFilesDir().getAbsolutePath() + "/_load.html");
-
+        Log.v("Pytigon", "W4");
         mWebView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        mWebView.setWebViewClient(new WebViewClient() {
+        Log.v("Pytigon", "W5");
+        /*mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
                     return false;
                 }
             });
+        */
+
+
+        Log.v("Pytigon", "W7");
 
         mLayout = new AbsoluteLayout(this);
         mLayout.addView(mWebView);
+        Log.v("Pytigon", "W8");
 
         setContentView(mLayout);
+        Log.v("Pytigon", "W9");
 
         String mFilesDirectory = mActivity.getFilesDir().getAbsolutePath();
         Log.v(TAG, "Setting env vars for start.c and Python to use");
@@ -284,6 +353,7 @@ public class PythonActivity extends Activity {
         PythonActivity.nativeSetEnv("ANDROID_ENTRYPOINT", "main.pyo");
         PythonActivity.nativeSetEnv("PYTHONHOME", mFilesDirectory);
         PythonActivity.nativeSetEnv("PYTHONPATH", mFilesDirectory + ":" + mFilesDirectory + "/lib");
+        Log.v("Pytigon", "W10");
 
         try {
             Log.v(TAG, "Access to our meta-data...");
@@ -296,10 +366,43 @@ public class PythonActivity extends Activity {
             }
         } catch (PackageManager.NameNotFoundException e) {
         }
+        Log.v("Pytigon", "W11");
+
+
+        List<String> apps = getApps();
+        Log.v("Pytigon", "W6");
+        if (apps.size()>1) {
+            Dialog dialog = onCreateDialogSingleChoice(apps);
+            if (dialog != null) {
+                dialog.show();
+            }
+        }
+        else {
+            Log.v("Pytigon", "U1");
+            PythonActivity.nativeSetEnv("PYTIGON_APP", apps.get(0));
+            Log.v("Pytigon", apps.get(0));
+            Log.v("Pytigon", "U2");
+
+            if (mWebView != null) {
+                mWebView.loadUrl("file:///" + mActivity.getFilesDir().getAbsolutePath() + "/_load2.html");
+            }
+            Log.v("Pytigon", "U3");
+            final Thread pythonThread = new Thread(new PythonMain(), "PythonThread");
+            Log.v("Pytigon", "U4");
+            PythonActivity.mPythonThread = pythonThread;
+            Log.v("Pytigon", "U5");
+            pythonThread.start();
+            Log.v("Pytigon", "U6");
+        }
+
 
 
         final Thread wvThread = new Thread(new WebViewLoaderMain(), "WvThread");
+        Log.v("Pytigon", "W12");
+
         wvThread.start();
+        Log.v("Pytigon", "W13");
+
     }
 
     @Override
@@ -399,7 +502,7 @@ public class PythonActivity extends Activity {
                 os.write(data_version.getBytes());
                 os.close();
             } catch (Exception e) {
-                Log.w("python", e);
+                Log.w("Pytigon", e);
             }
         }
     }
@@ -488,6 +591,7 @@ public class PythonActivity extends Activity {
     // Listener interface for onActivityResult
     //
 
+
     public interface ActivityResultListener {
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
@@ -508,6 +612,9 @@ public class PythonActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (mWebView != null) {
+            mWebView.onActivityResult(requestCode, resultCode, intent);
+        }
         if ( this.activityResultListeners == null )
             return;
         this.onResume();
@@ -516,7 +623,9 @@ public class PythonActivity extends Activity {
             while ( iterator.hasNext() )
                 (iterator.next()).onActivityResult(requestCode, resultCode, intent);
         }
+
     }
+
 
     public static void start_service(String serviceTitle, String serviceDescription,
                 String pythonServiceArgument) {

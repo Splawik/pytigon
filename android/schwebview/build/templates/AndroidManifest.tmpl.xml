@@ -69,6 +69,21 @@
             {%- endif -%}
         </activity>
 
+        <activity android:name="org.kivy.android.DevToolsActivity"
+                  android:label="Pytigon DevTools"
+                  android:configChanges="keyboardHidden|orientation{% if args.min_sdk_version >= 13 %}|screenSize{% endif %}"
+                  android:screenOrientation="{{ args.orientation }}"
+                  >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            {%- if args.intent_filters -%}
+            {{- args.intent_filters -}}
+            {%- endif -%}
+        </activity>
+
+
         {% if service %}
         <service android:name="org.kivy.android.PythonService"
                  android:process=":pythonservice" />

@@ -217,9 +217,10 @@
                     div class=pull-right
                         button href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
-        li class=nav-item dropdown user user-menu
-            a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
-                span class=fa fa-power-off
+        %if not autologin:
+            li class=nav-item dropdown user user-menu
+                a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
+                    span class=fa fa-power-off
 
     <div id="menu" class="tab-content menu-content win-header">
 
