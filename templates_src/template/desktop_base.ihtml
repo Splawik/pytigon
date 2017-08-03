@@ -17,6 +17,7 @@
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
     {% jscript_link 'vanillajs_plugins/js.cookie.js' %}
     {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+    {% jscript_link 'vanillajs_plugins/popper.min.js' %}
 
     {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 
@@ -310,7 +311,7 @@
                 img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
 
     div class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
-        div class=modal-dialog {% block modal_dialog_class %}{% endblock %},,,role=document
+        div class=modal-dialog {% block modal_dialog_class %}modal-lg{% endblock %},,,role=document
             div class=modal-content
                 div class=modal-header
                     h5 class=modal-title,,,id=ModalLabel...{{title}}
@@ -318,7 +319,7 @@
                         span aria-hidden=true...&times;
                 div class=modal-body
                     div class=container-fluid
-                            div class=dialog-data refr_target
+                        div class=dialog-data refr_target
                 div class=modal-footer
                     %% content_start_ok_cancel
                         button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Cancel)

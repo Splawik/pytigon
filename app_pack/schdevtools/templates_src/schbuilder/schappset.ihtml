@@ -83,15 +83,29 @@
         field_edit/install_file,install.ini(Distribute),install_ini,_top
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
 
-%% row_edit
-    % form:
-        'name', 'title', 'ext_apps', 'plugins', 'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type'
+%% form_class
+    .form-vertical
 
-    % if standard_web_browser:
-        % form:
-            'custom_tags', 'user_param'
-    % else:    
-        % form_item custom_tags:
-            {{form.custom_tags|textfiel_row_col:"4x100"}}
-        % form_item user_param:
-            {{form.user_param|textfiel_row_col:"4x100"}}
+
+%% row_edit
+    div class=form2columns
+        div class=row
+            % col2_form:
+                'name', 'title'
+
+        % vert_form:
+            'ext_apps', 'plugins'
+
+        div class=row
+            % col2_form:
+                'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type'
+
+        % if standard_web_browser:
+            div class=row
+                % col2_form:
+                    'custom_tags', 'user_param'
+        % else:    
+            % form_item custom_tags:
+                {{form.custom_tags|textfiel_row_col:"4x100"}}
+            % form_item user_param:
+                {{form.user_param|textfiel_row_col:"4x100"}}

@@ -114,6 +114,36 @@ not(.login_background) div.content-wrapper {
     .user-menu div.dropdown-menu .dropdown-block p {
       font-size: 0.8rem; }
 
+.tabsort div.dropdown-menu {
+  width: 22rem;
+  height: 10rem;
+  overflow-y: scroll; }
+
+/* form */
+.form-group label {
+  font-style: italic;
+  font-size: 0.7rem;
+  line-height: 1; }
+
+.form-group textarea {
+  line-height: 1.5;
+  height: 8rem; }
+
+.bootstrap-datetimepicker-widget {
+  width: auto !important;
+  box-shadow: 2px 2px 2px #888; }
+
+.btn.dropdown-toggle::after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.3em;
+  vertical-align: middle;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-left: 0.3em solid transparent; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
@@ -349,3 +379,18 @@ a, button {
 
 .tabsort_panel {
   margin-top: 5px !important; }
+
+.form2columns label {
+  margin-bottom: 0px; }
+
+.form2columns .checkbox {
+  margin-left: 0px !important; }
+
+#Dialog label::after {
+  content: ":"; }
+
+.checkbox label::after {
+  content: none !important; }
+
+.tbl_scroll {
+  min-height: 11rem; }

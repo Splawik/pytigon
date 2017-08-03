@@ -1,6 +1,12 @@
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh; }
+
 body {
   overflow-x: hidden;
-  overflow-y: auto; }
+  overflow-y: auto;
+  height: 100vh; }
 
 div.content {
   margin-top: 5px; }
@@ -39,3 +45,10 @@ a.navbar-brand {
   #tabs2 li.nav-item .close {
     margin-top: 2px;
     margin-right: 2px; }
+
+.tabsort-toolbar-expand2 {
+  position: absolute !important;
+  top: -14px;
+  left: initial;
+  right: 28px;
+  background: #fc0 !important; }
