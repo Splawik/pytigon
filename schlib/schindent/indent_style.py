@@ -30,6 +30,8 @@ import subprocess
 #import tempfile
 from schlib.schdjangoext.tools import gettempdir
 from schlib.schtools.tools import get_executable
+from schlib.schindent.py_to_js import compile
+
 
 from .indent_tools import convert_js
 
@@ -633,6 +635,12 @@ def py_to_js(script, module_path):
                 continue
         out_tab.append(line[tab:])
     script2 = "\n".join(out_tab)
-    code = py2js(script2, module_path)
-    return code
+    #code = py2js(script2, module_path)
 
+    error, code = compile(script2, gettempdir())
+
+    if error:
+        print(code)
+        return code
+    else:
+        return code
