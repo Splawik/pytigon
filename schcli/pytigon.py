@@ -779,7 +779,7 @@ def _main_init(argv):
         elif row[0].data == 'csrf_token':
             app.csrf_token = row[1].data
         elif 'start_page' in row[0].data:
-            app.start_pages.extend([x for x in row[1].data.split(';') if x])
+            app.start_pages.extend([x for x in row[1].data.split(';') if x and x != 'None'])
         elif row[0].data == 'title':
             app.title = row[1].data
         elif row[0].data == 'plugins':

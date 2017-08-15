@@ -394,7 +394,7 @@ class SchTableGrid(wx.grid.Grid):
             return
 
         if evt.AltDown() and evt.KeyCode != wx.WXK_RETURN:
-            wx.GetApp().GetTopWindow().on_key_down(evt)
+            wx.GetApp().GetTopWindow().on_acc_key_down(evt)
             return
         if evt.KeyCode == wx.WXK_TAB and evt.ControlDown():
             evt.Skip()
