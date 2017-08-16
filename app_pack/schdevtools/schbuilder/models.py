@@ -254,8 +254,8 @@ Static_CHOICES = (
     ("C","css"),
     ("J","javascript"),
     ("P","python to javascript"),
-    ("R","component.js module"),
-    ("I","icss to css"),
+    ("R","vue.js component"),
+    ("I","sass to css"),
     
     )
 

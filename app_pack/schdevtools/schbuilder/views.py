@@ -48,6 +48,8 @@ from schlib.schtools.process import py_run
 
 from ext_lib.pygettext import main as gtext
 
+import sass
+
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
@@ -419,66 +421,59 @@ def gen(request, pk):
     
     static_files = appset.schstatic_set.all()
     
-    static_root = settings.ROOT_PATH+"/static/"+appset.name+"/"
+    if settings.STATIC_ROOT:
+        static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),appset.name)
+    else:
+        static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),appset.name)
+    
+    static_scripts = os.path.join(static_root,'js')
+    static_style = os.path.join(static_root,'css')
+    static_components = os.path.join(static_root,'components')
     
     for static_file in static_files:
         txt = static_file.code
         if static_file.type=='C':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f = open_and_create_dir(os.path.join(static_style, static_file.name+".css"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
         if static_file.type=='J':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f = open_and_create_dir(os.path.join(static_scripts,static_file.name+".js"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
         if static_file.type=='P':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
             codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
-            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f = open_and_create_dir(os.path.join(static_scripts,static_file.name+".js"),"wb")
             f.write(codejs.encode('utf-8'))
             f.close()        
         if static_file.type=='R':
-            #t = Template(txt)
-            #txt2 = t.render(Context({'appset': appset} ))
-            txt2 = txt
             try:
-                codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
+                codejs = schlib.schindent.indent_style.py_to_js(txt, None)
             except:
                 codejs = ""
-    
-    
-            #txt2 = ihtml_to_html(None, input_str=txt, lang='en')
-            #txt2 = txt2.replace("\"{", '{').replace("}\"", '}').replace('function on_', '').replace("""var __name__ = "__main__";""", '')
-            #t = Template(txt2)
-            #txt3 = t.render(Context({'appset': appset} ))
-            #buf = []
-            #buf.append("<%s>" % static_file.name)
-            #for line in txt3.split('\n'):
-            #    buf.append('    '+line.replace('\r',''))
-            #buf.append("</%s>" % static_file.name)
-            f = open_and_create_dir(settings.ROOT_PATH+"/static/components/"+appset.name+"/"+static_file.name+'.js',"wb")
-            #f.write("\n".join(buf).encode('utf-8'))
-            f.write(codejs.encode('utf-8'))
+            t = Template(codejs)
+            txt2 = t.render(Context({'appset': appset} ))
+            f = open_and_create_dir(os.path.join(static_components, static_file.name+'.js'),"wb")
+            f.write(txt2.encode('utf-8'))
             f.close()        
         if static_file.type=='I':
-            in_str = io.StringIO(txt)
-            out_str = io.StringIO()
-            convert_js(in_str, out_str)
-            t = Template(out_str.getvalue())
+            buf = sass.compile(string=txt, indented=True,)
+            t = Template(buf)
             txt2 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(static_root+static_file.name,"wb")
+            f = open_and_create_dir(os.path.join(static_style,static_file.name+".css"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
     
     component_elements = []
+    
     if appset.custom_tags:
-        component_elements += [ pos for pos in appset.custom_tags.replace('\n',';').replace('\r','').split(';') if pos ]
-    component_elements += [ appset.name+"/"+pos.name for pos in static_files if pos.type in ('R',) ]
+        component_elements += [ 'app/'+pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in appset.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
+    component_elements += [ 'app/' + appset.name + "/components/" + pos.name for pos in static_files if pos.type in ('R',) ]
     
     js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]

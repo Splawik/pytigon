@@ -6,27 +6,27 @@
 {% block js_extrascipts %}
         {{block.super}}
         {% jscript_link 'vue/vue.js' %}
-        {% jscript_link 'schdevtools/test_javascript.js' %}
-        {% jscript_link 'schdevtools/test_python.js' %}
+        {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
+        {% jscript_link 'app/schdevtools/js/test_python.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
-        {% css_link 'schdevtools/style.css' %}
-        {% css_link 'schdevtools/test_icss.css' %}
+        {% css_link 'app/schdevtools/css/style.css' %}
+        {% css_link 'app/schdevtools/css/test_icss.css' %}
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'standard_components/code_editor' %}
-        {% component 'standard_components/d3' %}
-        {% component 'standard_components/leaflet' %}
-        {% component 'standard_components/video-js' %}
-        {% component 'standard_components/code_editor' %}
-        {% component 'standard_components/handsontable' %}
-        {% component 'standard_components/pivottable' %}
-        {% component 'standard_components/summernote' %}
-        {% component 'standard_components/txtarea_editor' %}
-        {% component 'standard_components/plotly' %}
-        {% component 'schdevtools/test' %}
+        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/d3.js' %}
+        {% component 'app/standard_components/components/leaflet.js' %}
+        {% component 'app/standard_components/components/video-js.js' %}
+        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/handsontable.js' %}
+        {% component 'app/standard_components/components/pivottable.js' %}
+        {% component 'app/standard_components/components/summernote.js' %}
+        {% component 'app/standard_components/components/txtarea_editor.js' %}
+        {% component 'app/standard_components/components/plotly.js' %}
+        {% component 'app/schdevtools/components/test.js' %}
 {% endblock %}
 {% block component_init %}
         component_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "test",  ]

@@ -62,6 +62,7 @@ def open_and_create_dir(filename, mode):
         filename - path and name of file
         mode - see mode for standard python function: open
     """
+    print(filename)
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
     return open(filename, mode)

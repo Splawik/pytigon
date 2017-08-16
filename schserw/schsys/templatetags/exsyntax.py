@@ -726,7 +726,7 @@ def link(context, href, rel, typ):
 
 @inclusion_tag('widgets/component.html')
 def component(context, name):
-    return standard_dict(context, {'href': "components/"+name+".js",})
+    return standard_dict(context, {'href': name,})
 
 
 @inclusion_tag('widgets/paginator.html')
