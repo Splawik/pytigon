@@ -636,11 +636,47 @@ def py_to_js(script, module_path):
         out_tab.append(line[tab:])
     script2 = "\n".join(out_tab)
     #code = py2js(script2, module_path)
-
+    spec_format = False
+    if '"""' in script2:
+        spec_format = True
+        x = script2.split('"""')
+        tab_script = []
+        tab_string = []
+        in_tabstring = False
+        for pos in x:
+            if in_tabstring:
+                pos2 = ihtml_to_html_base(None, pos)
+                tab_string.append(pos2.replace('\r',''))
+                tab_script.append("'$$$compiled_str$$$'")
+                in_tabstring = False
+            else:
+                tab_script.append(pos)
+                in_tabstring = True
+        script2 = "".join(tab_script)
+        tmp = []
+        for pos in tab_string:
+            tmp2 = pos.split('\n')
+            if len(tmp2)==1:
+                tmp.append(tmp2[0])
+            elif len(tmp2)==2:
+                tmp.append(tmp2[0]+"\\n' +\n    '"+tmp2[1])
+            else:
+                result = tmp2[0] + "\\n' +\n"
+                for pos2 in tmp2[1:-1]:
+                    result += "    '" + pos2 + "\\n' +\n"
+                result += "    '" +tmp2[-1]
+                tmp.append(result)
+        tab_string = tmp
     error, code = compile(script2, gettempdir())
 
     if error:
         print(code)
         return code
     else:
+        if spec_format:
+            x = code.split("$$$compiled_str$$$")
+            result = [None] * (len(x) + len(tab_string))
+            result[::2] = x
+            result[1::2] = tab_string
+            code = "".join(result)
         return code

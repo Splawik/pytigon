@@ -122,13 +122,14 @@ class VfsTable(Table):
                 if cmp and cmp.match(p) or not cmp:
                     id = b32encode(pos.encode('utf-8')).decode('utf-8')
                     info = default_storage.fs.getinfo(pos)
-                    if not 'created_time' in info:
-                        info['created_time'] = ''
+                    #if not ha'created_time' in info:
+                    #    info['created_time'] = ''
                     elements.append([
                         id,
                         (p, ',#fdd'),
                         '',
-                        (info['created_time'], ',,#f00,s'),
+                        #(info['created_time'], ',,#f00,s'),
+                        (info.created, ',,#f00,s'),
                         info,
                         {'edit': ('tableurl', '../../%s//' % id, _('Change folder'))},
                     ])
@@ -140,8 +141,10 @@ class VfsTable(Table):
             if cmp and cmp.match(p) or not cmp:
                 id = b32encode(pos.encode('utf-8')).decode('utf-8')
                 info = default_storage.fs.getinfo(pos)
-                size = info['size']
-                ctime = info['created_time']
+                #size = info['size']
+                #ctime = info['created_time']
+                size = info.size
+                ctime = info.created
                 elements.append([
                     id,
                     p,

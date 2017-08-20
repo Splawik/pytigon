@@ -376,6 +376,7 @@ class ToolbarBar(object):
             address_or_parser - addres of http page
             parameters - parameters for http request
         """
+        page=None
         if not toolbar_page:
             u_name = 'main tools'
             page_name = _('main tools')

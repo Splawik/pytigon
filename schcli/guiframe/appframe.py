@@ -26,6 +26,8 @@ During the initialisation process all defined for application plugins are starte
 import os
 import sys
 import platform
+import subprocess
+
 from tempfile import NamedTemporaryFile
 from pydispatch import dispatcher
 
@@ -1011,8 +1013,19 @@ class SchAppFrame(SchBaseFrame):
                 name = "data.dat"
 
             p = http_ret.ptr()
-            with open(os.path.join(os.path.join(settings.DATA_PATH, 'download'), name), "wb") as f:
+
+            path = os.path.join(settings.DATA_PATH, 'download')
+
+            with open(os.path.join(path, name), "wb") as f:
                 f.write(p)
+
+            if platform.system() == "Windows":
+                os.startfile(path)
+            elif platform.system() == "Darwin":
+                subprocess.Popen(["open", path])
+            else:
+                subprocess.Popen(["xdg-open", path])
+
         return True
 
     def get_main_panel(self):

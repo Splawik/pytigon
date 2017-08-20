@@ -7,4 +7,4 @@
                 %% description
                     {{action.title}}
     % else
-        ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{path}}{{action.url}}
+        ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}}

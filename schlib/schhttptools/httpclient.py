@@ -287,6 +287,11 @@ class HttpClient:
         pass
 
 
+    def show(self, parent):
+        if HTTP_ERROR_FUNC:
+            HTTP_ERROR_FUNC(parent, self.content)
+
+
 class AppHttp(HttpClient):
     """Extended version of HttpClient"""
 

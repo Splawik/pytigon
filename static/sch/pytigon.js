@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-07-30 13:49:56
+// Transcrypt'ed from Python, 2017-08-20 10:07:20
 
 	var __symbols__ = ['__py3.6__', '__esv5__'];
 	var __all__ = {};

@@ -456,10 +456,8 @@ def gen(request, pk):
                 codejs = schlib.schindent.indent_style.py_to_js(txt, None)
             except:
                 codejs = ""
-            t = Template(codejs)
-            txt2 = t.render(Context({'appset': appset} ))
             f = open_and_create_dir(os.path.join(static_components, static_file.name+'.js'),"wb")
-            f.write(txt2.encode('utf-8'))
+            f.write(codejs.encode('utf-8'))
             f.close()        
         if static_file.type=='I':
             buf = sass.compile(string=txt, indented=True,)

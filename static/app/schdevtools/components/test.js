@@ -1,7 +1,13 @@
-Python to javascript compile error: h3... <SYNTAX FAULT] { opts.title }
-
-code:
-====>h3...{ opts.title }
-     
-     ul
-         li each={ item, i in items }...{ item }
+var TEMPLATE = '<div>\n' +
+    '        <div>\n' +
+    '                <table>\n' +
+    '                        <tr></tr>\n' +
+    '                        <td>Hello</td>\n' +
+    '                </table>\n' +
+    '        </div>\n' +
+    '</div>\n' +
+    '\n' +
+    '';
+__pragma__ ('<all>')
+	__all__.TEMPLATE = TEMPLATE;
+__pragma__ ('</all>')

@@ -138,13 +138,15 @@ class DataProxy:
                 c[key] = value
         self.http.post(self.parent, self.tabaddress, process_post_parm(c))
 
-        page = schjson.loads(self.http.str())
         try:
+            page = schjson.loads(self.http.str())
             retpage = page["page"]
         except:
             retpage = None
-            from schlib.schhttptools.httperror import http_error
-            http_error(wx.GetApp().GetTopWindow(), self.http.str())
+            #from schlib.schhttptools.httperror import http_error
+            #http_error(wx.GetApp().GetTopWindow(), self.http.str())
+            self.http.show(wx.GetApp().GetTopWindow())
+            retpage = []
         self.http.clear_ptr()
         return retpage
 
