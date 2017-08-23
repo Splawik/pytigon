@@ -24,11 +24,13 @@ os.chdir(script_path)
 with open("./static_src/sch/__javascript__/pytigon.js", "rt") as fin:
     with open("./static/sch/pytigon.js", "wt") as fout:
         prg = fin.read()
-        x = prg.split("__all__.__call__ = __call__;")
+        #x = prg.split("__all__.__call__ = __call__;")
+        x = prg.split("__all__.__setslice__ = __setslice__;")
         if len(x) == 2:
             x0 = x[0].replace("function pytigon () {", "")
             x1 = "\n\nfunction pytigon () {" + x[1]
-            xx = x0 + "__all__.__call__ = __call__;" + x1
+            #xx = x0 + "__all__.__call__ = __call__;" + x1
+            xx = x0 + "__all__.__setslice__ = __setslice__;" + x1
             fout.write(xx)
 
 def scss_compile(parent_path, name):

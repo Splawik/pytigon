@@ -466,6 +466,11 @@ def gen(request, pk):
             f = open_and_create_dir(os.path.join(static_style,static_file.name+".css"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
+        if static_file.type=='U':
+            f = open_and_create_dir(os.path.join(static_scripts,static_file.name),"wb")
+            f.write(txt.encode('utf-8'))
+            f.close()        
+    
     
     component_elements = []
     
@@ -477,7 +482,7 @@ def gen(request, pk):
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
     
     template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'component_elements': component_elements })
-    print(component_elements)
+    #print(component_elements)
     #template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
     
     template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })

@@ -256,6 +256,7 @@ Static_CHOICES = (
     ("P","python to javascript"),
     ("R","vue.js component"),
     ("I","sass to css"),
+    ("U","custom file"),
     
     )
 
