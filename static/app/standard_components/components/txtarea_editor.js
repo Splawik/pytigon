@@ -43,10 +43,3 @@ var process_mutations = function (mutations) {
 var observer = new MutationObserver (process_mutations);
 var config = dict ({'attributes': false, 'childList': true, 'characterData': true, 'subtree': true});
 observer.observe (target, config);
-__pragma__ ('<all>')
-	__all__.config = config;
-	__all__.mounted = mounted;
-	__all__.observer = observer;
-	__all__.process_mutations = process_mutations;
-	__all__.target = target;
-__pragma__ ('</all>')

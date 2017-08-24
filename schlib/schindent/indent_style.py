@@ -646,7 +646,7 @@ def py_to_js(script, module_path):
         for pos in x:
             if in_tabstring:
                 pos2 = ihtml_to_html_base(None, pos)
-                tab_string.append(pos2.replace('\r',''))
+                tab_string.append(pos2.replace('\r','').replace("'", "\\'").replace("\"","\\\""))
                 tab_script.append("'$$$compiled_str$$$'")
                 in_tabstring = False
             else:

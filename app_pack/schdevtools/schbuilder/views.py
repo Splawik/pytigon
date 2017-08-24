@@ -432,45 +432,63 @@ def gen(request, pk):
     
     for static_file in static_files:
         txt = static_file.code
-        if static_file.type=='C':
+        typ = static_file.type
+        dest_path = None
+        if static_file.type=='U':
+            dest_path = os.path.join(static_root,static_file.name)
+            if '.pyj' in static_file.name:
+                dest_path = os.path.join(static_root,static_file.name.replace('.pyj', '.js'))
+                typ = 'P'
+            elif '.sass' in static_file.name:
+                dest_path = os.path.join(static_root,static_file.name.replace('.sass', '.css'))
+                typ = 'I'
+            elif '.vue' in static_file.name:
+                dest_path = os.path.join(static_root,static_file.name.replace('.vue', '.js'))
+                typ = 'R'
+                        
+        if typ=='C':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
             f = open_and_create_dir(os.path.join(static_style, static_file.name+".css"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
-        if static_file.type=='J':
+        if typ=='J':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
             f = open_and_create_dir(os.path.join(static_scripts,static_file.name+".js"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
-        if static_file.type=='P':
+        if typ=='P':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))
-            codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
-            f = open_and_create_dir(os.path.join(static_scripts,static_file.name+".js"),"wb")
-            f.write(codejs.encode('utf-8'))
-            f.close()        
-        if static_file.type=='R':
             try:
-                codejs = schlib.schindent.indent_style.py_to_js(txt, None)
+                codejs = schlib.schindent.indent_style.py_to_js(txt2, None)
+                codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
-            f = open_and_create_dir(os.path.join(static_components, static_file.name+'.js'),"wb")
+            f = open_and_create_dir(dest_path if dest_path else os.path.join(static_scripts,static_file.name+".js"),"wb")
             f.write(codejs.encode('utf-8'))
             f.close()        
-        if static_file.type=='I':
+        if typ=='R':
+            try:
+                codejs = schlib.schindent.indent_style.py_to_js(txt, None)
+                codejs = codejs.split("__pragma__ ('<all>')",1)[0]
+            except:
+                codejs = ""
+            f = open_and_create_dir(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'),"wb")
+            f.write(codejs.encode('utf-8'))
+            f.close()        
+        if typ=='I':
             buf = sass.compile(string=txt, indented=True,)
             t = Template(buf)
             txt2 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(os.path.join(static_style,static_file.name+".css"),"wb")
+            f = open_and_create_dir(dest_path if dest_path else os.path.join(static_style,static_file.name+".css"),"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
-        if static_file.type=='U':
-            f = open_and_create_dir(os.path.join(static_scripts,static_file.name),"wb")
+        if typ=='U':
+            f = open_and_create_dir(dest_path,"wb")
             f.write(txt.encode('utf-8'))
             f.close()        
-    
     
     component_elements = []
     

@@ -15,6 +15,3 @@ var _pivot = function (resolve, reject) {
 	load_css (base_path + '/pivot.css');
 };
 Vue.component ('sch-pivottable', _pivot);
-__pragma__ ('<all>')
-	__all__._pivot = _pivot;
-__pragma__ ('</all>')

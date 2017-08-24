@@ -251,12 +251,12 @@ ContentType_CHOICES = (
     )
 
 Static_CHOICES = (
-    ("C","css"),
-    ("J","javascript"),
-    ("P","python to javascript"),
-    ("R","vue.js component"),
-    ("I","sass to css"),
-    ("U","custom file"),
+    ("C","css (included in desktop.html)"),
+    ("J","javascript (included in desktop.html)"),
+    ("P","python to javascript (included in desktop.html)"),
+    ("R","vue.js component (included in desktop.html)"),
+    ("I","sass to css (included in desktop.html)"),
+    ("U","custom file (embeded translation for .pyj, .vue, .sass)"),
     
     )
 

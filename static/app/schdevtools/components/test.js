@@ -8,6 +8,3 @@ var TEMPLATE = '<div>\n' +
     '</div>\n' +
     '\n' +
     '';
-__pragma__ ('<all>')
-	__all__.TEMPLATE = TEMPLATE;
-__pragma__ ('</all>')

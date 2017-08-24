@@ -18,6 +18,3 @@ var _d3 = function (resolve, reject) {
 	load_js (base_path + '/plotly-latest.min.js', _on_loadjs);
 };
 Vue.component ('sch-d3', _d3);
-__pragma__ ('<all>')
-	__all__._d3 = _d3;
-__pragma__ ('</all>')

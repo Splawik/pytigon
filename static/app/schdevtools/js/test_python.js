@@ -6,6 +6,3 @@ var Test = __class__ ('Test', [object], {
 		return self.value;
 	});}
 });
-__pragma__ ('<all>')
-	__all__.Test = Test;
-__pragma__ ('</all>')

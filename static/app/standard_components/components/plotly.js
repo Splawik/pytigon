@@ -14,6 +14,3 @@ var _plotly = function (resolve, reject) {
 	load_js (base_path + '/plotly-latest.min.js', _on_loadjs);
 };
 Vue.component ('sch-plotly', _plotly);
-__pragma__ ('<all>')
-	__all__._plotly = _plotly;
-__pragma__ ('</all>')

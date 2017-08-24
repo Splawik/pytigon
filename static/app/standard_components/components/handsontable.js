@@ -15,6 +15,3 @@ var _handsontable = function (resolve, reject) {
 	load_css (base_path + '/handsontable.full.css');
 };
 Vue.component ('sch-handsontable', _handsontable);
-__pragma__ ('<all>')
-	__all__._handsontable = _handsontable;
-__pragma__ ('</all>')

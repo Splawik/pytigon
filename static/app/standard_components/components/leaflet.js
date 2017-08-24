@@ -26,7 +26,3 @@ var _leaflet = function (resolve, reject) {
 	load_css (base_path + '/leaflet.css');
 };
 Vue.component ('sch-leaflet', _leaflet);
-__pragma__ ('<all>')
-	__all__._leaflet = _leaflet;
-	__all__._marker = _marker;
-__pragma__ ('</all>')

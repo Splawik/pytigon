@@ -3,7 +3,19 @@ var _vseditor = function (resolve, reject) {
 	var _on_loadjs0 = function () {
 		var _on_loadjs = function () {
 			var props = list (['width', 'height', 'value', 'title', 'href']);
-			var template = '\n            <div>\n                <div class="inline" v-bind:style="style_inline">\n                        <button v-bind:disabled="!changed" v-on:click="save" class="btn btn-sm btn-primary" v-bind:style="style_btn">\n                            <span class="fa fa-floppy-o" />\n                        </button>\n                </div>\n                <div class="inline inline_title" v-bind:style="style_title">\n                    <strong></strong>\n                </div>\n                <div class="vseditor" name="vseditor"></div>\n            </div>    \n            ';
+			var template = '                        <div>\n' +
+    '                                <div class=\"inline\" v-bind:style=\"style_inline\">\n' +
+    '                                                <button v-bind:disabled=\"!changed\" v-on:click=\"save\" class=\"btn btn-sm btn-primary\" v-bind:style=\"style_btn\">\n' +
+    '                                                        <span class=\"fa fa-floppy-o\" />\n' +
+    '                                                </button>\n' +
+    '                                </div>\n' +
+    '                                <div class=\"inline inline_title\" v-bind:style=\"style_title\">\n' +
+    '                                        <strong>{{ title }}</strong>\n' +
+    '                                </div>\n' +
+    '                                <div class=\"vseditor\" name=\"vseditor\"></div>\n' +
+    '                        </div>\n' +
+    '\n' +
+    '';
 			var data = function () {
 				return dict ({'style_inline': dict ({'display': 'inline-block'}), 'style_btn': dict ({'margin-left': '0px'}), 'style_title': dict ({'ma rgin-left': '10px'}), 'changed': false});
 			};
@@ -39,6 +51,3 @@ var _vseditor = function (resolve, reject) {
 	load_many_js ((((base_path + '/../../system/require.js') + ';') + base_path) + '/loader.js', _on_loadjs0);
 };
 Vue.component ('sch-vseditor', _vseditor);
-__pragma__ ('<all>')
-	__all__._vseditor = _vseditor;
-__pragma__ ('</all>')
