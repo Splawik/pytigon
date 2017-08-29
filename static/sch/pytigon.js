@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-08-23 20:32:03
+// Transcrypt'ed from Python, 2017-08-29 19:39:25
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3008,8 +3008,13 @@ function pytigon () {
 							}
 							datatable_onresize ();
 						});},
-						get new_page () {return __get__ (this, function (self, title, data, href, component_init, page_init) {
+						get new_page () {return __get__ (this, function (self, title_alternate, data, href, component_init, page_init) {
 							var _id = 'tab' + self.id;
+							var tmp = jQuery (data).find ('title').text ();
+							var title = jQuery.trim (tmp);
+							if (!(title)) {
+								var title = title_alternate;
+							}
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
 							self.titles [title2] = menu_item;

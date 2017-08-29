@@ -34,6 +34,7 @@ import signal
 import os
 import io
 import ctypes 
+import time
 
 from django.db import transaction
 from django.urls import reverse
@@ -309,6 +310,8 @@ def gen(request, pk):
     base_path = settings.ROOT_PATH+"/app_pack/"+appset.name
     src_path = settings.ROOT_PATH+"/app_pack/schdevtools/"
     object_list = []
+    gmt = time.gmtime()
+    gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
     
     if not os.path.exists(base_path):
         object_list.append((datetime.datetime.now().time().isoformat(), 'mkdir:', base_path))
@@ -334,7 +337,7 @@ def gen(request, pk):
             f.write(appset.install_file)
     
     
-    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset})
+    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str})
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
     template_to_file(base_path, "wsgi", "wsgi.py",  {'appset': appset, 'base_path': base_path.replace('\\','/')})

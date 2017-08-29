@@ -213,8 +213,8 @@ class GenericRows(object):
         self.table = table
         self.prefix = prefix
         self.field = None
-        self.title = title
-        self.title_plural = title_plural
+        self.title = _(title)
+        self.title_plural = _(title_plural)
         if parent_rows:
             self.base_path = parent_rows.base_path
             self.base_model = parent_rows.base_model

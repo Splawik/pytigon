@@ -68,37 +68,37 @@ formfield_default = {'required':True, }
 
 formfield_defaults = {
     'CharField': { 'param': "max_length=None, min_length=None", },
-    'ChoiceField': { 'param': "choices=models.<<choice_name>>", },
+    'ChoiceField': { 'param': "choices=models.[[choice_name]]", },
     'TypedChoiceField': { 'param': "coerce=,empty_value=''", },
     'DecimalField': { 'param': "max_value=None, min_value=None, max_digits=None, decimal_places=None", },
-    'FilePathField': { 'param': "path=<<path>>, match=None, recursive=False, allow_files=True, allow_folders=False", },
+    'FilePathField': { 'param': "path=[[path]], match=None, recursive=False, allow_files=True, allow_folders=False", },
     'FloatField': { 'param': "max_value=None, min_value=None", },
     'IntegerField': { 'param': "max_value=None, min_value=None", },
     'GenericIPAddressField': { 'param': "protocol='both', unpack_ipv4=False", },
-    'MultipleChoiceField': { 'param': "choices=models.<<choice_name>>", },
+    'MultipleChoiceField': { 'param': "choices=models.[[choice_name]]", },
     'TypedMultipleChoiceField': { 'param': "coerce=,empty_value=''", },
-    'RegexField': {'param': "regex='<<regex>>', max_length=None, min_length=None", },
+    'RegexField': {'param': "regex='[[regex]]', max_length=None, min_length=None", },
     'URLField': { 'param': "max_length=None, min_length=None", },
-    'ComboField': { 'param': "fields=<<fields>>", },    
+    'ComboField': { 'param': "fields=[[fields]]", },    
 }
 
 
 widgets = [
     "ok_cancel",
-    "button '<<url>>' '<<description>>' '[[name]]' '[[target]]'"
-    "action_table '<<action>>' '<<description>>' '[[name]]' '[[target]]'",
-    "print_table '<<description>>' '[[target]]'",
-    "new_row '<<description>>' '[[target]]'",
-    "edit_row '<<description>>' '[[target]]'",
-    "view_row '<<description>>' '<<dx>>' '<<dy>>' , '[[target]]'",
-    "print_row '<<description>>' '[[target]]'",
-    "action_row '<<action>>' '<<description>>' '[[name]]' '[[target]]'",
-    "delete_row '<<description>>' '[[target]]'",
-    "list_field '<<field>>' '<<name>>' '<<description>>' '[[target]]'"
-    "edit_field '<<field>>' '<<name>>' '<<description>>' '[[target]]'"
-    "action_field '<<field>>' '<<action>>' '<<description>>' '[[name]]' '[[target]]'",
-    "jscript_link '<<href>>'",
-    "css_link '<<href>>'",
+    "button '[[url]]' '[[description]]' '[[name]]' '[[target]]'"
+    "action_table '[[action]]' '[[description]]' '[[name]]' '[[target]]'",
+    "print_table '[[description]]' '[[target]]'",
+    "new_row '[[description]]' '[[target]]'",
+    "edit_row '[[description]]' '[[target]]'",
+    "view_row '[[description]]' '[[dx]]' '[[dy]]' , '[[target]]'",
+    "print_row '[[description]]' '[[target]]'",
+    "action_row '[[action]]' '[[description]]' '[[name]]' '[[target]]'",
+    "delete_row '[[description]]' '[[target]]'",
+    "list_field '[[field]]' '[[name]]' '[[description]]' '[[target]]'"
+    "edit_field '[[field]]' '[[name]]' '[[description]]' '[[target]]'"
+    "action_field '[[field]]' '[[action]]' '[[description]]' '[[name]]' '[[target]]'",
+    "jscript_link '[[href]]'",
+    "css_link '[[href]]'",
     ]
     
     
@@ -274,8 +274,8 @@ FileType_CHOICES = (
 class SChAppSet( models.Model):
     
     class Meta:
-        verbose_name = _("SChAppSet")
-        verbose_name_plural = _("SChAppSet")
+        verbose_name = _("Application package")
+        verbose_name_plural = _("Application packages")
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'schbuilder'
 

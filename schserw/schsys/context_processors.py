@@ -440,12 +440,13 @@ def sch_standard(request):
         url_base = ''
 
     url_app_base = url_base
-
+    app_pack = None
     if len(settings.APP_PACKS) > 0:
-        for app_pack in settings.APP_PACKS:
-            if not app_pack.startswith('_'):
-                if ('/'+app_pack+'/') in request.path:
-                    url_app_base =  url_base + "/" + app_pack
+        for _app_pack in settings.APP_PACKS:
+            if not _app_pack.startswith('_'):
+                if ('/'+_app_pack+'/') in request.path:
+                    url_app_base =  url_base + "/" + _app_pack
+                    app_pack = _app_pack
                     break
 
     lng = request.LANGUAGE_CODE[:2].lower()
@@ -505,6 +506,7 @@ def sch_standard(request):
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         'autologin': request.session.get('autologin', False),
+        'app_pack': app_pack
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

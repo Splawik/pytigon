@@ -25,8 +25,13 @@ class TabMenu:
             history_push_state(menu_item.title, menu_item.url)
         datatable_onresize()
 
-    def new_page(self, title, data, href, component_init, page_init):
+    def new_page(self, title_alternate, data, href, component_init, page_init):
         _id = "tab" + self.id
+
+        tmp = jQuery(data).find("title").text()
+        title =jQuery.trim(tmp)
+        if not title:
+            title = title_alternate
         title2 = jQuery.trim(title)
         menu_item = TabMenuItem(_id, title2, href, data)
         self.titles[title2] = menu_item

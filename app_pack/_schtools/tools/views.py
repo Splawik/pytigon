@@ -22,7 +22,7 @@ import os
 import sys
 import datetime
 
-
+import time 
 
 
 
@@ -100,3 +100,18 @@ def get_user_param(request, **argv):
 
 
 
+
+@dict_to_json
+
+def app_time_stamp(request, **argv):
+    
+    if settings.GEN_TIME:
+        return { 'TIME': settings.GEN_TIME }
+    else:
+        gmt = time.gmtime()
+        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])    
+        return { 'TIME': gmt_str }
+    
+
+
+ 

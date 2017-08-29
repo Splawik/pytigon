@@ -74,7 +74,7 @@ gen.for_field('SChAppSet', 'schapp_set', 'Applications', prefix="up", template_n
 gen.for_field('SChApp', 'schappmenu_set', 'Menu', prefix="wiki", template_name="schbuilder/schappmenu2.html")
 #gen.standard('SChAppMenu', u'SChAppMenu', prefix="wiki")
 
-gen.standard('SChAppSet', _('SChAppSet'), _('SChAppSet'))
+gen.standard('SChAppSet', _('Application package'), _('Application packages'))
 gen.standard('SChApp', _('SChApp'), _('SChApp'))
 gen.standard('SChChoice', _('SChChoice'), _('SChChoice'))
 gen.standard('SChChoiceItem', _('SChChoiceItem'), _('SChChoiceItem'))
