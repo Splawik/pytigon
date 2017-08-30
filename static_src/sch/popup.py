@@ -331,12 +331,14 @@ def fragment_init(elem=None):
         'format' : 'YYYY.MM.DD',
         'lang': 'pl',
         'switchOnClick': True,
+        'time': False,
     }
 
     d = elem2.find('.dateinput')
     d.bootstrapMaterialDatePicker(format)
 
     format['format'] = 'YYYY.MM.DD HH:mm'
+    format['time'] = True
 
     d = elem2.find('.datetimeinput')
     d.bootstrapMaterialDatePicker(format)

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-08-29 19:39:25
+// Transcrypt'ed from Python, 2017-08-30 22:46:54
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2803,10 +2803,11 @@ function pytigon () {
 						handle_class_click (elem, 'get_tbl_value', on_get_tbl_value);
 						handle_class_click (elem, 'new_tbl_value', on_new_tbl_value);
 						handle_class_click (elem, 'get_row', on_get_row);
-						var format = dict ({'weekStart': 1, 'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true});
+						var format = dict ({'weekStart': 1, 'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true, 'time': false});
 						var d = elem2.find ('.dateinput');
 						d.bootstrapMaterialDatePicker (format);
 						format ['format'] = 'YYYY.MM.DD HH:mm';
+						format ['time'] = true;
 						var d = elem2.find ('.datetimeinput');
 						d.bootstrapMaterialDatePicker (format);
 						var iterate_material_icons = function () {

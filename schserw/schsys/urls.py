@@ -62,8 +62,8 @@ def sch_login(request, *argi, **argv):
     if path == "":
         path = request.POST.get("next", "")
         if path == "":
-            path = "/"
-    return HttpResponseRedirect(make_href(path))
+            path = make_href("/")
+    return HttpResponseRedirect(path)
 
 
 urlpatterns = [
