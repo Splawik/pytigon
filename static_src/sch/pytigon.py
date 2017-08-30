@@ -191,7 +191,7 @@ def page_init(id, first_time = True):
     fragment_init(window.ACTIVE_PAGE.page)
 
 
-def app_init(application_template, menu_id, lang, base_path, base_fragment_init, component_init):
+def app_init(application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time):
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
     window.PUSH_STATE = True
@@ -206,6 +206,7 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
     window.RET_CONTROL = None
     window.COMPONENT_INIT = component_init
     window.LANG = lang
+    window.GEN_TIME = gen_time
 
     if can_popup():
         def _local_fun():

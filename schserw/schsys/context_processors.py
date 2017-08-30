@@ -24,6 +24,7 @@
 
 
 import uuid
+import time
 from urllib.parse import urlparse
 
 from django.conf import settings 
@@ -475,6 +476,13 @@ def sch_standard(request):
         d_template = d_template.replace('.html', '_'+lng+'.html')
         d_template2 = d_template2.replace('.html', '_'+lng+'.html')
 
+    if settings.GEN_TIME:
+        gmt_str = settings.GEN_TIME
+    else:
+        gmt = time.gmtime()
+        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
+
+
     ret = {
         'standard_web_browser': standard,
         'app_manager': AppManager(request),
@@ -506,7 +514,8 @@ def sch_standard(request):
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         'autologin': request.session.get('autologin', False),
-        'app_pack': app_pack
+        'app_pack': app_pack,
+        'gen_time': gmt_str,
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

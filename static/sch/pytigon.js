@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-08-30 22:46:54
+// Transcrypt'ed from Python, 2017-08-30 23:16:06
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3842,7 +3842,7 @@ function pytigon () {
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 			fragment_init (window.ACTIVE_PAGE.page);
 		};
-		var app_init = function (application_template, menu_id, lang, base_path, base_fragment_init, component_init) {
+		var app_init = function (application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time) {
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
 			window.PUSH_STATE = true;
@@ -3857,6 +3857,7 @@ function pytigon () {
 			window.RET_CONTROL = null;
 			window.COMPONENT_INIT = component_init;
 			window.LANG = lang;
+			window.GEN_TIME = gen_time;
 			if (can_popup ()) {
 				var _local_fun = function () {
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
