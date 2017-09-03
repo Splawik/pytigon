@@ -22,6 +22,7 @@ import sys
 from fs.mountfs import MountFS
 
 APPSET_NAME = "Pytigon"
+GEN_TIME = '0000.00.00 00:00:00'
 
 if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv):
     DEBUG = True
