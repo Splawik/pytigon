@@ -71,8 +71,12 @@ def download_binary_file(buf, content_disposition):
     save_as(buf, file_name)
 
 
-def ajax_get(url, complete):
+def ajax_get(url, complete, process_req=None):
     req = __new__(XMLHttpRequest())
+
+    if process_req:
+        process_req(req)
+
     process_blob = False
     try:
         req.responseType = "blob"
@@ -153,14 +157,19 @@ def _req_post(req, url, data, complete):
     req.send(data)
 
 
-def ajax_post(url, data, complete):
+def ajax_post(url, data, complete, process_req=None):
     req = __new__(XMLHttpRequest())
+    if process_req:
+        process_req(req)
     _req_post(req, url, data, complete)
 
 window.ajax_post = ajax_post
 
-def ajax_submit(form, complete, data_filter=None):
+def ajax_submit(form, complete, data_filter=None, process_req=None):
     req = __new__(XMLHttpRequest())
+
+    if process_req:
+        process_req(req)
 
     if form.find("[type='file']").length > 0:
         form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )

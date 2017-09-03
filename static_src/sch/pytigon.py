@@ -17,7 +17,8 @@ from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok, fragment_init
 from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html
-
+from offline import service_worker_and_indexedDB_test, install_service_worker
+from db import sync_and_run
 
 def init_pagintor(pg):
     x=load_js
@@ -191,7 +192,8 @@ def page_init(id, first_time = True):
     fragment_init(window.ACTIVE_PAGE.page)
 
 
-def app_init(application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time):
+def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time):
+    window.APPSET_NAME = appset_name
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
     window.PUSH_STATE = True
@@ -207,6 +209,15 @@ def app_init(application_template, menu_id, lang, base_path, base_fragment_init,
     window.COMPONENT_INIT = component_init
     window.LANG = lang
     window.GEN_TIME = gen_time
+
+    if navigator.onLine and service_worker_and_indexedDB_test():
+        install_service_worker()
+
+    def _on_sync(status):
+        if status == "OK-refresh":
+            location.reload()
+
+    sync_and_run('sys', _on_sync)
 
     if can_popup():
         def _local_fun():

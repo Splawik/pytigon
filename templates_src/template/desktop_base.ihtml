@@ -64,14 +64,10 @@
     %% theme_js_scripts
 
 %% jquery_init
-    %% fragment_init
-        .function base_fragment_init() {
-        .    //jQuery('input[type=file]').fileinput({'showUpload':false, 'previewFileType':'any', browseLabel: '', language: 'pl' });
-        .    //jQuery('div.file-input-new').closest('div').find('a').attr('target','_blank')
-        .}
-    %% component_init
+    %% js_app_init
+        .function base_fragment_init() {}
         .component_init = null
-    .pytigon.app_init('{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, '{{ gen_time }}' )
+    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, '{{ gen_time }}' )
 
 
 %% jquery_ready_start
@@ -133,8 +129,12 @@
     %% theme_css_links
 
     %% theme_css_links_spec
-        {% css_link 'themes/default.css'|css_hack %}
-        {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
+        % comment:
+            {% css_link 'themes/default.css'|css_hack %}
+            {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
+
+        {% css_link 'themes/default.css' %}
+        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
 
 
 

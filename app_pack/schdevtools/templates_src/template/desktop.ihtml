@@ -44,3 +44,14 @@
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+
+%% js_app_init
+    .db_struct = [ ["devparam", {"keyPath": "key"}] ];
+    .init_db(db_struct);
+    .devtools_sync = function(run_after) {
+    .    console.log("SYNC!");
+    .    run_after("OK");
+    .}
+    .sync_struct = [ ['devparam', window.BASE_PATH + "/schdevtools/devparam/", devtools_sync], ];
+    .init_sync(sync_struct);
+    {{ block.super }}

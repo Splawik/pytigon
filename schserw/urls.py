@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'select2/', include(django_select2.urls)),
     url(r'^favicon.ico', schserw.schsys.views.favicon),
+    url(r'^sw.js', schserw.schsys.views.sw),
 ]
 
 def app_description(app_pack):

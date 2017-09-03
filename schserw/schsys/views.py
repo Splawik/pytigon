@@ -20,6 +20,7 @@
 """Module contains base views for pytigon applications"""
 
 from base64 import b32decode
+import os
 
 from django.conf import settings
 from django.contrib import messages
@@ -332,3 +333,26 @@ def plugins(request, app, plugin_name):
 
 def favicon(request):
     return HttpResponseRedirect(make_href("/static/favicon.ico"))
+
+
+def sw(request):
+    if settings.STATIC_ROOT:
+        _static_root = settings.STATIC_ROOT
+    else:
+        _static_root = settings.STATICFILES_DIRS[0]
+    static_root = os.path.join(os.path.join(_static_root, 'app'),settings.APPSET_NAME)
+
+    sw_path = os.path.join(static_root, "sw.js")
+    buf = ""
+
+    if os.path.exists(sw_path):
+        with open(sw_path, "rt") as sw:
+            buf = sw.read()
+    standard_sw_path = os.path.join(_static_root, "sch/sw.js")
+
+    buf2 = ""
+    if os.path.exists(standard_sw_path):
+        with open(standard_sw_path, "rt") as sw:
+            buf2 = sw.read()
+            buf2 = buf2.replace('//++//', buf)
+    return HttpResponse(buf2.encode('utf-8'), content_type="application/javascript; charset=utf-8")

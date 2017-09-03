@@ -489,8 +489,10 @@ def gen(request, pk):
             f.write(txt2.encode('utf-8'))
             f.close()        
         if typ=='U':
+            t = Template(txt)
+            txt2 = t.render(Context({'appset': appset} ))
             f = open_and_create_dir(dest_path,"wb")
-            f.write(txt.encode('utf-8'))
+            f.write(txt2.encode('utf-8'))
             f.close()        
     
     component_elements = []

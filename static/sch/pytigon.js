@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-08-30 23:16:06
+// Transcrypt'ed from Python, 2017-09-03 20:25:27
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2416,6 +2416,243 @@
 function pytigon () {
 	__nest__ (
 		__all__,
+		'db', {
+			__all__: {
+				__inited__: false,
+				__init__: function (__all__) {
+					var INIT_DB_STRUCT = null;
+					var init_db = function (struct) {
+						INIT_DB_STRUCT = struct;
+					};
+					window.init_db = init_db;
+					var open_database = function (on_open) {
+						if (!(window.indexedDB)) {
+							console.log ('Your Browser does not support IndexedDB');
+						}
+						else {
+							var request = window.indexedDB.open (window.APPSET_NAME, 1);
+							var _onerror = function (event) {
+								console.log ('Error opening DB', event);
+							};
+							request.onerror = _onerror;
+							var _onupgradeneeded = function (event) {
+								console.log ('Upgrading');
+								var db = event.target.result;
+								var objectStore = db.createObjectStore ('param', dict ({'keyPath': 'key'}));
+								if (INIT_DB_STRUCT) {
+									var __iterable0__ = INIT_DB_STRUCT;
+									for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+										var pos = __iterable0__ [__index0__];
+										var objectStore = db.createObjectStore (pos [0], pos [1]);
+									}
+								}
+							};
+							request.onupgradeneeded = _onupgradeneeded;
+							var _onsuccess = function (event) {
+								var db = event.target.result;
+								on_open (db);
+							};
+							request.onsuccess = _onsuccess;
+						}
+					};
+					window.open_database = open_database;
+					var get_table = function (table_name, on_open, read_only) {
+						if (typeof read_only == 'undefined' || (read_only != null && read_only .hasOwnProperty ("__kwargtrans__"))) {;
+							var read_only = true;
+						};
+						var _on_open = function (db) {
+							if (read_only == true) {
+								var mode = 'readonly';
+							}
+							else {
+								var mode = 'readwrite';
+							}
+							var tabTrans = db.transaction (table_name, mode);
+							var tabObjectStore = tabTrans.objectStore (table_name);
+							on_open (tabTrans, tabObjectStore);
+						};
+						open_database (_on_open);
+					};
+					window.get_table = get_table;
+					var get_list_from_table = function (table, on_open_list) {
+						var on_open = function (trans, table) {
+							var py_items = list ([]);
+							var oncomplete = function (evt) {
+								on_open_list (py_items);
+							};
+							trans.oncomplete = oncomplete;
+							var cursor_request = table.openCursor ();
+							var onerror = function (error) {
+								console.log (error);
+							};
+							cursor_request.onerror = onerror;
+							var onsuccess = function (evt) {
+								var cursor = evt.target.result;
+								if (cursor) {
+									py_items.push (cursor.value);
+									cursor.continue ();
+								}
+							};
+							cursor_request.onsuccess = onsuccess;
+						};
+						get_table (table, on_open);
+					};
+					window.get_list_from_table = get_list_from_table;
+					var on_sys_sync = function (fun) {
+						var _fun = function (cache_deleted) {
+							if (cache_deleted) {
+								fun ('OK-refresh');
+							}
+							else {
+								fun ('OK-no cache');
+							}
+						};
+						caches.delete ('PYTIGON_' + window.APPSET_NAME).then (_fun);
+					};
+					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + '/tools/app_time_stamp/', on_sys_sync])]);
+					var init_sync = function (sync_struct) {
+						var __iterable0__ = sync_struct;
+						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							var pos = __iterable0__ [__index0__];
+							SYNC_STRUCT.append (pos);
+						}
+					};
+					window.init_sync = init_sync;
+					var sync_and_run = function (tbl, fun) {
+						var rec = null;
+						var __iterable0__ = SYNC_STRUCT;
+						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							var pos = __iterable0__ [__index0__];
+							if (pos [0] == tbl) {
+								var rec = pos;
+								break;
+							}
+						}
+						if (!(rec)) {
+							fun ('error - no reg function');
+						}
+						if (navigator.onLine) {
+							var complete = function (responseText) {
+								var x = JSON.parse (responseText);
+								var time = x ['TIME'];
+								var _on_open_param = function (trans, db) {
+									var param_get_request = db.get ('time_sync_' + tbl);
+									var _on_param_error = function (event) {
+										rec [2] (fun);
+										db.add (dict ({'key': 'time_sync_' + tbl, 'value': time}));
+									};
+									var _on_param_success = function (event) {
+										var param = param_get_request.result;
+										if (param) {
+											var time2 = param.value;
+											if (time2 < time) {
+												rec [2] (fun);
+												param.value = time;
+												var param_update_request = db.put (param);
+											}
+											else {
+												fun ('OK');
+											}
+										}
+										else {
+											var param_add_request = db.add (dict ({'key': 'time_sync_' + tbl, 'value': time}));
+											var _on_add_success = function (event) {
+												rec [2] (fun);
+											};
+											var _on_add_error = function (event) {
+												rec [2] (fun);
+											};
+											param_add_request.onerror = _on_add_error;
+											param_add_request.onsuccess = _on_add_success;
+										}
+									};
+									param_get_request.onerror = _on_param_error;
+									param_get_request.onsuccess = _on_param_success;
+								};
+								get_table ('param', _on_open_param, false);
+							};
+							var _on_request_init = function (request) {
+								var _on_timeout = function (event) {
+									fun ('timeout');
+								};
+								request.timeout = 2000;
+								request.ontimeout = _on_timeout;
+							};
+							ajax_get (rec [1], complete, _on_request_init);
+						}
+						else {
+							fun ('offline');
+						}
+					};
+					window.sync_and_run = sync_and_run;
+					__pragma__ ('<all>')
+						__all__.INIT_DB_STRUCT = INIT_DB_STRUCT;
+						__all__.SYNC_STRUCT = SYNC_STRUCT;
+						__all__.get_list_from_table = get_list_from_table;
+						__all__.get_table = get_table;
+						__all__.init_db = init_db;
+						__all__.init_sync = init_sync;
+						__all__.on_sys_sync = on_sys_sync;
+						__all__.open_database = open_database;
+						__all__.sync_and_run = sync_and_run;
+					__pragma__ ('</all>')
+				}
+			}
+		}
+	);
+	__nest__ (
+		__all__,
+		'offline', {
+			__all__: {
+				__inited__: false,
+				__init__: function (__all__) {
+					var install_service_worker = function () {
+						if (hasattr (navigator, 'serviceWorker')) {
+							var reg = function (registration) {
+								if (registration.installing) {
+									var serviceWorker = registration.installing;
+								}
+								else if (registration.waiting) {
+									var serviceWorker = registration.waiting;
+								}
+								else if (registration.active) {
+									var serviceWorker = registration.active;
+								}
+								if (serviceWorker) {
+									console.log (serviceWorker.state);
+									var onstatechange = function (e) {
+										console.log (e.target.state);
+									};
+									serviceWorker.addEventListener ('statechange', onstatechange);
+								}
+							};
+							var err = function (error) {
+								console.log (error);
+							};
+							navigator.serviceWorker.register (BASE_PATH + 'sw.js').then (reg).catch (err);
+						}
+						else {
+							console.log ("The current browser doesn't support service workers");
+						}
+					};
+					var service_worker_and_indexedDB_test = function () {
+						if (hasattr (navigator, 'serviceWorker') && hasattr (window, 'indexedDB')) {
+							return true;
+						}
+						else {
+							return false;
+						}
+					};
+					__pragma__ ('<all>')
+						__all__.install_service_worker = install_service_worker;
+						__all__.service_worker_and_indexedDB_test = service_worker_and_indexedDB_test;
+					__pragma__ ('</all>')
+				}
+			}
+		}
+	);
+	__nest__ (
+		__all__,
 		'page', {
 			__all__: {
 				__inited__: false,
@@ -3321,8 +3558,14 @@ function pytigon () {
 						}
 						save_as (buf, file_name);
 					};
-					var ajax_get = function (url, complete) {
+					var ajax_get = function (url, complete, process_req) {
+						if (typeof process_req == 'undefined' || (process_req != null && process_req .hasOwnProperty ("__kwargtrans__"))) {;
+							var process_req = null;
+						};
 						var req = new XMLHttpRequest ();
+						if (process_req) {
+							process_req (req);
+						}
 						var process_blob = false;
 						try {
 							req.responseType = 'blob';
@@ -3403,16 +3646,28 @@ function pytigon () {
 						}
 						req.send (data);
 					};
-					var ajax_post = function (url, data, complete) {
+					var ajax_post = function (url, data, complete, process_req) {
+						if (typeof process_req == 'undefined' || (process_req != null && process_req .hasOwnProperty ("__kwargtrans__"))) {;
+							var process_req = null;
+						};
 						var req = new XMLHttpRequest ();
+						if (process_req) {
+							process_req (req);
+						}
 						_req_post (req, url, data, complete);
 					};
 					window.ajax_post = ajax_post;
-					var ajax_submit = function (form, complete, data_filter) {
+					var ajax_submit = function (form, complete, data_filter, process_req) {
 						if (typeof data_filter == 'undefined' || (data_filter != null && data_filter .hasOwnProperty ("__kwargtrans__"))) {;
 							var data_filter = null;
 						};
+						if (typeof process_req == 'undefined' || (process_req != null && process_req .hasOwnProperty ("__kwargtrans__"))) {;
+							var process_req = null;
+						};
 						var req = new XMLHttpRequest ();
+						if (process_req) {
+							process_req (req);
+						}
 						if (form.find ("[type='file']").length > 0) {
 							form.attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
 							var data = new FormData (form [0]);
@@ -3663,6 +3918,9 @@ function pytigon () {
 		var load_many_js = __init__ (__world__.tools).load_many_js;
 		var history_push_state = __init__ (__world__.tools).history_push_state;
 		var mount_html = __init__ (__world__.tools).mount_html;
+		var service_worker_and_indexedDB_test = __init__ (__world__.offline).service_worker_and_indexedDB_test;
+		var install_service_worker = __init__ (__world__.offline).install_service_worker;
+		var sync_and_run = __init__ (__world__.db).sync_and_run;
 		var init_pagintor = function (pg) {
 			var x = load_js;
 			if (pg.length > 0) {
@@ -3842,7 +4100,8 @@ function pytigon () {
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 			fragment_init (window.ACTIVE_PAGE.page);
 		};
-		var app_init = function (application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time) {
+		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time) {
+			window.APPSET_NAME = appset_name;
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
 			window.PUSH_STATE = true;
@@ -3858,6 +4117,15 @@ function pytigon () {
 			window.COMPONENT_INIT = component_init;
 			window.LANG = lang;
 			window.GEN_TIME = gen_time;
+			if (navigator.onLine && service_worker_and_indexedDB_test ()) {
+				install_service_worker ();
+			}
+			var _on_sync = function (status) {
+				if (status == 'OK-refresh') {
+					location.reload ();
+				}
+			};
+			sync_and_run ('sys', _on_sync);
 			if (can_popup ()) {
 				var _local_fun = function () {
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
@@ -4086,6 +4354,8 @@ function pytigon () {
 		};
 		window.addEventListener ('popstate', _on_popstate, false);
 		__pragma__ ('<use>' +
+			'db' +
+			'offline' +
 			'page' +
 			'popup' +
 			'tabmenu' +
@@ -4114,6 +4384,7 @@ function pytigon () {
 			__all__.history_push_state = history_push_state;
 			__all__.init_pagintor = init_pagintor;
 			__all__.init_table = init_table;
+			__all__.install_service_worker = install_service_worker;
 			__all__.jquery_ready = jquery_ready;
 			__all__.load_css = load_css;
 			__all__.load_js = load_js;
@@ -4132,6 +4403,8 @@ function pytigon () {
 			__all__.page_init = page_init;
 			__all__.refresh_fragment = refresh_fragment;
 			__all__.ret_ok = ret_ok;
+			__all__.service_worker_and_indexedDB_test = service_worker_and_indexedDB_test;
+			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
    return __all__;
