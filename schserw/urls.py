@@ -32,20 +32,21 @@ import django.views.i18n
 import django.conf.urls.i18n
 import django_select2.urls
 
+
 from schlib.schdjangoext.django_init import AppConfigMod
 
 import schserw.schsys.views
-
+from schlib.schdjangoext.tools import make_href
 
 urlpatterns = [
-    url(r'schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
-    url(r'schsys/i18n/', include(django.conf.urls.i18n)),
-    url(r'admin/', admin.site.urls),
-    url(r'schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
-    url(r'site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'select2/', include(django_select2.urls)),
-    url(r'^favicon.ico', schserw.schsys.views.favicon),
-    url(r'^sw.js', schserw.schsys.views.sw),
+    url('schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
+    url('schsys/i18n/', include(django.conf.urls.i18n)),
+    url('admin/', admin.site.urls),
+    url('schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
+    url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+    url('select2/', include(django_select2.urls)),
+    url('^favicon.ico', schserw.schsys.views.favicon),
+    url('^'+make_href('sw.js'), schserw.schsys.views.sw),
 ]
 
 def app_description(app_pack):
