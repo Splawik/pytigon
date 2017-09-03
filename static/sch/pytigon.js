@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-03 20:25:27
+// Transcrypt'ed from Python, 2017-09-03 21:47:04
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2636,7 +2636,7 @@ function pytigon () {
 						}
 					};
 					var service_worker_and_indexedDB_test = function () {
-						if (hasattr (navigator, 'serviceWorker') && hasattr (window, 'indexedDB')) {
+						if (hasattr (navigator, 'serviceWorker') && hasattr (window, 'indexedDB') && (location.hostname == 'localhost' || location.hostname == '127.0.0.1' || location.protocol == 'https:')) {
 							return true;
 						}
 						else {
