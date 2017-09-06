@@ -35,12 +35,13 @@
     {% component 'app/standard_components/components/summernote.js' %}
     {% component 'app/standard_components/components/txtarea_editor.js' %}
     {% component 'app/standard_components/components/plotly.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
     {% component 'app/schdevtools/components/test.js' %}
     
     
 
 %% component_init
-    .component_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "test",  ] 
+    .component_init = [ "code_editor", "d3", "leaflet", "video-js", "code_editor", "handsontable", "pivottable", "summernote", "txtarea_editor", "plotly", "vs_editor", "test",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

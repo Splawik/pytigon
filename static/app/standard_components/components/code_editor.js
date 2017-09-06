@@ -34,7 +34,7 @@ var _codeeditor = function (resolve, reject) {
 			var _on_input = function (e) {
 				var f = jQuery (':focus');
 				if (f.length > 0) {
-					var tag = f.py_get (0).nodeName.toLowerCase ();
+					var tag = f.get (0).nodeName.toLowerCase ();
 				}
 				else {
 					tag == '';

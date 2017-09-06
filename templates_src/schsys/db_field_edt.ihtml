@@ -163,7 +163,7 @@
 %% content
     % if standard_web_browser
         %% edit_area
-            summernote value={{txt|bencode}},,,href={{URL_BASE}}{{save_path}},,,title={{title}}
+            sch-vseditor value={{txt|bencode}},,,href={{URL_BASE}}{{save_path}},,,title={{title}}
     % else:
         {{ block.super }}
 

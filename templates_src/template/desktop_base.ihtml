@@ -66,6 +66,7 @@
 %% jquery_init
     %% js_app_init
         .function base_fragment_init() {}
+    %% component_init
         .component_init = null
     .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, '{{ gen_time }}' )
 
