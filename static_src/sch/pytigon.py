@@ -399,7 +399,7 @@ def jquery_ready():
         page_init('body_body')
     else:
         if window.APPLICATION_TEMPLATE == 'modern':
-            txt  = jQuery('.page').text()
+            txt  = jQuery('.page').html()
             txt2 = jQuery.trim(txt)
             if txt2:
                 txt = jQuery.trim(jQuery('.page')[0].outerHTML)

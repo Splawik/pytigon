@@ -139,9 +139,16 @@ def sync_and_run(tbl, fun):
                     if param:
                         time2 = param.value
                         if time2 < time:
-                            rec[2](fun)
+                            #rec[2](fun)
                             param.value = time
                             param_update_request = db.put(param)
+
+                            def _on_update(event):
+                                nonlocal rec, fun
+                                rec[2](fun)
+
+                            param_update_request.onerror = _on_update
+                            param_update_request.onsuccess = _on_update
                         else:
                             fun("OK")
                     else:

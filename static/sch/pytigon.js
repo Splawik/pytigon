@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-03 21:47:04
+// Transcrypt'ed from Python, 2017-09-07 20:06:32
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2546,9 +2546,13 @@ function pytigon () {
 										if (param) {
 											var time2 = param.value;
 											if (time2 < time) {
-												rec [2] (fun);
 												param.value = time;
 												var param_update_request = db.put (param);
+												var _on_update = function (event) {
+													rec [2] (fun);
+												};
+												param_update_request.onerror = _on_update;
+												param_update_request.onsuccess = _on_update;
 											}
 											else {
 												fun ('OK');
@@ -4309,7 +4313,7 @@ function pytigon () {
 				page_init ('body_body');
 			}
 			else if (window.APPLICATION_TEMPLATE == 'modern') {
-				var txt = jQuery ('.page').text ();
+				var txt = jQuery ('.page').html ();
 				var txt2 = jQuery.trim (txt);
 				if (txt2) {
 					var txt = jQuery.trim (jQuery ('.page') [0].outerHTML);
