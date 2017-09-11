@@ -101,7 +101,7 @@ def on_sys_sync(fun):
             fun("OK-no cache")
     caches.delete("PYTIGON_"+window.APPSET_NAME).then(_fun)
 
-SYNC_STRUCT = [ ['sys', window.BASE_PATH + "/tools/app_time_stamp/", on_sys_sync], ]
+SYNC_STRUCT = [ ['sys', window.BASE_PATH + "tools/app_time_stamp/", on_sys_sync], ]
 
 def init_sync(sync_struct):
     nonlocal SYNC_STRUCT

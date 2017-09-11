@@ -318,24 +318,26 @@ class SChAppSet( models.Model):
         return ret
     
     def get_ext_apps_without_pack(self):
-        l=self.ext_apps.split(',')
         ret = []
-        for a in l:
-            if a !='':
-                if '.' in a:
-                    ret.append(a.split('.')[1])
-                else:
-                    ret.append(a)
+        if self.ext_apps:
+            l=self.ext_apps.split(',')
+            for a in l:
+                if a !='':
+                    if '.' in a:
+                        ret.append(a.split('.')[1])
+                    else:
+                        ret.append(a)
         return ret
     
     def get_ext_modules(self):
-        l=self.ext_apps.split(',')
         ret = []
-        for a in l:
-            elms=a.split('.')
-            if len(elms)>1:
-                module=elms[-2]
-                ret.append(module)
+        if self.ext_apps:
+            l=self.ext_apps.split(',')
+            for a in l:
+                elms=a.split('.')
+                if len(elms)>1:
+                    module=elms[-2]
+                    ret.append(module)
         return ret
     
     

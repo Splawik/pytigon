@@ -120,7 +120,8 @@ body {
   overflow-y: auto; }
 
 .desktop_content {
-  padding: 0px; }
+  padding: 0px;
+  min-height: 100vh; }
 
 .content {
   padding-top: 10px; }
@@ -137,3 +138,9 @@ body {
     .drop_down_blocks > li > a {
       color: white;
       text-decoration: none !important; }
+
+#loading-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 130px;
+  width: 48px; }

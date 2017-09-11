@@ -108,3 +108,5 @@ except:
     pass
 
 GEN_TIME = '{{gmtime}}'
+{% if offline_support %}OFFLINE_SUPPORT = True
+{% endif %}

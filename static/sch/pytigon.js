@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-07 20:06:32
+// Transcrypt'ed from Python, 2017-09-11 15:51:49
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2509,7 +2509,7 @@ function pytigon () {
 						};
 						caches.delete ('PYTIGON_' + window.APPSET_NAME).then (_fun);
 					};
-					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + '/tools/app_time_stamp/', on_sys_sync])]);
+					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + 'tools/app_time_stamp/', on_sys_sync])]);
 					var init_sync = function (sync_struct) {
 						var __iterable0__ = sync_struct;
 						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
@@ -2923,10 +2923,10 @@ function pytigon () {
 						var popup_activator = jQuery ('#' + jQuery (ok_button).closest ('.refr_object').attr ('related-object'));
 						if (responseText && __in__ ('RETURN_OK', responseText)) {
 							if (!(can_popup ())) {
-								if (jQuery ('div.dialog-form').hasClass ('in')) {
+								if (jQuery ('div.dialog-form').hasClass ('show')) {
 									var dialog = 'div.dialog-form';
 								}
-								else if (jQuery ('div.dialog-form-delete').hasClass ('in')) {
+								else if (jQuery ('div.dialog-form-delete').hasClass ('show')) {
 									var dialog = 'div.dialog-form-delete';
 								}
 								else {
@@ -2955,7 +2955,7 @@ function pytigon () {
 						if (responseText && __in__ ('RETURN_OK', responseText)) {
 							var related_object = jQuery (ok_button).closest ('.refr_object').attr ('related-object');
 							var popup_activator = jQuery ('#' + related_object);
-							if (jQuery (ok_button).closest ('.refr_object').hasClass ('in')) {
+							if (jQuery (ok_button).closest ('.refr_object').hasClass ('show')) {
 								jQuery ('div.dialog-form').modal ('hide');
 							}
 							else {
@@ -3268,16 +3268,6 @@ function pytigon () {
 							if (window.PUSH_STATE) {
 								history_push_state (title2, href);
 							}
-							var _on_show_tab = function (e) {
-								window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id), menu_item);
-								var menu = get_menu ();
-								menu_item = menu.titles [jQuery.trim (e.target.text)];
-								self.active_item = menu_item;
-								if (window.PUSH_STATE) {
-									history_push_state (menu_item.title, menu_item.url);
-								}
-							};
-							jQuery ('#tabs2 a:last').on ('shown.bs.tab', _on_show_tab);
 							jQuery ('#tabs2 a:last').tab ('show');
 							page_init (_id, false);
 							var _on_button_click = function (event) {
@@ -3476,8 +3466,21 @@ function pytigon () {
 							}
 						}
 					};
+					var content_set_height = function () {
+						if (!(jQuery (this).is (':visible'))) {
+							return ;
+						}
+						var content_offset = jQuery (this).offset ().top;
+						var dy_win = jQuery (window).height ();
+						var dy = (dy_win - content_offset) - 30;
+						if (dy < 200) {
+							var dy = 200;
+						}
+						jQuery (this).height (dy);
+					};
 					var datatable_onresize = function () {
 						jQuery ('.datatable:not(.table_get)').each (datetable_set_height);
+						jQuery ('.content').each (content_set_height);
 					};
 					window.datatable_onresize = datatable_onresize;
 					__pragma__ ('<use>' +
@@ -3487,6 +3490,7 @@ function pytigon () {
 					__pragma__ ('<all>')
 						__all__._rowStyle = _rowStyle;
 						__all__.ajax_post = ajax_post;
+						__all__.content_set_height = content_set_height;
 						__all__.datatable_ajax = datatable_ajax;
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.datatable_refresh = datatable_refresh;
@@ -3645,8 +3649,6 @@ function pytigon () {
 						req.setRequestHeader ('X-CSRFToken', Cookies.get ('csrftoken'));
 						if (data.length) {
 							req.setRequestHeader ('Content-type', 'application/x-www-form-urlencoded');
-							req.setRequestHeader ('Content-length', data.length);
-							req.setRequestHeader ('Connection', 'close');
 						}
 						req.send (data);
 					};
@@ -3727,7 +3729,7 @@ function pytigon () {
 						}
 					};
 					var can_popup = function () {
-						if (jQuery ('div.dialog-form').hasClass ('in') || jQuery ('div.dialog-form-delete').hasClass ('in') || jQuery ('div.dialog-form-info').hasClass ('in')) {
+						if (jQuery ('.modal-open').length > 0) {
 							return false;
 						}
 						else {
@@ -4104,13 +4106,14 @@ function pytigon () {
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 			fragment_init (window.ACTIVE_PAGE.page);
 		};
-		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time) {
+		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
 			window.APPSET_NAME = appset_name;
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
 			window.PUSH_STATE = true;
-			window.BASE_PATH = null;
-			window.BASE_PATH = base_path;
+			if (base_path) {
+				window.BASE_PATH = base_path;
+			}
 			window.WAIT_ICON = null;
 			window.WAIT_ICON2 = false;
 			window.MENU_ID = 0;
@@ -4121,15 +4124,17 @@ function pytigon () {
 			window.COMPONENT_INIT = component_init;
 			window.LANG = lang;
 			window.GEN_TIME = gen_time;
-			if (navigator.onLine && service_worker_and_indexedDB_test ()) {
-				install_service_worker ();
-			}
-			var _on_sync = function (status) {
-				if (status == 'OK-refresh') {
-					location.reload ();
+			if (offline_support) {
+				if (navigator.onLine && service_worker_and_indexedDB_test ()) {
+					install_service_worker ();
 				}
-			};
-			sync_and_run ('sys', _on_sync);
+				var _on_sync = function (status) {
+					if (status == 'OK-refresh') {
+						location.reload ();
+					}
+				};
+				sync_and_run ('sys', _on_sync);
+			}
 			if (can_popup ()) {
 				var _local_fun = function () {
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
@@ -4187,10 +4192,6 @@ function pytigon () {
 						jQuery (jQuery (this).prop ('hash')).perfectScrollbar ();
 					};
 					jQuery ('#tabs a').click (_on_tabs_click);
-					var _on_resize = function (e) {
-						datatable_onresize ();
-					};
-					jQuery ('#tabs2').on ('shown.bs.tab', _on_resize);
 					var _on_timeout = function (e) {
 						window.setTimeout (datatable_onresize, 300);
 					};

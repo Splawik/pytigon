@@ -112,7 +112,29 @@ def init_table(table, table_type):
                 datatable_onresize()
 
 
+def content_set_height():
+    if not jQuery(this).jquery_is(':visible'):
+        return
+
+    #elem = jQuery(this).findclosest('.tab-pane')
+    #content_offset = elem.offset().top
+    #content_offset = elem.offset().height()
+    #dy_win = jQuery('.desktop_content').height()
+    #console.log(content_offset)
+    #console.log(dy_win)
+    content_offset = jQuery(this).offset().top
+    dy_win = jQuery(window).height()
+
+    dy = dy_win - content_offset - 30
+    if dy<200: dy = 200
+
+    #console.log(content_offset2)
+
+    jQuery(this).height(dy)
+
+
 def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)
+    jQuery('.content').each(content_set_height)
 
 window.datatable_onresize = datatable_onresize

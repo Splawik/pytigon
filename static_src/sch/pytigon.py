@@ -192,13 +192,13 @@ def page_init(id, first_time = True):
     fragment_init(window.ACTIVE_PAGE.page)
 
 
-def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, gen_time):
+def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
     window.APPSET_NAME = appset_name
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
     window.PUSH_STATE = True
-    window.BASE_PATH = None
-    window.BASE_PATH = base_path
+    if base_path:
+        window.BASE_PATH = base_path
     window.WAIT_ICON = None
     window.WAIT_ICON2 = False
     window.MENU_ID = 0
@@ -210,8 +210,9 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     window.LANG = lang
     window.GEN_TIME = gen_time
 
-    if navigator.onLine and service_worker_and_indexedDB_test():
-        install_service_worker()
+    if offline_support:
+        if navigator.onLine and service_worker_and_indexedDB_test():
+            install_service_worker()
 
     def _on_sync(status):
         if status == "OK-refresh":

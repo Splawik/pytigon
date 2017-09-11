@@ -224,6 +224,8 @@ DEFAULT_FILE_STORAGE_FS = MountFS()
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 
+OFFLINE_SUPPORT = False
+
 try:
     from schserw.settings_local import *
 except:

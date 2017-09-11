@@ -8,6 +8,9 @@
 
 
 %% js_scripts_base
+    script language=javascript
+        .window.BASE_PATH = '{{URL_BASE}}/';
+
     {% jscript_link 'system/browser-polyfill.min.js' %}
 
     % if request.get_host == '127.0.0.2':
@@ -38,7 +41,7 @@
     {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
     {% jscript_link 'jquery_plugins/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js' %}
 
-    {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
+    {% jscript_link 'bootstrap/js/bootstrap.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
@@ -68,7 +71,7 @@
         .function base_fragment_init() {}
     %% component_init
         .component_init = null
-    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, '{{ gen_time }}' )
+    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ gen_time }}' )
 
 
 %% jquery_ready_start

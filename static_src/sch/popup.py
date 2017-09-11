@@ -211,10 +211,10 @@ def _refresh_win(responseText, ok_button):
     popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
     if responseText and "RETURN_OK" in responseText:
         if not can_popup():
-            if jQuery("div.dialog-form").hasClass('in'):
+            if jQuery("div.dialog-form").hasClass('show'):
                 dialog = "div.dialog-form"
             else:
-                if jQuery("div.dialog-form-delete").hasClass('in') :
+                if jQuery("div.dialog-form-delete").hasClass('show') :
                     dialog = "div.dialog-form-delete"
                 else:
                     dialog = "div.dialog-form-info"
@@ -238,7 +238,7 @@ def _refresh_win_and_ret(responseText, ok_button):
     if responseText and "RETURN_OK" in responseText:
         related_object = jQuery(ok_button).closest(".refr_object").attr('related-object')
         popup_activator = jQuery("#"+related_object)
-        if jQuery(ok_button).closest(".refr_object").hasClass('in'):
+        if jQuery(ok_button).closest(".refr_object").hasClass('show'):
             jQuery("div.dialog-form").modal('hide')
         else:
             jQuery(ok_button).closest(".refr_object").remove()

@@ -151,8 +151,8 @@ def _req_post(req, url, data, complete):
 
     if data.length:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        req.setRequestHeader("Content-length", data.length)
-        req.setRequestHeader("Connection", "close")
+        #req.setRequestHeader("Content-length", data.length)
+        #req.setRequestHeader("Connection", "close")
 
     req.send(data)
 
@@ -217,7 +217,8 @@ def get_table_type(elem):
 
 
 def can_popup():
-    if jQuery("div.dialog-form").hasClass('in') or jQuery("div.dialog-form-delete").hasClass('in') or jQuery("div.dialog-form-info").hasClass('in'):
+    if jQuery('.modal-open').length > 0:
+    #if jQuery("div.dialog-form").hasClass('show') or jQuery("div.dialog-form-delete").hasClass('show') or jQuery("div.dialog-form-info").hasClass('show'):
         return False
     else:
         return True

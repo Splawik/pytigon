@@ -515,7 +515,9 @@ def sch_standard(request):
         'DEBUG': settings.DEBUG,
         'autologin': request.session.get('autologin', False),
         'app_pack': app_pack,
+        'offline_support': settings.OFFLINE_SUPPORT,
         'gen_time': gmt_str,
+
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

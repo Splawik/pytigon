@@ -337,7 +337,6 @@ def gen(request, pk):
             f.write(appset.install_file)
     
     
-    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str})
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
     template_to_file(base_path, "wsgi", "wsgi.py",  {'appset': appset, 'base_path': base_path.replace('\\','/')})
@@ -433,10 +432,15 @@ def gen(request, pk):
     static_style = os.path.join(static_root,'css')
     static_components = os.path.join(static_root,'components')
     
+    offline_support = False
+    
     for static_file in static_files:
         txt = static_file.code
         typ = static_file.type
         dest_path = None
+        if static_file.name=='sw.js':
+            offline_support = True
+            
         if static_file.type=='U':
             dest_path = os.path.join(static_root,static_file.name)
             if '.pyj' in static_file.name:
@@ -509,6 +513,9 @@ def gen(request, pk):
     #template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
     
     template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
+    
+    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str, 'offline_support': offline_support})
+    
     
     base_path_src = base_path + "/src"
     
