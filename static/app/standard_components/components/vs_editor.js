@@ -1,6 +1,6 @@
 var _vseditor = function (resolve, reject) {
 	var TEMPLATE = '        <div class=\"vseditorbase\">\n' +
-    '                <button v-bind:disabled=\"!changed\" v-on:click=\"save\" class=\"btn btn-sm btn-primary\">\n' +
+    '                <button v-bind:disabled=\"!changed\" v-on:click=\"save\" class=\"btn btn-sm btn-primary\" style=\"position: absolute; z-index: 999;\">\n' +
     '                        <span class=\"fa fa-floppy-o\"></span>\n' +
     '                </button>\n' +
     '                <div style=\"width:100%; position:absolute; top:10px; text-align:center\">\n' +
@@ -33,11 +33,12 @@ var _vseditor = function (resolve, reject) {
 				};
 				Vue.nextTick (_next);
 			};
-			var save = function () {
+			var save = function (event) {
+				var self = this;
 				if (this.href) {
 					var ajax_options = dict ({'method': 'POST', 'url': this.href, 'dataType': 'html', 'data': dict ({'data': this.editor.getValue ()})});
 					var _on_ajax = function () {
-						this.changed = false;
+						self.changed = false;
 					};
 					jQuery.ajax (ajax_options).done (_on_ajax);
 				}
