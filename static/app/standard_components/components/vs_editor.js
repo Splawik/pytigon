@@ -21,7 +21,8 @@ var _vseditor = function (resolve, reject) {
 				var self = this;
 				var _next = function () {
 					var ed = jQuery (self.$el).find ('div.vseditor');
-					self.editor = monaco.editor.create (ed [0], dict ({'value': atob (self.value), 'language': 'python', 'theme': 'vs-dark'}));
+					var value = decodeURIComponent (escape (atob (self.value)));
+					self.editor = monaco.editor.create (ed [0], dict ({'value': value, 'language': 'python', 'theme': 'vs-dark'}));
 					var _changed = function (event) {
 						self.changed = true;
 					};

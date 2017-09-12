@@ -79,7 +79,10 @@ def view_editor(request, pk, app, tab, model, template_name, field_edit_name, po
             extra_context=None, target=None, parent_pk=0, field_name=None):
     if request.POST:
         data = request.POST['data']
+        #print(type(data), data)
         buf = data.replace('\r\n', '\n')
+        #if type(buf)==str:
+        #    buf = buf.encode('utf-8')
         obj = model.objects.get(id=pk)
         setattr(obj, field_edit_name, buf)
         obj.save()

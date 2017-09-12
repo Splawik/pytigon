@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-11 15:51:49
+// Transcrypt'ed from Python, 2017-09-12 21:31:32
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3268,6 +3268,16 @@ function pytigon () {
 							if (window.PUSH_STATE) {
 								history_push_state (title2, href);
 							}
+							var _on_show_tab = function (e) {
+								window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id), menu_item);
+								var menu = get_menu ();
+								menu_item = menu.titles [jQuery.trim (e.target.text)];
+								self.active_item = menu_item;
+								if (window.PUSH_STATE) {
+									history_push_state (menu_item.title, menu_item.url);
+								}
+							};
+							jQuery ('#tabs2 a:last').on ('shown.bs.tab', _on_show_tab);
 							jQuery ('#tabs2 a:last').tab ('show');
 							page_init (_id, false);
 							var _on_button_click = function (event) {
@@ -4128,13 +4138,13 @@ function pytigon () {
 				if (navigator.onLine && service_worker_and_indexedDB_test ()) {
 					install_service_worker ();
 				}
-				var _on_sync = function (status) {
-					if (status == 'OK-refresh') {
-						location.reload ();
-					}
-				};
-				sync_and_run ('sys', _on_sync);
 			}
+			var _on_sync = function (status) {
+				if (status == 'OK-refresh') {
+					location.reload ();
+				}
+			};
+			sync_and_run ('sys', _on_sync);
 			if (can_popup ()) {
 				var _local_fun = function () {
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
@@ -4192,6 +4202,10 @@ function pytigon () {
 						jQuery (jQuery (this).prop ('hash')).perfectScrollbar ();
 					};
 					jQuery ('#tabs a').click (_on_tabs_click);
+					var _on_resize = function (e) {
+						datatable_onresize ();
+					};
+					jQuery ('#tabs2').on ('shown.bs.tab', _on_resize);
 					var _on_timeout = function (e) {
 						window.setTimeout (datatable_onresize, 300);
 					};
