@@ -383,7 +383,10 @@ class SChApp( models.Model):
                     ret.append(tab.name)
                 else:
                     ret.append(app.name+"."+tab.name)
-        ext_apps = self.parent.ext_apps.split(',')
+        if self.parent.ext_apps:
+            ext_apps = self.parent.ext_apps.split(',')
+        else:
+            ext_apps = []
         if len(ext_apps)>0:
             for ext_app in ext_apps:
                 if 'schserw.' in ext_app:
