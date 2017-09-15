@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-12 21:31:32
+// Transcrypt'ed from Python, 2017-09-15 18:52:59
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3902,6 +3902,51 @@ function pytigon () {
 			}
 		}
 	);
+	__nest__ (
+		__all__,
+		'widget', {
+			__all__: {
+				__inited__: false,
+				__init__: function (__all__) {
+					var img_field = function (elem) {
+						var txt = jQuery (elem).val ().py_replace (new RegExp ('^.*[\\\\ /]'), '');
+						jQuery (elem).closest ('label').find ('.upload').html (txt);
+						if (elem.files && elem.files [0]) {
+							var file_name = elem.files [0].name;
+							var ext = list (['.jpeg', '.jpg', '.svg', '.gif', '.png']);
+							var test = false;
+							var __iterable0__ = ext;
+							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								var pos = __iterable0__ [__index0__];
+								if (__in__ (pos, file_name)) {
+									var test = true;
+									break;
+								}
+							}
+							if (test) {
+								var reader = new FileReader ();
+								var _onload = function (e) {
+									var x = jQuery (elem).closest ('label').find ('img');
+									if (x.length > 0) {
+										x.remove ();
+									}
+									var img = jQuery ("<img style='float: left; max-height: 48px; max-width: 48px;'/>");
+									img.insertAfter (jQuery (elem).closest ('label').find ('input'));
+									img.attr ('src', e.target.result);
+								};
+							}
+							reader.onload = _onload;
+							reader.readAsDataURL (elem.files [0]);
+						}
+					};
+					window.img_field = img_field;
+					__pragma__ ('<all>')
+						__all__.img_field = img_field;
+					__pragma__ ('</all>')
+				}
+			}
+		}
+	);
 	(function () {
 		var Page = __init__ (__world__.page).Page;
 		var TabMenuItem = __init__ (__world__.tabmenuitem).TabMenuItem;
@@ -3937,6 +3982,7 @@ function pytigon () {
 		var service_worker_and_indexedDB_test = __init__ (__world__.offline).service_worker_and_indexedDB_test;
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
+		var img_field = __init__ (__world__.widget).img_field;
 		var init_pagintor = function (pg) {
 			var x = load_js;
 			if (pg.length > 0) {
@@ -4381,6 +4427,7 @@ function pytigon () {
 			'tabmenuitem' +
 			'tbl' +
 			'tools' +
+			'widget' +
 		'</use>')
 		__pragma__ ('<all>')
 			__all__.Page = Page;
@@ -4401,6 +4448,7 @@ function pytigon () {
 			__all__.get_table_type = get_table_type;
 			__all__.handle_class_click = handle_class_click;
 			__all__.history_push_state = history_push_state;
+			__all__.img_field = img_field;
 			__all__.init_pagintor = init_pagintor;
 			__all__.init_table = init_table;
 			__all__.install_service_worker = install_service_worker;

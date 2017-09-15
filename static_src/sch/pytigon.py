@@ -19,6 +19,7 @@ from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
+from widget import img_field
 
 def init_pagintor(pg):
     x=load_js

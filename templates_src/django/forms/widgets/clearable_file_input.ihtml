@@ -4,6 +4,6 @@
 {{ input_text }}:{% endif %}
 <label class="btn btn-primary btn-file nocolon upload">
 <p class="upload">Upload</p>
-<input style="display:none"  onchange="jQuery(this).closest('label').find('.upload').html(jQuery(this).val().replace(/^.*[\\\/]/, ''));"  type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} />
+<input style="display:none"  onchange="img_field(this);"  type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} />
 <i class="fa fa-upload"></i>
 </label>
