@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-17 13:00:19
+// Transcrypt'ed from Python, 2017-09-17 13:59:35
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2712,6 +2712,9 @@ function pytigon () {
 						}
 						else {
 							var target = refr_block.find ('.refr_target');
+							if (target.length > 1) {
+								var target = jQuery (target [0]);
+							}
 						}
 						if (only_table) {
 							var datatable = target.find ('table[name=tabsort].datatable');
@@ -2926,9 +2929,10 @@ function pytigon () {
 						}
 					};
 					var _refresh_win = function (responseText, ok_button) {
-						var popup_activator = jQuery ('#' + jQuery (ok_button).closest ('.refr_object').attr ('related-object'));
+						var refr_obj = jQuery (ok_button).closest ('.refr_object');
+						var popup_activator = jQuery ('#' + refr_obj.attr ('related-object'));
 						if (responseText && __in__ ('RETURN_OK', responseText)) {
-							if (!(can_popup ())) {
+							if (refr_obj.hasClass ('modal')) {
 								if (jQuery ('div.dialog-form').hasClass ('show')) {
 									var dialog = 'div.dialog-form';
 								}
@@ -2947,10 +2951,10 @@ function pytigon () {
 								}
 							}
 							else if (!(refresh_fragment (popup_activator, null, true))) {
-								return refresh_fragment (popup_activator, null, true);
+								return refresh_fragment (popup_activator, null, false);
 							}
 						}
-						else if (!(can_popup ())) {
+						else if (refr_obj.hasClass ('modal')) {
 							mount_html (jQuery ('div.dialog-data'), responseText);
 						}
 						else {

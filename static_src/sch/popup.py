@@ -12,6 +12,8 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
         target = refr_block
     else:
         target = refr_block.find('.refr_target')
+        if target.length>1:
+            target = jQuery(target[0])
 
     if only_table:
         datatable = target.find('table[name=tabsort].datatable')
@@ -215,9 +217,11 @@ def _dialog_loaded(is_modal, elem):
 
 
 def _refresh_win(responseText, ok_button):
-    popup_activator = jQuery("#"+jQuery(ok_button).closest(".refr_object").attr("related-object"))
+    refr_obj = jQuery(ok_button).closest('.refr_object')
+    popup_activator = jQuery("#"+refr_obj.attr("related-object"))
     if responseText and "RETURN_OK" in responseText:
-        if not can_popup():
+        if refr_obj.hasClass('modal'):
+        #if not can_popup():
             if jQuery("div.dialog-form").hasClass('show'):
                 dialog = "div.dialog-form"
             else:
@@ -234,9 +238,10 @@ def _refresh_win(responseText, ok_button):
                 refresh_fragment(popup_activator, hide_dialog_form, False)
         else:
             if not refresh_fragment(popup_activator, None, True):
-                return refresh_fragment(popup_activator, None, True)
+                return refresh_fragment(popup_activator, None, False)
     else:
-        if not can_popup():
+        if refr_obj.hasClass('modal'):
+        #if not can_popup():
             mount_html(jQuery("div.dialog-data"), responseText)
         else:
             mount_html(ok_button.closest('.refr_target'),responseText)
