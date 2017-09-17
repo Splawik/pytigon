@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-17 13:59:35
+// Transcrypt'ed from Python, 2017-09-17 22:58:23
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3454,7 +3454,7 @@ function pytigon () {
 						jQuery ('.datatable:not(.table_get)').each (datetable_set_height);
 						jQuery ('.content').each (content_set_height);
 					};
-					window.dattable_onresize = datatable_onresize;
+					window.datatable_onresize = datatable_onresize;
 					var _on_fragment_init = function (elem) {
 						elem.find ('.win-content').bind ('resize', datatable_onresize);
 						datatable_onresize ();
