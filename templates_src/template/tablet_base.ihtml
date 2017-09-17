@@ -75,7 +75,7 @@
         section class=sidebar
             ul class=sidebar-menu
                 li class=bg-primary
-                    a href={{URL_BASE}}/,,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;
+                    a href={{URL_BASE}}/,,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
                         span class=logo-lg
                             % if appset_title|length > 20:
                                 small...{{appset_title}}

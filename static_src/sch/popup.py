@@ -1,7 +1,7 @@
 __pragma__ ('alias', 'jquery_type', 'type')
 
 from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html,\
-    get_table_type
+    get_table_type, register_fragment_init_fun
 
 from tbl import datatable_refresh, datatable_onresize, init_table
 
@@ -22,20 +22,27 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
             return True
         return False
 
-    src = refr_block.find('.refr_source')
+    if refr_block.hasClass('refr_source'):
+        src = refr_block
+    else:
+        src = refr_block.find('.refr_source')
     if src.length > 0:
         href = src.attr('href')
         if src.prop("tagName") == 'FORM':
             def _refr2(data):
                 mount_html(target, data)
-                fragment_init(target)
+                #fragment_init(target)
                 if fun:
                     fun();
             ajax_post(corect_href(href), src.serialize(), _refr2)
         else:
             def _on_load(responseText):
-                pass
+                if fun:
+                    fun()
             ajax_load(target, corect_href(href), _on_load)
+    else:
+        if fun:
+            fun()
     return True
 
 def on_popup_inline(elem):
@@ -56,9 +63,9 @@ def on_popup_inline(elem):
     elem2 = new_fragment.find(".refr_target")
 
     def _on_load(responseText, status, response):
-        jQuery('#IDIAL_'+id).hide()
-        jQuery('#IDIAL_'+id).removeClass('hide')
-        jQuery('#IDIAL_'+id).show("slow")
+        #jQuery('#IDIAL_'+id).hide()
+        #jQuery('#IDIAL_'+id).removeClass('hide')
+        #jQuery('#IDIAL_'+id).show("slow")
         if status!='error':
             _dialog_loaded(False, elem2)
             on_dialog_load()
@@ -131,7 +138,7 @@ def on_popup_edit_new(elem):
             else:
                 elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
                 elem2.insertAfter(jQuery(elem).closest("tr"))
-        mount_html(elem2.find('.modal-title'), jQuery(elem).attr('title'))
+        mount_html(elem2.find('.modal-title'), jQuery(elem).attr('title'), False, False)
         elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
         elem3 = elem2.find("div.dialog-data-inner")
 
@@ -194,7 +201,7 @@ def on_dialog_load():
 
 
 def _dialog_loaded(is_modal, elem):
-    fragment_init(elem)
+    #fragment_init(elem)
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
 
@@ -312,114 +319,16 @@ def on_get_row(elem):
     jQuery(elem).closest(".refr_source").remove()
 
 
-FIRST_INIT = True
+def _init_subforms(elem):
+    subforms = elem.find('.subform_frame')
 
-def fragment_init(elem=None):
-    nonlocal FIRST_INIT
+    def _load_subform(index, obj):
+        content = jQuery(this).find(".subform_content")
+        if content.length>0:
+            href = jQuery(this).attr("href")
+            def _finish():
+                pass
+            ajax_load(content, href, _finish)
+    subforms.each(_load_subform)
 
-    if elem:
-        elem2 = elem
-    else:
-        elem2 = window.ACTIVE_PAGE.page
-
-    handle_class_click(elem, 'get_tbl_value', on_get_tbl_value)
-    handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
-    handle_class_click(elem, 'get_row', on_get_row)
-
-    format = {
-        'weekStart': 1,
-        'format' : 'YYYY.MM.DD',
-        'lang': 'pl',
-        'switchOnClick': True,
-        'time': False,
-    }
-
-    d = elem2.find('.dateinput')
-    d.bootstrapMaterialDatePicker(format)
-
-    format['format'] = 'YYYY.MM.DD HH:mm'
-    format['time'] = True
-
-    d = elem2.find('.datetimeinput')
-    d.bootstrapMaterialDatePicker(format)
-
-    def iterate_material_icons():
-        font_map = {
-            'clear': 'eraser',
-            'chevron_left': 'chevron-left',
-            'chevron_right': 'chevron-right',
-            'keyboard_arrow_up': 'chevron-up',
-            'keyboard_arrow_down': 'chevron-down',
-        }
-        jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
-
-    jQuery('i.material-icons').each(iterate_material_icons)
-
-    if 1==2:
-        icons = {
-            'time': 'fa fa-clock-o',
-            'date': 'fa fa-calendar',
-            'up': 'fa fa-chevron-up',
-            'down': 'fa fa-chevron-down',
-            'previous': 'fa fa-chevron-left',
-            'next': 'fa fa-chevron-right',
-            'today': 'fa fa-calendar-check-o',
-            'clear': 'fa fa-trash',
-            'close': 'fa fa-times'
-        }
-
-        d = elem2.find('.dateinput')
-        d.wrap( "<div class='input-group date' data-target-input='nearest'></div>" )
-        d.after("<span class='input-group-addon'><span class='fa fa-callendar'></span></span>")
-
-        d.parent().uid()
-        id = d.parent().attr('id')
-        d.addClass('datetimepicker-input')
-        d.attr('data-target', id)
-        d.find('.input-group-addon').attr('data-target', id)
-
-        d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
-
-        d = elem2.find('.datetimeinput')
-        d.wrap( "<div class='input-group date datetime' data-target-input='nearest'></div>" )
-        d.after("<span class='input-group-addon'><span class='fa fa-clock-o'></span></span>")
-
-        d.parent().uid()
-        id = d.parent().attr('id')
-        d.addClass('datetimepicker-input')
-        d.attr('data-target', id)
-        d.find('.input-group-addon').attr('data-target', id)
-
-        d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
-
-    elem2.find('.win-content').bind('resize', datatable_onresize)
-
-    jQuery('.selectpicker').selectpicker()
-
-
-    def _on_blur(e):
-        if e['type'] == 'focus' or this.value.length > 0:
-            test = True
-        else:
-            test = False
-        jQuery(this).parents('.form-group').toggleClass('focused',test)
-
-    elem2.find('.label-floating .form-control').on('focus blur', _on_blur).trigger('blur')
-
-
-    #if window.RIOT_INIT:
-    #    _id = jQuery(elem).uid()
-    #    for pos in window.RIOT_INIT:
-    #        x = sprintf("riot.mount('#%s')", _id+" "+pos)
-    #        eval(x)
-
-
-    #x = __new__(Vue())
-
-    #__pragma__ ('alias', 'Q', '$')
-    #x.Qcompile(elem2[0])
-
-    if window.BASE_FRAGMENT_INIT:
-        window.BASE_FRAGMENT_INIT()
-
-    datatable_onresize()
+register_fragment_init_fun(_init_subforms)

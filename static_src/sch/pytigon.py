@@ -14,7 +14,7 @@ from page import Page
 from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
-     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok, fragment_init
+     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
 from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html
 from offline import service_worker_and_indexedDB_test, install_service_worker
@@ -33,7 +33,7 @@ def init_pagintor(pg):
             if form:
                 def _on_new_page(data):
                     mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
-                    fragment_init(pg.closest('.content').find(".tabsort tbody"))
+                    #fragment_init(pg.closest('.content').find(".tabsort tbody"))
                     if window.WAIT_ICON2:
                         jQuery('#loading-indicator').hide()
                         window.WAIT_ICON2 = False
@@ -76,68 +76,6 @@ def page_init(id, first_time = True):
 
     if first_time:
         elem2 = jQuery('body')
-        #handle_class_click(elem2, 'get_tbl_value', on_get_tbl_value)
-        #handle_class_click(elem2, 'new_tbl_value', on_new_tbl_value)
-        #handle_class_click(elem2, 'get_row', on_get_row)
-    def _on_click(e):
-        target = jQuery(e.currentTarget).attr('target')
-        src_obj = jQuery(this)
-
-        if target == "_blank":
-            return
-
-        for pos in ['get_tbl_value', 'new_tbl_value', 'get_row']:
-            if jQuery(this).hasClass(pos):
-                return True
-
-        for pos in [ ('popup', on_popup_edit_new), ('popup_inline', on_popup_inline),  ('popup_info', on_popup_info), ('popup_delete', on_popup_delete) ]:
-            if jQuery(this).hasClass(pos[0]):
-                e.preventDefault()
-                pos[1](this)
-                return True
-
-        href = jQuery(this).attr("href")
-        if href and '#' in href:
-            return True
-
-        e.preventDefault()
-
-        if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
-            title = jQuery(e.currentTarget).attr('title')
-            if not title:
-                if len(href)>16:
-                    title = '...'+href[-13:]
-                else:
-                    title = href
-            return _on_menu_href(this,title)
-
-        href2 = corect_href(href)
-
-        def _on_data(data):
-            nonlocal href, src_obj
-
-            if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
-                if target=="refresh_obj":
-                    if not refresh_fragment(src_obj, None, True):
-                        refresh_fragment(src_obj)
-                else:
-                    refresh_fragment(src_obj)
-            else:
-                if window.APPLICATION_TEMPLATE == 'modern':
-                    mount_html(window.ACTIVE_PAGE.page, data)
-                    window.ACTIVE_PAGE.set_href(href)
-                    page_init(window.ACTIVE_PAGE.id, False)
-                else:
-                    mount_html(jQuery('#body_body'), data)
-                    page_init('body_body', False)
-                window.ACTIVE_PAGE.set_href(href)
-                get_menu().get_active_item().url = href
-                if window.PUSH_STATE:
-                    history_push_state("title", href)
-        ajax_get(href2,_on_data)
-
-
-    jQuery('#'+ id).on( "click", "a", _on_click)
 
     def _on_submit(e):
         if jQuery(this).attr('target')=='_blank':
@@ -190,8 +128,6 @@ def page_init(id, first_time = True):
 
     window.ACTIVE_PAGE.page.find('form').submit(_on_submit)
 
-    fragment_init(window.ACTIVE_PAGE.page)
-
 
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
     window.APPSET_NAME = appset_name
@@ -220,6 +156,8 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             location.reload()
 
     sync_and_run('sys', _on_sync)
+
+    init_popup_events()
 
     if can_popup():
         def _local_fun():
@@ -386,7 +324,7 @@ def jquery_ready():
     jQuery(document).ajaxError(_on_error)
 
     def _on_hide(e):
-        mount_html(jQuery(this).find("div.dialog-data"),"<div class='alert alert-info' role='alert'>Sending data - please wait</div>")
+        mount_html(jQuery(this).find("div.dialog-data"),"<div class='alert alert-info' role='alert'>Sending data - please wait</div>", False, False)
 
     jQuery('div.dialog-form').on('hide.bs.modal', _on_hide)
 
@@ -413,6 +351,76 @@ def jquery_ready():
             page_init('body_body')
 
 
+EVENT_TAB = [
+    ('popup', on_popup_edit_new),
+    ('popup_inline', on_popup_inline),
+    ('popup_info', on_popup_info),
+    ('popup_delete', on_popup_delete),
+    ('get_tbl_value', on_get_tbl_value),
+    ('new_tbl_value', on_new_tbl_value),
+    ('get_row', on_get_row),
+]
+
+def init_popup_events():
+    def _on_click(e):
+        nonlocal EVENT_TAB
+
+        target = jQuery(e.currentTarget).attr('target')
+        src_obj = jQuery(this)
+
+        if target == "_blank" or target == '_parent':
+            return True
+
+        href = jQuery(this).attr("href")
+        if href and '#' in href:
+            return True
+
+        for pos in EVENT_TAB:
+            if jQuery(this).hasClass(pos[0]):
+                e.preventDefault()
+                pos[1](this)
+                return True
+
+        e.preventDefault()
+
+        if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
+            title = jQuery(e.currentTarget).attr('title')
+            if not title:
+                if len(href)>16:
+                    title = '...'+href[-13:]
+                else:
+                    title = href
+            return _on_menu_href(this,title)
+
+        href2 = corect_href(href)
+
+        def _on_data(data):
+            nonlocal href, src_obj
+
+            if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+                if target=="refresh_obj":
+                    if not refresh_fragment(src_obj, None, True):
+                        refresh_fragment(src_obj)
+                else:
+                    refresh_fragment(src_obj)
+            else:
+                if window.APPLICATION_TEMPLATE == 'modern':
+                    mount_html(window.ACTIVE_PAGE.page, data)
+                    window.ACTIVE_PAGE.set_href(href)
+                    page_init(window.ACTIVE_PAGE.id, False)
+                else:
+                    mount_html(jQuery('#body_body'), data)
+                    page_init('body_body', False)
+                window.ACTIVE_PAGE.set_href(href)
+                get_menu().get_active_item().url = href
+                if window.PUSH_STATE:
+                    history_push_state("title", href)
+        ajax_get(href2,_on_data)
+
+    #jQuery('body').on("click", "a", _on_click)
+    jQuery('#tabs2_content').on("click", "a", _on_click)
+    jQuery('#dialog-form-modal').on("click", "a", _on_click)
+
 def _on_popstate(e):
     if e.state:
         window.PUSH_STATE = False
@@ -432,7 +440,7 @@ def _on_popstate(e):
         if window.APPLICATION_TEMPLATE == 'modern':
             pass
         else:
-            mount_html(jQuery('#body_body'), "")
+            mount_html(jQuery('#body_body'), "", False, False)
             window.ACTIVE_PAGE = None
             if window.APPLICATION_TEMPLATE == 'standard':
                 jQuery('a.menu-href').removeClass('btn-warning')

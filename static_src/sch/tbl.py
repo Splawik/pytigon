@@ -1,7 +1,7 @@
 __pragma__ ('alias', 'jquery_is', 'is')
 
 from scrolltbl import stick_header
-from tools import ajax_post, ajax_post
+from tools import ajax_post, ajax_post, register_fragment_init_fun
 
 
 def datetable_set_height():
@@ -137,4 +137,11 @@ def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)
     jQuery('.content').each(content_set_height)
 
-window.datatable_onresize = datatable_onresize
+window.dattable_onresize = datatable_onresize
+
+
+def _on_fragment_init(elem):
+    elem.find('.win-content').bind('resize', datatable_onresize)
+    datatable_onresize()
+
+register_fragment_init_fun(_on_fragment_init)

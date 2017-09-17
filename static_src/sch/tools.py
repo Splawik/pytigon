@@ -2,6 +2,115 @@ __pragma__ ('alias', 'S', '$')
 
 LOADED_FILES = {}
 
+FIRST_INIT = True
+FRAGMENT_INIT_FUN = []
+
+def register_fragment_init_fun(fun):
+    global FRAGMENT_INIT_FUN
+    FRAGMENT_INIT_FUN.append(fun)
+
+def fragment_init(elem=None):
+    global FIRST_INIT, FRAGMENT_INIT_FUN
+
+    if elem:
+        elem2 = elem
+    else:
+        elem2 = window.ACTIVE_PAGE.page
+
+    #handle_class_click(elem, 'get_tbl_value', on_get_tbl_value)
+    #handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
+    #handle_class_click(elem, 'get_row', on_get_row)
+
+    format = {
+        'weekStart': 1,
+        'format' : 'YYYY.MM.DD',
+        'lang': 'pl',
+        'switchOnClick': True,
+        'time': False,
+    }
+
+    d = elem2.find('.dateinput')
+    d.bootstrapMaterialDatePicker(format)
+
+    format['format'] = 'YYYY.MM.DD HH:mm'
+    format['time'] = True
+
+    d = elem2.find('.datetimeinput')
+    d.bootstrapMaterialDatePicker(format)
+
+    def iterate_material_icons():
+        font_map = {
+            'clear': 'eraser',
+            'chevron_left': 'chevron-left',
+            'chevron_right': 'chevron-right',
+            'keyboard_arrow_up': 'chevron-up',
+            'keyboard_arrow_down': 'chevron-down',
+        }
+        jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
+
+    jQuery('i.material-icons').each(iterate_material_icons)
+
+    if 1==2:
+        icons = {
+            'time': 'fa fa-clock-o',
+            'date': 'fa fa-calendar',
+            'up': 'fa fa-chevron-up',
+            'down': 'fa fa-chevron-down',
+            'previous': 'fa fa-chevron-left',
+            'next': 'fa fa-chevron-right',
+            'today': 'fa fa-calendar-check-o',
+            'clear': 'fa fa-trash',
+            'close': 'fa fa-times'
+        }
+
+        d = elem2.find('.dateinput')
+        d.wrap( "<div class='input-group date' data-target-input='nearest'></div>" )
+        d.after("<span class='input-group-addon'><span class='fa fa-callendar'></span></span>")
+
+        d.parent().uid()
+        id = d.parent().attr('id')
+        d.addClass('datetimepicker-input')
+        d.attr('data-target', id)
+        d.find('.input-group-addon').attr('data-target', id)
+
+        d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
+
+        d = elem2.find('.datetimeinput')
+        d.wrap( "<div class='input-group date datetime' data-target-input='nearest'></div>" )
+        d.after("<span class='input-group-addon'><span class='fa fa-clock-o'></span></span>")
+
+        d.parent().uid()
+        id = d.parent().attr('id')
+        d.addClass('datetimepicker-input')
+        d.attr('data-target', id)
+        d.find('.input-group-addon').attr('data-target', id)
+
+        d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
+
+    #elem2.find('.win-content').bind('resize', datatable_onresize)
+
+    jQuery('.selectpicker').selectpicker()
+
+
+    def _on_blur(e):
+        if e['type'] == 'focus' or this.value.length > 0:
+            test = True
+        else:
+            test = False
+        jQuery(this).parents('.form-group').toggleClass('focused',test)
+
+    elem2.find('.label-floating .form-control').on('focus blur', _on_blur).trigger('blur')
+
+
+    if window.BASE_FRAGMENT_INIT:
+        window.BASE_FRAGMENT_INIT()
+
+    #datatable_onresize()
+
+    for fun in FRAGMENT_INIT_FUN:
+        fun(elem2)
+
+
 def evalJSFromHtml(html):
     newElement = document.createElement('div')
     newElement.innerHTML = html
@@ -13,23 +122,28 @@ def evalJSFromHtml(html):
     jQuery.each(scripts, eval_fun)
 
 
-def mount_html(elem, html_txt):
-    if window.COMPONENT_INIT and len(window.COMPONENT_INIT)>0:
-        elem.empty()
-        res = Vue.compile("<div>"+html_txt+"</div>")
-        if elem and elem.length>0:
-            vm = __new__(Vue( { 'render': res.render, 'staticRenderFns': res.staticRenderFns } ))
-            component = vm.S__mount()
+def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
+    if component_init:
+        if window.COMPONENT_INIT and len(window.COMPONENT_INIT)>0:
+            elem.empty()
+            res = Vue.compile("<div>"+html_txt+"</div>")
+            if elem and elem.length>0:
+                vm = __new__(Vue( { 'render': res.render, 'staticRenderFns': res.staticRenderFns } ))
+                component = vm.S__mount()
 
-            def _append(index, value):
-                if value:
-                    elem[0].appendChild(value)
+                def _append(index, value):
+                    if value:
+                        elem[0].appendChild(value)
 
-            jQuery.each(component.S__el.childNodes, _append)
+                jQuery.each(component.S__el.childNodes, _append)
 
-            evalJSFromHtml(html_txt)
+                evalJSFromHtml(html_txt)
     else:
         elem.html(html_txt)
+
+    if run_fragment_init:
+        fragment_init(elem)
+
 
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
@@ -232,15 +346,6 @@ def corect_href(href):
             return href + '&only_content=1'
         else:
             return href + '?only_content=1'
-
-
-def handle_class_click(fragment_obj, obj_class, fun):
-    def _on_click(e):
-        src_obj = jQuery(this)
-        e.preventDefault()
-        fun(this)
-        return False
-    fragment_obj.on( "click", "."+obj_class, _on_click)
 
 
 def load_css(path):

@@ -168,7 +168,7 @@
                 li
                     div style=width:5px; height:10px;
     div id=logo_place
-        a href={{URL_BASE}}/,,,class=logo,,,style=white-space:nowrap;text-align: center;
+        a href={{URL_BASE}}/,,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
             span class=logo-lg
                 % if appset_title|length > 20:
                     small...{{appset_title}}
@@ -314,7 +314,7 @@
             % else:
                 img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
 
-    div class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
+    div id=dialog-form-modal,,, class=dialog-form modal refr_object,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabel
         div class=modal-dialog {% block modal_dialog_class %}modal-lg{% endblock %},,,role=document
             div class=modal-content
                 div class=modal-header

@@ -729,6 +729,11 @@ def component(context, name):
     return standard_dict(context, {'href': name,})
 
 
+@inclusion_tag('widgets/subform.html')
+def subform(context, name):
+    return standard_dict(context, {'href': name,})
+
+
 @inclusion_tag('widgets/paginator.html')
 def paginator(context):
     return context
