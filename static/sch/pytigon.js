@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-17 22:58:23
+// Transcrypt'ed from Python, 2017-09-17 23:23:49
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3573,21 +3573,19 @@ function pytigon () {
 						if (typeof component_init == 'undefined' || (component_init != null && component_init .hasOwnProperty ("__kwargtrans__"))) {;
 							var component_init = true;
 						};
-						if (component_init) {
-							if (window.COMPONENT_INIT && len (window.COMPONENT_INIT) > 0) {
-								elem.empty ();
-								var res = Vue.compile (('<div>' + html_txt) + '</div>');
-								if (elem && elem.length > 0) {
-									var vm = new Vue (dict ({'render': res.render, 'staticRenderFns': res.staticRenderFns}));
-									var component = vm.$mount ();
-									var _append = function (index, value) {
-										if (value) {
-											elem [0].appendChild (value);
-										}
-									};
-									jQuery.each (component.$el.childNodes, _append);
-									evalJSFromHtml (html_txt);
-								}
+						if (component_init && window.COMPONENT_INIT && len (window.COMPONENT_INIT) > 0) {
+							elem.empty ();
+							var res = Vue.compile (('<div>' + html_txt) + '</div>');
+							if (elem && elem.length > 0) {
+								var vm = new Vue (dict ({'render': res.render, 'staticRenderFns': res.staticRenderFns}));
+								var component = vm.$mount ();
+								var _append = function (index, value) {
+									if (value) {
+										elem [0].appendChild (value);
+									}
+								};
+								jQuery.each (component.$el.childNodes, _append);
+								evalJSFromHtml (html_txt);
 							}
 						}
 						else {
