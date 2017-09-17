@@ -137,7 +137,7 @@ def datatable_onresize():
     jQuery('.datatable:not(.table_get)').each(datetable_set_height)
     jQuery('.content').each(content_set_height)
 
-window.dattable_onresize = datatable_onresize
+window.datatable_onresize = datatable_onresize
 
 
 def _on_fragment_init(elem):
