@@ -885,7 +885,7 @@ class Form(Node):
         self.form_class = form_class
 
     def render(self, context):
-        output = self.nodelist.render(context).strip()
+        output = self.nodelist.render(context).strip().replace('\"',"'").replace(";","','")
 
         form = context['form']
         form.helper = FormHelper(form)
@@ -1135,3 +1135,20 @@ def recursetree(parser, token):
 @register.simple_tag
 def spec(format):
     return format.replace('{', '{{').replace('}', '}}').replace('[', '{%').replace(']', '%}')
+
+
+@inclusion_tag('widgets/fields.html')
+def fields(context, fieldformat):
+    ret = {}
+    fields = []
+    for pos in fieldformat.strip().split(';'):
+        pos2 = pos.strip()
+        if pos2:
+            if '/' in pos2:
+                x = pos.split('/')
+                fields.append((x[0],int(x[1]),))
+            else:
+                fields.append((pos2,12))
+    ret['fields'] = fields
+    ret['form'] = context['form']
+    return ret

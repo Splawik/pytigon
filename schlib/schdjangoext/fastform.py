@@ -31,6 +31,8 @@ Wybierz:[opcja1;opcja2
 opcja3]
 """
 
+from django import forms
+
 
 def _scan_lines(input_str):
     l = input_str.replace('\r','').split('\n')
@@ -53,9 +55,9 @@ def _get_name_and_title(s):
     if s.endswith('!'):
         required = True
         s = s[:-1]
-        
-    if '/' in s:
-        name, title = s.split('/', 1)
+
+    if '//' in s:
+        name, title = s.split('//', 1)
     else:
         title = s
         x = s.encode('ascii', 'replace').decode('utf-8').replace('?','_').lower()
@@ -65,65 +67,59 @@ def _get_name_and_title(s):
                 name += z
         name = name[:16]
     return name, title, required
-        
+
+
 def _read_form_line(line):
-    kwargs = ""
-    field_type = ""
+    kwargs = {}
+    field_type = None
     title=""
     name=""
     required=False
-    frm=""    
-    if ':' in line:
-        x = line.rsplit(":", 1)
+    frm=""
+    if "::" in line:
+        x = line.rsplit("::", 1)
         line2 = x[0].strip()
         frm = x[1].strip()
         if frm.startswith('0'):
-            field_type='IntegerField'
+            field_type=forms.IntegerField
             if len(frm)>1:
-               kwargs = 'min_value=0, max_value=%d' % 10**len(frm)
+               kwargs = { 'min_value': 0, 'max_value': 10**len(frm) }
         elif frm.startswith('9'):
-            field_type='FloatField'
+            field_type=forms.FloatField
             if len(frm)>1:
-               kwargs = 'min_value=0, max_value=%d' % 10**len(frm)
+               kwargs = { 'min_value': 0, 'max_value': 10**len(frm) }
         elif frm.startswith('#'):
-            field_type='DateField'
+            field_type=forms.DateField
         elif frm.startswith('*'):
-            field_type='CharField'
+            field_type=forms.CharField
             if len(frm)>0:
-               kwargs = 'max_length=%d' % len(frm)
+               kwargs = { 'max_length': len(frm) }
         elif frm.startswith('_'):
-            field_type='CharField'
-            kwargs = 'max_length=%d' % len(frm) 
+            field_type=forms.CharField
+            kwargs = { 'widget': forms.Textarea, 'max_length': len(frm) }
         elif frm.startswith('['):
-            field_type='ChoiceField'
-            choices = ",".join(list(["('"+pos+"','"+pos+"')" for pos in frm[1:-1].split(';') if pos]))
-            kwargs = "choices = ["+choices+"]"
+            field_type=forms.ChoiceField
+            choices = list([ (pos,pos,) for pos in frm[1:-1].split(';') if pos])
+            kwargs = { 'choices': choices }
     else:
         if line.endswith('?'):
-            field_type='BooleanField'
+            field_type=forms.BooleanField
             line2 = line[:-1].strip()
         else:
-            field_type='CharField'
+            field_type=forms.CharField
             line2 = line
     name, title, required = _get_name_and_title(line2)
     return name, field_type, title, required, kwargs
-    
-def read_from_lines(input_str):
-    ret = []
-    tab = _scan_lines(input_str)
-    for pos in tab:
-        if pos:
-            name, field_type, title, required, kwargs = _read_form_line(pos.strip())
-            if required:
-                r = "True"
-            else:
-                r = "False"
-            s = "    %s = forms.%s(label='%s', required=%s, %s)" % (name, field_type, title, r, kwargs)
-            ret.append(s)
-    return ret     
-
-def form_from_str(input_str, form_name):
-    x = read_from_lines(input_str)
-    return ("class %s(forms.Form):\n" % form_name) + "\n".join(x)
 
 
+def form_from_str(input_str):
+    class _Form(forms.Form):
+        def __init__(self, user, *args, **kwargs):
+            super(_Form, self).__init__(*args, **kwargs)
+
+            tab = _scan_lines(input_str)
+            for pos in tab:
+                if pos:
+                    name, field_type, title, required, form_kwargs = _read_form_line(pos.strip())
+                    self.fields[name] = field_type(label=title, required=required, **form_kwargs)
+    return _Form
