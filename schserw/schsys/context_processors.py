@@ -400,7 +400,7 @@ def sch_standard(request):
     else:
         form_delete = False
 
-    if '/view' in request.path:
+    if '/view/' in request.path:
         form_info = True
     else:
         form_info = False

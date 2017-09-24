@@ -52,7 +52,7 @@ field_defaults = {
     'PositiveSmallIntegerField': {},
     'SlugField': {},
     'SmallIntegerField': {},
-    'TextField': {},
+    'TextField': { 'editable': False, },
     'TimeField': {},
     'URLField': {},
     'XMLField': {},
@@ -61,7 +61,7 @@ field_defaults = {
     'HiddenForeignKey': { 'name': 'parent', 'description': 'Parent' },
     'GForeignKey': { 'name': 'parent', 'description': 'Parent' },
     'GManyToManyField': {},
-    'GHiddenForeignKey': { 'name': 'parent', 'description': 'Parent' },
+    'GHiddenForeignKey': { 'name': 'parent', 'description': 'Parent', },
 }
 
 formfield_default = {'required':True, }
@@ -697,7 +697,7 @@ class SChField( models.Model):
             return self.rel_to
             
     def get_relate_set_name(self):
-        if 'related_name' in self.param:
+        if self.param and 'related_name' in self.param:
             for pos in self.param.split(','):
                 rec=pos.split('=')
                 if rec[0].strip()=='related_name':
