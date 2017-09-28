@@ -25,6 +25,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import re
 import shutil
 import xml.dom.minidom
+import base64
 
 from schlib.schfs.vfstools import delete_from_zip
 
@@ -246,8 +247,31 @@ class DocTransform:
         if not x:
             x = doc_str
 
+        files = []
+        if '[[[' in x and ']]]' in x:
+            data = [ pos.split(']]]')[0] for pos in x.split('[[[')[1:] ]
+            data2 = [ pos.split(']]]')[-1] for pos in x.split('[[[')]
+            fdata = []
+            i = 1
+            for pos in data:
+                x = pos.split(',', 1)
+                ext = x[0].split(';')[0].split('/')[-1]
+                name = 'Pictures/pytigon_%d.%s' % (i, ext)
+                fdata.append(name)
+                files.append([name, x, ext])
+                i += 1
+
+            data3 = [None] * (len(data)+len(data2))
+            data3[::2] = data2
+            data3[1::2] = fdata
+            x = "".join(data3)
+
         z = ZipFile(self.file_name_out, 'a', ZIP_DEFLATED)
         z.writestr('content.xml', x.encode('utf-8'))
+
+        for pos in files:
+            z.writestr(pos[0], base64.b64decode(pos[1].encode('utf-8')))
+
         z.close()
 
         return 1
