@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-26 19:22:10
+// Transcrypt'ed from Python, 2017-09-28 22:15:35
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3504,13 +3504,23 @@ function pytigon () {
 						else {
 							var elem2 = window.ACTIVE_PAGE.page;
 						}
-						var format = dict ({'weekStart': 1, 'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true, 'time': false});
+						var format = dict ({'singleDatePicker': true, 'showDropdowns': true, 'locale': dict ({'format': 'YYYY-MM-DD', 'applyLabel': 'Apply', 'cancelLabel': 'Cancel'})});
 						var d = elem2.find ('.dateinput');
-						d.bootstrapMaterialDatePicker (format);
-						format ['format'] = 'YYYY.MM.DD HH:mm';
-						format ['time'] = true;
+						d.daterangepicker (format);
+						format ['format'] = 'YYYY-MM-DD HH:mm';
+						format ['timePicker'] = true;
+						format ['timePickerIncrement'] = 30;
 						var d = elem2.find ('.datetimeinput');
-						d.bootstrapMaterialDatePicker (format);
+						d.daterangepicker (format);
+						if (false) {
+							var format = dict ({'weekStart': 1, 'format': 'YYYY.MM.DD', 'lang': 'pl', 'switchOnClick': true, 'time': false});
+							var d = elem2.find ('.dateinput');
+							d.bootstrapMaterialDatePicker (format);
+							format ['format'] = 'YYYY.MM.DD HH:mm';
+							format ['time'] = true;
+							var d = elem2.find ('.datetimeinput');
+							d.bootstrapMaterialDatePicker (format);
+						}
 						var iterate_material_icons = function () {
 							var font_map = dict ({'clear': 'eraser', 'chevron_left': 'chevron-left', 'chevron_right': 'chevron-right', 'keyboard_arrow_up': 'chevron-up', 'keyboard_arrow_down': 'chevron-down'});
 							jQuery (this).removeClass ('material-icons').addClass ('fa').addClass ('fa-' + font_map [this.textContent]).empty ();

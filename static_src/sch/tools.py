@@ -22,21 +22,43 @@ def fragment_init(elem=None):
     #handle_class_click(elem, 'get_row', on_get_row)
 
     format = {
-        'weekStart': 1,
-        'format' : 'YYYY.MM.DD',
-        'lang': 'pl',
-        'switchOnClick': True,
-        'time': False,
+        'singleDatePicker': True,
+        'showDropdowns': True,
+        'locale': {
+            'format': 'YYYY-MM-DD',
+            'applyLabel': 'Apply',
+            'cancelLabel': 'Cancel',
+        }
     }
 
     d = elem2.find('.dateinput')
-    d.bootstrapMaterialDatePicker(format)
+    d.daterangepicker(format)
 
-    format['format'] = 'YYYY.MM.DD HH:mm'
-    format['time'] = True
+    format['format'] = 'YYYY-MM-DD HH:mm'
+    format['timePicker'] = True
+    format['timePickerIncrement'] = 30
 
     d = elem2.find('.datetimeinput')
-    d.bootstrapMaterialDatePicker(format)
+    d.daterangepicker(format)
+
+
+    if False:
+        format = {
+            'weekStart': 1,
+            'format' : 'YYYY.MM.DD',
+            'lang': 'pl',
+            'switchOnClick': True,
+            'time': False,
+        }
+
+        d = elem2.find('.dateinput')
+        d.bootstrapMaterialDatePicker(format)
+
+        format['format'] = 'YYYY.MM.DD HH:mm'
+        format['time'] = True
+
+        d = elem2.find('.datetimeinput')
+        d.bootstrapMaterialDatePicker(format)
 
     def iterate_material_icons():
         font_map = {

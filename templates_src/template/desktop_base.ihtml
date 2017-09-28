@@ -44,8 +44,10 @@
     {% jscript_link 'bootstrap/js/bootstrap.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
-    {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.js' %}
+
     % comment:
+        {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
         {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
         {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
 
@@ -112,8 +114,9 @@
     {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
-    {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.css' %}
     % comment:
+        {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
         {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
