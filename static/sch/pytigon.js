@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-09-28 22:15:35
+// Transcrypt'ed from Python, 2017-10-02 22:49:55
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4139,6 +4139,7 @@ function pytigon () {
 			window.ACTIVE_PAGE.page.find ('form').submit (_on_submit);
 		};
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
+			moment.locale ('pl');
 			window.APPSET_NAME = appset_name;
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
@@ -4366,7 +4367,10 @@ function pytigon () {
 			}
 		};
 		var EVENT_TAB = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete]), tuple (['get_tbl_value', on_get_tbl_value]), tuple (['new_tbl_value', on_new_tbl_value]), tuple (['get_row', on_get_row])]);
-		var init_popup_events = function () {
+		var init_popup_events = function (elem) {
+			if (typeof elem == 'undefined' || (elem != null && elem .hasOwnProperty ("__kwargtrans__"))) {;
+				var elem = null;
+			};
 			var _on_click = function (e) {
 				var target = jQuery (e.currentTarget).attr ('target');
 				var src_obj = jQuery (this);
@@ -4430,8 +4434,13 @@ function pytigon () {
 				};
 				ajax_get (href2, _on_data);
 			};
-			jQuery ('#tabs2_content').on ('click', 'a', _on_click);
-			jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
+			if (elem) {
+				elem.on ('click', 'a', _on_click);
+			}
+			else {
+				jQuery ('#tabs2_content').on ('click', 'a', _on_click);
+				jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
+			}
 		};
 		var _on_popstate = function (e) {
 			if (e.state) {
