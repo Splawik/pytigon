@@ -361,7 +361,7 @@ EVENT_TAB = [
     ('get_row', on_get_row),
 ]
 
-def init_popup_events():
+def init_popup_events(elem=None):
     def _on_click(e):
         nonlocal EVENT_TAB
 
@@ -418,8 +418,11 @@ def init_popup_events():
         ajax_get(href2,_on_data)
 
     #jQuery('body').on("click", "a", _on_click)
-    jQuery('#tabs2_content').on("click", "a", _on_click)
-    jQuery('#dialog-form-modal').on("click", "a", _on_click)
+    if elem:
+        elem.on("click", "a", _on_click)
+    else:
+        jQuery('#tabs2_content').on("click", "a", _on_click)
+        jQuery('#dialog-form-modal').on("click", "a", _on_click)
 
 def _on_popstate(e):
     if e.state:

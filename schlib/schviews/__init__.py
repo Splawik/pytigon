@@ -305,6 +305,8 @@ class GenericRows(object):
                     return self.paginate_by
 
             def get(self, request, *args, **kwargs):
+                if 'init' in kwargs:
+                    kwargs['init'](self)
                 if 'tree' in self.kwargs['vtype']:
                     parent = int(kwargs['filter'])
                     if parent < 0:

@@ -23,6 +23,7 @@
 
 from base64 import b64encode, b64decode
 import datetime
+import importlib
 
 from django import template
 from django.core.urlresolvers import reverse
@@ -797,3 +798,13 @@ def append_class_to_attrs(obj, arg):
     else:
         return "class='%s'" % arg
 
+@register.filter(name='import_var')
+def _import_var(obj):
+    path = str(obj)
+    base_path, item = path.split(':')
+    m = importlib.import_module(base_path)
+    return getattr(m, item)
+
+@register.filter(name='run_fun')
+def _run_fun(obj):
+    return obj()

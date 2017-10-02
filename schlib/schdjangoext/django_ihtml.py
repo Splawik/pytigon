@@ -36,6 +36,7 @@ AUTO_CLOSE_DJANGO_ELEM = [
 
 NO_AUTO_CLOSE_DJANGO_ELEM = [
     'else',
+    'elif',
     ]
 
 
