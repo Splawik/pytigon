@@ -22,6 +22,7 @@
 """
 
 from django.conf import settings
+from django.core.files.storage import default_storage
 import requests
 
 from schlib.schfs.vfstools import norm_path
@@ -65,7 +66,7 @@ def set_http_idle_func(func):
     HTTP_IDLE_FUNC = func
 
 def schurljoin(base, address):
-    if address and len(address)>0 and base and len(base)>0 and base[-1]=='/' and address[0]=='/':
+    if address and len(address)>0 and base and len(base)>0 and base[-1]=='/' and address[0]=='/' and not base.endswith("://"):
             return base+address[1:]
     else:
         return base + address
@@ -161,9 +162,11 @@ class HttpClient:
                 path = settings.MEDIA_ROOT+adr.replace('http://127.0.0.2', '').replace('/site_media','')
 
             try:
-                with open(path, "rb") as f:
-                    self.content = f.read()
-                    self.ret_content_type = "text/html"
+                self.content = default_storage.open(path).read()
+                self.ret_content_type = "text/html"
+                #with open(path, "rb") as f:
+                #    self.content = f.read()
+                #    self.ret_content_type = "text/html"
                 return (200, adr)
             except:
                 self.content = b""
@@ -174,9 +177,12 @@ class HttpClient:
             file_name = adr[7:]
             if file_name[0]=='/' and file_name[2]==':':
                 file_name = file_name[1:]
-            f = open(file_name, "rb")
+            f = default_storage.open(file_name)
             self.content = f.read()
-            f.close()
+            #default_storage.open(file_name).read()
+            #f = open(file_name, "rb")
+            #self.content = f.read()
+            #f.close()
             self.ret_content_type = "text/html charset=utf-8"
             return (200, adr)
 

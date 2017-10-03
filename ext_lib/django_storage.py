@@ -4,7 +4,7 @@ from django.core.files import File
 
 from fs.path import abspath, dirname
 from fs.errors import ResourceNotFound as ResourceNotFoundError
-from fs.error_tools import unwrap_errors 
+from fs.error_tools import unwrap_errors
 
 class FSStorage(Storage):
     def __init__(self, fs=None, base_url=None):
@@ -25,27 +25,39 @@ class FSStorage(Storage):
             raise NotImplementedError
         return path
 
-    @unwrap_errors
+    #@unwrap_errors
     def size(self, name):
-        return self.fs.getsize(name)
+        with unwrap_errors(name):
+            size = self.fs.getsize(name)
+        return size
+        #return self.fs.getsize(name)
 
-    @unwrap_errors
+    #@unwrap_errors
     def url(self, name):
-        return self.base_url + abspath(name)
+        with unwrap_errors(name):
+            ret = self.base_url + abspath(name)
+        return ret
+        #return self.base_url + abspath(name)
 
-    @unwrap_errors
+    #@unwrap_errors
     def _open(self, name, mode):
-        return File(self.fs.open(name, mode))
+        with unwrap_errors(name):
+            f = self.fs.open(name, mode)
+        return File(f)
+        #return File(self.fs.open(name, mode))
 
-    @unwrap_errors
+    #@unwrap_errors
     def _save(self, name, content):
-        self.fs.makedir(dirname(name), allow_recreate=True, recursive=True)
-        self.fs.setcontents(name, content)
+        with unwrap_errors(name):
+            self.fs.makedir(dirname(name), allow_recreate=True, recursive=True)
+            self.fs.setcontents(name, content)
         return name
 
     @unwrap_errors
     def delete(self, name):
-        try:
-            self.fs.remove(name)
-        except ResourceNotFound:
-            pass
+        with unwrap_errors(name):
+            try:
+                self.fs.remove(name)
+            except ResourceNotFoundError:
+                pass
+            

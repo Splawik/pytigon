@@ -153,11 +153,11 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 if self._request.META['HTTP_USER_AGENT'].startswith('Py'):
                     self['Content-Type'] = 'application/zip'
                     self['Content-Disposition'] = 'attachment; filename="somefilename.zip"'
-                    zip_stream = stream_from_html(self.content, stream_type='zip')
+                    zip_stream = stream_from_html(self.content, stream_type='zip', base_url="file://")
                     self.content = zip_stream.getvalue()
                 else:
                     self['Content-Type'] = 'application/pdf'
-                    pdf_stream = stream_from_html(self.content, stream_type='pdf')
+                    pdf_stream = stream_from_html(self.content, stream_type='pdf', base_url="file://")
                     self.content = pdf_stream.getvalue()
             elif self.context_data['view'].doc_type()=='json':
                 self['Content-Type'] = 'application/json'

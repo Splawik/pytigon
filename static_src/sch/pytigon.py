@@ -130,7 +130,7 @@ def page_init(id, first_time = True):
 
 
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
-    moment.locale('pl')
+    moment.locale(lang)
 
     window.APPSET_NAME = appset_name
     window.APPLICATION_TEMPLATE = application_template

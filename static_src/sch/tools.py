@@ -42,24 +42,6 @@ def fragment_init(elem=None):
     d.daterangepicker(format)
 
 
-    if False:
-        format = {
-            'weekStart': 1,
-            'format' : 'YYYY.MM.DD',
-            'lang': 'pl',
-            'switchOnClick': True,
-            'time': False,
-        }
-
-        d = elem2.find('.dateinput')
-        d.bootstrapMaterialDatePicker(format)
-
-        format['format'] = 'YYYY.MM.DD HH:mm'
-        format['time'] = True
-
-        d = elem2.find('.datetimeinput')
-        d.bootstrapMaterialDatePicker(format)
-
     def iterate_material_icons():
         font_map = {
             'clear': 'eraser',

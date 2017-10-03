@@ -64,7 +64,7 @@ class HtmlViewerParser(HtmlModParser):
     CSS_TYPE_STANDARD = 0
     CSS_TYPE_INDENT = 1
 
-    def __init__(self, dc=None, dc_info=None, url=None, calc_only=False,
+    def __init__(self, dc=None, dc_info=None, base_url=None, url=None, calc_only=False,
                  parse_only=False, init_css_str=None,css_type=CSS_TYPE_STANDARD):
         """Constructor
 
@@ -82,6 +82,7 @@ class HtmlViewerParser(HtmlModParser):
         """
         self.tag_parser = None
         self.url = url
+        self.base_url = base_url
         self.parse_only = parse_only
         self.obj_id_dict = {}
         self.obj_action_dict = {}
@@ -144,7 +145,7 @@ class HtmlViewerParser(HtmlModParser):
     def get_http_object(self):
         """return http connector"""
         if not self.http:
-            self.http = HttpClient(self.url)
+            self.http = HttpClient(self.base_url)
         return self.http
 
     def set_max_rendered_size(self, width, height):
@@ -287,7 +288,7 @@ class HtmlViewerParser(HtmlModParser):
                 print('|   '*tab, "/", obj.tag, "(", obj.height, ")")
 
 def stream_from_html(html, output_stream=None, css=None, width=int(210*72/25.4), height=int(297*72/25.4),
-        stream_type='pdf'):
+        stream_type='pdf', base_url=None):
     """Render html string
 
     Args:
@@ -325,7 +326,7 @@ def stream_from_html(html, output_stream=None, css=None, width=int(210*72/25.4),
         dc = CairoDc(calc_only=False, width=width2, height=height2)
 
     dc.set_paging(True)
-    p = HtmlViewerParser(dc=dc, calc_only=False)
+    p = HtmlViewerParser(dc=dc, calc_only=False, base_url=base_url)
     p.feed(html2)
     p.close()
     if stream_type=='pdf':
