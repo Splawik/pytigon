@@ -21,6 +21,8 @@
 
 """
 
+import base64
+
 from django.conf import settings
 from django.core.files.storage import default_storage
 import requests
@@ -115,6 +117,17 @@ class HttpClient:
             credentials - default False
             user_agent - default None
         """
+
+        if address_str.startswith('data:'):
+            x = address_str.split(',', 1)
+            if len(x)==2:
+                t = x[0][5:].split(';')
+                if t[1].strip()=='base64':
+                    self.content = base64.b64decode(x[1].encode('utf-8'))
+                    self.ret_content_type = t[0]
+                    return (200, address_str)
+            return (500, address_str)
+
         global COOKIES
         global COOKIES_EMBEDED
         global BLOCK

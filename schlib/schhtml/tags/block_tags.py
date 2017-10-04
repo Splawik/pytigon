@@ -72,10 +72,10 @@ class BodyTag(ParBase):
         self.dc = parent.dc.subdc(0, 0, width, height, False)
         (self.width, self.height) = self.dc.get_size()
         if self.width >= 0:
-            self.width = width - 2 * (self.margins[2] + self.margins[0])
+            self.width = width - self.margins[0] - self.margins[1]
         else:
             self.width = -1
-        self.height = (height - self.margins[3]) - self.margins[1]
+        self.height = height - self.margins[2] - self.margins[3]
         self.new_page = 0
         self.reg_id(self.dc)
         self.reg_end()
@@ -135,8 +135,9 @@ class BodyTag(ParBase):
             self.dc.paging = True
 
     def _get_pseudo_margins(self):
-        return [self.extra_space[0], self.extra_space[1], self.extra_space[2]
-                 + self.y, self.extra_space[3]]
+        #return [self.extra_space[0], self.extra_space[1], self.extra_space[2]
+        #         + self.y, self.extra_space[3]]
+        return [self.extra_space[0], self.extra_space[1], self.extra_space[2] , self.extra_space[3]]
 
     def get_client_height(self):
         if not self.dc_page:

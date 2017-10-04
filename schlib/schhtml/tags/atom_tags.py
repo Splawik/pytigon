@@ -90,7 +90,7 @@ class ImgDraw(object):
     def draw_atom(self, dc, style, x, y, dx, dy):
         http = self.img_tag.parser.http
         if self.image:
-            dc.draw_image(x, y, self.width, self.height, 0, self.image,)
+            dc.draw_image(x, y, self.width, self.height, 3, self.image,)
         else:
             print('null_img')
 
