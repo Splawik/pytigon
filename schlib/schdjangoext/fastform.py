@@ -114,7 +114,7 @@ def _read_form_line(line):
 
 def form_from_str(input_str):
     class _Form(forms.Form):
-        def __init__(self, user, *args, **kwargs):
+        def __init__(self, *args, **kwargs):
             super(_Form, self).__init__(*args, **kwargs)
 
             tab = _scan_lines(input_str)

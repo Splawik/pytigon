@@ -21,6 +21,7 @@ import os
 import sys
 from fs.mountfs import MountFS
 from fs.osfs import OSFS
+from django.conf import settings
 
 APPSET_NAME = "Pytigon"
 GEN_TIME = '0000.00.00 00:00:00'
@@ -221,12 +222,28 @@ else:
     }
 
 DEFAULT_FILE_STORAGE = 'django_storage.FSStorage'
-DEFAULT_FILE_STORAGE_FS = MountFS()
-DEFAULT_FILE_STORAGE_FS.mount('pytigon', OSFS(ROOT_PATH))
-DEFAULT_FILE_STORAGE_FS.mount('static', OSFS(STATICFILES_DIRS[0]))
+
+def DEFAULT_FILE_STORAGE_FS():
+    _m = MountFS()
+    _m.mount('pytigon', OSFS(settings.ROOT_PATH))
+    _m.mount('static', OSFS(settings.STATICFILES_DIRS[0]))
+    _m.mount('app', OSFS(settings.LOCAL_ROOT_PATH))
+    _m.mount('data', OSFS(settings.DATA_PATH))
+    try:
+        _m.mount('media', OSFS(settings.MEDIA_ROOT))
+    except:
+        pass
+    try:
+        _m.mount('temp', OSFS(settings.TEMP_PATH))
+    except:
+        pass
+    try:
+        _m.mount('upload', OSFS(settings.UPLOAD_PATH))
+    except:
+        pass
+    return _m
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
-
 OFFLINE_SUPPORT = False
 
 try:

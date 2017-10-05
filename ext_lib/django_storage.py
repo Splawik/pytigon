@@ -9,7 +9,7 @@ from fs.error_tools import unwrap_errors
 class FSStorage(Storage):
     def __init__(self, fs=None, base_url=None):
         if fs is None:
-            fs = settings.DEFAULT_FILE_STORAGE_FS
+            fs = settings.DEFAULT_FILE_STORAGE_FS()
         if base_url is None:
             base_url = settings.MEDIA_URL
         base_url = base_url.rstrip('/')

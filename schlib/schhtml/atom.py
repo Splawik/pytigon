@@ -20,8 +20,7 @@
 
 from schlib.schhtml.htmltools import superstrip
 
-decode_sym = (('&gt;','>'), ('&lt;','<'), ('&amp;', '&'), ('&quot;','\"'))
-
+decode_sym = (('&gt;','>'), ('&lt;','<'), ('&amp;', '&'), ('&quot;','\"'),)
 
 def unescape(txt):
     ret = txt

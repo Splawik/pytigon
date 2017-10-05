@@ -327,7 +327,7 @@ def stream_from_html(html, output_stream=None, css=None, width=int(210*72/25.4),
 
     dc.set_paging(True)
     p = HtmlViewerParser(dc=dc, calc_only=False, base_url=base_url)
-    p.feed(html2)
+    p.feed(html2.replace('&nbsp;','»'))
     p.close()
     if stream_type=='pdf':
         with open(pdf_name,"rb") as f:

@@ -302,7 +302,7 @@ class BaseDc(object):
                         obj.get_height(),
                         )
                 if not ret:
-                    self.draw_text(x + dx, y + line.dy_up, obj.data)
+                    self.draw_text(x + dx, y + line.dy_up, obj.data.replace('»',' '))
             else:
                 obj.data.draw_atom(
                     self,

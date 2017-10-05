@@ -125,7 +125,7 @@ class HttpClient:
                 if t[1].strip()=='base64':
                     self.content = base64.b64decode(x[1].encode('utf-8'))
                     self.ret_content_type = t[0]
-                    return (200, address_str)
+                    return (200, None)
             return (500, address_str)
 
         global COOKIES
@@ -177,9 +177,6 @@ class HttpClient:
             try:
                 self.content = default_storage.open(path).read()
                 self.ret_content_type = "text/html"
-                #with open(path, "rb") as f:
-                #    self.content = f.read()
-                #    self.ret_content_type = "text/html"
                 return (200, adr)
             except:
                 self.content = b""
@@ -192,10 +189,6 @@ class HttpClient:
                 file_name = file_name[1:]
             f = default_storage.open(file_name)
             self.content = f.read()
-            #default_storage.open(file_name).read()
-            #f = open(file_name, "rb")
-            #self.content = f.read()
-            #f.close()
             self.ret_content_type = "text/html charset=utf-8"
             return (200, adr)
 

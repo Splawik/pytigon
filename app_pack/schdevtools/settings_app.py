@@ -38,9 +38,6 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 
-from fs.osfs import OSFS
-DEFAULT_FILE_STORAGE_FS.mount('pytigon', OSFS(ROOT_PATH))
-
 PACKS = []
 
 for app in APPS:
@@ -110,5 +107,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2017.10.02 17:33:50'
+GEN_TIME = '2017.10.05 16:16:54'
 OFFLINE_SUPPORT = True
