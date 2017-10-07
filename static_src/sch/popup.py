@@ -7,6 +7,7 @@ from tbl import datatable_refresh, datatable_onresize, init_table
 
 
 def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
+    only_table_href = False
     refr_block = data_item_to_refresh.closest('.refr_object')
     if refr_block.hasClass('refr_target'):
         target = refr_block
@@ -22,13 +23,19 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
             if fun:
                 fun()
             return True
-        return False
+        datatable = target.find('table[name=tabsort].tabsort')
+        if datatable.length > 0:
+            only_table_href = True
+            target = datatable
+        else:
+            return False
 
     if refr_block.hasClass('refr_source'):
         src = refr_block
     else:
         src = refr_block.find('.refr_source')
     if src.length > 0:
+        src = jQuery(src[0])
         href = src.attr('href')
         if src.prop("tagName") == 'FORM':
             def _refr2(data):
@@ -36,12 +43,12 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
                 #fragment_init(target)
                 if fun:
                     fun();
-            ajax_post(corect_href(href), src.serialize(), _refr2)
+            ajax_post(corect_href(href, only_table_href), src.serialize(), _refr2)
         else:
             def _on_load(responseText):
                 if fun:
                     fun()
-            ajax_load(target, corect_href(href), _on_load)
+            ajax_load(target, corect_href(href, only_table_href), _on_load)
     else:
         if fun:
             fun()

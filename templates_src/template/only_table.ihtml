@@ -1,0 +1,4 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/only_table_base.html'
+

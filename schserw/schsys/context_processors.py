@@ -88,6 +88,8 @@ def standard_web_browser(request):
             return 2
         elif 'only_content' in request.GET:
             return 5
+        elif 'only_table' in request.GET:
+            return 6
         else:
             return 1
 
@@ -319,7 +321,8 @@ def sch_standard(request):
 
     Returns dict with vars:
         standard_web_browser - 0 - wxPython client, 1 - standard browser, 2 - hybrid (webkit embeded in wxPython
-        application, 3 - webkit in wxPython frame (no hybrid), 5 - render only content (for javascript ajax)
+        application, 3 - webkit in wxPython frame (no hybrid), 5 - render only content (for javascript ajax),
+        6 - render only table content (for javascript ajax)
 
         app_manager - AppManager(request)
 
@@ -467,6 +470,9 @@ def sch_standard(request):
         d_template2 = default_template(b_type)
     elif standard==5:
         d_template = default_template('only_content')
+        d_template2 = default_template(b_type)
+    elif standard == 6:
+        d_template = default_template('only_table')
         d_template2 = default_template(b_type)
     else:
         d_template = default_template(b_type)

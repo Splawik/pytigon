@@ -16,7 +16,7 @@ from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
 from tbl import init_table, datatable_onresize
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html, register_fragment_init_fun, register_mount_fun
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
@@ -66,67 +66,11 @@ def init_pagintor(pg):
 
 def page_init(id, first_time = True):
     table_type = get_table_type(jQuery('#'+ id))
-
     if table_type != 'datatable':
         if window.ACTIVE_PAGE:
             pg = window.ACTIVE_PAGE.page.find('.pagination')
             paginate = init_pagintor(pg)
-
     init_table(jQuery('#'+ id + ' .tabsort'), table_type)
-
-    if first_time:
-        elem2 = jQuery('body')
-
-    def _on_submit(e):
-        if jQuery(this).attr('target')=='_blank':
-            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-            return True
-
-        if jQuery(this).attr('target')=='refresh_obj':
-            if refresh_fragment(jQuery(this), None, True):
-                return False
-
-        data = jQuery(this).serialize()
-
-        if data and 'pdf=on' in data:
-            jQuery(this).attr('target','_blank')
-            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-            return True
-        if data and 'odf=on' in data:
-            jQuery(this).attr('target','_blank')
-            jQuery(this).attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-            return True
-
-        e.preventDefault()
-
-        submit_button = jQuery(this).find('button[type="submit"]')
-        if submit_button.length > 0:
-            submit_button.attr("data-style", "zoom-out")
-            submit_button.attr("data-spinner-color", "#FF0000")
-            window.WAIT_ICON = Ladda.create(submit_button[0])
-            window.WAIT_ICON.start()
-        else:
-            window.WAIT_ICON2 = True
-            jQuery('#loading-indicator').show()
-
-
-        href = jQuery(this).attr("action")
-        if href:
-            jQuery(this).attr('action', corect_href(href))
-
-        def _on_submit2(data):
-            nonlocal id
-            mount_html(window.ACTIVE_PAGE.page, data)
-            page_init(id, False)
-            if window.WAIT_ICON:
-                window.WAIT_ICON.stop()
-            if window.WAIT_ICON2:
-                jQuery('#loading-indicator').hide()
-                window.WAIT_ICON2 = False
-        ajax_submit(jQuery(this), _on_submit2)
-
-
-    window.ACTIVE_PAGE.page.find('form').submit(_on_submit)
 
 
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
@@ -159,8 +103,60 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
     sync_and_run('sys', _on_sync)
 
-    init_popup_events()
+    def _on_submit(e):
+        if jQuery(this).attr('target') == '_blank':
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data")
+            return True
 
+        if jQuery(this).attr('target') == 'refresh_obj':
+            if refresh_fragment(jQuery(this), None, True):
+                return False
+
+        data = jQuery(this).serialize()
+
+        if data and 'pdf=on' in data:
+            jQuery(this).attr('target', '_blank')
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data")
+            return True
+        if data and 'odf=on' in data:
+            jQuery(this).attr('target', '_blank')
+            jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data")
+            return True
+
+        e.preventDefault()
+
+        submit_button = jQuery(this).find('button[type="submit"]')
+        if submit_button.length > 0:
+            submit_button.attr("data-style", "zoom-out")
+            submit_button.attr("data-spinner-color", "#FF0000")
+            window.WAIT_ICON = Ladda.create(submit_button[0])
+            window.WAIT_ICON.start()
+        else:
+            window.WAIT_ICON2 = True
+            jQuery('#loading-indicator').show()
+
+        href = jQuery(this).attr("action")
+        if href:
+            jQuery(this).attr('action', corect_href(href))
+
+        def _on_submit2(data):
+            nonlocal id
+            mount_html(window.ACTIVE_PAGE.page, data)
+            page_init(id, False)
+            if window.WAIT_ICON:
+                window.WAIT_ICON.stop()
+            if window.WAIT_ICON2:
+                jQuery('#loading-indicator').hide()
+                window.WAIT_ICON2 = False
+
+        ajax_submit(jQuery(this), _on_submit2)
+
+    jQuery('#tabs2_content').on("submit", "form", _on_submit)
+    jQuery('#dialog-form-modal').on("submit", "form", _on_submit)
+    #jQuery('#tabs2_content').on("submit", "button", _on_submit)
+    #jQuery('#dialog-form-modal').on("submit", "button", _on_submit)
+
+    init_popup_events()
     if can_popup():
         def _local_fun():
             nonlocal menu_id
@@ -425,6 +421,8 @@ def init_popup_events(elem=None):
     else:
         jQuery('#tabs2_content').on("click", "a", _on_click)
         jQuery('#dialog-form-modal').on("click", "a", _on_click)
+
+#register_mount_fun(init_popup_events)
 
 def _on_popstate(e):
     if e.state:

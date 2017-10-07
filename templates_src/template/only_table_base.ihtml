@@ -1,0 +1,17 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends 'template/only_content.html'
+
+%% list_page_start
+
+%% list_page_header
+
+%% list_content_header
+
+%% list_content_footer
+
+%% list_content_end
+
+%% list_page_footer
+
+%% list_page_end

@@ -126,7 +126,14 @@ def evalJSFromHtml(html):
     jQuery.each(scripts, eval_fun)
 
 
+MOUNT_INIT_FUN = []
+
+def register_mount_fun(fun):
+    global MOUNT_INIT_FUN
+    MOUNT_INIT_FUN.append(fun)
+
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
+    global MOUNT_INIT_FUN
     if component_init and window.COMPONENT_INIT and len(window.COMPONENT_INIT)>0:
             elem.empty()
             res = Vue.compile("<div>"+html_txt+"</div>")
@@ -147,6 +154,9 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     if run_fragment_init:
         fragment_init(elem)
 
+    if MOUNT_INIT_FUN:
+        for fun in MOUNT_INIT_FUN:
+            fun(elem)
 
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
@@ -341,14 +351,20 @@ def can_popup():
         return True
 
 
-def corect_href(href):
+def corect_href(href, only_table=False):
     if 'only_content' in href:
         return href
     else:
-        if '?' in href:
-            return href + '&only_content=1'
+        if only_table:
+            if '?' in href:
+                return href + '&only_table=1'
+            else:
+                return href + '?only_table=1'
         else:
-            return href + '?only_content=1'
+            if '?' in href:
+                return href + '&only_content=1'
+            else:
+                return href + '?only_content=1'
 
 
 def load_css(path):
