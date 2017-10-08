@@ -144,6 +144,9 @@ not(.login_background) div.content-wrapper {
   border-right: 0.3em solid transparent;
   border-left: 0.3em solid transparent; }
 
+.form-vertical .form-control {
+  width: 100%; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;

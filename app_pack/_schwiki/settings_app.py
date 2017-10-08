@@ -106,3 +106,5 @@ try:
     from settings_app_local import *
 except:
     pass
+
+GEN_TIME = '2017.10.08 09:35:13'

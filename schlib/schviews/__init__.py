@@ -675,7 +675,8 @@ class GenericRows(object):
                         self.init_form = self.object.init_new()
 
                 if 'parent_pk' in self.kwargs and hasattr(self.object, 'parent_id'):
-                    self.object.parent_id = int(self.kwargs['parent_pk'])
+                    if int(self.kwargs['parent_pk'])!=0:
+                        self.object.parent_id = int(self.kwargs['parent_pk'])
 
                 if request and request.POST:
                     p = request.POST

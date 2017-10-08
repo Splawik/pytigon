@@ -207,7 +207,7 @@
                                                                 span class=fa fa-refresh
                         %%list_content_header_third_row
                             div class=tr row list_content_header list_content_header_third_row
-                                div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td col-sm-8 col-xs-5 form-inline{% endif %},,,role=form,,,id={{uuid}}_toolbar
+                                div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td col-sm-8 col-xs-5{% endif %},,,role=form,,,id={{uuid}}_toolbar
                                     div class=dropdown
                                         % if standard_web_browser and object_list:
                                             % if table_type == 'datatable':

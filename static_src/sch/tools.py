@@ -54,18 +54,25 @@ def fragment_init(elem=None):
 
     jQuery('i.material-icons').each(iterate_material_icons)
 
-    if 1==2:
-        icons = {
-            'time': 'fa fa-clock-o',
-            'date': 'fa fa-calendar',
-            'up': 'fa fa-chevron-up',
-            'down': 'fa fa-chevron-down',
-            'previous': 'fa fa-chevron-left',
-            'next': 'fa fa-chevron-right',
-            'today': 'fa fa-calendar-check-o',
-            'clear': 'fa fa-trash',
-            'close': 'fa fa-times'
-        }
+    icons = {
+        'time': 'fa fa-clock-o',
+        'date': 'fa fa-calendar',
+        'up': 'fa fa-chevron-up',
+        'down': 'fa fa-chevron-down',
+        'previous': 'fa fa-chevron-left',
+        'next': 'fa fa-chevron-right',
+        'today': 'fa fa-calendar-check-o',
+        'clear': 'fa fa-trash',
+        'close': 'fa fa-times',
+        'paginationSwitchDown': 'fa-chevron-down',
+        'paginationSwitchUp': 'fa-chevron-up',
+        'refresh': 'fa-refresh',
+        'toggle': 'fa-list-alt',
+        'columns': 'fa-th',
+        'detailOpen': 'fa-plus',
+        'detailClose': 'fa-minus'
+    }
+    if 1 == 2:
 
         d = elem2.find('.dateinput')
         d.wrap( "<div class='input-group date' data-target-input='nearest'></div>" )

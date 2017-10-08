@@ -105,28 +105,34 @@ class LocalizationTemplateResponse(TemplateResponse):
 class ExtTemplateResponse(LocalizationTemplateResponse):
     def __init__(self, request, template, context=None, content_type=None, status=None, mimetype=None,
                  current_app=None, charset=None, using=None):
-        if context and 'view' in context and context['view'].doc_type()=='pdf':
-            template2 = []
-            if 'template_name' in context:
-                template2.append(context['template_name']+'.html')
-            for pos in template:
-                template2.append(pos.replace('.html', '_pdf.html'))
-            template2.append("schsys/table_pdf.html")
-        elif context and 'view' in context and context['view'].doc_type()=='txt':
-            template2 = []
-            if 'template_name' in context:
-                template2.append(context['template_name']+'.html')
-            for pos in template:
-                template2.append(pos.replace('.html', '_txt.html'))
-        elif context and 'view' in context and context['view'].doc_type()=='odf':
-            template2 = []
-            if 'template_name' in context:
-                template2.append(context['template_name']+'.ods')
-            for pos in template:
-                template2.append(pos.replace('.html', '.ods'))
-            template2.append("schsys/table.ods")
-        else:
-            template2 = template
+
+        template2 = None
+        if context and 'view' in context and context['view']:
+            template2 = self._get_model_template(context, context['view'].doc_type())
+
+        if not template2:
+            if context and 'view' in context and context['view'].doc_type()=='pdf':
+                template2 = []
+                if 'template_name' in context:
+                    template2.append(context['template_name']+'.html')
+                for pos in template:
+                    template2.append(pos.replace('.html', '_pdf.html'))
+                template2.append("schsys/table_pdf.html")
+            elif context and 'view' in context and context['view'].doc_type()=='txt':
+                template2 = []
+                if 'template_name' in context:
+                    template2.append(context['template_name']+'.html')
+                for pos in template:
+                    template2.append(pos.replace('.html', '_txt.html'))
+            elif context and 'view' in context and context['view'].doc_type()=='odf':
+                template2 = []
+                if 'template_name' in context:
+                    template2.append(context['template_name']+'.ods')
+                for pos in template:
+                    template2.append(pos.replace('.html', '.ods'))
+                template2.append("schsys/table.ods")
+            else:
+                template2 = template
 
         try:
             TemplateResponse.__init__(self, request, template2, context,
@@ -134,6 +140,22 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
         except:
             TemplateResponse.__init__(self, request, template2, context,
                                   content_type, status, current_app)
+
+    def _get_model_template(self, context, doc_type):
+        if context and 'object' in context:
+            o = context['object']
+            if hasattr(o, 'template_for_object'):
+                t = o.template_for_object(context, doc_type)
+                if t:
+                    return t
+        elif context and 'view' in context and 'object_list' in context:
+            ol = context['object_list']
+            if hasattr(ol, 'model'):
+                if hasattr(ol.model, 'template_for_list'):
+                    t = ol.model.template_for_list(context, doc_type)
+                    if t:
+                        return t
+        return None
 
     def render(self):
         if self.context_data['view'].doc_type()=='odf':
@@ -194,6 +216,24 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 self.content = schjson.json_dumps(d)
 
             return ret
+
+
+    @property
+    def rendered_content(self):
+        """Returns the freshly rendered content for the template and context
+        described by the TemplateResponse.
+
+        This *does not* set the final content of the response. To set the
+        response content, you must either call render(), or set the
+        content explicitly using the value of this property.
+        """
+        template = self.resolve_template(self.template_name)
+        context = self.resolve_context(self.context_data)
+        try:
+            content = template.render(context, self._request)
+        except:
+            content = template.render(RequestContext(self._request, context))
+        return content
 
 
 class ExtTemplateView(generic.TemplateView):
