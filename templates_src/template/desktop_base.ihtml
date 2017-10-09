@@ -296,12 +296,15 @@
 
 
 %% body_body
-    % if application_type == 'modern':
-        div class=container-fluid tab-pane refr_target refr_object win-content page
-            {{block.super}}
+    % if standard_web_browser == 6:
+	{{block.super}}
     % else:
-        div id=body_body,,,class=container-fluid tab-pane refr_target refr_object win-content page
-            {{block.super}}
+        % if application_type == 'modern':
+            div class=container-fluid tab-pane refr_target refr_object win-content page
+                {{block.super}}
+        % else:
+            div id=body_body,,,class=container-fluid tab-pane refr_target refr_object win-content page
+                {{block.super}}
 
 %% body_end
     % if standard_web_browser:
