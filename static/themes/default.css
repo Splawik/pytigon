@@ -45,9 +45,11 @@ not(.login_background) div.content-wrapper {
       text-transform: none;
       border-top-right-radius: 0.15rem;
       border-top-left-radius: 0.15rem; }
-
-#tabs2:hover li {
-  display: flex !important; }
+    #tabs2 li:nth-child(1n+4) {
+      width: 25px;
+      overflow: hidden; }
+      #tabs2 li:nth-child(1n+4) a {
+        color: transparent; }
 
 /* bootstrap-table */
 .tabsort_panel .table td, .table_panel .table td {

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-11 07:31:16
+// Transcrypt'ed from Python, 2017-10-12 00:08:30
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3230,7 +3230,7 @@ function pytigon () {
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
 							self.titles [title2] = menu_item;
-							jQuery ('#tabs2').append (vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, _id])));
+							jQuery ('#tabs2').append (vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, title2, _id])));
 							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;

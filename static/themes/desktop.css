@@ -94,6 +94,7 @@
   padding-left: 10px;
   position: absolute;
   right: 10px;
+  width: 500px;
   z-index: 9999; }
   #tabs2 a {
     background-color: #ddd !important;
@@ -106,7 +107,11 @@
     margin-right: 2px !important; }
     #tabs2 > li > a {
       background-color: rgba(250, 250, 250, 0.6) !important;
-      margin-bottom: 0px !important; }
+      margin-bottom: 0px !important;
+      text-overflow: ellipsis;
+      max-width: 120px;
+      overflow: hidden;
+      font-size: small; }
 
 #tabs2_content {
   background-color: #fff;
