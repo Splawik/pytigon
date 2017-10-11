@@ -46,6 +46,9 @@ not(.login_background) div.content-wrapper {
       border-top-right-radius: 0.15rem;
       border-top-left-radius: 0.15rem; }
 
+#tabs2:hover li {
+  display: flex !important; }
+
 /* bootstrap-table */
 .tabsort_panel .table td, .table_panel .table td {
   padding-top: 0.25rem;
@@ -297,6 +300,9 @@ label.upload i {
 
 .label-floating .form-control:focus::-webkit-input-placeholder {
   transition: none; }
+
+form.form-inline .label-floating label.control-label {
+  position: absolute; }
 
 .btn-file {
   cursor: pointer;

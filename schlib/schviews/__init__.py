@@ -424,7 +424,10 @@ class GenericRows(object):
                 if self.form_valid == True:
                     return self.form.process(self.request, ret)
                 else:
-                    return ret
+                    if hasattr(self.form, 'process_invalid'):
+                        return self.form.process_invalid(self.request, ret)
+                    else:
+                        return ret
 
         fun = make_perms_test_fun(self.base_perm % 'list', ListView.as_view())
         self._append(url, fun)

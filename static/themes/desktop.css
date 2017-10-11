@@ -94,10 +94,7 @@
   padding-left: 10px;
   position: absolute;
   right: 10px;
-  width: 400px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  z-index: 999; }
+  z-index: 9999; }
   #tabs2 a {
     background-color: #ddd !important;
     white-space: nowrap;
