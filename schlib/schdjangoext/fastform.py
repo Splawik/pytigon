@@ -96,7 +96,7 @@ def _read_form_line(line):
                kwargs = { 'max_length': len(frm) }
         elif frm.startswith('_'):
             field_type=forms.CharField
-            kwargs = { 'widget': forms.Textarea, 'max_length': len(frm) }
+            kwargs = { 'widget': forms.Textarea }
         elif frm.startswith('['):
             field_type=forms.ChoiceField
             choices = list([ (pos,pos,) for pos in frm[1:-1].split(';') if pos])
