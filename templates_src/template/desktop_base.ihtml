@@ -74,7 +74,7 @@
         .function base_fragment_init() {}
     %% component_init
         .component_init = null
-    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ get_current_language }}', '{{URL_BASE}}/', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ gen_time }}' )
+    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{URL_BASE}}/', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ gen_time }}' )
 
 
 %% jquery_ready_start
@@ -292,7 +292,7 @@
     % else
         div class=tabbable win-content
             div id=tab_tabs2
-                ul class=nav nav-tabs win-header,,,id=tabs2
+                ul class=nav nav-tabs win-header append-left,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
         {{block.super}}
 

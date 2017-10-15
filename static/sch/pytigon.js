@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-12 00:08:30
+// Transcrypt'ed from Python, 2017-10-15 17:49:53
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3230,7 +3230,14 @@ function pytigon () {
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
 							self.titles [title2] = menu_item;
-							jQuery ('#tabs2').append (vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, title2, _id])));
+							var menu_pos = vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, title2, _id]));
+							var append_left = jQuery ('#tabs2').hasClass ('append-left');
+							if (append_left) {
+								jQuery ('#tabs2').prepend (menu_pos);
+							}
+							else {
+								jQuery ('#tabs2').append (menu_pos);
+							}
 							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;
@@ -3247,8 +3254,14 @@ function pytigon () {
 									history_push_state (menu_item.title, menu_item.url);
 								}
 							};
-							jQuery ('#tabs2 a:last').on ('shown.bs.tab', _on_show_tab);
-							jQuery ('#tabs2 a:last').tab ('show');
+							if (append_left) {
+								jQuery ('#tabs2 a:first').on ('shown.bs.tab', _on_show_tab);
+								jQuery ('#tabs2 a:first').tab ('show');
+							}
+							else {
+								jQuery ('#tabs2 a:last').on ('shown.bs.tab', _on_show_tab);
+								jQuery ('#tabs2 a:last').tab ('show');
+							}
 							page_init (_id, false);
 							var _on_button_click = function (event) {
 								get_menu ().remove_page (jQuery (this).attr ('id').py_replace ('button_', ''));
@@ -3576,6 +3589,16 @@ function pytigon () {
 						};
 						jQuery.each (scripts, eval_fun);
 					};
+					var evalCSSFromHtml = function (html, elem) {
+						var newElement = document.createElement ('div');
+						newElement.innerHTML = html;
+						var css = newElement.getElementsByTagName ('style');
+						var eval_fun = function (id, value) {
+							jQuery (value).attr ('scoped', 'scoped');
+							elem.append (value);
+						};
+						jQuery.each (css, eval_fun);
+					};
 					var MOUNT_INIT_FUN = list ([]);
 					var register_mount_fun = function (fun) {
 						MOUNT_INIT_FUN.append (fun);
@@ -3600,6 +3623,7 @@ function pytigon () {
 								};
 								jQuery.each (component.$el.childNodes, _append);
 								evalJSFromHtml (html_txt);
+								evalCSSFromHtml (html_txt, elem);
 							}
 						}
 						else {
@@ -3958,6 +3982,7 @@ function pytigon () {
 						__all__.can_popup = can_popup;
 						__all__.corect_href = corect_href;
 						__all__.download_binary_file = download_binary_file;
+						__all__.evalCSSFromHtml = evalCSSFromHtml;
 						__all__.evalJSFromHtml = evalJSFromHtml;
 						__all__.fragment_init = fragment_init;
 						__all__.get_page = get_page;

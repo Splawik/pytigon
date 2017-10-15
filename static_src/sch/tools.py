@@ -133,6 +133,23 @@ def evalJSFromHtml(html):
     jQuery.each(scripts, eval_fun)
 
 
+def evalCSSFromHtml(html, elem):
+    newElement = document.createElement('div')
+    newElement.innerHTML = html
+
+    css = newElement.getElementsByTagName("style")
+    def eval_fun(id, value):
+        #elem.append("<style scoped></style>")
+        #if value.id:
+        #eval(value.innerHTML)
+        #s = jQuery("<style scoped></style>")
+        jQuery(value).attr('scoped', 'scoped')
+        #s.innerHTML = value
+        elem.append(value)
+
+    jQuery.each(css, eval_fun)
+
+
 MOUNT_INIT_FUN = []
 
 def register_mount_fun(fun):
@@ -155,6 +172,7 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
                 jQuery.each(component.S__el.childNodes, _append)
 
                 evalJSFromHtml(html_txt)
+                evalCSSFromHtml(html_txt, elem)
     else:
         elem.html(html_txt)
 

@@ -2,8 +2,8 @@
   background-color: #eee;
   margin-bottom: 3px; }
   .menu-content a.menu-href {
-    padding: 10px;
-    margin: 5px 5px; }
+    padding: 5px 10px 15px 10px;
+    margin: 5px 5px 5px 5px; }
 
 #logo_place {
   position: absolute;
@@ -55,7 +55,6 @@
   border-bottom: white;
   border-bottom-style: solid;
   border-bottom-width: 2px;
-  padding-right: 420px;
   overflow-x: auto;
   overflow-y: hidden;
   color: white; }
@@ -90,11 +89,10 @@
 
 #tabs2 {
   background-color: transparent;
-  margin-top: -38px;
+  margin-top: -32px;
   padding-left: 10px;
   position: absolute;
   right: 10px;
-  width: 500px;
   z-index: 9999; }
   #tabs2 a {
     background-color: #ddd !important;

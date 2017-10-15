@@ -40,15 +40,14 @@ not(.login_background) div.content-wrapper {
         margin-right: 0px;
         box-shadow: none; }
     #tabs2 li.nav-item a.nav-link {
-      padding: 8px;
-      padding-right: 12px;
+      padding: 6px 12px 10px 8px;
       text-transform: none;
       border-top-right-radius: 0.15rem;
       border-top-left-radius: 0.15rem; }
-    #tabs2 li:nth-child(1n+4) {
+    #tabs2 li:nth-child(1n+6) {
       width: 25px;
       overflow: hidden; }
-      #tabs2 li:nth-child(1n+4) a {
+      #tabs2 li:nth-child(1n+6) a {
         color: transparent; }
 
 /* bootstrap-table */
@@ -82,11 +81,14 @@ not(.login_background) div.content-wrapper {
 .tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
   background-color: transparent; }
 
-.tabsort_panel div.td_action .btn, .table_panel div.td_action .btn {
+.tabsort_panel div.td_action, .table_panel div.td_action {
   box-shadow: none;
   border: none;
-  text-transform: none;
-  color: #006040; }
+  text-transform: none; }
+  .tabsort_panel div.td_action .btn-secondary, .table_panel div.td_action .btn-secondary {
+    color: #006040; }
+  .tabsort_panel div.td_action .btn-danger, .table_panel div.td_action .btn-danger {
+    color: #600040; }
 
 .tabsort_panel div.td_action .btn:not(:hover), .table_panel div.td_action .btn:not(:hover) {
   background-color: transparent; }
@@ -309,6 +311,9 @@ form.form-inline .label-floating label.control-label {
 .btn-file {
   cursor: pointer;
   cursor: hand; }
+
+div.calendar-table td.today {
+  background: #ffb; }
 
 .txt3d {
   font-weight: 900;

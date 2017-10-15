@@ -36,7 +36,16 @@ class TabMenu:
         menu_item = TabMenuItem(_id, title2, href, data)
         self.titles[title2] = menu_item
         #jQuery('#tabs2').append(vsprintf("<li id='li_%s'>                  <a href='#%s'                          data-toggle='tab'           >%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, _id]))
-        jQuery('#tabs2').append(vsprintf("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, title2, _id]))
+        menu_pos = vsprintf(
+            "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
+            [_id, _id, title2, title2, _id])
+
+        append_left =jQuery("#tabs2").hasClass('append-left')
+
+        if append_left:
+            jQuery('#tabs2').prepend(menu_pos)
+        else:
+            jQuery('#tabs2').append(menu_pos)
         jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
 
         window.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
@@ -57,9 +66,12 @@ class TabMenu:
             self.active_item = menu_item
             if window.PUSH_STATE:
                 history_push_state(menu_item.title, menu_item.url)
-        jQuery('#tabs2 a:last').on('shown.bs.tab', _on_show_tab)
-
-        jQuery('#tabs2 a:last').tab('show')
+        if append_left:
+            jQuery('#tabs2 a:first').on('shown.bs.tab', _on_show_tab)
+            jQuery('#tabs2 a:first').tab('show')
+        else:
+            jQuery('#tabs2 a:last').on('shown.bs.tab', _on_show_tab)
+            jQuery('#tabs2 a:last').tab('show')
 
         page_init(_id, False)
 
