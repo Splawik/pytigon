@@ -143,3 +143,6 @@ ul.sidebar-menu ul.treeview-menu {
 .tabsort-toolbar-expand2 {
   top: -40px !important;
   left: 50px !important; }
+
+.tabsort .badge-secondary {
+  background: #868e96; }
