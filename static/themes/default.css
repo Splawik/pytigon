@@ -312,7 +312,7 @@ form.form-inline .label-floating label.control-label {
   cursor: pointer;
   cursor: hand; }
 
-div.calendar-table td.today {
+div.calendar-table td.today:not(.active) {
   background: #ffb; }
 
 .txt3d {
