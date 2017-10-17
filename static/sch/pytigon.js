@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-15 19:57:24
+// Transcrypt'ed from Python, 2017-10-17 19:14:49
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2721,6 +2721,7 @@ function pytigon () {
 							var datatable = target.find ('table[name=tabsort].datatable');
 							if (datatable.length > 0) {
 								datatable_refresh (datatable);
+								target.find ('.inline_dialog').remove ();
 								if (fun) {
 									fun ();
 								}
@@ -2729,6 +2730,7 @@ function pytigon () {
 							var datatable = target.find ('table[name=tabsort].tabsort');
 							if (datatable.length > 0) {
 								var only_table_href = true;
+								target.find ('.inline_dialog').remove ();
 								var target = datatable.closest ('div.tableframe');
 							}
 							else {

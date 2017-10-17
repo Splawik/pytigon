@@ -258,6 +258,8 @@ class CtrlTag(TableTag):
                 height += m[2]+m[3]
             if '99.7%' in self.attrs['height']:
                 height += m[2]+m[3]-wx.Button.GetDefaultSize()[1]
+            if '100%' in self.attrs['height']:
+                height -= self.parent.y - +m[3]
 
             self.height = self._norm_sizes([self.attrs['height']], height)[0]
 

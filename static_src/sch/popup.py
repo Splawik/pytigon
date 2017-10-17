@@ -20,12 +20,14 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
         datatable = target.find('table[name=tabsort].datatable')
         if datatable.length>0:
             datatable_refresh(datatable)
+            target.find('.inline_dialog').remove()
             if fun:
                 fun()
             return True
         datatable = target.find('table[name=tabsort].tabsort')
         if datatable.length > 0:
             only_table_href = True
+            target.find('.inline_dialog').remove()
             target = datatable.closest('div.tableframe')
         else:
             return False
