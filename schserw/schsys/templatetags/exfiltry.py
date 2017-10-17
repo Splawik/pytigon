@@ -26,7 +26,7 @@ import datetime
 import importlib
 
 from django import template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.forms.widgets import HiddenInput, CheckboxSelectMultiple
 from django.template.loader import get_template
 from django.template import Context, Template
@@ -85,7 +85,7 @@ def bencode(value):
     """Returns b64encode(value)"""
 
     if value:
-        return b64encode(value.encode('utf-8'))
+        return b64encode(value.encode('utf-8')).decode('utf-8')
     else:
         return ''
 

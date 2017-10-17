@@ -25,11 +25,11 @@
 import collections
 import uuid
 
-from django.core.urlresolvers import get_script_prefix
+from django.urls import get_script_prefix
 from django.apps import apps
 from django.views import generic
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings
 from django.conf.urls import url
 from django.db.models import CharField

@@ -28,7 +28,7 @@ import time
 from urllib.parse import urlparse
 
 from django.conf import settings 
-from django.core.urlresolvers import get_script_prefix
+from django.urls import get_script_prefix
 try:
     from django.contrib.auth.models import Permission
 except:

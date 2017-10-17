@@ -118,13 +118,44 @@ class Loader(BaseLoader):
             except ValueError:
                 pass
 
-    def load_template_source(self, template_name, template_dirs=None):
-        tried = []
-        compile_template(template_name, template_dirs, tried)
-        if tried:
-            error_msg = 'Tried %s' % tried
-        else:
-            error_msg = \
-                'Your TEMPLATE_DIRS setting is empty. Change it to point to at least one template directory.'
-        raise TemplateDoesNotExist(error_msg)
-
+    def get_contents(self, origin):
+        filepath = origin
+        filepath2 = filepath.replace('_src', '').replace('.ihtml', '.html')
+        try:
+            write = False
+            if os.path.exists(filepath):
+                if not os.path.exists(os.path.dirname(filepath2)):
+                    os.makedirs(os.path.dirname(filepath2))
+                if os.path.exists(filepath2):
+                    time2 = os.path.getmtime(filepath2)
+                    time1 = os.path.getmtime(filepath)
+                    if time1 > time2:
+                        write = True
+                else:
+                    write = True
+                if write:
+                    langs = []
+                    for pos in settings.LANGUAGES:
+                        langs.append(pos[0])
+                    for lang in langs:
+                        try:
+                            ret = ihtml_to_html(filepath, lang=lang)
+                            if ret:
+                                try:
+                                    if lang == 'en':
+                                        with codecs.open(filepath2, 'w', encoding='utf-8') as f:
+                                            f.write(ret)
+                                    else:
+                                        with codecs.open(filepath2.replace('.html', '_' + lang + ".html"),
+                                                         'w', encoding='utf-8') as f:
+                                            f.write(ret)
+                                except:
+                                    import traceback
+                                    import sys
+                                    print(sys.exc_info())
+                                    print(traceback.print_exc())
+                        except:
+                            pass
+        except:
+            pass
+        raise TemplateDoesNotExist(origin)

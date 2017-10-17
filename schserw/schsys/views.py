@@ -25,7 +25,6 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.http import HttpResponse, HttpResponseRedirect
 

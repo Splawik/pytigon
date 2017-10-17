@@ -23,7 +23,7 @@ import sys
 import os
 import platform
 
-from base64 import b32encode, b32decode
+from base64 import b64encode, b64decode
 
 
 def split2(txt, sep):
@@ -62,19 +62,19 @@ def extend_fun_to(obj):
 
 
 def bencode(s):
-    """encode string s by b32encode function"""
+    """encode string s by b64encode function"""
     if type(s)==str:
-        return b32encode(s.encode('utf-8')).decode('utf-8')
+        return b64encode(s.encode('utf-8')).decode('utf-8')
     else:
-        return b32encode(s).decode('utf-8')
+        return b64encode(s).decode('utf-8')
 
 
 def bdecode(s):
     """decode string encoded by bencode function"""
     if type(s)==str:
-        return b32decode(s.encode('utf-8')).decode('utf-8')
+        return b64decode(s.encode('utf-8')).decode('utf-8')
     else:
-        return b32decode(s).decode('utf-8')
+        return b64decode(s).decode('utf-8')
 
 
 def clean_href(href):

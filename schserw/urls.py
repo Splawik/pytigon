@@ -39,7 +39,7 @@ import schserw.schsys.views
 from schlib.schdjangoext.tools import make_href
 
 urlpatterns = [
-    url('schsys/jsi18n/$', django.views.i18n.javascript_catalog, {'packages': ('django.conf', )}),
+    url('schsys/jsi18n/$', django.views.i18n.JavaScriptCatalog, {'packages': ('django.conf', )}),
     url('schsys/i18n/', include(django.conf.urls.i18n)),
     url('admin/', admin.site.urls),
     url('schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
