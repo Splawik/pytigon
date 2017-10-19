@@ -111,6 +111,10 @@ class Loader(BaseLoader):
             template_dirs = settings.TEMPLATES[0]['DIRS']
         for template_dir in template_dirs:
             try:
+                for pos in settings.LANGUAGES:
+                    if '_'+pos[0]+'.html' in template_name:
+                        template_name = template_name.replace('_'+pos[0]+'.html', '.html')
+
                 yield safe_join(template_dir + '_src',
                                 template_name.replace('.html', '.ihtml'))
             except UnicodeDecodeError:

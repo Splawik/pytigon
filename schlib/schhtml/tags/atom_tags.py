@@ -26,7 +26,7 @@ from schlib.schhtml.atom import Atom, NullAtom, BrAtom
 class AtomTag(BaseHtmlAtomParser):
     def __init__(self, parent, parser, tag, attrs):
         BaseHtmlAtomParser.__init__(self, parent, parser, tag, attrs)
-        self.child_tags = parent.child_tags + ['a', 'p', 'calc', 'big', 'strong', 'span', 'div']
+        self.child_tags = parent.child_tags + ['a', 'p', 'calc', 'big', 'strong', 'span', 'font', 'div']
         self.gparent = parent.gparent
 
     def draw_atom(self, dc, style, x, y, dx, dy):
@@ -175,6 +175,7 @@ register_tag_map('sub', AtomTag)
 register_tag_map('sup', AtomTag)
 register_tag_map('tt', AtomTag)
 register_tag_map('span', AtomTag)
+register_tag_map('font', AtomTag)
 register_tag_map('img', ImgTag)
 register_tag_map('image', ImgTag)
 register_tag_map('calc', ParCalc)

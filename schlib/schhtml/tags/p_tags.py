@@ -39,6 +39,7 @@ class ParBase(BaseHtmlAtomParser):
             'sup',
             'tt',
             'span',
+            'font',
             'table',
             'ul',
             'ol',
