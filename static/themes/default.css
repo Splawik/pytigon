@@ -116,12 +116,12 @@ not(.login_background) div.content-wrapper {
 .user-menu {
   white-space: nowrap; }
   .user-menu div.dropdown-menu {
-    padding: 10px;
+    padding: 20px;
     width: 22rem; }
     .user-menu div.dropdown-menu .dropdown-block p {
       font-size: 0.8rem; }
 
-.tabsort div.dropdown-menu {
+.tabsort .td_action div.dropdown-menu {
   width: 22rem;
   height: 10rem;
   overflow-y: scroll; }
@@ -153,6 +153,14 @@ not(.login_background) div.content-wrapper {
 
 .form-vertical .form-control {
   width: 100%; }
+
+div.form-group.label-floating span.invalid-feedback {
+  display: block;
+  position: absolute;
+  bottom: 6px;
+  left: 30px;
+  background: yellow;
+  padding: 0px 10px; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
@@ -226,15 +234,21 @@ div.login-container > .row {
 
 .login-card {
   min-width: 250px;
-  background: #224466;
-  box-shadow: 5px 5px 2px #112233; }
+  background: #357;
+  color: #dff;
+  box-shadow: 5px 5px 2px #112233;
+  padding: 20px; }
   .login-card card-header {
     background: transparent;
     font-size: 18px; }
   .login-card input {
     color: white !important;
-    background: rgba(0, 0, 0, 0.1);
-    padding: 0px 10px !important; }
+    background: rgba(0, 0, 0, 0.2) !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important; }
+  .login-card .input-group-addon {
+    color: #dff;
+    background-color: transparent; }
   .login-card span {
     color: white !important; }
 

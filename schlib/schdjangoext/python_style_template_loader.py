@@ -28,7 +28,7 @@ import django.template.loaders.filesystem
 
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 
-def compile_template(template_name, template_dirs=None, tried=None, compiled=None):
+def compile_template(template_name, template_dirs=None, tried=None, compiled=None, force=False):
     def get_template_sources(template_name, template_dirs=None):
         if not template_dirs:
             template_dirs = settings.TEMPLATES[0]['DIRS']
@@ -54,10 +54,13 @@ def compile_template(template_name, template_dirs=None, tried=None, compiled=Non
                     if not os.path.exists(os.path.dirname(filepath2)):
                         os.makedirs(os.path.dirname(filepath2))
                     if os.path.exists(filepath2):
-                        time2 = os.path.getmtime(filepath2)
-                        time1 = os.path.getmtime(filepath)
-                        if time1 > time2:
+                        if force:
                             write = True
+                        else:
+                            time2 = os.path.getmtime(filepath2)
+                            time1 = os.path.getmtime(filepath)
+                            if time1 > time2:
+                                write = True
                     else:
                         write = True
                     if write:

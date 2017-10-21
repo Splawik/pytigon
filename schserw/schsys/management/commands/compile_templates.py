@@ -21,5 +21,5 @@ class Command(BaseCommand):
                 if f.endswith('.ihtml'):
                     p = os.path.join(root, f)
                     x = p[l+15:]
-                    compile_template(x, compiled=compiled)
+                    compile_template(x, compiled=compiled, force=True)
         print(compiled)

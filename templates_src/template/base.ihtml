@@ -26,12 +26,12 @@
                                     div class=form-group
                                         label class=control-label,,,for=username_ ..._(User name)
                                         div class=input-group
-                                            span class=input-group-addon fa fa-user
+                                            div class=input-group-addon fa fa-user
                                             input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=
                                     div class=form-group
                                         label class=control-label,,,for=password_..._(Password)
                                         div class=input-group
-                                            span class=input-group-addon fa fa-key
+                                            div class=input-group-addon fa fa-key
                                             input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=
                                     div class=row
                                         div class=col
@@ -47,22 +47,22 @@
             div class=modal-dialog modal-sm
                 div class=modal-content
                     div class=modal-header
-                        h3...Change Password
-                    form class=form-inline,,,role=form,,,action={{URL_BASE}}/schsys/change_password/,,,method=post,,,name=change_password
+                        h3..._(Change Password)
+                    form role=form,,,action={{URL_BASE}}/schsys/change_password/,,,method=post,,,name=change_password
                         div class=modal-body
                             {% csrf_token %}
                             div class=form-group
-                                label for=current_password...Current Password
+                                label class=control-label,,,for=current_password..._(Current Password)
                                 input class=form-control,,,name=current_password,,,type=password
                             div class=form-group
-                                label for=new_password...New Password
+                                label class=control-label,,,for=new_password..._(New Password)
                                 input class=form-control,,,name=new_password,,,type=password
                             div class=form-group
-                                label for=confirm_password...Confirm Password
+                                label class=control-label,,,for=confirm_password..._(Confirm Password)
                                 input class=form-control,,,name=confirm_password,,,type=password
                         div class=modal-footer
-                            button href=#,,,class=btn,,,data-dismiss=modal...Cancel
-                            button type=submit,,,class=btn btn-secondary...OK
+                            button href=#,,,class=btn,,,data-dismiss=modal..._(Cancel)
+                            button type=submit,,,class=btn btn-secondary..._(OK)
 
 %% messages
     % if messages:

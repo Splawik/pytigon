@@ -5114,7 +5114,6 @@
                 $recentColor.css({
                   'background-color': 'yellow'
                 });
-
                 $button.data('value', {
                   backColor: 'yellow'
                 });

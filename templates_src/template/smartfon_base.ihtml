@@ -53,7 +53,8 @@
                     %if not autologin:
                         a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)..._(Logout)
                     a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
-                    a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                    % if user.is_superuser
+                        a class=dropdown-item system_menu,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
     % else:
         </ul>
 

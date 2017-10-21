@@ -221,7 +221,7 @@ def run_python_shell_task(request, base_path, appset_name):
     return HttpResponseRedirect(new_url)
 
 
-def make_messages(src_path, path, name, outpath=None):
+def make_messages(src_path, path, name, outpath=None, ext_locales=[]):
     backup_argv = sys.argv
     
     sys.argv = [None, '-a', '-d', name, '-p', path]
@@ -235,7 +235,7 @@ def make_messages(src_path, path, name, outpath=None):
 
     wzr_filename = os.path.join(path, name+'.pot')
     for pos in os.scandir(path):
-        if pos.is_dir():
+        if pos.is_dir():            
             lang = pos.name
             ftmp = os.path.join(path, lang)
             if outpath:
@@ -251,15 +251,62 @@ def make_messages(src_path, path, name, outpath=None):
                 os.rename(filename, old_filename)
             except:
                 pass
+
             wzr = polib.pofile(wzr_filename)
-            po = polib.pofile(old_filename)
+            if os.path.exists(old_filename):
+                po = polib.pofile(old_filename)
+            else:
+                po = polib.POFile()
             po.merge(wzr)
+            
+            #for pos2 in ext_locales:
+            #    ftmp = os.path.join(pos2[1],lang)
+            #    if outpath:
+            #        ftmp = os.path.join(ftmp, outpath)
+            #    ext_filename = os.path.join(ftmp, name+'.po')
+            #    if os.path.exists(ext_filename):
+            #        ext_po = polib.pofile(ext_filename)
+            #        po.merge(ext_po)
+                
             po.save(filename)
             po.save_as_mofile(mo_filename)
 
     sys.argv = backup_argv
 
-     
+
+def locale_gen_internal(pk):
+    app_pack = models.SChAppSet.objects.get(id=pk)
+
+    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
+    app_path = os.path.join(base_path, app_pack.name)
+    locale_path = os.path.join(app_path, 'locale')
+
+    ext_apps = []
+    ext_locales = []
+    if app_pack.ext_apps:
+        for pos in app_pack.ext_apps.split(','):
+            pos2 = pos.split('.')[0]
+            if pos2 and not pos2 in ext_apps:
+                ext_apps.append(pos2)
+                app_path2 = os.path.join(base_path, pos2)
+                locale_path2 = os.path.join(app_path2, 'locale')                
+                ext_locales.append([app_path2, locale_path2])
+    make_messages(app_path, locale_path, 'django', 'LC_MESSAGES', ext_locales)
+
+    template_path = os.path.join(app_path, "templates")
+
+    to_remove = []
+    for root, dirs, files in os.walk(template_path):
+        for f in files:
+            if f.endswith('.html'):
+                p = os.path.join(root, f)
+                to_remove.append(p)
+
+    for pos in to_remove:
+        os.unlink(pos)
+
+    return { 'object_list': [[ 'OK' ],] }
+         
 
 PFORM = form_with_perms('schbuilder') 
 
@@ -1032,6 +1079,9 @@ def translate_sync(request, pk):
         with open(po_path, "wt") as f:
             f.write(po_init2)
         
+    
+    (code, output, err) = py_run([os.path.join(app_path, 'manage.py'), 'compile_templates'])
+    locale_gen_internal(app_pack.id)
         
     po = polib.pofile(po_path)
     
@@ -1065,6 +1115,7 @@ def translate_sync(request, pk):
     if save:
         po.save(po_path)
     
+    locale_gen_internal(app_pack.id)
     
     return { 'object_list': [[ updated, inserted ],] }
     
@@ -1077,27 +1128,13 @@ def translate_sync(request, pk):
 
 def locale_gen(request, pk):
     
-    app_pack = models.SChAppSet.objects.get(id=pk)
+    ret = locale_gen_internal(pk)
+    if ret:
+        ret_str = 'OK'
+    else:
+        ret_str = 'Error'
     
-    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
-    app_path = os.path.join(base_path, app_pack.name)
-    locale_path = os.path.join(app_path, 'locale')
-    
-    make_messages(app_path, locale_path, 'django', 'LC_MESSAGES')
-    
-    template_path = os.path.join(app_path, "templates")
-    
-    to_remove = []
-    for root, dirs, files in os.walk(template_path):
-        for f in files:
-            if f.endswith('.html'):
-                p = os.path.join(root, f)
-                to_remove.append(p)
-    
-    for pos in to_remove:
-        os.unlink(pos)
-    
-    return { 'object_list': [[ 'OK' ],] }
+    return { 'object_list': [[ ret_str ],] }
     
 
 
