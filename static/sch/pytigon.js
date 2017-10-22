@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-21 11:05:53
+// Transcrypt'ed from Python, 2017-10-22 19:38:29
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4418,6 +4418,31 @@ function pytigon () {
 			}
 		};
 		var EVENT_TAB = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete]), tuple (['get_tbl_value', on_get_tbl_value]), tuple (['new_tbl_value', on_new_tbl_value]), tuple (['get_row', on_get_row])]);
+		var standard_on_data = function (src_obj, href) {
+			var _standard_on_data = function (data) {
+				if (data && __in__ ('_parent_refr', data)) {
+					refresh_fragment (src_obj);
+				}
+				else {
+					if (window.APPLICATION_TEMPLATE == 'modern') {
+						mount_html (window.ACTIVE_PAGE.page, data);
+						window.ACTIVE_PAGE.set_href (href);
+						page_init (window.ACTIVE_PAGE.id, false);
+					}
+					else {
+						mount_html (jQuery ('#body_body'), data);
+						page_init ('body_body', false);
+					}
+					window.ACTIVE_PAGE.set_href (href);
+					get_menu ().get_active_item ().url = href;
+					if (window.PUSH_STATE) {
+						history_push_state ('title', href);
+					}
+				}
+			};
+			return _standard_on_data;
+		};
+		window.standard_on_data = standard_on_data;
 		var init_popup_events = function (elem) {
 			if (typeof elem == 'undefined' || (elem != null && elem .hasOwnProperty ("__kwargtrans__"))) {;
 				var elem = null;
@@ -4579,6 +4604,7 @@ function pytigon () {
 			__all__.register_mount_fun = register_mount_fun;
 			__all__.ret_ok = ret_ok;
 			__all__.service_worker_and_indexedDB_test = service_worker_and_indexedDB_test;
+			__all__.standard_on_data = standard_on_data;
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();

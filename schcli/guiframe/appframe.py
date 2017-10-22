@@ -646,11 +646,11 @@ class SchAppFrame(SchBaseFrame):
         if panel == "desktop2":
             if title is None:
                 if type(address_or_parser)==str:
-                    n.add_and_split(page, "", wx.RIGHT)
+                    n.add_and_split(page, "", wx.BOTTOM)
                 else:
-                    n.add_and_split(page, address_or_parser.title, wx.RIGHT)
+                    n.add_and_split(page, address_or_parser.title, wx.BOTTOM)
             else:
-                n.add_and_split(page, title2, wx.RIGHT)
+                n.add_and_split(page, title2, wx.BOTTOM)
         else:
             if title is None:
                 if type(address_or_parser)==str:

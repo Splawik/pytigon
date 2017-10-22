@@ -167,7 +167,6 @@ class SchNotebook(aui.AuiNotebook):
             title - title of new tab
             direction - split direction: wx.LEFT, wx.TOP, wx.RIGHT, wx.Bottom
         """
-
         self.closing = False
         if self.GetPageCount() < 1:
             return
@@ -179,17 +178,13 @@ class SchNotebook(aui.AuiNotebook):
             split_size.x /= 2
             split_size.y /= 2
         new_tabs = aui.TabFrame(self)
-        try:
-            new_tabs._rect = wx.Rect(wx.Point(0, 0), split_size)
-        except:
-            new_tabs._rect = wx.Rect(0, 0, split_size.GetWidth(), split_size.GetHeight())
         new_tabs.SetTabCtrlHeight(self._tab_ctrl_height)
         self._tab_id_counter += 1
         new_tabs._tabs = aui.AuiTabCtrl(self, self._tab_id_counter)
         new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
         new_tabs._tabs.SetAGWFlags(self._agwFlags)
         dest_tabs = new_tabs._tabs
-        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False)
+        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(split_size.GetWidth(), split_size.GetHeight())
         if direction == wx.LEFT:
             pane_info.Left()
             mouse_pt = wx.Point(0, cli_size.y / 2)
@@ -216,7 +211,7 @@ class SchNotebook(aui.AuiNotebook):
         page.Reparent(self)
         self.DoSizing()
         dest_tabs.Refresh()
-        self.SetSelectionToPage(page_info)
+        #self.SetSelectionToPage(page_info)
         self.UpdateHintWindowSize()
 
     def on_navigete(self, evt):

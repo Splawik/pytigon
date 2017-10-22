@@ -359,6 +359,29 @@ EVENT_TAB = [
     ('get_row', on_get_row),
 ]
 
+
+def standard_on_data(src_obj, href):
+    def _standard_on_data(data):
+        nonlocal href, src_obj
+
+        if (data and "_parent_refr" in data):
+            refresh_fragment(src_obj)
+        else:
+            if window.APPLICATION_TEMPLATE == 'modern':
+                mount_html(window.ACTIVE_PAGE.page, data)
+                window.ACTIVE_PAGE.set_href(href)
+                page_init(window.ACTIVE_PAGE.id, False)
+            else:
+                mount_html(jQuery('#body_body'), data)
+                page_init('body_body', False)
+            window.ACTIVE_PAGE.set_href(href)
+            get_menu().get_active_item().url = href
+            if window.PUSH_STATE:
+                history_push_state("title", href)
+    return _standard_on_data
+
+window.standard_on_data = standard_on_data
+
 def init_popup_events(elem=None):
     def _on_click(e):
         nonlocal EVENT_TAB
