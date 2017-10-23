@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-22 19:38:29
+// Transcrypt'ed from Python, 2017-10-23 20:17:14
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4206,7 +4206,7 @@ function pytigon () {
 				}
 				var _on_submit2 = function (data) {
 					mount_html (window.ACTIVE_PAGE.page, data);
-					page_init (id, false);
+					page_init (window.ACTIVE_PAGE.page.id, false);
 					if (window.WAIT_ICON) {
 						window.WAIT_ICON.stop ();
 					}

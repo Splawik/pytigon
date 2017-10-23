@@ -140,9 +140,8 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             jQuery(this).attr('action', corect_href(href))
 
         def _on_submit2(data):
-            nonlocal id
             mount_html(window.ACTIVE_PAGE.page, data)
-            page_init(id, False)
+            page_init(window.ACTIVE_PAGE.page.id, False)
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
             if window.WAIT_ICON2:
