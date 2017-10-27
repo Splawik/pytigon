@@ -4,7 +4,7 @@
 
 % load exfiltry
 % load exsyntax
-% load crispy_forms_tags
+% load bootstrap4
 
 
 %% login
@@ -125,9 +125,9 @@
         % else:
             %% row_edit_start
                 % if standard_web_browser == 1 or standard_web_browser == 2:
-                    <div id="Dialog">
+                    <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
             %% row_edit_header
-                {{form.errors|as_crispy_errors}}
+                {% bootstrap_form_errors form %}
             %% row_edit_all
                 form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}application/x-www-form-urlencoded{% endblock %}
                     % csrf_token

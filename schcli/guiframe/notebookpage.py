@@ -285,15 +285,24 @@ class SchNotebookPage(wx.Window):
             close_without_refresh - if True parent form of closing form shoud be refreshed,
             if False refresh is not needed.
         """
-        sel = self.GetParent().GetSelection()
-        if sel>=0:
-            ret = self.close_no_del(close_without_refresh)
-            if not ret:
-                p = self.GetParent()
-                p.DeletePage(sel)
-            return ret
-        else:
-            return False
+        pages = self.GetParent()._tabs._pages
+        for i in range(0,len(pages)):
+            if pages[i].window==self:
+                ret = self.close_no_del(close_without_refresh)
+                if not ret:
+                    self.GetParent().DeletePage(i)
+                return ret
+        return False
+
+        #sel = self.GetParent().GetSelection()
+        #if sel>=0:
+        #    ret = self.close_no_del(close_without_refresh)
+        #    if not ret:
+        #        p = self.GetParent()
+        #        p.DeletePage(sel)
+        #    return ret
+        #else:
+        #    return False
 
     def on_child_form_ok(self):
         """function called by child SchForm object when OK is pushed and data in parent form shoud be refreshed"""

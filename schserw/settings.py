@@ -167,8 +167,8 @@ INSTALLED_APPS = [
     'django.forms',
     'schserw.schsys',
     'django.contrib.staticfiles',
-    'crispy_forms',
-    'django_select2',    
+    'django_select2',
+    'bootstrap4',    
     ]
 
 if platform_name()!='Android':

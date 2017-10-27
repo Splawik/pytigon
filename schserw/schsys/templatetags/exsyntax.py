@@ -34,12 +34,6 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.template.base import token_kwargs, TemplateSyntaxError
 from django.template.base import Node
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, MultiField, Field, Hidden
-from crispy_forms.bootstrap import PrependedAppendedText, AppendedText, PrependedText, InlineRadios,\
-    Tab, TabHolder, AccordionGroup, Accordion, Alert, InlineCheckboxes, \
-    FieldWithButtons, StrictButton
-
 
 from schlib.schhtml.parser import Parser
 from schlib.schtools.wiki import wiki_from_str
@@ -886,69 +880,73 @@ def checkboxselectmultiple(context, field, only_field=False):
 
 
 class Form(Node):
-    def __init__(self, nodelist, form_class = None):
+    def __init__(self, nodelist, def_param, param):
         self.nodelist = nodelist
-        self.form_class = form_class
+        self.def_param=def_param
+        self.param = []
+        for pos in param:
+            self.param.append(template.Variable(pos))
 
     def render(self, context):
         output = self.nodelist.render(context).strip().replace('\"',"'").replace(";","','")
-
         form = context['form']
-        form.helper = FormHelper(form)
-        form.helper.form_tag = False
-        form.helper.disable_csrf = True
-        form.helper.label_class = "formitem"
-
-        if not ('vform' in context and context['vform'] == True):
-            if self.form_class:
-                if self.form_class == 'form-horizontal':
-                    form.helper.form_class = self.form_class
-                    form.helper.label_class = 'col-sm-3'
-                    form.helper.field_class = 'col-sm-9'
-                elif self.form_class == 'col2':
-                    form.helper.field_div_class = 'col-md-6'
-                    context['col2'] = True
-                else:
-                    form.helper.form_class = 'form-inline'
-                    form.helper.form_show_labels = False
-                    form.helper.field_template = 'bootstrap4/layout/inline_field.html'
-            else:
-                form.helper.label_class = 'col-sm-12'
-                form.helper.field_class = 'col-sm-12'
-                context['col2'] = False
-
+        fields = []
         if output:
-            form.helper.layout  = eval("Layout("+output.replace('[[', '{{').replace(']]', '}}')+")")
-        t = Template("""{% load crispy_forms_tags %}{% crispy form %}""")
-        return t.render(context)
+            for f in output.split(','):
+                x = f.split(':', 1)
+                name = x[0].replace("'", "").strip()
+                if len(x)>1:
+                    p=x[1]
+                elif len(self.param)>1:
+                    p=self.param[1].resolve(context)
+                else:
+                    p=self.def_param
+                fields.append([name,p])
+        else:
+            for field in form:
+                if len(self.param)>1:
+                    p=self.param[1].resolve(context)
+                else:
+                    p=self.def_param
+                fields.append([field.name,p])
 
+        template_str = "{% load exsyntax %}<div class='row'>"
+        for field in fields:
+            template_str += "{%% field '%s' '%s' %%}" % ( field[0], field[1])
+        template_str += "</div>"
+        t = Template(template_str)
+        return t.render(context)
 
 @register.tag
 def form(parser, token):
+    parm = token.split_contents()
     nodelist = parser.parse(('endform'))
     parser.delete_first_token()
-    return Form(nodelist, 'form-horizontal')
+    return Form(nodelist, "12:3:3/12:9:9", parm)
 
 
 @register.tag
 def vert_form(parser, token):
+    parm = token.split_contents()
     nodelist = parser.parse(('endvert_form',))
     parser.delete_first_token()
-    return Form(nodelist, None)
+    return Form(nodelist, "^/12", parm)
 
 
 @register.tag
 def inline_form(parser, token):
+    parm = token.split_contents()
     nodelist = parser.parse(('endinline_form',))
     parser.delete_first_token()
-    return Form(nodelist, 'form-inline')
+    return Form(nodelist, "/", parm)
 
 
 @register.tag
 def col2_form(parser, token):
+    parm = token.split_contents()
     nodelist = parser.parse(('endcol2_form',))
     parser.delete_first_token()
-    return Form(nodelist, 'col2')
+    return Form(nodelist, "^/12/6", parm)
 
 
 class FormItemNode(Node):
@@ -1157,4 +1155,104 @@ def fields(context, fieldformat):
                 fields.append((pos2,12))
     ret['fields'] = fields
     ret['form'] = context['form']
+    return ret
+
+#fieldformat:
+#   label_format/input_format/size/addon
+#label_format:
+#size:size:size - bootstrap size for .col-sm, .col-md, col-lg or:
+# ^ - for floating label or
+# empty - for label above input field
+#input format:
+#size:size:size - bootstrap size for .col-sm, .col-md, col-lg
+
+@inclusion_tag('widgets/field.html')
+def field(context, field_name, fieldformat=None):
+    label_class = "control-label float-left"
+    form_group_class = "form-group"
+    field_class = "controls float-left"
+    placeholder = False
+    show_label = True
+
+    addon_after=""
+    addon_before=""
+    addon_after_class=""
+    addon_before_class=""
+
+    if fieldformat:
+        ff = fieldformat
+    else:
+        ff = context['formformat']
+        if not ff:
+            ff = "12:3:3/12:9:9"
+
+    x = fieldformat.split('/',2)
+    if len(x) < 2:
+        return {}
+
+    if x[0]=='^':
+        form_group_class = "form-group label-floating def"
+    elif not x[0]:
+        form_group_class = "form-group label-over-field ghi"
+    elif not x[0]:
+        placeholder=True
+        show_label=False
+    else:
+        y = x[0].split(':')
+        if len(y)==3:
+            label_class += " col-m-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+        else:
+            label_class += " col-sm-12 col-md-%s" % y[0]
+
+    if not x[1]:
+        pass
+    else:
+        y = x[1].split(':')
+        if len(y)==3:
+            field_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+        else:
+            field_class += " col-sm-12 col-md-%s" % y[0]
+
+
+    if len(x)>2:
+        w = x[2].strip()
+        if w:
+            y=w.split(':')
+            if len(y)==3:
+                form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+            else:
+                form_group_class += " col-sm-12 col-md-%s" % y[0]
+
+
+    if len(x)>3:
+        addon = x[3]
+        if addon:
+            if   addon.startswith('(-X)'):
+                addon_after=addon[4:]
+                addon_after_class = "input-group-btn"
+            elif addon.startswith('(X-)'):
+                addon_before=addon[4:]
+                addon_before_class = "input-group-btn"
+            elif addon.startswith('(-x)'):
+                addon_after = addon[4:]
+                addon_after_class = "input-group-addon"
+            elif addon.startswith('(x-)'):
+                addon_before=addon[4:]
+                addon_before_class = "input-group-addon"
+
+    field = context['form'][field_name]
+
+    ret = {}
+    ret['form'] = context['form']
+    ret['field'] = field
+    ret['label_class'] = label_class
+    ret['form_group_class'] = form_group_class
+    ret['field_class'] = field_class
+    ret['placeholder'] = placeholder
+    ret['addon_after'] = addon_after
+    ret['addon_after_class'] = addon_after_class
+    ret['addon_before'] = addon_before
+    ret['addon_before_class'] = addon_before_class
+    ret['show_label'] = show_label
+    ret['standard_web_browser'] = context['standard_web_browser']
     return ret

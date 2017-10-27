@@ -808,3 +808,14 @@ def _import_var(obj):
 @register.filter(name='run_fun')
 def _run_fun(obj):
     return obj()
+    
+    
+@register.filter(name='getitem')
+def getitem(value, attr):
+    """Returns getattr(value, attr)"""
+    try:
+        obj = value[attr]
+    except:
+        obj = None
+    return obj
+

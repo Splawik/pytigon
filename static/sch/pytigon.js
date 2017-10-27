@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-23 20:17:14
+// Transcrypt'ed from Python, 2017-10-27 20:56:13
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2929,11 +2929,10 @@ function pytigon () {
 					var _dialog_loaded = function (is_modal, elem) {
 						if (is_modal) {
 							jQuery ('div.dialog-form').fadeTo ('fast', 1);
-							if (jQuery ('div.dialog-form').find ('div.form2columns').length > 0) {
-								jQuery ('div.dialog-form').find ('.modal-dialog').addClass ('modal-lg');
-							}
-							else {
-								jQuery ('div.dialog-form').find ('.modal-dialog').removeClass ('modal-lg');
+							jQuery ('div.dialog-form').find ('.modal-dialog').removeClass ('modal-lg').removeClass ('modal-sm');
+							var x = jQuery ('div.dialog-form').find ('div[name=modal-type-ref]');
+							if (x.length > 0) {
+								jQuery ('div.dialog-form').find ('.modal-dialog').addClass (x.attr ('class'));
 							}
 							jQuery ('div.dialog-form').modal ();
 							jQuery ('div.dialog-form').drags (dict ({'handle': '.modal-header'}));

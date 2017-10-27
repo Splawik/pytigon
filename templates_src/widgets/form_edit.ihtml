@@ -1,18 +1,18 @@
-% load crispy_forms_tags
+% load bootstrap4
 
 % if standard_web_browser:
     % for row in field_rows:
         % for obj in row:
             % if obj.type == 'l':
-                {{obj.field|as_crispy_field}}
+                {% bootstrap_field obj.field %}
             % if obj.type == 'f':
-                {{obj.field|as_crispy_field}}
+                {% bootstrap_field obj.field %}
             % if obj.type == 'L':
-                {{obj.field|as_crispy_field}}
+                {% bootstrap_field obj.field %}
             % if obj.type == 'F':
-                {{obj.field|as_crispy_field}}
+                {% bootstrap_field obj.field %}
             % if obj.type == 'LF':
-                {{obj.field|as_crispy_field}}
+                {% bootstrap_field obj.field %}
 % else:
     % for row in field_rows:
         % for obj in row:

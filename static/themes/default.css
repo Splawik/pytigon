@@ -127,14 +127,18 @@ not(.login_background) div.content-wrapper {
   overflow-y: scroll; }
 
 /* form */
-.form-group label {
-  font-style: italic;
-  font-size: 0.7rem;
-  line-height: 1; }
-
-.form-group textarea {
-  line-height: 1.5;
-  height: 8rem; }
+.form-group {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-top: -8px; }
+  .form-group label {
+    font-style: italic;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding-left: 15px; }
+  .form-group textarea {
+    line-height: 1.5;
+    height: 8rem; }
 
 .bootstrap-datetimepicker-widget {
   width: auto !important;
@@ -154,13 +158,17 @@ not(.login_background) div.content-wrapper {
 .form-vertical .form-control {
   width: 100%; }
 
-div.form-group.label-floating span.invalid-feedback {
-  display: block;
-  position: absolute;
-  bottom: 6px;
-  left: 30px;
-  background: yellow;
-  padding: 0px 10px; }
+div.form-group.label-floating {
+  margin-top: 0.5rem; }
+  div.form-group.label-floating span.invalid-feedback {
+    display: block;
+    position: absolute;
+    bottom: 6px;
+    left: 30px;
+    background: yellow;
+    padding: 0px 10px; }
+  div.form-group.label-floating label {
+    position: absolute; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
@@ -293,14 +301,16 @@ label.upload i {
   height: 55px; }
 
 .label-floating .control-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   opacity: 0.4;
   pointer-events: none;
   transform: translate3d(5px, 22px, 0) scale(1);
   transform-origin: left top;
   transition: 240ms;
-  top: -10px; }
+  top: -14px;
+  padding-left: 19px;
+  z-index: 1; }
 
 .label-floating.focused .control-label {
   opacity: 1;
@@ -339,7 +349,7 @@ div.calendar-table td.today:not(.active) {
     color: white; }
 
 .dialog-data .checkbox {
-  margin-left: -8px; }
+  margin-left: 9px; }
 
 div.table {
   margin-bottom: 0rem; }
@@ -415,7 +425,7 @@ a, button {
 .form2columns .checkbox {
   margin-left: 0px !important; }
 
-#Dialog label::after {
+div.modal-body label::after {
   content: ":"; }
 
 .checkbox label::after {

@@ -4,8 +4,6 @@
 
 % load exfiltry
 % load exsyntax
-% load crispy_forms_tags
-
 
 %% js_scripts_base
     script language=javascript
@@ -41,7 +39,8 @@
     {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
     {% jscript_link 'jquery_plugins/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js' %}
 
-    {% jscript_link 'bootstrap/js/bootstrap.js' %}
+    %% bootstrap_js
+        {% jscript_link 'bootstrap/js/bootstrap.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.js' %}

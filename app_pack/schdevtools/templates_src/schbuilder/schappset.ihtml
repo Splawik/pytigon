@@ -85,8 +85,28 @@
 %% form_class
     .form-vertical
 
+%% dialog_type
+    .modal-lg
 
 %% row_edit
+
+    %form "^/12/6":
+        .name,title
+    %form "/12":
+        .ext_apps,plugins
+    %form "^/12/6":
+        .gui_type,gui_elements,is_hybrid,start_page,desktop_gui_type,tablet_gui_type,smartfon_gui_type
+
+    % if standard_web_browser:
+        %form "/12":
+            .custom_tags,user_param
+    % else:    
+        % form_item custom_tags:
+            {{form.custom_tags|textfiel_row_col:"4x100"}}
+        % form_item user_param:
+            {{form.user_param|textfiel_row_col:"4x100"}}
+
+%% row_edit2
     div class=form2columns
         div class=row
             % col2_form:

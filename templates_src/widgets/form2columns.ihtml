@@ -6,12 +6,8 @@
         % for pos in fields:
             div class=col-md-6
                 div class=vert_form_panel
-                    %if pos in 'wypadki;data_wykonania;wersja;operacja;opis;zadania;charakterystyka;czas_pracy;zagr_biologiczne;zagr_chemiczne;pracownicy;plan_poprawy':
-                        .%form:
-                            '{{pos}}'
-                    % else:
-                        %form:
-                            {{pos}}
+                    %form:
+                        {{pos}}
 % else:
     table
         %for pos2 in fields2:

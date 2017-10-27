@@ -2,6 +2,7 @@
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
+{% load bootstrap4 %}
 {% block pythoncode %}
         {% if form_edit %}
                 <script language="python">
@@ -95,28 +96,32 @@
 {% block table_header_edit %}
     <h2>Wiki pages</h2>
 {% endblock %}
+{% block form_class %}
+        form-vertical
+{% endblock %}
 {% block row_edit %}
         {% if standard_web_browser %}
                 <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active">
-                                        <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
+                                <li class="nav-item active" role="presentation">
+                                        <a class="nav-link" href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
                                 </li>
-                                <li role="presentation">
-                                        <a href="#data" aria-controls="profile" role="tab" data-toggle="tab">Data</a>
+                                <li class="nav-item" role="presentation">
+                                        <a class="nav-link" href="#data" aria-controls="profile" role="tab" data-toggle="tab">Data</a>
                                 </li>
                         </ul>
-                        <div class="tab-content">
+                        <div class="tab-content form2columns">
                                 <div role="tabpanel" class="tab-pane active" id="settings">
-                                        {% form %}
-                                                'name', 'page_type', 'subject', 'description', 'base_template', 'rights_group', 'menu'
-                                        {% endform %}
+                                        {% field 'name' '^/12:12:12' %}
+                                        {% with 'name page_type subject description base_template rights_group menu' as fields %}
+                                                {% for pos in fields.split %}
+                                                        {% bootstrap_field form|getitem:pos %}
+                                                {% endfor %}
+                                        {% endwith %}
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="data">
                                         <div class="vert_form_panel">
-                                                {% vert_form %}
-                                                        'content_src'
-                                                {% endvert_form %}
+                                                {% bootstrap_field form.content_src %}
                                                 <txtarea_editor rel_id="id_content_src"></txtarea_editor>
                                         </div>
                                 </div>

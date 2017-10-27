@@ -184,7 +184,7 @@ class SchNotebook(aui.AuiNotebook):
         new_tabs._tabs.SetArtProvider(self._tabs.GetArtProvider().Clone())
         new_tabs._tabs.SetAGWFlags(self._agwFlags)
         dest_tabs = new_tabs._tabs
-        pane_info = framemanager.AuiPaneInfo().Bottom().CaptionVisible(False).BestSize(split_size.GetWidth(), split_size.GetHeight())
+        pane_info = framemanager.AuiPaneInfo().CaptionVisible(False).BestSize(split_size.GetWidth(), split_size.GetHeight())
         if direction == wx.LEFT:
             pane_info.Left()
             mouse_pt = wx.Point(0, cli_size.y / 2)
@@ -197,8 +197,8 @@ class SchNotebook(aui.AuiNotebook):
         elif direction == wx.BOTTOM:
             pane_info.Bottom()
             mouse_pt = wx.Point(cli_size.x / 2, cli_size.y)
-        self._mgr.AddPane(new_tabs, pane_info, mouse_pt)
-        self._mgr.Update()
+        #self._mgr.AddPane(new_tabs, pane_info, mouse_pt)
+        #self._mgr.Update()
         page_info = aui.AuiNotebookPage()
         page_info.window = page
         page_info.caption = title
@@ -213,6 +213,10 @@ class SchNotebook(aui.AuiNotebook):
         dest_tabs.Refresh()
         #self.SetSelectionToPage(page_info)
         self.UpdateHintWindowSize()
+
+        self._mgr.AddPane(new_tabs, pane_info, mouse_pt)
+        self._mgr.Update()
+
 
     def on_navigete(self, evt):
         forward = evt.GetDirection()

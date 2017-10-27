@@ -2,9 +2,7 @@
 
 % load exfiltry
 % load exsyntax
-% load crispy_forms_field
-% load crispy_forms_tags
-
+% load bootstrap4
 
 %% login
 
@@ -231,7 +229,7 @@
                                     table class=filter_form,,,border=0
                                         tr
                                             td
-                                                {{ field|as_crispy_field:"sch_bootstrap"}}
+                                                {% bootstrap_field field 'horizontal'%}
                                             td
                                                 {{ field.errors }}
                                 table class=filter_form

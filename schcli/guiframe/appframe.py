@@ -429,7 +429,8 @@ class SchAppFrame(SchBaseFrame):
             tab.SetFocus()
 
     def _create_notebook_ctrl(self, hideSingleTab=True):
-        style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS
+        style = aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_CLOSE_ON_ALL_TABS | aui.AUI_NB_TAB_MOVE | \
+                aui.AUI_NB_TAB_EXTERNAL_MOVE | aui.AUI_NB_TAB_SPLIT | aui.AUI_NB_WINDOWLIST_BUTTON
         n = SchNotebook(self._panel, wx.Point(0, 0), wx.Size(0,0), style=style)
         n.SetAGWWindowStyleFlag(style)
         n.SetArtProvider(aui.VC71TabArt())
@@ -646,11 +647,11 @@ class SchAppFrame(SchBaseFrame):
         if panel == "desktop2":
             if title is None:
                 if type(address_or_parser)==str:
-                    n.add_and_split(page, "", wx.BOTTOM)
+                    n.add_and_split(page, "", wx.RIGHT)
                 else:
-                    n.add_and_split(page, address_or_parser.title, wx.BOTTOM)
+                    n.add_and_split(page, address_or_parser.title, wx.RIGHT)
             else:
-                n.add_and_split(page, title2, wx.BOTTOM)
+                n.add_and_split(page, title2, wx.RIGHT)
         else:
             if title is None:
                 if type(address_or_parser)==str:
