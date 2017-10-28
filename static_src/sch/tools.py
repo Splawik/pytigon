@@ -31,14 +31,14 @@ def fragment_init(elem=None):
         }
     }
 
-    d = elem2.find('.dateinput')
+    d = elem2.find('div.form-group .datefield input')
     d.daterangepicker(format)
 
     format['format'] = 'YYYY-MM-DD HH:mm'
     format['timePicker'] = True
     format['timePickerIncrement'] = 30
 
-    d = elem2.find('.datetimeinput')
+    d = elem2.find('div.form-group .datetimefield input')
     d.daterangepicker(format)
 
 

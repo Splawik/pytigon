@@ -1,0 +1,9 @@
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+% if standard_web_browser:
+    % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class
+% else:
+    % bootstrap_field field layout='horizontal' label_class=label_class field_class=field_class
+

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-27 20:56:13
+// Transcrypt'ed from Python, 2017-10-28 23:31:17
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3528,12 +3528,12 @@ function pytigon () {
 							var elem2 = window.ACTIVE_PAGE.page;
 						}
 						var format = dict ({'singleDatePicker': true, 'showDropdowns': true, 'locale': dict ({'format': 'YYYY-MM-DD', 'applyLabel': 'Apply', 'cancelLabel': 'Cancel'})});
-						var d = elem2.find ('.dateinput');
+						var d = elem2.find ('div.form-group .datefield input');
 						d.daterangepicker (format);
 						format ['format'] = 'YYYY-MM-DD HH:mm';
 						format ['timePicker'] = true;
 						format ['timePickerIncrement'] = 30;
-						var d = elem2.find ('.datetimeinput');
+						var d = elem2.find ('div.form-group .datetimefield input');
 						d.daterangepicker (format);
 						var iterate_material_icons = function () {
 							var font_map = dict ({'clear': 'eraser', 'chevron_left': 'chevron-left', 'chevron_right': 'chevron-right', 'keyboard_arrow_up': 'chevron-up', 'keyboard_arrow_down': 'chevron-down'});

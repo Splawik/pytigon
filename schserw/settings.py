@@ -198,13 +198,11 @@ ALLOWED_HOSTS = ['*',]
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
 AUTO_RENDER_SELECT2_STATICS = False
 
-CRISPY_CLASS_CONVERTERS = {'selectmultiple': "selectpicker"}
 
 if PRODUCTION_VERSION and platform_name()!='Android':
     CHANNEL_LAYERS = {

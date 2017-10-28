@@ -82,23 +82,22 @@
         field_edit/install_file,install.ini(Distribute),install_ini,_top
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
 
-%% form_class
-    .form-vertical
-
 %% dialog_type
     .modal-lg
 
 %% row_edit
 
-    %form "^/12/6":
+    %form "^/6":
         .name,title
-    %form "/12":
+    %form "^/12":
         .ext_apps,plugins
-    %form "^/12/6":
-        .gui_type,gui_elements,is_hybrid,start_page,desktop_gui_type,tablet_gui_type,smartfon_gui_type
+    %form "^/6":
+        .gui_type,gui_elements,is_hybrid,start_page
+    %form "^/3":
+        .desktop_gui_type,tablet_gui_type,smartfon_gui_type
 
     % if standard_web_browser:
-        %form "/12":
+        %form "^/12":
             .custom_tags,user_param
     % else:    
         % form_item custom_tags:
@@ -117,7 +116,9 @@
 
         div class=row
             % col2_form:
-                'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type'
+                'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 
+            
+                'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type'
 
         % if standard_web_browser:
             div class=row

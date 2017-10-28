@@ -185,7 +185,7 @@
                 % if standard_web_browser:
             %% list_content_header
                 div
-                    div class=table,,,width=100%
+                    div class=table container,,,width=100%
                         %%list_content_header_first_row
                             div class=tr row list_content_header list_content_header_first_row
                                 div class=td col-sm-12 hidden-sm-down text-center

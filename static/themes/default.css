@@ -127,18 +127,33 @@ not(.login_background) div.content-wrapper {
   overflow-y: scroll; }
 
 /* form */
+.modal-body label {
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+.modal-body .form-group:not(.label-floating) > label {
+  max-height: 43px;
+  margin-top: 15px; }
+
+.modal-body .form-control {
+  margin-bottom: 5px; }
+
+form .row .row {
+  margin-right: 0px;
+  margin-left: 0px;
+  display: block; }
+
 .form-group {
   padding-left: 0px;
-  padding-right: 0px;
-  margin-top: -8px; }
+  padding-right: 0px; }
   .form-group label {
     font-style: italic;
-    font-size: 0.7rem;
-    line-height: 1;
-    padding-left: 15px; }
+    font-size: 0.7rem; }
   .form-group textarea {
     line-height: 1.5;
     height: 8rem; }
+  .form-group div.checkbox label {
+    padding-right: 10px; }
 
 .bootstrap-datetimepicker-widget {
   width: auto !important;
@@ -169,6 +184,12 @@ div.form-group.label-floating {
     padding: 0px 10px; }
   div.form-group.label-floating label {
     position: absolute; }
+
+div.row > div > div.form-group > label.control-label {
+  margin-left: -15px; }
+
+div.radio input {
+  margin-top: 3px; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
@@ -347,9 +368,6 @@ div.calendar-table td.today:not(.active) {
   font-size: 1.2rem; }
   .txt3d.wiki-title a {
     color: white; }
-
-.dialog-data .checkbox {
-  margin-left: 9px; }
 
 div.table {
   margin-bottom: 0rem; }

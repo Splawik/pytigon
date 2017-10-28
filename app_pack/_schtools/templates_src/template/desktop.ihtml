@@ -5,16 +5,18 @@
 
 % load exfiltry
 % load exsyntax
-% load crispy_forms_tags
+% load bootstrap4
 % load staticfiles
 
 %% js_extrascipts
     {{block.super}}
     
     
+    
 
 %% extrastyle
     {{block.super}}
+    
     
 
 %% body_footer

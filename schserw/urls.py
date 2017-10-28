@@ -90,7 +90,7 @@ for app in settings.INSTALLED_APPS:
         else:
             pos = app
             if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') \
-            or pos.startswith('crispy') or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
+            or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
             or pos.startswith('bootstrap4'):
                 continue
         elementy = pos.split('.')

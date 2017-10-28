@@ -38,6 +38,7 @@ from django.template.base import Node
 from schlib.schhtml.parser import Parser
 from schlib.schtools.wiki import wiki_from_str
 
+from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 
 register = template.Library()
 
@@ -922,7 +923,7 @@ def form(parser, token):
     parm = token.split_contents()
     nodelist = parser.parse(('endform'))
     parser.delete_first_token()
-    return Form(nodelist, "12:3:3/12:9:9", parm)
+    return Form(nodelist, "12:3:3/12:12:12", parm)
 
 
 @register.tag
@@ -946,7 +947,7 @@ def col2_form(parser, token):
     parm = token.split_contents()
     nodelist = parser.parse(('endcol2_form',))
     parser.delete_first_token()
-    return Form(nodelist, "^/12/6", parm)
+    return Form(nodelist, "^/12:6:6", parm)
 
 
 class FormItemNode(Node):
@@ -1141,21 +1142,21 @@ def spec(format):
     return format.replace('{', '{{').replace('}', '}}').replace('[', '{%').replace(']', '%}')
 
 
-@inclusion_tag('widgets/fields.html')
-def fields(context, fieldformat):
-    ret = {}
-    fields = []
-    for pos in fieldformat.strip().split(';'):
-        pos2 = pos.strip()
-        if pos2:
-            if '/' in pos2:
-                x = pos.split('/')
-                fields.append((x[0],int(x[1]),))
-            else:
-                fields.append((pos2,12))
-    ret['fields'] = fields
-    ret['form'] = context['form']
-    return ret
+#@inclusion_tag('widgets/fields.html')
+#def fields(context, fieldformat):
+#    ret = {}
+#    fields = []
+#    for pos in fieldformat.strip().split(';'):
+#        pos2 = pos.strip()
+#        if pos2:
+#            if '/' in pos2:
+#                x = pos.split('/')
+#                fields.append((x[0],int(x[1]),))
+#            else:
+#                fields.append((pos2,12))
+#    ret['fields'] = fields
+#    ret['form'] = context['form']
+#    return ret
 
 #fieldformat:
 #   label_format/input_format/size/addon
@@ -1168,9 +1169,12 @@ def fields(context, fieldformat):
 
 @inclusion_tag('widgets/field.html')
 def field(context, field_name, fieldformat=None):
+    field = context['form'][field_name]
+
     label_class = "control-label float-left"
-    form_group_class = "form-group"
-    field_class = "controls float-left"
+    offset = ""
+    form_group_class = "form-group row"
+    field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = False
     show_label = True
 
@@ -1184,48 +1188,43 @@ def field(context, field_name, fieldformat=None):
     else:
         ff = context['formformat']
         if not ff:
-            ff = "12:3:3/12:9:9"
+            ff = "12:3:3/12:12:12"
 
     x = fieldformat.split('/',2)
     if len(x) < 2:
         return {}
 
     if x[0]=='^':
-        form_group_class = "form-group label-floating def"
+        form_group_class += " label-floating"
+        field_class += " col-12"
+    elif x[0]=='-':
+        form_group_class += " label-over-field"
+        field_class += " col-12"
     elif not x[0]:
-        form_group_class = "form-group label-over-field ghi"
-    elif not x[0]:
-        placeholder=True
+        placeholder=field.label
         show_label=False
+        field_class += " col-12"
     else:
-        y = x[0].split(':')
+        y = [int(pos) for pos in x[0].split(':')]
         if len(y)==3:
-            label_class += " col-m-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+            label_class += " col-sm-%d col-md-%d col-lg-%s" % (y[0], y[1], y[2])
+            field_class += " col-sm-%d col-md-%d col-lg-%d" % ((11-y[0])%12+1, (11-y[1])%12+1, (11-y[2])%12+1)
+            offset = " offset-sm-%d offset-md-%d offset-lg-%d" % (y[0]%12, y[1]%12, y[2]%12)
         else:
-            label_class += " col-sm-12 col-md-%s" % y[0]
+            label_class += " col-sm-12 col-md-%d" % y[0]
+            field_class += " col-sm-12 col-md-%d" % ((11-y[0])%12+1)
+            offset = "offset-sm-0 offset-md-%d" % (y[0] % 12)
 
-    if not x[1]:
-        pass
-    else:
+    if x[1]:
         y = x[1].split(':')
         if len(y)==3:
-            field_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+            form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
         else:
-            field_class += " col-sm-12 col-md-%s" % y[0]
+            form_group_class += " col-sm-12 col-md-%s" % y[0]
 
 
     if len(x)>2:
-        w = x[2].strip()
-        if w:
-            y=w.split(':')
-            if len(y)==3:
-                form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
-            else:
-                form_group_class += " col-sm-12 col-md-%s" % y[0]
-
-
-    if len(x)>3:
-        addon = x[3]
+        addon = x[2]
         if addon:
             if   addon.startswith('(-X)'):
                 addon_after=addon[4:]
@@ -1240,7 +1239,8 @@ def field(context, field_name, fieldformat=None):
                 addon_before=addon[4:]
                 addon_before_class = "input-group-addon"
 
-    field = context['form'][field_name]
+    if offset and type(field.field.widget) in (CheckboxInput, RadioSelect, CheckboxSelectMultiple, FileInput):
+        field_class += " " + offset
 
     ret = {}
     ret['form'] = context['form']

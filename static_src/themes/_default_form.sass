@@ -1,22 +1,43 @@
 /* form */
 
-.dialog-data label 
-    font-style:italic
+.modal-body
+    label
+        font-style:italic
+        text-overflow: ellipsis
+        overflow: hidden
+
+    .form-group:not(.label-floating)
+        > label
+            max-height: 43px
+            margin-top: 15px
+
+    .form-control
+        margin-bottom: 5px
+
+form
+    .row
+        .row
+            margin-right: 0px
+            margin-left: 0px
+            display: block
 
 .form-group
     padding-left: 0px
     padding-right: 0px
-    margin-top: -8px
+    //margin-top: -8px
     label
         font-style: italic
         font-size: 0.7rem
-        line-height: 1
-        padding-left: 15px
+        //line-height: 1
+        //padding-left: 15px
 
     textarea
         line-height: 1.5
         height: 8rem
 
+    div.checkbox
+        label
+            padding-right: 10px
 
 .bootstrap-datetimepicker-widget 
     width: auto !important
@@ -52,3 +73,8 @@ div.form-group.label-floating
     label
         position: absolute
 
+div.row > div > div.form-group > label.control-label
+    margin-left: -15px
+
+div.radio input
+    margin-top: 3px

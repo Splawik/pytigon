@@ -1,0 +1,15 @@
+div.note-editor div.note-toolbar div.note-color div.dropdown-menu {
+  min-width: 162px; }
+  div.note-editor div.note-toolbar div.note-color div.dropdown-menu div.note-palette:nth-child(1) {
+    visibility: hidden;
+    position: absolute; }
+
+div.note-popover {
+  visibility: hidden; }
+
+div.note-editor button.close {
+  position: absolute;
+  right: 20px; }
+
+div.note-editor .note-toolbar {
+  background-color: whitesmoke; }
