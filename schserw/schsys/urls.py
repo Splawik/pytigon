@@ -84,4 +84,6 @@ urlpatterns = [
 
     url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
     url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>[\w_]+)/$',schserw.schsys.views.plugins),
+
+    url('app_time_stamp/$', schserw.schsys.views.app_time_stamp, {}),
 ]

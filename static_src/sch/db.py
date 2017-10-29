@@ -101,7 +101,7 @@ def on_sys_sync(fun):
             fun("OK-no cache")
     caches.delete("PYTIGON_"+window.APPSET_NAME).then(_fun)
 
-SYNC_STRUCT = [ ['sys', window.BASE_PATH + "tools/app_time_stamp/", on_sys_sync], ]
+SYNC_STRUCT = [ ['sys', window.BASE_PATH + "schsys/app_time_stamp/", on_sys_sync], ]
 
 def init_sync(sync_struct):
     nonlocal SYNC_STRUCT
@@ -122,9 +122,6 @@ def sync_and_run(tbl, fun):
 
     if navigator.onLine:
         def complete(responseText):
-            x = JSON.parse(responseText)
-            time = x['TIME']
-
             def _on_open_param(trans, db):
                 nonlocal tbl
                 param_get_request = db.js_get("time_sync_"+tbl)
@@ -168,7 +165,14 @@ def sync_and_run(tbl, fun):
                 param_get_request.onerror = _on_param_error
                 param_get_request.onsuccess = _on_param_success
 
-            get_table("param", _on_open_param, False)
+            try:
+                x = JSON.parse(responseText)
+                time = x['TIME']
+                get_table("param", _on_open_param, False)
+            except:
+                window.open().document.write(responseText)
+                #win = window.open("data:text/html," + responseText, "_blank", "width=200,height=100")
+                #win.focus()
 
         def _on_request_init(request):
             def _on_timeout(event):

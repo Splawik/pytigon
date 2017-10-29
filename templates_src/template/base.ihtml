@@ -212,7 +212,7 @@
                                         % if standard_web_browser and object_list:
                                             % if table_type == 'datatable':
                                                 div class=dropdown
-                                                    button type=button,,,class=btn btn-secondary btn-sm dropdown-toggle,,,data-toggle=dropdown
+                                                    button type=button,,,class=btn btn-secondary {{btn_size}} dropdown-toggle,,,data-toggle=dropdown
                                                         span class=fa fa-bars
                                                     div class=dropdown-menu
                                                         a href=../odf/list,,,class=dropdown-item,,,target=_blank...=> ods

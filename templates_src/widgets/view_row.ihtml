@@ -2,7 +2,7 @@
 %extends "widgets/action.html"
 
 %% action_class
-    .popup_info btn btn-sm btn-outline-info
+    .popup_info btn {{btn_size}} btn-outline-info
 
 %% action_widget_content
     % with standard_web_browser=True

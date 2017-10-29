@@ -86,16 +86,16 @@ def mark_safe2(x):
         return x
 
 STANDARD_DESC = { #title, attrs, 
-    'default': ('Default', "class='btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' "),
-    'edit': (_('Update'), "class='popup btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'edit2': (_('Update'), "class='popup btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'otheredit': (_('Update document'), "class='popup btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'otheredit_inline': (_('Update document'), "class='popup inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup inline' "),
-    'delete': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'delete2': (_('Delete'),  "class='popup_delete btn btn-sm btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'field_list': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_list_get': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_action': (_('Default'), "class='popup_inline btn btn-sm btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'default': ('Default', "class='btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' "),
+    'edit': (_('Update'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'edit2': (_('Update'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'otheredit': (_('Update document'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
+    'otheredit_inline': (_('Update document'), "class='popup inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup inline' "),
+    'delete': (_('Delete'),  "class='popup_delete btn {{btn_size}} btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
+    'delete2': (_('Delete'),  "class='popup_delete btn {{btn_size}} btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
+    'field_list': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_list_get': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
+    'field_action': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
 }
 
 
@@ -232,18 +232,18 @@ class Action:
             else:
                 self.target = '_blank'
 
-                
+        btn_size = settings.BOOTSTRAP_BUTTON_SIZE_CLASS
         if not self.attrs :
             if action2 in STANDARD_DESC:
-                self.attrs = STANDARD_DESC[action2][1]
+                self.attrs = STANDARD_DESC[action2][1].replace('{{btn_size}}','btn_size')
             else:
-                self.attrs = STANDARD_DESC['default'][1]
+                self.attrs = STANDARD_DESC['default'][1].replace('{{btn_size}}','btn_size')
         else:
             if self.attrs[0]=='+':
                 if action2 in STANDARD_DESC:
-                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC[action2][1].split('|')[0])
+                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC[action2][1].split('|')[0]).replace('{{btn_size}}','btn_size')
                 else:
-                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC['default'][1].split('|')[0])
+                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC['default'][1].split('|')[0]).replace('{{btn_size}}','btn_size')
 
         if '|' in self.attrs:
             x = self.attrs.split('|')
@@ -1189,62 +1189,68 @@ def field(context, field_name, fieldformat=None):
         ff = context['formformat']
         if not ff:
             ff = "12:3:3/12:12:12"
+    hidden = False
 
-    x = fieldformat.split('/',2)
-    if len(x) < 2:
-        return {}
-
-    if x[0]=='^':
-        form_group_class += " label-floating"
-        field_class += " col-12"
-    elif x[0]=='-':
-        form_group_class += " label-over-field"
-        field_class += " col-12"
-    elif not x[0]:
-        placeholder=field.label
-        show_label=False
-        field_class += " col-12"
+    if ff=='!':
+        hidden=True
     else:
-        y = [int(pos) for pos in x[0].split(':')]
-        if len(y)==3:
-            label_class += " col-sm-%d col-md-%d col-lg-%s" % (y[0], y[1], y[2])
-            field_class += " col-sm-%d col-md-%d col-lg-%d" % ((11-y[0])%12+1, (11-y[1])%12+1, (11-y[2])%12+1)
-            offset = " offset-sm-%d offset-md-%d offset-lg-%d" % (y[0]%12, y[1]%12, y[2]%12)
+
+        x = fieldformat.split('/',2)
+        if len(x) < 2:
+            return {}
+
+        if x[0]=='^':
+            form_group_class += " label-floating"
+            field_class += " col-12"
+        elif x[0]=='-':
+            form_group_class += " label-over-field"
+            field_class += " col-12"
+        elif not x[0]:
+            placeholder=field.label
+            show_label=False
+            field_class += " col-12"
         else:
-            label_class += " col-sm-12 col-md-%d" % y[0]
-            field_class += " col-sm-12 col-md-%d" % ((11-y[0])%12+1)
-            offset = "offset-sm-0 offset-md-%d" % (y[0] % 12)
+            y = [int(pos) for pos in x[0].split(':')]
+            if len(y)==3:
+                label_class += " col-sm-%d col-md-%d col-lg-%s" % (y[0], y[1], y[2])
+                field_class += " col-sm-%d col-md-%d col-lg-%d" % ((11-y[0])%12+1, (11-y[1])%12+1, (11-y[2])%12+1)
+                offset = " offset-sm-%d offset-md-%d offset-lg-%d" % (y[0]%12, y[1]%12, y[2]%12)
+            else:
+                label_class += " col-sm-12 col-md-%d" % y[0]
+                field_class += " col-sm-12 col-md-%d" % ((11-y[0])%12+1)
+                offset = "offset-sm-0 offset-md-%d" % (y[0] % 12)
 
-    if x[1]:
-        y = x[1].split(':')
-        if len(y)==3:
-            form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
-        else:
-            form_group_class += " col-sm-12 col-md-%s" % y[0]
+        if x[1]:
+            y = x[1].split(':')
+            if len(y)==3:
+                form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+            else:
+                form_group_class += " col-sm-12 col-md-%s" % y[0]
 
 
-    if len(x)>2:
-        addon = x[2]
-        if addon:
-            if   addon.startswith('(-X)'):
-                addon_after=addon[4:]
-                addon_after_class = "input-group-btn"
-            elif addon.startswith('(X-)'):
-                addon_before=addon[4:]
-                addon_before_class = "input-group-btn"
-            elif addon.startswith('(-x)'):
-                addon_after = addon[4:]
-                addon_after_class = "input-group-addon"
-            elif addon.startswith('(x-)'):
-                addon_before=addon[4:]
-                addon_before_class = "input-group-addon"
+        if len(x)>2:
+            addon = x[2]
+            if addon:
+                if   addon.startswith('(-X)'):
+                    addon_after=addon[4:]
+                    addon_after_class = "input-group-btn"
+                elif addon.startswith('(X-)'):
+                    addon_before=addon[4:]
+                    addon_before_class = "input-group-btn"
+                elif addon.startswith('(-x)'):
+                    addon_after = addon[4:]
+                    addon_after_class = "input-group-addon"
+                elif addon.startswith('(x-)'):
+                    addon_before=addon[4:]
+                    addon_before_class = "input-group-addon"
 
-    if offset and type(field.field.widget) in (CheckboxInput, RadioSelect, CheckboxSelectMultiple, FileInput):
-        field_class += " " + offset
+        if offset and type(field.field.widget) in (CheckboxInput, RadioSelect, CheckboxSelectMultiple, FileInput):
+            field_class += " " + offset
 
     ret = {}
     ret['form'] = context['form']
     ret['field'] = field
+    ret['hidden'] = hidden
     ret['label_class'] = label_class
     ret['form_group_class'] = form_group_class
     ret['field_class'] = field_class

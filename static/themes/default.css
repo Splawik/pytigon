@@ -105,7 +105,7 @@ not(.login_background) div.content-wrapper {
   opacity: 0.66;
   filter: alpha(opacity=66); }
 
-.tabsort_panel tr td.td_information .btn.btn-sm, .table_panel tr td.td_information .btn.btn-sm {
+.tabsort_panel tr td.td_information .btn, .table_panel tr td.td_information .btn {
   padding: 5px 8px;
   box-shadow: none; }
 
@@ -190,6 +190,15 @@ div.row > div > div.form-group > label.control-label {
 
 div.radio input {
   margin-top: 3px; }
+
+body:not(.modal-open) .dark_background {
+  position: fixed;
+  background: #000;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  opacity: 0.3; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
@@ -420,7 +429,8 @@ div.td_action .btn-secondary:after, div.td_information .btn-secondary:after {
   z-index: 999;
   transform: rotate(0deg);
   transition: .3s;
-  background: transparent !important; }
+  background: #fc0 !important;
+  box-shadow: none !important; }
 
 .tabsort-toolbar-expand.active {
   transform: rotate(315deg) !important;

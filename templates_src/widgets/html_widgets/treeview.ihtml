@@ -26,7 +26,7 @@
                             ul class=children
                                 {{ children }}
                         % else:
-                            <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary btn-sm"{%endif %}>
+                            <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
                                 % if data|slugify == "":
                                     {{node.name}}
                                 % else

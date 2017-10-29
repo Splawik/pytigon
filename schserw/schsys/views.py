@@ -34,6 +34,8 @@ from schlib.schtools import schjson
 from schlib.schviews.viewtools import render_to_response
 from schlib.schdjangoext.tools import make_href
 
+from schlib.schviews.viewtools import dict_to_json
+
 APP = None
 
 _RET_OK = """
@@ -355,3 +357,13 @@ def sw(request):
             buf2 = sw.read()
             buf2 = buf2.replace('//++//', buf)
     return HttpResponse(buf2.encode('utf-8'), content_type="application/javascript; charset=utf-8")
+
+
+@dict_to_json
+def app_time_stamp(request, **argv):
+    if settings.GEN_TIME:
+        return {'TIME': settings.GEN_TIME}
+    else:
+        gmt = time.gmtime()
+        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
+        return {'TIME': gmt_str}

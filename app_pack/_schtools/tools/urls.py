@@ -11,7 +11,6 @@ urlpatterns = [
     url('search/(?P<type>.+)/', views.autocomplete_search, {}),
     url('set_user_param/$', views.set_user_param, {}),
     url('get_user_param/$', views.get_user_param, {}),
-    url('app_time_stamp/$', views.app_time_stamp, {}),
     
     
 ]

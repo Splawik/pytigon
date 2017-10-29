@@ -63,6 +63,8 @@ def on_popup_inline(elem):
     if window.WAIT_ICON:
         window.WAIT_ICON.start()
 
+    jQuery('body').addClass('shown_inline_dialog')
+
     jQuery(elem).closest('table').find(".inline_dialog").remove()
 
     window.COUNTER = window.COUNTER    + 1
@@ -94,6 +96,7 @@ def on_popup_in_form(elem):
     if window.WAIT_ICON:
         window.WAIT_ICON.start()
 
+    jQuery('body').addClass('shown_inline_dialog')
     jQuery(elem).closest('div.Dialog').find(".inline_dialog").remove()
 
     window.COUNTER = window.COUNTER + 1
@@ -136,6 +139,7 @@ def on_popup_edit_new(elem):
             on_dialog_load()
         ajax_load(elem2, jQuery(elem).attr("href"), _on_load)
     else:
+        jQuery('body').addClass('shown_inline_dialog')
         if window.WAIT_ICON:
             window.WAIT_ICON.start()
         if jQuery(elem).hasClass('new-row'):
@@ -302,6 +306,7 @@ window.on_delete_ok = on_delete_ok
 
 def on_cancel_inline(elem):
     jQuery(elem).closest('.inline_dialog').remove()
+    jQuery('body').removeClass('shown_inline_dialog')
 
 window.on_cancel_inline = on_cancel_inline
 

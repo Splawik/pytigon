@@ -523,6 +523,7 @@ def sch_standard(request):
         'app_pack': app_pack,
         'offline_support': settings.OFFLINE_SUPPORT,
         'gen_time': gmt_str,
+        'btn_size': settings.BOOTSTRAP_BUTTON_SIZE_CLASS,
 
         }
     if 'client_param' in request.session:

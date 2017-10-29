@@ -1,5 +1,6 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
 <div class='refr_object'>\
+    <div class='dark_background'></div>\
     <div class='modal-dialog' role='document' style='max-width: initial;'>\
         <div class='modal-content'>\
             <div class='modal-header'>\
@@ -43,6 +44,7 @@ var INLINE_DIALOG_INFO_HTML = "\
 
 var INLINE_TABLE_HTML = "\
 <div class='indent shadow-z-2 refr_object'>\
+    <div class='dark_background'></div>\
     <button type='button' class='btn btn-danger btn-raised btn-xs close' onclick='on_cancel_inline($(this));return false'>\
         <span class='fa fa-times' aria-hidden='true'></span>\
     </button>\

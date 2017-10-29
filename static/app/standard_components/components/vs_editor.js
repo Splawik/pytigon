@@ -6,7 +6,7 @@ var _vseditor = function (resolve, reject) {
     '                <div style=\"width:100%; position:absolute; top:10px; text-align:center\">\n' +
     '                        <h5>{{ title }}</h5>\n' +
     '                </div>\n' +
-    '                <div class=\"vseditor\" name=\"vseditor\" style=\"position: absolute; top:50px; left:5px; right:15px; bottom:10px;\"></div>\n' +
+    '                <div class=\"vseditor\" name=\"vseditor\" style=\"position: absolute; top:50px; left:5px; right:5px; bottom:1px; overflow: hidden;\"></div>\n' +
     '        </div>\n' +
     '\n' +
     '';
@@ -28,7 +28,9 @@ var _vseditor = function (resolve, reject) {
 					};
 					self.editor.onDidChangeModelContent (_changed);
 					var _on_resize = function (event) {
-						self.editor.layout ();
+						if (ed.width () > 50 && ed.height () > 50) {
+							self.editor.layout ();
+						}
 					};
 					jQuery (window).resize (_on_resize);
 				};
@@ -50,7 +52,6 @@ var _vseditor = function (resolve, reject) {
 		require.config (dict ({'paths': dict ({'vs': base_path})}));
 		require (list (['vs/editor/editor.main']), _on_loadjs);
 	};
-	console.log ('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 	load_many_js ((((base_path + '/../../system/require.js') + ';') + base_path) + '/loader.js', _on_loadjs0);
 };
 Vue.component ('sch-vseditor', _vseditor);

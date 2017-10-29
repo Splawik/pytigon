@@ -29,7 +29,6 @@ template_template = """
 
 {%% load exfiltry %%}
 {%% load exsyntax %%}
-{%% load crispy_forms_tags %%}
 
 %s
 

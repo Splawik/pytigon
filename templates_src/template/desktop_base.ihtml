@@ -223,9 +223,9 @@
                 div class=dropdown-footer
                     % if user.is_superuser:
                     div class=pull-left
-                        button class=system_menu btn btn-secondary btn-sm btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                        button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
                     div class=pull-right
-                        button href=#,,,class=btn btn-secondary btn-sm btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                        button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
         %if not autologin:
             li class=nav-item dropdown user user-menu
@@ -244,12 +244,12 @@
             <div id="{{app_name}}" class="tab-pane tab-tab active" role="tabpanel">
 
     % if url|is_menu_checked:request.get_full_path:
-        a href={{URL_BASE}}/{{url}},,,class=btn btn-warning btn-sm btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{URL_BASE}}/{{url}},,,class=btn btn-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
             %if icon:
                 <i class="fa {{icon}}"></i>
             {{opis}}
     % else
-        a href={{URL_BASE}}/{{url}},,,class=btn btn-secondary btn-sm btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{URL_BASE}}/{{url}},,,class=btn btn-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
             %if icon:
                 <i class="fa {{icon}}"></i>
             {{opis}}

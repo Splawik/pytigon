@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-28 23:31:17
+// Transcrypt'ed from Python, 2017-10-29 18:07:45
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2509,7 +2509,7 @@ function pytigon () {
 						};
 						caches.delete ('PYTIGON_' + window.APPSET_NAME).then (_fun);
 					};
-					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + 'tools/app_time_stamp/', on_sys_sync])]);
+					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + 'schsys/app_time_stamp/', on_sys_sync])]);
 					var init_sync = function (sync_struct) {
 						var __iterable0__ = sync_struct;
 						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
@@ -2533,8 +2533,6 @@ function pytigon () {
 						}
 						if (navigator.onLine) {
 							var complete = function (responseText) {
-								var x = JSON.parse (responseText);
-								var time = x ['TIME'];
 								var _on_open_param = function (trans, db) {
 									var param_get_request = db.get ('time_sync_' + tbl);
 									var _on_param_error = function (event) {
@@ -2573,7 +2571,14 @@ function pytigon () {
 									param_get_request.onerror = _on_param_error;
 									param_get_request.onsuccess = _on_param_success;
 								};
-								get_table ('param', _on_open_param, false);
+								try {
+									var x = JSON.parse (responseText);
+									var time = x ['TIME'];
+									get_table ('param', _on_open_param, false);
+								}
+								catch (__except0__) {
+									window.open ().document.write (responseText);
+								}
 							};
 							var _on_request_init = function (request) {
 								var _on_timeout = function (event) {
@@ -2776,6 +2781,7 @@ function pytigon () {
 						if (window.WAIT_ICON) {
 							window.WAIT_ICON.start ();
 						}
+						jQuery ('body').addClass ('shown_inline_dialog');
 						jQuery (elem).closest ('table').find ('.inline_dialog').remove ();
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
@@ -2803,6 +2809,7 @@ function pytigon () {
 						if (window.WAIT_ICON) {
 							window.WAIT_ICON.start ();
 						}
+						jQuery ('body').addClass ('shown_inline_dialog');
 						jQuery (elem).closest ('div.Dialog').find ('.inline_dialog').remove ();
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
@@ -2845,6 +2852,7 @@ function pytigon () {
 							ajax_load (elem2, jQuery (elem).attr ('href'), _on_load);
 						}
 						else {
+							jQuery ('body').addClass ('shown_inline_dialog');
 							if (window.WAIT_ICON) {
 								window.WAIT_ICON.start ();
 							}
@@ -3022,6 +3030,7 @@ function pytigon () {
 					window.on_delete_ok = on_delete_ok;
 					var on_cancel_inline = function (elem) {
 						jQuery (elem).closest ('.inline_dialog').remove ();
+						jQuery ('body').removeClass ('shown_inline_dialog');
 					};
 					window.on_cancel_inline = on_cancel_inline;
 					var ret_ok = function (id, title) {
@@ -3527,10 +3536,10 @@ function pytigon () {
 						else {
 							var elem2 = window.ACTIVE_PAGE.page;
 						}
-						var format = dict ({'singleDatePicker': true, 'showDropdowns': true, 'locale': dict ({'format': 'YYYY-MM-DD', 'applyLabel': 'Apply', 'cancelLabel': 'Cancel'})});
+						var format = dict ({'singleDatePicker': true, 'showDropdowns': true, 'buttonClasses': 'btn', 'applyClass': 'btn-success align-top', 'cancelClass': 'btn-danger btn-sm align-top', 'timePicker24Hour': true, 'autoApply': true, 'locale': dict ({'format': 'YYYY-MM-DD', 'separator': '-', 'applyLabel': '&nbsp; OK &nbsp;', 'cancelLabel': "<i class='fa fa-close'></i>"})});
 						var d = elem2.find ('div.form-group .datefield input');
 						d.daterangepicker (format);
-						format ['format'] = 'YYYY-MM-DD HH:mm';
+						format ['locale'] ['format'] = 'YYYY-MM-DD HH:mm';
 						format ['timePicker'] = true;
 						format ['timePickerIncrement'] = 30;
 						var d = elem2.find ('div.form-group .datetimefield input');
@@ -3541,26 +3550,6 @@ function pytigon () {
 						};
 						jQuery ('i.material-icons').each (iterate_material_icons);
 						var icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
-						if (1 == 2) {
-							var d = elem2.find ('.dateinput');
-							d.wrap ("<div class='input-group date' data-target-input='nearest'></div>");
-							d.after ("<span class='input-group-addon'><span class='fa fa-callendar'></span></span>");
-							d.parent ().uid ();
-							var id = d.parent ().attr ('id');
-							d.addClass ('datetimepicker-input');
-							d.attr ('data-target', id);
-							d.find ('.input-group-addon').attr ('data-target', id);
-							d.parent ().datetimepicker (dict ({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': true, 'icons': icons}));
-							var d = elem2.find ('.datetimeinput');
-							d.wrap ("<div class='input-group date datetime' data-target-input='nearest'></div>");
-							d.after ("<span class='input-group-addon'><span class='fa fa-clock-o'></span></span>");
-							d.parent ().uid ();
-							var id = d.parent ().attr ('id');
-							d.addClass ('datetimepicker-input');
-							d.attr ('data-target', id);
-							d.find ('.input-group-addon').attr ('data-target', id);
-							d.parent ().datetimepicker (dict ({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': true, 'icons': icons}));
-						}
 						jQuery ('.selectpicker').selectpicker ();
 						var _on_blur = function (e) {
 							if (e ['type'] == 'focus' || this.value.length > 0) {
@@ -3612,19 +3601,24 @@ function pytigon () {
 							var component_init = true;
 						};
 						if (component_init && window.COMPONENT_INIT && len (window.COMPONENT_INIT) > 0) {
-							elem.empty ();
-							var res = Vue.compile (('<div>' + html_txt) + '</div>');
-							if (elem && elem.length > 0) {
-								var vm = new Vue (dict ({'render': res.render, 'staticRenderFns': res.staticRenderFns}));
-								var component = vm.$mount ();
-								var _append = function (index, value) {
-									if (value) {
-										elem [0].appendChild (value);
-									}
-								};
-								jQuery.each (component.$el.childNodes, _append);
-								evalJSFromHtml (html_txt);
-								evalCSSFromHtml (html_txt, elem);
+							try {
+								elem.empty ();
+								var res = Vue.compile (('<div>' + html_txt) + '</div>');
+								if (elem && elem.length > 0) {
+									var vm = new Vue (dict ({'render': res.render, 'staticRenderFns': res.staticRenderFns}));
+									var component = vm.$mount ();
+									var _append = function (index, value) {
+										if (value) {
+											elem [0].appendChild (value);
+										}
+									};
+									jQuery.each (component.$el.childNodes, _append);
+									evalJSFromHtml (html_txt);
+									evalCSSFromHtml (html_txt, elem);
+								}
+							}
+							catch (__except0__) {
+								elem.html (html_txt);
 							}
 						}
 						else {
@@ -3694,11 +3688,21 @@ function pytigon () {
 								else {
 									var reader = new FileReader ();
 									var _on_reader_load = function () {
-										complete (reader.result);
+										if (req.status != 200) {
+											window.open ().document.write (reader.result);
+											complete ('Error - details on new page');
+										}
+										else {
+											complete (reader.result);
+										}
 									};
 									reader.onload = _on_reader_load;
 									reader.readAsText (req.response);
 								}
+							}
+							else if (req.status != 200) {
+								window.open ().document.write (req.response);
+								complete ('Error - details on new page');
 							}
 							else {
 								complete (req.response);
@@ -3736,6 +3740,10 @@ function pytigon () {
 								else {
 									var reader = new FileReader ();
 									var _on_reader_load = function () {
+										if (req.status != 200) {
+											window.open ().document.write (reader.result);
+											complete ('Error - details on new page');
+										}
 										complete (reader.result);
 									};
 									reader.onload = _on_reader_load;
@@ -3743,6 +3751,10 @@ function pytigon () {
 								}
 							}
 							else {
+								if (req.status != 200) {
+									window.open ().document.write (req.response);
+									complete ('Error - details on new page');
+								}
 								complete (req.response);
 							}
 						};

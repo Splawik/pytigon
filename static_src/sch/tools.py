@@ -17,30 +17,31 @@ def fragment_init(elem=None):
     else:
         elem2 = window.ACTIVE_PAGE.page
 
-    #handle_class_click(elem, 'get_tbl_value', on_get_tbl_value)
-    #handle_class_click(elem, 'new_tbl_value', on_new_tbl_value)
-    #handle_class_click(elem, 'get_row', on_get_row)
-
     format = {
         'singleDatePicker': True,
         'showDropdowns': True,
+        "buttonClasses": "btn",
+        "applyClass": "btn-success align-top",
+        "cancelClass": "btn-danger btn-sm align-top",
+        "timePicker24Hour": True,
+        "autoApply": True,
         'locale': {
             'format': 'YYYY-MM-DD',
-            'applyLabel': 'Apply',
-            'cancelLabel': 'Cancel',
+            "separator": "-",
+            'applyLabel': "&nbsp; OK &nbsp;",
+            'cancelLabel': "<i class='fa fa-close'></i>",
         }
     }
 
     d = elem2.find('div.form-group .datefield input')
     d.daterangepicker(format)
 
-    format['format'] = 'YYYY-MM-DD HH:mm'
+    format['locale']['format'] = 'YYYY-MM-DD HH:mm'
     format['timePicker'] = True
     format['timePickerIncrement'] = 30
 
     d = elem2.find('div.form-group .datetimefield input')
     d.daterangepicker(format)
-
 
     def iterate_material_icons():
         font_map = {
@@ -72,33 +73,6 @@ def fragment_init(elem=None):
         'detailOpen': 'fa-plus',
         'detailClose': 'fa-minus'
     }
-    if 1 == 2:
-
-        d = elem2.find('.dateinput')
-        d.wrap( "<div class='input-group date' data-target-input='nearest'></div>" )
-        d.after("<span class='input-group-addon'><span class='fa fa-callendar'></span></span>")
-
-        d.parent().uid()
-        id = d.parent().attr('id')
-        d.addClass('datetimepicker-input')
-        d.attr('data-target', id)
-        d.find('.input-group-addon').attr('data-target', id)
-
-        d.parent().datetimepicker({'format': 'YYYY-MM-DD', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
-
-        d = elem2.find('.datetimeinput')
-        d.wrap( "<div class='input-group date datetime' data-target-input='nearest'></div>" )
-        d.after("<span class='input-group-addon'><span class='fa fa-clock-o'></span></span>")
-
-        d.parent().uid()
-        id = d.parent().attr('id')
-        d.addClass('datetimepicker-input')
-        d.attr('data-target', id)
-        d.find('.input-group-addon').attr('data-target', id)
-
-        d.parent().datetimepicker({'format': 'YYYY-MM-DD hh:mm', 'locale': 'pl', 'showTodayButton': True, 'icons': icons,})
-
-    #elem2.find('.win-content').bind('resize', datatable_onresize)
 
     jQuery('.selectpicker').selectpicker()
 
@@ -159,6 +133,7 @@ def register_mount_fun(fun):
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
     if component_init and window.COMPONENT_INIT and len(window.COMPONENT_INIT)>0:
+        try:
             elem.empty()
             res = Vue.compile("<div>"+html_txt+"</div>")
             if elem and elem.length>0:
@@ -173,6 +148,8 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
 
                 evalJSFromHtml(html_txt)
                 evalCSSFromHtml(html_txt, elem)
+        except:
+            elem.html(html_txt)
     else:
         elem.html(html_txt)
 
@@ -246,12 +223,20 @@ def ajax_get(url, complete, process_req=None):
                 reader = __new__(FileReader())
 
                 def _on_reader_load():
-                    complete(reader.result)
+                    if req.status != 200:
+                        window.open().document.write(reader.result)
+                        complete("Error - details on new page")
+                    else:
+                        complete(reader.result)
 
                 reader.onload = _on_reader_load
                 reader.readAsText(req.response)
         else:
-            complete(req.response)
+            if req.status != 200:
+                window.open().document.write(req.response)
+                complete("Error - details on new page")
+            else:
+                complete(req.response)
 
     req.onload = _onload
 
@@ -288,11 +273,17 @@ def _req_post(req, url, data, complete):
                 reader = __new__(FileReader())
 
                 def _on_reader_load():
+                    if req.status != 200:
+                        window.open().document.write(reader.result)
+                        complete("Error - details on new page")
                     complete(reader.result)
 
                 reader.onload = _on_reader_load
                 reader.readAsText(req.response)
         else:
+            if req.status != 200:
+                window.open().document.write(req.response)
+                complete("Error - details on new page")
             complete(req.response)
 
     req.onload = _onload

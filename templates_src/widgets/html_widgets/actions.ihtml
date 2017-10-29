@@ -14,14 +14,14 @@
                     % for node in obj:
                         li class=hide hide_node
                             % if node|hasattr:'id':
-                                <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary btn-sm"{%endif %}>
+                                <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
                                     % if data|slugify == "":
                                         {{node.name}}
                                     % else
                                         {{data|format:node.name}}
                                 </a>
                             % else:
-                                <a href="{{href|format:node.0}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary btn-sm"{%endif %}>
+                                <a href="{{href|format:node.0}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
                                     % if data|slugify == "":
                                         {{node.1}}
                                     % else
