@@ -5,5 +5,6 @@
 <label class="btn btn-primary btn-file nocolon upload">
 <p class="upload">Upload</p>
 <input style="display:none"  onchange="img_field(this);"  type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} />
+<img src='data:image/jpeg;base64,{{widget.value}}' style='float: left; max-height: 48px; max-width: 48px;'/>
 <i class="fa fa-upload"></i>
 </label>

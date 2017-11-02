@@ -161,3 +161,7 @@
           transform: translate3d(320px, 0, 0);
 }
 
+.fab .menu-open-button h4, .fab .menu-open-button span {
+    pointer-events: none;
+}
+

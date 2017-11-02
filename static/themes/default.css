@@ -78,7 +78,7 @@ not(.login_background) div.content-wrapper {
 .tabsort_panel table .btn, .table_panel table .btn {
   background-color: rgba(255, 255, 255, 0.7); }
 
-.tabsort_panel .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
+.tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
   background-color: transparent; }
 
 .tabsort_panel div.td_action, .table_panel div.td_action {

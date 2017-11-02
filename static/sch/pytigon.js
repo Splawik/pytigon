@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-29 18:07:45
+// Transcrypt'ed from Python, 2017-10-31 18:28:33
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2509,7 +2509,14 @@ function pytigon () {
 						};
 						caches.delete ('PYTIGON_' + window.APPSET_NAME).then (_fun);
 					};
-					var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + 'schsys/app_time_stamp/', on_sys_sync])]);
+					var _UA = window.navigator.userAgent;
+					var _MSIE = _UA.indexOf ('MSIE ');
+					if (_MSIE > 0) {
+						var SYNC_STRUCT = list ([]);
+					}
+					else {
+						var SYNC_STRUCT = list ([list (['sys', window.BASE_PATH + 'schsys/app_time_stamp/', on_sys_sync])]);
+					}
 					var init_sync = function (sync_struct) {
 						var __iterable0__ = sync_struct;
 						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
@@ -2584,7 +2591,12 @@ function pytigon () {
 								var _on_timeout = function (event) {
 									fun ('timeout');
 								};
-								request.timeout = 2000;
+								try {
+									request.timeout = 2000;
+								}
+								catch (__except0__) {
+									// pass;
+								}
 								request.ontimeout = _on_timeout;
 							};
 							ajax_get (rec [1], complete, _on_request_init);
@@ -2597,6 +2609,8 @@ function pytigon () {
 					__pragma__ ('<all>')
 						__all__.INIT_DB_STRUCT = INIT_DB_STRUCT;
 						__all__.SYNC_STRUCT = SYNC_STRUCT;
+						__all__._MSIE = _MSIE;
+						__all__._UA = _UA;
 						__all__.get_list_from_table = get_list_from_table;
 						__all__.get_table = get_table;
 						__all__.init_db = init_db;

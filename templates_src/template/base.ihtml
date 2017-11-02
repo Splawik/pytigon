@@ -127,7 +127,8 @@
                 % if standard_web_browser == 1 or standard_web_browser == 2:
                     <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
             %% row_edit_header
-                {% bootstrap_form_errors form %}
+                % if form:
+                    {% bootstrap_form_errors form %}
             %% row_edit_all
                 form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}application/x-www-form-urlencoded{% endblock %}
                     % csrf_token

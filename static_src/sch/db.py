@@ -101,7 +101,13 @@ def on_sys_sync(fun):
             fun("OK-no cache")
     caches.delete("PYTIGON_"+window.APPSET_NAME).then(_fun)
 
-SYNC_STRUCT = [ ['sys', window.BASE_PATH + "schsys/app_time_stamp/", on_sys_sync], ]
+_UA = window.navigator.userAgent
+_MSIE = _UA.indexOf("MSIE ")
+
+if _MSIE>0:
+    SYNC_STRUCT = [ ]
+else:
+    SYNC_STRUCT = [ ['sys', window.BASE_PATH + "schsys/app_time_stamp/", on_sys_sync], ]
 
 def init_sync(sync_struct):
     nonlocal SYNC_STRUCT
@@ -179,7 +185,10 @@ def sync_and_run(tbl, fun):
                 nonlocal fun
                 fun("timeout")
 
-            request.timeout = 2000
+            try:
+                request.timeout = 2000
+            except:
+                pass
             request.ontimeout = _on_timeout
 
         ajax_get(rec[1], complete, _on_request_init)

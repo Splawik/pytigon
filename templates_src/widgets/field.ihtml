@@ -2,11 +2,20 @@
 % load exsyntax
 % load bootstrap4
 
-% if hidden:
-    input type=hidden,,,name={{field.name}},,,value={{field.value}}
-% else:
-    % if standard_web_browser:
-        % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
+% if standard_web_browser:
+    % if hidden:
+        input type=hidden,,,name={{field.name}},,,value={{field.value}}
     % else:
-        % bootstrap_field field layout='horizontal' label_class=label_class field_class=field_class
-
+        % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
+% else:
+    tr
+        td
+            % if not hidden and not field.is_hidden:
+                label for={{ field.id_for_label }},,,class=control-label {% if field.field.required %} requiredField{% endif %}
+                    {{field.label|safe}}{% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
+        td
+            % if hidden:
+                input type=hidden,,,name={{field.name}},,,value={{field.value}}
+            % else:
+                {{ field }}
+            

@@ -28,6 +28,8 @@ var _summertextarea = function (resolve, reject) {
 				color_button.data ('value', dict ({'backColor': 'white'}));
 				var recent_color = color_button.find ('.note-recent-color');
 				recent_color.css (dict ({'background-color': 'white'}));
+				var color_button_dropdown = jQuery (self.$el).find ('div.note-color .dropdown-toggle');
+				color_button_dropdown.removeClass ('btn-light');
 			};
 			Vue.nextTick (_next);
 		};
