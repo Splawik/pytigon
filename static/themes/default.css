@@ -470,3 +470,6 @@ table.layout0 tr td {
   margin: 0 !important;
   text-align: center;
   vertical-align: middle; }
+
+.hide {
+  display: none; }

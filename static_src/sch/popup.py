@@ -71,7 +71,7 @@ def on_popup_inline(elem):
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
-    new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML + "</td></tr>")
+    new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</td></tr>")
     new_fragment.insertAfter(jQuery(elem).closest("tr"))
     elem2 = new_fragment.find(".refr_target")
 

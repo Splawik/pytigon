@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-10-31 18:28:33
+// Transcrypt'ed from Python, 2017-11-02 20:57:29
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2800,7 +2800,7 @@ function pytigon () {
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
 						var href2 = corect_href (jQuery (elem).attr ('href'));
-						var new_fragment = jQuery (((((("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML) + '</td></tr>');
+						var new_fragment = jQuery (((((("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.innerText)) + '</td></tr>');
 						new_fragment.insertAfter (jQuery (elem).closest ('tr'));
 						var elem2 = new_fragment.find ('.refr_target');
 						var _on_load = function (responseText, status, response) {
