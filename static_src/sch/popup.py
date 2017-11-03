@@ -76,6 +76,8 @@ def on_popup_inline(elem):
     elem2 = new_fragment.find(".refr_target")
 
     def _on_load(responseText, status, response):
+        nonlocal new_fragment
+        new_fragment.removeClass('hide')
         #jQuery('#IDIAL_'+id).hide()
         #jQuery('#IDIAL_'+id).removeClass('hide')
         #jQuery('#IDIAL_'+id).show("slow")

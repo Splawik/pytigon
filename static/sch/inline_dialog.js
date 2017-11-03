@@ -7,7 +7,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
                 <h4 class='modal-title'>Modal title</h4>\
                 <button type='button' class='close btn-raised' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
             </div>\
-            <div class='modal-body'>\
+            <div class='modal-body inline-update-modal-body'>\
                 <div class='refr_target dialog-data-inner'></div>\
             </div>\
             <div class='modal-footer'>\
@@ -28,7 +28,7 @@ var INLINE_TABLE_HTML = "\
                 <h4 class='modal-title'>{{title}}</h4>\
                 <button type='button' class='close btn-raised' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
             </div>\
-            <div class='modal-body'>\
+            <div class='modal-body inline-table-modal-body'>\
                 <div class='refr_target dialog-data-inner'></div>\
             </div>\
         </div>\

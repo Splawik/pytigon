@@ -72,6 +72,7 @@ div.form-group.label-floating
 
     label
         position: absolute
+        left: 0px
 
 div.row > div > div.form-group > label.control-label
     margin-left: -15px
@@ -85,11 +86,15 @@ div.radio input
 //    box-shadow: none !important
 
 body:not(.modal-open) .dark_background
-    position: fixed;
-    background: #000;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    opacity: 0.3;
+    position: fixed
+    background: #448
+    left: 0px
+    top: 0px
+    //bottom: -5000px
+    bottom: 0px
+    right: 0px
+    opacity: 0.1
+    pointer-events: none
 
+.inline-table-modal-body, .inline-update-modal-body
+    padding: 30px

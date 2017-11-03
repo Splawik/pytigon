@@ -183,7 +183,8 @@ div.form-group.label-floating {
     background: yellow;
     padding: 0px 10px; }
   div.form-group.label-floating label {
-    position: absolute; }
+    position: absolute;
+    left: 0px; }
 
 div.row > div > div.form-group > label.control-label {
   margin-left: -15px; }
@@ -193,12 +194,16 @@ div.radio input {
 
 body:not(.modal-open) .dark_background {
   position: fixed;
-  background: #000;
+  background: #448;
   left: 0px;
   top: 0px;
   bottom: 0px;
   right: 0px;
-  opacity: 0.3; }
+  opacity: 0.1;
+  pointer-events: none; }
+
+.inline-table-modal-body, .inline-update-modal-body {
+  padding: 30px; }
 
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
