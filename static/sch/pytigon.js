@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-03 20:11:01
+// Transcrypt'ed from Python, 2017-11-04 23:47:05
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4053,17 +4053,27 @@ function pytigon () {
 							if (test) {
 								var reader = new FileReader ();
 								var _onload = function (e) {
-									var x = jQuery (elem).closest ('label').find ('img');
+									var x = jQuery (elem).closest ('label').find ('.img');
 									if (x.length > 0) {
 										x.remove ();
 									}
-									var img = jQuery ("<img style='float: left; max-height: 48px; max-width: 48px;'/>");
+									var img = jQuery ("<img class='img' />");
 									img.insertAfter (jQuery (elem).closest ('label').find ('input'));
 									img.attr ('src', e.target.result);
 								};
+								reader.onload = _onload;
+								reader.readAsDataURL (elem.files [0]);
 							}
-							reader.onload = _onload;
-							reader.readAsDataURL (elem.files [0]);
+							else {
+								var x = jQuery (elem).closest ('label').find ('.img');
+								if (x.length > 0) {
+									x.remove ();
+								}
+								var ext = file_name.py_split ('.').slice (-(1)) [0];
+								var img = jQuery ("<p class='img' />");
+								img.insertAfter (jQuery (elem).closest ('label').find ('input'));
+								img.html (ext);
+							}
 						}
 					};
 					window.img_field = img_field;

@@ -9,6 +9,7 @@ not(.login_background) div.content-wrapper {
 
 .app_chose {
   margin: 10px 5px;
+  padding: 5px 10px;
   box-shadow: 5px 5px 2px #112233; }
 
 .app_chose a {
@@ -320,13 +321,27 @@ div.login-container > .row {
   line-height: 1.33;
   border-radius: 35px; }
 
-label.upload p {
+label.upload {
+  height: 80px;
   padding: 0px;
-  margin: 0px;
-  text-transform: none; }
-
-label.upload i {
-  padding: 0px 10px; }
+  min-width: 120px; }
+  label.upload p {
+    padding: 5px 20px 5px 30px;
+    margin: 0px;
+    text-transform: none; }
+  label.upload img, label.upload .img {
+    max-height: 48px;
+    max-width: 96px;
+    position: absolute;
+    left: calc(50% - 48px);
+    padding: 0px;
+    font-size: 24px;
+    text-transform: uppercase; }
+  label.upload i {
+    position: absolute;
+    top: 6px;
+    left: 2px;
+    padding: 0px 10px; }
 
 .checkboxinput {
   margin-right: 10px; }

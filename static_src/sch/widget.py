@@ -15,14 +15,23 @@ def img_field(elem):
 
             def _onload(e):
                 nonlocal elem
-                x = jQuery(elem).closest('label').find('img')
+                x = jQuery(elem).closest('label').find('.img')
                 if x.length>0:
                     x.remove()
-                img = jQuery("<img style='float: left; max-height: 48px; max-width: 48px;'/>")
+                img = jQuery("<img class='img' />")
                 img.insertAfter(jQuery(elem).closest('label').find('input'))
                 img.attr('src', e.target.result)
 
-        reader.onload = _onload
-        reader.readAsDataURL(elem.files[0])
+            reader.onload = _onload
+            reader.readAsDataURL(elem.files[0])
+        else:
+            x = jQuery(elem).closest('label').find('.img')
+            if x.length > 0:
+                x.remove()
+            ext = file_name.split('.').slice(-1)[0]
+            img = jQuery("<p class='img' />")
+            img.insertAfter(jQuery(elem).closest('label').find('input'))
+            img.html(ext)
+
 
 window.img_field = img_field
