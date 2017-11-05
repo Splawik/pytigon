@@ -32,7 +32,8 @@
 
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
-    {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
+    % comment:
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
 
 
     {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}

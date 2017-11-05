@@ -71,8 +71,17 @@ def on_popup_inline(elem):
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
+
     new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</td></tr>")
     new_fragment.insertAfter(jQuery(elem).closest("tr"))
+
+    #style = "position:absolute; top=" + jQuery(elem).position().top + ";"
+    #new_fragment = jQuery("<div class='refr_source inline_dialog hide' style='"+ style + "' id='IDIAL_"+ \
+    #                      id+"' href='"+href2+"'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</div>")
+    #new_fragment.insertAfter(jQuery(elem).closest("tr").find('td'))
+    #jQuery(elem).closest("tr").find('td:first-child').append(new_fragment)
+    #jQuery(elem).closest('.bootstrap-table').prepend(new_fragment)
+
     elem2 = new_fragment.find(".refr_target")
 
     def _on_load(responseText, status, response):
@@ -115,10 +124,10 @@ def on_popup_in_form(elem):
         jQuery('#IDIAL_'+id).show("slow")
         if status!='error':
             _dialog_loaded(False, elem2)
-            table_type = get_table_type(elem2)
-            tbl = elem2.find('.tabsort')
-            if tbl.length > 0:
-                init_table(tbl, table_type)
+            #table_type = get_table_type(elem2)
+            #tbl = elem2.find('.tabsort')
+            #if tbl.length > 0:
+            #    init_table(tbl, table_type)
             on_dialog_load()
         if window.WAIT_ICON:
             window.WAIT_ICON.stop()
@@ -165,8 +174,8 @@ def on_popup_edit_new(elem):
             elem2.show("slow")
             if status!='error':
                 _dialog_loaded(False, elem3)
-                table_type = get_table_type(elem3)
-                init_table(elem3, table_type)
+                #table_type = get_table_type(elem3)
+                #init_table(elem3, table_type)
                 on_dialog_load()
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()

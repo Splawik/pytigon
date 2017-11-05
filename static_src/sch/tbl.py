@@ -1,10 +1,11 @@
 __pragma__ ('alias', 'jquery_is', 'is')
 
 from scrolltbl import stick_header
-from tools import ajax_post, ajax_post, register_fragment_init_fun
+from tools import ajax_post, ajax_post, register_fragment_init_fun, get_table_type, load_js, mount_html
 
 
 def datetable_set_height():
+
     if jQuery(this).hasClass('table_get'):
         return
     if not jQuery(this).jquery_is(':visible'):
@@ -112,6 +113,49 @@ def init_table(table, table_type):
                 datatable_onresize()
 
 
+def init_pagintor(pg):
+    x=load_js
+    if pg.length>0:
+        paginate = True
+        totalPages = pg.attr('totalPages')
+        page_number = pg.attr('start_page')
+
+        def _on_page_click(event, page):
+            form = pg.closest('.refr_object').find('form.refr_source')
+            if form:
+                def _on_new_page(data):
+                    mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+                    #fragment_init(pg.closest('.content').find(".tabsort tbody"))
+                    if window.WAIT_ICON2:
+                        jQuery('#loading-indicator').hide()
+                        window.WAIT_ICON2 = False
+
+                url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
+                form.attr('action', url)
+                form.attr('href', url)
+                active_button = pg.find('.page active')
+                window.WAIT_ICON2 = True
+                jQuery('#loading-indicator').show()
+                ajax_post(url, form.serialize(), _on_new_page)
+
+        options = {
+            'totalPages': +totalPages,
+            'startPage': +page_number,
+            'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
+            'onPageClick': _on_page_click
+        }
+        pg.twbsPagination(options)
+        if +page_number != 1:
+            form = pg.closest('.refr_object').find('form.refr_source')
+            url = pg.attr('href').replace('[[page]]', page_number)+'&only_content=1'
+            form.attr('action', url)
+            form.attr('href', url)
+    else:
+        paginate = False
+
+    return paginate
+
+
 def content_set_height():
     if not jQuery(this).jquery_is(':visible'):
         return
@@ -141,7 +185,15 @@ window.datatable_onresize = datatable_onresize
 
 
 def _on_fragment_init(elem):
-    elem.find('.win-content').bind('resize', datatable_onresize)
+    #elem.find('.win-content').bind('resize', datatable_onresize)
     datatable_onresize()
+    table_type = get_table_type(elem)
+    if table_type != 'datatable':
+        pg = elem.find('.pagination')
+        paginate = init_pagintor(pg)
+    tbl = elem.find('.tabsort')
+    if tbl.length > 0:
+        init_table(tbl, table_type)
+
 
 register_fragment_init_fun(_on_fragment_init)

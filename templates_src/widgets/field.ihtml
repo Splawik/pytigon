@@ -4,7 +4,10 @@
 
 % if standard_web_browser:
     % if hidden:
-        input type=hidden,,,name={{field.name}},,,value={{field.value}}
+        % if field.value:
+            input type=hidden,,,name={{field.name}},,,value={{field.value}}
+        % else:
+            input type=hidden,,,name={{field.name}}
     % else:
         % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
 % else:
@@ -15,7 +18,10 @@
                     {{field.label|safe}}{% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
         td
             % if hidden:
-                input type=hidden,,,name={{field.name}},,,value={{field.value}}
+                % if field.value:
+                    input type=hidden,,,name={{field.name}},,,value={{field.value}}
+                % else:
+                    input type=hidden,,,name={{field.name}}
             % else:
                 {{ field }}
             

@@ -413,7 +413,7 @@ def gen(request, pk):
             for field in table.schfield_set.filter(type__in=['GForeignKey','GManyToManyField', 'GHiddenForeignKey', 'GTreeForeignKey', 'GHiddenTreeForeignKey']):
                 if field.type in ('GTreeForeignKey', 'GHiddenTreeForeignKey'):
                     is_tree_table = True
-                    if table.base_table in ("", "models.Model") and not table.proxy_model:
+                    if table.base_table in (None, "", "models.Model") and not table.proxy_model:
                         table.base_table = 'models.TreeModel'
                         table.tree_tab = 1
                     else: 

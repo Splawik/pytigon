@@ -21,56 +21,57 @@ from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
 
-def init_pagintor(pg):
-    x=load_js
-    if pg.length>0:
-        paginate = True
-        totalPages = pg.attr('totalPages')
-        page_number = pg.attr('start_page')
-
-        def _on_page_click(event, page):
-            form = pg.closest('.refr_object').find('form.refr_source')
-            if form:
-                def _on_new_page(data):
-                    mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
-                    #fragment_init(pg.closest('.content').find(".tabsort tbody"))
-                    if window.WAIT_ICON2:
-                        jQuery('#loading-indicator').hide()
-                        window.WAIT_ICON2 = False
-
-                url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
-                form.attr('action', url)
-                form.attr('href', url)
-                active_button = pg.find('.page active')
-                window.WAIT_ICON2 = True
-                jQuery('#loading-indicator').show()
-                ajax_post(url, form.serialize(), _on_new_page)
-
-        options = {
-            'totalPages': +totalPages,
-            'startPage': +page_number,
-            'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
-            'onPageClick': _on_page_click
-        }
-        pg.twbsPagination(options)
-        if +page_number != 1:
-            form = pg.closest('.refr_object').find('form.refr_source')
-            url = pg.attr('href').replace('[[page]]', page_number)+'&only_content=1'
-            form.attr('action', url)
-            form.attr('href', url)
-    else:
-        paginate = False
-
-    return paginate
+# def init_pagintor(pg):
+#     x=load_js
+#     if pg.length>0:
+#         paginate = True
+#         totalPages = pg.attr('totalPages')
+#         page_number = pg.attr('start_page')
+#
+#         def _on_page_click(event, page):
+#             form = pg.closest('.refr_object').find('form.refr_source')
+#             if form:
+#                 def _on_new_page(data):
+#                     mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
+#                     #fragment_init(pg.closest('.content').find(".tabsort tbody"))
+#                     if window.WAIT_ICON2:
+#                         jQuery('#loading-indicator').hide()
+#                         window.WAIT_ICON2 = False
+#
+#                 url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
+#                 form.attr('action', url)
+#                 form.attr('href', url)
+#                 active_button = pg.find('.page active')
+#                 window.WAIT_ICON2 = True
+#                 jQuery('#loading-indicator').show()
+#                 ajax_post(url, form.serialize(), _on_new_page)
+#
+#         options = {
+#             'totalPages': +totalPages,
+#             'startPage': +page_number,
+#             'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
+#             'onPageClick': _on_page_click
+#         }
+#         pg.twbsPagination(options)
+#         if +page_number != 1:
+#             form = pg.closest('.refr_object').find('form.refr_source')
+#             url = pg.attr('href').replace('[[page]]', page_number)+'&only_content=1'
+#             form.attr('action', url)
+#             form.attr('href', url)
+#     else:
+#         paginate = False
+#
+#     return paginate
 
 
 def page_init(id, first_time = True):
-    table_type = get_table_type(jQuery('#'+ id))
-    if table_type != 'datatable':
-        if window.ACTIVE_PAGE:
-            pg = window.ACTIVE_PAGE.page.find('.pagination')
-            paginate = init_pagintor(pg)
-    init_table(jQuery('#'+ id + ' .tabsort'), table_type)
+    pass
+    #table_type = get_table_type(jQuery('#'+ id))
+    #if table_type != 'datatable':
+    #    if window.ACTIVE_PAGE:
+    #        pg = window.ACTIVE_PAGE.page.find('.pagination')
+    #        paginate = init_pagintor(pg)
+    #init_table(jQuery('#'+ id + ' .tabsort'), table_type)
 
 
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
@@ -102,6 +103,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             location.reload()
 
     sync_and_run('sys', _on_sync)
+    jQuery(window).resize(datatable_onresize)
 
     def _on_submit(e):
         if jQuery(this).attr('target') == '_blank':
@@ -215,6 +217,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
             def _on_resize(e):
                 datatable_onresize()
+
             jQuery("#tabs2").on('shown.bs.tab', _on_resize)
 
             def _on_timeout(e):
@@ -222,7 +225,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
             jQuery('body').on('expanded.pushMenu collapsed.pushMenu', _on_timeout)
 
-            jQuery(window).resize(datatable_onresize)
+            #jQuery(window).resize(datatable_onresize)
 
         jQuery(_local_fun)
 

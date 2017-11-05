@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-04 23:47:05
+// Transcrypt'ed from Python, 2017-11-05 21:36:01
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2838,11 +2838,6 @@ function pytigon () {
 							jQuery ('#IDIAL_' + id).show ('slow');
 							if (status != 'error') {
 								_dialog_loaded (false, elem2);
-								var table_type = get_table_type (elem2);
-								var tbl = elem2.find ('.tabsort');
-								if (tbl.length > 0) {
-									init_table (tbl, table_type);
-								}
 								on_dialog_load ();
 							}
 							if (window.WAIT_ICON) {
@@ -2895,8 +2890,6 @@ function pytigon () {
 								elem2.show ('slow');
 								if (status != 'error') {
 									_dialog_loaded (false, elem3);
-									var table_type = get_table_type (elem3);
-									init_table (elem3, table_type);
 									on_dialog_load ();
 								}
 								if (window.WAIT_ICON) {
@@ -3371,6 +3364,9 @@ function pytigon () {
 					var ajax_post = __init__ (__world__.tools).ajax_post;
 					var ajax_post = __init__ (__world__.tools).ajax_post;
 					var register_fragment_init_fun = __init__ (__world__.tools).register_fragment_init_fun;
+					var get_table_type = __init__ (__world__.tools).get_table_type;
+					var load_js = __init__ (__world__.tools).load_js;
+					var mount_html = __init__ (__world__.tools).mount_html;
 					var datetable_set_height = function () {
 						if (jQuery (this).hasClass ('table_get')) {
 							return ;
@@ -3485,6 +3481,45 @@ function pytigon () {
 							}
 						}
 					};
+					var init_pagintor = function (pg) {
+						var x = load_js;
+						if (pg.length > 0) {
+							var paginate = true;
+							var totalPages = pg.attr ('totalPages');
+							var page_number = pg.attr ('start_page');
+							var _on_page_click = function (event, page) {
+								var form = pg.closest ('.refr_object').find ('form.refr_source');
+								if (form) {
+									var _on_new_page = function (data) {
+										mount_html (pg.closest ('.content').find ('.tabsort tbody'), jQuery (jQuery.parseHTML (data)).find ('.tabsort tbody').html ());
+										if (window.WAIT_ICON2) {
+											jQuery ('#loading-indicator').hide ();
+											window.WAIT_ICON2 = false;
+										}
+									};
+									var url = pg.attr ('href').py_replace ('[[page]]', page) + '&only_content=1';
+									form.attr ('action', url);
+									form.attr ('href', url);
+									var active_button = pg.find ('.page active');
+									window.WAIT_ICON2 = true;
+									jQuery ('#loading-indicator').show ();
+									ajax_post (url, form.serialize (), _on_new_page);
+								}
+							};
+							var options = dict ({'totalPages': +(totalPages), 'startPage': +(page_number), 'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>', 'onPageClick': _on_page_click});
+							pg.twbsPagination (options);
+							if (+(page_number) != 1) {
+								var form = pg.closest ('.refr_object').find ('form.refr_source');
+								var url = pg.attr ('href').py_replace ('[[page]]', page_number) + '&only_content=1';
+								form.attr ('action', url);
+								form.attr ('href', url);
+							}
+						}
+						else {
+							var paginate = false;
+						}
+						return paginate;
+					};
 					var content_set_height = function () {
 						if (!(jQuery (this).is (':visible'))) {
 							return ;
@@ -3503,8 +3538,16 @@ function pytigon () {
 					};
 					window.datatable_onresize = datatable_onresize;
 					var _on_fragment_init = function (elem) {
-						elem.find ('.win-content').bind ('resize', datatable_onresize);
 						datatable_onresize ();
+						var table_type = get_table_type (elem);
+						if (table_type != 'datatable') {
+							var pg = elem.find ('.pagination');
+							var paginate = init_pagintor (pg);
+						}
+						var tbl = elem.find ('.tabsort');
+						if (tbl.length > 0) {
+							init_table (tbl, table_type);
+						}
 					};
 					register_fragment_init_fun (_on_fragment_init);
 					__pragma__ ('<use>' +
@@ -3520,7 +3563,11 @@ function pytigon () {
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.datatable_refresh = datatable_refresh;
 						__all__.datetable_set_height = datetable_set_height;
+						__all__.get_table_type = get_table_type;
+						__all__.init_pagintor = init_pagintor;
 						__all__.init_table = init_table;
+						__all__.load_js = load_js;
+						__all__.mount_html = mount_html;
 						__all__.prepare_datatable = prepare_datatable;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
 						__all__.stick_header = stick_header;
@@ -4121,57 +4168,11 @@ function pytigon () {
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
 		var img_field = __init__ (__world__.widget).img_field;
-		var init_pagintor = function (pg) {
-			var x = load_js;
-			if (pg.length > 0) {
-				var paginate = true;
-				var totalPages = pg.attr ('totalPages');
-				var page_number = pg.attr ('start_page');
-				var _on_page_click = function (event, page) {
-					var form = pg.closest ('.refr_object').find ('form.refr_source');
-					if (form) {
-						var _on_new_page = function (data) {
-							mount_html (pg.closest ('.content').find ('.tabsort tbody'), jQuery (jQuery.parseHTML (data)).find ('.tabsort tbody').html ());
-							if (window.WAIT_ICON2) {
-								jQuery ('#loading-indicator').hide ();
-								window.WAIT_ICON2 = false;
-							}
-						};
-						var url = pg.attr ('href').py_replace ('[[page]]', page) + '&only_content=1';
-						form.attr ('action', url);
-						form.attr ('href', url);
-						var active_button = pg.find ('.page active');
-						window.WAIT_ICON2 = true;
-						jQuery ('#loading-indicator').show ();
-						ajax_post (url, form.serialize (), _on_new_page);
-					}
-				};
-				var options = dict ({'totalPages': +(totalPages), 'startPage': +(page_number), 'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>', 'onPageClick': _on_page_click});
-				pg.twbsPagination (options);
-				if (+(page_number) != 1) {
-					var form = pg.closest ('.refr_object').find ('form.refr_source');
-					var url = pg.attr ('href').py_replace ('[[page]]', page_number) + '&only_content=1';
-					form.attr ('action', url);
-					form.attr ('href', url);
-				}
-			}
-			else {
-				var paginate = false;
-			}
-			return paginate;
-		};
 		var page_init = function (id, first_time) {
 			if (typeof first_time == 'undefined' || (first_time != null && first_time .hasOwnProperty ("__kwargtrans__"))) {;
 				var first_time = true;
 			};
-			var table_type = get_table_type (jQuery ('#' + id));
-			if (table_type != 'datatable') {
-				if (window.ACTIVE_PAGE) {
-					var pg = window.ACTIVE_PAGE.page.find ('.pagination');
-					var paginate = init_pagintor (pg);
-				}
-			}
-			init_table (jQuery (('#' + id) + ' .tabsort'), table_type);
+			// pass;
 		};
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
 			moment.locale (lang);
@@ -4203,6 +4204,7 @@ function pytigon () {
 				}
 			};
 			sync_and_run ('sys', _on_sync);
+			jQuery (window).resize (datatable_onresize);
 			var _on_submit = function (e) {
 				if (jQuery (this).attr ('target') == '_blank') {
 					jQuery (this).attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
@@ -4321,7 +4323,6 @@ function pytigon () {
 						window.setTimeout (datatable_onresize, 300);
 					};
 					jQuery ('body').on ('expanded.pushMenu collapsed.pushMenu', _on_timeout);
-					jQuery (window).resize (datatable_onresize);
 				};
 				jQuery (_local_fun);
 			}
@@ -4615,7 +4616,6 @@ function pytigon () {
 			__all__.handle_class_click = handle_class_click;
 			__all__.history_push_state = history_push_state;
 			__all__.img_field = img_field;
-			__all__.init_pagintor = init_pagintor;
 			__all__.init_popup_events = init_popup_events;
 			__all__.init_table = init_table;
 			__all__.install_service_worker = install_service_worker;
