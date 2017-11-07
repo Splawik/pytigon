@@ -201,7 +201,7 @@ def copy_files_and_dirs(src, dst):
 
 def run_python_shell_task2(request):
     id = get_process_manager().put(request, "python-shell", "python3", '-i')
-    new_url = "../../schsys/thread/%d/edit/" % id
+    new_url = make_href("../../schsys/thread/%d/edit/" % id)
     return HttpResponseRedirect(new_url)
 
 def run_python_shell_task_base(request, base_path, appset_name):
@@ -217,7 +217,7 @@ def run_python_shell_task_base(request, base_path, appset_name):
 
 def run_python_shell_task(request, base_path, appset_name):
     id = run_python_shell_task_base(request, base_path, appset_name)
-    new_url = "../../schsys/thread/%d/edit/" % id
+    new_url = make_href("../../schsys/thread/%d/edit/" % id)
     return HttpResponseRedirect(new_url)
 
 
@@ -895,7 +895,7 @@ def template_edit(request, pk):
     else:
         id = templates[0].id
     
-    new_url = "/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id)
+    new_url = make_href("/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id))
     
     return HttpResponseRedirect(new_url)
     
@@ -1063,7 +1063,7 @@ def template_edit3(request, pk):
         id = template.id
     else:
         id = templates[0].id
-    new_url = "/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id)
+    new_url = make_href("/schbuilder/table/SChTemplate/%s/template_code/py/editor/" % str(id))
     return HttpResponseRedirect(new_url)
     
 

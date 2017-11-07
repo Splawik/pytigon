@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-07 20:34:34
+// Transcrypt'ed from Python, 2017-11-07 23:07:56
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4248,6 +4248,11 @@ function pytigon () {
 			sync_and_run ('sys', _on_sync);
 			jQuery (window).resize (datatable_onresize);
 			var _on_submit = function (e) {
+				if (jQuery (this).hasClass ('DialogForm')) {
+					e.preventDefault ();
+					on_edit_ok (false, jQuery (this));
+					return ;
+				}
 				if (jQuery (this).attr ('target') == '_blank') {
 					jQuery (this).attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
 					return true;
@@ -4298,6 +4303,20 @@ function pytigon () {
 			};
 			jQuery ('#tabs2_content').on ('submit', 'form', _on_submit);
 			jQuery ('#dialog-form-modal').on ('submit', 'form', _on_submit);
+			var _on_key = function (e) {
+				if (e.which == 13) {
+					var elem = jQuery (e.target);
+					var form = elem.closest ('form');
+					if (form.length > 0) {
+						if (form.hasClass ('DialogForm')) {
+							e.preventDefault ();
+							on_edit_ok (false, form);
+							return ;
+						}
+					}
+				}
+			};
+			jQuery (document).keypress (_on_key);
 			init_popup_events ();
 			if (can_popup ()) {
 				var _local_fun = function () {
@@ -4337,11 +4356,6 @@ function pytigon () {
 						}
 					};
 					jQuery ('body').on ('click', 'a.menu-href', _on_menu_click);
-					var _on_submit = function (e) {
-						e.preventDefault ();
-						on_edit_ok (false, jQuery (this));
-					};
-					jQuery ('body').on ('submit', 'form.DialogForm', _on_submit);
 					var _on_logout_click = function () {
 						window.location = jQuery (this).attr ('action');
 					};

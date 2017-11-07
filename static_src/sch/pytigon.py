@@ -53,6 +53,11 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     jQuery(window).resize(datatable_onresize)
 
     def _on_submit(e):
+        if jQuery(this).hasClass('DialogForm'):
+            e.preventDefault()
+            on_edit_ok(False, jQuery(this))
+            return
+
         if jQuery(this).attr('target') == '_blank':
             jQuery(this).attr("enctype", "multipart/form-data").attr("encoding", "multipart/form-data")
             return True
@@ -100,6 +105,20 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
     jQuery('#tabs2_content').on("submit", "form", _on_submit)
     jQuery('#dialog-form-modal').on("submit", "form", _on_submit)
+
+
+    def _on_key(e):
+        if e.which == 13:
+            elem = jQuery(e.target)
+            form = elem.closest('form')
+            if form.length > 0:
+                if form.hasClass('DialogForm'):
+                    e.preventDefault()
+                    on_edit_ok(False, form)
+                    return
+
+    jQuery(document).keypress(_on_key)
+
     #jQuery('#tabs2_content').on("submit", "button", _on_submit)
     #jQuery('#dialog-form-modal').on("submit", "button", _on_submit)
 
@@ -141,10 +160,10 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
                         _on_menu_href(this)
             jQuery('body').on('click', 'a.menu-href', _on_menu_click)
 
-            def _on_submit(e):
-                e.preventDefault()
-                on_edit_ok(False, jQuery(this))
-            jQuery('body').on('submit', 'form.DialogForm', _on_submit)
+            #def _on_submit(e):
+            #    e.preventDefault()
+            #    on_edit_ok(False, jQuery(this))
+            #jQuery('body').on('submit', 'form.DialogForm', _on_submit)
 
             def _on_logout_click():
                 window.location = jQuery(this).attr('action')
