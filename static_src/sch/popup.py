@@ -227,7 +227,28 @@ def on_dialog_load():
 
 
 def _dialog_loaded(is_modal, elem):
-    #fragment_init(elem)
+    obj = elem.closest('.refr_object')
+    if obj.length > 0:
+        if obj[0].hasAttribute("related-object"):
+            btn = jQuery("#" + obj.attr("related-object"))
+        else:
+            btn = obj
+
+        if btn.hasClass('no_cancel'):
+            obj.find('.btn_cancel').hide()
+        else:
+            obj.find('.btn_cancel').show()
+
+        if btn.hasClass('no_close'):
+            obj.find('.close').hide()
+        else:
+            obj.find('.close').show()
+
+        if btn.hasClass('no_ok'):
+            obj.find('.btn_ok').hide()
+        else:
+            obj.find('.btn_ok').show()
+
     if is_modal:
         jQuery("div.dialog-form").fadeTo( "fast", 1)
         jQuery('div.dialog-form').find('.modal-dialog').removeClass('modal-lg').removeClass('modal-sm')
@@ -298,10 +319,20 @@ def _refresh_win_after_ok(responseText, ok_button):
         _refresh_win(responseText, ok_button)
 
 
-def on_edit_ok(form):
+def on_edit_ok(button, form):
+    if form:
+        f=form
+    else:
+        f = jQuery(button).parent().parent().find('form:first')
+
     def _fun(data):
-        _refresh_win_after_ok(data, form)
-    ajax_submit(form, _fun)
+        _refresh_win_after_ok(data, f)
+
+    if f.length>0:
+        ajax_submit(f, _fun)
+    else:
+        _refresh_win("RETURN_OK", jQuery(button))
+
     return False
 
 window.on_edit_ok = on_edit_ok

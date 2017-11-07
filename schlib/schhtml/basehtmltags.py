@@ -22,6 +22,21 @@ import fnmatch
 from schlib.schhtml.atom import AtomList
 
 
+def rgb_to_hex(color):
+    try:
+        def _to_2hex(s):
+            x = hex(int(s))[2:]
+            if len(x)==1:
+                return '0'+x
+            else:
+                return x
+        tab = color.split('(')[1].split(')')[0].split(',')
+        ret = '#' + _to_2hex(tab[0])+ _to_2hex(tab[1])+ _to_2hex(tab[2])
+        return ret
+    except:
+        return '#000'
+
+
 class BaseHtmlElemParser(object):
     @property
     def height(self):
@@ -126,6 +141,7 @@ class BaseHtmlElemParser(object):
             obj = obj.get_parent()
         return None
 
+
     def get_style_id(self):
         color = self.get_atrr('color')
         font_family = self.get_atrr('font-family')
@@ -133,8 +149,12 @@ class BaseHtmlElemParser(object):
         font_style = self.get_atrr('font-style')
         font_weight = self.get_atrr('font-weight')
         text_decoration = self.get_atrr('text-decoration')
+
         if not color[0] == '#':
-            color = '#000'
+            if color.strip().startswith('rgb'):
+                color = rgb_to_hex(color)
+            else:
+                color = '#000'
         if not font_family in ('serif', 'sans-serif', 'monospace', 'cursive', 'fantasy'):
             font_family = 'sans-serif'
         if not '%' in font_size:

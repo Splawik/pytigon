@@ -218,6 +218,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             return ret
 
 
+
     @property
     def rendered_content(self):
         """Returns the freshly rendered content for the template and context
@@ -232,7 +233,10 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
         try:
             content = template.render(context, self._request)
         except:
-            content = template.render(RequestContext(self._request, context))
+            try:
+                content = template.render(RequestContext(self._request, context))
+            except:
+                content = template.render(context, self._request)
         return content
 
 

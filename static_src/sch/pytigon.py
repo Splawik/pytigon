@@ -21,59 +21,6 @@ from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
 
-# def init_pagintor(pg):
-#     x=load_js
-#     if pg.length>0:
-#         paginate = True
-#         totalPages = pg.attr('totalPages')
-#         page_number = pg.attr('start_page')
-#
-#         def _on_page_click(event, page):
-#             form = pg.closest('.refr_object').find('form.refr_source')
-#             if form:
-#                 def _on_new_page(data):
-#                     mount_html(pg.closest('.content').find(".tabsort tbody"), jQuery(jQuery.parseHTML(data)).find(".tabsort tbody").html())
-#                     #fragment_init(pg.closest('.content').find(".tabsort tbody"))
-#                     if window.WAIT_ICON2:
-#                         jQuery('#loading-indicator').hide()
-#                         window.WAIT_ICON2 = False
-#
-#                 url = pg.attr('href').replace('[[page]]', page)+'&only_content=1'
-#                 form.attr('action', url)
-#                 form.attr('href', url)
-#                 active_button = pg.find('.page active')
-#                 window.WAIT_ICON2 = True
-#                 jQuery('#loading-indicator').show()
-#                 ajax_post(url, form.serialize(), _on_new_page)
-#
-#         options = {
-#             'totalPages': +totalPages,
-#             'startPage': +page_number,
-#             'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>',
-#             'onPageClick': _on_page_click
-#         }
-#         pg.twbsPagination(options)
-#         if +page_number != 1:
-#             form = pg.closest('.refr_object').find('form.refr_source')
-#             url = pg.attr('href').replace('[[page]]', page_number)+'&only_content=1'
-#             form.attr('action', url)
-#             form.attr('href', url)
-#     else:
-#         paginate = False
-#
-#     return paginate
-
-
-def page_init(id, first_time = True):
-    pass
-    #table_type = get_table_type(jQuery('#'+ id))
-    #if table_type != 'datatable':
-    #    if window.ACTIVE_PAGE:
-    #        pg = window.ACTIVE_PAGE.page.find('.pagination')
-    #        paginate = init_pagintor(pg)
-    #init_table(jQuery('#'+ id + ' .tabsort'), table_type)
-
-
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
     moment.locale(lang)
 
@@ -143,7 +90,6 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         def _on_submit2(data):
             mount_html(window.ACTIVE_PAGE.page, data)
-            page_init(window.ACTIVE_PAGE.page.id, False)
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
             if window.WAIT_ICON2:
@@ -197,7 +143,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
             def _on_submit(e):
                 e.preventDefault()
-                on_edit_ok(jQuery(this))
+                on_edit_ok(False, jQuery(this))
             jQuery('body').on('submit', 'form.DialogForm', _on_submit)
 
             def _on_logout_click():
@@ -256,12 +202,11 @@ def _on_menu_href(elem, title=None):
                 nonlocal href, href2, title
 
                 if window.APPLICATION_TEMPLATE == 'modern':
-                    id = menu.new_page(title, data, href2, window.COMPONENT_INIT, page_init)
+                    id = menu.new_page(title, data, href2)
                 else:
                     mount_html(jQuery('#body_body'),data)
                     window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
                     window.ACTIVE_PAGE.set_href(href2)
-                    page_init('body_body', False)
                     if window.PUSH_STATE:
                         id = jQuery(elem).attr('id')
                         if not id:
@@ -335,8 +280,6 @@ def jquery_ready():
 
     if window.APPLICATION_TEMPLATE == 'traditional':
         window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-
-        page_init('body_body')
     else:
         if window.APPLICATION_TEMPLATE == 'modern':
             txt  = jQuery('.page').html()
@@ -345,10 +288,9 @@ def jquery_ready():
                 txt = jQuery.trim(jQuery('.page')[0].outerHTML)
                 jQuery('.page').remove()
                 menu = get_menu()
-                menu.new_page(jQuery('title').text(), txt, window.location.href, window.COMPONENT_INIT, page_init)
+                menu.new_page(jQuery('title').text(), txt, window.location.href)
         else:
             window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-            page_init('body_body')
 
 
 EVENT_TAB = [
@@ -372,10 +314,8 @@ def standard_on_data(src_obj, href):
             if window.APPLICATION_TEMPLATE == 'modern':
                 mount_html(window.ACTIVE_PAGE.page, data)
                 window.ACTIVE_PAGE.set_href(href)
-                page_init(window.ACTIVE_PAGE.id, False)
             else:
                 mount_html(jQuery('#body_body'), data)
-                page_init('body_body', False)
             window.ACTIVE_PAGE.set_href(href)
             get_menu().get_active_item().url = href
             if window.PUSH_STATE:
@@ -430,24 +370,20 @@ def init_popup_events(elem=None):
                 if window.APPLICATION_TEMPLATE == 'modern':
                     mount_html(window.ACTIVE_PAGE.page, data)
                     window.ACTIVE_PAGE.set_href(href)
-                    page_init(window.ACTIVE_PAGE.id, False)
                 else:
                     mount_html(jQuery('#body_body'), data)
-                    page_init('body_body', False)
                 window.ACTIVE_PAGE.set_href(href)
                 get_menu().get_active_item().url = href
                 if window.PUSH_STATE:
                     history_push_state("title", href)
         ajax_get(href2,_on_data)
 
-    #jQuery('body').on("click", "a", _on_click)
     if elem:
         elem.on("click", "a", _on_click)
     else:
         jQuery('#tabs2_content').on("click", "a", _on_click)
         jQuery('#dialog-form-modal').on("click", "a", _on_click)
 
-#register_mount_fun(init_popup_events)
 
 def _on_popstate(e):
     if e.state:

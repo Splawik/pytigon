@@ -75,7 +75,7 @@ def datatable_ajax(params):
 
 def init_table(table, table_type):
     if table_type == 'scrolled':
-        stick_header()
+        stick_header(table)
     if table_type == 'datatable':
         def onLoadSuccess(data):
             prepare_datatable(table)
@@ -158,6 +158,9 @@ def init_pagintor(pg):
 
 def content_set_height():
     if not jQuery(this).jquery_is(':visible'):
+        return
+
+    if jQuery(this).closest('.tabsort').length>0:
         return
 
     #elem = jQuery(this).findclosest('.tab-pane')

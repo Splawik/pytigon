@@ -1,47 +1,53 @@
 def stick_resize():
     tbl = window.ACTIVE_PAGE.page.find(".tbl_scroll")
     if tbl.length>0:
+        tbl2 = jQuery(tbl[0])
+        if tbl2.closest('.tabsort').length>0:
+            return
         dy_table = tbl.offset().top
         dy_win = dy_win = jQuery(window).height()
         dy = dy_win - dy_table
         if dy<100: dy = 100
-        tbl.height(dy-35)
+        tbl2.height(dy-35)
 
 
 def resize_win():
     stick_resize()
     tab2 = []
-    tab_width = window.ACTIVE_PAGE.page.find("table[name='tabsort']").width()
-    window.ACTIVE_PAGE.page.find(".tbl_header").width(tab_width)
+    tabs = window.ACTIVE_PAGE.page.find("table[name='tabsort']")
+    if tabs.length > 0:
+        first_tab_on_page = jQuery(tabs[0])
+        tab_width = jQuery(first_tab_on_page).width()
+        jQuery(first_tab_on_page.find(".tbl_header")[0]).width(tab_width)
 
-    def _local_fun():
-        tab2.push(jQuery(this).width())
-    window.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(_local_fun)
+        def _local_fun():
+            tab2.push(jQuery(this).width())
+        first_tab_on_page.find("tr:first td").each(_local_fun)
 
-    tab2 = tab2.reverse()
+        tab2 = tab2.reverse()
 
-    def _local_fun2():
-        jQuery(this).width(tab2.pop())
-    window.ACTIVE_PAGE.page.find(".tbl_header th").each(_local_fun2)
+        def _local_fun2():
+            jQuery(this).width(tab2.pop())
+        first_tab_on_page.find(".tbl_header:first th").each(_local_fun2)
 
 
-def stick_header():
+def stick_header(tbl):
     tab = []
     tab2 = []
 
     def _local_fun():
         tab.push(jQuery(this).width())
-    window.ACTIVE_PAGE.page.find("table.tabsort th").each(_local_fun)
+    tbl.find("table.tabsort th").each(_local_fun)
 
     table = jQuery('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>')
-    table.append( window.ACTIVE_PAGE.page.find("table.tabsort thead") )
+    table.append(tbl.find("table.tabsort thead") )
 
-    window.ACTIVE_PAGE.page.find('.tbl_scroll').before(table)
+    tbl.find('.tbl_scroll').before(table)
 
     def _local_fun2():
         tab2.push(jQuery(this).width())
 
-    window.ACTIVE_PAGE.page.find(".tbl_header th").each(_local_fun2)
+    tbl.find(".tbl_header th").each(_local_fun2)
 
     tab2 = tab2.reverse()
 
@@ -49,13 +55,13 @@ def stick_header():
         x = tab2.pop()
         if x > jQuery(this).width():
             jQuery(this).css("min-width", x)
-    window.ACTIVE_PAGE.page.find("table[name='tabsort'] tr:first td").each(_local_fun3)
+    tbl.find("table[name='tabsort'] tr:first td").each(_local_fun3)
 
     tab = tab.reverse()
 
     def _local_fun4():
         jQuery(this).width(tab.pop())
-    window.ACTIVE_PAGE.page.find(".tbl_header th").each(_local_fun4)
+    tbl.find(".tbl_header th").each(_local_fun4)
 
     jQuery(window).resize(resize_win)
 

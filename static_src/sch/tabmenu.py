@@ -25,7 +25,7 @@ class TabMenu:
             history_push_state(menu_item.title, menu_item.url)
         datatable_onresize()
 
-    def new_page(self, title_alternate, data, href, component_init, page_init):
+    def new_page(self, title_alternate, data, href):
         _id = "tab" + self.id
 
         tmp = jQuery(data).find("title").text()
@@ -35,7 +35,6 @@ class TabMenu:
         title2 = jQuery.trim(title)
         menu_item = TabMenuItem(_id, title2, href, data)
         self.titles[title2] = menu_item
-        #jQuery('#tabs2').append(vsprintf("<li id='li_%s'>                  <a href='#%s'                          data-toggle='tab'           >%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", [_id, _id, title2, _id]))
         menu_pos = vsprintf(
             "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
             [_id, _id, title2, title2, _id])
@@ -51,7 +50,7 @@ class TabMenu:
         window.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
         self.active_item = menu_item
 
-        mount_html(jQuery('#'+_id),data)
+        #mount_html(jQuery('#'+_id),data)
 
         if window.PUSH_STATE:
             history_push_state(title2, href)
@@ -73,8 +72,7 @@ class TabMenu:
             jQuery('#tabs2 a:last').on('shown.bs.tab', _on_show_tab)
             jQuery('#tabs2 a:last').tab('show')
 
-        page_init(_id, False)
-
+        mount_html(jQuery('#' + _id), data)
 
         def _on_button_click(event):
             get_menu().remove_page(jQuery(this).attr('id').replace('button_',''))

@@ -1014,21 +1014,33 @@ def installer(request, pk):
 
 def restart_server(request):
     
-    if platform.system() == "Linux":
-        if 'mod_wsgi.process_group' in request.environ:
-            if request.environ['mod_wsgi.process_group'] != '':
-                os.kill(os.getpid(), signal.SIGINT)
-                print("restart_1")
+    restarted = False
+    try:
+        if platform.system() == "Linux":
+            if 'mod_wsgi.process_group' in request.environ:
+                if request.environ['mod_wsgi.process_group'] != '':
+                    os.kill(os.getpid(), signal.SIGINT)
+                    restarted = True
+            else:
+                try:
+                    import uwsgi
+                    uwsgi.reload()
+                    restarted = True
+                except:
+                    pass
         else:
-            try:
-                import uwsgi
-                uwsgi.reload()
-            except:
-                pass
+            ctypes.windll.libhttpd.ap_signal_parent(1)
+            restarted = True
+    except:
+        pass
+    
+    script = "<script>jQuery('#ModalLabel').html('Restart');</script>"
+    
+    if restarted:
+        return HttpResponse("<html>%s<body>Restarted</body></html>" % script)
     else:
-        ctypes.windll.libhttpd.ap_signal_parent(1)
-        print("restart_2")
-    return HttpResponse('<html><body>Restarted</body></html>')
+        return HttpResponse("<html>%s<body>I can't restart server</body></html>" % script)
+        
     
 
 

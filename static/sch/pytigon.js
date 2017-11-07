@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-05 21:36:01
+// Transcrypt'ed from Python, 2017-11-07 20:34:34
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2943,6 +2943,33 @@ function pytigon () {
 						// pass;
 					};
 					var _dialog_loaded = function (is_modal, elem) {
+						var obj = elem.closest ('.refr_object');
+						if (obj.length > 0) {
+							if (obj [0].hasAttribute ('related-object')) {
+								var btn = jQuery ('#' + obj.attr ('related-object'));
+							}
+							else {
+								var btn = obj;
+							}
+							if (btn.hasClass ('no_cancel')) {
+								obj.find ('.btn_cancel').hide ();
+							}
+							else {
+								obj.find ('.btn_cancel').show ();
+							}
+							if (btn.hasClass ('no_close')) {
+								obj.find ('.close').hide ();
+							}
+							else {
+								obj.find ('.close').show ();
+							}
+							if (btn.hasClass ('no_ok')) {
+								obj.find ('.btn_ok').hide ();
+							}
+							else {
+								obj.find ('.btn_ok').show ();
+							}
+						}
 						if (is_modal) {
 							jQuery ('div.dialog-form').fadeTo ('fast', 1);
 							jQuery ('div.dialog-form').find ('.modal-dialog').removeClass ('modal-lg').removeClass ('modal-sm');
@@ -3020,11 +3047,22 @@ function pytigon () {
 							_refresh_win (responseText, ok_button);
 						}
 					};
-					var on_edit_ok = function (form) {
+					var on_edit_ok = function (button, form) {
+						if (form) {
+							var f = form;
+						}
+						else {
+							var f = jQuery (button).parent ().parent ().find ('form:first');
+						}
 						var _fun = function (data) {
-							_refresh_win_after_ok (data, form);
+							_refresh_win_after_ok (data, f);
 						};
-						ajax_submit (form, _fun);
+						if (f.length > 0) {
+							ajax_submit (f, _fun);
+						}
+						else {
+							_refresh_win ('RETURN_OK', jQuery (button));
+						}
 						return false;
 					};
 					window.on_edit_ok = on_edit_ok;
@@ -3133,6 +3171,10 @@ function pytigon () {
 					var stick_resize = function () {
 						var tbl = window.ACTIVE_PAGE.page.find ('.tbl_scroll');
 						if (tbl.length > 0) {
+							var tbl2 = jQuery (tbl [0]);
+							if (tbl2.closest ('.tabsort').length > 0) {
+								return ;
+							}
 							var dy_table = tbl.offset ().top;
 							var __left0__ = jQuery (window).height ();
 							var dy_win = __left0__;
@@ -3141,38 +3183,42 @@ function pytigon () {
 							if (dy < 100) {
 								var dy = 100;
 							}
-							tbl.height (dy - 35);
+							tbl2.height (dy - 35);
 						}
 					};
 					var resize_win = function () {
 						stick_resize ();
 						var tab2 = list ([]);
-						var tab_width = window.ACTIVE_PAGE.page.find ("table[name='tabsort']").width ();
-						window.ACTIVE_PAGE.page.find ('.tbl_header').width (tab_width);
-						var _local_fun = function () {
-							tab2.push (jQuery (this).width ());
-						};
-						window.ACTIVE_PAGE.page.find ("table[name='tabsort'] tr:first td").each (_local_fun);
-						var tab2 = tab2.reverse ();
-						var _local_fun2 = function () {
-							jQuery (this).width (tab2.py_pop ());
-						};
-						window.ACTIVE_PAGE.page.find ('.tbl_header th').each (_local_fun2);
+						var tabs = window.ACTIVE_PAGE.page.find ("table[name='tabsort']");
+						if (tabs.length > 0) {
+							var first_tab_on_page = jQuery (tabs [0]);
+							var tab_width = jQuery (first_tab_on_page).width ();
+							jQuery (first_tab_on_page.find ('.tbl_header') [0]).width (tab_width);
+							var _local_fun = function () {
+								tab2.push (jQuery (this).width ());
+							};
+							first_tab_on_page.find ('tr:first td').each (_local_fun);
+							var tab2 = tab2.reverse ();
+							var _local_fun2 = function () {
+								jQuery (this).width (tab2.py_pop ());
+							};
+							first_tab_on_page.find ('.tbl_header:first th').each (_local_fun2);
+						}
 					};
-					var stick_header = function () {
+					var stick_header = function (tbl) {
 						var tab = list ([]);
 						var tab2 = list ([]);
 						var _local_fun = function () {
 							tab.push (jQuery (this).width ());
 						};
-						window.ACTIVE_PAGE.page.find ('table.tabsort th').each (_local_fun);
+						tbl.find ('table.tabsort th').each (_local_fun);
 						var table = jQuery ('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>');
-						table.append (window.ACTIVE_PAGE.page.find ('table.tabsort thead'));
-						window.ACTIVE_PAGE.page.find ('.tbl_scroll').before (table);
+						table.append (tbl.find ('table.tabsort thead'));
+						tbl.find ('.tbl_scroll').before (table);
 						var _local_fun2 = function () {
 							tab2.push (jQuery (this).width ());
 						};
-						window.ACTIVE_PAGE.page.find ('.tbl_header th').each (_local_fun2);
+						tbl.find ('.tbl_header th').each (_local_fun2);
 						var tab2 = tab2.reverse ();
 						var _local_fun3 = function () {
 							var x = tab2.py_pop ();
@@ -3180,12 +3226,12 @@ function pytigon () {
 								jQuery (this).css ('min-width', x);
 							}
 						};
-						window.ACTIVE_PAGE.page.find ("table[name='tabsort'] tr:first td").each (_local_fun3);
+						tbl.find ("table[name='tabsort'] tr:first td").each (_local_fun3);
 						var tab = tab.reverse ();
 						var _local_fun4 = function () {
 							jQuery (this).width (tab.py_pop ());
 						};
-						window.ACTIVE_PAGE.page.find ('.tbl_header th').each (_local_fun4);
+						tbl.find ('.tbl_header th').each (_local_fun4);
 						jQuery (window).resize (resize_win);
 						resize_win ();
 					};
@@ -3238,7 +3284,7 @@ function pytigon () {
 							}
 							datatable_onresize ();
 						});},
-						get new_page () {return __get__ (this, function (self, title_alternate, data, href, component_init, page_init) {
+						get new_page () {return __get__ (this, function (self, title_alternate, data, href) {
 							var _id = 'tab' + self.id;
 							var tmp = jQuery (data).find ('title').text ();
 							var title = jQuery.trim (tmp);
@@ -3259,7 +3305,6 @@ function pytigon () {
 							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;
-							mount_html (jQuery ('#' + _id), data);
 							if (window.PUSH_STATE) {
 								history_push_state (title2, href);
 							}
@@ -3280,7 +3325,7 @@ function pytigon () {
 								jQuery ('#tabs2 a:last').on ('shown.bs.tab', _on_show_tab);
 								jQuery ('#tabs2 a:last').tab ('show');
 							}
-							page_init (_id, false);
+							mount_html (jQuery ('#' + _id), data);
 							var _on_button_click = function (event) {
 								get_menu ().remove_page (jQuery (this).attr ('id').py_replace ('button_', ''));
 							};
@@ -3436,7 +3481,7 @@ function pytigon () {
 					};
 					var init_table = function (table, table_type) {
 						if (table_type == 'scrolled') {
-							stick_header ();
+							stick_header (table);
 						}
 						if (table_type == 'datatable') {
 							var onLoadSuccess = function (data) {
@@ -3522,6 +3567,9 @@ function pytigon () {
 					};
 					var content_set_height = function () {
 						if (!(jQuery (this).is (':visible'))) {
+							return ;
+						}
+						if (jQuery (this).closest ('.tabsort').length > 0) {
 							return ;
 						}
 						var content_offset = jQuery (this).offset ().top;
@@ -4168,12 +4216,6 @@ function pytigon () {
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
 		var img_field = __init__ (__world__.widget).img_field;
-		var page_init = function (id, first_time) {
-			if (typeof first_time == 'undefined' || (first_time != null && first_time .hasOwnProperty ("__kwargtrans__"))) {;
-				var first_time = true;
-			};
-			// pass;
-		};
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
 			moment.locale (lang);
 			window.APPSET_NAME = appset_name;
@@ -4244,7 +4286,6 @@ function pytigon () {
 				}
 				var _on_submit2 = function (data) {
 					mount_html (window.ACTIVE_PAGE.page, data);
-					page_init (window.ACTIVE_PAGE.page.id, false);
 					if (window.WAIT_ICON) {
 						window.WAIT_ICON.stop ();
 					}
@@ -4298,7 +4339,7 @@ function pytigon () {
 					jQuery ('body').on ('click', 'a.menu-href', _on_menu_click);
 					var _on_submit = function (e) {
 						e.preventDefault ();
-						on_edit_ok (jQuery (this));
+						on_edit_ok (false, jQuery (this));
 					};
 					jQuery ('body').on ('submit', 'form.DialogForm', _on_submit);
 					var _on_logout_click = function () {
@@ -4356,13 +4397,12 @@ function pytigon () {
 					var href2 = corect_href (href);
 					var _on_new_win = function (data) {
 						if (window.APPLICATION_TEMPLATE == 'modern') {
-							var id = menu.new_page (title, data, href2, window.COMPONENT_INIT, page_init);
+							var id = menu.new_page (title, data, href2);
 						}
 						else {
 							mount_html (jQuery ('#body_body'), data);
 							window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
 							window.ACTIVE_PAGE.set_href (href2);
-							page_init ('body_body', false);
 							if (window.PUSH_STATE) {
 								var id = jQuery (elem).attr ('id');
 								if (!(id)) {
@@ -4437,7 +4477,6 @@ function pytigon () {
 			jQuery ('.navbar-ex1-collapse').on ('hidden.bs.collapse', _local_fun);
 			if (window.APPLICATION_TEMPLATE == 'traditional') {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
-				page_init ('body_body');
 			}
 			else if (window.APPLICATION_TEMPLATE == 'modern') {
 				var txt = jQuery ('.page').html ();
@@ -4446,12 +4485,11 @@ function pytigon () {
 					var txt = jQuery.trim (jQuery ('.page') [0].outerHTML);
 					jQuery ('.page').remove ();
 					var menu = get_menu ();
-					menu.new_page (jQuery ('title').text (), txt, window.location.href, window.COMPONENT_INIT, page_init);
+					menu.new_page (jQuery ('title').text (), txt, window.location.href);
 				}
 			}
 			else {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
-				page_init ('body_body');
 			}
 		};
 		var EVENT_TAB = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete]), tuple (['get_tbl_value', on_get_tbl_value]), tuple (['new_tbl_value', on_new_tbl_value]), tuple (['get_row', on_get_row])]);
@@ -4464,11 +4502,9 @@ function pytigon () {
 					if (window.APPLICATION_TEMPLATE == 'modern') {
 						mount_html (window.ACTIVE_PAGE.page, data);
 						window.ACTIVE_PAGE.set_href (href);
-						page_init (window.ACTIVE_PAGE.id, false);
 					}
 					else {
 						mount_html (jQuery ('#body_body'), data);
-						page_init ('body_body', false);
 					}
 					window.ACTIVE_PAGE.set_href (href);
 					get_menu ().get_active_item ().url = href;
@@ -4532,11 +4568,9 @@ function pytigon () {
 						if (window.APPLICATION_TEMPLATE == 'modern') {
 							mount_html (window.ACTIVE_PAGE.page, data);
 							window.ACTIVE_PAGE.set_href (href);
-							page_init (window.ACTIVE_PAGE.id, false);
 						}
 						else {
 							mount_html (jQuery ('#body_body'), data);
-							page_init ('body_body', false);
 						}
 						window.ACTIVE_PAGE.set_href (href);
 						get_menu ().get_active_item ().url = href;
@@ -4634,7 +4668,6 @@ function pytigon () {
 			__all__.on_popup_edit_new = on_popup_edit_new;
 			__all__.on_popup_info = on_popup_info;
 			__all__.on_popup_inline = on_popup_inline;
-			__all__.page_init = page_init;
 			__all__.refresh_fragment = refresh_fragment;
 			__all__.register_fragment_init_fun = register_fragment_init_fun;
 			__all__.register_mount_fun = register_mount_fun;

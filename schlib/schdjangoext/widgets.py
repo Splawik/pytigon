@@ -5,5 +5,10 @@ class ImgFileInput(django.forms.widgets.ClearableFileInput):
         return value
 
     def value_from_datadict(self, data, files, name):
-        x = data[name]
-        return x
+        if name in data:
+            return  data[name]
+        elif name in files:
+            return files[name]
+        else:
+            return None
+

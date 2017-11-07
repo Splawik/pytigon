@@ -419,8 +419,13 @@ def new_row_inline(context, title="", name="", target='', attrs='', param='-', u
 
 
 @inclusion_tag('widgets/list_action.html')
-def list_action(context, action, id, title="", name="", target='_blank', attrs='', url=""):
-    ret = action_fun(context, action, title, name, target, attrs, "", url if url else "../../../action/%s" % action)
+def list_action(context, action, id, title="", name="", target='_top', attrs='', url="", active=False):
+    if attrs:
+        ret = action_fun(context, action, title, name, target, attrs, "", url if url else "../../../action/%s" % action)
+    elif active:
+        ret = action_fun(context, action, title, name, target, "class='btn btn-secondary no_close no_cancel' data-role='button'", "", url if url else "../../../action/%s" % action)
+    else:
+        ret = action_fun(context, action, title, name, target, "class='btn btn-secondary no_ok no_cancel' data-role='button'", "", url if url else "../../../action/%s" % action)
     return ret
 
 

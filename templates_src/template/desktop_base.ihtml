@@ -335,8 +335,8 @@
                         div class=dialog-data refr_target
                 div class=modal-footer
                     %% content_start_ok_cancel
-                        button type=button,,,class=btn btn-secondary,,,data-dismiss=modal..._(Cancel)
-                        button type=button,,,class=btn btn-primary,,,onclick=javascript:on_edit_ok(jQuery(this).parent().parent().find('form:first'));return false;..._(OK)
+                        button type=button,,,class=btn btn-secondary btn_cancel,,,data-dismiss=modal..._(Cancel)
+                        button type=button,,,class=btn btn-primary btn_ok,,,onclick=javascript:on_edit_ok(this, false);return false;..._(OK)
 
     div class=dialog-form-info modal,,,tabindex=-1,,,role=dialog,,,aria-hidden=true,,,aria-labelledby=ModalLabelInfo
         div class=modal-dialog
