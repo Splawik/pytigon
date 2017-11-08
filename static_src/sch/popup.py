@@ -75,21 +75,11 @@ def on_popup_inline(elem):
     new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</td></tr>")
     new_fragment.insertAfter(jQuery(elem).closest("tr"))
 
-    #style = "position:absolute; top=" + jQuery(elem).position().top + ";"
-    #new_fragment = jQuery("<div class='refr_source inline_dialog hide' style='"+ style + "' id='IDIAL_"+ \
-    #                      id+"' href='"+href2+"'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</div>")
-    #new_fragment.insertAfter(jQuery(elem).closest("tr").find('td'))
-    #jQuery(elem).closest("tr").find('td:first-child').append(new_fragment)
-    #jQuery(elem).closest('.bootstrap-table').prepend(new_fragment)
-
     elem2 = new_fragment.find(".refr_target")
 
     def _on_load(responseText, status, response):
         nonlocal new_fragment
         new_fragment.removeClass('hide')
-        #jQuery('#IDIAL_'+id).hide()
-        #jQuery('#IDIAL_'+id).removeClass('hide')
-        #jQuery('#IDIAL_'+id).show("slow")
         if status!='error':
             _dialog_loaded(False, elem2)
             on_dialog_load()
@@ -124,10 +114,6 @@ def on_popup_in_form(elem):
         jQuery('#IDIAL_'+id).show("slow")
         if status!='error':
             _dialog_loaded(False, elem2)
-            #table_type = get_table_type(elem2)
-            #tbl = elem2.find('.tabsort')
-            #if tbl.length > 0:
-            #    init_table(tbl, table_type)
             on_dialog_load()
         if window.WAIT_ICON:
             window.WAIT_ICON.stop()
@@ -148,7 +134,7 @@ def on_popup_edit_new(elem):
         def _on_load(responseText, status, response):
             _dialog_loaded(True, elem2)
             on_dialog_load()
-        ajax_load(elem2, jQuery(elem).attr("href"), _on_load)
+        ajax_load(elem2, corect_href(jQuery(elem).attr("href")), _on_load)
     else:
         jQuery('body').addClass('shown_inline_dialog')
         if window.WAIT_ICON:
@@ -174,16 +160,13 @@ def on_popup_edit_new(elem):
             elem2.show("slow")
             if status!='error':
                 _dialog_loaded(False, elem3)
-                #table_type = get_table_type(elem3)
-                #init_table(elem3, table_type)
                 on_dialog_load()
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
                 window.WAIT_ICON = None
-        ajax_load(elem3,jQuery(elem).attr("href"), _on_load2)
+        ajax_load(elem3,corect_href(jQuery(elem).attr("href")), _on_load2)
 
     return False
-
 
 
 def on_popup_info(elem):
@@ -236,8 +219,10 @@ def _dialog_loaded(is_modal, elem):
 
         if btn.hasClass('no_cancel'):
             obj.find('.btn_cancel').hide()
+            obj.find('.close').hide()
         else:
             obj.find('.btn_cancel').show()
+            obj.find('.close').show()
 
         if btn.hasClass('no_close'):
             obj.find('.close').hide()
@@ -266,7 +251,6 @@ def _refresh_win(responseText, ok_button):
     popup_activator = jQuery("#"+refr_obj.attr("related-object"))
     if responseText and "RETURN_OK" in responseText:
         if refr_obj.hasClass('modal'):
-        #if not can_popup():
             if jQuery("div.dialog-form").hasClass('show'):
                 dialog = "div.dialog-form"
             else:
@@ -286,7 +270,6 @@ def _refresh_win(responseText, ok_button):
                 return refresh_fragment(popup_activator, None, False)
     else:
         if refr_obj.hasClass('modal'):
-        #if not can_popup():
             mount_html(jQuery("div.dialog-data"), responseText)
         else:
             mount_html(ok_button.closest('.refr_target'),responseText)
@@ -389,7 +372,7 @@ def _init_subforms(elem):
             href = jQuery(this).attr("href")
             def _finish():
                 pass
-            ajax_load(content, href, _finish)
+            ajax_load(content, corect_href(href), _finish)
     subforms.each(_load_subform)
 
 register_fragment_init_fun(_init_subforms)

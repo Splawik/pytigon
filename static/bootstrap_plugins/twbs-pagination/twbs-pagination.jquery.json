@@ -1,7 +1,7 @@
 {
     "name": "twbs-pagination",
-    "version": "1.1.0",
-    "title": "Twbs Pagination",
+    "version": "1.4.1",
+    "title": "jQuery Bootstrap Pagination",
     "author": {
         "name": "Eugene Simakin",
         "email": "mail@esimakin.com",
@@ -9,12 +9,12 @@
     },
     "licenses": [
         {
-            "type": "Apache 2.0",
+            "type": "Apache-2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     ],
     "dependencies": {
-        "jquery": "> 1.10.2"
+        "jquery": "> 1.7"
     },
     "description": "Twbs Pagination is a jQuery plugin that provides pagination for your web site or application. Check out the demo!",
     "keywords": [

@@ -196,13 +196,14 @@
                             div class=tr row list_content_header list_content_header_two_row
                                 div class=td col-md-12 col-sm-12,,,colspan=3
                                     %% list_filter_form
-                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
+                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
                                             % csrf_token
                                             %% form_filter
                                                 %if form
                                                     %% form_content
                                                         {{ form.non_field_errors }}
-                                                        % inline_form:
+                                                        %% form_table_filter
+                                                            % inline_form:
                                                         %% form_content_button
                                                             button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
                                                                 span class=fa fa-refresh
@@ -232,7 +233,7 @@
                 div class=tabsort_panel
                     % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                         %if table_type == 'scrolled' or not table_type:
-                            <div class="tbl_scroll" style="overflow-y: scroll;">
+                            <div class="tbl_scroll" style="overflow-y: auto;">
                     table id=tabsort,,,name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
                         %% list_full_row_header
                             thead

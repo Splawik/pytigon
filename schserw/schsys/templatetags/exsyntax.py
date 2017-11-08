@@ -742,7 +742,7 @@ def subform(context, name):
 
 @inclusion_tag('widgets/paginator.html')
 def paginator(context):
-    return context
+    return context.flatten()
 
 
 @inclusion_tag('widgets/paginator.html')
@@ -769,7 +769,7 @@ def paginator2(context):
 
         context['page_last'] = context['paginator'].page_range[-1]
         context['page_number'] = context['page_obj'].number
-    return context
+    return context.flatten()
 
 
 @inclusion_tag('widgets/html_widget_js.html')
@@ -944,7 +944,7 @@ def inline_form(parser, token):
     parm = token.split_contents()
     nodelist = parser.parse(('endinline_form',))
     parser.delete_first_token()
-    return Form(nodelist, "/", parm)
+    return Form(nodelist, "^/", parm)
 
 
 @register.tag

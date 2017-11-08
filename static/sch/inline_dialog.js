@@ -1,7 +1,7 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
 <div class='refr_object'>\
     <div class='dark_background'></div>\
-    <div class='modal-dialog' role='document' style='max-width: initial;'>\
+    <div class='modal-dialog' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>Modal title</h4>\
@@ -22,7 +22,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 var INLINE_TABLE_HTML = "\
 <div class='refr_object'>\
     <div class='dark_background'></div>\
-    <div class='modal-dialog' role='document' style='max-width: initial;'>\
+    <div class='modal-dialog' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>{{title}}</h4>\

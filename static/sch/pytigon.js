@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-07 23:07:56
+// Transcrypt'ed from Python, 2017-11-08 23:37:54
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2511,7 +2511,8 @@ function pytigon () {
 					};
 					var _UA = window.navigator.userAgent;
 					var _MSIE = _UA.indexOf ('MSIE ');
-					if (_MSIE > 0) {
+					var _MSIE2 = _UA.indexOf ('Trident/');
+					if (_MSIE > 0 || _MSIE2 > 0) {
 						var SYNC_STRUCT = list ([]);
 					}
 					else {
@@ -2610,6 +2611,7 @@ function pytigon () {
 						__all__.INIT_DB_STRUCT = INIT_DB_STRUCT;
 						__all__.SYNC_STRUCT = SYNC_STRUCT;
 						__all__._MSIE = _MSIE;
+						__all__._MSIE2 = _MSIE2;
 						__all__._UA = _UA;
 						__all__.get_list_from_table = get_list_from_table;
 						__all__.get_table = get_table;
@@ -2859,7 +2861,7 @@ function pytigon () {
 								_dialog_loaded (true, elem2);
 								on_dialog_load ();
 							};
-							ajax_load (elem2, jQuery (elem).attr ('href'), _on_load);
+							ajax_load (elem2, corect_href (jQuery (elem).attr ('href')), _on_load);
 						}
 						else {
 							jQuery ('body').addClass ('shown_inline_dialog');
@@ -2897,7 +2899,7 @@ function pytigon () {
 									window.WAIT_ICON = null;
 								}
 							};
-							ajax_load (elem3, jQuery (elem).attr ('href'), _on_load2);
+							ajax_load (elem3, corect_href (jQuery (elem).attr ('href')), _on_load2);
 						}
 						return false;
 					};
@@ -2953,9 +2955,11 @@ function pytigon () {
 							}
 							if (btn.hasClass ('no_cancel')) {
 								obj.find ('.btn_cancel').hide ();
+								obj.find ('.close').hide ();
 							}
 							else {
 								obj.find ('.btn_cancel').show ();
+								obj.find ('.close').show ();
 							}
 							if (btn.hasClass ('no_close')) {
 								obj.find ('.close').hide ();
@@ -3114,7 +3118,7 @@ function pytigon () {
 								var _finish = function () {
 									// pass;
 								};
-								ajax_load (content, href, _finish);
+								ajax_load (content, corect_href (href), _finish);
 							}
 						};
 						subforms.each (_load_subform);
@@ -3157,89 +3161,6 @@ function pytigon () {
 						__all__.refresh_fragment = refresh_fragment;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
 						__all__.ret_ok = ret_ok;
-					__pragma__ ('</all>')
-				}
-			}
-		}
-	);
-	__nest__ (
-		__all__,
-		'scrolltbl', {
-			__all__: {
-				__inited__: false,
-				__init__: function (__all__) {
-					var stick_resize = function () {
-						var tbl = window.ACTIVE_PAGE.page.find ('.tbl_scroll');
-						if (tbl.length > 0) {
-							var tbl2 = jQuery (tbl [0]);
-							if (tbl2.closest ('.tabsort').length > 0) {
-								return ;
-							}
-							var dy_table = tbl.offset ().top;
-							var __left0__ = jQuery (window).height ();
-							var dy_win = __left0__;
-							var dy_win = __left0__;
-							var dy = dy_win - dy_table;
-							if (dy < 100) {
-								var dy = 100;
-							}
-							tbl2.height (dy - 35);
-						}
-					};
-					var resize_win = function () {
-						stick_resize ();
-						var tab2 = list ([]);
-						var tabs = window.ACTIVE_PAGE.page.find ("table[name='tabsort']");
-						if (tabs.length > 0) {
-							var first_tab_on_page = jQuery (tabs [0]);
-							var tab_width = jQuery (first_tab_on_page).width ();
-							jQuery (first_tab_on_page.find ('.tbl_header') [0]).width (tab_width);
-							var _local_fun = function () {
-								tab2.push (jQuery (this).width ());
-							};
-							first_tab_on_page.find ('tr:first td').each (_local_fun);
-							var tab2 = tab2.reverse ();
-							var _local_fun2 = function () {
-								jQuery (this).width (tab2.py_pop ());
-							};
-							first_tab_on_page.find ('.tbl_header:first th').each (_local_fun2);
-						}
-					};
-					var stick_header = function (tbl) {
-						var tab = list ([]);
-						var tab2 = list ([]);
-						var _local_fun = function () {
-							tab.push (jQuery (this).width ());
-						};
-						tbl.find ('table.tabsort th').each (_local_fun);
-						var table = jQuery ('<table class="tabsort tbl_header" style="overflow-x: hidden;"></table>');
-						table.append (tbl.find ('table.tabsort thead'));
-						tbl.find ('.tbl_scroll').before (table);
-						var _local_fun2 = function () {
-							tab2.push (jQuery (this).width ());
-						};
-						tbl.find ('.tbl_header th').each (_local_fun2);
-						var tab2 = tab2.reverse ();
-						var _local_fun3 = function () {
-							var x = tab2.py_pop ();
-							if (x > jQuery (this).width ()) {
-								jQuery (this).css ('min-width', x);
-							}
-						};
-						tbl.find ("table[name='tabsort'] tr:first td").each (_local_fun3);
-						var tab = tab.reverse ();
-						var _local_fun4 = function () {
-							jQuery (this).width (tab.py_pop ());
-						};
-						tbl.find ('.tbl_header th').each (_local_fun4);
-						jQuery (window).resize (resize_win);
-						resize_win ();
-					};
-					window.icons = dict ({'refresh': 'fa-refresh', 'toggle': 'fa-toggle-on fa-lg', 'columns': 'fa-th-list', 'detailOpen': 'fa-plus-square', 'detailClose': 'fa-minus-square'});
-					__pragma__ ('<all>')
-						__all__.resize_win = resize_win;
-						__all__.stick_header = stick_header;
-						__all__.stick_resize = stick_resize;
 					__pragma__ ('</all>')
 				}
 			}
@@ -3405,7 +3326,6 @@ function pytigon () {
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
-					var stick_header = __init__ (__world__.scrolltbl).stick_header;
 					var ajax_post = __init__ (__world__.tools).ajax_post;
 					var ajax_post = __init__ (__world__.tools).ajax_post;
 					var register_fragment_init_fun = __init__ (__world__.tools).register_fragment_init_fun;
@@ -3480,9 +3400,6 @@ function pytigon () {
 						}
 					};
 					var init_table = function (table, table_type) {
-						if (table_type == 'scrolled') {
-							stick_header (table);
-						}
 						if (table_type == 'datatable') {
 							var onLoadSuccess = function (data) {
 								prepare_datatable (table);
@@ -3599,7 +3516,6 @@ function pytigon () {
 					};
 					register_fragment_init_fun (_on_fragment_init);
 					__pragma__ ('<use>' +
-						'scrolltbl' +
 						'tools' +
 					'</use>')
 					__pragma__ ('<all>')
@@ -3618,7 +3534,6 @@ function pytigon () {
 						__all__.mount_html = mount_html;
 						__all__.prepare_datatable = prepare_datatable;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
-						__all__.stick_header = stick_header;
 					__pragma__ ('</all>')
 				}
 			}
@@ -3944,13 +3859,8 @@ function pytigon () {
 							if (ret) {
 								return ret;
 							}
-							else {
-								return 'scrolled';
-							}
 						}
-						else {
-							return '';
-						}
+						return '';
 					};
 					var can_popup = function () {
 						if (jQuery ('.modal-open').length > 0) {
@@ -4140,7 +4050,7 @@ function pytigon () {
 							var __iterable0__ = ext;
 							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
 								var pos = __iterable0__ [__index0__];
-								if (__in__ (pos, file_name)) {
+								if (__in__ (pos, file_name.lower ())) {
 									var test = true;
 									break;
 								}

@@ -1,6 +1,5 @@
 __pragma__ ('alias', 'jquery_is', 'is')
 
-from scrolltbl import stick_header
 from tools import ajax_post, ajax_post, register_fragment_init_fun, get_table_type, load_js, mount_html
 
 
@@ -74,8 +73,6 @@ def datatable_ajax(params):
 
 
 def init_table(table, table_type):
-    if table_type == 'scrolled':
-        stick_header(table)
     if table_type == 'datatable':
         def onLoadSuccess(data):
             prepare_datatable(table)

@@ -28,16 +28,25 @@
 label.upload
     height: 80px
     padding: 0px
-    min-width: 120px
+    min-width: 160px
+
     p
-        padding: 5px 20px 5px 30px;
-        margin: 0px;
-        text-transform: none;
+        padding: 5px 20px 5px 30px
+        margin: 0px
+        text-transform: none
+        position: absolute
+        overflow: hidden
+        text-overflow: ellipsis
+
+    p.upload
+        max-width: 170px
+
     img, .img
         max-height: 48px
-        max-width: 96px
+        max-width: 150px
         position: absolute;
-        left: calc(50% - 48px)
+        left: 6px
+        top: 27px
         padding: 0px
         font-size: 24px
         text-transform: uppercase

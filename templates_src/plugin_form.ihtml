@@ -41,12 +41,12 @@
                   %%form_title
                     {{title}}
             %% form_header
-          form method=post,,,action=.,,,class=TableFiltr
+          form method=post,,,action=.,,,class=table_filter
             %%form_filter
                 %if form
                     ul class=form
                         {{ form.as_ul }}
-                        li:::input type=submit,,,value=Odśwież
+                        li:::input type=submit,,,value=_(Refresh)
                     br
           %% table_start
             <table id="tabsort" class="tabsort">

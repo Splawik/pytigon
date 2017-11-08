@@ -7,7 +7,7 @@ def img_field(elem):
         ext = [ '.jpeg', '.jpg', '.svg', '.gif', '.png']
         test = False
         for pos in ext:
-            if pos in file_name:
+            if pos in file_name.lower():
                 test= True
                 break
         if test:

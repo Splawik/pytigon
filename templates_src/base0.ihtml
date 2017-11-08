@@ -118,6 +118,8 @@
                     %% jquery_ready_end
                 %% js_script_body
 
+        %% page_finish
+
     %% body_end...</body>
 
     %% page_end...</html>

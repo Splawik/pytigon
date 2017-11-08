@@ -219,7 +219,7 @@
         %% list_content_actions
         <br />
         %% list_filter_form
-            form method=post,,,action={{request.path}},,,class=TableFiltr
+            form method=post,,,action={{request.path}},,,class=table_filter
                 % csrf_token
                 %% form_filter
                     %if form
@@ -236,7 +236,7 @@
                                     tr
                                         td
                                             %% form_content_schbutton
-                                                input type=submit,,,value=Odśwież,,,class=btn btn-info,,,target=_self,,,height=44
+                                                input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44
 
 
 %% tabsort_class...class=tabsort

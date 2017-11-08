@@ -353,10 +353,7 @@ def get_table_type(elem):
         ret = tabsort.attr('table_type')
         if ret:
             return ret
-        else:
-            return "scrolled"
-    else:
-        return ""
+    return ""
 
 
 def can_popup():

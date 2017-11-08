@@ -103,8 +103,9 @@ def on_sys_sync(fun):
 
 _UA = window.navigator.userAgent
 _MSIE = _UA.indexOf("MSIE ")
+_MSIE2 = _UA.indexOf('Trident/')
 
-if _MSIE>0:
+if _MSIE>0 or _MSIE2>0:
     SYNC_STRUCT = [ ]
 else:
     SYNC_STRUCT = [ ['sys', window.BASE_PATH + "schsys/app_time_stamp/", on_sys_sync], ]

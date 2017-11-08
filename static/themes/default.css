@@ -175,7 +175,8 @@ form .row .row {
   width: 100%; }
 
 div.form-group.label-floating {
-  margin-top: 0.5rem; }
+  margin-top: 0.5rem;
+  position: relative; }
   div.form-group.label-floating span.invalid-feedback {
     display: block;
     position: absolute;
@@ -242,16 +243,16 @@ body:not(.modal-open) .dark_background {
 .form-inline input, .form-inline select {
   font-size: 14px; }
 
-.TableFiltr {
+.table_filter {
   margin-top: 0px;
   margin-bottom: 3px;
   margin-left: 0px;
   margin-right: 50px; }
 
-form.TableFiltr label::after {
+form.table_filter label::after {
   content: ":"; }
 
-form.TableFiltr label.nocolon::after {
+form.table_filter label.nocolon::after {
   content: "" !important; }
 
 /* login form */
@@ -324,16 +325,22 @@ div.login-container > .row {
 label.upload {
   height: 80px;
   padding: 0px;
-  min-width: 120px; }
+  min-width: 160px; }
   label.upload p {
     padding: 5px 20px 5px 30px;
     margin: 0px;
-    text-transform: none; }
+    text-transform: none;
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  label.upload p.upload {
+    max-width: 170px; }
   label.upload img, label.upload .img {
     max-height: 48px;
-    max-width: 96px;
+    max-width: 150px;
     position: absolute;
-    left: calc(50% - 48px);
+    left: 6px;
+    top: 27px;
     padding: 0px;
     font-size: 24px;
     text-transform: uppercase; }
@@ -496,3 +503,8 @@ table.layout0 tr td {
 
 .hide {
   display: none; }
+
+.pagination {
+  margin-top: 5px;
+  float: right;
+  margin-right: -3px; }
