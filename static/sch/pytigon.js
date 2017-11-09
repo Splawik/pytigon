@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-08 23:37:54
+// Transcrypt'ed from Python, 2017-11-09 10:57:11
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2538,6 +2538,7 @@ function pytigon () {
 						}
 						if (!(rec)) {
 							fun ('error - no reg function');
+							return ;
 						}
 						if (navigator.onLine) {
 							var complete = function (responseText) {
@@ -4213,6 +4214,7 @@ function pytigon () {
 			};
 			jQuery ('#tabs2_content').on ('submit', 'form', _on_submit);
 			jQuery ('#dialog-form-modal').on ('submit', 'form', _on_submit);
+			jQuery ('#menu').perfectScrollbar ();
 			var _on_key = function (e) {
 				if (e.which == 13) {
 					var elem = jQuery (e.target);

@@ -187,6 +187,9 @@ div.form-group.label-floating {
   div.form-group.label-floating label {
     position: absolute;
     left: 0px; }
+  div.form-group.label-floating div.checkbox label {
+    position: relative;
+    white-space: nowrap; }
 
 div.row > div > div.form-group > label.control-label {
   margin-left: -15px; }
@@ -212,8 +215,10 @@ body:not(.modal-open) .dark_background {
   padding: 2px;
   margin-right: 15px; }
 
-.form-inline .form-group .form-control {
-  max-height: 30px; }
+.form-inline .form-group {
+  margin-top: 1rem; }
+  .form-inline .form-group .form-control {
+    max-height: 30px; }
 
 .form-inline .form-group select.form-control {
   padding-top: 2px;
@@ -221,6 +226,9 @@ body:not(.modal-open) .dark_background {
 
 .form-inline .form-group label {
   padding-right: 8px; }
+
+.form-inline .form-group label.upload {
+  position: relative; }
 
 .form-inline .form-group .numberinput {
   width: 100px;

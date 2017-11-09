@@ -126,6 +126,7 @@ def sync_and_run(tbl, fun):
             break
     if not rec:
         fun("error - no reg function")
+        return
 
     if navigator.onLine:
         def complete(responseText):

@@ -105,7 +105,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
     jQuery('#tabs2_content').on("submit", "form", _on_submit)
     jQuery('#dialog-form-modal').on("submit", "form", _on_submit)
-
+    jQuery('#menu').perfectScrollbar()
 
     def _on_key(e):
         if e.which == 13:
