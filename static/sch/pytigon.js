@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-09 10:57:11
+// Transcrypt'ed from Python, 2017-11-10 23:10:18
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3570,11 +3570,6 @@ function pytigon () {
 						format ['timePickerIncrement'] = 30;
 						var d = elem2.find ('div.form-group .datetimefield input');
 						d.daterangepicker (format);
-						var iterate_material_icons = function () {
-							var font_map = dict ({'clear': 'eraser', 'chevron_left': 'chevron-left', 'chevron_right': 'chevron-right', 'keyboard_arrow_up': 'chevron-up', 'keyboard_arrow_down': 'chevron-down'});
-							jQuery (this).removeClass ('material-icons').addClass ('fa').addClass ('fa-' + font_map [this.textContent]).empty ();
-						};
-						jQuery ('i.material-icons').each (iterate_material_icons);
 						var icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
 						jQuery ('.selectpicker').selectpicker ();
 						var _on_blur = function (e) {
@@ -4127,6 +4122,7 @@ function pytigon () {
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
 		var img_field = __init__ (__world__.widget).img_field;
+		window.PS = null;
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
 			moment.locale (lang);
 			window.APPSET_NAME = appset_name;
@@ -4214,7 +4210,13 @@ function pytigon () {
 			};
 			jQuery ('#tabs2_content').on ('submit', 'form', _on_submit);
 			jQuery ('#dialog-form-modal').on ('submit', 'form', _on_submit);
-			jQuery ('#menu').perfectScrollbar ();
+			if (jQuery ('#menu').length > 0) {
+				window.PS = new PerfectScrollbar ('#menu');
+				var _on_resize = function () {
+					window.PS.update ();
+				};
+				jQuery (window).resize (_on_resize);
+			}
 			var _on_key = function (e) {
 				if (e.which == 13) {
 					var elem = jQuery (e.target);
@@ -4248,7 +4250,6 @@ function pytigon () {
 						var elem = jQuery (('#tabs a:eq(' + id) + ')');
 						elem.tab ('show');
 					}
-					jQuery (elem.prop ('hash')).perfectScrollbar ();
 					var _on_menu_click = function (e) {
 						if (window.APPLICATION_TEMPLATE != 'traditional') {
 							e.preventDefault ();
@@ -4279,7 +4280,6 @@ function pytigon () {
 					var _on_tabs_click = function (e) {
 						e.preventDefault ();
 						jQuery (this).tab ('show');
-						jQuery (jQuery (this).prop ('hash')).perfectScrollbar ();
 					};
 					jQuery ('#tabs a').click (_on_tabs_click);
 					var _on_resize = function (e) {

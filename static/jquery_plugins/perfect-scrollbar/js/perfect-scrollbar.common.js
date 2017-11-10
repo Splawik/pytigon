@@ -3,11 +3,7 @@
  * (c) 2017 Hyunje Jun
  * @license MIT
  */
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.PerfectScrollbar = factory());
-}(this, (function () { 'use strict';
+'use strict';
 
 function get(element) {
   return getComputedStyle(element);
@@ -1292,6 +1288,4 @@ PerfectScrollbar.prototype.removePsClasses = function removePsClasses () {
     .join(' ');
 };
 
-return PerfectScrollbar;
-
-})));
+module.exports = PerfectScrollbar;

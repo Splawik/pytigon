@@ -43,17 +43,17 @@ def fragment_init(elem=None):
     d = elem2.find('div.form-group .datetimefield input')
     d.daterangepicker(format)
 
-    def iterate_material_icons():
-        font_map = {
-            'clear': 'eraser',
-            'chevron_left': 'chevron-left',
-            'chevron_right': 'chevron-right',
-            'keyboard_arrow_up': 'chevron-up',
-            'keyboard_arrow_down': 'chevron-down',
-        }
-        jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()
-
-    jQuery('i.material-icons').each(iterate_material_icons)
+    #def iterate_material_icons():
+    #    font_map = {
+    #        'clear': 'eraser',
+    #        'chevron_left': 'chevron-left',
+    #        'chevron_right': 'chevron-right',
+    #        'keyboard_arrow_up': 'chevron-up',
+    #        'keyboard_arrow_down': 'chevron-down',
+    #    }
+    #    jQuery(this).removeClass('material-icons').addClass('fa').addClass('fa-'+font_map[this.textContent]).empty()#
+    #
+    #   jQuery('i.material-icons').each(iterate_material_icons)
 
     icons = {
         'time': 'fa fa-clock-o',
@@ -65,6 +65,7 @@ def fragment_init(elem=None):
         'today': 'fa fa-calendar-check-o',
         'clear': 'fa fa-trash',
         'close': 'fa fa-times',
+        #'caret': 'fa fa-caret-down',
         'paginationSwitchDown': 'fa-chevron-down',
         'paginationSwitchUp': 'fa-chevron-up',
         'refresh': 'fa-refresh',

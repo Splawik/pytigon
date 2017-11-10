@@ -9,6 +9,9 @@ $.sidebarMenu = function(menu) {
     if (checkElement.is(subMenuSelector) && checkElement.is(':visible')) {
       checkElement.slideUp(animationSpeed, function() {
         checkElement.removeClass('menu-open');
+        if (window.PS) {
+            window.PS.update();
+        }
       });
       checkElement.parent("li").removeClass("active");
     }
@@ -30,6 +33,9 @@ $.sidebarMenu = function(menu) {
         checkElement.addClass('menu-open');
         parent.find('li.active').removeClass('active');
         parent_li.addClass('active');
+        if (window.PS) {
+            window.PS.update();
+        }
       });
     }
     //if this isn't a link, prevent the page from being redirected

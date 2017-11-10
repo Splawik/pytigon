@@ -1178,7 +1178,7 @@ def field(context, field_name, fieldformat=None):
 
     label_class = "control-label float-left"
     offset = ""
-    form_group_class = "form-group row"
+    form_group_class = "form-group row group_%s" % type(field.field).__name__.lower()
     field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = False
     show_label = True

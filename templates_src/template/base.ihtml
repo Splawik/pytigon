@@ -124,7 +124,7 @@
                 </div>
         % else:
             %% row_edit_start
-                % if standard_web_browser == 1 or standard_web_browser == 2:
+                % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                     <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
             %% row_edit_header
                 % if form:
@@ -146,7 +146,7 @@
                 %% form_ok_cancel
 
             %% row_edit_end
-                % if standard_web_browser == 1 or standard_web_browser == 2:
+                % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                     </div>
             script
                 jQuery('#ModalLabel').html('{{title}}')

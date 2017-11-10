@@ -210,6 +210,11 @@ body:not(.modal-open) .dark_background {
 .inline-table-modal-body, .inline-update-modal-body {
   padding: 30px; }
 
+.group_filefield label.control-label {
+  transform: none;
+  top: -10p;
+  margin-top: -2px; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
@@ -262,6 +267,11 @@ form.table_filter label::after {
 
 form.table_filter label.nocolon::after {
   content: "" !important; }
+
+.form-inline div.form-group.label-floating {
+  margin-top: 1rem; }
+  .form-inline div.form-group.label-floating label {
+    white-space: nowrap; }
 
 /* login form */
 .login_background {
@@ -333,7 +343,8 @@ div.login-container > .row {
 label.upload {
   height: 80px;
   padding: 0px;
-  min-width: 160px; }
+  min-width: 160px;
+  align-items: normal; }
   label.upload p {
     padding: 5px 20px 5px 30px;
     margin: 0px;
@@ -356,7 +367,7 @@ label.upload {
     position: absolute;
     top: 6px;
     left: 2px;
-    padding: 0px 10px; }
+    padding: 0px 5px; }
 
 .checkboxinput {
   margin-right: 10px; }
@@ -516,3 +527,10 @@ table.layout0 tr td {
   margin-top: 5px;
   float: right;
   margin-right: -3px; }
+
+.caret {
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #000000;
+  position: relative;
+  top: 10px; }

@@ -21,7 +21,12 @@ from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
 
+
+window.PS = None
+
 def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
+    nonlocal PS
+
     moment.locale(lang)
 
     window.APPSET_NAME = appset_name
@@ -105,7 +110,15 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
     jQuery('#tabs2_content').on("submit", "form", _on_submit)
     jQuery('#dialog-form-modal').on("submit", "form", _on_submit)
-    jQuery('#menu').perfectScrollbar()
+    #jQuery('#menu').perfectScrollbar()
+
+    if jQuery('#menu').length > 0:
+        window.PS = __new__(PerfectScrollbar('#menu'))
+
+        def _on_resize():
+            window.PS.js_update()
+
+        jQuery(window).resize(_on_resize)
 
     def _on_key(e):
         if e.which == 13:
@@ -141,7 +154,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
                 elem = jQuery('#tabs a:eq('+ id + ')')
                 elem.tab('show')
 
-            jQuery(elem.prop("hash")).perfectScrollbar()
+            #jQuery(elem.prop("hash")).perfectScrollbar()
 
             def _on_menu_click(e):
                 if window.APPLICATION_TEMPLATE != 'traditional':
@@ -177,7 +190,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             def _on_tabs_click(e):
                 e.preventDefault()
                 jQuery(this).tab('show')
-                jQuery(jQuery(this).prop("hash")).perfectScrollbar()
+                #jQuery(jQuery(this).prop("hash")).perfectScrollbar()
             jQuery('#tabs a').click(_on_tabs_click)
 
             def _on_resize(e):
