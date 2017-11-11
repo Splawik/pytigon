@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-10 23:10:18
+// Transcrypt'ed from Python, 2017-11-11 14:44:21
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3082,6 +3082,7 @@ function pytigon () {
 					var on_cancel_inline = function (elem) {
 						jQuery (elem).closest ('.inline_dialog').remove ();
 						jQuery ('body').removeClass ('shown_inline_dialog');
+						datatable_onresize ();
 					};
 					window.on_cancel_inline = on_cancel_inline;
 					var ret_ok = function (id, title) {
@@ -3404,7 +3405,11 @@ function pytigon () {
 						if (table_type == 'datatable') {
 							var onLoadSuccess = function (data) {
 								prepare_datatable (table);
-								datatable_onresize ();
+								var _pagination = function () {
+									jQuery (table).closest ('.fixed-table-container').find ('.fixed-table-pagination ul.pagination a').addClass ('page-link');
+									datatable_onresize ();
+								};
+								setTimeout (_pagination, 0);
 								return false;
 							};
 							var queryParams = function (p) {
@@ -3570,7 +3575,6 @@ function pytigon () {
 						format ['timePickerIncrement'] = 30;
 						var d = elem2.find ('div.form-group .datetimefield input');
 						d.daterangepicker (format);
-						var icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
 						jQuery ('.selectpicker').selectpicker ();
 						var _on_blur = function (e) {
 							if (e ['type'] == 'focus' || this.value.length > 0) {
@@ -3997,6 +4001,7 @@ function pytigon () {
 						button.click (_animate);
 					};
 					window.animate_combo = animate_combo;
+					window.icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
 					__pragma__ ('<all>')
 						__all__.FIRST_INIT = FIRST_INIT;
 						__all__.FRAGMENT_INIT_FUN = FRAGMENT_INIT_FUN;
@@ -4036,6 +4041,32 @@ function pytigon () {
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var humanFileSize = function (bytes, si) {
+						if (si) {
+							var thresh = 1000;
+						}
+						else {
+							var thresh = 1024;
+						}
+						if (Math.abs (bytes) < thresh) {
+							return tuple ([bytes + ' B', 0]);
+						}
+						if (si) {
+							var units = list (['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']);
+						}
+						else {
+							var units = list (['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']);
+						}
+						var u = -(1);
+						while (true) {
+							bytes /= thresh;
+							u++;
+							if (!(Math.abs (bytes) >= thresh && u < units.length - 1)) {
+								break;
+							}
+						}
+						return tuple ([(bytes.toFixed (1) + ' ') + units [u], u + 1]);
+					};
 					var img_field = function (elem) {
 						var txt = jQuery (elem).val ().py_replace (new RegExp ('^.*[\\\\ /]'), '');
 						jQuery (elem).closest ('label').find ('.upload').html (txt);
@@ -4070,7 +4101,10 @@ function pytigon () {
 								if (x.length > 0) {
 									x.remove ();
 								}
-								var ext = file_name.py_split ('.').slice (-(1)) [0];
+								var __left0__ = humanFileSize (elem.files [0].size, true);
+								var size = __left0__ [0];
+								var level = __left0__ [1];
+								var ext = ((((elem.files [0].type + "<br><span class='size_level_") + level) + "'>") + size) + '</span>';
 								var img = jQuery ("<p class='img' />");
 								img.insertAfter (jQuery (elem).closest ('label').find ('input'));
 								img.html (ext);
@@ -4079,6 +4113,7 @@ function pytigon () {
 					};
 					window.img_field = img_field;
 					__pragma__ ('<all>')
+						__all__.humanFileSize = humanFileSize;
 						__all__.img_field = img_field;
 					__pragma__ ('</all>')
 				}

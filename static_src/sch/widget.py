@@ -1,3 +1,22 @@
+def humanFileSize(bytes, si):
+    if si:
+        thresh = 1000
+    else:
+        thresh =  1024
+    if Math.abs(bytes) < thresh:
+        return bytes + ' B', 0
+    if si:
+        units = ['kB','MB','GB','TB','PB','EB','ZB','YB']
+    else:
+        units = ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB']
+    u = -1
+    while True:
+        bytes /= thresh
+        u+=1
+        if not (Math.abs(bytes) >= thresh and u < units.length - 1):
+            break
+    return bytes.toFixed(1)+' '+units[u], u+1
+
 def img_field(elem):
     txt = jQuery(elem).val().replace( __new__(RegExp("^.*[\\\ /]")), '')
     jQuery(elem).closest('label').find('.upload').html(txt)
@@ -28,7 +47,10 @@ def img_field(elem):
             x = jQuery(elem).closest('label').find('.img')
             if x.length > 0:
                 x.remove()
-            ext = file_name.split('.').slice(-1)[0]
+
+            size, level = humanFileSize(elem.files[0].size, True)
+            ext = elem.files[0].js_type + "<br><span class='size_level_"+level+ "'>"+ size + "</span>"
+
             img = jQuery("<p class='img' />")
             img.insertAfter(jQuery(elem).closest('label').find('input'))
             img.html(ext)

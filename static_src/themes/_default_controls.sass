@@ -46,12 +46,17 @@ label.upload
     img, .img
         max-height: 48px
         max-width: 150px
+
         position: absolute;
         left: 6px
         top: 27px
         padding: 0px
-        font-size: 24px
+        font-size: 15px
         text-transform: uppercase
+
+    p.img
+        width: 150px
+
     i
         position: absolute
         top: 6px
@@ -109,3 +114,9 @@ form.form-inline .label-floating label.control-label
 
 div.calendar-table td.today:not(.active)
     background: #ffb
+
+
+a.disabled
+    pointer-events: none !important
+    background: #ccc !important
+    color: #eee !important

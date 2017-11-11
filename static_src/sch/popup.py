@@ -332,6 +332,7 @@ window.on_delete_ok = on_delete_ok
 def on_cancel_inline(elem):
     jQuery(elem).closest('.inline_dialog').remove()
     jQuery('body').removeClass('shown_inline_dialog')
+    datatable_onresize()
 
 window.on_cancel_inline = on_cancel_inline
 

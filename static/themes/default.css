@@ -113,6 +113,9 @@ not(.login_background) div.content-wrapper {
 .tabsort_panel div.td_information a.btn, .table_panel div.td_information a.btn {
   box-shadow: none; }
 
+.columns.pull-right {
+  margin-right: 2px; }
+
 /* dropdown menu */
 .user-menu {
   white-space: nowrap; }
@@ -149,7 +152,8 @@ form .row .row {
   padding-right: 0px; }
   .form-group label {
     font-style: italic;
-    font-size: 0.7rem; }
+    font-size: 0.7rem;
+    line-height: normal; }
   .form-group textarea {
     line-height: 1.5;
     height: 8rem; }
@@ -225,6 +229,9 @@ body:not(.modal-open) .dark_background {
   .form-inline .form-group .form-control {
     max-height: 30px; }
 
+.form-inline .form-group .datefield input {
+  width: 120px; }
+
 .form-inline .form-group select.form-control {
   padding-top: 2px;
   padding-bottom: 2px; }
@@ -249,7 +256,7 @@ body:not(.modal-open) .dark_background {
   bottom: 3px;
   height: 100%;
   min-height: 45px;
-  margin-right: 10px;
+  margin-right: 0px;
   padding-left: 1.5rem;
   padding-right: 1.5rem; }
 
@@ -361,8 +368,10 @@ label.upload {
     left: 6px;
     top: 27px;
     padding: 0px;
-    font-size: 24px;
+    font-size: 15px;
     text-transform: uppercase; }
+  label.upload p.img {
+    width: 150px; }
   label.upload i {
     position: absolute;
     top: 6px;
@@ -414,6 +423,11 @@ form.form-inline .label-floating label.control-label {
 
 div.calendar-table td.today:not(.active) {
   background: #ffb; }
+
+a.disabled {
+  pointer-events: none !important;
+  background: #ccc !important;
+  color: #eee !important; }
 
 .txt3d {
   font-weight: 900;
@@ -527,10 +541,18 @@ table.layout0 tr td {
   margin-top: 5px;
   float: right;
   margin-right: -3px; }
+  .pagination li.active a {
+    background: #2196F3;
+    color: white; }
 
-.caret {
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid #000000;
-  position: relative;
-  top: 10px; }
+.size_level_0 {
+  color: #fff; }
+
+.size_level_1 {
+  color: #9f9; }
+
+.size_level_2 {
+  color: #f44; }
+
+.size_level_3 .size_level_4 .size_level_5 .size_level_6 {
+  color: #000; }

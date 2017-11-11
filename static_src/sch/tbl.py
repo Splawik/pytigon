@@ -76,9 +76,15 @@ def init_table(table, table_type):
     if table_type == 'datatable':
         def onLoadSuccess(data):
             prepare_datatable(table)
-            datatable_onresize()
+
+            def _pagination():
+                nonlocal table
+                jQuery(table).closest('.fixed-table-container').find('.fixed-table-pagination ul.pagination a').addClass('page-link')
+                datatable_onresize()
+
+            setTimeout(_pagination,0)
             return False
-        
+
         def queryParams(p):
             refr_block = jQuery(table).closest('.refr_object')
             src = refr_block.find('.refr_source')
@@ -108,6 +114,7 @@ def init_table(table, table_type):
                 panel = table_panel.find('.fixed-table-toolbar')
                 panel.hide()
                 datatable_onresize()
+
 
 
 def init_pagintor(pg):

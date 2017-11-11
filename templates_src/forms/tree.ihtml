@@ -16,20 +16,21 @@
     % if standard_web_browser
         %if parent_pk > 0
             % button "../../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
+            a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button.../
         % else:
-            a href=../../../-{{parent_pk}}/form/{{ro}}tree,,,class=button btn btn-secondary,,,disabled=disabled... ..
+            a href=../../../-{{parent_pk}}/form/{{ro}}tree,,,class=button btn btn-secondary disabled,,,disabled=disabled... ..
+            a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button disabled.../
     % else:
         % if parent_pk > 0:
             CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=Wstecz..
         % else:
             CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=Wstecz..
+        a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button.../
 
-
-    a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button.../
     %for pos in parent_obj.parents|slice:"::-1":
         a href=../../{{pos.id}}/form/tree,,,class=button btn btn-secondary ladda-button...{{pos.code}}
     % if parent_obj.code:
-        a class=button btn btn-secondary ladda-button,,,disabled=disabled
+        a class=button btn btn-secondary ladda-button disabled,,,disabled=disabled
             {{parent_obj.code}}
 
 %% id_extra
