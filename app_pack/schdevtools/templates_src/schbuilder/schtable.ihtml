@@ -92,10 +92,10 @@
             option selected=selected,,,value=...---------
         %else
             option value=...---------
-        %if object.base_table == 'MPTTModel'
-            option value=MPTTModel...MPTTModel,,,selected=selected
+        %if object.base_table == 'JSONModel'
+            option value=JSONModel,,,selected=selected...JSONModel
         %else
-            option value=MPTTModel...MPTTModel                    
+            option value=JSONModel...JSONModel                    
             
         %for model in object.get_models
             %if model == object.base_table

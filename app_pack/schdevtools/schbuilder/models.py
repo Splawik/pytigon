@@ -2,7 +2,10 @@
 
 import django
 from django.db import models
+
 from schlib.schdjangoext.fields import *
+from schlib.schdjangoext.models import JSONModel
+
 import schlib.schdjangoext.fields as ext_models
 
 from django.utils.translation import ugettext_lazy as _

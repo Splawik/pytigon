@@ -486,7 +486,9 @@ class GenericRows(object):
         parent_class = self
 
         class UpdateView(generic.UpdateView):
-            response_class = LocalizationTemplateResponse
+            #response_class = LocalizationTemplateResponse
+            doc_type = "html"
+            response_class = ExtTemplateResponse
 
             if self.field:
                 try:
@@ -501,6 +503,10 @@ class GenericRows(object):
             template_name = self.template_name
             title = self.title
             fields = "__all__"
+
+
+            def doc_type(self):
+                return "html"
 
             def get_context_data(self, **kwargs):
                 nonlocal parent_class
@@ -517,11 +523,16 @@ class GenericRows(object):
 
             def get(self, request, *args, **kwargs):
                 self.object = self.get_object()
-                form_class = self.get_form_class()
-                form = self.get_form(form_class)
 
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(request, form, False)
+                if 'init' in kwargs:
+                    kwargs['init'](self)
+
+                form_class = self.get_form_class()
+
+                if self.object and hasattr(self.object, 'get_form'):
+                    form = self.object.get_form(self, request, form_class, False)
+                else:
+                    form = self.get_form(form_class)
 
                 if form:
                     for field in form.fields:
@@ -533,12 +544,17 @@ class GenericRows(object):
 
             def post(self, request, *args, **kwargs):
                 self.object = self.get_object()
-                form_class = self.get_form_class()
-                form = self.get_form(form_class)
 
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(request, form, False)
-                    
+                if 'init' in kwargs:
+                    kwargs['init'](self)
+
+                form_class = self.get_form_class()
+
+                if self.object and hasattr(self.object, 'get_form'):
+                    form = self.object.get_form(self, request, form_class, False)
+                else:
+                    form = self.get_form(form_class)
+
                 if self.model and hasattr(self.model, 'is_form_valid'):
                     def vfun():
                         return self.model.is_form_valid(form)
@@ -555,9 +571,18 @@ class GenericRows(object):
                 """
                 If the form is valid, save the associated model.
                 """
+                _data = {}
+                for key, value in form.data.items():
+                    if key.startswith('json_'):
+                        _data[key[5:]] = value
+
                 self.object = form.save(commit=False)
-                if hasattr(self.object, 'post'):
-                    if self.object.post(request):
+
+                if _data:
+                    self.object._data = _data
+
+                if hasattr(self.object, 'post_form'):
+                    if self.object.post_form(self, form, request):
                         self.object.save()
                 else:
                     self.object.save()
@@ -618,10 +643,11 @@ class GenericRows(object):
                 else:
                     self.init_form = None
                 form_class = self.get_form_class()
-                form = self.get_form(form_class)
 
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(request, form, True)
+                if self.object and hasattr(self.object, 'get_form'):
+                    form = self.object.get_form(self, request, form_class, True)
+                else:
+                    form = self.get_form(form_class)
 
                 if form:
                     for field in form.fields:
@@ -649,10 +675,11 @@ class GenericRows(object):
             def post(self, request, *args, **kwargs):
                 self.object = None
                 form_class = self.get_form_class()
-                form = self.get_form(form_class)
 
-                if self.object and hasattr(self.object, 'transform_form'):
-                    self.object.transform_form(request, form, True)
+                if self.object and hasattr(self.object, 'get_form'):
+                    form = self.object.get_form(self, request, form_class, True)
+                else:
+                    form = self.get_form(form_class)
 
                 if self.model and hasattr(self.model, 'is_form_valid'):
                     def vfun():
@@ -669,7 +696,16 @@ class GenericRows(object):
                 """
                 If the form is valid, save the associated model.
                 """
+
+                _data = {}
+                for key, value in form.data.items():
+                    if key.startswith('json_'):
+                        _data[key[5:]] = value
+
                 self.object = form.save(commit=False)
+
+                if _data:
+                    self.object._data = _data
 
                 if hasattr(self.object, 'init_new'):
                     if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
@@ -690,8 +726,8 @@ class GenericRows(object):
                         if hasattr(self.object, pos) and not pos in p:
                             setattr(self.object, pos, self.init_form[pos])
 
-                if hasattr(self.object, 'post'):
-                    if self.object.post(request):
+                if hasattr(self.object, 'post_form'):
+                    if self.object.post_form(self, form, request):
                         self.object.save()
                 else:
                     self.object.save()
@@ -785,6 +821,7 @@ class GenericRows(object):
 
         class TreeView(generic.ListView):
             response_class = LocalizationTemplateResponse
+
             model = self.base_model
             paginate_by = 64
             allow_empty = True

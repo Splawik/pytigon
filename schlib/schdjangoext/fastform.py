@@ -112,14 +112,24 @@ def _read_form_line(line):
     return name, field_type, title, required, kwargs
 
 
-def form_from_str(input_str):
-    class _Form(forms.Form):
-        def __init__(self, *args, **kwargs):
-            super(_Form, self).__init__(*args, **kwargs)
+def form_from_str(input_str, init_data = {}, base_form_class = forms.Form, prefix=""):
+    if 'base_form' in input_str:
+        make_form_str = "def make_form_class(base_form):\n" + "\n".join(
+            ['    ' + pos for pos in input_str.split('\n')]) + "\n"
+        exec(make_form_str)
+        _Form = locals()['make_form_class'](base_form_class)
+        return _Form
+    else:
+        class _Form(base_form_class):
+            def __init__(self, *args, **kwargs):
+                super(_Form, self).__init__(*args, **kwargs)
 
-            tab = _scan_lines(input_str)
-            for pos in tab:
-                if pos:
-                    name, field_type, title, required, form_kwargs = _read_form_line(pos.strip())
-                    self.fields[name] = field_type(label=title, required=required, **form_kwargs)
-    return _Form
+                tab = _scan_lines(input_str)
+                for pos in tab:
+                    if pos:
+                        name, field_type, title, required, form_kwargs = _read_form_line(pos.strip())
+                        if name in init_data:
+                            self.fields[prefix+name] = field_type(label=title, required=required, initial=init_data[name], **form_kwargs)
+                        else:
+                            self.fields[prefix+name] = field_type(label=title, required=required, **form_kwargs)
+        return _Form
