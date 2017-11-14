@@ -822,7 +822,7 @@ def prj_import(request):
     
             tasks_array=app_pos[7]
             for task_pos in tasks_array:
-                task = models.SChView(**array_dict(task_pos, task_attr))
+                task = models.SChTask(**array_dict(task_pos, task_attr))
                 task.parent=app
                 task.save()
     

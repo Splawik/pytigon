@@ -78,7 +78,7 @@ class JSONModel(models.Model):
         if hasattr(self, '_data'):
             if 'json_update' in self._data:
                 data = {}
-                if self.json_data:
+                if self.jsondata:
                     d = json_loads(self.jsondata)
                     for key, value in d.items():
                         data[key] = value
@@ -91,3 +91,4 @@ class JSONModel(models.Model):
             self.jsondata = json_str
 
         super().save(*args, **kwargs)
+
