@@ -11,16 +11,6 @@
         script language=python
             def init_form(self):
                 self.tabsort.grid.default_command = 'code'
-                                
-            def signal_from_child(self, child, signal):
-                if signal=='set_bitmap_list':
-                    bitmaps = {
-                        "code":"client://mimetypes/text-x-generic-template.png",
-                        "template_edit3":"client://mimetypes/x-office-presentation.png",
-                        "doc":"client://apps/help-browser.png"
-                    }
-                    child.set_bitmaps(bitmaps)
-
 
 %% all
     %with form_width=960 form_height=1200 show_title_bar=0 title=_("Views") vform=True
@@ -45,13 +35,13 @@
     {{ block.super }}
     % if object.ret_type == 'T':
         % row_actions:
-            .field_edit/view_code,Code,code,_top
-            .template_edit3,Template        
-            .field_edit/doc,Doc,doc,_top
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_top
+            .template_edit3,Template,[|client://mimetypes/x-office-presentation.png]
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_top
     % else:
         % row_actions:
-            .field_edit/view_code,Code,code,_top
-            .field_edit/doc,Doc,doc,_top
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_top
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_top
     
 %% row_edit
     {{ form.view_type.as_hidden }}

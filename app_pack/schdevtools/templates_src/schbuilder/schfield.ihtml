@@ -21,15 +21,6 @@
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
                 pass
 
-            def signal_from_child(self, child, signal):
-                if signal=='set_bitmap_list':
-                    bitmaps = {
-                        "field_up":"client://actions/go-up.png",
-                        "field_down":"client://actions/go-down.png",
-                        "field_duplicate":"client://actions/go-bottom.png"
-                    }
-                    child.set_bitmaps(bitmaps)
-
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -91,13 +82,13 @@
 %% list_row_actions
     {{block.super}}
     {% if not forloop.first %}
-        % row_actions:...field_up,Move up
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png]
     {% endif %}
     {% if not forloop.last %}
-        % row_actions:...field_down,Move down
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
     
-    % row_actions:...field_duplicate,Duplicate
+    % row_actions:...field_duplicate,Duplicate,[|client://actions/go-bottom.png]
 
 
 %% table_header_edit

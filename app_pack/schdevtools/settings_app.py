@@ -107,5 +107,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2017.11.14 21:56:38'
+GEN_TIME = '2017.11.18 13:05:04'
 OFFLINE_SUPPORT = True

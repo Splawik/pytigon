@@ -11,19 +11,6 @@
             def init_form(self):
                 self.tabsort.grid.default_command = 'fields'
                 
-            def signal_from_child(self, child, signal):
-                if signal=='set_bitmap_list':
-                    bitmaps = {
-                        "code":"client://mimetypes/text-x-generic-template.png",
-                        "meta":"client://actions/document-properties.png",
-                        "fields":"client://actions/format-indent-more.png",
-                        "template_edit":"client://mimetypes/x-office-presentation.png",
-                        "doc":"client://apps/help-browser.png",
-                        "field_up":"client://actions/go-up.png",
-                        "field_down":"client://actions/go-down.png",
-                    }
-                    child.set_bitmaps(bitmaps)
-
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -64,24 +51,23 @@
 
 %% list_row_actions
     {% if not forloop.first %}
-        % row_actions:... field_up,Move up
+        % row_actions:... field_up,Move up,[|client://actions/go-up.png]
     {% endif %}
     {% if not forloop.last %}
-        % row_actions:...field_down,Move down
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
 
     % row_actions:
         .edit
-        .field_edit/table_code,Code,code
-        .field_edit/metaclass_code,Meta class,meta
-        .field_list/schfield_set,Fields,fields
-        .field_edit/doc,Documentation,doc
+        .field_edit/table_code,Code,[fa fa-code fa-2|client://mimetypes/text-x-generic-template.png]
+        .field_edit/metaclass_code,Meta class,[|client://actions/document-properties.png]
+        .field_list/schfield_set,Fields,[|client://actions/format-indent-more.png]
+        .field_edit/doc,Documentation,[|client://apps/help-browser.png]
         .template_edit,Template
         .delete
 
 %% table_header_edit
   h2..._(Table list)
-
 
 %% row_edit
     % form:

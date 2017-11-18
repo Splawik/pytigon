@@ -6,26 +6,6 @@
 
 %% pythoncode
     script language=python
-        def signal_from_child(self, child, signal):
-            if signal=='set_bitmap_list':
-                bitmaps = {
-                    "app": "client://apps/preferences-system-windows.png",
-                    "app_templ": "client://mimetypes/text-x-script.png",
-                    "doc": "client://apps/help-browser.png",
-                    "gen": "client://categories/applications-multimedia.png",
-                    "run": "client://actions/media-playback-start.png",
-                    "prj_export": "client://actions/document-save-as.png",
-                    "manage": "client://categories/preferences-system.png",
-                    "installer": "client://apps/internet-web-browser.png",
-                    "UP": "wx.ART_GO_TO_PARENT",
-                    "static": "client://apps/system-file-manager.png",
-                    "files": "client://mimetypes/text-html.png",
-                    "readme_txt": "fa://navicon.png",
-                    "locale": "client://apps/preferences-system-network-proxy.png",
-                    "locale_gen": "client://mimetypes/text-html.png"
-                }
-                child.set_bitmaps(bitmaps)
-
         def filter_url(self, target, href):
             if '/run' in href:
                 import subprocess
@@ -40,7 +20,6 @@
                 return True
             return href
 
-
 %% all
     %with edit_vscroll=True table_type='datatable'
         {{ block.super }}
@@ -49,7 +28,7 @@
 %% list_content_actions
     % new_row _("New application set")
     % list_action "prj_import/edit" _("Import")
-    % list_action "restart_server" _("Restart server") "" "" "_top" active=False
+    % list_action "restart_server" _("Restart server") target="_top" active=False
     % list_action "update" _("Update server from git")
 
 
@@ -63,21 +42,21 @@
 
 %% list_row_actions
     % row_actions: ===>
-        UP,Open in toolbar,,_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
+        UP,Open in toolbar,[|wx.ART_GO_TO_PARENT],_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
         edit
-        gen,Build
+        gen,Build,[|client://categories/applications-multimedia.png]
         |
-        field_list/schapp_set,Applications,app
-        field_edit/user_app_template,Application template,app_templ,_top
-        field_edit/doc,Doc,doc,_top2
-        field_list/schstatic_set,Static files,static,_top
-        field_list/schlocale_set,Locale,locale
-        manage,Manage
+        field_list/schapp_set,Applications,[|client://apps/preferences-system-windows.png]
+        field_edit/user_app_template,Application template,[|client://mimetypes/text-x-script.png],_top
+        field_edit/doc,Doc,[|client://apps/help-browser.png],_top2
+        field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_top
+        field_list/schlocale_set,Locale,[|client://apps/preferences-system-network-proxy.png]
+        manage,Manage,[|client://categories/preferences-system.png]
         delete
-        run_{{object.name}},Run,run
-        prj_export,Export(Distribute)
-        installer,Make installer(Distribute)
-        field_edit/readme_file,readme.txt(Distribute),readme_txt,_top
+        run_{{object.name}},Run,[|client://actions/media-playback-start.png]
+        prj_export,Export(Distribute),[|client://actions/document-save-as.png]
+        installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
+        field_edit/readme_file,readme.txt(Distribute),[|fa://navicon.png],_top
         field_edit/license_file,license.txt(Distribute),license_txt,_top
         field_edit/install_file,install.ini(Distribute),install_ini,_top
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
@@ -104,28 +83,3 @@
             {{form.custom_tags|textfiel_row_col:"4x100"}}
         % form_item user_param:
             {{form.user_param|textfiel_row_col:"4x100"}}
-
-%% row_edit2
-    div class=form2columns
-        div class=row
-            % col2_form:
-                'name', 'title'
-
-        % vert_form:
-            'ext_apps', 'plugins'
-
-        div class=row
-            % col2_form:
-                'gui_type', 'gui_elements', 'is_hybrid', 'start_page', 
-            
-                'desktop_gui_type', 'tablet_gui_type', 'smartfon_gui_type'
-
-        % if standard_web_browser:
-            div class=row
-                % col2_form:
-                    'custom_tags', 'user_param'
-        % else:    
-            % form_item custom_tags:
-                {{form.custom_tags|textfiel_row_col:"4x100"}}
-            % form_item user_param:
-                {{form.user_param|textfiel_row_col:"4x100"}}

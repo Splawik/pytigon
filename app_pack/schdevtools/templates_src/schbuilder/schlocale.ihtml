@@ -4,17 +4,6 @@
 %load exfiltry
 %load exsyntax
 
-%% pythoncode
-    script language=python
-        def signal_from_child(self, child, signal):
-            if signal=='set_bitmap_list':
-                bitmaps = {
-                    "translate": "fa://flag-checkered.png",
-                    "translate_sync": "client://actions/view-refresh.png"
-                }
-                child.set_bitmaps(bitmaps)
-
-
 %% all
     %with edit_vscroll=True table_type='datatable'
         {{ block.super }}
@@ -35,5 +24,5 @@
         edit
         |
         field_list/schtranslate_set,Locale,locale
-        translate_sync,_("Sync translate messages")
+        translate_sync,_("Sync translate messages"),[|client://actions/view-refresh.png]
 

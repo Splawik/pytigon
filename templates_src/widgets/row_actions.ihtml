@@ -3,13 +3,13 @@
 
 % if standard_web_browser:
     % for pos in actions:
-        a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}}
+        a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,title={{pos.title}},,,target={{pos.target}},,,name={{pos.name}},,,{{pos.attrs|safe}}
             % if browser_type == 'mobile':
                 % if not pos.icon:
                     {{pos.title}}
             % else:
                 % if pos.icon:
-                    <span class="{{pos.icon.0}} fa fa-lg"></span>
+                    <span class="{{pos.icon}}"></span>
                 % else:
                     {{pos.title}}
 
@@ -18,12 +18,12 @@
             button class=btn {{btn_size}} btn-outline-primary,,,data-toggle=dropdown...<span class="fa fa-bars fa-lg"></span>
             div class=dropdown-menu dropdown-menu-right
                 % for pos in actions2:
-                    a test=True,,,href={{path}}{{pos.url|safe}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}
+                    a test=True,,,href={{path}}{{pos.url|safe}},,,title={{pos.title}},,,target={{pos.target}},,,name={{pos.name}},,,{{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}
                         {{pos.title}}
 % else:
     % for pos in actions|add:actions2:
         % if pos.icon:
-            a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}},,,src=fa://{{pos.icon.0}}?size=1
+            a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}},,,src={{pos.icon}}
         % else:
             a href={{path}}{{pos.url|safe}},,,class={{pos.tag_class}},,,id={{pos.name}},,,name={{pos.name}},,,title={{pos.title}},,,target={{pos.target}},,,{{pos.attrs|safe}}
 

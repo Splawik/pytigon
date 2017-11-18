@@ -6,18 +6,11 @@
 
     %% widget_content
         % if standard_web_browser:
-            div id={{id}},,,class=inline_frame,,,href={{href}},,,width=100%,,,height={{height}}
+            div class=inline_frame,,,href={{href}},,,width=100%,,,height={{height}}
         % else
             ctrlhtml name={{id}},,,src={{path}}{{href}},,,width=100%,,,height={{height}}
 
     %% js
 
     %% js2
-        % if standard_web_browser:
-            script {:}
-                function inline_load_completed(responseText, status, response):
-                    popup_init()
-                    date_init()
 
-                jQuery("#{{id}}").append(INLINE_FRAME_HTML)
-                jQuery("#{{id}}").find("div.frame-data-inner").load('{{href}} .content',inline_load_completed)

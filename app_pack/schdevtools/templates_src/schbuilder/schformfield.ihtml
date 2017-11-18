@@ -85,13 +85,13 @@
 %% list_row_actions
     {{block.super}}
     {% if not forloop.first %}
-        % row_actions:...field_up,Move up
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png]
     {% endif %}
     {% if not forloop.last %}
-        % row_actions:...field_down,Move down
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
     
-    % row_actions:...field_duplicat,Duplicate
+    % row_actions:...field_duplicat,Duplicate,[|client://actions/go-bottom.png]
 
 
 %% table_header_edit

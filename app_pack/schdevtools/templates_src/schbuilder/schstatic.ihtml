@@ -6,13 +6,6 @@
 
 %% pythoncode
     script language=python
-        def signal_from_child(self, child, signal):
-            if signal=='set_bitmap_list':
-                bitmaps = {
-                    "code": "client://apps/accessories-text-editor.png",
-                }
-                child.set_bitmaps(bitmaps)
-
         def filter_url(self, target, href):
             return href
 
@@ -37,7 +30,7 @@
 %% list_row_actions
     % row_actions:
         .edit
-        .field_edit/code,Code,code,_top
+        .field_edit/code,Code,[|client://apps/accessories-text-editor.png],_top
         .delete
 
 %% row_edit

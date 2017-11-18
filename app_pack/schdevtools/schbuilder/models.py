@@ -598,7 +598,7 @@ class SChField( models.Model):
     url_params = models.CharField('Url params', null=True, blank=True, editable=True, max_length=255)
     
 
-    def init_new(self, param=None):
+    def init_new(self, request, view, param=None):
         if param:
             self.type=param
     
@@ -735,7 +735,7 @@ class SChView( models.Model):
     ret_type = models.CharField('Return value type', null=False, blank=False, editable=True, default='U',choices=ViewRetType_CHOICES,max_length=1)
     
 
-    def init_new(self, param=None):
+    def init_new(self, request, view, param=None):
         if param:
             self.view_type=param
             defaults={}
@@ -1053,7 +1053,7 @@ class SChFormField( models.Model):
     param = models.CharField('Param', null=True, blank=True, editable=True, max_length=64)
     
 
-    def init_new(self, param=None):
+    def init_new(self, request, view, param=None):
         if param:
             self.type=param
     
@@ -1069,7 +1069,7 @@ class SChFormField( models.Model):
     def as_declaration(self):
         if self.type == 'UserField':
             return self.param        
-        ret = "%s = forms.%s(label='%s', required=%s, " % \
+        ret = "%s = forms.%s(label=_('%s'), required=%s, " % \
                 (self.name, self.type, self.label, self.required)
         if self.initial:
             ret+= "initial=%s," % self.initial

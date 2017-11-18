@@ -633,13 +633,14 @@ class GenericRows(object):
                         self.object.parent = self.pmodel.objects.get(id=ppk)
                 if hasattr(self.model, 'init_new'):
                     if kwargs['add_param'] and kwargs['add_param'] != '-':
-                        self.init_form = self.object.init_new(kwargs['add_param'])
+                        self.init_form = self.object.init_new(request, self, kwargs['add_param'])
                     else:
-                        self.init_form = self.object.init_new()
+                        self.init_form = self.object.init_new(request, self)
 
-                    for pos in self.init_form:
-                        if hasattr(self.object, pos):
-                            setattr(self.object, pos, self.init_form[pos])
+                    if self.init_form:
+                        for pos in self.init_form:
+                            if hasattr(self.object, pos):
+                                setattr(self.object, pos, self.init_form[pos])
                 else:
                     self.init_form = None
                 form_class = self.get_form_class()
@@ -709,9 +710,9 @@ class GenericRows(object):
 
                 if hasattr(self.object, 'init_new'):
                     if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
-                        self.init_form = self.object.init_new(self.kwargs['add_param'])
+                        self.init_form = self.object.init_new(request, self, self.kwargs['add_param'])
                     else:
-                        self.init_form = self.object.init_new()
+                        self.init_form = self.object.init_new(request, self)
 
                 if 'parent_pk' in self.kwargs and hasattr(self.object, 'parent_id'):
                     if int(self.kwargs['parent_pk'])!=0:

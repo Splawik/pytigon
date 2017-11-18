@@ -3,28 +3,11 @@
 
 %load exfiltry
 %load exsyntax
- 
-%% pythoncode
-    % if not form_edit
-        script language=python
-            def init_form(self):
-                pass
-            def signal_from_child(self, child, signal):
-                if signal=='set_bitmap_list':
-                    bitmaps = {
-                        "pcode":"client://mimetypes/text-x-generic-template.png",
-                        "ccode":"client://actions/go-first.png",
-                        "ecode":"client://actions/go-bottom.png",
-                        "field":"client://actions/format-indent-more.png",
-                        "template_edit2":"client://mimetypes/x-office-presentation.png",
-                        "doc":"client://apps/help-browser.png",
-                    }
-                    child.set_bitmaps(bitmaps)
-   
+    
+
 %% all
     %with form_width=720 form_height=480 show_title_bar=0 title=_("Forms")
         {{ block.super }}
-
 
 %% list_content_actions
     % new_row _("New form")
@@ -40,12 +23,12 @@
 %% list_row_actions
     {{block.super}}
     % row_actions:
-        .field_list/schformfield_set,Fields,field
-        .field_edit/process_code,Process_code,pcode
-        .field_edit/end_class_code,End class code, ccode
-        .field_edit/end_code,End code,ecode
-        .field_edit/doc,Doc,doc
-        .template_edit2,Template
+        .field_list/schformfield_set,Fields,[|client://actions/format-indent-more.png]
+        .field_edit/process_code,Process code,[|client://mimetypes/text-x-generic-template.png]
+        .field_edit/end_class_code,End class code,[|client://actions/go-first.png]
+        .field_edit/end_code,End code,[|client://actions/go-bottom.png]
+        .field_edit/doc,Doc,[|client://apps/help-browser.png]
+        .template_edit2,Template,[|client://mimetypes/x-office-presentation.png]
 
 
 %% table_header_edit

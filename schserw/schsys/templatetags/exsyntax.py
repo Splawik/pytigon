@@ -37,36 +37,11 @@ from django.template.base import Node
 
 from schlib.schhtml.parser import Parser
 from schlib.schtools.wiki import wiki_from_str
+from schlib.schtools.href_action import standard_dict, actions_dict, action_fun
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 
 register = template.Library()
-
-
-class GetAllAttributesParser(Parser):
-    def __init__(self, *argi, **argv):
-        super().__init__(*argi, **argv)
-        self.v = {}
-        
-    def handle_starttag(self, tag, attrs):        
-        for key, value in attrs.items():
-            if key in self.v:
-                self.v[key] += " "+value
-            else:
-                self.v[key] = value
-        
-
-def add_2_attribute_str(s1, s2):
-    out = io.StringIO()
-    parser = GetAllAttributesParser()
-    parser.feed("<html><x "+s1+"></html>")
-    parser.feed("<html><x "+s2+"></html>")
-    for pos in parser.v:
-        out.write(pos)
-        out.write("=\"")
-        out.write(parser.v[pos])
-        out.write("\" ")
-    return out.getvalue().strip()
 
 
 def inclusion_tag(file_name):
@@ -85,259 +60,6 @@ def mark_safe2(x):
     else:
         return x
 
-STANDARD_DESC = { #title, attrs, 
-    'default': ('Default', "class='btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' "),
-    'edit': (_('Update'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'edit2': (_('Update'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'otheredit': (_('Update document'), "class='popup btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup' "),
-    'otheredit_inline': (_('Update document'), "class='popup inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup inline' "),
-    'delete': (_('Delete'),  "class='popup_delete btn {{btn_size}} btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'delete2': (_('Delete'),  "class='popup_delete btn {{btn_size}} btn-danger' data-role='button' data-inline='true' data-mini='true' |class='popup_delete' "),
-    'field_list': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_list_get': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-    'field_action': (_('Default'), "class='popup_inline btn {{btn_size}} btn-secondary' data-role='button' data-inline='true' data-mini='true' |class='popup_inline' "),
-}
-
-
-STANDARD_URL = {
-    'action': "../../../{id}/action/{action}",
-    'edit': "../../../{id}/{action}",
-    'edit2': "./{id}/{action}",
-    'otheredit': "../../../{id}/{action}",
-    'otheredit_inline': "../../../{id}/{action}",
-    'delete': "../../../{id}/{action}",
-    'delete2': "./{id}/{action}",
-    'pdf': "../../../{id}/pdf/view/",
-    'odf': "../../../{id}/odf/view/",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
-    'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
-    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
-}
-
-STANDARD_URL_CHILD_TAB = {
-    'action': "{base_path}../{table_name}/{id}/action/{action}",
-    'field_list': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
-    'field_list_get': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
-    'field_edit': "{base_path}../{object_name}/{id}/{x1}/py/editor",
-}
-
-STANDARD_ICON = {
-    'edit':  ['fa-pencil', 'edit'],
-    'edit2':  ['fa-pencil', 'edit'],
-    'otheredit': ['fa-arrow-right', 'edit'],
-    'otheredit_inline': ['fa-arrow-right', 'edit'],
-    'delete': ['fa-trash-o', 'delete'],
-    'delete2': ['fa-trash-o', 'delete'],
-    'print': ['fa-print', 'arrow-d'],
-    'pdf': ['fa-eye', 'eye'],
-    'odf': ['fa-list', 'bullets'],
-    'field_list': ['fa-caret-down', 'grid'],
-    'field_list_get': ['fa-caret-down', 'grid'],
-    'field_action': ['fa-angle-double-down', 'grid'],
-    'field_edit': ['fa-pencil-square-o', 'edit'],
-}
-
-NEW_WIN_ACTIONS = ['pdf', 'odf',]
-
-
-def restructure(attrs):
-    data = [x.replace("='","=").split('=') for x in (attrs.replace('"',"'").strip()+" ").split("' ") if x]
-    c=s=d=""
-    for pos in data:
-        if pos[0]=='class':
-            c=pos[1]
-        elif pos[0]=='style':
-            s=pos[1]
-        else:
-            if d:
-                d+=" "
-            if len(pos)==2:
-                d+= "%s='%s'" % (pos[0], pos[1])
-            elif len(pos)==1:
-                d+=pos[0]
-
-    return (d, c, s)
-
-
-class Action:
-    def __init__(self, actions_str, context, d):
-        #actions_str: action,title,name,target,attrs,param,url
-        self.d = d
-        self.context = context
-        self.action = ""
-        self.title = ""
-        self.name = ""
-        self.target = ""
-        self.attrs = ""
-        self.attrs_in_menu = ""
-        self.tag_class = ""
-        self.tag_style = ""
-        self.url = ""
-        self.param = ""
-
-        self.x1 = ""
-        self.x2 = ""
-        self.x3 = ""
-
-        pos = actions_str.split(',')
-        action = pos[0].strip()
-
-        if '/' in action:
-            x = action.split('/')
-            self.x1 = x[1].strip()
-            if len(x)>2:
-                self.x2 = x[2]
-                if len(x)>3:
-                    self.x3 = x[3].strip()
-            self.d['action'] = self.action =  x[0].strip()
-        else:
-            self.d['action'] = self.action = action
-
-        self.d['x1'] = self.x1
-        self.d['x2'] = self.x2
-        self.d['x3'] = self.x3
-
-        if len(pos)>1:
-            self.title = pos[1].strip().split(':::')[0]
-            if len(pos)>2:
-                self.name = pos[2].strip()
-                if len(pos)>3:
-                    self.target = pos[3].strip()
-                    if len(pos)>4:
-                        self.attrs = pos[4].strip()
-                        if len(pos)>5:
-                            self.parm = pos[5].strip()
-                            if len(pos)>6:
-                                self.url = pos[6].strip()
-
-        action2 = self.action.split('__')[0]
-
-        if not self.title:
-            if action2 in STANDARD_DESC:
-                self.title = STANDARD_DESC[action2][0]
-            else:
-                self.title = action.replace('/', '_')
-
-        if not self.name:
-            if context['standard_web_browser']:
-                self.name = action.replace('/', '_')
-            else:
-                self.name = action.split('/')[0]
-        if not self.target:
-            if context['standard_web_browser'] and not action in NEW_WIN_ACTIONS:
-                #if context['default_template'] == 'template/mobile.html':
-                #    self.target = '_self'
-                #else:
-                self.target = '_top'
-            else:
-                self.target = '_blank'
-
-        btn_size = settings.BOOTSTRAP_BUTTON_SIZE_CLASS
-        if not self.attrs :
-            if action2 in STANDARD_DESC:
-                self.attrs = STANDARD_DESC[action2][1].replace('{{btn_size}}','btn_size')
-            else:
-                self.attrs = STANDARD_DESC['default'][1].replace('{{btn_size}}','btn_size')
-        else:
-            if self.attrs[0]=='+':
-                if action2 in STANDARD_DESC:
-                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC[action2][1].split('|')[0]).replace('{{btn_size}}','btn_size')
-                else:
-                    self.attrs = add_2_attribute_str(self.attrs[1:] , STANDARD_DESC['default'][1].split('|')[0]).replace('{{btn_size}}','btn_size')
-
-        if '|' in self.attrs:
-            x = self.attrs.split('|')
-            self.attrs, self.tag_class, self.tag_style = restructure(x[0])
-            self.attrs_in_menu = x[1]
-        else:
-            self.attrs, self.tag_class, self.tag_style = restructure(self.attrs)
-
-        if not self.url:
-            if action == 'field_up':
-                pass
-            if 'rel_field' in context and context['rel_field']:
-                if action2 in STANDARD_URL_CHILD_TAB:
-                    self.url = self.format(STANDARD_URL_CHILD_TAB[action2])
-                else:
-                    if action2 in STANDARD_URL:
-                        self.url = self.format(STANDARD_URL[action2])
-                    else:
-                        self.url = self.format(STANDARD_URL_CHILD_TAB['action'])
-            else:
-                if action2 in STANDARD_URL:
-                    self.url = self.format(STANDARD_URL[action2])
-                else:
-                    self.url = self.format(STANDARD_URL['action'])
-        else:
-            self.url = self.format(self.url)
-        if action2 in STANDARD_ICON:
-            self.icon = STANDARD_ICON[action2]
-        else:
-            self.icon = None
-        if len(pos)>1:
-            if ':::' in pos[1]:
-                self.icon = [ pos[1].strip().split(':::')[1], 'edit']
-
-        if self.icon and context['browser_type']=='mobile':
-            self.attrs = self.attrs + " data-iconpos='notext' data-icon='%s' " % self.icon[1]
-
-
-    def format(self, s):
-        return s.format(**self.d)
-
-
-def actions_dict(context, actions_str):
-    d = standard_dict(context, {})
-    if 'object' in context:
-        if hasattr(context['object'], '_meta'):
-            d['table_name'] = context['object']._meta.object_name
-            d['id'] = context['object'].id
-            d['object_name'] = context['object']._meta.object_name
-        else:
-            d['table_name'] = 'user_table'
-            d['id'] = context['object']['id']
-            d['object_name'] = 'object_name'
-
-    else:
-        d['table_name'] = None
-        d['id'] = 0
-        d['object_name'] = None
-
-    if 'rel_field' in context and context['rel_field']:
-        d['child_tab'] = True
-    else:
-        d['child_tab'] = False
-
-    actions = []
-    actions2 = []
-    test_actions2 = False
-    act = actions
-    for pos2 in actions_str.split(';'):
-        pos=pos2.strip()
-        if not pos:
-            continue
-        if pos[0]=='|':
-            act = actions2
-            test_actions2 = True
-        else:
-            action = Action(pos, context, d)
-            act.append(action)
-
-    if not test_actions2 and len(actions)>2 and context['standard_web_browser']:
-        actions2=actions[1:]
-        actions = actions[:1]
-
-    d['actions'] = actions
-    d['actions2'] = actions2
-
-    d['browser_type'] = context['browser_type']
-
-    if len('actions')>0:
-        d['action'] = actions[0]
-    else:
-        d['action'] = actions2[0]
-    return d
-
 
 # ROW ACTIONS
 
@@ -352,7 +74,6 @@ class RowActionNode(Node):
         t = get_template('widgets/row_actions.html')
         d = actions_dict(context, output2)
         return t.render(d, request = d['request'])
-        return t.render(d, request = d['request'])
 
 
 @register.tag
@@ -361,44 +82,39 @@ def row_actions(parser, token):
     parser.delete_first_token()
     return RowActionNode(nodelist)
 
+# Actions
 
 @inclusion_tag('widgets/view_row.html')
-def view_row(context, description, target=''):
-    href = "../../../%s/_/view/" % context['object'].id
-    ret = action_fun(context, 'view_row', description, 'view_row', target, "", "", href)
+def view_row(context, title = "", icon_name = "", target = "popup_info", attrs = "", tag_class = "", url = ""):
+    if url:
+        href=url
+    else:
+        href = "../../../%s/_/view/" % context['object'].id
+    ret = action_fun(context, 'view_row', title, 'view_row', target, attrs,tag_class, href)
     return ret
 
 
 @inclusion_tag('widgets/get_row.html')
-def get_row(context, description, target=''):
-    href = ""
-    ret = action_fun(context, 'get_row', description, 'get_row', target, "", "", href)
+def get_row(context, title = "", icon_name = "", target = "", attrs = "", tag_class = "", url = ""):
+    ret = action_fun(context, 'get_row', title, icon_name, target, attrs, tag_class, url)
     ret['id'] = context['object'].id
     ret['text'] = str(context['object'])
     return ret
 
-# ACTIONS
-
-def action_fun(context, action, title="", name="", target="", attrs="", param="", url=""):
-    action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, name, target, attrs, param, url)
-    t = Template(action_str)
-    output2 = t.render(context)
-    d = actions_dict(context, output2)
-    return standard_dict(context, d)
-
 
 @inclusion_tag('widgets/button.html')
-def button(context, url, title="", name="", target="", attrs=''):
-    ret = action_fun(context, 'button', title, name, target, attrs, "", url)
+def button(context, title = "", icon_name = "", target = "", attrs = "", tag_class = "", url = ""):
+    ret = action_fun(context, 'button', title, icon_name, target, attrs, tag_class, url)
     return ret
 
 
-def new_row_base(context, title="", name="", target='', attrs='', param='-', url="", action="new_row"):
+def new_row_base(context, action="new_row", title="", icon_name="", target='', attrs='', tag_class="", url=""):
     if url:
         url2=url
     else:
-        url2='../../../%s/add' % param
-    ret = action_fun(context, action, title, name, target, attrs, param, url2)
+        #url2='../../../%s/add' % param
+        url2='../../../{x1}/add'
+    ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     if title and title[0] == '+':
         description = title[1:]
         title = ""
@@ -409,31 +125,31 @@ def new_row_base(context, title="", name="", target='', attrs='', param='-', url
 
 
 @inclusion_tag('widgets/new_row.html')
-def new_row(context, title="", name="", target='', attrs='', param='-', url="", action="new_row"):
-    return new_row_base(context, title, name, target, attrs, param, url, action)
+def new_row(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row"):
+    return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
 
 
 @inclusion_tag('widgets/new_row.html')
-def new_row_inline(context, title="", name="", target='', attrs='', param='-', url="", action="new_row/inline"):
-    return new_row_base(context, title, name, target, attrs, param, url, action)
+def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row-inline/-"):
+    return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
 
 
 @inclusion_tag('widgets/list_action.html')
-def list_action(context, action, id, title="", name="", target='_top', attrs='', url="", active=False):
+def list_action(context, action, title="", icon_name="", target='_top', attrs='', tag_class="", url="", active=False):
     if attrs:
-        ret = action_fun(context, action, title, name, target, attrs, "", url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "../../../action/%s" % action)
     elif active:
-        ret = action_fun(context, action, title, name, target, "class='btn btn-secondary no_close no_cancel' data-role='button'", "", url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "../../../action/%s" % action)
     else:
-        ret = action_fun(context, action, title, name, target, "class='btn btn-secondary no_ok no_cancel' data-role='button'", "", url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "../../../action/%s" % action)
     return ret
 
 
 @inclusion_tag('widgets/wiki_button.html')
-def wiki_button(context, subject, wiki_description, attrs="", target='_self', url=""):
+def wiki_button(context, subject, wiki_description, icon_name="", target='_self',  attrs="", tag_class="", url=""):
     wiki_name = wiki_from_str(wiki_description)
     wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
-    return action_fun(context, "wiki", wiki_description, wiki_name, target, attrs, "", url if url else wiki_url)
+    return action_fun(context, "wiki", wiki_description, icon_name, target, attrs, tag_class, url if url else wiki_url)
 
 
 @inclusion_tag('widgets/wiki_link.html')
@@ -685,20 +401,6 @@ def do_sumtab(parser, token):
 
 
 do_sumtab = register.tag('sumtab', do_sumtab)
-
-
-def standard_dict(context, parm):
-    parm['standard_web_browser'] = context['standard_web_browser']
-    if 'rel_field' in context and context['rel_field']:
-        parm['base_path'] = '../../../../../'
-    else:
-        parm['base_path'] = '../../../'
-    path = context['request'].path
-    if not path.endswith('/'):
-        path = path+'/'
-    parm['request'] = context['request']
-    parm['path'] = path
-    return parm
 
 
 @register.simple_tag(takes_context=True)
@@ -1014,8 +716,8 @@ def form2columns(context, fields):
 
 
 @inclusion_tag('widgets/frame.html')
-def frame(context, id, href, height):
-    return standard_dict(context, {'id': id, 'href': href, 'height': height })
+def frame(context, href, height):
+    return standard_dict(context, {'href': href, 'height': height })
 
 
 _collapse_str = """

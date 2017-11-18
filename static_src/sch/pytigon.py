@@ -2,25 +2,19 @@ __pragma__ ('alias', 'jquery_is', 'is')
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
-#target:
-## _blank: new browser window
-## _top: new app tab
-## _self: replace current page
-## refresh_obj: replace current object
-## refresh_page: replace current page (like _self)
-## refresh_app: replace current app
-
 from page import Page
 from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
      on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
 from tbl import init_table, datatable_onresize
-from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load, ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html, register_fragment_init_fun, register_mount_fun
+from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load,\
+     ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html, register_fragment_init_fun,\
+     register_mount_fun, refresh_current_object, refresh_current_page, refresh_current_app
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
-
+from click_process import process_on_click
 
 window.PS = None
 
@@ -135,7 +129,11 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     #jQuery('#tabs2_content').on("submit", "button", _on_submit)
     #jQuery('#dialog-form-modal').on("submit", "button", _on_submit)
 
-    init_popup_events()
+    #init_popup_events()
+
+    process_on_click(EVENT_TAB)
+
+
     if can_popup():
         def _local_fun():
             nonlocal menu_id
@@ -325,14 +323,53 @@ def jquery_ready():
             window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
 
 
+def on_new_tab(url, elem, e):
+    title = jQuery(e.currentTarget).attr('title')
+    url2 = url.split('?')[0]
+    if not title:
+        if len(url2)>16:
+            title = '...'+url2[-13:]
+        else:
+            title = url2
+    return _on_menu_href(elem, title)
+
+
+## target:
+## _blank: new browser window (pdf) - default action
+## _parent: default action
+## _top: new app tab
+## _self: replace current page
+## popup_edit: new popup window
+## popup_info: new popup window
+## popup_delete: new popup window
+## inline: new inline window
+## none, get request (no gui)
+## refresh_obj: replace current object
+## refresh_page: replace current page (like _self)
+## refresh_app: replace current app
+
 EVENT_TAB = [
-    ('popup', on_popup_edit_new),
-    ('popup_inline', on_popup_inline),
-    ('popup_info', on_popup_info),
-    ('popup_delete', on_popup_delete),
-    ('get_tbl_value', on_get_tbl_value),
-    ('new_tbl_value', on_new_tbl_value),
-    ('get_row', on_get_row),
+    # target, class, get only content, get only tab, function
+    ('popup_edit', '*', True, False, on_popup_edit_new),
+    ('popup_info', '*', True, False, on_popup_info),
+    ('popup_delete', '*', True, False, on_popup_delete),
+    ('inline',  '*', True, False, on_popup_inline),
+
+    ('none', 'get_tbl_value', True, False, on_get_tbl_value),
+    ('none', 'new_tbl_value', True, False, on_new_tbl_value),
+    ('none', 'get_row', True, False, on_get_row),
+
+    ('_top', '*', True, False, on_new_tab),
+    ('_top2', '*', True, False, on_new_tab),
+
+    ('refresh_obj', '*', True, False, refresh_current_object),
+    ('refresh_page', '*',  True, False, refresh_current_page),
+    ('refresh_app', '*', False, False, refresh_current_app),
+
+    #('*', 'popup_info', True, False, on_popup_info),
+    #('*', 'popup_delete', True, False, on_popup_delete),
+    #('*', 'popup_inline', True, False, on_popup_inline),
+    #('*', 'popup', True, False, on_popup_edit_new),
 ]
 
 
@@ -356,65 +393,65 @@ def standard_on_data(src_obj, href):
 
 window.standard_on_data = standard_on_data
 
-def init_popup_events(elem=None):
-    def _on_click(e):
-        nonlocal EVENT_TAB
-
-        target = jQuery(e.currentTarget).attr('target')
-        src_obj = jQuery(this)
-
-        if target == "_blank" or target == '_parent':
-            return True
-
-        href = jQuery(this).attr("href")
-        if href and '#' in href:
-            return True
-
-        for pos in EVENT_TAB:
-            if jQuery(this).hasClass(pos[0]):
-                e.preventDefault()
-                pos[1](this)
-                return True
-
-        e.preventDefault()
-
-        if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
-            title = jQuery(e.currentTarget).attr('title')
-            if not title:
-                if len(href)>16:
-                    title = '...'+href[-13:]
-                else:
-                    title = href
-            return _on_menu_href(this,title)
-
-        href2 = corect_href(href)
-
-        def _on_data(data):
-            nonlocal href, src_obj
-
-            if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
-                if target=="refresh_obj":
-                    if not refresh_fragment(src_obj, None, True):
-                        refresh_fragment(src_obj)
-                else:
-                    refresh_fragment(src_obj)
-            else:
-                if window.APPLICATION_TEMPLATE == 'modern':
-                    mount_html(window.ACTIVE_PAGE.page, data)
-                    window.ACTIVE_PAGE.set_href(href)
-                else:
-                    mount_html(jQuery('#body_body'), data)
-                window.ACTIVE_PAGE.set_href(href)
-                get_menu().get_active_item().url = href
-                if window.PUSH_STATE:
-                    history_push_state("title", href)
-        ajax_get(href2,_on_data)
-
-    if elem:
-        elem.on("click", "a", _on_click)
-    else:
-        jQuery('#tabs2_content').on("click", "a", _on_click)
-        jQuery('#dialog-form-modal').on("click", "a", _on_click)
+# def init_popup_events(elem=None):
+#     def _on_click(e):
+#         nonlocal EVENT_TAB
+#
+#         target = jQuery(e.currentTarget).attr('target')
+#         src_obj = jQuery(this)
+#
+#         if target == "_blank" or target == '_parent':
+#             return True
+#
+#         href = jQuery(this).attr("href")
+#         if href and '#' in href:
+#             return True
+#
+#         for pos in EVENT_TAB:
+#             if jQuery(this).hasClass(pos[0]):
+#                 e.preventDefault()
+#                 pos[1](this)
+#                 return True
+#
+#         e.preventDefault()
+#
+#         if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
+#             title = jQuery(e.currentTarget).attr('title')
+#             if not title:
+#                 if len(href)>16:
+#                     title = '...'+href[-13:]
+#                 else:
+#                     title = href
+#             return _on_menu_href(this,title)
+#
+#         href2 = corect_href(href)
+#
+#         def _on_data(data):
+#             nonlocal href, src_obj
+#
+#             if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+#                 if target=="refresh_obj":
+#                     if not refresh_fragment(src_obj, None, True):
+#                         refresh_fragment(src_obj)
+#                 else:
+#                     refresh_fragment(src_obj)
+#             else:
+#                 if window.APPLICATION_TEMPLATE == 'modern':
+#                     mount_html(window.ACTIVE_PAGE.page, data)
+#                     window.ACTIVE_PAGE.set_href(href)
+#                 else:
+#                     mount_html(jQuery('#body_body'), data)
+#                 window.ACTIVE_PAGE.set_href(href)
+#                 get_menu().get_active_item().url = href
+#                 if window.PUSH_STATE:
+#                     history_push_state("title", href)
+#         ajax_get(href2,_on_data)
+#
+#     if elem:
+#         elem.on("click", "a", _on_click)
+#     else:
+#         jQuery('#tabs2_content').on("click", "a", _on_click)
+#         jQuery('#dialog-form-modal').on("click", "a", _on_click)
 
 
 def _on_popstate(e):

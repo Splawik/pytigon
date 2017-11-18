@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-11 14:44:21
+// Transcrypt'ed from Python, 2017-11-18 15:09:09
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2416,6 +2416,106 @@
 function pytigon () {
 	__nest__ (
 		__all__,
+		'click_process', {
+			__all__: {
+				__inited__: false,
+				__init__: function (__all__) {
+					var corect_href = __init__ (__world__.tools).corect_href;
+					var ajax_get = __init__ (__world__.tools).ajax_get;
+					var mount_html = __init__ (__world__.tools).mount_html;
+					var refresh_fragment = __init__ (__world__.popup).refresh_fragment;
+					var get_menu = __init__ (__world__.tabmenu).get_menu;
+					var process_on_click = function (event_tab, elem) {
+						if (typeof elem == 'undefined' || (elem != null && elem .hasOwnProperty ("__kwargtrans__"))) {;
+							var elem = null;
+						};
+						var _on_click = function (e) {
+							var target = jQuery (e.currentTarget).attr ('target');
+							if (target == '_blank' || target == '_parent') {
+								return true;
+							}
+							var src_obj = jQuery (this);
+							var href = jQuery (this).attr ('href');
+							if (href && __in__ ('#', href)) {
+								return true;
+							}
+							var __iterable0__ = event_tab;
+							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								var pos = __iterable0__ [__index0__];
+								if (pos [0] == '*' || pos [0] == target) {
+									if (pos [1] == '*' || src_obj.hasClass (pos [1])) {
+										if (pos [3]) {
+											var url = corect_href (href, true);
+										}
+										else if (pos [2]) {
+											var url = corect_href (href, false);
+										}
+										else {
+											var url = href;
+										}
+										e.preventDefault ();
+										pos [4] (url, this, e);
+										return true;
+									}
+								}
+							}
+							e.preventDefault ();
+							var href2 = corect_href (href);
+							var _on_data = function (data) {
+								if (data && __in__ ('_parent_refr', data) || __in__ (target, tuple (['refresh_obj', 'refresh_page']))) {
+									if (target == 'refresh_obj') {
+										if (!(refresh_fragment (src_obj, null, true))) {
+											refresh_fragment (src_obj);
+										}
+									}
+									else {
+										refresh_fragment (src_obj);
+									}
+								}
+								else {
+									if (window.APPLICATION_TEMPLATE == 'modern') {
+										mount_html (window.ACTIVE_PAGE.page, data);
+										window.ACTIVE_PAGE.set_href (href);
+									}
+									else {
+										mount_html (jQuery ('#body_body'), data);
+									}
+									window.ACTIVE_PAGE.set_href (href);
+									get_menu ().get_active_item ().url = href;
+									if (window.PUSH_STATE) {
+										history_push_state ('title', href);
+									}
+								}
+							};
+							ajax_get (href2, _on_data);
+						};
+						if (elem) {
+							elem.on ('click', 'a', _on_click);
+						}
+						else {
+							jQuery ('#tabs2_content').on ('click', 'a', _on_click);
+							jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
+						}
+					};
+					__pragma__ ('<use>' +
+						'popup' +
+						'tabmenu' +
+						'tools' +
+					'</use>')
+					__pragma__ ('<all>')
+						__all__.ajax_get = ajax_get;
+						__all__.corect_href = corect_href;
+						__all__.get_menu = get_menu;
+						__all__.mount_html = mount_html;
+						__all__.process_on_click = process_on_click;
+						__all__.refresh_fragment = refresh_fragment;
+					__pragma__ ('</all>')
+				}
+			}
+		}
+	);
+	__nest__ (
+		__all__,
 		'db', {
 			__all__: {
 				__inited__: false,
@@ -2791,7 +2891,7 @@ function pytigon () {
 						}
 						return true;
 					};
-					var on_popup_inline = function (elem) {
+					var on_popup_inline = function (url, elem, e) {
 						jQuery (elem).attr ('data-style', 'zoom-out');
 						jQuery (elem).attr ('data-spinner-color', '#FF0000');
 						window.WAIT_ICON = Ladda.create (elem);
@@ -2851,7 +2951,7 @@ function pytigon () {
 						ajax_load (elem2, href2, _on_load);
 						return false;
 					};
-					var on_popup_edit_new = function (elem) {
+					var on_popup_edit_new = function (url, elem, e) {
 						jQuery (elem).attr ('data-style', 'zoom-out');
 						jQuery (elem).attr ('data-spinner-color', '#FF0000');
 						window.WAIT_ICON = Ladda.create (elem);
@@ -2904,7 +3004,7 @@ function pytigon () {
 						}
 						return false;
 					};
-					var on_popup_info = function (elem) {
+					var on_popup_info = function (url, elem, e) {
 						if (can_popup ()) {
 							var _on_load = function (responseText, status, response) {
 								jQuery ('div.dialog-form-info').modal ();
@@ -2921,7 +3021,7 @@ function pytigon () {
 						}
 						return false;
 					};
-					var on_popup_delete = function (elem) {
+					var on_popup_delete = function (url, elem, e) {
 						if (can_popup ()) {
 							jQuery ('div.dialog-data-delete').closest ('.refr_object').attr ('related-object', jQuery (elem).uid ());
 							var _on_load = function (responseText, status, response) {
@@ -3090,17 +3190,17 @@ function pytigon () {
 						window.RET_CONTROL.val (id.toString ());
 						window.RET_CONTROL [0].defaultValue = id.toString ();
 					};
-					var on_get_tbl_value = function (elem) {
+					var on_get_tbl_value = function (url, elem, e) {
 						on_popup_in_form (elem);
 					};
-					var on_new_tbl_value = function (elem) {
+					var on_new_tbl_value = function (url, elem, e) {
 						window.EDIT_RET_FUNCTION = _refresh_win_and_ret;
 						window.RET_CONTROL = jQuery (elem).closest ('.input-group').find ('.django-select2');
 						jQuery (elem).data ('edit_ret_function', window.EDIT_RET_FUNCTION);
 						jQuery (elem).data ('ret_control', window.RET_CONTROL);
 						return on_popup_edit_new (elem);
 					};
-					var on_get_row = function (elem) {
+					var on_get_row = function (url, elem, e) {
 						var id = jQuery (elem).attr ('data-id');
 						var text = jQuery (elem).attr ('data-text');
 						var ret_control = jQuery (elem).closest ('.refr_source').prev ('.form-group').find ('.django-select2');
@@ -3586,6 +3686,19 @@ function pytigon () {
 							jQuery (this).parents ('.form-group').toggleClass ('focused', test);
 						};
 						elem2.find ('.label-floating .form-control').on ('focus blur', _on_blur).trigger ('blur');
+						var load_inline_frame = function () {
+							var frame = jQuery (this);
+							frame.append (INLINE_FRAME_HTML);
+							var obj2 = frame.find ('div.frame-data-inner');
+							if (obj2.length > 0) {
+								var url = frame.attr ('href');
+								var complete = function (txt) {
+									// pass;
+								};
+								ajax_load (obj2, url, complete);
+							}
+						};
+						elem2.find ('.inline_frame').each (load_inline_frame);
 						if (window.BASE_FRAGMENT_INIT) {
 							window.BASE_FRAGMENT_INIT ();
 						}
@@ -4002,6 +4115,15 @@ function pytigon () {
 					};
 					window.animate_combo = animate_combo;
 					window.icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
+					var refresh_current_object = function (rul, elem, e) {
+						// pass;
+					};
+					var refresh_current_page = function (rul, elem, e) {
+						// pass;
+					};
+					var refresh_current_app = function (rul, elem, e) {
+						// pass;
+					};
 					__pragma__ ('<all>')
 						__all__.FIRST_INIT = FIRST_INIT;
 						__all__.FRAGMENT_INIT_FUN = FRAGMENT_INIT_FUN;
@@ -4027,6 +4149,9 @@ function pytigon () {
 						__all__.load_many_js = load_many_js;
 						__all__.mount_html = mount_html;
 						__all__.on_load_js = on_load_js;
+						__all__.refresh_current_app = refresh_current_app;
+						__all__.refresh_current_object = refresh_current_object;
+						__all__.refresh_current_page = refresh_current_page;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
 						__all__.register_mount_fun = register_mount_fun;
 						__all__.save_as = save_as;
@@ -4153,10 +4278,14 @@ function pytigon () {
 		var mount_html = __init__ (__world__.tools).mount_html;
 		var register_fragment_init_fun = __init__ (__world__.tools).register_fragment_init_fun;
 		var register_mount_fun = __init__ (__world__.tools).register_mount_fun;
+		var refresh_current_object = __init__ (__world__.tools).refresh_current_object;
+		var refresh_current_page = __init__ (__world__.tools).refresh_current_page;
+		var refresh_current_app = __init__ (__world__.tools).refresh_current_app;
 		var service_worker_and_indexedDB_test = __init__ (__world__.offline).service_worker_and_indexedDB_test;
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
 		var img_field = __init__ (__world__.widget).img_field;
+		var process_on_click = __init__ (__world__.click_process).process_on_click;
 		window.PS = null;
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
 			moment.locale (lang);
@@ -4266,7 +4395,7 @@ function pytigon () {
 				}
 			};
 			jQuery (document).keypress (_on_key);
-			init_popup_events ();
+			process_on_click (EVENT_TAB);
 			if (can_popup ()) {
 				var _local_fun = function () {
 					if (window.APPLICATION_TEMPLATE != 'traditional') {
@@ -4453,7 +4582,20 @@ function pytigon () {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
 			}
 		};
-		var EVENT_TAB = list ([tuple (['popup', on_popup_edit_new]), tuple (['popup_inline', on_popup_inline]), tuple (['popup_info', on_popup_info]), tuple (['popup_delete', on_popup_delete]), tuple (['get_tbl_value', on_get_tbl_value]), tuple (['new_tbl_value', on_new_tbl_value]), tuple (['get_row', on_get_row])]);
+		var on_new_tab = function (url, elem, e) {
+			var title = jQuery (e.currentTarget).attr ('title');
+			var url2 = url.py_split ('?') [0];
+			if (!(title)) {
+				if (len (url2) > 16) {
+					var title = '...' + url2.__getslice__ (-(13), null, 1);
+				}
+				else {
+					var title = url2;
+				}
+			}
+			return _on_menu_href (elem, title);
+		};
+		var EVENT_TAB = list ([tuple (['popup_edit', '*', true, false, on_popup_edit_new]), tuple (['popup_info', '*', true, false, on_popup_info]), tuple (['popup_delete', '*', true, false, on_popup_delete]), tuple (['inline', '*', true, false, on_popup_inline]), tuple (['none', 'get_tbl_value', true, false, on_get_tbl_value]), tuple (['none', 'new_tbl_value', true, false, on_new_tbl_value]), tuple (['none', 'get_row', true, false, on_get_row]), tuple (['_top', '*', true, false, on_new_tab]), tuple (['_top2', '*', true, false, on_new_tab]), tuple (['refresh_obj', '*', true, false, refresh_current_object]), tuple (['refresh_page', '*', true, false, refresh_current_page]), tuple (['refresh_app', '*', false, false, refresh_current_app])]);
 		var standard_on_data = function (src_obj, href) {
 			var _standard_on_data = function (data) {
 				if (data && __in__ ('_parent_refr', data)) {
@@ -4477,79 +4619,6 @@ function pytigon () {
 			return _standard_on_data;
 		};
 		window.standard_on_data = standard_on_data;
-		var init_popup_events = function (elem) {
-			if (typeof elem == 'undefined' || (elem != null && elem .hasOwnProperty ("__kwargtrans__"))) {;
-				var elem = null;
-			};
-			var _on_click = function (e) {
-				var target = jQuery (e.currentTarget).attr ('target');
-				var src_obj = jQuery (this);
-				if (target == '_blank' || target == '_parent') {
-					return true;
-				}
-				var href = jQuery (this).attr ('href');
-				if (href && __in__ ('#', href)) {
-					return true;
-				}
-				var __iterable0__ = EVENT_TAB;
-				for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
-					var pos = __iterable0__ [__index0__];
-					if (jQuery (this).hasClass (pos [0])) {
-						e.preventDefault ();
-						pos [1] (this);
-						return true;
-					}
-				}
-				e.preventDefault ();
-				if (__in__ (jQuery (e.currentTarget).attr ('target'), tuple (['_top', '_top2']))) {
-					var title = jQuery (e.currentTarget).attr ('title');
-					if (!(title)) {
-						if (len (href) > 16) {
-							var title = '...' + href.__getslice__ (-(13), null, 1);
-						}
-						else {
-							var title = href;
-						}
-					}
-					return _on_menu_href (this, title);
-				}
-				var href2 = corect_href (href);
-				var _on_data = function (data) {
-					if (data && __in__ ('_parent_refr', data) || __in__ (target, tuple (['refresh_obj', 'refresh_page']))) {
-						if (target == 'refresh_obj') {
-							if (!(refresh_fragment (src_obj, null, true))) {
-								refresh_fragment (src_obj);
-							}
-						}
-						else {
-							refresh_fragment (src_obj);
-						}
-					}
-					else {
-						if (window.APPLICATION_TEMPLATE == 'modern') {
-							mount_html (window.ACTIVE_PAGE.page, data);
-							window.ACTIVE_PAGE.set_href (href);
-						}
-						else {
-							mount_html (jQuery ('#body_body'), data);
-						}
-						window.ACTIVE_PAGE.set_href (href);
-						get_menu ().get_active_item ().url = href;
-						if (window.PUSH_STATE) {
-							history_push_state ('title', href);
-						}
-					}
-				};
-				ajax_get (href2, _on_data);
-			};
-			if (elem) {
-				elem.on ('click', 'a', _on_click);
-			}
-			else {
-				jQuery ('#tabs2_content').on ('click', 'a', _on_click);
-				jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
-			}
-		};
 		var _on_popstate = function (e) {
 			if (e.state) {
 				window.PUSH_STATE = false;
@@ -4581,6 +4650,7 @@ function pytigon () {
 		};
 		window.addEventListener ('popstate', _on_popstate, false);
 		__pragma__ ('<use>' +
+			'click_process' +
 			'db' +
 			'offline' +
 			'page' +
@@ -4611,7 +4681,6 @@ function pytigon () {
 			__all__.handle_class_click = handle_class_click;
 			__all__.history_push_state = history_push_state;
 			__all__.img_field = img_field;
-			__all__.init_popup_events = init_popup_events;
 			__all__.init_table = init_table;
 			__all__.install_service_worker = install_service_worker;
 			__all__.jquery_ready = jquery_ready;
@@ -4624,11 +4693,16 @@ function pytigon () {
 			__all__.on_edit_ok = on_edit_ok;
 			__all__.on_get_row = on_get_row;
 			__all__.on_get_tbl_value = on_get_tbl_value;
+			__all__.on_new_tab = on_new_tab;
 			__all__.on_new_tbl_value = on_new_tbl_value;
 			__all__.on_popup_delete = on_popup_delete;
 			__all__.on_popup_edit_new = on_popup_edit_new;
 			__all__.on_popup_info = on_popup_info;
 			__all__.on_popup_inline = on_popup_inline;
+			__all__.process_on_click = process_on_click;
+			__all__.refresh_current_app = refresh_current_app;
+			__all__.refresh_current_object = refresh_current_object;
+			__all__.refresh_current_page = refresh_current_page;
 			__all__.refresh_fragment = refresh_fragment;
 			__all__.register_fragment_init_fun = register_fragment_init_fun;
 			__all__.register_mount_fun = register_mount_fun;

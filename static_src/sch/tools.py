@@ -55,6 +55,17 @@ def fragment_init(elem=None):
 
     elem2.find('.label-floating .form-control').on('focus blur', _on_blur).trigger('blur')
 
+    def load_inline_frame():
+        frame = jQuery(this)
+        frame.append(INLINE_FRAME_HTML)
+        obj2 = frame.find("div.frame-data-inner")
+        if obj2.length > 0:
+            url = frame.attr('href')
+            def complete(txt):
+                pass
+            ajax_load(obj2, url, complete)
+
+    elem2.find('.inline_frame').each(load_inline_frame)
 
     if window.BASE_FRAGMENT_INIT:
         window.BASE_FRAGMENT_INIT()
@@ -470,3 +481,13 @@ window.icons = {
     'detailOpen': 'fa-plus',
     'detailClose': 'fa-minus'
 }
+
+
+def refresh_current_object(rul, elem, e):
+    pass
+
+def refresh_current_page(rul, elem, e):
+    pass
+
+def refresh_current_app(rul, elem, e):
+    pass

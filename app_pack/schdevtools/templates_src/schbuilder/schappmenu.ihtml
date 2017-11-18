@@ -5,21 +5,12 @@
 %load exsyntax
 
 %% pythoncode
-    % if form_list
+    % if not form_list:
         script language=python
-            def signal_from_child(self, child, signal):
-                if signal=='set_bitmap_list':
-                    bitmaps = {
-                        "field_up":"client://actions/go-up.png",
-                        "field_down":"client://actions/go-down.png",
-                    }
-                    child.set_bitmaps(bitmaps)
-        {% else %}
-            script language=python
-                def init_form(self):
-                    import os
-                    paths = wx.StandardPaths.Get()
-                    self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 
 %% all
     %with form_width=720 form_height=480 show_title_bar=0 title=_("Menu") vform=True
@@ -42,10 +33,10 @@
 %% list_row_actions
     {{block.super}}
     {% if not forloop.first %}
-        % row_actions:...field_up,Move up
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png]
     {% endif %}
     {% if not forloop.last %}
-        % row_actions:...field_down,Move down
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
 
 

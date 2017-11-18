@@ -68,7 +68,7 @@
 
 
 %% menu
-    button class=sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
+    button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
         span class=fa fa-bars
 
     aside class=main-sidebar collapse show,,,id=menu,,,role=dialog

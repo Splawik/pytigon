@@ -138,10 +138,14 @@ def bitmap_from_href(href, size_type=SIZE_DEFAULT):
             suffix = ''
         else:
             suffix = '.png'
-        image = wx.Image(wx.GetApp().scr_path + '/static/fonts/font-awesome/fonts/%dx%d/' % (icon_size,icon_size) +
-                href2[5:].replace('fa-','')+suffix)
-        image = image.AdjustChannels(1, 1, 1, 0.55)
-        bmp = wx.Bitmap(image)
+        try:
+            image = wx.Image(wx.GetApp().scr_path + '/static/fonts/font-awesome/fonts/%dx%d/' % (icon_size,icon_size) +
+                    href2[5:].replace('fa-','')+suffix)
+            image = image.AdjustChannels(1, 1, 1, 0.55)
+            bmp = wx.Bitmap(image)
+        except:
+            print("Error, can't load image: ", href2)
+            bmp = wx.Bitmap()
     else:
         http = wx.GetApp().get_http(None)
         if http.get(None, str(href))[0]!=404:

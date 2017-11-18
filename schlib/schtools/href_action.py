@@ -1,0 +1,357 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY  ; without even the implied warranty of MERCHANTIBILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+#Pytigon - wxpython and django application framework
+
+#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+#copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
+#license: "LGPL 3.0"
+#version: "0.1a"
+
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+from django.template import Template
+
+STANDARD_ACTIONS = {
+    'default': {
+        'target': '_top',
+        'class': "btn {{btn_size}} btn-secondary",
+        'class_in_menu': "",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'attrs_in_menu': '',
+        #'url': "../../../{id}/action/{action}",
+        #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
+        'url': "{base_path}../{table_name}/{id}/action/{action}",
+    },
+    'action': {
+        'target': 'inline',
+        #'url': "../../../{id}/action/{action}",
+        #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
+        'url': "{base_path}../{table_name}/{id}/action/{action}",
+    },
+    'new_row': {
+        'target': 'popup_edit'
+    },
+    'edit': {
+        'target':  "popup_edit",
+        'title': _('Update'),
+        'class': "popup btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "../../../{id}/{action}",
+        'icon': 'edit fa fa-lg fa-pencil',
+    },
+    'edit2': {
+        'target':  "popup_edit",
+        'titl': _('Update'),
+        'class': "popup btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "./{id}/{action}",
+        'icon': 'edit fa fa-lg fa-pencil',
+    },
+    'otheredit': {
+        'target': "popup_edit",
+        'title': _('Update document'),
+        'class': "popup btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "../../../{id}/{action}",
+        'icon': 'edit fa fa-lg fa-arrow-right',
+    },
+    'otheredit_inline': {
+        'target': "inline",
+        'title': _('Update document'),
+        'class': "popup inline btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "../../../{id}/{action}",
+        'icon': 'edit fa fa-lg fa-arrow-right',
+    },
+    'delete': {
+        'target': "popup_delete",
+        'title': _('Delete'),
+        'class': "popup_delete btn {{btn_size}} btn-danger",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "../../../{id}/{action}",
+        'icon': 'delete fa fa-lg fa-trash-o'
+    },
+    'delete2': {
+        'target': "popup_delete",
+        'title': _('Delete'),
+        'class': "popup_delete btn {{btn_size}} btn-danger",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "./{id}/{action}",
+        'icon': 'delete fa fa-lg fa-trash-o'
+    },
+    'field_list': {
+        'target': 'inline',
+        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
+        'child-url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
+        'icon': 'grid fa fa-lg fa-caret-down',
+    },
+    'field_list_get': {
+        'target': 'inline',
+        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
+        'child-url': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
+        'icon': "grid fa fa-lg fa-caret-down",
+    },
+    'field_action': {
+        'target': 'inline',
+        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'attrs': "data-role='button' data-inline='true' data-mini='true'",
+        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
+        'icon': 'grid fa fa-lg fa-angle-double-down',
+    },
+    'field_edit': {
+        'url': "{base_path}../{object_name}/{id}/{x1}/py/editor",
+        'child-url': "{base_path}../{object_name}/{id}/{x1}/py/editor",
+        'icon': 'edit fa fa-lg fa-pencil-square-o',
+    },
+    'print': {
+        'target': '_blank',
+        'icon': 'arrow-d fa fa-lg fa-print',
+    },
+    'pdf': {
+        'target': '_blank',
+        'url': "../../../{id}/pdf/view/",
+        'icon': 'eye fa fa-lg fa-eye',
+    },
+    'odf': {
+        'target': '_blank',
+        'url': "../../../{id}/odf/view/",
+        'icon': 'bullets fa fa-lg fa-list',
+    },
+    'null': {
+        'target': 'null',
+        'url': "../../../{id}/action/{action}",
+    },
+    'inline': {
+        'target': 'inline',
+    },
+    'popup': {
+        'target': "popup_edit"
+    }
+
+}
+def unpack_value(standard_web_browser, value):
+    if value:
+        ret = value.strip()
+        if ret.startswith('[') and ret.endswith(']'):
+            x = ret[1:-1].split('|')
+            if standard_web_browser:
+                return x[0]
+            else:
+                if len(x) > 1:
+                    return x[1]
+                else:
+                    return x[0]
+        return ret
+    return value
+
+
+def get_action_parm(standard_web_browser, action, key, default_value=""):
+    global STANDARD_ACTIONS
+    ret = None
+    p = action.split('-')
+    for item in reversed(p):
+        if item in STANDARD_ACTIONS:
+            if key in STANDARD_ACTIONS[item]:
+                ret = STANDARD_ACTIONS[item][key]
+    if ret == None:
+        if key in STANDARD_ACTIONS['default']:
+            ret = STANDARD_ACTIONS['default'][key]
+    return unpack_value(standard_web_browser, ret)
+
+
+class Action:
+    def __init__(self, actions_str, context, d):
+        #actions_str: action,title,icon_name,target,attrs,class,url
+        self.d = d
+        self.context = context
+        self.action = ""
+        self.title = ""
+        self.icon = ""
+        self.target = ""
+        self.attrs = ""
+        self.attrs_in_menu = ""
+        self.tag_class = ""
+        self.tag_class_in_menu = ""
+        self.url = ""
+
+        self.x1 = ""
+        self.x2 = ""
+        self.x3 = ""
+
+        if 'standard_web_browser' in d:
+            standard_web_browser = d['standard_web_browser']
+        else:
+            standard_web_browser = 1
+
+        pos = actions_str.split(',')
+        action = pos[0].strip()
+
+        if '/' in action:
+            x = action.split('/')
+            self.x1 = x[1].strip()
+            if len(x)>2:
+                self.x2 = x[2]
+                if len(x)>3:
+                    self.x3 = x[3].strip()
+            self.d['action'] = self.action =  x[0].strip()
+        else:
+            self.d['action'] = self.action = action
+
+        self.d['x1'] = self.x1
+        self.d['x2'] = self.x2
+        self.d['x3'] = self.x3
+
+        if len(pos)>1:
+            self.title = unpack_value(standard_web_browser, pos[1])
+            if len(pos)>2:
+                self.icon = unpack_value(standard_web_browser, pos[2])
+                if len(pos)>3:
+                    self.target = unpack_value(standard_web_browser, pos[3])
+                    if len(pos)>4:
+                        self.attrs = unpack_value(standard_web_browser, pos[4])
+                        if len(pos)>5:
+                            self.tag_class = unpack_value(standard_web_browser, pos[5])
+                            if len(pos)>6:
+                                self.url = unpack_value(standard_web_browser, pos[6])
+
+        action2 = self.action.split('__')[0]
+
+        self.name = action.replace('/','_')
+
+        if not self.title:
+            self.title = get_action_parm(standard_web_browser, action2, 'title', action2)
+            if not self.title:
+                self.title = action2
+
+        if not self.icon:
+            self.icon = get_action_parm(standard_web_browser, action2, 'icon')
+
+        if not self.target:
+            self.target = get_action_parm(standard_web_browser, action2, 'target', "_blank")
+
+        btn_size = settings.BOOTSTRAP_BUTTON_SIZE_CLASS
+
+        if not self.tag_class:
+            self.tag_class = get_action_parm(standard_web_browser, action2, 'class').replace('{{btn_size}}','btn_size')
+        else:
+            if self.tag_class.startswith('+'):
+                self.tag_class = get_action_parm(standard_web_browser, action2, 'class').replace('{{btn_size}}','btn_size') + " " + self.tag_class
+
+        self.tag_class_in_menu = get_action_parm(standard_web_browser, action2, 'class_in_menu')
+
+        if not self.attrs:
+            self.attrs = get_action_parm(standard_web_browser, action2, 'attrs').replace('{{btn_size}}','btn_size')
+        else:
+            if self.attrs.startswith('+'):
+                self.attrs = get_action_parm(standard_web_browser, action2, 'attrs').replace('{{btn_size}}', 'btn_size') + " " + self.attrs
+
+        self.attrs_in_menu = get_action_parm(standard_web_browser, action2, 'attrs_in_menu')
+
+
+        if not self.url:
+            self.url = get_action_parm(standard_web_browser, action2, 'url')
+
+        self.url = self.format(self.url)
+
+        if self.icon:
+            if not standard_web_browser:
+                if not '://' in self.icon and not 'wx.' in self.icon:
+                    if 'fa-' in self.icon:
+                        x = self.icon.split(' ')
+                        for pos in x:
+                            if '-' in x and x != 'fa-lg':
+                                self.icon = "src=fa://%s?size=1" % x
+                    else:
+                        self.icon = ""
+
+    def format(self, s):
+        return s.format(**self.d)
+
+
+def standard_dict(context, parm):
+    parm['standard_web_browser'] = context['standard_web_browser']
+    if 'rel_field' in context and context['rel_field']:
+        parm['base_path'] = '../../../../../'
+    else:
+        parm['base_path'] = '../../../'
+    path = context['request'].path
+    if not path.endswith('/'):
+        path = path+'/'
+    parm['request'] = context['request']
+    parm['path'] = path
+    return parm
+
+
+def actions_dict(context, actions_str):
+    d = standard_dict(context, {})
+    if 'object' in context:
+        if hasattr(context['object'], '_meta'):
+            d['table_name'] = context['object']._meta.object_name
+            d['id'] = context['object'].id
+            d['object_name'] = context['object']._meta.object_name
+        else:
+            d['table_name'] = 'user_table'
+            d['id'] = context['object']['id']
+            d['object_name'] = 'object_name'
+
+    else:
+        d['table_name'] = None
+        d['id'] = 0
+        d['object_name'] = None
+
+    if 'rel_field' in context and context['rel_field']:
+        d['child_tab'] = True
+    else:
+        d['child_tab'] = False
+
+    actions = []
+    actions2 = []
+    test_actions2 = False
+    act = actions
+    for pos2 in actions_str.split(';'):
+        pos=pos2.strip()
+        if not pos:
+            continue
+        if pos[0]=='|':
+            act = actions2
+            test_actions2 = True
+        else:
+            action = Action(pos, context, d)
+            act.append(action)
+
+    if not test_actions2 and len(actions)>2 and context['standard_web_browser']:
+        actions2=actions[1:]
+        actions = actions[:1]
+
+    d['actions'] = actions
+    d['actions2'] = actions2
+
+    d['browser_type'] = context['browser_type']
+
+    if len('actions')>0:
+        d['action'] = actions[0]
+    else:
+        d['action'] = actions2[0]
+    return d
+
+#actions_str: action,title,icon_name,target,attrs,class,url
+def action_fun(context, action, title="", icon_name="", target="", attrs="", tag_class="", url=""):
+    action_str = "%s,%s,%s,%s,%s,%s,%s" % (action, title, icon_name, target, attrs, tag_class, url)
+    t = Template(action_str)
+    output2 = t.render(context)
+    d = actions_dict(context, output2)
+    return standard_dict(context, d)

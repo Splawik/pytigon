@@ -25,7 +25,7 @@ div.content
 /* application structure */
 #menu
     //overflow-y: hidden
-    position: absolute
+    position: fixed
     width: 256px
     z-index: 999
     background-color: #1e282c
@@ -103,8 +103,14 @@ header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-togg
 
 
 header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle 
-    color: #fff !important 
+    color: #fff !important
 
+
+.main-sidebar-toggle
+    border-radius: 20px
+
+.main-sidebar-toggle:hover
+    background-color: rgba(255,255,255,0.2) !important
 
 header.main-header nav.navbar 
     padding: 0px !important

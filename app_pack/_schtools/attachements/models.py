@@ -2,7 +2,10 @@
 
 import django
 from django.db import models
+
 from schlib.schdjangoext.fields import *
+from schlib.schdjangoext.models import JSONModel
+
 import schlib.schdjangoext.fields as ext_models
 
 from django.utils.translation import ugettext_lazy as _
@@ -60,7 +63,7 @@ class Attachements( models.Model):
         else:
             return cls.objects.all()
     
-    def init_new(self, value=None):
+    def init_new(self, request, view, value=None):
         if value:
             app, tbl, id, grp = value.split('__')
             return { 'application': app, 'table': tbl, 'parent_id': id, 'group': grp }

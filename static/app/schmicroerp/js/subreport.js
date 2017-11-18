@@ -1,5 +1,5 @@
 var subreport_dragstart = function (ev) {
-	ev.dataTransfer.setData ('text/plain', ev.target.getAttribute ('name'));
+	ev.dataTransfer.setData ('text', ev.target.getAttribute ('name'));
 };
 var subreport_drop = function (ev, base_path) {
 	ev.preventDefault ();
@@ -9,7 +9,7 @@ var subreport_drop = function (ev, base_path) {
 	else {
 		var target = ev.target.parentElement;
 	}
-	var data = ev.dataTransfer.getData ('text/plain');
+	var data = ev.dataTransfer.getData ('text');
 	var data2 = target.getAttribute ('name');
 	if (data2 != data) {
 		var href = ((((base_path + '/schreports/table/Report/') + data) + '/') + data2) + '/action/move_to';

@@ -948,7 +948,7 @@ class SchForm(ScrolledPanel):
                         self.GetParent().address_or_parser  = adr2
 
                     return
-                if target == '_blank':
+                if target in ('_blank', 'inline', 'popup_edit', 'popup_info', 'popup_delete', '_self',):
                     self.GetParent().active_ctrl = ctrl
                     win = self.new_child_page(mp, is_null(mp.title, title), parameters=self.get_parm_obj())
                     if win:

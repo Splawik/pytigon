@@ -56,7 +56,7 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
             fun()
     return True
 
-def on_popup_inline(elem):
+def on_popup_inline(url, elem, e):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
@@ -123,7 +123,7 @@ def on_popup_in_form(elem):
     return False
 
 
-def on_popup_edit_new(elem):
+def on_popup_edit_new(url, elem, e):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
@@ -169,7 +169,7 @@ def on_popup_edit_new(elem):
     return False
 
 
-def on_popup_info(elem):
+def on_popup_info(url, elem, e):
     if can_popup():
         def _on_load(responseText, status, response):
             jQuery('div.dialog-form-info').modal()
@@ -185,7 +185,7 @@ def on_popup_info(elem):
     return False
 
 
-def on_popup_delete(elem):
+def on_popup_delete(url, elem, e):
     if can_popup():
         jQuery("div.dialog-data-delete").closest(".refr_object").attr("related-object", jQuery(elem).uid())
 
@@ -342,17 +342,17 @@ def ret_ok(id, title):
     window.RET_CONTROL.val(id.toString())
     window.RET_CONTROL[0].defaultValue = id.toString()
 
-def on_get_tbl_value(elem):
+def on_get_tbl_value(url, elem, e):
     on_popup_in_form(elem)
 
-def on_new_tbl_value(elem):
+def on_new_tbl_value(url, elem, e):
     window.EDIT_RET_FUNCTION = _refresh_win_and_ret
     window.RET_CONTROL = jQuery(elem).closest(".input-group").find('.django-select2')
     jQuery(elem).data('edit_ret_function', window.EDIT_RET_FUNCTION)
     jQuery(elem).data('ret_control', window.RET_CONTROL)
     return on_popup_edit_new(elem)
 
-def on_get_row(elem):
+def on_get_row(url, elem, e):
     id = jQuery(elem).attr('data-id')
     text = jQuery(elem).attr('data-text')
     ret_control = jQuery(elem).closest(".refr_source").prev('.form-group').find('.django-select2')

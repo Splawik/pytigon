@@ -312,7 +312,7 @@ PFORM = form_with_perms('schbuilder')
 
 
 class Installer(forms.Form):
-    name = forms.ChoiceField(label='Application package name', required=True, choices=models.apppack)
+    name = forms.ChoiceField(label=_('Application package name'), required=True, choices=models.apppack)
     
     def process(self, request, queryset=None):
     
@@ -325,7 +325,7 @@ def view_installer(request, *argi, **argv):
 
 
 class Install(forms.Form):
-    install_file = forms.FileField(label='Install file (*.ptig)', required=True, )
+    install_file = forms.FileField(label=_('Install file (*.ptig)'), required=True, )
     
     def process(self, request, queryset=None):
     
