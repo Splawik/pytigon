@@ -1,10 +1,25 @@
 {# -*- coding: utf-8 -*- #}
 
+% load exfiltry
+% load exsyntax
+
 %% action_widget_content
     % if standard_web_browser:
-        a href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}},,,class={% block action_class %}{% if action.target == '_top' %}popup{% endif %} btn ladda-button {% endblock %}{{action.tag_class}},,,name={{action.name}},,,title={{action.title}},,,target={% ifnotequal action.target '_top' %}{{action.target}}{%else%}_top{% endifnotequal %},,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,{{action.attrs|safe}}
-            span class=ladda-label
-                %% description
+        a href={{path}}{{action.url|safe}},,,class={% block action_class %}{% endblock %}{{action.tag_class}},,,title={{action.title}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
+            % if browser_type == 'mobile':
+                % if not action.icon:
                     {{action.title}}
-    % else
+            % else:
+                % if action.icon:
+                    <span class="{{action.icon}}"></span>
+                % else:
+                    {{action.title}}
+
+    % else:
         ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}}
+        % comment:
+            % if action.icon:
+                a href={{path}}{{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}},,,src={{action.icon}}
+            % else:
+                a href={{path}}{{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}}
+                    {{action.title}}

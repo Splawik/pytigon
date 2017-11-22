@@ -20,6 +20,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.template import Template
+from django.utils.html import escape
 
 STANDARD_ACTIONS = {
     'default': {
@@ -39,12 +40,13 @@ STANDARD_ACTIONS = {
         'url': "{base_path}../{table_name}/{id}/action/{action}",
     },
     'new_row': {
-        'target': 'popup_edit'
+        'target': 'popup_edit',
+        'class': "btn {{btn_size}} btn-secondary edit new-row"
     },
     'edit': {
         'target':  "popup_edit",
         'title': _('Update'),
-        'class': "popup btn {{btn_size}} btn-secondary",
+        'class': "btn {{btn_size}} btn-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "../../../{id}/{action}",
         'icon': 'edit fa fa-lg fa-pencil',
@@ -52,27 +54,19 @@ STANDARD_ACTIONS = {
     'edit2': {
         'target':  "popup_edit",
         'titl': _('Update'),
-        'class': "popup btn {{btn_size}} btn-secondary",
+        'class': "btn {{btn_size}} btn-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "./{id}/{action}",
         'icon': 'edit fa fa-lg fa-pencil',
     },
-    'otheredit': {
-        'target': "popup_edit",
-        'title': _('Update document'),
-        'class': "popup btn {{btn_size}} btn-secondary",
-        'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "../../../{id}/{action}",
-        'icon': 'edit fa fa-lg fa-arrow-right',
-    },
-    'otheredit_inline': {
-        'target': "inline",
-        'title': _('Update document'),
-        'class': "popup inline btn {{btn_size}} btn-secondary",
-        'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "../../../{id}/{action}",
-        'icon': 'edit fa fa-lg fa-arrow-right',
-    },
+    #'otheredit_inline': {
+    #    'target': "inline",
+    #    'title': _('Update document'),
+    #    'class': "popup inline btn {{btn_size}} btn-secondary",
+    #    'attrs': "data-role='button' data-inline='true' data-mini='true'",
+    #    'url': "../../../{id}/{action}",
+    #    'icon': 'edit fa fa-lg fa-arrow-right',
+    #},
     'delete': {
         'target': "popup_delete",
         'title': _('Delete'),
@@ -140,11 +134,22 @@ STANDARD_ACTIONS = {
     },
     'popup': {
         'target': "popup_edit"
+    },
+    'popup_edit': {
+        'target': "popup_edit"
+    },
+    'popup_info': {
+        'target': "popup_info"
+    },
+    'popup_delete': {
+        'target': "popup_delete"
     }
-
 }
+
 def unpack_value(standard_web_browser, value):
     if value:
+        if value == "None":
+            return ""
         ret = value.strip()
         if ret.startswith('[') and ret.endswith(']'):
             x = ret[1:-1].split('|')
@@ -156,7 +161,7 @@ def unpack_value(standard_web_browser, value):
                 else:
                     return x[0]
         return ret
-    return value
+    return ""
 
 
 def get_action_parm(standard_web_browser, action, key, default_value=""):
@@ -167,6 +172,7 @@ def get_action_parm(standard_web_browser, action, key, default_value=""):
         if item in STANDARD_ACTIONS:
             if key in STANDARD_ACTIONS[item]:
                 ret = STANDARD_ACTIONS[item][key]
+                break
     if ret == None:
         if key in STANDARD_ACTIONS['default']:
             ret = STANDARD_ACTIONS['default'][key]
@@ -202,14 +208,15 @@ class Action:
 
         if '/' in action:
             x = action.split('/')
-            self.x1 = x[1].strip()
+            self.x1 = escape(x[1].strip())
             if len(x)>2:
-                self.x2 = x[2]
+                self.x2 = escape(x[2])
                 if len(x)>3:
-                    self.x3 = x[3].strip()
-            self.d['action'] = self.action =  x[0].strip()
+                    self.x3 = escape(x[3].strip())
+            action2 = x[0]
         else:
-            self.d['action'] = self.action = action
+            action2 = action
+        self.d['action'] = self.action =  action2.split('-')[0]
 
         self.d['x1'] = self.x1
         self.d['x2'] = self.x2
@@ -228,14 +235,16 @@ class Action:
                             if len(pos)>6:
                                 self.url = unpack_value(standard_web_browser, pos[6])
 
-        action2 = self.action.split('__')[0]
-
-        self.name = action.replace('/','_')
+        if '/' in action:
+            tmp = action.split('/')
+            self.name = tmp[0].split('-')[0]+'_'+tmp[1].replace('/','_')
+        else:
+            self.name = action.split('-')[0]
 
         if not self.title:
             self.title = get_action_parm(standard_web_browser, action2, 'title', action2)
             if not self.title:
-                self.title = action2
+                self.title = action2.split('-')[0]
 
         if not self.icon:
             self.icon = get_action_parm(standard_web_browser, action2, 'icon')
@@ -279,8 +288,15 @@ class Action:
                         self.icon = ""
 
     def format(self, s):
-        return s.format(**self.d)
-
+        ret = s.format(**self.d)
+        if self.d['x1']:
+            buf = "x1=%s" % self.d['x1']
+            if self.d['x2']:
+                buf+='&x2=%s' % self.d['x2']
+                if self.d['x3']:
+                    buf+='&x3=%s' % self.d['x3']
+            ret += '?'+buf
+        return ret
 
 def standard_dict(context, parm):
     parm['standard_web_browser'] = context['standard_web_browser']

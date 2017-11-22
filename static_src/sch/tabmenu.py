@@ -45,7 +45,7 @@ class TabMenu:
             jQuery('#tabs2').prepend(menu_pos)
         else:
             jQuery('#tabs2').append(menu_pos)
-        jQuery('#tabs2_content').append(sprintf("<div class='tab-pane' id='%s'></div>", _id) )
+        jQuery('#tabs2_content').append(sprintf("<div class='tab-pane container-fluid refr_target refr_object win-content page' id='%s'></div>", _id) )
 
         window.ACTIVE_PAGE = Page(_id, jQuery('#'+_id))
         self.active_item = menu_item

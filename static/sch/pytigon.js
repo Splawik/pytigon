@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-18 15:09:09
+// Transcrypt'ed from Python, 2017-11-22 18:49:45
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2892,18 +2892,28 @@ function pytigon () {
 						return true;
 					};
 					var on_popup_inline = function (url, elem, e) {
-						jQuery (elem).attr ('data-style', 'zoom-out');
-						jQuery (elem).attr ('data-spinner-color', '#FF0000');
+						var jelem = jQuery (elem);
+						if (jelem.hasClass ('edit')) {
+							return on_popup_edit_new (url, elem, e);
+						}
+						if (jelem.hasClass ('delete')) {
+							return on_popup_delete (url, elem, e);
+						}
+						if (jelem.hasClass ('info')) {
+							return on_popup_delete (url, elem, e);
+						}
+						jelem.attr ('data-style', 'zoom-out');
+						jelem.attr ('data-spinner-color', '#FF0000');
 						window.WAIT_ICON = Ladda.create (elem);
 						if (window.WAIT_ICON) {
 							window.WAIT_ICON.start ();
 						}
 						jQuery ('body').addClass ('shown_inline_dialog');
-						jQuery (elem).closest ('table').find ('.inline_dialog').remove ();
+						jelem.closest ('table').find ('.inline_dialog').remove ();
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
 						var href2 = corect_href (jQuery (elem).attr ('href'));
-						var new_fragment = jQuery (((((("<tr class='refr_source inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.innerText)) + '</td></tr>');
+						var new_fragment = jQuery (((((("<tr class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.innerText)) + '</td></tr>');
 						new_fragment.insertAfter (jQuery (elem).closest ('tr'));
 						var elem2 = new_fragment.find ('.refr_target');
 						var _on_load = function (responseText, status, response) {
@@ -2932,7 +2942,7 @@ function pytigon () {
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
 						var href2 = corect_href (jQuery (elem).attr ('href'));
-						var new_fragment = jQuery (((((("<div class='refr_source inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'>") + INLINE_TABLE_HTML) + '</div>');
+						var new_fragment = jQuery (((((("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'>") + INLINE_TABLE_HTML) + '</div>');
 						new_fragment.insertAfter (jQuery (elem).closest ('div.form-group'));
 						var elem2 = new_fragment.find ('.refr_target');
 						var _on_load = function (responseText, status, response) {
@@ -2952,10 +2962,12 @@ function pytigon () {
 						return false;
 					};
 					var on_popup_edit_new = function (url, elem, e) {
+						var target = jQuery (e.currentTarget).attr ('target');
+						var href2 = corect_href (jQuery (elem).attr ('href'));
 						jQuery (elem).attr ('data-style', 'zoom-out');
 						jQuery (elem).attr ('data-spinner-color', '#FF0000');
 						window.WAIT_ICON = Ladda.create (elem);
-						if (can_popup () && !(jQuery (elem).hasClass ('inline')) && !(jQuery (elem).attr ('name') && __in__ ('_inline', jQuery (elem).attr ('name')))) {
+						if (can_popup () && !(target == 'inline') && !(jQuery (elem).hasClass ('inline')) && !(jQuery (elem).attr ('name') && __in__ ('_inline', jQuery (elem).attr ('name')))) {
 							var elem2 = jQuery ('div.dialog-data');
 							elem2.closest ('.refr_object').attr ('related-object', jQuery (elem).uid ());
 							var _on_load = function (responseText, status, response) {
@@ -2970,22 +2982,22 @@ function pytigon () {
 								window.WAIT_ICON.start ();
 							}
 							if (jQuery (elem).hasClass ('new-row')) {
-								var elem2 = jQuery (("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML) + '</div>');
+								var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
 								elem2.insertAfter (jQuery (elem).closest ('div.tr'));
 							}
 							else {
 								var test = jQuery (elem).closest ('form');
 								if (test.length > 0) {
-									var elem2 = jQuery (("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML) + '</div>');
+									var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
 									elem2.insertAfter (jQuery (elem).closest ('div.form-group'));
 								}
 								else {
-									var elem2 = jQuery (("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML) + '</td></tr>');
+									var elem2 = jQuery ((sprintf ("<tr class='refr_source refr_object inline_dialog hide' href='%s'><td colspan='20'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</td></tr>');
 									elem2.insertAfter (jQuery (elem).closest ('tr'));
 								}
 							}
 							mount_html (elem2.find ('.modal-title'), jQuery (elem).attr ('title'), false, false);
-							elem2.find ('.refr_object').attr ('related-object', jQuery (elem).uid ());
+							elem2.attr ('related-object', jQuery (elem).uid ());
 							var elem3 = elem2.find ('div.dialog-data-inner');
 							var _on_load2 = function (responseText, status, response) {
 								elem2.hide ();
@@ -3000,7 +3012,7 @@ function pytigon () {
 									window.WAIT_ICON = null;
 								}
 							};
-							ajax_load (elem3, corect_href (jQuery (elem).attr ('href')), _on_load2);
+							ajax_load (elem3, href2, _on_load2);
 						}
 						return false;
 					};
@@ -3013,7 +3025,7 @@ function pytigon () {
 						}
 						else {
 							jQuery ('.inline_dialog').remove ();
-							jQuery (("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML) + '</td></tr>').insertAfter (jQuery (elem).parents ('tr'));
+							jQuery (("<tr class='refr_object inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML) + '</td></tr>').insertAfter (jQuery (elem).parents ('tr'));
 							var _on_load2 = function (responseText, status, response) {
 								// pass;
 							};
@@ -3032,7 +3044,7 @@ function pytigon () {
 						}
 						else {
 							jQuery ('.inline_dialog').remove ();
-							var elem2 = jQuery (("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML) + '</td></tr>');
+							var elem2 = jQuery (("<tr class='refr_object inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML) + '</td></tr>');
 							elem2.insertAfter (jQuery (elem).parents ('tr'));
 							elem2.find ('.refr_object').attr ('related-object', jQuery (elem).uid ());
 							var _on_load2 = function () {
@@ -3108,8 +3120,19 @@ function pytigon () {
 									refresh_fragment (popup_activator, hide_dialog_form, false);
 								}
 							}
-							else if (!(refresh_fragment (popup_activator, null, true))) {
-								return refresh_fragment (popup_activator, null, false);
+							else {
+								if (refr_obj.hasClass ('inline_dialog')) {
+									var inline_dialog = refr_obj;
+								}
+								else {
+									var inline_dialog = refr_obj.find ('.inline_dialog');
+								}
+								if (inline_dialog.length > 0) {
+									inline_dialog.remove ();
+								}
+								if (!(refresh_fragment (popup_activator, null, true))) {
+									return refresh_fragment (popup_activator, null, false);
+								}
 							}
 						}
 						else if (refr_obj.hasClass ('modal')) {
@@ -3325,7 +3348,7 @@ function pytigon () {
 							else {
 								jQuery ('#tabs2').append (menu_pos);
 							}
-							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane' id='%s'></div>", _id));
+							jQuery ('#tabs2_content').append (sprintf ("<div class='tab-pane container-fluid refr_target refr_object win-content page' id='%s'></div>", _id));
 							window.ACTIVE_PAGE = Page (_id, jQuery ('#' + _id));
 							self.active_item = menu_item;
 							if (window.PUSH_STATE) {
@@ -3987,10 +4010,15 @@ function pytigon () {
 						if (typeof only_table == 'undefined' || (only_table != null && only_table .hasOwnProperty ("__kwargtrans__"))) {;
 							var only_table = false;
 						};
-						if (__in__ ('only_content', href)) {
+						if (only_table) {
+							if (__in__ ('only_table', href)) {
+								return href;
+							}
+						}
+						else if (__in__ ('only_content', href)) {
 							return href;
 						}
-						else if (only_table) {
+						if (only_table) {
 							if (__in__ ('?', href)) {
 								return href + '&only_table=1';
 							}

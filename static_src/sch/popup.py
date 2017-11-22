@@ -26,9 +26,9 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
             return True
         datatable = target.find('table[name=tabsort].tabsort')
         if datatable.length > 0:
-            only_table_href = True
-            target.find('.inline_dialog').remove()
-            target = datatable.closest('div.tableframe')
+           only_table_href = True
+           target.find('.inline_dialog').remove()
+           target = datatable.closest('div.tableframe')
         else:
             return False
 
@@ -57,22 +57,30 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
     return True
 
 def on_popup_inline(url, elem, e):
-    jQuery(elem).attr("data-style", "zoom-out")
-    jQuery(elem).attr("data-spinner-color", "#FF0000")
+    jelem = jQuery(elem)
+    if jelem.hasClass('edit'):
+        return on_popup_edit_new(url, elem, e)
+    if jelem.hasClass('delete'):
+        return on_popup_delete(url, elem, e)
+    if jelem.hasClass('info'):
+        return on_popup_delete(url, elem, e)
+
+    jelem.attr("data-style", "zoom-out")
+    jelem.attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
     if window.WAIT_ICON:
         window.WAIT_ICON.start()
 
     jQuery('body').addClass('shown_inline_dialog')
 
-    jQuery(elem).closest('table').find(".inline_dialog").remove()
+    jelem.closest('table').find(".inline_dialog").remove()
 
     window.COUNTER = window.COUNTER    + 1
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
 
-    new_fragment = jQuery("<tr class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</td></tr>")
+    new_fragment = jQuery("<tr class='refr_source refr_object inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'><td colspan='20'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.innerText) + "</td></tr>")
     new_fragment.insertAfter(jQuery(elem).closest("tr"))
 
     elem2 = new_fragment.find(".refr_target")
@@ -104,7 +112,7 @@ def on_popup_in_form(elem):
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
-    new_fragment = jQuery("<div class='refr_source inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
+    new_fragment = jQuery("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
     new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
     elem2 = new_fragment.find(".refr_target")
 
@@ -124,10 +132,12 @@ def on_popup_in_form(elem):
 
 
 def on_popup_edit_new(url, elem, e):
+    target = jQuery(e.currentTarget).attr('target')
+    href2 = corect_href(jQuery(elem).attr("href"))
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
-    if can_popup() and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
+    if can_popup() and not target=='inline' and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
         elem2 = jQuery("div.dialog-data")
         elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
 
@@ -140,18 +150,19 @@ def on_popup_edit_new(url, elem, e):
         if window.WAIT_ICON:
             window.WAIT_ICON.start()
         if jQuery(elem).hasClass('new-row'):
-            elem2 = jQuery("<div class='refr_source inline_dialog tr hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+            elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
             elem2.insertAfter(jQuery(elem).closest("div.tr"))
         else:
             test = jQuery(elem).closest('form')
             if test.length > 0:
-                elem2 = jQuery("<div class='refr_source inline_dialog hide'>" + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
                 elem2.insertAfter(jQuery(elem).closest("div.form-group"))
             else:
-                elem2 = jQuery("<tr class='inline_dialog hide'><td colspan='20'>" + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
+                elem2 = jQuery(sprintf("<tr class='refr_source refr_object inline_dialog hide' href='%s'><td colspan='20'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
                 elem2.insertAfter(jQuery(elem).closest("tr"))
         mount_html(elem2.find('.modal-title'), jQuery(elem).attr('title'), False, False)
-        elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
+        #elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
+        elem2.attr("related-object", jQuery(elem).uid())
         elem3 = elem2.find("div.dialog-data-inner")
 
         def _on_load2(responseText, status, response):
@@ -164,7 +175,7 @@ def on_popup_edit_new(url, elem, e):
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
                 window.WAIT_ICON = None
-        ajax_load(elem3,corect_href(jQuery(elem).attr("href")), _on_load2)
+        ajax_load(elem3,href2, _on_load2)
 
     return False
 
@@ -176,7 +187,7 @@ def on_popup_info(url, elem, e):
         ajax_load(jQuery("div.dialog-data-info"),jQuery(elem).attr("href"), _on_load)
     else:
         jQuery(".inline_dialog").remove()
-        jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
+        jQuery("<tr class='refr_object inline_dialog'><td colspan='20'>" + INLINE_DIALOG_INFO_HTML + "</td></tr>").insertAfter(jQuery(elem).parents("tr"))
 
         def _on_load2(responseText, status, response):
             pass
@@ -195,7 +206,7 @@ def on_popup_delete(url, elem, e):
         ajax_load(jQuery("div.dialog-data-delete"),jQuery(elem).attr("href"), _on_load)
     else:
         jQuery(".inline_dialog").remove()
-        elem2 = jQuery("<tr class='inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
+        elem2 = jQuery("<tr class='refr_object inline_dialog'><td colspan='20'>" + INLINE_DIALOG_DELETE_HTML + "</td></tr>")
         elem2.insertAfter(jQuery(elem).parents("tr"))
         elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
         def _on_load2():
@@ -266,6 +277,13 @@ def _refresh_win(responseText, ok_button):
             if not refresh_fragment(popup_activator, hide_dialog_form, True):
                 refresh_fragment(popup_activator, hide_dialog_form, False)
         else:
+            if refr_obj.hasClass('inline_dialog'):
+                inline_dialog = refr_obj
+            else:
+                inline_dialog = refr_obj.find('.inline_dialog')
+            if inline_dialog.length>0:
+                inline_dialog.remove()
+
             if not refresh_fragment(popup_activator, None, True):
                 return refresh_fragment(popup_activator, None, False)
     else:

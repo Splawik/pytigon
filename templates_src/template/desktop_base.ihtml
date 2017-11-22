@@ -299,8 +299,8 @@
 
 
 %% body_body
-    % if standard_web_browser == 6:
-	{{block.super}}
+    % if standard_web_browser >= 5:
+	    {{block.super}}
     % else:
         % if application_type == 'modern':
             div class=container-fluid tab-pane refr_target refr_object win-content page
@@ -404,6 +404,24 @@
     % else:
         .class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
 
+%% row_edit_header
+    % if form:
+        % if form.errors:
+            div class=alert alert-danger alert-dismissable alert-link
+                button class=close,,,type=button,,,data-dismiss=alert,,,aria-hidden=true... &#215;
+                ul class=errorlist
+                    % if form.non_field_errors:
+                        li...{{ form.non_field_errors }}
+                    % for field in form:
+                        % if field.errors:
+                            li
+                                {{ field.label }}
+                                ul class=errorlist
+                                    % for error in field.errors:
+                                        li...{{ error }}
+                % comment:
+                    % for error in form.errors:
+                        {{ error }} {{error.code}}, {{ error.message }} {% if not forloop.last %}<br>{% endif %}
 
 %% row_edit_form
     %if form

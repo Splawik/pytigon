@@ -86,10 +86,10 @@ def standard_web_browser(request):
     else:
         if 'HYBRID_BROWSER' in request.session or 'hybrid' in request.GET:
             return 2
-        elif 'only_content' in request.GET:
-            return 5
         elif 'only_table' in request.GET:
             return 6
+        elif 'only_content' in request.GET:
+            return 5
         else:
             return 1
 

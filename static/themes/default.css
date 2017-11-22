@@ -113,8 +113,17 @@ not(.login_background) div.content-wrapper {
 .tabsort_panel div.td_information a.btn, .table_panel div.td_information a.btn {
   box-shadow: none; }
 
-.columns.pull-right {
-  margin-right: 2px; }
+div.bootstrap-table div.columns.pull-right {
+  margin-right: 2px;
+  position: absolute;
+  left: 0px;
+  margin-top: 5px !important; }
+
+div.bootstrap-table div.fixed-table-toolbar {
+  padding-left: 37px; }
+
+div.bootstrap-table div.search input {
+  height: 35px !important; }
 
 /* dropdown menu */
 .user-menu {
@@ -144,8 +153,7 @@ not(.login_background) div.content-wrapper {
 
 form .row .row {
   margin-right: 0px;
-  margin-left: 0px;
-  display: block; }
+  margin-left: 0px; }
 
 .form-group {
   padding-left: 0px;
@@ -258,7 +266,8 @@ body:not(.modal-open) .dark_background {
   min-height: 45px;
   margin-right: 0px;
   padding-left: 1.5rem;
-  padding-right: 1.5rem; }
+  padding-right: 1.5rem;
+  border-radius: 30px; }
 
 .form-inline input, .form-inline select {
   font-size: 14px; }

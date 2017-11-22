@@ -1,5 +1,5 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
-<div class='refr_object'>\
+<div>\
     <div class='dark_background'></div>\
     <div class='modal-dialog' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
@@ -20,7 +20,7 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 ";
 
 var INLINE_TABLE_HTML = "\
-<div class='refr_object'>\
+<div>\
     <div class='dark_background'></div>\
     <div class='modal-dialog' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
@@ -38,7 +38,7 @@ var INLINE_TABLE_HTML = "\
 
 
 var INLINE_DIALOG_DELETE_HTML = "\
-<div class='panel panel-default alert alert-danger refr_object'>\
+<div class='panel panel-default alert alert-danger'>\
     <div class='panel-body'>\
         <div class='refr_target dialog-data-inner'></div>\
     </div>\

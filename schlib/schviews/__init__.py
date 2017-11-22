@@ -625,7 +625,7 @@ class GenericRows(object):
                     success_url = make_path('ok')
                 return success_url
 
-            def get(self, request, *args, **kwargs):
+            def _get_form(self, request, *args, **kwargs):
                 self.object = self.model()
                 if self.field:
                     ppk = int(kwargs['parent_pk'])
@@ -640,7 +640,10 @@ class GenericRows(object):
                     if self.init_form:
                         for pos in self.init_form:
                             if hasattr(self.object, pos):
-                                setattr(self.object, pos, self.init_form[pos])
+                                try:
+                                    setattr(self.object, pos, self.init_form[pos])
+                                except:
+                                    pass
                 else:
                     self.init_form = None
                 form_class = self.get_form_class()
@@ -649,7 +652,10 @@ class GenericRows(object):
                     form = self.object.get_form(self, request, form_class, True)
                 else:
                     form = self.get_form(form_class)
+                return form
 
+            def get(self, request, *args, **kwargs):
+                form = self._get_form(request, *args, **kwargs)
                 if form:
                     for field in form.fields:
                         if hasattr(form.fields[field].widget, 'py_client'):
@@ -657,30 +663,25 @@ class GenericRows(object):
                                 form.fields[field].widget.set_py_client(True)
                 return self.render_to_response(self.get_context_data(form=form))
 
-
-            def get_initial(self):
-                d = super(CreateView, self).get_initial()
-                if self.field:
-                    if int(self.kwargs['parent_pk']) > 0:
-                        d['parent'] = self.kwargs['parent_pk']
-                    else:
-                        d['parent'] = None
-                if self.init_form:
-                    transform_extra_context(d, self.init_form)
-                return d
-
-            def get_form_kwargs(self):
-                ret = super(CreateView, self).get_form_kwargs()
-                return ret
-
             def post(self, request, *args, **kwargs):
-                self.object = None
-                form_class = self.get_form_class()
+                form = self._get_form(request, *args, **kwargs)
 
-                if self.object and hasattr(self.object, 'get_form'):
-                    form = self.object.get_form(self, request, form_class, True)
-                else:
-                    form = self.get_form(form_class)
+                #self.object = None
+
+                #if hasattr(self.model, 'init_new'):
+                #    if kwargs['add_param'] and kwargs['add_param'] != '-':
+                #        self.init_form = self.object.init_new(request, self, kwargs['add_param'])
+                #    else:
+                #        self.init_form = self.object.init_new(request, self)#
+                #else:
+                #    self.init_form = None
+
+                #form_class = self.get_form_class()
+
+                #if self.object and hasattr(self.object, 'get_form'):
+                #    form = self.object.get_form(self, request, form_class, True)
+                #else:
+                #    form = self.get_form(form_class)
 
                 if self.model and hasattr(self.model, 'is_form_valid'):
                     def vfun():
@@ -692,6 +693,37 @@ class GenericRows(object):
                 else:
                     print("INVALID:", form.errors)
                     return self.form_invalid(form)
+
+
+            def get_initial(self):
+                d = super(CreateView, self).get_initial()
+
+                if self.field:
+                    if int(self.kwargs['parent_pk']) > 0:
+                        d['parent'] = self.kwargs['parent_pk']
+                    else:
+                        d['parent'] = None
+                if self.init_form:
+                    transform_extra_context(d, self.init_form)
+                return d
+
+            def get_form_kwargs(self):
+                ret = super(CreateView, self).get_form_kwargs()
+                if self.init_form:
+                    data = ret['data'].copy()
+                    for key, value in self.init_form.items():
+                        data[key] = value
+                    ret.update({'data': data})
+
+                return ret
+
+
+            #def get_form_kwargs(self):
+            #    kwargs = super().get_form_kwargs()
+
+
+
+            #    return kwargs
 
             def form_valid(self, form, request=None):
                 """
@@ -708,11 +740,11 @@ class GenericRows(object):
                 if _data:
                     self.object._data = _data
 
-                if hasattr(self.object, 'init_new'):
-                    if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
-                        self.init_form = self.object.init_new(request, self, self.kwargs['add_param'])
-                    else:
-                        self.init_form = self.object.init_new(request, self)
+                #if hasattr(self.object, 'init_new'):
+                #    if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
+                #        self.init_form = self.object.init_new(request, self, self.kwargs['add_param'])
+                #    else:
+                #        self.init_form = self.object.init_new(request, self)
 
                 if 'parent_pk' in self.kwargs and hasattr(self.object, 'parent_id'):
                     if int(self.kwargs['parent_pk'])!=0:
@@ -725,7 +757,10 @@ class GenericRows(object):
                 if self.init_form:
                     for pos in self.init_form:
                         if hasattr(self.object, pos) and not pos in p:
-                            setattr(self.object, pos, self.init_form[pos])
+                            try:
+                                setattr(self.object, pos, self.init_form[pos])
+                            except:
+                                pass
 
                 if hasattr(self.object, 'post_form'):
                     if self.object.post_form(self, form, request):

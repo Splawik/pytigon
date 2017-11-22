@@ -6,7 +6,7 @@
 
     %% widget_content
         % if standard_web_browser:
-            div class=inline_frame,,,href={{href}},,,width=100%,,,height={{height}}
+            div class=inline_frame refr_target refr_object refr_source,,,href={{href}},,,width=100%,,,height={{height}}
         % else
             ctrlhtml name={{id}},,,src={{path}}{{href}},,,width=100%,,,height={{height}}
 

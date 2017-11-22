@@ -82,6 +82,11 @@ def row_actions(parser, token):
     parser.delete_first_token()
     return RowActionNode(nodelist)
 
+@inclusion_tag('widgets/action.html')
+def action(context, action, title = "", icon_name = "", target = "", attrs = "", tag_class = "", url = ""):
+    ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url)
+    return ret
+
 # Actions
 
 @inclusion_tag('widgets/view_row.html')
@@ -90,7 +95,7 @@ def view_row(context, title = "", icon_name = "", target = "popup_info", attrs =
         href=url
     else:
         href = "../../../%s/_/view/" % context['object'].id
-    ret = action_fun(context, 'view_row', title, 'view_row', target, attrs,tag_class, href)
+    ret = action_fun(context, 'view_row', title, icon_name, target, attrs,tag_class, href)
     return ret
 
 

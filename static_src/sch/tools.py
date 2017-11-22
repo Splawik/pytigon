@@ -345,19 +345,22 @@ def can_popup():
 
 
 def corect_href(href, only_table=False):
-    if 'only_content' in href:
+    if only_table:
+        if 'only_table' in href:
+            return href
+    elif 'only_content' in href:
         return href
-    else:
-        if only_table:
-            if '?' in href:
-                return href + '&only_table=1'
-            else:
-                return href + '?only_table=1'
+
+    if only_table:
+        if '?' in href:
+            return href + '&only_table=1'
         else:
-            if '?' in href:
-                return href + '&only_content=1'
-            else:
-                return href + '?only_content=1'
+            return href + '?only_table=1'
+    else:
+        if '?' in href:
+            return href + '&only_content=1'
+        else:
+            return href + '?only_content=1'
 
 
 def load_css(path):
