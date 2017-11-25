@@ -9,29 +9,28 @@
 %% list_content_actions
     % if not readonly
         % if parent_pk > 0
-            % button '../../../%d/this/-/add'|format:parent_obj.id 'New element'
+            % new_row "_(New element)" url='../../../%d/this/-/add'|format:parent_obj.id
         % else
-            % button '../../../0/this/-/add' 'New element'
+            % new_row "_(New element)" url='../../../0/this/-/add'
 
     % if standard_web_browser
         %if parent_pk > 0
-            % button "../../../-{{parent_pk}}/form/{{ro}}tree" ".." "" "_self"
-            a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button.../
+            % action "back-refresh_obj" ".." url="../../../-{{parent_pk}}/form/{{ro}}tree"
+            % action "home-refresh_obj" "/" url="../../../0/form/tree"
         % else:
-            a href=../../../-{{parent_pk}}/form/{{ro}}tree,,,class=button btn btn-secondary disabled,,,disabled=disabled... ..
-            a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button disabled.../
+            % action "back-refresh_obj" ".." url="../../../-{{parent_pk}}/form/{{ro}}tree" tag_class="+disabled" attrs="+disabled='disabled'"
+            % action "home-refresh_obj" "/" url="../../../0/form/tree" tag_class="+disabled"
     % else:
         % if parent_pk > 0:
-            CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=Wstecz..
+            CTRLBUTTON name=back,,,href=../../-{{parent_pk}}/form/{{ro}}tree,,,target=_refresh_data,,,src=wx.ART_GO_BACK,,,label=_(Back)
         % else:
-            CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=Wstecz..
+            CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=_(Back)
         a href=../../0/form/tree,,,class=button btn btn-secondary ladda-button.../
 
     %for pos in parent_obj.parents|slice:"::-1":
-        a href=../../{{pos.id}}/form/tree,,,class=button btn btn-secondary ladda-button...{{pos.code}}
+        % action "back-refresh_obj" pos.code url="../../../{{pos.id}}/form/tree"
     % if parent_obj.code:
-        a class=button btn btn-secondary ladda-button disabled,,,disabled=disabled
-            {{parent_obj.code}}
+        % action "back-refresh_obj" parent_obj.code tag_class="+disabled" attrs="+disabled='disabled'"
 
 %% id_extra
     %if object|childs

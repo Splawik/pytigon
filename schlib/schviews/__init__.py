@@ -272,7 +272,7 @@ class GenericRows(object):
             response_class = ExtTemplateResponse
             base_class = self
             form = None
-            form_valid = False
+            form_valid = None
 
             title = self.title_plural
 
@@ -339,6 +339,8 @@ class GenericRows(object):
                             self.form_valid = False
                     else:
                         self.form = getattr(views_module, form_name)()
+                        self.form_valid = None
+
                 return super(ListView, self).get(request, *args, **kwargs)
 
             def post(self, request, *args, **kwargs):
@@ -421,13 +423,16 @@ class GenericRows(object):
                         else:
                             ret = ret.order_by('-id')
 
-                if self.form_valid == True:
-                    return self.form.process(self.request, ret)
-                else:
-                    if hasattr(self.form, 'process_invalid'):
-                        return self.form.process_invalid(self.request, ret)
+                if self.form:
+                    if self.form_valid == True:
+                        return self.form.process(self.request, ret)
                     else:
-                        return ret
+                        if hasattr(self.form, 'process_empty_or_invalid'):
+                            return self.form.process_empty_or_invalid(self.request, ret)
+                        else:
+                            return ret
+                else:
+                    return ret
 
         fun = make_perms_test_fun(self.base_perm % 'list', ListView.as_view())
         self._append(url, fun)
@@ -710,10 +715,11 @@ class GenericRows(object):
             def get_form_kwargs(self):
                 ret = super(CreateView, self).get_form_kwargs()
                 if self.init_form:
-                    data = ret['data'].copy()
-                    for key, value in self.init_form.items():
-                        data[key] = value
-                    ret.update({'data': data})
+                    if 'data' in ret:
+                        data = ret['data'].copy()
+                        for key, value in self.init_form.items():
+                            data[key] = value
+                        ret.update({'data': data})
 
                 return ret
 

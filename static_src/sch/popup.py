@@ -1,12 +1,14 @@
 __pragma__ ('alias', 'jquery_type', 'type')
 
 from tools import can_popup, corect_href, ajax_load, ajax_get, ajax_post, ajax_submit, handle_class_click, mount_html,\
-    get_table_type, register_fragment_init_fun
+    get_table_type, register_fragment_init_fun, remove_page_from_href
 
 from tbl import datatable_refresh, datatable_onresize, init_table
 
+from tabmenu import get_menu
 
-def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
+
+def refresh_fragment(data_item_to_refresh, fun=None, only_table=False, data=None, remove_pagination=False):
     only_table_href = False
     refr_block = data_item_to_refresh.closest('.refr_object')
     if refr_block.hasClass('refr_target'):
@@ -32,28 +34,36 @@ def refresh_fragment(data_item_to_refresh, fun=None, only_table=False):
         else:
             return False
 
-    if refr_block.hasClass('refr_source'):
-        src = refr_block
-    else:
-        src = refr_block.find('.refr_source')
-    if src.length > 0:
-        src = jQuery(src[0])
-        href = src.attr('href')
-        if src.prop("tagName") == 'FORM':
-            def _refr2(data):
-                mount_html(target, data)
-                #fragment_init(target)
-                if fun:
-                    fun();
-            ajax_post(corect_href(href, only_table_href), src.serialize(), _refr2)
-        else:
-            def _on_load(responseText):
-                if fun:
-                    fun()
-            ajax_load(target, corect_href(href, only_table_href), _on_load)
-    else:
+    if data:
+        mount_html(target, data)
         if fun:
             fun()
+    else:
+        if refr_block.hasClass('refr_source'):
+            src = refr_block
+        else:
+            src = refr_block.find('.refr_source')
+        if src.length > 0:
+            src = jQuery(src[0])
+            href = src.attr('href')
+
+            if remove_pagination:
+                href = remove_page_from_href(href)
+
+            if src.prop("tagName") == 'FORM':
+                def _refr2(data):
+                    mount_html(target, data)
+                    if fun:
+                        fun()
+                ajax_post(corect_href(href, only_table_href), src.serialize(), _refr2)
+            else:
+                def _on_load(responseText):
+                    if fun:
+                        fun()
+                ajax_load(target, corect_href(href, only_table_href), _on_load)
+        else:
+            if fun:
+                fun()
     return True
 
 def on_popup_inline(url, elem, e):
@@ -395,3 +405,54 @@ def _init_subforms(elem):
     subforms.each(_load_subform)
 
 register_fragment_init_fun(_init_subforms)
+
+
+
+def refresh_current_object(url, elem, e):
+    href = url
+    href2 = corect_href(url)
+    target = "refresh_obj"
+    src_obj = jQuery(elem)
+
+    refr_block = src_obj.closest('.refr_object')
+    if refr_block.hasClass('refr_source'):
+        src = refr_block
+    else:
+        src = refr_block.find('.refr_source')
+    if src.length>0:
+        src.attr('href', href2)
+        src.attr('action', href2)
+
+    def _on_data(data):
+        nonlocal href, src_obj, target
+
+        if (data and "_parent_refr" in data) or target in ("refresh_obj", "refresh_page"):
+            if target == "refresh_obj":
+                if 'only_table' in href:
+                    if not refresh_fragment(src_obj, None, True, data):
+                        refresh_fragment(src_obj, None, False, data)
+                else:
+                    refresh_fragment(src_obj, None, False, data)
+            else:
+                refresh_fragment(src_obj, None, False, data)
+        else:
+            if window.APPLICATION_TEMPLATE == 'modern':
+                mount_html(window.ACTIVE_PAGE.page, data)
+                window.ACTIVE_PAGE.set_href(href)
+            else:
+                mount_html(jQuery('#body_body'), data)
+            window.ACTIVE_PAGE.set_href(href)
+            get_menu().get_active_item().url = href
+            if window.PUSH_STATE:
+                history_push_state("title", href)
+
+    if src_obj.hasClass("page-link"):
+        ajax_submit(src, _on_data)
+    else:
+        ajax_get(href2, _on_data)
+
+def refresh_current_page(url, elem, e):
+    pass
+
+def refresh_current_app(url, elem, e):
+    pass

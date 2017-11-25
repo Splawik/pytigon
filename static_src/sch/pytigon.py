@@ -6,11 +6,12 @@ from page import Page
 from tabmenuitem import TabMenuItem
 from tabmenu import get_menu
 from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_new, on_popup_inline, on_popup_info,\
-     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok
+     on_popup_delete, on_cancel_inline, refresh_fragment, on_edit_ok, on_delete_ok, ret_ok,\
+     refresh_current_object, refresh_current_page, refresh_current_app
 from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load,\
      ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html, register_fragment_init_fun,\
-     register_mount_fun, refresh_current_object, refresh_current_page, refresh_current_app
+     register_mount_fun, remove_page_from_href
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
@@ -62,7 +63,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             return True
 
         if jQuery(this).attr('target') == 'refresh_obj':
-            if refresh_fragment(jQuery(this), None, True):
+            if refresh_fragment(jQuery(this), None, True, None, True):
                 return False
 
         data = jQuery(this).serialize()
@@ -90,7 +91,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         href = jQuery(this).attr("action")
         if href:
-            jQuery(this).attr('action', corect_href(href))
+            jQuery(this).attr('action', corect_href(remove_page_from_href(href)))
 
         def _on_submit2(data):
             mount_html(window.ACTIVE_PAGE.page, data)

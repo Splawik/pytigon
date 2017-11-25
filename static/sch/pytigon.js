@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-22 18:49:45
+// Transcrypt'ed from Python, 2017-11-25 18:12:02
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2818,15 +2818,23 @@ function pytigon () {
 					var mount_html = __init__ (__world__.tools).mount_html;
 					var get_table_type = __init__ (__world__.tools).get_table_type;
 					var register_fragment_init_fun = __init__ (__world__.tools).register_fragment_init_fun;
+					var remove_page_from_href = __init__ (__world__.tools).remove_page_from_href;
 					var datatable_refresh = __init__ (__world__.tbl).datatable_refresh;
 					var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 					var init_table = __init__ (__world__.tbl).init_table;
-					var refresh_fragment = function (data_item_to_refresh, fun, only_table) {
+					var get_menu = __init__ (__world__.tabmenu).get_menu;
+					var refresh_fragment = function (data_item_to_refresh, fun, only_table, data, remove_pagination) {
 						if (typeof fun == 'undefined' || (fun != null && fun .hasOwnProperty ("__kwargtrans__"))) {;
 							var fun = null;
 						};
 						if (typeof only_table == 'undefined' || (only_table != null && only_table .hasOwnProperty ("__kwargtrans__"))) {;
 							var only_table = false;
+						};
+						if (typeof data == 'undefined' || (data != null && data .hasOwnProperty ("__kwargtrans__"))) {;
+							var data = null;
+						};
+						if (typeof remove_pagination == 'undefined' || (remove_pagination != null && remove_pagination .hasOwnProperty ("__kwargtrans__"))) {;
+							var remove_pagination = false;
 						};
 						var only_table_href = false;
 						var refr_block = data_item_to_refresh.closest ('.refr_object');
@@ -2859,35 +2867,46 @@ function pytigon () {
 								return false;
 							}
 						}
-						if (refr_block.hasClass ('refr_source')) {
-							var src = refr_block;
+						if (data) {
+							mount_html (target, data);
+							if (fun) {
+								fun ();
+							}
 						}
 						else {
-							var src = refr_block.find ('.refr_source');
-						}
-						if (src.length > 0) {
-							var src = jQuery (src [0]);
-							var href = src.attr ('href');
-							if (src.prop ('tagName') == 'FORM') {
-								var _refr2 = function (data) {
-									mount_html (target, data);
-									if (fun) {
-										fun ();
-									}
-								};
-								ajax_post (corect_href (href, only_table_href), src.serialize (), _refr2);
+							if (refr_block.hasClass ('refr_source')) {
+								var src = refr_block;
 							}
 							else {
-								var _on_load = function (responseText) {
-									if (fun) {
-										fun ();
-									}
-								};
-								ajax_load (target, corect_href (href, only_table_href), _on_load);
+								var src = refr_block.find ('.refr_source');
 							}
-						}
-						else if (fun) {
-							fun ();
+							if (src.length > 0) {
+								var src = jQuery (src [0]);
+								var href = src.attr ('href');
+								if (remove_pagination) {
+									var href = remove_page_from_href (href);
+								}
+								if (src.prop ('tagName') == 'FORM') {
+									var _refr2 = function (data) {
+										mount_html (target, data);
+										if (fun) {
+											fun ();
+										}
+									};
+									ajax_post (corect_href (href, only_table_href), src.serialize (), _refr2);
+								}
+								else {
+									var _on_load = function (responseText) {
+										if (fun) {
+											fun ();
+										}
+									};
+									ajax_load (target, corect_href (href, only_table_href), _on_load);
+								}
+							}
+							else if (fun) {
+								fun ();
+							}
 						}
 						return true;
 					};
@@ -3249,7 +3268,68 @@ function pytigon () {
 						subforms.each (_load_subform);
 					};
 					register_fragment_init_fun (_init_subforms);
+					var refresh_current_object = function (url, elem, e) {
+						var href = url;
+						var href2 = corect_href (url);
+						var target = 'refresh_obj';
+						var src_obj = jQuery (elem);
+						var refr_block = src_obj.closest ('.refr_object');
+						if (refr_block.hasClass ('refr_source')) {
+							var src = refr_block;
+						}
+						else {
+							var src = refr_block.find ('.refr_source');
+						}
+						if (src.length > 0) {
+							src.attr ('href', href2);
+							src.attr ('action', href2);
+						}
+						var _on_data = function (data) {
+							if (data && __in__ ('_parent_refr', data) || __in__ (target, tuple (['refresh_obj', 'refresh_page']))) {
+								if (target == 'refresh_obj') {
+									if (__in__ ('only_table', href)) {
+										if (!(refresh_fragment (src_obj, null, true, data))) {
+											refresh_fragment (src_obj, null, false, data);
+										}
+									}
+									else {
+										refresh_fragment (src_obj, null, false, data);
+									}
+								}
+								else {
+									refresh_fragment (src_obj, null, false, data);
+								}
+							}
+							else {
+								if (window.APPLICATION_TEMPLATE == 'modern') {
+									mount_html (window.ACTIVE_PAGE.page, data);
+									window.ACTIVE_PAGE.set_href (href);
+								}
+								else {
+									mount_html (jQuery ('#body_body'), data);
+								}
+								window.ACTIVE_PAGE.set_href (href);
+								get_menu ().get_active_item ().url = href;
+								if (window.PUSH_STATE) {
+									history_push_state ('title', href);
+								}
+							}
+						};
+						if (src_obj.hasClass ('page-link')) {
+							ajax_submit (src, _on_data);
+						}
+						else {
+							ajax_get (href2, _on_data);
+						}
+					};
+					var refresh_current_page = function (url, elem, e) {
+						// pass;
+					};
+					var refresh_current_app = function (url, elem, e) {
+						// pass;
+					};
 					__pragma__ ('<use>' +
+						'tabmenu' +
 						'tbl' +
 						'tools' +
 					'</use>')
@@ -3267,6 +3347,7 @@ function pytigon () {
 						__all__.corect_href = corect_href;
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.datatable_refresh = datatable_refresh;
+						__all__.get_menu = get_menu;
 						__all__.get_table_type = get_table_type;
 						__all__.handle_class_click = handle_class_click;
 						__all__.init_table = init_table;
@@ -3283,8 +3364,12 @@ function pytigon () {
 						__all__.on_popup_in_form = on_popup_in_form;
 						__all__.on_popup_info = on_popup_info;
 						__all__.on_popup_inline = on_popup_inline;
+						__all__.refresh_current_app = refresh_current_app;
+						__all__.refresh_current_object = refresh_current_object;
+						__all__.refresh_current_page = refresh_current_page;
 						__all__.refresh_fragment = refresh_fragment;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
+						__all__.remove_page_from_href = remove_page_from_href;
 						__all__.ret_ok = ret_ok;
 					__pragma__ ('</all>')
 				}
@@ -3473,7 +3558,7 @@ function pytigon () {
 						}
 						var panel = elem.find ('.fixed-table-toolbar');
 						if (!(panel.is (':visible'))) {
-							dy += panel.height ();
+							dy += panel.height () - 15;
 						}
 						jQuery (this).bootstrapTable ('resetView', dict ({'height': dy - 5}));
 					};
@@ -3572,45 +3657,6 @@ function pytigon () {
 							}
 						}
 					};
-					var init_pagintor = function (pg) {
-						var x = load_js;
-						if (pg.length > 0) {
-							var paginate = true;
-							var totalPages = pg.attr ('totalPages');
-							var page_number = pg.attr ('start_page');
-							var _on_page_click = function (event, page) {
-								var form = pg.closest ('.refr_object').find ('form.refr_source');
-								if (form) {
-									var _on_new_page = function (data) {
-										mount_html (pg.closest ('.content').find ('.tabsort tbody'), jQuery (jQuery.parseHTML (data)).find ('.tabsort tbody').html ());
-										if (window.WAIT_ICON2) {
-											jQuery ('#loading-indicator').hide ();
-											window.WAIT_ICON2 = false;
-										}
-									};
-									var url = pg.attr ('href').py_replace ('[[page]]', page) + '&only_content=1';
-									form.attr ('action', url);
-									form.attr ('href', url);
-									var active_button = pg.find ('.page active');
-									window.WAIT_ICON2 = true;
-									jQuery ('#loading-indicator').show ();
-									ajax_post (url, form.serialize (), _on_new_page);
-								}
-							};
-							var options = dict ({'totalPages': +(totalPages), 'startPage': +(page_number), 'visiblePages': 3, 'first': '<<', 'prev': '<', 'next': '>', 'last': '>>', 'onPageClick': _on_page_click});
-							pg.twbsPagination (options);
-							if (+(page_number) != 1) {
-								var form = pg.closest ('.refr_object').find ('form.refr_source');
-								var url = pg.attr ('href').py_replace ('[[page]]', page_number) + '&only_content=1';
-								form.attr ('action', url);
-								form.attr ('href', url);
-							}
-						}
-						else {
-							var paginate = false;
-						}
-						return paginate;
-					};
 					var content_set_height = function () {
 						if (!(jQuery (this).is (':visible'))) {
 							return ;
@@ -3634,10 +3680,6 @@ function pytigon () {
 					var _on_fragment_init = function (elem) {
 						datatable_onresize ();
 						var table_type = get_table_type (elem);
-						if (table_type != 'datatable') {
-							var pg = elem.find ('.pagination');
-							var paginate = init_pagintor (pg);
-						}
 						var tbl = elem.find ('.tabsort');
 						if (tbl.length > 0) {
 							init_table (tbl, table_type);
@@ -3657,7 +3699,6 @@ function pytigon () {
 						__all__.datatable_refresh = datatable_refresh;
 						__all__.datetable_set_height = datetable_set_height;
 						__all__.get_table_type = get_table_type;
-						__all__.init_pagintor = init_pagintor;
 						__all__.init_table = init_table;
 						__all__.load_js = load_js;
 						__all__.mount_html = mount_html;
@@ -4033,6 +4074,29 @@ function pytigon () {
 							return href + '?only_content=1';
 						}
 					};
+					var remove_page_from_href = function (href) {
+						var x = href.py_split ('?');
+						if (len (x) > 1) {
+							var x2 = x [1].py_split ('&');
+							if (len (x2) > 1) {
+								var x3 = list ([]);
+								var __iterable0__ = x2;
+								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+									var pos = __iterable0__ [__index0__];
+									if (!(__in__ ('page=', pos))) {
+										x3.append (pos);
+									}
+								}
+								return (x [0] + '?') + ''.join (x3);
+							}
+							else if (__in__ ('page=', x2 [0])) {
+								return x2;
+							}
+							else {
+								return href;
+							}
+						}
+					};
 					var load_css = function (path) {
 						if (!(LOADED_FILES && __in__ (path, LOADED_FILES))) {
 							LOADED_FILES [path] = null;
@@ -4143,15 +4207,6 @@ function pytigon () {
 					};
 					window.animate_combo = animate_combo;
 					window.icons = dict ({'time': 'fa fa-clock-o', 'date': 'fa fa-calendar', 'up': 'fa fa-chevron-up', 'down': 'fa fa-chevron-down', 'previous': 'fa fa-chevron-left', 'next': 'fa fa-chevron-right', 'today': 'fa fa-calendar-check-o', 'clear': 'fa fa-trash', 'close': 'fa fa-times', 'paginationSwitchDown': 'fa-chevron-down', 'paginationSwitchUp': 'fa-chevron-up', 'refresh': 'fa-refresh', 'toggle': 'fa-list-alt', 'columns': 'fa-th', 'detailOpen': 'fa-plus', 'detailClose': 'fa-minus'});
-					var refresh_current_object = function (rul, elem, e) {
-						// pass;
-					};
-					var refresh_current_page = function (rul, elem, e) {
-						// pass;
-					};
-					var refresh_current_app = function (rul, elem, e) {
-						// pass;
-					};
 					__pragma__ ('<all>')
 						__all__.FIRST_INIT = FIRST_INIT;
 						__all__.FRAGMENT_INIT_FUN = FRAGMENT_INIT_FUN;
@@ -4177,11 +4232,9 @@ function pytigon () {
 						__all__.load_many_js = load_many_js;
 						__all__.mount_html = mount_html;
 						__all__.on_load_js = on_load_js;
-						__all__.refresh_current_app = refresh_current_app;
-						__all__.refresh_current_object = refresh_current_object;
-						__all__.refresh_current_page = refresh_current_page;
 						__all__.register_fragment_init_fun = register_fragment_init_fun;
 						__all__.register_mount_fun = register_mount_fun;
+						__all__.remove_page_from_href = remove_page_from_href;
 						__all__.save_as = save_as;
 					__pragma__ ('</all>')
 				}
@@ -4289,6 +4342,9 @@ function pytigon () {
 		var on_edit_ok = __init__ (__world__.popup).on_edit_ok;
 		var on_delete_ok = __init__ (__world__.popup).on_delete_ok;
 		var ret_ok = __init__ (__world__.popup).ret_ok;
+		var refresh_current_object = __init__ (__world__.popup).refresh_current_object;
+		var refresh_current_page = __init__ (__world__.popup).refresh_current_page;
+		var refresh_current_app = __init__ (__world__.popup).refresh_current_app;
 		var init_table = __init__ (__world__.tbl).init_table;
 		var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 		var can_popup = __init__ (__world__.tools).can_popup;
@@ -4306,9 +4362,7 @@ function pytigon () {
 		var mount_html = __init__ (__world__.tools).mount_html;
 		var register_fragment_init_fun = __init__ (__world__.tools).register_fragment_init_fun;
 		var register_mount_fun = __init__ (__world__.tools).register_mount_fun;
-		var refresh_current_object = __init__ (__world__.tools).refresh_current_object;
-		var refresh_current_page = __init__ (__world__.tools).refresh_current_page;
-		var refresh_current_app = __init__ (__world__.tools).refresh_current_app;
+		var remove_page_from_href = __init__ (__world__.tools).remove_page_from_href;
 		var service_worker_and_indexedDB_test = __init__ (__world__.offline).service_worker_and_indexedDB_test;
 		var install_service_worker = __init__ (__world__.offline).install_service_worker;
 		var sync_and_run = __init__ (__world__.db).sync_and_run;
@@ -4357,7 +4411,7 @@ function pytigon () {
 					return true;
 				}
 				if (jQuery (this).attr ('target') == 'refresh_obj') {
-					if (refresh_fragment (jQuery (this), null, true)) {
+					if (refresh_fragment (jQuery (this), null, true, null, true)) {
 						return false;
 					}
 				}
@@ -4386,7 +4440,7 @@ function pytigon () {
 				}
 				var href = jQuery (this).attr ('action');
 				if (href) {
-					jQuery (this).attr ('action', corect_href (href));
+					jQuery (this).attr ('action', corect_href (remove_page_from_href (href)));
 				}
 				var _on_submit2 = function (data) {
 					mount_html (window.ACTIVE_PAGE.page, data);
@@ -4734,6 +4788,7 @@ function pytigon () {
 			__all__.refresh_fragment = refresh_fragment;
 			__all__.register_fragment_init_fun = register_fragment_init_fun;
 			__all__.register_mount_fun = register_mount_fun;
+			__all__.remove_page_from_href = remove_page_from_href;
 			__all__.ret_ok = ret_ok;
 			__all__.service_worker_and_indexedDB_test = service_worker_and_indexedDB_test;
 			__all__.standard_on_data = standard_on_data;

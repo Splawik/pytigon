@@ -363,6 +363,23 @@ def corect_href(href, only_table=False):
             return href + '?only_content=1'
 
 
+def remove_page_from_href(href):
+    x = href.split("?")
+    if len(x)>1:
+        x2 = x[1].split('&')
+        if len(x2) > 1:
+            x3 = []
+            for pos in x2:
+                if not 'page=' in pos:
+                    x3.append(pos)
+            return x[0]+'?'+ ("".join(x3))
+        else:
+            if 'page=' in x2[0]:
+                return x2
+            else:
+                return href
+
+
 def load_css(path):
     nonlocal LOADED_FILES
     if not (LOADED_FILES and path in LOADED_FILES):
@@ -485,12 +502,3 @@ window.icons = {
     'detailClose': 'fa-minus'
 }
 
-
-def refresh_current_object(rul, elem, e):
-    pass
-
-def refresh_current_page(rul, elem, e):
-    pass
-
-def refresh_current_app(rul, elem, e):
-    pass

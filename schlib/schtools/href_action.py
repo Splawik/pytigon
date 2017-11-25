@@ -143,7 +143,11 @@ STANDARD_ACTIONS = {
     },
     'popup_delete': {
         'target': "popup_delete"
+    },
+    'refresh_obj': {
+        'target': "refresh_obj"
     }
+
 }
 
 def unpack_value(standard_web_browser, value):
@@ -258,7 +262,7 @@ class Action:
             self.tag_class = get_action_parm(standard_web_browser, action2, 'class').replace('{{btn_size}}','btn_size')
         else:
             if self.tag_class.startswith('+'):
-                self.tag_class = get_action_parm(standard_web_browser, action2, 'class').replace('{{btn_size}}','btn_size') + " " + self.tag_class
+                self.tag_class = get_action_parm(standard_web_browser, action2, 'class').replace('{{btn_size}}','btn_size') + " " + self.tag_class[1:]
 
         self.tag_class_in_menu = get_action_parm(standard_web_browser, action2, 'class_in_menu')
 
@@ -266,7 +270,7 @@ class Action:
             self.attrs = get_action_parm(standard_web_browser, action2, 'attrs').replace('{{btn_size}}','btn_size')
         else:
             if self.attrs.startswith('+'):
-                self.attrs = get_action_parm(standard_web_browser, action2, 'attrs').replace('{{btn_size}}', 'btn_size') + " " + self.attrs
+                self.attrs = get_action_parm(standard_web_browser, action2, 'attrs').replace('{{btn_size}}', 'btn_size') + " " + self.attrs[1:]
 
         self.attrs_in_menu = get_action_parm(standard_web_browser, action2, 'attrs_in_menu')
 

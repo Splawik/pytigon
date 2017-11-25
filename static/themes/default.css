@@ -125,6 +125,13 @@ div.bootstrap-table div.fixed-table-toolbar {
 div.bootstrap-table div.search input {
   height: 35px !important; }
 
+div.tableframe {
+  position: relative; }
+  div.tableframe ul.simple_pagination {
+    position: absolute;
+    right: 2px;
+    top: -42px; }
+
 /* dropdown menu */
 .user-menu {
   white-space: nowrap; }
