@@ -148,6 +148,8 @@ def on_popup_edit_new(url, elem, e):
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
     if can_popup() and not target=='inline' and not jQuery(elem).hasClass('inline') and not (jQuery(elem).attr('name') and '_inline' in jQuery(elem).attr('name')) :
+        jQuery('#ModalLabel').html(jQuery(elem).attr('title'))
+
         elem2 = jQuery("div.dialog-data")
         elem2.closest(".refr_object").attr("related-object", jQuery(elem).uid())
 

@@ -378,7 +378,7 @@ def remove_page_from_href(href):
                 return x2
             else:
                 return href
-
+    return href
 
 def load_css(path):
     nonlocal LOADED_FILES

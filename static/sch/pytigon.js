@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-25 18:12:02
+// Transcrypt'ed from Python, 2017-11-26 16:27:31
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2987,6 +2987,7 @@ function pytigon () {
 						jQuery (elem).attr ('data-spinner-color', '#FF0000');
 						window.WAIT_ICON = Ladda.create (elem);
 						if (can_popup () && !(target == 'inline') && !(jQuery (elem).hasClass ('inline')) && !(jQuery (elem).attr ('name') && __in__ ('_inline', jQuery (elem).attr ('name')))) {
+							jQuery ('#ModalLabel').html (jQuery (elem).attr ('title'));
 							var elem2 = jQuery ('div.dialog-data');
 							elem2.closest ('.refr_object').attr ('related-object', jQuery (elem).uid ());
 							var _on_load = function (responseText, status, response) {
@@ -4096,6 +4097,7 @@ function pytigon () {
 								return href;
 							}
 						}
+						return href;
 					};
 					var load_css = function (path) {
 						if (!(LOADED_FILES && __in__ (path, LOADED_FILES))) {

@@ -22,12 +22,14 @@ import os.path
 
 from django.apps import apps
 from django.db.models import Max, Min
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.template import loader, RequestContext, Context
+
 from django.views import generic
 from django.core import serializers
 
+from schlib.schdjangoext.tools import make_href
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
 from schlib.schtools import schjson
@@ -273,7 +275,10 @@ def dict_to_template(template_name):
     def _dict_to_template(func):
         def inner(request, *args, **kwargs):
             v = func(request, *args, **kwargs)
-            return render_to_response(template_name, v, request=request)
+            if 'redirect' in v:
+                return HttpResponseRedirect(make_href(v['redirect']))
+            else:
+                return render_to_response(template_name, v, request=request)
         return inner
     return _dict_to_template
 

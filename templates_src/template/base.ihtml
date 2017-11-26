@@ -94,8 +94,9 @@
                                 td...{{ object|getfield:field.name }}
                     %% form_ok_cancel_info
                 % if standard_web_browser:
-                    script
-                        jQuery('#ModalLabelInfo').html('{{title}}')
+                    % if title:
+                        script
+                            jQuery('#ModalLabelInfo').html('{{title}}')
             % else:
                 %% form_delete
                     form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
@@ -148,8 +149,9 @@
             %% row_edit_end
                 % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                     </div>
-            script
-                jQuery('#ModalLabel').html('{{title}}')
+            % if title:
+                script
+                    jQuery('#ModalLabel').html('{{title}}')
 
         %% dialog_end
     % else:
