@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-26 16:27:31
+// Transcrypt'ed from Python, 2017-11-29 23:37:50
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3175,8 +3175,8 @@ function pytigon () {
 							if (popup_activator && popup_activator.data ('edit_ret_function')) {
 								window.RET_CONTROL = popup_activator.data ('ret_control');
 								window.EDIT_RET_FUNCTION = popup_activator.data ('edit_ret_function');
-								var q = jQuery (responseText);
-								eval (q [1].text);
+								var q = jQuery (('<div>' + responseText) + '</div>').find ('script');
+								eval (q.text ());
 							}
 						}
 						else {
@@ -3229,9 +3229,13 @@ function pytigon () {
 					};
 					window.on_cancel_inline = on_cancel_inline;
 					var ret_ok = function (id, title) {
-						window.RET_CONTROL.select2 ('data', dict ([[id, id], [text, title]])).trigger ('change');
-						window.RET_CONTROL.val (id.toString ());
-						window.RET_CONTROL [0].defaultValue = id.toString ();
+						var text = title;
+						var ret_control = window.RET_CONTROL;
+						if (ret_control.find (("option[value='" + id) + "']").length == 0) {
+							ret_control.append (jQuery ('<option>', dict ({'value': id, 'text': text})));
+						}
+						ret_control.val (id.toString ());
+						ret_control.trigger ('change');
 					};
 					var on_get_tbl_value = function (url, elem, e) {
 						on_popup_in_form (elem);
@@ -3241,7 +3245,7 @@ function pytigon () {
 						window.RET_CONTROL = jQuery (elem).closest ('.input-group').find ('.django-select2');
 						jQuery (elem).data ('edit_ret_function', window.EDIT_RET_FUNCTION);
 						jQuery (elem).data ('ret_control', window.RET_CONTROL);
-						return on_popup_edit_new (elem);
+						return on_popup_edit_new (url, elem, e);
 					};
 					var on_get_row = function (url, elem, e) {
 						var id = jQuery (elem).attr ('data-id');
@@ -3764,6 +3768,7 @@ function pytigon () {
 							}
 						};
 						elem2.find ('.inline_frame').each (load_inline_frame);
+						elem2.find ('.django-select2').djangoSelect2 ();
 						if (window.BASE_FRAGMENT_INIT) {
 							window.BASE_FRAGMENT_INIT ();
 						}
@@ -4679,7 +4684,7 @@ function pytigon () {
 			}
 			return _on_menu_href (elem, title);
 		};
-		var EVENT_TAB = list ([tuple (['popup_edit', '*', true, false, on_popup_edit_new]), tuple (['popup_info', '*', true, false, on_popup_info]), tuple (['popup_delete', '*', true, false, on_popup_delete]), tuple (['inline', '*', true, false, on_popup_inline]), tuple (['none', 'get_tbl_value', true, false, on_get_tbl_value]), tuple (['none', 'new_tbl_value', true, false, on_new_tbl_value]), tuple (['none', 'get_row', true, false, on_get_row]), tuple (['_top', '*', true, false, on_new_tab]), tuple (['_top2', '*', true, false, on_new_tab]), tuple (['refresh_obj', '*', true, false, refresh_current_object]), tuple (['refresh_page', '*', true, false, refresh_current_page]), tuple (['refresh_app', '*', false, false, refresh_current_app])]);
+		var EVENT_TAB = list ([tuple (['*', 'get_tbl_value', true, false, on_get_tbl_value]), tuple (['*', 'new_tbl_value', true, false, on_new_tbl_value]), tuple (['*', 'get_row', true, false, on_get_row]), tuple (['popup_edit', '*', true, false, on_popup_edit_new]), tuple (['popup_info', '*', true, false, on_popup_info]), tuple (['popup_delete', '*', true, false, on_popup_delete]), tuple (['inline', '*', true, false, on_popup_inline]), tuple (['_top', '*', true, false, on_new_tab]), tuple (['_top2', '*', true, false, on_new_tab]), tuple (['refresh_obj', '*', true, false, refresh_current_object]), tuple (['refresh_page', '*', true, false, refresh_current_page]), tuple (['refresh_app', '*', false, false, refresh_current_app])]);
 		var standard_on_data = function (src_obj, href) {
 			var _standard_on_data = function (data) {
 				if (data && __in__ ('_parent_refr', data)) {

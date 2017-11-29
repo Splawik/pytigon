@@ -315,8 +315,9 @@ def _refresh_win_and_ret(responseText, ok_button):
         if popup_activator and popup_activator.data('edit_ret_function'):
             window.RET_CONTROL = popup_activator.data('ret_control')
             window.EDIT_RET_FUNCTION = popup_activator.data('edit_ret_function')
-            q = jQuery(responseText)
-            eval(q[1].text)
+            #q = jQuery(responseText)
+            q = jQuery("<div>" + responseText + "</div>").find("script")
+            eval(q.text())
     else:
         mount_html(jQuery("div.dialog-data"), responseText)
 
@@ -368,9 +369,20 @@ window.on_cancel_inline = on_cancel_inline
 
 
 def ret_ok(id, title):
-    window.RET_CONTROL.select2('data', {id: id, text: title}).trigger("change")
-    window.RET_CONTROL.val(id.toString())
-    window.RET_CONTROL[0].defaultValue = id.toString()
+    #window.RET_CONTROL.select2('data', { 'id': id, 'text': title})
+    #window.RET_CONTROL.trigger("change")
+    #window.RET_CONTROL.val(id.toString())
+    #window.RET_CONTROL[0].defaultValue = id.toString()
+
+
+    text = title
+
+    ret_control = window.RET_CONTROL
+    if ret_control.find("option[value='"+id+"']").length==0:
+        ret_control.append(jQuery("<option>", { "value": id, "text": text }))
+    ret_control.val(id.toString())
+    ret_control.trigger('change')
+
 
 def on_get_tbl_value(url, elem, e):
     on_popup_in_form(elem)
@@ -380,7 +392,7 @@ def on_new_tbl_value(url, elem, e):
     window.RET_CONTROL = jQuery(elem).closest(".input-group").find('.django-select2')
     jQuery(elem).data('edit_ret_function', window.EDIT_RET_FUNCTION)
     jQuery(elem).data('ret_control', window.RET_CONTROL)
-    return on_popup_edit_new(elem)
+    return on_popup_edit_new(url, elem, e)
 
 def on_get_row(url, elem, e):
     id = jQuery(elem).attr('data-id')

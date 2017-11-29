@@ -113,7 +113,7 @@ def button(context, title = "", icon_name = "", target = "", attrs = "", tag_cla
     return ret
 
 
-def new_row_base(context, action="new_row", title="", icon_name="", target='', attrs='', tag_class="", url=""):
+def new_row_base(context, action="new_row/-", title="", icon_name="", target='', attrs='', tag_class="", url=""):
     if url:
         url2=url
     else:
@@ -130,7 +130,7 @@ def new_row_base(context, action="new_row", title="", icon_name="", target='', a
 
 
 @inclusion_tag('widgets/new_row.html')
-def new_row(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row"):
+def new_row(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row/-"):
     return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
 
 

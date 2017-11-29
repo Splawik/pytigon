@@ -23,6 +23,8 @@
     {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 
     {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
+    {% jscript_link 'django_select2/django_select2.js' %}
+
     % comment:
         {% jscript_link 'jquery_plugins/select2/js/select2.full.min.js' %}
         {% import_django_select2_js %}
@@ -136,6 +138,7 @@
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
 
     %% theme_css_links
+        {% css_link 'sch/select2-material.css' %}
 
     %% theme_css_links_spec
         % comment:

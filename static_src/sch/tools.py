@@ -67,6 +67,8 @@ def fragment_init(elem=None):
 
     elem2.find('.inline_frame').each(load_inline_frame)
 
+    elem2.find('.django-select2').djangoSelect2()
+
     if window.BASE_FRAGMENT_INIT:
         window.BASE_FRAGMENT_INIT()
 

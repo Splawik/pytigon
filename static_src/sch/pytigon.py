@@ -351,14 +351,14 @@ def on_new_tab(url, elem, e):
 
 EVENT_TAB = [
     # target, class, get only content, get only tab, function
+    ('*', 'get_tbl_value', True, False, on_get_tbl_value),
+    ('*', 'new_tbl_value', True, False, on_new_tbl_value),
+    ('*', 'get_row', True, False, on_get_row),
+
     ('popup_edit', '*', True, False, on_popup_edit_new),
     ('popup_info', '*', True, False, on_popup_info),
     ('popup_delete', '*', True, False, on_popup_delete),
     ('inline',  '*', True, False, on_popup_inline),
-
-    ('none', 'get_tbl_value', True, False, on_get_tbl_value),
-    ('none', 'new_tbl_value', True, False, on_new_tbl_value),
-    ('none', 'get_row', True, False, on_get_row),
 
     ('_top', '*', True, False, on_new_tab),
     ('_top2', '*', True, False, on_new_tab),
@@ -366,6 +366,7 @@ EVENT_TAB = [
     ('refresh_obj', '*', True, False, refresh_current_object),
     ('refresh_page', '*',  True, False, refresh_current_page),
     ('refresh_app', '*', False, False, refresh_current_app),
+
 
     #('*', 'popup_info', True, False, on_popup_info),
     #('*', 'popup_delete', True, False, on_popup_delete),
