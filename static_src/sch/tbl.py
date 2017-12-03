@@ -123,6 +123,9 @@ def content_set_height():
     if jQuery(this).closest('.tabsort').length>0:
         return
 
+    if jQuery(this).closest('#dialog-form-modal').length > 0:
+        return
+
     #elem = jQuery(this).findclosest('.tab-pane')
     #content_offset = elem.offset().top
     #content_offset = elem.offset().height()

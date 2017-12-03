@@ -234,6 +234,9 @@ body:not(.modal-open) .dark_background {
   top: -10p;
   margin-top: -2px; }
 
+#dialog-form-modal .inline_dialog {
+  width: 100% !important; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;

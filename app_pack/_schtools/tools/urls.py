@@ -11,8 +11,12 @@ urlpatterns = [
     url('search/(?P<type>.+)/', views.autocomplete_search, {}),
     url('set_user_param/$', views.set_user_param, {}),
     url('get_user_param/$', views.get_user_param, {}),
+    url('(?P<app>[\w=_,;-]*)/(?P<table>[\w=_,;-]*)/import_table/$', views.import_table, {}),
     
     
+    
+    
+    url('form/ImportTableForm/$', views.view_importtableform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'tools', views)

@@ -24,6 +24,7 @@
 from itertools import chain
 import collections
 
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django import forms
 from django.utils.safestring import mark_safe
@@ -35,6 +36,9 @@ from django.db.models.fields import TextField
 from django.utils.encoding import force_text
 from django.utils.html import conditional_escape, format_html, html_safe
 from django.forms.utils import flatatt
+
+from schlib.schdjangoext.tools import make_href
+
 
 @html_safe
 class SubWidget(object):
@@ -107,33 +111,40 @@ class RadioChoiceInput(ChoiceInput):
         self.value = force_text(self.value)
 
 
-
-BUTTONS="""
-<div class="input-group-btn">
-    <a type="button" target="popup_edit" name ="get_tbl_value" class="btn btn-secondary btn-flat foreignkey_button get_tbl_value" href='%s'>
-      <span class="fa-table fa"></span>
+_GET_TABLE_BUTTONS_1 = """
+    <a type='button' target='popup_edit' name='get_tbl_value' class='btn btn-secondary btn-flat foreignkey_button get_tbl_value' href='%s' title='%s'>
+      <span class='fa-table fa'></span>
     </a>
-    <a type="button" target="inline" name="new_tbl_value" class="btn btn-secondary btn-flat foreignkey_button new_tbl_value" href='%s'>
-      <span class="fa-plus fa"></span>
+"""
+_GET_TABLE_BUTTONS_2 = """    
+    <a type='button' target='inline' name='new_tbl_value' class='btn btn-secondary btn-flat foreignkey_button new_tbl_value' href='%s' title='%s'>
+      <span class='fa-plus fa'></span>
     </a>
-</div>
 """
 
-class _ModelSelect2WidgetExt(ModelSelect2Widget):
-    def __init__(self, href1=None, href2=None, *argi, **argv):
-        ModelSelect2Widget.__init__(self, *argi, **argv)
+class ModelSelect2WidgetExt(ModelSelect2Widget):
+    def __init__(self, href1=None, href2=None, is_new_button=False, label="", *argi, **argv):
+        ModelSelect2Widget.__init__(self, *argi, label=label, **argv)
         self.href1 = href1
         self.href2 = href2
+        self.is_new_button = is_new_button
+        self._label = label
 
     def render(self, name, value, attrs=None):
         x = super().render(name, value, attrs)
-        if len(self.choices.queryset)>0:
-            txt = str(self.choices.queryset[0])
-        else:
-            txt=""
-        buttons2 = BUTTONS % (self.href1, self.href2)
+
+        txt = ""
+        if self.queryset:
+            objs = self.queryset.filter(pk=value)
+            if len(objs)==1:
+                txt = str(objs[0])
+
+        buttons = _GET_TABLE_BUTTONS_1 % (self.href1, self._label + str(_(" - get object")))
+        if self.is_new_button:
+            buttons += _GET_TABLE_BUTTONS_2 % (self.href2, self._label + str(_(" - new object")))
+
         return mark_safe("<div class='select2 input-group' item_id='%s' item_str='%s'>%s%s</div>" %
-            (value, txt, x, buttons2))
+            (value, txt, x, buttons))
 
 
 class ForeignKey(models.ForeignKey):
@@ -146,25 +157,27 @@ class ForeignKey(models.ForeignKey):
             del kwargs['search_fields']
         else:
             self.search_fields = None
+        if 'is_new_button' in kwargs:
+            self.is_new_button = kwargs['is_new_button']
+            del kwargs['is_new_button']
+        else:
+            self.is_new_button = None
+
         super().__init__(*args, **kwargs)
         if len(args)>0:
             self.to = args[0]
+        self.filter =  '-'
 
     def formfield(self, **kwargs):
-        if settings.URL_ROOT_FOLDER:
-            href1 = "/%s/%s/table/%s/-/form/get?schtml=1" % (settings.URL_ROOT_FOLDER, self.to._meta.app_label,
-                self.to._meta.object_name)
-            href2 = "/%s/%s/table/%s/-/add?schtml=1" % (settings.URL_ROOT_FOLDER, self.to._meta.app_label,
-                self.to._meta.object_name)
-        else:
-            href1 = "/%s/table/%s/-/form/get?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
-            href2 = "/%s/table/%s/-/add?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name)
+        href1 = make_href("/%s/table/%s/%s/form/get?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name, self.filter))
+        href2 = make_href("/%s/table/%s/%s/add?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name, self.filter))
+        field = self
 
         if self.search_fields:
             _search_fields = self.search_fields
             class _Field(forms.ModelChoiceField):
                 def __init__(self, queryset, *argi, **argv):
-                    widget=_ModelSelect2WidgetExt(href1, href2, queryset = queryset,search_fields=_search_fields)
+                    widget=ModelSelect2WidgetExt(href1, href2, False, field.verbose_name, queryset = queryset,search_fields=_search_fields)
                     widget.attrs['style'] = 'width:400px;'
                     argv['widget'] = widget
                     forms.ModelChoiceField.__init__(self, queryset, *argi, **argv)

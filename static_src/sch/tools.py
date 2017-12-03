@@ -67,7 +67,21 @@ def fragment_init(elem=None):
 
     elem2.find('.inline_frame').each(load_inline_frame)
 
-    elem2.find('.django-select2').djangoSelect2()
+    elem2.find('.django-select2').djangoSelect2({'width': '100%'})
+
+    def init_select2_ctrl():
+        sel2 = jQuery(this)
+        src = sel2.closest(".input-group")
+        if src.length == 1:
+            if src[0].hasAttribute("item_id"):
+                id = src.attr('item_id')
+                if id:
+                    text = src.attr('item_str')
+                    sel2.append(jQuery("<option>", { "value": id, "text": text }))
+                    sel2.val(id.toString())
+                    sel2.trigger('change')
+
+    elem2.find('.django-select2').each(init_select2_ctrl)
 
     if window.BASE_FRAGMENT_INIT:
         window.BASE_FRAGMENT_INIT()

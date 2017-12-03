@@ -819,3 +819,8 @@ def getitem(value, attr):
         obj = None
     return obj
 
+@register.filter(name='append_filter')
+def append_filter(form_field, filter):
+    if hasattr(form_field, "filter"):
+        form_field.filter = filter
+    return form_field

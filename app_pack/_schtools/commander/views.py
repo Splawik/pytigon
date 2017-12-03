@@ -31,8 +31,8 @@ PFORM = form_with_perms('commander')
 
 
 class FileManager(forms.Form):
-    folder = forms.CharField(label='Folder', required=True, )
-    sort = forms.ChoiceField(label='Sort', required=True, choices=models.file_manager_sort_choices)
+    folder = forms.CharField(label=_('Folder'), required=True, )
+    sort = forms.ChoiceField(label=_('Sort'), required=True, choices=models.file_manager_sort_choices)
     
     
     
@@ -42,7 +42,7 @@ def view_filemanager(request, *argi, **argv):
 
 
 class Move(forms.Form):
-    dest = forms.ChoiceField(label='Destination', required=True, choices=[])
+    dest = forms.ChoiceField(label=_('Destination'), required=True, choices=[])
     
     
     
@@ -61,7 +61,7 @@ def view_move(request, *argi, **argv):
 
 
 class Copy(forms.Form):
-    dest = forms.ChoiceField(label='Destination', required=True, choices=[])
+    dest = forms.ChoiceField(label=_('Destination'), required=True, choices=[])
     
     
     
@@ -80,7 +80,7 @@ def view_copy(request, *argi, **argv):
 
 
 class MkDir(forms.Form):
-    name = forms.CharField(label='Folder name', required=True, max_length=None, min_length=None)
+    name = forms.CharField(label=_('Folder name'), required=True, max_length=None, min_length=None)
     
     def process(self, request, queryset=None):
     
@@ -108,7 +108,7 @@ def view_mkdir(request, *argi, **argv):
 
 
 class Rename(forms.Form):
-    name = forms.CharField(label='Name', required=True, max_length=None, min_length=None)
+    name = forms.CharField(label=_('Name'), required=True, max_length=None, min_length=None)
     
     
     
@@ -118,7 +118,7 @@ def view_rename(request, *argi, **argv):
 
 
 class NewFile(forms.Form):
-    name = forms.CharField(label='Name', required=True, max_length=None, min_length=None)
+    name = forms.CharField(label=_('Name'), required=True, max_length=None, min_length=None)
     
     
     
@@ -128,7 +128,7 @@ def view_newfile(request, *argi, **argv):
 
 
 class Delete(forms.Form):
-    recycle_bin = forms.BooleanField(label='Recycle bin', required=True, initial=True,)
+    recycle_bin = forms.BooleanField(label=_('Recycle bin'), required=True, initial=True,)
     
     
     
@@ -138,11 +138,11 @@ def view_delete(request, *argi, **argv):
 
 
 class Setup(forms.Form):
-    path1 = forms.CharField(label='Path 1', required=False, max_length=None, min_length=None)
-    path2 = forms.CharField(label='Path 2', required=False, max_length=None, min_length=None)
-    path3 = forms.CharField(label='Path 3', required=False, max_length=None, min_length=None)
-    path4 = forms.CharField(label='Path 4', required=False, max_length=None, min_length=None)
-    glob = forms.BooleanField(label='Default for all users', required=False, )
+    path1 = forms.CharField(label=_('Path 1'), required=False, max_length=None, min_length=None)
+    path2 = forms.CharField(label=_('Path 2'), required=False, max_length=None, min_length=None)
+    path3 = forms.CharField(label=_('Path 3'), required=False, max_length=None, min_length=None)
+    path4 = forms.CharField(label=_('Path 4'), required=False, max_length=None, min_length=None)
+    glob = forms.BooleanField(label=_('Default for all users'), required=False, )
     
     def process(self, request, queryset=None):
     

@@ -352,6 +352,10 @@ class GenericRows(object):
                 context['title'] = self.title
                 context['rel_field'] = self.rel_field
                 context['filter'] = self.kwargs['filter']
+
+                context['app_name'] = parent_class.table.app
+                context['table_name'] = parent_class.tab
+
                 if self.form:
                     context['form'] = self.form
 

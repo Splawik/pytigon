@@ -22,9 +22,26 @@ import os
 import sys
 import datetime
 
-import time 
+import time
+from schlib.schdjangoext.tools import import_model
+from pyexcel_odsr import get_data
+from schlib.schtools.schjson import json_dumps, json_loads
+from schlib.schfs.vfstools import get_temp_filename
+import openpyxl
+import csv
+ 
+
+PFORM = form_with_perms('tools') 
 
 
+class ImportTableForm(forms.Form):
+    import_file = forms.FileField(label=_('File to import'), required=True, )
+    
+    
+    
+
+def view_importtableform(request, *argi, **argv):
+    return PFORM(request, ImportTableForm, 'tools/formimporttableform.html', {})
 
 
 
@@ -96,6 +113,137 @@ def get_user_param(request, **argv):
         return HttpResponse(obj.value)
     else:
         return HttpResponse("")
+    
+
+@dict_to_template('tools/v_import_table.html')
+
+
+
+
+def import_table(request, app, table):
+    
+    if request.FILES:
+        if 'import_file' in request.FILES:
+            data = request.FILES['import_file']        
+            name = data.name
+            ext = name.split('.')[-1].lower()
+            model = import_model(app, table)
+            
+            table = []
+            
+            if ext in ('xlsx', 'xls', 'ods'):
+                if ext == 'ods':
+                    d = get_data(data)
+                    #print("F0", d)
+                    #buf = json_dumps(d)
+                    for key in d:                    
+                        table = d[key]
+                        break
+                else:
+                    first_line = True
+                    width = 0
+                    
+                    file_name = get_temp_filename("temp.xlsx")
+                    f = open(file_name, 'wb')
+                    f.write(data.read())
+                    f.close()
+                    
+                    workbook = openpyxl.load_workbook(filename=file_name, read_only=True)
+                    worksheets = workbook.get_sheet_names()
+                    worksheet = workbook.get_sheet_by_name(worksheets[0])            
+                    
+                    for row in list(worksheet.rows):
+                        if first_line:
+                            first_line = False
+                            buf = []
+                            i = 0;
+                            for pos in row:
+                                value = pos.value
+                                if value:
+                                    buf.append(value)
+                                else:
+                                    break
+                                i += 1
+                            if len(buf)>0:
+                                count = len(buf)
+                                table.append(buf)
+                            else:
+                                break
+                        else:
+                            if row[0].value:
+                                buf = []
+                                i = 0
+                                for pos in row:
+                                    if i >= count:
+                                        break
+                                    buf.append(pos.value)
+                                    i += 1
+                                table.append(buf)
+                            else:
+                                break
+                    os.remove(file_name)            
+            elif ext in ('txt', 'csv'):
+                first_line = True
+                sep_list = ['\t', ';', ',', '|', ]
+                sep = None            
+                
+                txt = data.read().decode('utf-8').replace('\r','').split('\n')
+                for line in txt:
+                    for pos in sep_list:
+                        if pos in line:
+                            sep = pos
+                            break
+                    break
+                    
+                if sep:
+                    csv_reader = csv.reader(txt, delimiter=sep)
+                    for row in csv_reader:
+                        table.append(row)
+                                  
+            if table and len(table)>1:
+                header = list([pos.strip() for pos in table[0] if pos])
+                tree = False
+                tmp = []
+                for pos in header:
+                    if not pos in tmp:
+                        tmp.append(pos)
+                    else:
+                        tree = True
+                        id1 = tmp.index(pos)
+                        id2 = len(tmp)
+                        break            
+                
+                for row in table[1:]:
+                    if len(row) == len(header):
+                        x = model() 
+                        parent = None                       
+                        for index, (attr_name, value) in enumerate(zip(header,row)):
+                            if tree:
+                                if index == id1:
+                                    if row[id2]:
+                                        objs = model.objects.filter(**{ attr_name: value })
+                                        if len(objs)==1:
+                                            parent = objs[0]
+                                    else:
+                                        setattr(x, attr_name, value)
+                                elif index == id2:
+                                    if row[id2]:
+                                        setattr(x, attr_name, value)
+                                        if parent:
+                                            setattr(x, 'parent', parent)
+                                else:
+                                    setattr(x, attr_name, value)                                
+                            else:
+                                setattr(x, attr_name, value)
+                        x.save()
+                                    
+            return { 'redirect': '/schsys/ok/' }    
+        else:
+            form = ImportTableForm(request.POST, request.FILES)
+    else:
+        form = ImportTableForm()
+    
+    return { 'form': form }
     
 
 

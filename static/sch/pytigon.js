@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-11-29 23:37:50
+// Transcrypt'ed from Python, 2017-12-03 21:20:02
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -81,6 +81,27 @@
         }
     }
     __all__.__get__ = __get__;
+
+    var __getcm__ = function (self, func, quotedFuncName) {
+        if (self.hasOwnProperty ('__class__')) {
+            return function () {
+                var args = [] .slice.apply (arguments);
+                return func.apply (null, [self.__class__] .concat (args));
+            };
+        }
+        else {
+            return function () {
+                var args = [] .slice.apply (arguments);
+                return func.apply (null, [self] .concat (args));
+            };
+        }
+    }
+    __all__.__getcm__ = __getcm__;
+    
+    var __getsm__ = function (self, func, quotedFuncName) {
+        return func;
+    }
+    __all__.__getsm__ = __getsm__;
         
     // Mother of all metaclasses        
     var py_metatype = {
@@ -173,7 +194,7 @@
 						get __init__ () {return __get__ (this, function (self) {
 							self.interpreter_name = 'python';
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.6.47';
+							self.transpiler_version = '3.6.57';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -251,13 +272,13 @@
 						});}
 					});
 					var ValueError = __class__ ('ValueError', [Exception], {
-						get __init__ () {return __get__ (this, function (self, error) {
-							Exception.__init__ (self, 'Erroneous value', __kwargtrans__ ({error: error}));
+						get __init__ () {return __get__ (this, function (self, message, error) {
+							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var KeyError = __class__ ('KeyError', [Exception], {
-						get __init__ () {return __get__ (this, function (self, error) {
-							Exception.__init__ (self, 'Invalid key', __kwargtrans__ ({error: error}));
+						get __init__ () {return __get__ (this, function (self, message, error) {
+							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var AssertionError = __class__ ('AssertionError', [Exception], {
@@ -706,26 +727,28 @@
     };
     __all__.__specialattrib__ = __specialattrib__;
 
-    // Len function for any object
+    // Compute length of any object
     var len = function (anObject) {
-        if (anObject) {
-            var l = anObject.length;
-            if (l == undefined) {
-                var result = 0;
-                for (var attrib in anObject) {
-                    if (!__specialattrib__ (attrib)) {
-                        result++;
-                    }
-                }
-                return result;
-            }
-            else {
-                return l;
-            }
-        }
-        else {
+        if (anObject === undefined || anObject === null) {
             return 0;
         }
+
+        if (anObject.__len__ instanceof Function) {
+            return anObject.__len__ ();
+        }
+
+        if (anObject.length !== undefined) {
+            return anObject.length;
+        }
+
+        var length = 0;
+        for (var attr in anObject) {
+            if (!__specialattrib__ (attr)) {
+                length++;
+            }
+        }
+
+        return length;
     };
     __all__.len = len;
 
@@ -779,7 +802,15 @@
             return -Infinity;
         }
         else if (isNaN (parseFloat (any))) {    // Call to parseFloat needed to exclude '', ' ' etc.
-            throw ValueError (new Error ());
+            if (any === false) {
+                return 0;
+            }
+            else if (any === true) {
+                return 1;
+            }
+            else {  // Needed e.g. in autoTester.check, so "return any ? true : false" won't do
+                throw ValueError ("could not convert string to float: '" + str(any) + "'", new Error ());
+            }
         }
         else {
             return +any;
@@ -901,9 +932,7 @@
                     }
                 }
                 catch (exception) {
-                    console.log ('ERROR: Could not evaluate repr (<object of type ' + typeof anObject + '>)');
-                    console.log (exception);
-                    return '???';
+                    return '<object of type: ' + typeof anObject + '>';
                 }
             }
         }
@@ -1292,7 +1321,7 @@
     Array.prototype.remove = function (element) {
         var index = this.indexOf (element);
         if (index == -1) {
-            throw ValueError (new Error ());
+            throw ValueError ("list.remove(x): x not in list", new Error ());
         }
         this.splice (index, 1);
     };
@@ -1350,8 +1379,6 @@
             for (var index = 0; index < iterable.length; index++) {
                 instance.add (iterable [index]);
             }
-
-
         }
         instance.__class__ = set;   // Not all arrays are sets
         return instance;
@@ -1792,7 +1819,7 @@
     function __popitem__ () {
         var aKey = Object.keys (this) [0];
         if (aKey == null) {
-            throw KeyError (aKey, new Error ());
+            throw KeyError ("popitem(): dictionary is empty", new Error ());
         }
         var result = tuple ([aKey, this [aKey]]);
         delete this [aKey];
@@ -1989,8 +2016,14 @@
     };
     __all__.__mul__ = __mul__;
 
-    var __div__ = function (a, b) {
-        if (typeof a == 'object' && '__div__' in a) {
+    var __truediv__ = function (a, b) {
+        if (typeof a == 'object' && '__truediv__' in a) {
+            return a.__truediv__ (b);
+        }
+        else if (typeof b == 'object' && '__rtruediv__' in b) {
+            return b.__rtruediv__ (a);
+        }
+        else if (typeof a == 'object' && '__div__' in a) {
             return a.__div__ (b);
         }
         else if (typeof b == 'object' && '__rdiv__' in b) {
@@ -2000,7 +2033,26 @@
             return a / b;
         }
     };
-    __all__.__div__ = __div__;
+    __all__.__truediv__ = __truediv__;
+
+    var __floordiv__ = function (a, b) {
+        if (typeof a == 'object' && '__floordiv__' in a) {
+            return a.__floordiv__ (b);
+        }
+        else if (typeof b == 'object' && '__rfloordiv__' in b) {
+            return b.__rfloordiv__ (a);
+        }
+        else if (typeof a == 'object' && '__div__' in a) {
+            return a.__div__ (b);
+        }
+        else if (typeof b == 'object' && '__rdiv__' in b) {
+            return b.__rdiv__ (a);
+        }
+        else {
+            return Math.floor (a / b);
+        }
+    };
+    __all__.__floordiv__ = __floordiv__;
 
     var __add__ = function (a, b) {
         if (typeof a == 'object' && '__add__' in a) {
@@ -2961,7 +3013,7 @@ function pytigon () {
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
 						var href2 = corect_href (jQuery (elem).attr ('href'));
-						var new_fragment = jQuery (((((("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'>") + INLINE_TABLE_HTML) + '</div>');
+						var new_fragment = jQuery (((((("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.getAttribute ('title'))) + '</div>');
 						new_fragment.insertAfter (jQuery (elem).closest ('div.form-group'));
 						var elem2 = new_fragment.find ('.refr_target');
 						var _on_load = function (responseText, status, response) {
@@ -3333,6 +3385,10 @@ function pytigon () {
 					var refresh_current_app = function (url, elem, e) {
 						// pass;
 					};
+					var _none = function () {
+						// pass;
+					};
+					jQuery.fn.modal.Constructor.prototype.enforceFocus = _none;
 					__pragma__ ('<use>' +
 						'tabmenu' +
 						'tbl' +
@@ -3341,6 +3397,7 @@ function pytigon () {
 					__pragma__ ('<all>')
 						__all__._dialog_loaded = _dialog_loaded;
 						__all__._init_subforms = _init_subforms;
+						__all__._none = _none;
 						__all__._refresh_win = _refresh_win;
 						__all__._refresh_win_after_ok = _refresh_win_after_ok;
 						__all__._refresh_win_and_ret = _refresh_win_and_ret;
@@ -3669,6 +3726,9 @@ function pytigon () {
 						if (jQuery (this).closest ('.tabsort').length > 0) {
 							return ;
 						}
+						if (jQuery (this).closest ('#dialog-form-modal').length > 0) {
+							return ;
+						}
 						var content_offset = jQuery (this).offset ().top;
 						var dy_win = jQuery (window).height ();
 						var dy = (dy_win - content_offset) - 30;
@@ -3768,7 +3828,23 @@ function pytigon () {
 							}
 						};
 						elem2.find ('.inline_frame').each (load_inline_frame);
-						elem2.find ('.django-select2').djangoSelect2 ();
+						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': '100%'}));
+						var init_select2_ctrl = function () {
+							var sel2 = jQuery (this);
+							var src = sel2.closest ('.input-group');
+							if (src.length == 1) {
+								if (src [0].hasAttribute ('item_id')) {
+									var id = src.attr ('item_id');
+									if (id) {
+										var text = src.attr ('item_str');
+										sel2.append (jQuery ('<option>', dict ({'value': id, 'text': text})));
+										sel2.val (id.toString ());
+										sel2.trigger ('change');
+									}
+								}
+							}
+						};
+						elem2.find ('.django-select2').each (init_select2_ctrl);
 						if (window.BASE_FRAGMENT_INIT) {
 							window.BASE_FRAGMENT_INIT ();
 						}

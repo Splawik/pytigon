@@ -69,7 +69,7 @@
                         option value={{item.0}}
                             {{item.0}}
             td align=left
-                % button "../../../" _("New field") "add_field"
+                % action "add_field" _("New field") url="../../../" 
 
 
 %% list_row_header

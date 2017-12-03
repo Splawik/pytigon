@@ -17,13 +17,13 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-
 from base64 import b64encode
 import io
 import re
 import itertools
 import html
 
+from django.db import models
 from django import template
 from django.utils.translation import gettext_lazy as _
 from django.template.loader import get_template
@@ -38,8 +38,17 @@ from django.template.base import Node
 from schlib.schhtml.parser import Parser
 from schlib.schtools.wiki import wiki_from_str
 from schlib.schtools.href_action import standard_dict, actions_dict, action_fun
+from schlib.schdjangoext.tools import import_model
+
+from schlib.schdjangoext.tools import make_href
+from schlib.schdjangoext.fields import ForeignKey, ModelSelect2WidgetExt
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
+from django.utils.safestring import SafeText
+from django import forms
+#from django_select2.forms import ModelSelect2Widget
+
+
 
 register = template.Library()
 
@@ -880,8 +889,11 @@ def spec(format):
 #size:size:size - bootstrap size for .col-sm, .col-md, col-lg
 
 @inclusion_tag('widgets/field.html')
-def field(context, field_name, fieldformat=None):
-    field = context['form'][field_name]
+def field(context, form_field, fieldformat=None):
+    if type(form_field) in (SafeText, str,):
+        field = context['form'][form_field]
+    else:
+        field = form_field
 
     label_class = "control-label float-left"
     offset = ""
@@ -939,7 +951,6 @@ def field(context, field_name, fieldformat=None):
             else:
                 form_group_class += " col-sm-12 col-md-%s" % y[0]
 
-
         if len(x)>2:
             addon = x[2]
             if addon:
@@ -974,3 +985,53 @@ def field(context, field_name, fieldformat=None):
     ret['show_label'] = show_label
     ret['standard_web_browser'] = context['standard_web_browser']
     return ret
+
+
+@inclusion_tag('widgets/get_table_row.html')
+def get_table_row(context, field_or_name, app_name=None, table_name=None, search_fields=None, filter=None, label = None,
+                   initial = None, is_new_button=False, get_target="popup_edit", new_target="inline"):
+    if type(field_or_name) in (SafeText, str,):
+        model = import_model(app_name, table_name)
+        _name = field_or_name
+        _app_name = app_name
+        _table_name = table_name
+        _initial = initial
+        _label = label if label else table_name
+        _queryset = None
+        _search_fields = search_fields
+    else:
+        _queryset = field_or_name.field.queryset
+        model = _queryset.model
+        _name = field_or_name.name
+        _app_name = app_name if app_name else _queryset.model._meta.app_label
+        _table_name = table_name if table_name else _queryset.model._meta.object_name
+        _initial = initial if initial else field_or_name.initial
+        _label = label if label else field_or_name.label
+        if search_fields:
+            _search_fields = search_fields
+        else:
+            if hasattr(field_or_name, 'search_fields'):
+                _search_fields = field_or_name.search_fields
+            else:
+                _search_fields = "name__icontains"
+
+    _filter = filter if filter else "-"
+
+
+    href1 = make_href("/%s/table/%s/%s/form/get?schtml=1" % (_app_name, _table_name, _filter))
+    href2 = make_href("/%s/table/%s/%s/add?schtml=1" % (_app_name, _table_name, _filter))
+
+    class _Form(forms.Form):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.fields[_name] = forms.ChoiceField(
+                widget=ModelSelect2WidgetExt(href1, href2, is_new_button, _label,
+                    model=model,
+                    search_fields=[_search_fields, "description__icontains"],
+                    queryset = _queryset,
+                ),
+            )
+    form = _Form(initial = { _name: _initial })
+    return { 'form': form, 'field': form[_name] }
+

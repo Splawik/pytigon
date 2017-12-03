@@ -122,7 +122,7 @@ def on_popup_in_form(elem):
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
-    new_fragment = jQuery("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML + "</div>")
+    new_fragment = jQuery("<div class='refr_source refr_object inline_dialog hide' id='IDIAL_"+id+"' href='"+href2+"'>" + INLINE_TABLE_HTML.replace("{{title}}",elem.getAttribute('title')) + "</div>")
     new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
     elem2 = new_fragment.find(".refr_target")
 
@@ -470,3 +470,8 @@ def refresh_current_page(url, elem, e):
 
 def refresh_current_app(url, elem, e):
     pass
+
+def _none():
+    pass
+
+jQuery.fn.modal.Constructor.prototype.enforceFocus = _none
