@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-05 17:48:17
+// Transcrypt'ed from Python, 2017-12-09 18:44:00
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3055,7 +3055,13 @@ function pytigon () {
 							}
 							if (jQuery (elem).hasClass ('new-row')) {
 								var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
-								elem2.insertAfter (jQuery (elem).closest ('div.tr'));
+								var new_position = jQuery (elem).closest ('.refr_object').find ('div.new_row');
+								if (new_position.length > 0) {
+									elem2.insertAfter (jQuery (new_position [0]));
+								}
+								else {
+									elem2.insertAfter (jQuery (elem).closest ('div.tr'));
+								}
 							}
 							else {
 								var test = jQuery (elem).closest ('form');

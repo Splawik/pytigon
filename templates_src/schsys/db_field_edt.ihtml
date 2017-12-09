@@ -155,7 +155,7 @@
             table width=800
                 tr
                     td
-            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{URL_BASE}}{{save_path}}
+            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                 DATA...{{txt|bencode}}
 
 
@@ -163,7 +163,7 @@
 %% content
     % if standard_web_browser
         %% edit_area
-            sch-vseditor value={{txt|bencode}},,,href={{URL_BASE}}{{save_path}},,,title={{title}}
+            sch-vseditor value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}}
     % else:
         {{ block.super }}
 

@@ -21,7 +21,7 @@
                         div class=card card-inverse login-card
                             div class=card-header..._(Login)
                             div class=card-block
-                                form class=login-form,,,action={{URL_BASE}}/schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
+                                form class=login-form,,,action={{base_path}}schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
                                     {% csrf_token %}
                                     div class=form-group
                                         label class=control-label,,,for=username_ ..._(User name)
@@ -48,7 +48,7 @@
                 div class=modal-content
                     div class=modal-header
                         h3..._(Change Password)
-                    form role=form,,,action={{URL_BASE}}/schsys/change_password/,,,method=post,,,name=change_password
+                    form role=form,,,action={{base_path}}schsys/change_password/,,,method=post,,,name=change_password
                         div class=modal-body
                             {% csrf_token %}
                             div class=form-group
@@ -221,12 +221,13 @@
                                                     div class=dropdown-menu
                                                         a href=../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
                                                         a href=../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
-                                                        a href={{URL_BASE}}/tools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
+                                                        a href={{base_url}}tools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
                                         %% list_content_actions
                                 % if is_paginated and table_type != 'datatable':
                                     div class=td col-sm-4 col-xs-7 text-right,,,align=right
 
                 % if standard_web_browser:
+                    div class=new_row
                     % if table_type == 'datatable':
                         button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
                             i class=fa fa-times

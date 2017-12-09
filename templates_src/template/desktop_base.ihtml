@@ -7,7 +7,7 @@
 
 %% js_scripts_base
     script language=javascript
-        .window.BASE_PATH = '{{URL_BASE}}/';
+        .window.BASE_PATH = '{{base_path}}';
 
     {% jscript_link 'system/browser-polyfill.min.js' %}
 
@@ -76,7 +76,7 @@
         .function base_fragment_init() {}
     %% component_init
         .component_init = null
-    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{URL_BASE}}/', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ gen_time }}' )
+    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ gen_time }}' )
 
 
 %% jquery_ready_start
@@ -176,7 +176,7 @@
                 li
                     div style=width:5px; height:10px;
     div id=logo_place
-        a href={{URL_BASE}}/,,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
+        a href={{base_path},,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
             span class=logo-lg
                 % if appset_title|length > 20:
                     small...{{appset_title}}
@@ -227,13 +227,13 @@
                 div class=dropdown-footer
                     % if user.is_superuser:
                     div class=pull-left
-                        button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                        button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
                     div class=pull-right
                         button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
         %if not autologin:
             li class=nav-item dropdown user user-menu
-                a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
+                a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout?schtml=1,,,title=_(Logout)
                     span class=fa fa-power-off
 
     <div id="menu" class="tab-content menu-content win-header">
@@ -248,12 +248,12 @@
             <div id="{{app_name}}" class="tab-pane tab-tab active" role="tabpanel">
 
     % if url|is_menu_checked:request.get_full_path:
-        a href={{URL_BASE}}/{{url}},,,class=btn btn-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{base_path}}{{url}},,,class=btn btn-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
             %if icon:
                 <i class="fa {{icon}}"></i>
             {{opis}}
     % else
-        a href={{URL_BASE}}/{{url}},,,class=btn btn-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{base_path}}{{url}},,,class=btn btn-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
             %if icon:
                 <i class="fa {{icon}}"></i>
             {{opis}}

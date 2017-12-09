@@ -97,10 +97,10 @@ def view_editor(request, pk, app, tab, model, template_name, field_edit_name, po
                 f = field
                 break
         if field_name:
-            save_path = '/' + app + '/table/' + tab + '/' + str(parent_pk) + '/' + table_name + '/' + str(pk) + \
+            save_path =  app + '/table/' + tab + '/' + str(parent_pk) + '/' + table_name + '/' + str(pk) + \
                 '/' + field_edit_name + '/py/editor/'
         else:
-            save_path = '/' + app + '/table/' + table_name + '/' + str(pk) + '/' + field_edit_name + '/py/editor/'
+            save_path = app + '/table/' + table_name + '/' + str(pk) + '/' + field_edit_name + '/py/editor/'
         c = {
             'app': app,
             'tab': table_name,
@@ -754,12 +754,6 @@ class GenericRows(object):
                 return ret
 
 
-            #def get_form_kwargs(self):
-            #    kwargs = super().get_form_kwargs()
-
-
-
-            #    return kwargs
 
             def form_valid(self, form, request=None):
                 """

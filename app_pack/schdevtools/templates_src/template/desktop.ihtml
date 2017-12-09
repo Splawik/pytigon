@@ -55,6 +55,6 @@
     .    console.log("SYNC!");
     .    run_after("OK");
     .}
-    .sync_struct = [ ['devparam', "{{URL_BASE}}/schdevtools/devparam/", devtools_sync], ];
+    .sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
     .init_sync(sync_struct);
     {{ block.super }}

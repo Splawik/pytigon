@@ -106,7 +106,7 @@
             td...1
             td...{{icon}}
             td...html
-            td...{{opis}},{{URL_BASE}}/{{url}}
+            td...{{opis}},{{base_path}}{{url}}
 
         % if forloop.last
             %% toolbars_end

@@ -163,7 +163,11 @@ def on_popup_edit_new(url, elem, e):
             window.WAIT_ICON.start()
         if jQuery(elem).hasClass('new-row'):
             elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
-            elem2.insertAfter(jQuery(elem).closest("div.tr"))
+            new_position=jQuery(elem).closest('.refr_object').find('div.new_row')
+            if new_position.length>0:
+                elem2.insertAfter(jQuery(new_position[0]))
+            else:
+                elem2.insertAfter(jQuery(elem).closest("div.tr"))
         else:
             test = jQuery(elem).closest('form')
             if test.length > 0:

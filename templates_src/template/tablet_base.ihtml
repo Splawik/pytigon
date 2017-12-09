@@ -53,9 +53,9 @@
         <ul class="treeview-menu sidebar-submenu">
 
     % if opis|length > 20:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
+        <li><a href="{{base_path}}{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
     % else:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
+        <li><a href="{{base_path}}{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
 
     % if forloop.last
         </ul></li>
@@ -75,7 +75,7 @@
         section class=sidebar
             ul class=sidebar-menu
                 li class=bg-primary
-                    a href={{URL_BASE}}/,,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
+                    a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
                         span class=logo-lg
                             % if appset_title|length > 20:
                                 small...{{appset_title}}
@@ -135,13 +135,13 @@
                                     strong...{{user.date_joined|isoformat}}
                             div class=dropdown-footer
                                 div class=pull-left
-                                    button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{URL_BASE}}/admin?schtml=1,,,title=_(Administration)..._(Administraction)
+                                    button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
                                 div class=pull-right
                                     button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
                     %if not autologin:
                         li class=nav-item dropdown user user-menu
-                            a class=system_menu,,,href=#,,,action={{URL_BASE}}/schsys/do_logout?schtml=1,,,title=_(Logout)
+                            a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout?schtml=1,,,title=_(Logout)
                                 span class=fa fa-power-off
     {{block.super}}
 

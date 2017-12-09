@@ -834,3 +834,11 @@ def append_filter(form_field, filter):
     if hasattr(form_field, "filter"):
         form_field.filter = filter
     return form_field
+
+
+@register.filter(name='get_or_tree')
+def get_or_tree(getattr):
+    if getattr:
+        return 'gettree'
+    else:
+        return 'tree'

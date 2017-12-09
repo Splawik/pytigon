@@ -16,6 +16,6 @@
                         div class=card-block
                             h4 class=card-title...{{app_pack.0}}
                             h6 class=card-subtitle...{{app_pack.1}}
-                            a class=card-link btn btn-success btn-lg,,,href={{URL_BASE}}/{{app_pack.0}}/,,,role=button
+                            a class=card-link btn btn-success btn-lg,,,href={{base_path}}{{app_pack.0}}/,,,role=button
                                 i class=fa fa-play
                                 .run
