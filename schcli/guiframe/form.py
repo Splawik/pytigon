@@ -840,7 +840,7 @@ class SchForm(ScrolledPanel):
                     return
                 if target == '_refresh':
                     self.any_parent_command('send_refr_obj')
-                if target == '_refresh_data':
+                if target == 'refresh_obj':
                     self.any_parent_command('_refresh')
                 return
             if href[:7] == 'http://' or href[:7] == 'file://':
@@ -876,7 +876,7 @@ class SchForm(ScrolledPanel):
             if fields:
                 (typ, fields2) = fields.split(':')
                 adr = adr + '|' + fields2
-            if target == '_refresh_data':
+            if target == 'refresh_obj':
                 self.any_parent_command('set_adr_and_param', adr, self.get_parm_obj())
                 self.any_parent_command('refresh_html')
                 return

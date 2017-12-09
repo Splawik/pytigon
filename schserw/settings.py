@@ -86,11 +86,14 @@ LANGUAGES = [['en', 'English'], ['pl', 'Polish']]
 LOGIN_REDIRECT_URL = '/'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
+
 BASE_URL = 'http://127.0.0.1:81'
 
 URL_ROOT_FOLDER = ''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
+
+APPEND_SLASH = False
 
 STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 

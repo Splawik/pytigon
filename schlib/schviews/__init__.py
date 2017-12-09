@@ -54,15 +54,15 @@ def make_path(view_name, args=None):
 
 
 def gen_tab_action(table, action, fun, extra_context=None):
-    return url(r'table/%s/action/%s$' % (table, action), fun, extra_context)
+    return url(r'table/%s/action/%s/$' % (table, action), fun, extra_context)
 
 
 def gen_tab_field_action(table, field, action, fun, extra_context=None):
-    return url(r'table/%s/(?P<parent_pk>\d+)/%s/action/%s$' % (table, field, action), fun, extra_context)
+    return url(r'table/%s/(?P<parent_pk>\d+)/%s/action/%s/$' % (table, field, action), fun, extra_context)
 
 
 def gen_row_action(table, action, fun, extra_context=None):
-    return url('table/%s/(?P<pk>\d+)/action/%s$' % (table, action), fun, extra_context)
+    return url('table/%s/(?P<pk>\d+)/action/%s/$' % (table, action), fun, extra_context)
 
 
 def transform_extra_context(context1, context2):
@@ -243,6 +243,19 @@ class GenericRows(object):
             else:
                 return self.base_path
 
+
+    def table_paths_to_context(self, view_class, context):
+        x = view_class.request.path.split('/table/', 1)
+        x2 = x[1].split('/')
+        context['app_path'] = x[0] + "/"
+        if 'parent_pk' in view_class.kwargs:
+            context['table_path'] = x[0] + "/table/" + "/".join(x2[:3]) + "/"
+            context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
+        else:
+            context['table_path'] = x[0] + "/table/" + x2[0] + "/"
+            context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
+
+
     def set_field(self, field=None):
         self.field = field
         return self
@@ -258,7 +271,7 @@ class GenericRows(object):
         return self
 
     def list(self):
-        url = r'(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|get|tree)$'
+        url = r'((?P<base_filter>[\w=_,;-]*)/|)(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|tree|get|gettree)/$'
 
         parent_class = self
 
@@ -312,8 +325,7 @@ class GenericRows(object):
                     if parent < 0:
                         parent_old = parent
                         try:
-                            parent = self.model.objects.get(id=-1
-                                     * parent).parent.id
+                            parent = self.model.objects.get(id=-1 * parent).parent.id
                         except:
                             parent = 0
                         path2 = request.get_full_path().replace(str(parent_old), str(parent))
@@ -353,6 +365,11 @@ class GenericRows(object):
                 context['rel_field'] = self.rel_field
                 context['filter'] = self.kwargs['filter']
 
+                parent_class.table_paths_to_context(self, context)
+
+                if 'base_filter' in self.kwargs and self.kwargs['base_filter']:
+                    context['base_filter'] = self.kwargs['base_filter']
+
                 context['app_name'] = parent_class.table.app
                 context['table_name'] = parent_class.tab
 
@@ -390,7 +407,10 @@ class GenericRows(object):
                     parent = int(self.kwargs['filter'])
                     if parent >= 0:
                         if parent == 0:
-                            parent = None
+                            if 'base_filter' in self.kwargs and self.kwargs['base_filter']:
+                                parent = int(self.kwargs['base_filter'])
+                            else:
+                                parent = None
                         ret =  ret.filter(parent=parent)
                 else:
                     if self.queryset:
@@ -479,6 +499,9 @@ class GenericRows(object):
                 context = super(DetailView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - '+str(_('element information'))
                 context['app_pack'] = ""
+
+                parent_class.table_paths_to_context(self, context)
+
                 for app in settings.APPS:
                     if '.' in app and parent_class.table.app in app:
                         _app = app.split('.')[0]
@@ -522,6 +545,9 @@ class GenericRows(object):
                 context = super(UpdateView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('update element'))
                 context['app_pack'] = ""
+
+                parent_class.table_paths_to_context(self, context)
+
                 for app in settings.APPS:
                     if '.' in app and parent_class.table.app in app:
                         _app = app.split('.')[0]
@@ -606,7 +632,7 @@ class GenericRows(object):
         return self._append(url, fun)
 
     def add(self):
-        url = r'(?P<add_param>[\w=_-]*)/add$'
+        url = r'(?P<add_param>[\w=_-]*)/add/$'
         parent_class = self
 
         class CreateView(generic.CreateView):
@@ -790,6 +816,9 @@ class GenericRows(object):
                 context['title'] = self.title + ' - '+ str(_('new element'))
                 context['object'] = self.object
                 context['app_pack'] = ""
+
+                parent_class.table_paths_to_context(self, context)
+
                 for app in settings.APPS:
                     if '.' in app and parent_class.table.app in app:
                         _app = app.split('.')[0]
@@ -824,6 +853,8 @@ class GenericRows(object):
                 nonlocal parent_class
                 context = super(DeleteView, self).get_context_data(**kwargs)
                 context['title'] = self.title + ' - ' + str(_('delete element'))
+
+                parent_class.table_paths_to_context(self, context)
 
                 context['app_pack'] = ""
                 for app in settings.APPS:
@@ -861,90 +892,11 @@ class GenericRows(object):
             )
         return self._append(url, fun, parm)
 
-    def tree(self):
-        url = r'(?P<parent_pk>[\d-]*)/(?P<target>[\w_-]*)/[_]?tree$'
-        parent_class = self
-
-        class TreeView(generic.ListView):
-            response_class = LocalizationTemplateResponse
-
-            model = self.base_model
-            paginate_by = 64
-            allow_empty = True
-            template_name = self.template_name
-            title = self.title_plural
-            if self.field:
-                rel_field = field
-            else:
-                rel_field = None
-
-            def doc_type(self):
-                if self.kwargs['target']=='pdf':
-                    return "pdf"
-                elif self.kwargs['target']=='odf':
-                    return "odf"
-                elif self.kwargs['target']=='txt':
-                    return "txt"
-                elif self.kwargs['target']=='json':
-                    return "json"
-                else:
-                    return "html"
-
-            def get_context_data(self, **kwargs):
-                nonlocal parent_class
-                context = super(TreeView, self).get_context_data(**kwargs)
-                context['title'] = self.title
-                context['rel_field'] = self.rel_field
-                parent = int(self.kwargs['parent_pk'])
-                context['parent_pk'] = parent
-                if parent > 0:
-                    context['parent_obj'] = self.model.objects.get(id=parent)
-                else:
-                    context['parent_obj'] = None
-
-                context['app_pack'] = ""
-                for app in settings.APPS:
-                    if '.' in app and parent_class.table.app in app:
-                        _app = app.split('.')[0]
-                        if not _app.startswith('_'):
-                            context['app_pack'] = app.split('.')[0]
-                        break
-                return context
-
-            def get(self, request, *args, **kwargs):
-                parent = int(kwargs['parent_pk'])
-                if parent < 0:
-                    parent_old = parent
-                    try:
-                        parent = self.model.objects.get(id=-1
-                                 * parent).parent.id
-                    except:
-                        parent = 0
-                    path2 = request.get_full_path().replace(str(parent_old), str(parent))
-                    return HttpResponseRedirect(path2)
-                else:
-                    return super(TreeView, self).get(request, *args, **kwargs)
-
-            def post(self, request, *args, **kwargs):
-                return self.get(request, *args, **kwargs)
-
-            def get_queryset(self):
-                parent = int(self.kwargs['parent_pk'])
-                queryset = self.model.objects.all()
-                if parent < 0:
-                    return self.model.objects.all()
-                else:
-                    if parent == 0:
-                        parent = None
-                    return self.model.objects.filter(parent=parent)
-
-        fun = make_perms_test_fun(self.base_perm % 'list', TreeView.as_view())
-        return self._append(url, fun)
 
 def generic_table(urlpatterns, app, tab, title='', title_plural='', template_name=None, extra_context=None,
             queryset=None, views_module=None):
     GenericTable(urlpatterns, app, views_module).new_rows(tab, None, title, title_plural, template_name, extra_context,
-            queryset).list().detail().edit().add().delete().editor().tree().gen()
+            queryset).list().detail().edit().add().delete().editor().gen()
 
 
 def generic_table_start(urlpatterns, app, views_module=None):

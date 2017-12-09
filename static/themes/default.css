@@ -26,7 +26,10 @@ not(.login_background) div.content-wrapper {
       border: medium none;
       box-shadow: none !important;
       margin-bottom: -3px !important;
-      outline: 0px; }
+      outline: 0px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 10rem; }
     #tabs2 li button {
       position: absolute;
       top: 0px;

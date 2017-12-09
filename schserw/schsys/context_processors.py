@@ -403,7 +403,7 @@ def sch_standard(request):
     else:
         form_delete = False
 
-    if '/view/' in request.path:
+    if request.path.endswith('/view'):
         form_info = True
     else:
         form_info = False
@@ -435,9 +435,12 @@ def sch_standard(request):
     else:
         show_title_bar=False
     if '/get' in request.path:
-        get = True
+        if '/gettree' in request.path:
+            get = 'gettree'
+        else:
+            get = 'get'
     else:
-        get = False
+        get = ""
     if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
         url_base = '/' + settings.URL_ROOT_FOLDER
     else:
@@ -503,6 +506,7 @@ def sch_standard(request):
         'form_grid': form_grid,
         'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
+        'base_path': url_base+"/",
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
         'browser_type': b_type,

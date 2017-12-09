@@ -710,24 +710,34 @@ def get_fields_names(obj):
 @register.filter(name='get_fields_verbose_names')
 def get_fields_verbose_names(obj):
     ret = []
-    for field in obj._meta.get_fields():
-        if hasattr(obj, field.name):
-            if field.name == 'id':
-                ret.insert(0,field.verbose_name)
-            else:
-                ret.append(field.verbose_name)
+    if hasattr(obj, "_meta"):
+        for field in obj._meta.get_fields():
+            if hasattr(obj, field.name):
+                if hasattr(field, "verbose_name"):
+                    if field.name == 'id':
+                        ret.insert(0,field.verbose_name)
+                    else:
+                        ret.append(field.verbose_name)
+                else:
+                    ret.append(field.name)
+    else:
+        for i in range(0, len(obj)):
+            ret.append("x%d" % i)
     return ret
 
 @register.filter(name='get_fields')
 def get_fields(obj):
-    ret = []
-    for field in obj._meta.get_fields():
-        if hasattr(obj, field.name):
-            if field.name == 'id':
-                ret.insert(0, getattr(obj, field.name))
-            else:
-                ret.append(getattr(obj, field.name))
-    return ret
+    if hasattr(obj, "_meta"):
+        ret = []
+        for field in obj._meta.get_fields():
+            if hasattr(obj, field.name):
+                if field.name == 'id':
+                    ret.insert(0, getattr(obj, field.name))
+                else:
+                    ret.append(getattr(obj, field.name))
+        return ret
+    else:
+        return obj
 
 
 @register.filter(name='has_group') 

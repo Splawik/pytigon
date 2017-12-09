@@ -302,7 +302,7 @@ class SchApp(App, _BASE_APP):
         else:
             href = "/"
 
-        self.http = httpclient.AppHttp(address, self)
+        self.http = httpclient.AppHttp(address+"/", self)
         ret, newaddr = self.http.get(self, href)
         if ret != 200:
             if not login(href, auth_type='basic'):
@@ -811,7 +811,7 @@ def _main_init(argv):
             'csrfmiddlewaretoken': app.csrf_token,
             'username': username,
             'password': password,
-            'next': address + "/" + app_name + '/schsys/ok' if app_name else  address + '/schsys/ok',
+            'next': address + "/" + app_name + '/schsys/ok/' if app_name else  address + '/schsys/ok/',
             'client_param': app._get_parm_for_server(),
         })
         ret_str = app.http.str()

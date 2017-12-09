@@ -31,13 +31,13 @@ STANDARD_ACTIONS = {
         'attrs_in_menu': '',
         #'url': "../../../{id}/action/{action}",
         #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
-        'url': "{base_path}../{table_name}/{id}/action/{action}",
+        'url': "{tp}{id}/action/{action}/",
     },
     'action': {
         'target': 'inline',
         #'url': "../../../{id}/action/{action}",
         #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
-        'url': "{base_path}../{table_name}/{id}/action/{action}",
+        'url': "{tp}{id}/action/{action}/",
     },
     'new_row': {
         'target': 'popup_edit',
@@ -48,7 +48,7 @@ STANDARD_ACTIONS = {
         'title': _('Update'),
         'class': "btn {{btn_size}} btn-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "../../../{id}/{action}",
+        'url': "{tp}{id}/{action}/",
         'icon': 'edit fa fa-lg fa-pencil',
     },
     'edit2': {
@@ -56,7 +56,7 @@ STANDARD_ACTIONS = {
         'titl': _('Update'),
         'class': "btn {{btn_size}} btn-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "./{id}/{action}",
+        'url': "{tp}{id}/{action}/",
         'icon': 'edit fa fa-lg fa-pencil',
     },
     #'otheredit_inline': {
@@ -72,7 +72,7 @@ STANDARD_ACTIONS = {
         'title': _('Delete'),
         'class': "popup_delete btn {{btn_size}} btn-danger",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "../../../{id}/{action}",
+        'url': "{tp}{id}/{action}/",
         'icon': 'delete fa fa-lg fa-trash-o'
     },
     'delete2': {
@@ -80,35 +80,35 @@ STANDARD_ACTIONS = {
         'title': _('Delete'),
         'class': "popup_delete btn {{btn_size}} btn-danger",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "./{id}/{action}",
+        'url': "./{id}/{action}/",
         'icon': 'delete fa fa-lg fa-trash-o'
     },
     'field_list': {
         'target': 'inline',
         'class': "popup_inline btn {{btn_size}} btn-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
-        'child-url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
+        'url': "{ap}table/{object_name}/{id}/{x1}/-/form/sublist/",
+        'child-url': "{ap}{object_name}/{id}/{x1}/-/form/sublist/",
         'icon': 'grid fa fa-lg fa-caret-down',
     },
     'field_list_get': {
         'target': 'inline',
         'class': "popup_inline btn {{btn_size}} btn-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
-        'child-url': "{base_path}../{object_name}/{id}/{x1}/-/form/get",
+        'url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
+        'child-url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
         'icon': "grid fa fa-lg fa-caret-down",
     },
     'field_action': {
         'target': 'inline',
         'class': "popup_inline btn {{btn_size}} btn-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "{base_path}../{object_name}/{id}/{x1}/-/form/sublist",
+        'url': "{ap}{object_name}/{id}/{x1}/-/form/sublist/",
         'icon': 'grid fa fa-lg fa-angle-double-down',
     },
     'field_edit': {
-        'url': "{base_path}../{object_name}/{id}/{x1}/py/editor",
-        'child-url': "{base_path}../{object_name}/{id}/{x1}/py/editor",
+        'url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
+        'child-url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
         'icon': 'edit fa fa-lg fa-pencil-square-o',
     },
     'print': {
@@ -117,17 +117,17 @@ STANDARD_ACTIONS = {
     },
     'pdf': {
         'target': '_blank',
-        'url': "../../../{id}/pdf/view/",
+        'url': "{tp}{id}/pdf/view/",
         'icon': 'eye fa fa-lg fa-eye',
     },
     'odf': {
         'target': '_blank',
-        'url': "../../../{id}/odf/view/",
+        'url': "{tp}{id}/odf/view/",
         'icon': 'bullets fa fa-lg fa-list',
     },
     'null': {
         'target': 'null',
-        'url': "../../../{id}/action/{action}",
+        'url': "{tp}{id}/action/{action}/",
     },
     'inline': {
         'target': 'inline',
@@ -292,7 +292,7 @@ class Action:
                         self.icon = ""
 
     def format(self, s):
-        ret = s.format(**self.d)
+        ret = s.format(**self.d).strip()
         if self.d['x1']:
             buf = "x1=%s" % self.d['x1']
             if self.d['x2']:
@@ -304,15 +304,23 @@ class Action:
 
 def standard_dict(context, parm):
     parm['standard_web_browser'] = context['standard_web_browser']
-    if 'rel_field' in context and context['rel_field']:
-        parm['base_path'] = '../../../../../'
-    else:
-        parm['base_path'] = '../../../'
+    #if 'rel_field' in context and context['rel_field']:
+    #    parm['base_path'] = '../../../../../'
+    #else:
+    #    parm['base_path'] = '../../../'
     path = context['request'].path
-    if not path.endswith('/'):
-        path = path+'/'
+    #if not path.endswith('/'):
+    #    path = path+'/'
     parm['request'] = context['request']
     parm['path'] = path
+    parm['base_path'] = context['URL_BASE']+"/"
+    parm['bp'] = context['URL_BASE']+"/"
+    if 'app_path' in context:
+        parm['ap'] = context['app_path']
+    if 'table_path' in context:
+        parm['tp'] = context['table_path']
+    if 'table_path_and_filter' in context:
+        parm['tpf'] = context['table_path_and_filter']
     return parm
 
 

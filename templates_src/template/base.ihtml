@@ -219,8 +219,8 @@
                                                     button type=button,,,class=btn btn-secondary {{btn_size}} dropdown-toggle,,,data-toggle=dropdown
                                                         span class=fa fa-bars
                                                     div class=dropdown-menu
-                                                        a href=../odf/list,,,class=dropdown-item,,,target=_blank...=> ods
-                                                        a href=../pdf/list,,,class=dropdown-item,,,target=_blank...=> pdf
+                                                        a href=../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
+                                                        a href=../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
                                                         a href={{URL_BASE}}/tools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
                                         %% list_content_actions
                                 % if is_paginated and table_type != 'datatable':

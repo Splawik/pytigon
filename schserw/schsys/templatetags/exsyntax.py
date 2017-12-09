@@ -42,11 +42,11 @@ from schlib.schdjangoext.tools import import_model
 
 from schlib.schdjangoext.tools import make_href
 from schlib.schdjangoext.fields import ForeignKey, ModelSelect2WidgetExt
+from schlib.schdjangoext.models import TreeModel
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 from django.utils.safestring import SafeText
 from django import forms
-#from django_select2.forms import ModelSelect2Widget
 
 
 
@@ -103,7 +103,7 @@ def view_row(context, title = "", icon_name = "", target = "popup_info", attrs =
     if url:
         href=url
     else:
-        href = "../../../%s/_/view/" % context['object'].id
+        href = "{tp}%s/_/view/" % context['object'].id
     ret = action_fun(context, 'view_row', title, icon_name, target, attrs,tag_class, href)
     return ret
 
@@ -126,8 +126,7 @@ def new_row_base(context, action="new_row/-", title="", icon_name="", target='',
     if url:
         url2=url
     else:
-        #url2='../../../%s/add' % param
-        url2='../../../{x1}/add'
+        url2='{tp}{x1}/add/'
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     if title and title[0] == '+':
         description = title[1:]
@@ -151,11 +150,11 @@ def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_cla
 @inclusion_tag('widgets/list_action.html')
 def list_action(context, action, title="", icon_name="", target='_top', attrs='', tag_class="", url="", active=False):
     if attrs:
-        ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "{tpf}action/%s/" % action)
     elif active:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "{tpf}action/%s/" % action)
     else:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "../../../action/%s" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "{tpf}action/%s/" % action)
     return ret
 
 
@@ -736,7 +735,7 @@ def frame(context, href, height):
 
 _collapse_str = """
         <div class="alert alert-warning" role="alert">
-            <a class="collapsed" data-toggle="collapse" href="#{id}" aria-expanded="false">
+            <a class="collapsed" data-toggle="collapse" href="#{id}/" aria-expanded="false">
                 {title}
             </a>
         </div>
@@ -1015,11 +1014,17 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
             else:
                 _search_fields = "name__icontains"
 
-    _filter = filter if filter else "-"
-
-
-    href1 = make_href("/%s/table/%s/%s/form/get?schtml=1" % (_app_name, _table_name, _filter))
-    href2 = make_href("/%s/table/%s/%s/add?schtml=1" % (_app_name, _table_name, _filter))
+    if TreeModel in model.__bases__:
+        if filter:
+            href1 = make_href("/%s/table/%s/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name, filter))
+            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+        else:
+            href1 = make_href("/%s/table/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name))
+            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+    else:
+        _filter = filter if filter else "-"
+        href1 = make_href("/%s/table/%s/%s/form/get/?schtml=1" % (_app_name, _table_name, _filter))
+        href2 = make_href("/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter))
 
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):

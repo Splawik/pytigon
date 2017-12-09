@@ -390,7 +390,7 @@
     % if table_type == 'datatable':
         .class="tabsort table datatable table-hover table-striped table-condensed {%if get %}table_get{% endif %}"
         .data-method="get"
-        .data-url="{{request.path}}/../../json/{% if get %}get{% else %}list{% endif %}"        
+        .data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}list/{% endif %}"
         .data-side-pagination="server"
         .data-pagination="true"
         .data-page-size="64"

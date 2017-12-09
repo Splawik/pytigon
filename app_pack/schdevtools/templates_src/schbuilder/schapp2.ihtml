@@ -9,7 +9,7 @@
         def init_form(self):
             self.path = "{{request.path}}"
             http = wx.GetApp().get_http(self)
-            http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+            http.post(self, "{{base_path}}tools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
 
 
         def filter_url(self, type, url):
@@ -22,14 +22,13 @@
                     win.toolbar_interface.remove_page(page.title)
 
                     http = wx.GetApp().get_http(self)
-                    http.post(self, "/tools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+                    http.post(self, "{{base_path}}tools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
 
                     return True
                 else:
                     id = self.app_list.GetValue()
                     if id:
-                        url2 = "../../../../../SChApp/" + id +"/" + url
-                        return url2
+                        return url.replace('{id}', id)
                     else:
                         dlg = wx.MessageDialog(self, _('Select application!'), _('A Message Box'), wx.OK | wx.ICON_INFORMATION )
                         dlg.ShowModal()
@@ -66,24 +65,24 @@
                                             {{item.name}}
             td width=20
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=tabele,,,label=_(Table),,,SRC=client://mimetypes/x-office-spreadsheet.png,,,href=schtable_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=tabele,,,label=_(Table),,,SRC=client://mimetypes/x-office-spreadsheet.png,,,href={{app_path}}table/SChApp/{id}/schtable_set/-/form/list/
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=choices,,,label=_(Choices),,,SRC=client://categories/applications-games.png,,,href=schchoice_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=choices,,,label=_(Choices),,,SRC=client://categories/applications-games.png,,,href={{app_path}}table/SChApp/{id}/schchoice_set/-/form/list/
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=views,,,label=_(Views),,,SRC=client://mimetypes/text-x-generic-template.png,,,href=schview_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=views,,,label=_(Views),,,SRC=client://mimetypes/text-x-generic-template.png,,,href={{app_path}}table/SChApp/{id}/schview_set/-/form/list/
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=forms,,,label=_(Forms),,,SRC=client://mimetypes/x-office-document.png,,,href=schform_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=forms,,,label=_(Forms),,,SRC=client://mimetypes/x-office-document.png,,,href={{app_path}}table/SChApp/{id}/schform_set/-/form/list/
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=menu,,,label=_(Menu),,,SRC=client://actions/tab-new.png,,,href=schappmenu_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=menu,,,label=_(Menu),,,SRC=client://actions/tab-new.png,,,href={{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/
             td cellpadding=0
-                CTRLNOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=client://apps/utilities-terminal.png,,,href=schtask_set/-/form/list
+                CTRLNOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=client://apps/utilities-terminal.png,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/
             td width=20
             td cellpadding=0
                 % widget class='menu' id='user_action' title='User action' style='toolbar': 
-                    li:::a class=btn btn-primary btn-sm,,,href=schtemplate_set/-/form/list..._(Templates)
-                    li:::a class=btn btn-primary btn-sm,,,href=schfiles_set/-/form/list..._(Custom files)
-                    li:::a class=btn btn-primary btn-sm,,,href=model_code/form/editor..._(User Models)
-                    li:::a class=btn btn-primary btn-sm,,,href=view_code/form/editor..._(User View)
-                    li:::a class=btn btn-primary btn-sm,,,href=urls_code/form/editor..._(User Url)
-                    li:::a class=btn btn-primary btn-sm,,,href=tasks_code/form/editor..._(User Tasks)
-                    li:::a class=btn btn-primary btn-sm,,,href=doc/form/editor..._(Doc)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/..._(Templates)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/..._(Custom files)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(User Models)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(User View)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(User Url)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(User Tasks)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/..._(Doc)

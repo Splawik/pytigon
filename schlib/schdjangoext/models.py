@@ -92,3 +92,7 @@ class JSONModel(models.Model):
 
         super().save(*args, **kwargs)
 
+
+class TreeModel(models.Model):
+    class Meta:
+        abstract = True

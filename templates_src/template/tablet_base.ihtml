@@ -53,9 +53,9 @@
         <ul class="treeview-menu sidebar-submenu">
 
     % if opis|length > 20:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis|truncatechars:20}}</a></li>
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
     % else:
-        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis|truncatechars:21}}</a></li>
+        <li><a href="{{URL_BASE}}/{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
 
     % if forloop.last
         </ul></li>

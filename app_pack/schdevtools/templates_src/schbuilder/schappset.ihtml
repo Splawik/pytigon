@@ -42,7 +42,7 @@
 
 %% list_row_actions
     % row_actions: ===>
-        UP,Open in toolbar,[|wx.ART_GO_TO_PARENT],_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,../../../../SChAppSet_up/{id}/schapp_set/-/form/list?childwin=1
+        UP,Open in toolbar,[|wx.ART_GO_TO_PARENT],_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,{{app_path}}table/SChAppSet_up/{id}/schapp_set/-/form/list/?childwin=1
         edit
         gen,Build,[|client://categories/applications-multimedia.png]
         |

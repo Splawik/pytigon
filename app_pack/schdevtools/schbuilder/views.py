@@ -414,7 +414,7 @@ def gen(request, pk):
                 if field.type in ('GTreeForeignKey', 'GHiddenTreeForeignKey'):
                     is_tree_table = True
                     if table.base_table in (None, "", "models.Model") and not table.proxy_model:
-                        table.base_table = 'models.TreeModel'
+                        table.base_table = 'TreeModel'
                         table.tree_tab = 1
                     else: 
                         table.tree_tab = 2

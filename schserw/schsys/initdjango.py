@@ -31,8 +31,8 @@ BaseForm._old_html_output = BaseForm._html_output
 
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
-models.TreeModel = models.Model
 
+#models.TreeModel = models.Model
 
 def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
     normal_row2 = normal_row.replace('<th>', "<th align='left'><em>").replace('</th>', '</em></th>')

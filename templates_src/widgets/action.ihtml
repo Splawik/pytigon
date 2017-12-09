@@ -5,7 +5,7 @@
 
 %% action_widget_content
     % if standard_web_browser:
-        a href={{path}}{{action.url|safe}},,,class={% block action_class %}{% endblock %}{{action.tag_class}},,,title={{action.title}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
+        a href={{action.url|safe}},,,class={% block action_class %}{% endblock %}{{action.tag_class}},,,title={{action.title}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
             % if browser_type == 'mobile':
                 % if not action.icon:
                     {{action.title}}
@@ -16,7 +16,7 @@
                     {{action.title}}
 
     % else:
-        ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={% if action.url.0 != '/' %}{{path}}{% endif %}{{action.url}}
+        ctrlbutton name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{action.url}}
         % comment:
             % if action.icon:
                 a href={{path}}{{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}},,,src={{action.icon}}

@@ -4,7 +4,7 @@ import django
 from django.db import models
 
 from schlib.schdjangoext.fields import *
-from schlib.schdjangoext.models import JSONModel
+from schlib.schdjangoext.models import *
 
 import schlib.schdjangoext.fields as ext_models
 
@@ -425,20 +425,20 @@ class SChApp( models.Model):
         ret = []
         for table in self.schtable_set.all():
             if table.generic:
-                ret.append('table/' + table.name +"/-/form/list")
+                ret.append('table/' + table.name +"/-/form/list/")
             for field in table.schfield_set.all():
                 if field.is_rel():
                     if field.type[0]=='G':
                         if field.name == 'parent' and field.rel_to == "'self'":
-                            ret.append('table/'+table.name+"/0/form/tree")
+                            ret.append('table/'+table.name+"/0/form/tree/")
         for view in self.schview_set.all():
             if view.url and view.url != "":
                 if not main:
                     if view.view_type=='r':
-                        url = 'table/' +  view.url + "/<<pk>>/action/"+view.name
+                        url = 'table/' +  view.url + "/<<pk>>/action/"+view.name+"/"
                         ret.append(url)
                 if view.view_type=='t':
-                    url = 'table/' +  view.url + "/action/"+view.name
+                    url = 'table/' +  view.url + "/action/"+view.name+"/"
                     ret.append(url)
                 if view.view_type=='u':
                     if not (main and '?P' in view.url):

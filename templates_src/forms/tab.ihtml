@@ -31,5 +31,5 @@
                 % delete_row "usuń"
 
 %% table_footer
-  [ - |  - |  <a href="add/" class="popup" name="insert" title="nowy element">nowy element</a> ]
+  [ - |  - |  <a href="add" class="popup" name="insert" title="nowy element">nowy element</a> ]
 
