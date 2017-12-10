@@ -188,27 +188,29 @@
                 % if standard_web_browser:
             %% list_content_header
                 div
-                    div class=table container,,,width=100%
+                    div class=table container,,,width=100%,,,style={% if get %}border:none;margin-top:-40px;{% endif %}
                         %%list_content_header_first_row
-                            div class=tr row list_content_header list_content_header_first_row
-                                div class=td col-sm-12 hidden-sm-down text-center
-                                    %% list_content_title
-                                        h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
+                            % if not get:
+                                div class=tr row list_content_header list_content_header_first_row
+                                    div class=td col-sm-12 hidden-sm-down text-center
+                                        %% list_content_title
+                                            h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
                         %%list_content_header_two_row
-                            div class=tr row list_content_header list_content_header_two_row
-                                div class=td col-md-12 col-sm-12,,,colspan=3
-                                    %% list_filter_form
-                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
-                                            % csrf_token
-                                            %% form_filter
-                                                %if form
-                                                    %% form_content
-                                                        {{ form.non_field_errors }}
-                                                        %% form_table_filter
-                                                            % inline_form:
-                                                        %% form_content_button
-                                                            button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
-                                                                span class=fa fa-refresh
+                            % if form:
+                                div class=tr row list_content_header list_content_header_two_row
+                                    div class=td col-md-12 col-sm-12,,,colspan=3
+                                        %% list_filter_form
+                                            form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
+                                                % csrf_token
+                                                %% form_filter
+                                                    %if form
+                                                        %% form_content
+                                                            {{ form.non_field_errors }}
+                                                            %% form_table_filter
+                                                                % inline_form:
+                                                            %% form_content_button
+                                                                button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
+                                                                    span class=fa fa-refresh
                         %%list_content_header_third_row
                             div class=tr row list_content_header list_content_header_third_row
                                 div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
@@ -228,7 +230,7 @@
 
                 % if standard_web_browser:
                     div class=new_row
-                    % if table_type == 'datatable':
+                    % if table_type == 'datatable' and not get:
                         button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
                             i class=fa fa-times
                     <div class="tableframe">

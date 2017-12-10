@@ -150,11 +150,11 @@ def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_cla
 @inclusion_tag('widgets/list_action.html')
 def list_action(context, action, title="", icon_name="", target='_top', attrs='', tag_class="", url="", active=False):
     if attrs:
-        ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "{tpf}action/%s/" % action)
+        ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "{tp}action/%s/" % action)
     elif active:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "{tpf}action/%s/" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "{tp}action/%s/" % action)
     else:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "{tpf}action/%s/" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "{tp}action/%s/" % action)
     return ret
 
 

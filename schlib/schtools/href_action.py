@@ -31,13 +31,15 @@ STANDARD_ACTIONS = {
         'attrs_in_menu': '',
         #'url': "../../../{id}/action/{action}",
         #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
-        'url': "{tp}{id}/action/{action}/",
+        #'url': "{tp}{id}/action/{action}/",
+        'url': "{ap}table/{table_name}/{id}/action/{action}/",
     },
     'action': {
         'target': 'inline',
         #'url': "../../../{id}/action/{action}",
-        #'child-url': "{base_path}../{table_name}/{id}/action/{action}",
-        'url': "{tp}{id}/action/{action}/",
+        #'url': "{tp}{id}/action/{action}/",
+        #'child-url': "{ap}table/{table_name}/{id}/action/{action}",
+        #'url': "{ap}table/{table_name}/{id}/action/{action}/",
     },
     'new_row': {
         'target': 'popup_edit',
@@ -80,7 +82,7 @@ STANDARD_ACTIONS = {
         'title': _('Delete'),
         'class': "popup_delete btn {{btn_size}} btn-danger",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
-        'url': "./{id}/{action}/",
+        'url': "{tp}{id}/{action}/",
         'icon': 'delete fa fa-lg fa-trash-o'
     },
     'field_list': {
@@ -88,7 +90,7 @@ STANDARD_ACTIONS = {
         'class': "popup_inline btn {{btn_size}} btn-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{ap}table/{object_name}/{id}/{x1}/-/form/sublist/",
-        'child-url': "{ap}{object_name}/{id}/{x1}/-/form/sublist/",
+        #'child-url': "{ap}{object_name}/{id}/{x1}/-/form/sublist/",
         'icon': 'grid fa fa-lg fa-caret-down',
     },
     'field_list_get': {
@@ -96,7 +98,7 @@ STANDARD_ACTIONS = {
         'class': "popup_inline btn {{btn_size}} btn-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
-        'child-url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
+        #'child-url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
         'icon': "grid fa fa-lg fa-caret-down",
     },
     'field_action': {
@@ -108,7 +110,7 @@ STANDARD_ACTIONS = {
     },
     'field_edit': {
         'url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
-        'child-url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
+        #'child-url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
         'icon': 'edit fa fa-lg fa-pencil-square-o',
     },
     'print': {
