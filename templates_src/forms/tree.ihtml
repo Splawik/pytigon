@@ -39,8 +39,12 @@
             a href={{table_path}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn btn-primary ladda-button,,,name=+
                 span class=fa fa-lg fa-plus
         %else
-            a href={{table_path}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn ladda-button,,,name=+
-                span class=fa fa-lg fa-plus
+            % if get:
+                span class=button btn
+                    span class=fa fa-lg fa-ban
+            % else:
+                a href={{table_path}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn ladda-button,,,name=+
+                    span class=fa fa-lg fa-plus-square-o
         {{ block.super }}
 
 %% tabsort_class

@@ -1,14 +1,77 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-10 11:28:53
+// Transcrypt'ed from Python, 2017-12-10 21:08:55
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
     var __world__ = __all__;
     
-    // Nested object creator, part of the nesting may already exist and have attributes
-    var __nest__ = function (headObject, tailNames, value) {
-        // In some cases this will be a global object, e.g. 'window'
+    /* Nested module-object creator, part of the nesting may already exist and have attributes
+    
+    A Transcrypt applicaton consists of a main module and additional modules.
+    Transcrypt modules constitute a unique, unambigous tree by their dotted names, no matter which of the alternative module root paths they come from.
+    The main module is represented by a main function by the name of the application.
+    The locals of this function constitute the outer namespace of the Transcrypt application.
+    References to all local variables of this function are also assigned to attributes of local variable __all__, using the variable names as an attribute names.
+    The main function returns this local variable __all__ (that inside the function is also known by the name __world__)
+    Normally this function result is assigned to window.<application name>.
+    The function may than be exited (unless its main line starts an ongoing activity), but the application namespace stays alive tby the reference that window has to it.
+    In case of the ongoing activity including the script is enough to start it, in other cases it has to be started explicitly by calling window.<application name>.<a function>.
+    There may be multiple such entrypoint functions.
+    
+    Additional modules are represented by objects rather than functions, nested into __world__ (so into __all__ of the main function).
+    This nesting can be directly or indirectly, according to the dotted paths of the additional modules.
+    One of the methods of the module object is the __init__ function, that's executed once at module initialisation time.
+    
+    The additional modues also have an __all__ variable, an attribute rather than a local variable.
+    However this __all__ object is passed to the __init__ function, so becomes a local variable there.
+    Variables in additional modules first become locals to the __init__ function but references to all of them are assigend to __all__ under their same names.
+    This resembles the cause of affairs in the main function.
+    However __world__ only referes to the __all__ of the main module, not of any additional modules.
+    Importing a module boils down to adding all members of its __all__ to the local namespace, directly or via dotted access, depending on the way of import.
+    
+    In each local namespace of the module function (main function for main module, __init__ for additional modules) there's a variable __name__ holding the name of the module.
+    Classes are created inside the static scope of a particular module, and at that (class creation) time their variable __module__ gets assigned a reference to __name__.
+    This assignement is generated explicitly by the compiler, as the class creation function __new__ of the metaclass isn't in the static scope containing __name__.
+    
+    In case of
+        import a
+        import a.b
+    a will have been created at the moment that a.b is imported,
+    so all a.b. is allowed to do is an extra attribute in a, namely a reference to b,
+    not recreate a, since that would destroy attributes previously present in a
+    
+    In case of
+        import a.b
+        import a
+    a will have to be created at the moment that a.b is imported
+    
+    In general in a chain
+        import a.b.c.d.e
+    a, a.b, a.b.c and a.b.c.d have to exist before e is created, since a.b.c.d should hold a reference to e.
+    Since this applies recursively, if e.g. c is already created, we can be sure a and a.b. will also be already created.
+    
+    So to be able to create e, we'll have to walk the chain a.b.c.d, starting with a.
+    As soon as we encounter a module in the chain that isn't already there, we'll have to create the remainder (tail) of the chain.
+    
+    e.g.
+        import a.b.c.d.e
+        import a.b.c
+    
+    will generate
+        var modules = {};
+        __nest__ (a, 'b.c.d.e', __init__ (__world__.a.b.c.d.e));
+        __nest__ (a, 'b.c', __init__ (__world__.a.b.c));
+        
+    The task of the __nest__ function is to start at the head object and then walk to the chain of objects behind it (tail),
+    creating the ones that do not exist already, and insert the necessary module reference attributes into them.   
+    */
+    
+    var __nest__ = function (headObject, tailNames, value) {    
         var current = headObject;
+        // In some cases this will be <main function>.__all__,
+        // which is the main module and is also known under the synonym <main function.__world__.
+        // N.B. <main function> is the entry point of a Transcrypt application,
+        // Carrying the same name as the application except the file name extension.
         
         if (tailNames != '') {  // Split on empty string doesn't give empty list
             // Find the last already created object in tailNames
@@ -190,11 +253,13 @@
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var __name__ = 'org.transcrypt.__base__';
 					var __Envir__ = __class__ ('__Envir__', [object], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self) {
 							self.interpreter_name = 'python';
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.6.57';
+							self.transpiler_version = '3.6.61';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -202,6 +267,7 @@
 					__pragma__ ('<all>')
 						__all__.__Envir__ = __Envir__;
 						__all__.__envir__ = __envir__;
+						__all__.__name__ = __name__;
 					__pragma__ ('</all>')
 				}
 			}
@@ -213,7 +279,9 @@
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var __name__ = 'org.transcrypt.__standard__';
 					var Exception = __class__ ('Exception', [object], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self) {
 							var kwargs = dict ();
 							if (arguments.length) {
@@ -262,26 +330,31 @@
 						});}
 					});
 					var IterableError = __class__ ('IterableError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, error) {
 							Exception.__init__ (self, "Can't iterate over non-iterable", __kwargtrans__ ({error: error}));
 						});}
 					});
 					var StopIteration = __class__ ('StopIteration', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, error) {
 							Exception.__init__ (self, 'Iterator exhausted', __kwargtrans__ ({error: error}));
 						});}
 					});
 					var ValueError = __class__ ('ValueError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var KeyError = __class__ ('KeyError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var AssertionError = __class__ ('AssertionError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							if (message) {
 								Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
@@ -292,27 +365,34 @@
 						});}
 					});
 					var NotImplementedError = __class__ ('NotImplementedError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var IndexError = __class__ ('IndexError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var AttributeError = __class__ ('AttributeError', [Exception], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self, message, error) {
 							Exception.__init__ (self, message, __kwargtrans__ ({error: error}));
 						});}
 					});
 					var Warning = __class__ ('Warning', [Exception], {
+						__module__: __name__,
 					});
 					var UserWarning = __class__ ('UserWarning', [Warning], {
+						__module__: __name__,
 					});
 					var DeprecationWarning = __class__ ('DeprecationWarning', [Warning], {
+						__module__: __name__,
 					});
 					var RuntimeWarning = __class__ ('RuntimeWarning', [Warning], {
+						__module__: __name__,
 					});
 					var __sort__ = function (iterable, key, reverse) {
 						if (typeof key == 'undefined' || (key != null && key .hasOwnProperty ("__kwargtrans__"))) {;
@@ -397,7 +477,7 @@
 						return function () {
 							var __accu0__ = [];
 							var __iterable0__ = iterable;
-							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 								var item = __iterable0__ [__index0__];
 								__accu0__.append (func (item));
 							}
@@ -411,7 +491,7 @@
 						return function () {
 							var __accu0__ = [];
 							var __iterable0__ = iterable;
-							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 								var item = __iterable0__ [__index0__];
 								if (func (item)) {
 									__accu0__.append (item);
@@ -421,6 +501,7 @@
 						} ();
 					};
 					var __Terminal__ = __class__ ('__Terminal__', [object], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self) {
 							self.buffer = '';
 							try {
@@ -459,7 +540,7 @@
 							self.buffer = '{}{}{}'.format (self.buffer, sep.join (function () {
 								var __accu0__ = [];
 								var __iterable0__ = args;
-								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 									var arg = __iterable0__ [__index0__];
 									__accu0__.append (str (arg));
 								}
@@ -473,7 +554,7 @@
 								console.log (sep.join (function () {
 									var __accu0__ = [];
 									var __iterable0__ = args;
-									for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+									for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 										var arg = __iterable0__ [__index0__];
 										__accu0__.append (str (arg));
 									}
@@ -518,6 +599,7 @@
 						__all__.ValueError = ValueError;
 						__all__.Warning = Warning;
 						__all__.__Terminal__ = __Terminal__;
+						__all__.__name__ = __name__;
 						__all__.__sort__ = __sort__;
 						__all__.__terminal__ = __terminal__;
 						__all__.filter = filter;
@@ -752,10 +834,18 @@
     };
     __all__.len = len;
 
-    // General conversions
+    // General conversions and checks
 
-    function __i__ (any) {  //  Conversion to iterable
+    function __i__ (any) {  //  Convert to iterable
         return py_typeof (any) == dict ? any.py_keys () : any;
+    }
+
+    function __k__ (keyed, key) {  //  Check existence of dict key via retrieved element
+        var result = keyed [key];
+        if (typeof result == 'undefined') {
+             throw KeyError (key, new Error());
+        }
+        return result;
     }
 
     // If the target object is somewhat true, return it. Otherwise return false.
@@ -1306,7 +1396,7 @@
         this.push (element);
     };
 
-    Array.prototype.clear = function () {
+    Array.prototype.py_clear = function () {
         this.length = 0;
     };
 
@@ -1487,7 +1577,7 @@
 
     Array.prototype.py_update = function () {   // O (n)
         var updated = [] .concat.apply (this.slice (), arguments) .sort ();
-        this.clear ();
+        this.py_clear ();
         for (var i = 0; i < updated.length; i++) {
             if (updated [i] != updated [i - 1]) {
                 this.push (updated [i]);
@@ -3811,6 +3901,7 @@ function pytigon () {
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var __name__ = 'tools';
 					var LOADED_FILES = dict ({});
 					var FIRST_INIT = true;
 					var FRAGMENT_INIT_FUN = list ([]);
@@ -3859,7 +3950,7 @@ function pytigon () {
 							}
 						};
 						elem2.find ('.inline_frame').each (load_inline_frame);
-						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': '100%'}));
+						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': 'calc(100% - 42px)'}));
 						var init_select2_ctrl = function () {
 							var sel2 = jQuery (this);
 							var src = sel2.closest ('.input-group');
@@ -3880,7 +3971,7 @@ function pytigon () {
 							window.BASE_FRAGMENT_INIT ();
 						}
 						var __iterable0__ = FRAGMENT_INIT_FUN;
-						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 							var fun = __iterable0__ [__index0__];
 							fun (elem2);
 						}
@@ -3944,7 +4035,7 @@ function pytigon () {
 						}
 						if (MOUNT_INIT_FUN) {
 							var __iterable0__ = MOUNT_INIT_FUN;
-							for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+							for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 								var fun = __iterable0__ [__index0__];
 								fun (elem);
 							}
@@ -3968,7 +4059,7 @@ function pytigon () {
 						var file_name = 'temp.dat';
 						var var_list = content_disposition.py_split (';');
 						var __iterable0__ = var_list;
-						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 							var pos = __iterable0__ [__index0__];
 							if (__in__ ('filename', pos)) {
 								var file_name = pos.py_split ('=') [1];
@@ -4194,7 +4285,7 @@ function pytigon () {
 							if (len (x2) > 1) {
 								var x3 = list ([]);
 								var __iterable0__ = x2;
-								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 									var pos = __iterable0__ [__index0__];
 									if (!(__in__ ('page=', pos))) {
 										x3.append (pos);
@@ -4229,7 +4320,7 @@ function pytigon () {
 							var functions = LOADED_FILES [path];
 							if (functions) {
 								var __iterable0__ = functions;
-								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 									var fun = __iterable0__ [__index0__];
 									fun ();
 								}
@@ -4270,7 +4361,7 @@ function pytigon () {
 							}
 						};
 						var __iterable0__ = paths.py_split (';');
-						for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+						for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 							var path = __iterable0__ [__index0__];
 							if (path.length > 0) {
 								var counter = counter + 1;
@@ -4326,6 +4417,7 @@ function pytigon () {
 						__all__.FRAGMENT_INIT_FUN = FRAGMENT_INIT_FUN;
 						__all__.LOADED_FILES = LOADED_FILES;
 						__all__.MOUNT_INIT_FUN = MOUNT_INIT_FUN;
+						__all__.__name__ = __name__;
 						__all__._req_post = _req_post;
 						__all__.ajax_get = ajax_get;
 						__all__.ajax_load = ajax_load;

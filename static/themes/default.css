@@ -240,6 +240,10 @@ body:not(.modal-open) .dark_background {
 #dialog-form-modal .inline_dialog {
   width: 100% !important; }
 
+div.form_delete, div.form_info {
+  max-height: 25rem;
+  overflow-y: auto; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
@@ -506,6 +510,9 @@ div.dtp-buttons button {
 
 div.td_action .btn-secondary:after, div.td_information .btn-secondary:after {
   background-image: radial-gradient(circle, #eee 10%, transparent 10.01%) !important; }
+
+div.td_information {
+  white-space: nowrap; }
 
 .div_content_center {
   text-align: center; }

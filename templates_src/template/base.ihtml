@@ -84,14 +84,15 @@
                 <div id="Dialog">
             % if form_info:
                 %% form_info
-                    table name=tabsort,,,class=listctrl table table-bordered,,,width=100%
-                        tr
-                            th..._(Field)
-                            th..._(Value)
-                        % for field in object|getfields:
+                    div class=form_info
+                        table name=tabsort,,,class=listctrl table table-bordered,,,width=100%
                             tr
-                                td...{{ field.verbose_name }}
-                                td...{{ object|getfield:field.name }}
+                                th..._(Field)
+                                th..._(Value)
+                            % for field in object|getfields:
+                                tr
+                                    td...{{ field.verbose_name }}
+                                    td...{{ object|getfield:field.name }}
                     %% form_ok_cancel_info
                 % if standard_web_browser:
                     % if title:
@@ -103,7 +104,7 @@
                         % csrf_token
                         %% form_delete_content
                             h4..._(Delete the item)?
-                            div
+                            div class=form_delete
                                 %% form_delete_object
                                     table class=table table-stripe ui-responsive,,,data-role=table
                                         thead
