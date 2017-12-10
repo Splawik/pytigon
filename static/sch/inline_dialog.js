@@ -1,7 +1,7 @@
 var INLINE_DIALOG_UPDATE_HTML = "\
-<div>\
+<div style='position:relative'>\
     <div class='dark_background'></div>\
-    <div class='modal-dialog' role='document' style='max-width: 100%;'>\
+    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>Modal title</h4>\
@@ -20,9 +20,9 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 ";
 
 var INLINE_TABLE_HTML = "\
-<div>\
+<div style='position:relative'>\
     <div class='dark_background'></div>\
-    <div class='modal-dialog' role='document' style='max-width: 100%;'>\
+    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\
         <div class='modal-content'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>{{title}}</h4>\
@@ -66,3 +66,4 @@ var INLINE_FRAME_HTML = "\
         <div class='frame-data-inner'></div>\
 </div>\
 ";
+

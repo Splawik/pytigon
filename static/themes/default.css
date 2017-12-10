@@ -302,6 +302,12 @@ form.table_filter label.nocolon::after {
   .form-inline div.form-group.label-floating label {
     white-space: nowrap; }
 
+div.tab-content .modal-dialog-inline {
+  position: relative;
+  left: 0px;
+  right: 0px;
+  top: -35px; }
+
 /* login form */
 .login_background {
   /* IE10+ */

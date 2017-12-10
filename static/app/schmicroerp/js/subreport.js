@@ -12,7 +12,7 @@ var subreport_drop = function (ev, base_path) {
 	var data = ev.dataTransfer.getData ('text');
 	var data2 = target.getAttribute ('name');
 	if (data2 != data) {
-		var href = ((((base_path + '/schreports/table/Report/') + data) + '/') + data2) + '/action/move_to';
+		var href = ((((base_path + '/schreports/table/Report/') + data) + '/') + data2) + '/action/move_to/';
 		ajax_get (href, standard_on_data (jQuery (target), href));
 	}
 };

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-09 18:44:00
+// Transcrypt'ed from Python, 2017-12-10 11:28:53
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3064,14 +3064,39 @@ function pytigon () {
 								}
 							}
 							else {
-								var test = jQuery (elem).closest ('form');
-								if (test.length > 0) {
-									var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
-									elem2.insertAfter (jQuery (elem).closest ('div.form-group'));
+								var in_table = false;
+								var __iterable0__ = list ([jQuery (elem).parent (), jQuery (elem).parent ().parent ()]);
+								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+									var obj = __iterable0__ [__index0__];
+									var __iterable1__ = list (['td_action', 'td_information']);
+									for (var __index1__ = 0; __index1__ < __iterable1__.length; __index1__++) {
+										var c = __iterable1__ [__index1__];
+										if (obj.hasClass (c)) {
+											var in_table = true;
+											break;
+										}
+									}
 								}
-								else {
+								if (in_table) {
 									var elem2 = jQuery ((sprintf ("<tr class='refr_source refr_object inline_dialog hide' href='%s'><td colspan='20'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</td></tr>');
 									elem2.insertAfter (jQuery (elem).closest ('tr'));
+								}
+								else {
+									var test = jQuery (elem).closest ('form');
+									if (test.length > 0) {
+										var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
+										elem2.insertAfter (jQuery (elem).closest ('div.form-group'));
+									}
+									else {
+										var elem2 = jQuery ((sprintf ("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML) + '</div>');
+										var new_position = jQuery (elem).closest ('.refr_object').find ('div.new_row');
+										if (new_position.length > 0) {
+											elem2.insertAfter (jQuery (new_position [0]));
+										}
+										else {
+											elem2.insertAfter (jQuery (elem).closest ('div.tr'));
+										}
+									}
 								}
 							}
 							mount_html (elem2.find ('.modal-title'), jQuery (elem).attr ('title'), false, false);

@@ -169,13 +169,28 @@ def on_popup_edit_new(url, elem, e):
             else:
                 elem2.insertAfter(jQuery(elem).closest("div.tr"))
         else:
-            test = jQuery(elem).closest('form')
-            if test.length > 0:
-                elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
-                elem2.insertAfter(jQuery(elem).closest("div.form-group"))
-            else:
+            in_table = False
+            for obj in [jQuery(elem).parent(), jQuery(elem).parent().parent() ]:
+                for c in ['td_action', 'td_information']:
+                    if obj.hasClass(c):
+                        in_table = True
+                        break
+            if in_table:
                 elem2 = jQuery(sprintf("<tr class='refr_source refr_object inline_dialog hide' href='%s'><td colspan='20'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</td></tr>")
                 elem2.insertAfter(jQuery(elem).closest("tr"))
+            else:
+                test = jQuery(elem).closest('form')
+                if test.length > 0:
+                    elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog hide' href='%s'>", href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                    elem2.insertAfter(jQuery(elem).closest("div.form-group"))
+                else:
+                    elem2 = jQuery(sprintf("<div class='refr_source refr_object inline_dialog tr hide' href='%s'>",
+                                           href2) + INLINE_DIALOG_UPDATE_HTML + "</div>")
+                    new_position = jQuery(elem).closest('.refr_object').find('div.new_row')
+                    if new_position.length > 0:
+                        elem2.insertAfter(jQuery(new_position[0]))
+                    else:
+                        elem2.insertAfter(jQuery(elem).closest("div.tr"))
         mount_html(elem2.find('.modal-title'), jQuery(elem).attr('title'), False, False)
         #elem2.find(".refr_object").attr("related-object", jQuery(elem).uid())
         elem2.attr("related-object", jQuery(elem).uid())

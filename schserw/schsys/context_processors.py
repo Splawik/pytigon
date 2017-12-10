@@ -403,7 +403,7 @@ def sch_standard(request):
     else:
         form_delete = False
 
-    if request.path.endswith('/view'):
+    if request.path.endswith('/view/'):
         form_info = True
     else:
         form_info = False
