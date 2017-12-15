@@ -390,7 +390,8 @@ label.upload {
     text-transform: none;
     position: absolute;
     overflow: hidden;
-    text-overflow: ellipsis; }
+    text-overflow: ellipsis;
+    left: 0px; }
   label.upload p.upload {
     max-width: 170px; }
   label.upload img, label.upload .img {

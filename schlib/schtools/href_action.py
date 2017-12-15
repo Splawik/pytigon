@@ -148,6 +148,9 @@ STANDARD_ACTIONS = {
     },
     'refresh_obj': {
         'target': "refresh_obj"
+    },
+    'top': {
+        'target': "_top"
     }
 
 }
@@ -193,6 +196,7 @@ class Action:
         self.action = ""
         self.title = ""
         self.icon = ""
+        self.icon2 = ""
         self.target = ""
         self.attrs = ""
         self.attrs_in_menu = ""
@@ -292,7 +296,11 @@ class Action:
                                 self.icon = "src=fa://%s?size=1" % x
                     else:
                         self.icon = ""
-
+            else:
+                if '/' in self.icon:
+                    x = self.icon.split('/')
+                    self.icon = x[0]
+                    self.icon2 = x[1]
     def format(self, s):
         ret = s.format(**self.d).strip()
         if self.d['x1']:

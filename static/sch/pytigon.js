@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-10 21:08:55
+// Transcrypt'ed from Python, 2017-12-14 16:38:13
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2950,6 +2950,7 @@ function pytigon () {
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var __name__ = 'popup';
 					var can_popup = __init__ (__world__.tools).can_popup;
 					var corect_href = __init__ (__world__.tools).corect_href;
 					var ajax_load = __init__ (__world__.tools).ajax_load;
@@ -3074,7 +3075,7 @@ function pytigon () {
 						window.COUNTER = window.COUNTER + 1;
 						var id = window.COUNTER;
 						var href2 = corect_href (jQuery (elem).attr ('href'));
-						var new_fragment = jQuery (((((("<tr class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.innerText)) + '</td></tr>');
+						var new_fragment = jQuery (((((("<tr class='refr_source refr_object inline_dialog hide' id='IDIAL_" + id) + "' href='") + href2) + "'><td colspan='20'>") + INLINE_TABLE_HTML.py_replace ('{{title}}', elem.getAttribute ('title'))) + '</td></tr>');
 						new_fragment.insertAfter (jQuery (elem).closest ('tr'));
 						var elem2 = new_fragment.find ('.refr_target');
 						var _on_load = function (responseText, status, response) {
@@ -3156,10 +3157,10 @@ function pytigon () {
 							else {
 								var in_table = false;
 								var __iterable0__ = list ([jQuery (elem).parent (), jQuery (elem).parent ().parent ()]);
-								for (var __index0__ = 0; __index0__ < __iterable0__.length; __index0__++) {
+								for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 									var obj = __iterable0__ [__index0__];
 									var __iterable1__ = list (['td_action', 'td_information']);
-									for (var __index1__ = 0; __index1__ < __iterable1__.length; __index1__++) {
+									for (var __index1__ = 0; __index1__ < len (__iterable1__); __index1__++) {
 										var c = __iterable1__ [__index1__];
 										if (obj.hasClass (c)) {
 											var in_table = true;
@@ -3516,6 +3517,7 @@ function pytigon () {
 						'tools' +
 					'</use>')
 					__pragma__ ('<all>')
+						__all__.__name__ = __name__;
 						__all__._dialog_loaded = _dialog_loaded;
 						__all__._init_subforms = _init_subforms;
 						__all__._none = _none;

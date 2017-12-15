@@ -12,6 +12,8 @@
             % else:
                 % if action.icon:
                     <span class="{{action.icon}}"></span>
+                    % if action.icon2:
+                        <span class="{{action.icon2}}"></span>
                 % else:
                     {{action.title}}
 
