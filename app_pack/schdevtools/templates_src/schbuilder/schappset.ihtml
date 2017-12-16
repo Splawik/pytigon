@@ -53,7 +53,7 @@
         field_list/schlocale_set,Locale,[|client://apps/preferences-system-network-proxy.png]
         manage,Manage,[|client://categories/preferences-system.png]
         delete
-        run_{{object.name}},Run,[|client://actions/media-playback-start.png]
+        run,Run {{object.name}},[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
         field_edit/readme_file,readme.txt(Distribute),[|fa://navicon.png],_top

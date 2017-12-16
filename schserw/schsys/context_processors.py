@@ -446,6 +446,14 @@ def sch_standard(request):
     else:
         url_base = ''
 
+    i = 0
+    app_path = url_base + "/"
+    for pos in rr:
+        if pos == settings.URL_ROOT_FOLDER:
+            app_path = "/".join(rr[:i+2])+"/"
+            break
+        i+=1
+
     url_app_base = url_base
     app_pack = None
     if len(settings.APP_PACKS) > 0:
@@ -507,6 +515,7 @@ def sch_standard(request):
         'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
         'base_path': url_base+"/",
+        'app_path': app_path,
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
         'browser_type': b_type,

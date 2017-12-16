@@ -247,7 +247,7 @@ class GenericRows(object):
     def table_paths_to_context(self, view_class, context):
         x = view_class.request.path.split('/table/', 1)
         x2 = x[1].split('/')
-        context['app_path'] = x[0] + "/"
+        #context['app_path'] = x[0] + "/"
         if 'parent_pk' in view_class.kwargs:
             context['table_path'] = x[0] + "/table/" + "/".join(x2[:3]) + "/"
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
