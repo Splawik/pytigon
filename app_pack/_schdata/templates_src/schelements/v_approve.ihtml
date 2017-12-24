@@ -1,0 +1,26 @@
+{# -*- coding: utf-8 -*- #}
+
+%extends 'template/only_content.html'
+%load exfiltry
+%load exsyntax
+
+
+%% all
+    %with show_form=True form_edit=True
+        {{ block.super }}
+
+%% form_action
+    {{request.path}}?x1={{ action_name }}
+
+%% row_edit_form    
+    % if error:
+        {{ error|safe }}
+    % else:
+        % if description:
+            {{ description|safe }}
+        % else:
+            _(Are you sure you want to accept the document)? <br>
+            _(You accept the status): {{ action_name }}
+    br    
+    % if form:
+        % form:

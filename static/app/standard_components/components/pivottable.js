@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _pivot = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/jquery_plugins/pivottable';
 	var _on_loadjs = function () {

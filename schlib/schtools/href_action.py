@@ -95,6 +95,10 @@ STANDARD_ACTIONS = {
         'url': "{ap}table/{object_name}/{id}/{x1}/py/editor/",
         'icon': 'edit fa fa-lg fa-pencil-square-o',
     },
+    'any_field_edit': {
+        'url': "{app_path}table/{object_name}/{id}/{x1}/{format}/editor/",
+        'icon': 'edit fa fa-lg fa-pencil-square-o',
+    },
     'print': {
         'target': '_blank',
         'icon': 'arrow-d fa fa-lg fa-print',
@@ -296,30 +300,26 @@ class Action:
             ret += '?'+buf
         return ret
 
-def standard_dict(context, parm):
-    parm['standard_web_browser'] = context['standard_web_browser']
-    #if 'rel_field' in context and context['rel_field']:
-    #    parm['base_path'] = '../../../../../'
-    #else:
-    #    parm['base_path'] = '../../../'
-    path = context['request'].path
-    #if not path.endswith('/'):
-    #    path = path+'/'
-    parm['request'] = context['request']
-    parm['path'] = path
-    parm['base_path'] = context['URL_BASE']+"/"
-    parm['bp'] = context['URL_BASE']+"/"
-    if 'app_path' in context:
-        parm['ap'] = context['app_path']
-    if 'table_path' in context:
-        parm['tp'] = context['table_path']
-    if 'table_path_and_filter' in context:
-        parm['tpf'] = context['table_path_and_filter']
-    return parm
+def standard_dict(context, parm=None):
+    d = {}
+    d.update(context.flatten())
+    if parm:
+        d.update(parm)
 
+    d['path'] = d['request'].path
+    d['bp'] = d['base_path']
+    if 'app_path' in d:
+        d['ap'] = d['app_path']
+    if 'table_path' in d:
+        d['tp'] = d['table_path']
+    if 'table_path_and_filter' in d:
+        d['tpf'] = d['table_path_and_filter']
+
+    return d
 
 def actions_dict(context, actions_str):
-    d = standard_dict(context, {})
+    d = standard_dict(context)
+
     if 'object' in context:
         if hasattr(context['object'], '_meta'):
             d['table_name'] = context['object']._meta.object_name
@@ -329,11 +329,6 @@ def actions_dict(context, actions_str):
             d['table_name'] = 'user_table'
             d['id'] = context['object']['id']
             d['object_name'] = 'object_name'
-
-    else:
-        d['table_name'] = None
-        d['id'] = 0
-        d['object_name'] = None
 
     if 'rel_field' in context and context['rel_field']:
         d['child_tab'] = True
@@ -362,8 +357,6 @@ def actions_dict(context, actions_str):
     d['actions'] = actions
     d['actions2'] = actions2
 
-    d['browser_type'] = context['browser_type']
-
     if len('actions')>0:
         d['action'] = actions[0]
     else:
@@ -376,4 +369,5 @@ def action_fun(context, action, title="", icon_name="", target="", attrs="", tag
     t = Template(action_str)
     output2 = t.render(context)
     d = actions_dict(context, output2)
-    return standard_dict(context, d)
+    #return standard_dict(context, d)
+    return d

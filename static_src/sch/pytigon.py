@@ -11,7 +11,7 @@ from popup import on_get_tbl_value, on_new_tbl_value, on_get_row, on_popup_edit_
 from tbl import init_table, datatable_onresize
 from tools import can_popup, corect_href, get_table_type, handle_class_click, ajax_get, ajax_post, ajax_load,\
      ajax_submit, load_css, load_js, load_many_js, history_push_state, mount_html, register_fragment_init_fun,\
-     register_mount_fun, remove_page_from_href
+     register_mount_fun, remove_page_from_href, get_and_run_script
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
@@ -208,7 +208,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
-def _on_menu_href(elem, title=None):
+def _on_menu_href(elem, title=None, url=None):
     if window.APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
@@ -227,7 +227,10 @@ def _on_menu_href(elem, title=None):
         if window.APPLICATION_TEMPLATE == 'modern' and menu.is_open(title):
             menu.activate(title)
         else:
-            href = jQuery(elem).attr("href")
+            if url:
+                href = url
+            else:
+                href = jQuery(elem).attr("href")
             href2 = corect_href(href)
             def _on_new_win(data):
                 nonlocal href, href2, title
@@ -332,7 +335,7 @@ def on_new_tab(url, elem, e):
             title = '...'+url2[-13:]
         else:
             title = url2
-    return _on_menu_href(elem, title)
+    return _on_menu_href(elem, title, url)
 
 
 ## target:
@@ -367,6 +370,7 @@ EVENT_TAB = [
     ('refresh_page', '*',  True, False, refresh_current_page),
     ('refresh_app', '*', False, False, refresh_current_app),
 
+    ('run_script', '*', False, False, get_and_run_script),
 
     #('*', 'popup_info', True, False, on_popup_info),
     #('*', 'popup_delete', True, False, on_popup_delete),

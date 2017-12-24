@@ -1,0 +1,60 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row _("Account state")
+
+%% list_row_header
+    th...Account
+    th...Subcode
+    th...Account name
+    th...Target
+    th...Period
+    th...debit
+    th...credit
+    th...element
+    th...classifier1value
+    th...classifier2value
+    th...classifier3value
+
+%% list_row
+    td...{{object.parent.name}}
+    td...{{object.subcode}}
+    td...{{object.parent}}
+    td...{{object.target}}
+    td...{{object.period}}
+    td...{{object.debit}}
+    td...{{object.credit}}
+    td...{{object.element}}
+    td...{{object.classifier1value}}
+    td...{{object.classifier2value}}
+    td...{{object.classifier3value}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+

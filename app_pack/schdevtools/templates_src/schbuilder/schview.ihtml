@@ -23,7 +23,7 @@
                 % widget class='menu' id='new_view' title=_("&New view"):
                     % for pos in object_list|module_obj:"View_CHOICES"
                         li
-                            a href={{request.path}}../../../../{{pos.0}}/add...{{pos.1}}
+                            a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
         
 %% list_row_header
     th...Name

@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _vseditor = function (resolve, reject) {
 	var TEMPLATE = '        <div class=\"vseditorbase\">\n' +
     '                <button v-bind:disabled=\"!changed\" v-on:click=\"save\" class=\"btn btn-sm btn-primary\" style=\"position: absolute; z-index: 999;\">\n' +
@@ -23,6 +24,7 @@ var _vseditor = function (resolve, reject) {
 					var ed = jQuery (self.$el).find ('div.vseditor');
 					var value = decodeURIComponent (escape (atob (self.value)));
 					self.editor = monaco.editor.create (ed [0], dict ({'value': value, 'language': 'python', 'theme': 'vs-dark'}));
+					ed.data ('editor', self.editor);
 					var _changed = function (event) {
 						self.changed = true;
 					};

@@ -1,0 +1,40 @@
+{# -*- coding: utf-8 -*- #}
+%extends "forms/tree.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+
+%% all
+    %with form_width=800 form_height=600 table_type='datatable' title=_("Classifier"):
+        {{ block.super }}
+
+%% list_row_header
+    th...Name
+    th...Description
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.description}}
+
+%% row_edit
+    % if form_add:
+        % form:
+            "name",
+            "description"
+    % else
+        % form:
+            "parent",
+            "name",
+            "description"

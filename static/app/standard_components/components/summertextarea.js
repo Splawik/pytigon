@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _summertextarea = function (resolve, reject) {
 	var TEMPLATE = '        <div class=\"summertextareabase border rounded\" v-bind:height=\"height\">\n' +
     '                <textarea class=\"summernotearea\" v-bind:name=\"name\" v-bind:id=\"id\"></textarea>\n' +

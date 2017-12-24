@@ -72,15 +72,14 @@ not(.login_background) div.content-wrapper {
   background-color: rgba(0, 0, 0, 0.05); }
 
 .tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
+  text-transform: none;
+  padding: 0.5rem; }
+
+.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
   box-shadow: none;
   border: none !important;
-  text-transform: none;
-  padding: 0.5rem;
   color: black;
   background-color: rgba(0, 0, 0, 0.05); }
-
-.tabsort_panel table .btn, .table_panel table .btn {
-  background-color: rgba(255, 255, 255, 0.7); }
 
 .tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
   background-color: transparent; }
@@ -592,3 +591,18 @@ table.layout0 tr td {
 
 .size_level_3 .size_level_4 .size_level_5 .size_level_6 {
   color: #000; }
+
+.wiki_collapse_link {
+  position: absolute;
+  right: 5px;
+  z-index: 100; }
+
+.wiki_collapse .wiki_view_actions a {
+  position: absolute;
+  top: -40px; }
+
+.wiki_collapse .wiki_view_actions a:nth-child(2) {
+  left: 35px; }
+
+.wiki_collapse .wiki_view_actions a:nth-child(3) {
+  left: 70px; }

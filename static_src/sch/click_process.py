@@ -2,6 +2,40 @@ from tools import corect_href, ajax_get, mount_html
 from popup import refresh_fragment
 from tabmenu import get_menu
 
+
+def get_value(elem, name):
+    if elem.length > 0:
+        x = elem.closest('.refr_object')
+        if x.length > 0:
+            x2 = x.find(sprintf("[name='%s']", name))
+            if x2.length > 0:
+                return x2.val()
+    return "[[ERROR]]"
+
+def process_href(href, elem):
+    ret = []
+    if '[[' in href and ']]' in href:
+        x1 = href.split('[[')
+        process = False
+        for pos in x1:
+            if process:
+                if ']]' in pos:
+                    x2 = pos.split(']]', 1)
+                    value = get_value(elem, x2[0])
+                    if value and value != "None":
+                        ret.append(value+x2[1])
+                    else:
+                        ret.append("-"+x2[1])
+                else:
+                    ret.append(pos)
+                process = False
+            else:
+                ret.append(pos)
+                process = True
+        return "".join(ret)
+    else:
+        return href
+
 def process_on_click(event_tab, elem=None):
     def _on_click(e):
         nonlocal event_tab
@@ -15,6 +49,8 @@ def process_on_click(event_tab, elem=None):
         href = jQuery(this).attr("href")
         if href and '#' in href:
             return True
+
+        href = process_href(href, src_obj)
 
         for pos in event_tab:
             if pos[0] == '*' or pos[0] == target:
@@ -30,15 +66,6 @@ def process_on_click(event_tab, elem=None):
                     return True
 
         e.preventDefault()
-
-        #if jQuery(e.currentTarget).attr('target') in ("_top", "_top2"):
-        #    title = jQuery(e.currentTarget).attr('title')
-        #    if not title:
-        #        if len(href)>16:
-        #            title = '...'+href[-13:]
-        #        else:
-        #            title = href
-        #    return _on_menu_href(this,title)
 
         href2 = corect_href(href)
 

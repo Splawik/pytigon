@@ -80,7 +80,8 @@ def compile(python_code, temp_dir=None):
         'tconv': False, 
         'verbose': False, 
         'ext': None, 
-        'star': False,    
+        'star': False,
+        'keycheck': False,
     }
 
     utils.commandArgs.__dict__.update (x)

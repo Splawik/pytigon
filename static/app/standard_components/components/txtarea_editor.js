@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var mounted = function () {
 	var txtarea = jQuery (this.$el);
 	txtarea.addClass ('vue');

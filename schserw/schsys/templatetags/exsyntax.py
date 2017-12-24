@@ -906,10 +906,12 @@ def field(context, form_field, fieldformat=None):
     addon_after_class=""
     addon_before_class=""
 
+    ff = None
     if fieldformat:
         ff = fieldformat
     else:
-        ff = context['formformat']
+        if 'formformat' in context:
+            ff = context['formformat']
         if not ff:
             ff = "12:3:3/12:12:12"
     hidden = False
@@ -917,8 +919,7 @@ def field(context, form_field, fieldformat=None):
     if ff=='!':
         hidden=True
     else:
-
-        x = fieldformat.split('/',2)
+        x = ff.split('/',2)
         if len(x) < 2:
             return {}
 
@@ -1014,6 +1015,11 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
             else:
                 _search_fields = "name__icontains"
 
+    if 'formformat' in context:
+        formformat = context['formformat']
+    else:
+        formformat = "12:3:3/12:12:12"
+
     if TreeModel in model.__bases__:
         if filter:
             href1 = make_href("/%s/table/%s/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name, filter))
@@ -1038,5 +1044,5 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
                 ),
             )
     form = _Form(initial = { _name: _initial })
-    return { 'form': form, 'field': form[_name] }
+    return { 'form': form, 'field': form[_name], "formformat": formformat, }
 

@@ -1,0 +1,73 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes:
+        % for item in doctypes:
+            % new_row "New document: "|append_str:item.name action="new_row/"|append_str:item.name
+
+%% list_row_header
+    th..._(Register)
+    th..._(Target)
+    th..._(Name)
+    th..._(Number)
+    th..._(Description)
+    th..._(Date)
+    th..._(Status)
+    
+%% list_row
+    td...{{object.doc_type_parent.name}}
+    td...{{object.org_chart_parent.name}}
+    td...{{object.name}}
+    td...{{object.number}}
+    td...{{object.description}}
+    td...{{object.date|isoformat}}
+    td...{{object.status}}
+
+%% id_extra
+    % row_actions:
+        .field_list/docitem_set,Document items,fa fa-lg fa-plus/fa fa-list-ol        
+    {{ block.super }}
+
+%% list_row_actions
+    % if object.status == "" or object.status == 'edit':
+        % row_actions:
+            .edit-inline
+            .delete
+        
+    % with object|args:request|call:"get_visible_statuses" as vs:    
+        % if vs:
+            % for row in vs:
+                % action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target='popup_edit' url=table_path|append_str:"{id}/action/approve/"
+
+    % if object|args:request|call:"status_can_be_undo":
+        % action "decline_status"|append_str:"/"|append_str:object.status "_(Discard status:) "|append_str:object.status "fa fa-undo" tag_class="+btn-danger" target='popup_edit' url=table_path|append_str:"{id}/action/discard/"
+        
+%% row_edit
+    %% dochead_edit
+        % form:
+    % if object.id:
+        %% docitem_list
+            % frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px"
+            
+            

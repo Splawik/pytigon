@@ -1,0 +1,11 @@
+{# -*- coding: utf-8 -*- #}
+%extends "schelements/dochead.html"
+
+%load exfiltry
+%load exsyntax
+
+%% dochead_edit
+    % form:
+        .description
+    % get_table_row "account_id" "schelements" "Account" "name__icontains" filter="1"
+    

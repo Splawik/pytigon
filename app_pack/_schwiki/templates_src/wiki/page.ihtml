@@ -73,7 +73,7 @@
             height: 350px
       
 %% all
-    %with form_width=720 form_height=480 show_title_bar=0 title=_("Wiki pages") vform=True
+    %with form_width=720 form_height=480 show_title_bar=0 title=_("Wiki pages")
         {{ block.super }}
 
 
@@ -104,33 +104,5 @@
   h2..._(Wiki pages)
 
 
-%% form_class
-    .form-vertical
-
 %% row_edit
-    % if standard_web_browser
-        div role=tabpanel
-            ul class=nav nav-tabs,,,role=tablist
-                li class=nav-item active,,,role=presentation
-                    a class=nav-link,,,href=#settings,,,aria-controls=settings,,,role=tab,,,data-toggle=tab...Settings
-                li class=nav-item,,,role=presentation
-                    a class=nav-link,,,href=#data,,,aria-controls=profile,,,role=tab,,,data-toggle=tab...Data
-            div class=tab-content form2columns
-                div role=tabpanel,,,class=tab-pane active,,,id=settings
-                    % field 'name' '^/12:12:12'
-                    % with 'name page_type subject description base_template rights_group menu' as fields:
-                        % for pos in fields.split:
-                            % bootstrap_field form|getitem:pos
-                div role=tabpanel,,,class=tab-pane,,,id=data
-                    div class=vert_form_panel
-                        % bootstrap_field form.content_src
-                        txtarea_editor rel_id=id_content_src        
-    % else:
-        % form:
-            'name', 'page_type', 'subject', 'description', 'base_template', 'rights_group', 'menu'
-        tr
-            td cellpadding=0,,,colspan=2
-                CTRLSTYLEDTEXT name=content_src,,,width=100%,,,height=99.7%-18,,,src={{ext}}
-                    data
-                        {{object.content_src|bencode}}
-
+    % form:

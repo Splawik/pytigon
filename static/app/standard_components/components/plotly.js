@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _plotly = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/vanillajs_plugins';
 	var _on_loadjs = function () {

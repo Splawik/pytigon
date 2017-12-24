@@ -1,0 +1,57 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='simple':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New document item"
+
+%% list_row_header
+    th...order
+    th...date
+    th...description
+    th...amount
+    th...element
+    th...level
+
+%% list_row
+    td...{{object.order}}
+    td...{{object.date|isoformat}}
+    td...{{object.description}}
+    td...{{object.amount}}
+    td...{{object.element}}
+    td...{{object.level}}
+
+
+%% id_extra
+    % row_actions:
+        .field_list-top/accountoperation_set,Account operations,fa fa-lg fa-plus/fa fa-list-ol
+    {{ block.super }}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .description,amount,element
+

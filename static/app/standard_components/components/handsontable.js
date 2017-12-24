@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _handsontable = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/jquery_plugins';
 	var _on_loadjs = function () {

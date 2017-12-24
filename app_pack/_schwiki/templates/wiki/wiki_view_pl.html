@@ -12,7 +12,7 @@
             success: RefreshWin2
         }
         function RefreshWin2(responseText, statusText) {
-            location.href = "/schwiki/{{subject}}/{{page_name}}/view/"
+            location.href = "{{base_path}}wiki/{{subject}}/{{page_name}}/view/"
         }
 {% endblock %}
 {% block extrastyle %}
@@ -73,26 +73,42 @@
                 {% endif %}
         {% endif %}
 {% endblock %}
+{% block list_page %}
+        <div id="{{uuid}}" class="refr_object refr_source" related-object="{{uuid}}" href="{{ request.path|append_str:"?only_table=1" }}">
+                {{ block.super }}
+        </div>
+{% endblock %}
 {% block list_content_header %}
-        {% if standard_web_browser and perms.schwiki.add_page %}
-                <a data-toggle="collapse" href="#collapse" style="position: absolute;right: 5px;">
-                        <span class="fa-arrows-v fa fa-fw"></span>
-                </a>
-                <div id="collapse" class="panel-collapse collapse">
+        {% if not standard_web_browser == 6 %}
+                {% if standard_web_browser and perms.schwiki.add_page %}
+                        <a data-toggle="collapse" href="#{{uuid}}collapse" class="wiki_collapse_link">
+                                <span class="fa-arrows-v fa fa-fw"></span>
+                        </a>
+                        <div id="{{uuid}}collapse" class="panel-collapse collapse wiki_collapse">
+                                {{ block.super }}
+                        </div>
+                  {% else %}
                         {{ block.super }}
-                </div>
+                {% endif %}
         {% endif %}
 {% endblock %}
 {% block list_content_title %}
-        <h4 style="white-space:nowrap;">{{subject}}: {{page_name}}</h4>
+        {% if not standard_web_browser == 6 %}
+                <h4 style="white-space:nowrap;">{{subject}}: {{page_name}}</h4>
+        {% endif %}
 {% endblock %}
 {% block list_content_actions %}
-        {% if content %}
-                {% button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę" %}
-          {% else %}
-                {% button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę wiki" %}
-                {% button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę ihtml" %}
-                {% button "/schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" "edytuj stronę html" %}
+        {% if not standard_web_browser == 6 %}
+                <table width="100%">
+                        <tr>
+                                <td class="wiki_view_actions" style="width:100%;border:0px;padding:0px;">
+                                        {% action "edit" "Edit page" url="{{base_path}}wiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" %}
+                                        {% with ap="wiki" object_name="Page" id=object.id format='txt' %}
+                                                {% action "any_field_edit-inline/content_src" "Edit page source" %}
+                                        {% endwith %}
+                                </td>
+                        </tr>
+                </table>
         {% endif %}
 {% endblock %}
 {% block form %}
@@ -130,7 +146,7 @@
                         <br />
                 {% endif %}
         {% endif %}
-        <div class="panel-body">
+        <div class="panel-body refr_target">
                 {% if content %}
                         {% if wiki_path %}
                                 {{content|wikify:wiki_path|safe}}

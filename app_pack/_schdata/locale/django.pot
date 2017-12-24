@@ -1,0 +1,293 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2017-10-23 20:54+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:4
+msgid "main tools"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:5
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:9
+msgid "Elements"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:10
+msgid "Classifiers"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:11
+msgid "Organisation chart"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:12
+msgid "Accounts"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:13
+msgid "States of accounts"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:14
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:453
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:43
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:58
+msgid "Account operations"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:15
+msgid "Documents register"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:16
+msgid "Documents"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/__init__.py:17
+msgid "Documents [safety]"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:95
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:96
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:35
+msgid "Element"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:117
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:118
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:36
+msgid "Organizational chart"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:254
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:255
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:37
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:15
+msgid "Classifier"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:281
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:38
+msgid "Document register"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:282
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:38
+msgid "Document registers"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:309
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:39
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:47
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:48
+msgid "Document header"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:310
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:39
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:47
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:48
+msgid "Document headers"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:362
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:40
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:49
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:50
+msgid "Document line"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:363
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:40
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:49
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:50
+msgid "Document lines"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:391
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:392
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:41
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:52
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:53
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:54
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:55
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:56
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:57
+msgid "Account"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:422
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:42
+msgid "State of account"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:423
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:42
+msgid "States of account"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/models.py:452
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:43
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schelements/urls.py:58
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:12
+msgid "Account operation"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/__init__.py:4
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/__init__.py:5
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/__init__.py:10
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/models.py:79
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/urls.py:37
+msgid "Reports"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/__init__.py:9
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/models.py:47
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/urls.py:36
+msgid "Report definition"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/models.py:48
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/urls.py:36
+msgid "Reports definitions"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/models.py:78
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/schreports/urls.py:37
+msgid "Report"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:1
+msgid "Target"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:2
+msgid "Number"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:3
+msgid "Description"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:4
+msgid "Date"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:5
+msgid "Update report"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:6
+msgid "New doc line"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:7
+msgid "order"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:8
+msgid "description"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:9
+msgid "amount"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:10
+msgid "element"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:11
+msgid "level"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:13
+msgid "Account state"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:14
+msgid "New account"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:16
+msgid "New document register"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:17
+msgid "name"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:18
+msgid "Register"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:19
+msgid "Name"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:20
+msgid "Status"
+msgstr ""
+
+#:
+#: /home/sch/prj/pytigon/app_pack/schdevtools/../../app_pack/schmicroerp/translate.py:21
+msgid "New element"
+msgstr ""
+

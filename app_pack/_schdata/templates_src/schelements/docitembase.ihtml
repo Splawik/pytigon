@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+%extends "schelements/docitem.html"
+
+%load exfiltry
+%load exsyntax
+
+%%list_content_header_first_row
+
+%%list_content_header_two_row

@@ -142,8 +142,16 @@ def on_popup_in_form(elem):
 
 
 def on_popup_edit_new(url, elem, e):
-    target = jQuery(e.currentTarget).attr('target')
-    href2 = corect_href(jQuery(elem).attr("href"))
+    if e:
+        target = jQuery(e.currentTarget).attr('target')
+    else:
+        target = "popup"
+
+    if url:
+        href2 = corect_href(url)
+    else:
+        href2 = corect_href(jQuery(elem).attr("href"))
+
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
@@ -156,7 +164,7 @@ def on_popup_edit_new(url, elem, e):
         def _on_load(responseText, status, response):
             _dialog_loaded(True, elem2)
             on_dialog_load()
-        ajax_load(elem2, corect_href(jQuery(elem).attr("href")), _on_load)
+        ajax_load(elem2, href2, _on_load)
     else:
         jQuery('body').addClass('shown_inline_dialog')
         if window.WAIT_ICON:
@@ -210,6 +218,7 @@ def on_popup_edit_new(url, elem, e):
 
     return False
 
+window.on_popup_edit_new = on_popup_edit_new
 
 def on_popup_info(url, elem, e):
     if can_popup():
@@ -380,9 +389,18 @@ window.on_delete_ok = on_delete_ok
 
 
 def on_cancel_inline(elem):
-    jQuery(elem).closest('.inline_dialog').remove()
+    refr = False
+    inline_dialog = jQuery(elem).closest('.inline_dialog')
+    if inline_dialog.length > 0:
+        test = inline_dialog.find('.refresh_after_close')
+        if test.length > 0:
+            refr = True
     jQuery('body').removeClass('shown_inline_dialog')
-    datatable_onresize()
+    if refr:
+        _refresh_win("RETURN_OK", inline_dialog.parent())
+    else:
+        inline_dialog.remove()
+        datatable_onresize()
 
 window.on_cancel_inline = on_cancel_inline
 

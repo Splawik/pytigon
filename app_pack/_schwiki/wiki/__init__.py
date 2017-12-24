@@ -6,7 +6,8 @@ Title = _('Wiki')
 Perms = True
 Index = ''
 Urls  = (
-    ('table/Page/-/form/list?schtml=desktop',_('Wiki'),'wiki.change_page','wx.ART_HELP_SIDE_PANEL'),
+    ('table/Page/-/form/list/?schtml=desktop',_('Wiki'),'wiki.change_page','wx.ART_HELP_SIDE_PANEL'),
+    ('table/PageObjectsConf/-/form/list/?schtml=desktop',_('Page objects conf.'),None,'client://actions/document-properties.png'),
 )
 UserParam = {}
 def AdditionalUrls():

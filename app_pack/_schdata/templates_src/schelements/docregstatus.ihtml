@@ -1,0 +1,56 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='simple':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New status"
+
+%% list_row_header
+    th..._(Order)
+    th..._(Name)
+    th..._(Description)
+
+%% list_row
+    td...{{object.order}}
+    td...{{object.name}}
+    td...{{object.description}}
+
+
+%% list_row_actions
+    {% if not forloop.first %}
+        % row_actions:...doc_reg_status_up,Move up,fa fa-caret-square-o-down
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...doc_reg_status_down,Move down,fa fa-caret-square-o-down
+    {% endif %}
+
+    % row_actions:
+        .edit
+        .field_edit/accept_proc,Accept procedure,accept_proc
+        .field_edit/undo_proc,Undo procedure,undo_proc
+        .field_edit/can_set_proc,Check if status can be set
+        .field_edit/can_undo_proc,Check if status can be removed
+        .delete
+
+
+%% row_edit
+    % form:

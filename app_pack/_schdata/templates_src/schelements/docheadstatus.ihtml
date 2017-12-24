@@ -1,0 +1,42 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+
+%% list_row_header
+    th..._(Date)
+    th..._(Name)
+    th..._(Operator)
+    th..._(Data)
+
+%% list_row
+    td...{{object.date}}
+    td...{{object.name}}
+    td...{{object.operator}}
+    td...{{object.data}}
+
+%% list_row_actions
+
+%% row_edit
+    % form:
+

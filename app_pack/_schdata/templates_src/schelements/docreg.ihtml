@@ -1,0 +1,49 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='simple':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row _("New document register")
+
+%% list_row_header
+    th..._(name)
+    th..._(description)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.description}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_list/doctype_set,Types of documents,doctype_set        
+        .field_list/docregstatus_set,Types of document statuses,docregstatus_set        
+        .field_edit/head_form,Head form,head_form
+        .field_edit/item_form,Item form,item_form
+        .field_edit/save_head_fun,Save head function,save_head_fun
+        .field_edit/save_item_fun,Save item function,save_item_fun
+        .delete
+
+%% row_edit
+    % form:
+        .app,name,group,description
+

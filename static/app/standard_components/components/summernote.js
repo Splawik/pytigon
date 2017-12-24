@@ -1,3 +1,4 @@
+var __name__ = '__main__';
 var _htmleditor = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/bootstrap_plugins/summernote';
 	var _on_loadjs = function () {

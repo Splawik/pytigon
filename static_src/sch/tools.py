@@ -518,3 +518,12 @@ window.icons = {
     'detailClose': 'fa-minus'
 }
 
+def get_and_run_script(url, elem, e):
+    def _on_load_js(html_text):
+        nonlocal elem, e
+        object = jQuery(elem)
+        x = jQuery(html_text).html()
+        if x:
+            eval(x)
+        object = None
+    ajax_get(url, _on_load_js)

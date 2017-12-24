@@ -299,18 +299,19 @@ class AppManager:
         return ret
 
 
-def uuid(path):
-    if ':' in path:
-        path2 = path.split(':')[1]
-    else:
-        path2 = path
-    if '?' in path:
-        path2 = path.split('?')[0]
-    else:
-        path2 = path
-
-    path2 = path.replace('/','_')
-    return path2
+def _uuid(path):
+    return uuid.uuid4()
+    #if ':' in path:
+    #    path2 = path.split(':')[1]
+    #else:
+    #    path2 = path
+    #if '?' in path:
+    #    path2 = path.split('?')[0]
+    #else:
+    #    path2 = path
+    #
+    #path2 = path.replace('/','_')
+    #return path2
 
 
 def sch_standard(request):
@@ -529,7 +530,7 @@ def sch_standard(request):
         'show_title_bar': show_title_bar,
         'get': get,
         'settings': settings,
-        'uuid': uuid(request.path),
+        'uuid': _uuid(request.path),
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         'autologin': request.session.get('autologin', False),

@@ -212,6 +212,8 @@
                                                             %% form_content_button
                                                                 button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
                                                                     span class=fa fa-refresh
+                            % else:
+                                form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,target=refresh_obj
                         %%list_content_header_third_row
                             div class=tr row list_content_header list_content_header_third_row
                                 div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
@@ -234,7 +236,9 @@
                     % if table_type == 'datatable' and not get:
                         button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
                             i class=fa fa-times
-                    <div class="tableframe">
+
+            % if standard_web_browser:
+                <div class="tableframe">
 
             %% list_content_body
                 %% list_content_paginator
@@ -323,9 +327,10 @@
                         %if table_type == 'scrolled' or not table_type:
                             </div>
 
+            % if standard_web_browser:
+                </div>
+
             %% list_content_footer
-                % if standard_web_browser:
-                    </div>
 
             %% list_content_end
                 % if standard_web_browser:
