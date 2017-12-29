@@ -8,6 +8,7 @@
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
+        {% css_link 'app/_schwiki/css/wiki_editor.css' %}
 {% endblock %}
 {% block body_footer %}
         {{block.super}}

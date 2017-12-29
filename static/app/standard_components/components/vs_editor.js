@@ -25,6 +25,7 @@ var _vseditor = function (resolve, reject) {
 					var value = decodeURIComponent (escape (atob (self.value)));
 					self.editor = monaco.editor.create (ed [0], dict ({'value': value, 'language': 'python', 'theme': 'vs-dark'}));
 					ed.data ('editor', self.editor);
+					ed.data ('vue-editor', self);
 					var _changed = function (event) {
 						self.changed = true;
 					};

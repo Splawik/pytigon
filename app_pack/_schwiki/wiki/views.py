@@ -26,6 +26,7 @@ from .models import Page
 from schlib.schdjangoext.fastform import form_from_str
 from django.template.loader import select_template
 from schlib.schviews import make_path
+from schlib.schtools.schjson import json_loads, json_dumps
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -76,13 +77,20 @@ def view_page(request, app_or_subject, page_name):
         id = page.id
         content = page.content
     except Page.DoesNotExist:
+        page = Page()
+        page.name = page_name
+        page.subject = app_or_subject
+        page.update_time = datetime.datetime.now()
+        page.operator = request.user.username
+        page.save()
+        id = page.id
         content = None
         
     c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 'wiki_path_list': path_list, 'title': '?: ' + page_name, 'object': page }
     #if page:
         #if page.page_type != 'W':
     
-    if page.base_template:
+    if page and page.base_template:
         base_template = page.base_template
     else:
         base_template = "wiki/wiki_view.html"
@@ -126,13 +134,15 @@ def edit_page(request, app_or_subject, page_name):
 
 def insert_object_to_editor(request, pk):
     
-    if pk != '0':
-        object = models.PageObjectsConf.objects.get(pk=pk)
-        page_id = request.GET.get('page_id', 0)
-        page=models.Page.objects.get(pk=page_id)
-        return { 'pk': pk, 'object': object, 'page': page }
+    page_id = request.GET.get('page_id', 0)
+    page=models.Page.objects.get(pk=page_id)
+    
+    if pk:
+        object = models.PageObjectsConf.objects.get(pk=pk)        
     else:
-        return {}
+        object = None
+    
+    return { 'pk': pk, 'object': object, 'page_id': page_id, 'page': page }
     
 
 
@@ -168,7 +178,7 @@ def edit_page_object(request):
                                 data = locals()['save'](form, rep)
                             else:
                                 data = form.cleaned_data
-                            page._data = { name: data }
+                            page._data = { name: data } 
                             page._data['json_update'] = True
                             page.save()
                             url = make_path('ok')

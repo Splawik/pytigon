@@ -62,7 +62,7 @@ def gen_tab_field_action(table, field, action, fun, extra_context=None):
 
 
 def gen_row_action(table, action, fun, extra_context=None):
-    return url('table/%s/(?P<pk>\d+)/action/%s/$' % (table, action), fun, extra_context)
+    return url('table/%s/(?P<pk>\d*)/action/%s/$' % (table, action), fun, extra_context)
 
 
 def transform_extra_context(context1, context2):

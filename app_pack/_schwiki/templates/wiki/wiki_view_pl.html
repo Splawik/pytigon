@@ -119,14 +119,25 @@
         {% endif %}
 {% endblock %}
 {% block list_content_body %}
-        {% if wiki_path_list %}
+        {% if not standard_web_browser == 6 and wiki_path_list %}
                 {% if standard_web_browser %}
                         <ol class="breadcrumb">
                                 {% for wiki_elem in wiki_path_list %}
-                                        <li>
-                                                {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
-                                        </li>
+                                        {% if wiki_elem|lower == page_name|lower %}
+                                                <li class="breadcrumb-item active">
+                                                        {{ wiki_elem }}
+                                                </li>
+                                          {% else %}
+                                                <li class="breadcrumb-item">
+                                                        {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
+                                                </li>
+                                        {% endif %}
                                 {% endfor %}
+                                {% if wiki_path_list and not page_name|lower in wiki_path_list %}
+                                        <li class="breadcrumb-item active">
+                                                {{ page_name }}
+                                        </li>
+                                {% endif %}
                         </ol>
                   {% else %}
                         <table width="100%">
@@ -136,9 +147,12 @@
                                 <tr>
                                         <td bgcolor="#{{color_background_0_9}}">
                                                 {% for wiki_elem in wiki_path_list %}
-                                                        {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                                                        {% if wiki_elem|lower == page_name|lower %}
+                                                                {{ wiki_elem }}
+                                                          {% else %}
+                                                                {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                                                        {% endif %}
                                                 {% endfor %}
-                                                >
                                         </td>
                                 </tr>
                                 <tr><td></td></tr>

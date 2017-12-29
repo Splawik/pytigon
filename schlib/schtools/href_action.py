@@ -327,7 +327,9 @@ def actions_dict(context, actions_str):
             d['object_name'] = context['object']._meta.object_name
         else:
             d['table_name'] = 'user_table'
-            d['id'] = context['object']['id']
+            if context['object'] and 'id' in context['object']:
+                d['id'] = context['object']['id']
+
             d['object_name'] = 'object_name'
 
     if 'rel_field' in context and context['rel_field']:

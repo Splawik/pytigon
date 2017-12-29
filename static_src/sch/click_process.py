@@ -25,7 +25,7 @@ def process_href(href, elem):
                     if value and value != "None":
                         ret.append(value+x2[1])
                     else:
-                        ret.append("-"+x2[1])
+                        ret.append(x2[1])
                 else:
                     ret.append(pos)
                 process = False

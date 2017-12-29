@@ -105,3 +105,20 @@ def get_executable():
         else:
             return os.__file__[:-6].replace('/lib/python', '/bin/python')
 
+
+def norm_indent(text):
+    text_tab = text
+    if type(text) == str:
+        text_tab = text.replace('\r', '').split('\n')
+    indent = -1
+    ret = []
+    for pos in text_tab:
+        if indent < 0:
+            x1 = len(pos)
+            x2 = len(pos.lstrip())
+            indent = x1-x2
+        ret.append(pos[indent:])
+    if indent >= 0:
+        return "\n".join(ret)
+    else:
+        return ""

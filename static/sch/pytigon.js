@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2017-12-23 20:56:41
+// Transcrypt'ed from Python, 2017-12-28 14:26:29
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2596,7 +2596,7 @@ function pytigon () {
 											ret.append (value + x2 [1]);
 										}
 										else {
-											ret.append ('-' + x2 [1]);
+											ret.append (x2 [1]);
 										}
 									}
 									else {
