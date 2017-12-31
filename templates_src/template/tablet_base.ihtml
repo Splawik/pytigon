@@ -5,7 +5,6 @@
 % load exfiltry
 % load exsyntax
 
-
 %% ext_js_scripts
     {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
 
@@ -13,25 +12,19 @@
     {{block.super}}
     {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
 
-
 %% menu_start
     div class=control-sidebar-bg
 
-
 %% topmenu_start
-
 
 %% topmenu
 
-
 %% topmenu_end
-
 
 %% submenu_start
 
-
 %% submenu
-    % ifchanged app_name
+    % ifchanged item_info.app_name
         % if not forloop.first
             </ul></li>
             <li class="treeview">
@@ -39,33 +32,36 @@
             <li class="treeview active">
 
         <a href="#">
-            % if user_param.icon:
-                <i class="fa {{user_param.icon}}"></i>
+            % if item_info.user_param.icon:
+                <i class="fa {{item_info.user_param.icon}}"></i>
             % else:
                 <i class="fa fa-link"></i>
-            % if app_name in request.get_full_path
-                <span><strong>{{app_name}}</strong></span>
+            % if item_info.app_name in request.get_full_path
+                <span><strong>{{item_info.app_title}}</strong></span>
             % else
-                <span>{{app_name}}</span>
+                <span>{{item_info.app_title}}</span>
             <i class="fa fa-angle-left pull-right"></i>
         </a>
 
         <ul class="treeview-menu sidebar-submenu">
 
-    % if opis|length > 20:
-        <li><a href="{{base_path}}{{url}}" class='menu-href ladda-button' data-toggle='tooltip' title='{{opis}}'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
-    % else:
-        <li><a href="{{base_path}}{{url}}" class='menu-href ladda-button'><i class="fa fa-circle-o"></i>{{opis}}</a></li>
+    li
+        a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,data-toggle=tooltip,,,title={{item_info.description}}
+            % if item_info.icon:
+                % if standard_web_browser:
+                    {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
+                % else:
+                    {{item_info.icon}}
+            % else:
+                i class=fa fa-circle-o
+            {{item_info.description}}
 
     % if forloop.last
         </ul></li>
 
-
 %% submenu_end
 
-
 %% menu_end
-
 
 %% menu
     button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
@@ -82,7 +78,6 @@
                             % else:
                                 {{appset_title}}
                 {{block.super}}
-
 
 %% body_start
     % if form_ext or not show_form:
@@ -106,7 +101,6 @@
             % comment:
                 a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
                     span class=fa fa-bars
-
 
             % if not NO_TABS and application_type == 'modern':
                 div class=navbar-nav tabbable,,,id=tab_tabs2
@@ -145,7 +139,6 @@
                                 span class=fa fa-power-off
     {{block.super}}
 
-
 %% tabs
     % if application_type != 'modern':
         {{block.super}}
@@ -156,7 +149,6 @@
             % with NO_TABS=True:
                 {{block.super}}
     </section></div>
-
 
 %% body_end
     % if form_ext or not show_form:
@@ -184,6 +176,5 @@
             .</script>
 
     {{block.super}}
-
 
 %% loading-indicator:

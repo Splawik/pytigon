@@ -166,7 +166,7 @@ class SchAppFrame(SchBaseFrame):
         wx.ArtProvider.Push(ArtProviderFromIcon())
 
         icon = wx.Icon()
-        b = wx.Bitmap(wx.Image(wx.GetApp().scr_path + '/schappdata/media/schweb.png'))
+        b = wx.Bitmap(wx.Image(wx.GetApp().scr_path + '/static/icons/schweb.png'))
         icon.CopyFromBitmap(b)
         self.SetIcon(icon)
 
@@ -754,7 +754,10 @@ class SchAppFrame(SchBaseFrame):
                         bitmap = (wx.GetApp().images)[int(row[4].data)]
                     except:
                         if row[4].data != "":
-                            bitmap = bitmap_from_href(row[4].data)
+                            try:
+                                bitmap = bitmap_from_href(row[4].data)
+                            except:
+                                bitmap = (wx.GetApp().images)[0]
                         else:
                             bitmap = (wx.GetApp().images)[0]
                     idn = self._append_command(row[5].data, row[6].data)

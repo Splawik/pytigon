@@ -24,18 +24,18 @@
 %% topmenu_end
 
 %% submenu
-    % ifchanged app_name
+    % ifchanged item_info.app_name
         % if not forloop.first
             </div></li>
         <li class="nav-item dropdown">
             a href=#,,,class=nav-link dropdown-toggle,,,data-toggle=dropdown
-                % if app_name in request.get_full_path
-                    <strong>{{app_name}}</strong>
+                % if item_info.app_name in request.get_full_path
+                    <strong>{{item_info.app_name}}</strong>
                 % else
-                    {{app_name}}
+                    {{item_info.app_name}}
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-    a class=menu-href dropdown-item,,,href={{base_path}}{{url}}...{{opis}}
+    a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url}}...{{item_info.description}}
 
   % if forloop.last
         </div></li>

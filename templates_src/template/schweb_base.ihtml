@@ -76,9 +76,9 @@
                 th...Dana
 
 
-        % ifchanged module_title
+        % ifchanged item_info.module_title
             tr
-                td...{{module_title}}
+                td...{{item_info.module_title}}
                 td
                 td
                 td
@@ -86,10 +86,10 @@
                 td
                 td
 
-        % ifchanged app_name
+        % ifchanged item_info.app_name
             tr
                 td
-                td...{{app_title}}
+                td...{{item_info.app_title}}
                 td
                 td
                 td
@@ -102,11 +102,11 @@
         tr
             td
             td
-            td...{{opis}}
+            td...{{item_info.description}}
             td...1
-            td...{{icon}}
+            td...{{item_info.icon}}
             td...html
-            td...{{opis}},{{base_path}}{{url}}
+            td...{{item_info.description}},{{base_path}}{{item_info.url}}
 
         % if forloop.last
             %% toolbars_end

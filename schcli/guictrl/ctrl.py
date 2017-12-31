@@ -194,7 +194,7 @@ def _make_button_class(base_class, is_bitmap_button=False, is_close_button=False
             self.bmp = None
             if is_bitmap_button:
                 if is_close_button:
-                    self.src="client://emblems/emblem-unreadable.png"
+                    self.src="png://emblems/emblem-unreadable.png"
                 if self.src:
                     self.bmp = bitmap_from_href(self.src, icon_size)
 
@@ -438,8 +438,8 @@ class BITMAPCOMBOBOX(BitmapComboBox, SchBaseCtrl):
                 self.Append(id, bmp, id)
 
     def init_embeded_icons(self):
-        base_path = wx.GetApp().scr_path+'/schappdata/media/22x22/'
-        return self._init_icons(base_path, 'client://')
+        base_path = wx.GetApp().scr_path+'/static/icons/22x22/'
+        return self._init_icons(base_path, 'png://')
 
     def init_fa_icons(self):
         base_path = wx.GetApp().scr_path+'/static/fonts/font-awesome/fonts/22x22/'

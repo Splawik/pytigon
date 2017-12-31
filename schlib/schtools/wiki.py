@@ -66,14 +66,14 @@ def make_href(wiki_value, new_win=True, section=None, btn = False, path=None):
 
     if section:
         if new_win:
-            return "<a href='%s/schwiki/%s/%s/view/' target='_top2' %s>%s</a>" % (p, section, wiki, btn_str, wiki_value)
+            return "<a href='%s/schwiki/%s/%s/view/?desc=%s' target='_top2' %s>%s</a>" % (p, section, wiki, wiki_value, btn_str, wiki_value)
         else:
-            return "<a href='%s/schwiki/%s/%s/view/' target='_self' %s>%s</a>" % (p, section, wiki, btn_str, wiki_value)
+            return "<a href='%s/schwiki/%s/%s/view/?desc=%s' target='_self' %s>%s</a>" % (p, section, wiki, wiki_value, btn_str, wiki_value)
     else:
         if new_win:
-            return "<a href='../../%s/view/' target='_top2' %s>%s</a>" % (wiki, btn_str, wiki_value)
+            return "<a href='../../%s/view/?desc=%s' target='_top2' %s>%s</a>" % (wiki, wiki_value, btn_str, wiki_value)
         else:
-            return "<a href='../../%s/view/' target='_self' %s>%s</a>" % (wiki, btn_str, wiki_value)
+            return "<a href='../../%s/view/?desc=%s' target='_self' %s>%s</a>" % (wiki, wiki_value, btn_str, wiki_value)
 
 
 def wikify(value, path=None):

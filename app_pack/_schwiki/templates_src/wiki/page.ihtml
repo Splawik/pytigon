@@ -82,17 +82,21 @@
 
 
 %% list_row_header
-    th...Name
     th...Subject
+    th...Name
     th...Description
-    th...Page type
+    th...Menu
+    th...Operator
+    th...Modify time
     
 
 %% list_row
-    td...{{object.name}}
     td...{{object.subject}}
+    td...{{object.name}}
     td...{{object.description}}
-    td...{{object.page_type}}
+    td...{{object.menu}}
+    td...{{object.operator}}
+    td...{{object.update_time}}
 
 
 %% list_row_actions
@@ -106,3 +110,5 @@
 
 %% row_edit
     % form:
+        .subject,name,description,base_template,rights_group,menu
+        

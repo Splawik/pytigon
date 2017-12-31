@@ -76,16 +76,20 @@
         {% new_row "New wiki page" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Name</th>
         <th>Subject</th>
+        <th>Name</th>
         <th>Description</th>
-        <th>Page type</th>
+        <th>Menu</th>
+        <th>Operator</th>
+        <th>Modify time</th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.name}}</td>
         <td>{{object.subject}}</td>
+        <td>{{object.name}}</td>
         <td>{{object.description}}</td>
-        <td>{{object.page_type}}</td>
+        <td>{{object.menu}}</td>
+        <td>{{object.operator}}</td>
+        <td>{{object.update_time}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
@@ -98,6 +102,7 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
+                subject,name,description,base_template,rights_group,menu
         {% endform %}
 {% endblock %}
 

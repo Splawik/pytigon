@@ -4,7 +4,7 @@ import django
 from django.db import models
 
 from schlib.schdjangoext.fields import *
-from schlib.schdjangoext.models import JSONModel
+from schlib.schdjangoext.models import *
 
 import schlib.schdjangoext.fields as ext_models
 

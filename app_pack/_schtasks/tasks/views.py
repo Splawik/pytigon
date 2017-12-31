@@ -32,10 +32,10 @@ PFORM = form_with_perms('tasks')
 
 
 class TaskListForm(forms.Form):
-    time_from = forms.DateTimeField(label='Time from', required=False, )
-    time_to = forms.DateTimeField(label='Time to', required=False, )
-    only_my = forms.NullBooleanField(label='Only my', required=False, )
-    only_active = forms.NullBooleanField(label='Only active', required=False, )
+    time_from = forms.DateTimeField(label=_('Time from'), required=False, )
+    time_to = forms.DateTimeField(label=_('Time to'), required=False, )
+    only_my = forms.NullBooleanField(label=_('Only my'), required=False, )
+    only_active = forms.NullBooleanField(label=_('Only active'), required=False, )
     
     def process(self, request, queryset=None):
     

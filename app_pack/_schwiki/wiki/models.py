@@ -24,7 +24,7 @@ from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.wiki import wikify
 from schlib.schtools.tools import norm_indent
 from django.template.loader import select_template
-
+from datetime import datetime
 
 template_content = """
 {# -*- coding: utf-8 -*- #}
@@ -100,7 +100,7 @@ class Page(JSONModel):
     rights_group = models.CharField('Rights group', null=True, blank=True, editable=True, max_length=64)
     menu = models.CharField('Menu', null=True, blank=True, editable=True, max_length=64)
     operator = models.CharField('Operator', null=True, blank=True, editable=False, max_length=64)
-    update_time = models.DateTimeField('Update time', null=False, blank=False, editable=True, )
+    update_time = models.DateTimeField('Update time', null=False, blank=False, editable=False, default=datetime.now,)
     
 
     def save(self, *args, **kwargs):
@@ -183,6 +183,9 @@ class Page(JSONModel):
     
     def transform_template_name(self, request, template_name):
         return "wiki/edit_wiki_content.html"
+    
+    def get_form(self, view, request, form_class, adding):
+        return None
     
 admin.site.register(Page)
 

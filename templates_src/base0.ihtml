@@ -63,12 +63,12 @@
                 %% menu
 
                     %% topmenu_start
-                    %for title, perms, index, app_name, user_param, xnone, xnone in app_manager|args:app_pack|call:"get_apps_width_perm":
+                    %for app_info in app_manager|args:app_pack|call:"get_apps_width_perm":
                         %% topmenu
                     %% topmenu_end
 
                     %% submenu_start
-                    %for module_title, app_title, app_name, url, opis, prawo, icon, app_parms, user_param in app_manager|args:app_pack|call:"get_app_items_width_perm":
+                    %for item_info in app_manager|args:app_pack|call:"get_app_items_width_perm":
                         %% submenu
                     %% submenu_end
 

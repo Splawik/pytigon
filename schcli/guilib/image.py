@@ -104,8 +104,8 @@ def bitmap_from_href(href, size_type=SIZE_DEFAULT):
         href - can be:
             - ArtProvider id - for example "wx.ART_COPY"
             - Font Awesome id, format: "fa://icon_name", for example "fa://bus"
-            - path to image in local library, format: "client://image_name",
-              for example: "client://mimetypes/text-x-script.png".
+            - path to image in local library, format: "png://image_name",
+              for example: "png://mimetypes/text-x-script.png".
               Local library is located in path: "/schappdata/media/size/"
             - path to image in web, for example: "http://www.pytigon.com/test.png"
 
@@ -131,7 +131,10 @@ def bitmap_from_href(href, size_type=SIZE_DEFAULT):
     if href2[:3] == 'wx.':
         bmp = wx.ArtProvider.GetBitmap(eval(href2), wx.ART_TOOLBAR, (icon_size, icon_size))
     elif href.startswith('client://'):
-        image = wx.Image(wx.GetApp().scr_path + '/schappdata/media/%dx%d/' % (icon_size, icon_size) + href2[9:])
+        image = wx.Image(wx.GetApp().scr_path + '/static/icons/%dx%d/' % (icon_size, icon_size) + href2[9:])
+        bmp = wx.Bitmap(image)
+    elif href.startswith('png://'):
+        image = wx.Image(wx.GetApp().scr_path + '/static/icons/%dx%d/' % (icon_size, icon_size) + href2[6:])
         bmp = wx.Bitmap(image)
     elif href.startswith('fa://'):
         if '.png' in href.lower():
@@ -166,7 +169,7 @@ class ArtProviderFromIcon(wx.ArtProvider):
         self.tab_22 = {}
         self.tab_32 = {}
 
-        ids = open(wx.GetApp().scr_path + '/schappdata/media/ids.txt')
+        ids = open(wx.GetApp().scr_path + '/static/icons/ids.txt')
         for line in ids:
             l = line.replace('\n', '').split(',')
             if len(l) > 1:
@@ -190,17 +193,17 @@ class ArtProviderFromIcon(wx.ArtProvider):
             if artid in self.tab_16:
                 if self.tab_16[artid][1]:
                     return self.tab_16[artid][1]
-                path = 'client://' + self.tab_16[artid][0] + '?size=0'
+                path = 'png://' + self.tab_16[artid][0] + '?size=0'
         elif size == 22:
             if artid in self.tab_22:
                 if self.tab_22[artid][1]:
                     return self.tab_22[artid][1]
-                path = 'client://' + self.tab_22[artid][0] + '?size=1'
+                path = 'png://' + self.tab_22[artid][0] + '?size=1'
         else:
             if artid in self.tab_32:
                 if self.tab_32[artid][1]:
                     return self.tab_32[artid][1]
-                path = 'client://' + self.tab_32[artid][0] + '?size=2'
+                path = 'png://' + self.tab_32[artid][0] + '?size=2'
         try:
             bitmap = bitmap_from_href(path)
         except:

@@ -34,8 +34,11 @@ from django.db.models.query import QuerySet
 from django.db.models import Count, Min, Sum, Avg
 from django.utils.safestring import mark_safe
 
+from schlib.schdjangoext.tools import make_href as mhref
+
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.wiki import wiki_from_str, make_href, wikify
+
 
 register = template.Library()
 
@@ -842,3 +845,17 @@ def get_or_tree(getattr):
         return 'gettree'
     else:
         return 'tree'
+
+
+@register.filter(name='to_html_icon')
+def to_html_icon(icon_str, additional_class=""):
+    if icon_str.startswith('fa://'):
+        return "<i class='fa fa-%s %s'></i>" % (icon_str[5:].replace('.png',''), additional_class)
+    elif icon_str.startswith('png://'):
+        src = mhref("/static/icons/22x22/%s" % icon_str[5:])
+        return "<img src='%s' class='%s'></img>" % (src, additional_class)
+    elif icon_str.startswith('client://'):
+        src = mhref("/static/icons/22x22/%s" % icon_str[9:])
+        return "<img src='%s' class='%s'></img>" % (src, additional_class)
+    else:
+        return "<i class='fa fa-circle-o'></i>"

@@ -566,6 +566,8 @@ class GenericRows(object):
 
                 if self.object and hasattr(self.object, 'get_form'):
                     form = self.object.get_form(self, request, form_class, False)
+                    if not form:
+                        form = self.get_form(form_class)
                 else:
                     form = self.get_form(form_class)
 
@@ -587,6 +589,8 @@ class GenericRows(object):
 
                 if self.object and hasattr(self.object, 'get_form'):
                     form = self.object.get_form(self, request, form_class, False)
+                    if not form:
+                        form = self.get_form(form_class)
                 else:
                     form = self.get_form(form_class)
 

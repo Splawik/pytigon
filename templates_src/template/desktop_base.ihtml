@@ -189,16 +189,16 @@
 %% topmenu
     %if forloop.first:
         li class=nav-item topmenu
-            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top
-                % if user_param.icon:
-                    <i class="fa {{user_param.icon}}"></i>
-                {{title}}
+            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_top
+                % if app_info.user_param.icon:
+                    <i class="fa {{app_info.user_param.icon}}"></i>
+                {{app_info.app_title}}
     %else:
         li class=nav-item topmenu
-            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_name}},,,href=#{{app_name}},,,target=_top
-                % if user_param.icon:
-                    <i class="fa {{user_param.icon}}"></i>
-                {{title}}
+            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_top
+                % if app_info.user_param.icon:
+                    <i class="fa {{app_info.user_param.icon}}"></i>
+                {{app_info.app_title}}
 
 
 %%topmenu_end
@@ -240,23 +240,23 @@
 
 
 %% submenu
-    % ifchanged app_name
+    % ifchanged item_info.app_name
         % if not forloop.first
             </div>
-            <div id="{{app_name}}" class="tab-pane tab-tab" role="tabpanel">
+            <div id="{{item_info.app_name}}" class="tab-pane tab-tab" role="tabpanel">
         % else:
-            <div id="{{app_name}}" class="tab-pane tab-tab active" role="tabpanel">
+            <div id="{{item_info.app_name}}" class="tab-pane tab-tab active" role="tabpanel">
 
-    % if url|is_menu_checked:request.get_full_path:
-        a href={{base_path}}{{url}},,,class=btn btn-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
-            %if icon:
-                <i class="fa {{icon}}"></i>
-            {{opis}}
+    % if item_info.url|is_menu_checked:request.get_full_path:
+        a href={{base_path}}{{item_info.url}},,,class=btn btn-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+            %if item_info.icon:
+                <i class="fa {{item_info.icon}}"></i>
+            {{item_info.description}}
     % else
-        a href={{base_path}}{{url}},,,class=btn btn-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
-            %if icon:
-                <i class="fa {{icon}}"></i>
-            {{opis}}
+        a href={{base_path}}{{item_info.url}},,,class=btn btn-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+            %if item_info.icon:
+                <i class="fa {{item_info.icon}}"></i>
+            {{item_info.description}}
     % if forloop.last
         </div>
 

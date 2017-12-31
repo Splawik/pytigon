@@ -57,9 +57,13 @@ template_start = """
 
 
 
-def view_page(request, app_or_subject, page_name):
+def view_page(request, app_or_subject, page_path):
     
-    path, sep, page_name = page_name.rpartition('+')
+    desc = request.GET.get('desc','')
+    path, sep, page_name = page_path.rpartition('+')
+    if page_name:
+        page_name = page_name[0].upper()+page_name[1:]
+        
     id = -1
     if path:
         path_list = path.split('+')
@@ -71,6 +75,19 @@ def view_page(request, app_or_subject, page_name):
     else:
         path_list = None
         path = page_name
+    
+    path_list2 = []
+    if path_list:
+        for pos in path_list:
+            try:
+                p = Page.objects.get(name=pos, subject=app_or_subject)
+                if p.description:
+                    path_list2.append(p.description)
+                else:
+                    path_list2.append(pos)
+            except:
+                path_list2.append(pos)
+    
     page = None
     try:
         page = Page.objects.get(name=page_name, subject=app_or_subject)
@@ -79,6 +96,7 @@ def view_page(request, app_or_subject, page_name):
     except Page.DoesNotExist:
         page = Page()
         page.name = page_name
+        page.description=desc
         page.subject = app_or_subject
         page.update_time = datetime.datetime.now()
         page.operator = request.user.username
@@ -86,25 +104,20 @@ def view_page(request, app_or_subject, page_name):
         id = page.id
         content = None
         
-    c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 'wiki_path_list': path_list, 'title': '?: ' + page_name, 'object': page }
-    #if page:
-        #if page.page_type != 'W':
+    c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 
+         'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,
+         'description': desc if desc else page_name,
+    }
     
     if page and page.base_template:
         base_template = page.base_template
     else:
         base_template = "wiki/wiki_view.html"
     
-    #content2 = ( template_start % base_template ) + page.content
     c['content'] = content
     
     
     return render(request, base_template, context=c)
-    #t = Template(content)
-    #return HttpResponse(t.render(c))
-    
-    #t = Template(template_start_wiki)
-    #return HttpResponse(t.render(c))
     
 
 

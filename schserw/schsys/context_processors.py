@@ -137,6 +137,30 @@ def default_template(b_type):
     return "template/%s.html" % b_type
 
 
+class AppInfo:
+    def __init__(self, app_title=None, app_perms=None, index=None, app_name=None, module_title=None,
+                 module_name=None, user_param=None):
+        self.app_title = app_title
+        self.app_perms = app_perms
+        self.index = index
+        self.app_name = app_name
+        self.module_title = module_title
+        self.module_name = module_name
+        self.user_param = user_param
+
+
+class AppItemInfo(AppInfo):
+    def __init__(self, app_info, url=None, description=None, right=None, icon=None):
+        super().__init__(app_info.app_title, app_info.app_perms, app_info.index, app_info.app_name,
+                         app_info.module_title, app_info.module_name, app_info.user_param)
+        self.url = url
+        self.description = description
+        self.right = right
+        self.icon = icon
+
+    def get_app_info(self):
+        return AppInfo(self.app_title, self.app_perms, self.index, self.app_name,
+                        self.module_title, self.module_name, self.user_param)
 
 class AppManager:
     def __init__(self, request):
@@ -160,13 +184,13 @@ class AppManager:
             return elementy[nr]
 
     def get_main_title(self):
-        apps = self.get_apps()
+        apps = self._get_apps()
         for app in apps:
             if app[4]=='main':
                 return app[0]
         return ""
 
-    def get_apps(self, app_set=None):
+    def _get_apps(self, app_set=None):
         ret = []
 
         if app_set:
@@ -213,50 +237,100 @@ class AppManager:
                         user_param = module2.UserParam
                     else:
                         user_param = {}
-                    ret.append((title, perms, index, appname, module_title, elementy[0], user_param))
+
+                    app_info = AppInfo()
+                    app_info.app_title = title
+                    app_info.app_perms = perms
+                    app_info.index = index
+                    app_info.app_name = appname
+                    app_info.module_title = module_title
+                    app_info.module_name = elementy[0]
+                    app_info.user_param = user_param
+                    ret.append(app_info)
+
+                    #ret.append(AppInfo(title, perms, index, appname, module_title, elementy[0], user_param))
             except:
                 pass
+        return ret
+
+    def get_apps(self, app_set=None):
+        ret = []
+        items = self.get_app_items(app_set)
+        for item in items:
+            append = True
+            for pos in ret:
+                if pos.app_name == item.app_name:
+                    append = False
+                    break
+            if append:
+                ret.append(item.get_app_info())
         return ret
 
     def get_menu_id(self):
         i = 0
         apps = self.get_apps_width_perm()
         for app in apps:
-            if app[3] == self.appid():
+            if app.app_name == self.appid():
                 return i
             i += 1
         return 0
 
     def get_app_items(self, app_pack=None):
-        apps = self.get_apps(app_pack)
+        apps = self._get_apps(app_pack)
         ret = []
         for app in apps:
-            app_name = app[3]
-            app_title = app[0]
-            module_title = app[4]
-            module_name = app[5]
-            user_param = app[6]
-            if app_name != None and app_name != '':
-                try:
-                    module = __import__(module_name)
-                    if module_name != app_name:
-                        module2 = getattr(module, app_name)
+            if app.app_name != None and app.app_name != '':
+                #try:
+                    module = __import__(app.module_name)
+                    if app.module_name != app.app_name:
+                        module2 = getattr(module, app.app_name)
                     else:
                         module2 = module
                     if module2:
                         for pos in module2.Urls:
-                            ret.append((module_title, app_title, app_name, app_name + '/' + pos[0], pos[1],
-                                        pos[2], pos[3], app[1], user_param,))
+                            #Urls: url, title, right, icon
+                            app_info = AppItemInfo(app)
+                            app_info.url = app.app_name + '/'+ pos[0]
+                            app_info.description = pos[1]
+                            app_info.right = pos[2]
+                            app_info.icon = pos[3]
+                            ret.append(app_info)
+
                         if hasattr(module2, 'AdditionalUrls'):
+                            # AdditionalUrls: url, title, right, icon, module,
                             if callable(module2.AdditionalUrls):
                                 urls2 = module2.AdditionalUrls()
                             else:
                                 urls2 = module2.AdditionalUrls
-                        for pos in urls2:
-                            ret.append((module_title, app_title, app_name, app_name + '/' + pos[0], pos[1], pos[2],
-                                        pos[3], app[1], user_param,))
-                except:
-                    pass
+                            for pos in urls2:
+                                app_info = AppItemInfo(app)
+                                app_info.module_title = pos[4] if pos[4] else app.module_title
+                                app_info.app_name = pos[5] if pos[5] else app.app_name
+                                app_info.app_title = pos[6] if pos[6] else app.app_title
+                                app_info.url = pos[0]
+                                app_info.description = pos[1]
+                                app_info.right = pos[2]
+                                app_info.icon = pos[3]
+                                app_info.app_perms = None
+                                app_info.user_param = None
+
+                                id = -1
+                                test = 0
+                                i = 0
+                                for pos in ret:
+                                    if pos.module_title == app_info.module_title:
+                                        if test == 0:
+                                            id = i
+                                        if pos.app_name == app_info.app_name:
+                                            test = 1
+                                            id = i
+                                    i+=1
+                                if id>=0:
+                                    ret.insert(id+1, app_info)
+                                else:
+                                    ret.append(app_info)
+                #except:
+                #    pass
         return ret
 
     def get_apps_width_perm(self, app_pack=None):
@@ -264,15 +338,14 @@ class AppManager:
         items = self.get_app_items()
         no_empty_apps = []
         for item in items:
-            app_name = item[2]
-            if not app_name in no_empty_apps:
-                no_empty_apps.append(app_name)
+            if not item.app_name in no_empty_apps:
+                no_empty_apps.append(item.app_name)
         for item in self.get_apps(app_pack):
-            if item[3] in settings.HIDE_APPS:                
+            if item.app_name in settings.HIDE_APPS:
                 continue
-            if item[3] in no_empty_apps:
-                if item[1]:
-                    if self.request.user.has_module_perms(item[3]):
+            if item.app_name in no_empty_apps:
+                if item.app_perms:
+                    if self.request.user.has_module_perms(item.app_name):
                         ret.append(item)
                 else:
                     ret.append(item)
@@ -281,18 +354,18 @@ class AppManager:
     def get_app_items_width_perm(self, app_pack=None):
         ret = []
         for item in self.get_app_items(app_pack):
-            if item[2] in settings.HIDE_APPS:                
+            if item.app_name in settings.HIDE_APPS:
                 continue
-            if not item[7] or self.request.user.has_module_perms(item[2]):
-                if item[5]:
-                    if self.request.user.has_perm(item[5]):
+            if not item.app_perms or self.request.user.has_module_perms(item.app_name):
+                if item.right:
+                    if self.request.user.has_perm(item.right):
                         ret.append(item)
                 else:
                     ret.append(item)
             else:
-                if len(Permission.objects.filter(content_type__app_label = item[2]))==0:
-                    if item[5]:
-                        if self.request.user.has_perm(item[5]):
+                if len(Permission.objects.filter(content_type__app_label = item.app_name))==0:
+                    if item.right:
+                        if self.request.user.has_perm(item.right):
                             ret.append(item)
                     else:
                         ret.append(item)
