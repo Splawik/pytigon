@@ -96,7 +96,7 @@
     td...{{object.description}}
     td...{{object.menu}}
     td...{{object.operator}}
-    td...{{object.update_time}}
+    td...{{object.update_time|isoformat}}
 
 
 %% list_row_actions

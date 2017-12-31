@@ -123,11 +123,12 @@ _GET_TABLE_BUTTONS_2 = """
 """
 
 class ModelSelect2WidgetExt(ModelSelect2Widget):
-    def __init__(self, href1=None, href2=None, is_new_button=False, label="", *argi, **argv):
+    def __init__(self, href1=None, href2=None, is_new_button=False, is_get_button=True, label="", *argi, **argv):
         ModelSelect2Widget.__init__(self, *argi, label=label, **argv)
         self.href1 = href1
         self.href2 = href2
         self.is_new_button = is_new_button
+        self.is_get_button = is_get_button
         self._label = label
 
     def render(self, name, value, attrs=None):
@@ -138,8 +139,10 @@ class ModelSelect2WidgetExt(ModelSelect2Widget):
             objs = self.queryset.filter(pk=value)
             if len(objs)==1:
                 txt = str(objs[0])
-
-        buttons = _GET_TABLE_BUTTONS_1 % (self.href1, self._label + str(_(" - get object")))
+        if self.is_get_button:
+            buttons = _GET_TABLE_BUTTONS_1 % (self.href1, self._label + str(_(" - get object")))
+        else:
+            buttons = ""
         if self.is_new_button:
             buttons += _GET_TABLE_BUTTONS_2 % (self.href2, self._label + str(_(" - new object")))
 
@@ -177,7 +180,7 @@ class ForeignKey(models.ForeignKey):
             _search_fields = self.search_fields
             class _Field(forms.ModelChoiceField):
                 def __init__(self, queryset, *argi, **argv):
-                    widget=ModelSelect2WidgetExt(href1, href2, False, field.verbose_name, queryset = queryset,search_fields=_search_fields)
+                    widget=ModelSelect2WidgetExt(href1, href2, False, True, field.verbose_name, queryset = queryset,search_fields=_search_fields)
                     widget.attrs['style'] = 'width:400px;'
                     argv['widget'] = widget
                     forms.ModelChoiceField.__init__(self, queryset, *argi, **argv)

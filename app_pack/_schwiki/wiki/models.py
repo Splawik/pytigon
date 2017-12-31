@@ -103,6 +103,11 @@ class Page(JSONModel):
     update_time = models.DateTimeField('Update time', null=False, blank=False, editable=False, default=datetime.now,)
     
 
+    def save_from_request(self, request, view_type, param):
+        self.operator = request.user.username
+        self.update_time = datetime.now()
+        self.save()
+    
     def save(self, *args, **kwargs):
         if self.content_src:
             

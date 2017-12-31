@@ -89,7 +89,7 @@
         <td>{{object.description}}</td>
         <td>{{object.menu}}</td>
         <td>{{object.operator}}</td>
-        <td>{{object.update_time}}</td>
+        <td>{{object.update_time|isoformat}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

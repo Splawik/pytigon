@@ -127,12 +127,10 @@ def view_page(request, app_or_subject, page_path):
 
 def edit_page(request, app_or_subject, page_name):
     
-    #print('edit page:', subject, page_name)
     try:
         page = Page.objects.get(name=page_name, subject=app_or_subject)
     except Page.DoesNotExist:
         page = Page(app=app, name=page_name, subject=app_or_subject)
-        #page.page_type = 'W'
         page.save()
     
     redir = make_href("/wiki/table/Page/%d/edit/?childwin=1" % page.id)
@@ -193,6 +191,8 @@ def edit_page_object(request):
                                 data = form.cleaned_data
                             page._data = { name: data } 
                             page._data['json_update'] = True
+                            page.operator = request.user.username
+                            page.update_time = datetime.datetime.now()
                             page.save()
                             url = make_path('ok')
                             return HttpResponseRedirect(url)

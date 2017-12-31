@@ -989,7 +989,7 @@ def field(context, form_field, fieldformat=None):
 
 @inclusion_tag('widgets/get_table_row.html')
 def get_table_row(context, field_or_name, app_name=None, table_name=None, search_fields=None, filter=None, label = None,
-                   initial = None, is_new_button=False, get_target="popup_edit", new_target="inline"):
+                   initial = None, is_get_button=True, is_new_button=False, get_target="popup_edit", new_target="inline"):
     if type(field_or_name) in (SafeText, str,):
         model = import_model(app_name, table_name)
         _name = field_or_name
@@ -1037,7 +1037,8 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
             super().__init__(*args, **kwargs)
 
             self.fields[_name] = forms.ChoiceField(
-                widget=ModelSelect2WidgetExt(href1, href2, is_new_button, _label,
+                label = _label,
+                widget=ModelSelect2WidgetExt(href1, href2, is_new_button, is_get_button, _label,
                     model=model,
                     search_fields=[_search_fields, "description__icontains"],
                     queryset = _queryset,
