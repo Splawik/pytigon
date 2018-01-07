@@ -46,6 +46,13 @@ template_start = """
 {%% load exfiltry %%}
 {%% load exsyntax %%}
 """
+
+template_simple = """
+{# -*- coding: utf-8 -*- #}
+
+{% load exfiltry %}
+{% load exsyntax %}
+"""
  
 
 
@@ -93,6 +100,11 @@ def view_page(request, app_or_subject, page_path):
         page = Page.objects.get(name=page_name, subject=app_or_subject)
         id = page.id
         content = page.content
+        
+        t = Template(template_simple + content)
+        c = Context({'object': page, 'wiki_path': path })
+        
+        content=t.render(c)
     except Page.DoesNotExist:
         page = Page()
         page.name = page_name
@@ -103,6 +115,7 @@ def view_page(request, app_or_subject, page_path):
         page.save()
         id = page.id
         content = None
+    
         
     c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 
          'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,
@@ -150,10 +163,15 @@ def insert_object_to_editor(request, pk):
     
     if pk:
         object = models.PageObjectsConf.objects.get(pk=pk)        
+        if object.edit_form:
+            edit_form = "True"
+        else:
+            edit_form = "False"
     else:
         object = None
+        edit_form = "True"
     
-    return { 'pk': pk, 'object': object, 'page_id': page_id, 'page': page }
+    return { 'pk': pk, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
     
 
 
@@ -225,6 +243,16 @@ def edit_page_object(request):
         
     url = make_path('ok')
     return HttpResponseRedirect(url)
+    
+
+@dict_to_template('wiki/v_publish.html')
+
+
+
+
+def publish(request):
+    
+    return { "OK", True }
     
 
 

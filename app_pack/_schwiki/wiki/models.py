@@ -21,7 +21,7 @@ from schlib.schhtml.htmltools import superstrip
 from django.template import RequestContext,Context, Template
 import markdown2 as markdown
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
-from schlib.schtools.wiki import wikify
+from schlib.schtools.wiki import wikify, wiki_from_str, make_href
 from schlib.schtools.tools import norm_indent
 from django.template.loader import select_template
 from datetime import datetime
@@ -33,7 +33,7 @@ template_content = """
 %s
 """
 
-def _get_wiki_object(page, buf, name):
+def _get_wiki_object(page, buf, name, paragraf):
     name0 = name.split('_')[0]
     conf = None
     x = PageObjectsConf.objects.filter(name=name0)
@@ -49,7 +49,7 @@ def _get_wiki_object(page, buf, name):
         if conf.inline_wiki:
             inline_content = html_from_wiki(page, inline_content)
 
-        context = {'param': c, 'inline_content': inline_content, 'object': conf, 'page': page}
+        context = {'param': c, 'inline_content': inline_content, 'object': conf, 'page': page, 'paragraf': paragraf}
         if conf.view_dict:
             exec(conf.view_dict)
             context = locals()['get_view_dict'](context)
@@ -59,8 +59,7 @@ def _get_wiki_object(page, buf, name):
 
         t = select_template([template_name1, template_name2, ])
 
-        return t.render(context).replace('[[', '{{').replace(']]', '}}').replace('[%', '{%').replace('%]',
-                                                                                                     '%}')
+        return t.render(context) #.replace('[[', '{{').replace(']]', '}}').replace('[%', '{%').replace('%]', '%}')
     else:
         return ""
 
@@ -79,12 +78,13 @@ def html_from_wiki(page, wiki_str):
     paragraf_prefix = None
     paragraf_suffix = None
     section_close_elements = []
+    document_close_elements = []
 
     def write_papragraf():
         nonlocal in_wiki_object, buf, paragraf_prefix, paragraf_suffix, document, paragraf
 
         if in_wiki_object:
-            x = _get_wiki_object(page, buf, name)
+            x = _get_wiki_object(page, buf, name, [paragraf_prefix, paragraf_suffix])
             document.append(x)
             buf = []
         else:
@@ -116,6 +116,12 @@ def html_from_wiki(page, wiki_str):
             document.append("".join(list(reversed(section_close_elements))))
         section_close_elements = []
 
+    def write_document():
+        nonlocal document_close_elements, document
+        if document_close_elements:
+            document.append("".join(list(reversed(document_close_elements))))
+        document_close_elements = []
+
     lines = wiki_str.replace('\r', '').split('\n')
     for line in lines:
         if in_wiki_object:
@@ -123,7 +129,7 @@ def html_from_wiki(page, wiki_str):
                 buf.append(line)
                 continue
             else:
-                x = _get_wiki_object(page, buf, name)
+                x = _get_wiki_object(page, buf, name, [paragraf_prefix, paragraf_suffix])
 
                 if x.startswith('@@@'):
                     if '|||' in x:
@@ -135,9 +141,14 @@ def html_from_wiki(page, wiki_str):
                         paragraf_suffix = ""
                 else:
                     if '|||' in x:
-                        y = x.split('|||')
-                        paragraf.append((y[0], False))
-                        section_close_elements.append(y[1])
+                        if '||||' in x:
+                            y = x.split('||||')
+                            paragraf.append((y[0], False))
+                            document_close_elements.append(y[1])
+                        else:
+                            y = x.split('|||')
+                            paragraf.append((y[0], False))
+                            section_close_elements.append(y[1])
                     else:
                         paragraf.append((x, False))
 
@@ -162,6 +173,7 @@ def html_from_wiki(page, wiki_str):
 
     write_papragraf()
     write_section()
+    write_document()
 
     return "\n".join(document)
 
@@ -234,6 +246,8 @@ class Page(JSONModel):
     menu = models.CharField('Menu', null=True, blank=True, editable=True, max_length=64)
     operator = models.CharField('Operator', null=True, blank=True, editable=False, max_length=64)
     update_time = models.DateTimeField('Update time', null=False, blank=False, editable=False, default=datetime.now,)
+    published = models.NullBooleanField('Published', null=False, blank=False, editable=False, default=False,)
+    latest = models.NullBooleanField('Latest', null=False, blank=False, editable=False, default=True,)
     
 
     def save_from_request(self, request, view_type, param):
@@ -246,10 +260,8 @@ class Page(JSONModel):
             content = html_from_wiki(self, self.content_src)
         else:
             content = ""
-        t = Template(template_content % content)
-        c = Context({})
-        self.content=t.render(c)
-    
+        self.content = content
+        
         super(Page, self).save(*args, **kwargs) 
     
     def transform_template_name(self, request, template_name):
@@ -257,6 +269,18 @@ class Page(JSONModel):
     
     def get_form(self, view, request, form_class, adding):
         return None
+    
+    def get_page_for_wiki(self, wiki_str):
+        wiki_word = wiki_from_str(wiki_str)
+        objs = Page.objects.filter(subject=self.subject, name = wiki_word)
+        if len(objs)>0:
+            return objs[0]
+        else:
+            return None
+    
+    def get_href(self, path=None):
+        return make_href(self.description if self.description else self.name, new_win=False, section=self.subject, path=path)
+    
     
 admin.site.register(Page)
 
@@ -275,9 +299,12 @@ class WikiConf(JSONModel):
         
     
 
-    operator_or_group = models.CharField('Operator or group', null=False, blank=False, editable=True, max_length=64)
-    time = models.DateTimeField('Time of publication', null=False, blank=False, editable=True, )
-    copies = models.IntegerField('Number of copies', null=False, blank=False, editable=True, )
+    subject = models.CharField('Wiki subject', null=False, blank=False, editable=True, max_length=64)
+    group_of_rights_to_view = models.CharField('A group of rights to view wiki', null=True, blank=True, editable=True, max_length=64)
+    group_of_rights_to_edit = models.CharField('A group of rights to edit wiki', null=True, blank=True, editable=True, max_length=64)
+    backup_copies = models.IntegerField('Number of backup copies', null=False, blank=False, editable=True, )
+    publish_fun = models.TextField('Function called after publishing', null=True, blank=True, editable=False, )
+    css = models.TextField('Additional css styles', null=True, blank=True, editable=False, )
     
 
     

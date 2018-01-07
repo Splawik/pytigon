@@ -8,6 +8,7 @@ Index = ''
 Urls  = (
     ('table/Page/-/form/list/?schtml=desktop',_('Wiki'),'wiki.change_page','wx.ART_HELP_SIDE_PANEL'),
     ('table/PageObjectsConf/-/form/list/?schtml=desktop',_('Page objects conf.'),None,'client://actions/document-properties.png'),
+    ('table/WikiConf/-/form/list/?schtml=desktop',_('Publish options'),None,'png://categories/applications-system.png'),
 )
 UserParam = {}
 from django.utils.translation import ugettext_lazy as _

@@ -43,6 +43,9 @@ from schlib.schdjangoext.tools import import_model
 from schlib.schdjangoext.tools import make_href
 from schlib.schdjangoext.fields import ForeignKey, ModelSelect2WidgetExt
 from schlib.schdjangoext.models import TreeModel
+from schlib.schtools.wiki import wiki_from_str, make_href, wikify
+
+
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 from django.utils.safestring import SafeText
@@ -1046,4 +1049,21 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
             )
     form = _Form(initial = { _name: _initial })
     return { 'form': form, 'field': form[_name], "formformat": formformat, }
+
+
+@register.simple_tag(takes_context=True)
+def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True):
+    ret = ""
+    subpage = from_wiki_page.get_page_for_wiki(wiki_str)
+    if subpage and subpage.content:
+        if only_header:
+            content = subpage.content.split("<div class='read_more'")[0]
+        else:
+            content = subpage.content
+
+        ret += "<div class='article-header'><div class='article-header-title'>" + subpage.get_href(path) + \
+               "</div>" + content + "</div>\n"
+    else:
+        ret = wikify("[[" + wiki_str + "]]", path)
+    return mark_safe(ret)
 

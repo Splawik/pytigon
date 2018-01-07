@@ -72,11 +72,12 @@
             ul class=sidebar-menu
                 li class=bg-primary
                     a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
-                        span class=logo-lg
-                            % if appset_title|length > 20:
-                                small...{{appset_title}}
-                            % else:
-                                {{appset_title}}
+                        %% logo
+                            span class=logo-lg
+                                % if appset_title|length > 20:
+                                    small...{{appset_title}}
+                                % else:
+                                    {{appset_title}}
                 {{block.super}}
 
 %% body_start

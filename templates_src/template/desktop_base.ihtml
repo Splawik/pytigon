@@ -177,12 +177,13 @@
                     div style=width:5px; height:10px;
     div id=logo_place
         a href={{base_path}},,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
-            span class=logo-lg
-                % if appset_title|length > 20:
-                    small...{{appset_title}}
-                % else:
-                    strong
-                        {{appset_title}}
+            %% logo
+                span class=logo-lg
+                    % if appset_title|length > 20:
+                        small...{{appset_title}}
+                    % else:
+                        strong
+                            {{appset_title}}
 
     <ul class="nav nav-tabs win-header" id='tabs' role='tablist'>
 

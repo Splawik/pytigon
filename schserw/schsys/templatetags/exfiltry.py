@@ -859,3 +859,4 @@ def to_html_icon(icon_str, additional_class=""):
         return "<img src='%s' class='%s'></img>" % (src, additional_class)
     else:
         return "<i class='fa fa-circle-o'></i>"
+
