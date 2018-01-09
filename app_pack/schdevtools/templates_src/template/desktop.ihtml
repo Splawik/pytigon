@@ -22,6 +22,7 @@
     {% css_link 'app/schdevtools/css/style.css' %}
     {% css_link 'app/schdevtools/css/test_icss.css' %}
     
+    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
     
 
 %% body_footer

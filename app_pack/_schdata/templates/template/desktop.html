@@ -13,11 +13,11 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'app/standard_components/components/summertextarea.js' %}
+        {% component 'app/standard_components/components/wysiwyg_edit.js' %}
         {% component 'app/standard_components/components/vs_editor.js' %}
 {% endblock %}
 {% block component_init %}
-        component_init = [ "summertextarea", "vs_editor",  ]
+        component_init = [ "wysiwyg_edit", "vs_editor",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
