@@ -1,0 +1,47 @@
+.wiki_editor .form-group:nth-child(1) {
+  position: absolute;
+  left: 100px;
+  width: 300px; }
+
+.wiki_container h1 {
+  font-size: 1.2rem;
+  margin: 5px 0px; }
+
+.wiki_container h2 {
+  font-size: 1rem;
+  margin: 5px 0px; }
+
+.wiki_container .col {
+  margin-bottom: 30px; }
+
+.wiki_container .col > h1 {
+  border-bottom: 2px solid #ccc;
+  font-size: 2.4rem; }
+
+.wiki_container .right-block {
+  box-shadow: 2px 2px 6px;
+  background: #2c3b41;
+  padding: 5px;
+  margin: 1rem 0px;
+  border-radius: 3px;
+  color: #fff; }
+  .wiki_container .right-block h1 {
+    font-size: 1.5rem;
+    display: flex; }
+  .wiki_container .right-block a {
+    color: #fff !important; }
+  .wiki_container .right-block .article-header .article-header-title a {
+    background: rgba(255, 255, 255, 0.05) !important; }
+
+.wiki_container .article-header .article-header-title a {
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  padding: 0px 5px;
+  margin: 0px -5px;
+  color: #000; }
+
+.wiki_container .breadcrumb {
+  background: #fff;
+  box-shadow: 1px 1px 8px #ddd;
+  padding: 5px 10px; }

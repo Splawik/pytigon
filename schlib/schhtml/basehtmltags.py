@@ -273,16 +273,51 @@ class BaseHtmlElemParser(object):
     def _norm_sizes(self, sizes, dxy):
         ret = []
         for pos in sizes:
-            t = str(pos).split('%')
-            if len(t) == 2:
-                if dxy >= 0:
-                    x = int((float(t[0]) * dxy) / 100)
+            test = True
+            if not 'calc' in pos:
+                try:
+                    pos2 = pos.replace('px', '').strip()
+                    if pos2.endswith('%'):
+                        if dxy >= 0:
+                            x = int(int(pos2.replace('%', '')) * dxy / 100)
+                        else:
+                            x = -1
+                    elif pos2.endswith('em'):
+                        x = int(pos2.replace('em', '')) * 1
+                    elif pos2.endswith('rem'):
+                        x = int(pos2.replace('rem','')) * 1
+                    else:
+                        x = int(pos2)
+                    test = False
+                except:
+                    pass
+
+            if test:
+                #try:
+                    if 'calc' in pos:
+                        e = pos.split('(', 1)[1].rsplit(')', 1)[0].strip() #.replace('[[', '{').replace(']]','}')
+                    else:
+                        e = pos
+                    e = e.replace('px','').replace('em','*em').replace('rem','*rem').replace('%','*height/100')
+                    c = { 'top': self.dy, 'height': dxy, 'em': 1, 'rem': 1 }
+                    if hasattr(self, "get_context"):
+                        context = self.get_context()
+                        c.update(context)
+                    x = int(eval(e, c))
+                #except:
+                #    x = 10
+
+            if False:
+                t = str(pos).split('%')
+                if len(t) == 2:
+                    if dxy >= 0:
+                        x = int((float(t[0]) * dxy) / 100)
+                    else:
+                        x = -1
+                    if x >= 0 and len(t[1]) > 0:
+                        x += int(t[1])
                 else:
-                    x = -1
-                if x >= 0 and len(t[1]) > 0:
-                    x += int(t[1])
-            else:
-                x = int(float(t[0].replace('px', '').replace('em', '')))
+                    x = int(float(t[0].replace('px', '').replace('em', '')))
             ret.append(x)
         return ret
 

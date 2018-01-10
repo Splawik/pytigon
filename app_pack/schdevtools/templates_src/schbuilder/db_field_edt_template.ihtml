@@ -92,7 +92,7 @@
         table width=100%
             tr
                 td width=200
-                    ctrltree name=_panel,,,width=200,,,height=100%
+                    ctrltree name=_panel,,,width=200,,,height=calc(100% - top - 20)
                         li...{{object}}
                             ul
                                 li...object.fields
@@ -132,7 +132,7 @@
                                 %for pos in object.get_blocks
                                     li...{{pos|safe}}
                 td
-                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                         DATA...{{txt|bencode}}
 
 %% content

@@ -252,19 +252,35 @@ class CtrlTag(TableTag):
 
             m = self._get_parent_pseudo_margins()
             height = (height - m[2]) - m[3] - 3
-            if '99.9%' in self.attrs['height']:
-                height -= wx.Button.GetDefaultSize()[1]
-            if '99.8%' in self.attrs['height']:
-                height += m[2]+m[3]
-            if '99.7%' in self.attrs['height']:
-                height += m[2]+m[3]-wx.Button.GetDefaultSize()[1]
-            if '100%' in self.attrs['height']:
-                if self.parent and hasattr(self.parent,'y'):
-                    height -= self.parent.y - +m[3]
-                else:
-                    height += m[3]
+            #if False:
+            #    if '99.9%' in self.attrs['height']:
+            #        height -= wx.Button.GetDefaultSize()[1]
+            #    if '99.8%' in self.attrs['height']:
+            #        height += m[2]+m[3]
+            #    if '99.7%' in self.attrs['height']:
+            #        height += m[2]+m[3]-wx.Button.GetDefaultSize()[1]
+            #if '100%' in self.attrs['height']:
+            #    if self.parent and hasattr(self.parent,'y'):
+            #        height -= self.parent.y - +m[3]
+            #    else:
+            #        height += m[3]
 
             self.height = self._norm_sizes([self.attrs['height']], height)[0]
+            if self.attrs['height'].strip()=='100%':
+                self.height -= self.get_context()['top']
+
+    def get_context(self):
+        if self.parent and hasattr(self.parent,'y'):
+            _y = self.parent.y + 3
+        else:
+            _y = 1
+
+        context = {
+            'button_size_dx': wx.Button.GetDefaultSize()[0]+14,
+            'button_size_dy': wx.Button.GetDefaultSize()[1]+14,
+            'top': _y
+        }
+        return context
 
     def handle_data(self, data):
         if self.tag == 'ctrlcheckbox':
