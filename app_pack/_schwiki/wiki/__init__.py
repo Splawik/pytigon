@@ -16,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 def AdditionalUrls():
     from .models import Page
     ret = []
-    for object in Page.objects.all():
+    for object in Page.objects.filter(published=True):
         if object.menu:
             elements = object.menu.split(',')
             menu_path=elements[0].split('/')            

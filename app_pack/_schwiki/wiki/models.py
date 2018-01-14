@@ -251,8 +251,49 @@ class Page(JSONModel):
     
 
     def save_from_request(self, request, view_type, param):
+        conf_list = WikiConf.objects.filter(subject=self.subject)
+        conf_exists = False
+        if len(conf_list)>0:
+            conf = conf_list[0]
+            conf_exists = True
+            if conf.backup_copies>0:
+                pages = Page.objects.filter(subject = self.subject, name = self.name).update(latest=False)
+                obj_to_save = Page()
+                obj_to_save.subject = self.subject
+                obj_to_save.name = self.name
+                obj_to_save.description = self.description
+                obj_to_save.content_src = self.content_src
+                obj_to_save.content = self.content
+                obj_to_save.base_template = self.base_template
+                obj_to_save.rights_group = self.rights_group
+                obj_to_save.menu = self.menu
+                obj_to_save.operator = self.operator
+                obj_to_save.update_time = self.update_time
+                obj_to_save.published = False
+                obj_to_save.latest = True
+                obj_to_save.operator = request.user.username
+                obj_to_save.update_time = datetime.now()
+                obj_to_save.save()
+                pages = Page.objects.filter(subject = self.subject, name = self.name).order_by('update_time')
+                if len(pages) > conf.backup_copies:
+                    to_delete_count = len(pages) - conf.backup_copies
+                    to_delete = []
+                    for pos in pages:
+                        if not pos.published and not pos.latest:
+                            to_delete.append(pos)
+                            to_delete_count -= 1
+                        if to_delete_count <= 0:
+                            break
+                    if to_delete:
+                        for pos2 in to_delete:
+                            pos2.delete()
+                return
+                
         self.operator = request.user.username
         self.update_time = datetime.now()
+        self.latest = True
+        if not conf_exists:
+            self.published = True            
         self.save()
     
     def save(self, *args, **kwargs):
@@ -270,17 +311,35 @@ class Page(JSONModel):
     def get_form(self, view, request, form_class, adding):
         return None
     
-    def get_page_for_wiki(self, wiki_str):
+    def get_page_for_wiki(self, wiki_str, user=None):
         wiki_word = wiki_from_str(wiki_str)
-        objs = Page.objects.filter(subject=self.subject, name = wiki_word)
-        if len(objs)>0:
-            return objs[0]
-        else:
-            return None
+        return Page.get_page(user, self.subject, wiki_word)
     
     def get_href(self, path=None):
         return make_href(self.description if self.description else self.name, new_win=False, section=self.subject, path=path)
     
+    @staticmethod
+    def get_page(request_or_username, subject, name):
+        if type(request_or_username)==str:
+            username = request_or_username
+        elif request_or_username.user:
+            username = request_or_username.user.username
+        else:
+            username = None
+        objs = None
+        if username:
+            objs = Page.objects.filter(subject=subject, name = name, operator=username, latest=True)
+        if not objs or len(objs)==0:
+            objs = Page.objects.filter(subject=subject, name = name, published=True)
+        if not objs or len(objs)==0:
+            objs = Page.objects.filter(subject=subject, name = name)
+        if len(objs)>0:
+            return objs[0]
+        else:
+            return None
+        
+        
+        
     
 admin.site.register(Page)
 

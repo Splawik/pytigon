@@ -12,7 +12,9 @@ urlpatterns = [
     url('^(?P<app_or_subject>\w*)/(?P<page_name>\w*)/edit/$', views.edit_page),
     gen_row_action('PageObjectsConf', 'insert_object_to_editor', views.insert_object_to_editor),
     gen_tab_action('PageObjectsConf', 'edit_page_object', views.edit_page_object),
-    gen_tab_action('WikiConf', 'publish', views.publish),
+    gen_row_action('WikiConf', 'publish', views.publish),
+    
+    
     
     
     

@@ -87,7 +87,8 @@ def view_page(request, app_or_subject, page_path):
     if path_list:
         for pos in path_list:
             try:
-                p = Page.objects.get(name=pos, subject=app_or_subject)
+                #p = Page.objects.get(name=pos, subject=app_or_subject)
+                p = Page.get_page(request, app_or_subject, name)
                 if p.description:
                     path_list2.append(p.description)
                 else:
@@ -97,12 +98,13 @@ def view_page(request, app_or_subject, page_path):
     
     page = None
     try:
-        page = Page.objects.get(name=page_name, subject=app_or_subject)
+        #page = Page.objects.get(name=page_name, subject=app_or_subject)
+        page = Page.get_page(request, app_or_subject, page_name)
         id = page.id
         content = page.content
         
         t = Template(template_simple + content)
-        c = Context({'object': page, 'wiki_path': path })
+        c = Context({'object': page, 'wiki_path': path, 'request': request })
         
         content=t.render(c)
     except Page.DoesNotExist:
@@ -196,15 +198,18 @@ def edit_page_object(request):
             else:
                 form_class = None
                 form = None
-                
+            
+            context = {'conf': obj, 'page': page, 'request': request}
+            
             if request.POST or request.FILES:    
                 if request.method == 'POST':
                     if form_class:
                         form = form_class(request.POST, request.FILES)
                         if form.is_valid():
                             if obj.save_fun:
+                                
                                 exec(obj.save_fun)
-                                data = locals()['save'](form, rep)
+                                data = locals()['save'](form, context)
                             else:
                                 data = form.cleaned_data
                             page._data = { name: data } 
@@ -224,7 +229,7 @@ def edit_page_object(request):
                     
                     if obj.load_fun:
                         exec(obj.load_fun)
-                        data_form = locals()['load'](data)
+                        data_form = locals()['load'](data, context)
                     else:
                         if name in data:
                             data_form = data[name]
@@ -250,9 +255,26 @@ def edit_page_object(request):
 
 
 
-def publish(request):
+def publish(request, pk):
     
-    return { "OK", True }
+    conf = models.WikiConf.objects.get(pk = pk)
+    object_list = []
+    
+    pages = models.Page.objects.filter(subject=conf.subject, latest=True, published=False, operator=request.user.username)
+    if len(pages)>0:
+        for page in pages:
+            page.published = True
+            page.save()
+            if conf.publish_fun:
+                exec(conf.publish_fun)
+                info = locals()['publish_fun'](page, conf)
+                object_list.append([page, info])
+            else:
+                object_list.append([page, ""])
+    
+    pages = models.Page.objects.filter(subject=conf.subject, latest=False, published=True, operator=request.user.username).update(published=False)
+    
+    return { "OK": True, 'object_list': object_list }
     
 
 

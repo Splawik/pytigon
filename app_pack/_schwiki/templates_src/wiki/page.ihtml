@@ -88,6 +88,7 @@
     th...Menu
     th...Operator
     th...Modify time
+    th...Status
     
 
 %% list_row
@@ -97,7 +98,16 @@
     td...{{object.menu}}
     td...{{object.operator}}
     td...{{object.update_time|isoformat}}
-
+    td
+        % if object.published:
+            span class=fa fa-users
+            % if object.latest:
+                span class=fa fa-check-square-o
+        % else:
+            % if object.latest :
+                span class=fa fa-calendar-plus-o            
+            % else:
+                span class=fa fa-low-vision            
 
 %% list_row_actions
     % row_actions:

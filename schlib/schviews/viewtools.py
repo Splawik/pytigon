@@ -277,6 +277,8 @@ def dict_to_template(template_name):
             v = func(request, *args, **kwargs)
             if 'redirect' in v:
                 return HttpResponseRedirect(make_href(v['redirect']))
+            elif 'template_name' in v:
+                return render_to_response(v['template_name'], v, request=request)
             else:
                 return render_to_response(template_name, v, request=request)
         return inner

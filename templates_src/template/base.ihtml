@@ -140,7 +140,7 @@
                                 % if field:
                                     tr
                                         td
-                                            {{form|getvalue:field|as_widget:"width:100%,height:99.9%-20" }}
+                                            {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
                                 % else:
                                     %% row_edit
                                         {{form.as_table}}
