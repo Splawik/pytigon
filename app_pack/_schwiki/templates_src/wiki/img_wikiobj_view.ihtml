@@ -1,0 +1,10 @@
+div class=row
+    % for element in elements:
+        % if element.type == 'img':
+            div class={{element.css_class}} img_form_view
+                img src=data:image/png;base64,{{ element.data.0 }},,,style=width:100%
+                % if element.data.1:
+                    span class={{param.img_view_type}}...{{element.data.1}}
+        % else:
+            div class={{element.css_class}} img_form_view_text,,,style={{ element.style }}
+                {{element.data.1}}

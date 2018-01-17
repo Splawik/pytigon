@@ -25,6 +25,7 @@ from schlib.schtools.wiki import wikify, wiki_from_str, make_href
 from schlib.schtools.tools import norm_indent
 from django.template.loader import select_template
 from datetime import datetime
+from collections import namedtuple
 
 template_content = """
 {# -*- coding: utf-8 -*- #}

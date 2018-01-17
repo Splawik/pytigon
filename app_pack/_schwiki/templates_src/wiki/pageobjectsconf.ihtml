@@ -1,0 +1,42 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row _("New wiki class")
+
+%% list_row_header
+    th...Application
+    th...Name
+    th...Description
+    th...Inline editing
+
+
+%% list_row
+    td...{{object.app}}
+    td...{{object.name}}
+    td...{{object.description}}
+    td...{{object.inline_editing}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/edit_form,Edit form
+        .field_edit/load_fun,Load function
+        .field_edit/save_fun,Save function
+        .field_edit/view_dict,View dict
+        .field_edit/doc,Documentaction
+        .delete
+
+%% row_edit
+    % form:
+

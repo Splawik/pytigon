@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block edit_area %}
+        <div class="refresh_after_close" style="height: 100vh;">
+                {{ block.super }}
+        </div>
+{% endblock %}
+{% block content %}
+        <div class="container wiki_editor" style="width:calc( 100vw - 370px );">
+                {% comment %}
+                        {% with formformat="^/" %}
+                        {% endwith %}
+                {% endcomment %}
+                {% get_table_row "wikiobj_id" "wiki" "PageObjectsConf" "name__icontains" label="Type of wiki object" filter="1" is_get_button=False %}
+                {% action "new_object" "Modify or create a wiki object" url="{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}" target="run_script" %}
+                {% with title=page.name %}
+                        {{ block.super }}
+                {% endwith %}
+        </div>
+        <style>
+                .wiki_editor .form-group:nth-child(1) {
+                        position: absolute;
+                        left: 40px;
+                        width: 400px;
+                        top: -7px;
+                }
+                .wiki_editor button:nth-child(1) {
+                        position: absolute;
+                        left: 5px;
+                }
+                .wiki_editor a.btn:nth-child(2) {
+                        position: absolute;
+                        left: 380px;
+                }
+        </style>
+{% endblock %}
+

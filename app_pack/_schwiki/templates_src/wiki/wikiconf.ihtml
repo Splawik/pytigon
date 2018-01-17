@@ -1,0 +1,46 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+
+%% scroll
+
+
+%% list_content_actions
+    % new_row "New config"
+
+%% list_row_header
+    th..._(Wiki subject)
+    th..._(Group of rigths to view)
+    th..._(Group of rigths to edit)
+    th..._(backup_copies)
+
+
+%% list_row
+    td...{{object.subject}}
+    td...{{group_of_rights_to_view}}
+    td...{{group_of_rights_to_edit}}
+    td...{{object.backup_copies}}
+
+
+%% list_row_actions
+    % row_actions:
+        .publish,Publish,[fa fa-users]
+    % row_actions:
+        .edit
+        .field_edit/publish_fun,Publish function
+        .field_edit/css,CSS
+        .delete
+
+
+%% row_edit
+    % form:
+        .subject,group_of_rights_to_view,group_of_rights_to_edit,backup_copies
+

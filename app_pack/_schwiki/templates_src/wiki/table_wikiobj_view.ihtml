@@ -1,0 +1,7 @@
+<table class="{{html_class}}">
+    {% for row in tbl %}<tr>
+        {% for pos in row %}<{{pos.tag}} class="{{pos.html_class}}">{{ pos.data }}</{{pos.tag}}>
+        {% endfor %}
+    </tr>    
+    {% endfor %}
+</table>
