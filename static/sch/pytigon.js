@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-20 14:55:19
+// Transcrypt'ed from Python, 2018-01-20 18:28:49
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4676,7 +4676,7 @@ function pytigon () {
 		var img_field = __init__ (__world__.widget).img_field;
 		var process_on_click = __init__ (__world__.click_process).process_on_click;
 		window.PS = null;
-		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time) {
+		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
 			moment.locale (lang);
 			window.APPSET_NAME = appset_name;
 			window.APPLICATION_TEMPLATE = application_template;

@@ -295,6 +295,7 @@ class SChAppSet( models.Model):
     gui_type = models.CharField('Gui type', null=False, blank=False, editable=True, choices=Gui_CHOICES,max_length=32)
     gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
     is_hybrid = models.BooleanField('Is hybrid', null=False, blank=False, editable=True, default=False,)
+    login_required = models.NullBooleanField('login_required', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )

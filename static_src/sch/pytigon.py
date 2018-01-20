@@ -19,7 +19,8 @@ from click_process import process_on_click
 
 window.PS = None
 
-def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, gen_time):
+def app_init(appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, \
+             offline_support, start_page, gen_time):
     nonlocal PS
 
     moment.locale(lang)
