@@ -1,0 +1,7 @@
+% extends default_template
+
+%% all
+    % with SHOW_LOGIN_WIN=True:
+        {{ block.super }}
+
+

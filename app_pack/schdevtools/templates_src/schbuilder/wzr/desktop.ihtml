@@ -21,7 +21,7 @@
     {% spec '{' %}block.super{% spec '}' %}
     {% for css_static in css_static_files %}{% spec '[' %} css_link 'app/{{appset.name}}/css/{{css_static.name}}.css' {% spec ']' %}
     {% endfor %}
-    {% for appset_tab in static_for_ext_apps %}{% for css_static2 in appset_tab.2 %}{% spec '[' %} jcss_link 'app/{{appset_tab.0}}/css/{{css_static2.name}}.css' {% spec ']' %}
+    {% for appset_tab in static_for_ext_apps %}{% for css_static2 in appset_tab.2 %}{% spec '[' %} css_link 'app/{{appset_tab.0}}/css/{{css_static2.name}}.css' {% spec ']' %}
     {% endfor %}{% endfor %}
 
 %% body_footer
