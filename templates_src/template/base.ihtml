@@ -9,7 +9,7 @@
 
 %% login
     % if not user.is_authenticated
-        % if settings.SHOW_LOGIN_WIN
+        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN
             div class=container login-container
                 div class=row align-items-center
                     div class=col

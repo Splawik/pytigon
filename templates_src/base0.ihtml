@@ -52,7 +52,7 @@
 
     %% body
 
-        %if not user.is_authenticated and settings.SHOW_LOGIN_WIN and not NO_CHECK_AUTH:
+        %if not user.is_authenticated and not NO_CHECK_AUTH and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
             %% login_header
             %% login
             %% login_footer

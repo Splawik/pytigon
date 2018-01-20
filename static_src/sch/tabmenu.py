@@ -99,8 +99,11 @@ class TabMenu:
         jQuery.each(self.titles, _local_fun)
         jQuery(sprintf('#li_%s', id) ).remove()
         jQuery(sprintf('#%s', id)).remove()
-        jQuery('#tabs2 a:last').tab('show')
-
+        last_a = jQuery('#tabs2 a:last')
+        if last_a.length > 0:
+            last_a.tab('show')
+        else:
+            jQuery('#wiki_start').show()
 
 def get_menu():
     if not window.MENU:

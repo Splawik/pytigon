@@ -206,6 +206,15 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         jQuery(_local_fun)
 
+    if window.location.pathname == base_path:
+        def _on_load(responseText, status, response):
+            pass
+
+        ajax_load(jQuery('#wiki_start'), base_path + "wiki/pytigon_doc/Start/view/?only_content&schtml=1", _on_load)
+
+    #alert(window.location.pathname)
+    #alert(base_path)
+
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None, url=None):
@@ -234,6 +243,8 @@ def _on_menu_href(elem, title=None, url=None):
             href2 = corect_href(href)
             def _on_new_win(data):
                 nonlocal href, href2, title
+
+                jQuery('#wiki_start').hide()
 
                 if window.APPLICATION_TEMPLATE == 'modern':
                     id = menu.new_page(title, data, href2)

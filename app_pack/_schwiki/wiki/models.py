@@ -270,6 +270,7 @@ class Page(JSONModel):
                 obj_to_save.menu = self.menu
                 obj_to_save.operator = self.operator
                 obj_to_save.update_time = self.update_time
+                obj_to_save.jsondata = self.jsondata
                 obj_to_save.published = False
                 obj_to_save.latest = True
                 obj_to_save.operator = request.user.username

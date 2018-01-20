@@ -110,34 +110,39 @@
             div class=navbar-collapse align-self-end
                 ul class=nav
                     %% drop_down_blocks
-                    li class=nav-item dropdown user user-menu
-                        a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
-                            span class=fa fa-user
-                            span class=hidden-sm-down...{{user.username}}
-                        div class=dropdown-menu dropdown-menu-right
-                            div class=dropdown-block
-                                p...username:
-                                    strong...{{user.username}}
-                                p...first name:
-                                    strong...{{user.first_name}}
-                                p...last name:
-                                    strong...{{user.last_name}}
-                                p...email:
-                                    strong...{{user.email}}
-                                p...last login:
-                                    strong...{{user.last_login|isoformat}}
-                                p...date joined:
-                                    strong...{{user.date_joined|isoformat}}
-                            div class=dropdown-footer
-                                div class=pull-left
-                                    button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
-                                div class=pull-right
-                                    button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
-
-                    %if not autologin:
+                    % if user.is_authenticated:
                         li class=nav-item dropdown user user-menu
-                            a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)
-                                span class=fa fa-power-off
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
+                                span class=fa fa-user
+                                span class=hidden-sm-down...{{user.username}}
+                            div class=dropdown-menu dropdown-menu-right
+                                div class=dropdown-block
+                                    p...username:
+                                        strong...{{user.username}}
+                                    p...first name:
+                                        strong...{{user.first_name}}
+                                    p...last name:
+                                        strong...{{user.last_name}}
+                                    p...email:
+                                        strong...{{user.email}}
+                                    p...last login:
+                                        strong...{{user.last_login|isoformat}}
+                                    p...date joined:
+                                        strong...{{user.date_joined|isoformat}}
+                                div class=dropdown-footer
+                                    div class=pull-left
+                                        button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
+                                    div class=pull-right
+                                        button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+
+                        %if not autologin:
+                            li class=nav-item dropdown user user-menu
+                                a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)
+                                    span class=fa fa-power-off
+                    % else:
+                        li class=nav-item dropdown user user-menu
+                            a class=system_menu,,,href=#,,,action={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                                span class=fa fa-sign-in
     {{block.super}}
 
 %% tabs

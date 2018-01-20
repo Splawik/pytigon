@@ -207,7 +207,10 @@ def edit_page_object(request):
                         form = form_class(request.POST, request.FILES)
                         if form.is_valid():
                             if obj.save_fun:
-                                
+                                try:
+                                    context['old_data'] = page.get_json_data()[name]
+                                except:
+                                    pass
                                 exec(obj.save_fun)
                                 data = locals()['save'](form, context)
                             else:

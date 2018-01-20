@@ -70,6 +70,7 @@ urlpatterns = [
     url(r'^ok/$', schserw.schsys.views.ok, name='ok'),
     url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', schserw.schsys.views.ret_ok, name='ret_ok'),
 
+    url(r'^login/$', TemplateView.as_view(template_name='schapp/login.html')),
     url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
     url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': make_href("/")}),
     url(r'^change_password/$', schserw.schsys.views.change_password),

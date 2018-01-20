@@ -94,21 +94,25 @@
 {% endblock %}
 {% block list_content_title %}
         {% if not standard_web_browser == 6 %}
-                <h4 style="white-space:nowrap;">{{subject}}: {{description}}</h4>
+                {% if perms.schwiki.add_page %}
+                        <h4 style="white-space:nowrap;">{{subject}}: {{description}}</h4>
+                {% endif %}
         {% endif %}
 {% endblock %}
 {% block list_content_actions %}
         {% if not standard_web_browser == 6 %}
-                <table width="100%">
-                        <tr>
-                                <td class="wiki_view_actions" style="width:100%;border:0px;padding:0px;">
-                                        {% action "edit" "Edit page" url="{{base_path}}wiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" %}
-                                        {% with ap="wiki" object_name="Page" id=object.id format='txt' %}
-                                                {% action "any_field_edit-inline/content_src" "Edit page source" %}
-                                        {% endwith %}
-                                </td>
-                        </tr>
-                </table>
+                {% if perms.schwiki.add_page %}
+                        <table width="100%">
+                                <tr>
+                                        <td class="wiki_view_actions" style="width:100%;border:0px;padding:0px;">
+                                                {% action "edit" "Edit page" url="{{base_path}}wiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" %}
+                                                {% with ap="wiki" object_name="Page" id=object.id format='txt' %}
+                                                        {% action "any_field_edit-inline/content_src" "Edit page source" %}
+                                                {% endwith %}
+                                        </td>
+                                </tr>
+                        </table>
+                {% endif %}
         {% endif %}
 {% endblock %}
 {% block form %}

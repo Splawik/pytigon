@@ -6,5 +6,6 @@
 %% body_body
     % if not application_type == 'modern':
         {{block.super}}
+    div id=wiki_start
 
 %% content

@@ -110,6 +110,10 @@ _TRACE = False
 if any(s.startswith('--trace') for s in sys.argv):
     _TRACE = True
 
+_VIDEO = False
+if any(s.startswith('--video') for s in sys.argv):
+    _VIDEO = True
+
 if any(s.startswith('--rpc') for s in sys.argv):
     import wxreactor
 
@@ -592,6 +596,7 @@ def _main_init(argv):
             'param=',
             'inspection',
             'trace',
+            'video',
         ])
     except getopt.GetoptError:
         usage()
@@ -852,6 +857,7 @@ def _main_run():
             app.title,
             wx.DefaultPosition,
             wx.Size(800, 700),
+            video = _VIDEO
         )
 
     frame.CenterOnScreen()
@@ -927,6 +933,8 @@ def main(argv):
             --inspection - turn on wxPython inspection
 
             --trace - show trace of python calls
+
+            --video - record video session
     """
 
     ready_to_run, nogui = _main_init(argv)

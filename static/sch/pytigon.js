@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-07 11:54:52
+// Transcrypt'ed from Python, 2018-01-20 14:55:19
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3643,12 +3643,14 @@ function pytigon () {
 			__all__: {
 				__inited__: false,
 				__init__: function (__all__) {
+					var __name__ = 'tabmenu';
 					var Page = __init__ (__world__.page).Page;
 					var TabMenuItem = __init__ (__world__.tabmenuitem).TabMenuItem;
 					var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 					var history_push_state = __init__ (__world__.tools).history_push_state;
 					var mount_html = __init__ (__world__.tools).mount_html;
 					var TabMenu = __class__ ('TabMenu', [object], {
+						__module__: __name__,
 						get __init__ () {return __get__ (this, function (self) {
 							self.id = 0;
 							self.titles = dict ({});
@@ -3739,7 +3741,13 @@ function pytigon () {
 							jQuery.each (self.titles, _local_fun);
 							jQuery (sprintf ('#li_%s', id)).remove ();
 							jQuery (sprintf ('#%s', id)).remove ();
-							jQuery ('#tabs2 a:last').tab ('show');
+							var last_a = jQuery ('#tabs2 a:last');
+							if (last_a.length > 0) {
+								last_a.tab ('show');
+							}
+							else {
+								jQuery ('#wiki_start').show ();
+							}
 						});}
 					});
 					var get_menu = function () {
@@ -3758,6 +3766,7 @@ function pytigon () {
 						__all__.Page = Page;
 						__all__.TabMenu = TabMenu;
 						__all__.TabMenuItem = TabMenuItem;
+						__all__.__name__ = __name__;
 						__all__.datatable_onresize = datatable_onresize;
 						__all__.get_menu = get_menu;
 						__all__.history_push_state = history_push_state;
@@ -4837,6 +4846,12 @@ function pytigon () {
 				};
 				jQuery (_local_fun);
 			}
+			if (window.location.pathname == base_path) {
+				var _on_load = function (responseText, status, response) {
+					// pass;
+				};
+				ajax_load (jQuery ('#wiki_start'), base_path + 'wiki/pytigon_doc/Start/view/?only_content&schtml=1', _on_load);
+			}
 		};
 		var _on_menu_href = function (elem, title, url) {
 			if (typeof title == 'undefined' || (title != null && title .hasOwnProperty ("__kwargtrans__"))) {;
@@ -4874,6 +4889,7 @@ function pytigon () {
 					}
 					var href2 = corect_href (href);
 					var _on_new_win = function (data) {
+						jQuery ('#wiki_start').hide ();
 						if (window.APPLICATION_TEMPLATE == 'modern') {
 							var id = menu.new_page (title, data, href2);
 						}

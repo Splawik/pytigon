@@ -207,35 +207,41 @@
 
     ul class=nav drop_down_blocks
         %% drop_down_blocks
-        li class=nav-item dropdown user user-menu
-            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
-                span class=fa fa-user
-                span class=hidden-sm-down...{{user.username}}
-            div class=dropdown-menu dropdown-menu-right
-                div class=dropdown-block
-                    p...username:
-                        strong...{{user.username}}
-                    p...first name:
-                        strong...{{user.first_name}}
-                    p...last name:
-                        strong...{{user.last_name}}
-                    p...email:
-                        strong...{{user.email}}
-                    p...last login:
-                        strong...{{user.last_login|isoformat}}
-                    p...date joined:
-                        strong...{{user.date_joined|isoformat}}
-                div class=dropdown-footer
-                    % if user.is_superuser:
-                    div class=pull-left
-                        button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
-                    div class=pull-right
-                        button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+        % if user.is_authenticated:
+            li class=nav-item dropdown user user-menu
+                a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
+                    span class=fa fa-user
+                    span class=hidden-sm-down...{{user.username}}
+                div class=dropdown-menu dropdown-menu-right
+                    div class=dropdown-block
+                        p...username:
+                            strong...{{user.username}}
+                        p...first name:
+                            strong...{{user.first_name}}
+                        p...last name:
+                            strong...{{user.last_name}}
+                        p...email:
+                            strong...{{user.email}}
+                        p...last login:
+                            strong...{{user.last_login|isoformat}}
+                        p...date joined:
+                            strong...{{user.date_joined|isoformat}}
+                    div class=dropdown-footer
+                        % if user.is_superuser:
+                        div class=pull-left
+                            button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
+                        div class=pull-right
+                            button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
         %if not autologin:
             li class=nav-item dropdown user user-menu
                 a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)
                     span class=fa fa-power-off
+        % else:
+            li class=nav-item dropdown user user-menu
+                a class=system_menu,,,href=#,,,action={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                    span class=fa fa-sign-in
+
 
     <div id="menu" class="tab-content menu-content win-header">
 
@@ -276,12 +282,13 @@
     %% body_start_0
         % if not show_form:
             % if standard_web_browser:
-                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
                     <body class="login_background">
                 % else:
+                    {{ SHOW_LOGIN_WIN }}
                     <body>
             % else:
-                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN:
+                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
                     <body bgcolor="#{{color_body_1_5}}" class="login_background">
                 % else:
                     <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">

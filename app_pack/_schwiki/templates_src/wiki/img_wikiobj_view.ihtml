@@ -1,3 +1,45 @@
+style ===>
+    .img_form_view {
+        padding: 1px;
+    }
+    
+    .i4321 td.t1 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+
+    .i4321 td.t2 div {
+        position: relative;
+        left: -40px;
+        top: 30px;
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .i4321 td.t3 div {
+        position: relative;
+        top: -50px;
+        left: 20px;
+        transform: rotate(-20deg);
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .i4321 td.t4 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .o1 {
+        position: absolute;
+        bottom: 3px;    
+        left: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.3);
+        color: #ccc;
+        padding: 0px 5px;
+    }
+    
+    
+    
 div class=row
     % for element in elements:
         % if element.type == 'img':
@@ -6,5 +48,8 @@ div class=row
                 % if element.data.1:
                     span class={{param.img_view_type}}...{{element.data.1}}
         % else:
-            div class={{element.css_class}} img_form_view_text,,,style={{ element.style }}
-                {{element.data.1}}
+            % if element.type == 'txt':
+                div class={{element.css_class}} img_form_view_text,,,style={{ element.style }}
+                    {{element.data|safe}}
+            % else:
+                {{ element.data|safe }}

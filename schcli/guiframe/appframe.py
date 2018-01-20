@@ -54,6 +54,40 @@ from schcli.guiframe.baseframe import SchBaseFrame
 
 _ = wx.GetTranslation
 
+_RECORD_VIDEO = 0
+_RECORD_VIDEO_STRUCT = None
+_RECORD_VIDEO_OUT = None
+_RECORD_VIDEO_MONITOR = None
+
+def save_video_frame(win):
+    global _RECORD_VIDEO_STRUCT, _RECORD_VIDEO_OUT, _RECORD_VIDEO_MONITOR
+    if _RECORD_VIDEO_STRUCT:
+        mss = _RECORD_VIDEO_STRUCT[0]
+        cv2 = _RECORD_VIDEO_STRUCT[1]
+        numpy = _RECORD_VIDEO_STRUCT[2]
+        if not _RECORD_VIDEO_OUT:
+            pos = win.GetScreenPosition()
+            size = win.GetSize()
+
+            fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+            #fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+            #fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            #fourcc = cv2.VideoWriter_fourcc(*'X264')
+            #fourcc = cv2.VideoWriter_fourcc(*'X263')
+
+            _RECORD_VIDEO_OUT = cv2.VideoWriter('video.avi', fourcc, 4, (size.width, size.height))
+            _RECORD_VIDEO_MONITOR = {'top': pos.y, 'left': pos.x, 'width': size.width, 'height': size.height }
+
+        with mss() as sct:
+            pos = win.GetScreenPosition()
+            size = win.GetSize()
+            frame = numpy.array(sct.grab(_RECORD_VIDEO_MONITOR))
+            _RECORD_VIDEO_OUT.write(frame)
+
+def finish_video():
+    if _RECORD_VIDEO_OUT:
+        _RECORD_VIDEO_OUT.release()
+        _RECORD_VIDEO_STRUCT = None
 
 class _SChMainPanel(wx.Window):
     def __init__(self, app_frame, *argi, **argv):
@@ -83,7 +117,7 @@ class SchAppFrame(SchBaseFrame):
     """
 
     def __init__(self, gui_style="tree(toolbar,statusbar)", title="", pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=wx.DEFAULT_FRAME_STYLE | wx.CLIP_CHILDREN | wx.WANTS_CHARS,):
+                 style=wx.DEFAULT_FRAME_STYLE | wx.CLIP_CHILDREN | wx.WANTS_CHARS, video=False):
         """Constructor
 
         Args:
@@ -125,7 +159,7 @@ class SchAppFrame(SchBaseFrame):
         self._menu_bar_lp = 0
         self._toolbar_bar_lp = 1
         self._proc_mannager = None
-
+        self._video = video
         self.gui_style = gui_style
         self.idle_objects = []
         self.gui_style = gui_style
@@ -719,6 +753,19 @@ class SchAppFrame(SchBaseFrame):
     def on_timer(self, evt):
         #if platform.system() == "Windows":
         #    wx.html2.WebView.New("messageloop")
+        global _RECORD_VIDEO, _RECORD_VIDEO_STRUCT
+        if self._video:
+            if _RECORD_VIDEO == 0:
+                try:
+                    from mss import mss
+                    import cv2
+                    import numpy
+                    _RECORD_VIDEO_STRUCT = (mss, cv2, numpy)
+                    _RECORD_VIDEO = 1
+                except:
+                    _RECORD_VIDEO = 2
+            if _RECORD_VIDEO == 1:
+                save_video_frame(self)
 
         x = dispatcher.getReceivers(signal='PROCESS_INFO')
         if len(x)>0:
@@ -794,6 +841,7 @@ class SchAppFrame(SchBaseFrame):
 
 
     def _exit(self, event=None):
+        finish_video()
         self.t1.Stop()
         wx.GetApp().on_exit()
         self._mgr.UnInit()
