@@ -1069,3 +1069,7 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
         ret = wikify("[[" + wiki_str + "]]", path)
     return mark_safe(ret)
 
+
+@register.simple_tag(takes_context=True)
+def wiki (context, wiki_str, path=None, section = None,  only_header=True):
+    return mark_safe(wikify(wiki_str, path, section))

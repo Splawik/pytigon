@@ -19,6 +19,7 @@
         {% if standard_web_browser %}
                 {% css_link 'pygments/pygments_style.css' %}
         {% endif %}
+        {{ block.super }}
 {% endblock %}
 {% block pythoncode %}
         <script language="python">
@@ -119,7 +120,7 @@
         {% if perms.schwiki.add_page %}
                 {{ block.super }}
           {% else %}
-                {{content|wikify|safe}}
+                {% wiki content "" subject %}
         {% endif %}
 {% endblock %}
 {% block list_content_body %}
@@ -133,7 +134,7 @@
                                                 </li>
                                           {% else %}
                                                 <li class="breadcrumb-item">
-                                                        {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
+                                                        {% wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
                                                 </li>
                                         {% endif %}
                                 {% endfor %}
@@ -154,7 +155,8 @@
                                                         {% if wiki_elem|lower == description|lower %}
                                                                 {{ wiki_elem }}
                                                           {% else %}
-                                                                {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                                                                {% wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
+                                                                /
                                                         {% endif %}
                                                 {% endfor %}
                                         </td>
@@ -167,12 +169,12 @@
         <div class="panel-body refr_target container wiki_container">
                 {% if content %}
                         {% if wiki_path %}
-                                {{content|wikify:wiki_path|safe}}
+                                {% wiki content wiki_path subject %}
                           {% else %}
-                                {{content|wikify|safe}}
+                                {% wiki content "" subject %}
                         {% endif %}
                   {% else %}
-                        Ta strona jeszcze nie istnieje!
+                        (This page don't exists yet!)
                 {% endif %}
         </div>
 {% endblock %}

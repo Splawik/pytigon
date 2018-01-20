@@ -21,6 +21,7 @@
 %% extrastyle
     %if standard_web_browser:
         {% css_link 'pygments/pygments_style.css' %}
+    {{ block.super }}
 
 %% pythoncode
     script language=python
@@ -102,7 +103,7 @@
     % if perms.schwiki.add_page
         {{ block.super }}
     % else
-        {{content|wikify|safe}}
+        % wiki content "" subject
 
 %% list_content_body
     % if not standard_web_browser == 6 and wiki_path_desc:
@@ -114,7 +115,7 @@
                             {{ wiki_elem }}
                     % else:
                         li class=breadcrumb-item
-                            {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}
+                            % wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject
                             
                 % if wiki_path_desc and not description|lower in wiki_path_desc:
                     li class=breadcrumb-item active
@@ -129,16 +130,17 @@
                             % if wiki_elem|lower == description|lower:
                                 {{ wiki_elem }}
                             % else:
-                                {{ '[['|append_str:wiki_elem|append_str:']]'|wikify:wiki_path|safe }}/
+                                % wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject
+                                /
                 tr:::td
             br
 
     div class=panel-body refr_target container wiki_container
         % if content
             % if wiki_path:
-                {{content|wikify:wiki_path|safe}}
+                % wiki content wiki_path subject
             % else:
-                {{content|wikify|safe}}
+                % wiki content "" subject
         % else
-            .Ta strona jeszcze nie istnieje!
+            _(This page don't exists yet!)
 

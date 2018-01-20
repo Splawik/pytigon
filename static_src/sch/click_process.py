@@ -80,7 +80,11 @@ def process_on_click(event_tab, elem=None):
                     refresh_fragment(src_obj)
             else:
                 if window.APPLICATION_TEMPLATE == 'modern':
-                    mount_html(window.ACTIVE_PAGE.page, data)
+                    if window.ACTIVE_PAGE:
+                        mount_html(window.ACTIVE_PAGE.page, data)
+                    else:
+                        mount_html(jQuery('#wiki_start'), data)
+                        return
                     window.ACTIVE_PAGE.set_href(href)
                 else:
                     mount_html(jQuery('#body_body'), data)
@@ -95,3 +99,4 @@ def process_on_click(event_tab, elem=None):
     else:
         jQuery('#tabs2_content').on("click", "a", _on_click)
         jQuery('#dialog-form-modal').on("click", "a", _on_click)
+        jQuery('#wiki_start').on("click", "a", _on_click)

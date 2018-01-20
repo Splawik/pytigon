@@ -76,7 +76,7 @@ def make_href(wiki_value, new_win=True, section=None, btn = False, path=None):
             return "<a href='../../%s/view/?desc=%s' target='_self' %s>%s</a>" % (wiki, wiki_value, btn_str, wiki_value)
 
 
-def wikify(value, path=None):
+def wikify(value, path=None, section=None):
     x = value.split('[[')
     if len(x) > 1:
         ret = []
@@ -99,10 +99,10 @@ def wikify(value, path=None):
                 if ';' in txt:
                     l = txt.split(';')
                     txt = l[0]
-                    section = l[1]
+                    _section = l[1]
                 else:
-                    section = None
-                ret.append(make_href(txt, new_win=new_win, section=section, btn=btn, path=path) + y[1])
+                    _section = section
+                ret.append(make_href(txt, new_win=new_win, section=_section, btn=btn, path=path) + y[1])
             else:
                 ret.append('[[' + pos)
         return ''.join(ret)

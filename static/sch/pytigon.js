@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-20 18:28:49
+// Transcrypt'ed from Python, 2018-01-21 00:07:45
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2665,7 +2665,13 @@ function pytigon () {
 								}
 								else {
 									if (window.APPLICATION_TEMPLATE == 'modern') {
-										mount_html (window.ACTIVE_PAGE.page, data);
+										if (window.ACTIVE_PAGE) {
+											mount_html (window.ACTIVE_PAGE.page, data);
+										}
+										else {
+											mount_html (jQuery ('#wiki_start'), data);
+											return ;
+										}
 										window.ACTIVE_PAGE.set_href (href);
 									}
 									else {
@@ -2686,6 +2692,7 @@ function pytigon () {
 						else {
 							jQuery ('#tabs2_content').on ('click', 'a', _on_click);
 							jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
+							jQuery ('#wiki_start').on ('click', 'a', _on_click);
 						}
 					};
 					__pragma__ ('<use>' +
@@ -4678,6 +4685,7 @@ function pytigon () {
 		window.PS = null;
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
 			moment.locale (lang);
+			window.ACTIVE_PAGE = null;
 			window.APPSET_NAME = appset_name;
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
@@ -4846,11 +4854,11 @@ function pytigon () {
 				};
 				jQuery (_local_fun);
 			}
-			if (window.location.pathname == base_path) {
+			if (start_page && window.location.pathname == base_path) {
 				var _on_load = function (responseText, status, response) {
 					// pass;
 				};
-				ajax_load (jQuery ('#wiki_start'), base_path + 'wiki/pytigon_doc/Start/view/?only_content&schtml=1', _on_load);
+				ajax_load (jQuery ('#wiki_start'), (base_path + start_page) + '?only_content&schtml=1', _on_load);
 			}
 		};
 		var _on_menu_href = function (elem, title, url) {

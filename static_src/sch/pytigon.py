@@ -24,7 +24,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     nonlocal PS
 
     moment.locale(lang)
-
+    window.ACTIVE_PAGE = None
     window.APPSET_NAME = appset_name
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
@@ -207,11 +207,12 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         jQuery(_local_fun)
 
-    if window.location.pathname == base_path:
+    if start_page and window.location.pathname == base_path:
         def _on_load(responseText, status, response):
             pass
 
-        ajax_load(jQuery('#wiki_start'), base_path + "wiki/pytigon_doc/Start/view/?only_content&schtml=1", _on_load)
+        ajax_load(jQuery('#wiki_start'), base_path + start_page + "?only_content&schtml=1", _on_load)
+
 
     #alert(window.location.pathname)
     #alert(base_path)

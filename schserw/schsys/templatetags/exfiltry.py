@@ -378,9 +378,9 @@ def print_info(value):
     print('PRINT_INFO:', value.__class__.__name__, dir(value), value)
     return value
 
-@register.filter(name='wikify')
-def _wikify(value, path=None):
-    return wikify(value, path)
+#@register.filter(name='wikify')
+#def _wikify(value, path=None):
+#    return wikify(value, path)
 
 
 @register.filter(name='wiki')
