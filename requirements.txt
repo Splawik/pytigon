@@ -22,3 +22,4 @@ pypyodbc
 daphne
 polib
 libsass
+pyexcel_odsr

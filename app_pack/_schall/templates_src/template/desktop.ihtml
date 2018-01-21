@@ -23,29 +23,30 @@
     
     {% css_link 'app/schdevtools/css/style.css' %}
     {% css_link 'app/schdevtools/css/test_icss.css' %}
+    {% css_link 'app/schpytigondoc/css/pytigondoc.css' %}
     {% css_link 'app/_schwiki/css/wiki_editor.css' %}
     
 
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/d3.js' %}
     {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/standard_components/components/wysiwyg_edit.js' %}
     {% component 'app/standard_components/components/code_editor.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/plotly.js' %}
     {% component 'app/standard_components/components/pivottable.js' %}
     {% component 'app/standard_components/components/handsontable.js' %}
     {% component 'app/standard_components/components/summernote.js' %}
+    {% component 'app/standard_components/components/d3.js' %}
     {% component 'app/standard_components/components/leaflet.js' %}
     {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/plotly.js' %}
+    {% component 'app/standard_components/components/video-js.js' %}
+    {% component 'app/standard_components/components/wysiwyg_edit.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
     
     
 
 %% component_init
-    .component_init = [ "d3", "txtarea_editor", "video-js", "wysiwyg_edit", "code_editor", "vs_editor", "plotly", "pivottable", "handsontable", "summernote", "leaflet", "test",  ] 
+    .component_init = [ "txtarea_editor", "code_editor", "pivottable", "handsontable", "summernote", "d3", "leaflet", "test", "plotly", "video-js", "wysiwyg_edit", "vs_editor",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

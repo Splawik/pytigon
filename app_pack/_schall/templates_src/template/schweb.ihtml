@@ -19,6 +19,6 @@
         [ gui_style | modern(toolbar(file(open,exit),clipboard)) ]
         [ hybrid | 0 ]
         [ title  | Pytigon ]
-        [ start_page | wiki/sys/Start/view/ ]
+        [ start_page | None ]
         [ plugins | None ]
 

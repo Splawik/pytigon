@@ -63,7 +63,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
 
-START_PAGE = 'wiki/sys/Start/view/'
+START_PAGE = 'None'
 SHOW_LOGIN_WIN = False
 PACKS = []
 
@@ -134,4 +134,4 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.01.21 15:01:17'
+GEN_TIME = '2018.01.21 18:41:29'

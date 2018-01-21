@@ -3,13 +3,14 @@
 % extends "schapp/index.html"
 
 %% body_start
-    % if settings.START_PAGE:
+    % if settings.START_PAGE != 'None':
         {{ block.super }}
     % else:
         <body bgcolor="#{{color_body_1_5}}" class="login_background">
 
 %% body
-    % if settings.START_PAGE:
+
+    % if settings.START_PAGE != 'None':
         {{ block.super }}
     % else:
         div class=wrapper container
@@ -29,6 +30,7 @@
                                     .run
 
 
+
 %% body_header
 
 %% nav
@@ -45,19 +47,18 @@
 
 %% sidebar
 
-%% tabs2
+
+%% tabs
     % with NO_TABS=True:
         {{block.super}}
 
 %% html_widgets_init
 
-%% body_footer
+%% body_footer2
 
-%% page_footer2
+%% body_end
 
-%% body_end2
-
-%% page_end2
+%% page_end
 
 
 
