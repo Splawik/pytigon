@@ -54,7 +54,6 @@ import sass
  
 _template="""
         [ gui_style | {{appset.gui_type}}({{appset.gui_elements}}) ]
-        [ hybrid | {%if appset.is_hybrid %}1{%else%}0{%endif%} ]
         [ title  | {{appset.title}} ]
         [ start_page | {{start_page}} ]
         [ plugins | {{appset.plugins}} ]
@@ -556,15 +555,21 @@ def gen(request, pk):
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
     
     
-    
     static_for_ext_apps = []
     if appset.ext_apps:
         appset_tab = []
-        for pos in appset.ext_apps.split(','):
+        tab = appset.get_ext_apps()
+        for pos in tab:
             if pos:
                 x = pos.split('.')[0]
                 if not x in appset_tab:
                     appset_tab.append(x)
+        
+        #for pos in appset.ext_apps.split(','):
+        #    if pos:
+        #        x = pos.split('.')[0]
+        #        if not x in appset_tab:
+        #            appset_tab.append(x)
         for pos in appset_tab:
             try:
                 appset2 = models.SChAppSet.objects.get(name=pos)
@@ -572,15 +577,15 @@ def gen(request, pk):
                 appset2 = None
             if appset2:
                 static_files2 = appset2.schstatic_set.all()
-                js_static_files2 = [ pos for pos in static_files2 if pos.type in ('J', 'P') ]
-                css_static_files2 = [ pos for pos in static_files2 if pos.type in ('C', 'I') ]
+                js_static_files2 = [ pos2 for pos2 in static_files2 if pos2.type in ('J', 'P') ]
+                css_static_files2 = [ pos2 for pos2 in static_files2 if pos2.type in ('C', 'I') ]
                 static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
     
                 if appset2.custom_tags:
                     component_elements += [ 'app/'+pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in appset2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
                 component_elements += [ 'app/' + appset2.name + "/components/" + pos.name for pos in static_files2 if pos.type in ('R',) ]
     
-    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': js_static_files, 'css_static_files': css_static_files, 'static_for_ext_apps': static_for_ext_apps, 'component_elements': component_elements })
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'appset': appset, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements) })
     
     
     #print(component_elements)

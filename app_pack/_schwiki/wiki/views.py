@@ -107,7 +107,7 @@ def view_page(request, app_or_subject, page_path):
         c = Context({'object': page, 'wiki_path': path, 'request': request })
         
         content=t.render(c)
-    except Page.DoesNotExist:
+    except:
         page = Page()
         page.name = page_name
         page.description=desc

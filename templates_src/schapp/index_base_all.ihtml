@@ -1,21 +1,63 @@
-% extends default_template
+{# -*- coding: utf-8 -*- #}
+
+% extends "schapp/index.html"
 
 %% body_start
-    <body bgcolor="#{{color_body_1_5}}" class="login_background">
+    % if settings.START_PAGE:
+        {{ block.super }}
+    % else:
+        <body bgcolor="#{{color_body_1_5}}" class="login_background">
 
 %% body
-    div class=wrapper container
-        header
-            h2 class=text-primary txt3d app_chose_title
-                .Pytigon - application list
+    % if settings.START_PAGE:
+        {{ block.super }}
+    % else:
+        div class=wrapper container
+            header
+                h2 class=text-primary txt3d app_chose_title
+                    .Pytigon - application list
 
-        div class=row
-            % for app_pack in app_packs:
-                div class=col-xs-12 col-sm-6 col-md-6 col-lg-4
-                    div class=card app_chose rounded
-                        div class=card-block
-                            h4 class=card-title...{{app_pack.0}}
-                            h6 class=card-subtitle...{{app_pack.1}}
-                            a class=card-link btn btn-success btn-lg,,,href={{base_path}}{{app_pack.0}}/,,,role=button
-                                i class=fa fa-play
-                                .run
+            div class=row
+                % for app_pack in app_packs:
+                    div class=col-xs-12 col-sm-6 col-md-6 col-lg-4
+                        div class=card app_chose rounded
+                            div class=card-block
+                                h4 class=card-title...{{app_pack.0}}
+                                h6 class=card-subtitle...{{app_pack.1}}
+                                a class=card-link btn btn-success btn-lg,,,href={{base_path}}{{app_pack.0}}/,,,role=button
+                                    i class=fa fa-play
+                                    .run
+
+
+%% body_header
+
+%% nav
+
+%% login
+
+%% body_init
+
+%% panel
+
+%% messages
+
+%% navglobal
+
+%% sidebar
+
+%% tabs2
+    % with NO_TABS=True:
+        {{block.super}}
+
+%% html_widgets_init
+
+%% body_footer
+
+%% page_footer2
+
+%% body_end2
+
+%% page_end2
+
+
+

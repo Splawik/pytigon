@@ -19,6 +19,6 @@
         [ gui_style | modern(toolbar(file(exit),clipboard)) ]
         [ hybrid | 0 ]
         [ title  | Wiki ]
-        [ start_page |  ]
+        [ start_page | None ]
         [ plugins | riot:standard_components/txtarea_editor ]
 

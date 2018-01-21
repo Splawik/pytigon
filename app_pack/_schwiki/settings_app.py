@@ -37,7 +37,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
-START_PAGE = ''
+START_PAGE = 'None'
 SHOW_LOGIN_WIN = False
 PACKS = []
 
@@ -108,4 +108,4 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.01.20 22:07:47'
+GEN_TIME = '2018.01.21 14:24:31'

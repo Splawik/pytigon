@@ -207,7 +207,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         jQuery(_local_fun)
 
-    if start_page and window.location.pathname == base_path:
+    if start_page and start_page != "None" and window.location.pathname == base_path:
         def _on_load(responseText, status, response):
             pass
 

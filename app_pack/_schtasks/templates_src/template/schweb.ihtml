@@ -16,9 +16,9 @@
         [ autologin | 1 ]
         [ csrf_token | {%csrf_token%} ]
         [ riot_elements | ]
-        [ gui_style | modern() ]
+        [ gui_style | modern(None) ]
         [ hybrid | 0 ]
         [ title  | Tasks ]
         [ start_page | toolbar(file(exit),clipboard) ]
-        [ plugins |  ]
+        [ plugins | None ]
 

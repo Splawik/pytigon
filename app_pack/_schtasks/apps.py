@@ -1,1 +1,2 @@
 APPS=['tasks',]
+PUBLIC = True

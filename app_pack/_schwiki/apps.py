@@ -1,1 +1,2 @@
 APPS=['wiki',]
+PUBLIC = True

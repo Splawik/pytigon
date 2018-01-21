@@ -294,8 +294,8 @@ class SChAppSet( models.Model):
     plugins = models.CharField('Plugins', null=True, blank=True, editable=True, max_length=4096)
     gui_type = models.CharField('Gui type', null=False, blank=False, editable=True, choices=Gui_CHOICES,max_length=32)
     gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
-    is_hybrid = models.BooleanField('Is hybrid', null=False, blank=False, editable=True, default=False,)
-    login_required = models.NullBooleanField('login_required', null=True, blank=True, editable=True, default=False,)
+    login_required = models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
+    public = models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
@@ -310,15 +310,31 @@ class SChAppSet( models.Model):
     encoded_zip = models.TextField('Encoded zip file', null=True, blank=True, editable=False, )
     
 
-    def get_ext_apps(self):
-        ret = []
+    def get_ext_apps(self, tab=None):
+        if tab:
+            ret = tab
+        else:
+            ret = []
         if self.ext_apps:
-            l=self.ext_apps.split(',')
+            if self.ext_apps == '*':
+                appset_list = SChAppSet.objects.all()
+                for pos in appset_list:
+                    if pos.name == self.name or not pos.public:
+                        continue
+                    app_list = pos.schapp_set.all()
+                    for pos2 in app_list:
+                        name = pos.name+"."+pos2.name
+                        if not name in ret:
+                            ret.append(name)
+                return ret
+            else:
+                l=self.ext_apps.split(',')
         else:
             return ret
         for a in l:
             if a !='':
-                ret.append(a)
+                if not a in ret:
+                    ret.append(a)
         return ret
     
     def get_ext_apps_without_pack(self):

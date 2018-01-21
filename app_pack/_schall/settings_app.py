@@ -46,24 +46,25 @@ for ff in os.listdir(base_apps_path):
             app_pack_folders.append(ff)
 for app_pack in app_pack_folders:
     base_apps_path2 = os.path.join(base_apps_path, app_pack)
-    APP_PACKS.append(app_pack)
-
     x = __import__(app_pack+".apps")
-    apps = x.apps.APPS
-    for pos in apps:
-        if '.' in pos:
-            name = pos
-        else:
-            name = app_pack + '.' + pos
-        if not name in APPS:
-            APPS.append(name)
+    if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
+        APP_PACKS.append(app_pack)
+        apps = x.apps.APPS
+        for pos in apps:
+            if '.' in pos:
+                name = pos
+            else:
+                name = app_pack + '.' + pos
+            if not name in APPS:
+                APPS.append(name)
 
 URL_ROOT_FOLDER=''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
 
-
+START_PAGE = 'wiki/sys/Start/view/'
+SHOW_LOGIN_WIN = False
 PACKS = []
 
 for app in APPS:
@@ -133,4 +134,4 @@ try:
 except:
     pass
 
-GEN_TIME = '2017.11.11 15:42:52'
+GEN_TIME = '2018.01.21 15:01:17'

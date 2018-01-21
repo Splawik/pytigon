@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-21 00:07:45
+// Transcrypt'ed from Python, 2018-01-21 14:30:38
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -4854,7 +4854,7 @@ function pytigon () {
 				};
 				jQuery (_local_fun);
 			}
-			if (start_page && window.location.pathname == base_path) {
+			if (start_page && start_page != 'None' && window.location.pathname == base_path) {
 				var _on_load = function (responseText, status, response) {
 					// pass;
 				};
