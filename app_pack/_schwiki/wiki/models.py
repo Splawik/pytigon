@@ -50,7 +50,7 @@ def _get_wiki_object(page, buf, name, paragraf):
         if conf.inline_wiki:
             inline_content = html_from_wiki(page, inline_content)
 
-        context = {'param': c, 'inline_content': inline_content, 'object': conf, 'page': page, 'paragraf': paragraf}
+        context = {'param': c, 'inline_content': inline_content, 'object': conf, 'page': page, 'paragraf': paragraf, 'name': name, }
         if conf.view_dict:
             exec(conf.view_dict)
             context = locals()['get_view_dict'](context)
@@ -82,7 +82,7 @@ def html_from_wiki(page, wiki_str):
     document_close_elements = []
 
     def write_papragraf():
-        nonlocal in_wiki_object, buf, paragraf_prefix, paragraf_suffix, document, paragraf
+        nonlocal in_wiki_object, buf, paragraf_prefix, paragraf_suffix, document, paragraf, page
 
         if in_wiki_object:
             x = _get_wiki_object(page, buf, name, [paragraf_prefix, paragraf_suffix])
@@ -299,6 +299,8 @@ class Page(JSONModel):
         self.save()
     
     def save(self, *args, **kwargs):
+        #if not self.id:
+        super(Page, self).save(*args, **kwargs) 
         if self.content_src:
             content = html_from_wiki(self, self.content_src)
         else:
@@ -341,7 +343,8 @@ class Page(JSONModel):
             return None
         
         
-        
+    def __str__(self):
+        return self.name
     
 admin.site.register(Page)
 

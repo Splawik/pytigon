@@ -40,11 +40,12 @@
 
 %% list_row_actions
     % row_actions:
-        .run,RunScript,run,_top
         .edit
         .field_edit/code,Code,code
         .field_edit/doc,Doc,doc
-        .delete
+        .delete        
+    % row_actions:        
+        .run,Run script,fa fa-play,_top
 
 
 %% row_edit

@@ -121,7 +121,7 @@ def view_page(request, app_or_subject, page_path):
         
     c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 
          'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,
-         'description': desc if desc else page_name,
+         'description': desc if desc else page_name, 'only_content': True,
     }
     
     if page and page.base_template:

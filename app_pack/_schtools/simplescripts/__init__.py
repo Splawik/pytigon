@@ -6,7 +6,7 @@ Title = _('Simple scripts')
 Perms = True
 Index = ''
 Urls  = (
-    ('table/Scripts/-/form/list?schtml=desktop',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
+    ('table/Scripts/-/form/list/?schtml=desktop',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
 )
 UserParam = {}
 from django.utils.translation import ugettext_lazy as _
@@ -29,6 +29,6 @@ def AdditionalUrls():
                 icon = elements[1]
             else:
                 icon = 'client://apps/utilities-terminal.png'                    
-            ret.append(("run/"+object.name+"/?schtml=1", object.title, object.rights_group, icon, _(module_title) if module_title else "", app_name, _(app_title) if app_title else ""))    
+            ret.append(("simplescripts/run/"+object.name+"/?schtml=1", object.title, object.rights_group, icon, _(module_title) if module_title else "", app_name, _(app_title) if app_title else ""))    
             
     return ret

@@ -9,7 +9,6 @@
     %with form_info=False show_form=False form_width=470 form_height=665
         {{ block.super }}
 
-
 %% jquery_ovr2
     .var options = {
     .    success: RefreshWin2
@@ -70,7 +69,7 @@
 
 
 %% list_page
-    div id={{uuid}},,,class=refr_object refr_source,,,related-object={{uuid}},,,href={{ request.path|append_str:"?only_table=1" }}
+    div id={{uuid}},,,class=refr_object refr_target refr_source wiki-frame,,,href={{ request.get_full_path|append_get_param:"only_content=1" }},,,related-object={{uuid}}
         {{ block.super }}
 
 %% list_content_header
@@ -108,7 +107,7 @@
 %% list_content_body
     % if not standard_web_browser == 6 and wiki_path_desc:
         % if standard_web_browser:
-            ol class=breadcrumb
+            ol class=breadcrumb wiki-breadcrumb
                 % for wiki_elem in wiki_path_desc:
                     % if wiki_elem|lower == description|lower:
                         li class=breadcrumb-item active
@@ -135,12 +134,12 @@
                 tr:::td
             br
 
-    div class=panel-body refr_target container wiki_container
+    div class=panel-body container-fluid wiki_container
         % if content
             % if wiki_path:
                 % wiki content wiki_path subject
             % else:
                 % wiki content "" subject
         % else
-            _(This page don't exists yet!)
+            _(This page do not exists yet!)
 

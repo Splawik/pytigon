@@ -1,6 +1,7 @@
 <style >
     .img_form_view {
         padding: 1px;
+        position: relative;
     }
     .i4321 td.t1 div {
         position: relative;
@@ -32,8 +33,20 @@
         color: #ccc;
         padding: 0px 5px;
     }
+    .img_form_view:hover span {
+        color: #fff;
+    }
+    .img_form_view span a {
+        color: #ccc;
+    }
+    .img_form_view:hover span a {
+        color: #fff;
+    }
 </style>
 <div class="row">
+        <a class="wiki-object-edit" href="{{base_path}}wiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1" target="popup_edit">
+                <span class="fa fa-cog fa-2"></span>
+        </a>
         {% for element in elements %}
                 {% if element.type == 'img' %}
                         <div class="{{element.css_class}} img_form_view">

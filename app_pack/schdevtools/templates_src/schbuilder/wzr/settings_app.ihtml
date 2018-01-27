@@ -38,7 +38,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
 START_PAGE = '{{appset.start_page}}'
-SHOW_LOGIN_WIN = {% if login_required %}True{% else %}False{% endif %}
+SHOW_LOGIN_WIN = {% if appset.login_required %}True{% else %}False{% endif %}
 PACKS = []
 
 for app in APPS:

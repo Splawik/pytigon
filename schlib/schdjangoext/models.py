@@ -86,6 +86,7 @@ class JSONModel(models.Model):
                     if key != 'json_update':
                         data[key] = value
                 json_str = json_dumps(data)
+                self._data = data
             else:
                 json_str = json_dumps(self._data)
             self.jsondata = json_str

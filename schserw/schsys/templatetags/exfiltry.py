@@ -860,3 +860,9 @@ def to_html_icon(icon_str, additional_class=""):
     else:
         return "<i class='fa fa-circle-o'></i>"
 
+@register.filter(name='append_get_param')
+def append_get_param(href, parm):
+    if '?' in href:
+        return href+"&"+str(parm)
+    else:
+        return href+"?"+str(parm)

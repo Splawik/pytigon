@@ -28,22 +28,22 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
     {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/leaflet.js' %}
     {% component 'app/standard_components/components/code_editor.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/summernote.js' %}
     {% component 'app/standard_components/components/pivottable.js' %}
-    {% component 'app/standard_components/components/plotly.js' %}
-    {% component 'app/standard_components/components/d3.js' %}
     {% component 'app/standard_components/components/handsontable.js' %}
+    {% component 'app/standard_components/components/summernote.js' %}
+    {% component 'app/standard_components/components/d3.js' %}
+    {% component 'app/standard_components/components/leaflet.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
+    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/video-js.js' %}
+    {% component 'app/standard_components/components/plotly.js' %}
     
     
 
 %% component_init
-    .component_init = [ "video-js", "test", "txtarea_editor", "leaflet", "code_editor", "vs_editor", "summernote", "pivottable", "plotly", "d3", "handsontable",  ] 
+    .component_init = [ "txtarea_editor", "code_editor", "pivottable", "handsontable", "summernote", "d3", "leaflet", "vs_editor", "test", "video-js", "plotly",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
@@ -58,3 +58,9 @@
     .sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
     .init_sync(sync_struct);
     {{ block.super }}
+
+%% logo
+    span class=logo-lg
+        img src={{base_path}}static/favicon.ico,,,style=height:100%;
+        span class=txt3d text-white,,,style=font-size:1rem;
+            .Pytigon - dev tools

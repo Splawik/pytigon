@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-21 14:30:38
+// Transcrypt'ed from Python, 2018-01-22 17:11:28
 
    var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2692,6 +2692,7 @@ function pytigon () {
 						else {
 							jQuery ('#tabs2_content').on ('click', 'a', _on_click);
 							jQuery ('#dialog-form-modal').on ('click', 'a', _on_click);
+							jQuery ('#body_body').on ('click', 'a', _on_click);
 							jQuery ('#wiki_start').on ('click', 'a', _on_click);
 						}
 					};

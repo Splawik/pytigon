@@ -21,7 +21,9 @@
                         div class=card card-inverse login-card
                             div class=card-header..._(Login)
                             div class=card-block
-                                form class=login-form,,,action={{base_path}}schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
+                                % comment:
+                                    form class=login-form,,,action={{base_path}}schsys/do_login/?next={{URL_APP_BASE}},,,method=post,,,name=signin
+                                form class=login-form,,,action={{base_path}}schsys/do_login/?next={{request.path}},,,method=post,,,name=signin
                                     {% csrf_token %}
                                     div class=form-group
                                         label class=control-label,,,for=username_ ..._(User name)

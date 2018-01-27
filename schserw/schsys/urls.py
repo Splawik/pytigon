@@ -63,6 +63,10 @@ def sch_login(request, *argi, **argv):
         path = request.POST.get("next", "")
         if path == "":
             path = make_href("/")
+
+    if '/schsys/login/' in path:
+        path = make_href("/")
+
     return HttpResponseRedirect(path)
 
 

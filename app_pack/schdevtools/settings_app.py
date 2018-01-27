@@ -37,8 +37,8 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 MEDIA_ROOT =  os.path.join(_lp,  'media')
-START_PAGE = 'schbuilder/devtools'
-SHOW_LOGIN_WIN = False
+START_PAGE = 'None'
+SHOW_LOGIN_WIN = True
 PACKS = []
 
 for app in APPS:
@@ -108,5 +108,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.01.21 13:20:19'
+GEN_TIME = '2018.01.22 19:50:35'
 OFFLINE_SUPPORT = True
