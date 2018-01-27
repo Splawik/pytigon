@@ -472,6 +472,8 @@ def history_push_state(title, url, data=None):
         data2 = title
     window.history.pushState(data2, title, url2)
 
+window.history_push_state = history_push_state
+
 
 def animate_combo(button, obj1, obj2,  obj1_style_off, obj1_style_on, obj2_style_off, obj2_style_on, speed, end=None):
     if end:

@@ -1066,7 +1066,7 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
         ret += "<div class='article-header'><div class='article-header-title'>" + subpage.get_href(path) + \
                "</div>" + content + "</div>\n"
     else:
-        ret = wikify("[[" + wiki_str + "]]", path)
+        ret = wikify("[[" + wiki_str + "]]", path, from_wiki_page.subject)
     return mark_safe(ret)
 
 
