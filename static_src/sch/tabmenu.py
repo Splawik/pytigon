@@ -91,7 +91,6 @@ class TabMenu:
 
 
     def remove_page(self, id):
-
         def _local_fun(index, value):
             if value and value.id == id:
                 self.titles[index] = None
@@ -103,6 +102,11 @@ class TabMenu:
         if last_a.length > 0:
             last_a.tab('show')
         else:
+            window.ACTIVE_PAGE = None
+            if window.PUSH_STATE:
+                history_push_state("", window.BASE_PATH)
+            if jQuery('#wiki_start').find('.content').length == 0:
+                window.init_start_wiki_page()
             jQuery('#wiki_start').show()
 
 def get_menu():

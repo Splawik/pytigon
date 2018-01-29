@@ -27,6 +27,12 @@ urlpatterns = [
     
     
     
+    
+    
+    
+    
+    
+    
 ]
 
 gen = generic_table_start(urlpatterns, 'wiki', views)

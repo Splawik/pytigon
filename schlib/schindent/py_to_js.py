@@ -82,6 +82,8 @@ def compile(python_code, temp_dir=None):
         'ext': None, 
         'star': False,
         'keycheck': False,
+        'dnostrip': True,
+        'jscall': True
     }
 
     utils.commandArgs.__dict__.update (x)

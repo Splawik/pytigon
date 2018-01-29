@@ -53,6 +53,7 @@ style ===>
     
 div class=row
     a class=wiki-object-edit,,,href={{base_path}}wiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
+        .img
         span class=fa fa-cog fa-2
     % for element in elements:
         % if element.type == 'img':

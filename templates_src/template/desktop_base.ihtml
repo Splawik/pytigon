@@ -308,7 +308,8 @@
                 ul class=nav nav-tabs win-header append-left,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
         {{block.super}}
-
+    % if standard_web_browser < 5:
+        div id=wiki_start
 
 %% body_body
     % if standard_web_browser >= 5:

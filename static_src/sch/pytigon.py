@@ -207,12 +207,15 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
         jQuery(_local_fun)
 
-    if start_page and start_page != "None" and window.location.pathname == base_path:
-        def _on_load(responseText, status, response):
-            pass
+    def _init_start_wiki_page():
+        if start_page and start_page != "None" and window.location.pathname == base_path:
+            def _on_load(responseText, status, response):
+                pass
 
-        ajax_load(jQuery('#wiki_start'), base_path + start_page + "?only_content&schtml=1", _on_load)
+            ajax_load(jQuery('#wiki_start'), base_path + start_page + "?only_content&schtml=1", _on_load)
 
+    window.init_start_wiki_page = _init_start_wiki_page
+    _init_start_wiki_page()
 
     #alert(window.location.pathname)
     #alert(base_path)

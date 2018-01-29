@@ -1,0 +1,6 @@
+{{start_div|safe}}
+a class=wiki-object-edit,,,href={{base_path}}wiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
+    .block
+    span class=fa fa-cog fa-2
+{{content|safe}}
+{{end_div|safe}}

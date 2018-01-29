@@ -1,7 +1,11 @@
-<table class="{{html_class}}">
-    {% for row in tbl %}<tr>
-        {% for pos in row %}<{{pos.tag}} class="{{pos.html_class}}">{{ pos.data }}</{{pos.tag}}>
+div
+    a class=wiki-object-edit,,,href={{base_path}}wiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
+        .table
+        span class=fa fa-cog fa-2
+    <table class="{{html_class}}">
+        {% for row in tbl %}<tr>
+            {% for pos in row %}<{{pos.tag}} class="{{pos.html_class}}">{{ pos.data }}</{{pos.tag}}>
+            {% endfor %}
+        </tr>    
         {% endfor %}
-    </tr>    
-    {% endfor %}
-</table>
+    </table>
