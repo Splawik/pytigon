@@ -62,7 +62,10 @@ if platform_name()=='Android':
     else:
         DATA_PATH = p2
 else:
-    DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
+    if ROOT_PATH.startswith('/var/www'):
+        DATA_PATH = os.path.join("/home/www-data/.pytigon")
+    else:
+        DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
 
 if not os.path.exists(DATA_PATH):
     from schlib.schtools.install_init import init
