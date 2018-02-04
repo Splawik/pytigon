@@ -17,6 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from channels.routing import route
+from channels.routing import ProtocolTypeRouter
 
-channel_routing = []
+application = ProtocolTypeRouter({
+})

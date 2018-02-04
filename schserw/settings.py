@@ -30,10 +30,12 @@ if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
+    print("DEBUG")
 else:
-    DEBUG = True
+    DEBUG = False
     DB_DEBUG = False
     PRODUCTION_VERSION = True
+    print("PRODUCTION")
 
 SHOW_LOGIN_WIN = True
 
@@ -100,8 +102,8 @@ APPEND_SLASH = False
 
 STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 
-if not DEBUG:
-    STATIC_ROOT = STATICFILES_DIRS[0]
+#if not DEBUG:
+#    STATIC_ROOT = STATICFILES_DIRS[0]
 
 MEDIA_ROOT =  ROOT_PATH + '/app_pack'
 
@@ -210,19 +212,16 @@ BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 
 AUTO_RENDER_SELECT2_STATICS = False
 
+ASGI_APPLICATION = "schserw.routing.application"
 
 if PRODUCTION_VERSION and platform_name()!='Android':
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgi_redis.RedisChannelLayer",
-            "ROUTING": "schserw.routing.channel_routing",
-        },
-    }
-else:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "asgiref.inmemory.ChannelLayer",
-            "ROUTING": "schserw.routing.channel_routing",
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            #"ROUTING": "schserw.routing.channel_routing",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
         },
     }
 
