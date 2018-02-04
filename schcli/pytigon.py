@@ -56,6 +56,8 @@ if ROOT_PATH.startswith('.'):
 sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + '/schappdata')
 
+os.environ["LD_LIBRARY_PATH"] = ROOT_PATH + '/ext_prg/tcc'
+
 from schlib import init_paths
 
 init_paths()
