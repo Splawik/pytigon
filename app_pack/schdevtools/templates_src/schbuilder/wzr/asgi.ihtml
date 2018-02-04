@@ -12,12 +12,11 @@ sys.path.insert(0,base_path + "../..")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
-
-from channels.asgi import get_channel_layer
-
 import django
+from channels.routing import get_default_application
 import schserw.schsys.initdjango
+
 django.setup()
 schserw.schsys.initdjango.init_django()
 
-channel_layer = get_channel_layer()
+application = get_default_application()
