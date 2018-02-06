@@ -72,8 +72,8 @@
         .ext_apps,plugins
     %form "^/6":
         .gui_type,gui_elements,login_required,start_page
-    %form "^/3":
-        .desktop_gui_type,tablet_gui_type,smartfon_gui_type,public
+    %form "^/2":
+        .desktop_gui_type,tablet_gui_type,smartfon_gui_type,public,main
 
     % if standard_web_browser:
         %form "^/12":

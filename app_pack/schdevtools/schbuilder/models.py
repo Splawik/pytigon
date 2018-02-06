@@ -296,6 +296,7 @@ class SChAppSet( models.Model):
     gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
     login_required = models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
     public = models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
+    main = models.NullBooleanField('Main pack', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )

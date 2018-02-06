@@ -15,7 +15,7 @@ sys.path.append(_rp)
 
 from schserw.settings import *
 
-from apps import APPS
+from apps import APPS, PUBLIC, MAIN_APP_PACK
 
 try:
     from global_db_settings import setup_databases
@@ -31,7 +31,8 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0]:
+if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
+        and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='schdevtools'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
@@ -108,5 +109,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.02.04 19:02:09'
+GEN_TIME = '2018.02.06 21:08:36'
 OFFLINE_SUPPORT = True

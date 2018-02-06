@@ -30,12 +30,10 @@ if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
-    print("DEBUG")
 else:
     DEBUG = False
     DB_DEBUG = False
     PRODUCTION_VERSION = True
-    print("PRODUCTION")
 
 SHOW_LOGIN_WIN = True
 
