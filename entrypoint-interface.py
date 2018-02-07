@@ -83,13 +83,14 @@ port = START_CLIENT_PORT
 
 ret_tab = []
 for app_pack in APP_PACKS:
-    cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d asgi:application" % (app_pack, port)
+    cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d --access-log /var/log/pytigon-access.log asgi:application" % (app_pack, port)
     port += 1
     print(cmd)
     ret_tab.append(subprocess.Popen(cmd, shell=True))
 
-restart = subprocess.Popen("systemctl restart nginx", shell=True)
+restart = subprocess.Popen("nginx -g 'daemon off;'", shell=True)
 restart.wait()
 
 for pos in ret_tab:
     pos.wait()
+

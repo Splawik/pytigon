@@ -22,11 +22,13 @@ import sys
 from fs.mountfs import MountFS
 from fs.osfs import OSFS
 from django.conf import settings
+from os import environ
 
 APPSET_NAME = "Pytigon"
 GEN_TIME = '0000.00.00 00:00:00'
 
-if sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv):
+if (sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv)) \
+        or 'PYTIGON_DEBUG' in environ:
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
@@ -48,7 +50,6 @@ sys.path.append(ROOT_PATH + '/schappdata/schplugins')
 from schlib.schtools.platform_info import platform_name
 
 if platform_name()=='Android':
-    from os import environ
     p1 = p2 = None
     if 'SECONDARY_STORAGE' in environ:
         p1 = os.path.join(environ['SECONDARY_STORAGE'], ".pytigon")
