@@ -2,18 +2,23 @@
 import subprocess
 import os
 import sys
+from os import environ
 
 BASE_APPS_PATH = "/var/www/pytigon/app_pack"
 sys.path.append(BASE_APPS_PATH)
 
+VIRTUAL_HOST = "localhost"
+
+if 'VIRTUAL_PORT' in environ:
+    VIRTUAL_PORT = environ['VIRTUAL_PORT']
+else:
+    VIRTUAL_PORT = 8080
+
+START_CLIENT_PORT = 8000
+
 APP_PACKS = []
 APP_PACK_FOLDERS = []
 MAIN_APP_PACK = None
-
-PORT = 8080
-SERVER = "localhost"
-
-START_CLIENT_PORT = 8000
 
 CFG_START = """server
 {   
@@ -49,6 +54,10 @@ CFG_END = """
 }
 """
 
+if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
+    unzip = subprocess.Popen("unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/", shell=True)
+    unzip.wait()
+
 for ff in os.listdir(BASE_APPS_PATH):
     if os.path.isdir( os.path.join(BASE_APPS_PATH,ff)):
         if not ff.startswith('_'):
@@ -68,7 +77,7 @@ if not MAIN_APP_PACK and len(APP_PACKS)==1:
     APP_PACKS = []
 
 with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
-    conf.write(CFG_START % ( PORT, SERVER))
+    conf.write(CFG_START % ( VIRTUAL_PORT, VIRTUAL_HOST))
     port = START_CLIENT_PORT
     for app_pack in APP_PACKS:
         conf.write(CFG_ELEM % (app_pack, "http://127.0.0.1", port, app_pack))
