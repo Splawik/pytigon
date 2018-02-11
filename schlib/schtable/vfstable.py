@@ -121,7 +121,7 @@ class VfsTable(Table):
             if default_storage.fs.isdir(pos) or p.lower().endswith('.zip'):
                 if cmp and cmp.match(p) or not cmp:
                     id = b32encode(pos.encode('utf-8')).decode('utf-8')
-                    info = default_storage.fs.getinfo(pos)
+                    info = default_storage.fs.getdetails(pos)
                     #if not ha'created_time' in info:
                     #    info['created_time'] = ''
                     elements.append([
@@ -129,8 +129,8 @@ class VfsTable(Table):
                         (p, ',#fdd'),
                         '',
                         #(info['created_time'], ',,#f00,s'),
-                        (info.created, ',,#f00,s'),
-                        info,
+                        (info.modified.replace(tzinfo=None), ',,#f00,s'),
+                        info.raw,
                         {'edit': ('tableurl', '../../%s//' % id, _('Change folder'))},
                     ])
             else:
@@ -140,17 +140,17 @@ class VfsTable(Table):
             pos=pp[1]
             if cmp and cmp.match(p) or not cmp:
                 id = b32encode(pos.encode('utf-8')).decode('utf-8')
-                info = default_storage.fs.getinfo(pos)
+                info = default_storage.fs.getdetails(pos)
                 #size = info['size']
                 #ctime = info['created_time']
                 size = info.size
-                ctime = info.created
+                ctime = info.modified.replace(tzinfo=None)
                 elements.append([
                     id,
                     p,
                     (size, '>,' + self._size_to_color(size)),
                     (ctime, ',' + self._time_to_color(ctime)),
-                    info,
+                    info.raw,
                     {'edit': ('command', '../../%s//' % id, _('Open file'))},
                     ])
         return elements

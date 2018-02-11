@@ -985,21 +985,17 @@ def installer(request, pk):
     
     buf.append("ADDING DATABASE FILES")
     
-    if 'local' in settings.DATABASES:
-        if os.path.exists(db_name):
-            os.rename(db_name, db_name+"."+datetime.datetime.now().strftime('%Y%m%d%H%M%S')+".bak")
+    (code, output, err) = py_run([os.path.join(base_path, 'manage.py'), 'export_to_local_db'])
     
-        (code, output, err) = py_run([os.path.join(base_path, 'manage.py'), 'export_to_local_db'])
-        
-        buf.append("Export to local db:")
-        if output:
-            for pos in output:
-                buf.append(pos)
-        
-        if err:
-            buf.append("ERRORS:")
-            for pos in err:
-                buf.append(pos)
+    buf.append("Export to local db:")
+    if output:
+        for pos in output:
+            buf.append(pos)
+    
+    if err:
+        buf.append("ERRORS:")
+        for pos in err:
+            buf.append(pos)
             
     zip.write(db_name, name_in_zip=name+".db")
     zip.close()
@@ -1022,10 +1018,21 @@ def restart_server(request):
     restarted = False
     try:
         if platform.system() == "Linux":
-            if 'mod_wsgi.process_group' in request.environ:
-                if request.environ['mod_wsgi.process_group'] != '':
+            if platform.system() == "Linux":
+                if type(request).__name__=="AsgiRequest":
                     os.kill(os.getpid(), signal.SIGINT)
                     restarted = True
+                elif 'mod_wsgi.process_group' in request.environ:
+                    if request.environ['mod_wsgi.process_group'] != '':
+                        os.kill(os.getpid(), signal.SIGINT)
+                        restarted = True
+                else:
+                    try:
+                        import uwsgi
+                        uwsgi.reload()
+                        restarted = True
+                    except:
+                        pass
             else:
                 try:
                     import uwsgi

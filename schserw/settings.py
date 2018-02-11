@@ -23,6 +23,7 @@ from fs.mountfs import MountFS
 from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
+import tempfile
 
 APPSET_NAME = "Pytigon"
 GEN_TIME = '0000.00.00 00:00:00'
@@ -62,17 +63,17 @@ if platform_name()=='Android':
             DATA_PATH = p1
     else:
         DATA_PATH = p2
+    LOG_PATH = DATA_PATH
 else:
     if ROOT_PATH.startswith('/var/www'):
         DATA_PATH = os.path.join("/home/www-data/.pytigon")
+        LOG_PATH = "/var/log"
     else:
         DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
+        LOG_PATH = DATA_PATH
 
-if not os.path.exists(DATA_PATH):
-    from schlib.schtools.install_init import init
-    init(DATA_PATH)
 
-TEMP_PATH = os.path.join(DATA_PATH, "temp")
+TEMP_PATH = tempfile.gettempdir()
 
 if platform_name()=='Android':
     APP_PACK_PATH = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_pack')
@@ -104,9 +105,8 @@ STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 #if not DEBUG:
 #    STATIC_ROOT = STATICFILES_DIRS[0]
 
-MEDIA_ROOT =  ROOT_PATH + '/app_pack'
-
-UPLOAD_PATH = MEDIA_ROOT + '/upload/'
+MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
+UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
 
 ADMIN_MEDIA_PREFIX = '/media/'
 
@@ -186,10 +186,56 @@ HIDE_APPS = []
 
 APP_PACKS = []
 
+#LOGGING = {
+#    'version': 1,
+#    'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},
+#    'loggers': {'django.db.backends': {'level': 'DEBUG', 'handers': ['console']}}
+#}
+
 LOGGING = {
     'version': 1,
-    'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},
-    'loggers': {'django.db.backends': {'level': 'DEBUG', 'handers': ['console']}}
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'null': {
+            'level':'DEBUG',
+            'class':'logging.NullHandler',
+        },
+        'logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': LOG_PATH + "/pytigon.log",
+            'maxBytes': 50000,
+            'backupCount': 2,
+            'formatter': 'standard',
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'WARN',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'pytogion': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+    }
 }
 
 LOCALE_PATHS = [
@@ -204,7 +250,6 @@ ALLOWED_HOSTS = ['*',]
 
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
-
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""
@@ -233,11 +278,11 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount('app', OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount('data', OSFS(settings.DATA_PATH))
     try:
-        _m.mount('media', OSFS(settings.MEDIA_ROOT))
+        _m.mount('temp', OSFS(settings.TEMP_PATH))
     except:
         pass
     try:
-        _m.mount('temp', OSFS(settings.TEMP_PATH))
+        _m.mount('media', OSFS(settings.MEDIA_ROOT))
     except:
         pass
     try:

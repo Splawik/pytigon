@@ -47,7 +47,10 @@ class ComplexEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if not obj.__class__.__name__ in self.complex_types:
-            return {'object': repr(obj)}
+            if obj.__class__.__name__ == 'datetime':
+                return {'object': repr(obj).replace(", tzinfo=<UTC>", "") }
+            else:
+                return {'object': repr(obj)}
         return json.JSONEncoder.default(self, obj)
 
 

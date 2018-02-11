@@ -19,12 +19,19 @@
 
 import os
 
-def _mkdir(path, ext):
-    p = os.path.join(path, ext)    
+def _mkdir(path, ext=None):
+    if ext:
+        p = os.path.join(path, ext)
+    else:
+        p = path
+
     if not os.path.exists(p):
         os.mkdir(p)
 
-def init(path):
-    paths = ['', 'temp', 'cache', 'plugins_cache', '_schall',  'schdevtools']
-    for p in paths:
-        _mkdir(path, p)
+def init(app_pack, data_path, paths=None):
+    _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
+    for p in _paths:
+        _mkdir(data_path, p)
+    if paths:
+        for p in paths:
+            _mkdir(p)

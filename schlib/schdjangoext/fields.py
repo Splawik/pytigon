@@ -436,11 +436,17 @@ class RadioSelectExt(RadioSelect):
 class ModelChoiceFieldExt(forms.ModelChoiceField):
     widget = RadioSelectExt
 
-    def __init__(self, queryset, empty_label="---------", required=True, widget=None, label=None, initial=None,
-                 help_text='', to_field_name=None, limit_choices_to=None, *args, **kwargs):
+    #def __init__(self, queryset, empty_label="---------", required=True, widget=None, label=None, initial=None,
+    #             help_text='', to_field_name=None, limit_choices_to=None, *args, **kwargs):
+    #    self.model_to = queryset.model
+    #    forms.ModelChoiceField.__init__(self, queryset, empty_label, required, widget, label, initial,
+    #        help_text, to_field_name, limit_choices_to, *args, **kwargs)
+    #    self.widget.set_ext_data(self.model_to)
+
+
+    def __init__(self, queryset, **kwargs):
         self.model_to = queryset.model
-        forms.ModelChoiceField.__init__(self, queryset, empty_label, required, widget, label, initial,
-            help_text, to_field_name, limit_choices_to, *args, **kwargs)
+        forms.ModelChoiceField.__init__(self, queryset, **kwargs)
         self.widget.set_ext_data(self.model_to)
 
 
@@ -451,8 +457,10 @@ class ForeignKeyExt(models.ForeignKey):
         db = kwargs.pop('using', None)
         defaults = {
             'form_class': ModelChoiceFieldExt,
-            'queryset': self.rel.to._default_manager.using(db).complex_filter(self.rel.limit_choices_to),
-            'to_field_name': self.rel.field_name,
+            #'queryset': self.rel.to._default_manager.using(db).complex_filter(self.rel.limit_choices_to),
+            'queryset': self.remote_field.model._default_manager.using(db).complex_filter(self.remote_field.limit_choices_to),
+#            'to_field_name': self.rel.field_name,
+            'to_field_name': self.remote_field.field_name,
             }
         defaults.update(kwargs)
         return super(models.ForeignKey, self).formfield(**defaults)
