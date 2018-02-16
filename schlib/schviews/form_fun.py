@@ -89,7 +89,19 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
                     doc_type = 'html'
                 return render_to_response_ext(request, template_name2, context=user_dict, doc_type=doc_type)
         else:
-            return render_to_response(template_name2, context={'form': f}, request=request)
+            if hasattr(f, "process_invalid"):
+                if param:
+                    user_dict = f.process(request, param)
+                else:
+                    user_dict = f.process(request)
+                user_dict.update({'form': f})
+                if not issubclass(type(user_dict), dict):
+                    return user_dict
+                if object_id:
+                    user_dict.update({'object_id': object_id})
+                return render_to_response(template_name2, context=user_dict, request=request)
+            else:
+                return render_to_response(template_name2, context={'form': f}, request=request)
     else:
         if hasattr(f, "init"):
             f.init(request)

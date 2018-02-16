@@ -30,7 +30,7 @@
             def OnClick(self, event):
                 x = self.field_list.GetValue()
                 http = wx.GetApp().get_http(self.add_field)
-                adr = "{{request.path}}"+self.add_field.href+x+"/add"
+                adr = "{{request.path}}"+self.add_field.href+x+"/add/"
                 (err, adr2) = http.get(self, str(adr))
                 self.new_child_page(adr2)
 

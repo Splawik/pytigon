@@ -1004,7 +1004,7 @@ def installer(request, pk):
     
     url = reverse('start')+'schbuilder/download_installer/'+name+'/'
     
-    return { 'object_list': buf, 'name': name, 'url': url }
+    return { 'object_list': buf, 'name': name, 'url': url, 'tp': "SChAppSet" }
     
     
 
