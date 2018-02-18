@@ -312,8 +312,7 @@ class SchForm(ScrolledPanel):
         (x, y) = (xv * dx, yv * dy)
         self._act_scroll_xy = (x, y)
         dc = wx.ClientDC(self)
-        if self.wxdc and self._dc_buf and self._dc_buf_x == x and self._dc_buf_y \
-                == y:
+        if self.wxdc and self._dc_buf and self._dc_buf_x == x and self._dc_buf_y == y:
             dc.SetDeviceOrigin(-1 * x, -1 * y)
             rect = self.GetRect()
             dc.Blit(x,y,rect.GetWidth(),rect.GetHeight(),self._dc_buf,x,y)

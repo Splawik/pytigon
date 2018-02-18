@@ -30,15 +30,15 @@ class SChAuiBaseManager(aui.framemanager.AuiManager):
         aui.framemanager.AuiManager.__init__(self, *argi, **argv)
         self.Bind(wx.EVT_WINDOW_CREATE, self.DoUpdateEvt)
 
-    def Update(self):
-        if '__WXGTK__' in wx.PlatformInfo:
-            def _fun():
-                self.DoUpdate()
-                if self._frame:
-                    self._frame.Refresh()
-            wx.CallAfter(_fun)
-        else:
-            super().Update()
+    #def Update(self):
+    #    if '__WXGTK__' in wx.PlatformInfo:
+    #        def _fun():
+    #            self.DoUpdate()
+    #            if self._frame:
+    #                self._frame.Refresh()
+    #        wx.CallAfter(_fun)
+    #    else:
+    #        super().Update()
 
 
     def OnRender(self, event):

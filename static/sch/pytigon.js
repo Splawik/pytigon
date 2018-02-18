@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-01-28 13:18:16
+// Transcrypt'ed from Python, 2018-02-18 19:21:01
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3396,6 +3396,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'tabmenuitem', {

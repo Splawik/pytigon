@@ -27,7 +27,7 @@
             % else:
                 meta name=NO_HSCROLLBAR,,,content=True
 
-    % if 'start'|reverse == request.path or start_page:
+    % if 'start'|reverse == request.path or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         %% indexhead
             table style=width: 100%;,,,border=1
                 tr

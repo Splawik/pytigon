@@ -15,7 +15,7 @@ sys.path.append(_rp)
 
 from schserw.settings import *
 
-from apps import APPS
+from apps import APPS, PUBLIC, MAIN_APP_PACK
 
 try:
     from global_db_settings import setup_databases
@@ -24,6 +24,8 @@ except:
 
 APPSET_TITLE = "Pytigon web client"
 APPSET_NAME = "_schremote"
+MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
+UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
 
 THEMES = ['tablet_modern', 'tablet_modern', 'tablet_traditional']
 
@@ -31,13 +33,14 @@ LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0]:
+if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
+        and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schremote'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
-MEDIA_ROOT =  os.path.join(_lp,  'media')
-
+START_PAGE = ''
+SHOW_LOGIN_WIN = False
 PACKS = []
 
 for app in APPS:
@@ -59,6 +62,9 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+
+from schlib.schtools.install_init import init
+init(APPSET_NAME, DATA_PATH, [MEDIA_ROOT, UPLOAD_PATH])
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -107,4 +113,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2017.10.27 21:42:52'
+GEN_TIME = '2018.02.18 15:01:40'
+

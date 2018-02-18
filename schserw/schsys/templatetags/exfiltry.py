@@ -34,6 +34,8 @@ from django.db.models.query import QuerySet
 from django.db.models import Count, Min, Sum, Avg
 from django.utils.safestring import mark_safe
 
+import markdown2 as markdown
+
 from schlib.schdjangoext.tools import make_href as mhref
 
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
@@ -866,3 +868,7 @@ def append_get_param(href, parm):
         return href+"&"+str(parm)
     else:
         return href+"?"+str(parm)
+
+@register.filter(name='markdown', is_safe=True)
+def _markdown(value):
+    return markdown.markdown(value, extras=['tables', 'codehilite'])

@@ -164,3 +164,8 @@ ul.sidebar-menu ul.treeview-menu {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
+
+a.logo span {
+  top: -3px;
+  position: relative;
+  left: 5px; }

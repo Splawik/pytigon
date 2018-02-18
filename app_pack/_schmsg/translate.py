@@ -1,5 +1,0 @@
-_("Field")
-_("Value")
-_("Delete the item")
-_("Refresh")
-_("Action")
