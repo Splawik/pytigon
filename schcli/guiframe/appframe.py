@@ -851,7 +851,11 @@ class SchAppFrame(SchBaseFrame):
         self.Destroy()
 
     def on_open(self, event):
-        self.new_main_page(wx.GetApp().base_address + '/commander/form/FileManager/', "Commander", None, "panel")
+        if wx.GetApp().base_app:
+            base_path = wx.GetApp().base_address + "/" + wx.GetApp().base_app
+        else:
+            base_path = wx.GetApp().base_address
+        self.new_main_page(base_path + '/commander/form/FileManager/', "Commander", None, "panel")
 
     def on_exit(self, event=None):
         self._exit()
