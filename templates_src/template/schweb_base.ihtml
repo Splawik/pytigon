@@ -50,7 +50,7 @@
         %% pythoncode_for_table
 
 %% submenu
-    % if not app_manager.appname or start_page:
+    % if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         % if forloop.first
             h1...Aplikacja:
             h2...SCHWeb
@@ -137,7 +137,7 @@
             </table>
 
 %% menu2
-    % if not app_manager.appname or start_page:
+    % if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         h1...Toolbar 1
         .Typ:<br />
             .0 - przycisk<br />

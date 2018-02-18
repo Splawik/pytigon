@@ -631,6 +631,8 @@ def _main_init(argv):
                 address = x[0].replace('$$$', '//')
                 if len(x)>1:
                     app_name = x[1]
+                    if app_name.endswith('/'):
+                        app_name = app_name[:-1]
             else:
                 address = arg
 
@@ -803,14 +805,14 @@ def _main_init(argv):
     username = 'auto'
     password = 'anawa'
 
-    if extern_app_set:
-        app.http.get("", "http://127.0.0.2/")
-        app.http.post("", "http://127.0.0.2/schsys/do_login/", {
-            'username': username,
-            'password': password,
-            'next': "http://127.0.0.2/schsys/ok",
-            'client_param': app._get_parm_for_server()
-        })
+    #if extern_app_set:
+    #    app.http.get("", "http://127.0.0.2/")
+    #    app.http.post("", "http://127.0.0.2/schsys/do_login/", {
+    #        'username': username,
+    #        'password': password,
+    #        'next': "http://127.0.0.2/schsys/ok",
+    #        'client_param': app._get_parm_for_server()
+    #    })
 
     if not app.authorized and autologin:
         ready_to_run = False
