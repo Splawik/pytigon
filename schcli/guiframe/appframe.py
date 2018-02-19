@@ -423,9 +423,9 @@ class SchAppFrame(SchBaseFrame):
                     for page in app.start_pages:
                         url_page = page.split(';')
                         if len(url_page) == 2:
-                            self._on_html(_(url_page[0]) + ',' + app.base_address + "/" + url_page[1])
+                            self._on_html(_(url_page[0]) + ',' + app.base_path + "/" + url_page[1])
                         elif len(url_page) == 1:
-                            self._on_html(',' + app.base_address + "/" + url_page[0])
+                            self._on_html(',' + app.base_path + "/" + url_page[0])
 
                 wx.CallAfter(start_pages)
 
@@ -631,7 +631,8 @@ class SchAppFrame(SchBaseFrame):
             return
 
         if not address.startswith('^'):
-            if (not _panel or _panel.startswith('browser')) or ((address.startswith('http') or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
+            if (not _panel or _panel.startswith('browser')) or ((address.startswith('http') \
+                    or address.startswith('file://')) and not address.startswith(wx.GetApp().base_address)):
                 if '_' in _panel:
                     _panel = _panel.split('_')[1]
                 else:
@@ -643,7 +644,7 @@ class SchAppFrame(SchBaseFrame):
                     wx.CallAfter(_ret_fun)
                 else:
                     def _ret_fun():
-                        ret.body.WEB.go(wx.GetApp().base_address + address)
+                        ret.body.WEB.go(wx.GetApp().base_path + address)
                     wx.CallAfter(_ret_fun)
                 return ret
 

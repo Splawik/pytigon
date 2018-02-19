@@ -34,6 +34,7 @@ import platform
 import zipfile
 import getopt
 import configparser
+from urllib.parse import urljoin
 
 if platform.system() == "Windows":
     # grouping pytigon applicactions in the windows taskbar
@@ -303,6 +304,10 @@ class SchApp(App, _BASE_APP):
     def _init2(self, address, app):
         self.base_address = address
         self.base_app = app
+        if self.base_app:
+            self.base_path = urljoin(self.base_address, self.base_app)
+        else:
+            self.base_path = self.base_address
         if app and app != '':
             href = "/" + app + "/"
         else:
@@ -337,6 +342,11 @@ class SchApp(App, _BASE_APP):
     def _re_init(self, address, app):
         self.base_address = address
         self.base_app = app
+        if self.base_app:
+            self.base_path = urljoin(self.base_address, self.base_app)
+        else:
+            self.base_path = self.base_address
+
         if app and app != '':
             self.http.get(self, '/' + app + '/')
         else:
