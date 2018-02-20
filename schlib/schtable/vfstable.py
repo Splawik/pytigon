@@ -131,7 +131,7 @@ class VfsTable(Table):
                         #(info['created_time'], ',,#f00,s'),
                         (info.modified.replace(tzinfo=None), ',,#f00,s'),
                         info.raw,
-                        {'edit': ('tableurl', '../../%s//' % id, _('Change folder'))},
+                        {'edit': ('tableurl', '../../%s/_/' % id, _('Change folder'))},
                     ])
             else:
                 files.append((p, pos))
@@ -151,7 +151,7 @@ class VfsTable(Table):
                     (size, '>,' + self._size_to_color(size)),
                     (ctime, ',' + self._time_to_color(ctime)),
                     info.raw,
-                    {'edit': ('command', '../../%s//' % id, _('Open file'))},
+                    {'edit': ('command', '../../%s/_/' % id, _('Open file'))},
                     ])
         return elements
 

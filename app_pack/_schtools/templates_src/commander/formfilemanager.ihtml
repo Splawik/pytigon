@@ -11,7 +11,6 @@
         from schlib.schtools.schhtmlgen import Html as Hgen
         from schlib.schtasks.task import get_process_manager
         from PIL import Image
-        from tools.models import Parameter
         from schlib.schtools.tools import extend_fun_to, bencode, bdecode
         from schcli.guilib.image import bitmap_from_href
         from wx.lib import platebtn
@@ -25,22 +24,22 @@
                 self.panels_dir.append([pos+1, 0, "/", False])
                 self.panels_state.append(None)
 
-            x = [ None, None, None, None ]
-            for base_key in [ 'commander/{{request.user.username}}/path', 'commander/all/path']:
-                print(base_key)
-                test  = True
-                for i in range(4):
-                    if not x[i]:
-                        objs = Parameter.objects.filter(key=base_key+str(i))
-                        if len(objs)>0:
-                            x[i] = objs[0].value
-                        else:
-                            test = False
-                if test:
-                    break
-            for i in range(0,4):
-                if x[i]:
-                    self.panels_dir[i][2] = x[i]
+            #x = [ None, None, None, None ]
+            #for base_key in [ 'commander/{{request.user.username}}/path', 'commander/all/path']:
+            #    print(base_key)
+            #    test  = True
+            #    for i in range(4):
+            #        if not x[i]:
+            #            objs = Parameter.objects.filter(key=base_key+str(i))
+            #            if len(objs)>0:
+            #                x[i] = objs[0].value
+            #            else:
+            #                test = False
+            #    if test:
+            #        break
+            #for i in range(0,4):
+            #    if x[i]:
+            #        self.panels_dir[i][2] = x[i]
                     
             self.panels_to_refresh=[]
             
@@ -66,7 +65,7 @@
             self.CMD.GetTable().can_append=False
             self.CMD.Bind(wx.EVT_CHAR, self.on_char)
             self.CMD.DisableCellEditControl()
-            self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"//")
+            self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"/_/")
             self.CMD.GetTable().refresh(0)
 
             self.PANELS.body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
@@ -197,7 +196,7 @@
 
             if self.panels_state[self.tab]==None:
                 self.CMD.duplicate_table_and_state()
-                self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[self.tab][2].encode('utf-8') ).decode('utf-8')+"//")
+                self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[self.tab][2].encode('utf-8') ).decode('utf-8')+"/_/")
                 self.panels_state[self.tab]=self.CMD.get_table_and_state()
                 self.CMD.GetTable().refresh(0)
             else:
@@ -447,5 +446,5 @@
                 CTRLHTML name=PANELS,,,width=100%,,,height=80
         tr
             td
-                CTRLGRID name=CMD,,,width=100%,,,height=100%,,,READONLY=1,,,src=/schcommander/table/FileManager/grid/_/_/,,,keymap=standard
+                CTRLGRID name=CMD,,,width=100%,,,height=100%,,,READONLY=1,,,src={{base_path}}commander/grid/_/_/,,,keymap=standard
 

@@ -46,8 +46,8 @@ urlpatterns = [
     url('schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url('select2/', include(django_select2.urls)),
-    url('^favicon.ico', schserw.schsys.views.favicon),
-    url('^'+make_href('sw.js'), schserw.schsys.views.sw),
+    url('favicon.ico', schserw.schsys.views.favicon),
+    url( make_href('sw.js'), schserw.schsys.views.sw),
 ]
 
 def app_description(app_pack):
@@ -116,5 +116,3 @@ if settings.URL_ROOT_FOLDER:
     urlpatterns = [
         path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
     ]
-#else:
-#    urlpatterns = _urlpatterns

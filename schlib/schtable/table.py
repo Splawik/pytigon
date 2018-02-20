@@ -106,7 +106,7 @@ class Table:
         if 'cmd' in cmd_dict:
             cmd = cmd_dict['cmd']
         else:
-            cmd = cmd_page
+            cmd = CMD_PAGE
             cmd_dict = {}
             cmd_dict['nr'] = 0
         if cmd == CMD_INFO:
