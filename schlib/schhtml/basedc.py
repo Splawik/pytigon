@@ -102,9 +102,13 @@ class BaseDc(object):
         if len(hex) == 4:  #  #000
             (r, g, b) = (hex[1], hex[2], hex[3])
             (r, g, b) = [int(n, 16) * 16 for n in (r, g, b)]
-        if len(hex) == 7:  # #00ff00
+        elif len(hex) == 7:  # #00ff00
             (r, g, b) = (hex[1:3], hex[3:5], hex[5:])
             (r, g, b) = [int(n, 16) for n in (r, g, b)]
+        else:
+            r = 0
+            g = 0
+            b = 0
         return (r, g, b)
 
     def subdc(self,x,y,dx,dy,reg_max=True,):
