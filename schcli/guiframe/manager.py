@@ -41,11 +41,11 @@ class SChAuiBaseManager(aui.framemanager.AuiManager):
     #        super().Update()
 
 
-    def OnRender(self, event):
-        if self._frame and self._frame.GetHandle():
-            super().OnRender(event)
-        else:
-            event.Skip()
+    #def OnRender(self, event):
+    #    if self._frame and self._frame.GetHandle():
+    #        super().OnRender(event)
+    #    else:
+    #        event.Skip()
 
     def OnLeftDown(self, event):
         part = self.HitTest(*event.GetPosition())
