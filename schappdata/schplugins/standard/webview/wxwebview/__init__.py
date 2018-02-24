@@ -42,7 +42,10 @@ function mod_click(e) {
 }
 """
 
+import wx.html2
+
 class WebViewMemoryHandler(wx.html2.WebViewHandler):
+
     def __init__(self, browser):
         wx.html2.WebViewHandler.__init__(self, "http")
         self.browser = browser

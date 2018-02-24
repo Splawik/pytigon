@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-02-18 19:21:01
+// Transcrypt'ed from Python, 2018-02-23 16:40:59
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -121,7 +121,7 @@
     };
     __all__.object = object;
     var __class__ = function (name, bases, attribs, meta) {
-        if (meta == undefined) {
+        if (meta === undefined) {
             meta = bases [0] .__metaclass__;
         }
         return meta.__new__ (meta, name, bases, attribs);
@@ -141,7 +141,7 @@
 						get __init__ () {return __get__ (this, function (self) {
 							self.interpreter_name = 'python';
 							self.transpiler_name = 'transcrypt';
-							self.transpiler_version = '3.6.85';
+							self.transpiler_version = '3.6.101';
 							self.target_subdir = '__javascript__';
 						});}
 					});
@@ -155,7 +155,6 @@
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'org.transcrypt.__standard__', {
@@ -500,7 +499,6 @@
 			}
 		}
 	);
-
     var __call__ = function (/* <callee>, <this>, <params>* */) {
         var args = [] .slice.apply (arguments);
         if (typeof args [0] == 'object' && '__call__' in args [0]) {
@@ -613,7 +611,7 @@
     var getattr = function (obj, name) {
         return name in obj ? obj [name] : obj ['py_' + name];
     };
-    __all__.getattr= getattr;
+    __all__.getattr = getattr;
     var hasattr = function (obj, name) {
         try {
             return name in obj || 'py_' + name in obj;
@@ -633,8 +631,11 @@
     };
     __all__.delattr = (delattr);
     var __in__ = function (element, container) {
-        if (py_typeof (container) == dict) {
-            return container.hasOwnProperty (element);
+        if (container === undefined || container === null) {
+            return false;
+        }
+        if (container.__contains__ instanceof Function) {
+            return container.__contains__ (element);
         }
         else {
             return (
@@ -674,7 +675,13 @@
     function __k__ (keyed, key) {
         var result = keyed [key];
         if (typeof result == 'undefined') {
-             throw KeyError (key, new Error());
+            if (keyed instanceof Array)
+                if (key == +key && key >= 0 && keyed.length > key)
+                    return result;
+                else
+                    throw IndexError (key, new Error());
+            else
+                throw KeyError (key, new Error());
         }
         return result;
     }
@@ -690,17 +697,15 @@
         );
     }
     __all__.__t__ = __t__;
-    var bool = function (any) {
-        return !!__t__ (any);
-    };
-    bool.__name__ = 'bool';
-    __all__.bool = bool;
     var float = function (any) {
         if (any == 'inf') {
             return Infinity;
         }
         else if (any == '-inf') {
             return -Infinity;
+        }
+        else if (any == 'nan') {
+            return NaN;
         }
         else if (isNaN (parseFloat (any))) {
             if (any === false) {
@@ -718,17 +723,25 @@
         }
     };
     float.__name__ = 'float';
+    float.__bases__ = [object];
     __all__.float = float;
     var int = function (any) {
         return float (any) | 0
     };
     int.__name__ = 'int';
+    int.__bases__ = [object];
     __all__.int = int;
+    var bool = function (any) {
+        return !!__t__ (any);
+    };
+    bool.__name__ = 'bool';
+    bool.__bases__ = [int];
+    __all__.bool = bool;
     var py_typeof = function (anObject) {
         var aType = typeof anObject;
         if (aType == 'object') {
             try {
-                return anObject.__class__;
+                return '__class__' in anObject ? anObject.__class__ : object;
             }
             catch (exception) {
                 return aType;
@@ -745,17 +758,6 @@
     };
     __all__.py_typeof = py_typeof;
     var issubclass = function (aClass, classinfo) {
-        function isA (queryClass) {
-            if (queryClass == classinfo) {
-                return true;
-            }
-            for (var index = 0; index < queryClass.__bases__.length; index++) {
-                if (isA (queryClass.__bases__ [index], classinfo)) {
-                    return true;
-                }
-            }
-            return false;
-        };
         if (classinfo instanceof Array) {
             for (var index = 0; index < classinfo.length; index++) {
                 var aClass2 = classinfo [index];
@@ -766,10 +768,26 @@
             return false;
         }
         try {
-            return isA (aClass);
+            var aClass2 = aClass;
+            if (aClass2 == classinfo) {
+                return true;
+            }
+            else {
+                var bases = [].slice.call (aClass2.__bases__);
+                while (bases.length) {
+                    aClass2 = bases.shift ();
+                    if (aClass2 == classinfo) {
+                        return true;
+                    }
+                    if (aClass2.__bases__.length) {
+                        bases = [].slice.call (aClass2.__bases__).concat (bases);
+                    }
+                }
+                return false;
+            }
         }
         catch (exception) {
-            return aClass == classinfo || classinfo == object || (aClass == bool && classinfo == int);
+            return aClass == classinfo || classinfo == object;
         }
     };
     __all__.issubclass = issubclass;
@@ -1070,6 +1088,7 @@
     __all__.list = list;
     Array.prototype.__class__ = list;
     list.__name__ = 'list';
+    list.__bases__ = [object];
     Array.prototype.__iter__ = function () {return new __PyIterator__ (this);};
     Array.prototype.__getslice__ = function (start, stop, step) {
         if (start < 0) {
@@ -1179,6 +1198,7 @@
     }
     __all__.tuple = tuple;
     tuple.__name__ = 'tuple';
+    tuple.__bases__ = [object];
     function set (iterable) {
         var instance = [];
         if (iterable) {
@@ -1191,6 +1211,7 @@
     }
     __all__.set = set;
     set.__name__ = 'set';
+    set.__bases__ = [object];
     Array.prototype.__bindexOf__ = function (element) {
         element += '';
         var mindex = 0;
@@ -1355,21 +1376,26 @@
     };
     Uint8Array.prototype.__rmul__ = Uint8Array.prototype.__mul__;
     function str (stringable) {
-        try {
-            return stringable.__str__ ();
-        }
-        catch (exception) {
+        if (typeof stringable === 'number')
+            return stringable.toString();
+        else {
             try {
-                return repr (stringable);
+                return stringable.__str__ ();
             }
             catch (exception) {
-                return String (stringable);
+                try {
+                    return repr (stringable);
+                }
+                catch (exception) {
+                    return String (stringable);
+                }
             }
         }
     };
     __all__.str = str;
     String.prototype.__class__ = str;
     str.__name__ = 'str';
+    str.__bases__ = [object];
     String.prototype.__iter__ = function () {new __PyIterator__ (this);};
     String.prototype.__repr__ = function () {
         return (this.indexOf ('\'') == -1 ? '\'' + this + '\'' : '"' + this + '"') .py_replace ('\t', '\\t') .py_replace ('\n', '\\n');
@@ -1381,7 +1407,14 @@
         return this.charAt (0).toUpperCase () + this.slice (1);
     };
     String.prototype.endswith = function (suffix) {
-        return suffix == '' || this.slice (-suffix.length) == suffix;
+        if (suffix instanceof Array) {
+            for (var i=0;i<suffix.length;i++) {
+                if (this.slice (-suffix[i].length) == suffix[i])
+                    return true;
+            }
+        } else
+            return suffix == '' || this.slice (-suffix.length) == suffix;
+        return false;
     };
     String.prototype.find  = function (sub, start) {
         return this.indexOf (sub, start);
@@ -1406,7 +1439,7 @@
             }
         }
         return result;
-    }
+    };
     __setProperty__ (String.prototype, 'format', {
         get: function () {return __get__ (this, function (self) {
             var args = tuple ([] .slice.apply (arguments).slice (1));
@@ -1516,7 +1549,14 @@
         }
     };
     String.prototype.startswith = function (prefix) {
-        return this.indexOf (prefix) == 0;
+        if (prefix instanceof Array) {
+            for (var i=0;i<prefix.length;i++) {
+                if (this.indexOf (prefix [i]) == 0)
+                    return true;
+            }
+        } else
+            return this.indexOf (prefix) == 0;
+        return false;
     };
     String.prototype.strip = function () {
         return this.trim ();
@@ -1525,13 +1565,16 @@
         return this.toUpperCase ();
     };
     String.prototype.__mul__ = function (scalar) {
-        var result = this;
-        for (var i = 1; i < scalar; i++) {
+        var result = '';
+        for (var i = 0; i < scalar; i++) {
             result = result + this;
         }
         return result;
     };
     String.prototype.__rmul__ = String.prototype.__mul__;
+    function __contains__ (element) {
+        return this.hasOwnProperty (element);
+    }
     function __keys__ () {
         var keys = [];
         for (var attrib in this) {
@@ -1652,6 +1695,7 @@
             }
         }
         __setProperty__ (instance, '__class__', {value: dict, enumerable: false, writable: true});
+        __setProperty__ (instance, '__contains__', {value: __contains__, enumerable: false});
         __setProperty__ (instance, 'py_keys', {value: __keys__, enumerable: false});
         __setProperty__ (instance, '__iter__', {value: function () {new __PyIterator__ (this.py_keys ());}, enumerable: false});
         __setProperty__ (instance, Symbol.iterator, {value: function () {new __JsIterator__ (this.py_keys ());}, enumerable: false});
@@ -1670,6 +1714,7 @@
     }
     __all__.dict = dict;
     dict.__name__ = 'dict';
+    dict.__bases__ = [object];
     function __setdoc__ (docString) {
         this.__doc__ = docString;
         return this;
@@ -1679,7 +1724,7 @@
         if (typeof a == 'object' && '__mod__' in a) {
             return a.__mod__ (b);
         }
-        else if (typeof b == 'object' && '__rpow__' in b) {
+        else if (typeof b == 'object' && '__rmod__' in b) {
             return b.__rmod__ (a);
         }
         else {
@@ -1691,7 +1736,7 @@
         if (typeof a == 'object' && '__mod__' in a) {
             return a.__mod__ (b);
         }
-        else if (typeof b == 'object' && '__rpow__' in b) {
+        else if (typeof b == 'object' && '__rmod__' in b) {
             return b.__rmod__ (a);
         }
         else {
@@ -1962,7 +2007,7 @@
         else if (typeof a == 'object' && '__mod__' in a) {
             return a.__mod__ (b);
         }
-        else if (typeof b == 'object' && '__rpow__' in b) {
+        else if (typeof b == 'object' && '__rmod__' in b) {
             return b.__rmod__ (a);
         }
         else {
@@ -2115,6 +2160,9 @@
         if (typeof container == 'object' && '__getitem__' in container) {
             return container.__getitem__ (key);
         }
+        else if ((typeof container == 'string' || container instanceof Array) && key < 0) {
+            return container [container.length + key];
+        }
         else {
             return container [key];
         }
@@ -2123,6 +2171,9 @@
     var __setitem__ = function (container, key, value) {
         if (typeof container == 'object' && '__setitem__' in container) {
             container.__setitem__ (key, value);
+        }
+        else if ((typeof container == 'string' || container instanceof Array) && key < 0) {
+            container [container.length + key] = value;
         }
         else {
             container [key] = value;

@@ -97,7 +97,7 @@ def compile(python_code, temp_dir=None):
 
     error = False
     try:
-        compiler.Program (compilerPath, __symbols__)
+        compiler.Program (compilerPath, compilerPath, __symbols__)
         with open(dest,"rt") as pyoutput:
             ret = pyoutput.read()        
             s = ret.split('(function () {\n', 1)[1]

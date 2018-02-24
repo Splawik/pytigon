@@ -37,6 +37,8 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
         and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schall'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
+
 
 app_pack_folders = []
 base_apps_path = APP_PACK_PATH
@@ -62,8 +64,6 @@ URL_ROOT_FOLDER=''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
-
-    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 START_PAGE = 'None'
 SHOW_LOGIN_WIN = False
@@ -139,5 +139,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.02.18 15:01:33'
+GEN_TIME = '2018.02.23 14:51:43'
 

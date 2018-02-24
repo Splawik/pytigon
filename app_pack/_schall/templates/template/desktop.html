@@ -19,21 +19,21 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'app/standard_components/components/txtarea_editor.js' %}
-        {% component 'app/standard_components/components/code_editor.js' %}
-        {% component 'app/standard_components/components/pivottable.js' %}
-        {% component 'app/standard_components/components/handsontable.js' %}
-        {% component 'app/standard_components/components/summernote.js' %}
-        {% component 'app/standard_components/components/d3.js' %}
-        {% component 'app/standard_components/components/leaflet.js' %}
         {% component 'app/schdevtools/components/test.js' %}
+        {% component 'app/standard_components/components/summernote.js' %}
+        {% component 'app/standard_components/components/handsontable.js' %}
+        {% component 'app/standard_components/components/leaflet.js' %}
         {% component 'app/standard_components/components/plotly.js' %}
-        {% component 'app/standard_components/components/video-js.js' %}
         {% component 'app/standard_components/components/wysiwyg_edit.js' %}
+        {% component 'app/standard_components/components/pivottable.js' %}
+        {% component 'app/standard_components/components/video-js.js' %}
+        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/txtarea_editor.js' %}
+        {% component 'app/standard_components/components/d3.js' %}
         {% component 'app/standard_components/components/vs_editor.js' %}
 {% endblock %}
 {% block component_init %}
-        component_init = [ "txtarea_editor", "code_editor", "pivottable", "handsontable", "summernote", "d3", "leaflet", "test", "plotly", "video-js", "wysiwyg_edit", "vs_editor",  ]
+        component_init = [ "test", "summernote", "handsontable", "leaflet", "plotly", "wysiwyg_edit", "pivottable", "video-js", "code_editor", "txtarea_editor", "d3", "vs_editor",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

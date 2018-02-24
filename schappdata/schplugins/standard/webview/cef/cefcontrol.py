@@ -347,7 +347,7 @@ class CEFControl(wx.Control):
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_CLOSE, self.on_close)
 
-        if self.GetHandle():
+        if self.Handle:
             self.on_paint(None)
         else:
             self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -368,7 +368,7 @@ class CEFControl(wx.Control):
     def embed_browser(self):
         window_info = cef.WindowInfo()
         (width, height) = self.GetClientSize()
-        window_info.SetAsChild(self.GetHandle(), [0, 0, width, height])
+        window_info.SetAsChild(self.Handle, [0, 0, width, height])
         self.browser = cef.CreateBrowserSync(window_info, url = self.url)
         self.browser.SetClientHandler(FocusHandler(self))
         self.browser.SetClientHandler(KeyboardHandler(self))
@@ -389,14 +389,14 @@ class CEFControl(wx.Control):
         return self.browser
 
     def on_set_focus(self, event):
-        cef.WindowUtils.OnSetFocus(self.GetHandle(), 0, 0, 0)
+        cef.WindowUtils.OnSetFocus(self.Handle, 0, 0, 0)
         event.Skip()
 
     def on_size(self, event):
         if not self.browser:
             return
         if platform.system() == "Windows":
-            cef.WindowUtils.OnSize(self.GetHandle(), 0, 0, 0)
+            cef.WindowUtils.OnSize(self.Handle, 0, 0, 0)
         else:
             (x, y) = (0, 0)
             (width, height) = event.GetSize()
