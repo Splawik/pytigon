@@ -28,7 +28,7 @@ if 'CERT' in environ:
     x = environ['CERT'].split(';')
     CRT = "ssl_certificate " + x[0] + ";"
     KEY = "ssl_certificate_key " + x[1] + ";"
-    VIRTUAL_PORT += " ssl"
+    VIRTUAL_PORT += " ssl http2"
 else:
     CRT = ""
     KEY = ""

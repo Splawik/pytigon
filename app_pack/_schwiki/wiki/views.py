@@ -96,18 +96,18 @@ def view_page(request, app_or_subject, page_path):
             except:
                 path_list2.append(pos)
     
-    page = None
-    try:
-        #page = Page.objects.get(name=page_name, subject=app_or_subject)
-        page = Page.get_page(request, app_or_subject, page_name)
+    page = Page.get_page(request, app_or_subject, page_name)
+    if page:
         id = page.id
         content = page.content
-        
-        t = Template(template_simple + content)
-        c = Context({'object': page, 'wiki_path': path, 'request': request })
-        
-        content=t.render(c)
-    except:
+        try: 
+            t = Template(template_simple + content)
+            c = RequestContext(request, {'object': page, 'wiki_path': path, })        
+            #c = Context({'object': page, 'wiki_path': path, 'request': request })    
+            content=t.render(c)
+        except:
+            content = page.content
+    else:
         page = Page()
         page.name = page_name
         page.description=desc

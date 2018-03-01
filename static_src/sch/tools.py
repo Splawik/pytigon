@@ -237,7 +237,8 @@ def ajax_get(url, complete, process_req=None):
     req.onload = _onload
 
     req.open('GET', url, True)
-    req.send()
+    #req.overrideMimeType('text/plain; charset=x-user-defined')
+    req.send(None)
 
 window.ajax_get = ajax_get
 

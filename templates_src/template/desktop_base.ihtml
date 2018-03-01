@@ -69,6 +69,10 @@
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
 
+    % comment:
+        {% jscript_link 'fonts/font-awesome/js/fontawesome-all.min.js' %}
+        {% jscript_link 'fonts/font-awesome/js/fa-v4-shims.min.js' %}
+
     %% theme_js_scripts
 
 %% jquery_init
@@ -125,6 +129,7 @@
         {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
 
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
+    {% css_link 'bootstrap_plugins/modal-fullscreen.css' %}
 
     {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}

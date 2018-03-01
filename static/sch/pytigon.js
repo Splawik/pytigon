@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-02-23 16:40:59
+// Transcrypt'ed from Python, 2018-02-27 16:55:35
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -155,6 +155,7 @@
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'org.transcrypt.__standard__', {
@@ -499,6 +500,7 @@
 			}
 		}
 	);
+
     var __call__ = function (/* <callee>, <this>, <params>* */) {
         var args = [] .slice.apply (arguments);
         if (typeof args [0] == 'object' && '__call__' in args [0]) {
@@ -3249,6 +3251,53 @@ function pytigon () {
 					var _none = function () {
 						// pass;
 					};
+					var popup_min_max = function (elm, max) {
+						if (typeof max == 'undefined' || (max != null && max .hasOwnProperty ("__kwargtrans__"))) {;
+							var max = true;
+						};
+						var elem = jQuery (elm);
+						if (elem.hasClass ('modal-dialog')) {
+							var popup = elem;
+						}
+						else {
+							var popup = elem.closest ('.modal-dialog');
+						}
+						if (popup.length > 0) {
+							var minimize = popup.find ('.minimize');
+							var maximize = popup.find ('.maximize');
+							if (minimize.length > 0) {
+								if (max) {
+									minimize.show ();
+								}
+								else {
+									minimize.hide ();
+								}
+							}
+							if (maximize.length > 0) {
+								if (max) {
+									maximize.hide ();
+								}
+								else {
+									maximize.show ();
+								}
+							}
+							if (max) {
+								popup.addClass ('modal-fullscreen');
+							}
+							else {
+								popup.removeClass ('modal-fullscreen');
+							}
+							jQuery (window).trigger ('resize');
+						}
+					};
+					var popup_minimize = function (elem) {
+						return popup_min_max (elem, false);
+					};
+					window.popup_minimize = popup_minimize;
+					var popup_maximize = function (elem) {
+						return popup_min_max (elem, true);
+					};
+					window.popup_maximize = popup_maximize;
 					jQuery.fn.modal.Constructor.prototype.enforceFocus = _none;
 					__pragma__ ('<use>' +
 						'tabmenu' +
@@ -3288,6 +3337,9 @@ function pytigon () {
 						__all__.on_popup_in_form = on_popup_in_form;
 						__all__.on_popup_info = on_popup_info;
 						__all__.on_popup_inline = on_popup_inline;
+						__all__.popup_maximize = popup_maximize;
+						__all__.popup_min_max = popup_min_max;
+						__all__.popup_minimize = popup_minimize;
 						__all__.refresh_current_app = refresh_current_app;
 						__all__.refresh_current_object = refresh_current_object;
 						__all__.refresh_current_page = refresh_current_page;
@@ -3882,7 +3934,7 @@ function pytigon () {
 						};
 						req.onload = _onload;
 						req.open ('GET', url, true);
-						req.send ();
+						req.send (null);
 					};
 					window.ajax_get = ajax_get;
 					var ajax_load = function (elem, url, complete) {
@@ -4226,7 +4278,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {

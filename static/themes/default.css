@@ -55,65 +55,54 @@ not(.login_background) div.content-wrapper {
         color: transparent; }
 
 /* bootstrap-table */
-.tabsort_panel .table td, .table_panel .table td {
-  padding-top: 0.25rem;
-  padding-right: 0.75rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.75rem;
-  vertical-align: middle; }
-
-.tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table_panel table.table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.02); }
-
-.tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table_panel table.table-striped tbody tr:nth-of-type(even) {
-  background-color: transparent; }
-
-.tabsort_panel table.table-striped tbody tr:hover, .table_panel table.table-striped tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.05); }
-
-.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
-  text-transform: none;
-  padding: 0.5rem; }
-
-.tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
-  box-shadow: none;
-  border: none !important;
-  color: black;
-  background-color: rgba(0, 0, 0, 0.05); }
-
-.tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
-  background-color: transparent; }
-
-.tabsort_panel div.td_action, .table_panel div.td_action {
-  box-shadow: none;
-  border: none;
-  text-transform: none; }
-  .tabsort_panel div.td_action .btn-secondary, .table_panel div.td_action .btn-secondary {
-    color: #006040; }
-  .tabsort_panel div.td_action .btn-danger, .table_panel div.td_action .btn-danger {
-    color: #600040; }
-
-.tabsort_panel div.td_action .btn:not(:hover), .table_panel div.td_action .btn:not(:hover) {
-  background-color: transparent; }
-
-.tabsort_panel tr:not(:hover) div.td_action .btn, .table_panel tr:not(:hover) div.td_action .btn {
-  opacity: 0.33;
-  filter: alpha(opacity=33); }
-
-.tabsort_panel .td_information, .table_panel .td_information {
-  width: 100%;
-  height: 100%; }
-
-.tabsort_panel tr:not(:hover) div.td_information *, .table_panel tr:not(:hover) div.td_information * {
-  opacity: 0.66;
-  filter: alpha(opacity=66); }
-
-.tabsort_panel tr td.td_information .btn, .table_panel tr td.td_information .btn {
-  padding: 5px 8px;
-  box-shadow: none; }
-
-.tabsort_panel div.td_information a.btn, .table_panel div.td_information a.btn {
-  box-shadow: none; }
+.tabsort_panel, .table_panel {
+  width: 100%; }
+  .tabsort_panel .table td, .table_panel .table td {
+    padding-top: 0.25rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.75rem;
+    vertical-align: middle; }
+  .tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table_panel table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02); }
+  .tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table_panel table.table-striped tbody tr:nth-of-type(even) {
+    background-color: transparent; }
+  .tabsort_panel table.table-striped tbody tr:hover, .table_panel table.table-striped tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05); }
+  .tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
+    text-transform: none;
+    padding: 0.5rem; }
+  .tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn {
+    box-shadow: none;
+    border: none !important;
+    color: black;
+    background-color: rgba(0, 0, 0, 0.05); }
+  .tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover) {
+    background-color: transparent; }
+  .tabsort_panel div.td_action, .table_panel div.td_action {
+    box-shadow: none;
+    border: none;
+    text-transform: none; }
+    .tabsort_panel div.td_action .btn-secondary, .table_panel div.td_action .btn-secondary {
+      color: #006040; }
+    .tabsort_panel div.td_action .btn-danger, .table_panel div.td_action .btn-danger {
+      color: #600040; }
+  .tabsort_panel div.td_action .btn:not(:hover), .table_panel div.td_action .btn:not(:hover) {
+    background-color: transparent; }
+  .tabsort_panel tr:not(:hover) div.td_action .btn, .table_panel tr:not(:hover) div.td_action .btn {
+    opacity: 0.33;
+    filter: alpha(opacity=33); }
+  .tabsort_panel .td_information, .table_panel .td_information {
+    width: 100%;
+    height: 100%; }
+  .tabsort_panel tr:not(:hover) div.td_information *, .table_panel tr:not(:hover) div.td_information * {
+    opacity: 0.66;
+    filter: alpha(opacity=66); }
+  .tabsort_panel tr td.td_information .btn, .table_panel tr td.td_information .btn {
+    padding: 5px 8px;
+    box-shadow: none; }
+  .tabsort_panel div.td_information a.btn, .table_panel div.td_information a.btn {
+    box-shadow: none; }
 
 div.bootstrap-table div.columns.pull-right {
   margin-right: 2px;

@@ -63,9 +63,6 @@
                     #dlg.Destroy()
                 return q
 
- 
-%% vscroll
-
 %% extrastyle
     style type=text/css{:}
         #id_content_src:
@@ -73,13 +70,12 @@
             height: 350px
       
 %% all
-    %with form_width=720 form_height=480 show_title_bar=0 title=_("Wiki pages")
+    %with table_type='datatable' show_title_bar=0 title=_("Wiki pages")
         {{ block.super }}
 
 
 %% list_content_actions
     % new_row _("New wiki page")
-
 
 %% list_row_header
     th...Subject
@@ -90,7 +86,6 @@
     th...Modify time
     th...Status
     
-
 %% list_row
     td...{{object.subject}}
     td...{{object.name}}
@@ -121,4 +116,4 @@
 %% row_edit
     % form:
         .subject,name,description,base_template,rights_group,menu
-        
+    input type=hidden,,,name=direct_save    

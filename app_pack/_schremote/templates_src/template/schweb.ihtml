@@ -19,6 +19,6 @@
         [ gui_style | modern(toolbar(file(open,exit),clipboard)) ]
         [ hybrid | 0 ]
         [ title  | Pytigon web client ]
-        [ start_page |  ]
-        [ plugins |  ]
+        [ start_page | None ]
+        [ plugins | None ]
 

@@ -511,4 +511,40 @@ def refresh_current_app(url, elem, e):
 def _none():
     pass
 
+def popup_min_max(elm, max=True):
+    elem = jQuery(elm)
+    if elem.hasClass('modal-dialog'):
+        popup = elem
+    else:
+        popup = elem.closest('.modal-dialog')
+    if popup.length > 0:
+        minimize = popup.find('.minimize')
+        maximize = popup.find('.maximize')
+        if minimize.length > 0:
+            if max:
+                minimize.show()
+            else:
+                minimize.hide()
+        if maximize.length > 0:
+            if max:
+                maximize.hide()
+            else:
+                maximize.show()
+        if max:
+            popup.addClass('modal-fullscreen')
+        else:
+            popup.removeClass('modal-fullscreen')
+        jQuery(window).trigger('resize')
+
+def popup_minimize(elem):
+    return popup_min_max(elem, False)
+
+window.popup_minimize = popup_minimize
+
+def popup_maximize(elem):
+    return popup_min_max(elem, True)
+
+window.popup_maximize = popup_maximize
+
+
 jQuery.fn.modal.Constructor.prototype.enforceFocus = _none

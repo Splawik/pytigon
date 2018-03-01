@@ -57,7 +57,6 @@
 </script>
         {% endif %}
 {% endblock %}
-{% block vscroll %}{% endblock %}
 {% block extrastyle %}
         <style type="text/css">
     #id_content_src{
@@ -68,7 +67,7 @@
 </style>
 {% endblock %}
 {% block all %}
-        {% with form_width=720 form_height=480 show_title_bar=0 title="Wiki pages" %}
+        {% with table_type='datatable' show_title_bar=0 title="Wiki pages" %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -119,5 +118,6 @@
         {% form %}
                 subject,name,description,base_template,rights_group,menu
         {% endform %}
+        <input type="hidden" name="direct_save" />
 {% endblock %}
 

@@ -28,7 +28,7 @@ import tempfile
 APPSET_NAME = "Pytigon"
 GEN_TIME = '0000.00.00 00:00:00'
 
-if (sys.argv and ((sys.argv[0] == 'manage.py' and 'runserver' in sys.argv) or '--debug' in sys.argv)) \
+if (sys.argv and ((sys.argv[0].endswith('manage.py') and 'runserver' in sys.argv) or '--debug' in sys.argv)) \
         or 'PYTIGON_DEBUG' in environ:
     DEBUG = True
     DB_DEBUG = True

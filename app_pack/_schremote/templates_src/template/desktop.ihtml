@@ -17,6 +17,7 @@
 %% extrastyle
     {{block.super}}
     
+    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
     
 
 %% body_footer
