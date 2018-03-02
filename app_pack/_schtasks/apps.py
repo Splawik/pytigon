@@ -1,3 +1,3 @@
-APPS=['tasks',]
+APPS=['schtasks',]
 PUBLIC = True
 MAIN_APP_PACK = False

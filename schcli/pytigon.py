@@ -536,6 +536,11 @@ class SchApp(App, _BASE_APP):
                 if result == wx.ID_YES:
                     self.task_manager.kill_all()
 
+    def run_script(self, app_name, script_path):
+        with open(script_path, "rb") as s:
+            wx.CallAfter(self.GetTopWindow().new_main_page, '/' + app_name + '/run_script/', "Run script",
+                         {'script': s.read()})
+
 
 def login(base_href, auth_type=None):
     """Show login form"""
@@ -574,6 +579,7 @@ def login(base_href, auth_type=None):
                 dlg.message.SetLabel(_('Failed login attempt! http error: %s') % ret)
     dlg.Destroy()
     return False
+
 
 
 def _main_init(argv):
@@ -663,10 +669,25 @@ def _main_init(argv):
     if len(args) > 0:
         if '.ptig' in args[0].lower():
             prg_name = args[0].split('/')[-1].split('\\')[-1]
-            prg_name2 = prg_name.split('.')[0]
-            if not pytigon_install.install(args[0], prg_name2):
-                return (None, None)
-            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
+            x = prg_name.split('.')
+            if len(x)==2 or ( len(x)>2 and x[-2].lower()=='inst'):
+                prg_name2 = x[0]
+                if not pytigon_install.install(args[0], prg_name2):
+                    return (None, None)
+                CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
+            else:
+                if len(x)>3:
+                    prg_name2 = x[0]
+                    app_name2 = x[-2]
+                    app_pack = x[-3]
+                    CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + app_pack.strip()
+                    if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
+                        print(_("Application pack: '%s' does not exists") % app_pack.strip())
+                        return (None, None)
+                    wx.CallAfter(app.run_script, app_name2, args[0])
+                else:
+                    print(_("Name of script: '%s' is not valid") % prg_name)
+                    return (None, None)
         else:
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + args[0].strip()
             if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):

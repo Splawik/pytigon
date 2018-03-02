@@ -1,3 +1,3 @@
-APPS=['schbuilder','_schtools.simplescripts','_schtools.tools','_schwiki.wiki','_schtools.commander','_schtasks.tasks',]
+APPS=['schbuilder','_schtools.schsimplescripts','_schtools.schtools','_schwiki.schwiki','_schtools.schcommander','_schtasks.schtasks',]
 PUBLIC = True
 MAIN_APP_PACK = False

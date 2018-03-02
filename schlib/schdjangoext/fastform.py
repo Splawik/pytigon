@@ -21,13 +21,13 @@
 Form example in string format
 Co to jest?
 Nazwisko
-Nazwisko2:*
-imie/Imię!:*
-Opis:_
-Data:####.##.##
-Wiek:0
-Kwota!:9.99
-Wybierz:[opcja1;opcja2
+Nazwisko2::*
+imie//Imię!::*
+Opis::_
+Data::####.##.##
+Wiek::0
+Kwota!::9.99
+Wybierz::[opcja1;opcja2
 opcja3]
 """
 

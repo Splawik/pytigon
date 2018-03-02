@@ -229,7 +229,7 @@
                                     table class=filter_form,,,border=0
                                         tr
                                             td
-                                                {% bootstrap_field field 'horizontal'%}
+                                                {% bootstrap_field field layout='horizontal' %}
                                             td
                                                 {{ field.errors }}
                                 table class=filter_form

@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 ModuleTitle = _('main tools')
 Title = _('Pytigon builder')
 Perms = True
-Index = ''
+Index = 'None'
 Urls  = (
     ('table/SChAppSet/-/form/list/?schtml=desktop',_('Application packages'),'schbuilder.change_schappset','client://status/folder-open.png'),
     ('form/Installer/',_('Make installer'),None,'client://categories/applications-internet.png'),

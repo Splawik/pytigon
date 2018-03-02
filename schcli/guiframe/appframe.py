@@ -856,7 +856,7 @@ class SchAppFrame(SchBaseFrame):
             base_path = wx.GetApp().base_address + "/" + wx.GetApp().base_app
         else:
             base_path = wx.GetApp().base_address
-        self.new_main_page(base_path + '/commander/form/FileManager/', "Commander", None, "panel")
+        self.new_main_page(base_path + '/schcommander/form/FileManager/', "Commander", None, "panel")
 
     def on_exit(self, event=None):
         self._exit()
