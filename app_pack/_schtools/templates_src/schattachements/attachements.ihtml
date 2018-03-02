@@ -1,0 +1,50 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "download": "client://status/mail-attachment.png",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=800 form_height=600
+        {{ block.super }}
+
+%% scroll
+
+%% enctype
+    .multipart/form-data
+
+%% list_content_actions    
+    % new_row _("New attachement") "" ""  "" "{{filter}}"
+
+%% list_row_header
+    th...Name
+    th...ext
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.ext}}
+
+
+%% list_row_actions
+    % row_actions:
+        .download,_(Download),download,_blank
+    % row_actions:
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:
+

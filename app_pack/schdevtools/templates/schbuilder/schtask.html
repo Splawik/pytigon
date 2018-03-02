@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=960 form_height=1200 show_title_bar=0 title="Tasks" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New task" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+{% endblock %}
+{% block list_row_actions %}
+        {{ block.super }}
+        {% row_actions %}
+                field_edit/code,Code,[|client://mimetypes/text-x-generic-template.png],_top
+                field_edit/doc,Doc,[|client://apps/help-browser.png],_top
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "name"
+        {% endform %}
+{% endblock %}
+

@@ -1,0 +1,50 @@
+script
+    robj = object.closest(".refr_object") 
+    editor_div = robj.find("div[name='vseditor']")
+    ed = editor_div.data('editor')
+    
+    repeat = 2
+    
+    while(repeat>0):
+        pos = ed.getPosition()
+        text = ed.getValue()
+        tab=text.split("\n")
+        line = tab[pos.lineNumber-1]
+        
+        if line.startswith('@'):
+            if "{{edit_form}}" == "True":
+                x = line.split(':')
+                href = "{{app_path}}table/PageObjectsConf/action/edit_page_object/?name=" + x[0][1:] + "&page_id={{page.id}}" 
+                on_popup_edit_new(href, object[0], None)
+            repeat = 0
+        else:
+            if not "{{pk}}":
+                alert("Select new wiki object type or point to existing element to edit proporties")
+                break
+            max = 0
+            for l in tab:
+                if l.startswith('@{{object.name}}'):
+                    x = l.split('_')
+                    if len(x)>1:
+                        xx = x[1].split(':')
+                        try:
+                            n = int(xx[0])
+                            if n> max:
+                                max = n
+                        except:
+                            pass
+            
+            range = __new__ ( monaco.Range(pos.lineNumber, 1, pos.lineNumber, 1) ) 
+            id = { 'major': 1, 'minor': 1 }
+            if "{{edit_form}}" == "True":
+                edit_form = '_'+str(max+1)
+            else:
+                edit_form = ""
+            text = "@{{object.name}}"+edit_form+"{% if object.inline_editing %}:\n{% else %}\n{% endif %}"
+            op = { 'identifier': id, 'range': range, 'text': text, 'forceMoveMarkers': True }
+            ed.executeEdits("pytigon", [op,])
+            ed.setPosition(pos)
+            
+            editor_div.data('vue-editor').save(None)
+            
+            repeat -= 1

@@ -1,0 +1,23 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% scroll
+
+%% all
+    % with show_form=True form_edit=True:
+        {{ block.super }}
+
+%% form_action
+    {{request.get_full_path}}
+
+%% row_edit_form
+    % if form:
+        {{ block.super }}
+    % else:
+        .This object doesn't need additional parameters
+    
+%% row_edit
+    % form:

@@ -1,0 +1,71 @@
+style ===>
+    .img_form_view {
+        padding: 1px;
+        position: relative;
+    }
+    
+    .i4321 td.t1 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+
+    .i4321 td.t2 div {
+        position: relative;
+        left: -40px;
+        top: 30px;
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .i4321 td.t3 div {
+        position: relative;
+        top: -50px;
+        left: 20px;
+        transform: rotate(-20deg);
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .i4321 td.t4 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+    
+    .o1 {
+        position: absolute;
+        bottom: 3px;    
+        left: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.3);
+        color: #ccc;
+        padding: 0px 5px;
+    }
+    
+    .img_form_view:hover span {
+        color: #fff;
+    }
+
+    .img_form_view span a {
+        color: #ccc;
+    }
+
+    .img_form_view:hover span a {
+        color: #fff;
+    }
+    
+div class=row
+    [% if perms.wiki.add_page %]
+    a class=wiki-object-edit,,,href={{base_path}}schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
+        .img
+        span class=fa fa-cog fa-2
+    [% endif %]
+    % for element in elements:
+        % if element.type == 'img':
+            div class={{element.css_class}} img_form_view
+                img src=data:image/png;base64,{{ element.data.0 }},,,style=width:100%
+                % if element.data.1:
+                    span class={{param.img_view_type}}...{{element.data.1}}
+        % else:
+            % if element.type == 'txt':
+                div class={{element.css_class}} img_form_view_text,,,style={{ element.style }}
+                    {{element.data|safe}}
+            % else:
+                {{ element.data|safe }}

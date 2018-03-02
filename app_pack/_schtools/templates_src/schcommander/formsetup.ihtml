@@ -1,0 +1,18 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+%% extrahead
+    % if OK:
+        meta name=target,,,content=_parent_refr
+
+%% form_content_schbutton
+    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=44
+
+
+%% all
+    %with show_title_bar=1 title='Setup' vform=True
+        {{ block.super }}
+

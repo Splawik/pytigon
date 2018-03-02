@@ -1,0 +1,25 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Import form'
+        {{ block.super }}
+
+
+%%list_content_header_first_row
+
+%% form_content_button
+
+
+%% user_header
+    th...x
+
+
+%% user_row
+    tr
+        td... {{object}}
+
