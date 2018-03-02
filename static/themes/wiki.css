@@ -1,0 +1,22 @@
+.wiki_container .h1 {
+  border-bottom: 2px solid #ccc; }
+
+.wiki_container .right-block {
+  box-shadow: 2px 2px 6px;
+  padding: 5px;
+  margin: 1rem 0px;
+  border-radius: 3px; }
+  .wiki_container .right-block h1 {
+    font-size: 1.5rem;
+    display: flex;
+    width: 100%;
+    background: #f9f9f9;
+    padding: 5px;
+    border: none; }
+
+.wiki_container .article-header {
+  font-size: 1.5rem;
+  background: #f9f9f9;
+  display: flex;
+  padding: 5px;
+  color: #000; }
