@@ -10,7 +10,7 @@
 %% menu_start
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary win-header" id="topmenu">
 
-        button class=navbar-toggler navbar-toggler-right,,,type=button,,,data-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
+        button class=navbar-toggler,,,type=button,,,data-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
             span class=navbar-toggler-icon
 
         a class=navbar-brand txt3d,,,href=#...{{appset_title}}
