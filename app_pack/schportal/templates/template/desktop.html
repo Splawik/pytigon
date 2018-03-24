@@ -1,0 +1,26 @@
+{% extends 'template/desktop_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load bootstrap4 %}
+{% load staticfiles %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'vue/vue.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+        {% css_link 'app/schportal/css/portal.css' %}
+        {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        {% component 'app/standard_components/components/vs_editor.js' %}
+        {% component 'app/standard_components/components/d3.js' %}
+{% endblock %}
+{% block component_init %}
+        component_init = [ "vs_editor", "d3",  ]
+{% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+{% endblock %}
+
