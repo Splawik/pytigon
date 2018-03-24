@@ -4,6 +4,7 @@ ldap3
 django_python3_ldap
 django-bootstrap4
 django_select2
+django-cors-headers
 whitenoise
 transcrypt
 fpdf

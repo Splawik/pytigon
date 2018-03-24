@@ -16,7 +16,7 @@ import sys
 from schlib.schhtml.htmltools import superstrip
 
 
-from tools.models import *
+from schtools.models import *
 
 
 

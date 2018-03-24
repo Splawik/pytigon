@@ -313,7 +313,7 @@ class Page(JSONModel):
         super(Page, self).save(*args, **kwargs) 
     
     def transform_template_name(self, request, template_name):
-        return "wiki/edit_wiki_content.html"
+        return "schwiki/edit_wiki_content.html"
     
     def get_form(self, view, request, form_class, adding):
         return None

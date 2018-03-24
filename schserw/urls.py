@@ -85,6 +85,8 @@ else:
 if settings.DEBUG:
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
+SHOW_ERROR = False
+
 for app in settings.INSTALLED_APPS:
         if isinstance(app, AppConfigMod):
             pos = app.name
@@ -94,11 +96,14 @@ for app in settings.INSTALLED_APPS:
             or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
             or pos.startswith('bootstrap4'):
                 continue
+            if pos == 'schserw.schsys':
+                SHOW_ERROR = True
         elementy = pos.split('.')
         module = __import__(pos)
 
         if pos == 'pytigon':
             pass
+
         try:
                 module_name = '%s.urls' % str(pos)
                 m = importlib.import_module(module_name)
@@ -107,8 +112,9 @@ for app in settings.INSTALLED_APPS:
                 else:
                     urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
         except:
-            print(pos)
-            traceback.print_exc()
+            if SHOW_ERROR:
+                print(pos)
+                traceback.print_exc()
 
 #urlpatterns = _urlpatterns
 

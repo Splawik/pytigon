@@ -1,4 +1,4 @@
-% extends "wiki/wikiobj_edit.html"
+% extends "schwiki/wikiobj_edit.html"
 
 % load exfiltry
 % load exsyntax

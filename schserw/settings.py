@@ -150,6 +150,7 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -172,11 +173,12 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.admin',
     'django.forms',
-    'schserw.schsys',
     'django.contrib.staticfiles',
     'django_select2',
-    'bootstrap4',    
-    ]
+    'bootstrap4',
+    'corsheaders',
+    'schserw.schsys',
+]
 
 if platform_name()!='Android':
     INSTALLED_APPS.append('channels')
@@ -293,6 +295,12 @@ def DEFAULT_FILE_STORAGE_FS():
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 OFFLINE_SUPPORT = False
+
+CORS_ORIGIN_WHITELIST = (
+    'null',
+)
+
+#CORS_ORIGIN_ALLOW_ALL = True
 
 try:
     from schserw.settings_local import *
