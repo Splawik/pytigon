@@ -300,7 +300,8 @@ CORS_ORIGIN_WHITELIST = (
     'null',
 )
 
-#CORS_ORIGIN_ALLOW_ALL = True
+if platform_name()=='Android':
+   CORS_ORIGIN_ALLOW_ALL = True
 
 try:
     from schserw.settings_local import *

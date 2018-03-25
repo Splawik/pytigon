@@ -38,6 +38,7 @@ from schlib.schdjangoext.django_init import AppConfigMod
 
 import schserw.schsys.views
 from schlib.schdjangoext.tools import make_href
+from schlib.schtools.platform_info import platform_name
 
 urlpatterns = [
     url('schsys/jsi18n/$', django.views.i18n.JavaScriptCatalog, {'packages': ('django.conf', )}),
@@ -82,7 +83,7 @@ else:
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
     urlpatterns.append(u)
 
-if settings.DEBUG:
+if settings.DEBUG or platform_name()=='Android':
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
 SHOW_ERROR = False
