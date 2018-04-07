@@ -1,0 +1,28 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+% load staticfiles
+
+%% js_extrascipts
+    {{block.super}}
+    
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+    
+
+%% body_footer
+    {{block.super}}
+    
+
+%% component_init
+     .component_init = [] 

@@ -1,0 +1,53 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Instalation'
+        {{ block.super }}
+
+%% list_content_header
+    % if status != 2:
+        {{ block.super }}
+
+%% list_content_header_first_row
+    % if status == 1:
+        div class=row 
+            div class=jumbotron
+                p...{{readmedata|markdown|safe}}
+        div class=row
+            div class=card
+                div class=card-header...License
+                div class=card-block pre-scrollable,,,style=padding:0 1rem;
+                    p class=card-text...{{licensedata|markdown|safe}}
+        br 
+
+
+%% list_content_header_third_row
+    br
+        
+%% form_table_filter
+    % if status:
+        % if status == 1:
+            input type=hidden,,,name=status,,,id=id_status,,,value=1
+            % inline_form:
+                .accept_license
+    % else:
+        input type=hidden,,,name=status,,,id=id_status,,,value=
+        % inline_form:
+            .ptig
+
+%% form_content_button
+    button type=submit,,,value=_(Next),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Next)
+        span class=fa fa-arrow-right
+
+%% user_header
+    th...Instalation report
+
+%% user_row
+    tr
+        td... {{object}}
+
