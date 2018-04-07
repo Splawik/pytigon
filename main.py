@@ -36,6 +36,21 @@ CTX  = None
 MAX_SEL_APP = 10
 FRAGMENT = False
 
+
+p1 = p2 = None
+if 'SECONDARY_STORAGE' in os.environ:
+    p1 = os.path.join(os.environ['SECONDARY_STORAGE'], ".pytigon")
+if 'EXTERNAL_STORAGE' in os.environ:
+    p2 = os.path.join(os.environ['EXTERNAL_STORAGE'], ".pytigon")
+if p1:
+    if os.path.exists(p2):
+        STORAGE = p2[:-8]
+    else:
+        STORAGE = p1[:-8]
+else:
+    STORAGE = p2[:-8]
+
+
 class PytigonWebViewClientCallback(PythonJavaClass):
     __javainterfaces__ = [ 'tk/pytigon/libpytigon/PytigonWebViewClientCallback' ]
     __javacontext__ = 'app'
@@ -86,8 +101,11 @@ class InterfaceManager(BoxLayout):
         self.show_first_form()
 
     def  show_first_form(self):
-        x = [ pos for pos in os.listdir(os.path.join(self.base_path, "app_pack")) if not pos.startswith('_')  ]
+        global STORAGE
+        x = [ pos for pos in os.listdir(os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")) if not pos.startswith('_')  ]
+        print("python:Pytigon:F0:", os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack"))
         if len(x)>1:             
+            print("python:Pytigon:F1")
             if len(x)>MAX_SEL_APP:
                 dy = MAX_SEL_APP - 1
             else:
@@ -108,9 +126,12 @@ class InterfaceManager(BoxLayout):
                 spinner.bind(text=self.spinner_callback)
                 self.add_widget(spinner)
         else:
+            print("python:Pytigon:F2", x)            
             if len(x)>0:
+                print("python:Pytigon:F3")
                 self.on_app_chosen(x[0])
             else:
+                print("python:Pytigon:F4")
                 self.on_app_chosen()
         
 

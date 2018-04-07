@@ -108,7 +108,8 @@ class InstallWizard(Wizard):
 
 
 def install(pti, app_name):
-    try:
+    #try:
+    if True:
         zip_file = zipfile.ZipFile(str(pti))
         l = zip_file.open('LICENSE.txt')
         licence_txt = l.read().decode('utf-8')
@@ -121,6 +122,7 @@ def install(pti, app_name):
             return True
         else:
             return False
-    except:
+    #except:
+    else:
         wx.MessageBox(_('Installation error!'), _('Installation'))
         return False

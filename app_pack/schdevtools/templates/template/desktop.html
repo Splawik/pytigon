@@ -1,0 +1,57 @@
+{% extends 'template/desktop_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load bootstrap4 %}
+{% load staticfiles %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'vue/vue.js' %}
+        {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
+        {% jscript_link 'app/schdevtools/js/test_python.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+        {% css_link 'app/schdevtools/css/style.css' %}
+        {% css_link 'app/schdevtools/css/test_icss.css' %}
+        {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        {% component 'app/schdevtools/components/test.js' %}
+        {% component 'app/standard_components/components/txtarea_editor.js' %}
+        {% component 'app/standard_components/components/video-js.js' %}
+        {% component 'app/standard_components/components/vs_editor.js' %}
+        {% component 'app/standard_components/components/handsontable.js' %}
+        {% component 'app/standard_components/components/d3.js' %}
+        {% component 'app/standard_components/components/leaflet.js' %}
+        {% component 'app/standard_components/components/pivottable.js' %}
+        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/summernote.js' %}
+        {% component 'app/standard_components/components/plotly.js' %}
+{% endblock %}
+{% block component_init %}
+        component_init = [ "test", "txtarea_editor", "video-js", "vs_editor", "handsontable", "d3", "leaflet", "pivottable", "code_editor", "summernote", "plotly",  ]
+{% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+{% endblock %}
+{% block js_app_init %}
+        db_struct = [ ["devparam", {"keyPath": "key"}] ];
+        init_db(db_struct);
+        devtools_sync = function(run_after) {
+            console.log("SYNC!");
+            run_after("OK");
+        }
+        sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
+        init_sync(sync_struct);
+        {{ block.super }}
+{% endblock %}
+{% block logo %}
+        <span class="logo-lg">
+                <img src="{{base_path}}static/favicon.ico" style="height:100%;"></img>
+                <span class="txt3d text-white" style="font-size:1rem;">
+                        Pytigon - dev tools
+                </span>
+        </span>
+{% endblock %}
+

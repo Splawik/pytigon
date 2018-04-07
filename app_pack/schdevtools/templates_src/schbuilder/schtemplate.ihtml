@@ -1,0 +1,38 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+        
+%% all
+    %with form_width=960 form_height=1200 show_title_bar=0 title=_("Templates")
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row _("New template")
+
+
+%% list_row_header
+    th..._(Name)
+
+
+%% list_row
+    td...{{object.name}}
+
+
+%% list_row_actions
+    % row_actions:
+        .field_edit/template_code,Code,[|client://mimetypes/x-office-presentation.png],_top
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:
