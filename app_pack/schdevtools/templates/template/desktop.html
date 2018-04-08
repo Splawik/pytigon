@@ -17,20 +17,20 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'app/schdevtools/components/test.js' %}
-        {% component 'app/standard_components/components/txtarea_editor.js' %}
-        {% component 'app/standard_components/components/video-js.js' %}
-        {% component 'app/standard_components/components/vs_editor.js' %}
-        {% component 'app/standard_components/components/handsontable.js' %}
-        {% component 'app/standard_components/components/d3.js' %}
-        {% component 'app/standard_components/components/leaflet.js' %}
         {% component 'app/standard_components/components/pivottable.js' %}
-        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/d3.js' %}
+        {% component 'app/standard_components/components/txtarea_editor.js' %}
         {% component 'app/standard_components/components/summernote.js' %}
+        {% component 'app/standard_components/components/code_editor.js' %}
+        {% component 'app/standard_components/components/vs_editor.js' %}
         {% component 'app/standard_components/components/plotly.js' %}
+        {% component 'app/standard_components/components/handsontable.js' %}
+        {% component 'app/standard_components/components/video-js.js' %}
+        {% component 'app/schdevtools/components/test.js' %}
+        {% component 'app/standard_components/components/leaflet.js' %}
 {% endblock %}
 {% block component_init %}
-        component_init = [ "test", "txtarea_editor", "video-js", "vs_editor", "handsontable", "d3", "leaflet", "pivottable", "code_editor", "summernote", "plotly",  ]
+        component_init = [ "pivottable", "d3", "txtarea_editor", "summernote", "code_editor", "vs_editor", "plotly", "handsontable", "video-js", "test", "leaflet",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

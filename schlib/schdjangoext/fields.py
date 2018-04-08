@@ -201,6 +201,9 @@ class HiddenForeignKey(models.ForeignKey):
         field.widget.choices = None
         return field
 
+class ManyToManyField(models.ManyToManyField):
+    pass
+
 
 class ManyToManyFieldAlternateRel(models.ManyToManyField):
     """Extended version of django models.ManyToManyField class."""
