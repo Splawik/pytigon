@@ -53,9 +53,9 @@ from schlib.schtools.platform_info import platform_name
 if platform_name()=='Android':
     p1 = p2 = None
     if 'SECONDARY_STORAGE' in environ:
-        p1 = os.path.join(environ['SECONDARY_STORAGE'], ".pytigon")
+        p1 = os.path.join(environ['SECONDARY_STORAGE'], "pytigon_data")
     if 'EXTERNAL_STORAGE' in environ:
-        p2 = os.path.join(environ['EXTERNAL_STORAGE'], ".pytigon")
+        p2 = os.path.join(environ['EXTERNAL_STORAGE'], "pytigon_data")
     if p1:
         if os.path.exists(p2):
             DATA_PATH = p2

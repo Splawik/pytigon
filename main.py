@@ -39,16 +39,16 @@ FRAGMENT = False
 
 p1 = p2 = None
 if 'SECONDARY_STORAGE' in os.environ:
-    p1 = os.path.join(os.environ['SECONDARY_STORAGE'], ".pytigon")
+    p1 = os.path.join(os.environ['SECONDARY_STORAGE'], "pytigon_data")
 if 'EXTERNAL_STORAGE' in os.environ:
-    p2 = os.path.join(os.environ['EXTERNAL_STORAGE'], ".pytigon")
+    p2 = os.path.join(os.environ['EXTERNAL_STORAGE'], "pytigon_data")
 if p1:
     if os.path.exists(p2):
-        STORAGE = p2[:-8]
+        STORAGE = p2[:-12]
     else:
-        STORAGE = p1[:-8]
+        STORAGE = p1[:-12]
 else:
-    STORAGE = p2[:-8]
+    STORAGE = p2[:-12]
 
 
 class PytigonWebViewClientCallback(PythonJavaClass):
