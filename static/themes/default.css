@@ -298,7 +298,7 @@ div.tab-content .modal-dialog-inline {
   position: relative;
   left: 0px;
   right: 0px;
-  top: -35px; }
+  top: 0px; }
 
 /* login form */
 .login_background {

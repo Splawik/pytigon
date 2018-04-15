@@ -37,9 +37,8 @@ class AppConfigMod(AppConfig):
         if module_has_submodule(self.module, MODELS_MODULE_NAME):
             for _mod in self.models:
                 mod = self.models[_mod]
-                if type(mod) != str and mod._meta.app_label == self.name:
-                    return
-
+                #if type(mod) != str and mod._meta.app_label == self.name:
+                #    return
             models_module_name = '%s.%s' % (self.name, MODELS_MODULE_NAME)
             try:
                 self.models_module = import_module(models_module_name)

@@ -49,8 +49,10 @@ class FSStorage(Storage):
     #@unwrap_errors
     def _save(self, name, content):
         with unwrap_errors(name):
-            self.fs.makedir(dirname(name), allow_recreate=True, recursive=True)
-            self.fs.setcontents(name, content)
+            #self.fs.makedir(dirname(name), allow_recreate=True, recursive=True)
+            self.fs.makedirs(dirname(name), recreate=True)
+            #self.fs.setcontents(name, content)
+            self.fs.setfile(name, content)
         return name
 
     @unwrap_errors

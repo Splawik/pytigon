@@ -219,7 +219,8 @@ def ajax_get(url, complete, process_req=None):
                 reader = __new__(FileReader())
 
                 def _on_reader_load():
-                    if req.status != 200:
+                    if req.status != 200 and req.status != 0:
+                        console.log(reader.result)
                         window.open().document.write(reader.result)
                         complete("Error - details on new page")
                     else:
@@ -228,7 +229,8 @@ def ajax_get(url, complete, process_req=None):
                 reader.onload = _on_reader_load
                 reader.readAsText(req.response)
         else:
-            if req.status != 200:
+            if req.status != 200 and req.status != 0:
+                console.log(req.response)
                 window.open().document.write(req.response)
                 complete("Error - details on new page")
             else:
@@ -270,7 +272,8 @@ def _req_post(req, url, data, complete):
                 reader = __new__(FileReader())
 
                 def _on_reader_load():
-                    if req.status != 200:
+                    if req.status != 200 and req.status != 0:
+                        console.log(reader.result)
                         window.open().document.write(reader.result)
                         complete("Error - details on new page")
                     complete(reader.result)
@@ -278,7 +281,8 @@ def _req_post(req, url, data, complete):
                 reader.onload = _on_reader_load
                 reader.readAsText(req.response)
         else:
-            if req.status != 200:
+            if req.status != 200 and req.status != 0:
+                console.log(req.response)
                 window.open().document.write(req.response)
                 complete("Error - details on new page")
             complete(req.response)

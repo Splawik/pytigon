@@ -178,6 +178,7 @@ def sync_and_run(tbl, fun):
                 time = x['TIME']
                 get_table("param", _on_open_param, False)
             except:
+                console.log(responseText)
                 window.open().document.write(responseText)
                 #win = window.open("data:text/html," + responseText, "_blank", "width=200,height=100")
                 #win.focus()

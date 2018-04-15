@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-03-03 21:00:35
+// Transcrypt'ed from Python, 2018-04-15 16:05:35
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2536,6 +2536,8 @@ function pytigon () {
 									get_table ('param', _on_open_param, false);
 								}
 								catch (__except0__) {
+									console.log ('Y1');
+									console.log (responseText);
 									window.open ().document.write (responseText);
 								}
 							};
@@ -3912,7 +3914,8 @@ function pytigon () {
 								else {
 									var reader = new FileReader ();
 									var _on_reader_load = function () {
-										if (req.status != 200) {
+										if (req.status != 200 && req.status != 0) {
+											console.log (reader.result);
 											window.open ().document.write (reader.result);
 											complete ('Error - details on new page');
 										}
@@ -3924,7 +3927,8 @@ function pytigon () {
 									reader.readAsText (req.response);
 								}
 							}
-							else if (req.status != 200) {
+							else if (req.status != 200 && req.status != 0) {
+								console.log (req.response);
 								window.open ().document.write (req.response);
 								complete ('Error - details on new page');
 							}
@@ -3964,7 +3968,8 @@ function pytigon () {
 								else {
 									var reader = new FileReader ();
 									var _on_reader_load = function () {
-										if (req.status != 200) {
+										if (req.status != 200 && req.status != 0) {
+											console.log (reader.result);
 											window.open ().document.write (reader.result);
 											complete ('Error - details on new page');
 										}
@@ -3975,7 +3980,8 @@ function pytigon () {
 								}
 							}
 							else {
-								if (req.status != 200) {
+								if (req.status != 200 && req.status != 0) {
+									console.log (req.response);
 									window.open ().document.write (req.response);
 									complete ('Error - details on new page');
 								}
@@ -4278,7 +4284,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
