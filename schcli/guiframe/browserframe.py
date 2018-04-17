@@ -45,10 +45,10 @@ class SchBrowserFrame(SchBaseFrame):
         wx.GetApp().SetTopWindow(self)
 
         self.init_plugins()
-        self.Show()
         self.Bind(wx.EVT_IDLE, self.on_idle)
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_SHOW, self.on_show)
+        self.Show()
         wx.CallAfter(self.SetSize, (800,600))
 
     def on_show(self, event):
