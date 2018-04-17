@@ -27,22 +27,22 @@ import threading
 
 import django
 
-from channels import DEFAULT_CHANNEL_LAYER, channel_layers
-from channels.asgi import get_channel_layer
-from channels.handler import ViewConsumer
-from channels.worker import Worker
+#from channels import DEFAULT_CHANNEL_LAYER, channel_layers
+#from channels.asgi import get_channel_layer
+#from channels.handler import ViewConsumer
+#from channels.worker import Worker
 
 import schserw.schsys.initdjango
 
 
-class WorkerThread(threading.Thread):
-    def __init__(self, channel_layer):
-        super(WorkerThread, self).__init__()
-        self.channel_layer = channel_layer
+#class WorkerThread(threading.Thread):
+#    def __init__(self, channel_layer):
+#        super(WorkerThread, self).__init__()
+#        self.channel_layer = channel_layer
 
-    def run(self):
-        worker = Worker(channel_layer=self.channel_layer, signal_handlers=False)
-        worker.run()
+#    def run(self):
+#        worker = Worker(channel_layer=self.channel_layer, signal_handlers=False)
+#        worker.run()
 
 def log_action(protocol, action, details):
     msg = "[%s] " % datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -56,23 +56,33 @@ def log_action(protocol, action, details):
 
 
 def _run(addr, port, prod):
-    if prod:
-        channel_layer = get_channel_layer()
-    else:
-        channel_layer = channel_layers[DEFAULT_CHANNEL_LAYER]
-        channel_layer.router.check_default(
-            http_consumer=ViewConsumer(),
-        )
-        for _ in range(4):
-            worker = WorkerThread(channel_layer)
-            worker.daemon = True
-            worker.start()
+    #if True or prod:
+    #    channel_layer = get_channel_layer()
+    #else:
+    #    channel_layer = channel_layers[DEFAULT_CHANNEL_LAYER]
+    #    channel_layer.router.check_default(
+    #        http_consumer=ViewConsumer(),
+    #    )
+    #    for _ in range(4):
+    #        worker = WorkerThread(channel_layer)
+    #        worker.daemon = True
+    #        worker.start()
     try:
         from daphne.server import Server
+        from daphne.endpoints import build_endpoint_description_strings
+        from channels.routing import get_default_application
+
+        #application = django.core.handlers.wsgi.WSGIHandler()
+
+        print(addr, port)
+        endpoints = build_endpoint_description_strings(host=addr, port=int(port))
+
         server = Server(
-            channel_layer=channel_layer,
-            host=addr,
-            port=int(port),
+            #channel_layer=channel_layer,
+            get_default_application(),
+            endpoints=endpoints,
+            #host=addr,
+            #port=int(port),
             signal_handlers=False,
             action_logger=log_action,
             http_timeout=60,

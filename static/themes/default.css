@@ -220,6 +220,16 @@ body:not(.modal-open) .dark_background {
 .inline-table-modal-body, .inline-update-modal-body {
   padding: 30px; }
 
+.modal-fullscreen .modal-header {
+  padding-bottom: 2rem; }
+
+.modal-fullscreen .modal-footer {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem; }
+
+.modal-fullscreen .inline-table-modal-body, .modal-fullscreen .inline-update-modal-body {
+  overflow-y: auto; }
+
 .group_filefield label.control-label {
   transform: none;
   top: -10p;
@@ -247,7 +257,8 @@ div.form_delete, div.form_info {
 
 .form-inline .form-group select.form-control {
   padding-top: 2px;
-  padding-bottom: 2px; }
+  padding-bottom: 2px;
+  padding-right: 1rem; }
 
 .form-inline .form-group label {
   padding-right: 8px; }

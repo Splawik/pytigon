@@ -28,25 +28,25 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/pivottable.js' %}
-    {% component 'app/standard_components/components/d3.js' %}
-    {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/summernote.js' %}
-    {% component 'app/standard_components/components/code_editor.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/plotly.js' %}
     {% component 'app/standard_components/components/handsontable.js' %}
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/code_editor.js' %}
+    {% component 'app/standard_components/components/d3.js' %}
     {% component 'app/standard_components/components/leaflet.js' %}
+    {% component 'app/standard_components/components/pivottable.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
+    {% component 'app/standard_components/components/summernote.js' %}
+    {% component 'app/standard_components/components/plotly.js' %}
+    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/video-js.js' %}
+    {% component 'app/standard_components/components/txtarea_editor.js' %}
     
     
 
 %% component_init
-    .component_init = [ "pivottable", "d3", "txtarea_editor", "summernote", "code_editor", "vs_editor", "plotly", "handsontable", "video-js", "test", "leaflet",  ] 
+    .component_init = [ "handsontable", "code_editor", "d3", "leaflet", "pivottable", "vs_editor", "summernote", "plotly", "test", "video-js", "txtarea_editor",  ] 
 
 %% botstrap_css
-    {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 
 %% js_app_init
     .db_struct = [ ["devparam", {"keyPath": "key"}] ];
