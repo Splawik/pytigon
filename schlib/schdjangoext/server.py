@@ -72,6 +72,9 @@ def _run(addr, port, prod):
         from daphne.endpoints import build_endpoint_description_strings
         from channels.routing import get_default_application
 
+        django.setup()
+        schserw.schsys.initdjango.init_django()
+
         #application = django.core.handlers.wsgi.WSGIHandler()
 
         print(addr, port)
@@ -109,8 +112,6 @@ def run_server(address, port, prod=True):
         processes (with redis for example). If prod == False - server is runing in development mode, 4 workers are
         started in the some process.
     """
-    django.setup()
-    schserw.schsys.initdjango.init_django()
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('Start server: ', address, port)

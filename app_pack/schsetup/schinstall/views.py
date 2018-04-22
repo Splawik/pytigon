@@ -33,7 +33,7 @@ PFORM = form_with_perms('schinstall')
 
 class upload_ptig(forms.Form):
     status = forms.CharField(label=_('Status'), required=False, max_length=None, min_length=None)
-    ptig = forms.FileField(label=_('Pytigon install file (*.ptig)'), required=False, )
+    ptig = forms.FileField(label=_('Pytigon install file (*.ptig)'), required=False, widget=forms.ClearableFileInput(attrs={'accept': '.ptig'}))
     accept_license = forms.BooleanField(label=_('Accept license'), required=True, initial=False,)
     
     def process(self, request, queryset=None):

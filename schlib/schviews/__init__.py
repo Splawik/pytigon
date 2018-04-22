@@ -759,7 +759,10 @@ class GenericRows(object):
                     if 'data' in ret:
                         data = ret['data'].copy()
                         for key, value in self.init_form.items():
+                            if key in data and data[key]:
+                                continue
                             data[key] = value
+
                         ret.update({'data': data})
 
                 return ret
