@@ -7,7 +7,7 @@
         %% header_new_button
             div class=row
                 div class=tr d-inline
-                    % new_row "+ "|append_str:rep_def.description "" "" "" "-" "../../../../new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            
+                    % new_row "+ "|append_str:rep_def.description "" "" "" "-" "{{base_path}}schreports/new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            
         
         div class=row
             %% header
@@ -42,4 +42,4 @@
         %% footer_new_button
             div class=row
                 div class=tr d-inline
-                    % new_row "+ "|append_str:rep_def.description "" "" "" "-" "../../../../new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            
+                    % new_row "+ "|append_str:rep_def.description "" "" "" "-" "{{base_path}}schreports/new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            

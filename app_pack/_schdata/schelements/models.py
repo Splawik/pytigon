@@ -670,7 +670,7 @@ admin.site.register(DocItem)
 
 
 class DocRegStatus( models.Model):
-
+    
     class Meta:
         verbose_name = _("Document status")
         verbose_name_plural = _("Document status")
@@ -679,9 +679,9 @@ class DocRegStatus( models.Model):
 
 
         ordering = ['id']
-
-
-
+        
+        
+    
 
     parent = ext_models.HiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     order = models.IntegerField('Order', null=False, blank=False, editable=True, )
@@ -692,14 +692,14 @@ class DocRegStatus( models.Model):
     undo_proc = models.TextField('Undo status procedure', null=True, blank=True, editable=False, )
     can_set_proc = models.TextField('Check if status can be set', null=True, blank=True, editable=False, )
     can_undo_proc = models.TextField('Check if status can be removed', null=True, blank=True, editable=False, )
+    
 
-
-
+    
 admin.site.register(DocRegStatus)
 
 
 class DocHeadStatus(JSONModel):
-
+    
     class Meta:
         verbose_name = _("Document head status")
         verbose_name_plural = _("Documents head status")
@@ -708,18 +708,18 @@ class DocHeadStatus(JSONModel):
 
 
         ordering = ['id']
-
-
-
+        
+        
+    
 
     parent = ext_models.HiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     date = models.DateTimeField('Date', null=False, blank=False, editable=True, )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     description = models.CharField('Description', null=True, blank=True, editable=False, max_length=64)
     operator = models.CharField('Operator', null=True, blank=True, editable=True, max_length=32)
+    
 
-
-
+    
 admin.site.register(DocHeadStatus)
 
 
