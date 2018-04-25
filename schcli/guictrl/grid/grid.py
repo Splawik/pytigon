@@ -90,7 +90,10 @@ class SchTableGrid(wx.grid.Grid):
                 self.AutoSizeColumns(False)
                 self.AutoSizeRows(True)
 
-        self.SetSelectionMode(wx.grid.Grid.SelectRows)
+        try:
+            self.SetSelectionMode(wx.grid.Grid.SelectRows)
+        except:
+            self.SetSelectionMode(wx.grid.Grid.GridSelectRows)
 
         self.typ = typ
         self.readonly = False
