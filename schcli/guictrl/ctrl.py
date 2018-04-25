@@ -683,6 +683,7 @@ class TABLE(SchGridPanel, SchBaseCtrl):
         return SchGridPanel.GetMinSize(self)
 
     def process_refr_data(self, **kwds):
+        self.grid.last_action = ""
         self.init_base(kwds)
         tdata = self.get_tdata()
         return self.do_refresh(tdata)
@@ -699,6 +700,8 @@ class TABLE(SchGridPanel, SchBaseCtrl):
                 self.grid.MakeCellVisible(newRow, 0)
         else: # self.grid.last_action == 'edit':
             if oldRow < self.grid.GetTable().GetNumberRows():
+                if oldRow<0:
+                    oldRow = 0
                 self.grid.SetGridCursor(oldRow, 0)
                 self.grid.MakeCellVisible(oldRow, 0)
 

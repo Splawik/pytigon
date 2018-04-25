@@ -532,8 +532,10 @@ def popup_min_max(elm, max=True):
                 maximize.show()
         if max:
             popup.addClass('modal-fullscreen')
+            popup.addClass('modal-open')
         else:
             popup.removeClass('modal-fullscreen')
+            popup.removeClass('modal-open')
         jQuery(window).trigger('resize')
 
 def popup_minimize(elem):

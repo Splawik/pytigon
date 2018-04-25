@@ -25,16 +25,16 @@ def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
     import schcli.guictrl.ctrl
     from base64 import b64encode
 
-    if platform.system() == "Linux":
+    #if platform.system() == "Linux":
+    #    from .wxwebview import init_plugin_web_view
+    #    return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
+    #else:
+    try:
+        from .cef import init_plugin_cef
+        return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
+    except:
         from .wxwebview import init_plugin_web_view
         return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
-    else:
-        try:
-            from .cef import init_plugin_cef
-            return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
-        except:
-            from .wxwebview import init_plugin_web_view
-            return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
 
     def Component(parent, **kwds):
         http = wx.GetApp().get_http(parent)

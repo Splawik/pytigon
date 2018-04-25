@@ -100,7 +100,12 @@ def cef_init():
             },
             "ignore_certificate_errors": True,
         }
-        cef.Initialize(settings)
+        switches = {
+            #"disable-gpu": "1",
+            "no-proxy-server": "1",
+        }
+
+        cef.Initialize(settings, switches=switches)
 
         frame.run_on_close.append(cef_close)
 

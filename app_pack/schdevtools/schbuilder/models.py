@@ -131,7 +131,7 @@ Field_CHOICES = (
     ("ImageField","ImageField"),
     ("IntegerField","IntegerField"),
     ("GenericIPAddressField","GenericIPAddressField"),
-    ("NullBooleanField","NullBooleanField"),
+    ("NullBooleanField","NullBooleanField!"),
     ("PositiveIntegerField","PositiveIntegerField"),
     ("PositiveSmallIntegerField","PositiveSmallIntegerField"),
     ("SlugField","SlugField"),
@@ -294,9 +294,9 @@ class SChAppSet( models.Model):
     plugins = models.CharField('Plugins', null=True, blank=True, editable=True, max_length=4096)
     gui_type = models.CharField('Gui type', null=False, blank=False, editable=True, choices=Gui_CHOICES,max_length=32)
     gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
-    login_required = models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
-    public = models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
-    main = models.NullBooleanField('Main pack', null=True, blank=True, editable=True, default=False,)
+    login_required = ext_models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
+    public = ext_models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
+    main = ext_models.NullBooleanField('Main pack', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
@@ -864,7 +864,7 @@ class SChTemplate( models.Model):
 
     parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
-    direct_to_template = models.NullBooleanField('Direct to template', null=True, blank=True, editable=True, )
+    direct_to_template = ext_models.NullBooleanField('Direct to template', null=True, blank=True, editable=True, )
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=64)
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
@@ -1062,7 +1062,7 @@ class SChFormField( models.Model):
     parent = ext_models.HiddenForeignKey(SChForm, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=FormField_CHOICES,max_length=64)
-    required = models.NullBooleanField('Required', null=True, blank=True, editable=True, )
+    required = ext_models.NullBooleanField('Required', null=True, blank=True, editable=True, )
     label = models.CharField('Label', null=False, blank=False, editable=True, max_length=64)
     initial = models.CharField('Initial', null=True, blank=True, editable=True, max_length=256)
     widget = models.CharField('Widget', null=True, blank=True, editable=True, max_length=64)

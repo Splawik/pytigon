@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-04-20 17:32:06
+// Transcrypt'ed from Python, 2018-04-25 21:37:36
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3284,9 +3284,11 @@ function pytigon () {
 							}
 							if (max) {
 								popup.addClass ('modal-fullscreen');
+								popup.addClass ('modal-open');
 							}
 							else {
 								popup.removeClass ('modal-fullscreen');
+								popup.removeClass ('modal-open');
 							}
 							jQuery (window).trigger ('resize');
 						}
@@ -3353,7 +3355,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenu', {
@@ -3769,7 +3770,7 @@ function pytigon () {
 							}
 						};
 						elem2.find ('.inline_frame').each (load_inline_frame);
-						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': 'calc(100% - 42px)'}));
+						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': 'calc(100% - 48px)'}));
 						var init_select2_ctrl = function () {
 							var sel2 = jQuery (this);
 							var src = sel2.closest ('.input-group');
