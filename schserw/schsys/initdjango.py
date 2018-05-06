@@ -24,6 +24,10 @@ from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
 from copy import deepcopy
 from django.forms.forms import BaseForm
+from django.conf import settings
+import os
+import shutil
+from schlib.schfs.vfstools import extractall
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
 
@@ -75,11 +79,15 @@ def fields_as_table(self):
 
 django.forms.models.ModelForm.fields_as_table = fields_as_table
 
-
 mimetypes.add_type('image/svg+xml', '.svg')
 
-
 def init_django():
-    return True
-
-
+    p = settings.APP_PACK_PATH
+    if not os.path.exists(p):
+        os.makedirs(p)
+        p2 = os.path.join(settings.ROOT_PATH, 'app_pack')
+        if os.path.exists(p2):
+            shutil.copytree(p2, p)
+        else:
+            zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
+            extractall(zip_file, p)

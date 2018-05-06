@@ -75,7 +75,7 @@ else:
 
 TEMP_PATH = tempfile.gettempdir()
 
-if platform_name()=='Android':
+if platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
     APP_PACK_PATH = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_pack')
 else:
     APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')

@@ -20,6 +20,7 @@
 import sys
 import platform
 import os
+from os import environ
 
 
 def init_paths():
