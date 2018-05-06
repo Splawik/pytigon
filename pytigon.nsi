@@ -85,8 +85,8 @@ Section "pytigon - client"
   File /r  /x __pycache__ /x *.pyc /x *.pyo schcli\*.*
   SetOutPath $INSTDIR\schappdata
   File /r  /x __pycache__ /x *.pyc /x *.pyo schappdata\*.*
-  SetOutPath $INSTDIR\app_pack\_schmsg
-  File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schmsg\*.*
+  ;SetOutPath $INSTDIR\app_pack\_schmsg
+  ;File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schmsg\*.*
   SetOutPath $INSTDIR\app_pack\_schtasks
   File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schtasks\*.*
   SetOutPath $INSTDIR\app_pack\_schtools
