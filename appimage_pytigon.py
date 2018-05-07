@@ -22,6 +22,6 @@ from schcli.pytigon import main
 from os import environ
 
 if __name__ == '__main__':
-    environ['PYTIGON_APP_IMAGE'] = 1
+    environ['PYTIGON_APP_IMAGE'] = '1'
     main(sys.argv[1:])
 
