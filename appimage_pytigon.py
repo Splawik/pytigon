@@ -17,11 +17,10 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+from os import environ
+environ['PYTIGON_APP_IMAGE'] = '1'
 import sys
 from schcli.pytigon import main
-from os import environ
 
 if __name__ == '__main__':
-    environ['PYTIGON_APP_IMAGE'] = '1'
     main(sys.argv[1:])
-
