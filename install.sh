@@ -22,18 +22,18 @@ else
     ./python/Scripts/pip install -r requirements.txt
     curl -L -o ./python/lxml-3.4.4-cp35-none-win32.whl https://pypi.anaconda.org/giumas/simple/lxml/3.4.4/lxml-3.4.4-cp35-none-win32.whl
     ./python/Scripts/pip install ./python/lxml-3.4.4-cp35-none-win32.whl
-    curl -L -o ext_lib_cli_win.zip http://pytigon.tk/download/ext_lib_cli_win.zip
+    curl -L -o ext_lib_cli_win.zip http://pytigon.cloud/download/ext_lib_cli_win.zip
     unzip ext_lib_cli_win.zip
     rm ext_lib_cli_win.zip    
     curl -L -o ./ext_prg/tcc-0.9.26-win32-bin.zip http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26-win32-bin.zip
     unzip ./ext_prg/tcc-0.9.26-win32-bin.zip -d ./ext_prg
     rm ./ext_prg/tcc-0.9.26-win32-bin.zip
-    curl -L -o ./ext_prg/LinkRes2Exe.zip http://pytigon.tk/download/LinkRes2Exe.zip
+    curl -L -o ./ext_prg/LinkRes2Exe.zip http://pytigon.cloud/download/LinkRes2Exe.zip
     unzip ./ext_prg/LinkRes2Exe.zip -d ./ext_prg
     rm ./ext_prg/LinkRes2Exe.zip
     ./ext_prg/tcc/tcc pytigon.c -ladvapi32
     ./ext_prg/LinkRes2Exe pytigon.res pytigon.exe
     ./ext_prg/tcc/tcc pytigon_cmd.c -ladvapi32
     ./ext_prg/LinkRes2Exe pytigon.res pytigon_cmd.exe
-    curl -L -o ./install/vcredist_x86.exe http://pytigon.tk/download/vcredist_x86.exe
+    curl -L -o ./install/vcredist_x86.exe http://pytigon.cloud/download/vcredist_x86.exe
 fi

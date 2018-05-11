@@ -944,7 +944,7 @@ def main(argv):
 
             -h, --help - show help
 
-            --href=<address> - address of http server, http://www.pytigon.tk for example
+            --href=<address> - address of http server, http://www.pytigon.cloud for example
 
             -p <parameters>, --param=<parameters> - parametres of request to http server
 
