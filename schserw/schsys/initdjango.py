@@ -24,7 +24,7 @@ from django.forms.widgets import TextInput, PasswordInput
 from django.db import models
 from copy import deepcopy
 from django.forms.forms import BaseForm
-from django.conf import settings
+
 import os
 import shutil
 from schlib.schfs.vfstools import extractall
@@ -81,8 +81,12 @@ django.forms.models.ModelForm.fields_as_table = fields_as_table
 
 mimetypes.add_type('image/svg+xml', '.svg')
 
-def init_django():
-    p = settings.APP_PACK_PATH
+def init_django(app_pack_path=None):
+    from django.conf import settings
+    if app_pack_path:
+        p = app_pack_path
+    else:
+        p = settings.APP_PACK_PATH
     if not os.path.exists(p):
         os.makedirs(p)
         p2 = os.path.join(settings.ROOT_PATH, 'app_pack')
