@@ -13,6 +13,8 @@ urlpatterns = [
     gen_row_action('PageObjectsConf', 'insert_object_to_editor', views.insert_object_to_editor),
     gen_tab_action('PageObjectsConf', 'edit_page_object', views.edit_page_object),
     gen_row_action('WikiConf', 'publish', views.publish),
+    url('(?P<q>.*)/search/$', views.search, {}),
+    
     
     
     

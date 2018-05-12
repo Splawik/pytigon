@@ -19,7 +19,7 @@
 
 """Module contains base views for pytigon applications"""
 
-from base64 import b32decode
+from base64 import b32decode, b32encode
 import os
 
 from django.conf import settings
@@ -367,3 +367,11 @@ def app_time_stamp(request, **argv):
         gmt = time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
         return {'TIME': gmt_str}
+
+
+def search(request, **argv):
+    q = request.POST.get("q", "")
+    q2 = b32encode(q.encode('utf-8')).decode('utf-8')
+    print("Q:", q2)
+    return HttpResponseRedirect(make_href((settings.SEARCH_PATH %  q2)+ "?only_content=1"))
+

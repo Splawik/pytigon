@@ -27,6 +27,7 @@ from schlib.schdjangoext.fastform import form_from_str
 from django.template.loader import select_template
 from schlib.schviews import make_path
 from schlib.schtools.schjson import json_loads, json_dumps
+from base64 import b32decode, b32encode
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -278,6 +279,19 @@ def publish(request, pk):
     pages = models.Page.objects.filter(subject=conf.subject, latest=False, published=True, operator=request.user.username).update(published=False)
     
     return { "OK": True, 'object_list': object_list }
+    
+
+@dict_to_template('schwiki/v_search.html')
+
+
+
+
+def search(request, q):
+    
+    search_txt = b32decode(q).decode('utf-8')
+    object_list = Page.objects.filter(content__iregex=search_txt)
+    
+    return { "object_list": object_list, 'q': search_txt }
     
 
 

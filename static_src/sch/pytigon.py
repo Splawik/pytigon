@@ -54,6 +54,7 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     jQuery(window).resize(datatable_onresize)
 
     def _on_submit(e):
+        self = jQuery(this)
         if jQuery(this).hasClass('DialogForm'):
             e.preventDefault()
             on_edit_ok(False, jQuery(this))
@@ -95,7 +96,12 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
             jQuery(this).attr('action', corect_href(remove_page_from_href(href)))
 
         def _on_submit2(data):
-            mount_html(window.ACTIVE_PAGE.page, data)
+            nonlocal href, self
+            if window.ACTIVE_PAGE:
+                mount_html(window.ACTIVE_PAGE.page, data)
+            else:
+                _on_menu_href(self, self.attr('title'), None, data)
+
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
             if window.WAIT_ICON2:
@@ -106,6 +112,8 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
     jQuery('#tabs2_content').on("submit", "form", _on_submit)
     jQuery('#dialog-form-modal').on("submit", "form", _on_submit)
+    jQuery('#search').on("submit", "form", _on_submit)
+
     #jQuery('#menu').perfectScrollbar()
 
     if jQuery('#menu').length > 0:
@@ -222,10 +230,14 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
 
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
-def _on_menu_href(elem, title=None, url=None):
+def _on_menu_href(elem, title=None, url=None, txt=None):
     if window.APPLICATION_TEMPLATE != 'traditional':
         if not title:
             title = jQuery.trim(jQuery(elem).text())
+        if txt:
+            value = jQuery("<div>"+txt+"</div>").find('title').text()
+            if value:
+                title = value
 
         menu = get_menu()
         classname = jQuery(elem).attr("class")
@@ -277,13 +289,16 @@ def _on_menu_href(elem, title=None, url=None):
                 jQuery('a.menu-href').removeClass('btn-warning')
                 jQuery(elem).addClass('btn-warning')
 
-            if window.WAIT_ICON:
-                window.WAIT_ICON.start()
+            if txt:
+                _on_new_win(txt)
             else:
-                window.WAIT_ICON2 = True
-                jQuery('#loading-indicator').show()
-            ajax_get(href2, _on_new_win)
-            jQuery('.navbar-ex1-collapse').collapse('hide')
+                if window.WAIT_ICON:
+                    window.WAIT_ICON.start()
+                else:
+                    window.WAIT_ICON2 = True
+                    jQuery('#loading-indicator').show()
+                ajax_get(href2, _on_new_win)
+                jQuery('.navbar-ex1-collapse').collapse('hide')
 
         jQuery(".auto-hide").trigger("click")
 

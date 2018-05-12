@@ -208,8 +208,8 @@ class PageObjectsConf( models.Model):
     app = models.CharField('Application', null=False, blank=False, editable=True, max_length=32)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=128)
-    inline_editing = models.NullBooleanField('Inline editing', null=False, blank=False, editable=True, default=False,)
-    inline_wiki = models.NullBooleanField('Inline wiki', null=False, blank=False, editable=True, default=False,)
+    inline_editing = ext_models.NullBooleanField('Inline editing', null=False, blank=False, editable=True, default=False,)
+    inline_wiki = ext_models.NullBooleanField('Inline wiki', null=False, blank=False, editable=True, default=False,)
     edit_form = models.TextField('Edit form', null=True, blank=True, editable=False, )
     load_fun = models.TextField('Load function', null=True, blank=True, editable=False, )
     save_fun = models.TextField('Save function', null=True, blank=True, editable=False, )
@@ -247,8 +247,8 @@ class Page(JSONModel):
     menu = models.CharField('Menu', null=True, blank=True, editable=True, max_length=64)
     operator = models.CharField('Operator', null=True, blank=True, editable=False, max_length=64)
     update_time = models.DateTimeField('Update time', null=False, blank=False, editable=False, default=datetime.now,)
-    published = models.NullBooleanField('Published', null=False, blank=False, editable=False, default=False,)
-    latest = models.NullBooleanField('Latest', null=False, blank=False, editable=False, default=True,)
+    published = ext_models.NullBooleanField('Published', null=False, blank=False, editable=False, default=False,)
+    latest = ext_models.NullBooleanField('Latest', null=False, blank=False, editable=False, default=True,)
     
 
     def save_from_request(self, request, view_type, param):

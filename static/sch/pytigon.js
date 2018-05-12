@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-04-25 21:37:36
+// Transcrypt'ed from Python, 2018-05-12 23:54:45
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3355,6 +3355,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'tabmenu', {
@@ -4451,6 +4452,7 @@ function pytigon () {
 			sync_and_run ('sys', _on_sync);
 			jQuery (window).resize (datatable_onresize);
 			var _on_submit = function (e) {
+				var self = jQuery (this);
 				if (jQuery (this).hasClass ('DialogForm')) {
 					e.preventDefault ();
 					on_edit_ok (false, jQuery (this));
@@ -4493,7 +4495,12 @@ function pytigon () {
 					jQuery (this).attr ('action', corect_href (remove_page_from_href (href)));
 				}
 				var _on_submit2 = function (data) {
-					mount_html (window.ACTIVE_PAGE.page, data);
+					if (window.ACTIVE_PAGE) {
+						mount_html (window.ACTIVE_PAGE.page, data);
+					}
+					else {
+						_on_menu_href (self, self.attr ('title'), null, data);
+					}
 					if (window.WAIT_ICON) {
 						window.WAIT_ICON.stop ();
 					}
@@ -4506,6 +4513,7 @@ function pytigon () {
 			};
 			jQuery ('#tabs2_content').on ('submit', 'form', _on_submit);
 			jQuery ('#dialog-form-modal').on ('submit', 'form', _on_submit);
+			jQuery ('#search').on ('submit', 'form', _on_submit);
 			if (jQuery ('#menu').length > 0) {
 				window.PS = new PerfectScrollbar ('#menu');
 				var _on_resize = function () {
@@ -4600,16 +4608,25 @@ function pytigon () {
 			window.init_start_wiki_page = _init_start_wiki_page;
 			_init_start_wiki_page ();
 		};
-		var _on_menu_href = function (elem, title, url) {
+		var _on_menu_href = function (elem, title, url, txt) {
 			if (typeof title == 'undefined' || (title != null && title .hasOwnProperty ("__kwargtrans__"))) {;
 				var title = null;
 			};
 			if (typeof url == 'undefined' || (url != null && url .hasOwnProperty ("__kwargtrans__"))) {;
 				var url = null;
 			};
+			if (typeof txt == 'undefined' || (txt != null && txt .hasOwnProperty ("__kwargtrans__"))) {;
+				var txt = null;
+			};
 			if (window.APPLICATION_TEMPLATE != 'traditional') {
 				if (!(title)) {
 					var title = jQuery.trim (jQuery (elem).text ());
+				}
+				if (txt) {
+					var value = jQuery (('<div>' + txt) + '</div>').find ('title').text ();
+					if (value) {
+						var title = value;
+					}
 				}
 				var menu = get_menu ();
 				var classname = jQuery (elem).attr ('class');
@@ -4667,15 +4684,20 @@ function pytigon () {
 						jQuery ('a.menu-href').removeClass ('btn-warning');
 						jQuery (elem).addClass ('btn-warning');
 					}
-					if (window.WAIT_ICON) {
-						window.WAIT_ICON.start ();
+					if (txt) {
+						_on_new_win (txt);
 					}
 					else {
-						window.WAIT_ICON2 = true;
-						jQuery ('#loading-indicator').show ();
+						if (window.WAIT_ICON) {
+							window.WAIT_ICON.start ();
+						}
+						else {
+							window.WAIT_ICON2 = true;
+							jQuery ('#loading-indicator').show ();
+						}
+						ajax_get (href2, _on_new_win);
+						jQuery ('.navbar-ex1-collapse').collapse ('hide');
 					}
-					ajax_get (href2, _on_new_win);
-					jQuery ('.navbar-ex1-collapse').collapse ('hide');
 				}
 				jQuery ('.auto-hide').trigger ('click');
 				return false;

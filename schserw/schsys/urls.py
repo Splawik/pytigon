@@ -91,4 +91,5 @@ urlpatterns = [
     url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>[\w_]+)/$',schserw.schsys.views.plugins),
 
     url('app_time_stamp/$', schserw.schsys.views.app_time_stamp, {}),
+    url('search/$', schserw.schsys.views.search, {}),
 ]

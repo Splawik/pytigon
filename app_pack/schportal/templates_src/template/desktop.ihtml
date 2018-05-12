@@ -34,4 +34,4 @@
     .component_init = [ "vs_editor", "d3",  ] 
 
 %% botstrap_css
-    {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

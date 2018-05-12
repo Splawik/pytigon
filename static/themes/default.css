@@ -16,6 +16,22 @@ not(.login_background) div.content-wrapper {
   padding: 10px 40px;
   margin: 10px 0px; }
 
+.nav li.search {
+  background-color: transparent !important; }
+  .nav li.search div.input-group {
+    color: white; }
+    .nav li.search div.input-group input.form-control {
+      height: 40px;
+      color: white; }
+    .nav li.search div.input-group input.form-control::placeholder {
+      color: white !important;
+      opacity: 1; }
+    .nav li.search div.input-group input.form-control::-ms-input-placeholder {
+      color: white !important; }
+  .nav li.search div.input-group-addon {
+    height: 40px;
+    padding-top: 12px; }
+
 /* Tab - close button on tab */
 #tabs2 {
   border-bottom: 0px; }

@@ -256,6 +256,8 @@ PYTHON_CONSOLE = sys.executable
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 
+SEARCH_PATH = "/schwiki/%s/search/"
+
 AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "schserw.routing.application"
