@@ -88,7 +88,6 @@ def init_django(app_pack_path=None, root_path=None):
     else:
         p = settings.APP_PACK_PATH
     if not os.path.exists(p):
-        os.makedirs(p)
         if root_path:
             p2 = os.path.join(root_path, 'app_pack')
         else:
@@ -103,4 +102,5 @@ def init_django(app_pack_path=None, root_path=None):
             else:
                 zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
             print("X3", zip_file)
+            os.makedirs(p)
             extractall(zip_file, p)
