@@ -90,8 +90,11 @@ def init_django(app_pack_path=None):
     if not os.path.exists(p):
         os.makedirs(p)
         p2 = os.path.join(settings.ROOT_PATH, 'app_pack')
+        print("X1", p2)
         if os.path.exists(p2):
+            print("X2", p2, p)
             shutil.copytree(p2, p)
         else:
             zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
+            print("X3", zip_file)
             extractall(zip_file, p)
