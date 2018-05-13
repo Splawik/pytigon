@@ -81,7 +81,7 @@ django.forms.models.ModelForm.fields_as_table = fields_as_table
 
 mimetypes.add_type('image/svg+xml', '.svg')
 
-def init_django(app_pack_path=None):
+def init_django(app_pack_path=None, root_path=None):
     from django.conf import settings
     if app_pack_path:
         p = app_pack_path
@@ -89,12 +89,18 @@ def init_django(app_pack_path=None):
         p = settings.APP_PACK_PATH
     if not os.path.exists(p):
         os.makedirs(p)
-        p2 = os.path.join(settings.ROOT_PATH, 'app_pack')
+        if root_path:
+            p2 = os.path.join(root_path, 'app_pack')
+        else:
+            p2 = os.path.join(settings.ROOT_PATH, 'app_pack')
         print("X1", p2)
         if os.path.exists(p2):
             print("X2", p2, p)
             shutil.copytree(p2, p)
         else:
-            zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
+            if root_path:
+                zip_file = os.path.join(root_path, "app_pack.zip")
+            else:
+                zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
             print("X3", zip_file)
             extractall(zip_file, p)
