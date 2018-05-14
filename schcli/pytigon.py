@@ -88,7 +88,7 @@ import schcli.guictrl.tag
 from schserw import settings as schserw_settings
 
 from schlib.schtools.install_init import init
-init(schserw_settings.APPSET_NAME, schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
+init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
 
 #def install_0():
