@@ -667,7 +667,7 @@ def _main_init(argv):
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 
     import schserw.schsys.initdjango
-    schserw.schsys.initdjango.init_django(schserw_settings.APP_PACK_PATH, schserw_settings.ROOT_PATH)
+    schserw.schsys.initdjango.init_django(schserw_settings.APP_PACK_PATH, schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH)
 
     if len(args) > 0:
         if '.ptig' in args[0].lower():
