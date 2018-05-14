@@ -25,7 +25,7 @@ from django.conf import settings
 from os import environ
 import tempfile
 
-APPSET_NAME = "Pytigon"
+APPSET_NAME = "_schall"
 GEN_TIME = '0000.00.00 00:00:00'
 
 if (sys.argv and ((sys.argv[0].endswith('manage.py') and 'runserver' in sys.argv) or '--debug' in sys.argv)) \
