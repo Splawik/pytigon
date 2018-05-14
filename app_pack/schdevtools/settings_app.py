@@ -39,6 +39,9 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
+from schlib.schtools.install_init import init
+init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, [MEDIA_ROOT, UPLOAD_PATH])
+
 START_PAGE = 'None'
 SHOW_LOGIN_WIN = True
 PACKS = []
@@ -62,9 +65,6 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
-
-from schlib.schtools.install_init import init
-init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, [MEDIA_ROOT, UPLOAD_PATH])
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -113,6 +113,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.05.14 11:44:01'
+GEN_TIME = '2018.05.14 12:01:29'
 OFFLINE_SUPPORT = True
 
