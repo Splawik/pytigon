@@ -87,19 +87,20 @@ import schcli.guictrl.tag
 
 from schserw import settings as schserw_settings
 
-def install_0():
-    # function create pytigon system folders if they do not exist.
-    home_dir = os.path.join(os.path.expanduser('~'), '.pytigon/')
-    if not os.path.exists(home_dir):
-        os.mkdir(home_dir)
-        os.mkdir(home_dir + '.cache/')
-        os.mkdir(home_dir + 'plugins_cache')
-        ini = open(home_dir + 'plugins_cache/__init__.py', 'w')
-        ini.write(' ')
-        ini.close()
 
-
-install_0()
+#def install_0():
+#    # function create pytigon system folders if they do not exist.
+#    home_dir = os.path.join(os.path.expanduser('~'), '.pytigon/')
+#    if not os.path.exists(home_dir):
+#        os.mkdir(home_dir)
+#        os.mkdir(home_dir + '.cache/')
+#        os.mkdir(home_dir + 'plugins_cache')
+#        ini = open(home_dir + 'plugins_cache/__init__.py', 'w')
+#        ini.write(' ')
+#        ini.close()
+#
+#
+#install_0()
 
 INSPECTION = False
 if any(s.startswith('--inspection') for s in sys.argv):

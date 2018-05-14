@@ -28,6 +28,7 @@ from django.forms.forms import BaseForm
 import os
 import shutil
 from schlib.schfs.vfstools import extractall
+import zipfile
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
 
@@ -100,7 +101,7 @@ def init_django(app_pack_path=None, root_path=None, data_path=None):
             else:
                 zip_file = os.path.join(settings.ROOT_PATH, "app_pack.zip")
             os.makedirs(p)
-            extractall(zip_file, p)
+            extractall(zipfile.ZipFile(zip_file), p)
 
     if data_path:
         dp = data_path
@@ -114,4 +115,4 @@ def init_django(app_pack_path=None, root_path=None, data_path=None):
             zip_file2 = os.path.join(os.path.join(settings.ROOT_PATH, "install"), ".pytigon.zip")
         os.makedirs(dp)
         if os.path.exists(zip_file2):
-            extractall(zip_file2, dp)
+            extractall(zipfile.ZipFile(zip_file2), dp)
