@@ -353,7 +353,7 @@ class DocType( models.Model):
     parent = ext_models.HiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
-    correction = models.NullBooleanField('Correction', null=True, blank=True, editable=True, )
+    correction = ext_models.NullBooleanField('Correction', null=True, blank=True, editable=True, )
     head_form = models.TextField('Head form', null=True, blank=True, editable=False, )
     item_form = models.TextField('Item form', null=True, blank=True, editable=False, )
     save_head_fun = models.TextField('Save head function', null=True, blank=True, editable=False, )
@@ -747,7 +747,7 @@ class Account(TreeModel):
     root_classifier1 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
     root_classifier2 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
     root_classifier3 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
-    enabled = models.NullBooleanField('Enabled', null=False, blank=False, editable=True, default=True,)
+    enabled = ext_models.NullBooleanField('Enabled', null=False, blank=False, editable=True, default=True,)
     
 
     def save(self, *args, **kwargs):
@@ -796,7 +796,7 @@ class AccountState( models.Model):
     element = models.ForeignKey(Element, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Element', )
     debit = models.DecimalField('Debit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     credit = models.DecimalField('Credit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
-    aggregate = models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
+    aggregate = ext_models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
     
 
     
@@ -824,7 +824,7 @@ class AccountOperation( models.Model):
     account_state = ext_models.ForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set')
     sign = models.IntegerField('Sign - debit or credit', null=False, blank=False, editable=True, )
     amount = models.DecimalField('Amount', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
-    enabled = models.NullBooleanField('Enabled', null=True, blank=True, editable=False, default=False,)
+    enabled = ext_models.NullBooleanField('Enabled', null=True, blank=True, editable=False, default=False,)
     
 
     def get_account_state(self, account, element, period, target, classifier1=None, classifier2=None, classifier3=None, subcode="", aggregate=False):

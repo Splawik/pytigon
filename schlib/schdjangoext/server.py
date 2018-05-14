@@ -73,7 +73,6 @@ def _run(addr, port, prod):
         from channels.routing import get_default_application
 
         django.setup()
-        schserw.schsys.initdjango.init_django()
 
         #application = django.core.handlers.wsgi.WSGIHandler()
 

@@ -64,7 +64,7 @@ for app in APPS:
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 
 from schlib.schtools.install_init import init
-init(APPSET_NAME, DATA_PATH, [MEDIA_ROOT, UPLOAD_PATH])
+init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, [MEDIA_ROOT, UPLOAD_PATH])
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -113,5 +113,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.05.12 13:55:14'
+GEN_TIME = '2018.05.14 11:46:03'
 

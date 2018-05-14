@@ -24,13 +24,13 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/vs_editor.js' %}
     {% component 'app/standard_components/components/wysiwyg_edit.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
     
     
 
 %% component_init
-    .component_init = [ "vs_editor", "wysiwyg_edit",  ] 
+    .component_init = [ "wysiwyg_edit", "vs_editor",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

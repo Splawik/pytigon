@@ -20,15 +20,6 @@
 import os
 import django
 
-setup_old = django.setup
-
-def setup(*argi, **argv):
-    import schserw.schsys.initdjango
-    schserw.schsys.initdjango.init_django()
-    setup_old(*argi, **argv)
-
-django.setup = setup
-
 def cmd(arg, from_main=False):
     if from_main:
         argv = arg

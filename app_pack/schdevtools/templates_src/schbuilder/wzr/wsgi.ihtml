@@ -16,9 +16,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
 from django.core.wsgi import get_wsgi_application
 import django
-import schserw.schsys.initdjango
 django.setup()
-schserw.schsys.initdjango.init_django()
 
 application = get_wsgi_application()
 

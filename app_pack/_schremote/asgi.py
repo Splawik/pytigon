@@ -14,9 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 
 import django
 from channels.routing import get_default_application
-import schserw.schsys.initdjango
 
 django.setup()
-schserw.schsys.initdjango.init_django()
 
 application = get_default_application()

@@ -45,8 +45,8 @@ def init_embeded_django():
 
     add_wsgi_intercept('127.0.0.2', 80, create_fn)
 
-    import schserw.schsys.initdjango
-    schserw.schsys.initdjango.init_django()
+    #import schserw.schsys.initdjango
+    #schserw.schsys.initdjango.init_django()
 
 
 BLOCK = False

@@ -18,8 +18,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings_app')
 from channels.asgi import get_channel_layer
 
 import django
-import schserw.schsys.initdjango
 django.setup()
-schserw.schsys.initdjango.init_django()
 
 channel_layer = get_channel_layer()

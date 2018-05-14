@@ -18,6 +18,9 @@
 #version: "0.1a"
 
 import os
+from schlib.schfs.vfstools import extractall
+import zipfile
+import shutil
 
 def _mkdir(path, ext=None):
     if ext:
@@ -28,10 +31,26 @@ def _mkdir(path, ext=None):
     if not os.path.exists(p):
         os.mkdir(p)
 
-def init(app_pack, data_path, paths=None):
-    #_paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
-    #for p in _paths:
-    #    _mkdir(data_path, p)
+def init(app_pack, root_path, data_path, app_pack_path, paths=None):
+    if not os.path.exists(app_pack_path):
+        p2 = os.path.join(root_path, 'app_pack')
+        if os.path.exists(p2):
+            shutil.copytree(p2, app_pack_path)
+        else:
+            zip_file = os.path.join(root_path, "app_pack.zip")
+            if os.path.exists(zip_file):
+                os.makedirs(app_pack_path)
+                extractall(zipfile.ZipFile(zip_file), app_pack_path)
+
+    if not os.path.exists(data_path):
+        zip_file2 = os.path.join(os.path.join(root_path, "install"), ".pytigon.zip")
+        if os.path.exists(zip_file2):
+            os.makedirs(data_path)
+            extractall(zipfile.ZipFile(zip_file2), data_path)
+
+    _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
+    for p in _paths:
+        _mkdir(data_path, p)
     if paths:
         for p in paths:
             _mkdir(p)
