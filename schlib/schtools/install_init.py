@@ -29,9 +29,9 @@ def _mkdir(path, ext=None):
         os.mkdir(p)
 
 def init(app_pack, data_path, paths=None):
-    _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
-    for p in _paths:
-        _mkdir(data_path, p)
+    #_paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
+    #for p in _paths:
+    #    _mkdir(data_path, p)
     if paths:
         for p in paths:
             _mkdir(p)
