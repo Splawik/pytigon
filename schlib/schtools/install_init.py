@@ -57,7 +57,7 @@ def init(app_pack, root_path, data_path, app_pack_path, paths=None):
             print("X9", zip_file2, data_path)
             extractall(zipfile.ZipFile(zip_file2), data_path)
 
-    print("X10", zip_file2, data_path)
+    print("X10")
     _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
     for p in _paths:
         _mkdir(data_path, p)
