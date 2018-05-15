@@ -379,7 +379,8 @@ def gen(request, pk):
         if appset.license_file:
             f.write(appset.license_file)
     with open(os.path.join(base_path, "install.ini"), "wt") as f:
-        f.write("[DEFAULT]\nAPPSET_NAME=%s\n\n" % appset.name)
+        f.write("[DEFAULT]\nAPPSET_NAME=%s\n" % appset.name)
+        f.write("GEN_TIME='%s'\n\n" % gmt_str)
         if appset.install_file:
             f.write(appset.install_file)
     

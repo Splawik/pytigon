@@ -20,7 +20,9 @@
 import os
 from schlib.schfs.vfstools import extractall
 import zipfile
-import shutil
+#import shutil
+from distutils.dir_util import copy_tree
+import configparser
 
 def _mkdir(path, ext=None):
     if ext:
@@ -31,28 +33,64 @@ def _mkdir(path, ext=None):
     if not os.path.exists(p):
         os.mkdir(p)
 
+def upgrade_test(zip_path, out_path):
+    if os.path.exists(zip_path):
+        archive = zipfile.ZipFile(zip_path, 'r')
+        cfg_txt = archive.read('install.ini').decode('utf-8')
+        cfg = configparser.ConfigParser()
+        cfg.read_string(cfg_txt)
+        t1 = cfg['DEFAULT']['GEN_TIME']
+        ini2 = os.path.join(out_path, "install.ini")
+        if os.path.exists(ini2):
+            cfg2 = configparser.ConfigParser()
+            cfg2.read(ini2)
+            t2 = cfg2['DEFAULT']['GEN_TIME']
+            if t2 < t1:
+                return True
+    return False
+
+
 def init(app_pack, root_path, data_path, app_pack_path, paths=None):
     _root_path = os.path.normpath(root_path)
     _data_path = os.path.normpath(data_path)
     _app_pack_path = os.path.normpath(app_pack_path)
 
-    test1 = False if os.path.exists(_app_pack_path) else True
-    test2 = False if os.path.exists(_data_path) else True
+    test1 = 0 if os.path.exists(_app_pack_path) else 1
+    test2 = 0 if os.path.exists(_data_path) else 1
+
+    if not test1:
+        if upgrade_test(os.path.join(os.path.join(_root_path, "install"), "app_pack.zip"),_app_pack_path):
+            test1 = 2
+            print("Upgrade app_pack")
+
+    if not test2:
+        if upgrade_test(os.path.join(os.path.join(_root_path, "install"), ".pytigon.zip"), _data_path):
+            test2 = 2
+            print("Upgrade data")
 
     if test1:
         p2 = os.path.join(_root_path, 'app_pack')
-        if os.path.exists(p2):
-            shutil.copytree(p2, _app_pack_path)
+        if os.path.exists(p2) and test1 == 1:
+            copy_tree(p2, _app_pack_path)
         else:
-            zip_file = os.path.join(_root_path, "app_pack.zip")
+            zip_file = os.path.join(os.path.join(_root_path, "install"), "app_pack.zip")
             if os.path.exists(zip_file):
-                os.makedirs(_app_pack_path)
+                if not os.path.exists(_app_pack_path):
+                    os.makedirs(_app_pack_path)
                 extractall(zipfile.ZipFile(zip_file), _app_pack_path)
+
     if test2:
         zip_file2 = os.path.join(os.path.join(_root_path, "install"), ".pytigon.zip")
         if os.path.exists(zip_file2):
-            os.makedirs(_data_path)
-            extractall(zipfile.ZipFile(zip_file2), _data_path)
+            if not os.path.exists(_data_path):
+                os.makedirs(_data_path)
+            if test2==2:
+                extractall(zipfile.ZipFile(zip_file2), _data_path, exclude=['.*\.db',])
+            else:
+                extractall(zipfile.ZipFile(zip_file2), _data_path)
+
+    if test2 == 2:
+        pass
 
     _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
     for p in _paths:
