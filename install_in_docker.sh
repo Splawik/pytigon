@@ -9,3 +9,4 @@ mv ./ext_prg/tcc-0.9.26 ./ext_prg/tcc
 cd ./ext_prg/tcc
 ./configure --disable-static
 make
+
