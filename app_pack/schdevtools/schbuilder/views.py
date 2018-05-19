@@ -49,7 +49,10 @@ from schlib.schtools.process import py_run
 
 from ext_lib.pygettext import main as gtext
 
-import sass
+try:
+    import sass
+except:
+    pass
 
  
 _template="""
