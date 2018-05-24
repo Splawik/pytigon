@@ -29,7 +29,7 @@ import time
 from jnius import autoclass, PythonJavaClass, java_method
 from android.runnable import run_on_ui_thread, Runnable
 
-PytigonWebViewFragment = autoclass('tk.pytigon.libpytigon.PytigonWebViewFragment')
+PytigonWebViewFragment = autoclass('cloud.pytigon.libpytigon.PytigonWebViewFragment')
 ACTIVITY = autoclass('org.kivy.android.PythonActivity').mActivity                              
 SERVICE = None
 CTX  = None
@@ -52,7 +52,7 @@ else:
 
 
 class PytigonWebViewClientCallback(PythonJavaClass):
-    __javainterfaces__ = [ 'tk/pytigon/libpytigon/PytigonWebViewClientCallback' ]
+    __javainterfaces__ = [ 'cloud/pytigon/libpytigon/PytigonWebViewClientCallback' ]
     __javacontext__ = 'app'
     
     def __init__(self, parent):
@@ -178,7 +178,7 @@ class InterfaceManager(BoxLayout):
 
     def start_service(self):
         global SERVICE, CTX
-        SERVICE = autoclass('tk.pytigon.ServicePytigon')
+        SERVICE = autoclass('cloud.pytigon.ServicePytigon')
         CTX = autoclass('org.kivy.android.PythonActivity').mActivity
         CTX.nativeSetEnv("PYTIGON_APP", self.app)
         SERVICE.start(CTX, self.app)

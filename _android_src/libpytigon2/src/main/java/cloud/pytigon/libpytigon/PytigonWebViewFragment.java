@@ -1,4 +1,4 @@
-package tk.pytigon.libpytigon;
+package cloud.pytigon.libpytigon;
 
 import android.app.*;
 import android.content.*;
@@ -13,7 +13,7 @@ import android.annotation.SuppressLint;
 
 
 import im.delight.android.webview.AdvancedWebView;
-import tk.pytigon.libpytigon.PytigonWebViewClientCallback;
+import cloud.pytigon.libpytigon.PytigonWebViewClientCallback;
 
 import android.app.Fragment;
 
