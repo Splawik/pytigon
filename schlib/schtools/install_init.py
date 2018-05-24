@@ -71,7 +71,7 @@ def init(app_pack, root_path, data_path, app_pack_path, paths=None):
     if test1:
         p2 = os.path.join(_root_path, 'app_pack')
         if os.path.exists(p2) and test1 == 1:
-            copy_tree(p2, _app_pack_path)
+            copy_tree(p2, _app_pack_path, preserve_mode=0, preserve_times=0)
         else:
             zip_file = os.path.join(os.path.join(_root_path, "install"), "app_pack.zip")
             if os.path.exists(zip_file):
