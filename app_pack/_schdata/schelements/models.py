@@ -141,7 +141,7 @@ class OrgChartElem(TreeModel):
         
         
     
-    parent = models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
     
@@ -278,7 +278,7 @@ class Classifier(TreeModel):
         
         
     
-    parent = models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
     
@@ -736,7 +736,7 @@ class Account(TreeModel):
         
         
     
-    parent = models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
     

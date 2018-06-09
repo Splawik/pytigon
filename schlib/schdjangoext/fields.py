@@ -509,3 +509,11 @@ class NullBooleanField(models.NullBooleanField):
         defaults = {'form_class': forms.BooleanField}
         defaults.update(kwargs)
         return super().formfield(**defaults)
+
+
+class TreeForeignKey(ForeignKey):
+    pass
+
+class GTreeForeignKey(ForeignKey):
+    pass
+

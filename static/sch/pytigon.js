@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-05-12 23:54:45
+// Transcrypt'ed from Python, 2018-06-08 23:49:22
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3950,7 +3950,7 @@ function pytigon () {
 						ajax_get (url, _onload);
 					};
 					window.ajax_load = ajax_load;
-					var _req_post = function (req, url, data, complete) {
+					var _req_post = function (req, url, data, complete, content_type) {
 						var process_blob = false;
 						try {
 							req.responseType = 'blob';
@@ -3992,7 +3992,10 @@ function pytigon () {
 						req.onload = _onload;
 						req.open ('POST', url, true);
 						req.setRequestHeader ('X-CSRFToken', Cookies.get ('csrftoken'));
-						if (data.length) {
+						if (content_type) {
+							req.setRequestHeader ('Content-Type', content_type);
+						}
+						else if (data.length) {
 							req.setRequestHeader ('Content-type', 'application/x-www-form-urlencoded');
 						}
 						req.send (data);
@@ -4015,16 +4018,17 @@ function pytigon () {
 						if (typeof process_req == 'undefined' || (process_req != null && process_req .hasOwnProperty ("__kwargtrans__"))) {;
 							var process_req = null;
 						};
+						var content_type = null;
 						var req = new XMLHttpRequest ();
 						if (process_req) {
 							process_req (req);
 						}
 						if (form.find ("[type='file']").length > 0) {
-							form.attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
 							var data = new FormData (form [0]);
 							if (data_filter) {
 								var data = data_filter (data);
 							}
+							var content_type = 'multipart/form-data';
 							if (!(form.find ('#progress').length == 1)) {
 								form.find ('div.inline-form-body').append ("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
 							}
@@ -4044,7 +4048,7 @@ function pytigon () {
 								var data = data_filter (data);
 							}
 						}
-						_req_post (req, corect_href (form.attr ('action')), data, complete);
+						_req_post (req, corect_href (form.attr ('action')), data, complete, content_type);
 					};
 					window.ajax_submit = ajax_submit;
 					var get_page = function (elem) {
@@ -4888,7 +4892,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

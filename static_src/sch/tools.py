@@ -254,7 +254,7 @@ def ajax_load(elem, url, complete):
 
 window.ajax_load = ajax_load
 
-def _req_post(req, url, data, complete):
+def _req_post(req, url, data, complete, content_type):
     process_blob = False
     try:
         req.responseType = "blob"
@@ -292,8 +292,9 @@ def _req_post(req, url, data, complete):
     req.open("POST", url, True)
 
     req.setRequestHeader("X-CSRFToken", Cookies.js_get('csrftoken'))
-
-    if data.length:
+    if content_type:
+        req.setRequestHeader('Content-Type', content_type)
+    elif data.length:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
         #req.setRequestHeader("Content-length", data.length)
         #req.setRequestHeader("Connection", "close")
@@ -310,18 +311,30 @@ def ajax_post(url, data, complete, process_req=None):
 window.ajax_post = ajax_post
 
 def ajax_submit(form, complete, data_filter=None, process_req=None):
+    content_type = None
     req = __new__(XMLHttpRequest())
 
     if process_req:
         process_req(req)
 
     if form.find("[type='file']").length > 0:
-        form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
+        #form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
         data = __new__(FormData(form[0]))
         if data_filter:
             data = data_filter(data)
         #if not form.f("div").find("#progress").length == 1:
-        if not form.find("#progress").length == 1:        
+
+        #var parameters = [];
+        #for(var pair of data.entries()) {
+        #    parameters.push(
+        #        encodeURIComponent(pair[0]) + '=' +
+        #        encodeURIComponent(pair[1])
+        #    )
+        #}
+        #data = parameters.join('&');
+        content_type = 'multipart/form-data'
+
+        if not form.find("#progress").length == 1:
             form.find('div.inline-form-body').append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
             #form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         else:
@@ -335,7 +348,7 @@ def ajax_submit(form, complete, data_filter=None, process_req=None):
         if data_filter:
             data = data_filter(data)
 
-    _req_post(req, corect_href(form.attr("action")), data, complete)
+    _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
 
 window.ajax_submit = ajax_submit
 

@@ -19,6 +19,9 @@ var on_install = function (event) {
 self.addEventListener ('install', on_install);
 
 var on_fetch = function (event) {
+    if (event.request.method === 'POST') {
+      return;
+    }
     var resp = function (response) {
                 if (response) {
                         return response;
