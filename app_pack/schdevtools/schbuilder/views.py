@@ -361,12 +361,12 @@ def gen(request, pk):
     
     if not os.path.exists(base_path):
         object_list.append((datetime.datetime.now().time().isoformat(), 'mkdir:', base_path))
-        os.mkdir(base_path)
-        os.mkdir(base_path+"/templates")
-        os.mkdir(base_path+"/templates/template")
-        os.mkdir(base_path+"/templates_src")
-        os.mkdir(base_path+"/templates_src/template")
-        os.mkdir(base_path+"/apache")
+        os.makedirs(base_path, exist_ok=True)
+        os.makedirs(base_path+"/templates", exist_ok=True)
+        os.makedirs(base_path+"/templates/template", exist_ok=True)
+        os.makedirs(base_path+"/templates_src", exist_ok=True)
+        os.makedirs(base_path+"/templates_src/template", exist_ok=True)
+        os.makedirs(base_path+"/apache", exist_ok=True)
     
     apps = appset.schapp_set.all()
     
@@ -394,11 +394,11 @@ def gen(request, pk):
     for app in apps:
         object_list.append((datetime.datetime.now().time().isoformat(), 'create app:', app.name))
         if not os.path.exists(base_path+"/"+app.name):
-            os.mkdir(base_path+"/"+app.name)
+            os.makedirs(base_path+"/"+app.name, exist_ok=True)
         if not os.path.exists(base_path+"/templates_src/"+app.name):
-            os.mkdir(base_path+"/templates_src/"+app.name)
+            os.makedirs(base_path+"/templates_src/"+app.name, exist_ok=True)
         if not os.path.exists(base_path+"/templates/"+app.name):
-            os.mkdir(base_path+"/templates/"+app.name)
+            os.makedirs(base_path+"/templates/"+app.name, exist_ok=True)
     
         app_names.append(app.name)
     

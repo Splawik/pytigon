@@ -293,10 +293,12 @@ def _req_post(req, url, data, complete, content_type):
 
     req.setRequestHeader("X-CSRFToken", Cookies.js_get('csrftoken'))
     if content_type:
-        req.setRequestHeader('Content-Type', content_type)
-    elif data.length:
+        #req.setRequestHeader('Content-Type', content_type)
+        pass
+    else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        #req.setRequestHeader("Content-length", data.length)
+    if data.length:
+        req.setRequestHeader("Content-length", data.length)
         #req.setRequestHeader("Connection", "close")
 
     req.send(data)
@@ -332,7 +334,7 @@ def ajax_submit(form, complete, data_filter=None, process_req=None):
         #    )
         #}
         #data = parameters.join('&');
-        content_type = 'multipart/form-data'
+        content_type = 'multipart/form-data; boundary=...'
 
         if not form.find("#progress").length == 1:
             form.find('div.inline-form-body').append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")

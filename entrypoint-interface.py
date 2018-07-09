@@ -97,7 +97,10 @@ for ff in os.listdir(BASE_APPS_PATH):
 
 for app_pack in APP_PACK_FOLDERS:
     base_apps_pack2 = os.path.join(BASE_APPS_PATH, app_pack)
-    x = __import__(app_pack+".apps")
+    try:
+        x = __import__(app_pack+".apps")
+    except:
+        continue
     if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
         if hasattr(x.apps, 'MAIN_APP_PACK') and x.apps.MAIN_APP_PACK:
             MAIN_APP_PACK = app_pack

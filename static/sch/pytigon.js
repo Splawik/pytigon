@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-06-08 23:49:22
+// Transcrypt'ed from Python, 2018-07-09 21:13:24
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3993,10 +3993,13 @@ function pytigon () {
 						req.open ('POST', url, true);
 						req.setRequestHeader ('X-CSRFToken', Cookies.get ('csrftoken'));
 						if (content_type) {
-							req.setRequestHeader ('Content-Type', content_type);
+							// pass;
 						}
-						else if (data.length) {
+						else {
 							req.setRequestHeader ('Content-type', 'application/x-www-form-urlencoded');
+						}
+						if (data.length) {
+							req.setRequestHeader ('Content-length', data.length);
 						}
 						req.send (data);
 					};
@@ -4028,7 +4031,7 @@ function pytigon () {
 							if (data_filter) {
 								var data = data_filter (data);
 							}
-							var content_type = 'multipart/form-data';
+							var content_type = 'multipart/form-data; boundary=...';
 							if (!(form.find ('#progress').length == 1)) {
 								form.find ('div.inline-form-body').append ("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
 							}
@@ -4289,7 +4292,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4892,6 +4894,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();
