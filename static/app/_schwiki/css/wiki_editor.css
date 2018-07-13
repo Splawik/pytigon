@@ -62,3 +62,10 @@
       padding: 0px 0.7rem; }
       .wiki-frame .row > .col > .col {
         padding: 0px; }
+    .wiki-frame .row .div_float {
+      padding: 0px 0.7rem; }
+    .wiki-frame .row .img_float {
+      width: 66%;
+      float: left;
+      padding-right: 0.7rem;
+      padding-bottom: 0.1rem; }
