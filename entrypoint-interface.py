@@ -90,6 +90,18 @@ if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
     unzip = subprocess.Popen("unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/", shell=True)
     unzip.wait()
 
+def create_sym_links(source_path, dest_path):
+    if os.path.exists(source_path) and os.path.exists(dest_path):
+        x = os.listdir(source_path)
+        for pos in x:
+            s_path = os.path.join(source_path, pos)
+            d_path = os.path.join(dest_path, pos)
+            if not os.path.exists(d_path):
+                os.symlink(s_path, d_path)
+
+create_sym_links("/pytigon/app_pack/", "/var/www/pytigon/app_pack/")
+create_sym_links("/pytigon/static/app/", "/var/www/pytigon/static/app/")
+
 for ff in os.listdir(BASE_APPS_PATH):
     if os.path.isdir( os.path.join(BASE_APPS_PATH,ff)):
         if not ff.startswith('_'):
