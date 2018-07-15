@@ -66,6 +66,26 @@
       padding: 0px 0.7rem; }
     .wiki-frame .row .img_float {
       width: 66%;
-      float: left;
-      padding-right: 0.7rem;
       padding-bottom: 0.1rem; }
+    .wiki-frame .row .img_float_left {
+      float: left;
+      padding-right: 0.7rem; }
+    .wiki-frame .row .img_float_right {
+      float: right;
+      padding-left: 0.7rem; }
+    .wiki-frame .row .video_float {
+      padding-bottom: 0.1rem; }
+    .wiki-frame .row .video_float_left {
+      float: left;
+      padding-right: 0.7rem; }
+    .wiki-frame .row .video_float_right {
+      float: right;
+      padding-left: 0.7rem; }
+    .wiki-frame .row .svg_float {
+      padding-bottom: 0.1rem; }
+    .wiki-frame .row .svg_float_left {
+      float: left;
+      padding-right: 0.7rem; }
+    .wiki-frame .row .svg_float_right {
+      float: right;
+      padding-left: 0.7rem; }
