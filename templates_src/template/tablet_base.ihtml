@@ -109,12 +109,13 @@
 
             div class=navbar-collapse align-self-end
                 ul class=nav
-                    li id=search,,,class=nav-item search
-                        form action={{base_path}}schsys/search/,,,title=_(Search results)
-                            div class=input-group
-                                input class=form-control,,,placeholder=_(search),,,name=q
-                                div class=input-group-addon
-                                    i class=fa fa-search
+                    % if settings.SEARCH_PATH:
+                        li id=search,,,class=nav-item search
+                            form action={{base_path}}schsys/search/,,,title=_(Search results)
+                                div class=input-group
+                                    input class=form-control,,,placeholder=_(search),,,name=q
+                                    div class=input-group-addon
+                                        i class=fa fa-search
                     %% drop_down_blocks
                     % if user.is_authenticated:
                         li class=nav-item dropdown user user-menu

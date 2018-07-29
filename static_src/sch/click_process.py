@@ -46,7 +46,11 @@ def process_on_click(event_tab, elem=None):
 
         src_obj = jQuery(this)
 
-        href = jQuery(this).attr("href")
+        if 'xlink:href' in e.currentTarget.attributes:
+            href = jQuery(this).attr('xlink:href')
+        else:
+            href = jQuery(this).attr("href")
+
         if href and '#' in href:
             return True
 

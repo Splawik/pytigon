@@ -373,5 +373,7 @@ def search(request, **argv):
     q = request.POST.get("q", "")
     q2 = b32encode(q.encode('utf-8')).decode('utf-8')
     print("Q:", q2)
-    return HttpResponseRedirect(make_href((settings.SEARCH_PATH %  q2)+ "?only_content=1"))
-
+    if hasattr(settings, "SEARCH_PATH"):
+        return HttpResponseRedirect(make_href((settings.SEARCH_PATH %  q2)+ "?only_content=1"))
+    else:
+        return Http404()

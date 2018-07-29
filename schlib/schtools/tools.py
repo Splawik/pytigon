@@ -22,6 +22,7 @@ import types
 import sys
 import os
 import platform
+import inspect
 
 from base64 import b64encode, b64decode
 
@@ -122,3 +123,31 @@ def norm_indent(text):
         return "\n".join(ret)
     else:
         return ""
+
+def get_request():
+    frame = None
+    r = None
+    try:
+        for f in inspect.stack()[1:]:
+            frame = f[0]
+            code = frame.f_code
+
+            if code.co_varnames[:1] == ("request",):
+                r = frame.f_locals["request"]
+            elif code.co_varnames[:2] == ("self", "request",):
+                r = frame.f_locals["request"]
+            if r and hasattr(r, 'session'):
+                return r
+            else:
+                r = None
+    finally:
+        if frame:
+            del frame
+    return None
+
+def get_session():
+    request = get_request()
+    if request:
+        return request.session
+    else:
+        return None

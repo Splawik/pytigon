@@ -24,3 +24,7 @@ daphne
 polib
 libsass
 pyexcel_odsr
+unidecode
+django-bulk_update
+dj-database-url
+dj-email-url
