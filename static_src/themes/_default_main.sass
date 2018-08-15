@@ -27,9 +27,13 @@ not(.login_background) div.content-wrapper
             input.form-control
                 height: 40px
                 color: white
+                box-shadow: inset 0 -1px 0 #bbf
+
+            input.form-control:focus
+                box-shadow: inset 0 -2px 0 #fff
 
             input.form-control::placeholder
-                    color: white !important
+                    color: #bbf !important
                     opacity: 1
 
             input.form-control::-ms-input-placeholder

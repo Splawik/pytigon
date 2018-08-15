@@ -19,8 +19,8 @@
 
 from os import environ
 environ['PYTIGON_APP_IMAGE'] = '1'
-import sys
-from schcli.pytigon import main
+from ptigrun import run 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    run()
+
