@@ -89,7 +89,7 @@ def change_password(request):
         if user is not None and user.is_active:
             user.set_password(new_password)
             user.save()
-            return HttpResponseRedirect(make_href("/schsys/do_logout?schtml=1"))
+            return HttpResponseRedirect(make_href("/schsys/do_logout/?schtml=1"))
         else:
             messages.add_message(request, messages.ERROR, 'Bad old password')
             return HttpResponseRedirect(make_href('/'))

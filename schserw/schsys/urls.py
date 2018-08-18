@@ -19,8 +19,8 @@
 
 from django.conf.urls import url
 
-from django.contrib.auth.views import login
-from django.contrib.auth import authenticate, login as login2
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LoginView
 
 from django.views.generic import TemplateView
 import django.contrib.auth.views
@@ -37,9 +37,6 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
 
 def sch_login(request, *argi, **argv):
-    #print("PATH:", request.path)
-    #print("POST:", request.POST)
-    #print("GET:", request.GET)
     ret = None
     if 'user' in request.GET:
         username = request.GET['user']
@@ -48,10 +45,10 @@ def sch_login(request, *argi, **argv):
                 password = request.GET['password']
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
-                    ret = login2(request, user)
+                    ret = login(request, user)
                     request.session['autologin'] = True
     if ret == None:
-        ret = login(request, *argi, **argv)
+        ret = LoginView.as_view()(request, *argi, **argv)
 
     parm = request.POST.get('client_param', '')
     if parm != '':
@@ -76,7 +73,7 @@ urlpatterns = [
 
     url(r'^login/$', TemplateView.as_view(template_name='schapp/login.html')),
     url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
-    url(r'^do_logout/$', django.contrib.auth.views.logout, {'next_page': make_href("/")}),
+    url(r'^do_logout/$', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
     url(r'^change_password/$', schserw.schsys.views.change_password),
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
