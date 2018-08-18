@@ -16,6 +16,7 @@
     {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
     {% jscript_link 'app/schdevtools/js/test_python.js' %}
     {% jscript_link 'app/_schdata/js/subreport.js' %}
+    {% jscript_link 'app/schpolb/js/kalkulator_init.js' %}
     
 
 %% extrastyle
@@ -24,28 +25,31 @@
     {% css_link 'app/schdevtools/css/style.css' %}
     {% css_link 'app/schdevtools/css/test_icss.css' %}
     {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+    {% css_link 'app/schpolb/css/polbruk.css' %}
     
 
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/handsontable.js' %}
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/standard_components/components/leaflet.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/d3.js' %}
+    {% component 'app/schpolb/components/kalkulator_sync.js' %}
     {% component 'app/standard_components/components/code_editor.js' %}
     {% component 'app/standard_components/components/pivottable.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
+    {% component 'app/standard_components/components/txtarea_editor.js' %}
     {% component 'app/standard_components/components/plotly.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/video-js.js' %}
+    {% component 'app/standard_components/components/leaflet.js' %}
     {% component 'app/standard_components/components/summernote.js' %}
+    {% component 'app/standard_components/components/handsontable.js' %}
+    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/standard_components/components/d3.js' %}
+    {% component 'app/schpolb/components/kalkulator_cenowy.js' %}
     {% component 'app/standard_components/components/wysiwyg_edit.js' %}
     
     
 
 %% component_init
-    .component_init = [ "txtarea_editor", "handsontable", "video-js", "leaflet", "vs_editor", "d3", "code_editor", "pivottable", "plotly", "test", "summernote", "wysiwyg_edit",  ] 
+    .component_init = [ "kalkulator_sync", "code_editor", "pivottable", "vs_editor", "txtarea_editor", "plotly", "video-js", "leaflet", "summernote", "handsontable", "test", "d3", "kalkulator_cenowy", "wysiwyg_edit",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

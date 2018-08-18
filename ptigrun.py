@@ -24,17 +24,21 @@ import os
 from schcli.pytigon import main
 from schlib.schtools.tools import get_executable
 from schlib.schtools.platform_info import platform_name
+from os import environ
 
 def run():
+    base_path = __file__.replace("ptigrun.py", "")
+    if base_path == "":
+        base_path = os.getcwd()
+    else:
+        os.chdir(base_path)
+
+    environ['PYTIGON_ROOT_PATH'] = base_path
+
     if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
         if '_' in sys.argv[1]:
             x = sys.argv[1].split('_',1)
             app = x[1]
-            base_path = __file__.replace("ptigrun.py", "")
-            if base_path == "":
-                base_path = os.getcwd()
-            else:
-                os.chdir(base_path)
 
             if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
                 path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
