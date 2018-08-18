@@ -23,6 +23,7 @@ import os
 
 from schcli.pytigon import main
 from schlib.schtools.tools import get_executable
+from schlib.schtools.platform_info import platform_name
 
 def run():
     if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
@@ -34,8 +35,12 @@ def run():
                 base_path = os.getcwd()
             else:
                 os.chdir(base_path)
-    
-            path2 = os.path.join(base_path, "app_pack")
+
+            if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
+                path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
+            else:
+                path2 = os.path.join(base_path, "app_pack")
+
             path3 = os.path.join(path2, app)
             os.chdir(path3)
             subprocess.run([get_executable(), "manage.py"] + sys.argv[2:])

@@ -21,7 +21,6 @@
 
 """
 
-
 import collections
 import uuid
 
