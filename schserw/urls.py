@@ -21,6 +21,7 @@
 import importlib
 import traceback
 import os
+from os import environ
 
 from django.conf.urls import url, include
 from django.conf import settings
@@ -83,7 +84,9 @@ else:
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
     urlpatterns.append(u)
 
-if settings.DEBUG or platform_name()=='Android':
+if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
+    if 'PYTIGON_APP_IMAGE' in environ:
+        urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
     urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
 SHOW_ERROR = False

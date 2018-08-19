@@ -105,6 +105,11 @@ STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
 if platform_name()=='Android':
     STATIC_ROOT = STATICFILES_DIRS[0]
 
+if platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
+    STATIC_APP_ROOT = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_static')
+else:
+    STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
+
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
 UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
 

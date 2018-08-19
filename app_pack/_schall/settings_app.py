@@ -66,7 +66,7 @@ MEDIA_URL = '/site_media/'
 
 
 from schlib.schtools.install_init import init
-init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, [MEDIA_ROOT, UPLOAD_PATH])
+init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
 START_PAGE = 'None'
 SHOW_LOGIN_WIN = False
@@ -139,5 +139,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.08.18 18:24:03'
+GEN_TIME = '2018.08.19 09:28:33'
 

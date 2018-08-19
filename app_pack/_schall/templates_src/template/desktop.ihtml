@@ -31,25 +31,25 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/schpolb/components/kalkulator_sync.js' %}
-    {% component 'app/standard_components/components/code_editor.js' %}
-    {% component 'app/standard_components/components/pivottable.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/plotly.js' %}
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/standard_components/components/leaflet.js' %}
-    {% component 'app/standard_components/components/summernote.js' %}
+    {% component 'app/standard_components/components/wysiwyg_edit.js' %}
     {% component 'app/standard_components/components/handsontable.js' %}
+    {% component 'app/standard_components/components/leaflet.js' %}
+    {% component 'app/schpolb/components/kalkulator_cenowy.js' %}
+    {% component 'app/standard_components/components/video-js.js' %}
+    {% component 'app/standard_components/components/pivottable.js' %}
+    {% component 'app/schpolb/components/kalkulator_sync.js' %}
     {% component 'app/schdevtools/components/test.js' %}
     {% component 'app/standard_components/components/d3.js' %}
-    {% component 'app/schpolb/components/kalkulator_cenowy.js' %}
-    {% component 'app/standard_components/components/wysiwyg_edit.js' %}
+    {% component 'app/standard_components/components/txtarea_editor.js' %}
+    {% component 'app/standard_components/components/plotly.js' %}
+    {% component 'app/standard_components/components/vs_editor.js' %}
+    {% component 'app/standard_components/components/code_editor.js' %}
+    {% component 'app/standard_components/components/summernote.js' %}
     
     
 
 %% component_init
-    .component_init = [ "kalkulator_sync", "code_editor", "pivottable", "vs_editor", "txtarea_editor", "plotly", "video-js", "leaflet", "summernote", "handsontable", "test", "d3", "kalkulator_cenowy", "wysiwyg_edit",  ] 
+    .component_init = [ "wysiwyg_edit", "handsontable", "leaflet", "kalkulator_cenowy", "video-js", "pivottable", "kalkulator_sync", "test", "d3", "txtarea_editor", "plotly", "vs_editor", "code_editor", "summernote",  ] 
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

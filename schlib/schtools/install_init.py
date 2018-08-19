@@ -50,13 +50,15 @@ def upgrade_test(zip_path, out_path):
     return False
 
 
-def init(app_pack, root_path, data_path, app_pack_path, paths=None):
+def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=None):
     _root_path = os.path.normpath(root_path)
     _data_path = os.path.normpath(data_path)
     _app_pack_path = os.path.normpath(app_pack_path)
+    _static_app_path = os.path.normpath(static_app_path)
 
     test1 = 0 if os.path.exists(_app_pack_path) else 1
     test2 = 0 if os.path.exists(_data_path) else 1
+    test3 = 0 if os.path.exists(_static_app_path) else 1
 
     if not test1:
         if upgrade_test(os.path.join(os.path.join(_root_path, "install"), "app_pack.zip"),_app_pack_path):
@@ -91,6 +93,11 @@ def init(app_pack, root_path, data_path, app_pack_path, paths=None):
 
     if test2 == 2:
         pass
+
+    if test3:
+        p2 = os.path.join(os.path.join(_root_path, 'static'), 'app')
+        if os.path.exists(p2):
+            copy_tree(p2, _static_app_path, preserve_mode=0, preserve_times=0)
 
     _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
     for p in _paths:

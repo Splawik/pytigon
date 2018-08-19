@@ -40,7 +40,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 from schlib.schtools.install_init import init
-init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, [MEDIA_ROOT, UPLOAD_PATH])
+init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
 START_PAGE = 'None'
 SHOW_LOGIN_WIN = True
@@ -113,6 +113,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.08.18 18:23:24'
+GEN_TIME = '2018.08.19 09:09:22'
 OFFLINE_SUPPORT = True
 
