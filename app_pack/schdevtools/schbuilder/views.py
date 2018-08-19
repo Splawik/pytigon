@@ -276,7 +276,7 @@ def make_messages(src_path, path, name, outpath=None, ext_locales=[]):
 def locale_gen_internal(pk):
     app_pack = models.SChAppSet.objects.get(id=pk)
 
-    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
+    base_path = settings.APP_PACK_PATH
     app_path = os.path.join(base_path, app_pack.name)
     locale_path = os.path.join(app_path, 'locale')
 
@@ -353,8 +353,8 @@ def view_install(request, *argi, **argv):
 def gen(request, pk):
     
     appset = models.SChAppSet.objects.get(id=pk)
-    base_path = settings.ROOT_PATH+"/app_pack/"+appset.name
-    src_path = settings.ROOT_PATH+"/app_pack/schdevtools/"
+    base_path = os.path.join(settings.APP_PACK_PATH, appset.name)
+    src_path = os.path.join(settings.APP_PACK_PATH, "schdevtools")
     object_list = []
     gmt = time.gmtime()
     gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
@@ -471,10 +471,13 @@ def gen(request, pk):
     
     static_files = appset.schstatic_set.all()
     
-    if settings.STATIC_ROOT:
-        static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),appset.name)
+    if settings.STATIC_APP_ROOT:
+        static_root = os.path.join(settings.STATIC_APP_ROOT, appset.name)
     else:
-        static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),appset.name)
+        if settings.STATIC_ROOT:
+            static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),appset.name)
+        else:
+            static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),appset.name)
     
     static_scripts = os.path.join(static_root,'js')
     static_style = os.path.join(static_root,'css')
@@ -859,8 +862,8 @@ def prj_import(request):
 def manage(request, pk):
     
     appset = models.SChAppSet.objects.get(id=pk)
-    base_path = settings.ROOT_PATH+"/app_pack/"+appset.name
-    src_path = settings.ROOT_PATH+"/app_pack/schdevtools/"
+    base_path = os.path.join(settings.APP_PACK_PATH, appset.name)
+    src_path = os.path.join(settings.APP_PACK_PATH, "schdevtools") 
     command = "import sys; sys.path.append('%s'); from manage import *" % base_path
     pconsole = settings.PYTHON_CONSOLE.split(' ')
     pconsole[0]=">>>" + pconsole[0]
@@ -892,7 +895,7 @@ def template_edit(request, pk):
         else:
             template_suffix = "tbl"
     
-        file_name = settings.ROOT_PATH+("/app_pack/schdevtools/templates_src/schbuilder/wzr/new_generic_%s_template.ihtml" % template_suffix)
+        file_name = settings.APP_PACK_PATH + ("/schdevtools/templates_src/schbuilder/wzr/new_generic_%s_template.ihtml" % template_suffix)
     
         f = open(file_name, "rt")
         template.template_code = f.read()
@@ -930,7 +933,7 @@ def template_edit2(request, pk):
     if len(templates)==0:
         template=models.SChTemplate(parent=form.parent, name='Form'+form.name)
     
-        file_name = settings.ROOT_PATH+"/app_pack/schdevtools/templates_src/schbuilder/wzr/new_generic_form_template.ihtml"
+        file_name = settings.APP_PACK_PATH + "/schdevtools/templates_src/schbuilder/wzr/new_generic_form_template.ihtml"
         f = open(file_name, "rt")
         template.template_code = f.read()
         f.close()
@@ -1069,7 +1072,7 @@ def template_edit3(request, pk):
     if len(templates)==0:
         template=models.SChTemplate(parent=view.parent, name='v_'+view.name)
     
-        file_name = settings.ROOT_PATH+"/app_pack/schdevtools/templates_src/schbuilder/wzr/new_generic_form_template.ihtml"
+        file_name = settings.APP_PACK_PATH + "/schdevtools/templates_src/schbuilder/wzr/new_generic_form_template.ihtml"
         f = open(file_name, "rt")
         template.template_code = f.read()
         f.close()
@@ -1106,7 +1109,7 @@ def translate_sync(request, pk):
     locale_obj = models.SChLocale.objects.get(id=pk)
     app_pack = locale_obj.parent
     
-    base_path = os.path.join(settings.ROOT_PATH, 'app_pack')
+    base_path = settings.APP_PACK_PATH
     
     app_path = os.path.join(base_path, app_pack.name)
     locale_path = os.path.join(app_path, 'locale')
