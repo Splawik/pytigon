@@ -45,7 +45,7 @@ int WINAPI WinMain(
     if(key(bufor)!=1) get_program_path(bufor,256);
     chdir(bufor);
     strcat(bufor, "\\python\\pythonw.exe");
-    strcpy(bufor2, "pytigon.py ");
+    strcpy(bufor2, "pytigon ");
     strcat(bufor2, lpCmdLine);
     execl(bufor, bufor, bufor2, NULL);
     

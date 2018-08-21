@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/python3.6
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -17,9 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import sys
-from schcli.pytigon import main
+from pytigon_run import run
 
 if __name__ == '__main__':
-   main(sys.argv[1:])
+    run()
 

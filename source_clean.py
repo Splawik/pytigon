@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from ext_lib import PythonTidy
+import PythonTidy
 
 #dirnames = ['./schcli', './schlib', './schserw', './app_pack', './templates_src']
 dirnames = ['./app_pack/schods', ]

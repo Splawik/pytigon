@@ -27,7 +27,7 @@ from schlib.schtools.platform_info import platform_name
 from os import environ
 
 def run():
-    base_path = __file__.replace("ptigrun.py", "")
+    base_path = __file__.replace("pytigon_run.py", "")
     if base_path == "":
         base_path = os.getcwd()
     else:
@@ -51,6 +51,8 @@ def run():
             os.chdir(base_path)
         else:
             subprocess.run([get_executable(), "manage.py"] + sys.argv[2:])
+    elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
+        subprocess.run([get_executable(),] + sys.argv[1:])
     else:
         main(sys.argv[1:])
 

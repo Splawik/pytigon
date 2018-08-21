@@ -19,7 +19,7 @@
 
 from os import environ
 environ['PYTIGON_APP_IMAGE'] = '1'
-from ptigrun import run 
+from pytigon_run import run
 
 if __name__ == '__main__':
     run()
