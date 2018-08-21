@@ -30,12 +30,13 @@ def run():
     base_path = __file__.replace("pytigon_run.py", "")
     if base_path == "":
         base_path = os.getcwd()
-    else:
-        os.chdir(base_path)
+    #else:
+    #    os.chdir(base_path)
 
     environ['PYTIGON_ROOT_PATH'] = base_path
 
     if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
+        os.chdir(base_path)
         if '_' in sys.argv[1]:
             x = sys.argv[1].split('_',1)
             app = x[1]
@@ -54,6 +55,7 @@ def run():
     elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
         subprocess.run([get_executable(),] + sys.argv[1:])
     else:
+        os.chdir(base_path)
         main(sys.argv[1:])
 
 if __name__ == '__main__':
