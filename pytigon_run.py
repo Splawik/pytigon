@@ -55,7 +55,7 @@ def run():
     elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
         subprocess.run([get_executable(),] + sys.argv[1:])
     else:
-        os.chdir(base_path)
+        #os.chdir(base_path)
         main(sys.argv[1:])
 
 if __name__ == '__main__':
