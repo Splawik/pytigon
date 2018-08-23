@@ -1,3 +1,3 @@
-APPS=['schremote','_schtools.simplescripts','_schtools.tools','_schwiki.wiki','_schtools.commander','_schtasks.tasks',]
+APPS=['schremote','_schtools.schsimplescripts','_schtools.schtools','_schwiki.schwiki','_schtools.schcommander','_schtasks.schtasks',]
 PUBLIC = False
 MAIN_APP_PACK = False
