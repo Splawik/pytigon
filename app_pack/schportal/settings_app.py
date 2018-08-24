@@ -113,7 +113,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.08.19 09:29:05'
+GEN_TIME = '2018.08.24 15:16:25'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

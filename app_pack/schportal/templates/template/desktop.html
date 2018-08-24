@@ -14,11 +14,11 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'app/standard_components/components/vs_editor.js' %}
         {% component 'app/standard_components/components/d3.js' %}
+        {% component 'app/standard_components/components/vs_editor.js' %}
 {% endblock %}
 {% block component_init %}
-        component_init = [ "vs_editor", "d3",  ]
+        component_init = [ "d3", "vs_editor",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

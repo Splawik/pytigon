@@ -317,19 +317,19 @@ class SChAppSet( models.Model):
         else:
             ret = []
         if self.ext_apps:
-            if self.ext_apps == '*':
-                appset_list = SChAppSet.objects.all()
-                for pos in appset_list:
-                    if pos.name == self.name or not pos.public:
-                        continue
-                    app_list = pos.schapp_set.all()
-                    for pos2 in app_list:
-                        name = pos.name+"."+pos2.name
-                        if not name in ret:
-                            ret.append(name)
-                return ret
-            else:
-                l=self.ext_apps.split(',')
+            #if self.ext_apps == '*':
+            #    appset_list = SChAppSet.objects.all()
+            #    for pos in appset_list:
+            #        if pos.name == self.name or not pos.public:
+            #            continue
+            #        app_list = pos.schapp_set.all()
+            #        for pos2 in app_list:
+            #            name = pos.name+"."+pos2.name
+            #            if not name in ret:
+            #                ret.append(name)
+            #    return ret
+            #else:
+            l=self.ext_apps.split(',')
         else:
             return ret
         for a in l:

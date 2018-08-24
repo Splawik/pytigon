@@ -48,17 +48,20 @@ for ff in os.listdir(base_apps_path):
             app_pack_folders.append(ff)
 for app_pack in app_pack_folders:
     base_apps_path2 = os.path.join(base_apps_path, app_pack)
-    x = __import__(app_pack+".apps")
-    if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
-        APP_PACKS.append(app_pack)
-        apps = x.apps.APPS
-        for pos in apps:
-            if '.' in pos:
-                name = pos
-            else:
-                name = app_pack + '.' + pos
-            if not name in APPS:
-                APPS.append(name)
+    try:
+        x = __import__(app_pack+".apps")
+        if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
+            APP_PACKS.append(app_pack)
+            apps = x.apps.APPS
+            for pos in apps:
+                if '.' in pos:
+                    name = pos
+                else:
+                    name = app_pack + '.' + pos
+                if not name in APPS:
+                    APPS.append(name)
+    except:
+        print("Error importing module: ", app_pack+".apps")
 
 URL_ROOT_FOLDER=''
 STATIC_URL = '/static/'
@@ -139,5 +142,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.08.19 09:28:33'
+GEN_TIME = '2018.08.24 15:57:10'
 

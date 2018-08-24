@@ -13,46 +13,26 @@
     {% jscript_link 'vue/vue.js' %}
     
     
-    {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
-    {% jscript_link 'app/schdevtools/js/test_python.js' %}
-    {% jscript_link 'app/_schdata/js/subreport.js' %}
-    {% jscript_link 'app/schpolb/js/kalkulator_init.js' %}
     
 
 %% extrastyle
     {{block.super}}
     
-    {% css_link 'app/schdevtools/css/style.css' %}
-    {% css_link 'app/schdevtools/css/test_icss.css' %}
-    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
-    {% css_link 'app/schpolb/css/polbruk.css' %}
     
 
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/wysiwyg_edit.js' %}
-    {% component 'app/standard_components/components/handsontable.js' %}
-    {% component 'app/standard_components/components/leaflet.js' %}
-    {% component 'app/schpolb/components/kalkulator_cenowy.js' %}
-    {% component 'app/standard_components/components/video-js.js' %}
-    {% component 'app/standard_components/components/pivottable.js' %}
-    {% component 'app/schpolb/components/kalkulator_sync.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
-    {% component 'app/standard_components/components/d3.js' %}
-    {% component 'app/standard_components/components/txtarea_editor.js' %}
-    {% component 'app/standard_components/components/plotly.js' %}
     {% component 'app/standard_components/components/vs_editor.js' %}
     {% component 'app/standard_components/components/code_editor.js' %}
-    {% component 'app/standard_components/components/summernote.js' %}
     
     
 
 %% component_init
-    .component_init = [ "wysiwyg_edit", "handsontable", "leaflet", "kalkulator_cenowy", "video-js", "pivottable", "kalkulator_sync", "test", "d3", "txtarea_editor", "plotly", "vs_editor", "code_editor", "summernote",  ] 
+    .component_init = [ "vs_editor", "code_editor",  ] 
 
 %% botstrap_css
-    {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 
 %% css_links
     {{ block.super }}
