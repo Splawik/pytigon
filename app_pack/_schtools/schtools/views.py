@@ -27,7 +27,10 @@ from schlib.schdjangoext.tools import import_model
 from pyexcel_odsr import get_data
 from schlib.schtools.schjson import json_dumps, json_loads
 from schlib.schfs.vfstools import get_temp_filename
-import openpyxl
+try:
+    import openpyxl
+except:
+    pass
 import csv
  
 

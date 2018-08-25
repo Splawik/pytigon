@@ -57,7 +57,7 @@ print("python:pytigon:X3", schserw_settings.APP_PACK_PATH)
 print("python:pytigon:X4", schserw_settings.MEDIA_ROOT)
 print("python:pytigon:X5", schserw_settings.UPLOAD_PATH)
 
-init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
+init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
 
 p1 = p2 = None
