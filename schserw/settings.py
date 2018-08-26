@@ -166,7 +166,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
-    #'schserw.schmiddleware.schpost.LoginToSession',
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',

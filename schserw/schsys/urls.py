@@ -24,10 +24,11 @@ from django.contrib.auth.views import LoginView
 
 from django.views.generic import TemplateView
 import django.contrib.auth.views
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from schlib.schdjangoext.tools import make_href
 import schserw.schsys.views
 
+from schlib.schtools.tools import is_in_dicts, get_from_dicts
 
 DEFPARAM = "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
 color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
@@ -38,33 +39,36 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
 def sch_login(request, *argi, **argv):
     ret = None
-    if 'user' in request.GET:
-        username = request.GET['user']
+    if is_in_dicts('username', (request.POST, request.GET) ):
+        username = get_from_dicts('username', (request.POST, request.GET) )
         if username == 'auto':
-            if 'password' in request.GET:
-                password = request.GET['password']
+            if is_in_dicts('password', (request.POST, request.GET) ):
+                password = get_from_dicts('password', (request.POST, request.GET) )
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     ret = login(request, user)
                     request.session['autologin'] = True
+                else:
+                    return HttpResponse("Error!")
     if ret == None:
-        ret = LoginView.as_view()(request, *argi, **argv)
+        ret = LoginView.as_view(template_name='schapp/index.html')(request, *argi, **argv)
 
     parm = request.POST.get('client_param', '')
     if parm != '':
         request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
     else:
         request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
-    path = request.GET.get("next", "")
-    if path == "":
-        path = request.POST.get("next", "")
-        if path == "":
-            path = make_href("/")
+    #path = request.GET.get("next", "")
+    #if path == "":
+    #    path = request.POST.get("next", "")
+    #    if path == "":
+    #        path = make_href("/")
+    #
+    #if '/schsys/login/' in path:
+    #    path = make_href("/")
 
-    if '/schsys/login/' in path:
-        path = make_href("/")
-
-    return HttpResponseRedirect(path)
+    return ret
+    #return HttpResponseRedirect(path)
 
 
 urlpatterns = [

@@ -17,28 +17,6 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-class LoginToSession(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if 'sessionid' in request.GET:
-            from django.contrib.sessions.models import Session
-            from django.contrib.auth.models import User
-            from django.contrib.auth import login
-            sessionid = request.GET['sessionid']
-            session = Session.objects.get(session_key=sessionid)
-            d = request.session.decode(session.session_data)
-            uid = d.get('_auth_user_id')
-            user = User.objects.get(pk=uid)
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)
-            if 'client_param' in request.GET:
-                parm = request.GET['client_param']
-                if parm != '':
-                    request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
-        return self.get_response(request)
-
 class ViewRequests(object):
     def process_request(self, request):
         print(request.method, request.path)

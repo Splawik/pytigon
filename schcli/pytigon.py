@@ -532,9 +532,9 @@ class SchApp(App, _BASE_APP):
                          {'script': s.read()})
 
 
-def login(base_href, auth_type=None):
+def login(base_href, auth_type=None, username = None):
     """Show login form"""
-    dlg = LoginDialog(None, 101, _("Pytigon - login"))
+    dlg = LoginDialog(None, 101, _("Pytigon - login"), username=username)
 
     while dlg.ShowModal() == wx.ID_OK:
 
@@ -543,7 +543,7 @@ def login(base_href, auth_type=None):
 
         parm = {'username': username,
                 'password': password,
-                'next': '/schsys/ok',
+                'next': '/schsys/ok/',
                 'client_param': wx.GetApp()._get_parm_for_server(),
                 }
 
@@ -584,10 +584,14 @@ def _main_init(argv):
     embeded_browser = False
     extern_app_set = False
     app_name = ''
+    username = None
+    password = None
 
     try:
-        (opts, args) = getopt.getopt(argv, 'h:dmpbs', [
+        (opts, args) = getopt.getopt(argv, 'h:dmpbsu:p:', [
             'help',
+            'username=',
+            'password=',
             'embededbrowser',
             'embededserver',
             'migrate',
@@ -622,6 +626,10 @@ def _main_init(argv):
             loaddb = True
         elif opt == '--server_only':
             server_only = True
+        elif opt in ('-u' '--username'):
+            username = arg
+        elif opt in ('-p' '--password'):
+            password = arg
         elif opt in ('-b' '--embededbrowser'):
             embeded_browser = True
         elif opt in ('-s', '--embededserver'):
@@ -817,24 +825,20 @@ def _main_init(argv):
 
     ready_to_run = True
 
-    username = 'auto'
-    password = 'anawa'
 
-    #if extern_app_set:
-    #    app.http.get("", "http://127.0.0.2/")
-    #    app.http.post("", "http://127.0.0.2/schsys/do_login/", {
-    #        'username': username,
-    #        'password': password,
-    #        'next': "http://127.0.0.2/schsys/ok",
-    #        'client_param': app._get_parm_for_server()
-    #    })
+    if not app.authorized and ( (autologin and not username) or (username and password)):
+        if username:
+            username2 = username
+            password2 = password
+        else:
+            username2 = 'auto'
+            password2 = 'anawa'
 
-    if not app.authorized and autologin:
         ready_to_run = False
         app.http.post(app, "/" + app_name + '/schsys/do_login/' if app_name else '/schsys/do_login/', {
             'csrfmiddlewaretoken': app.csrf_token,
-            'username': username,
-            'password': password,
+            'username': username2,
+            'password': password2,
             'next': address + "/" + app_name + '/schsys/ok/' if app_name else  address + '/schsys/ok/',
             'client_param': app._get_parm_for_server(),
         })
@@ -845,7 +849,7 @@ def _main_init(argv):
     if not app.authorized:
         ready_to_run = False
         href = "/" + app_name + "/" if app_name else "/"
-        if login(href, auth_type=None):
+        if login(href, auth_type=None, username=username):
             app.authorized = True
             ready_to_run = True
     if reinit:

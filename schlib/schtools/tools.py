@@ -151,3 +151,15 @@ def get_session():
         return request.session
     else:
         return None
+
+def is_in_dicts(elem, dicts):
+    for dict in dicts:
+        if elem in dict:
+            return True
+    return False
+
+def get_from_dicts(elem, dicts):
+    for dict in dicts:
+        if elem in dict:
+            return dict[elem]
+    return False
