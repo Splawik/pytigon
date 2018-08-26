@@ -383,7 +383,14 @@ class CEFControl(wx.Control):
         else:
             self.browser.GetMainFrame().LoadUrl("about:blank")
 
-    def load_url(self, url):
+    def load_url(self, url, cookies=None):
+        if cookies:
+            cm = cef.CookieManager.GetGlobalManager()
+            for name, value in cookies.items():
+                cookie = cef.Cookie()
+                cookie.Set({'name': name, 'value': value })
+                cm.SetCookie(url, cookie)
+
         if self.browser:
             self.url = url
             self.browser.GetMainFrame().LoadUrl(url)

@@ -727,7 +727,8 @@ class SchAppFrame(SchBaseFrame):
     def bind_command(self, fun, id=wx.ID_ANY):
         """bind command event, unlike wxPython Bind this function bind command to menu and toolbar interface"""
         self.Bind(wx.EVT_MENU, fun, id=id)
-        self.toolbar_interface.bind(fun, id)
+        if self.toolbar_interface:
+            self.toolbar_interface.bind(fun, id)
 
     def get_menu_bar(self):
         """return toolbar interface"""

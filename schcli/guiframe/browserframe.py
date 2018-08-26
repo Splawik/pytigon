@@ -18,6 +18,9 @@
 #version: "0.1a"
 
 import wx
+
+from schlib.schhttptools.httpclient import COOKIES
+
 import schcli.guictrl.ctrl
 
 from schcli.guiframe.baseframe import SchBaseFrame
@@ -55,7 +58,8 @@ class SchBrowserFrame(SchBaseFrame):
         if event.Show and not self.ctrl:
             app = wx.GetApp()
             self.ctrl = schcli.guictrl.ctrl.HTML2(self, name='schbrowser', size=self.GetClientSize())
-            self.ctrl.load_url(app.base_address+"/")
+            #self.ctrl.load_url(app.base_address+"/", cookies = COOKIES)
+            self.ctrl.load_url(app.base_path+"/", cookies = COOKIES)
 
     def on_size(self, event):
         if event:

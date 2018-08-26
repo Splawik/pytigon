@@ -328,7 +328,7 @@ class BaseWebBrowser(object):
     def get_parent_form(self):
         return None
 
-    def load_url(self, url):
+    def load_url(self, url, cookies=None):
         pass
 
     def load_str(self, data, base=None):

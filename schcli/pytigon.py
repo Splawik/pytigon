@@ -185,18 +185,18 @@ class SchApp(App, _BASE_APP):
         if RPC:
             xmlrpc.XMLRPC.__init__(self)
 
-        if not '--no_splash' in sys.argv:
+        if not '--no_splash' in sys.argv and not '--no_gui' in sys.argv and not '--server_only' in sys.argv \
+                and not '--help' in sys.argv:
             bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
             splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
                                          1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
                                          wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
-        wx.Yield()
+            wx.Yield()
 
         config_name = os.path.join(SCR_PATH, "pytigon.ini")
         self.config = configparser.ConfigParser()
         self.config.read(config_name)
 
-        self.is_hybrid = False
         self.locale = None
         self.ext_app = []
         self.ext_app_http = {}
@@ -580,31 +580,28 @@ def _main_init(argv):
     nogui = False
     server_only = False
     address = 'http://127.0.0.2'
-    embed_diango = True
     app_title = _("Pytigon")
     embeded_browser = False
     extern_app_set = False
     app_name = ''
 
     try:
-        (opts, args) = getopt.getopt(argv, 'h:dmp', [
+        (opts, args) = getopt.getopt(argv, 'h:dmpbs', [
             'help',
-            # 'app_set=',
-            'hybrid',
-            'syncdb',
+            'embededbrowser',
+            'embededserver',
+            'migrate',
             'loaddb',
             'server_only',
-            'href=',
-            'nogui',
-            'menu_always',
             'debug',
-            'embededbrowser',
             'rpc=',
-            'no_splash',
             'param=',
             'inspection',
             'trace',
             'video',
+            'no_gui',
+            'no_splash',
+            'menu_always',
         ])
     except getopt.GetoptError:
         usage()
@@ -618,34 +615,19 @@ def _main_init(argv):
             return (0, 0)
         elif opt == '-d':
             global _DEBUG
-            _DEBUG = 1
-        elif opt == '--syncdb':
+            _DEBUG = True
+        elif opt == '--migrate':
             sync = True
         elif opt == '--loaddb':
             loaddb = True
         elif opt == '--server_only':
             server_only = True
-        elif opt == '--embededbrowser':
+        elif opt in ('-b' '--embededbrowser'):
             embeded_browser = True
-        elif opt == '--href':
-            if arg != 'embeded':
-                CWD_PATH = schserw_settings.APP_PACK_PATH + '/_schremote'
-
-            tmp = arg.replace('//', '$$$')
-            if '/' in arg:
-                x = tmp.split('/', 1)
-                address = x[0].replace('$$$', '//')
-                if len(x)>1:
-                    app_name = x[1]
-                    if app_name.endswith('/'):
-                        app_name = app_name[:-1]
-            else:
-                address = arg
-
+        elif opt in ('-s', '--embededserver'):
+            address = 'embeded'
             extern_app_set = True
-        elif opt == '--hybrid':
-            app.is_hybrid = True
-        elif opt == '--nogui':
+        elif opt == '--no_gui':
             nogui = True
         elif opt in ('-m', '--menu_always'):
             app.menu_always = True
@@ -679,10 +661,28 @@ def _main_init(argv):
                     print(_("Name of script: '%s' is not valid") % prg_name)
                     return (None, None)
         else:
-            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + args[0].strip()
-            if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
-                print(_("Application pack: '%s' does not exists") % args[0].strip())
-                return (None, None)
+            arg = args[0].strip()
+            if arg == 'embeded' or '.' in arg or '/' in arg:
+                if arg != 'embeded':
+                    CWD_PATH = schserw_settings.APP_PACK_PATH + '/_schremote'
+
+                tmp = arg.replace('//', '$$$')
+                if '/' in arg:
+                    x = tmp.split('/', 1)
+                    address = x[0].replace('$$$', '//')
+                    if len(x)>1:
+                        app_name = x[1]
+                        if app_name.endswith('/'):
+                            app_name = app_name[:-1]
+                else:
+                    address = arg
+
+                extern_app_set = True
+            else:
+                CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
+                if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
+                    print(_("Application pack: '%s' does not exists") % arg)
+                    return (None, None)
     elif extern_app_set:
         pass
     else:
@@ -705,41 +705,36 @@ def _main_init(argv):
 
     httpclient.init_embeded_django()
 
-    if address == 'http://127.0.0.2':
-        embed_diango = True
-    else:
-        embed_diango = True
+    import settings_app
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
+    from django.conf import settings
+    if sync:
+        from django.core.management.commands.migrate import Command as migrate_command
+        migrate = migrate_command()
+        try:
+            migrate.run_from_argv(['manage.py', 'migrate'])
+        except SystemExit:
+            pass
+    if loaddb:
+        from django.core.management.commands.loaddata import Command as load_command
+        load = load_command()
+        try:
+            load.run_from_argv(['manage.py', 'loaddata'])
+        except:
+            pass
 
-    if embed_diango:
-        import settings_app
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
-        from django.conf import settings
-        if sync:
-            from django.core.management.commands.syncdb import Command as sync_command
-            sync = sync_command()
-            try:
-                sync.run_from_argv(['manage.py', 'syncdb'])
-            except SystemExit:
-                pass
-        if loaddb:
-            from django.core.management.commands.loaddata import Command as load_command
-            load = load_command()
-            try:
-                load.run_from_argv(['manage.py', 'loaddata'])
-            except:
-                pass
     cwd = CWD_PATH
     inst_dir = SCR_PATH
     if inst_dir == '':
         inst_dir = cwd
-    if embed_diango:
-        settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/schappdata/schplugins')
-        settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/schappdata/schplugins')
-        settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/../templates')
-        settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/templates')
 
-        for a in apps:
-            settings.INSTALLED_APPS.append(a)
+    settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/schappdata/schplugins')
+    settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/schappdata/schplugins')
+    settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/../templates')
+    settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/templates')
+
+    for a in apps:
+        settings.INSTALLED_APPS.append(a)
 
     port = 0
     if server_only:
@@ -776,9 +771,8 @@ def _main_init(argv):
         app.task_manager = get_process_manager()
         server = None
 
-    if embed_diango:
-        settings.BASE_URL = 'http://' + address
-        settings.URL_ROOT_FOLDER = ''
+    settings.BASE_URL = 'http://' + address
+    settings.URL_ROOT_FOLDER = ''
 
     init_ret = app._init2(address, app_name)
     if init_ret != 200:
@@ -817,7 +811,7 @@ def _main_init(argv):
                 app.plugins = row[1].data.split(';')
 
     if server_only:
-        app.gui_style = 'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
+        app.gui_style = 'app.gui_style = tray(file(exit,open))'
 
     app._install_plugins()
 
@@ -925,41 +919,34 @@ def main(argv):
     """Run pytigon application: pytigon.py [option]... arg
 
     command line arguments:
-        arg: application package name or pytigon installation file name
+        arg: application package name, schdevtools for example
+             or address of http server, http://www.pytigon.cloud for example
+             or pytigon script name, test.schdevtools.schsimplescripts.ptig for example
+             or pytigon installation file name
+             or django management command in format: manage_[[package name]], manage_schdevtools runserver for example
+             or python script, test.py for example
 
         options:
-
             -h, --help - show help
 
-            --href=<address> - address of http server, http://www.pytigon.cloud for example
+            -b --embededbrowser - run embeded browseer window
+            -s --embededserver - run in background embeded http server
+            -m --menu_always - show menu event then configuration says otherwise
+            --no_splash - do not show splash window
+            --no_gui - run program without gui
+            --server_only - run only http server
+
+            --migrate - run django command: manage.py migrate
+            --loaddb - run django command: manage.py loaddb
+
+            --rpc=<port> - set tcp port of rpc
+            --video - record video session
 
             -p <parameters>, --param=<parameters> - parametres of request to http server
 
-            --hybrid - hybrid mode
-
-            --server_only - run only http server
-
-            --syncdb - run django command: manage.py syncdb
-
-            --loaddb - run django command: manage.py loaddb
-
-            --nogui - run program without gui
-
-            --embededbrowser - run in background embeded http server
-
-            -m --menu_always - show menu event then configuration says otherwise
-
-            --no_splash - do not show splash window
-
-            --rpc=<port> - set tcp port of rcp
-
             -d --debug - debug mode
-
             --inspection - turn on wxPython inspection
-
             --trace - show trace of python calls
-
-            --video - record video session
     """
 
     ready_to_run, nogui = _main_init(argv)

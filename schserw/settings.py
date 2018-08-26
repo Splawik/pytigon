@@ -38,6 +38,10 @@ else:
     DB_DEBUG = False
     PRODUCTION_VERSION = True
 
+if sys.argv and sys.argv[0].endswith('pytigon'):
+    PRODUCTION_VERSION = False
+    DEBUG = True
+
 SHOW_LOGIN_WIN = True
 
 SERW_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -162,7 +166,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
-    'schserw.schmiddleware.schpost.LoginToSession',
+    #'schserw.schmiddleware.schpost.LoginToSession',
     #'schserw.schmiddleware.schpost.ViewPost',
     #'schserw.schmiddleware.schpost.ViewRequests',
     #'schserw.schmiddleware.schpost.BeautyHtml',
