@@ -49,7 +49,10 @@ def sch_login(request, *argi, **argv):
                     ret = login(request, user)
                     request.session['autologin'] = True
                 else:
-                    return HttpResponse("Error!")
+                    if 'from_pytigon' in request.GET:
+                        return HttpResponse("Error!")
+                    else:
+                        ret = None
     if ret == None:
         ret = LoginView.as_view(template_name='schapp/index.html')(request, *argi, **argv)
 
