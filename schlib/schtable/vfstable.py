@@ -278,7 +278,6 @@ def vfsopen(request, file):
             file2 = b32decode(file).decode('utf-8')
         except:
             file2 = b32decode(file.encode('utf-8')).decode('utf-8')
-
         plik = default_storage.fs.open(automount(file2),'rb')
         buf = plik.read()
         plik.close()

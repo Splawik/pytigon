@@ -676,7 +676,7 @@ class SchAppFrame(SchBaseFrame):
             if refr:
                 self._mgr.GetPane(_panel).Show()
                 self._mgr.Update()
-            return False
+            return None
 
         page = SchNotebookPage(n)
         if panel == "desktop2":

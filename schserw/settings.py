@@ -303,6 +303,12 @@ def DEFAULT_FILE_STORAGE_FS():
         _m.mount('upload', OSFS(settings.UPLOAD_PATH))
     except:
         pass
+
+    if sys.argv and sys.argv[0].endswith('pytigon'):
+        if platform_name() == 'Windows':
+            _m.mount('osfs', OSFS("c:\\"))
+        else:
+            _m.mount('osfs', OSFS("/"))
     return _m
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400

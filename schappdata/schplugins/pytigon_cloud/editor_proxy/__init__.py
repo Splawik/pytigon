@@ -32,16 +32,21 @@ def init_plugin(
     accel,
     ):
 
-    def xmlrpc_edit(self, path=None):
-        okno=self.GetTopWindow().new_main_page("^standard/editor/editor.html", path, None)
+    def xmlrpc_edit(self, path):
+        x = path.replace('\\','/').split('/')
+        name = x[-1]
+        okno=self.GetTopWindow().new_main_page("^standard/editor/editor.html", name)
         p = "/schcommander/table/FileManager/open/%s/" % b32encode(path.encode('utf-8')).decode('utf-8')
         p_save = p.replace('/open/','/save/')
         p_save_as = "schcommander/table/FileManager/save/{{file}}/"
-        ed = okno.body["EDITOR"]
-        ed.load_from_url(p, "py")
-        ed.set_save_path(p_save, p_save_as)
-        ed.GotoPos(0)
-        self.GetTopWindow().Raise()
+        this = self
+        def _init():
+            ed = okno.body.EDITOR
+            ed.load_from_url(p, "py")
+            ed.set_save_path(p_save, p_save_as)
+            ed.GotoPos(0)
+            this.GetTopWindow().Raise()
+        wx.CallAfter(_init)
         return "OK"
 
     app.xmlrpc_edit = types.MethodType(xmlrpc_edit, app)
