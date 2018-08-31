@@ -52,6 +52,25 @@ def run():
             os.chdir(base_path)
         else:
             subprocess.run([get_executable(), "manage.py"] + sys.argv[2:])
+    elif len(sys.argv) > 1 and sys.argv[1].startswith('run_'):
+        x = sys.argv[1].split('_', 1)
+        if '/' in x[1]:
+            x2 = x[1].split('/', 1)
+            app = x2[0]
+            script = x2[1]
+        else:
+            app = x[1]
+            script = run.py
+
+        if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
+            path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
+        else:
+            path2 = os.path.join(base_path, "app_pack")
+
+        path3 = os.path.join(path2, app)
+
+        subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + sys.argv[2:])
+
     elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
         subprocess.run([get_executable(),] + sys.argv[1:])
     else:

@@ -178,7 +178,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.admin',
     'django.forms',
     'django.contrib.staticfiles',
@@ -188,9 +187,8 @@ INSTALLED_APPS = [
     'schserw.schsys',
 ]
 
-if platform_name()!='Android':
+if not 'PYTIGON_WITHOUT_CHANNELS' in os.environ  and platform_name()!='Android':
     INSTALLED_APPS.append('channels')
-
 
 HIDE_APPS = []
 

@@ -85,6 +85,21 @@ from schlib.schtools import createparm
 from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
 
+if any(s.startswith('--rpc') for s in sys.argv):
+    os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
+
+    import wxreactor
+    wxreactor.install()
+    from twisted.internet import reactor
+    from twisted.web import xmlrpc, server
+
+    RPC = True
+else:
+    RPC = False
+
+if not any(s.startswith('--channels') for s in sys.argv):
+    os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
+
 from schserw import settings as schserw_settings
 
 from schlib.schtools.install_init import init
@@ -106,17 +121,6 @@ if any(s.startswith('--trace') for s in sys.argv):
 _VIDEO = False
 if any(s.startswith('--video') for s in sys.argv):
     _VIDEO = True
-
-if any(s.startswith('--rpc') for s in sys.argv):
-    import wxreactor
-
-    wxreactor.install()
-    from twisted.internet import reactor
-    from twisted.web import xmlrpc, server
-
-    RPC = True
-else:
-    RPC = False
 
 # import gc
 # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
@@ -594,6 +598,7 @@ def _main_init(argv):
             'password=',
             'embededbrowser',
             'embededserver',
+            'channels'
             'migrate',
             'loaddb',
             'server_only',
