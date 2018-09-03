@@ -27,7 +27,7 @@ import uuid
 from django.urls import get_script_prefix
 from django.apps import apps
 from django.views import generic
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.conf import settings
 from django.conf.urls import url
@@ -37,6 +37,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from schlib.schviews.actions import new_row_action, update_row_action
 from schlib.schviews.viewtools import render_to_response
+from schlib.schtools.schjson import json_loads, json_dumps
 
 from .viewtools import transform_template_name, LocalizationTemplateResponse, ExtTemplateResponse
 from .form_fun import form_with_perms
@@ -277,7 +278,7 @@ class GenericRows(object):
         return self
 
     def list(self):
-        url = r'((?P<base_filter>[\w=_,;-]*)/|)(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|tree|get|gettree)/$'
+        url = r'((?P<base_filter>[\w=_,;-]*)/|)(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>list|sublist|tree|get|gettree|table_action)/$'
 
         parent_class = self
 
@@ -326,6 +327,23 @@ class GenericRows(object):
             def get(self, request, *args, **kwargs):
                 if 'init' in kwargs:
                     kwargs['init'](self)
+
+                if self.kwargs['vtype'] == 'table_action':
+                    queryset = self.get_queryset()
+                    if hasattr(queryset.model, 'table_action'):
+                        data = request.POST
+                        if request.content_type == 'application/json':
+                            data = json_loads(request.body)
+                        ret =  getattr(queryset.model, 'table_action')(self, request, data)
+                        if ret == None:
+                            raise Http404("Action doesn't exists")
+                        else:
+                            if type(ret) == str:
+                                return HttpResponse(ret, content_type='application/json')
+                            else:
+                                return JsonResponse(ret, safe=False)
+                    raise Http404("Action doesn't exists")
+
                 if 'tree' in self.kwargs['vtype']:
                     parent = int(kwargs['filter'])
                     if parent < 0:
@@ -470,7 +488,7 @@ class GenericRows(object):
         return self
 
     def detail(self):
-        url = r'(?P<pk>\d+)/(?P<target>[\w_]*)/view/$'
+        url = r'(?P<pk>\d+)/(?P<target>[\w_]*)/(?P<vtype>view|row_action)/$'
         parent_class = self
 
         class DetailView(generic.DetailView):
@@ -515,6 +533,22 @@ class GenericRows(object):
                             context['app_pack'] = app.split('.')[0]
                         break
                 return context
+
+            def get(self, request, *args, **kwargs):
+                if self.kwargs['vtype'] == 'row_action':
+                    self.object = self.get_object()
+                    if hasattr(self.object, 'row_action'):
+                        ret =  getattr(self.model, 'row_action')(self.model, request, args, kwargs)
+                        if ret == None:
+                            raise Http404("Action doesn't exists")
+                        else:
+                            return JsonResponse(ret)
+                    raise Http404("Action doesn't exists")
+
+                return super(generic.DetailView, self).get(request, *args, **kwargs)
+
+            def post(self, request, *args, **kwargs):
+                return self.get(request, *args, **kwargs)
 
         fun = make_perms_test_fun(self.base_perm % 'list', DetailView.as_view())
         return self._append(url, fun)

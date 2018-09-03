@@ -19,11 +19,14 @@
 
 import wx
 import wx.grid
+import csv
+import io
 
 from wx.grid import GridCellAttr, GridTableMessage, GRIDTABLE_NOTIFY_ROWS_DELETED, GRIDTABLE_NOTIFY_ROWS_APPENDED
 
 from schcli.guictrl.grid import popupcelleditors
 from schcli.guictrl.grid.renderers import ExtStringRenderer, IconAndStringRenderer, DateTimeRenderer
+from schlib.schtools.schjson import json_dumps, json_loads
 
 _ = wx.GetTranslation
 
@@ -483,8 +486,65 @@ class SchTableGrid(wx.grid.Grid):
             evt.Skip()
             return
 
+        if evt.ControlDown() and evt.GetKeyCode() in [67, 322]:
+            self.copy(evt)
+            return
+
+            # Ctrl+V
+        elif evt.ControlDown() and evt.GetKeyCode() == 86:
+            self.paste(evt)
+            return
+
         evt.Skip()
         return
+
+    def copy(self, evt, format='json'):
+        x = self.GetTable().copy()
+        if x:
+            if wx.TheClipboard.Open():
+                if format == 'csv':
+                    data = []
+                    first_rec = True
+                    for obj in x:
+                        row = obj['fields']
+                        if first_rec:
+                            rec = []
+                            for key, value in row.items():
+                                rec.append(key)
+                            data.append(rec)
+                            first_rec = False
+                        rec = []
+                        for pos in data[0]:
+                            if pos in row:
+                                rec.append(row[pos])
+                            else:
+                                rec.append(None)
+                        data.append(rec)
+                    writer = io.StringIO()
+                    csvwriter = csv.writer(writer)
+                    for row in data:
+                        csvwriter.writerow(row)
+                    writer.seek(0)
+                    x = writer.read()
+                    wx.TheClipboard.SetData(wx.TextDataObject(x))
+                if format == 'json':
+                    wx.TheClipboard.SetData(wx.TextDataObject(json_dumps(x, indent=4)))
+                wx.TheClipboard.Close()
+            else:
+                wx.MessageBox(_("Unable to open the clipboard"), _("Error"))
+
+    def paste(self, evt):
+        text_data = wx.TextDataObject()
+        if wx.TheClipboard.Open():
+            success = wx.TheClipboard.GetData(text_data)
+            wx.TheClipboard.Close()
+            if success:
+                txt = text_data.GetText()
+                ret = self.GetTable().paste(json_loads(txt))
+                if 'success' in ret:
+                    self.Refresh()
+        else:
+            wx.MessageBox(_("Unable to open the clipboard"), _("Error"))
 
     def on_update_rec_from_form(self, rec):
         row = self.GetGridCursorRow()

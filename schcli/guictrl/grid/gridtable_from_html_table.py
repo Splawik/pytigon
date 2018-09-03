@@ -17,12 +17,12 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
+import urllib
 import wx
 
 from .gridtable_base import SchGridTableBase
 from schlib.schhtml.htmlviewer import tdata_from_html
 from schcli.guilib.tools import colour_to_html
-
 
 class KeyForRec:
     def __init__(self, rec, tabsort):
@@ -310,3 +310,33 @@ class SimpleDataTable(SchGridTableBase):
 
     def CanSetValueAs(self,row,col,type_name):
         return self.CanGetValueAs(row, col, type_name)
+
+
+    def copy(self):
+        href_base = self._parent.GetParent().get_parm_obj().address
+        href = urllib.parse.urljoin(href_base, "../table_action/")
+        if self.rec_selected:
+            href += "?pk=" + ",".join([str(pos.data) for pos in self.get_sel_rows()[0]])
+        data = { 'action': 'copy', }
+        http = wx.GetApp().get_http(self._parent)
+        http.post(self._parent, href, parm = data, json_data = True)
+        try:
+            s = http.json()
+        except:
+            s = None
+        http.clear_ptr()
+        return s
+
+    def paste(self, data):
+        href_base = self._parent.GetParent().get_parm_obj().address
+        href = urllib.parse.urljoin(href_base, "../table_action/")
+
+        data2 = { 'action': 'paste', 'data': data }
+        http = wx.GetApp().get_http(self._parent)
+        http.post(self._parent, href, parm = data2, json_data = True)
+        try:
+            s = http.json()
+        except:
+            s = None
+        http.clear_ptr()
+        return s

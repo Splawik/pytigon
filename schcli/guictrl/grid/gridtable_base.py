@@ -345,3 +345,9 @@ class SchGridTableBase(wx.grid.GridTableBase):
             attr = self.attr_insert
             attr.IncRef()
             return attr
+
+    def copy(self):
+        return None
+
+    def paste(self, data):
+        return None

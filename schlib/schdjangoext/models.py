@@ -23,6 +23,7 @@
 
 from django.db import models
 from django import forms
+from django.core import serializers
 
 from schlib.schtools.schjson import json_dumps, json_loads
 from schlib.schdjangoext.fastform import form_from_str
@@ -97,3 +98,29 @@ class JSONModel(models.Model):
 class TreeModel(models.Model):
     class Meta:
         abstract = True
+
+
+def standard_table_action(cls, list_view, request, data, operations):
+    if 'action' in data:
+        if data['action'] == 'copy' and 'copy' in operations:
+            if 'pk' in request.GET:
+                x = request.GET['pk'].split(',')
+                x2 = [int(pos) for pos in x]
+                return serializers.serialize("json", list_view.get_queryset().filter(pk__in=x2))
+            else:
+                return serializers.serialize("json", list_view.get_queryset())
+        if data['action'] == 'paste' and 'paste' in operations:
+            if 'data' in data:
+                data2 = data['data']
+                for obj in data2:
+                    obj2 = cls()
+                    for key, value in obj['fields'].items():
+                        if not key in ('id', 'pk'):
+                            if key == 'parent':
+                                if 'parent_pk' in list_view.kwargs:
+                                    setattr(obj2, 'parent_id', list_view.kwargs['parent_pk'])
+                            else:
+                                setattr(obj2, key, value)
+                    obj2.save()
+            return {'success': 1}
+    return None

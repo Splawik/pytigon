@@ -93,7 +93,7 @@ class HttpClient:
     def close(self):
         pass
 
-    def post(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None):
+    def post(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, json_data = False):
         """Prepare post request to the http server
 
         Args:
@@ -103,10 +103,12 @@ class HttpClient:
             upload - True or False
             credentials - default False
             user_agent - default None
+            json_data - send parm to server in json format
         """
-        return self.get(parent, address_str, parm, upload, credentials, user_agent, True)
+        return self.get(parent, address_str, parm, upload, credentials, user_agent, True, json_data = json_data)
 
-    def get(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, post_request=False):
+    def get(self, parent, address_str, parm=None, upload = False, credentials=False, user_agent=None, \
+            post_request=False, json_data = False):
         """Prepare get request to the http server
 
         Args:
@@ -201,13 +203,19 @@ class HttpClient:
             headers['User-Agent'] = user_agent
         headers['Referer'] = adr
 
-
         HTTP_LOCK.acquire()
         try:
 
             if post_request:
+                #if 'csrfmiddlewaretoken' in parm:
+                #    headers['X-CSRFToken'] = parm['csrfmiddlewaretoken']
+                #if json_data:
+                #    headers['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+                    
                 if 'csrftoken' in cookies:
-                    parm['csrfmiddlewaretoken'] = cookies['csrftoken']
+                    #parm['csrfmiddlewaretoken'] = cookies['csrftoken']
+                    headers['X-CSRFToken'] = cookies['csrftoken']
+
                 if upload:
                     files = {}
                     for key, value in parm.items():
@@ -215,15 +223,29 @@ class HttpClient:
                             files[key]=open(value[1:], "rb")
                     for key in files:
                         del parm[key]
-                    if credentials:
-                        self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
+                    if json_data:
+                        if credentials:
+                            self.http = requests.post(adr, json=parm, files=files, headers=headers, auth=credentials,
+                                                      allow_redirects=True, cookies=cookies)
+                        else:
+                            self.http = requests.post(adr, json=parm, files=files, headers=headers,
+                                                      allow_redirects=True, cookies=cookies)
                     else:
-                        self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=cookies)
+                        if credentials:
+                            self.http = requests.post(adr, data=parm, files=files, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
+                        else:
+                            self.http = requests.post(adr, data=parm, files=files, headers=headers, allow_redirects=True, cookies=cookies)
                 else:
-                    if credentials:
-                        self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
+                    if json_data:
+                        if credentials:
+                            self.http = requests.post(adr, json=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
+                        else:
+                            self.http = requests.post(adr, json=parm, headers=headers, allow_redirects=True, cookies=cookies)
                     else:
-                        self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=cookies)
+                        if credentials:
+                            self.http = requests.post(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
+                        else:
+                            self.http = requests.post(adr, data=parm, headers=headers, allow_redirects=True, cookies=cookies)
             else:
                 if credentials:
                     self.http = requests.get(adr, data=parm, headers=headers, auth=credentials, allow_redirects=True, cookies=cookies)
@@ -290,6 +312,9 @@ class HttpClient:
         else:
             ret = self.content
         return ret
+
+    def json(self):
+        return self.http.json()
 
     def to_python(self):
         """Return request content in json format converted to python object"""

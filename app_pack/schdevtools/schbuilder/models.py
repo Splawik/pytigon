@@ -365,6 +365,12 @@ class SChAppSet( models.Model):
     def __str__(self):
         return self.name
     
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        return standard_table_action(cls, list_view, request, data, ['copy', 'paste'])
+    
+        
+    
 admin.site.register(SChAppSet)
 
 
@@ -724,6 +730,10 @@ class SChField( models.Model):
                 if rec[0].strip()=='related_name':
                     return rec[1].replace("'","").replace("\"","").strip()
         return self.parent.name.lower()+'_set'
+        
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        return standard_table_action(cls, list_view, request, data, ['copy', 'paste'])
     
 admin.site.register(SChField)
 

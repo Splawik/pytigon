@@ -79,13 +79,13 @@ def loads(json_str):
     return json.loads(unquote_plus(json_str), object_hook=as_complex)
 
 
-def json_dumps(obj):
+def json_dumps(obj, indent=None):
     """Encode python object to json format. Return encoded string.
 
     Args:
         obj - python object to encode
     """
-    return json.dumps(obj, cls=ComplexEncoder)
+    return json.dumps(obj, cls=ComplexEncoder, indent=indent)
 
 
 def json_loads(json_str):

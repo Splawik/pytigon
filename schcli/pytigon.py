@@ -841,7 +841,7 @@ def _main_init(argv):
 
         ready_to_run = False
         app.http.post(app, "/" + app_name + '/schsys/do_login/?from_pytigon=1' if app_name else '/schsys/do_login/?from_pytigon', {
-            'csrfmiddlewaretoken': app.csrf_token,
+            #'csrfmiddlewaretoken': app.csrf_token,
             'username': username2,
             'password': password2,
             'next': address + "/" + app_name + '/schsys/ok/' if app_name else  address + '/schsys/ok/',
