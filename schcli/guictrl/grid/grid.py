@@ -542,7 +542,8 @@ class SchTableGrid(wx.grid.Grid):
                 txt = text_data.GetText()
                 ret = self.GetTable().paste(json_loads(txt))
                 if 'success' in ret:
-                    self.Refresh()
+                    self.GetTable().refresh(True)
+                    self.ForceRefresh()
         else:
             wx.MessageBox(_("Unable to open the clipboard"), _("Error"))
 

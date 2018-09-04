@@ -346,6 +346,9 @@ class SchGridTableBase(wx.grid.GridTableBase):
             attr.IncRef()
             return attr
 
+    def refresh(self, storePos):
+        pass
+
     def copy(self):
         return None
 

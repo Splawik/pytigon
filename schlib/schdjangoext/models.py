@@ -101,15 +101,15 @@ class TreeModel(models.Model):
 
 
 def standard_table_action(cls, list_view, request, data, operations):
-    if 'action' in data:
-        if data['action'] == 'copy' and 'copy' in operations:
+    if 'action' in data and data['action'] in operations:
+        if data['action'] == 'copy':
             if 'pk' in request.GET:
                 x = request.GET['pk'].split(',')
                 x2 = [int(pos) for pos in x]
                 return serializers.serialize("json", list_view.get_queryset().filter(pk__in=x2))
             else:
                 return serializers.serialize("json", list_view.get_queryset())
-        if data['action'] == 'paste' and 'paste' in operations:
+        if data['action'] == 'paste':
             if 'data' in data:
                 data2 = data['data']
                 for obj in data2:

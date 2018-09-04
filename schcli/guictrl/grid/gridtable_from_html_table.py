@@ -312,6 +312,12 @@ class SimpleDataTable(SchGridTableBase):
         return self.CanGetValueAs(row, col, type_name)
 
 
+    def refresh(self, storePos):
+        #self.refr_count(self.proxy.get_count()+ self.can_append + self.append_count, storePos)
+        #self.GetView().ForceRefresh()
+        self.GetView().GetParent().get_parent_form().any_parent_command('refresh_html')
+
+
     def copy(self):
         href_base = self._parent.GetParent().get_parm_obj().address
         href = urllib.parse.urljoin(href_base, "../table_action/")
