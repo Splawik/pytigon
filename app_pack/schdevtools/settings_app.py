@@ -116,3 +116,10 @@ except:
 GEN_TIME = '2018.09.03 20:30:08'
 OFFLINE_SUPPORT = True
 
+#import  schserw.routing
+#from django.conf.urls import url
+#from schbuilder.customer  import EchoConsumer
+#schserw.routing.WEBSOCKET_URL_TAB.append(url(r"^echo/$", EchoConsumer),)
+CHANNELS_URL_TAB = [
+    (r"^echo/$", 'schbuilder.consumers.EchoConsumer')
+]

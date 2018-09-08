@@ -313,8 +313,6 @@ class SimpleDataTable(SchGridTableBase):
 
 
     def refresh(self, storePos):
-        #self.refr_count(self.proxy.get_count()+ self.can_append + self.append_count, storePos)
-        #self.GetView().ForceRefresh()
         self.GetView().GetParent().get_parent_form().any_parent_command('refresh_html')
 
 

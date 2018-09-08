@@ -68,7 +68,163 @@ if platform.system() == "Windows":
 else:
     sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
 
+_INSPECTION = False
+_DEBUG = False
+_TRACE = False
+_VIDEO = False
+_RPC = False
+_WEBSOCKET = None
+
+def usage():
+    print(process_argv.__doc__)
+
+def process_argv(argv):
+    """Run pytigon application: pytigon.py [option]... arg
+
+    command line arguments:
+        arg: application package name, schdevtools for example
+             or address of http server, http://www.pytigon.cloud for example
+             or pytigon script name, test.schdevtools.schsimplescripts.ptig for example
+             or pytigon installation file name
+             or django management command in format: manage_[[package name]], manage_schdevtools runserver for example
+             or python script, test.py for example
+
+        options:
+            -h, --help - show help
+
+            -b --embededbrowser - run embeded browseer window
+            -s --embededserver - run in background embeded http server
+            -m --menu_always - show menu event then configuration says otherwise
+            --no_splash - do not show splash window
+            --no_gui - run program without gui
+            --server_only - run only http server
+            --channels - start with channels library
+            --websocket_id=relative address - embed websocket client, address can be mulitipart,
+                           parts separated by a semicolon
+            --no_gui - run program without gui
+
+            --migrate - run django command: manage.py migrate
+            --loaddb - run django command: manage.py loaddb
+
+            --rpc=<port> - set tcp port of rpc
+            --video - record video session
+
+            -p <parameters>, --param=<parameters> - parametres of request to http server
+
+            -d --debug - debug mode
+            --inspection - turn on wxPython inspection
+            --trace - show trace of python calls
+    """
+    try:
+        (opts, args) = getopt.getopt(argv, 'h:dmpbsu:p:', [
+            'help',
+            'username=',
+            'password=',
+            'embededbrowser',
+            'embededserver',
+            'websocket_id=',
+            'channels',
+            'migrate',
+            'loaddb',
+            'server_only',
+            'debug',
+            'rpc=',
+            'param=',
+            'inspection',
+            'trace',
+            'video',
+            'no_gui',
+            'no_splash',
+            'menu_always',
+        ])
+    except getopt.GetoptError:
+        usage()
+        return None
+
+    ret = { 'args': args}
+
+    for (opt, arg) in opts:
+        if opt in ('-h', '--help'):
+            usage()
+            return None
+        elif opt == '--migrate':
+            ret['sync'] = True
+        elif opt == '--loaddb':
+            ret['loaddb'] = True
+        elif opt == '--server_only':
+            ret['server_only'] = True
+        elif opt in ('-u' '--username'):
+            ret['username'] = arg
+        elif opt in ('-p' '--password'):
+            ret['password'] = arg
+        elif opt in ('-b' '--embededbrowser'):
+            ret['embeded_browser'] = True
+        elif opt in ('-s', '--embededserver'):
+            ret['address'] = 'embeded'
+            ret['extern_app_set'] = True
+        elif opt == '--no_gui':
+            ret['nogui'] = True
+        elif opt in ('-m', '--menu_always'):
+            ret['menu_always'] = True
+        elif opt in ('--rpc'):
+            ret['rpc'] = int(arg)
+        elif opt in ('-p', '--param'):
+            ret['param'] = arg
+        elif opt in ('--channels'):
+            ret['channels'] = True
+        elif opt in ('--websocket_id',):
+            ret['websocket'] = arg
+        elif opt in ('--no_splash'):
+            ret['no_splash'] = True
+        elif opt in ('-d', '--debug'):
+            global _DEBUG
+            _DEBUG = True
+        elif opt in ('--inspection',):
+            global _INSPECTION
+            _INSPECTION = True
+        elif opt in ('--trace',):
+            global _TRACE
+            _TRACE = True
+        elif opt in ('--video',):
+            global _VIDEO
+            _VIDEO = True
+    return ret
+
+_PARAM = process_argv(sys.argv[1:])
+if _PARAM == None:
+    sys.exit(0)
+
+from schserw import settings as schserw_settings
+
+def process_adv_argv():
+    global _PARAM
+    if 'args' in _PARAM:
+        arg = _PARAM['args'][0].strip()
+        if not (arg == 'embeded' or '.' in arg or '/' in arg):
+            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
+            if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
+                print(_("Application pack: '%s' does not exists") % arg)
+                sys.exit(0)
+            else:
+                sys.path.insert(0, CWD_PATH)
+                try:
+                    from apps import GUI_COMMAND_LINE
+                    x = GUI_COMMAND_LINE.split(' ')
+                    param = process_argv(x)
+                    for key, value in param.items():
+                        if not key in _PARAM:
+                            _PARAM[key] = value
+                except:
+                    pass
+
+process_adv_argv()
+
 import wx
+
+if 'channels' in _PARAM or 'rpc' in _PARAM:
+    from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
+    import asyncio
+    from asyncio.events import get_event_loop
 
 from schcli.guilib import image
 from schcli.guilib import pytigon_install
@@ -85,42 +241,25 @@ from schlib.schtools import createparm
 from schlib.schparser.html_parsers import ShtmlParser
 import schcli.guictrl.tag
 
-if any(s.startswith('--rpc') for s in sys.argv):
-    os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
+if 'rpc' in _PARAM or 'websocket' in _PARAM:
+    import twisted.internet.asyncioreactor
+    twisted.internet.asyncioreactor.install()
 
-    import wxreactor
-    wxreactor.install()
     from twisted.internet import reactor
-    from twisted.web import xmlrpc, server
+    import twisted
+    if 'rpc' in _PARAM:
+        from twisted.web import xmlrpc, server
+        _RPC = True
+    if 'websocket' in _PARAM:
+        from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+        _WEBSOCKET = _PARAM['websocket']
 
-    RPC = True
-else:
-    RPC = False
-
-if not any(s.startswith('--channels') for s in sys.argv):
+if not 'channels' in _PARAM:
     os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
 
-from schserw import settings as schserw_settings
 
 from schlib.schtools.install_init import init
 init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
-
-
-INSPECTION = False
-if any(s.startswith('--inspection') for s in sys.argv):
-    INSPECTION = True
-
-_DEBUG = False
-if any(s.startswith('--debug') for s in sys.argv):
-    _DEBUG = True
-
-_TRACE = False
-if any(s.startswith('--trace') for s in sys.argv):
-    _TRACE = True
-
-_VIDEO = False
-if any(s.startswith('--video') for s in sys.argv):
-    _VIDEO = True
 
 # import gc
 # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
@@ -130,7 +269,7 @@ wx.RegisterId(10000)
 _ = wx.GetTranslation
 wx.outputWindowClass = None
 
-if INSPECTION:
+if _INSPECTION:
     import wx.lib.mixins.inspection
 
     App = wx.lib.mixins.inspection.InspectableApp
@@ -165,14 +304,16 @@ if INSPECTION:
         sys.settrace(trace_calls)
 
 else:
-    App = wx.App
+    if 'channels' in _PARAM or 'rpc' in _PARAM:
+        App = WxAsyncApp
+    else:
+        App = wx.App
 
-if RPC:
+if _RPC:
     _BASE_APP = xmlrpc.XMLRPC
 else:
     class _base:
         pass
-
 
     _BASE_APP = _base
 
@@ -184,13 +325,12 @@ class SchApp(App, _BASE_APP):
 
     def __init__(self):
         """Construct an application."""
-
+        global _PARAM
         App.__init__(self)
-        if RPC:
+        if _RPC:
             xmlrpc.XMLRPC.__init__(self)
 
-        if not '--no_splash' in sys.argv and not '--no_gui' in sys.argv and not '--server_only' in sys.argv \
-                and not '--help' in sys.argv:
+        if not 'no_splash' in _PARAM and not 'nogui' in _PARAM and not 'server_only' in _PARAM:
             bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
             splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
                                          1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
@@ -232,6 +372,7 @@ class SchApp(App, _BASE_APP):
         self.menu_always = False
         self.authorized = False
         self.rpc = None
+        self.websockets = {}
 
         self.gui_style = \
             'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
@@ -364,7 +505,7 @@ class SchApp(App, _BASE_APP):
 
         if hasattr(frame, 'statusbar') and frame.statusbar:
             self.thread_manager = SchThreadManager(self, frame.statusbar)
-        if INSPECTION:
+        if _INSPECTION:
             self.ShowInspectionTool()
 
     def register_extern_app(self, address, app):
@@ -536,6 +677,19 @@ class SchApp(App, _BASE_APP):
                          {'script': s.read()})
 
 
+    def on_websocket_connect(self, client, websocket_id, response):
+        print("On websocket connected", websocket_id, response.peer)
+
+    def on_websocket_open(self, client, websocket_id):
+        print("On websocket open", websocket_id)
+
+    def on_websocket_message(self, client, websocket_id, msg, binary):
+        print("On websocket message:", websocket_id, msg, binary)
+
+    def websocket_send(self, websocket_id, msg):
+        if websocket_id in self.websockets:
+            self.websocket[websocket_id].sendMessage(msg)
+
 def login(base_href, auth_type=None, username = None):
     """Show login form"""
     dlg = LoginDialog(None, 101, _("Pytigon - login"), username=username)
@@ -575,79 +729,32 @@ def login(base_href, auth_type=None, username = None):
     return False
 
 
+def _main_init():
+    global CWD_PATH, _PARAM
 
-def _main_init(argv):
-    global CWD_PATH
+    args = _PARAM['args']
     apps = []
-    sync = False
-    loaddb = False
-    nogui = False
-    server_only = False
     address = 'http://127.0.0.2'
     app_title = _("Pytigon")
-    embeded_browser = False
-    extern_app_set = False
     app_name = ''
-    username = None
-    password = None
-
-    try:
-        (opts, args) = getopt.getopt(argv, 'h:dmpbsu:p:', [
-            'help',
-            'username=',
-            'password=',
-            'embededbrowser',
-            'embededserver',
-            'channels'
-            'migrate',
-            'loaddb',
-            'server_only',
-            'debug',
-            'rpc=',
-            'param=',
-            'inspection',
-            'trace',
-            'video',
-            'no_gui',
-            'no_splash',
-            'menu_always',
-        ])
-    except getopt.GetoptError:
-        usage()
-        return (None, None)
 
     app = SchApp()
-
-    for (opt, arg) in opts:
-        if opt in ('-h', '--help'):
-            usage()
-            return (0, 0)
-        elif opt == '-d':
-            global _DEBUG
-            _DEBUG = True
-        elif opt == '--migrate':
-            sync = True
-        elif opt == '--loaddb':
-            loaddb = True
-        elif opt == '--server_only':
-            server_only = True
-        elif opt in ('-u' '--username'):
-            username = arg
-        elif opt in ('-p' '--password'):
-            password = arg
-        elif opt in ('-b' '--embededbrowser'):
-            embeded_browser = True
-        elif opt in ('-s', '--embededserver'):
-            address = 'embeded'
-            extern_app_set = True
-        elif opt == '--no_gui':
-            nogui = True
-        elif opt in ('-m', '--menu_always'):
-            app.menu_always = True
-        elif opt in ('--rpc'):
-            app.rpc = int(arg)
-        elif opt in ('-p', '--param'):
-            app.param = arg
+    if 'menu_always' in _PARAM:
+        app.menu_always = True
+    if 'rpc' in _PARAM:
+        app.rpc = int(_PARAM['rpc'])
+    if 'param' in _PARAM:
+        app.param = _PARAM['param']
+    if 'embeded_browser' in _PARAM:
+        app.embeded_browser = True
+    else:
+        app.embeded_browser = False
+    if 'extern_app_set':
+        extern_app_set = True
+    else:
+        extern_app_set = False
+    if 'address' in _PARAM:
+        address = _PARAM['address']
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 
@@ -721,14 +828,14 @@ def _main_init(argv):
     import settings_app
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
     from django.conf import settings
-    if sync:
+    if 'sync' in _PARAM:
         from django.core.management.commands.migrate import Command as migrate_command
         migrate = migrate_command()
         try:
             migrate.run_from_argv(['manage.py', 'migrate'])
         except SystemExit:
             pass
-    if loaddb:
+    if 'loaddb' in _PARAM:
         from django.core.management.commands.loaddata import Command as load_command
         load = load_command()
         try:
@@ -750,7 +857,7 @@ def _main_init(argv):
         settings.INSTALLED_APPS.append(a)
 
     port = 0
-    if server_only:
+    if 'server_only' in _PARAM:
         port = 80
         if ':' in address:
             l = address.split(':')
@@ -760,7 +867,7 @@ def _main_init(argv):
     if address == 'embeded':
         import socket
         from schlib.schdjangoext.server import run_server
-        if server_only:
+        if 'server_only' in _PARAM:
             address = '127.0.0.1'
         else:
             address = '127.0.0.3'
@@ -799,7 +906,7 @@ def _main_init(argv):
     app.server = server
     app.cwd = cwd
     app.inst_dir = inst_dir
-    app.embeded_browser = embeded_browser
+
     tab = app.get_tab(0)
 
     app.title = app_title
@@ -823,7 +930,7 @@ def _main_init(argv):
             if row[1].data and row[1].data != "":
                 app.plugins = row[1].data.split(';')
 
-    if server_only:
+    if 'server_only' in _PARAM:
         app.gui_style = 'app.gui_style = tray(file(exit,open))'
 
     app._install_plugins()
@@ -831,10 +938,10 @@ def _main_init(argv):
     ready_to_run = True
 
 
-    if not app.authorized and ( (autologin and not username) or (username and password)):
-        if username:
-            username2 = username
-            password2 = password
+    if not app.authorized and ( (autologin and not 'username' in _PARAM) or ('username' in _PARAM and 'password' in _PARAM)):
+        if 'username' in _PARAM:
+            username2 = _PARAM['username']
+            password2 = _PARAM['password']
         else:
             username2 = 'auto'
             password2 = 'anawa'
@@ -851,15 +958,15 @@ def _main_init(argv):
         if 'RETURN_OK' in ret_str:
             app.authorized = True
             ready_to_run = True
-    if not app.authorized:
+    if not app.authorized and 'username' in _PARAM:
         ready_to_run = False
         href = "/" + app_name + "/" if app_name else "/"
-        if login(href, auth_type=None, username=username):
+        if login(href, auth_type=None, username=_PARAM['username']):
             app.authorized = True
             ready_to_run = True
     if reinit:
         app._re_init(address, app_name)
-    return (ready_to_run, nogui)
+    return (ready_to_run, True if 'nogui' in _PARAM else False)
 
 
 def _main_run():
@@ -904,12 +1011,48 @@ def _main_run():
     if app.task_manager:
         frame.idle_objects.append(app.task_manager)
 
-    if RPC:
-        reactor.registerWxApp(app)
+    if _RPC:
         reactor.listenTCP(app.rpc, server.Site(app))
-        reactor.run()
-    else:
+
+    if _WEBSOCKET:
+        if ';' in _WEBSOCKET:
+            websockets  = _WEBSOCKET.split(';')
+        else:
+            websockets = [ _WEBSOCKET, ]
+
+        for websocket_id in websockets:
+            class PytigonClientProtocol(WebSocketClientProtocol):
+                def __init__(self):
+                    nonlocal app, websocket_id
+                    super().__init__()
+                    self.app = app
+                    self.websocket_id = websocket_id
+                    app.websockets[websocket_id] = self
+
+                def onConnect(self, response):
+                    self.app.on_websocket_connect(self, self.websocket_id, response)
+
+                def onOpen(self):
+                    self.app.on_websocket_open(self, self.websocket_id)
+
+                def onMessage(self, msg, binary):
+                    self.app.on_websocket_message(self, websocket_id, msg, binary)
+                    # reactor.callLater(1, self.sendHello)
+
+            ws_address = app.base_address.replace('http', 'ws').replace('https', 'wss')
+            ws_address += websocket_id
+            factory = WebSocketClientFactory(ws_address)
+            factory.protocol = PytigonClientProtocol
+            connectWS(factory)
+
+    if _INSPECTION == True:
         app.MainLoop()
+    else:
+        if 'channels' in _PARAM or 'rpc' in _PARAM:
+            loop = get_event_loop()
+            loop.run_until_complete(app.MainLoop())
+        else:
+            app.MainLoop()
 
     if app.task_manager:
         app.task_manager.wait_for_result()
@@ -920,45 +1063,9 @@ def _main_run():
         pos()
 
 
-def usage():
-    print(main.__doc__)
+def main():
 
-
-def main(argv):
-    """Run pytigon application: pytigon.py [option]... arg
-
-    command line arguments:
-        arg: application package name, schdevtools for example
-             or address of http server, http://www.pytigon.cloud for example
-             or pytigon script name, test.schdevtools.schsimplescripts.ptig for example
-             or pytigon installation file name
-             or django management command in format: manage_[[package name]], manage_schdevtools runserver for example
-             or python script, test.py for example
-
-        options:
-            -h, --help - show help
-
-            -b --embededbrowser - run embeded browseer window
-            -s --embededserver - run in background embeded http server
-            -m --menu_always - show menu event then configuration says otherwise
-            --no_splash - do not show splash window
-            --no_gui - run program without gui
-            --server_only - run only http server
-
-            --migrate - run django command: manage.py migrate
-            --loaddb - run django command: manage.py loaddb
-
-            --rpc=<port> - set tcp port of rpc
-            --video - record video session
-
-            -p <parameters>, --param=<parameters> - parametres of request to http server
-
-            -d --debug - debug mode
-            --inspection - turn on wxPython inspection
-            --trace - show trace of python calls
-    """
-
-    ready_to_run, nogui = _main_init(argv)
+    ready_to_run, nogui = _main_init()
     if ready_to_run:
         if nogui:
             while (True):
@@ -968,4 +1075,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

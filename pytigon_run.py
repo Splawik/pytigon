@@ -75,7 +75,7 @@ def run():
         subprocess.run([get_executable(),] + sys.argv[1:])
     else:
         #os.chdir(base_path)
-        main(sys.argv[1:])
+        main()
 
 if __name__ == '__main__':
     run()

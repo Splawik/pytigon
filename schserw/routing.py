@@ -17,7 +17,29 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from channels.routing import ProtocolTypeRouter
+import importlib
+
+from django.conf.urls import url
+from django.conf import settings
+
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+
+urls_tab = []
+
+if hasattr(settings, 'CHANNELS_URL_TAB'):
+    for row in settings.CHANNELS_URL_TAB:
+        u = row[0]
+        tmp = row[1].split('.')
+        m = importlib.import_module('.'.join(tmp[:-1]))
+        o = getattr(m,tmp[-1])
+        print(o)
+        urls_tab.append(url(u,o))
 
 application = ProtocolTypeRouter({
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            urls_tab
+        )
+    ),
 })
