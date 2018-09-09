@@ -8,6 +8,8 @@
         {% jscript_link 'vue/vue.js' %}
         {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
         {% jscript_link 'app/schdevtools/js/test_python.js' %}
+        <script src="https://unpkg.com/xterm@3.6.0/dist/xterm.js"></script>
+        <script src="https://unpkg.com/xterm@3.6.0/dist/addons/fit/fit.js"></script>
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
@@ -17,20 +19,61 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        {% component 'app/standard_components/components/txtarea_editor.js' %}
+        <script>
+          // Terminal.applyAddon(fullscreen)
+          var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+          var address = protocol + window.location.host +'/schcommander/shell/';
+          var websocket = new WebSocket(address);
+          Terminal.applyAddon(fit)
+          const term = new Terminal();
+          term.open(document.getElementById('terminal'));
+          term.fit()
+          term.resize(50, 15)
+          //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
+          // term.toggleFullScreen(true)
+          term.fit()
+          term.on('key', (key, ev) => {
+            //console.log("pressed key", key);
+            //console.log("event", ev);
+            var txt = JSON.stringify({ input: key });
+            //console.log("txt", txt);
+            websocket.send(txt);
+          });
+          websocket.onmessage = function(evt)  {
+            //console.log("client onmessage", evt.data)
+            term.write(evt.data);
+          }
+          function fitToscreen(){
+            term.fit()
+            websocket.send(JSON.stringify({resize: {"cols": term.cols, "rows": term.rows}}))
+          }
+          function debounce(func, wait_ms) {
+            let timeout
+            return function(...args) {
+              const context = this
+              clearTimeout(timeout)
+              timeout = setTimeout(() => func.apply(context, args), wait_ms)
+            }
+          }
+          const wait_ms = 50;
+          window.onresize = debounce(fitToscreen, wait_ms)
+</script>
+        <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
+        {% component 'app/standard_components/components/summernote.js' %}
+        {% component 'app/standard_components/components/plotly.js' %}
         {% component 'app/schdevtools/components/test.js' %}
-        {% component 'app/standard_components/components/video-js.js' %}
-        {% component 'app/standard_components/components/vs_editor.js' %}
+        {% component 'app/standard_components/components/leaflet.js' %}
         {% component 'app/standard_components/components/d3.js' %}
         {% component 'app/standard_components/components/code_editor.js' %}
-        {% component 'app/standard_components/components/pivottable.js' %}
-        {% component 'app/standard_components/components/plotly.js' %}
-        {% component 'app/standard_components/components/summernote.js' %}
         {% component 'app/standard_components/components/handsontable.js' %}
-        {% component 'app/standard_components/components/leaflet.js' %}
+        {% component 'app/standard_components/components/vs_editor.js' %}
+        {% component 'app/standard_components/components/pivottable.js' %}
+        {% component 'app/standard_components/components/txtarea_editor.js' %}
+        {% component 'app/standard_components/components/video-js.js' %}
+        <link rel="stylesheet" href="https://unpkg.com/xterm@3.6.0/dist/xterm.css" />
 {% endblock %}
 {% block component_init %}
-        component_init = [ "txtarea_editor", "test", "video-js", "vs_editor", "d3", "code_editor", "pivottable", "plotly", "summernote", "handsontable", "leaflet",  ]
+        component_init = [ "summernote", "plotly", "test", "leaflet", "d3", "code_editor", "handsontable", "vs_editor", "pivottable", "txtarea_editor", "video-js",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

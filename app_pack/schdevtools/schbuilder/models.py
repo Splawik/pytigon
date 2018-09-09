@@ -271,6 +271,17 @@ FileType_CHOICES = (
     
     )
 
+Consumer_CHOICES = (
+    ("WebsocketConsumer","WebsocketConsumer"),
+    ("AsyncWebsocketConsumer","AsyncWebsocketConsumer"),
+    ("JsonWebsocketConsumer","JsonWebsocketConsumer"),
+    ("AsyncJsonWebsocketConsumer","AsyncJsonWebsocketConsumer"),
+    ("AsyncHttpConsumer","AsyncHttpConsumer"),
+    ("AsyncConsumer","AsyncConsumer"),
+    ("SyncConsumer","SyncConsumer"),
+    
+    )
+
 
 
 
@@ -398,6 +409,7 @@ class SChApp( models.Model):
     view_code = models.TextField('View code', null=True, blank=True, editable=False, )
     urls_code = models.TextField('Urls code', null=True, blank=True, editable=False, )
     tasks_code = models.TextField('Tasks code', null=True, blank=True, editable=True, )
+    consumer_code = models.TextField('Consumer code', null=True, blank=True, editable=True, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     user_param = models.TextField('Urser parameter', null=True, blank=True, editable=True, )
     
@@ -1219,6 +1231,40 @@ class SChTranslate( models.Model):
 
     
 admin.site.register(SChTranslate)
+
+
+class SChChannelConsumer( models.Model):
+    
+    class Meta:
+        verbose_name = _("Channel consumer")
+        verbose_name_plural = _("Channel consumers")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schbuilder'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
+    consumer_type = models.CharField('Consumer type', null=False, blank=False, editable=True, choices=Consumer_CHOICES,max_length=64)
+    url = models.CharField('Url', null=True, blank=True, editable=True, max_length=255)
+    consumer_code = models.TextField('Consumer code', null=True, blank=True, editable=False, )
+    doc = models.TextField('Doc', null=True, blank=True, editable=False, )
+    
+
+    def init_new(self, request, view, param=None):
+        if param:
+            self.view_type=param
+            defaults={}
+            defaults['consumer_type'] = param
+            return defaults
+        else:
+            return None
+    
+admin.site.register(SChChannelConsumer)
 
 
 

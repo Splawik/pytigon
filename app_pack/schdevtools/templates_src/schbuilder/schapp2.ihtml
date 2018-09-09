@@ -76,6 +76,8 @@
                 CTRLNOBG_BUTTON_TXT NAME=menu,,,label=_(Menu),,,SRC=client://actions/tab-new.png,,,href={{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/
             td cellpadding=0
                 CTRLNOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=client://apps/utilities-terminal.png,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/
+            td cellpadding=0
+                CTRLNOBG_BUTTON_TXT NAME=consumers,,,label=_(Consumers),,,SRC=client://places/network-workgroup.png,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/
             td width=20
             td cellpadding=0
                 % widget class='menu' id='user_action' title='User action' style='toolbar': 
@@ -85,4 +87,5 @@
                     li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(User View)
                     li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(User Url)
                     li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(User Tasks)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(User Consumers)
                     li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/..._(Doc)

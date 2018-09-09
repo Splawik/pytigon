@@ -88,6 +88,9 @@
                         <td cellpadding="0">
                                 <CTRLNOBG_BUTTON_TXT NAME="tasks" label="Tasks" SRC="client://apps/utilities-terminal.png" href="{{app_path}}table/SChApp/{id}/schtask_set/-/form/list/"></CTRLNOBG_BUTTON_TXT>
                         </td>
+                        <td cellpadding="0">
+                                <CTRLNOBG_BUTTON_TXT NAME="consumers" label="Consumers" SRC="client://places/network-workgroup.png" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/"></CTRLNOBG_BUTTON_TXT>
+                        </td>
                         <td width="20"></td>
                         <td cellpadding="0">
                                 {% widget class='menu' id='user_action' title='User action' style='toolbar' %}
@@ -97,6 +100,7 @@
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">User View</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">User Url</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">User Tasks</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">User Consumers</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/doc/form/editor/">Doc</a></li>
                                 {% endwidget %}
                         </td>

@@ -23,25 +23,6 @@
         {% with edit_vscroll=True table_type='datatable' %}
                 {{ block.super }}
         {% endwith %}
-        <script>
-        // Code injected by live-server
-          var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-          var address = protocol + window.location.host +'/echo/';
-          var socket = new WebSocket(address);
-        (function() {
-          socket.onmessage = function(msg) {
-            console.log("I just got reply from server!: " + msg.data);
-          };
-          console.log('Web Socket enabled.');
-          socket.onopen = function(event) {
-            console.log("WebSocket is open now.");
-            socket.send('Hello world!');
-          };
-        })();
-        function onSend(){
-            socket.send('e');
-        }
-</script>
 {% endblock %}
 {% block list_content_actions %}
         {% new_row "Nowa paczka aplikacji" %}

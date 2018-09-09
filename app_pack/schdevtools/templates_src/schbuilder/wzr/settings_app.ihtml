@@ -108,6 +108,13 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+{% if consumers %}
+CHANNELS_URL_TAB = [ 
+{% for consumer in consumers %}    (r"^{{consumer.0}}$", '{{consumer.1}}'),
+{% endfor %}]
+{% endif %}
+
 try:
     from settings_app_local import *
 except:

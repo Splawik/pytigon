@@ -73,6 +73,7 @@ form_attr=sorted([field.name for field in models.SChForm._meta.fields if field.n
 formfield_attr=sorted([field.name for field in models.SChFormField._meta.fields if field.name not in ('parent','id')])
 task_attr=sorted([field.name for field in models.SChTask._meta.fields if field.name not in ('parent','id')])
 files_attr=sorted([field.name for field in models.SChFiles._meta.fields if field.name not in ('parent','id')])
+consumer_attr=sorted([field.name for field in models.SChChannelConsumer._meta.fields if field.name not in ('parent','id')])
 
 def callback_fun_tab(obj1, obj2):
     fields_tmp = []
@@ -426,9 +427,11 @@ def gen(request, pk):
         views = app.schview_set.all()
         forms = app.schform_set.all()
         tasks = app.schtask_set.all()
+        consumers = app.schchannelconsumer_set.all()
         template_to_file(base_path, "views", app.name+"/views.py",  {'views': views, 'forms': forms, 'app': app})
         template_to_file(base_path, "urls",  app.name+"/urls.py",  {'views': views, 'templates': templates, 'tables': tables, 'forms': forms, 'app': app, 'gfields': gfields})
         template_to_file(base_path, "tasks", app.name+"/tasks.py",  {'tasks': tasks, 'app': app})
+        template_to_file(base_path, "consumers", app.name+"/consumers.py",  {'consumers': consumers, 'app': app})
     
         for template in templates:
             str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")
@@ -561,6 +564,7 @@ def gen(request, pk):
     
     
     static_for_ext_apps = []
+    
     if appset.ext_apps:
         appset_tab = []
         tab = appset.get_ext_apps()
@@ -598,8 +602,24 @@ def gen(request, pk):
     
     template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'appset': appset, 'component_elements': component_elements })
     
-    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str, 'offline_support': offline_support})
+    consumers_tab = []
+    for _app in apps:
+        consumers = _app.schchannelconsumer_set.all()
+        for consumer in consumers:
+            consumers_tab.append((app.name+"/"+consumer.url+"/", _app.name+".consumers."+consumer.name))
     
+    for pos in appset.get_ext_apps():
+        if pos:
+            x = pos.split('.')
+            tab1 = models.SChAppSet.objects.filter(name=x[0])
+            for _appset in tab1:
+                tab2 = _appset.schapp_set.filter(name=x[1])
+                for _app in tab2:
+                    consumers = _app.schchannelconsumer_set.all()
+                    for consumer in consumers:
+                        consumers_tab.append((_app.name+"/"+consumer.url+"/", _app.name+".consumers."+consumer.name))
+                
+    template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str, 'offline_support': offline_support, 'consumers': consumers_tab })
     
     base_path_src = base_path + "/src"
     
@@ -731,13 +751,18 @@ def prj_export(request, pk):
         for task in tasks:
             tasks_array.append(obj_to_array(task,task_attr))
     
+        consumers = app.schchannelconsumer_set.all()
+        consumers_array=[]
+        for consumer in consumers:
+            consumers_array.append(obj_to_array(consumer,consumer_attr))
+    
         files = app.schfiles_set.all()
         files_array=[]
         for file in files:
             files_array.append(obj_to_array(file,files_attr))
     
         tmp = obj_to_array(app, app_attr)
-        apps_array.append([tmp, tables_array, choices_array, views_array, templates_array, appmenus_array, forms_array, tasks_array, files_array])
+        apps_array.append([tmp, tables_array, choices_array, views_array, templates_array, appmenus_array, forms_array, tasks_array, consumers_array, files_array])
     prj.append(apps_array)
     
     statics = appset.schstatic_set.all()
@@ -836,7 +861,14 @@ def prj_import(request):
                 task.parent=app
                 task.save()
     
-            files_array=app_pos[8]
+            consumers_array=app_pos[8]
+            for consumer_pos in consumers_array:
+                consumer = models.SChChannelConsumer(**array_dict(consumer_pos, consumer_attr))
+                consumer.parent=app
+                consumer.save()
+    
+    
+            files_array=app_pos[9]
             for file_pos in files_array:
                 f = models.SChFiles(**array_dict(file_pos, files_attr))
                 f.parent=app

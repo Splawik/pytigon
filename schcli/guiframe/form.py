@@ -112,6 +112,7 @@ class SchForm(ScrolledPanel):
         self.acc_tab = None
         self.last_clicked = None
         self.t1 = None
+        self.websockets = {}
 
         ScrolledPanel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
         try:
@@ -988,6 +989,48 @@ class SchForm(ScrolledPanel):
                     tool_bars = main_window.get_tool_bar()
                     exec (script.elem.text.replace('\r', ''))
                     return
+
+
+    def on_websocket_connect(self, client, websocket_id, response):
+        print("On websocket connected", websocket_id, response.peer)
+
+    def on_websocket_open(self, client, websocket_id):
+        print("On websocket open", websocket_id)
+
+    def on_websocket_message(self, client, websocket_id, msg, binary):
+        print("On websocket message:", websocket_id, msg, binary)
+
+    def websocket_send(self, websocket_id, msg):
+        if websocket_id in self.websockets:
+            self.websocket[websocket_id].sendMessage(msg)
+
+    def new_websocket(self, websocket_id):
+        from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+        form = self
+
+        class PytigonClientProtocol(WebSocketClientProtocol):
+            def __init__(self):
+                nonlocal form, websocket_id
+                super().__init__()
+                self.form = form
+                self.websocket_id = websocket_id
+                form.websockets[websocket_id] = self
+
+            def onConnect(self, response):
+                self.form.on_websocket_connect(self, self.websocket_id, response)
+
+            def onOpen(self):
+                self.form.on_websocket_open(self, self.websocket_id)
+
+            def onMessage(self, msg, binary):
+                self.form.on_websocket_message(self, websocket_id, msg, binary)
+
+        ws_address = wx.GetApp().base_address.replace('http', 'ws').replace('https', 'wss')
+        ws_address += websocket_id
+        factory = WebSocketClientFactory(ws_address)
+        factory.protocol = PytigonClientProtocol
+        connectWS(factory)
+
 
     def signal_from_child(self, child_object, signal):
         pass

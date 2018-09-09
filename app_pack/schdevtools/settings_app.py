@@ -108,18 +108,18 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+
+CHANNELS_URL_TAB = [ 
+    (r"^schcommander/shell/$", 'schcommander.consumers.ShellConsumer'),
+]
+
+
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.09.03 20:30:08'
+GEN_TIME = '2018.09.09 15:40:05'
 OFFLINE_SUPPORT = True
 
-#import  schserw.routing
-#from django.conf.urls import url
-#from schbuilder.customer  import EchoConsumer
-#schserw.routing.WEBSOCKET_URL_TAB.append(url(r"^echo/$", EchoConsumer),)
-CHANNELS_URL_TAB = [
-    (r"^echo/$", 'schbuilder.consumers.EchoConsumer')
-]

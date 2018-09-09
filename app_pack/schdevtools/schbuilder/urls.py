@@ -65,6 +65,7 @@ urlpatterns = [
      url(r'^devtools', TemplateView.as_view(template_name='schbuilder/devtools.html'), {}), 
     
     
+    
     url('form/Installer/$', views.view_installer, {}),
     url('form/Install/$', views.view_install, {}),
 ]
@@ -90,6 +91,7 @@ gen.standard('SChTask', _('SChTask'), _('SChTask'))
 gen.standard('SChFiles', _('SChFiles'), _('SChFiles'))
 gen.standard('SChLocale', _('Locale'), _('Locales'))
 gen.standard('SChTranslate', _('Translate'), _('Translate'))
+gen.standard('SChChannelConsumer', _('Channel consumer'), _('Channel consumers'))
 
 gen.for_field('SChAppSet', 'schapp_set', _('SChApp'), _('SChApp'))
 gen.for_field('SChApp', 'schchoice_set', _('SChChoice'), _('SChChoice'))
@@ -106,3 +108,4 @@ gen.for_field('SChApp', 'schtask_set', _('SChTask'), _('SChTask'))
 gen.for_field('SChApp', 'schfiles_set', _('SChFiles'), _('SChFiles'))
 gen.for_field('SChAppSet', 'schlocale_set', _('Locale'), _('Locales'))
 gen.for_field('SChLocale', 'schtranslate_set', _('Translate'), _('Translate'))
+gen.for_field('SChApp', 'schchannelconsumer_set', _('Channel consumer'), _('Channel consumers'))
