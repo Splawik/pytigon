@@ -141,5 +141,5 @@ function str2ab(str) {
         });
 
     }
-    #window.XMLHttpRequest = modXMLHttpRequest;
+    window.XMLHttpRequest = modXMLHttpRequest;
 })();

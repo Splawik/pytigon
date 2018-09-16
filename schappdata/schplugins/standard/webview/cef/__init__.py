@@ -20,6 +20,7 @@
 import wx
 from schcli.guilib.tools import get_colour
 import os
+import html
 
 CEF_INITIATED = False
 TIMER = None
@@ -51,7 +52,10 @@ def init_plugin_cef(
 
         def __init__(self, parent, **kwds):
             wx.GetApp().web_ctrl = self
-
+            self.component = False
+            if 'component' in kwds:
+                del kwds['component']
+                self.component = True
             SchBaseCtrl.__init__(self, parent, kwds)
             if 'style' in kwds:
                 kwds['style'] |= wx.WANTS_CHARS
@@ -100,9 +104,11 @@ def init_plugin_cef(
         def load_str(self, data, base=None):
             if self.browser:
                 if base:
-                    self.browser.GetMainFrame().LoadString(data, base)
+                    self.browser.GetMainFrame().LoadUrl("data:text/html, " + data.replace('<head>', '<head><base href="%s/">' % base))
                 else:
-                    self.browser.GetMainFrame().LoadString(data,self._static_prefix())
+                    self.browser.GetMainFrame().LoadUrl("data:text/html, " + data)
+            else:
+                wx.CallLater(100, self.load_str, data, base)
 
         def on_back(self, event):
             if self.browser:

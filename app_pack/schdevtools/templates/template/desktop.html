@@ -19,34 +19,41 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
+        <div style="width: 100%; height: 600px;">
+        <div id="terminal"></div>
+        </div>
         <script>
-          // Terminal.applyAddon(fullscreen)
           var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
           var address = protocol + window.location.host +'/schcommander/shell/';
           var websocket = new WebSocket(address);
+          //Terminal.applyAddon(fullscreen)
           Terminal.applyAddon(fit)
           const term = new Terminal();
           term.open(document.getElementById('terminal'));
-          term.fit()
-          term.resize(50, 15)
+          //term.resize(80,25)
+          term.setOption('fontFamily', 'monospace');
+          term.setOption('fontSize', 14);
+          term.setOption('lineHeight', 1.1);
+          //term.fit()
           //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
-          // term.toggleFullScreen(true)
-          term.fit()
+          //term.toggleFullScreen(true);
+          //term.fit()
           term.on('key', (key, ev) => {
-            //console.log("pressed key", key);
-            //console.log("event", ev);
             var txt = JSON.stringify({ input: key });
-            //console.log("txt", txt);
             websocket.send(txt);
           });
           websocket.onmessage = function(evt)  {
-            //console.log("client onmessage", evt.data)
             term.write(evt.data);
           }
           function fitToscreen(){
-            term.fit()
-            websocket.send(JSON.stringify({resize: {"cols": term.cols, "rows": term.rows}}))
+            term.fit();
+            console.log(term.cols, term.rows)
+            var s = JSON.stringify({resize: { cols: term.cols, rows: term.rows}})
+            websocket.send(s);
           }
+          websocket.onopen = function() {
+                fitToscreen();
+          };
           function debounce(func, wait_ms) {
             let timeout
             return function(...args) {
@@ -58,7 +65,6 @@
           const wait_ms = 50;
           window.onresize = debounce(fitToscreen, wait_ms)
 </script>
-        <div style="width: 100%; height: calc(100% - 50px);" id="terminal"></div>
         {% component 'app/standard_components/components/summernote.js' %}
         {% component 'app/standard_components/components/plotly.js' %}
         {% component 'app/schdevtools/components/test.js' %}

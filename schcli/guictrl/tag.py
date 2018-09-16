@@ -508,6 +508,13 @@ class ComponentTag(CtrlTag):
     def close(self):
         #self.count -= 1
         #if self.count < 0:
+
+        if 'window-width' in self.attrs:
+            self.attrs['width'] = self.attrs['window-width']
+
+        if 'window-height' in self.attrs:
+            self.attrs['height'] = self.attrs['window-height']
+
         return super().close()
 
     def handle_starttag(

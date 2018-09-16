@@ -2028,10 +2028,12 @@ def COMPONENT(parent, **kwds):
     buf = http.str()
     http.clear_ptr()
 
-    buf = buf.replace("<component>", kwds['param']['data'])
+    colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE).GetAsString(flags=wx.C2S_HTML_SYNTAX)
+    buf = buf.replace("<component>", kwds['param']['data']).replace("[[color]]", colour)
 
     if HTML2:
-        obj =  HTML2(parent, **kwds)
+        kwds['component'] = True
+        obj = HTML2(parent, **kwds)
         obj.load_str(buf, "http://127.0.0.2")
         return obj
     else:

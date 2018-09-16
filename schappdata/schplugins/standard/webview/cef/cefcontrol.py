@@ -84,7 +84,7 @@ def cef_init():
 
         settings = {
             "debug": False,
-            "log_severity": cef.LOGSEVERITY_INFO,
+            "log_severity": cef.LOGSEVERITY_DISABLE, #cef.LOGSEVERITY_INFO,
             "locales_dir_path": cef.GetModuleDirectory() + "/locales",
             "resources_dir_path": cef.GetModuleDirectory(),
             "browser_subprocess_path": cef.GetModuleDirectory() + "/subprocess",
@@ -103,6 +103,7 @@ def cef_init():
         switches = {
             #"disable-gpu": "1",
             "no-proxy-server": "1",
+            'disable-web-security': "1"
         }
 
         cef.Initialize(settings, switches=switches)
@@ -263,7 +264,7 @@ class ClientHandler:
     def OnTitleChange(self, browser, title):
         event = wx.CommandEvent()
         event.SetString(title)
-        if self.htmlwin: self.htmlwin.on_title_changed(event)
+        if self.htmlwin and not self.htmlwin.component: self.htmlwin.on_title_changed(event)
 
     def OnLoadStart(self, browser, frame):
         #if self.htmlwin: self.htmlwin.loading += 1
@@ -295,15 +296,37 @@ class ClientHandler:
         event.SetString(text[0])
         if self.htmlwin: self.htmlwin.on_status_message(event)
 
-    def OnBeforeBrowse(self, browser, frame, request, is_redirect):
-        if wx.GetKeyState(wx.WXK_CONTROL):
-            if self.htmlwin: self.htmlwin.new_win(request.GetUrl())
-            return True
-        else:
-            return False
+    #def OnBeforeBrowse(self, browser, frame, request, is_redirect):
+    #    if wx.GetKeyState(wx.WXK_CONTROL):
+    #        if self.htmlwin: self.htmlwin.new_win(request.GetUrl())
+    #        return True
+    #    else:
+    #        return False
 
     def OnBeforeResourceLoad(self, browser, frame, request):
         return False
+
+    #def OnConsoleMessage(self, browser, message, line, **_):
+
+    def OnConsoleMessage(self, browser, level, message, source, line):
+        print("M:", message, source, line, level)
+        #return True
+        return False
+
+    def OnLoadingStateChange(self, browser, is_loading, **_):
+        """For detecting if page loading has ended it is recommended
+        to use OnLoadingStateChange which is most reliable. The OnLoadEnd
+        callback also available in LoadHandler can sometimes fail in
+        some cases e.g. when image loading hangs."""
+        if not is_loading:
+            self._OnPageComplete(browser)
+
+    def _OnPageComplete(self, browser):
+        if self.htmlwin.hidden:
+            self.htmlwin.hidden=False
+            if self.htmlwin.size:
+                self.htmlwin.SetSize(*self.htmlwin.size[0], **self.htmlwin.size[1])
+
 
 class KeyboardHandler(object):
     def __init__(self, parent):
@@ -321,7 +344,6 @@ class KeyboardHandler(object):
                     p.on_acc_key_down(ev)
                 p = p.GetParent()
 
-        print("B1", event)
         return False
 
 
@@ -339,12 +361,25 @@ class FocusHandler(object):
         else:
             return True
 
+
 class CEFControl(wx.Control):
     def __init__(self, parent, url="", size=(-1, -1), *args, **kwargs):
         kwargs['style'] = wx.WANTS_CHARS | wx.NO_BORDER
-        wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
+        #wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
+        #print("X1:", self.component)
+        if self.component:
+            wx.Control.__init__(self, parent, id=wx.ID_ANY, size=(1,1), *args, **kwargs)
+            self.hidden = True
+        else:
+            wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
+            self.hidden = False
+
         self.url = url
+
+        self.size = None
         self.browser = None
+        #if self.hide:
+        #    self.Hide()
 
         cef_init()
 
@@ -352,31 +387,52 @@ class CEFControl(wx.Control):
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_CLOSE, self.on_close)
 
-        if self.Handle:
-            self.on_paint(None)
+        self.Show()
+        self.on_embed_browser()
+
+    def SetSize(self, *args, **kwargs):
+        if self.hidden:
+            self.size = (args, kwargs)
         else:
-            self.Bind(wx.EVT_PAINT, self.on_paint)
+            print("Size:", args, kwargs)
+            super().SetSize(*args, **kwargs)
 
-    def on_paint(self, event):
-        if not self.browser:
-            self.Unbind(wx.EVT_PAINT)
-            self.embed_browser()
+    def on_embed_browser(self):
+        if self.GetHandle():
+            if not self.browser:
+                self.Unbind(wx.EVT_PAINT)
+                self.embed_browser()
 
-            self.client_handler = ClientHandler(self)
-            self.browser.SetClientHandler(self.client_handler)
-            self.client_handler.mainBrowser = self.browser
-            if self.url:
-                self.load_url(self.url)
-        if event:
-            event.Skip()
+                self.client_handler = ClientHandler(self)
+                self.browser.SetClientHandler(self.client_handler)
+                self.client_handler.mainBrowser = self.browser
+                if self.url:
+                    self.load_url(self.url)
+        else:
+            wx.CallAfter(self.on_embed_browser)
 
     def embed_browser(self):
         window_info = cef.WindowInfo()
         (width, height) = self.GetClientSize()
-        window_info.SetAsChild(self.Handle, [0, 0, width, height])
+        print("embed_browser0", width, height)
+        if self.hidden:
+            window_info.SetAsChild(self.Handle, [0, 0, 1, 1])
+        else:
+            window_info.SetAsChild(self.Handle, [0, 0, width, height])
+            print("embed_browser", width, height)
         self.browser = cef.CreateBrowserSync(window_info, url = self.url)
         self.browser.SetClientHandler(FocusHandler(self))
         self.browser.SetClientHandler(KeyboardHandler(self))
+
+        this = self
+        def wx_fun(value):
+            print("Value sent from Javascript: ", value)
+            print(type(self))
+            #self.Show()
+
+        bindings = cef.JavascriptBindings()
+        bindings.SetFunction("wx_fun", wx_fun)
+        self.browser.SetJavascriptBindings(bindings)
 
         if self.url:
             self.browser.GetMainFrame().LoadUrl(self.url)
@@ -405,7 +461,7 @@ class CEFControl(wx.Control):
         event.Skip()
 
     def on_size(self, event):
-        if not self.browser:
+        if not self.browser or self.hidden:
             return
         if platform.system() == "Windows":
             cef.WindowUtils.OnSize(self.Handle, 0, 0, 0)

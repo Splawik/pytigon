@@ -198,7 +198,7 @@ from schserw import settings as schserw_settings
 
 def process_adv_argv():
     global _PARAM
-    if 'args' in _PARAM:
+    if 'args' in _PARAM and len(_PARAM['args'])>0:
         arg = _PARAM['args'][0].strip()
         if not (arg == 'embeded' or '.' in arg or '/' in arg):
             CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
@@ -333,8 +333,9 @@ class SchApp(App, _BASE_APP):
         if not 'no_splash' in _PARAM and not 'nogui' in _PARAM and not 'server_only' in _PARAM:
             bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
             splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
-                                         1000, None, -1, wx.DefaultPosition, wx.DefaultSize,
+                                         100, None, -1, wx.DefaultPosition, wx.DefaultSize,
                                          wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
+            splash.Update()
             wx.Yield()
 
         config_name = os.path.join(SCR_PATH, "pytigon.ini")
@@ -749,7 +750,7 @@ def _main_init():
         app.embeded_browser = True
     else:
         app.embeded_browser = False
-    if 'extern_app_set':
+    if 'extern_app_set' in _PARAM:
         extern_app_set = True
     else:
         extern_app_set = False
@@ -824,6 +825,9 @@ def _main_init():
     sys.path.insert(0, CWD_PATH)
 
     httpclient.init_embeded_django()
+
+    if not ( 'channels' in _PARAM or 'rpc' in _PARAM):
+        wx.Yield()
 
     import settings_app
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'

@@ -29,10 +29,12 @@ def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
     #    from .wxwebview import init_plugin_web_view
     #    return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
     #else:
-    try:
+    #try:
+    if True:
         from .cef import init_plugin_cef
         return init_plugin_cef(app,mainframe,desktop,mgr,menubar, toolbar, accel, BaseWebBrowser)
-    except:
+    else:
+    #except:
         from .wxwebview import init_plugin_web_view
         return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
 

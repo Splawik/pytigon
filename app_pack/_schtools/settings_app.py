@@ -108,10 +108,17 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+
+CHANNELS_URL_TAB = [ 
+    (r"^schlog/shell/$", 'schcommander.consumers.ShellConsumer'),
+]
+
+
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.08.23 19:39:57'
+GEN_TIME = '2018.09.16 21:21:31'
 

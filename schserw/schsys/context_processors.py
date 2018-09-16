@@ -398,7 +398,7 @@ def sch_standard(request):
         application, 3 - webkit in wxPython frame (no hybrid), 5 - render only content (for javascript ajax),
         6 - render only table content (for javascript ajax)
 
-        app_manager - AppManager(request)
+        app_manager - AppManager(request)browser_type=1
 
         form_edit - True if request in edit mode
 
@@ -574,6 +574,12 @@ def sch_standard(request):
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
 
 
+    if 'scope' in request:
+        websocket_base_path = 'wss://' if request.scope['scheme'] == 'https' else 'ws://'
+        websocket_base_path += request.scope['server'][0]+":"+str(request.scope['server'][1])
+    else:
+        websocket_base_path = request._current_scheme_host.replace('https://', 'wss://').replace('http://','ws://')
+
     ret = {
         'standard_web_browser': standard,
         'app_manager': AppManager(request),
@@ -589,6 +595,7 @@ def sch_standard(request):
         'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
         'base_path': url_base+"/",
+        'websocket_base_path': websocket_base_path,
         'app_path': app_path,
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
