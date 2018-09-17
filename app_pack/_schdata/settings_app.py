@@ -108,10 +108,13 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+
+
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.08.19 09:28:53'
+GEN_TIME = '2018.09.17 18:37:49'
 

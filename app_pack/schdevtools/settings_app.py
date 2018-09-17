@@ -111,6 +111,8 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
+    (r"^schbuilder/echo2/$", 'schbuilder.consumers.EchoConsumer'),
+    (r"^schbuilder/echo/$", 'schbuilder.consumers.EchoConsumer'),
     (r"^schcommander/shell/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
@@ -120,6 +122,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.09.09 15:40:05'
+GEN_TIME = '2018.09.17 18:39:27'
 OFFLINE_SUPPORT = True
 
