@@ -65,6 +65,7 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -108,10 +109,17 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+
+CHANNELS_URL_TAB = [ 
+    (r"^schcommander/shell/$", 'schcommander.consumers.ShellConsumer'),
+]
+
+
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.08.25 14:43:04'
+GEN_TIME = '2018.09.18 21:02:33'
 

@@ -39,9 +39,12 @@ class SchBaseFrame(wx.Frame):
 
     def init_plugins(self):
         home_dir = wx.GetApp().get_working_dir()
-        dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/"]
+        app_plugins = os.path.join(wx.GetApp().cwd, "plugins")
+        dirnames = [wx.GetApp().scr_path + "/schappdata/schplugins/", home_dir + "plugins_cache/", app_plugins]
         auto_plugins = wx.GetApp().config['Global settings']['auto_plugins'].split(';')
         for dirname in dirnames:
+            if not os.path.exists(dirname):
+                continue
             for ff in os.listdir(dirname):
                 if os.path.isdir(os.path.join(dirname, ff)):
                     dirname2 = os.path.join(dirname, ff)

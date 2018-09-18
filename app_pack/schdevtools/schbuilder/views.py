@@ -43,6 +43,8 @@ from schlib.schviews.viewtools import change_pos, duplicate_row
 from schlib.schtasks.base_task import get_process_manager
 import schlib.schindent.indent_style
 from schlib.schindent.indent_tools import convert_js
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
+
 from schlib.schfs.vfstools import ZipWriter, open_and_create_dir
 from schlib.schtools.install import extract_ptig
 from schlib.schtools.process import py_run
@@ -458,8 +460,37 @@ def gen(request, pk):
                 f = open_and_create_dir(base_path + "/" + app.name+"/management/commands/__init__.py","wb")
                 f.close()
                 file_name = base_path + "/" + app.name+"/management/commands/"+ file_obj.name
+            elif file_obj.file_type=='p':
+                if '/' in file_obj.name:
+                    x = file_obj.name.split('/')
+                    plugin_name = x[0]
+                    file_name = x[1]
+                else:
+                    plugin_name = file_obj.name
+                    file_name = '__init__'
+                file_name = base_path + "/plugins/" + app.name + "/" + plugin_name + "/" + file_name + ".py"
+            elif file_obj.file_type=='i':
+                if '/' in file_obj.name:
+                    x = file_obj.name.split('/')
+                    plugin_name = x[0]
+                    file_name = x[1]
+                else:
+                    plugin_name = file_obj.name
+                    file_name = 'index'
+                file_name = base_path + "/plugins/" + app.name + "/" + plugin_name + "/" + file_name + ".html"
+                content =  ihtml_to_html(None, file_obj.content)
+                f = open_and_create_dir(file_name,"wb")
+                f.write(content.encode('utf-8'))
+                f.close()
+                file_name = None
+            elif file_obj.file_type=='l':
+                f = open_and_create_dir(base_path + "/applib/__init__.py", "wb")
+                f.close()
+                f = open_and_create_dir(base_path + "/applib/" + app.name + "/__init__.py", "wb")
+                f.close()
+                file_name = base_path + "/applib/" + app.name + "/"+ file_obj.name + ".py"
             else: 
-                file_name=None
+                file_name = None
                 
             if file_name:
                 f = open_and_create_dir(file_name,"wb")

@@ -23,8 +23,8 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/vs_editor.js' %}
-    {% component 'app/standard_components/components/code_editor.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
     
     
 

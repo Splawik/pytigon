@@ -268,6 +268,9 @@ FileType_CHOICES = (
     ("t","TemplateTags"),
     ("c","Custom file"),
     ("m","Management command"),
+    ("p","Plugin code"),
+    ("i","Plugin template"),
+    ("l","Library code"),
     
     )
 

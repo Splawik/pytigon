@@ -65,6 +65,7 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -120,5 +121,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.09.16 21:21:31'
+GEN_TIME = '2018.09.18 21:01:32'
 
