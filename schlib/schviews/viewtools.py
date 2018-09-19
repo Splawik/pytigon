@@ -19,6 +19,7 @@
 
 import os
 import os.path
+import io
 
 from django.apps import apps
 from django.db.models import Max, Min
@@ -32,6 +33,7 @@ from django.core import serializers
 from schlib.schdjangoext.tools import make_href
 from schlib.schhtml.htmlviewer import stream_from_html
 from schlib.schdjangoext.odf_render import render_odf
+from schlib.schodf.xlsx_process import transform_xlsx
 from schlib.schtools import schjson
 from schlib.schparser.html_parsers import SimpleTabParserBase
 
@@ -133,6 +135,13 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 for pos in template:
                     template2.append(pos.replace('.html', '.ods'))
                 template2.append("schsys/table.ods")
+            elif context and 'view' in context and context['view'].doc_type()=='xlsx':
+                template2 = []
+                if 'template_name' in context:
+                    template2.append(context['template_name']+'.xlsx')
+                for pos in template:
+                    template2.append(pos.replace('.html', '.xlsx'))
+                template2.append("schsys/table.xlsx")
             else:
                 template2 = template
 
@@ -170,6 +179,28 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 os.remove(file_out)
                 file_in_name = os.path.basename(file_in)
                 self['Content-Disposition'] = 'attachment; filename=%s' % file_in_name
+            return self
+        elif self.context_data['view'].doc_type()=='xlsx':
+            self['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            context = self.resolve_context(self.context_data)
+            if 'object_list' in context:
+                transform_list = list(context['object_list'])
+            else:
+                transform_list = context['object']
+            if os.path.exists(self.template_name[0]):
+                stream_in = open(self.template_name[0], "rb")
+            else:
+                stream_in = None            
+            stream_out = io.BytesIO()
+            print("X0", context)
+            print("X1", transform_list)
+            transform_xlsx(stream_in, stream_out, transform_list)                
+            self.content = stream_out.getvalue()
+            print("X2")
+            if stream_in:
+                stream_in.close()
+            file_in_name = os.path.basename(self.template_name[0])
+            self['Content-Disposition'] = 'attachment; filename=%s' % file_in_name
             return self
         else:
             ret = TemplateResponse.render(self)
@@ -254,6 +285,8 @@ class ExtTemplateView(generic.TemplateView):
             return "pdf"
         elif self.kwargs['target']=='odf':
             return "odf"
+        elif self.kwargs['target']=='xlsx':
+            return "xlsx"
         elif self.kwargs['target']=='txt':
             return "txt"
         else:
