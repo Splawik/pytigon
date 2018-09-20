@@ -196,30 +196,47 @@ if _PARAM == None:
 
 from schserw import settings as schserw_settings
 
+import wx
+_ = wx.GetTranslation
+
 def process_adv_argv():
     global _PARAM
-    if 'args' in _PARAM and len(_PARAM['args'])>0:
+    if not ('args' in _PARAM and len(_PARAM['args']) > 0):
+        _app = wx.App()
+
+        choices = [ff for ff in os.listdir(schserw_settings.APP_PACK_PATH + "/") if not ff.startswith('_')]
+        dlg = wx.SingleChoiceDialog(None, _('select the application to run'), _("Pytigon"), choices,wx.CHOICEDLG_STYLE)
+        if dlg.ShowModal() == wx.ID_OK:
+            arg = dlg.GetStringSelection()
+            dlg.Destroy()
+
+        else:
+            dlg.Destroy()
+            sys.exit(0)
+
+        _app.MainLoop()
+        _app = None
+
+    else:
         arg = _PARAM['args'][0].strip()
-        if not (arg == 'embeded' or '.' in arg or '/' in arg):
-            CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
-            if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
-                print(_("Application pack: '%s' does not exists") % arg)
-                sys.exit(0)
-            else:
-                sys.path.insert(0, CWD_PATH)
-                try:
-                    from apps import GUI_COMMAND_LINE
-                    x = GUI_COMMAND_LINE.split(' ')
-                    param = process_argv(x)
-                    for key, value in param.items():
-                        if not key in _PARAM:
-                            _PARAM[key] = value
-                except:
-                    pass
+    if not (arg == 'embeded' or '.' in arg or '/' in arg):
+        CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
+        if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
+            print(_("Application pack: '%s' does not exists") % arg)
+            sys.exit(0)
+        else:
+            sys.path.insert(0, CWD_PATH)
+            try:
+                from apps import GUI_COMMAND_LINE
+                x = GUI_COMMAND_LINE.split(' ')
+                param = process_argv(x)
+                for key, value in param.items():
+                    if not key in _PARAM:
+                        _PARAM[key] = value
+            except:
+                pass
 
 process_adv_argv()
-
-import wx
 
 if 'channels' in _PARAM or 'rpc' in _PARAM:
     from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
@@ -266,7 +283,6 @@ init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_
 # gc.disable()
 
 wx.RegisterId(10000)
-_ = wx.GetTranslation
 wx.outputWindowClass = None
 
 if _INSPECTION:
@@ -731,7 +747,7 @@ def login(base_href, auth_type=None, username = None):
 
 
 def _main_init():
-    global CWD_PATH, _PARAM
+    global CWD_PATH, _PARAM, app
 
     args = _PARAM['args']
     apps = []
@@ -804,23 +820,6 @@ def _main_init():
                 if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
                     print(_("Application pack: '%s' does not exists") % arg)
                     return (None, None)
-    elif extern_app_set:
-        pass
-    else:
-        choices = [ff for ff in os.listdir(schserw_settings.APP_PACK_PATH + "/") if not ff.startswith('_')]
-
-        dlg = wx.SingleChoiceDialog(None,
-                                    _('select the application to run')
-                                    , app_title, choices,
-                                    wx.CHOICEDLG_STYLE)
-        if dlg.ShowModal() == wx.ID_OK:
-            dlg.GetStringSelection()
-            CWD_PATH = schserw_settings.APP_PACK_PATH + '/' + dlg.GetStringSelection()
-            dlg.Destroy()
-        else:
-            dlg.Destroy()
-            wx.Yield()
-            return (None, None)
 
     sys.path.insert(0, CWD_PATH)
 
