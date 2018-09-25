@@ -18,6 +18,7 @@
 #version: "0.1a"
 
 import os
+import sys
 from schlib.schfs.vfstools import extractall
 import zipfile
 #import shutil
@@ -105,3 +106,7 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
     if paths:
         for p in paths:
             _mkdir(p)
+
+    applib = os.path.join(os.path.join(_app_pack_path, app_pack), "applib")
+    if os.path.exists(applib) and not applib in sys.path:
+        sys.path.append(applib)

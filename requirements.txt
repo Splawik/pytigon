@@ -28,3 +28,5 @@ unidecode
 django-bulk_update
 dj-database-url
 dj-email-url
+wxasync
+cefpython3

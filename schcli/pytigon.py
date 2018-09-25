@@ -243,6 +243,22 @@ if 'channels' in _PARAM or 'rpc' in _PARAM:
     import asyncio
     from asyncio.events import get_event_loop
 
+    class SChAsyncApp(WxAsyncApp):
+        async def MainLoop(self):
+            evtloop = wx.GUIEventLoop()
+            with wx.EventLoopActivator(evtloop):
+                while not self.exiting:
+                    if platform.system() == "Darwin":
+                        evtloop.DispatchTimeout(0)
+                    else:
+                        while self.HasPendingEvents():
+                            self.ProcessPendingEvents()
+                        while evtloop.Pending():
+                            evtloop.Dispatch()
+                    await asyncio.sleep(0.005)
+                    evtloop.ProcessIdle()
+
+
 from schcli.guilib import image
 from schcli.guilib import pytigon_install
 from schcli.guilib.logindialog import LoginDialog
@@ -321,7 +337,7 @@ if _INSPECTION:
 
 else:
     if 'channels' in _PARAM or 'rpc' in _PARAM:
-        App = WxAsyncApp
+        App = SChAsyncApp
     else:
         App = wx.App
 

@@ -573,12 +573,14 @@ def sch_standard(request):
         gmt = time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
 
-
-    if 'scope' in request:
-        websocket_base_path = 'wss://' if request.scope['scheme'] == 'https' else 'ws://'
-        websocket_base_path += request.scope['server'][0]+":"+str(request.scope['server'][1])
-    else:
-        websocket_base_path = request._current_scheme_host.replace('https://', 'wss://').replace('http://','ws://')
+    try:
+        if 'scope' in request:
+            websocket_base_path = 'wss://' if request.scope['scheme'] == 'https' else 'ws://'
+            websocket_base_path += request.scope['server'][0]+":"+str(request.scope['server'][1])
+        else:
+            websocket_base_path = request._current_scheme_host.replace('https://', 'wss://').replace('http://','ws://')
+    except:
+        websocket_base_path = None
 
     ret = {
         'standard_web_browser': standard,
