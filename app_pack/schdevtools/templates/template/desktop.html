@@ -8,8 +8,6 @@
         {% jscript_link 'vue/vue.js' %}
         {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
         {% jscript_link 'app/schdevtools/js/test_python.js' %}
-        <script src="https://unpkg.com/xterm@3.6.0/dist/xterm.js"></script>
-        <script src="https://unpkg.com/xterm@3.6.0/dist/addons/fit/fit.js"></script>
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
@@ -19,67 +17,20 @@
 {% endblock %}
 {% block body_footer %}
         {{block.super}}
-        <div style="width: 100%; height: 600px;">
-        <div id="terminal"></div>
-        </div>
-        <script>
-          var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-          var address = protocol + window.location.host +'/schcommander/shell/';
-          var websocket = new WebSocket(address);
-          //Terminal.applyAddon(fullscreen)
-          Terminal.applyAddon(fit)
-          const term = new Terminal();
-          term.open(document.getElementById('terminal'));
-          //term.resize(80,25)
-          term.setOption('fontFamily', 'monospace');
-          term.setOption('fontSize', 14);
-          term.setOption('lineHeight', 1.1);
-          //term.fit()
-          //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
-          //term.toggleFullScreen(true);
-          //term.fit()
-          term.on('key', (key, ev) => {
-            var txt = JSON.stringify({ input: key });
-            websocket.send(txt);
-          });
-          websocket.onmessage = function(evt)  {
-            term.write(evt.data);
-          }
-          function fitToscreen(){
-            term.fit();
-            console.log(term.cols, term.rows)
-            var s = JSON.stringify({resize: { cols: term.cols, rows: term.rows}})
-            websocket.send(s);
-          }
-          websocket.onopen = function() {
-                fitToscreen();
-          };
-          function debounce(func, wait_ms) {
-            let timeout
-            return function(...args) {
-              const context = this
-              clearTimeout(timeout)
-              timeout = setTimeout(() => func.apply(context, args), wait_ms)
-            }
-          }
-          const wait_ms = 50;
-          window.onresize = debounce(fitToscreen, wait_ms)
-</script>
-        {% component 'app/standard_components/components/summernote.js' %}
-        {% component 'app/standard_components/components/plotly.js' %}
+        {% component 'app/schcomponents/components/video-js.js' %}
         {% component 'app/schdevtools/components/test.js' %}
-        {% component 'app/standard_components/components/leaflet.js' %}
-        {% component 'app/standard_components/components/d3.js' %}
-        {% component 'app/standard_components/components/code_editor.js' %}
-        {% component 'app/standard_components/components/handsontable.js' %}
-        {% component 'app/standard_components/components/vs_editor.js' %}
-        {% component 'app/standard_components/components/pivottable.js' %}
-        {% component 'app/standard_components/components/txtarea_editor.js' %}
-        {% component 'app/standard_components/components/video-js.js' %}
-        <link rel="stylesheet" href="https://unpkg.com/xterm@3.6.0/dist/xterm.css" />
+        {% component 'app/schcomponents/components/handsontable.js' %}
+        {% component 'app/schcomponents/components/leaflet.js' %}
+        {% component 'app/schcomponents/components/summernote.js' %}
+        {% component 'app/schcomponents/components/code_editor.js' %}
+        {% component 'app/schcomponents/components/plotly.js' %}
+        {% component 'app/schcomponents/components/d3.js' %}
+        {% component 'app/schcomponents/components/txtarea_editor.js' %}
+        {% component 'app/schcomponents/components/vs_editor.js' %}
+        {% component 'app/schcomponents/components/pivottable.js' %}
 {% endblock %}
 {% block component_init %}
-        component_init = [ "summernote", "plotly", "test", "leaflet", "d3", "code_editor", "handsontable", "vs_editor", "pivottable", "txtarea_editor", "video-js",  ]
+        component_init = [ "video-js", "test", "handsontable", "leaflet", "summernote", "code_editor", "plotly", "d3", "txtarea_editor", "vs_editor", "pivottable",  ]
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

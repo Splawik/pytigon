@@ -5,8 +5,10 @@ import sys
 #import atexit
 import tempfile
 import re
+import tokenize
 
 from transcrypt import __main__ as tmain
+from transcrypt.modules.org.transcrypt import utils
 
 programDir = os.getcwd () .replace ('\\', '/')
 transpilerDir = os.path.dirname (os.path.abspath (tmain.__file__)) .replace ('\\', '/')
@@ -95,9 +97,15 @@ def compile(python_code, temp_dir=None):
     #else:
     __symbols__.append ('__esv{}__'.format (utils.defaultJavaScriptVersion))
 
+    #__envir__ = utils.Any()
+    #with tokenize.open(f'{modulesDir}/org/transcrypt/__envir__.js') as envirFile:
+    #    exec(envirFile.read());
+    #__envir__.executor_name = __envir__.interpreter_name
+
     error = False
     try:
         compiler.Program (compilerPath, compilerPath, __symbols__)
+        #compiler.Program(compilerPath, __symbols__, __envir__)
         with open(dest,"rt") as pyoutput:
             ret = pyoutput.read()        
             s = ret.split('(function () {\n', 1)[1]
