@@ -54,6 +54,9 @@ def process_on_click(event_tab, elem=None):
         if href and '#' in href:
             return True
 
+        if not href:
+            return True
+
         href = process_href(href, src_obj)
 
         for pos in event_tab:

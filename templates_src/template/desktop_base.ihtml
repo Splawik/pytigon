@@ -115,7 +115,6 @@
 %% js_script_body
     %% jquery_ovr
 
-
 %% css_links
     {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}

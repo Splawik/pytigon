@@ -17,6 +17,8 @@ urlpatterns = [
     url('table/Report/(?P<dochead_id>\d+)/edit__rep2/$', views.edit__rep2, {}),
     url('table/Report/(?P<dochead_id>\d+)/repaction/(?P<rep_action>\w+)/$', views.repaction, {}),
     url('table/Report/(?P<rep_id>\d+)/(?P<to_pos>\d+)/action/move_to/$', views.move_to, {}),
+    url('plot_service/(?P<name>\w+)/$', views.plot_service, {}),
+    
     
     
     
@@ -33,5 +35,6 @@ gen = generic_table_start(urlpatterns, 'schreports', views)
 
 gen.standard('ReportDef', _('Report definition'), _('Reports definitions'))
 gen.standard('Report', _('Report'), _('Reports'))
+gen.standard('Plot', _('Plot'), _('Polts'))
 
 

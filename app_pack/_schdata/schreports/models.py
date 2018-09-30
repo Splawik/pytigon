@@ -163,5 +163,31 @@ class Report(JSONModel):
 admin.site.register(Report)
 
 
+class Plot( models.Model):
+    
+    class Meta:
+        verbose_name = _("Plot")
+        verbose_name_plural = _("Polts")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schreports'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
+    group = models.CharField('Group', null=False, blank=False, editable=True, max_length=64)
+    get_data = models.TextField('Get data', null=True, blank=True, editable=False, )
+    get_layout = models.TextField('Get layout', null=True, blank=True, editable=False, )
+    on_event = models.TextField('On event', null=True, blank=True, editable=False, )
+    permission = models.CharField('Permission', null=True, blank=True, editable=True, max_length=64)
+    
+
+    
+admin.site.register(Plot)
+
+
 
 

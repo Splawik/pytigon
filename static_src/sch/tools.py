@@ -304,13 +304,23 @@ def _req_post(req, url, data, complete, content_type):
     req.send(data)
 
 
-def ajax_post(url, data, complete, process_req=None):
+def ajax_post(url, data, complete, process_req = None):
     req = __new__(XMLHttpRequest())
     if process_req:
         process_req(req)
     _req_post(req, url, data, complete)
 
 window.ajax_post = ajax_post
+
+def ajax_json(url, data, complete, process_req = None):
+    def _complete(data_in):
+        _data = JSON.parse(data_in)
+        complete(_data)
+    
+    data2 = JSON.stringify(data)        
+    ajax_post(url, data2, _complete, process_req)
+
+window.ajax_json = ajax_json
 
 def ajax_submit(form, complete, data_filter=None, process_req=None):
     content_type = None

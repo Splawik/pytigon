@@ -8,5 +8,6 @@ Index = 'None'
 Urls  = (
     ('table/ReportDef/-/form/list/?schtml=desktop',_('Report definition'),None,'client://actions/document-properties.png'),
     ('table/Report/main_reports/form/list/?schtml=desktop',_('Reports'),None,'client://actions/format-justify-fill.png'),
+    ('table/Plot/-/form/list/?schtml=desktop',_('Plots'),None,'fa://pencil-square.png'),
 )
 UserParam = {}

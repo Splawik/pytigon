@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-08-14 17:40:11
+// Transcrypt'ed from Python, 2018-09-29 20:18:06
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -192,15 +192,17 @@
 								self.stack = 'No stack trace available';
 							}
 						});},
-						get __repr__ () {return __get__ (this, function (self) {
+						__repr__: function () {
+							var self = this;
 							if (len (self.__args__)) {
 								return '{}{}'.format (self.__class__.__name__, repr (tuple (self.__args__)));
 							}
 							else {
 								return '{}()'.format (self.__class__.__name__);
 							}
-						});},
-						get __str__ () {return __get__ (this, function (self) {
+						},
+						__str__: function () {
+							var self = this;
 							if (len (self.__args__) > 1) {
 								return str (tuple (self.__args__));
 							}
@@ -210,7 +212,7 @@
 							else {
 								return '';
 							}
-						});}
+						}
 					});
 					var IterableError = __class__ ('IterableError', [Exception], {
 						__module__: __name__,
@@ -406,7 +408,7 @@
 								self.element.innerHTML = '_';
 							}
 						});},
-						get print () {return __get__ (this, function (self) {
+						print: function () {
 							var sep = ' ';
 							var end = '\n';
 							if (arguments.length) {
@@ -415,17 +417,17 @@
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
-											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'sep': var sep = __allkwargs0__ [__attrib0__]; break;
 											case 'end': var end = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
 								}
-								var args = tuple ([].slice.apply (arguments).slice (1, __ilastarg0__ + 1));
+								var args = tuple ([].slice.apply (arguments).slice (0, __ilastarg0__ + 1));
 							}
 							else {
 								var args = tuple ();
 							}
+							var self = this;
 							self.buffer = '{}{}{}'.format (self.buffer, sep.join ((function () {
 								var __accu0__ = [];
 								var __iterable0__ = args;
@@ -450,15 +452,14 @@
 									return __accu0__;
 								}) ()));
 							}
-						});},
-						get input () {return __get__ (this, function (self, question) {
+						},
+						input: function (question) {
 							if (arguments.length) {
 								var __ilastarg0__ = arguments.length - 1;
 								if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
-											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'question': var question = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
@@ -466,11 +467,12 @@
 							}
 							else {
 							}
+							var self = this;
 							self.print ('{}'.format (question), __kwargtrans__ ({end: ''}));
 							var answer = window.prompt ('\n'.join (self.buffer.py_split ('\n').__getslice__ (-(16), null, 1)));
 							self.print (answer);
 							return answer;
-						});}
+						}
 					});
 					var __terminal__ = __Terminal__ ();
 					__pragma__ ('<all>')
@@ -2280,6 +2282,9 @@ function pytigon () {
 							if (href && __in__ ('#', href)) {
 								return true;
 							}
+							if (!(href)) {
+								return true;
+							}
 							var href = process_href (href, src_obj);
 							var __iterable0__ = event_tab;
 							for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
@@ -2367,7 +2372,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'db', {
@@ -4019,6 +4023,18 @@ function pytigon () {
 						_req_post (req, url, data, complete);
 					};
 					window.ajax_post = ajax_post;
+					var ajax_json = function (url, data, complete, process_req) {
+						if (typeof process_req == 'undefined' || (process_req != null && process_req .hasOwnProperty ("__kwargtrans__"))) {;
+							var process_req = null;
+						};
+						var _complete = function (data_in) {
+							var _data = JSON.parse (data_in);
+							complete (_data);
+						};
+						var data2 = JSON.stringify (data);
+						ajax_post (url, data2, _complete, process_req);
+					};
+					window.ajax_json = ajax_json;
 					var ajax_submit = function (form, complete, data_filter, process_req) {
 						if (typeof data_filter == 'undefined' || (data_filter != null && data_filter .hasOwnProperty ("__kwargtrans__"))) {;
 							var data_filter = null;
@@ -4269,6 +4285,7 @@ function pytigon () {
 						__all__.__name__ = __name__;
 						__all__._req_post = _req_post;
 						__all__.ajax_get = ajax_get;
+						__all__.ajax_json = ajax_json;
 						__all__.ajax_load = ajax_load;
 						__all__.ajax_post = ajax_post;
 						__all__.ajax_submit = ajax_submit;

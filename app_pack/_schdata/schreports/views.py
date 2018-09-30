@@ -281,4 +281,45 @@ def move_to(request, rep_id, to_pos):
     
 
 
+
+
+@dict_to_json
+
+def plot_service(request, **argv):
+    
+    param = json_loads(request.body.decode('utf-8'))
+    
+    action = param['action']
+    name = param['name']
+    
+    objs = models.Plot.objects.filter(name=name)
+    if len(objs) == 1:
+        obj = objs[0]
+    else:
+        obj = None
+    
+    if obj:
+        if action == 'get_data':
+            if obj.get_data:
+                tmp = "def _get_data():\n" + "\n".join([ "    " + pos for pos in obj.get_data.split('\n')])
+                exec(tmp)
+                data = locals()['_get_data']()        
+            return data
+        elif action == 'get_layout':
+            if obj.get_layout:
+                tmp = "def _get_layout():\n" + "\n".join([ "    " + pos for pos in obj.get_layout.split('\n')])
+                exec(tmp)
+                layout = locals()['get_layout']()        
+            else:
+                layout = {}
+            return layout
+        elif action == 'on_event':
+            return {}
+        else:
+            return { 'error': 'Action not found'}
+            
+    return { 'error': 'Plot object not found'}
+    
+
+
  
