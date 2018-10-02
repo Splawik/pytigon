@@ -23,7 +23,7 @@ from fs.mountfs import MountFS
 from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
-import tempfile
+from .main_paths import get_main_paths
 
 APPSET_NAME = "_schall"
 GEN_TIME = '0000.00.00 00:00:00'
@@ -44,45 +44,14 @@ if sys.argv and sys.argv[0].endswith('pytigon'):
 
 SHOW_LOGIN_WIN = True
 
-SERW_PATH = os.path.dirname(os.path.abspath(__file__))
-ROOT_PATH = SERW_PATH + '/..'
+paths = get_main_paths()
 
-sys.path.append(SERW_PATH)
-sys.path.append(ROOT_PATH)
-sys.path.append(ROOT_PATH + '/ext_lib')
-sys.path.append(ROOT_PATH + '/schappdata/schplugins')
-
-from schlib.schtools.platform_info import platform_name
-
-if platform_name()=='Android':
-    p1 = p2 = None
-    if 'SECONDARY_STORAGE' in environ:
-        p1 = os.path.join(environ['SECONDARY_STORAGE'], "pytigon_data")
-    if 'EXTERNAL_STORAGE' in environ:
-        p2 = os.path.join(environ['EXTERNAL_STORAGE'], "pytigon_data")
-    if p1:
-        if os.path.exists(p2):
-            DATA_PATH = p2
-        else:
-            DATA_PATH = p1
-    else:
-        DATA_PATH = p2
-    LOG_PATH = DATA_PATH
-else:
-    if ROOT_PATH.startswith('/var/www'):
-        DATA_PATH = os.path.join("/home/www-data/.pytigon")
-        LOG_PATH = "/var/log"
-    else:
-        DATA_PATH = os.path.join(os.path.expanduser("~"), ".pytigon")
-        LOG_PATH = DATA_PATH
-
-
-TEMP_PATH = tempfile.gettempdir()
-
-if platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
-    APP_PACK_PATH = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_pack')
-else:
-    APP_PACK_PATH = os.path.join(ROOT_PATH, 'app_pack')
+SERW_PATH = paths['SERW_PATH']
+ROOT_PATH = paths['ROOT_PATH']
+DATA_PATH = paths['DATA_PATH']
+LOG_PATH = paths['LOG_PATH']
+TEMP_PATH = paths['TEMP_PATH']
+APP_PACK_PATH = paths['APP_PACK_PATH']
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -105,6 +74,8 @@ MEDIA_URL = '/site_media/'
 APPEND_SLASH = False
 
 STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
+
+from schlib.schtools.platform_info import platform_name
 
 if platform_name()=='Android':
     STATIC_ROOT = STATICFILES_DIRS[0]
@@ -157,19 +128,26 @@ TEMPLATES = [
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.contrib.auth.middleware.RemoteUserMiddleware',
-    #'schserw.schmiddleware.schpost.ViewPost',
-    #'schserw.schmiddleware.schpost.ViewRequests',
-    #'schserw.schmiddleware.schpost.BeautyHtml',
-]
+if 'EMBEDED_DJANGO_SERVER' in environ:
+    MIDDLEWARE = [
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
+        'schserw.schmiddleware.csrf.DisableCSRF',
+    ]
+else:
+    MIDDLEWARE = [
+        'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
+        'django.contrib.auth.middleware.RemoteUserMiddleware',
+    ]
 
 MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 

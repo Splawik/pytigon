@@ -343,7 +343,7 @@ class AppManager:
         for item in self.get_apps(app_pack):
             if item.app_name in settings.HIDE_APPS:
                 continue
-            if item.app_name in no_empty_apps:
+            if item.app_name in no_empty_apps:                
                 if item.app_perms:
                     if self.request.user.has_module_perms(item.app_name):
                         ret.append(item)

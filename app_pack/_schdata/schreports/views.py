@@ -314,6 +314,7 @@ def plot_service(request, **argv):
                 layout = {}
             return layout
         elif action == 'on_event':
+            print("X1:", param)
             return {}
         else:
             return { 'error': 'Action not found'}

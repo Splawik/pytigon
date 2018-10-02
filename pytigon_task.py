@@ -19,33 +19,17 @@
 
 import os
 import sys
-
-import platform
 import getopt
+import time
 
-CWD_PATH = os.getcwd()
-SCR_PATH = os.path.dirname(__file__)
-if SCR_PATH == '':
-    SCR_PATH = CWD_PATH
-ROOT_PATH = SCR_PATH
-if ROOT_PATH.startswith('.'):
-    ROOT_PATH = CWD_PATH + '/' + ROOT_PATH
-EXT_LIB_PATH = ROOT_PATH + '/..'
-sys.path.append(ROOT_PATH)
-sys.path.append(ROOT_PATH + '/schappdata')
-sys.path.insert(0, ROOT_PATH + '/ext_lib')
-if platform.system() == "Windows":
-    sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_win')
-else:
-    sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
+from schserw.main_paths import get_main_paths
+paths = get_main_paths()
 
-print(sys.argv[1:])
-
+import schedule
 from schlib.schhttptools import httpclient
-from schlib.schparser.html_parsers import SimpleTabParserBase
 
 def usage():
-    print("pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password app_set:/view_name")
+    print("pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset")
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'ha:u:p:', [
@@ -61,15 +45,14 @@ except getopt.GetoptError:
 APP_SET = None
 VIEW = None
 ARGUMENTS = {}
-USERNAME = 'auto'
-PASSWORD = 'anawa'
+USERNAME =  None
+PASSWORD = None
 
-if len(args)>0 and ':' in args[0]:
+if len(args)>0:
     x = args[0].split(':')
     APP_SET = x[0]
-    VIEW = x[1]
 
-if not APP_SET or not VIEW:
+if not APP_SET:
     usage()
     sys.exit()
 
@@ -87,31 +70,31 @@ for (opt, arg) in opts:
     elif opt in ('-p', '--password='):
         PASSWORD = arg
 
-CWD_PATH = ROOT_PATH + '/app_pack/' + APP_SET
+CWD_PATH = os.path.join(paths['APP_PACK_PATH'], APP_SET)
 sys.path.insert(0, CWD_PATH)
-print(CWD_PATH)
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 httpclient.init_embeded_django()
 http = httpclient.HttpClient("http://127.0.0.2")
 
-ret, newaddr = http.get(None, '/')
-ret_str = http.str()
-mp = SimpleTabParserBase()
-mp.feed(ret_str)
-mp.close()
-csrf_token = ""
-for pos in mp.tables[0]:
-    if pos[0].strip()=='csrf_token':
-        csrf_token = pos[1].split('value')[1].split("\"")[1]
-http.clear_ptr()
+from apps import APPS
+from schlib.schtools import sch_import
+from schlib.schdjangoext.django_manage import cmd
 
-parm={'csrfmiddlewaretoken': csrf_token, 'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
-ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
-http.clear_ptr()
+for app in APPS:
+    try:
+        module = sch_import(app+".tasks")
+    except:
+        pass
 
-ret, newaddr = http.post(None, VIEW, parm=ARGUMENTS)
-ret_str = http.str()
-http.clear_ptr()
+    if hasattr(module, "init_schedule"):
+        module.init_schedule(cmd, http)
 
-print(ret_str)
+if USERNAME:
+    parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
+    ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
+    http.clear_ptr()
+
+while True:
+    schedule.run_pending()
+    time.sleep(10)

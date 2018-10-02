@@ -22,6 +22,7 @@
 """
 
 import base64
+import os
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -35,6 +36,8 @@ def init_embeded_django():
     import django.core.handlers.wsgi
     from wsgi_intercept import requests_intercept, add_wsgi_intercept
     requests_intercept.install()
+
+    os.environ['EMBEDED_DJANGO_SERVER'] = '1'
 
     import django
     django.setup()

@@ -92,33 +92,33 @@ if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in enviro
 SHOW_ERROR = False
 
 for app in settings.INSTALLED_APPS:
-        if isinstance(app, AppConfigMod):
-            pos = app.name
-        else:
-            pos = app
-            if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') \
-            or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
-            or pos.startswith('bootstrap4'):
-                continue
-            if pos == 'schserw.schsys':
-                SHOW_ERROR = True
-        elementy = pos.split('.')
-        module = __import__(pos)
+    if isinstance(app, AppConfigMod):
+        pos = app.name
+    else:
+        pos = app
+        if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') \
+        or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
+        or pos.startswith('bootstrap4'):
+            continue
+        if pos == 'schserw.schsys':
+            SHOW_ERROR = True
+    elementy = pos.split('.')
+    module = __import__(pos)
 
-        if pos == 'pytigon':
-            pass
+    if pos == 'pytigon':
+        pass
 
-        try:
-                module_name = '%s.urls' % str(pos)
-                m = importlib.import_module(module_name)
-                if len(elementy) > 1:
-                    urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
-                else:
-                    urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
-        except:
-            if SHOW_ERROR:
-                print(pos)
-                traceback.print_exc()
+    try:
+            module_name = '%s.urls' % str(pos)
+            m = importlib.import_module(module_name)
+            if len(elementy) > 1:
+                urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
+            else:
+                urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+    except:
+        if SHOW_ERROR:
+            print(pos)
+            traceback.print_exc()
 
 #urlpatterns = _urlpatterns
 

@@ -7,6 +7,33 @@ var from_dict = function (dict, py_name) {
 		return dict ({});
 	}
 };
+var transform_event_data = function (data) {
+	var ret = dict ({});
+	if (__in__ ('destination', data)) {
+		ret ['destination'] = data ['destination'];
+	}
+	if (__in__ ('event_name', data)) {
+		ret ['event_name'] = data ['event_name'];
+	}
+	if (__in__ ('points', data)) {
+		var pp = list ([]);
+		var __iterable0__ = data ['points'];
+		for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
+			var point = __iterable0__ [__index0__];
+			var p = dict ({});
+			var __iterable1__ = list (['curveNumber', 'pointNumber', 'x', 'y', 'z', 'lat', 'lon']);
+			for (var __index1__ = 0; __index1__ < len (__iterable1__); __index1__++) {
+				var key = __iterable1__ [__index1__];
+				if (point.hasOwnProperty (key)) {
+					p [key] = point [key];
+				}
+			}
+			pp.append (p);
+		}
+		ret ['points'] = pp;
+	}
+	return ret;
+};
 var _plotly = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/vanillajs_plugins';
 	var base_plotly_path = window.BASE_PATH + 'schreports/plot_service/';
@@ -101,22 +128,26 @@ var _plotly = function (resolve, reject) {
 						var pos = __iterable0__ [__index0__];
 						if (__in__ ('=>', pos)) {
 							var x = pos.py_split ('=>');
-							var _callback = function (data) {
-								data ['destination'] = x [1];
-								data ['event_name'] = x [0];
-								global_vue_bus.$emit ('plotly', data);
+							var _callback = function (data1) {
+								data1 ['destination'] = x [1];
+								data1 ['event_name'] = x [0];
+								global_vue_bus.$emit ('plotly', data1);
 							};
 							el.on ('plotly_' + x [0], _callback);
 						}
 						else {
-							var _callback = function (data) {
-								var _on_server_response = function (server_data) {
-									server_data ['event_name'] = pos;
-									process_response_data (this_obj, server_data);
+							var make_callback = function (event_name) {
+								var _callback = function (data2) {
+									data2 ['event_name'] = event_name;
+									var _on_server_response = function (server_data) {
+										server_data ['event_name'] = event_name;
+										process_response_data (this_obj, server_data);
+									};
+									ajax_json (url, dict ({'name': this_obj.plotlyName, 'action': 'on_event', 'event_name': event_name, 'data': transform_event_data (data2)}), _on_server_response);
 								};
-								ajax_json (url, dict ({'name': this_obj.plotlyName, 'action': 'on_event', 'event_name': pos, 'data': data}), _on_server_response);
+								return _callback;
 							};
-							el.on ('plotly_' + pos, _callback);
+							el.on ('plotly_' + pos, make_callback (pos));
 						}
 					}
 				}
