@@ -1,7 +1,7 @@
 var __name__ = '__main__';
-var from_dict = function (dict, py_name) {
-	if (__in__ (py_name, dict)) {
-		return dict [py_name];
+var from_dict = function (d, py_name) {
+	if (__in__ (py_name, d)) {
+		return d [py_name];
 	}
 	else {
 		return dict ({});
@@ -47,11 +47,19 @@ var _plotly = function (resolve, reject) {
 			}
 			else if (__in__ ('function', data)) {
 				var fun = data ['function'];
+				var el = this_obj.$el;
+				var layout = from_dict (data, 'layout');
+				if (this_obj.width) {
+					layout ['width'] = this_obj.width;
+				}
+				if (this_obj.height) {
+					layout ['height'] = this_obj.height;
+				}
 				if (fun == 'newPlot') {
-					Plotly.newPlot (el, from_dict (data, 'data'), from_dict (data, 'layout'), from_dict (data, 'config'));
+					Plotly.newPlot (el, from_dict (data, 'data'), layout, from_dict (data, 'config'));
 				}
 				else if (fun == 'react') {
-					Plotly.react (el, from_dict (data, 'data'), from_dict (data, 'layout'), from_dict (data, 'config'));
+					Plotly.react (el, from_dict (data, 'data'), layout, from_dict (data, 'config'));
 				}
 				else if (fun == 'restyle') {
 					if (__in__ ('traceIndices', data)) {
@@ -66,10 +74,10 @@ var _plotly = function (resolve, reject) {
 				}
 				else if (fun == 'update') {
 					if (__in__ ('traceIndices', data)) {
-						Plotly.restyle (el, from_dict (data, 'data_update'), from_dict (data, 'layout_update'), from_dict (data, 'traceIndices'));
+						Plotly.restyle (el, from_dict (data, 'data'), from_dict (data, 'layout'), from_dict (data, 'traceIndices'));
 					}
 					else {
-						Plotly.restyle (el, from_dict (data, 'data_update'), from_dict (data, 'layout_update'));
+						Plotly.restyle (el, from_dict (data, 'data'), from_dict (data, 'layout'));
 					}
 				}
 				else if (fun == 'addTraces') {

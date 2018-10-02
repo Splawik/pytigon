@@ -314,8 +314,14 @@ def plot_service(request, **argv):
                 layout = {}
             return layout
         elif action == 'on_event':
-            print("X1:", param)
-            return {}
+            if obj.on_event:
+                tmp = "def on_event(data):\n" + "\n".join([ "    " + pos for pos in obj.on_event.split('\n')])
+                exec(tmp)
+                ret = locals()['on_event'](param)                    
+                return ret
+            else:
+                print("X1:", param)
+                return {}
         else:
             return { 'error': 'Action not found'}
             
