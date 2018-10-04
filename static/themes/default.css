@@ -17,7 +17,7 @@ not(.login_background) div.content-wrapper {
   margin: 10px 0px; }
 
 .nav li.search {
-  background-color: transparent !important; }
+  background-color: rgba(0, 0, 0, 0) !important; }
   .nav li.search div.input-group {
     color: white; }
     .nav li.search div.input-group input.form-control {
@@ -71,7 +71,7 @@ not(.login_background) div.content-wrapper {
       width: 25px;
       overflow: hidden; }
       #tabs2 li:nth-child(1n+6) a {
-        color: transparent; }
+        color: rgba(0, 0, 0, 0); }
 
 /* bootstrap-table */
 .tabsort_panel, .table_panel, .subform_content {
@@ -85,7 +85,7 @@ not(.login_background) div.content-wrapper {
   .tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table_panel table.table-striped tbody tr:nth-of-type(odd), .subform_content table.table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, 0.02); }
   .tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table_panel table.table-striped tbody tr:nth-of-type(even), .subform_content table.table-striped tbody tr:nth-of-type(even) {
-    background-color: transparent; }
+    background-color: rgba(0, 0, 0, 0); }
   .tabsort_panel table.table-striped tbody tr:hover, .table_panel table.table-striped tbody tr:hover, .subform_content table.table-striped tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.05); }
   .tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn, .subform_content .btn, .subform_content .list_content_header .btn {
