@@ -51,12 +51,15 @@ PASSWORD = None
 if len(args)>0:
     x = args[0].split(':')
     APP_SET = x[0]
+    if len(x)>1:
+        VIEW = x[1]
 
 if not APP_SET:
     usage()
     sys.exit()
 
 ARGUMENTS = {}
+FORCE_GET = False
 for (opt, arg) in opts:
     if opt in ('-h', '--help'):
         usage()
@@ -65,9 +68,11 @@ for (opt, arg) in opts:
         pos = arg.replace('__',' ').split('=')
         if len(pos)==2:
             ARGUMENTS[pos[0]]=pos[1]
-    elif opt in ('-u', '--username='):
+        else:
+            FORCE_GET = True
+    elif opt in ('-u', '--username'):
         USERNAME = arg
-    elif opt in ('-p', '--password='):
+    elif opt in ('-p', '--password'):
         PASSWORD = arg
 
 CWD_PATH = os.path.join(paths['APP_PACK_PATH'], APP_SET)
@@ -77,24 +82,36 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
 httpclient.init_embeded_django()
 http = httpclient.HttpClient("http://127.0.0.2")
 
-from apps import APPS
-from schlib.schtools import sch_import
-from schlib.schdjangoext.django_manage import cmd
-
-for app in APPS:
-    try:
-        module = sch_import(app+".tasks")
-    except:
-        pass
-
-    if hasattr(module, "init_schedule"):
-        module.init_schedule(cmd, http)
-
-if USERNAME:
-    parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
-    ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
+if VIEW:
+    if USERNAME:
+        parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
+        ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
+        http.clear_ptr()
+    if ARGUMENTS or FORCE_GET:
+        ret, newaddr = http.post(None, VIEW, ARGUMENTS) #, credentials=(USERNAME, PASSWORD))
+    else:
+        ret, newaddr = http.get(None, VIEW) #, credentials=(USERNAME, PASSWORD))
+    print(http.str())
     http.clear_ptr()
+else:
+    from apps import APPS
+    from schlib.schtools import sch_import
+    from schlib.schdjangoext.django_manage import cmd
 
-while True:
-    schedule.run_pending()
-    time.sleep(10)
+    for app in APPS:
+        try:
+            module = sch_import(app+".tasks")
+        except:
+            pass
+
+        if hasattr(module, "init_schedule"):
+            module.init_schedule(cmd, http)
+
+    if USERNAME:
+        parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
+        ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
+        http.clear_ptr()
+
+    while True:
+        schedule.run_pending()
+        time.sleep(10)

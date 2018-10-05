@@ -216,6 +216,8 @@ div.form-group.label-floating {
   div.form-group.label-floating label {
     position: absolute;
     left: 0px; }
+  div.form-group.label-floating label.form-check-label {
+    position: relative; }
   div.form-group.label-floating div.checkbox label {
     position: relative;
     white-space: nowrap; }
