@@ -144,7 +144,7 @@ class OrgChartElem(TreeModel):
     parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     type = models.CharField('Organisation type', null=False, blank=False, editable=True, choices=orgchart_type_choice,max_length=1)
     grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1')
     grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2')
@@ -281,7 +281,7 @@ class Classifier(TreeModel):
     parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
     
@@ -739,7 +739,7 @@ class Account(TreeModel):
     parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     type1 = models.CharField('Type 1', null=True, blank=True, editable=False, choices=account_type_choice_1,max_length=1)
     type2 = models.CharField('Type 2', null=True, blank=True, editable=True, choices=account_type_choice_2,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
@@ -913,6 +913,38 @@ class AccountOperation( models.Model):
         return ret
     
 admin.site.register(AccountOperation)
+
+
+class BaseObject( models.Model):
+    
+    class Meta:
+        verbose_name = _("Base object")
+        verbose_name_plural = _("Base objects")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schelements'
+
+
+        ordering = ['id']
+        
+        abstract = True
+        
+        
+        
+    
+
+    app = models.CharField('Application', null=False, blank=False, editable=True, max_length=16)
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
+    description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
+    declaration = models.TextField('Declaration', null=True, blank=True, editable=False, )
+    template_src = models.TextField('Template source', null=True, blank=True, editable=False, )
+    template = models.TextField('Template', null=True, blank=True, editable=False, )
+    to_html_rec = models.TextField('Convert fields to html', null=True, blank=True, editable=False, )
+    save_fun = models.TextField('Save function', null=True, blank=True, editable=False, )
+    load_fun = models.TextField('Load function', null=True, blank=True, editable=False, )
+    
+
+    
+
 
 
 

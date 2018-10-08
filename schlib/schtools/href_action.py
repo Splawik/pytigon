@@ -116,6 +116,11 @@ STANDARD_ACTIONS = {
         'url': "{tp}{id}/odf/view/",
         'icon': 'bullets fa fa-lg fa-list',
     },
+    'xlsx': {
+        'target': '_blank',
+        'url': "{tp}{id}/xlsx/view/",
+        'icon': 'bullets fa fa-lg fa-list',
+    },
     'null': {
         'target': 'null',
         'url': "{tp}{id}/action/{action}/",

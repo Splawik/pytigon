@@ -28,6 +28,7 @@ Additional syntax:
 """
 
 import os.path
+import io
 from zipfile import ZipFile
 import xml.dom.minidom
 
@@ -38,6 +39,8 @@ from django.template.exceptions import TemplateDoesNotExist
 
 from schlib.schfs.vfstools import get_temp_filename
 from schlib.schodf.odf_process import DocTransform
+
+from schlib.schodf.xlsx_process import transform_xlsx
 
 
 template_dirs = getattr(settings, 'TEMPLATES')[0]['DIRS']
@@ -161,3 +164,37 @@ def render_to_response_odf(template_name, context_instance=None, debug=None):
         os.remove(s[0])
     return response
 
+
+def render_xlsx(template_name, transform_list):
+    name = None
+    if template_name.__class__ in (list, tuple):
+        test = False
+        for tname in template_name:
+            if tname[0] == '/':
+                name = tname
+                if os.path.exists(name):
+                    test = True
+                    break
+            else:
+                for template_dir in template_dirs:
+                    name = template_dir + '/' + tname
+                    if os.path.exists(name):
+                        test = True
+                        break
+                if test:
+                    break
+        if not test:
+            raise TemplateDoesNotExist(";".join(template_name))
+    else:
+        name = template_name
+
+    if os.path.exists(name):
+        stream_in = open(name, "rb")
+    else:
+        stream_in = None
+    stream_out = io.BytesIO()
+    transform_xlsx(stream_in, stream_out, transform_list)
+    if stream_in:
+        stream_in.close()
+
+    return stream_out

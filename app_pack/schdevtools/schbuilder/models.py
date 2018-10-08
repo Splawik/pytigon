@@ -680,9 +680,9 @@ class SChField( models.Model):
         return self.parent.get_models()
     
     def as_declaration(self):
-        if 'TreeForeignKey' in self.type:
-            if not self.parent.base_table in ("", "models.Model"):
-                return ""
+        #if 'TreeForeignKey' in self.type:
+        #    if not self.parent.base_table in ("", "models.Model"):
+        #        return ""
         
         if self.type == 'UserField':
             return self.param

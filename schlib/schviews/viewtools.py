@@ -32,8 +32,7 @@ from django.core import serializers
 
 from schlib.schdjangoext.tools import make_href
 from schlib.schhtml.htmlviewer import stream_from_html
-from schlib.schdjangoext.odf_render import render_odf
-from schlib.schodf.xlsx_process import transform_xlsx
+from schlib.schdjangoext.odf_render import render_odf, render_xlsx
 from schlib.schtools import schjson
 from schlib.schparser.html_parsers import SimpleTabParserBase
 
@@ -187,18 +186,8 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 transform_list = list(context['object_list'])
             else:
                 transform_list = context['object']
-            if os.path.exists(self.template_name[0]):
-                stream_in = open(self.template_name[0], "rb")
-            else:
-                stream_in = None            
-            stream_out = io.BytesIO()
-            print("X0", context)
-            print("X1", transform_list)
-            transform_xlsx(stream_in, stream_out, transform_list)                
+            stream_out = render_xlsx(self.template_name, transform_list)
             self.content = stream_out.getvalue()
-            print("X2")
-            if stream_in:
-                stream_in.close()
             file_in_name = os.path.basename(self.template_name[0])
             self['Content-Disposition'] = 'attachment; filename=%s' % file_in_name
             return self

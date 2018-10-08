@@ -172,8 +172,13 @@ class ForeignKey(models.ForeignKey):
         self.filter =  '-'
 
     def formfield(self, **kwargs):
-        href1 = make_href("/%s/table/%s/%s/form/get/?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name, self.filter))
-        href2 = make_href("/%s/table/%s/%s/add/?schtml=1" % (self.to._meta.app_label, self.to._meta.object_name, self.filter))
+        if type(self.to) == str:
+            to = self.model
+        else:
+            to = self.to
+
+        href1 = make_href("/%s/table/%s/%s/form/get/?schtml=1" % (to._meta.app_label, to._meta.object_name, self.filter))
+        href2 = make_href("/%s/table/%s/%s/add/?schtml=1" % (to._meta.app_label, to._meta.object_name, self.filter))
         field = self
 
         if self.search_fields:

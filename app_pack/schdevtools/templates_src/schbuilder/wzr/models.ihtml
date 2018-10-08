@@ -58,7 +58,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
 
     {% for line in table.table_code.splitlines %}{{line|safe}}
     {% endfor %}{% endif %}
-admin.site.register({{table.name}})
+{% if not 'abstract' in table.metaclass_code %}admin.site.register({{table.name}}){% endif %}
 
 {% endfor %}
 

@@ -28,6 +28,8 @@ urlpatterns = [
     
     
     
+    
+    
 ]
 
 gen = generic_table_start(urlpatterns, 'schreports', views)
@@ -35,6 +37,9 @@ gen = generic_table_start(urlpatterns, 'schreports', views)
 
 gen.standard('ReportDef', _('Report definition'), _('Reports definitions'))
 gen.standard('Report', _('Report'), _('Reports'))
+gen.standard('CommonGroupDef', _('Common group definition'), _('Common groups definition'))
+gen.standard('CommonGroup', _('Common group'), _('Common groups'))
 gen.standard('Plot', _('Plot'), _('Polts'))
+
 
 

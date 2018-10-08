@@ -25,11 +25,12 @@ from schlib.schtools.schjson import json_dumps, json_loads
 #from django.template import Context, Template
 from django.db.models import Max, Min
 
+from schelements.models import *
 
 
 
 
-class ReportDef( models.Model):
+class ReportDef(BaseObject):
     """
     Declaration:
         return Form()
@@ -60,15 +61,6 @@ class ReportDef( models.Model):
         
     
 
-    app = models.CharField('Application', null=False, blank=False, editable=True, max_length=16)
-    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
-    description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
-    declaration = models.TextField('Declaration', null=True, blank=True, editable=False, )
-    template_src = models.TextField('Template source', null=True, blank=True, editable=False, )
-    template = models.TextField('Template', null=True, blank=True, editable=False, )
-    to_html_rec = models.TextField('Convert fields to html', null=True, blank=True, editable=False, )
-    save_fun = models.TextField('Save function', null=True, blank=True, editable=False, )
-    load_fun = models.TextField('Load function', null=True, blank=True, editable=False, )
     
 
     def getsubrep(self, name):
@@ -161,6 +153,52 @@ class Report(JSONModel):
     
     
 admin.site.register(Report)
+
+
+class CommonGroupDef(BaseObject):
+    
+    class Meta:
+        verbose_name = _("Common group definition")
+        verbose_name_plural = _("Common groups definition")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schreports'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    on_new_elem_event = models.TextField('On new elemetn event', null=True, blank=True, editable=False, )
+    allowed_new_fields = models.TextField('Allowed new fields', null=True, blank=True, editable=False, )
+    
+
+    
+admin.site.register(CommonGroupDef)
+
+
+class CommonGroup(JSONModel):
+    
+    class Meta:
+        verbose_name = _("Common group")
+        verbose_name_plural = _("Common groups")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = 'schreports'
+
+
+        ordering = ['id']
+        
+        
+    
+
+    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    title = models.CharField('Title', null=True, blank=True, editable=True, max_length=64)
+    group_def_name = models.CharField('Group definition name', null=False, blank=False, editable=True, max_length=64)
+    tag_name = models.CharField('Tag name', null=True, blank=True, editable=True, max_length=64)
+    
+
+    
+admin.site.register(CommonGroup)
 
 
 class Plot( models.Model):
