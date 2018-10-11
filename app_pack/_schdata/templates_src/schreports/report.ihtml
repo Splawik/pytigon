@@ -23,9 +23,9 @@
 
 %% list_content_actions    
     div class=tr d-inline
-        .Nowy raport typu: 
+        .New: 
         % for pos in object_list.model.get_rep_types:        
-            % new_row_inline pos "" "" "" "-" "../../../../../new_rep/"|append_str:pos|append_str:"/0/" 
+            % new_row_inline pos "" "" "" "" "../../../../../new_rep/"|append_str:pos|append_str:"/0/" 
 
 
 %% list_row_header
@@ -39,7 +39,7 @@
 
 %% list_row_actions
     % row_actions:
-        .edit__rep/inline        
+        .edit-inline,_(Update),,,,,../../../../../../schreports/table/Report/{id}/edit__rep/        
         .pdf
         .odf        
         .field_edit/data,Data,data        

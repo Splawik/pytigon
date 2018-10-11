@@ -171,6 +171,7 @@ class CommonGroupDef(BaseObject):
 
     on_new_elem_event = models.TextField('On new elemetn event', null=True, blank=True, editable=False, )
     allowed_new_fields = models.TextField('Allowed new fields', null=True, blank=True, editable=False, )
+    main_group = ext_models.NullBooleanField('Main group', null=True, blank=True, editable=True, )
     
 
     
@@ -197,6 +198,20 @@ class CommonGroup(JSONModel):
     tag_name = models.CharField('Tag name', null=True, blank=True, editable=True, max_length=64)
     
 
+    @staticmethod    
+    def get_group_types(parent_pk):
+        if not parent_pk:
+            groupdef_list = CommonGroupDef.objects.filter(main_group=True)
+            return [pos.name for pos in groupdef_list]
+        else:
+            group = CommonGroup.objects.get(id=int(parent_pk))        
+            groupdef = CommonGroupDef.objects.filter(name=group.group_def_name)
+            ret = []
+            if len(groupdef)>0:
+                allowed_new_fields = groupdef[0].allowed_new_fields
+                if allowed_new_fields:
+                    ret = [ pos for pos in allowed_new_fields.replace(',',';').split(';') if pos ]
+            return ret
     
 admin.site.register(CommonGroup)
 

@@ -8,11 +8,12 @@
 
 %% list_content_actions
     % with gtree=get|get_or_tree:
-        % if not readonly
-            % if parent_pk > 0
-                % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent_obj.id
-            % else
-                % new_row "_(New element)" url=table_path|append_str:'0/this/-/add/'
+        %% list_content_actions_new_row
+            % if not readonly
+                % if parent_pk > 0
+                    % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent_obj.id
+                % else
+                    % new_row "_(New element)" url=table_path|append_str:'0/this/-/add/'
 
         % if standard_web_browser
             %if parent_pk > 0

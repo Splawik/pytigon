@@ -131,8 +131,8 @@ class ModelSelect2WidgetExt(ModelSelect2Widget):
         self.is_get_button = is_get_button
         self._label = label
 
-    def render(self, name, value, attrs=None):
-        x = super().render(name, value, attrs)
+    def render(self, name, value, attrs=None, renderer=None):
+        x = super().render(name, value, attrs, renderer=renderer)
 
         txt = ""
         if self.queryset:

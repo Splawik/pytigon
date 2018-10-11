@@ -35,6 +35,6 @@ var _summertextarea = function (resolve, reject) {
 	};
 	load_js (base_path + '/summernote-bs4.min.js', _on_loadjs);
 	load_css (base_path + '/summernote-bs4.css');
-	load_css (window.BASE_PATH + 'static/app/standard_components/summernote_add.css');
+	load_css (window.BASE_PATH + 'static/app/schcomponents/summernote_add.css');
 };
 Vue.component ('wysiwyg_edit', _summertextarea);

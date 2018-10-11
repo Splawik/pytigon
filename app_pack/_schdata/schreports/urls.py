@@ -18,6 +18,9 @@ urlpatterns = [
     url('table/Report/(?P<dochead_id>\d+)/repaction/(?P<rep_action>\w+)/$', views.repaction, {}),
     url('table/Report/(?P<rep_id>\d+)/(?P<to_pos>\d+)/action/move_to/$', views.move_to, {}),
     url('plot_service/(?P<name>\w+)/$', views.plot_service, {}),
+    url('new_group/(?P<group_type>\w+)/(?P<parent_id>\d+)/$', views.new_group, {}),
+    url('table/CommonGroup/(?P<group_id>\d+)/edit__group/$', views.edit__group, {}),
+    url('list_group_by_tag/(?P<group_tag>\w+)/$', views.list_group_by_tag, {}),
     
     
     
