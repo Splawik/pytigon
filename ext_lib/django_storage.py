@@ -55,7 +55,6 @@ class FSStorage(Storage):
             self.fs.setfile(name, content)
         return name
 
-    @unwrap_errors
     def delete(self, name):
         with unwrap_errors(name):
             try:
