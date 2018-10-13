@@ -1,4 +1,5 @@
 Django
+Twisted[tls,http2]
 channels
 ldap3
 django_python3_ldap
@@ -28,7 +29,7 @@ unidecode
 django-bulk_update
 dj-database-url
 dj-email-url
-git+https://github.com/wooyek/django-filer.git@feature/django2-support
+git+https://github.com/Splawik/django-filer.git@feature/django2-support
 schedule
 wxasync
 cefpython3

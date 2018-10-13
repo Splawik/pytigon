@@ -108,12 +108,14 @@ for app in settings.INSTALLED_APPS:
         pass
 
     try:
-            module_name = '%s.urls' % str(pos)
-            m = importlib.import_module(module_name)
-            if len(elementy) > 1:
-                urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
-            else:
-                urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+        module_name = '%s.urls' % str(pos)
+        m = importlib.import_module(module_name)
+        if len(elementy) > 1:
+            urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
+        else:
+            urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+    except ModuleNotFoundError:
+        pass
     except:
         if SHOW_ERROR:
             print(pos)

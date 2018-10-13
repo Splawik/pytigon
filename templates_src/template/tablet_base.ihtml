@@ -4,6 +4,7 @@
 
 % load exfiltry
 % load exsyntax
+% load static
 
 %% ext_js_scripts
     {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
@@ -95,9 +96,9 @@
 
         nav class=navbar navbar-toggleable-md bg-primary
             % if ie:
-                img src=/static/img/reload.gif,,,id=loading-indicator,,,style=display:none
+                img src={% get_static_prefix %}images/reload/reload.gif,,,id=loading-indicator,,,style=display:none
             % else:
-                img src=/static/img/reload.svg,,,id=loading-indicator,,,style=display:none
+                img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator,,,style=display:none
 
             % comment:
                 a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
