@@ -44,19 +44,21 @@
             $(this).not("." + options.emptyCssClass).addClass(options.formCssClass);
         });
         if ($this.length && showAddButton) {
-            var addButton;
-            if ($this.prop("tagName") === "TR") {
-                // If forms are laid out as table rows, insert the
-                // "add" button in a new table row:
-                var numCols = this.eq(-1).children().length;
-                $parent.append('<tr class="' + options.addCssClass + '"><td colspan="' + numCols + '"><a href="javascript:void(0)">' + options.addText + "</a></tr>");
-                addButton = $parent.find("tr:last a");
-            } else {
-                // Otherwise, insert it immediately after the last form:
-                $this.filter(":last").after('<div class="' + options.addCssClass + '"><a href="javascript:void(0)">' + options.addText + "</a></div>");
-                addButton = $this.filter(":last").next().find("a");
+            var addButton = options.addButton;
+            if (addButton === null) {
+                if ($this.prop("tagName") === "TR") {
+                    // If forms are laid out as table rows, insert the
+                    // "add" button in a new table row:
+                    var numCols = this.eq(-1).children().length;
+                    $parent.append('<tr class="' + options.addCssClass + '"><td colspan="' + numCols + '"><a href="#">' + options.addText + "</a></tr>");
+                    addButton = $parent.find("tr:last a");
+                } else {
+                    // Otherwise, insert it immediately after the last form:
+                    $this.filter(":last").after('<div class="' + options.addCssClass + '"><a href="#">' + options.addText + "</a></div>");
+                    addButton = $this.filter(":last").next().find("a");
+                }
             }
-            addButton.click(function(e) {
+            addButton.on('click', function(e) {
                 e.preventDefault();
                 var template = $("#" + options.prefix + "-empty");
                 var row = template.clone(true);
@@ -66,15 +68,15 @@
                 if (row.is("tr")) {
                     // If the forms are laid out in table rows, insert
                     // the remove button into the last table cell:
-                    row.children(":last").append('<div><a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + "</a></div>");
+                    row.children(":last").append('<div><a class="' + options.deleteCssClass + '" href="#">' + options.deleteText + "</a></div>");
                 } else if (row.is("ul") || row.is("ol")) {
                     // If they're laid out as an ordered/unordered list,
                     // insert an <li> after the last list item:
-                    row.append('<li><a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + "</a></li>");
+                    row.append('<li><a class="' + options.deleteCssClass + '" href="#">' + options.deleteText + "</a></li>");
                 } else {
                     // Otherwise, just insert the remove button as the
                     // last child element of the form's container:
-                    row.children(":first").append('<span><a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + "</a></span>");
+                    row.children(":first").append('<span><a class="' + options.deleteCssClass + '" href="#">' + options.deleteText + "</a></span>");
                 }
                 row.find("*").each(function() {
                     updateElementIndex(this, options.prefix, totalForms.val());
@@ -89,7 +91,7 @@
                     addButton.parent().hide();
                 }
                 // The delete button of each row triggers a bunch of other things
-                row.find("a." + options.deleteCssClass).click(function(e1) {
+                row.find("a." + options.deleteCssClass).on('click', function(e1) {
                     e1.preventDefault();
                     // Remove the parent form containing this button:
                     row.remove();
@@ -137,15 +139,16 @@
         emptyCssClass: "empty-row",    // CSS class applied to the empty row
         formCssClass: "dynamic-form",  // CSS class applied to each form in a formset
         added: null,          // Function called each time a new form is added
-        removed: null          // Function called each time a form is deleted
+        removed: null,          // Function called each time a form is deleted
+        addButton: null       // Existing add button to use
     };
 
 
     // Tabular inlines ---------------------------------------------------------
-    $.fn.tabularFormset = function(options) {
+    $.fn.tabularFormset = function(selector, options) {
         var $rows = $(this);
         var alternatingRows = function(row) {
-            $($rows.selector).not(".add-row").removeClass("row1 row2")
+            $(selector).not(".add-row").removeClass("row1 row2")
             .filter(":even").addClass("row1").end()
             .filter(":odd").addClass("row2");
         };
@@ -201,17 +204,18 @@
                 reinitDateTimeShortCuts();
                 updateSelectFilter();
                 alternatingRows(row);
-            }
+            },
+            addButton: options.addButton
         });
 
         return $rows;
     };
 
     // Stacked inlines ---------------------------------------------------------
-    $.fn.stackedFormset = function(options) {
+    $.fn.stackedFormset = function(selector, options) {
         var $rows = $(this);
         var updateInlineLabel = function(row) {
-            $($rows.selector).find(".inline_label").each(function(i) {
+            $(selector).find(".inline_label").each(function(i) {
                 var count = i + 1;
                 $(this).html($(this).html().replace(/(#\d+)/g, "#" + count));
             });
@@ -267,9 +271,28 @@
                 reinitDateTimeShortCuts();
                 updateSelectFilter();
                 updateInlineLabel(row);
-            }
+            },
+            addButton: options.addButton
         });
 
         return $rows;
     };
+
+    $(document).ready(function() {
+        $(".js-inline-admin-formset").each(function() {
+            var data = $(this).data(),
+                inlineOptions = data.inlineFormset,
+                selector;
+            switch(data.inlineType) {
+            case "stacked":
+                selector = inlineOptions.name + "-group .inline-related";
+                $(selector).stackedFormset(selector, inlineOptions.options);
+                break;
+            case "tabular":
+                selector = inlineOptions.name + "-group .tabular.inline-related tbody:first > tr";
+                $(selector).tabularFormset(selector, inlineOptions.options);
+                break;
+            }
+        });
+    });
 })(django.jQuery);

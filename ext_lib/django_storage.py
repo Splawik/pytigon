@@ -17,7 +17,16 @@ class FSStorage(Storage):
         self.base_url = base_url
 
     def exists(self, name):
-        return self.fs.isfile(name)
+        return self.fs.isfile(name) or self.fs.isdir(name)
+
+    def isdir(self, name):
+        return self.fs.isdir(name)
+
+    def listdir(self, name):
+        x = list(self.fs.scandir(name))
+        dirs = [ pos.name for pos in x if pos.isdir ]
+        files = [ pos.name for pos in x if not pos.isdir ]
+        return (dirs, files)
 
     def path(self, name):
         path = self.fs.getsyspath(name)
@@ -25,33 +34,24 @@ class FSStorage(Storage):
             raise NotImplementedError
         return path
 
-    #@unwrap_errors
     def size(self, name):
         with unwrap_errors(name):
             size = self.fs.getsize(name)
         return size
-        #return self.fs.getsize(name)
 
-    #@unwrap_errors
     def url(self, name):
         with unwrap_errors(name):
             ret = self.base_url + abspath(name)
         return ret
-        #return self.base_url + abspath(name)
 
-    #@unwrap_errors
     def _open(self, name, mode):
         with unwrap_errors(name):
             f = self.fs.open(name, mode)
         return File(f)
-        #return File(self.fs.open(name, mode))
 
-    #@unwrap_errors
     def _save(self, name, content):
         with unwrap_errors(name):
-            #self.fs.makedir(dirname(name), allow_recreate=True, recursive=True)
             self.fs.makedirs(dirname(name), recreate=True)
-            #self.fs.setcontents(name, content)
             self.fs.setfile(name, content)
         return name
 
@@ -63,3 +63,15 @@ class FSStorage(Storage):
             except ResourceNotFoundError:
                 pass
             
+    def get_accessed_time(self, name):
+        info = self.fs.getinfo(name, namespaces=['details'])
+        return info.accessed
+                
+    def get_created_time(self, name):
+        info = self.fs.getinfo(name, namespaces=['details'])
+        return info.created
+    
+    def get_modified_time(self, name):
+        info = self.fs.getinfo(name, namespaces=['details'])
+        return info.modified 
+        

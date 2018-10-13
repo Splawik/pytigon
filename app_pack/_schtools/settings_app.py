@@ -34,7 +34,7 @@ ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
-        and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
+        and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schtools'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
@@ -121,5 +121,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.09.18 21:01:32'
+GEN_TIME = '2018.10.12 10:20:02'
 

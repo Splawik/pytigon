@@ -27,7 +27,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
-from django.urls import path #include
+#from django.urls import path #include
 
 import django.views.i18n
 import django.conf.urls.i18n
@@ -123,5 +123,6 @@ for app in settings.INSTALLED_APPS:
 
 if settings.URL_ROOT_FOLDER:
     urlpatterns = [
-        path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
+        #path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
+        url(settings.URL_ROOT_FOLDER + "/", include(urlpatterns)),
     ]

@@ -1,8 +1,8 @@
-/*global SelectBox, addEvent, gettext, interpolate, quickElement, SelectFilter*/
+/*global SelectBox, gettext, interpolate, quickElement, SelectFilter*/
 /*
 SelectFilter2 - Turns a multiple-select box into a filter interface.
 
-Requires core.js, SelectBox.js and addevent.js.
+Requires jQuery, core.js, and SelectBox.js.
 */
 (function($) {
     'use strict';
@@ -75,15 +75,15 @@ Requires core.js, SelectBox.js and addevent.js.
             filter_input.id = field_id + '_input';
 
             selector_available.appendChild(from_box);
-            var choose_all = quickElement('a', selector_available, gettext('Choose all'), 'title', interpolate(gettext('Click to choose all %s at once.'), [field_name]), 'href', 'javascript:void(0);', 'id', field_id + '_add_all_link');
+            var choose_all = quickElement('a', selector_available, gettext('Choose all'), 'title', interpolate(gettext('Click to choose all %s at once.'), [field_name]), 'href', '#', 'id', field_id + '_add_all_link');
             choose_all.className = 'selector-chooseall';
 
             // <ul class="selector-chooser">
             var selector_chooser = quickElement('ul', selector_div);
             selector_chooser.className = 'selector-chooser';
-            var add_link = quickElement('a', quickElement('li', selector_chooser), gettext('Choose'), 'title', gettext('Choose'), 'href', 'javascript:void(0);', 'id', field_id + '_add_link');
+            var add_link = quickElement('a', quickElement('li', selector_chooser), gettext('Choose'), 'title', gettext('Choose'), 'href', '#', 'id', field_id + '_add_link');
             add_link.className = 'selector-add';
-            var remove_link = quickElement('a', quickElement('li', selector_chooser), gettext('Remove'), 'title', gettext('Remove'), 'href', 'javascript:void(0);', 'id', field_id + '_remove_link');
+            var remove_link = quickElement('a', quickElement('li', selector_chooser), gettext('Remove'), 'title', gettext('Remove'), 'href', '#', 'id', field_id + '_remove_link');
             remove_link.className = 'selector-remove';
 
             // <div class="selector-chosen">
@@ -105,24 +105,58 @@ Requires core.js, SelectBox.js and addevent.js.
 
             var to_box = quickElement('select', selector_chosen, '', 'id', field_id + '_to', 'multiple', 'multiple', 'size', from_box.size, 'name', from_box.getAttribute('name'));
             to_box.className = 'filtered';
-            var clear_all = quickElement('a', selector_chosen, gettext('Remove all'), 'title', interpolate(gettext('Click to remove all chosen %s at once.'), [field_name]), 'href', 'javascript:void(0);', 'id', field_id + '_remove_all_link');
+            var clear_all = quickElement('a', selector_chosen, gettext('Remove all'), 'title', interpolate(gettext('Click to remove all chosen %s at once.'), [field_name]), 'href', '#', 'id', field_id + '_remove_all_link');
             clear_all.className = 'selector-clearall';
 
             from_box.setAttribute('name', from_box.getAttribute('name') + '_old');
 
             // Set up the JavaScript event handlers for the select box filter interface
-            addEvent(choose_all, 'click', function() { SelectBox.move_all(field_id + '_from', field_id + '_to'); SelectFilter.refresh_icons(field_id); });
-            addEvent(add_link, 'click', function() { SelectBox.move(field_id + '_from', field_id + '_to'); SelectFilter.refresh_icons(field_id); });
-            addEvent(remove_link, 'click', function() { SelectBox.move(field_id + '_to', field_id + '_from'); SelectFilter.refresh_icons(field_id); });
-            addEvent(clear_all, 'click', function() { SelectBox.move_all(field_id + '_to', field_id + '_from'); SelectFilter.refresh_icons(field_id); });
-            addEvent(filter_input, 'keypress', function(e) { SelectFilter.filter_key_press(e, field_id); });
-            addEvent(filter_input, 'keyup', function(e) { SelectFilter.filter_key_up(e, field_id); });
-            addEvent(filter_input, 'keydown', function(e) { SelectFilter.filter_key_down(e, field_id); });
-            addEvent(from_box, 'change', function(e) { SelectFilter.refresh_icons(field_id); });
-            addEvent(to_box, 'change', function(e) { SelectFilter.refresh_icons(field_id); });
-            addEvent(from_box, 'dblclick', function() { SelectBox.move(field_id + '_from', field_id + '_to'); SelectFilter.refresh_icons(field_id); });
-            addEvent(to_box, 'dblclick', function() { SelectBox.move(field_id + '_to', field_id + '_from'); SelectFilter.refresh_icons(field_id); });
-            addEvent(findForm(from_box), 'submit', function() { SelectBox.select_all(field_id + '_to'); });
+            var move_selection = function(e, elem, move_func, from, to) {
+                if (elem.className.indexOf('active') !== -1) {
+                    move_func(from, to);
+                    SelectFilter.refresh_icons(field_id);
+                }
+                e.preventDefault();
+            };
+            choose_all.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move_all, field_id + '_from', field_id + '_to');
+            });
+            add_link.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move, field_id + '_from', field_id + '_to');
+            });
+            remove_link.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move, field_id + '_to', field_id + '_from');
+            });
+            clear_all.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move_all, field_id + '_to', field_id + '_from');
+            });
+            filter_input.addEventListener('keypress', function(e) {
+                SelectFilter.filter_key_press(e, field_id);
+            });
+            filter_input.addEventListener('keyup', function(e) {
+                SelectFilter.filter_key_up(e, field_id);
+            });
+            filter_input.addEventListener('keydown', function(e) {
+                SelectFilter.filter_key_down(e, field_id);
+            });
+            selector_div.addEventListener('change', function(e) {
+                if (e.target.tagName === 'SELECT') {
+                    SelectFilter.refresh_icons(field_id);
+                }
+            });
+            selector_div.addEventListener('dblclick', function(e) {
+                if (e.target.tagName === 'OPTION') {
+                    if (e.target.closest('select').id === field_id + '_to') {
+                        SelectBox.move(field_id + '_to', field_id + '_from');
+                    } else {
+                        SelectBox.move(field_id + '_from', field_id + '_to');
+                    }
+                    SelectFilter.refresh_icons(field_id);
+                }
+            });
+            findForm(from_box).addEventListener('submit', function() {
+                SelectBox.select_all(field_id + '_to');
+            });
             SelectBox.init(field_id + '_from');
             SelectBox.init(field_id + '_to');
             // Move selected from_box options to to_box
@@ -130,8 +164,8 @@ Requires core.js, SelectBox.js and addevent.js.
 
             if (!is_stacked) {
                 // In horizontal mode, give the same height to the two boxes.
-                var j_from_box = $(from_box);
-                var j_to_box = $(to_box);
+                var j_from_box = $('#' + field_id + '_from');
+                var j_to_box = $('#' + field_id + '_to');
                 var resize_filters = function() { j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight()); };
                 if (j_from_box.outerHeight() > 0) {
                     resize_filters(); // This fieldset is already open. Resize now.
@@ -144,14 +178,26 @@ Requires core.js, SelectBox.js and addevent.js.
             // Initial icon refresh
             SelectFilter.refresh_icons(field_id);
         },
+        any_selected: function(field) {
+            var any_selected = false;
+            try {
+                // Temporarily add the required attribute and check validity.
+                // This is much faster in WebKit browsers than the fallback.
+                field.attr('required', 'required');
+                any_selected = field.is(':valid');
+                field.removeAttr('required');
+            } catch (e) {
+                // Browsers that don't support :valid (IE < 10)
+                any_selected = field.find('option:selected').length > 0;
+            }
+            return any_selected;
+        },
         refresh_icons: function(field_id) {
             var from = $('#' + field_id + '_from');
             var to = $('#' + field_id + '_to');
-            var is_from_selected = from.find('option:selected').length > 0;
-            var is_to_selected = to.find('option:selected').length > 0;
             // Active if at least one item is selected
-            $('#' + field_id + '_add_link').toggleClass('active', is_from_selected);
-            $('#' + field_id + '_remove_link').toggleClass('active', is_to_selected);
+            $('#' + field_id + '_add_link').toggleClass('active', SelectFilter.any_selected(from));
+            $('#' + field_id + '_remove_link').toggleClass('active', SelectFilter.any_selected(to));
             // Active if the corresponding box isn't empty
             $('#' + field_id + '_add_all_link').toggleClass('active', from.find('option').length > 0);
             $('#' + field_id + '_remove_all_link').toggleClass('active', to.find('option').length > 0);
@@ -194,5 +240,13 @@ Requires core.js, SelectBox.js and addevent.js.
             return true;
         }
     };
+
+    window.addEventListener('load', function(e) {
+        $('select.selectfilter, select.selectfilterstacked').each(function() {
+            var $el = $(this),
+                data = $el.data();
+            SelectFilter.init($el.attr('id'), data.fieldName, parseInt(data.isStacked, 10));
+        });
+    });
 
 })(django.jQuery);

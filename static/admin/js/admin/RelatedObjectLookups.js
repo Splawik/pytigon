@@ -5,16 +5,6 @@
 (function($) {
     'use strict';
 
-    function html_unescape(text) {
-        // Unescape a string that was escaped using django.utils.html.escape.
-        text = text.replace(/&lt;/g, '<');
-        text = text.replace(/&gt;/g, '>');
-        text = text.replace(/&quot;/g, '"');
-        text = text.replace(/&#39;/g, "'");
-        text = text.replace(/&amp;/g, '&');
-        return text;
-    }
-
     // IE doesn't accept periods or dashes in the window name, but the element IDs
     // we use to generate popup window names may contain them, therefore we map them
     // to allowed characters in a reversible way so that we can locate the correct
@@ -67,15 +57,15 @@
     }
 
     function updateRelatedObjectLinks(triggeringLink) {
-        var $this = django.jQuery(triggeringLink);
-        var siblings = $this.nextAll('.change-related, .delete-related');
+        var $this = $(triggeringLink);
+        var siblings = $this.nextAll('.view-related, .change-related, .delete-related');
         if (!siblings.length) {
             return;
         }
         var value = $this.val();
         if (value) {
             siblings.each(function() {
-                var elm = django.jQuery(this);
+                var elm = $(this);
                 elm.attr('href', elm.attr('data-href-template').replace('__fk__', value));
             });
         } else {
@@ -84,10 +74,6 @@
     }
 
     function dismissAddRelatedObjectPopup(win, newId, newRepr) {
-        // newId and newRepr are expected to have previously been escaped by
-        // django.utils.html.escape.
-        newId = html_unescape(newId);
-        newRepr = html_unescape(newRepr);
         var name = windowname_to_id(win.name);
         var elem = document.getElementById(name);
         if (elem) {
@@ -102,7 +88,7 @@
                 }
             }
             // Trigger a change event to update related links if required.
-            django.jQuery(elem).trigger('change');
+            $(elem).trigger('change');
         } else {
             var toId = name + "_to";
             var o = new Option(newRepr, newId);
@@ -113,35 +99,37 @@
     }
 
     function dismissChangeRelatedObjectPopup(win, objId, newRepr, newId) {
-        objId = html_unescape(objId);
-        newRepr = html_unescape(newRepr);
         var id = windowname_to_id(win.name).replace(/^edit_/, '');
         var selectsSelector = interpolate('#%s, #%s_from, #%s_to', [id, id, id]);
-        var selects = django.jQuery(selectsSelector);
+        var selects = $(selectsSelector);
         selects.find('option').each(function() {
             if (this.value === objId) {
-                this.innerHTML = newRepr;
+                this.textContent = newRepr;
                 this.value = newId;
             }
+        });
+        selects.next().find('.select2-selection__rendered').each(function() {
+            // The element can have a clear button as a child.
+            // Use the lastChild to modify only the displayed value.
+            this.lastChild.textContent = newRepr;
+            this.title = newRepr;
         });
         win.close();
     }
 
     function dismissDeleteRelatedObjectPopup(win, objId) {
-        objId = html_unescape(objId);
         var id = windowname_to_id(win.name).replace(/^delete_/, '');
         var selectsSelector = interpolate('#%s, #%s_from, #%s_to', [id, id, id]);
-        var selects = django.jQuery(selectsSelector);
+        var selects = $(selectsSelector);
         selects.find('option').each(function() {
             if (this.value === objId) {
-                django.jQuery(this).remove();
+                $(this).remove();
             }
         }).trigger('change');
         win.close();
     }
 
     // Global for testing purposes
-    window.html_unescape = html_unescape;
     window.id_to_windowname = id_to_windowname;
     window.windowname_to_id = windowname_to_id;
 
@@ -158,6 +146,10 @@
     window.dismissAddAnotherPopup = dismissAddRelatedObjectPopup;
 
     $(document).ready(function() {
+        $("a[data-popup-opener]").on('click', function(event) {
+            event.preventDefault();
+            opener.dismissRelatedLookupPopup(window, $(this).data("popup-opener"));
+        });
         $('body').on('click', '.related-widget-wrapper-link', function(e) {
             e.preventDefault();
             if (this.href) {
@@ -176,6 +168,14 @@
             }
         });
         $('.related-widget-wrapper select').trigger('change');
+        $('body').on('click', '.related-lookup', function(e) {
+            e.preventDefault();
+            var event = $.Event('django:lookup-related');
+            $(this).trigger(event);
+            if (!event.isDefaultPrevented()) {
+                showRelatedObjectLookupPopup(this);
+            }
+        });
     });
 
 })(django.jQuery);

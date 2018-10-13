@@ -35,6 +35,12 @@ not(.login_background) div.content-wrapper {
     height: 40px;
     padding-top: 12px; }
 
+.dashboard #header {
+  display: none; }
+
+.dashboard #content {
+  padding: 0px 10px; }
+
 /* Tab - close button on tab */
 #tabs2 {
   border-bottom: 0px; }

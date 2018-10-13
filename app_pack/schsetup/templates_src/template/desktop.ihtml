@@ -10,6 +10,7 @@
 
 %% js_extrascipts
     {{block.super}}
+    {% jscript_link 'vue/vue.js' %}
     
     
     
@@ -23,6 +24,10 @@
 %% body_footer
     {{block.super}}
     
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/xterm.js' %}
+    
+    
 
 %% component_init
-     .component_init = [] 
+    .var component_init = [ "xterm",  ];  

@@ -28,6 +28,7 @@ unidecode
 django-bulk_update
 dj-database-url
 dj-email-url
+git+https://github.com/wooyek/django-filer.git@feature/django2-support
 schedule
 wxasync
 cefpython3

@@ -86,7 +86,7 @@ else:
     STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 ADMIN_MEDIA_PREFIX = '/media/'
 
@@ -277,6 +277,10 @@ def DEFAULT_FILE_STORAGE_FS():
         pass
     try:
         _m.mount('upload', OSFS(settings.UPLOAD_PATH))
+        _m.mount('filer_public', OSFS(os.path.join(settings.UPLOAD_PATH,"filer_public")))
+        _m.mount('filer_private', OSFS(os.path.join(settings.UPLOAD_PATH,"filer_private")))
+        _m.mount('filer_public_thumbnails', OSFS(os.path.join(settings.UPLOAD_PATH,"filer_public_thumbnails")))
+        _m.mount('filer_private_thumbnails', OSFS(os.path.join(settings.UPLOAD_PATH,"filer_private_thumbnails")))
     except:
         pass
 

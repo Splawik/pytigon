@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "{{appset.title}}"
 APPSET_NAME = "{{appset.name}}"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['{{appset.desktop_gui_type}}', '{{appset.tablet_gui_type}}', '{{appset.smartfon_gui_type}}']
 
