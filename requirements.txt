@@ -31,5 +31,6 @@ dj-database-url
 dj-email-url
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
 schedule
+django-sql-explorer
 wxasync
 cefpython3

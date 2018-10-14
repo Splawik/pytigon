@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Standar components"
 APPSET_NAME = "schcomponents"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['auto', 'auto', 'auto']
 
@@ -117,5 +117,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.11 20:53:56'
+GEN_TIME = '2018.10.14 13:47:45'
 

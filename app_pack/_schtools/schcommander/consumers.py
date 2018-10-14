@@ -63,7 +63,6 @@ class ShellConsumer(WebsocketConsumer):
         self.child_pid = None
         self.accept()
         (child_pid, fd) = pty.fork()
-        
         if child_pid == 0:
             env2 = os.environ.copy()
             env2['TERM'] = 'xterm'
@@ -73,9 +72,13 @@ class ShellConsumer(WebsocketConsumer):
             self.child_pid = child_pid
             self.thread = Thread(target=read_and_forward_pty_output, args=(self,))
             self.thread.start()
+            
     
     def disconnect(self, close_code):
+        print('Disconnect.......')
         self.exit = True
+        os.write(self.fd, b"exit\n")
+        
     
 
 

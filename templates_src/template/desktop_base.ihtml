@@ -10,10 +10,11 @@
     script language=javascript
         .window.BASE_PATH = '{{base_path}}';
 
-    {% jscript_link 'system/browser-polyfill.min.js' %}
-
     % if request.get_host == '127.0.0.2':
         {% jscript_link 'sch/schXMLHttpRequest.js' %}
+
+    {% jscript_link 'system/browser-polyfill.min.js' %}
+
     {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
     {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
     {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
@@ -26,17 +27,12 @@
     {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
     {% jscript_link 'django_select2/django_select2.js' %}
 
-    % comment:
-        {% jscript_link 'jquery_plugins/select2/js/select2.full.min.js' %}
-        {% import_django_select2_js %}
-    
+
     {% jscript_link 'jquery_plugins/jquery.form.js' %}
     {% jscript_link 'jquery_plugins/csrf.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
-    % comment:
-        {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
 
 
     {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
@@ -48,13 +44,6 @@
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.js' %}
-
-    % comment:
-        {% jscript_link 'bootstrap_plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js' %}
-        {% jscript_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/js/bootstrap-material-datetimepicker.js' %}
-        {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}
-        {% jscript_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/js/fileinput_locale_pl.js' %}
-
 
     {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
 
@@ -69,10 +58,6 @@
 
     {% jscript_link 'sch/pytigon.js' %}
     {% jscript_link 'sch/inline_dialog.js' %}
-
-    % comment:
-        {% jscript_link 'fonts/font-awesome/js/fontawesome-all.min.js' %}
-        {% jscript_link 'fonts/font-awesome/js/fa-v4-shims.min.js' %}
 
     %% theme_js_scripts
 

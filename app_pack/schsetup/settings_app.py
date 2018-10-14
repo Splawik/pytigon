@@ -69,6 +69,8 @@ INSTALLED_APPS.append('easy_thumbnails')
 INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
 
+INSTALLED_APPS.append('explorer')
+
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
     'easy_thumbnails.processors.autocrop',
@@ -79,6 +81,8 @@ THUMBNAIL_PROCESSORS = (
 
 FILER_DEBUG = True
 
+EXPLORER_CONNECTIONS = { 'Default': 'default' } 
+EXPLORER_DEFAULT_CONNECTION = 'default'
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
@@ -135,5 +139,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.13 11:10:42'
+GEN_TIME = '2018.10.14 08:28:00'
 

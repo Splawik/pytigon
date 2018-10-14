@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Pytigon tools"
 APPSET_NAME = "_schtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['auto', 'auto', 'auto']
 
@@ -121,5 +121,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.12 10:20:02'
+GEN_TIME = '2018.10.14 13:50:29'
 

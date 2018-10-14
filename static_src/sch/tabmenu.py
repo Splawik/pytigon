@@ -91,6 +91,11 @@ class TabMenu:
 
 
     def remove_page(self, id):
+        def _on_remove(index, value):
+            value.on_remove()
+
+        jQuery.each(jQuery('#' + id).find('.call_on_remove'), _on_remove)
+
         def _local_fun(index, value):
             if value and value.id == id:
                 self.titles[index] = None

@@ -11,6 +11,7 @@ urlpatterns = [
      url(r'^terminal', TemplateView.as_view(template_name='schadmin/terminal.html'), {}), 
      url(r'^administration', TemplateView.as_view(template_name='schadmin/administration.html'), {}), 
      url(r'^filemanager', TemplateView.as_view(template_name='schadmin/filemanager.html'), {}), 
+     url(r'^sqlexplore', TemplateView.as_view(template_name='schadmin/sqlexplore.html'), {}), 
     
     
 ]
@@ -18,6 +19,7 @@ urlpatterns = [
 gen = generic_table_start(urlpatterns, 'schadmin', views)
 from django.conf.urls import include
 urlpatterns.append(url(r'^filer/', include('filer.urls')))
+urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
 
 
 

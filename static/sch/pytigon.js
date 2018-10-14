@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-10-13 11:52:40
+// Transcrypt'ed from Python, 2018-10-14 12:45:46
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3462,6 +3462,10 @@ function pytigon () {
 							return _id;
 						});},
 						get remove_page () {return __get__ (this, function (self, id) {
+							var _on_remove = function (index, value) {
+								value.on_remove ();
+							};
+							jQuery.each (jQuery ('#' + id).find ('.call_on_remove'), _on_remove);
 							var _local_fun = function (index, value) {
 								if (value && value.id == id) {
 									self.titles [index] = null;
@@ -3512,7 +3516,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenuitem', {
