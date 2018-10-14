@@ -29,6 +29,9 @@ unidecode
 django-bulk_update
 dj-database-url
 dj-email-url
+easy_thumbnails
+django-mptt
+django_polymorphic
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
 schedule
 django-sql-explorer
