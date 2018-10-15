@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Pytigon portal"
 APPSET_NAME = "schportal"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['tablet_modern', 'tablet_modern', 'smartfon_standard']
 
@@ -34,7 +34,7 @@ ROOT_PATH = _rp
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
-        and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
+        and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='schportal'
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
@@ -65,6 +65,7 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -108,12 +109,15 @@ else:
             },
         }
         DATABASES['local'] = db_local
+
+
+
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.08.24 15:16:25'
+GEN_TIME = '2018.10.15 21:36:19'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

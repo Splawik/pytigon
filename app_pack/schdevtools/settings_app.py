@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Developer tools"
 APPSET_NAME = "schdevtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
@@ -121,6 +121,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.06 15:36:26'
+GEN_TIME = '2018.10.15 21:37:59'
 OFFLINE_SUPPORT = True
 

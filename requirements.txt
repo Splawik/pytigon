@@ -35,5 +35,4 @@ django_polymorphic
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
 schedule
 django-sql-explorer
-wxasync
 cefpython3

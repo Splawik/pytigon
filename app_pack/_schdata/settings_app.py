@@ -25,7 +25,7 @@ except:
 APPSET_TITLE = "Data structures"
 APPSET_NAME = "_schdata"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['tablet_modern', 'tablet_modern', 'auto']
 
@@ -117,5 +117,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.11 19:56:25'
+GEN_TIME = '2018.10.15 21:36:29'
 

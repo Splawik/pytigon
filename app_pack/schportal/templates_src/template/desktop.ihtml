@@ -25,13 +25,14 @@
 %% body_footer
     {{block.super}}
     
-    {% component 'app/standard_components/components/d3.js' %}
-    {% component 'app/standard_components/components/vs_editor.js' %}
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/d3.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
     
     
 
 %% component_init
-    .component_init = [ "d3", "vs_editor",  ] 
+    .var component_init = [ "d3", "vs_editor",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
