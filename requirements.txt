@@ -36,3 +36,4 @@ git+https://github.com/Splawik/django-filer.git@feature/django2-support
 schedule
 django-sql-explorer
 cefpython3
+xonsh

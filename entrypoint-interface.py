@@ -4,6 +4,8 @@ import os
 import sys
 from os import environ
 
+from schlib.schtools.tools import get_executable
+
 BASE_APPS_PATH = "/var/www/pytigon/app_pack"
 sys.path.append(BASE_APPS_PATH)
 
@@ -151,6 +153,11 @@ for app_pack in APP_PACKS:
     cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d --access-log /var/log/pytigon-access.log asgi:application" % (
     app_pack, port)
     port += 1
+    print(cmd)
+    ret_tab.append(subprocess.Popen(cmd, shell=True))
+
+for app_pack in APP_PACKS:
+    cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (get_executable(), app_pack)
     print(cmd)
     ret_tab.append(subprocess.Popen(cmd, shell=True))
 
