@@ -60,13 +60,19 @@ CFG_START = """server
     location ^~ /static/ {
         alias /var/www/pytigon/static/;
     }
-
-    location ^~ /schdevtools/static/ {
-        alias /var/www/pytigon/static/;
-    }
 """
 
 CFG_ELEM = """
+    location ^~ /%s/static/ {
+        alias /var/www/pytigon/static/;
+    }
+    location ~ /%s(.*)/socket.io/$ {
+        proxy_http_version 1.1;
+    
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_pass %s:%d/%s$1/socket.io/;
+    }    
     location ~ /%s(.*)$ {
         proxy_pass %s:%d/%s$1$is_args$args;
         proxy_set_header Host $host;
@@ -130,7 +136,7 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
     conf.write(CFG_START % ( VIRTUAL_PORT, VIRTUAL_HOST, CRT, KEY))
     port = START_CLIENT_PORT
     for app_pack in APP_PACKS:
-        conf.write(CFG_ELEM % (app_pack, "http://127.0.0.1", port, app_pack))
+        conf.write(CFG_ELEM % (app_pack, app_pack, "http://127.0.0.1", port, app_pack, app_pack, "http://127.0.0.1", port, app_pack))
         port += 1
     if MAIN_APP_PACK:
         conf.write(CFG_END % ("http://127.0.0.1", port))

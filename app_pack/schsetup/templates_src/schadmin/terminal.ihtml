@@ -8,4 +8,4 @@
 %% scroll
     
 %% list_page
-    sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/
+    sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/socket.io/

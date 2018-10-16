@@ -130,7 +130,7 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
-    (r"^schcommander/shell/$", 'schcommander.consumers.ShellConsumer'),
+    (r"^schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -139,5 +139,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.15 21:36:09'
+GEN_TIME = '2018.10.16 16:44:17'
 

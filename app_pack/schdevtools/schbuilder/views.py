@@ -648,7 +648,7 @@ def gen(request, pk):
                 for _app in tab2:
                     consumers = _app.schchannelconsumer_set.all()
                     for consumer in consumers:
-                        consumers_tab.append((_app.name+"/"+consumer.url+"/", _app.name+".consumers."+consumer.name))
+                        consumers_tab.append((_app.name+"/"+consumer.url+"/socket.io/", _app.name+".consumers."+consumer.name))
                 
     template_to_file(base_path, "settings_app", "settings_app.py",  {'appset': appset, 'gmtime': gmt_str, 'offline_support': offline_support, 'consumers': consumers_tab })
     
