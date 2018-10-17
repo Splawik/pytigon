@@ -32,6 +32,8 @@ def run():
     #else:
     #    os.chdir(base_path)
 
+    sys.path.append(os.path.join(base_path, "ext_lib"))
+
     environ['PYTIGON_ROOT_PATH'] = base_path
     if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
         os.chdir(base_path)

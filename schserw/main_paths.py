@@ -10,8 +10,8 @@ def get_main_paths():
 
     sys.path.append(ret['SERW_PATH'])
     sys.path.append(ret['ROOT_PATH'])
-    sys.path.append(os.path.join(ret['ROOT_PATH'], '/ext_lib'))
-    sys.path.append(os.path.join(ret['ROOT_PATH'], '/schappdata/schplugins'))
+    sys.path.append(os.path.join(ret['ROOT_PATH'], 'ext_lib'))
+    sys.path.append(os.path.join(ret['ROOT_PATH'], 'schappdata/schplugins'))
 
     from schlib.schtools.platform_info import platform_name
 
@@ -31,7 +31,7 @@ def get_main_paths():
         ret['LOG_PATH'] = ret['DATA_PATH']
     else:
         if ret['ROOT_PATH'].startswith('/var/www'):
-            ret['DATA_PATH'] = os.path.join("/home/www-data/.pytigon")
+            ret['DATA_PATH'] = "/home/www-data/.pytigon"
             ret['LOG_PATH'] = "/var/log"
         else:
             ret['DATA_PATH'] = os.path.join(os.path.expanduser("~"), ".pytigon")
