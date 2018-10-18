@@ -31,11 +31,13 @@ THEMES = ['tablet_modern', 'tablet_modern', 'auto']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
+URL_ROOT_PREFIX = ""
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='schsetup'
+    URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
@@ -63,8 +65,6 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
         else:
             LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
-
-TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 INSTALLED_APPS.append('easy_thumbnails')
 INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
@@ -83,6 +83,8 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
+
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
@@ -130,14 +132,16 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
-    (r"^schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
+
+print(CHANNELS_URL_TAB)
 
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.10.16 16:44:17'
+GEN_TIME = '2018.10.18 19:31:56'
 

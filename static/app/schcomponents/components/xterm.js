@@ -8,7 +8,17 @@ var _xterm = function (resolve, reject) {
 		var mounted = function () {
 			var self = this;
 			var _next = function () {
-				var address = self.href;
+				var address = location.hostname;
+				if (location.port) {
+					address += ':' + location.port;
+				}
+				address += self.href;
+				if (location.protocol != 'https:') {
+					var address = 'ws://' + address;
+				}
+				else {
+					var address = 'wss://' + address;
+				}
 				var websocket = new WebSocket (address);
 				var term = new Terminal ();
 				term.open (self.$el);

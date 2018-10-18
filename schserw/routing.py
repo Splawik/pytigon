@@ -33,7 +33,7 @@ if hasattr(settings, 'CHANNELS_URL_TAB'):
         tmp = row[1].split('.')
         m = importlib.import_module('.'.join(tmp[:-1]))
         o = getattr(m,tmp[-1])
-        print(o)
+        print("CHANNEL:", u, o)
         urls_tab.append(url(u,o))
 
 application = ProtocolTypeRouter({

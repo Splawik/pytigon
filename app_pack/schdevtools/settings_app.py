@@ -31,11 +31,13 @@ THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
+URL_ROOT_PREFIX = ""
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='schdevtools'
+    URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
@@ -112,7 +114,7 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
-    (r"^schcommander/shell/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -121,6 +123,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.16 16:43:01'
+GEN_TIME = '2018.10.18 19:29:08'
 OFFLINE_SUPPORT = True
 

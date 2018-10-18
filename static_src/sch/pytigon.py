@@ -31,6 +31,8 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     window.PUSH_STATE = True
     if base_path:
         window.BASE_PATH = base_path
+    else:
+        window.BASE_PATH = ""
     window.WAIT_ICON = None
     window.WAIT_ICON2 = False
     window.MENU_ID = 0

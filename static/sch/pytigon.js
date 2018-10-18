@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-10-14 12:45:46
+// Transcrypt'ed from Python, 2018-10-18 21:34:33
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3516,6 +3516,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'tabmenuitem', {
@@ -4462,6 +4463,9 @@ function pytigon () {
 			if (base_path) {
 				window.BASE_PATH = base_path;
 			}
+			else {
+				window.BASE_PATH = '';
+			}
 			window.WAIT_ICON = null;
 			window.WAIT_ICON2 = false;
 			window.MENU_ID = 0;
@@ -4921,7 +4925,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

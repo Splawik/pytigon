@@ -573,17 +573,6 @@ def sch_standard(request):
         gmt = time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
 
-    if '127.0' in request.META['REMOTE_ADDR']:
-        prefix = 'ws://'
-    else:
-        prefix =  'wss://'
-    if 'scope' in request:
-        websocket_base_path = prefix +  request.scope['server'][0]+":"+str(request.scope['server'][1])
-    else:
-        if prefix == 'ws://':
-            websocket_base_path = request._current_scheme_host.replace('https://', 'wss://').replace('http://','ws://')
-        else:
-            websocket_base_path = request._current_scheme_host.replace('https://', 'wss://').replace('http://','wss://')
 
     ret = {
         'standard_web_browser': standard,
@@ -600,7 +589,6 @@ def sch_standard(request):
         'URL_ROOT_FOLDER': settings.URL_ROOT_FOLDER,
         'URL_BASE': url_base,
         'base_path': url_base+"/",
-        'websocket_base_path': websocket_base_path,
         'app_path': app_path,
         'URL_APP_BASE': url_app_base,
         'show_form': show_form,
