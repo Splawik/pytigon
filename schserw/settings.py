@@ -248,7 +248,7 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "schserw.routing.application"
 
-if PRODUCTION_VERSION and platform_name()!='Android':
+if False  and PRODUCTION_VERSION and platform_name()!='Android':
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",

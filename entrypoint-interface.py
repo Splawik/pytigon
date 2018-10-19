@@ -150,7 +150,7 @@ port = START_CLIENT_PORT
 
 ret_tab = []
 for app_pack in APP_PACKS:
-    cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d --access-log /var/log/pytigon-access.log asgi:application" % (
+    cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d --proxy-headers --access-log /var/log/pytigon-access.log asgi:application" % (
     app_pack, port)
     port += 1
     print(cmd)
