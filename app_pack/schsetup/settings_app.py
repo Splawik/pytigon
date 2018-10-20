@@ -136,12 +136,10 @@ CHANNELS_URL_TAB = [
 ]
 
 
-print(CHANNELS_URL_TAB)
-
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2018.10.18 19:31:56'
+GEN_TIME = '2018.10.20 08:49:17'
 

@@ -97,3 +97,6 @@ urlpatterns = [
     url('app_time_stamp/$', schserw.schsys.views.app_time_stamp, {}),
     url('search/$', schserw.schsys.views.search, {}),
 ]
+
+
+gen = True

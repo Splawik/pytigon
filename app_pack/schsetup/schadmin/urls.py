@@ -18,6 +18,9 @@ urlpatterns = [
 
 gen = generic_table_start(urlpatterns, 'schadmin', views)
 from django.conf.urls import include
+from django.contrib import admin
+
+urlpatterns.append(url(r'^admin/', admin.site.urls))
 urlpatterns.append(url(r'^filer/', include('filer.urls')))
 urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
 

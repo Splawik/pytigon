@@ -24,7 +24,6 @@ from os import environ
 
 from django.conf.urls import url, include
 from django.conf import settings
-from django.contrib import admin
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 #from django.urls import path #include
@@ -43,7 +42,6 @@ from schlib.schtools.platform_info import platform_name
 urlpatterns = [
     url('schsys/jsi18n/$', django.views.i18n.JavaScriptCatalog, {'packages': ('django.conf', )}),
     url('schsys/i18n/', include(django.conf.urls.i18n)),
-    url('admin/', admin.site.urls),
     url('schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
     url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     url('select2/', include(django_select2.urls)),
@@ -110,16 +108,17 @@ for app in settings.INSTALLED_APPS:
     try:
         module_name = '%s.urls' % str(pos)
         m = importlib.import_module(module_name)
-        if len(elementy) > 1:
-            urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
-        else:
-            urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+        if hasattr(m, 'gen'):
+            if len(elementy) > 1:
+                urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
+            else:
+                urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
     except ModuleNotFoundError:
         pass
-    except:
-        if SHOW_ERROR:
-            print(pos)
-            traceback.print_exc()
+    #except:
+    #    if SHOW_ERROR:
+    #        print("URLs error: ", pos)
+    #        traceback.print_exc()
 
 #urlpatterns = _urlpatterns
 
