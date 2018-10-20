@@ -73,17 +73,19 @@ MEDIA_URL = '/site_media/'
 
 APPEND_SLASH = False
 
-STATICFILES_DIRS  = [ROOT_PATH + '/static', ]
+STATICFILES_DIRS  = []
+STATIC_ROOT = ROOT_PATH + '/static'
 
 from schlib.schtools.platform_info import platform_name
 
-if platform_name()=='Android':
-    STATIC_ROOT = STATICFILES_DIRS[0]
+#if platform_name()=='Android':
+#    STATIC_ROOT = STATICFILES_DIRS[0]
 
 if platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
     STATIC_APP_ROOT = os.path.join(os.path.join(os.path.join(DATA_PATH, '..'), 'pytigon'), 'app_static')
 else:
-    STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
+    #STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
+    STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
 UPLOAD_PATH = MEDIA_ROOT
@@ -160,6 +162,7 @@ INSTALLED_APPS = [
     'django.forms',
     'django.contrib.staticfiles',
     'django_select2',
+    'django_extensions',
     'bootstrap4',
     'corsheaders',
     'schserw.schsys',
@@ -248,23 +251,23 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "schserw.routing.application"
 
-if False  and PRODUCTION_VERSION and platform_name()!='Android':
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            #"ROUTING": "schserw.routing.channel_routing",
-            "CONFIG": {
-                "hosts": [("127.0.0.1", 6379)],
-            },
-        },
-    }
+#if  PRODUCTION_VERSION and platform_name()!='Android':
+#    CHANNEL_LAYERS = {
+#        "default": {
+#            "BACKEND": "channels_redis.core.RedisChannelLayer",
+#            #"ROUTING": "schserw.routing.channel_routing",
+#            "CONFIG": {
+#                "hosts": [("127.0.0.1", 6379)],
+#            },
+#        },
+#    }
 
 DEFAULT_FILE_STORAGE = 'django_storage.FSStorage'
 
 def DEFAULT_FILE_STORAGE_FS():
     _m = MountFS()
     _m.mount('pytigon', OSFS(settings.ROOT_PATH))
-    _m.mount('static', OSFS(settings.STATICFILES_DIRS[0]))
+    _m.mount('static', OSFS(settings.STATIC_ROOT))
     _m.mount('app', OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount('data', OSFS(settings.DATA_PATH))
     try:

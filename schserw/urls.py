@@ -39,7 +39,18 @@ import schserw.schsys.views
 from schlib.schdjangoext.tools import make_href
 from schlib.schtools.platform_info import platform_name
 
-urlpatterns = [
+
+_urlpatterns = []
+
+if settings.URL_ROOT_FOLDER:
+    urlpatterns = [
+        #path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
+        url(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns)),
+    ]
+else:
+    urlpatterns = _urlpatterns
+
+_urlpatterns.extend([
     url('schsys/jsi18n/$', django.views.i18n.JavaScriptCatalog, {'packages': ('django.conf', )}),
     url('schsys/i18n/', include(django.conf.urls.i18n)),
     url('schplugins/(?P<template_name>.*)', schserw.schsys.views.plugin_template),
@@ -47,7 +58,7 @@ urlpatterns = [
     url('select2/', include(django_select2.urls)),
     url('favicon.ico', schserw.schsys.views.favicon),
     url( make_href('sw.js'), schserw.schsys.views.sw),
-]
+])
 
 def app_description(app_pack):
     file_name = os.path.join(os.path.join(settings.APP_PACK_PATH, app_pack), 'settings_app.py')
@@ -69,22 +80,22 @@ if len(settings.APP_PACKS) > 0:
         #        {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
         u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'),
                 {'start_page': True }, name='start'+app_pack )
-        urlpatterns.append(u)
+        _urlpatterns.append(u)
 
     app_packs = [ (pos, app_description(pos)) for pos in settings.APP_PACKS ]
 
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),
           {'app_packs': app_packs }, name='start')
 
-    urlpatterns.append(u)
+    _urlpatterns.append(u)
 else:
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
-    urlpatterns.append(u)
+    _urlpatterns.append(u)
 
 if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ or not settings.PRODUCTION_VERSION:
     if 'PYTIGON_APP_IMAGE' in environ:
-        urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
-    urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
+        _urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
+    _urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
 
 SHOW_ERROR = False
 
@@ -110,20 +121,12 @@ for app in settings.INSTALLED_APPS:
         m = importlib.import_module(module_name)
         if hasattr(m, 'gen'):
             if len(elementy) > 1:
-                urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
+                _urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
             else:
-                urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+                _urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
     except ModuleNotFoundError:
         pass
-    #except:
-    #    if SHOW_ERROR:
-    #        print("URLs error: ", pos)
-    #        traceback.print_exc()
-
-#urlpatterns = _urlpatterns
-
-if settings.URL_ROOT_FOLDER:
-    urlpatterns = [
-        #path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
-        url(settings.URL_ROOT_FOLDER + "/", include(urlpatterns)),
-    ]
+    except:
+        if SHOW_ERROR:
+            print("URLs error: ", pos)
+            traceback.print_exc()
