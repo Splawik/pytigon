@@ -162,7 +162,6 @@ INSTALLED_APPS = [
     'django.forms',
     'django.contrib.staticfiles',
     'django_select2',
-    'django_extensions',
     'bootstrap4',
     'corsheaders',
     'schserw.schsys',
