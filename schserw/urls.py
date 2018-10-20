@@ -95,7 +95,7 @@ else:
 if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ or not settings.PRODUCTION_VERSION:
     if 'PYTIGON_APP_IMAGE' in environ:
         _urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
-    _urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATICFILES_DIRS[0]))
+    _urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATIC_URL))
 
 SHOW_ERROR = False
 
