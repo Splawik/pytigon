@@ -25,6 +25,8 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 import django.contrib.auth.views
 from django.http import HttpResponseRedirect, HttpResponse
+from django.conf import settings
+
 from schlib.schdjangoext.tools import make_href
 import schserw.schsys.views
 
@@ -38,40 +40,38 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
 
 def sch_login(request, *argi, **argv):
-    ret = None
+    path = ""
+    path_after_error = ""
+    if is_in_dicts('next', (request.POST, request.GET)):
+        path = get_from_dicts('next', (request.POST, request.GET))
+    if not path:
+        path = settings.URL_ROOT_FOLDER + "/"
+    if is_in_dicts('next_after_error', (request.POST, request.GET)):
+        path_after_error = get_from_dicts('next_after_error', (request.POST, request.GET))
+    if not path_after_error:
+        path_after_error = path
+
     if is_in_dicts('username', (request.POST, request.GET) ):
         username = get_from_dicts('username', (request.POST, request.GET) )
-        if username == 'auto':
-            if is_in_dicts('password', (request.POST, request.GET) ):
-                password = get_from_dicts('password', (request.POST, request.GET) )
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    ret = login(request, user)
+        if is_in_dicts('password', (request.POST, request.GET)):
+            password = get_from_dicts('password', (request.POST, request.GET))
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                if username == 'auto':
                     request.session['autologin'] = True
+                parm = request.POST.get('client_param', '')
+                if parm != '':
+                    request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
                 else:
-                    if 'from_pytigon' in request.GET:
-                        return HttpResponse("Error!")
-                    else:
-                        ret = None
-    if ret == None:
-        ret = LoginView.as_view(template_name='schapp/index.html')(request, *argi, **argv)
+                    request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
+                return HttpResponseRedirect(path)
 
-    parm = request.POST.get('client_param', '')
-    if parm != '':
-        request.session['client_param'] = dict([pos.split(':') for pos in parm.split(',')])
+    if 'from_pytigon' in request.GET:
+        return HttpResponse("Error!")
     else:
-        request.session['client_param'] = dict([pos.split(':') for pos in DEFPARAM.split(',')])
-    #path = request.GET.get("next", "")
-    #if path == "":
-    #    path = request.POST.get("next", "")
-    #    if path == "":
-    #        path = make_href("/")
-    #
-    #if '/schsys/login/' in path:
-    #    path = make_href("/")
+        return HttpResponseRedirect(path_after_error)
 
-    return ret
-    #return HttpResponseRedirect(path)
 
 
 urlpatterns = [
@@ -79,8 +79,10 @@ urlpatterns = [
     url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', schserw.schsys.views.ret_ok, name='ret_ok'),
 
     url(r'^login/$', TemplateView.as_view(template_name='schapp/login.html')),
-    url(r'^do_login/$', sch_login, { 'template_name': 'schapp/index.html'}),
+
+    url(r'^do_login/$', sch_login), #, { 'template_name': 'schapp/index.html'}),
     url(r'^do_logout/$', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
+
     url(r'^change_password/$', schserw.schsys.views.change_password),
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
