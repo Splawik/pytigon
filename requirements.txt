@@ -32,8 +32,9 @@ dj-email-url
 easy_thumbnails
 django-mptt
 django_polymorphic
+django-mailer
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
-schedule
 django-sql-explorer
+pendulum
 cefpython3
 xonsh

@@ -25,7 +25,7 @@ import time
 from schserw.main_paths import get_main_paths
 paths = get_main_paths()
 
-import schedule
+from schlib.schtasks import schschedule
 from schlib.schhttptools import httpclient
 
 def usage():
@@ -98,6 +98,8 @@ else:
     from schlib.schtools import sch_import
     from schlib.schdjangoext.django_manage import cmd
 
+    scheduler = schschedule.SChScheduler()
+
     for app in APPS:
         try:
             module = sch_import(app+".tasks")
@@ -105,13 +107,11 @@ else:
             pass
 
         if hasattr(module, "init_schedule"):
-            module.init_schedule(cmd, http)
+            module.init_schedule(scheduler, cmd, http)
 
     if USERNAME:
         parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
         ret, newaddr = http.post(None, '/schsys/do_login/', parm, credentials=(USERNAME, PASSWORD))
         http.clear_ptr()
-
-    while True:
-        schedule.run_pending()
-        time.sleep(10)
+    
+    scheduler.run()
