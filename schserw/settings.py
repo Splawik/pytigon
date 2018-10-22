@@ -151,7 +151,7 @@ else:
         'django.contrib.auth.middleware.RemoteUserMiddleware',
     ]
 
-MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+MIDDLEWARE.insert(0, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -160,6 +160,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.forms',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django_select2',
     'bootstrap4',
