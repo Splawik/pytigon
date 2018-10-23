@@ -31,6 +31,9 @@ import requests
 from schlib.schfs.vfstools import norm_path
 from schlib.schtools.schjson import json_loads
 import threading
+import logging
+
+LOGGER = logging.getLogger("httpclient")
 
 def init_embeded_django():
     import django.core.handlers.wsgi
@@ -165,7 +168,7 @@ class HttpClient:
         else:
             cookies = COOKIES
 
-        print(">>>>>>>>", adr)
+        LOGGER.info(adr)
 
         if not post_request and not '?' in adr:
             if adr in self.http_cache:
@@ -260,9 +263,9 @@ class HttpClient:
         self.content = self.http.content
 
         if self.http.status_code != 200:
-            print(adr, " httpcode:", self.http.status_code)
+            LOGGER.error({'address': adr, 'httpcode': self.http.status_code})
             if self.http.status_code == 500:
-                print(self.content)
+                LOGGER.error({'content': self.content})
 
         if 'content-type' in self.http.headers:
             self.ret_content_type=self.http.headers['content-type']

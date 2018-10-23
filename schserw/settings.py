@@ -175,57 +175,57 @@ HIDE_APPS = []
 
 APP_PACKS = []
 
-#LOGGING = {
-#    'version': 1,
-#    'handlers': {'console': {'level': 'DEBUG', 'class': 'logging.StreamHandler'}},
-#    'loggers': {'django.db.backends': {'level': 'DEBUG', 'handers': ['console']}}
-#}
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'standard': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
+if PRODUCTION_VERSION:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'standard': {
+                'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                'datefmt' : "%Y-%m-%d %H:%M:%S"
+            },
         },
-    },
-    'handlers': {
-        'null': {
-            'level':'DEBUG',
-            'class':'logging.NullHandler',
+        'handlers': {
+            'logfile': {
+                'level': 'INFO',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': LOG_PATH + "/pytigon.log",
+                'maxBytes': 50000,
+                'backupCount': 2,
+                'formatter': 'standard',
+            },
+            'errorlogfile': {
+                'level': 'WARNING',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': LOG_PATH + "/pytigon_err.log",
+                'maxBytes': 50000,
+                'backupCount': 2,
+                'formatter': 'standard',
+            },
         },
-        'logfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': LOG_PATH + "/pytigon.log",
-            'maxBytes': 50000,
-            'backupCount': 2,
-            'formatter': 'standard',
-        },
-        'console':{
-            'level':'INFO',
-            'class':'logging.StreamHandler',
-            'formatter': 'standard'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers':['console'],
-            'propagate': True,
-            'level':'WARN',
-        },
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'pytogion': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
+        'loggers': {
+            'django': {
+                'handlers':['logfile', 'errorlogfile'],
+                'level':'INFO',
+                'propagate': True,
+            },
+            'daphne': {
+                'handlers': ['logfile', 'errorlogfile'],
+                'level': 'INFO',
+                'propagate': True,
+            },
+            'httpclient': {
+                  'handlers': ['logfile', 'errorlogfile'],
+                  'level': 'INFO',
+                  'propagate': True,
+              },
+            'pytigon': {
+                'handlers': ['logfile', 'errorlogfile'],
+                'level': 'INFO',
+                'propagate': True,
+            },
+        }
     }
-}
 
 LOCALE_PATHS = [
     SERW_PATH + "/locale",
