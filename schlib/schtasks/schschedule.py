@@ -3,6 +3,8 @@ import traceback
 import sys
 import asyncio
 
+INIT_TIME = pendulum.now()
+
 def at_iterate(param):
     ret = []
     def tab_from_str(s):
@@ -27,50 +29,61 @@ def at_iterate(param):
         ret.append([param,0,0])
     return ret
 
-def every_month(day=1, at=0, in_months=None, in_weekdays=None):
+def monthly(day=1, at=0, in_months=None, in_weekdays=None):
     ret = []
     _day = day
-    def make_every_month_fun(_hour, _minute, _second):
-        def _every_month(dt=None):
-            nonlocal _day, _hour, _minute, _second, in_months, in_weekdays
+    def make_monthly_fun(_hour, _minute, _second):
+        def _monthly(dt=None):
+            nonlocal day, _day, _hour, _minute, _second, in_months, in_weekdays
             if dt:
                 x = dt.add(months=1)
             else:
-                x = pendulum.now()
+                x = INIT_TIME
                 if _day <= x.day:
                     if _day == x.day:
                         if _hour <= x.hour:
                             if _hour == x.hour:
                                 if _minute <= x.minute:
                                     x = x.add(months=1)
-            x = x.set(day= _day, hour = _hour, minute=_minute, second=_second)
+            day2=day
+            test=False
+            while not test:
+                try:
+                    x = x.set(day=day2, hour=_hour, minute=_minute, second=_second)
+                    test = True
+                except:
+                    if _day in (29,30,31):
+                        day2-=1
+                    else:
+                        day2+=1
+
             if in_months:
                 for i in range(12):
                     if x.month in in_months:
                         break
                     x = x.add(month=1)
 
-            if in_weekdays:
+            if in_weekdays and not x.weekday in in_weekdays:
                 for i in range(7):
+                    x = x.add(days=1)
                     if x.weekday() in in_weekdays:
                         return x
-                    x = x.add(days=1)
             return x
-        return  _every_month
+        return  _monthly
     for _hour, _minute, _second in at_iterate(at):
-        ret.append(make_every_month_fun(_hour, _minute, _second))
+        ret.append(make_monthly_fun(_hour, _minute, _second))
 
     return ret
 
-def every_day(at=0, in_weekdays=None):
+def daily(at=0, in_weekdays=None):
     ret = []
-    def make_every_day_fun(_hour, _minute, _second):
-        def _every_day(dt=None):
+    def make_daily_fun(_hour, _minute, _second):
+        def _daily(dt=None):
             nonlocal _hour, _minute, _second, in_weekdays
             if dt:
                 x = dt.add(days=1)
             else:
-                x = pendulum.now()
+                x = INIT_TIME
                 if _hour <= x.hour:
                     if _hour == x.hour:
                         if _minute <= x.minute:
@@ -78,94 +91,89 @@ def every_day(at=0, in_weekdays=None):
                     else:
                         x = x.add(days=1)
             x = x.set(hour = _hour, minute=_minute, second=_second)
-            if in_weekdays:
+            if in_weekdays and not x.weekday() in in_weekdays:
                 for i in range(7):
+                    x = x.add(days=1)
                     if x.weekday() in in_weekdays:
                         return x
-                    x = x.add(days=1)
             return x
-        return  _every_day
+        return  _daily
     for _hour, _minute, _second in at_iterate(at):
-        ret.append(make_every_day_fun(_hour, _minute, _second))
+        ret.append(make_daily_fun(_hour, _minute, _second))
     return ret
 
-def every_day_in_weekend(at=0):
-    return every_day(at, in_weekdays=(6,7))
-
-def every_work_day(at=0):
-    return every_day(at, in_weekdays=range(0,5))
-
-def every_hour(period=1, at=0, in_weekdays=None, in_hours=None):
+def hourly(period=1, at=0, in_weekdays=None, in_hours=None):
     ret = []
-    def make_every_hour_fun(_minute, _second):
-        def _every_hour(dt=None):
+    def make_hourly_fun(_minute, _second):
+        def _hourly(dt=None):
             nonlocal period, _minute, _second, in_weekdays, in_hours
             if dt:
                 x = dt.add(hours=period)
             else:
-                x=pendulum.now()
+                x = INIT_TIME
                 if _minute <= x.minute:
                     x = x.add(hours=1)
             x=x.set(minute = _minute, second = _second)
             if in_hours:
                 if not x.hour in in_hours:
                     x = x.add(days=1)
-                    x.set(hour = in_hours[0])
-            if in_weekdays:
+                    x = x.set(hour = in_hours[0])
+            if in_weekdays and not x.weekday() in in_weekdays:
                 for i in range(7):
+                    x = x.add(days=1)
                     if x.weekday() in in_weekdays:
                         if in_hours:
                             x=x.set(hour=in_hours[0])
                         else:
                             x=x.set(hour = 0)
                         return x
-                    x = x.add(days=1)
             return x
-        return  _every_hour
+        return  _hourly
     for _minute, _second, _ in at_iterate(at):
-        ret.append(make_every_hour_fun(_minute, _second))
+        ret.append(make_hourly_fun(_minute, _second))
     return ret
 
-def every_minute(period=1, at=0, in_weekdays=None, in_hours=None):
+def in_minute_intervals(period=1, at=0, in_weekdays=None, in_hours=None):
     ret = []
-    def make_every_minute_fun(_second):
-        def _every_minute(dt=None):
+    def make_in_minute_intervals_fun(_second):
+        def _in_minute_intervals(dt=None):
             nonlocal period, _second, in_weekdays, in_hours
             if dt:
                 x = dt.add(minutes=period)
             else:
-                x = pendulum.now().add(minutes=1)
+                x = INIT_TIME.add(minutes=1)
             x = x.set(second = _second)
             if in_hours:
                 if not x.hour in in_hours:
                     x = x.add(days=1).set(hour = in_hours[0])
-            if in_weekdays:
+            if in_weekdays and not x.weekday() in in_weekdays:
                 for i in range(7):
+                    x = x.add(days=1)
                     if x.weekday() in in_weekdays:
                         if in_hours:
                             x.hour =in_hours[0]
                         else:
                             x.hour = 0
                         return x
-                    x = x.add(days=1)
             return x
-        return _every_minute
+        return _in_minute_intervals
     for _minute, _second, _ in at_iterate(at):
-        ret.append(make_every_minute_fun(_second))
+        ret.append(make_in_minute_intervals_fun(_second))
     return ret
 
-def every_second(period=1, in_weekdays=None, in_hours=None):
-    def _every_second(dt=None):
+def in_second_intervals(period=1, in_weekdays=None, in_hours=None):
+    def _in_second_intervals(dt=None):
         nonlocal period, in_weekdays, in_hours
         if dt:
             x = dt.add(seconds=period)
         else:
-            x =  pendulum.now()
+            x =  INIT_TIME
         if in_hours:
             if not x.hour in in_hours:
                 x = x.add(days=1).set(hour = in_hours[0], minute = 0, second = 0)
-        if in_weekdays:
+        if in_weekdays and not x.weekday() in in_weekdays:
             for i in range(7):
+                x = x.add(days=1)
                 if x.weekday() in in_weekdays:
                     if in_hours:
                         x=x.set(hour = in_hours[0])
@@ -173,30 +181,46 @@ def every_second(period=1, in_weekdays=None, in_hours=None):
                         x=x.set(hour = 0)
                     x=x.set(minute = 0, second = 0)
                     return x
-                x = x.add(days=1)                
         return x
-    return _every_second
+    return _in_second_intervals
 
 class SChScheduler():
     def __init__(self):
         self.tasks = []
-        self.current_task = None
-        self.current_time = None
-        
+
     def add_task(self, time_functions, task, *argi, **argv):
         functions = []
         if type(time_functions)==str:
             x = time_functions.split(';')
             for pos in x:
                 if pos:
-                    functions.append(eval(pos, globals()))
+                    y = eval(pos, globals())
+                    if type(y) in (list, tuple):
+                        functions = y
+                    else:
+                        functions.append(y)
         elif type(time_functions) in (list, tuple):
             functions = time_functions
         else:
             functions = [time_functions,]
         for fun in functions:
-            self.tasks.append([task, argi, argv, fun, fun()])
-        print(self.tasks)
+            self.tasks.append([task, argi, argv, fun, fun(), task.__name__])
+
+    def get_tasks(self, name):
+        ret = []
+        for task in self.tasks:
+            if task[5] == name:
+                ret.append(task)
+        return ret
+
+    def remove_tasks(self, name):
+        tasks = self.get_tasks(name)
+        for task in tasks:
+            self.tasks.remove(task)
+
+    def clear(self):
+        self.tasks.clear()
+
     async def process(self, dt):
         if self.tasks:
             processes = []
@@ -204,24 +228,19 @@ class SChScheduler():
                 if task[4]<=dt:
                     task[4]=task[3](task[4])
                     try:
-                        self.current_task = task
-                        self.current_time = dt
                         processes.append(task[0](*task[1], **task[2]))
-                        self.current_task = None
-                        self.current_time = None
                     except:
                         print(sys.exc_info()[0])
                         print(traceback.print_exc())
-                        
+
             def _key(elem):
-                return elem[4]                
-                
+                return elem[4]
+
             self.tasks.sort(key=_key)
-             
+
             if processes:
                 await asyncio.wait(processes)
-                print(self.tasks)
-                
+
     async def _run(self):
         if self.tasks:
             old_time = None
@@ -230,40 +249,55 @@ class SChScheduler():
                 str_time = str(dt).strip('.')
                 if not (old_time and old_time == str_time):
                     await self.process(dt)
-                    if self.tasks:
-                        dt  = pendulum.now()
-                        x = dt - self.tasks[0][4]
-                        delta = x.in_seconds()
-                        if delta>1:
-                            await asyncio.sleep(delta-1)
-                    else:
+                    if not self.tasks:
                         return
-                await asyncio.sleep(0.3)
-        
+                await asyncio.sleep(0.2)
+
     def run(self):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self._run())
 
 
-if __name__ == '__main__':                    
+if __name__ == '__main__':    
+    INIT_TIME = pendulum.datetime(2016, 5, 1)
+
     scheduler = SChScheduler()
 
     async def hello():
-        print("hello world")
+        print("Hello world")
 
-    async def hello3(name, second="x"):
-        print("hello world: ", name, second)
+    async def hello1(name="", scheduler=None):
+        if scheduler:
+            tasks = scheduler.get_tasks('hello1')
+            if len(tasks)>0:
+                print(tasks[0][4])
+                return
+        print("Hello world 1")
+
+    async def hello2(scheduler):
+        print("Hello world 2")
+        scheduler.remove_tasks('hello2')
 
     async def exit(scheduler):
-        #scheduler.tasks.remove(scheduler.current_task)
-        scheduler.tasks.clear()
+        scheduler.clear()
 
-    #scheduler.add_task(every_minute(1), hello)
-    #scheduler.add_task("every_second(3)", hello3, "Zorro")
-    #scheduler.add_task(every_second(4), hello3, "Zorro", second="ABC")
-    #scheduler.add_task(exit, every_minute(1))
-    scheduler.add_task(every_hour(at="2;3"), hello)
-    scheduler.add_task(every_day(at="22:07"), hello)
-    scheduler.add_task(every_month(day=1, at="22:07"), hello)
+    if False:
+        scheduler.add_task(in_minute_intervals(1), hello)
+        scheduler.add_task("in_second_intervals(3)", hello)
+        scheduler.add_task(in_second_intervals(4), hello)
+        scheduler.add_task(hourly(at="2;3"), hello)
+        scheduler.add_task(daily(at="22:07"), hello)
+        scheduler.add_task(monthly(day=1, at="22:07"), hello)
+
+        scheduler.add_task(monthly(day=1, at="22:07"), hello1, name="monthly", scheduler=scheduler)
+        scheduler.add_task(daily(at="22:07", in_weekdays=(1,2,3,4,5)), hello1, name="monthly", scheduler=scheduler)
+        scheduler.add_task("hourly(at=7,in_weekdays=range(1,6), in_hours=range(3,5))",  hello1, name="monthly", scheduler=scheduler)
+        scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))",  hello1, name="in_second_intervals", scheduler=scheduler)
+
+        scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))",  hello2, scheduler)
+
+        scheduler.add_task(in_minute_intervals(1), exit, scheduler=scheduler)
+
+    scheduler.add_task(monthly(day=31, at="22:07"), hello1, name="monthly", scheduler=scheduler)
+
     scheduler.run()
-
