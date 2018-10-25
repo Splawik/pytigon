@@ -187,6 +187,16 @@ def in_second_intervals(period=1, in_weekdays=None, in_hours=None):
 class SChScheduler():
     def __init__(self):
         self.tasks = []
+        self.fmap = {
+            'M': monthly,
+            'd': daily,
+            'h': hourly,
+            'm': in_minute_intervals,
+            's': in_second_intervals
+        }
+
+    def __getattr__(self, item):
+        return self.fmap[item]
 
     def add_task(self, time_functions, task, *argi, **argv):
         functions = []
@@ -194,6 +204,14 @@ class SChScheduler():
             x = time_functions.split(';')
             for pos in x:
                 if pos:
+                    if (len(pos)>2 and pos[1]=='(') or len(pos)==1:
+                        if pos[0] in self.fmap:
+                            x = pos.split('(')
+                            if len(x)>1:
+                                pos = self.fmap[pos[0]].__name__+"("+x[1]
+                            else:
+                                pos = self.fmap[pos[0]].__name__+"()"
+
                     y = eval(pos, globals())
                     if type(y) in (list, tuple):
                         functions = y
@@ -298,6 +316,8 @@ if __name__ == '__main__':
 
         scheduler.add_task(in_minute_intervals(1), exit, scheduler=scheduler)
 
-    scheduler.add_task(monthly(day=31, at="22:07"), hello1, name="monthly", scheduler=scheduler)
+    scheduler.add_task("M(day=31, at='22:07')", hello1, name="monthly", scheduler=scheduler)
+    scheduler.add_task("M", hello1, name="monthly", scheduler=scheduler)
+    scheduler.add_task(scheduler.s(), hello1, name="monthly", scheduler=scheduler)
 
     scheduler.run()
