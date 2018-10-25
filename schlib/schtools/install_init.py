@@ -91,6 +91,13 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                 extractall(zipfile.ZipFile(zip_file2), _data_path, exclude=['.*\.db',])
             else:
                 extractall(zipfile.ZipFile(zip_file2), _data_path)
+            if not os.path.exists(os.path.join(_data_path,'media')):
+                media_path = os.path.exists(os.path.join(_data_path,'media'))
+                os.makedirs(media_path)
+                os.makedirs(os.path.join(media_path,'filer_public'))
+                os.makedirs(os.path.join(media_path,'filer_private'))
+                os.makedirs(os.path.join(media_path,'filer_public_tumbnails'))
+                os.makedirs(os.path.join(media_path,'filer_private_thumbnails'))
 
     if test2 == 2:
         pass
