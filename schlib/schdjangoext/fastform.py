@@ -32,6 +32,7 @@ opcja3]
 """
 
 from django import forms
+from schlib.schdjangoext import fields as ext_fields
 
 
 def _scan_lines(input_str):

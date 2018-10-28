@@ -243,6 +243,15 @@ def getfields(value):
     return ret
 
 
+@register.filter(name='getallparents')
+def getparents(parent):
+    """Returns fields for model (value) without many_to_many fields"""
+    ret = []
+    while parent:
+        ret.append(parent)
+        parent=parent.parent
+    return ret
+
 @register.filter(name='getallfields')
 def getallfields(value):
     """Returns all fields for model (value)"""

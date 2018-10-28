@@ -44,6 +44,8 @@
         .field_edit/load_fun,Load function,load_fun
         .field_edit/on_new_elem_event,On new element,on_new_elem_event
         .field_edit/allowed_new_fields,Allowed new fields,allowed_new_fields
+        .field_edit/to_str_fun,Convert to string function,to_str_fun
+        .field_edit/action_template,Action template,action_template
         .delete
 
 %% row_edit

@@ -160,6 +160,11 @@ class ForeignKey(models.ForeignKey):
             del kwargs['search_fields']
         else:
             self.search_fields = None
+        if 'query' in kwargs:
+            self.query = kwargs['query']
+            del kwargs['query']
+        else:
+            self.query = None
         if 'is_new_button' in kwargs:
             self.is_new_button = kwargs['is_new_button']
             del kwargs['is_new_button']
@@ -183,8 +188,18 @@ class ForeignKey(models.ForeignKey):
 
         if self.search_fields:
             _search_fields = self.search_fields
+            _query = self.query
             class _Field(forms.ModelChoiceField):
                 def __init__(self, queryset, *argi, **argv):
+                    nonlocal _query, _search_fields
+                    if _query:
+                        if 'Q' in _query:
+                            queryset = queryset.filter(_query['Q'])
+                        if 'order' in _query:
+                            queryset = queryset.order_by(*_query['order'])
+                        if 'limmit' in _query:
+                            queryset=queryset[:_query['limit']]
+
                     widget=ModelSelect2WidgetExt(href1, href2, False, True, field.verbose_name, queryset = queryset,search_fields=_search_fields)
                     widget.attrs['style'] = 'width:400px;'
                     argv['widget'] = widget
@@ -196,6 +211,23 @@ class ForeignKey(models.ForeignKey):
             defaults = {}
         defaults.update(**kwargs)
         return super().formfield(**defaults)
+
+
+class Select2Field(forms.ModelChoiceField):
+    def __init__(self, queryset, search_fields):
+        widget=ModelSelect2Widget(
+            queryset = queryset,
+            search_fields=search_fields,
+            attrs={'class': 'select2-full-width'}
+        )
+        super().__init__(queryset=queryset, widget=widget)
+
+    def to_python(self, value):
+        if type(value) in (int, str):
+            return value
+        else:
+            return value.id
+
 
 
 class HiddenForeignKey(models.ForeignKey):

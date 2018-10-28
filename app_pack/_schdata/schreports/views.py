@@ -343,8 +343,21 @@ def new_group(request, group_type, parent_id):
     group = models.CommonGroup()
     if parent:
         group.parent = parent
+        gparent  = parent
+        while gparent.parent:
+            gparent = gparent.parent
+        group.gparent =gparent
+        group.gp_group_def_name = gparent.group_def_name    
+    else:
+        group.gp_group_def_name = group_type
+        
     group.group_def_name = group_type
     group.save()
+    
+    if not group.gparent:
+        group.gparent = group
+        group.save()
+        
     url = make_href("/schreports/table/CommonGroup/%d/edit__group/" % group.id)
     return HttpResponseRedirect(url)
     
@@ -390,7 +403,6 @@ def edit__group(request, group_id):
             data_form = locals()['load'](data)
         else:
             data_form = data
-        print(data_form)
         data_form['title'] = group.title
         form = form_class(initial=data_form)
     

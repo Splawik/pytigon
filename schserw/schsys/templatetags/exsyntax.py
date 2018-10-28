@@ -1073,3 +1073,9 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
 @register.simple_tag(takes_context=True)
 def wiki (context, wiki_str, path=None, section = None,  only_header=True):
     return mark_safe(wikify(wiki_str, path, section))
+
+
+@register.simple_tag(takes_context=True)
+def subtemplate(context, template_string):
+    t = Template(template_string)
+    return mark_safe(t.render(context))

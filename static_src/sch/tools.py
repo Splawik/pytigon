@@ -67,7 +67,9 @@ def fragment_init(elem=None):
 
     elem2.find('.inline_frame').each(load_inline_frame)
 
-    elem2.find('.django-select2').djangoSelect2({'width': 'calc(100% - 48px)'})
+
+    elem2.find('.django-select2:not(.select2-full-width)').djangoSelect2({'width': 'calc(100% - 48px)'})
+    elem2.find('.django-select2.select2-full-width').djangoSelect2({'width': 'calc(100%)'})
 
     def init_select2_ctrl():
         sel2 = jQuery(this)

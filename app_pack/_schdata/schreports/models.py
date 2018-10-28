@@ -193,11 +193,33 @@ class CommonGroup(JSONModel):
     
 
     parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    gparent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent', related_name='gparentrel')
     title = models.CharField('Title', null=True, blank=True, editable=True, max_length=64)
     group_def_name = models.CharField('Group definition name', null=False, blank=False, editable=True, max_length=64)
+    gp_group_def_name = models.CharField('Grand parent group definition name', null=False, blank=False, editable=True, max_length=64)
     tag_name = models.CharField('Tag name', null=True, blank=True, editable=True, max_length=64)
     
 
+    def code(self):
+        return self.title
+    
+    def get_def(self):
+        x = CommonGroupDef.objects.filter(name=self.group_def_name)
+        if len(x)>0:
+            return x[0]
+        else:
+            return None
+    
+    def to_str(self):
+        def_obj = self.get_def()
+        if def_obj:
+            return def_obj.to_str(self)
+        else:
+            return None
+    
+    def __str__(self): 
+        return f"{self.title} [{self.group_def_name}]"
+    
     @staticmethod    
     def get_group_types(parent_pk):
         if not parent_pk:

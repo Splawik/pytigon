@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-10-18 21:34:33
+// Transcrypt'ed from Python, 2018-10-28 19:57:55
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3785,7 +3785,8 @@ function pytigon () {
 							}
 						};
 						elem2.find ('.inline_frame').each (load_inline_frame);
-						elem2.find ('.django-select2').djangoSelect2 (dict ({'width': 'calc(100% - 48px)'}));
+						elem2.find ('.django-select2:not(.select2-full-width)').djangoSelect2 (dict ({'width': 'calc(100% - 48px)'}));
+						elem2.find ('.django-select2.select2-full-width').djangoSelect2 (dict ({'width': 'calc(100%)'}));
 						var init_select2_ctrl = function () {
 							var sel2 = jQuery (this);
 							var src = sel2.closest ('.input-group');
@@ -4319,7 +4320,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4925,6 +4925,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();

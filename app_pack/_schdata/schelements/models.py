@@ -941,8 +941,26 @@ class BaseObject( models.Model):
     to_html_rec = models.TextField('Convert fields to html', null=True, blank=True, editable=False, )
     save_fun = models.TextField('Save function', null=True, blank=True, editable=False, )
     load_fun = models.TextField('Load function', null=True, blank=True, editable=False, )
+    to_str_fun = models.TextField('Object to str function', null=True, blank=True, editable=False, )
+    action_template = models.TextField('Action template', null=True, blank=True, editable=False, )
     
 
+    def to_str(self, obj):
+        if self.to_str_fun:
+            tmp = "def _to_str(self):\n" + "\n".join([ "    " + pos for pos in self.to_str_fun.split('\n')])
+            exec(tmp)
+            return locals()['_to_str'](obj)
+        else:
+            if obj.title:
+                return obj.title + " ["+self.name+"]"
+            else:
+                return str(obj) + " ["+self.name+"]"
+    
+    def get_action_template(self):
+        if self.action_template:
+            return ihtml_to_html(None, self.action_template)
+        else:
+            return None
     
 
 
