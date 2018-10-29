@@ -422,7 +422,7 @@ def list_group_by_tag(request, group_tag):
     groups = models.CommonGroup.objects.filter(tag_name=group_tag)
     if len(groups)>0:
         group = groups[0]
-        url = make_href("/schreports/table/CommonGroup/%d/form/tree/?only_content=1" % group.id)
+        url = make_href("/schreports/table/CommonGroup/%d/%d/form/tree/?only_content=1" % (group.id, group.id))
     else:
         url = make_href("/schreports/table/CommonGroup/0/form/tree/?only_content=1")
     return HttpResponseRedirect(url)    

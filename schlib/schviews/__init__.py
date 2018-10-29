@@ -254,12 +254,21 @@ class GenericRows(object):
     def table_paths_to_context(self, view_class, context):
         x = view_class.request.path.split('/table/', 1)
         x2 = x[1].split('/')
-        #context['app_path'] = x[0] + "/"
+
+        bf = 0
+        if 'base_filter' in view_class.kwargs:
+            bf = 1
+
         if 'parent_pk' in view_class.kwargs:
             context['table_path'] = x[0] + "/table/" + "/".join(x2[:3]) + "/"
+            context['table_path_and_base_filer'] = x[0] + "/table/" + "/".join(x2[:3+bf]) + "/"
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
         else:
             context['table_path'] = x[0] + "/table/" + x2[0] + "/"
+            if bf:
+                context['table_path_and_base_filter'] = context['table_path'] + x2[1]+"/"
+            else:
+                context['table_path_and_base_filter'] = context['table_path']
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
 
 
@@ -395,6 +404,8 @@ class GenericRows(object):
 
                 if 'base_filter' in self.kwargs and self.kwargs['base_filter']:
                     context['base_filter'] = self.kwargs['base_filter']
+                else:
+                    context['base_filter'] = ""
 
                 context['app_name'] = parent_class.table.app
                 context['table_name'] = parent_class.tab

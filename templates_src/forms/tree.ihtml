@@ -23,21 +23,24 @@
     % with gtree=get|get_or_tree:
         % if standard_web_browser
             span class=tree-home
-                %if parent_pk > 0
-                    % action "home-refresh_obj" "/" url=table_path|append_str:'0/form/{{gtree}}/'
+                % if parent_pk > 0 and base_filter != parent_pk|tostr:
+                    % if base_filter:
+                        % action "home-refresh_obj" "/" url=table_path_and_base_filter|append_str:base_filter|append_str:'/form/{{gtree}}/'
+                    % else:
+                        % action "home-refresh_obj" "/" url=table_path_and_base_filter|append_str:'0/form/{{gtree}}/'
                 % else:
-                    % action "home-refresh_obj" "/" url=table_path|append_str:'0/form/tree/' tag_class="+disabled"
+                    % action "home-refresh_obj" "/" url=table_path_and_base_filter|append_str:'0/form/tree/' tag_class="+disabled"
         % else:
-            % if parent_pk > 0:
-                CTRLBUTTON name=back,,,href={{table_path}}-{{parent_pk}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,src=wx.ART_GO_BACK,,,label=_(Back)
+            % if parent_pk > 0 and base_filter != parent_pk|tostr:
+                CTRLBUTTON name=back,,,href={{table_path_and_base_filter}}-{{parent_pk}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,src=wx.ART_GO_BACK,,,label=_(Back)
             % else:
                 CTRLBUTTON name=back,,,href=_disable,,,target=_self,,,src=wx.ART_GO_BACK,,,label=_(Back)
-            a href={{table_path}}0/form/{{gtree}}/,,,class=button btn btn-secondary ladda-button.../
+            a href={{table_path_and_base_filter}}0/form/{{gtree}}/,,,class=button btn btn-secondary ladda-button.../
 
         span class=tree-toolbar
             %for pos in parent_obj|getallparents reversed:
                 % if not forloop.last:
-                    % action "back-refresh_obj" pos.code url=table_path|append_str:'{{pos.id}}/form/{{gtree}}/'
+                    % action "back-refresh_obj" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/form/{{gtree}}/'
 
         %% list_content_actions_new_row
             % if not readonly
@@ -51,23 +54,23 @@
         th data-field=cid,,,data-sortable=true,,,class=tree-id
             % if standard_web_browser
                 % with gtree=get|get_or_tree:
-                    %if parent_pk > 0
-                        % action "back-refresh_obj" ".." url=table_path|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/'
+                    %if parent_pk > 0 and base_filter != parent_pk|tostr:
+                        % action "back-refresh_obj" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/'
                     % else:
-                        % action "back-refresh_obj" ".." url=table_path|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'"
+                        % action "back-refresh_obj" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'"
                 {% id_num 'Id' %}
 
 %% id_extra
     % with gtree=get|get_or_tree:
         %if object|childs
-            a href={{table_path}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn btn-primary ladda-button,,,name=+
+            a href={{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn btn-primary ladda-button,,,name=+
                 span class=fa fa-lg fa-plus
         %else
             % if get:
                 span class=button btn
                     span class=fa fa-lg fa-ban
             % else:
-                a href={{table_path}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn ladda-button,,,name=+
+                a href={{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn ladda-button,,,name=+
                     span class=fa fa-lg fa-plus-square-o
         {{ block.super }}
 
