@@ -386,6 +386,7 @@ def edit__group(request, group_id):
                     data = locals()['save'](form, group)
                 else:
                     data = form.cleaned_data
+                print("ZORRO:", data)
                 if 'title' in data:
                     group.title = data['title']
                     del data['title']

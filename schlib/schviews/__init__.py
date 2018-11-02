@@ -256,12 +256,12 @@ class GenericRows(object):
         x2 = x[1].split('/')
 
         bf = 0
-        if 'base_filter' in view_class.kwargs:
+        if 'base_filter' in view_class.kwargs and view_class.kwargs['base_filter'] != None:
             bf = 1
 
         if 'parent_pk' in view_class.kwargs:
             context['table_path'] = x[0] + "/table/" + "/".join(x2[:3]) + "/"
-            context['table_path_and_base_filer'] = x[0] + "/table/" + "/".join(x2[:3+bf]) + "/"
+            context['table_path_and_base_filter'] = x[0] + "/table/" + "/".join(x2[:3+bf]) + "/"
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
         else:
             context['table_path'] = x[0] + "/table/" + x2[0] + "/"
@@ -270,6 +270,11 @@ class GenericRows(object):
             else:
                 context['table_path_and_base_filter'] = context['table_path']
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
+
+        print("X0:", view_class.kwargs)
+        print("X1:",context['table_path'])
+        print("X2:",context['table_path_and_base_filter'])
+        print("X3:",context['table_path_and_filter'])
 
 
     def set_field(self, field=None):
