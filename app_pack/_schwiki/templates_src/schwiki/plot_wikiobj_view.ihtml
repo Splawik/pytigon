@@ -1,0 +1,9 @@
+div class=row
+    [% if perms.wiki.add_page %]
+    a class=wiki-object-edit,,,href=[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
+        .plot
+        span class=fa fa-image-o fa-2
+    [% endif %]
+
+    div class=div_float
+        <sch-plotly {% if param.width %}width="{{param.width}}"{% endif %} {% if param.height %}height="{{param.height}}"{% endif %} plotly-name="{{param.name}}" />
