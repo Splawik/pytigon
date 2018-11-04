@@ -320,7 +320,6 @@ def plot_service(request, **argv):
                 ret = locals()['on_event'](param)                    
                 return ret
             else:
-                print("X1:", param)
                 return {}
         else:
             return { 'error': 'Action not found'}
@@ -386,7 +385,6 @@ def edit__group(request, group_id):
                     data = locals()['save'](form, group)
                 else:
                     data = form.cleaned_data
-                print("ZORRO:", data)
                 if 'title' in data:
                     group.title = data['title']
                     del data['title']

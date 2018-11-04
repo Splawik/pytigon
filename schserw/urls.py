@@ -39,6 +39,9 @@ import schserw.schsys.views
 from schlib.schdjangoext.tools import make_href
 from schlib.schtools.platform_info import platform_name
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 _urlpatterns = []
 
@@ -97,7 +100,7 @@ else:
 #        _urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
 #    _urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATIC_URL))
 
-SHOW_ERROR = False
+#SHOW_ERROR = False
 
 for app in settings.INSTALLED_APPS:
     if isinstance(app, AppConfigMod):
@@ -108,8 +111,8 @@ for app in settings.INSTALLED_APPS:
         or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
         or pos.startswith('bootstrap4'):
             continue
-        if pos == 'schserw.schsys':
-            SHOW_ERROR = True
+        #if pos == 'schserw.schsys':
+        #    SHOW_ERROR = True
     elementy = pos.split('.')
     module = __import__(pos)
 
@@ -124,9 +127,10 @@ for app in settings.INSTALLED_APPS:
                 _urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
             else:
                 _urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
-    except ModuleNotFoundError:
-        pass
+    except ModuleNotFoundError as e:
+        x = pos.split('.')[0]
+        y = e.name.split('.')[0]
+        if x != y:
+            logger.exception(f"URLs error: {pos}")
     except:
-        if SHOW_ERROR:
-            print("URLs error: ", pos)
-            traceback.print_exc()
+        logger.exception(f"URLs error: {pos}")

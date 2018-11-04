@@ -271,11 +271,6 @@ class GenericRows(object):
                 context['table_path_and_base_filter'] = context['table_path']
             context['table_path_and_filter'] = x[0] + "/table/" + "/".join(x2[:-3]) + "/"
 
-        print("X0:", view_class.kwargs)
-        print("X1:",context['table_path'])
-        print("X2:",context['table_path_and_base_filter'])
-        print("X3:",context['table_path_and_filter'])
-
 
     def set_field(self, field=None):
         self.field = field

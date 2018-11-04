@@ -31,11 +31,13 @@ THEMES = ['tablet_modern', 'tablet_modern', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
+URL_ROOT_PREFIX = ""
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='schportal'
+    URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
@@ -117,7 +119,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.10.15 21:36:19'
+GEN_TIME = '2018.11.03 21:12:04'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

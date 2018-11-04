@@ -857,13 +857,12 @@ def get_or_tree(getattr):
     else:
         return 'tree'
 
-
 @register.filter(name='to_html_icon')
 def to_html_icon(icon_str, additional_class=""):
     if icon_str.startswith('fa://'):
         return "<i class='fa fa-%s %s'></i>" % (icon_str[5:].replace('.png',''), additional_class)
     elif icon_str.startswith('png://'):
-        src = mhref("/static/icons/22x22/%s" % icon_str[5:])
+        src = mhref("/static/icons/22x22/%s" % icon_str[6:])
         return "<img src='%s' class='%s'></img>" % (src, additional_class)
     elif icon_str.startswith('client://'):
         src = mhref("/static/icons/22x22/%s" % icon_str[9:])

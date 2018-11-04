@@ -526,6 +526,10 @@ div.daterangepicker button.cancelBtn {
   .txt3d.wiki-title a {
     color: white; }
 
+div.highlight pre {
+  padding: 10px;
+  font-size: 12px; }
+
 div.table {
   margin-bottom: 0rem; }
 
