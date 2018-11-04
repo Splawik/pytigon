@@ -68,18 +68,16 @@
                 {% endif %}
         {% endif %}
 {% endblock %}
-{% block list_page %}
-        <div id="{{uuid}}" class="refr_object refr_target refr_source wiki-frame" href="{{ request.get_full_path|append_get_param:"only_content=1" }}" related-object="{{uuid}}">
-                {{ block.super }}
-        </div>
+{% block style_content_start %}
+        <div id="{{uuid}}" class="content wiki-frame refr_object refr_target refr_source refr_replace" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
 {% endblock %}
 {% block list_content_header %}
         {% if not standard_web_browser == 6 %}
                 {% if standard_web_browser and perms.schwiki.add_page %}
-                        <a data-toggle="collapse" href="#x{{uuid}}collapse" class="wiki_collapse_link">
+                        <a data-toggle="collapse" href="#{{uuid}}collapse" class="wiki_collapse_link">
                                 <span class="fa fa-arrows-v fa-fw"></span>
                         </a>
-                        <div id="x{{uuid}}collapse" class="panel-collapse collapse wiki_collapse">
+                        <div id="{{uuid}}collapse" class="panel-collapse collapse wiki_collapse">
                                 {{ block.super }}
                         </div>
                   {% else %}

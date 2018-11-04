@@ -158,6 +158,11 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
         for fun in MOUNT_INIT_FUN:
             fun(elem)
 
+    if elem.hasClass('refr_replace'):
+        elem_tmp = elem.contents()
+        elem.replaceWith(elem_tmp)
+
+
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
 

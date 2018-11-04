@@ -149,10 +149,6 @@
 
 
 %% login_header
-    % comment:
-        div
-            h3 style=padding: 0px 50px 0px 5px; margin: 5px 0px;,,,class=txt3d text-white
-                {{appset_title}}
 
 %% login_footer
 

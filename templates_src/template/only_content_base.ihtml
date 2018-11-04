@@ -5,10 +5,6 @@
 %% page_start
 
 %% page_head
-    head
-        meta charset=utf-8
-        title
-            {{title}}
 
 %% body_start
 
@@ -29,6 +25,10 @@
 %% sidebar
 
 %% tabs
+    head
+        meta charset=utf-8
+        title
+            {{title}}
     % with NO_TABS=True:
         {{block.super}}
 

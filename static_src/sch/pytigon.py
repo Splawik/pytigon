@@ -129,12 +129,13 @@ def app_init(appset_name, application_template, menu_id, lang, base_path, base_f
     def _on_key(e):
         if e.which == 13:
             elem = jQuery(e.target)
-            form = elem.closest('form')
-            if form.length > 0:
-                if form.hasClass('DialogForm'):
-                    e.preventDefault()
-                    on_edit_ok(False, form)
-                    return
+            if elem.prop("tagName") != 'TEXTAREA':
+                form = elem.closest('form')
+                if form.length > 0:
+                    if form.hasClass('DialogForm'):
+                        e.preventDefault()
+                        on_edit_ok(False, form)
+                        return
 
     jQuery(document).keypress(_on_key)
 

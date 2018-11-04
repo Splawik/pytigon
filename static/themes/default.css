@@ -518,13 +518,14 @@ div.daterangepicker button.cancelBtn {
   font-weight: 900;
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6), 4px 4px 5px rgba(0, 0, 0, 0.8); }
   .txt3d span {
-    color: antiquewhite;
     vertical-align: middle; }
 
 .txt3d.wiki-title {
   font-size: 1.2rem; }
   .txt3d.wiki-title a {
     color: white; }
+  .txt3d.wiki-title span {
+    color: antiquewhite; }
 
 div.highlight pre {
   padding: 10px;

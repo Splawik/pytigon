@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-11-03 21:24:51
+// Transcrypt'ed from Python, 2018-11-04 18:44:36
 
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -3876,6 +3876,10 @@ function pytigon () {
 								fun (elem);
 							}
 						}
+						if (elem.hasClass ('refr_replace')) {
+							var elem_tmp = elem.contents ();
+							elem.replaceWith (elem_tmp);
+						}
 					};
 					var save_as = function (blob, file_name) {
 						var url = window.URL.createObjectURL (blob);
@@ -4562,12 +4566,14 @@ function pytigon () {
 			var _on_key = function (e) {
 				if (e.which == 13) {
 					var elem = jQuery (e.target);
-					var form = elem.closest ('form');
-					if (form.length > 0) {
-						if (form.hasClass ('DialogForm')) {
-							e.preventDefault ();
-							on_edit_ok (false, form);
-							return ;
+					if (elem.prop ('tagName') != 'TEXTAREA') {
+						var form = elem.closest ('form');
+						if (form.length > 0) {
+							if (form.hasClass ('DialogForm')) {
+								e.preventDefault ();
+								on_edit_ok (false, form);
+								return ;
+							}
 						}
 					}
 				}
