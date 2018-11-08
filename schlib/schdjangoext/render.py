@@ -23,6 +23,30 @@ from schlib.schdjangoext.odf_render import render_odf, render_xlsx
 from schlib.schhtml.htmlviewer import stream_from_html
 import os
 
+def get_template_names(context, doc_type):
+    ret = []
+    templates = []
+    if 'template_names' in context:
+        t = context['template_names']
+        if type(t) in (tuple, list):
+            for pos in t:
+                templates.append(pos)
+        else:
+            templates.append(t)        
+    if 'object_list' in context:                
+        templates.append("schsys/object_list")
+    else:
+        templates.append("schsys/object")
+
+    for pos in templates:
+        if doc_type in ('html', 'txt', 'pdf'):
+            ret.append(f'{pos}_{doc_type}.html')
+        else:
+            ret.append(f'{pos}.{doc_type}')
+    
+    return ret
+
+
 def render_doc(context):
     ret_attr = {}
     ret_content = None
@@ -36,18 +60,11 @@ def render_doc(context):
         ol = True
     else:
         ol = False
-
+        
+    templates = get_template_names(context, doc_type)
 
     if doc_type in ('odf', 'ods'):
-        template2 = []
-        if 'template_name' in context:
-            template2.append(context['template_name'] + '.ods')
-        if ol:
-            template2.append("schsys/object_list.ods")
-        else:
-            template2.append("schsys/object.ods")
-
-        file_out, file_in = render_odf(template2, context)
+        file_out, file_in = render_odf(templates, context)
         if file_out:
             with open(file_out, "rb") as f:
                 ret_content = f.read()
@@ -58,61 +75,33 @@ def render_doc(context):
         return ret_attr, ret_content
 
     elif doc_type == 'xlsx':
-        template2 = []
-        if 'template_name' in context:
-            template2.append(context['template_name'] + '.xlsx')
-
-        if ol:
-            template2.append("schsys/object_list.xlsx")
-        else:
-            template2.append("schsys/object.xlsx")
-
         if ol:
             transform_list = list(context['object_list'])
         else:
             transform_list = context['object']
 
-        stream_out = render_xlsx(template2, transform_list)
+        stream_out = render_xlsx(templates, transform_list)
         ret_content = stream_out.getvalue()
-        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(template2[0])
+        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0])
         ret_attr['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return ret_attr, ret_content
 
     elif doc_type == 'pdf':
-        template2 = []
-        if 'template_name' in context:
-            template2.append(context['template_name'] + '_pdf.html')
-        if ol:
-            template2.append("schsys/object_list_pdf.html")
-        else:
-            template2.append("schsys/object_pdf.html")
-        t = loader.select_template(template2)
+        t = loader.select_template(templates)
         content = t.render(context)
         ret_attr['Content-Type'] = 'application/pdf'
+        if type(content) == str:
+            content = content.encode('utf-8')
         pdf_stream = stream_from_html(content, stream_type='pdf', base_url="file://")
         ret_content = pdf_stream.getvalue()
         return ret_attr, ret_content
 
     elif doc_type == 'txt':
-        template2 = []
-        if 'template_name' in context:
-            template2.append(context['template_name'] + '_txt.html')
-        if ol:
-            template2.append("schsys/object_list_txt.html")
-        else:
-            template2.append("schsys/object_txt.html")
-        t = loader.select_template(template2)
+        t = loader.select_template(templates)
         ret_content = t.render(context)
         return ret_attr, ret_content
 
     else:
-        template2 = []
-        if 'template_name' in context:
-            template2.append(context['template_name'] + '.html')
-        if ol:
-            template2.append("schsys/object_list.html")
-        else:
-            template2.append("schsys/object.html")
-        t = loader.select_template(template2)
+        t = loader.select_template(templates)
         ret_content = t.render(context)
         return ret_attr, ret_content
