@@ -305,7 +305,7 @@ class Page(JSONModel):
         #if not self.id:
         super(Page, self).save(*args, **kwargs) 
         if self.content_src:
-            content = html_from_wiki(self, self.content_src)
+            content = html_from_wiki(self, self.content_src+"\n\n\n&nbsp;")
         else:
             content = ""
         self.content = content

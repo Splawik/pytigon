@@ -2,6 +2,7 @@ import pendulum
 import traceback
 import sys
 import asyncio
+import types
 
 from asyncio.events import get_event_loop
 
@@ -255,7 +256,7 @@ class SChScheduler():
             self.tasks.append([task, argi, argv, fun, fun(), task.__name__])
 
     def add_rcp_fun(self, name, fun):
-        setattr(self.rcpserver, name, fun)
+        setattr(self.rcpserver, "xmlrpc_" + name, types.MethodType(fun,self.rcpserver))
         self.rcpserver_activated = True
 
     def get_tasks(self, name):
