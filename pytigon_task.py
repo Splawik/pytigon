@@ -97,8 +97,18 @@ else:
     from apps import APPS
     from schlib.schtools import sch_import
     from schlib.schdjangoext.django_manage import cmd
+    from django.conf import settings
 
-    scheduler = schschedule.SChScheduler()
+    mail_conf = None
+    if hasattr(settings, 'EMAIL_IMAP_HOST'):
+        mail_conf = {}
+        mail_conf['server'] = settings.EMAIL_IMAP_HOST
+        mail_conf['username'] = settings.EMAIL_HOST_USER
+        mail_conf['password'] = settings.EMAIL_HOST_PASSWORD
+        mail_conf['inbox'] = settings.EMAIL_IMAP_INBOX
+        mail_conf['outbox'] = settings.EMAIL_IMAP_OUTBOX
+
+    scheduler = schschedule.SChScheduler(mail_conf)
 
     for app in APPS:
         try:

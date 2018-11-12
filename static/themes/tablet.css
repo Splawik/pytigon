@@ -143,6 +143,9 @@ header.main-header nav.navbar {
   font-size: 14px; }
 
 /* sidebar menu */
+section.sidebar {
+  font-size: 14px; }
+
 ul.sidebar-menu ul.treeview-menu {
   padding-left: 25px !important; }
 

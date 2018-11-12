@@ -119,8 +119,18 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.03 21:12:04'
+GEN_TIME = '2018.11.12 11:07:02'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 
+if 'EMAIL_HOST_USER' in os.environ:
+    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+if 'EMAIL_HOST_PASSWORD' in os.environ:
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_IMAP_HOST = 'imap.gmail.com'
+EMAIL_IMAP_INBOX = 'inbox'
+EMAIL_IMAP_OUTBOX = 'outbox'

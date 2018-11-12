@@ -3,6 +3,19 @@ import traceback
 import sys
 import asyncio
 
+from asyncio.events import get_event_loop
+
+loop = get_event_loop()
+
+import twisted.internet.asyncioreactor
+twisted.internet.asyncioreactor.install(loop)
+
+from twisted.internet import reactor
+import twisted
+from twisted.internet.defer import inlineCallbacks, Deferred
+
+from twisted.web import xmlrpc, server
+
 INIT_TIME = pendulum.now()
 
 def at_iterate(param):
@@ -184,8 +197,15 @@ def in_second_intervals(period=1, in_weekdays=None, in_hours=None):
         return x
     return _in_second_intervals
 
+
+class RpcServer(xmlrpc.XMLRPC):
+
+    def xmlrpc_echo(self, x):
+        return x + "!"
+
+
 class SChScheduler():
-    def __init__(self):
+    def __init__(self, mail_conf=None):
         self.tasks = []
         self.fmap = {
             'M': monthly,
@@ -194,6 +214,16 @@ class SChScheduler():
             'm': in_minute_intervals,
             's': in_second_intervals
         }
+        self.rcpserver = RpcServer()
+        reactor.listenTCP(7080, server.Site(self.rcpserver))
+        if mail_conf:
+            from schlib.schtools.imap4client import IMAPClient
+            self.imap4 = IMAPClient(mail_conf['server'], mail_conf['username'], mail_conf['password'],
+                                    mail_conf['inbox'], mail_conf['outbox'])
+        else:
+            self.imap4 = None
+
+        self.rcpserver_activated = False
 
     def __getattr__(self, item):
         return self.fmap[item]
@@ -223,6 +253,10 @@ class SChScheduler():
             functions = [time_functions,]
         for fun in functions:
             self.tasks.append([task, argi, argv, fun, fun(), task.__name__])
+
+    def add_rcp_fun(self, name, fun):
+        setattr(self.rcpserver, name, fun)
+        self.rcpserver_activated = True
 
     def get_tasks(self, name):
         ret = []
@@ -260,15 +294,16 @@ class SChScheduler():
                 await asyncio.wait(processes)
 
     async def _run(self):
-        if self.tasks:
+        if self.tasks or self.rcpserver_activated or self.imap4:
             old_time = None
             while True:
                 dt  = pendulum.now()
                 str_time = str(dt).strip('.')
                 if not (old_time and old_time == str_time):
                     await self.process(dt)
-                    if not self.tasks:
+                    if not self.tasks and not self.rcpserver_activated and not self.imap4:
                         return
+
                 await asyncio.sleep(0.2)
 
     def run(self):
