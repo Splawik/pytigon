@@ -299,10 +299,13 @@ def stream_from_html(html, output_stream=None, css=None, width=int(210*72/25.4),
         height - default value 297*72/25.4
         stream_type - 'zip' or 'pdf', default pdf.
     """
-    if '<html'.encode('ascii') in html:
-        html2 = html.decode('utf-8')
+    
+    if not type(html) == str:
+        html = html.decode('utf-8')
+    if '<html' in html:
+        html2 = html
     else:
-        html2 = '<html><body>' + html.decode('utf-8') +"</body></html>"
+        html2 = '<html><body>' + html +"</body></html>"
 
     if 'orientation:landscape' in html2 or 'orientation: landscape' in html2:
         width2 = height
