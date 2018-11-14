@@ -108,7 +108,11 @@ else:
         mail_conf['inbox'] = settings.EMAIL_IMAP_INBOX
         mail_conf['outbox'] = settings.EMAIL_IMAP_OUTBOX
 
-    scheduler = schschedule.SChScheduler(mail_conf)
+    xmlrpc_port = None
+    if hasattr(settings, 'XMLRPC_PORT'):
+        xmlrpc_port = settings['XMLRPC_PORT']
+
+    scheduler = schschedule.SChScheduler(mail_conf, xmlrpc_port)
 
     for app in APPS:
         try:

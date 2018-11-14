@@ -32,10 +32,9 @@ import twisted.internet.asyncioreactor
 twisted.internet.asyncioreactor.install(loop)
 
 from twisted.internet import reactor
-import twisted
-from twisted.internet.defer import inlineCallbacks, Deferred
 
 from twisted.web import xmlrpc, server
+
 
 INIT_TIME = pendulum.now()
 
@@ -244,7 +243,10 @@ class RpcServer(xmlrpc.XMLRPC):
         super().__init__()
 
     def xmlrpc_echo(self, x):
-        return x + "!"
+        return x
+
+    def xmlrpc_show_tasks(self):
+        return self.scheduler.show_tasks()
 
 
 class SChScheduler():
@@ -372,10 +374,8 @@ if __name__ == '__main__':
 
     scheduler = SChScheduler(rpc_port=7080)
 
-
     async def hello():
         print("Hello world")
-
 
     async def hello1(name="", scheduler=None):
         if scheduler:
@@ -385,34 +385,30 @@ if __name__ == '__main__':
                 return
         print("Hello world 1")
 
-
     async def hello2(scheduler):
         print("Hello world 2")
         scheduler.remove_tasks('hello2')
 
-
     async def exit(scheduler):
         scheduler.clear()
 
+    scheduler.add_task(in_minute_intervals(1), hello)
+    scheduler.add_task("in_second_intervals(3)", hello)
+    scheduler.add_task(in_second_intervals(4), hello)
+    scheduler.add_task(hourly(at="2,3"), hello)
+    scheduler.add_task(daily(at="22:07"), hello)
+    scheduler.add_task(monthly(day=1, at="22:07"), hello)
 
-    if False:
-        scheduler.add_task(in_minute_intervals(1), hello)
-        scheduler.add_task("in_second_intervals(3)", hello)
-        scheduler.add_task(in_second_intervals(4), hello)
-        scheduler.add_task(hourly(at="2;3"), hello)
-        scheduler.add_task(daily(at="22:07"), hello)
-        scheduler.add_task(monthly(day=1, at="22:07"), hello)
+    scheduler.add_task(monthly(day=1, at="22:07"), hello1, name="monthly", scheduler=scheduler)
+    scheduler.add_task(daily(at="22:07", in_weekdays=(1, 2, 3, 4, 5)), hello1, name="monthly", scheduler=scheduler)
+    scheduler.add_task("hourly(at=7,in_weekdays=range(1,6), in_hours=range(3,5))", hello1, name="monthly",
+                       scheduler=scheduler)
+    scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))", hello1,
+                       name="in_second_intervals", scheduler=scheduler)
 
-        scheduler.add_task(monthly(day=1, at="22:07"), hello1, name="monthly", scheduler=scheduler)
-        scheduler.add_task(daily(at="22:07", in_weekdays=(1, 2, 3, 4, 5)), hello1, name="monthly", scheduler=scheduler)
-        scheduler.add_task("hourly(at=7,in_weekdays=range(1,6), in_hours=range(3,5))", hello1, name="monthly",
-                           scheduler=scheduler)
-        scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))", hello1,
-                           name="in_second_intervals", scheduler=scheduler)
+    scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))", hello2, scheduler)
 
-        scheduler.add_task("in_second_intervals(in_weekdays=range(1,2), in_hours=range(3,5))", hello2, scheduler)
-
-        scheduler.add_task(in_minute_intervals(1), exit, scheduler=scheduler)
+    scheduler.add_task(in_minute_intervals(1), exit, scheduler=scheduler)
 
     scheduler.add_task("M(day=31, at='22:07')", hello1, name="monthly", scheduler=scheduler)
     scheduler.add_task("M", hello1, name="monthly", scheduler=scheduler)
