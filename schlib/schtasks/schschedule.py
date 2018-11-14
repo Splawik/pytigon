@@ -24,16 +24,7 @@ import asyncio
 import types
 
 from asyncio.events import get_event_loop
-
 loop = get_event_loop()
-
-import twisted.internet.asyncioreactor
-
-twisted.internet.asyncioreactor.install(loop)
-
-from twisted.internet import reactor
-
-from twisted.web import xmlrpc, server
 
 
 INIT_TIME = pendulum.now()
@@ -237,18 +228,6 @@ def in_second_intervals(period=1, in_weekdays=None, in_hours=None):
     return _in_second_intervals
 
 
-class RpcServer(xmlrpc.XMLRPC):
-    def __init__(self, scheduler):
-        self.scheduler = scheduler
-        super().__init__()
-
-    def xmlrpc_echo(self, x):
-        return x
-
-    def xmlrpc_show_tasks(self):
-        return self.scheduler.show_tasks()
-
-
 class SChScheduler():
     def __init__(self, mail_conf=None, rpc_port=None):
         self.tasks = []
@@ -259,8 +238,26 @@ class SChScheduler():
             'm': in_minute_intervals,
             's': in_second_intervals
         }
+        if rpc_port or mail_conf:
+            import twisted.internet.asyncioreactor
+            twisted.internet.asyncioreactor.install(loop)
+            from twisted.internet import reactor
+            from twisted.web import xmlrpc, server
+
         if rpc_port:
+            class RpcServer(xmlrpc.XMLRPC):
+                def __init__(self, scheduler):
+                    self.scheduler = scheduler
+                    super().__init__()
+
+                def xmlrpc_echo(self, x):
+                    return x
+
+                def xmlrpc_show_tasks(self):
+                    return self.scheduler.show_tasks()
+
             self.rpcserver = RpcServer(self)
+
             reactor.listenTCP(rpc_port, server.Site(self.rpcserver))
         else:
             self.rpcserver = None
