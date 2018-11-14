@@ -17,7 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.template import loader
+from django.template import loader, Context
 
 from schlib.schdjangoext.odf_render import render_odf, render_xlsx
 from schlib.schhtml.htmlviewer import stream_from_html
@@ -39,10 +39,11 @@ def get_template_names(context, doc_type):
         templates.append("schsys/object")
 
     for pos in templates:
+        dtype = doc_type.replace('odf', 'ods')
         if doc_type in ('html', 'txt', 'pdf'):
-            ret.append(f'{pos}_{doc_type}.html')
+            ret.append(f'{pos}_{dtype}.html')
         else:
-            ret.append(f'{pos}.{doc_type}')
+            ret.append(f'{pos}.{dtype}')
     
     return ret
 
@@ -64,7 +65,7 @@ def render_doc(context):
     templates = get_template_names(context, doc_type)
 
     if doc_type in ('odf', 'ods'):
-        file_out, file_in = render_odf(templates, context)
+        file_out, file_in = render_odf(templates, Context(context))
         if file_out:
             with open(file_out, "rb") as f:
                 ret_content = f.read()
@@ -89,17 +90,22 @@ def render_doc(context):
     elif doc_type == 'pdf':
         t = loader.select_template(templates)
         content = ""+t.render(context)
+        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0]).replace('.html','').replace('_pdf', '.pdf')
         ret_attr['Content-Type'] = 'application/pdf'
         pdf_stream = stream_from_html(content, stream_type='pdf', base_url="file://")
         ret_content = pdf_stream.getvalue()
         return ret_attr, ret_content
 
     elif doc_type == 'txt':
+        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0]).replace('.html','').replace('_txt', '.txt')
+        ret_attr['Content-Type'] = 'text/plain'
         t = loader.select_template(templates)
         ret_content = ""+t.render(context)
         return ret_attr, ret_content
 
     else:
+        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0]).replace('_html', '')
+        ret_attr['Content-Type'] = 'text/html'
         t = loader.select_template(templates)
         ret_content = ""+t.render(context)
         return ret_attr, ret_content
