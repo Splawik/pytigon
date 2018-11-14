@@ -88,7 +88,7 @@ def render_doc(context):
 
     elif doc_type == 'pdf':
         t = loader.select_template(templates)
-        content = str(t.render(context))
+        content = ""+t.render(context)
         ret_attr['Content-Type'] = 'application/pdf'
         pdf_stream = stream_from_html(content, stream_type='pdf', base_url="file://")
         ret_content = pdf_stream.getvalue()
@@ -96,10 +96,10 @@ def render_doc(context):
 
     elif doc_type == 'txt':
         t = loader.select_template(templates)
-        ret_content = str(t.render(context))
+        ret_content = ""+t.render(context)
         return ret_attr, ret_content
 
     else:
         t = loader.select_template(templates)
-        ret_content = str(t.render(context))
+        ret_content = ""+t.render(context)
         return ret_attr, ret_content
