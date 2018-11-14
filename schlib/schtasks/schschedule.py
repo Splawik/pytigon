@@ -206,7 +206,7 @@ class RpcServer(xmlrpc.XMLRPC):
 
 
 class SChScheduler():
-    def __init__(self, mail_conf=None):
+    def __init__(self, mail_conf=None, listen_on_port = None):
         self.tasks = []
         self.fmap = {
             'M': monthly,
@@ -215,8 +215,11 @@ class SChScheduler():
             'm': in_minute_intervals,
             's': in_second_intervals
         }
-        self.rcpserver = RpcServer()
-        reactor.listenTCP(7080, server.Site(self.rcpserver))
+        if listen_on_port:
+            self.rpcserver = RpcServer()
+            reactor.listenTCP(7080, server.Site(self.rpcserver))
+        else:
+            self.rpcserver = None
         if mail_conf:
             from schlib.schtools.imap4client import IMAPClient
             self.imap4 = IMAPClient(mail_conf['server'], mail_conf['username'], mail_conf['password'],
@@ -224,7 +227,7 @@ class SChScheduler():
         else:
             self.imap4 = None
 
-        self.rcpserver_activated = False
+        self.rpcserver_activated = False
 
     def __getattr__(self, item):
         return self.fmap[item]
@@ -255,9 +258,10 @@ class SChScheduler():
         for fun in functions:
             self.tasks.append([task, argi, argv, fun, fun(), task.__name__])
 
-    def add_rcp_fun(self, name, fun):
-        setattr(self.rcpserver, "xmlrpc_" + name, types.MethodType(fun,self.rcpserver))
-        self.rcpserver_activated = True
+    def add_rpc_fun(self, name, fun):
+        if self.rpcserver:
+            setattr(self.rpcserver, "xmlrpc_" + name, types.MethodType(fun,self.rpcserver))
+            self.rpcserver_activated = True
 
     def get_tasks(self, name):
         ret = []
@@ -295,14 +299,14 @@ class SChScheduler():
                 await asyncio.wait(processes)
 
     async def _run(self):
-        if self.tasks or self.rcpserver_activated or self.imap4:
+        if self.tasks or self.rpcserver_activated or self.imap4:
             old_time = None
             while True:
                 dt  = pendulum.now()
                 str_time = str(dt).strip('.')
                 if not (old_time and old_time == str_time):
                     await self.process(dt)
-                    if not self.tasks and not self.rcpserver_activated and not self.imap4:
+                    if not self.tasks and not self.rpcserver_activated and not self.imap4:
                         return
 
                 await asyncio.sleep(0.2)
