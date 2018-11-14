@@ -299,7 +299,6 @@ class SChScheduler():
             functions = time_functions
         else:
             functions = [time_functions, ]
-        print(functions)
         for fun in functions:
             self.tasks.append([task, argi, argv, fun, fun(), task.__name__])
 
