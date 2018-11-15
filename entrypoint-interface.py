@@ -150,8 +150,12 @@ port = START_CLIENT_PORT
 
 ret_tab = []
 for app_pack in APP_PACKS:
-    cmd = "cd /var/www/pytigon/app_pack/%s && exec daphne -b 0.0.0.0 -p %d --proxy-headers --access-log /var/log/pytigon-access.log asgi:application" % (
-    app_pack, port)
+    #server = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
+    server = f"gunicorn -b 0.0.0.0:{port} -w 4 -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
+    path = f"/var/www/pytigon/app_pack/{app_pack}"
+
+    cmd = "cd {path} && exec {server}"
+
     port += 1
     print(cmd)
     ret_tab.append(subprocess.Popen(cmd, shell=True))
