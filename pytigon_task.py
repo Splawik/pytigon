@@ -28,6 +28,10 @@ paths = get_main_paths()
 from schlib.schtasks import schschedule
 from schlib.schhttptools import httpclient
 
+import logging
+
+LOGGER = logging.getLogger("pytigon_task")
+
 def usage():
     print("pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset")
 
@@ -118,10 +122,13 @@ else:
         try:
             module = sch_import(app+".tasks")
         except:
-            pass
-
+            LOGGER.exception("An error occurred durring import task")
+        
         if hasattr(module, "init_schedule"):
-            module.init_schedule(scheduler, cmd, http)
+            try:
+                module.init_schedule(scheduler, cmd, http)
+            except:
+                LOGGER.exception("An error occurred durring init_schedule")
 
     if USERNAME:
         parm={'username': USERNAME, 'password': PASSWORD, 'next': '/schsys/ok/',}
