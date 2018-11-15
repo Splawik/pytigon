@@ -224,6 +224,11 @@ if PRODUCTION_VERSION:
                 'level': 'INFO',
                 'propagate': True,
             },
+            'pytigon_task': {
+                'handlers': ['logfile', 'errorlogfile'],
+                'level': 'INFO',
+                'propagate': True,
+            },
         }
     }
 
