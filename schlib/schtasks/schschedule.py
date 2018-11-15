@@ -25,7 +25,13 @@ import types
 
 from asyncio.events import get_event_loop
 loop = get_event_loop()
+import twisted.internet.asyncioreactor
+twisted.internet.asyncioreactor.install(loop)
+from twisted.internet import reactor
+from twisted.web import xmlrpc, server
+import logging
 
+LOGGER = logging.getLogger("pytigon_task")
 
 INIT_TIME = pendulum.now()
 
@@ -238,11 +244,6 @@ class SChScheduler():
             'm': in_minute_intervals,
             's': in_second_intervals
         }
-        if rpc_port or mail_conf:
-            import twisted.internet.asyncioreactor
-            twisted.internet.asyncioreactor.install(loop)
-            from twisted.internet import reactor
-            from twisted.web import xmlrpc, server
 
         if rpc_port:
             class RpcServer(xmlrpc.XMLRPC):
@@ -329,9 +330,9 @@ class SChScheduler():
                     task[4] = task[3](task[4])
                     try:
                         processes.append(task[0](*task[1], **task[2]))
+                        LOGGER.info("Running task: " + task[5])
                     except:
-                        print(sys.exc_info()[0])
-                        print(traceback.print_exc())
+                        LOGGER.exception("An error occurred in task")
 
             def _key(elem):
                 return elem[4]
