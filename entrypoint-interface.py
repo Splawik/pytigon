@@ -151,7 +151,10 @@ port = START_CLIENT_PORT
 ret_tab = []
 for app_pack in APP_PACKS:
     #server = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
-    server = f"gunicorn -b 0.0.0.0:{port} -w 4 -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
+
+    count = 4 if app_pack == MAIN_APP_PACK else 1
+
+    server = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
     cmd = f"cd {path} && exec {server}"
