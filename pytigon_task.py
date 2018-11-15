@@ -110,7 +110,7 @@ else:
 
     xmlrpc_port = None
     if hasattr(settings, 'XMLRPC_PORT'):
-        xmlrpc_port = settings['XMLRPC_PORT']
+        xmlrpc_port = settings.XMLRPC_PORT
 
     scheduler = schschedule.SChScheduler(mail_conf, xmlrpc_port)
 
