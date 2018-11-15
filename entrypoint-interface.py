@@ -154,7 +154,7 @@ for app_pack in APP_PACKS:
     server = f"gunicorn -b 0.0.0.0:{port} -w 4 -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
-    cmd = "cd {path} && exec {server}"
+    cmd = f"cd {path} && exec {server}"
 
     port += 1
     print(cmd)
