@@ -67,11 +67,11 @@ else:
 #1. daphne
 #2. gunicorn
 #3. hypercorn
-ASGI_SERVER_NAME  = 'hypercorn'
+ASGI_SERVER_ID  = 0
 if 'ASGI_SERVER_NAME' in environ:
-    if 'dapne' in environ['ASGI_SERVER_NAME']:
+    if 'gunicorn' in environ['ASGI_SERVER_NAME']:
         ASGI_SERVER_NAME = 1
-    elif 'gunicorn' in environ['ASGI_SERVER_NAME']:
+    elif 'dapne' in environ['ASGI_SERVER_NAME']:
         ASGI_SERVER_NAME = 2
 
 START_CLIENT_PORT = 8000
@@ -195,11 +195,11 @@ for app_pack in APP_PACKS:
     else:
         count = NOWP['default-main'] if app_pack == MAIN_APP_PACK else NOWP['default-additional']
 
-    server1 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
+    server1 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
     server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
-    server3 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
+    server3 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
 
-    if
+    server = (server1, server2, server3, )[ASGI_SERVER_ID]
 
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
