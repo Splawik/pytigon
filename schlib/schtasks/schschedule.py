@@ -18,8 +18,6 @@
 # version: "0.1a"
 
 import pendulum
-import traceback
-import sys
 import asyncio
 import types
 

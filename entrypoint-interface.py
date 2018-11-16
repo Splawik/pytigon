@@ -35,6 +35,45 @@ else:
     CRT = ""
     KEY = ""
 
+
+#NUMBER_OF_WORKER_PROCESSES struct:
+# 1. NUMBER_FOR_MAIN_APP, for example: 4
+# 2. NUMBER_FOR_MAIN_APP:NUMBER_FOR_ADDITIONAL_APP, for example: 4:1
+# 3. NAME_OF_SPECIFIC_APP:NUMBER_FOR_SPECIFIC_APP,*, for example:  schportal:4,schdevtools:2
+
+NOWP = {}
+if 'NUMBER_OF_WORKER_PROCESSES' in environ:
+    nowp =  environ['NUMBER_OF_WORKER_PROCESSES']
+    if ':' in nowp:
+        if ',' in nowp or ';' in nowp:
+            for pos in nowp.replace(',',';').split(';'):
+                if ':' in pos:
+                    x = pos.split(':')
+                    NOWP[x[0]] = x[1]
+                else:
+                    NOWP[x] = 1
+        else:
+            x = nowp.split(':')
+            NOWP['default-main'] = int(x[0])
+            NOWP['default-additional'] = int(x[1])
+    else:
+        NOWP['default-main'] = int(nowp)
+        NOWP['default-additional'] = 1
+else:
+    NOWP['default-main'] = 4
+    NOWP['default-additional'] = 1
+
+#ASGI_SERVER_NAME:
+#1. daphne
+#2. gunicorn
+#3. hypercorn
+ASGI_SERVER_NAME  = 'hypercorn'
+if 'ASGI_SERVER_NAME' in environ:
+    if 'dapne' in environ['ASGI_SERVER_NAME']:
+        ASGI_SERVER_NAME = 1
+    elif 'gunicorn' in environ['ASGI_SERVER_NAME']:
+        ASGI_SERVER_NAME = 2
+
 START_CLIENT_PORT = 8000
 
 APP_PACKS = []
@@ -150,11 +189,18 @@ port = START_CLIENT_PORT
 
 ret_tab = []
 for app_pack in APP_PACKS:
-    #server = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
 
-    count = 4 if app_pack == MAIN_APP_PACK else 1
+    if app_pack in NOWP:
+        count = NOWP[app_pack]
+    else:
+        count = NOWP['default-main'] if app_pack == MAIN_APP_PACK else NOWP['default-additional']
 
-    server = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
+    server1 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
+    server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
+    server3 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
+
+    if
+
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
     cmd = f"cd {path} && exec {server}"
