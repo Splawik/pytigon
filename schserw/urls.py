@@ -120,13 +120,15 @@ for app in settings.INSTALLED_APPS:
         pass
 
     try:
-        module_name = '%s.urls' % str(pos)
-        m = importlib.import_module(module_name)
-        if hasattr(m, 'gen'):
-            if len(elementy) > 1:
-                _urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
-            else:
-                _urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
+        test =  importlib.import_module(pos)
+        if hasattr(test, "ModuleTitle"):
+            module_name = '%s.urls' % str(pos)
+            m = importlib.import_module(module_name)
+            if hasattr(m, 'gen'):
+                if len(elementy) > 1:
+                    _urlpatterns.append(url(r'%s/' % str(elementy[1]), include(m)))
+                else:
+                    _urlpatterns.append(url(r'%s/' % str(elementy[0]), include(m)))
     except ModuleNotFoundError as e:
         x = pos.split('.')[0]
         y = e.name.split('.')[0]
