@@ -88,24 +88,22 @@ def compile(python_code, temp_dir=None):
         'jscall': True
     }
 
+    utils.CommandArgs.parse()
     utils.commandArgs.__dict__.update (x)
 
     __symbols__ = []
     __symbols__.append ('__py{}.{}__'.format (* sys.version_info [:2]))
-    #if utils.commandArgs.esv:
-    #    __symbols__.append ('__esv{}__'.format (utils.commandArgs.esv))
-    #else:
     __symbols__.append ('__esv{}__'.format (utils.defaultJavaScriptVersion))
 
-    #__envir__ = utils.Any()
-    #with tokenize.open(f'{modulesDir}/org/transcrypt/__envir__.js') as envirFile:
-    #    exec(envirFile.read());
-    #__envir__.executor_name = __envir__.interpreter_name
+    __envir__ = utils.Any()
+    with tokenize.open(f'{modulesDir}/org/transcrypt/__envir__.js') as envirFile:
+        exec(envirFile.read());
+    __envir__.executor_name = __envir__.interpreter_name
 
     error = False
     try:
-        compiler.Program (compilerPath, compilerPath, __symbols__)
-        #compiler.Program(compilerPath, __symbols__, __envir__)
+        compiler.Program(compilerPath, __symbols__, __envir__)
+
         with open(dest,"rt") as pyoutput:
             ret = pyoutput.read()        
             s = ret.split('(function () {\n', 1)[1]

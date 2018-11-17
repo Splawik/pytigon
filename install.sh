@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    virtualenv --python=python3.6 python
+    virtualenv --python=python3.7 python
     ./python/bin/pip install  -r requirements.txt
     curl -L -o ./ext_prg/tcc-0.9.26.tar.bz2 http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26.tar.bz2
     tar xjf ./ext_prg/tcc-0.9.26.tar.bz2 -C ./ext_prg/
