@@ -196,6 +196,9 @@ if _PARAM == None:
 
 from schserw import settings as schserw_settings
 
+from schlib.schtools.install_init import init
+init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
+
 import wx
 _ = wx.GetTranslation
 
@@ -289,10 +292,6 @@ if 'rpc' in _PARAM or 'websocket' in _PARAM:
 
 if not 'channels' in _PARAM:
     os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
-
-
-from schlib.schtools.install_init import init
-init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
 # import gc
 # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)

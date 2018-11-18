@@ -1,13 +1,13 @@
 app: pytigon
 
 ingredients:
-  dist: xenial
+  dist: bionic
   sources: 
-    - deb http://archive.ubuntu.com/ubuntu/ xenial main universe
-    - deb http://ppa.launchpad.net/jonathonf/python-3.6/ubuntu xenial main
+    - deb http://archive.ubuntu.com/ubuntu/ bionic main universe
+    - deb  https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa bionic main
   packages:
-    - python3.6
-    - python3-distutils
+    - python3.7
+    - python3.7-distutils
     - curl 
     - git 
     - apt-transport-https 
@@ -16,12 +16,13 @@ ingredients:
     - zip
 
   script:
-    - virtualenv venv -p $(which python3.6) --always-copy
-    - venv/bin/pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk2/ubuntu-16.04/ wxPython
+    - virtualenv venv -p $(which python3.7) --always-copy
+    - venv/bin/pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk2/ubuntu-18.04/ wxPython
     - venv/bin/pip install Pillow mysqlclient cefpython3
     - wget -c https://github.com/Splawik/pytigon/archive/master.zip
     - unzip master.zip
     - venv/bin/pip install -r pytigon-master/requirements.txt 
+    - venv/bin/pip install -r pytigon-master/requirements_gui.txt 
     
 script:
   - cat > pytigon.desktop <<EOF
@@ -35,9 +36,9 @@ script:
   - mkdir opt
   - cp -R ../pytigon-master opt/pytigon
   - cp -Rf ../venv/lib/python3.*/site-packages/* usr/lib/python3/dist-packages/    
-  - ( cd opt/pytigon/ ; ../../usr/bin/python3.6 manage.py compile_templates )
-  - cp opt/pytigon/pytigon.png usr/share/icons/hicolor/48x48/pytigon.png
-  - cp usr/share/icons/hicolor/48x48/pytigon.png .
+  - ( cd opt/pytigon/ ; ../../usr/bin/python3.7 manage.py compile_templates )
+  - cp opt/pytigon/pytigon.png usr/share/icons/hicolor/48x48/apps/pytigon.png
+  - cp usr/share/icons/hicolor/48x48/apps/pytigon.png .
   - ( cd usr/bin/ ; ln -s ../../opt/pytigon/appimage_pytigon.py pytigon )
   - chmod a+x opt/pytigon/appimage_pytigon.py
-
+  
