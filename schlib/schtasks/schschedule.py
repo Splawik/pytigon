@@ -354,8 +354,14 @@ class SChScheduler():
                 await asyncio.sleep(0.2)
 
     def run(self):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self._run())
+        can_exit = False
+        while not can_exit:
+            try:
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(self._run())
+                can_exit = True
+            except:
+                LOGGER.exception("Problem with scheduler")
 
     def show_tasks(self):
         ret = []

@@ -288,7 +288,7 @@ class HttpClient:
                     HTTP_ERROR_FUNC(parent, self.content)
                     BLOCK = False
                 else:
-                    with open("last_error.html", "wb") as f:
+                    with open(os.path.join(settings.DATA_PATH, "last_error.html"), "wb") as f:
                         f.write(self.content)
                 return (500, self.http.url)
 
