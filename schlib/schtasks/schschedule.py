@@ -232,6 +232,10 @@ def in_second_intervals(period=1, in_weekdays=None, in_hours=None):
     return _in_second_intervals
 
 
+def _key(elem):
+    return elem[4]
+
+
 class SChScheduler():
     def __init__(self, mail_conf=None, rpc_port=None):
         self.tasks = []
@@ -254,6 +258,9 @@ class SChScheduler():
 
                 def xmlrpc_show_tasks(self):
                     return self.scheduler.show_tasks()
+
+                def xmlrpc_show_current_tasks(self):
+                    return self.scheduler.show_current_tasks()
 
             self.rpcserver = RpcServer(self)
 
@@ -325,43 +332,20 @@ class SChScheduler():
             processes = []
             for task in self.tasks:
                 if task[4] <= dt:
-                    task[4] = task[3](task[4])
                     try:
+                        task[4] = task[3](task[4])
                         processes.append(task[0](*task[1], **task[2]))
                         LOGGER.info("Running task: " + task[5])
                     except:
-                        LOGGER.exception("An error occurred in task")
-
-            def _key(elem):
-                return elem[4]
-
-            self.tasks.sort(key=_key)
+                        LOGGER.exception("An error occurred in executing task")
 
             if processes:
-                await asyncio.wait(processes)
-
-    async def _run(self):
-        if self.tasks or self.rpcserver_activated or self.imap4:
-            old_time = None
-            while True:
-                dt = pendulum.now()
-                str_time = str(dt).strip('.')
-                if not (old_time and old_time == str_time):
-                    await self.process(dt)
-                    if not self.tasks and not self.rpcserver_activated and not self.imap4:
-                        return
-
-                await asyncio.sleep(0.2)
-
-    def run(self):
-        can_exit = False
-        while not can_exit:
-            try:
-                loop = asyncio.get_event_loop()
-                loop.run_until_complete(self._run())
-                can_exit = True
-            except:
-                LOGGER.exception("Problem with scheduler")
+                self.tasks.sort(key=_key)
+                try:
+                    done, pending = await asyncio.wait(processes)
+                    results = [future.result() for future in done]
+                except:
+                    LOGGER.exception("An error occurred in task")
 
     def show_tasks(self):
         ret = []
@@ -370,6 +354,29 @@ class SChScheduler():
                 ret.append((str(task[5]), str(task[4]), str(task[1]), str(task[2])))
         return ret
 
+    def show_current_tasks(self):
+        ret = []
+        for task in asyncio.all_tasks():
+            name = task._coro.__name__
+            if not name in ('_run', 'process'):
+                ret.append(task._coro.__name__)
+        return ret
+
+    async def _run(self):
+        if self.tasks or self.rpcserver_activated or self.imap4:
+            while True:
+                try:
+                    loop = asyncio.get_event_loop()
+                    loop.create_task(self.process(pendulum.now()))
+                    if not self.tasks and not self.rpcserver_activated and not self.imap4:
+                        return
+                except:
+                    LOGGER.exception("Problem with scheduler")
+                await asyncio.sleep(1)
+
+    def run(self):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self._run())
 
 if __name__ == '__main__':
     INIT_TIME = pendulum.datetime(2016, 5, 1)
@@ -389,7 +396,8 @@ if __name__ == '__main__':
 
     async def hello2(scheduler):
         print("Hello world 2")
-        scheduler.remove_tasks('hello2')
+        x = p/10
+        #scheduler.remove_tasks('hello2')
 
     async def exit(scheduler):
         scheduler.clear()

@@ -197,7 +197,7 @@ if PRODUCTION_VERSION:
             'errorlogfile': {
                 'level': 'WARNING',
                 'class':'logging.handlers.RotatingFileHandler',
-                'filename': LOG_PATH + "/pytigon_err.log",
+                'filename': LOG_PATH + "/pytigon-err.log",
                 'maxBytes': 50000,
                 'backupCount': 2,
                 'formatter': 'standard',

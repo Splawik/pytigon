@@ -127,7 +127,7 @@ else:
         
         if hasattr(module, "init_schedule"):
             try:
-                module.init_schedule(scheduler, sync_to_async(cmd), sync_to_async(http))
+                module.init_schedule(scheduler, cmd, http)
             except:
                 LOGGER.exception("An error occurred durring init_schedule")
 
