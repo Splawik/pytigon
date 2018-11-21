@@ -144,12 +144,11 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             else:
                 template2 = template
 
-        try:
-            TemplateResponse.__init__(self, request, template2, context,
-                                      content_type, status, current_app, charset=charset, using=using)
-        except:
-            TemplateResponse.__init__(self, request, template2, context,
-                                  content_type, status, current_app)
+        #try:
+        #    TemplateResponse.__init__(self, request, template2, context,
+        #                              content_type, status, current_app, charset=charset, using=using)
+        #except:
+        TemplateResponse.__init__(self, request, template2, context, content_type, status, current_app)
 
     def _get_model_template(self, context, doc_type):
         if context and 'object' in context:

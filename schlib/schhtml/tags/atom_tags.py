@@ -123,7 +123,6 @@ class ImgTag(AtomTag):
                 if '.png' in img_name:
                     self.img = img
                 else:
-                    print(img_name)
                     stream = io.BytesIO(img)
                     import PIL
                     image = PIL.Image.open(stream)
