@@ -1,7 +1,7 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-11-08 22:45:08
+// Transcrypt'ed from Python, 2018-11-21 08:59:28
 
-    var __symbols__ = ['__py3.6__', '__esv5__'];
+    var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
     var __world__ = __all__;
     var __nest__ = function (headObject, tailNames, value) {
@@ -192,17 +192,15 @@
 								self.stack = 'No stack trace available';
 							}
 						});},
-						__repr__: function () {
-							var self = this;
+						get __repr__ () {return __get__ (this, function (self) {
 							if (len (self.__args__)) {
 								return '{}{}'.format (self.__class__.__name__, repr (tuple (self.__args__)));
 							}
 							else {
 								return '{}()'.format (self.__class__.__name__);
 							}
-						},
-						__str__: function () {
-							var self = this;
+						});},
+						get __str__ () {return __get__ (this, function (self) {
 							if (len (self.__args__) > 1) {
 								return str (tuple (self.__args__));
 							}
@@ -212,7 +210,7 @@
 							else {
 								return '';
 							}
-						}
+						});}
 					});
 					var IterableError = __class__ ('IterableError', [Exception], {
 						__module__: __name__,
@@ -408,7 +406,7 @@
 								self.element.innerHTML = '_';
 							}
 						});},
-						print: function () {
+						get print () {return __get__ (this, function (self) {
 							var sep = ' ';
 							var end = '\n';
 							if (arguments.length) {
@@ -417,17 +415,17 @@
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
+											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'sep': var sep = __allkwargs0__ [__attrib0__]; break;
 											case 'end': var end = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
 								}
-								var args = tuple ([].slice.apply (arguments).slice (0, __ilastarg0__ + 1));
+								var args = tuple ([].slice.apply (arguments).slice (1, __ilastarg0__ + 1));
 							}
 							else {
 								var args = tuple ();
 							}
-							var self = this;
 							self.buffer = '{}{}{}'.format (self.buffer, sep.join ((function () {
 								var __accu0__ = [];
 								var __iterable0__ = args;
@@ -452,14 +450,15 @@
 									return __accu0__;
 								}) ()));
 							}
-						},
-						input: function (question) {
+						});},
+						get input () {return __get__ (this, function (self, question) {
 							if (arguments.length) {
 								var __ilastarg0__ = arguments.length - 1;
 								if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
+											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'question': var question = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
@@ -467,12 +466,11 @@
 							}
 							else {
 							}
-							var self = this;
 							self.print ('{}'.format (question), __kwargtrans__ ({end: ''}));
 							var answer = window.prompt ('\n'.join (self.buffer.py_split ('\n').__getslice__ (-(16), null, 1)));
 							self.print (answer);
 							return answer;
-						}
+						});}
 					});
 					var __terminal__ = __Terminal__ ();
 					__pragma__ ('<all>')
@@ -4932,7 +4930,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

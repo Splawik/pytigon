@@ -92,7 +92,8 @@ if len(settings.APP_PACKS) > 0:
 
     _urlpatterns.append(u)
 else:
-    u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
+    #u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
+    u = url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start')
     _urlpatterns.append(u)
 
 #if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ or not settings.PRODUCTION_VERSION:

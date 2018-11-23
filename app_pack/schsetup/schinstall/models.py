@@ -18,9 +18,17 @@ from schlib.schhtml.htmltools import superstrip
 
 from schsimplescripts.models import *
 
+from schwiki.models import *
+
+from schattachements.models import *
+
+from schlog.models import *
+
 from schtools.models import *
 
-from schwiki.models import *
+from schelements.models import *
+
+from schreports.models import *
 
 from schcommander.models import *
 

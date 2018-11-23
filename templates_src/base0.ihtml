@@ -51,7 +51,6 @@
     %% body_header
 
     %% body
-
         %if not user.is_authenticated and not NO_CHECK_AUTH and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
             %% login_header
             %% login
@@ -61,7 +60,6 @@
                 %% change_password
                 %% menu_start
                 %% menu
-
                     %% topmenu_start
                     %for app_info in app_manager|args:app_pack|call:"get_apps_width_perm":
                         %% topmenu

@@ -138,8 +138,8 @@ def default_template(b_type):
 
 
 class AppInfo:
-    def __init__(self, app_title=None, app_perms=None, index=None, app_name=None, module_title=None,
-                 module_name=None, user_param=None):
+    def __init__(self, app_title="", app_perms="", index="", app_name="", module_title="",
+                 module_name="", user_param=""):
         self.app_title = app_title
         self.app_perms = app_perms
         self.index = index
@@ -148,9 +148,14 @@ class AppInfo:
         self.module_name = module_name
         self.user_param = user_param
 
+    def __str__(self):
+        return  f"module_name: {self.module_name}\n" + \
+                f"module_title: {self.module_title}\n" + \
+                f"app_name: {self.app_name}\n" + \
+                f"app_title: {self.app_title}\n"
 
 class AppItemInfo(AppInfo):
-    def __init__(self, app_info, url=None, description=None, right=None, icon=None):
+    def __init__(self, app_info, url="", description="", right="", icon=""):
         super().__init__(app_info.app_title, app_info.app_perms, app_info.index, app_info.app_name,
                          app_info.module_title, app_info.module_name, app_info.user_param)
         self.url = url
@@ -161,6 +166,10 @@ class AppItemInfo(AppInfo):
     def get_app_info(self):
         return AppInfo(self.app_title, self.app_perms, self.index, self.app_name,
                         self.module_title, self.module_name, self.user_param)
+
+    def __str__(self):
+        return  super().__str__()+"\n"+ \
+                f"description: {self.description}\n"
 
 class AppManager:
     def __init__(self, request):
@@ -275,7 +284,7 @@ class AppManager:
             i += 1
         return 0
 
-    def get_app_items(self, app_pack=None):
+    def get_app_items(self, app_pack=settings.APPSET_NAME):
         apps = self._get_apps(app_pack)
         ret = []
         for app in apps:
@@ -299,21 +308,21 @@ class AppManager:
                         if hasattr(module2, 'AdditionalUrls'):
                             # AdditionalUrls: url, title, right, icon, module,
                             if callable(module2.AdditionalUrls):
-                                urls2 = module2.AdditionalUrls()
+                                urls2 = module2.AdditionalUrls(app_pack, self.request.LANGUAGE_CODE[:2].lower())
                             else:
                                 urls2 = module2.AdditionalUrls
                             for pos in urls2:
                                 app_info = AppItemInfo(app)
-                                app_info.module_title = pos[4] if pos[4] else app.module_title
-                                app_info.app_name = pos[5] if pos[5] else app.app_name
-                                app_info.app_title = pos[6] if pos[6] else app.app_title
+                                app_info.module_name = pos[4] if pos[4] else app.module_name
+                                app_info.module_title = pos[5] if pos[5] else app.module_title
+                                app_info.app_name = pos[6] if pos[6] else app.app_name
+                                app_info.app_title = pos[7] if pos[7] else app.app_title
                                 app_info.url = pos[0]
                                 app_info.description = pos[1]
                                 app_info.right = pos[2]
                                 app_info.icon = pos[3]
                                 app_info.app_perms = None
                                 app_info.user_param = None
-
                                 id = -1
                                 test = 0
                                 i = 0
@@ -333,9 +342,9 @@ class AppManager:
                 #    pass
         return ret
 
-    def get_apps_width_perm(self, app_pack=None):
+    def get_apps_width_perm(self, app_pack=settings.APPSET_NAME):
         ret = []
-        items = self.get_app_items()
+        items = self.get_app_items(app_pack)
         no_empty_apps = []
         for item in items:
             if not item.app_name in no_empty_apps:
@@ -351,7 +360,7 @@ class AppManager:
                     ret.append(item)
         return ret
 
-    def get_app_items_width_perm(self, app_pack=None):
+    def get_app_items_width_perm(self, app_pack=settings.APPSET_NAME):
         ret = []
         for item in self.get_app_items(app_pack):
             if item.app_name in settings.HIDE_APPS:
@@ -522,6 +531,8 @@ def sch_standard(request):
                     url_app_base =  url_base + "/" + _app_pack
                     app_pack = _app_pack
                     break
+    if not app_pack:
+        app_pack = settings.APPSET_NAME
 
     lng = request.LANGUAGE_CODE[:2].lower()
 
@@ -557,7 +568,6 @@ def sch_standard(request):
     else:
         gmt = time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
-
 
     ret = {
         'standard_web_browser': standard,

@@ -9,7 +9,6 @@
         <body bgcolor="#{{color_body_1_5}}" class="login_background">
 
 %% body
-
     % if settings.START_PAGE != 'None':
         {{ block.super }}
     % else:
@@ -19,13 +18,13 @@
                     .Pytigon - application list
 
             div class=row
-                % for app_pack in app_packs:
+                % for apppack in app_packs:
                     div class=col-xs-12 col-sm-6 col-md-6 col-lg-4
                         div class=card app_chose rounded
                             div class=card-block
-                                h4 class=card-title...{{app_pack.0}}
-                                h6 class=card-subtitle...{{app_pack.1}}
-                                a class=card-link btn btn-success btn-lg,,,href={{base_path}}{{app_pack.0}}/,,,role=button
+                                h4 class=card-title...{{apppack.0}}
+                                h6 class=card-subtitle...{{apppack.1}}
+                                a class=card-link btn btn-success btn-lg,,,href={{base_path}}{{apppack.0}}/,,,role=button
                                     i class=fa fa-play
                                     .run
 
