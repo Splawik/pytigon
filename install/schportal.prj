@@ -1,0 +1,34 @@
+[
+    [
+        "schcomponents/d3\nschcomponents/vs_editor\nschcomponents/plotly",
+        "tablet_modern",
+        null,
+        null,
+        "_schtools.schtools,_schwiki.schwiki,_schdata.schreports",
+        "toolmenu,toolbar(file(exit),clipboard,nav)",
+        "tree",
+        null,
+        null,
+        false,
+        true,
+        "schportal",
+        null,
+        true,
+        null,
+        "smartfon_standard",
+        "schwiki/portal/Start/view/",
+        "tablet_modern",
+        "Pytigon portal",
+        "###> templates_src/template/desktop.ihtml\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% extrahead\n    %if standard_web_browser:\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n    {{ block.super }}\n\n### templates_src/template/tablet.ihtml\n{# -*- coding: utf-8 -*- #}\n\n%extends 'template/tablet_base.html'\n\n%% logo\n    img src={{base_path}}static/favicon.ico\n    {{block.super}}\n\n###> settings_app.py\nSEARCH_PATH = \"/schwiki/%s/search/\"\n\nif 'EMAIL_HOST_USER' in os.environ:\n    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']\nif 'EMAIL_HOST_PASSWORD' in os.environ:\n    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']\n\n#EMAIL_HOST = 'smtp.gmail.com'\n#EMAIL_PORT = 587\n#EMAIL_USE_TLS = True\n#EMAIL_IMAP_HOST = 'imap.gmail.com'\n#EMAIL_IMAP_INBOX = 'inbox'\n#EMAIL_IMAP_OUTBOX = 'outbox'\n",
+        ""
+    ],
+    [],
+    [
+        [
+            ".logo \n    img \n        margin-top: -6px\n        position: absolute\n        right: 5px\n\n    span \n        top: 11px\n        position: absolute\n        font-size: 80%\n        left: -10px !important",
+            null,
+            "portal",
+            "I"
+        ]
+    ]
+]

@@ -1,0 +1,265 @@
+[
+    [
+        "",
+        "auto",
+        null,
+        null,
+        null,
+        null,
+        "modern",
+        null,
+        null,
+        false,
+        false,
+        "_schtasks",
+        null,
+        true,
+        null,
+        "auto",
+        "toolbar(file(exit),clipboard)",
+        "auto",
+        "Tasks",
+        null,
+        ""
+    ],
+    [
+        [
+            [
+                null,
+                null,
+                null,
+                null,
+                "main tools",
+                "schtasks",
+                false,
+                "",
+                "Tasks",
+                null,
+                "",
+                "from django.http import HttpResponse\nfrom schlib.schtasks.base_task import get_process_manager\nfrom schlib.schtools.schjson import json_dumps, json_loads\n\n$$$\n\nput.csrf_exempt = True\nput_message.csrf_exempt = True\nget_messages.csrf_exempt = True\npop_messages.csrf_exempt = True\nkill_thread.csrf_exempt = True\nremove_thread.csrf_exempt = True\nlist_threads.csrf_exempt = True\nthread_info.csrf_exempt = True\nkill_all.csrf_exempt = True\nwait_for_result.csrf_exempt = True\n"
+            ],
+            [],
+            [],
+            [
+                [
+                    null,
+                    "put",
+                    "",
+                    "U",
+                    "put$",
+                    "{}",
+                    "fun = request.POST.get(\"func\", \"\")\ntitle = request.POST.get(\"title\", \"\")\nusername = request.POST.get(\"username\", \"guest\")\nparam = json_loads(request.POST.get(\"param\", \"{}\"))\nret = get_process_manager().put(username, title, fun, **param)\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "put_message",
+                    "",
+                    "U",
+                    "put_message$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nmessage = request.POST.get(\"message\", \"\")\nret = get_process_manager().put_message(int(id), message)\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "get_messages",
+                    "",
+                    "U",
+                    "get_messages$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nid_start = request.POST.get(\"id_start\", 0)\nret = get_process_manager().get_messages(int(id), int(id_start))\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "pop_messages",
+                    "",
+                    "U",
+                    "pop_messages$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nret = get_process_manager().pop_messages(int(id))\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "kill_thread",
+                    "",
+                    "U",
+                    "kill_thread$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nret = get_process_manager().kill_thread(int(id))\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "remove_thread",
+                    "",
+                    "U",
+                    "remove_thread$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nret = get_process_manager().remove_thread(int(id))\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "list_threads",
+                    "",
+                    "U",
+                    "list_threads",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nret = get_process_manager().list_threads(int(id))\nret2 = []\nfor pos in ret:\n    elem = {}\n    elem['id'] = pos.id\n    elem['title'] = pos.title\n    elem['status'] = pos.status\n    elem['username'] = pos.username\n    elem['time_from'] = pos.time_from\n    elem['time_to'] = pos.time_to\n    ret2.append(elem)\nreturn HttpResponse(json_dumps(ret2), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "thread_info",
+                    "",
+                    "U",
+                    "thread_info$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\npos = get_process_manager().thread_info(int(id))\n\nelem = {}\nelem['id'] = pos.id\nelem['title'] = pos.title\nelem['status'] = pos.status\nelem['username'] = pos.username\nelem['time_from'] = pos.time_from\nelem['time_to'] = pos.time_to\n\nreturn HttpResponse(json_dumps(elem), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "kill_all",
+                    "",
+                    "U",
+                    "kill_all$",
+                    "{}",
+                    "id = request.POST.get(\"id\", 0)\nret = get_process_manager().kill_all(int(id))\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "wait_for_result",
+                    "",
+                    "U",
+                    "wait_for_result$",
+                    "{}",
+                    "ret = get_process_manager().wait_for_result()\nreturn HttpResponse(json_dumps(ret), content_type = \"application/json\")\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "edit_task",
+                    "id",
+                    "T",
+                    "form/TaskListForm/(?P<id>\\d+)/(edit2__)*task$",
+                    "{}",
+                    "if request.POST:\n    task_manager = get_process_manager()\n    task_manager.kill_thread(int(id))\n    return { 'POST': \"RETURN_OK\" }\nelse:\n    task_manager = get_process_manager()\n    object = task_manager.thread_info(int(id))\n    messages = task_manager.get_messages(int(id))\n    return { 'object': object, 'messages': messages }\n",
+                    "u"
+                ],
+                [
+                    null,
+                    "kill_task",
+                    "id",
+                    "T",
+                    "form/TaskListForm/(?P<id>\\d+)/delete2__task$",
+                    "{}",
+                    "if request.POST:\n    task_manager = get_process_manager()\n    task_manager.kill_thread(int(id))\n    return { 'POST': \"RETURN_OK\" }\nelse:\n    task_manager = get_process_manager()\n    object = task_manager.thread_info(int(id))\n    messages = task_manager.get_messages(int(id))\n    return { 'object': object, 'messages': messages }\n",
+                    "u"
+                ]
+            ],
+            [
+                [
+                    null,
+                    "FormTaskListForm",
+                    null,
+                    "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with form_width=800 form_height=600 show_title_bar=1 title='Task'\n        {{ block.super }}\n\n\n%% tabsort_class\n    .class=\"tabsort table\"\n\n\n%% user_header\n    th...id\n    th...time_from\n    th...time_to\n    th...username\n    th...title\n    th...status\n    th...action\n\n%% user_row\n    tr\n        td... {{object.id}}\n        td... {{object.time_from|isoformat}}\n        td... {{object.time_to|isoformat}}\n        td... {{object.username}}\n        td... {{object.title}}\n        td... {{object.status}}\n        td\n            % if object.status < 2:\n                % row_actions:\n                    .edit2__task,Edit,edit\n                    .delete2__task,Kill,kill\n            % else:\n                % row_actions:\n                    .edit2__task,Edit,edit\n\n%% content_start_ok_cancel\n    button type=button,,,class=btn btn-default,,,data-dismiss=modal..._(Close)\n    button type=button,,,class=btn btn-danger,,,onclick=javascript:on_edit_ok($(this).parent().parent().find('form:first'));return false;..._(Kill task)\n",
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    "v_edit_task",
+                    null,
+                    "{# -*- coding: utf-8 -*- #}\n% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% pythoncode\n    script language=python\n        def init_form(self):\n            from schlib.schtools import schjson\n            self.schjson = schjson\n            \n            if hasattr(self, \"txt\"):\n                self.txt.Bind(wx.EVT_TEXT_ENTER, self.on_enter)\n            \n            self.start_id = 0\n            \n            self.tuser = wx.Timer(self)\n            self.tuser.Start(1000)\n            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)\n            \n            if hasattr(self, \"task_progress\"):\n                self.task_progress.SetValue(0)\n        \n        def reinit(self):\n            if hasattr(self, \"start_id\"):\n                start_id = self.start_id\n            else:\n                start_id = 0\n            if hasattr(self, 'tuser'):\n                self.tuser.Stop()\n            self.init_form()\n            self.start_id = start_id\n                \n        def transfer(self):\n            http = wx.GetApp().http\n            parm = { 'id': \"{{object.id}}\", 'id_start': self.start_id } \n            http.post(self, \"/tasks/get_messages\", parm=parm)\n            s = http.str()\n            http.clear_ptr()\n            lines = self.schjson.loads(s)\n            self.cmd.append_texts(lines)\n            for line in lines:\n                if line!=\"\":\n                    if line.startswith('$$$'):\n                        x = line[3:].split(':')\n                        fun = x[0]\n                        if len(x)>1:\n                            parm = x[1]\n                        else:\n                            parm = None\n                        if fun == 'PROGRESS':\n                            if hasattr(self, 'task_progress'):\n                                self.task_progress.SetValue(int(parm))\n                self.start_id += 1\n\n        def on_close(self):\n            self.tuser.Stop()\n\n        def on_enter(self, event):\n            if hasattr(self, 'txt'):\n                value = self.txt.GetValue()\n            \n                parm = { 'id': '{{object.id}}', 'message': value + \"\\n\" }\n\n                http = wx.GetApp().http\n\n                http.post(self, \"/tasks/put_message\", parm=parm)\n                s = http.str()\n                http.clear_ptr()\n\n                self.txt.SetValue(\"\")\n            \n\n        def on_timer_user(self, event):\n            return self.transfer()\n\n\n%% all\n    %with show_title_bar=1 title='Edit task':\n        {{ block.super }}\n\n%% body_body\n    {{ block.super }}\n\n%% body\n    % if not show_form and object:\n        {{ block.super }}\n        div class=content\n            div class=panel\n                div class=panel-body\n                    % with show_form=True:\n                        {{ block.super }}\n                    % if standard_web_browser:\n                        button type=button,,,class=btn btn-danger,,,id=kill_task...Kill task\n                        script\n                            def _on_kill():\n                                window.location = \"/\"\n                            jQuery('#kill_task').click(_on_kill)\n    % else:\n        {{ block.super }}\n\n\n%% list_content_body\n\n%% row_edit_form\n    %% task_title\n        h3 class=panel-title...{{object.title}} (id={{object.id}})\n        br\n    table class=tasks_tbl table\n        %% task_status\n            tr\n                th...status\n                td...{{object.status}}\n            tr\n                th...username\n                td...{{object.username}}\n            tr\n                th...time_from\n                td...{{object.time_from|isoformat_short}}\n            % if object.status > 1:\n                tr\n                    th...time_to\n                    td...{{object.time_to|isoformat_short}}        \n        % if standard_web_browser:\n            % if object.status < 2:\n                tr:::td colspan=2\n                    div class=ext_padding            \n                        div class=form-group\n                            label class=control-label,,,for=cmd\n                                .Enter command:\n                            input type=text,,,class=form-control,,,id=cmd,,,name=cmd,,,aria-describedby=cmdStatus\n            tr:::td colspan=2\n                div id=cmd_list_{{object.id}},,,style=overflow-y:scroll;height:100px;\n                    % if object.status > 1:\n                        % for message in messages:\n                            % if not '$$$' in message:\n                                {{message}} <br />\n            % if object.status < 2:\n                tr\n                    th...Progress:\n                    td\n                        div class=progress\n                            div id=task_progress,,,class=progress-bar progress-bar-striped active,,,role=progressbar,,,style=width: 50%\n\n            % if object.status < 2:\n                script \n                    def on_edit_ok(form):\n                        def _on_kill():\n                            filter = form.closest('div.content').find('form.TableFiltr')\n                            jQuery(\"div.dialog-form\").fadeTo( \"slow\", 0.5 )\n                            if filter.length>0:\n                                filter.attr('action','{{request.path}}/../../')\n                                filter.submit()\n                        on_kill(_on_kill)\n                        \n                    def on_timer():\n                        obj = jQuery('#cmd_list_{{object.id}}')\n                        if obj.length:\n                            def _on_post(data):\n                                start_id_{{object.id}} += data.length\n                                for pos in data:\n                                    tmp = data[pos]\n                                    if tmp[:3]=='$$$':\n                                        x = tmp[3:].split(':')\n                                        fun = x[0]\n                                        parm = None\n                                        if len(x)>1:\n                                            parm = x[1]\n                                        if fun==\"PROGRESS\":\n                                            jQuery('#task_progress').css('width', parm+'%')\n                                    else:\n                                        obj.append(data[pos])\n                                        obj.append(\"<br />\")\n                                        obj[0].scrollTop = obj[0].scrollHeight\n                            jQuery.post(\"/tasks/get_messages\", { 'id': \"{{object.id}}\", 'id_start': start_id_{{object.id}} }, _on_post)\n                        else:\n                            clearInterval(timer_{{object.id}})\n                \n                    timer_{{object.id}}=setInterval( on_timer, 1000)\n                    on_timer()\n                    start_id_{{object.id}} = 0\n\n                    def _on_keydown(event):\n                        if(event.keyCode == 13):\n                            event.preventDefault()\n                            return false\n                    jQuery(window).keydown(_on_keydown)\n                    def _on_key_up(e):\n                        def _fun(data):\n                            jQuery('#cmd').val(\"\")                      \n                            \n                        if (e.keyCode == 13):\n                            jQuery.post(\"/tasks/put_message\", { 'id': \"{{object.id}}\", 'message': jQuery('#cmd').val()+\"\\n\" }, _fun)\n                            \n                    jQuery(\"#cmd\").keyup(_on_key_up)\n                    \n                    def on_kill(fun):\n                        def _on_kill(result):\n                            if(result):\n                                jQuery.post(\"/tasks/kill_thread\", { 'id': \"{{object.id}}\", }, fun)\n                        BootstrapDialog.confirm('Kill task, are you sure?', _on_kill)\n                            \n        % else:\n            %% wx_task_progress\n                tr\n                    td colspan=2,,,width=100%-10\n                        CTRLGAUGE name=task_progress,,,width=100%-10\n            %% wx_task_input\n                tr\n                    td colspan=2,,,width=100%-10\n                        strong...Enter command: <br />\n                        CTRLTEXT name=txt,,,param=PROCESS_ENTER,,,width=100%-10\n            </table><table>\n            %% wx_task_list\n                tr\n                    td width=100%\n                        CTRLHTMLLISTBOX name=cmd,,,width=100%-10,,,height=100%-50\n\n%% form_ok_cancel\n    % if not standard_web_browser:\n        table width=100%,,,cellspacing=0,,,cellpadding=3\n            tr\n                td align=center\n                    <CTRLBUTTON id=\"wx.ID_CANCEL\" TARGET=\"_parent\" value=\"close\" />\n                    <input type=\"submit\" value=\"Kill task\" name=\"OKBUTTON\" />\n",
+                    null,
+                    null
+                ],
+                [
+                    null,
+                    "v_kill_task",
+                    null,
+                    "{# -*- coding: utf-8 -*- #}\n% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with form_width=800 form_height=600 show_title_bar=1 title='-----'\n        {{ block.super }}\n\n%% body\n    % if POST:\n        .RETURN_OK\n    % else:   \n        {{ block.super }}\n    \n%% form_delete_object\n    table class=table\n        tr\n            th...Property\n            th...Value\n        tr\n            th...id\n            td...{{object.id}}\n        tr\n            th...title\n            td...{{object.title}}\n        tr\n            th...username\n            td...{{object.username}}\n        \n",
+                    null,
+                    null
+                ]
+            ],
+            [
+                [
+                    "client://status/image-loading.png",
+                    "1",
+                    "Task list",
+                    "",
+                    "form/TaskListForm/",
+                    "desktop"
+                ]
+            ],
+            [
+                [
+                    [
+                        "",
+                        "",
+                        "",
+                        "tasks",
+                        "TaskListForm",
+                        "time_from = self.cleaned_data['time_from']\ntime_to = self.cleaned_data['time_to']\n\nif time_from:\n    _time_from = time_from.isoformat()\nelse:\n    _time_from = None\nif time_to:\n    _time_to = time_to.isoformat()\nelse:\n    _time_to = None\n\nif request.user.is_authenticated:\n    username = request.user.username\nelse:\n    username = 'guest'\n\nprint(\"X1:\", time_from, time_to)\n\nonly_my = self.cleaned_data['only_my']\nonly_active = self.cleaned_data['only_active']\n\ntask_manager = get_process_manager()\nobject_list  = []\n\nl = task_manager.list_threads(all=not only_active)\nfor pos in l:\n    test = True\n    if time_from and pos['time_from'] <  time_from:\n        test = False\n    if time_to and (not pos['time_to'] or pos['time_to'] > time_to):\n        test = False\n    if only_my and pos['username'] != username:\n        test = False\n    if test:\n        object_list.append(pos)\n    \nreturn { \"object_list\": object_list, 'time_from': _time_from, 'time_to': _time_to, 'only_my': only_my, 'only_active': only_active }\n"
+                    ],
+                    [
+                        [
+                            "",
+                            "",
+                            "",
+                            "Time from",
+                            "time_from",
+                            "",
+                            false,
+                            "DateTimeField",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            "Time to",
+                            "time_to",
+                            "",
+                            false,
+                            "DateTimeField",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            "Only my",
+                            "only_my",
+                            "",
+                            false,
+                            "NullBooleanField",
+                            ""
+                        ],
+                        [
+                            "",
+                            "",
+                            "",
+                            "Only active",
+                            "only_active",
+                            "",
+                            false,
+                            "NullBooleanField",
+                            ""
+                        ]
+                    ]
+                ]
+            ],
+            [],
+            [],
+            []
+        ]
+    ],
+    []
+]

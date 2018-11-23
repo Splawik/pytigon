@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 def AdditionalUrls(app_pack, lang):
     from .models import Scripts
     ret = []
+    ret_buf = []
     for object in Scripts.objects.all():
         if object.menu:
             elements = object.menu.split(',')

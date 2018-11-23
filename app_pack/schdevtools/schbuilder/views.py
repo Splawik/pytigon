@@ -308,7 +308,108 @@ def locale_gen_internal(pk):
         os.unlink(pos)
 
     return { 'object_list': [[ 'OK' ],] }
-         
+        
+
+def prj_import_from_str(s):
+    object_list = []
+    prj = json.loads(s)
+    with transaction.atomic():
+        appset = models.SChAppSet(**array_dict(prj[0], appset_attr))
+        appset.save()
+    
+        apps_array=prj[1]
+        for app_pos in apps_array:
+            app = models.SChApp(**array_dict(app_pos[0], app_attr))
+            app.parent=appset
+            app.save()
+    
+            tables_array = app_pos[1]
+            for table_pos in tables_array:
+                table = models.SChTable(**array_dict(table_pos[0], table_attr))
+                table.parent=app
+                table.save()
+    
+                fields_array=table_pos[1]
+                for field_pos in fields_array:
+                    field = models.SChField(**array_dict(field_pos, field_attr))
+                    field.parent=table
+                    field.save()
+    
+    
+            choices_array = app_pos[2]
+            for choice_pos in choices_array:
+                choice = models.SChChoice(**array_dict(choice_pos[0], choice_attr))
+                choice.parent=app
+                choice.save()
+    
+                choice_item_array=choice_pos[1]
+                for item_pos in choice_item_array:
+                    choice_item = models.SChChoiceItem(**array_dict(item_pos, choice_item_attr))
+                    choice_item.parent=choice
+                    choice_item.save()
+    
+            views_array=app_pos[3]
+            for view_pos in views_array:
+                view = models.SChView(**array_dict(view_pos, view_attr))
+                view.parent=app
+                view.save()
+    
+            templates_array=app_pos[4]
+            for template_pos in templates_array:
+                template = models.SChTemplate(**array_dict(template_pos, template_attr))
+                template.parent=app
+                template.save()
+    
+            appmenus = app.schappmenu_set.all()
+            appmenus_array=app_pos[5]
+            for appmenu_pos in appmenus_array:
+                appmenu = models.SChAppMenu(**array_dict(appmenu_pos, appmenu_attr))
+                appmenu.parent=app
+                appmenu.save()
+    
+            forms_array = app_pos[6]
+            for form_pos in forms_array:
+                form = models.SChForm(**array_dict(form_pos[0], form_attr))
+                form.parent=app
+                form.save()
+    
+                formfields_array=form_pos[1]
+                for field_pos in formfields_array:
+                    field = models.SChFormField(**array_dict(field_pos, formfield_attr))
+                    field.parent=form
+                    field.save()
+    
+    
+            tasks_array=app_pos[7]
+            for task_pos in tasks_array:
+                task = models.SChTask(**array_dict(task_pos, task_attr))
+                task.parent=app
+                task.save()
+    
+            consumers_array=app_pos[8]
+            for consumer_pos in consumers_array:
+                consumer = models.SChChannelConsumer(**array_dict(consumer_pos, consumer_attr))
+                consumer.parent=app
+                consumer.save()
+    
+    
+            files_array=app_pos[9]
+            for file_pos in files_array:
+                f = models.SChFiles(**array_dict(file_pos, files_attr))
+                f.parent=app
+                f.save()
+    
+        statics_array=prj[2]
+        for static in statics_array:
+            s = models.SChStatic(**array_dict(static, static_attr))
+            s.parent=appset
+            s.save()
+    
+    object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
+
+    return { 'object_list': reversed(object_list) }
+
+ 
 
 PFORM = form_with_perms('schbuilder') 
 
@@ -814,107 +915,8 @@ def prj_export(request, pk):
 
 def prj_import(request):
     
-    object_list = []
-    
     ex_str = request.POST['EDITOR']
-    prj=json.loads(ex_str)
-    
-    with transaction.atomic():
-        appset = models.SChAppSet(**array_dict(prj[0], appset_attr))
-        appset.save()
-    
-        apps_array=prj[1]
-        for app_pos in apps_array:
-            app = models.SChApp(**array_dict(app_pos[0], app_attr))
-            app.parent=appset
-            app.save()
-    
-            tables_array = app_pos[1]
-            for table_pos in tables_array:
-                table = models.SChTable(**array_dict(table_pos[0], table_attr))
-                table.parent=app
-                table.save()
-    
-                fields_array=table_pos[1]
-                for field_pos in fields_array:
-                    field = models.SChField(**array_dict(field_pos, field_attr))
-                    field.parent=table
-                    field.save()
-    
-    
-            choices_array = app_pos[2]
-            for choice_pos in choices_array:
-                choice = models.SChChoice(**array_dict(choice_pos[0], choice_attr))
-                choice.parent=app
-                choice.save()
-    
-                choice_item_array=choice_pos[1]
-                for item_pos in choice_item_array:
-                    choice_item = models.SChChoiceItem(**array_dict(item_pos, choice_item_attr))
-                    choice_item.parent=choice
-                    choice_item.save()
-    
-            views_array=app_pos[3]
-            for view_pos in views_array:
-                view = models.SChView(**array_dict(view_pos, view_attr))
-                view.parent=app
-                view.save()
-    
-            templates_array=app_pos[4]
-            for template_pos in templates_array:
-                template = models.SChTemplate(**array_dict(template_pos, template_attr))
-                template.parent=app
-                template.save()
-    
-            appmenus = app.schappmenu_set.all()
-            appmenus_array=app_pos[5]
-            for appmenu_pos in appmenus_array:
-                appmenu = models.SChAppMenu(**array_dict(appmenu_pos, appmenu_attr))
-                appmenu.parent=app
-                appmenu.save()
-    
-            forms_array = app_pos[6]
-            for form_pos in forms_array:
-                form = models.SChForm(**array_dict(form_pos[0], form_attr))
-                form.parent=app
-                form.save()
-    
-                formfields_array=form_pos[1]
-                for field_pos in formfields_array:
-                    field = models.SChFormField(**array_dict(field_pos, formfield_attr))
-                    field.parent=form
-                    field.save()
-    
-    
-            tasks_array=app_pos[7]
-            for task_pos in tasks_array:
-                task = models.SChTask(**array_dict(task_pos, task_attr))
-                task.parent=app
-                task.save()
-    
-            consumers_array=app_pos[8]
-            for consumer_pos in consumers_array:
-                consumer = models.SChChannelConsumer(**array_dict(consumer_pos, consumer_attr))
-                consumer.parent=app
-                consumer.save()
-    
-    
-            files_array=app_pos[9]
-            for file_pos in files_array:
-                f = models.SChFiles(**array_dict(file_pos, files_attr))
-                f.parent=app
-                f.save()
-    
-        statics_array=prj[2]
-        for static in statics_array:
-            s = models.SChStatic(**array_dict(static, static_attr))
-            s.parent=appset
-            s.save()
-    
-    object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
-        
-    return { 'object_list': reversed(object_list) }
-    
+    return prj_import_from_str(ex_str)
     
 
 

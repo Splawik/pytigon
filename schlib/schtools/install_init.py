@@ -24,6 +24,7 @@ import zipfile
 #import shutil
 from distutils.dir_util import copy_tree
 import configparser
+from schlib.schtools.process import py_run
 
 def _mkdir(path, ext=None):
     if ext:
@@ -84,20 +85,34 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
 
     if test2:
         zip_file2 = os.path.join(os.path.join(_root_path, "install"), ".pytigon.zip")
+        if not os.path.exists(_data_path):
+            os.makedirs(_data_path)
         if os.path.exists(zip_file2):
-            if not os.path.exists(_data_path):
-                os.makedirs(_data_path)
             if test2==2:
                 extractall(zipfile.ZipFile(zip_file2), _data_path, exclude=['.*\.db',])
             else:
                 extractall(zipfile.ZipFile(zip_file2), _data_path)
-            if not os.path.exists(os.path.join(_data_path,'media')):
-                media_path = os.path.exists(os.path.join(_data_path,'media'))
-                os.makedirs(media_path)
-                os.makedirs(os.path.join(media_path,'filer_public'))
-                os.makedirs(os.path.join(media_path,'filer_private'))
-                os.makedirs(os.path.join(media_path,'filer_public_tumbnails'))
-                os.makedirs(os.path.join(media_path,'filer_private_thumbnails'))
+        if not os.path.exists(os.path.join(_data_path,'media')):
+            media_path = os.path.join(os.path.join(_data_path,'media'))
+            os.makedirs(media_path)
+            os.makedirs(os.path.join(media_path,'filer_public'))
+            os.makedirs(os.path.join(media_path,'filer_private'))
+            os.makedirs(os.path.join(media_path,'filer_public_tumbnails'))
+            os.makedirs(os.path.join(media_path,'filer_private_thumbnails'))
+        app_packs = [ff for ff in os.listdir(_app_pack_path) if not ff.startswith('_')]
+
+        tmp = os.getcwd()
+        for app in app_packs:
+            path = os.path.join(_app_pack_path, app)
+            if os.path.isdir(path):
+                db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
+                os.chdir(path)
+                if not os.path.exists(db_path):
+                    py_run(['manage.py', 'migrate'])
+                    py_run(['manage.py', 'createautouser'])
+                    if app == 'schdevtools':
+                        py_run(['manage.py', 'import_projects'])
+        os.chdir(tmp)
 
     if test2 == 2:
         pass
