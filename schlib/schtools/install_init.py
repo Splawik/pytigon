@@ -108,13 +108,20 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                 db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
                 os.chdir(path)
                 if not os.path.exists(db_path):
-                    py_run(['manage.py', 'createallmigrations'])
-                    py_run(['manage.py', 'migrate'])
-                    py_run(['manage.py', 'createautouser'])
+                    exit_code, output_tab, err_tab = py_run(['manage.py', 'makeallmigrations'])
+                    if err_tab:
+                        print(err_tab)
+                    exit_code, output_tab, err_tab = py_run(['manage.py', 'migrate'])
+                    if err_tab:
+                        print(err_tab)
+                    exit_code, output_tab, err_tab = py_run(['manage.py', 'createautouser'])
+                    if err_tab:
+                        print(err_tab)
                     if app == 'schdevtools':
-                        py_run(['manage.py', 'import_projects'])
+                        exit_code, output_tab, err_tab = py_run(['manage.py', 'import_projects'])
+                        if err_tab:
+                            print(err_tab)
         os.chdir(tmp)
-
     if test2 == 2:
         pass
 
