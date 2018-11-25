@@ -108,6 +108,7 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                 db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
                 os.chdir(path)
                 if not os.path.exists(db_path):
+                    py_run(['manage.py', 'createallmigrations'])
                     py_run(['manage.py', 'migrate'])
                     py_run(['manage.py', 'createautouser'])
                     if app == 'schdevtools':
