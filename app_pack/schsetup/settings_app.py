@@ -65,6 +65,12 @@ for app in APPS:
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]
             sys.path.append(pp)
+            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
+        else:
+            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
+
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
+TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 INSTALLED_APPS.append('easy_thumbnails')
 INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
@@ -83,12 +89,6 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
-        else:
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
-
-TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
-TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -144,5 +144,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.25 19:23:33'
+GEN_TIME = '2018.11.25 20:48:14'
 
