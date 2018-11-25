@@ -34,7 +34,7 @@ PFORM = form_with_perms('schinstall')
 class upload_ptig(forms.Form):
     status = forms.CharField(label=_('Status'), required=False, max_length=None, min_length=None)
     ptig = forms.FileField(label=_('Pytigon install file (*.ptig)'), required=False, widget=forms.ClearableFileInput(attrs={'accept': '.ptig'}))
-    accept_license = forms.BooleanField(label=_('Accept license'), required=True, initial=False,)
+    accept_license = forms.BooleanField(label=_('Accept license'), required=False, initial=False,)
     
     def process(self, request, queryset=None):
     
@@ -43,11 +43,10 @@ class upload_ptig(forms.Form):
             if status == '1':
                 if 'INSTALL_FILE_NAME' in request.session:
                     file_name = request.session['INSTALL_FILE_NAME']
-                    archive = zipfile.ZipFile(file_name, 'r')        
+                    archive = zipfile.ZipFile(file_name, 'r')
                     accept_license = self.cleaned_data['accept_license']
                     if accept_license:
-                        initdata = archive.read('/install.ini')
-                        print(initdata.decode('utf-8'))
+                        initdata = archive.read('install.ini')
                         config = configparser.ConfigParser()
                         config.read_string(initdata.decode('utf-8'))
                         
@@ -58,8 +57,8 @@ class upload_ptig(forms.Form):
                                 return { 'object_list': ret, 'status': 2 }
                         return { 'object_list': [['Invalid install file'],], 'status': 2 }
                     else:
-                        readmedata = archive.read('/README.txt')
-                        licensedata = archive.read('/LICENSE.txt')
+                        readmedata = archive.read('README.txt')
+                        licensedata = archive.read('LICENSE.txt')
                         return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': False }
                 return { 'object_list': None, 'status': None }
         else:
@@ -71,29 +70,26 @@ class upload_ptig(forms.Form):
                 plik.write(ptig.read())
                 plik.close()
                 archive = zipfile.ZipFile(file_name, 'r')
-                readmedata = archive.read('/README.txt')
-                licensedata = archive.read('/LICENSE.txt')
+                readmedata = archive.read('README.txt')
+                licensedata = archive.read('LICENSE.txt')
                 archive.close()
+                self.initial = { 'accept_license': False, }
                 return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': True }
             else:
                 return { 'object_list': None, 'status': None }
-        
-        
+    
+    def clean(self):
+        status = self.cleaned_data['status']
+        if not status:
+            ret = { 'status': None }
+        else:
+            if not self.cleaned_data['accept_license']:
+                self._errors["accept_license"] = ["The license must be approved"]
+            ret = self.cleaned_data
+        return ret
     
     def process_invalid(self, request, param=None):
-        ptig= request.FILES['ptig']
-        file_name = get_temp_filename("temp.ptig")
-        print(file_name)
-        plik = open(file_name, 'wb')
-        plik.write(ptig.read())
-        plik.close()
-    
-        messages = []
-        messages.append(['Komunikat 1', ])
-        messages.append(['Komunikat 2', ])
-        messages.append(['Komunikat 3', ])
-    
-        return { 'object_list': messages }
+        return { 'object_list': [] }
 
 def view_upload_ptig(request, *argi, **argv):
     return PFORM(request, upload_ptig, 'schinstall/formupload_ptig.html', {})

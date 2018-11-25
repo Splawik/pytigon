@@ -189,7 +189,7 @@ class ZipWriter:
             if name_in_zip:
                 self.zip_file.writestr(name_in_zip, data)
             else:
-                self.zip_file.writestr(file_name[self.base_len:], data)
+                self.zip_file.writestr(file_name[self.base_len+1:], data)
 
     def toZip(self, file):
         if os.path.isfile(file):
