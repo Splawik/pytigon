@@ -11,9 +11,9 @@ class Command(makemigrations.Command):
                 app_name = app
             else:
                 app_name = app.name
-            
+
             print(app_name)
-                
+
             options2 = options.copy()
-            options2['name'] =  app
+            options2['name'] =  app_name
             super().handle(*args, **options2)
