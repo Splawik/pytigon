@@ -41,6 +41,9 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schall'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
+    STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
+
 
 app_pack_folders = []
 base_apps_path = APP_PACK_PATH
@@ -69,9 +72,6 @@ URL_ROOT_FOLDER=''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
-
-    STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
-    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 from schlib.schtools.install_init import init
 init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -151,5 +151,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.25 19:22:07'
+GEN_TIME = '2018.11.25 19:40:55'
 
