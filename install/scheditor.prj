@@ -19,7 +19,7 @@
         null,
         "auto",
         "Editor",
-        "###<40> settings_app.py\n\nfrom fs.osfs import OSFS\nfrom django.core.files.storage import default_storage\ndefault_storage.fs.mount('os', OSFS(\"/\"))\n\n###> templates_src/template/schweb.ihtml\n%% toolbars_start\n    tr\n        td\n        td\n        td...Python shell\n        td...1\n        td...client://apps/utilities-terminal.png\n        td...html\n        td...Terminal,^standard/shell/shell.html?schtml=panel\n",
+        "###<45> settings_app.py\n\nfrom fs.osfs import OSFS\nfrom django.core.files.storage import default_storage\ndefault_storage.fs.mount('os', OSFS(\"/\"))\n\n###> templates_src/template/schweb.ihtml\n%% toolbars_start\n    tr\n        td\n        td\n        td...Python shell\n        td...1\n        td...client://apps/utilities-terminal.png\n        td...html\n        td...Terminal,^standard/shell/shell.html?schtml=panel\n",
         "GUI_COMMAND_LINE=\"--no_splash --debug --rpc=8090\""
     ],
     [

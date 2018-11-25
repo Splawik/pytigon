@@ -19,7 +19,7 @@
         null,
         "tablet_modern",
         "Setup application",
-        "###<67> settings_app.py\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
+        "###<73> settings_app.py\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
         ""
     ],
     [
@@ -65,11 +65,11 @@
                 [
                     [
                         "",
-                        "def process_invalid(self, request, param=None):\n    ptig= request.FILES['ptig']\n    file_name = get_temp_filename(\"temp.ptig\")\n    print(file_name)\n    plik = open(file_name, 'wb')\n    plik.write(ptig.read())\n    plik.close()\n\n    messages = []\n    messages.append(['Komunikat 1', ])\n    messages.append(['Komunikat 2', ])\n    messages.append(['Komunikat 3', ])\n\n    return { 'object_list': messages }\n",
+                        "def clean(self):\n    status = self.cleaned_data['status']\n    if not status:\n        ret = { 'status': None }\n    else:\n        if not self.cleaned_data['accept_license']:\n            self._errors[\"accept_license\"] = [\"The license must be approved\"]\n        ret = self.cleaned_data\n    return ret\n\ndef process_invalid(self, request, param=None):\n    return { 'object_list': [] }\n",
                         "",
                         null,
                         "upload_ptig",
-                        "status = self.cleaned_data['status']\nif status:\n    if status == '1':\n        if 'INSTALL_FILE_NAME' in request.session:\n            file_name = request.session['INSTALL_FILE_NAME']\n            archive = zipfile.ZipFile(file_name, 'r')        \n            accept_license = self.cleaned_data['accept_license']\n            if accept_license:\n                initdata = archive.read('/install.ini')\n                print(initdata.decode('utf-8'))\n                config = configparser.ConfigParser()\n                config.read_string(initdata.decode('utf-8'))\n                \n                if 'APPSET_NAME' in config['DEFAULT']:\n                    appset_name = config['DEFAULT']['APPSET_NAME']\n                    if appset_name:                \n                        ret = extract_ptig(archive, appset_name)\n                        return { 'object_list': ret, 'status': 2 }\n                return { 'object_list': [['Invalid install file'],], 'status': 2 }\n            else:\n                readmedata = archive.read('/README.txt')\n                licensedata = archive.read('/LICENSE.txt')\n                return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': False }\n        return { 'object_list': None, 'status': None }\nelse:\n    if 'ptig' in request.FILES:\n        ptig = request.FILES['ptig']         \n        file_name = get_temp_filename(\"temp.ptig\")\n        request.session['INSTALL_FILE_NAME'] = file_name\n        plik = open(file_name, 'wb')\n        plik.write(ptig.read())\n        plik.close()\n        archive = zipfile.ZipFile(file_name, 'r')\n        readmedata = archive.read('/README.txt')\n        licensedata = archive.read('/LICENSE.txt')\n        archive.close()\n        return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': True }\n    else:\n        return { 'object_list': None, 'status': None }\n\n\n"
+                        "status = self.cleaned_data['status']\nif status:\n    if status == '1':\n        if 'INSTALL_FILE_NAME' in request.session:\n            file_name = request.session['INSTALL_FILE_NAME']\n            archive = zipfile.ZipFile(file_name, 'r')\n            accept_license = self.cleaned_data['accept_license']\n            if accept_license:\n                initdata = archive.read('install.ini')\n                config = configparser.ConfigParser()\n                config.read_string(initdata.decode('utf-8'))\n                \n                if 'APPSET_NAME' in config['DEFAULT']:\n                    appset_name = config['DEFAULT']['APPSET_NAME']\n                    if appset_name:                \n                        ret = extract_ptig(archive, appset_name)\n                        return { 'object_list': ret, 'status': 2 }\n                return { 'object_list': [['Invalid install file'],], 'status': 2 }\n            else:\n                readmedata = archive.read('README.txt')\n                licensedata = archive.read('LICENSE.txt')\n                return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': False }\n        return { 'object_list': None, 'status': None }\nelse:\n    if 'ptig' in request.FILES:\n        ptig = request.FILES['ptig']         \n        file_name = get_temp_filename(\"temp.ptig\")\n        request.session['INSTALL_FILE_NAME'] = file_name\n        plik = open(file_name, 'wb')\n        plik.write(ptig.read())\n        plik.close()\n        archive = zipfile.ZipFile(file_name, 'r')\n        readmedata = archive.read('README.txt')\n        licensedata = archive.read('LICENSE.txt')\n        archive.close()\n        self.initial = { 'accept_license': False, }\n        return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': True }\n    else:\n        return { 'object_list': None, 'status': None }\n"
                     ],
                     [
                         [
@@ -101,7 +101,7 @@
                             "Accept license",
                             "accept_license",
                             null,
-                            true,
+                            false,
                             "BooleanField",
                             null
                         ]
@@ -110,7 +110,13 @@
             ],
             [],
             [],
-            []
+            [
+                [
+                    "# -*- coding: utf-8 -*-\nfrom django.core.management.base import BaseCommand, CommandError\n\nimport sys\nimport io\nimport os\nimport getopt\n\nfrom zipfile import ZipFile\n\nfrom schlib.schtools.install import extract_ptig\n\nclass Command(BaseCommand):\n    help =\"Install .ptig file\"\n\n    def add_arguments(self, parser):\n        parser.add_argument(\n            'filename', \n            help='Pytigon instalation file (*.ptig)',\n        )\n\n    def handle(self, *args, **options):\n        filename = options['filename']\n        if os.path.exists(filename):\n            name=filename.replace('\\\\', '/').split('/')[-1].split('.')[0]\n            with ZipFile(filename) as zip_file:\n                extract_ptig(zip_file, name)\n",
+                    "m",
+                    "ptig_install.py"
+                ]
+            ]
         ],
         [
             [
