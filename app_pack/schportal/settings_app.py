@@ -8,7 +8,10 @@ from schlib.schtools.platform_info import platform_name
 
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
-_rp = _lp+"/../.."
+if 'PYTIGON_ROOT_PATH' in os.environ:
+    _rp = os.environ['PYTIGON_ROOT_PATH']
+else:
+    _rp = _lp+"/../.."
 
 sys.path.append(_lp)
 sys.path.append(_rp)
@@ -119,7 +122,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.12 11:07:02'
+GEN_TIME = '2018.11.25 19:24:00'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 
@@ -128,9 +131,9 @@ if 'EMAIL_HOST_USER' in os.environ:
 if 'EMAIL_HOST_PASSWORD' in os.environ:
     EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_IMAP_HOST = 'imap.gmail.com'
-EMAIL_IMAP_INBOX = 'inbox'
-EMAIL_IMAP_OUTBOX = 'outbox'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_IMAP_HOST = 'imap.gmail.com'
+#EMAIL_IMAP_INBOX = 'inbox'
+#EMAIL_IMAP_OUTBOX = 'outbox'

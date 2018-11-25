@@ -8,7 +8,10 @@ from schlib.schtools.platform_info import platform_name
 
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
-_rp = _lp+"/../.."
+if 'PYTIGON_ROOT_PATH' in os.environ:
+    _rp = os.environ['PYTIGON_ROOT_PATH']
+else:
+    _rp = _lp+"/../.."
 
 sys.path.append(_lp)
 sys.path.append(_rp)
@@ -62,9 +65,6 @@ for app in APPS:
         if len(aa)==2:
             pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]
             sys.path.append(pp)
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
-        else:
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 INSTALLED_APPS.append('easy_thumbnails')
 INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
@@ -83,6 +83,9 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
+            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
+        else:
+            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
 TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
@@ -141,5 +144,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.25 11:41:08'
+GEN_TIME = '2018.11.25 19:23:33'
 

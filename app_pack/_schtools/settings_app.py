@@ -8,7 +8,10 @@ from schlib.schtools.platform_info import platform_name
 
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
-_rp = _lp+"/../.."
+if 'PYTIGON_ROOT_PATH' in os.environ:
+    _rp = os.environ['PYTIGON_ROOT_PATH']
+else:
+    _rp = _lp+"/../.."
 
 sys.path.append(_lp)
 sys.path.append(_rp)
@@ -123,5 +126,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.23 10:30:33'
+GEN_TIME = '2018.11.25 19:21:15'
 

@@ -24,4 +24,4 @@
     
 
 %% component_init
-     .component_init = [] 
+     .component_init = []; 

@@ -23,18 +23,18 @@ import os
 
 from schlib.schtools.tools import get_executable
 from schlib.schtools.platform_info import platform_name
-from os import environ
+
 
 def run():
     base_path = __file__.replace("pytigon_run.py", "")
     if base_path == "":
         base_path = os.getcwd()
-    #else:
-    #    os.chdir(base_path)
+    else:
+        os.chdir(base_path)
 
     sys.path.append(os.path.join(base_path, "ext_lib"))
 
-    environ['PYTIGON_ROOT_PATH'] = base_path
+    os.environ['PYTIGON_ROOT_PATH'] = base_path
     if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
         os.chdir(base_path)
         if '_' in sys.argv[1]:
@@ -45,6 +45,12 @@ def run():
                 path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
             else:
                 path2 = os.path.join(base_path, "app_pack")
+
+            if not os.path.exists(path2):
+                from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+                    STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+                from schlib.schtools.install_init import init
+                init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
             path3 = os.path.join(path2, app)
             os.chdir(path3)

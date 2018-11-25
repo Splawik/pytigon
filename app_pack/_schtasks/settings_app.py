@@ -8,7 +8,10 @@ from schlib.schtools.platform_info import platform_name
 
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
-_rp = _lp+"/../.."
+if 'PYTIGON_ROOT_PATH' in os.environ:
+    _rp = os.environ['PYTIGON_ROOT_PATH']
+else:
+    _rp = _lp+"/../.."
 
 sys.path.append(_lp)
 sys.path.append(_rp)
@@ -25,17 +28,19 @@ except:
 APPSET_TITLE = "Tasks"
 APPSET_NAME = "_schtasks"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
-UPLOAD_PATH = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'upload')
+UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['auto', 'auto', 'auto']
 
 LOCAL_ROOT_PATH = os.path.join(_lp, "..")
 ROOT_PATH = _rp
+URL_ROOT_PREFIX = ""
 sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
-        and not 'pytigon.py' in sys.argv[0] and not MAIN_APP_PACK:
+        and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schtasks'
+    URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
@@ -117,5 +122,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.09.18 21:01:24'
+GEN_TIME = '2018.11.25 19:20:52'
 

@@ -8,7 +8,10 @@ from schlib.schtools.platform_info import platform_name
 
 
 _lp  = os.path.dirname(os.path.abspath(__file__))
-_rp = _lp+"/../.."
+if 'PYTIGON_ROOT_PATH' in os.environ:
+    _rp = os.environ['PYTIGON_ROOT_PATH']
+else:
+    _rp = _lp+"/../.."
 
 sys.path.append(_lp)
 sys.path.append(_rp)
@@ -38,9 +41,6 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
     URL_ROOT_FOLDER='_schall'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
-    STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
-    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
-
 
 app_pack_folders = []
 base_apps_path = APP_PACK_PATH
@@ -69,6 +69,9 @@ URL_ROOT_FOLDER=''
 STATIC_URL = '/static/'
 MEDIA_URL = '/site_media/'
 
+
+    STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
+    MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 from schlib.schtools.install_init import init
 init(APPSET_NAME, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -148,5 +151,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.17 16:05:57'
+GEN_TIME = '2018.11.25 19:22:07'
 
