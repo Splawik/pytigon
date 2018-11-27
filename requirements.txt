@@ -39,3 +39,4 @@ django-sql-explorer
 pendulum
 cefpython3
 xonsh
+hypercorn

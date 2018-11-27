@@ -77,6 +77,32 @@ def run():
 
         subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + sys.argv[2:])
 
+    elif len(sys.argv)>1 and sys.argv[1].startswith('runserver'):
+        if '_' in sys.argv[1]:
+            x = sys.argv[1].split('_', 1)
+            app = x[1]
+            if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
+                path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
+            else:
+                path2 = os.path.join(base_path, "app_pack")
+
+            if not os.path.exists(path2):
+                from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+                    STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+                from schlib.schtools.install_init import init
+                init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
+
+            path3 = os.path.join(path2, app)
+            os.chdir(path3)
+            options = []
+            if not '-b' in sys.argv[2:]:
+                options = ['-b', '0.0.0.0:8000',]
+
+            options.append('asgi:application')
+            subprocess.run([get_executable(), "-m", "hypercorn", ] + sys.argv[2:] + options )
+
+            os.chdir(base_path)
+
     elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
         subprocess.run([get_executable(),] + sys.argv[1:])
     else:
