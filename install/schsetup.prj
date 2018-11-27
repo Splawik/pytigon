@@ -19,7 +19,7 @@
         null,
         "tablet_modern",
         "Setup application",
-        "###<73> settings_app.py\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
+        "###<76> settings_app.py\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
         ""
     ],
     [

@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
 import os, sys
 
-base_path = os.path.abspath(__file__.replace("asgi.py", ""))
+_lp = os.path.abspath(__file__.replace("wsgi.py", ""))
 
 if 'PYTIGON_ROOT_PATH' in os.environ:
     _rp = os.environ['PYTIGON_ROOT_PATH']
 else:
-    _rp = os.path.abspath(os.path.join(base_path, "../../"))
+    _rp = os.path.abspath(os.path.join(_lp, "../../"))
 
-sys.path.insert(0,base_path)
+sys.path.insert(0,_lp)
 sys.path.insert(0,_rp)
 
 from schlib import init_paths

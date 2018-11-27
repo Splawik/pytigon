@@ -1,20 +1,23 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
 import sys
 from urllib.parse import urlparse
-from schlib.schdjangoext.django_init import get_app_config
-from schlib.schtools.platform_info import platform_name
 
+_lp = os.path.abspath(__file__.replace("settings_app.py", ""))
 
-_lp  = os.path.dirname(os.path.abspath(__file__))
 if 'PYTIGON_ROOT_PATH' in os.environ:
     _rp = os.environ['PYTIGON_ROOT_PATH']
 else:
-    _rp = _lp+"/../.."
+    _rp = os.path.abspath(os.path.join(_lp, "../../"))
 
-sys.path.append(_lp)
-sys.path.append(_rp)
+sys.path.insert(0,_lp)
+sys.path.insert(0,_rp)
+
+from schlib import init_paths
+init_paths()
+
+from schlib.schdjangoext.django_init import get_app_config
+from schlib.schtools.platform_info import platform_name
 
 from schserw.settings import *
 
@@ -144,5 +147,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.11.27 21:26:14'
+GEN_TIME = '2018.11.27 22:15:11'
 
