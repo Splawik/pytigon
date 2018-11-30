@@ -196,6 +196,8 @@ if _PARAM == None:
 
 from schserw import settings as schserw_settings
 
+sys.path.append(schserw_settings.APP_PACK_PATH)
+
 from schlib.schtools.install_init import init
 init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
@@ -796,8 +798,12 @@ def _main_init():
             x = prg_name.split('.')
             if len(x)==2 or ( len(x)>2 and x[-2].lower()=='inst'):
                 prg_name2 = x[0]
+                path = os.path.join(schserw_settings.APP_PACK_PATH, '_schremote')
+                sys.path.append(path)
                 if not pytigon_install.install(args[0], prg_name2):
                     return (None, None)
+                #sys.path.remove(path)
+                return (None, None)
                 CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
             else:
                 if len(x)>3:
