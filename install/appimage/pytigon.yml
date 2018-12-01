@@ -2,9 +2,11 @@ app: pytigon
 
 ingredients:
   dist: bionic
+  
   sources: 
     - deb http://archive.ubuntu.com/ubuntu/ bionic main universe
     - deb  https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa bionic main
+    
   packages:
     - python3.7
     - python3.7-distutils
@@ -14,31 +16,33 @@ ingredients:
     - mysql-client 
     - libmysqlclient-dev 
     - zip
-
+    - libpng-dev 
+    
   script:
     - virtualenv venv -p $(which python3.7) --always-copy
     - venv/bin/pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk2/ubuntu-18.04/ wxPython
-    - venv/bin/pip install Pillow mysqlclient cefpython3
+    - venv/bin/pip install Pillow mysql psycopg2 cefpython3
     - wget -c https://github.com/Splawik/pytigon/archive/master.zip
     - unzip master.zip
     - venv/bin/pip install -r pytigon-master/requirements.txt 
     - venv/bin/pip install -r pytigon-master/requirements_gui.txt 
-    
+
 script:
-  - cat > pytigon.desktop <<EOF
-  - [Desktop Entry]
-  - Type=Application
-  - Name=Pytigon
-  - Icon=pytigon
-  - Exec=pytigon
-  - Categories=Utility;
-  - EOF
   - mkdir opt
   - cp -R ../pytigon-master opt/pytigon
   - cp -Rf ../venv/lib/python3.*/site-packages/* usr/lib/python3/dist-packages/    
-  - ( cd opt/pytigon/ ; ../../usr/bin/python3.7 manage.py compile_templates )
   - cp opt/pytigon/pytigon.png usr/share/icons/hicolor/48x48/apps/pytigon.png
-  - cp usr/share/icons/hicolor/48x48/apps/pytigon.png .
+  - cp opt/pytigon/pytigon.png .
+  - cat > pytigon.desktop <<EOF
+  - [Desktop Entry]
+  - Type=Application
+  - Name=pytigon
+  - Icon=pytigon
+  - Exec=pytigon
+  - Categories=Utility;
+  - MimeType=application/pytigon;
+  - EOF
+  - ( cd opt/pytigon/ ; ../../usr/bin/python3.7 manage.py compile_templates )
   - ( cd usr/bin/ ; ln -s ../../opt/pytigon/appimage_pytigon.py pytigon )
   - chmod a+x opt/pytigon/appimage_pytigon.py
   

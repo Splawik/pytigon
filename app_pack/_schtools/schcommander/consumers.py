@@ -14,14 +14,19 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 
 from channels.generic.http import AsyncHttpConsumer
 
-import pty
 import select
 import time
 from threading import Thread
 import subprocess
 import struct
-import fcntl
-import termios
+
+try:
+    import pty
+    import fcntl
+    import termios
+except:
+    pass
+    
 from schlib.schtools.tools import get_executable
 
 def read_and_forward_pty_output(consumer):
