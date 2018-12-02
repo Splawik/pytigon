@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-11-21 08:59:28
+// Transcrypt'ed from Python, 2018-12-02 20:32:47
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -155,7 +155,6 @@
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'org.transcrypt.__standard__', {
@@ -500,7 +499,6 @@
 			}
 		}
 	);
-
     var __call__ = function (/* <callee>, <this>, <params>* */) {
         var args = [] .slice.apply (arguments);
         if (typeof args [0] == 'object' && '__call__' in args [0]) {
@@ -4930,6 +4928,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();

@@ -34,22 +34,21 @@ int get_program_path(char * pBuf, int len)
         }
 }
 
-int main(int argi, char **argv)
+
+int WINAPI WinMain(
+	HINSTANCE hInstance,
+	HINSTANCE hPrevInstance,
+	LPSTR lpCmdLine,
+	int nCmdShow)
 {
-    char bufor[256], bufor2[256], lpCmdLine[256];
-    int i;
-    
+    char bufor[256], bufor2[256];    
     if(key(bufor)!=1) get_program_path(bufor,256);
     chdir(bufor);
-    strcat(bufor, "\\python\\python.exe");
+    strcat(bufor, "\\python\\pythonw.exe");
     strcpy(bufor2, "pytigon ");
-    lpCmdLine[0]=0;
-    for(int i = 1; i < argi; i++)
-    {  strcat(lpCmdLine, argv[i]);
-        strcat(lpCmdLine, " ");
-    }
     strcat(bufor2, lpCmdLine);
     execl(bufor, bufor, bufor2, NULL);
+    
     return 0;
 }
 

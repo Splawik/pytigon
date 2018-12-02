@@ -1,9 +1,11 @@
 Unicode true
 
 !include "MUI2.nsh"
+!include "EnvVarUpdate.nsh"
 
 Name "Pytigon"
-OutFile ".\install\pytigon.exe"
+
+OutFile ".\install\install_pytigon.exe"
 InstallDir "$LOCALAPPDATA\pytigon"
 InstallDirRegKey HKCU "Software\pytigon" ""
 RequestExecutionLevel user
@@ -12,6 +14,7 @@ InstType "$(full)"
 InstType "$(only_server)" 
 InstType "$(no_python_runtime)"
 
+!define COMPANYNAME "Pytigon"
 !define MUI_ABORTWARNING
 !define MUI_LANGDLL_ALLLANGUAGES
 
@@ -31,6 +34,7 @@ InstType "$(no_python_runtime)"
 
 ;--------------------------------
 ;Installer Sections
+
 
 Section "pytigon - server"
 
@@ -64,16 +68,18 @@ Section "pytigon - server"
 
   WriteRegStr HKCU "Software\Classes\.ptig" "" "Pytigon.0"
   WriteRegStr HKCU "Software\Classes\Pytigon.0" "" "Pytigon file"
-  WriteRegStr HKCU "Software\Classes\Pytigon.0\DefaultIcon" "" "$INSTDIR\pytigon.exe,0"
+  WriteRegStr HKCU "Software\Classes\Pytigon.0\DefaultIcon" "" "$INSTDIR\pytigonw.exe,0"
   ReadRegStr $R0 HKCU "Software\Classes\Pytigon.0\shell\open\command" ""
   ${If} $R0 == ""
     WriteRegStr HKCU "Software\Classes\Pytigon.0\shell" "" "open"
-    WriteRegStr HKCU "Software\Classes\Pytigon.0\shell\open\command" "" '$INSTDIR\pytigon.exe "%1"'
+    WriteRegStr HKCU "Software\Classes\Pytigon.0\shell\open\command" "" '$INSTDIR\pytigonw.exe "%1"'
   ${EndIf}
 
 
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  ${EnvVarUpdate} $0 "PATH" "A" "HKCU" $INSTDIR
 
 SectionEnd
 
@@ -95,17 +101,18 @@ Section "pytigon - client"
   File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schwiki\*.*
   SetOutPath $INSTDIR\app_pack\schdevtools
   File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\schdevtools\*.*
-  SetOutPath $PROFILE\.pytigon
-  File /r install\.pytigon\*.*
+  SetOutPath $INSTDIR\install
+  File /r install\*.prj
 
   SetOutPath $INSTDIR
-  File pytigon.py
+  File pytigon
   File pytigon.ini
   File pytigon_task.py
+  File pytigon_run.py
   File wsgi.py
   File asgi.py
   File pytigon.exe
-  File pytigon_cmd.exe
+  File pytigonw.exe
   File pytigon_splash.jpeg
   File pytigon.png
   File pytigon.ico
@@ -114,15 +121,17 @@ Section "pytigon - client"
   WriteRegStr HKCU "Software\pytigon" "" $INSTDIR
   WriteRegDWORD HKCU "SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION" "python.exe" 0x2AF9
 
-SectionEnd
+  createDirectory "$SMPROGRAMS\${COMPANYNAME}"
+  createShortCut "$SMPROGRAMS\${COMPANYNAME}\pytigon.lnk" "$INSTDIR\pytigonw.exe" "" "$INSTDIR\pytigon.ico" 1 SW_SHOWNORMAL ALT|CONTROL|SHIFT|P "$(pytigon_description)"
 
+
+SectionEnd
 
 Section "python runtime"
   SectionIn 1
   SetOutPath $INSTDIR\python
   File /r /x *.pyo /x __pycache__  python\*.*
 SectionEnd
-
 
 
 Section "vcredist"
@@ -138,11 +147,15 @@ SectionEnd
 ;Uninstaller Section
 
 Section "Uninstall"
+
+  ${un.EnvVarUpdate} $0 "PATH" "A" "HKCU" $INSTDIR
+
   Delete "$INSTDIR\Uninstall.exe"
 
   RMDir /r /REBOOTOK $INSTDIR
   
   DeleteRegKey /ifempty HKCU "Software\pytigon"
+
 
 SectionEnd
 
@@ -156,3 +169,5 @@ SectionEnd
   LangString no_python_runtime ${LANG_POLISH} "Bez oprogramowanie python"
   LangString only_server ${LANG_ENGLISH} "Only server"
   LangString only_server ${LANG_POLISH} "Tylko serwer"
+  LangString pytigon_description ${LANG_ENGLISH} "Start pytigon"
+  LangString pytigon_description ${LANG_POLISH} "Start pytigon"
