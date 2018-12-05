@@ -63,6 +63,12 @@ else:
     NOWP['default-main'] = 4
     NOWP['default-additional'] = 1
 
+
+if 'TIMEOUT' in environ:
+    TIMEOUT = environ['TIMEOUT']
+else:
+    TIMEOUT = "30"
+
 #ASGI_SERVER_NAME:
 #1. daphne
 #2. gunicorn
@@ -119,8 +125,12 @@ CFG_ELEM = """
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr$is_args$args;
         proxy_set_header X-Forwarded-For $remote_addr$is_args$args;
+        proxy_connect_timeout       $TIMEOUT;
+        proxy_send_timeout          $TIMEOUT;
+        proxy_read_timeout          $TIMEOUT;
+        send_timeout                $TIMEOUT;
     }
-"""
+""".replace('$TIMEOUT', TIMEOUT)
 
 
 CFG_END = """
@@ -129,9 +139,13 @@ CFG_END = """
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr$is_args$args;
         proxy_set_header X-Forwarded-For $remote_addr$is_args$args;
+        proxy_connect_timeout       $TIMEOUT;
+        proxy_send_timeout          $TIMEOUT;
+        proxy_read_timeout          $TIMEOUT;
+        send_timeout                $TIMEOUT;
     }   
 }
-"""
+""".replace('$TIMEOUT', TIMEOUT)
 
 if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
     unzip = subprocess.Popen("unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/", shell=True)

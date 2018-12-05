@@ -194,9 +194,9 @@ def in_minute_intervals(period=1, at=0, in_weekdays=None, in_hours=None):
                     x = x.add(days=1)
                     if x.weekday() in in_weekdays:
                         if in_hours:
-                            x.hour = in_hours[0]
+                            x = x.set(hour=in_hours[0])
                         else:
-                            x.hour = 0
+                            x = x.set(hour=0)
                         return x
             return x
 
