@@ -76,9 +76,9 @@ else:
 ASGI_SERVER_ID  = 0
 if 'ASGI_SERVER_NAME' in environ:
     if 'gunicorn' in environ['ASGI_SERVER_NAME']:
-        ASGI_SERVER_NAME = 1
+        ASGI_SERVER_ID = 1
     elif 'dapne' in environ['ASGI_SERVER_NAME']:
-        ASGI_SERVER_NAME = 2
+        ASGI_SERVER_ID = 2
 
 START_CLIENT_PORT = 8000
 
