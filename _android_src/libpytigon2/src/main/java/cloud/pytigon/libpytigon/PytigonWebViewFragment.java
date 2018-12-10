@@ -37,6 +37,8 @@ public class PytigonWebViewFragment extends Fragment implements AdvancedWebView.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        
         mWebView = new AdvancedWebView(getActivity());        
         mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setAllowFileAccessFromFileURLs(true);
+        mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
         mWebView.setGeolocationEnabled(true);
         
         mWebView.setListener(this, this);

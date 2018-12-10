@@ -73,6 +73,8 @@ if p1:
 else:
     STORAGE = p2[:-12]
 
+print("python:pytigon:XX1:", STORAGE)
+print("python:pytigon:XX2:", [ pos for pos in os.listdir(STORAGE) ])
 
 class PytigonWebViewClientCallback(PythonJavaClass):
     __javainterfaces__ = [ 'cloud/pytigon/libpytigon/PytigonWebViewClientCallback' ]

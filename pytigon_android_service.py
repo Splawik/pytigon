@@ -53,6 +53,7 @@ if __name__ == '__main__':
     server.socket_host = "0.0.0.0"
     server.socket_port = 8000
     server.thread_pool = 4
+    server.peercreds_resolve_enabled = False
     server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()

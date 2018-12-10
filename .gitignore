@@ -22,6 +22,8 @@ migrations/
 
 .gitignore
 
+*/.gradle/
+
 global_db_settings.py
 
 # pytigon installation files

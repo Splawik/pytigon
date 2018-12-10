@@ -1,2 +1,1 @@
-sqlite3/*
-
+sqlite3/*,lib-dynload/_sqlite3.so
