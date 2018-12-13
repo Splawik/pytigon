@@ -19,13 +19,13 @@ whitenoise,fpdf,html5lib,markdown2,wsgi_intercept,openpyxl,et_xmlfile,httpie,PyD
 tempora,cheroot,transcrypt,pyexcel_odsr,pyexcel_io,lml,chardet,django-cors-headers,jdcal,pillow,libsass,\
 more-itertools,backports.functools-lru-cache,cheroot,jaraco.functools,tempora,portend,zc.lockfile,cherrypy,\
 django,django-bulk_update,dj-database-url,dj-email-url,easy_thumbnails,django-mptt,django_polymorphic,pendulum,requests,\
-django-sql-explorer,django-mailer\
+django-sql-explorer,django-mailer,filer\
     --permission=INTERNET --permission=READ_EXTERNAL_STORAGE --permission=WRITE_EXTERNAL_STORAGE --permission=INSTALL_SHORTCUT \
     --permission=INSTALL_SHORTCUT \
     --blacklist=./blacklist.txt --whitelist=./whitelist.txt \
     --icon=$HOME/prj/pytigon/pytigon.png --presplash=$HOME/prj/pytigon/pytigon_splash.jpeg \
     --service=pytigon:pytigon_android_service.py \
-    --add-jar=$HOME/prj/pytigon/install/android/pytigon.jar
+    --add-jar=$HOME/prj/pytigon/install/android/pytigon.jar \
+    --local-recipes=$HOME/prj/pytigon/_android_src/recipes
 
-#unicode,django-mailer,django-sql-explorer
 bash
