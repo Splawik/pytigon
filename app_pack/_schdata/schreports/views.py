@@ -309,15 +309,15 @@ def plot_service(request, **argv):
             if obj.get_layout:
                 tmp = "def _get_layout():\n" + "\n".join([ "    " + pos for pos in obj.get_layout.split('\n')])
                 exec(tmp)
-                layout = locals()['get_layout']()        
+                layout = locals()['_get_layout']()        
             else:
                 layout = {}
             return layout
         elif action == 'on_event':
             if obj.on_event:
-                tmp = "def on_event(data):\n" + "\n".join([ "    " + pos for pos in obj.on_event.split('\n')])
+                tmp = "def _on_event(data):\n" + "\n".join([ "    " + pos for pos in obj.on_event.split('\n')])
                 exec(tmp)
-                ret = locals()['on_event'](param)                    
+                ret = locals()['_on_event'](param)                    
                 return ret
             else:
                 return {}
