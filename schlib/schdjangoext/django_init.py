@@ -23,6 +23,7 @@ from importlib import import_module
 from django.apps.config import AppConfig, MODELS_MODULE_NAME
 from django.utils.module_loading import module_has_submodule
 
+import schlib.schdjangoext.import_from_db
 
 class AppConfigMod(AppConfig):
     def __init__(self, *argi, **argv):
