@@ -265,11 +265,11 @@ class ManyToManyFieldAlternateRel(models.ManyToManyField):
 
 class CheckboxSelectMultipleWithIcon(CheckboxSelectMultiple):
 
-    def render(self,name,value,attrs=None,choices=()):
+    def render(self,name,value,attrs=None,renderer=None,choices=()):
         if value is None:
             value = []
         has_id = attrs and 'id' in attrs
-        final_attrs = self.build_attrs(attrs, name=name)
+        final_attrs = self.build_attrs(attrs) #, name=name)
         output = ['<ul>']
         str_values = set([v for v in value])
         for (i, (option_value, option_label)) in enumerate(chain(self.choices,
@@ -309,16 +309,11 @@ class ManyToManyFieldWidthIcon(models.ManyToManyField):
     """
 
     def formfield(self, **kwargs):
-        db = kwargs.pop('using', None)
-        defaults = {'form_class': ModelMultipleChoiceFieldWidthIcon,
-                    'queryset': self.rel.to._default_manager.using(db).complex_filter(self.rel.limit_choices_to)}
-        defaults.update(kwargs)
-        if defaults.get('initial') is not None:
-            initial = defaults['initial']
-            if isinstance(initial, collections.Callable):
-                initial = initial()
-            defaults['initial'] = [i._get_pk_val() for i in initial]
-        return super(models.ManyToManyField, self).formfield(**defaults)
+        if kwargs:
+            kwargs['form_class']= ModelMultipleChoiceFieldWidthIcon,
+        else:
+            kwargs = { 'form_class': ModelMultipleChoiceFieldWidthIcon }
+        return super().formfield(**kwargs)
 
 
 class RadioInput2(RadioChoiceInput):
@@ -476,14 +471,6 @@ class RadioSelectExt(RadioSelect):
 class ModelChoiceFieldExt(forms.ModelChoiceField):
     widget = RadioSelectExt
 
-    #def __init__(self, queryset, empty_label="---------", required=True, widget=None, label=None, initial=None,
-    #             help_text='', to_field_name=None, limit_choices_to=None, *args, **kwargs):
-    #    self.model_to = queryset.model
-    #    forms.ModelChoiceField.__init__(self, queryset, empty_label, required, widget, label, initial,
-    #        help_text, to_field_name, limit_choices_to, *args, **kwargs)
-    #    self.widget.set_ext_data(self.model_to)
-
-
     def __init__(self, queryset, **kwargs):
         self.model_to = queryset.model
         forms.ModelChoiceField.__init__(self, queryset, **kwargs)
@@ -497,9 +484,7 @@ class ForeignKeyExt(models.ForeignKey):
         db = kwargs.pop('using', None)
         defaults = {
             'form_class': ModelChoiceFieldExt,
-            #'queryset': self.rel.to._default_manager.using(db).complex_filter(self.rel.limit_choices_to),
             'queryset': self.remote_field.model._default_manager.using(db).complex_filter(self.remote_field.limit_choices_to),
-#            'to_field_name': self.rel.field_name,
             'to_field_name': self.remote_field.field_name,
             }
         defaults.update(kwargs)

@@ -573,7 +573,6 @@ class GenericRows(object):
         parent_class = self
 
         class UpdateView(generic.UpdateView):
-            #response_class = LocalizationTemplateResponse
             doc_type = "html"
             response_class = ExtTemplateResponse
 
@@ -693,9 +692,10 @@ class GenericRows(object):
     def add(self):
         url = r'(?P<add_param>[\w=_-]*)/add/$'
         parent_class = self
+        
 
         class CreateView(generic.CreateView):
-            response_class = LocalizationTemplateResponse
+            response_class = ExtTemplateResponse
             if self.field and self.field != 'this':
                 try:
                     f = getattr(self.base_model, self.field).related
@@ -711,6 +711,10 @@ class GenericRows(object):
             field = self.field
             init_form = None
             fields = "__all__"
+
+
+            def doc_type(self):
+                return "html"
 
             def get_success_url(self):
                 if self.object:
@@ -730,7 +734,6 @@ class GenericRows(object):
                         self.init_form = self.object.init_new(request, self, kwargs['add_param'])
                     else:
                         self.init_form = self.object.init_new(request, self)
-
                     if self.init_form:
                         for pos in self.init_form:
                             if hasattr(self.object, pos):
@@ -759,23 +762,6 @@ class GenericRows(object):
 
             def post(self, request, *args, **kwargs):
                 form = self._get_form(request, *args, **kwargs)
-
-                #self.object = None
-
-                #if hasattr(self.model, 'init_new'):
-                #    if kwargs['add_param'] and kwargs['add_param'] != '-':
-                #        self.init_form = self.object.init_new(request, self, kwargs['add_param'])
-                #    else:
-                #        self.init_form = self.object.init_new(request, self)#
-                #else:
-                #    self.init_form = None
-
-                #form_class = self.get_form_class()
-
-                #if self.object and hasattr(self.object, 'get_form'):
-                #    form = self.object.get_form(self, request, form_class, True)
-                #else:
-                #    form = self.get_form(form_class)
 
                 if self.model and hasattr(self.model, 'is_form_valid'):
                     def vfun():
@@ -832,12 +818,6 @@ class GenericRows(object):
                 if _data:
                     self.object._data = _data
 
-                #if hasattr(self.object, 'init_new'):
-                #    if self.kwargs['add_param'] and self.kwargs['add_param'] != '-':
-                #        self.init_form = self.object.init_new(request, self, self.kwargs['add_param'])
-                #    else:
-                #        self.init_form = self.object.init_new(request, self)
-
                 if 'parent_pk' in self.kwargs and hasattr(self.object, 'parent_id'):
                     if int(self.kwargs['parent_pk'])!=0:
                         self.object.parent_id = int(self.kwargs['parent_pk'])
@@ -856,10 +836,8 @@ class GenericRows(object):
 
                 if hasattr(self.object, 'post_form'):
                     if self.object.post_form(self, form, request):
-                        #self.object.save()
                         save(self.object, request, "add")
                 else:
-                    #self.object.save()
                     save(self.object, request, "add")
                 form.save_m2m()
 

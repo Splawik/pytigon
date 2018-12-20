@@ -287,6 +287,11 @@ def move_to(request, rep_id, to_pos):
 
 def plot_service(request, **argv):
     
+    if 'param' in request.GET:
+        request_param = request.GET['param']
+    else:
+        request_param = None
+        
     param = json_loads(request.body.decode('utf-8'))
     
     action = param['action']
@@ -301,23 +306,23 @@ def plot_service(request, **argv):
     if obj:
         if action == 'get_data':
             if obj.get_data:
-                tmp = "def _get_data():\n" + "\n".join([ "    " + pos for pos in obj.get_data.split('\n')])
+                tmp = "def _get_data(request_param):\n" + "\n".join([ "    " + pos for pos in obj.get_data.split('\n')])
                 exec(tmp)
-                data = locals()['_get_data']()        
+                data = locals()['_get_data'](request_param)        
             return data
         elif action == 'get_layout':
             if obj.get_layout:
-                tmp = "def _get_layout():\n" + "\n".join([ "    " + pos for pos in obj.get_layout.split('\n')])
+                tmp = "def _get_layout(request_param):\n" + "\n".join([ "    " + pos for pos in obj.get_layout.split('\n')])
                 exec(tmp)
-                layout = locals()['_get_layout']()        
+                layout = locals()['_get_layout'](request_param)        
             else:
                 layout = {}
             return layout
         elif action == 'on_event':
             if obj.on_event:
-                tmp = "def _on_event(data):\n" + "\n".join([ "    " + pos for pos in obj.on_event.split('\n')])
+                tmp = "def _on_event(data, request_param):\n" + "\n".join([ "    " + pos for pos in obj.on_event.split('\n')])
                 exec(tmp)
-                ret = locals()['_on_event'](param)                    
+                ret = locals()['_on_event'](param, request_param)                    
                 return ret
             else:
                 return {}

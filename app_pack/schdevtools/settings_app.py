@@ -20,7 +20,7 @@ from schlib.schdjangoext.django_init import get_app_config
 from schlib.schtools.platform_info import platform_name
 
 from schserw.settings import *
-
+DEBUG=True
 from apps import APPS, PUBLIC, MAIN_APP_PACK
 
 try:

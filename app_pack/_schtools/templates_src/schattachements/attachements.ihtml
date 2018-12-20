@@ -1,3 +1,5 @@
+
+
 {# -*- coding: utf-8 -*- #}
 %extends "form.html"
 
@@ -26,7 +28,7 @@
     .multipart/form-data
 
 %% list_content_actions    
-    % new_row _("New attachement") "" ""  "" "{{filter}}"
+    % new_row _("New attachement") action="new_row/{{filter}}"
 
 %% list_row_header
     th...Name
@@ -39,7 +41,7 @@
 
 %% list_row_actions
     % row_actions:
-        .download,_(Download),download,_blank
+        .download,_(Download),,_blank
     % row_actions:
         .edit
         .delete

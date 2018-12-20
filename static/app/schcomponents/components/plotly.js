@@ -38,7 +38,7 @@ var _plotly = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/vanillajs_plugins';
 	var base_plotly_path = window.BASE_PATH + 'schreports/plot_service/';
 	var _on_loadjs = function () {
-		var props = list (['width', 'height', 'plotlyName']);
+		var props = list (['width', 'height', 'plotlyName', 'param']);
 		var template = "<div name='plotlydiv' v-bind:style='{ width: width, height: height} ></div>";
 		var process_response_data = function (this_obj, data) {
 			if (__in__ ('redirect', data) && data ['redirect']) {
@@ -115,6 +115,9 @@ var _plotly = function (resolve, reject) {
 		};
 		var mounted = function () {
 			var url = (base_plotly_path + this.plotlyName) + '/';
+			if (this.param) {
+				url += '?param=' + this.param;
+			}
 			var this_obj = this;
 			var data = null;
 			var layout = null;
