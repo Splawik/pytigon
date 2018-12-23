@@ -3,13 +3,13 @@
 #   - python-for-android dependencies
 #
 # Build with:
-#     docker build --tag=p4a .
+#     docker build --tag=p4apy3 .
 #
 # Run with:
-#     docker run -it --rm p4a /bin/sh -c '. venv/bin/activate && p4a apk --help'
+#     docker run -it --rm p4apy3 /bin/sh -c '. venv/bin/activate && p4a apk --help'
 #
 # Or for interactive shell:
-#     docker run -it --rm p4a
+#     docker run -it --rm p4apy3
 #
 # Note:
 #     Use 'docker run' without '--rm' flag for keeping the container and use
@@ -71,11 +71,11 @@ RUN apt -y update -qq \
 RUN yes | "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" --licenses > /dev/null
 
 # download platforms, API, build tools
-RUN "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" "platforms;android-21" && \
+RUN "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" "platforms;android-19" && \
     "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" "platforms;android-27" && \
     "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" "build-tools;26.0.2" && \
-    "${ANDROID_SDK_HOME}/tools/bin/sdkmanager" "extras;android;m2repository" && \
     chmod +x "${ANDROID_SDK_HOME}/tools/bin/avdmanager"
+
 
 ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
@@ -85,38 +85,16 @@ ENV WORK_DIR="${HOME_DIR}" \
 # install system dependencies
 RUN apt -y update -qq \
     && apt -y install -qq --no-install-recommends \
-        python virtualenv python-pip wget lbzip2 patch sudo \
+        python3 virtualenv python3-pip wget lbzip2 patch sudo \
     && apt -y autoremove \
     && apt -y clean
-
-RUN apt update  -y && \
-    apt upgrade -y && \
-    apt install -y
-
-RUN apt -y install software-properties-common
-RUN add-apt-repository -y ppa:deadsnakes/ppa
-
-RUN apt update  -y && \
-    apt upgrade -y && \
-    apt install -y
-
-RUN apt install -y libsqlite-dev
-RUN apt install -y libsqlite3-dev
-RUN apt install -y python3.7 python3.7-dev python3.7-distutils
-
-RUN apt update -y --fix-missing
-
-RUN apt install -y curl git apt-transport-https &&\
-    apt install -y redis-server
-
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.7
 
 # build dependencies
 # https://buildozer.readthedocs.io/en/latest/installation.html#android-on-ubuntu-16-04-64bit
 RUN dpkg --add-architecture i386 \
     && apt -y update -qq \
     && apt -y install -qq --no-install-recommends \
-        build-essential ccache git python2.7 python2.7-dev \
+        build-essential ccache git python3 python3-dev \
         libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 \
         libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 \
         zip zlib1g-dev zlib1g:i386 \
@@ -138,7 +116,8 @@ RUN useradd --create-home --shell /bin/bash ${USER}
 RUN usermod -append --groups sudo ${USER}
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN pip install --upgrade cython==0.28.6
+
+RUN pip3 install --upgrade cython==0.28.6
 
 WORKDIR ${WORK_DIR}
 COPY . ${WORK_DIR}
@@ -147,8 +126,19 @@ COPY . ${WORK_DIR}
 RUN chown --recursive ${USER} ${WORK_DIR} ${ANDROID_SDK_HOME}
 USER ${USER}
 
-# install python-for-android from current branch
-RUN virtualenv --python=python venv \
-    && . venv/bin/activate \
-    && pip install -e .
+RUN sudo apt update  -y 
+RUN sudo apt -y install software-properties-common --fix-missing
+RUN sudo add-apt-repository -y ppa:deadsnakes/ppa
+RUN sudo apt update  -y && \
+    sudo apt upgrade -y && \
+    sudo apt install -y
+RUN sudo apt install -y python3.7 python3.7-dev python3.7-distutils    
+RUN sudo apt install -y curl git apt-transport-https 
+RUN sudo curl https://bootstrap.pypa.io/get-pip.py | sudo python3.7
+RUN sudo apt install -y libffi-dev
 
+
+# install python-for-android from current branch
+RUN virtualenv --python=python3 venv \
+    && . venv/bin/activate \
+    && pip3 install -e .
