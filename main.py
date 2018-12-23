@@ -37,28 +37,18 @@ CTX  = None
 MAX_SEL_APP = 10
 FRAGMENT = False
 
+base_path = os.path.dirname(os.path.abspath(__file__))
+if not base_path in sys.path:
+    sys.path.insert(0, base_path)
+os.chdir(base_path)
+
 from schlib import init_paths
 init_paths()
 
-base_path = __file__.replace("main.py", "")
-if base_path == "":
-    base_path = "./"
-else:
-    os.chdir(base_path)
-
-sys.path.insert(0,base_path)
-sys.path.insert(0,os.path.join(base_path, "_android"))
-
 from schserw import settings as schserw_settings
 from schlib.schtools.install_init import init
-print("python:pytigon:X1", schserw_settings.ROOT_PATH)
-print("python:pytigon:X2", schserw_settings.DATA_PATH)
-print("python:pytigon:X3", schserw_settings.APP_PACK_PATH)
-print("python:pytigon:X4", schserw_settings.MEDIA_ROOT)
-print("python:pytigon:X5", schserw_settings.UPLOAD_PATH)
 
 init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
-
 
 p1 = p2 = None
 if 'SECONDARY_STORAGE' in os.environ:
@@ -73,8 +63,6 @@ if p1:
 else:
     STORAGE = p2[:-12]
 
-print("python:pytigon:XX1:", STORAGE)
-print("python:pytigon:XX2:", [ pos for pos in os.listdir(STORAGE) ])
 
 class PytigonWebViewClientCallback(PythonJavaClass):
     __javainterfaces__ = [ 'cloud/pytigon/libpytigon/PytigonWebViewClientCallback' ]

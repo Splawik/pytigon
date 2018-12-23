@@ -3,18 +3,15 @@ import os
 import sys
 from os import environ
 
-base_path = __file__.replace("manage.py", "")
-if base_path == "":
-    base_path = "./"
-else:
-    os.chdir(base_path)
+_lp = os.path.dirname(os.path.abspath(__file__))
+os.chdir(_lp)
+if not _lp in sys.path: sys.path.insert(0, _lp)
 
 if 'PYTIGON_ROOT_PATH' in environ:
-    sys.path.insert(0, environ['PYTIGON_ROOT_PATH'])
+    _rp = environ['PYTIGON_ROOT_PATH']
 else:
-    sys.path.insert(0, os.path.abspath(base_path + "../.."))
-
-sys.path.insert(0, base_path)
+    _rp= os.path.abspath(os.path.join(_lp, "..", ".."))
+if not _rp in sys.path: sys.path.insert(0, _rp)
 
 from schlib import init_paths
 init_paths()

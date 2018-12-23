@@ -3,15 +3,15 @@ import os
 import sys
 from urllib.parse import urlparse
 
-_lp = os.path.abspath(__file__.replace("settings_app.py", ""))
+_lp = os.path.dirname(os.path.abspath(__file__))
 
 if 'PYTIGON_ROOT_PATH' in os.environ:
     _rp = os.environ['PYTIGON_ROOT_PATH']
 else:
-    _rp = os.path.abspath(os.path.join(_lp, "../../"))
+    _rp = os.path.abspath(os.path.join(_lp, "..", ".."))
 
-sys.path.insert(0,_lp)
-sys.path.insert(0,_rp)
+if not _lp in sys.path: sys.path.insert(0,_lp)
+if not _rp in sys.path: sys.path.insert(0,_rp)
 
 from schlib import init_paths
 init_paths()
@@ -20,7 +20,7 @@ from schlib.schdjangoext.django_init import get_app_config
 from schlib.schtools.platform_info import platform_name
 
 from schserw.settings import *
-DEBUG=True
+
 from apps import APPS, PUBLIC, MAIN_APP_PACK
 
 try:
@@ -35,10 +35,10 @@ UPLOAD_PATH = MEDIA_ROOT
 
 THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
-LOCAL_ROOT_PATH = os.path.join(_lp, "..")
+LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
 ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
-sys.path.append(LOCAL_ROOT_PATH)
+if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_APP_PACK:
@@ -59,21 +59,22 @@ for app in APPS:
         pack = app.split('.')[0]
         if not pack in PACKS:
             PACKS.append(pack)
-            sys.path.append(os.path.join(LOCAL_ROOT_PATH, pack))
+            p1 = os.path.join(LOCAL_ROOT_PATH, pack)
+            if not p1 in sys.path:  sys.path.append(p1)
 
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
         TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
         if len(aa)==2:
-            pp = os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]
-            sys.path.append(pp)
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/locale")
+            pp = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", aa[0]))
+            if not pp in sys.path: sys.path.append(pp)
+            LOCALE_PATHS.append(os.path.join(pp, "locale"))
         else:
-            LOCALE_PATHS.append(os.path.dirname(os.path.abspath(__file__))+"/locale")
+            LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
-TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/templates")
-TEMPLATES[0]['DIRS'].insert(0, os.path.dirname(os.path.abspath(__file__))+"/plugins")
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (APPSET_NAME, APPSET_NAME))
 
@@ -129,6 +130,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.12.10 19:49:24'
+GEN_TIME = '2018.12.23 11:27:48'
 OFFLINE_SUPPORT = True
 

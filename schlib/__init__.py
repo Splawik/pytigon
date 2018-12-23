@@ -18,46 +18,35 @@
 #version: "0.1a"
 
 import sys
-import platform
 import os
-from os import environ
-
 
 def init_paths():
+
+    tmp = []
+    for pos in sys.path:
+        if not pos in tmp:
+            if not '.zip' in pos and not pos.startswith('.'):
+                tmp.append(pos)
+    sys.path = tmp
+
     from schlib.schtools.platform_info import platform_name
     
-    base_path = __file__.replace("__init__.py", "")
-
-    if base_path == "":
-        base_path = "./"
-
+    base_path = os.path.dirname(os.path.abspath(__file__))
     pname = platform_name()
 
     if pname == 'Android':
-        p = base_path + "../android"
-        p2 = base_path + "../ext_lib"
-        p = os.path.abspath(p)
-        p2 = os.path.abspath(p2)
-        sys.path.insert(0, p)
-        sys.path.append(p2)
+        p = os.path.abspath(os.path.join(base_path, "..", "_android"))
+        p2 = os.path.abspath(os.path.join(base_path, "..", "ext_lib"))
+        if not p in sys.path: sys.path.insert(0, p)
+        if not p2 in sys.path: sys.path.append(p2)
     else:
         if pname == "Windows":
-            p = base_path + "../python/lib/site-packages"
+            p = os.path.abspath(os.path.join(base_path, "..", "python" "lib", "site-packages"))
         else:
-            platform_name
-            p = base_path + "../python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])
+            p = os.path.abspath(os.path.join(base_path , "..", "python", "lib",\
+                "python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1])))
 
-        p2 = base_path + "../ext_lib"
+        p2 = os.path.abspath(os.path.join(base_path, "..", "ext_lib"))
 
-        p = os.path.abspath(p)
-        p2 = os.path.abspath(p2)
-        sys.path.insert(0, p)
-        sys.path.append(p2)
-
-        tmp = []
-        for pos in sys.path:
-            if not pos in tmp:
-                if not '.zip' in pos:
-                    tmp.append(pos)
-        sys.path = tmp
-
+        if not p in sys.path: sys.path.insert(0, p)
+        if not p2 in sys.path: sys.path.append(p2)

@@ -1,14 +1,15 @@
 docker run \
     --interactive \
     --tty \
-    --volume "$HOME/prj/pytigon":/home/user/prj/pytigon \
+    --volume "$HOME/prj/pytigon-android/pytigon":/home/user/prj/pytigon \
     --volume "$HOME/.local":/home/user/.local \
-    --volume "$HOME/prj/python-for-android/pythonforandroid/recipes":/home/user/pythonforandroid/recipes \
-    --volume "$HOME/prj/python-for-android/pythonforandroid/bootstraps":/home/user/pythonforandroid/bootstraps \
-    --volume "$HOME/prj/python-for-android/home_data/":/home/user/home_data \
-    p4a sh -c '. venv/bin/activate \
+    --volume "$HOME/prj/pytigon-android/pytigon/_android_src/recipes/python3":/home/user/pythonforandroid/recipes/python3 \
+    --volume "$HOME/prj/pytigon-android/pytigon/_android_src/recipes/none":/home/user/pythonforandroid/recipes/requests \
+    --volume "$HOME/prj/pytigon-android/python-for-android/home_data/":/home/user/home_data \
+    p4apy3 sh -c '. venv/bin/activate \
         && cd prj/pytigon \
         && bash build_android_entrypoint.sh'
 
 adb uninstall cloud.pytigon
-adb install $HOME/.local/share/python-for-android/dists/pytigon/build/outputs/apk/pytigon-debug.apk
+adb install $HOME/.local/share/python-for-android/dists/pytigon/build/outputs/apk/debug/pytigon-debug.apk
+

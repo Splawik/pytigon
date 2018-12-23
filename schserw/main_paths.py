@@ -8,10 +8,13 @@ def get_main_paths():
     ret['SERW_PATH'] = os.path.dirname(os.path.abspath(__file__))
     ret['ROOT_PATH'] = os.path.abspath(os.path.join(ret['SERW_PATH'], '..'))
 
-    sys.path.append(ret['SERW_PATH'])
-    sys.path.append(ret['ROOT_PATH'])
-    sys.path.append(os.path.join(ret['ROOT_PATH'], 'ext_lib'))
-    sys.path.append(os.path.join(ret['ROOT_PATH'], 'schappdata/schplugins'))
+    if not ret['SERW_PATH'] in sys.path: sys.path.append(ret['SERW_PATH'])
+    if not ret['ROOT_PATH'] in sys.path: sys.path.append(ret['ROOT_PATH'])
+
+    p1 = os.path.join(ret['ROOT_PATH'], 'ext_lib')
+    p2 = os.path.join(ret['ROOT_PATH'], 'schappdata', 'schplugins')
+    if not p1 in sys.path: sys.path.append(p1)
+    if not p2 in sys.path: sys.path.append(p2)
 
     from schlib.schtools.platform_info import platform_name
 

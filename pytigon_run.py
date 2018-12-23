@@ -24,42 +24,42 @@ import os
 from schlib.schtools.tools import get_executable
 from schlib.schtools.platform_info import platform_name
 
-
-def run():
-    base_path = __file__.replace("pytigon_run.py", "")
-    if base_path == "":
-        base_path = os.getcwd()
+def run(param=None):
+    if param:
+        argv=param
     else:
-        os.chdir(base_path)
+        argv=sys.argv
 
-    sys.path.append(os.path.join(base_path, "ext_lib"))
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(base_path)
+
+    ext_lib_path = os.path.join(base_path, "ext_lib")
+    if not ext_lib_path in sys.path:
+        sys.path.append(ext_lib_path)
 
     os.environ['PYTIGON_ROOT_PATH'] = base_path
-    if len(sys.argv)>1 and sys.argv[1].startswith('manage'):
-        os.chdir(base_path)
-        if '_' in sys.argv[1]:
-            x = sys.argv[1].split('_',1)
+    if len(argv)>1 and argv[1].startswith('manage'):
+        if '_' in argv[1]:
+            from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+
+            x = argv[1].split('_',1)
             app = x[1]
 
-            if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
-                path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
-            else:
-                path2 = os.path.join(base_path, "app_pack")
-
-            if not os.path.exists(path2):
-                from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
-                    STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+            if not os.path.exists(APP_PACK_PATH):
                 from schlib.schtools.install_init import init
                 init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-            path3 = os.path.join(path2, app)
+            path3 = os.path.join(APP_PACK_PATH, app)
             os.chdir(path3)
-            subprocess.run([get_executable(), "manage.py"] + sys.argv[2:])
+            subprocess.run([get_executable(), "manage.py"] + argv[2:])
             os.chdir(base_path)
         else:
-            subprocess.run([get_executable(), "manage.py"] + sys.argv[2:])
-    elif len(sys.argv) > 1 and sys.argv[1].startswith('run_'):
-        x = sys.argv[1].split('_', 1)
+            subprocess.run([get_executable(), "manage.py"] + argv[2:])
+    elif len(argv) > 1 and argv[1].startswith('run_'):
+        from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+            STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+        x = argv[1].split('_', 1)
         if '/' in x[1]:
             x2 = x[1].split('/', 1)
             app = x2[0]
@@ -68,48 +68,47 @@ def run():
             app = x[1]
             script = run.py
 
-        if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
-            path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
-        else:
-            path2 = os.path.join(base_path, "app_pack")
+        path3 = os.path.join(APP_PACK_PATH, app)
+        subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + argv[2:])
 
-        path3 = os.path.join(path2, app)
-
-        subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + sys.argv[2:])
-
-    elif len(sys.argv)>1 and sys.argv[1].startswith('runserver'):
-        if '_' in sys.argv[1]:
-            x = sys.argv[1].split('_', 1)
+    elif len(argv)>1 and argv[1].startswith('runserver'):
+        if '_' in argv[1]:
+            from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+            x = argv[1].split('_', 1)
             app = x[1]
-            if platform_name() == 'Android' or 'PYTIGON_APP_IMAGE' in os.environ:
-                path2 = os.path.join(os.path.join(os.path.expanduser("~"), "pytigon"), 'app_pack')
-            else:
-                path2 = os.path.join(base_path, "app_pack")
 
-            if not os.path.exists(path2):
-                from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
-                    STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+            if not os.path.exists(APP_PACK_PATH):
                 from schlib.schtools.install_init import init
                 init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-            path3 = os.path.join(path2, app)
+            path3 = os.path.join(APP_PACK_PATH, app)
             os.chdir(path3)
             options = []
-            if not '-b' in sys.argv[2:]:
+            if not '-b' in argv[2:]:
                 options = ['-b', '0.0.0.0:8000',]
 
             options.append('asgi:application')
-            subprocess.run([get_executable(), "-m", "hypercorn", ] + sys.argv[2:] + options )
+            tmp = sys.argv
+            sys.argv=['',] + argv[2:] + options
+
+            if platform_name() == 'Android':
+                from daphne.cli import CommandLineInterface
+                CommandLineInterface.entrypoint()
+            else:
+                from hypercorn.__main__ import main
+                main()
+
+            sys.argv = tmp
 
             os.chdir(base_path)
 
-    elif len(sys.argv)>1 and ( sys.argv[1].endswith('.py') or sys.argv[1][-4:-1] == ".py" ):
-        subprocess.run([get_executable(),] + sys.argv[1:])
+    elif len(argv)>1 and ( argv[1].endswith('.py') or argv[1][-4:-1] == ".py" ):
+        subprocess.run([get_executable(),] + argv[1:])
     else:
-        #os.chdir(base_path)
         from schcli.pytigon import main
         main()
 
 if __name__ == '__main__':
-    run()
+    run(sys.argv)
 
