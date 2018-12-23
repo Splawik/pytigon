@@ -1,6 +1,10 @@
 if [ ! -d ./pytigon  ]; then
     git clone https://github.com/Splawik/pytigon.git
     mkdir pytigon/_android_src/recipes/none
+else
+    cd pytigon
+    git pull
+    cd ..
 fi
 
 if [ ! -d ./python-for-android  ]; then
