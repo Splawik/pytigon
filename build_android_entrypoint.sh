@@ -23,7 +23,7 @@ django,django-bulk_update,dj-database-url,dj-email-url,easy_thumbnails,django-mp
 more-itertools,backports.functools-lru-cache,jaraco.functools,tempora,portend,zc.lockfile,\
 django-sql-explorer,django-mailer\
     --permission=INTERNET --permission=READ_EXTERNAL_STORAGE --permission=WRITE_EXTERNAL_STORAGE --permission=INSTALL_SHORTCUT \
-    --permission=VIBRATE --permission=ACCESS_WIFI_STATE --permission=CHANGE_WIFI_STATE \
+    --permission=VIBRATE --permission=ACCESS_WIFI_STATE --permission=CHANGE_WIFI_STATE --permission=ACCESS_NETWORK_STATE \
     --blacklist=./blacklist.txt --whitelist=./whitelist.txt \
     --icon=$HOME/prj/pytigon/pytigon.png --presplash=$HOME/prj/pytigon/pytigon_splash.jpeg \
     --service=pytigon:pytigon_android_service.py \
