@@ -74,8 +74,8 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
-INSTALLED_APPS.append('easy_thumbnails')
-INSTALLED_APPS.append('filer')
+#INSTALLED_APPS.append('easy_thumbnails')
+#INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')

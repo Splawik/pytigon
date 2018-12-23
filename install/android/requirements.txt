@@ -1,0 +1,12 @@
+twisted
+channels
+daphne
+hypercorn 
+certifi
+idna
+pkg_resources
+pytz
+urllib3
+six 
+git+https://github.com/Splawik/Transcrypt.git@es5
+xonsh 
