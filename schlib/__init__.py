@@ -25,7 +25,7 @@ def init_paths():
     tmp = []
     for pos in sys.path:
         if not pos in tmp:
-            if not '.zip' in pos and not pos.startswith('.'):
+            if not pos.startswith('.'):
                 tmp.append(pos)
     sys.path = tmp
 
