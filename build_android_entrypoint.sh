@@ -8,10 +8,10 @@ export ANDROIDNDKVER="21"
 export GRADLE_OPTS="-Xms1724m -Xmx5048m -Dorg.gradle.jvmargs='-Xms1724m -Xmx5048m'"
 
 
-cd $HOME/prj/pytigon/_android_src/libpytigon2/
+cd $HOME/prj/pytigon/install/android/_android_src/libpytigon2/
 ./gradlew build
-cd $HOME/prj/pytigon/
-cp $HOME/prj/pytigon/_android_src/libpytigon2/build/intermediates/bundles/default/classes.jar $HOME/prj/pytigon/install/android/pytigon.jar
+cd $HOME/prj/pytigon/install/android/
+cp $HOME/prj/pytigon/install/android/_android_src/libpytigon2/build/intermediates/bundles/default/classes.jar $HOME/prj/pytigon/install/android/pytigon.jar
 
 
 p4a apk --debug  --private $HOME/prj/pytigon --dist-name=pytigon  --package=cloud.pytigon --arch=armeabi-v7a \

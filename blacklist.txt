@@ -1,3 +1,6 @@
 schcli/*
+install/android/*
+install/appimage/*
+install/linux_install.py
+.git/*
 *.apk
-
