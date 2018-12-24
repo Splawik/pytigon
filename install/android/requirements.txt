@@ -4,7 +4,7 @@ daphne
 hypercorn 
 certifi
 idna
-pkg_resources
+setuptools
 pytz
 urllib3
 six 
