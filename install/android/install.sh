@@ -23,7 +23,7 @@ else
     venv/bin/python -m pip install --upgrade -r pytigon/install/android/requirements.txt 
 fi 
 
-yes | cp -Rf venv/lib/python3.7/site-packages pytigon/_android
+yes | cp -Rf venv/lib/python3.7/site-packages/* pytigon/_android
 
 cd pytigon
 bash build_android.sh
