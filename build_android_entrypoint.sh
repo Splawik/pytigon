@@ -8,10 +8,10 @@ export ANDROIDNDKVER="21"
 export GRADLE_OPTS="-Xms1724m -Xmx5048m -Dorg.gradle.jvmargs='-Xms1724m -Xmx5048m'"
 
 
-cd $HOME/prj/pytigon/install/android/_android_src/libpytigon2/
-./gradlew build
-cd $HOME/prj/pytigon/install/android/
-cp $HOME/prj/pytigon/install/android/_android_src/libpytigon2/build/intermediates/bundles/default/classes.jar $HOME/prj/pytigon/install/android/pytigon.jar
+#cd $HOME/prj/pytigon/install/android/_android_src/libpytigon2/
+#./gradlew build
+#cd $HOME/prj/pytigon/install/android/
+#cp $HOME/prj/pytigon/install/android/_android_src/libpytigon2/build/intermediates/bundles/default/classes.jar $HOME/prj/pytigon/install/android/pytigon.jar
 
 
 p4a apk --debug  --private $HOME/prj/pytigon --dist-name=pytigon  --package=cloud.pytigon --arch=armeabi-v7a \
@@ -27,6 +27,7 @@ django-sql-explorer,django-mailer\
     --blacklist=./blacklist.txt --whitelist=./whitelist.txt \
     --icon=$HOME/prj/pytigon/pytigon.png --presplash=$HOME/prj/pytigon/pytigon_splash.jpeg \
     --service=pytigon:pytigon_android_service.py \
-    --add-jar=$HOME/prj/pytigon/install/android/pytigon.jar
-
+    --add-source=$HOME/prj/pytigon/install/android/_android_src/libpytigon2/src/main/java/im/delight/android/webview \
+    --add-source=$HOME/prj/pytigon/install/android/_android_src/libpytigon2/src/main/java/cloud/pytigon/libpytigon 
 bash
+#    --add-jar=$HOME/prj/pytigon/install/android/pytigon.jar
