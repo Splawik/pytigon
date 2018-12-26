@@ -26,6 +26,13 @@ import os
 import socket
 import time
 import sys
+import fcntl
+import struct
+
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(), 0x8915,  struct.pack(b'256s', ifname[:15]))[20:24])
 
 from jnius import autoclass, PythonJavaClass, java_method
 from android.runnable import run_on_ui_thread, Runnable
@@ -115,9 +122,18 @@ class InterfaceManager(BoxLayout):
 
     def  show_first_form(self):
         global STORAGE
+
+        try:
+            ip_address  = get_ip_address(b'wlan0')
+            label = Label(text="My ip address: " + ip_address)
+            self.add_widget(label)
+        except:
+            pass
+
         x = [ pos for pos in os.listdir(os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")) if not pos.startswith('_')  ]
         print("python:Pytigon:F0:", os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack"))
-        if len(x)>1:             
+
+        if len(x)>1:
             print("python:Pytigon:F1")
             if len(x)>MAX_SEL_APP:
                 dy = MAX_SEL_APP - 1
