@@ -4,7 +4,7 @@ docker run \
     --volume "$HOME/prj/pytigon-android/pytigon":/home/user/prj/pytigon \
     --volume "$HOME/.local":/home/user/.local \
     --volume "$HOME/prj/pytigon-android/pytigon/install/android/_android_src/recipes/python3":/home/user/pythonforandroid/recipes/python3 \
-    --volume "$HOME/prj/pytigon-android/pytigon/install/android/_android_src/sdl2/build/src/main/res/layout":/home/user/prj/pytigon/install/android/_android_src/sdl2/build/src/main/res/layout \
+    --volume "$HOME/prj/pytigon-android/pytigon/install/android/_android_src/sdl2/build/src/main/res/layout":/home/user/pythonforandroid/bootstraps/sdl2/build/src/main/res/layout \        
     --volume "$HOME/prj/pytigon-android/pytigon/install/android/_android_src/recipes/none":/home/user/pythonforandroid/recipes/requests \
     --volume "$HOME/prj/pytigon-android/python-for-android/home_data/":/home/user/home_data \
     p4apy3 sh -c '. venv/bin/activate \
