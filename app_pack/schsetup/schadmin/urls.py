@@ -10,8 +10,8 @@ from . import views
 urlpatterns = [
      url(r'^terminal', TemplateView.as_view(template_name='schadmin/terminal.html'), {}), 
      url(r'^administration', TemplateView.as_view(template_name='schadmin/administration.html'), {}), 
-#     url(r'^filemanager', TemplateView.as_view(template_name='schadmin/filemanager.html'), {}), 
-#     url(r'^sqlexplore', TemplateView.as_view(template_name='schadmin/sqlexplore.html'), {}), 
+     url(r'^filemanager', TemplateView.as_view(template_name='schadmin/filemanager.html'), {}), 
+     url(r'^sqlexplore', TemplateView.as_view(template_name='schadmin/sqlexplore.html'), {}), 
     
     
 ]
@@ -21,8 +21,8 @@ from django.conf.urls import include
 from django.contrib import admin
 
 urlpatterns.append(url(r'^admin/', admin.site.urls))
-#urlpatterns.append(url(r'^filer/', include('filer.urls')))
-#urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
+urlpatterns.append(url(r'^filer/', include('filer.urls')))
+urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
 
 
 

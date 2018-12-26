@@ -51,7 +51,10 @@ from schlib.schtools.process import py_run
 
 from ext_lib.pygettext import main as gtext
 
-import sass
+try:
+    import sass
+except:
+    sass =  None
 
  
 _template="""
@@ -672,12 +675,13 @@ def gen(request, pk):
             f.write(codejs.encode('utf-8'))
             f.close()        
         if typ=='I':
-            buf = sass.compile(string=txt, indented=True,)
-            t = Template(buf)
-            txt2 = t.render(Context({'appset': appset} ))
-            f = open_and_create_dir(dest_path if dest_path else os.path.join(static_style,static_file.name+".css"),"wb")
-            f.write(txt2.encode('utf-8'))
-            f.close()        
+            if sass:
+                buf = sass.compile(string=txt, indented=True,)
+                t = Template(buf)
+                txt2 = t.render(Context({'appset': appset} ))
+                f = open_and_create_dir(dest_path if dest_path else os.path.join(static_style,static_file.name+".css"),"wb")
+                f.write(txt2.encode('utf-8'))
+                f.close()        
         if typ=='U':
             t = Template(txt)
             txt2 = t.render(Context({'appset': appset} ))

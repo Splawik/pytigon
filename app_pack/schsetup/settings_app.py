@@ -74,19 +74,21 @@ for app in APPS:
             LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
-#INSTALLED_APPS.append('easy_thumbnails')
-#INSTALLED_APPS.append('filer')
 INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
 
-THUMBNAIL_PROCESSORS = (
-    'easy_thumbnails.processors.colorspace',
-    'easy_thumbnails.processors.autocrop',
-    #'easy_thumbnails.processors.scale_and_crop',
-    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'easy_thumbnails.processors.filters',
-)
+if platform_name()!='Android':
+    INSTALLED_APPS.append('easy_thumbnails')
+    INSTALLED_APPS.append('filer')
+
+    THUMBNAIL_PROCESSORS = (
+        'easy_thumbnails.processors.colorspace',
+        'easy_thumbnails.processors.autocrop',
+        #'easy_thumbnails.processors.scale_and_crop',
+        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        'easy_thumbnails.processors.filters',
+    )
 
 FILER_DEBUG = True
 
@@ -148,5 +150,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.12.23 11:39:22'
+GEN_TIME = '2018.12.26 21:56:43'
 

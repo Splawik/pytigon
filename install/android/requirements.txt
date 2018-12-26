@@ -10,3 +10,4 @@ urllib3
 six 
 git+https://github.com/Splawik/Transcrypt.git@es5
 xonsh 
+sqlparse

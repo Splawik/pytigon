@@ -57,6 +57,9 @@ from schlib.schtools.install_init import init
 
 init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
+if not schserw_settings.APP_PACK_PATH in sys.path:
+    sys.path.append(schserw_settings.APP_PACK_PATH)
+
 p1 = p2 = None
 if 'SECONDARY_STORAGE' in os.environ:
     p1 = os.path.join(os.environ['SECONDARY_STORAGE'], "pytigon_data")
@@ -130,35 +133,44 @@ class InterfaceManager(BoxLayout):
         except:
             pass
 
-        x = [ pos for pos in os.listdir(os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")) if not pos.startswith('_')  ]
-        print("python:Pytigon:F0:", os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack"))
+        base_apps_path = os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")
+        l = [ pos for pos in os.listdir(base_apps_path) if not pos.startswith('_')  ]
+        apps = []
+        for app_pack in l:
+            base_apps_path2 = os.path.join(base_apps_path, app_pack)
+            try:
+                x = __import__(app_pack+".apps")
+                if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
+                    apps.append(app_pack)
+            except:
+                print("Error importing module: ", app_pack+".apps")
 
-        if len(x)>1:
+        if len(apps)>1:
             print("python:Pytigon:F1")
-            if len(x)>MAX_SEL_APP:
+            if len(apps)>MAX_SEL_APP:
                 dy = MAX_SEL_APP - 1
             else:
-                dy = len(x)
+                dy = len(apps)
         
-            for pos in x[:dy]:
+            for pos in apps[:dy]:
                 button = Button(id=pos, text=pos, size_hint=(1,1))
                 button.bind(on_release=self.chose_callback)
                 self.add_widget(button)
 
-            if len(x)>MAX_SEL_APP:
+            if len(apps)>MAX_SEL_APP:
                 spinner = Spinner(
                     text='Other applications',
-                    values= x[dy:],
+                    values= apps[dy:],
                     size_hint=(.5, 1),
                     pos_hint={'center_x': 0.5, }
                     )
                 spinner.bind(text=self.spinner_callback)
                 self.add_widget(spinner)
         else:
-            print("python:Pytigon:F2", x)            
-            if len(x)>0:
+            print("python:Pytigon:F2", apps)
+            if len(apps)>0:
                 print("python:Pytigon:F3")
-                self.on_app_chosen(x[0])
+                self.on_app_chosen(apps[0])
             else:
                 print("python:Pytigon:F4")
                 self.on_app_chosen()
