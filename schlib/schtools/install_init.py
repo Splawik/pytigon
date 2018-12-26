@@ -24,7 +24,8 @@ import zipfile
 #import shutil
 from distutils.dir_util import copy_tree
 import configparser
-from schlib.schtools.process import py_run
+from schlib.schtools.process import py_run, py_manage
+from schlib.schtools.platform_info import platform_name
 
 def _mkdir(path, ext=None):
     if ext:
@@ -108,17 +109,17 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                 db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
                 os.chdir(path)
                 if not os.path.exists(db_path):
-                    exit_code, output_tab, err_tab = py_run(['manage.py', 'makeallmigrations'])
+                    exit_code, output_tab, err_tab = py_manage(['makeallmigrations',], True)
                     if err_tab:
                         print(err_tab)
-                    exit_code, output_tab, err_tab = py_run(['manage.py', 'migrate'])
+                    exit_code, output_tab, err_tab = py_manage(['migrate',], True)
                     if err_tab:
                         print(err_tab)
-                    exit_code, output_tab, err_tab = py_run(['manage.py', 'createautouser'])
+                    exit_code, output_tab, err_tab = py_manage(['createautouser',], True)
                     if err_tab:
                         print(err_tab)
                     if app == 'schdevtools':
-                        exit_code, output_tab, err_tab = py_run(['manage.py', 'import_projects'])
+                        exit_code, output_tab, err_tab = py_manage(['import_projects',], True)
                         if err_tab:
                             print(err_tab)
         os.chdir(tmp)

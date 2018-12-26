@@ -18,7 +18,10 @@
 #version: "0.1a"
 
 import sys
+import os
+import asyncio
 from subprocess import Popen, PIPE
+from threading import Thread
 
 from schlib.schtools.tools import get_executable
 
@@ -57,3 +60,23 @@ def py_run(cmd):
     else:
         err_tab = None
     return (exit_code, output_tab, err_tab)
+
+def _manage(path, cmd):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    os.chdir(path)
+    m = __import__("schlib.schdjangoext.django_manage")
+    sys.path.insert(0, path)
+    m.schdjangoext.django_manage.cmd(cmd, from_main=False)
+    sys.path.pop(0)
+
+def py_manage(cmd, thread_version = False):
+    if len(cmd) > 0:
+        if thread_version:
+            thread = Thread(target=_manage, args=(os.getcwd(), cmd,))
+            thread.start()
+            thread.join()
+            return 0, [], []
+        else:
+            return py_run(['manage.py',] + cmd)
+

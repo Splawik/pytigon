@@ -125,7 +125,7 @@ class InterfaceManager(BoxLayout):
 
         try:
             ip_address  = get_ip_address(b'wlan0')
-            label = Label(text="My ip address: " + ip_address)
+            label = Label(text=f"[color=88f][b]My ip address: {ip_address}[/b][/color]", markup=True)
             self.add_widget(label)
         except:
             pass
@@ -142,7 +142,7 @@ class InterfaceManager(BoxLayout):
         
             for pos in x[:dy]:
                 button = Button(id=pos, text=pos, size_hint=(1,1))
-                button.bind(on_press=self.chose_callback)
+                button.bind(on_release=self.chose_callback)
                 self.add_widget(button)
 
             if len(x)>MAX_SEL_APP:
