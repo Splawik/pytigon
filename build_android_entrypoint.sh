@@ -10,7 +10,7 @@ export GRADLE_OPTS="-Xms1724m -Xmx5048m -Dorg.gradle.jvmargs='-Xms1724m -Xmx5048
 
 cd $HOME/prj/pytigon/install/android/_android_src/libpytigon2/
 ./gradlew build
-cd $HOME/prj/pytigon/install/android/
+cd $HOME/prj/pytigon
 cp $HOME/prj/pytigon/install/android/_android_src/libpytigon2/build/intermediates/bundles/default/classes.jar $HOME/prj/pytigon/install/android/pytigon.jar
 
 
