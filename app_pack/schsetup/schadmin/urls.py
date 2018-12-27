@@ -19,10 +19,13 @@ urlpatterns = [
 gen = generic_table_start(urlpatterns, 'schadmin', views)
 from django.conf.urls import include
 from django.contrib import admin
+from schlib.schtools.platform_info import platform_name
 
 urlpatterns.append(url(r'^admin/', admin.site.urls))
-urlpatterns.append(url(r'^filer/', include('filer.urls')))
 urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
+
+if platform_name()!='Android':
+    urlpatterns.append(url(r'^filer/', include('filer.urls')))
 
 
 

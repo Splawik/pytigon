@@ -106,6 +106,7 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
             if os.path.isdir(path):
                 db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
                 os.chdir(path)
+                print("python: pytigon: init: ", path)
                 if not os.path.exists(db_path):
                     exit_code, output_tab, err_tab = py_manage(['makeallmigrations',], True)
                     if err_tab:
@@ -117,7 +118,9 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                     if err_tab:
                         print(err_tab)
                     if app == 'schdevtools':
+                        print("python: pytigon: import_projects!")
                         exit_code, output_tab, err_tab = py_manage(['import_projects',], True)
+                        print("python: pytigon: projects imported!")
                         if err_tab:
                             print(err_tab)
         os.chdir(tmp)
