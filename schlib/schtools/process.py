@@ -20,11 +20,39 @@
 import sys
 import os
 import asyncio
+import imp
 from subprocess import Popen, PIPE
 from threading import Thread
 import importlib
 
 from schlib.schtools.tools import get_executable
+
+class FrozenModules():
+    def __init__(self):
+        self.to_restore = {}
+        self.all = []
+        to_delete = []
+
+        for pos in sys.modules:
+            self.all.append(pos)
+            if pos.startswith('django') or pos.startswith('schlib') or pos.startswith('schserw') or pos.startswith('settings'):
+                self.to_restore[pos] = sys.modules[pos]
+                to_delete.append(pos)
+
+        for pos in to_delete:
+            del sys.modules[pos]
+
+    def restore(self):
+        to_delete = []
+        for module in sys.modules:
+            if not module in self.all:
+                to_delete.append(module)
+
+        for module in to_delete:
+            del sys.modules[module]
+
+        for pos in self.to_restore:
+            sys.modules[pos] = self.to_restore[pos]
 
 def py_run(cmd):
     """run python script
@@ -63,32 +91,36 @@ def py_run(cmd):
     return (exit_code, output_tab, err_tab)
 
 def _manage(path, cmd):
+    frozen_modules = FrozenModules()
+
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     os.chdir(path)
-    tmp = []
-    to_reload = {}
-    for m in sys.modules:
-        tmp.append(m)
-    for pos in tmp:
-        if pos.startswith('django') or pos.startswith('schserw') or pos.startswith('settings'):
-            to_reload[pos] = sys.modules[pos]
-            del sys.modules[pos]
-
+    #tmp = []
+    #to_reload = {}
+    #for m in sys.modules:
+    #    tmp.append(m)
+    #for pos in tmp:
+    #    if pos.startswith('django') or pos.startswith('schserw') or pos.startswith('settings'):
+    #        to_reload[pos] = sys.modules[pos]
+    #        del sys.modules[pos]
+    #
     m = __import__("schlib.schdjangoext.django_manage")
     sys.path.insert(0, path)
     m.schdjangoext.django_manage.cmd(cmd, from_main=False)
     sys.path.pop(0)
-    to_delete = []
-    for module in sys.modules:
-        if not module in tmp:
-            to_delete.append(module)
+    #to_delete = []
+    #for module in sys.modules:
+    #    if not module in tmp:
+    #        to_delete.append(module)
 
-    for module in to_delete:
-        del sys.modules[module]
+    #for module in to_delete:
+    #    del sys.modules[module]
 
-    for pos in to_reload:
-        sys.modules[pos] = to_reload[pos]
+    #for pos in to_reload:
+    #    sys.modules[pos] = to_reload[pos]
+
+    frozen_modules.restore()
 
 def py_manage(cmd, thread_version = False):
     if len(cmd) > 0:
@@ -99,4 +131,7 @@ def py_manage(cmd, thread_version = False):
             return 0, [], []
         else:
             return py_run(['manage.py',] + cmd)
+
+
+
 

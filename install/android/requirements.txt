@@ -11,4 +11,5 @@ six
 git+https://github.com/Splawik/Transcrypt.git@es5
 xonsh 
 sqlparse
-js_asset
+django-js-asset
+
