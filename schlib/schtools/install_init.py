@@ -21,11 +21,9 @@ import os
 import sys
 from schlib.schfs.vfstools import extractall
 import zipfile
-#import shutil
 from distutils.dir_util import copy_tree
 import configparser
-from schlib.schtools.process import py_run, py_manage
-from schlib.schtools.platform_info import platform_name
+from schlib.schtools.process import py_manage
 
 def _mkdir(path, ext=None):
     if ext:
