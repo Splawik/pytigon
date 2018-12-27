@@ -108,18 +108,18 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
                 os.chdir(path)
                 print("python: pytigon: init: ", path)
                 if not os.path.exists(db_path):
-                    exit_code, output_tab, err_tab = py_manage(['makeallmigrations',], True)
+                    exit_code, output_tab, err_tab = py_manage(['makeallmigrations',], False)
                     if err_tab:
                         print(err_tab)
-                    exit_code, output_tab, err_tab = py_manage(['migrate',], True)
+                    exit_code, output_tab, err_tab = py_manage(['migrate',], False)
                     if err_tab:
                         print(err_tab)
-                    exit_code, output_tab, err_tab = py_manage(['createautouser',], True)
+                    exit_code, output_tab, err_tab = py_manage(['createautouser',], False)
                     if err_tab:
                         print(err_tab)
                     if app == 'schdevtools':
                         print("python: pytigon: import_projects!")
-                        exit_code, output_tab, err_tab = py_manage(['import_projects',], True)
+                        exit_code, output_tab, err_tab = py_manage(['import_projects',], False)
                         print("python: pytigon: projects imported!")
                         if err_tab:
                             print(err_tab)

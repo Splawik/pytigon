@@ -24,7 +24,15 @@ else
 fi 
 
 yes | cp -Rf venv/lib/python3.7/site-packages/* pytigon/_android
-
+cd pytigon
+export  DATA_PATH=$HOME/prj/pytigon-android/data
+rm -r $DATA_PATH
+python3.7 manage.py compile_templates
+cd ..
+cd data
+zip .pytigon.zip -r *
+cd ..
+cp ./data/.pytigon.zip ./pytigon/install
 cd pytigon
 bash build_android.sh
 cd ..

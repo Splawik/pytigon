@@ -46,7 +46,7 @@ def run(param=None):
             x = argv[1].split('_',1)
             app = x[1]
 
-            if not os.path.exists(APP_PACK_PATH):
+            if not os.path.exists(APP_PACK_PATH) or not os.path.exists(DATA_PATH):
                 from schlib.schtools.install_init import init
                 init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
@@ -78,7 +78,7 @@ def run(param=None):
             x = argv[1].split('_', 1)
             app = x[1]
 
-            if not os.path.exists(APP_PACK_PATH):
+            if not os.path.exists(APP_PACK_PATH) or not os.path.exists(DATA_PATH):
                 from schlib.schtools.install_init import init
                 init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 

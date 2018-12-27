@@ -33,12 +33,19 @@ def get_main_paths():
             ret['DATA_PATH'] = p2
         ret['LOG_PATH'] = ret['DATA_PATH']
     else:
-        if ret['ROOT_PATH'].startswith('/var/www'):
-            ret['DATA_PATH'] = "/home/www-data/.pytigon"
-            ret['LOG_PATH'] = "/var/log"
+        if 'DATA_PATH' in environ:
+            ret['DATA_PATH']  = environ['DATA_PATH']
+            if ret['ROOT_PATH'].startswith('/var/www'):
+                ret['LOG_PATH'] = "/var/log"
+            else:
+                ret['LOG_PATH'] = ret['DATA_PATH']            
         else:
-            ret['DATA_PATH'] = os.path.join(os.path.expanduser("~"), ".pytigon")
-            ret['LOG_PATH'] = ret['DATA_PATH']
+            if ret['ROOT_PATH'].startswith('/var/www'):
+                ret['DATA_PATH'] = "/home/www-data/.pytigon"
+                ret['LOG_PATH'] = "/var/log"
+            else:
+                ret['DATA_PATH'] = os.path.join(os.path.expanduser("~"), ".pytigon")
+                ret['LOG_PATH'] = ret['DATA_PATH']
 
     ret['TEMP_PATH'] = tempfile.gettempdir()
 
