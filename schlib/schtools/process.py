@@ -22,6 +22,7 @@ import os
 import asyncio
 from subprocess import Popen, PIPE
 from threading import Thread
+import importlib
 
 from schlib.schtools.tools import get_executable
 
@@ -65,10 +66,29 @@ def _manage(path, cmd):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     os.chdir(path)
+    tmp = []
+    to_reload = {}
+    for m in sys.modules:
+        tmp.append(m)
+    for pos in tmp:
+        if pos.startswith('django') or pos.startswith('schserw') or pos.startswith('settings'):
+            to_reload[pos] = sys.modules[pos]
+            del sys.modules[pos]
+
     m = __import__("schlib.schdjangoext.django_manage")
     sys.path.insert(0, path)
     m.schdjangoext.django_manage.cmd(cmd, from_main=False)
     sys.path.pop(0)
+    to_delete = []
+    for module in sys.modules:
+        if not module in tmp:
+            to_delete.append(module)
+
+    for module in to_delete:
+        del sys.modules[module]
+
+    for pos in to_reload:
+        sys.modules[pos] = to_reload[pos]
 
 def py_manage(cmd, thread_version = False):
     if len(cmd) > 0:
