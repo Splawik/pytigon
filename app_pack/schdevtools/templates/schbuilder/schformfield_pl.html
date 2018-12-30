@@ -106,7 +106,9 @@
     <h2>Table field list</h2>
 {% endblock %}
 {% block row_edit %}
-        {{form.fields_as_table.parent__name__required__label__initial__widget__help_text__error_messages__param}}
+        {% form %}
+                "parent", "name", "required", "label", "initial", "widget", "help_text", "error_messages", "param"
+        {% endform %}
         <tr>
                 <td></td>
                 <td>

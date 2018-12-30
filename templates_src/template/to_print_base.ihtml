@@ -1,0 +1,189 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends default_template2
+
+
+% load exfiltry
+% load exsyntax
+% load static
+
+%% js_scripts_base
+    script language=javascript
+        .window.BASE_PATH = '{{base_path}}';
+        .window.LOADED = 0
+
+    % if request.get_host == '127.0.0.2':
+        {% jscript_link 'sch/schXMLHttpRequest.js' %}
+
+    {% jscript_link 'system/browser-polyfill.min.js' %}
+
+    {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
+    {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+    {% jscript_link 'vanillajs_plugins/lz-string.min.js' %}
+    {% jscript_link 'vanillajs_plugins/js.cookie.js' %}
+    {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+    {% jscript_link 'vanillajs_plugins/popper.min.js' %}
+
+    {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+
+    {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
+    {% jscript_link 'django_select2/django_select2.js' %}
+
+
+    {% jscript_link 'jquery_plugins/jquery.form.js' %}
+    {% jscript_link 'jquery_plugins/csrf.js' %}
+
+    {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+
+
+    {% jscript_link 'jquery_plugins/jquery.unique-element-id.js' %}
+    {% jscript_link 'jquery_plugins/jquery.draggable.js' %}
+    {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
+
+    %% bootstrap_js
+        {% jscript_link 'bootstrap/js/bootstrap.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
+
+    {% jscript_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.js' %}
+
+    {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
+
+
+    {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
+    {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
+
+    {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
+
+    %% ext_js_scripts
+
+    {% jscript_link 'sch/pytigon.js' %}
+    {% jscript_link 'sch/inline_dialog.js' %}
+
+    %% theme_js_scripts
+
+%% jquery_init
+    %% js_app_init
+        .function base_fragment_init() {
+        .    new Vue({ el: '.content' })
+        .    window.LOADED=1
+        .}
+    %% component_init
+        .component_init = null
+    .pytigon.app_init('{{appset_name}}', 'traditional', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+
+
+%% jquery_ready_start
+    .jQuery(document).ready(function() {
+
+
+%% jquery_ready
+    .pytigon.jquery_ready();
+    .base_fragment_init();
+
+
+%% jquery_ready_end
+  });
+
+
+%% js_scripts
+    % if form_edit or form_delete or form_info
+        % if form_ext
+            {{ block.super }}
+    % else
+        {{ block.super }}
+
+
+%% js_extrascipts_init
+    % if form_edit or form_delete or form_info
+        % if form_ext
+            {{ block.super }}
+    % else
+        {{ block.super }}
+
+
+%% js_script_body
+    %% jquery_ovr
+
+%% css_links
+    {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
+
+    {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
+
+    {% css_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.css' %}
+    % comment:
+        {% css_link 'bootstrap_plugins/bootstrap-tabdrop/css/tabdrop.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
+        {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
+
+    {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
+    {% css_link 'bootstrap_plugins/modal-fullscreen.css' %}
+
+    {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
+    {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
+
+    {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
+    {% css_link 'themes/select2-bootstrap.css' %}
+
+    {{ form.media.css }}
+
+
+    %% botstrap_css
+        {% css_link 'bootstrap/css/bootstrap.min.css' %}
+
+    %% theme_css_links
+        {% css_link 'sch/select2-material.css' %}
+
+    %% theme_css_links_spec
+        % comment:
+            {% css_link 'themes/default.css'|css_hack %}
+            {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
+
+        {% css_link 'themes/default.css' %}
+        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
+
+
+
+%% css_start
+    <style type="text/css">
+
+%% css_end
+    </style>
+
+
+%% page_start
+
+%% body_start
+
+%% body_header
+
+%% nav
+
+%% login
+
+%% body_init
+
+%% panel
+
+%% messages
+
+%% navglobal
+
+%% sidebar
+
+%% tabs
+    head
+        meta charset=utf-8
+        title
+            {{title}}
+    % with NO_TABS=True:
+        {{block.super}}
+
+%% html_widgets_init
+
+%% body_end
+
+%% page_end
+

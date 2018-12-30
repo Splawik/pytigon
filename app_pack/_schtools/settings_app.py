@@ -121,7 +121,7 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
- ("^"+URL_ROOT_PREFIX+r"schlog/shell/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schauth/shell/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -130,5 +130,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2018.12.23 11:37:45'
+GEN_TIME = '2018.12.30 11:11:54'
 

@@ -1,2 +1,2 @@
 % load static
-link rel=stylesheet,,,type=text/css,,,href={% get_static_prefix %}{{href}},,,media=screen
+link rel=stylesheet,,,type=text/css,,,href={% get_static_prefix %}{{href}}

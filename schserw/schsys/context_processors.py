@@ -90,6 +90,8 @@ def standard_web_browser(request):
             return 6
         elif 'only_content' in request.GET:
             return 5
+        elif 'to_print' in request.GET:
+            return 9
         else:
             return 1
 
@@ -554,6 +556,9 @@ def sch_standard(request):
         d_template2 = default_template(b_type)
     elif standard == 6:
         d_template = default_template('only_table')
+        d_template2 = default_template(b_type)
+    elif standard == 9:
+        d_template = default_template('to_print')
         d_template2 = default_template(b_type)
     else:
         d_template = default_template(b_type)

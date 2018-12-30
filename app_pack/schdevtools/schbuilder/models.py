@@ -20,6 +20,8 @@ from schsimplescripts.models import *
 
 from schtools.models import *
 
+from schauth.models import *
+
 from schwiki.models import *
 
 from schcommander.models import *
@@ -313,6 +315,7 @@ class SChAppSet( models.Model):
     main = ext_models.NullBooleanField('Main pack', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
+    app_main = models.TextField('Main application entrypoint', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     desktop_gui_type = models.CharField('Gui type for pc web browser', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)
     smartfon_gui_type = models.CharField('Gui type for smartfon', null=False, blank=False, editable=True, default='auto',choices=HtmlGui_CHOICES,max_length=32)

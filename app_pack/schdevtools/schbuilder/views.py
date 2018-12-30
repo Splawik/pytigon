@@ -35,6 +35,7 @@ import os
 import io
 import ctypes 
 import time
+import configparser
 
 from django.db import transaction
 from django.urls import reverse
@@ -48,6 +49,7 @@ from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schfs.vfstools import ZipWriter, open_and_create_dir
 from schlib.schtools.install import extract_ptig
 from schlib.schtools.process import py_run
+from schlib.schtools.platform_info import platform_name
 
 from ext_lib.pygettext import main as gtext
 
@@ -490,7 +492,9 @@ def gen(request, pk):
         f.write("GEN_TIME='%s'\n\n" % gmt_str)
         if appset.install_file:
             f.write(appset.install_file)
-    
+    if appset.app_main:
+        with open(os.path.join(base_path, "appset_main.py"), "wt") as f:
+            f.write(appset.app_main)
     
     template_to_file(base_path, "manage", "manage.py",  {'appset': appset})
     template_to_file(base_path, "init", "__init__.py",  {'appset': appset})
@@ -818,8 +822,33 @@ def gen(request, pk):
         bstream = io.BytesIO(bcontent)
         with zipfile.ZipFile(bstream, "r") as izip:
             izip.extractall(base_path)
-        
-    object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
+    
+    success = True
+    
+    if platform_name()!='Android' and appset.install_file:
+        init_str = "[DEFAULT]\n"+appset.install_file
+        config = configparser.ConfigParser(allow_no_value=True)
+        config.read_string(init_str)
+        pip_str = config['DEFAULT']['pip']
+        if pip_str:
+            applib_path  = os.path.join(base_path, "applib")
+            if not os.path.exists(applib_path):
+                os.mkdir(applib_path)
+            packages = [ x.strip() for x in pip_str.split(' ') if x ]
+            exit_code, output_tab, err_tab = py_run(['-m', 'pip', 'install', f'--target={applib_path}', '--upgrade', ] + packages)
+            if output_tab:
+                for pos in output_tab:
+                    if pos:
+                        object_list.append((datetime.datetime.now().time().isoformat(), "pip info", pos))
+            if err_tab:
+                for pos in err_tab:
+                    if pos:
+                        object_list.append((datetime.datetime.now().time().isoformat(), "pip error", pos))
+                        success = False
+    if success:    
+        object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
+    else:
+        object_list.append((datetime.datetime.now().time().isoformat(), 'ERRORS:', ""))    
         
     return { 'object_list': reversed(object_list) }
     

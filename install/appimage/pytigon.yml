@@ -5,11 +5,12 @@ ingredients:
   
   sources: 
     - deb http://archive.ubuntu.com/ubuntu/ bionic main universe
-    - deb  https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa bionic main
+    - deb https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa bionic main
     
   packages:
     - python3.7
     - python3.7-distutils
+    - libpython3.7
     - curl 
     - git 
     - apt-transport-https 
