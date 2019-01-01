@@ -9,6 +9,9 @@ var _pivot = function (resolve, reject) {
 			var options = dict ({'rows': list (['color']), 'cols': list (['shape'])});
 			var pivottable = jQuery (this.$el).pivotUI (data, options);
 			this.pivottable = pivottable;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		resolve (dict ({'props': props, 'template': template, 'mounted': mounted}));
 	};

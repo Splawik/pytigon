@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-12-02 20:32:47
+// Transcrypt'ed from Python, 2019-01-01 23:54:13
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -155,6 +155,7 @@
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'org.transcrypt.__standard__', {
@@ -191,15 +192,17 @@
 								self.stack = 'No stack trace available';
 							}
 						});},
-						get __repr__ () {return __get__ (this, function (self) {
+						__repr__: function () {
+							var self = this;
 							if (len (self.__args__)) {
 								return '{}{}'.format (self.__class__.__name__, repr (tuple (self.__args__)));
 							}
 							else {
 								return '{}()'.format (self.__class__.__name__);
 							}
-						});},
-						get __str__ () {return __get__ (this, function (self) {
+						},
+						__str__: function () {
+							var self = this;
 							if (len (self.__args__) > 1) {
 								return str (tuple (self.__args__));
 							}
@@ -209,7 +212,7 @@
 							else {
 								return '';
 							}
-						});}
+						}
 					});
 					var IterableError = __class__ ('IterableError', [Exception], {
 						__module__: __name__,
@@ -405,7 +408,7 @@
 								self.element.innerHTML = '_';
 							}
 						});},
-						get print () {return __get__ (this, function (self) {
+						print: function () {
 							var sep = ' ';
 							var end = '\n';
 							if (arguments.length) {
@@ -414,17 +417,17 @@
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
-											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'sep': var sep = __allkwargs0__ [__attrib0__]; break;
 											case 'end': var end = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
 								}
-								var args = tuple ([].slice.apply (arguments).slice (1, __ilastarg0__ + 1));
+								var args = tuple ([].slice.apply (arguments).slice (0, __ilastarg0__ + 1));
 							}
 							else {
 								var args = tuple ();
 							}
+							var self = this;
 							self.buffer = '{}{}{}'.format (self.buffer, sep.join ((function () {
 								var __accu0__ = [];
 								var __iterable0__ = args;
@@ -449,15 +452,14 @@
 									return __accu0__;
 								}) ()));
 							}
-						});},
-						get input () {return __get__ (this, function (self, question) {
+						},
+						input: function (question) {
 							if (arguments.length) {
 								var __ilastarg0__ = arguments.length - 1;
 								if (arguments [__ilastarg0__] && arguments [__ilastarg0__].hasOwnProperty ("__kwargtrans__")) {
 									var __allkwargs0__ = arguments [__ilastarg0__--];
 									for (var __attrib0__ in __allkwargs0__) {
 										switch (__attrib0__) {
-											case 'self': var self = __allkwargs0__ [__attrib0__]; break;
 											case 'question': var question = __allkwargs0__ [__attrib0__]; break;
 										}
 									}
@@ -465,11 +467,12 @@
 							}
 							else {
 							}
+							var self = this;
 							self.print ('{}'.format (question), __kwargtrans__ ({end: ''}));
 							var answer = window.prompt ('\n'.join (self.buffer.py_split ('\n').__getslice__ (-(16), null, 1)));
 							self.print (answer);
 							return answer;
-						});}
+						}
 					});
 					var __terminal__ = __Terminal__ ();
 					__pragma__ ('<all>')
@@ -499,6 +502,7 @@
 			}
 		}
 	);
+
     var __call__ = function (/* <callee>, <this>, <params>* */) {
         var args = [] .slice.apply (arguments);
         if (typeof args [0] == 'object' && '__call__' in args [0]) {
@@ -4454,6 +4458,7 @@ function pytigon () {
 		var img_field = __init__ (__world__.widget).img_field;
 		var process_on_click = __init__ (__world__.click_process).process_on_click;
 		window.PS = null;
+		window.MOUNTED_COMPONENTS = 0;
 		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
 			moment.locale (lang);
 			window.ACTIVE_PAGE = null;
@@ -4780,6 +4785,7 @@ function pytigon () {
 			jQuery ('.navbar-ex1-collapse').on ('hidden.bs.collapse', _local_fun);
 			if (window.APPLICATION_TEMPLATE == 'traditional') {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
+				new Vue (dict ({'el': '#body_body'}));
 			}
 			else if (window.APPLICATION_TEMPLATE == 'modern') {
 				var txt = jQuery ('.page').html ();
@@ -4793,6 +4799,7 @@ function pytigon () {
 			}
 			else {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
+				new Vue (dict ({'el': '#body_body'}));
 			}
 		};
 		var on_new_tab = function (url, elem, e) {
@@ -4928,7 +4935,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

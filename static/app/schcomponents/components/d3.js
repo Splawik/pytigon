@@ -13,6 +13,9 @@ var _d3 = function (resolve, reject) {
 				d3.select (this).style ('fill', 'white');
 			};
 			sampleSVG.append ('circle').style ('stroke', 'gray').style ('fill', 'white').attr ('r', 40).attr ('cx', 50).attr ('cy', 50).on ('mouseover', _on_mouseover).on ('mouseout', _on_mouseout);
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		resolve (dict ({'props': props, 'template': template, 'mounted': mounted}));
 	};

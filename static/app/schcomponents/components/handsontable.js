@@ -9,6 +9,9 @@ var _handsontable = function (resolve, reject) {
 			var data = list ([list (['Column A', 'Column B', 'Column C']), list (['1', '2', '3'])]);
 			var htable = new window.Handsontable (this.$el, dict ({'data': data}));
 			self.htable = htable;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		resolve (dict ({'props': props, 'template': template, 'mounted': mounted}));
 	};

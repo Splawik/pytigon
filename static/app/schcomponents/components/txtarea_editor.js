@@ -17,6 +17,9 @@ var mounted = function () {
 			txtarea.val (editor.getSession ().getValue ());
 		};
 		editor.getSession ().on ('change', _on_change);
+		if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+			window.MOUNTED_COMPONENTS++;
+		}
 	};
 	load_js (base_path + '/ace.js', _on_loadjs);
 };

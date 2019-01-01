@@ -44,14 +44,17 @@ def compile(python_code, temp_dir=None):
 
     compilerPath = [programDir, modulesDir, tmp] + sys.path
 
-    src = os.path.join(tmp, "input.py")
     dest = os.path.join(os.path.join(tmp, "__javascript__"), "input.mod.js")
 
     if os.path.exists(dest):
         os.remove(dest)
 
-    with open(src, "wt") as pyinput:
-        pyinput.write(python_code)
+    if python_code.startswith('file://'):
+        src = python_code[7:]
+    else:
+        src = os.path.join(tmp, "input.py")
+        with open(src, "wt") as pyinput:
+            pyinput.write(python_code)
 
     x = {
         'source': src, 
@@ -130,7 +133,11 @@ def compile(python_code, temp_dir=None):
                         tab.append("Python to javascript compile error:" + description)
                         tab.append("")
                         tab.append("code:")
-                        lines = python_code.split('\n')
+                        if python_code.startswith('file://'):
+                            with open(src, 'rt') as f:
+                                lines = f.read().split('\n')
+                        else:
+                            lines = python_code.split('\n')
                         start = row - 4
                         end = row + 4
                         if start < 0:

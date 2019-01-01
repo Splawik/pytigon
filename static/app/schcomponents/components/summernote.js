@@ -29,6 +29,9 @@ var _htmleditor = function (resolve, reject) {
 			}
 			editor.summernote ();
 			self.editor = editor;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		var save = function () {
 			var self = this;

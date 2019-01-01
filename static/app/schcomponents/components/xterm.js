@@ -56,6 +56,9 @@ var _xterm = function (resolve, reject) {
 					websocket.onmessage = _on_message;
 					jQuery (window).resize (_fit_to_screen);
 					_fit_to_screen ();
+					if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+						window.MOUNTED_COMPONENTS++;
+					}
 				};
 				websocket.onopen = _on_websocket_open;
 			};

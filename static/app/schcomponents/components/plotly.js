@@ -133,6 +133,9 @@ var _plotly = function (resolve, reject) {
 				var plot = Plotly.newPlot (this_obj.$el, data, layout, dict ({'displayModeBar': true, 'showLink': false, 'displaylogo': false, 'scrollZoom': true, 'modeBarButtonsToRemove': list (['sendDataToCloud'])}));
 				this_obj.plot = plot;
 				var el = this_obj.$el;
+				if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+					window.MOUNTED_COMPONENTS++;
+				}
 				if (events) {
 					var __iterable0__ = events;
 					for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {

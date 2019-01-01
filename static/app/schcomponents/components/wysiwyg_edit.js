@@ -27,6 +27,9 @@ var _summertextarea = function (resolve, reject) {
 				ed.summernote (options);
 				var value = decodeURIComponent (escape (atob (self.value)));
 				ed.summernote ('code', value);
+				if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+					window.MOUNTED_COMPONENTS++;
+				}
 			};
 			Vue.nextTick (_next);
 		};

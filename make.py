@@ -14,9 +14,11 @@ else:
     os.chdir(script_path)
 
 os.chdir("./static_src/sch")
-sys.argv = ["", "-n", "pytigon.py"]
+sys.argv = ["", "--xpath", script_path, "-n", "pytigon.py"]
 print(os.getcwd())
 from transcrypt.__main__ import main
+sys.path.insert(0, script_path)
+print(sys.path)
 main()
 
 os.chdir(script_path)

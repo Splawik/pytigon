@@ -20,6 +20,9 @@ var _leaflet = function (resolve, reject) {
 			};
 			this.$slots.default.forEach (_process_slot);
 			this.mapobj = mapobj;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		resolve (dict ({'props': props, 'template': template, 'mounted': mounted}));
 	};

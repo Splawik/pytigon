@@ -16,6 +16,9 @@ var _video = function (resolve, reject) {
 			};
 			var player = videojs (this.$el, dict ({}), _on_video);
 			this.player = player;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		resolve (dict ({'props': props, 'template': template, 'mounted': mounted}));
 	};

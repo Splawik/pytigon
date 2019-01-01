@@ -37,6 +37,9 @@ var _vseditor = function (resolve, reject) {
 					};
 					jQuery (window).resize (_on_resize);
 				};
+				if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+					window.MOUNTED_COMPONENTS++;
+				}
 				Vue.nextTick (_next);
 			};
 			var save = function (event) {

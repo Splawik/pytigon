@@ -66,8 +66,6 @@
 %% jquery_init
     %% js_app_init
         .function base_fragment_init() {
-        .    new Vue({ el: '.content' })
-        .    window.LOADED=1
         .}
     %% component_init
         .component_init = null
@@ -179,7 +177,8 @@
         title
             {{title}}
     % with NO_TABS=True:
-        {{block.super}}
+        div id=body_body,,,class=container-fluid tab-pane refr_target refr_object win-content page
+            {{block.super}}
 
 %% html_widgets_init
 

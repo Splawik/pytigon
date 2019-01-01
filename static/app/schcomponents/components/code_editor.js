@@ -55,6 +55,9 @@ var _codeeditor = function (resolve, reject) {
 				editor.getSession ().setValue (atob (self.value));
 			}
 			self.editor = editor;
+			if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
+				window.MOUNTED_COMPONENTS++;
+			}
 		};
 		var save = function () {
 			if (this.href) {
