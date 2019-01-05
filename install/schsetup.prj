@@ -1,5 +1,6 @@
 [
     [
+        null,
         "schcomponents/xterm",
         "tablet_modern",
         null,
@@ -19,7 +20,7 @@
         null,
         "tablet_modern",
         "Setup application",
-        "###<76> settings_app.py\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
+        "###<76> settings_app.py\nINSTALLED_APPS.append('mptt')\n\nINSTALLED_APPS.append('explorer')\n\nif platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n    INSTALLED_APPS.append('filer')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
         ""
     ],
     [
@@ -129,7 +130,7 @@
                 true,
                 "",
                 "Administration",
-                "from django.conf.urls import include\nfrom django.contrib import admin\n\nurlpatterns.append(url(r'^admin/', admin.site.urls))\nurlpatterns.append(url(r'^filer/', include('filer.urls')))\nurlpatterns.append(url(r'^explorer/', include('explorer.urls')))\n",
+                "from django.conf.urls import include\nfrom django.contrib import admin\nfrom schlib.schtools.platform_info import platform_name\n\nurlpatterns.append(url(r'^admin/', admin.site.urls))\nurlpatterns.append(url(r'^explorer/', include('explorer.urls')))\n\nif platform_name()!='Android':\n    urlpatterns.append(url(r'^filer/', include('filer.urls')))\n",
                 "",
                 null
             ],

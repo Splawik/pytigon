@@ -1,3 +1,11 @@
+import os
+import sys
+
+BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..",".."))
+if not BASE_PATH in sys.path:
+    sys.path.insert(0, BASE_PATH)
+os.chdir(BASE_PATH)
+
 import kivy
 from kivy.app import App
 from kivy.lang import Builder
@@ -22,8 +30,6 @@ from kivy.uix.spinner import Spinner
 from kivy.uix.scatter import Scatter
 from kivy.graphics.svg import Svg
 
-import os
-import sys
 import socket
 import fcntl
 import struct
@@ -42,11 +48,6 @@ def get_ip_address(ifname):
         s.fileno(), 0x8915, struct.pack(b'256s', ifname[:15]))[20:24])
 
 MAX_SEL_APP = 10
-
-base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..",".."))
-if not base_path in sys.path:
-    sys.path.insert(0, base_path)
-os.chdir(base_path)
 
 from schlib import init_paths
 

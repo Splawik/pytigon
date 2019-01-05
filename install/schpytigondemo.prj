@@ -1,5 +1,6 @@
 [
     [
+        null,
         "schcomponents/code_editor\nschcomponents/d3\nschcomponents/leaflet\nschcomponents/video-js\nschcomponents/code_editor\nschcomponents/handsontable\nschcomponents/pivottable\nschcomponents/summernote\nschcomponents/txtarea_editor\nschcomponents/plotly\nschcomponents/vs_editor\nschcomponents/xterm",
         "desktop_modern",
         null,

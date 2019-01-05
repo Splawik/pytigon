@@ -1,5 +1,6 @@
 [
     [
+        null,
         "schcomponents/d3\nschcomponents/vs_editor\nschcomponents/plotly",
         "tablet_modern",
         null,

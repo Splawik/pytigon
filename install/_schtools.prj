@@ -1,5 +1,6 @@
 [
     [
+        null,
         "",
         "auto",
         null,
@@ -25,7 +26,7 @@
     [
         [
             [
-                "import pty\nimport select\nimport time\nfrom threading import Thread\nimport subprocess\nimport struct\nimport fcntl\nimport termios\nfrom schlib.schtools.tools import get_executable\n\ndef read_and_forward_pty_output(consumer):\n    max_read_bytes = 1024 * 20\n    while not consumer.exit:\n        time.sleep(0.01)\n        if consumer.fd:\n            timeout_sec = 1\n            (data_ready, _, _) = select.select([consumer.fd, ], [], [], timeout_sec)\n            if data_ready:\n                output = os.read(consumer.fd, max_read_bytes).decode()\n                if output:\n                    consumer.send(text_data=output)\n    print(\"Shell closed\")\n",
+                "import select\nimport time\nfrom threading import Thread\nimport subprocess\nimport struct\n\ntry:\n    import pty\n    import fcntl\n    import termios\nexcept:\n    pass\n    \nfrom schlib.schtools.tools import get_executable\n\ndef read_and_forward_pty_output(consumer):\n    max_read_bytes = 1024 * 20\n    while not consumer.exit:\n        time.sleep(0.01)\n        if consumer.fd:\n            timeout_sec = 1\n            (data_ready, _, _) = select.select([consumer.fd, ], [], [], timeout_sec)\n            if data_ready:\n                output = os.read(consumer.fd, max_read_bytes).decode()\n                if output:\n                    consumer.send(text_data=output)\n    print(\"Shell closed\")\n",
                 null,
                 null,
                 null,
@@ -1139,7 +1140,7 @@
                     null,
                     "Attachements",
                     null,
-                    "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"download\": \"client://status/mail-attachment.png\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% enctype\n    .multipart/form-data\n\n%% list_content_actions    \n    % new_row _(\"New attachement\") \"\" \"\"  \"\" \"{{filter}}\"\n\n%% list_row_header\n    th...Name\n    th...ext\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.ext}}\n\n\n%% list_row_actions\n    % row_actions:\n        .download,_(Download),download,_blank\n    % row_actions:\n        .edit\n        .delete\n\n\n%% row_edit\n    % form:\n\n",
+                    "\n\n{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"download\": \"client://status/mail-attachment.png\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% enctype\n    .multipart/form-data\n\n%% list_content_actions    \n    % new_row _(\"New attachement\") action=\"new_row/{{filter}}\"\n\n%% list_row_header\n    th...Name\n    th...ext\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.ext}}\n\n\n%% list_row_actions\n    % row_actions:\n        .download,_(Download),,_blank\n    % row_actions:\n        .edit\n        .delete\n\n\n%% row_edit\n    % form:\n\n",
                     null,
                     null
                 ]
@@ -1334,6 +1335,142 @@
                 ]
             ],
             [],
+            [],
+            [],
+            [],
+            []
+        ],
+        [
+            [
+                "",
+                null,
+                null,
+                null,
+                "Authorization",
+                "schauth",
+                true,
+                "",
+                "Authorization",
+                null,
+                "",
+                "from django.urls import reverse\nfrom django.contrib.auth import login\nfrom django.contrib.auth.models import User"
+            ],
+            [
+                [
+                    [
+                        null,
+                        null,
+                        true,
+                        null,
+                        "UrlWithAuth",
+                        "['id']",
+                        null,
+                        null,
+                        null,
+                        "Url with authorization",
+                        "Urls with authorization"
+                    ],
+                    [
+                        [
+                            false,
+                            null,
+                            false,
+                            null,
+                            "User name",
+                            true,
+                            null,
+                            "username",
+                            false,
+                            "max_length=64",
+                            null,
+                            "CharField",
+                            false,
+                            null
+                        ],
+                        [
+                            false,
+                            null,
+                            true,
+                            null,
+                            "Key",
+                            true,
+                            null,
+                            "key",
+                            false,
+                            "max_length=255",
+                            null,
+                            "CharField",
+                            true,
+                            null
+                        ],
+                        [
+                            true,
+                            null,
+                            false,
+                            null,
+                            "Redirect to",
+                            true,
+                            null,
+                            "redirect_to",
+                            true,
+                            "max_length=255",
+                            null,
+                            "CharField",
+                            false,
+                            null
+                        ],
+                        [
+                            true,
+                            null,
+                            false,
+                            null,
+                            "Post data",
+                            false,
+                            null,
+                            "post_data",
+                            true,
+                            null,
+                            null,
+                            "TextField",
+                            false,
+                            null
+                        ]
+                    ]
+                ]
+            ],
+            [],
+            [
+                [
+                    null,
+                    "auth",
+                    "key, path",
+                    "U",
+                    "auth/(?P<key>[\\w-]+)/(?P<path>.*)$",
+                    "{}",
+                    "objects = models.UrlWithAuth.objects.filter(key=key)\nif len(objects) == 1:\n    username = objects[0].username\n    users = User.objects.filter(username=username)\n    if len(users)==1:\n        login(request, users[0])\n        if path:\n            new_url = reverse('start')+path\n        else:\n            new_url = reverse('start')+objects[0].redirect_to\n        return HttpResponseRedirect(new_url)\n\nnew_url = reverse('start')\nreturn HttpResponseRedirect(new_url)\n",
+                    "u"
+                ]
+            ],
+            [
+                [
+                    null,
+                    "UrlWithAuth",
+                    null,
+                    "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New key\"\n\n%% list_row_header\n    th...User name\n    th...Redirect to\n\n%% list_row\n    td...{{object.username}}\n    td...{{object.redirect_to}}\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% row_edit\n    % form:\n",
+                    null,
+                    null
+                ]
+            ],
+            [
+                [
+                    "png://apps/system-users.png",
+                    "1",
+                    "Urls with auth",
+                    null,
+                    "table/UrlWithAuth/-/form/list/",
+                    "desktop"
+                ]
+            ],
             [],
             [],
             [],

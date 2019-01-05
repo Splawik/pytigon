@@ -1,5 +1,6 @@
 [
     [
+        null,
         "schcomponents/wysiwyg_edit\nschcomponents/vs_editor",
         "tablet_modern",
         "",
@@ -3179,7 +3180,7 @@
                     "J",
                     "plot_service/(?P<name>\\w+)/$",
                     "{}",
-                    "param = json_loads(request.body.decode('utf-8'))\n\naction = param['action']\nname = param['name']\n\nobjs = models.Plot.objects.filter(name=name)\nif len(objs) == 1:\n    obj = objs[0]\nelse:\n    obj = None\n\nif obj:\n    if action == 'get_data':\n        if obj.get_data:\n            tmp = \"def _get_data():\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.get_data.split('\\n')])\n            exec(tmp)\n            data = locals()['_get_data']()        \n        return data\n    elif action == 'get_layout':\n        if obj.get_layout:\n            tmp = \"def _get_layout():\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.get_layout.split('\\n')])\n            exec(tmp)\n            layout = locals()['get_layout']()        \n        else:\n            layout = {}\n        return layout\n    elif action == 'on_event':\n        if obj.on_event:\n            tmp = \"def on_event(data):\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.on_event.split('\\n')])\n            exec(tmp)\n            ret = locals()['on_event'](param)                    \n            return ret\n        else:\n            return {}\n    else:\n        return { 'error': 'Action not found'}\n        \nreturn { 'error': 'Plot object not found'}\n",
+                    "if 'param' in request.GET:\n    request_param = request.GET['param']\nelse:\n    request_param = None\n    \nparam = json_loads(request.body.decode('utf-8'))\n\naction = param['action']\nname = param['name']\n\nobjs = models.Plot.objects.filter(name=name)\nif len(objs) == 1:\n    obj = objs[0]\nelse:\n    obj = None\n\nif obj:\n    if action == 'get_data':\n        if obj.get_data:\n            tmp = \"def _get_data(request_param):\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.get_data.split('\\n')])\n            exec(tmp)\n            data = locals()['_get_data'](request_param)        \n        return data\n    elif action == 'get_layout':\n        if obj.get_layout:\n            tmp = \"def _get_layout(request_param):\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.get_layout.split('\\n')])\n            exec(tmp)\n            layout = locals()['_get_layout'](request_param)        \n        else:\n            layout = {}\n        return layout\n    elif action == 'on_event':\n        if obj.on_event:\n            tmp = \"def _on_event(data, request_param):\\n\" + \"\\n\".join([ \"    \" + pos for pos in obj.on_event.split('\\n')])\n            exec(tmp)\n            ret = locals()['_on_event'](param, request_param)                    \n            return ret\n        else:\n            return {}\n    else:\n        return { 'error': 'Action not found'}\n        \nreturn { 'error': 'Plot object not found'}\n",
                     "u"
                 ],
                 [

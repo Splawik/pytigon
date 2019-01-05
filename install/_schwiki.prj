@@ -1,5 +1,6 @@
 [
     [
+        null,
         "",
         "auto",
         null,
@@ -567,7 +568,7 @@
                     "view_page",
                     "app_or_subject, page_path",
                     "U",
-                    "(?P<app_or_subject>.*)/(?P<page_path>.*)/view/$",
+                    "^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$",
                     null,
                     "desc = request.GET.get('desc','')\npath, sep, page_name = page_path.rpartition('+')\nif page_name:\n    page_name = page_name[0].upper()+page_name[1:]\n    \nid = -1\nif path:\n    path_list = path.split('+')\n    if page_name in path_list:\n        path_list = path_list[:path_list.index(page_name)]\n    if len(path_list) > 10:\n        path_list = path_list[1:]    \n    path = '+'.join(path_list+[page_name,]) \nelse:\n    path_list = None\n    path = page_name\n\npath_list2 = []\nif path_list:\n    for pos in path_list:\n        try:\n            #p = Page.objects.get(name=pos, subject=app_or_subject)\n            p = Page.get_page(request, app_or_subject, name)\n            if p.description:\n                path_list2.append(p.description)\n            else:\n                path_list2.append(pos)\n        except:\n            path_list2.append(pos)\n\npage = Page.get_page(request, app_or_subject, page_name)\nif page:\n    id = page.id\n    content = page.content\n    try: \n        t = Template(template_simple + content)\n        c = RequestContext(request, {'object': page, 'wiki_path': path, })        \n        #c = Context({'object': page, 'wiki_path': path, 'request': request })    \n        content=t.render(c)\n    except:\n        content = page.content\nelse:\n    page = Page()\n    page.name = page_name\n    page.description=desc\n    page.subject = app_or_subject\n    page.update_time = datetime.datetime.now()\n    page.operator = request.user.username\n    page.save()\n    id = page.id\n    content = None\n\n    \nc = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, \n     'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,\n     'description': desc if desc else page_name, 'only_content': True,\n}\n\nif page and page.base_template:\n    base_template = page.base_template\nelse:\n    base_template = \"schwiki/wiki_view.html\"\n\nc['content'] = content\n\n\nreturn render(request, base_template, context=c)\n",
                     "u"

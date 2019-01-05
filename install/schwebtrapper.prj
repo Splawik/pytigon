@@ -1,5 +1,6 @@
 [
     [
+        null,
         "",
         "auto",
         "def crawl_tree(tree) :\n  if type(tree.tag) is str :\n    handle_starttag(tree.tag, tree.attrib)\n    if tree.text :\n      handle_data(tree.text)\n    for node in tree :\n      crawl_tree(node)\n    handle_endtag(tree.tag)\n  if tree.tail :\n    handle_data(tree.tail)\n    ",
