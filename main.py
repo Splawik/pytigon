@@ -1,13 +1,8 @@
-from schlib.schandroid import InterfaceManager, PytigonApp
+from schlib.schandroid.android_client import InterfaceManager, PytigonApp
 
 import socket
 import fcntl
 import struct
-
-def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(), 0x8915,  struct.pack(b'256s', ifname[:15]))[20:24])
 
 from jnius import autoclass, PythonJavaClass, java_method
 from android.runnable import run_on_ui_thread, Runnable
@@ -109,6 +104,6 @@ class PytigonApp2(PytigonApp):
                 return False
 
 
-PytigonApp().run()
+PytigonApp2().run()
 if SERVICE:
     SERVICE.stop(CTX)
