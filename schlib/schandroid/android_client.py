@@ -141,7 +141,7 @@ class InterfaceManager(BoxLayout):
         else:
             ip_address = '-'
 
-        label = Label(text=f"[size=25sp][color=88f][b]PYTIGON - select the application:[/b][/color][/size]\n[size=20sp][color=448](my ip addresses: {ip_address})[/b][/color][/size]",
+        label = Label(text=f"[size=18sp][color=88f][b]PYTIGON - select the application:[/b][/color][/size]\n[size=15sp][color=448](my ip addresses: {ip_address})[/b][/color][/size]",
                       markup=True, halign = 'center')
         self.add_widget(label)
 
