@@ -23,20 +23,13 @@ from kivy.uix.scatter import Scatter
 from kivy.graphics.svg import Svg
 
 import os
-import socket
-import time
 import sys
-import fcntl
-import struct
 
+import netifaces
 
 from os.path import expanduser
 home = expanduser("~")
 
-def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(), 0x8915, struct.pack(b'256s', ifname[:15]))[20:24])
 
 MAX_SEL_APP = 10
 
@@ -111,12 +104,27 @@ class InterfaceManager(BoxLayout):
     def show_first_form(self):
         global STORAGE
 
-        try:
-            ip_address = get_ip_address(b'wlan0')
-            label = Label(text=f"[color=88f][b]My ip address: {ip_address}[/b][/color]", markup=True)
-            self.add_widget(label)
-        except:
-            pass
+        ip_tab = []
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            if interface[:2] in ('wl', 'en', 'et'):
+                ifaddress = netifaces.ifaddresses(interface)
+                if netifaces.AF_INET in ifaddress:
+                    inets = ifaddress[netifaces.AF_INET]
+                    for inet in inets:
+                        if 'addr' in inet:
+                            addr = inet['addr']
+                            if len(addr.split('.')) == 4:
+                                ip_tab.append(addr)
+
+        if ip_tab:
+            ip_address = ', '.join(ip_tab)
+        else:
+            ip_address = '-'
+
+        label = Label(text=f"[size=20][color=88f][b]PYTIGON - select the application:[/b][/color][/size]\n[color=448](my ip addresses: {ip_address})[/b][/color]",
+                      markup=True, halign = 'center')
+        self.add_widget(label)
 
         base_apps_path = os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")
         l = [pos for pos in os.listdir(base_apps_path) if not pos.startswith('_')]
@@ -131,7 +139,6 @@ class InterfaceManager(BoxLayout):
                 print("Error importing module: ", app_pack + ".apps")
 
         if len(apps) > 1:
-            print("python:Pytigon:F1")
             if len(apps) > MAX_SEL_APP:
                 dy = MAX_SEL_APP - 1
             else:
@@ -152,12 +159,9 @@ class InterfaceManager(BoxLayout):
                 spinner.bind(text=self.spinner_callback)
                 self.add_widget(spinner)
         else:
-            print("python:Pytigon:F2", apps)
             if len(apps) > 0:
-                print("python:Pytigon:F3")
                 self.on_app_chosen(apps[0])
             else:
-                print("python:Pytigon:F4")
                 self.on_app_chosen()
 
     def show_second_form(self):
