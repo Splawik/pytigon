@@ -7,7 +7,6 @@ django-bootstrap4
 django_select2
 django-cors-headers
 whitenoise
-transcrypt == 3.6.101
 fpdf
 html5lib
 lxml
