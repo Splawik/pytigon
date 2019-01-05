@@ -102,10 +102,11 @@ class InterfaceManager(BoxLayout):
     angle = NumericProperty(0)
 
     def __init__(self, **kwargs):
+        global BASE_PATH
         super(InterfaceManager, self).__init__(**kwargs)
-        base_path = os.path.dirname(os.path.abspath(__file__))
+        #base_path = os.path.dirname(os.path.abspath(__file__))
 
-        self.base_path = base_path
+        self.base_path = BASE_PATH
 
         self.webview = None
         self.app = None
@@ -140,7 +141,7 @@ class InterfaceManager(BoxLayout):
         else:
             ip_address = '-'
 
-        label = Label(text=f"[size=20][color=88f][b]PYTIGON - select the application:[/b][/color][/size]\n[color=448](my ip addresses: {ip_address})[/b][/color]",
+        label = Label(text=f"[size=25sp][color=88f][b]PYTIGON - select the application:[/b][/color][/size]\n[size=20sp][color=448](my ip addresses: {ip_address})[/b][/color][/size]",
                       markup=True, halign = 'center')
         self.add_widget(label)
 
