@@ -24,12 +24,22 @@ from kivy.graphics.svg import Svg
 
 import os
 import sys
+import socket
+import fcntl
+import struct
 
-import netifaces
+try:
+    import netifaces
+except:
+    netifaces = None
 
 from os.path import expanduser
 home = expanduser("~")
 
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(), 0x8915, struct.pack(b'256s', ifname[:15]))[20:24])
 
 MAX_SEL_APP = 10
 
@@ -105,17 +115,24 @@ class InterfaceManager(BoxLayout):
         global STORAGE
 
         ip_tab = []
-        interfaces = netifaces.interfaces()
-        for interface in interfaces:
-            if interface[:2] in ('wl', 'en', 'et'):
-                ifaddress = netifaces.ifaddresses(interface)
-                if netifaces.AF_INET in ifaddress:
-                    inets = ifaddress[netifaces.AF_INET]
-                    for inet in inets:
-                        if 'addr' in inet:
-                            addr = inet['addr']
-                            if len(addr.split('.')) == 4:
-                                ip_tab.append(addr)
+        if netifaces:
+            interfaces = netifaces.interfaces()
+            for interface in interfaces:
+                if interface[:2] in ('wl', 'en', 'et'):
+                    ifaddress = netifaces.ifaddresses(interface)
+                    if netifaces.AF_INET in ifaddress:
+                        inets = ifaddress[netifaces.AF_INET]
+                        for inet in inets:
+                            if 'addr' in inet:
+                                addr = inet['addr']
+                                if len(addr.split('.')) == 4:
+                                    ip_tab.append(addr)
+        else:
+            try:
+                ip_address = get_ip_address(b'wlan0')
+                ip_tab.append(ip_address)
+            except:
+                pass
 
         if ip_tab:
             ip_address = ', '.join(ip_tab)
