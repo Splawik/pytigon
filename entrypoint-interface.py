@@ -9,7 +9,10 @@ from schlib.schtools.tools import get_executable
 BASE_APPS_PATH = "/var/www/pytigon/app_pack"
 sys.path.append(BASE_APPS_PATH)
 
-VIRTUAL_HOST = "localhost"
+if 'VIRTUAL_HOST' in environ:
+    VIRTUAL_HOST = str(environ['VIRTUAL_HOST'])
+else:
+    VIRTUAL_HOST = "localhost"
 
 if 'VIRTUAL_PORT' in environ:
     VIRTUAL_PORT = str(environ['VIRTUAL_PORT'])
@@ -86,27 +89,38 @@ APP_PACKS = []
 APP_PACK_FOLDERS = []
 MAIN_APP_PACK = None
 
-CFG_OLD = """server {
-       listen         %s;
-       server_name    %s;
-       return         301 %s;
-}
+CFG_OLD = f"""server {{
+       listen         {VIRTUAL_PORT_80};
+       server_name    {VIRTUAL_HOST} www.{VIRTUAL_HOST};
+       return         301 {PORT_80_REDIRECT};
+}}
 
 """
 
-CFG_START = """server
-{
-    listen %s;
+CFG_START = f"""
+server {{
+    listen {VIRTUAL_PORT};
     client_max_body_size 20M;
-    server_name %s;
+    server_name www.{VIRTUAL_HOST};
     charset utf-8;
 
-    %s
-    %s
+    {CRT}
+    {KEY}
 
-    location ^~ /static/ {
+    return 301 {PORT_80_REDIRECT}$request_uri;
+}}    
+server {{
+    listen {VIRTUAL_PORT};
+    client_max_body_size 20M;
+    server_name {VIRTUAL_HOST};
+    charset utf-8;
+
+    {CRT}
+    {KEY}
+
+    location ^~ /static/ {{
         alias /var/www/pytigon/static/;
-    }
+    }}
 """
 
 CFG_ELEM = """
@@ -186,9 +200,9 @@ if not MAIN_APP_PACK and len(APP_PACKS)==1:
 
 with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
     if PORT_80_REDIRECT:
-       conf.write(CFG_OLD % (VIRTUAL_PORT_80, VIRTUAL_HOST, PORT_80_REDIRECT))
+       conf.write(CFG_OLD)
 
-    conf.write(CFG_START % ( VIRTUAL_PORT, VIRTUAL_HOST, CRT, KEY))
+    conf.write(CFG_START)
     port = START_CLIENT_PORT
     for app_pack in APP_PACKS:
         conf.write(CFG_ELEM % (app_pack, app_pack, "http://127.0.0.1", port, app_pack, app_pack, "http://127.0.0.1", port, app_pack))
