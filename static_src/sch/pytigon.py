@@ -349,7 +349,7 @@ def jquery_ready():
 
     if window.APPLICATION_TEMPLATE == 'traditional':
         window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-        __new__(Vue({'el': '#body_body'}))
+        #__new__(Vue({'el': '#body_body'}))
     else:
         if window.APPLICATION_TEMPLATE == 'modern':
             txt  = jQuery('.page').html()
@@ -361,7 +361,8 @@ def jquery_ready():
                 menu.new_page(jQuery('title').text(), txt, window.location.href)
         else:
             window.ACTIVE_PAGE = Page(0, jQuery('#body_body'))
-            __new__(Vue({'el': '#body_body'}))
+            if window.APPLICATION_TEMPLATE == 'to_print':
+                __new__(Vue({'el': '#body_body'}))
 
 def on_new_tab(url, elem, e):
     title = jQuery(e.currentTarget).attr('title')

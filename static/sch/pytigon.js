@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-01-01 23:54:13
+// Transcrypt'ed from Python, 2019-01-06 16:03:01
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -4785,7 +4785,6 @@ function pytigon () {
 			jQuery ('.navbar-ex1-collapse').on ('hidden.bs.collapse', _local_fun);
 			if (window.APPLICATION_TEMPLATE == 'traditional') {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
-				new Vue (dict ({'el': '#body_body'}));
 			}
 			else if (window.APPLICATION_TEMPLATE == 'modern') {
 				var txt = jQuery ('.page').html ();
@@ -4799,7 +4798,9 @@ function pytigon () {
 			}
 			else {
 				window.ACTIVE_PAGE = Page (0, jQuery ('#body_body'));
-				new Vue (dict ({'el': '#body_body'}));
+				if (window.APPLICATION_TEMPLATE == 'to_print') {
+					new Vue (dict ({'el': '#body_body'}));
+				}
 			}
 		};
 		var on_new_tab = function (url, elem, e) {
