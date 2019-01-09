@@ -1,4 +1,5 @@
-#! /usr/bin/python3
+#!/usr/bin/env python3.7
+
 import subprocess
 import os
 import sys
@@ -9,28 +10,28 @@ from schlib.schtools.tools import get_executable
 BASE_APPS_PATH = "/var/www/pytigon/app_pack"
 sys.path.append(BASE_APPS_PATH)
 
-if 'VIRTUAL_HOST' in environ:
-    VIRTUAL_HOST = str(environ['VIRTUAL_HOST'])
+if "VIRTUAL_HOST" in environ:
+    VIRTUAL_HOST = str(environ["VIRTUAL_HOST"])
 else:
     VIRTUAL_HOST = "localhost"
 
-if 'VIRTUAL_PORT' in environ:
-    VIRTUAL_PORT = str(environ['VIRTUAL_PORT'])
+if "VIRTUAL_PORT" in environ:
+    VIRTUAL_PORT = str(environ["VIRTUAL_PORT"])
 else:
-    VIRTUAL_PORT = '443'
+    VIRTUAL_PORT = "443"
 
-if 'VIRTUAL_PORT_80' in environ:
-    VIRTUAL_PORT_80 = str(environ['VIRTUAL_PORT_80'])
+if "VIRTUAL_PORT_80" in environ:
+    VIRTUAL_PORT_80 = str(environ["VIRTUAL_PORT_80"])
 else:
-    VIRTUAL_PORT_80 = '80'
+    VIRTUAL_PORT_80 = "80"
 
-if 'PORT_80_REDIRECT' in environ:
-    PORT_80_REDIRECT = environ['PORT_80_REDIRECT']
+if "PORT_80_REDIRECT" in environ:
+    PORT_80_REDIRECT = environ["PORT_80_REDIRECT"]
 else:
     PORT_80_REDIRECT = None
 
-if 'CERT' in environ:
-    x = environ['CERT'].split(';')
+if "CERT" in environ:
+    x = environ["CERT"].split(";")
     CRT = "ssl_certificate " + x[0] + ";"
     KEY = "ssl_certificate_key " + x[1] + ";"
     VIRTUAL_PORT += " ssl http2"
@@ -44,29 +45,29 @@ else:
 # 3. NAME_OF_SPECIFIC_APP:NUMBER_FOR_SPECIFIC_APP,*, for example:  schportal:4,schdevtools:2
 
 NOWP = {}
-if 'NUMBER_OF_WORKER_PROCESSES' in environ:
-    nowp = environ['NUMBER_OF_WORKER_PROCESSES']
-    if ':' in nowp:
-        if ',' in nowp or ';' in nowp:
-            for pos in nowp.replace(',', ';').split(';'):
-                if ':' in pos:
-                    x = pos.split(':')
+if "NUMBER_OF_WORKER_PROCESSES" in environ:
+    nowp = environ["NUMBER_OF_WORKER_PROCESSES"]
+    if ":" in nowp:
+        if "," in nowp or ";" in nowp:
+            for pos in nowp.replace(",", ";").split(";"):
+                if ":" in pos:
+                    x = pos.split(":")
                     NOWP[x[0]] = x[1]
                 else:
                     NOWP[x] = 1
         else:
-            x = nowp.split(':')
-            NOWP['default-main'] = int(x[0])
-            NOWP['default-additional'] = int(x[1])
+            x = nowp.split(":")
+            NOWP["default-main"] = int(x[0])
+            NOWP["default-additional"] = int(x[1])
     else:
-        NOWP['default-main'] = int(nowp)
-        NOWP['default-additional'] = 1
+        NOWP["default-main"] = int(nowp)
+        NOWP["default-additional"] = 1
 else:
-    NOWP['default-main'] = 4
-    NOWP['default-additional'] = 1
+    NOWP["default-main"] = 4
+    NOWP["default-additional"] = 1
 
-if 'TIMEOUT' in environ:
-    TIMEOUT = environ['TIMEOUT']
+if "TIMEOUT" in environ:
+    TIMEOUT = environ["TIMEOUT"]
 else:
     TIMEOUT = "30"
 
@@ -75,10 +76,10 @@ else:
 # 2. gunicorn
 # 3. hypercorn
 ASGI_SERVER_ID = 0
-if 'ASGI_SERVER_NAME' in environ:
-    if 'gunicorn' in environ['ASGI_SERVER_NAME']:
+if "ASGI_SERVER_NAME" in environ:
+    if "gunicorn" in environ["ASGI_SERVER_NAME"]:
         ASGI_SERVER_ID = 1
-    elif 'dapne' in environ['ASGI_SERVER_NAME']:
+    elif "dapne" in environ["ASGI_SERVER_NAME"]:
         ASGI_SERVER_ID = 2
 
 START_CLIENT_PORT = 8000
@@ -148,7 +149,9 @@ CFG_ELEM = """
         proxy_read_timeout          $TIMEOUT;
         send_timeout                $TIMEOUT;
     }
-""".replace('$TIMEOUT', TIMEOUT)
+""".replace(
+    "$TIMEOUT", TIMEOUT
+)
 
 CFG_END = """
     location ~ (.*)$ {
@@ -162,10 +165,15 @@ CFG_END = """
         send_timeout                $TIMEOUT;
     }   
 }
-""".replace('$TIMEOUT', TIMEOUT)
+""".replace(
+    "$TIMEOUT", TIMEOUT
+)
 
 if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
-    unzip = subprocess.Popen("unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/", shell=True)
+    unzip = subprocess.Popen(
+        "unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/",
+        shell=True,
+    )
     unzip.wait()
 
 
@@ -184,7 +192,7 @@ create_sym_links("/pytigon/static/app/", "/var/www/pytigon/static/app/")
 
 for ff in os.listdir(BASE_APPS_PATH):
     if os.path.isdir(os.path.join(BASE_APPS_PATH, ff)):
-        if not ff.startswith('_'):
+        if not ff.startswith("_"):
             APP_PACK_FOLDERS.append(ff)
 
 for app_pack in APP_PACK_FOLDERS:
@@ -193,8 +201,8 @@ for app_pack in APP_PACK_FOLDERS:
         x = __import__(app_pack + ".apps")
     except:
         continue
-    if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
-        if hasattr(x.apps, 'MAIN_APP_PACK') and x.apps.MAIN_APP_PACK:
+    if hasattr(x.apps, "PUBLIC") and x.apps.PUBLIC:
+        if hasattr(x.apps, "MAIN_APP_PACK") and x.apps.MAIN_APP_PACK:
             MAIN_APP_PACK = app_pack
         else:
             APP_PACKS.append(app_pack)
@@ -210,8 +218,20 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
     conf.write(CFG_START)
     port = START_CLIENT_PORT
     for app_pack in APP_PACKS:
-        conf.write(CFG_ELEM % (
-        app_pack, app_pack, "http://127.0.0.1", port, app_pack, app_pack, "http://127.0.0.1", port, app_pack))
+        conf.write(
+            CFG_ELEM
+            % (
+                app_pack,
+                app_pack,
+                "http://127.0.0.1",
+                port,
+                app_pack,
+                app_pack,
+                "http://127.0.0.1",
+                port,
+                app_pack,
+            )
+        )
         port += 1
     if MAIN_APP_PACK:
         conf.write(CFG_END % ("http://127.0.0.1", port))
@@ -227,13 +247,17 @@ for app_pack in APP_PACKS:
     if app_pack in NOWP:
         count = NOWP[app_pack]
     else:
-        count = NOWP['default-main'] if app_pack == MAIN_APP_PACK else NOWP['default-additional']
+        count = (
+            NOWP["default-main"]
+            if app_pack == MAIN_APP_PACK
+            else NOWP["default-additional"]
+        )
 
     server1 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
     server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
     server3 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
 
-    server = (server1, server2, server3,)[ASGI_SERVER_ID]
+    server = (server1, server2, server3)[ASGI_SERVER_ID]
 
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
@@ -243,9 +267,12 @@ for app_pack in APP_PACKS:
     print(cmd)
     ret_tab.append(subprocess.Popen(cmd, shell=True))
 
-if not 'NO_EXECUTE_TASKS' in environ:
+if not "NO_EXECUTE_TASKS" in environ:
     for app_pack in APP_PACKS:
-        cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (get_executable(), app_pack)
+        cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (
+            get_executable(),
+            app_pack,
+        )
         print(cmd)
         ret_tab.append(subprocess.Popen(cmd, shell=True))
 
@@ -254,4 +281,3 @@ restart.wait()
 
 for pos in ret_tab:
     pos.wait()
-
