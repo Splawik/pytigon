@@ -38,18 +38,17 @@ else:
     CRT = ""
     KEY = ""
 
-
-#NUMBER_OF_WORKER_PROCESSES struct:
+# NUMBER_OF_WORKER_PROCESSES struct:
 # 1. NUMBER_FOR_MAIN_APP, for example: 4
 # 2. NUMBER_FOR_MAIN_APP:NUMBER_FOR_ADDITIONAL_APP, for example: 4:1
 # 3. NAME_OF_SPECIFIC_APP:NUMBER_FOR_SPECIFIC_APP,*, for example:  schportal:4,schdevtools:2
 
 NOWP = {}
 if 'NUMBER_OF_WORKER_PROCESSES' in environ:
-    nowp =  environ['NUMBER_OF_WORKER_PROCESSES']
+    nowp = environ['NUMBER_OF_WORKER_PROCESSES']
     if ':' in nowp:
         if ',' in nowp or ';' in nowp:
-            for pos in nowp.replace(',',';').split(';'):
+            for pos in nowp.replace(',', ';').split(';'):
                 if ':' in pos:
                     x = pos.split(':')
                     NOWP[x[0]] = x[1]
@@ -66,17 +65,16 @@ else:
     NOWP['default-main'] = 4
     NOWP['default-additional'] = 1
 
-
 if 'TIMEOUT' in environ:
     TIMEOUT = environ['TIMEOUT']
 else:
     TIMEOUT = "30"
 
-#ASGI_SERVER_NAME:
-#1. daphne
-#2. gunicorn
-#3. hypercorn
-ASGI_SERVER_ID  = 0
+# ASGI_SERVER_NAME:
+# 1. daphne
+# 2. gunicorn
+# 3. hypercorn
+ASGI_SERVER_ID = 0
 if 'ASGI_SERVER_NAME' in environ:
     if 'gunicorn' in environ['ASGI_SERVER_NAME']:
         ASGI_SERVER_ID = 1
@@ -89,7 +87,8 @@ APP_PACKS = []
 APP_PACK_FOLDERS = []
 MAIN_APP_PACK = None
 
-CFG_OLD = f"""server {{
+if PORT_80_REDIRECT:
+    CFG_OLD = f"""server {{
        listen         {VIRTUAL_PORT_80};
        server_name    {VIRTUAL_HOST} www.{VIRTUAL_HOST};
        return         301 {PORT_80_REDIRECT};
@@ -97,7 +96,8 @@ CFG_OLD = f"""server {{
 
 """
 
-CFG_START = f"""
+if CRT:
+    CFG_START = f"""
 server {{
     listen {VIRTUAL_PORT};
     client_max_body_size 20M;
@@ -108,7 +108,11 @@ server {{
     {KEY}
 
     return 301 {PORT_80_REDIRECT}$request_uri;
-}}    
+}}"""
+else:
+    CFG_START = ""
+
+CFG_START += f"""
 server {{
     listen {VIRTUAL_PORT};
     client_max_body_size 20M;
@@ -129,7 +133,7 @@ CFG_ELEM = """
     }
     location ~ /%s(.*)/socket.io/$ {
         proxy_http_version 1.1;
-    
+
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_pass %s:%d/%s$1/socket.io/;
@@ -145,7 +149,6 @@ CFG_ELEM = """
         send_timeout                $TIMEOUT;
     }
 """.replace('$TIMEOUT', TIMEOUT)
-
 
 CFG_END = """
     location ~ (.*)$ {
@@ -165,6 +168,7 @@ if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
     unzip = subprocess.Popen("unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/", shell=True)
     unzip.wait()
 
+
 def create_sym_links(source_path, dest_path):
     if os.path.exists(source_path) and os.path.exists(dest_path):
         x = os.listdir(source_path)
@@ -174,18 +178,19 @@ def create_sym_links(source_path, dest_path):
             if not os.path.exists(d_path):
                 os.symlink(s_path, d_path)
 
+
 create_sym_links("/pytigon/app_pack/", "/var/www/pytigon/app_pack/")
 create_sym_links("/pytigon/static/app/", "/var/www/pytigon/static/app/")
 
 for ff in os.listdir(BASE_APPS_PATH):
-    if os.path.isdir( os.path.join(BASE_APPS_PATH,ff)):
+    if os.path.isdir(os.path.join(BASE_APPS_PATH, ff)):
         if not ff.startswith('_'):
             APP_PACK_FOLDERS.append(ff)
 
 for app_pack in APP_PACK_FOLDERS:
     base_apps_pack2 = os.path.join(BASE_APPS_PATH, app_pack)
     try:
-        x = __import__(app_pack+".apps")
+        x = __import__(app_pack + ".apps")
     except:
         continue
     if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
@@ -194,18 +199,19 @@ for app_pack in APP_PACK_FOLDERS:
         else:
             APP_PACKS.append(app_pack)
 
-if not MAIN_APP_PACK and len(APP_PACKS)==1:
+if not MAIN_APP_PACK and len(APP_PACKS) == 1:
     MAIN_APP_PACK = APP_PACKS[0]
     APP_PACKS = []
 
 with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
     if PORT_80_REDIRECT:
-       conf.write(CFG_OLD)
+        conf.write(CFG_OLD)
 
     conf.write(CFG_START)
     port = START_CLIENT_PORT
     for app_pack in APP_PACKS:
-        conf.write(CFG_ELEM % (app_pack, app_pack, "http://127.0.0.1", port, app_pack, app_pack, "http://127.0.0.1", port, app_pack))
+        conf.write(CFG_ELEM % (
+        app_pack, app_pack, "http://127.0.0.1", port, app_pack, app_pack, "http://127.0.0.1", port, app_pack))
         port += 1
     if MAIN_APP_PACK:
         conf.write(CFG_END % ("http://127.0.0.1", port))
@@ -227,7 +233,7 @@ for app_pack in APP_PACKS:
     server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
     server3 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
 
-    server = (server1, server2, server3, )[ASGI_SERVER_ID]
+    server = (server1, server2, server3,)[ASGI_SERVER_ID]
 
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 
@@ -237,10 +243,11 @@ for app_pack in APP_PACKS:
     print(cmd)
     ret_tab.append(subprocess.Popen(cmd, shell=True))
 
-for app_pack in APP_PACKS:
-    cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (get_executable(), app_pack)
-    print(cmd)
-    ret_tab.append(subprocess.Popen(cmd, shell=True))
+if not 'NO_EXECUTE_TASKS' in environ:
+    for app_pack in APP_PACKS:
+        cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (get_executable(), app_pack)
+        print(cmd)
+        ret_tab.append(subprocess.Popen(cmd, shell=True))
 
 restart = subprocess.Popen("nginx -g 'daemon off;'", shell=True)
 restart.wait()

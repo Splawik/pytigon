@@ -227,16 +227,21 @@ class CommonGroup(JSONModel):
     def get_group_types(parent_pk):
         if not parent_pk:
             groupdef_list = CommonGroupDef.objects.filter(main_group=True)
-            return [pos.name for pos in groupdef_list]
+            return [pos for pos in groupdef_list]
         else:
             group = CommonGroup.objects.get(id=int(parent_pk))        
             groupdef = CommonGroupDef.objects.filter(name=group.group_def_name)
             ret = []
             if len(groupdef)>0:
                 allowed_new_fields = groupdef[0].allowed_new_fields
-                if allowed_new_fields:
-                    ret = [ pos for pos in allowed_new_fields.replace(',',';').split(';') if pos ]
+                if allowed_new_fields:                    
+                    for pos in allowed_new_fields.replace(',',';').split(';'):
+                        if pos:
+                            objs = CommonGroupDef.objects.filter(name=pos)
+                            if len(objs)>0:
+                                ret.append(objs[0])
             return ret
+    
     
 admin.site.register(CommonGroup)
 
