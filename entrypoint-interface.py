@@ -87,6 +87,7 @@ START_CLIENT_PORT = 8000
 APP_PACKS = []
 APP_PACK_FOLDERS = []
 MAIN_APP_PACK = None
+NO_ASGI = []
 
 if PORT_80_REDIRECT:
     CFG_OLD = f"""server {{
@@ -201,6 +202,9 @@ for app_pack in APP_PACK_FOLDERS:
         x = __import__(app_pack + ".apps")
     except:
         continue
+    if hasattr(x.apps, "NO_ASGI") and x.apps.NO_ASGI:
+        NO_ASGI.append(app_pack)
+
     if hasattr(x.apps, "PUBLIC") and x.apps.PUBLIC:
         if hasattr(x.apps, "MAIN_APP_PACK") and x.apps.MAIN_APP_PACK:
             MAIN_APP_PACK = app_pack
@@ -253,11 +257,14 @@ for app_pack in APP_PACKS:
             else NOWP["default-additional"]
         )
 
-    server1 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
-    server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application"
-    server3 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
+    if app_pack in NO_ASGI:
+        server = f"gunicorn -b 0.0.0.0:{port} -w {count} --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log wsgi -t {TIMEOUT}"
+    else:
+        server1 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
+        server2 = f"gunicorn -b 0.0.0.0:{port} -w {count} -k uvicorn.workers.UvicornWorker --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log asgi:application -t {TIMEOUT}"
+        server3 = f"daphne -b 0.0.0.0 -p {port} --proxy-headers --access-log /var/log/pytigon-access.log asgi:application"
 
-    server = (server1, server2, server3)[ASGI_SERVER_ID]
+        server = (server1, server2, server3)[ASGI_SERVER_ID]
 
     path = f"/var/www/pytigon/app_pack/{app_pack}"
 

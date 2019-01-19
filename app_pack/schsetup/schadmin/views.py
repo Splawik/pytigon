@@ -11,7 +11,13 @@ from django.conf import settings
 from django.views.generic import TemplateView
 
 from schlib.schviews.form_fun import form_with_perms
-from schlib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
+from schlib.schviews.viewtools import (
+    dict_to_template,
+    dict_to_odf,
+    dict_to_pdf,
+    dict_to_json,
+    dict_to_xml,
+)
 from schlib.schviews.viewtools import render_to_response
 from schlib.schdjangoext.tools import make_href
 
@@ -21,12 +27,3 @@ from . import models
 import os
 import sys
 import datetime
-
-
-
-
-
-
-
-
-

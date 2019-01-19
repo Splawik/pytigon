@@ -7,14 +7,6 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = [
-    
-    
-    
-    url('form/upload_ptig/$', views.view_upload_ptig, {}),
-]
+urlpatterns = [url("form/upload_ptig/$", views.view_upload_ptig, {})]
 
-gen = generic_table_start(urlpatterns, 'schinstall', views)
-
-
-
+gen = generic_table_start(urlpatterns, "schinstall", views)

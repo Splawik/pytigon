@@ -9,9 +9,3 @@ import sys
 import datetime
 import time
 from queue import Empty
-
-
-
-
-
-
