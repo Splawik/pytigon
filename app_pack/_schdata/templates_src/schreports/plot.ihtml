@@ -38,6 +38,7 @@
 %% list_row_actions
     % row_actions:
         .edit
+        .field_edit/get_config,Get config,get_config
         .field_edit/get_data,Get data,get_data
         .field_edit/get_layout,Get layout,get_layout
         .field_edit/on_event,On event,on_event

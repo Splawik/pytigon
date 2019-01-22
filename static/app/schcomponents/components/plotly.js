@@ -130,7 +130,7 @@ var _plotly = function (resolve, reject) {
 				if (this_obj.height) {
 					layout ['height'] = this_obj.height;
 				}
-				var plot = Plotly.newPlot (this_obj.$el, data, layout, dict ({'displayModeBar': true, 'showLink': false, 'displaylogo': false, 'scrollZoom': true, 'modeBarButtonsToRemove': list (['sendDataToCloud'])}));
+				var plot = Plotly.newPlot (this_obj.$el, data, layout, config);
 				this_obj.plot = plot;
 				var el = this_obj.$el;
 				if (window.hasOwnProperty ('MOUNTED_COMPONENTS')) {
@@ -171,18 +171,25 @@ var _plotly = function (resolve, reject) {
 				if (__in__ ('events', _data)) {
 					events = _data ['events'];
 				}
-				if (layout != null) {
+				if (layout != null && config != null) {
 					on_loaded ();
 				}
 			};
 			var on_layout_loaded = function (_data) {
 				layout = _data;
-				if (data != null) {
+				if (data != null && config != null) {
+					on_loaded ();
+				}
+			};
+			var on_config_loaded = function (_data) {
+				config = _data;
+				if (data != null && layout != null) {
 					on_loaded ();
 				}
 			};
 			ajax_json (url, dict ({'name': this_obj.plotlyName, 'action': 'get_data'}), on_data_loaded);
 			ajax_json (url, dict ({'name': this_obj.plotlyName, 'action': 'get_layout'}), on_layout_loaded);
+			ajax_json (url, dict ({'name': this_obj.plotlyName, 'action': 'get_config'}), on_config_loaded);
 		};
 		var created = function () {
 			var this_obj = this;
