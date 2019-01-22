@@ -14,14 +14,3 @@ from django.contrib import admin
 import os, os.path
 import sys
 from schlib.schhtml.htmltools import superstrip
-
-
-
-
-
-
-
-
-
-
-
