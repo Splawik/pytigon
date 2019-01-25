@@ -301,8 +301,8 @@ def truncate(value, arg):
         return retstr
 
 
-@register.filter(name='floatformat')
-def floatformat(text):
+@register.filter(name='floatformat02')
+def floatformat02(text):
     arg = 2
     try:
         f = float(text)
