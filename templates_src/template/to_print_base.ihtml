@@ -110,39 +110,10 @@
 
     {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
 
-    {% css_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.css' %}
-    % comment:
-        {% css_link 'bootstrap_plugins/bootstrap-tabdrop/css/tabdrop.css' %}
-        {% css_link 'bootstrap_plugins/bootstrap-material-datetimepicker-gh-pages/css/bootstrap-material-datetimepicker.css' %}
-        {% css_link 'bootstrap_plugins/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}
-
-    {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
-    {% css_link 'bootstrap_plugins/modal-fullscreen.css' %}
-
-    {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
-    {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
-
-    {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
-    {% css_link 'themes/select2-bootstrap.css' %}
-
     {{ form.media.css }}
-
 
     %% botstrap_css
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
-
-    %% theme_css_links
-        {% css_link 'sch/select2-material.css' %}
-
-    %% theme_css_links_spec
-        % comment:
-            {% css_link 'themes/default.css'|css_hack %}
-            {% css_link 'themes/'|append_str:browser_type|append_str:'.css'|css_hack %}
-
-        {% css_link 'themes/default.css' %}
-        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
-
-
 
 %% css_start
     <style type="text/css">
