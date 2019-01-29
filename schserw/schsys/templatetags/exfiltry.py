@@ -301,52 +301,42 @@ def truncate(value, arg):
         return retstr
 
 
-@register.filter(name='floatformat02')
-def floatformat02(text):
-    arg = 2
+@register.filter(name='genericfloatformat')
+def genericfloatformat(text, arg="{: .2f}"):
+    space_convert = False
     try:
         f = float(text)
+        if ': ' in arg:
+            space_convert = True
+            arg2 = arg.replace(': ', ':,')
+        else:
+            arg2 = arg
+        x = arg2.format(f)
+        if space_convert:
+            return x.replace(',', ' ')
+        else:
+            return ""
     except ValueError:
         return ''
+
+@register.filter(name='genericfloatnullformat')
+def floatnullformat(text, arg="{: .2f}"):
     try:
-        d = int(arg)
-    except ValueError:
-        return str(f)
-    m = f - int(f)
-    if not m and d < 0:
-        return '%d' % int(f)
-    else:
-        formatstr = '%%.%df' % abs(d)
-        return formatstr % f
-
-
-@register.filter(name='floatnullformat')
-def floatnullformat(text):
-    x = floatformat(text)
-    if x =='0.00':
+        f = float(text)
+        if f:
+            return "-"
+        else:
+            return genericfloatformat(text, arg)
+    except:
         return "-"
-    else:
-        return x
 
+@register.filter(name='floatformat2')
+def floatformat2(text):
+    return genericfloatformat(text, "{ .2f}")
 
 @register.filter(name='floatformat3')
 def floatformat3(text):
-    arg = 3
-    try:
-        f = float(text)
-    except ValueError:
-        return ''
-    try:
-        d = int(arg)
-    except ValueError:
-        return str(f)
-    m = f - int(f)
-    if not m and d < 0:
-        return '%d' % int(f)
-    else:
-        formatstr = '%%.%df' % abs(d)
-        return formatstr % f
-
+    return genericfloatformat(text, "{ .3f}")
 
 @register.filter(name='amount')
 def amount(text):
