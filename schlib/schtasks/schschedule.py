@@ -61,19 +61,19 @@ def at_iterate(param):
     return ret
 
 
-def monthly(day=1, at=0, in_months=None, in_weekdays=None):
+def monthly(day=1, at=0, in_months=None, in_weekdays=None, tz='local'):
     ret = []
     _day = day
 
     def make_monthly_fun(_hour, _minute, _second):
         def _monthly(dt=None):
-            nonlocal day, _day, _hour, _minute, _second, in_months, in_weekdays
+            nonlocal day, _day, _hour, _minute, _second, in_months, in_weekdays, tz
             if dt:
                 x = dt.add(months=1)
             else:
                 x = INIT_TIME
                 try:
-                    x2 = pendulum.datetime(x.year, x.month, _day, _hour, _minute, _second)
+                    x2 = pendulum.datetime(x.year, x.month, _day, _hour, _minute, _second, tz=tz)
                     if x > x2:
                         x = x.add(months=1)
                 except:
@@ -112,17 +112,17 @@ def monthly(day=1, at=0, in_months=None, in_weekdays=None):
     return ret
 
 
-def daily(at=0, in_weekdays=None):
+def daily(at=0, in_weekdays=None, tz='local'):
     ret = []
 
     def make_daily_fun(_hour, _minute, _second):
         def _daily(dt=None):
-            nonlocal _hour, _minute, _second, in_weekdays
+            nonlocal _hour, _minute, _second, in_weekdays, tz
             if dt:
                 x = dt.add(days=1)
             else:
                 x = INIT_TIME
-                x2 = pendulum.datetime(x.year, x.month, x.day, _hour, _minute, _second)
+                x2 = pendulum.datetime(x.year, x.month, x.day, _hour, _minute, _second, tz=tz)
                 if x > x2:
                     x = x.add(days=1)
             x = x.set(hour=_hour, minute=_minute, second=_second)
