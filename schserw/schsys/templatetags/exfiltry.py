@@ -583,7 +583,7 @@ def obj_to_str(value):
 
 def obj_to_float(value):
     if value:
-        return floatformat(value)
+        return floatformat2(value)
     else:
         return ""
 
