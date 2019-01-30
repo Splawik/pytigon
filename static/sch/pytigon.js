@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-01-09 19:30:59
+// Transcrypt'ed from Python, 2019-01-30 18:20:08
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -3409,7 +3409,7 @@ function pytigon () {
 						});},
 						get new_page () {return __get__ (this, function (self, title_alternate, data, href) {
 							var _id = 'tab' + self.id;
-							var tmp = jQuery (data).find ('title').text ();
+							var tmp = jQuery (data).find ('header').find ('title').text ();
 							var title = jQuery.trim (tmp);
 							if (!(title)) {
 								var title = title_alternate;
@@ -3516,7 +3516,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenuitem', {
@@ -4668,7 +4667,7 @@ function pytigon () {
 					var title = jQuery.trim (jQuery (elem).text ());
 				}
 				if (txt) {
-					var value = jQuery (('<div>' + txt) + '</div>').find ('title').text ();
+					var value = jQuery (('<div>' + txt) + '</div>').find ('head').find ('title').text ();
 					if (value) {
 						var title = value;
 					}
@@ -4936,6 +4935,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();

@@ -303,7 +303,7 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
         if not title:
             title = jQuery.trim(jQuery(elem).text())
         if txt:
-            value = jQuery("<div>" + txt + "</div>").find("title").text()
+            value = jQuery("<div>" + txt + "</div>").find('head').find("title").text()
             if value:
                 title = value
 

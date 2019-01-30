@@ -28,7 +28,7 @@ class TabMenu:
     def new_page(self, title_alternate, data, href):
         _id = "tab" + self.id
 
-        tmp = jQuery(data).find("title").text()
+        tmp = jQuery(data).find('header').find("title").text()
         title =jQuery.trim(tmp)
         if not title:
             title = title_alternate
