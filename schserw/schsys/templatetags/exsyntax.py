@@ -81,12 +81,14 @@ class RowActionNode(Node):
 
     def render(self, context):
         output = self.nodelist.render(context)
-        t = Template(output)
-        output2 = t.render(context).replace('\n',';')
-        t = get_template('widgets/row_actions.html')
-        d = actions_dict(context, output2)
-        return t.render(d, request = d['request'])
-
+        if output.replace('\n',''):
+            t = Template(output)
+            output2 = t.render(context).replace('\n',';')
+            t = get_template('widgets/row_actions.html')
+            d = actions_dict(context, output2)
+            return t.render(d, request = d['request'])
+        else:
+            return ""
 
 @register.tag
 def row_actions(parser, token):
