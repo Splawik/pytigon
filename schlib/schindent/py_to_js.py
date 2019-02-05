@@ -14,6 +14,10 @@ programDir = os.getcwd () .replace ('\\', '/')
 transpilerDir = os.path.dirname (os.path.abspath (tmain.__file__)) .replace ('\\', '/')
 modulesDir = '{}/modules'.format (transpilerDir)
 tempDir = tempfile.gettempdir()
+tmp_path = os.path.dirname(os.path.abspath(__file__))
+
+base_path = os.path.abspath(os.path.join(os.path.join(tmp_path, ".."),".."))
+
 
 try:
     sys.path.remove (transpilerDir)	
@@ -42,7 +46,7 @@ def compile(python_code, temp_dir=None):
     else:
         tmp = tempDir
 
-    compilerPath = [programDir, modulesDir, tmp] + sys.path
+    compilerPath = [base_path, programDir, modulesDir, tmp] + sys.path
 
     dest = os.path.join(os.path.join(tmp, "__javascript__"), "input.mod.js")
 
