@@ -31,10 +31,6 @@ from django.contrib.auth.models import User
 
 
 
-
-
-
-
 def auth(request, key, path):
     
     objects = models.UrlWithAuth.objects.filter(key=key)
@@ -46,12 +42,13 @@ def auth(request, key, path):
             if path:
                 new_url = reverse('start')+path
             else:
-                new_url = reverse('start')+objects[0].redirect_to
+                if objects[0].redirect_to:
+                    new_url = reverse('start')+objects[0].redirect_to
+                else:
+                    new_url = reverse('start')
             return HttpResponseRedirect(new_url)
     
     new_url = reverse('start')
     return HttpResponseRedirect(new_url)
-    
-
 
  
