@@ -194,6 +194,7 @@
         
     % form "^/12":
         .text
-
+    % form "/6":
+        .textclass;textstyle
     % form "/4":
-        .textright;textclass;textstyle
+        .quality;jpeg;textright
