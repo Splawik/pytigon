@@ -69,12 +69,8 @@ def save_video_frame(win):
             pos = win.GetScreenPosition()
             size = win.GetSize()
 
-            fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-            #fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-            #fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            #fourcc = cv2.VideoWriter_fourcc(*'X264')
-            #fourcc = cv2.VideoWriter_fourcc(*'X263')
-
+            #fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
             _RECORD_VIDEO_OUT = cv2.VideoWriter('video.avi', fourcc, 4, (size.width, size.height))
             _RECORD_VIDEO_MONITOR = {'top': pos.y, 'left': pos.x, 'width': size.width, 'height': size.height }
 
@@ -82,8 +78,10 @@ def save_video_frame(win):
             pos = win.GetScreenPosition()
             size = win.GetSize()
             frame = numpy.array(sct.grab(_RECORD_VIDEO_MONITOR))
+            frame = numpy.flip(frame[:, :, :3], 2) 
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)          
             _RECORD_VIDEO_OUT.write(frame)
-
+            
 def finish_video():
     if _RECORD_VIDEO_OUT:
         _RECORD_VIDEO_OUT.release()
