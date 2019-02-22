@@ -51,6 +51,8 @@ from schlib.schtools.install import extract_ptig
 from schlib.schtools.process import py_run
 from schlib.schtools.platform_info import platform_name
 
+from schlib.schtools.install import post_install
+
 from ext_lib.pygettext import main as gtext
 
 try:
@@ -462,6 +464,7 @@ def view_install(request, *argi, **argv):
 def gen(request, pk):
     
     appset = models.SChAppSet.objects.get(id=pk)
+    root_path = settings.ROOT_PATH
     base_path = os.path.join(settings.APP_PACK_PATH, appset.name)
     src_path = os.path.join(settings.APP_PACK_PATH, "schdevtools")
     object_list = []
@@ -591,12 +594,18 @@ def gen(request, pk):
                 f.write(content.encode('utf-8'))
                 f.close()
                 file_name = None
-            elif file_obj.file_type=='l':
+            elif file_obj.file_type in ('l', 'x', 'C'):
                 f = open_and_create_dir(base_path + "/applib/__init__.py", "wb")
                 f.close()
-                f = open_and_create_dir(base_path + "/applib/" + app.name + "/__init__.py", "wb")
+                f = open_and_create_dir(base_path + "/applib/" + app.name + "lib/__init__.py", "wb")
                 f.close()
-                file_name = base_path + "/applib/" + app.name + "/"+ file_obj.name + ".py"
+                file_name = base_path + "/applib/" + app.name + "lib/"+ file_obj.name 
+                if file_obj.file_type == 'l':
+                    file_name += ".py"
+                elif file_obj.file_type == 'x':
+                    file_name += ".pyx"
+                else:
+                    file_name += '.c'
             else: 
                 file_name = None
                 
@@ -849,6 +858,17 @@ def gen(request, pk):
         object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
     else:
         object_list.append((datetime.datetime.now().time().isoformat(), 'ERRORS:', ""))    
+    
+    (exit_code, output_rab, err_tab) = post_install(root_path, base_path)
+    if output_tab:
+        for pos in output_tab:
+            if pos:
+                object_list.append((datetime.datetime.now().time().isoformat(), "compile info", pos))
+    if err_tab:
+        for pos in err_tab:
+            if pos:
+                object_list.append((datetime.datetime.now().time().isoformat(), "compile error", pos))
+                success = False
         
     return { 'object_list': reversed(object_list) }
     

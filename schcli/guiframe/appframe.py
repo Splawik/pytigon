@@ -39,7 +39,6 @@ from wx.lib.agw import aui
 from django.conf import settings
 
 from schlib.schfs.vfstools import get_temp_filename
-from schlib.schtools.cc import compile
 from schlib.schtools.tools import split2
 from schlib.schtasks.task import get_process_manager
 

@@ -21,17 +21,78 @@ import os
 import datetime
 import zipfile
 from shutil import move
-
+from pathlib import Path
 
 from django.conf import settings
 from schlib.schdjangoext.django_manage import *
 from schlib.schfs.vfstools import extractall
 from schlib.schtools.process import py_run
+from schlib.schtools.cc import check_compiler, compile
+
+
+def post_install(base_path, app_path):
+    ret_output = []
+    ret_errors = []
+    ret = 0
+
+    test_cc =  check_compiler(base_path)
+
+    applib = os.path.join(app_path, 'applib')
+    p = Path(applib)
+    fl = p.glob('**/*.pyx')
+    for pos in fl:
+        pyx_filename = p.joinpath(pos).as_posix()
+        if test_cc:
+            c_filename = pyx_filename.replace('.pyx', '.c')
+            (ret_code, output, err) = py_run(['-m', 'cython',  pyx_filename])
+            if ret_code:
+                ret = ret_code
+            if output:
+                for pos in output:
+                    ret_output.append(pos)
+            if err:
+                for pos in err:
+                    ret_errors.append(pos)
+            if os.path.exists(c_filename):
+                (ret_code, output, err) = compile(base_path, c_filename, pyd=True)
+                if ret_code:
+                    ret = ret_code
+                os.unlink(c_filename)
+                if output:
+                    for pos in output:
+                        ret_output.append(pos)
+                if err:
+                    for pos in err:
+                        ret_errors.append(pos)
+        else:
+            out_filename = pyx_filename.replace('.pyx', '.py')
+            with open(pyx_filename, "rt") as f_in:
+                with open(out_filename, "wt") as f_out:
+                    f_out.write(f_in.read())
+    if check_compiler(base_path):
+        fl = p.glob('**/*.c')
+        for pos in fl:
+            c_filename = p.joinpath(pos).as_posix()
+            if os.path.exists(c_filename):
+                (ret_code, output, err) = compile(base_path, c_filename, pyd=False)
+                if ret_code:
+                    ret = ret_code
+                if output:
+                    for pos in output:
+                        ret_output.append(pos)
+                if err:
+                    for pos in err:
+                        ret_errors.append(pos)
+
+    return (ret, ret_output, ret_errors)
+
 
 def install():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
     appset_name = settings.APPSET_NAME
     data_path = settings.DATA_PATH
+    root_path = settings.ROOT_PATH
+    app_pack_path = settings.APP_PACK_PATH
     app_data_path = os.path.join(data_path, appset_name)
     db_path = os.path.join(app_data_path, appset_name+".db")
     if os.path.exists(db_path):
@@ -83,7 +144,10 @@ def install():
             User.objects.db_manager(db_profile).create_superuser('auto', 'auto@pytigon.com', 'anawa')
             if db_profile != 'default':
                 User.objects.db_manager('default').create_superuser('auto', 'auto@pytigon.com', 'anawa')
-
+    ret = post_install(root_path, app_pack_path)
+    if ret:
+        for pos in ret:
+            print(pos)
 
 def export_to_local_db():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")

@@ -24,6 +24,8 @@ import zipfile
 from distutils.dir_util import copy_tree
 import configparser
 from schlib.schtools.process import py_manage
+from schlib.schtools.install import post_install
+
 
 def _mkdir(path, ext=None):
     if ext:
@@ -140,6 +142,11 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
             _mkdir(p)
 
     applib = os.path.join(os.path.join(_app_pack_path, app_pack), "applib")
-    if os.path.exists(applib) and not applib in sys.path:
+    if os.path.exists(applib):
         if not applib in sys.path:
             sys.path.append(applib)
+        if test1 or test2 or test3:
+            ret = post_install(_root_path, os.path.join(_app_pack_path, app_pack))
+            if ret:
+                for pos in ret:
+                    print(pos)

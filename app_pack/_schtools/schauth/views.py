@@ -24,7 +24,13 @@ import datetime
 
 from django.urls import reverse
 from django.contrib.auth import login
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
+
+ 
+
+
+
+
 
 
 
@@ -42,13 +48,15 @@ def auth(request, key, path):
             if path:
                 new_url = reverse('start')+path
             else:
-                if objects[0].redirect_to:
-                    new_url = reverse('start')+objects[0].redirect_to
-                else:
-                    new_url = reverse('start')
+                new_url = reverse('start')+objects[0].redirect_to
             return HttpResponseRedirect(new_url)
     
     new_url = reverse('start')
     return HttpResponseRedirect(new_url)
+    
+
+
+
 
 auth.csrf_exempt = True
+ 

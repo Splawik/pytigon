@@ -54,8 +54,8 @@ class FrozenModules():
         for pos in self.to_restore:
             sys.modules[pos] = self.to_restore[pos]
 
-def py_run(cmd):
-    """run python script
+def run(cmd):
+    """run extern command
 
     args:
         cmd - array of parameters
@@ -66,9 +66,9 @@ def py_run(cmd):
             return stdout data
             return stderr data
     example:
-        py_run(["manage.py", "help"])
+        run(["ls" "-la",])
     """
-    process = Popen([get_executable(),]+cmd, stdout=PIPE, stderr=PIPE)
+    process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     (output, err) = process.communicate()
     exit_code = process.wait()
     if output:
@@ -89,6 +89,23 @@ def py_run(cmd):
     else:
         err_tab = None
     return (exit_code, output_tab, err_tab)
+
+
+def py_run(cmd):
+    """run python script
+
+    args:
+        cmd - array of parameters
+
+    returns:
+        array:
+            return code,
+            return stdout data
+            return stderr data
+    example:
+        py_run(["manage.py", "help"])
+    """
+    return run([get_executable(), ]+cmd)
 
 def _manage(path, cmd):
     frozen_modules = FrozenModules()

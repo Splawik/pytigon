@@ -273,6 +273,8 @@ FileType_CHOICES = (
     ("p","Plugin code"),
     ("i","Plugin template"),
     ("l","Library code"),
+    ("C","Library c code"),
+    ("x","Library cython code"),
     
     )
 

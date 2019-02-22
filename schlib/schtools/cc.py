@@ -19,44 +19,42 @@
 
 
 import os
-import ctypes
 import platform
+from schlib.schtools.process import run
 
-
-_LIBTCC=None
-
-
-def load_libtcc(base_path):
-    global _LIBTCC
-    if _LIBTCC:
-        return True
-
-    if platform.system() == "Linux":
-        file_and_path_to_tcclib = base_path + "/ext_prg/tcc/libtcc.so.1.0"
+def check_compiler(base_path):
+    tcc_dir = os.path.join(base_path, "ext_prg", "tcc")
+    if platform.system() == 'Windows':
+        compiler = os.path.join(tcc_dir, "tcc.exe")
     else:
-        file_and_path_to_tcclib = base_path + "/ext_prg/tcc/libtcc.dll"
-    try:
-        _LIBTCC=ctypes.cdll.LoadLibrary(file_and_path_to_tcclib)
-    except:
-        _LIBTCC = None
-        return False
-    return True
+        compiler = os.path.join(tcc_dir, "tcc")
+    return os.path.exists(compiler)
 
 
-def _req0(funname,retval):
-    if retval!=0:
-        raise ValueError("%s returned error code %s." % (funname,retval))
+def compile(base_path, input_file_name, output_file_name=None, pyd=True):
+    tcc_dir = os.path.join(base_path, "ext_prg", "tcc")
+    include1 = os.path.join(tcc_dir, "include")
+    include2 = os.path.join(include1, "python3.7")
+    tmp = os.getcwd()
+    os.chdir(tcc_dir)
 
+    if output_file_name:
+        ofn = output_file_name
+    else:
+        if platform.system() == 'Windows':
+            if pyd:
+                ofn = input_file_name.replace('.c', '') + ".pyd"
+            else:
+                ofn = input_file_name.replace('.c', '') + ".dll"
+            compiler = ".\\tcc.exe"
+        else:
+            ofn = input_file_name.replace('.c', '')+".so"
+            compiler = "./tcc"
 
-def compile(path_c, base_path):
-    for f in os.listdir(path_c):
-        if f.lower().endswith('.c'):
-            src = path_c + "/" + f
-            if load_libtcc(base_path):
-                os.chdir(base_path+"/ext_prg/tcc/")
-                tccstate=_LIBTCC.tcc_new()
-                _req0("set_output_type", _LIBTCC.tcc_set_output_type(tccstate,2))
-                _req0("add_file", _LIBTCC.tcc_add_include_path(tccstate, (base_path+"/ext_prg/tcc/include").encode('utf-8')))
-                _req0("add_file", _LIBTCC.tcc_add_file(tccstate,src.encode('utf-8')))
-                _req0("output_file", _LIBTCC.tcc_output_file(tccstate, src.replace('.c','.bin').encode('utf-8')))
-                _LIBTCC.tcc_delete(tccstate)
+    cmd = [compiler, input_file_name, '-o', ofn, '-shared']
+    for include in (include1, include2):
+        cmd.append('-I' + include + '')
+
+    (ret_code, output, err) = run(cmd)
+    os.chdir(tmp)
+    return (ret_code, output, err)
