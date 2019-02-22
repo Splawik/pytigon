@@ -51,4 +51,4 @@ def auth(request, key, path):
     new_url = reverse('start')
     return HttpResponseRedirect(new_url)
 
- auth.csrf_exempt = True
+auth.csrf_exempt = True
