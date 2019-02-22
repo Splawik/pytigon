@@ -26,6 +26,7 @@ from django.views.generic import TemplateView
 import django.contrib.auth.views
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from schlib.schdjangoext.tools import make_href
 import schserw.schsys.views
@@ -38,7 +39,7 @@ color_higlight:FFFFFF,color_shadow:A0A0A0,color_background_0_5:787878,color_back
 color_background_0_9:D8D8D8,color_background:F0F0F0,color_background_1_1:F1F1F1,\
 color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 
-
+@csrf_exempt
 def sch_login(request, *argi, **argv):
     path = ""
     path_after_error = ""
