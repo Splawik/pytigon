@@ -29,14 +29,14 @@ def transform_xlsx(stream_in, stream_out, transform_list):
         pos = list(_pos)
         key = pos[0]
         
-        if type(key)=='str' and '=>' in key:
+        if type(key)==str and '=>' in key:
             x = key.split('=>')
             ws_name = x[0] if x[0] else 'data'
             set_sheet(ws_name)            
             ws.append(pos[1:])
             
-        elif type(key)=='str' and '/' in key:
-            x = key.split('/')
+        elif type(key)==str and '//' in key:
+            x = key.split('//')
             ws_name = x[0] if x[0] else 'data'
             set_sheet(ws_name)            
             if ':' in x[1]:
