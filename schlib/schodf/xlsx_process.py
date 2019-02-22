@@ -40,7 +40,7 @@ def transform_xlsx(stream_in, stream_out, transform_list):
             ws_name = x[0] if x[0] else 'data'
             set_sheet(ws_name)            
             if ':' in x[1]:
-                xx = x[1].split(':')
+                xx = x[1].split(':', 1)
             else:
                 xx = ( x[1], pos[1], )
             
