@@ -40,3 +40,4 @@ cefpython3
 xonsh
 hypercorn
 netifaces
+cython
