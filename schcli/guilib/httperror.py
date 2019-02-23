@@ -41,7 +41,7 @@ class HttpErrorDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
 
 
-        self.label = schcli.guictrl.ctrl.HTML2(self, size=(800, 600), name="webbrowser")
+        self.label = schcli.guictrl.ctrl.HTML2(self, size=(1024, 768), name="webbrowser")
 
         try:
             sizer.Add(self.label.wb, 0, wx.ALIGN_CENTRE | wx.ALL, 5)

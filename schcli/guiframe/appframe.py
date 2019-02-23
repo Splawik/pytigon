@@ -382,7 +382,7 @@ class SchAppFrame(SchBaseFrame):
 
 
     def setup_frame(self):
-        self.SetMinSize(wx.Size(800, 700))
+        self.SetMinSize(wx.Size(800, 600))
 
 
     def init_acc_keys(self):

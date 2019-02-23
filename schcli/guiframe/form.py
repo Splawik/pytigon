@@ -114,6 +114,9 @@ class SchForm(ScrolledPanel):
         self.t1 = None
         self.websockets = {}
 
+        self.hscroll = hscroll
+        self.vscroll = vscroll
+
         ScrolledPanel.__init__(self, parent, -1, style=wx.WANTS_CHARS)
         try:
             self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
@@ -282,17 +285,17 @@ class SchForm(ScrolledPanel):
                 (w2, h2) = p.get_max_sizes()
                 #h2+=8
                 #h2-=wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                hscroll = True if w2 > w + 3 else False
-                vscroll = True if h2 > h + 3 else False
+                self.hscroll = True if w2 > w + 3 else False
+                self.vscroll = True if h2 > h + 3 else False
                 if self.no_hscrollbar:
-                    hscroll = False
-                if ( vscroll or hscroll ) and w > 0 and h > 0 and w2 > 0 and h2 > 0:
-                    if vscroll:
+                    self.hscroll = False
+                if ( self.vscroll or self.hscroll ) and w > 0 and h > 0 and w2 > 0 and h2 > 0:
+                    if self.vscroll:
                         w2 = w2 + wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-                    if hscroll:
+                    if self.hscroll:
                         h2 = h2 + wx.SystemSettings.GetMetric(wx.SYS_HSCROLL_Y)
                     self._best_virtual_size = (w2, h2)
-                    self.EnableScrolling(hscroll, vscroll)
+                    self.EnableScrolling(self.hscroll, self.vscroll)
                 self.SetVirtualSize((w2, h2))
             else:
                 self.EnableScrolling(False, False)
@@ -748,7 +751,31 @@ class SchForm(ScrolledPanel):
             elif hasattr(self, 'init_form'):
                 self.init_form()
         wx.CallAfter(self._build_acc_tab)
+        wx.CallAfter(self._check_scroll_bar)
 
+
+    def _check_scroll_bar(self):
+        size = self.GetSize()
+        max_y = 0
+        children = self.GetChildren()
+        for child in children:
+            pos = child.GetPosition()
+            child_size = child.GetSize()
+            y = pos[1]+child_size[1]
+            if y > size[1]:
+                if y > max_y:
+                    max_y = y
+        if max_y>0:
+            self.vscroll = True
+            self.no_vscrollbar = False
+            self.SetupScrolling(self.hscroll, self.vscroll, rate_y=1)
+            self.EnableScrolling(self.hscroll, self.vscroll)
+            self.SetVirtualSize(size[0], max_y)
+            self.wxdc = None
+            self.draw_background(True, size)
+            return
+
+        #for pos in self.con
 
     def new_local_child_page(self,address,title='',parameters=None):
         return self.new_child_page('http://local.net/' + address, title, parameters)

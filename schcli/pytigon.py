@@ -1008,14 +1008,14 @@ def _main_run():
             wx.ID_ANY,
             app.title,
             wx.DefaultPosition,
-            wx.Size(800, 700),
+            wx.Size(1024, 768),
         )
     else:
         frame = appframe.SchAppFrame(
             app.gui_style,
             app.title,
             wx.DefaultPosition,
-            wx.Size(800, 700),
+            wx.Size(1024, 768),
             video = _VIDEO
         )
 
