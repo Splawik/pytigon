@@ -292,7 +292,7 @@ class HttpClient:
                         f.write(self.content)
                 return (500, self.http.url)
 
-        if not post_request and not '?' in adr and type(self.content)==bytes and b'Cache-control' in self.content:
+        if not post_request and not '?' in adr and type(self.content)==bytes and ( b'Cache-control' in self.content or '/schplugins' in adr ):
             self.http_cache[adr]=(self.ret_content_type, self.content)
 
         return (self.http.status_code, self.http.url)
