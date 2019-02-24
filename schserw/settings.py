@@ -314,6 +314,7 @@ if platform_name()=='Android':
 CACHE_URL = os.environ.setdefault('CACHE_URL', '')
 if CACHE_URL:
     CACHES = {'default': django_cache_url.config()}
+    SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 try:
     from schserw.settings_local import *
