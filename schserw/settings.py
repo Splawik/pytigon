@@ -24,6 +24,8 @@ from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
 from .main_paths import get_main_paths
+import django_cache_url
+
 
 APPSET_NAME = "_schall"
 GEN_TIME = '0000.00.00 00:00:00'
@@ -308,6 +310,10 @@ CORS_ORIGIN_WHITELIST = (
 
 if platform_name()=='Android':
    CORS_ORIGIN_ALLOW_ALL = True
+
+CACHE_URL = os.environ.setdefault('CACHE_URL', '')
+if CACHE_URL:
+    CACHES = {'default': django_cache_url.config()}
 
 try:
     from schserw.settings_local import *
