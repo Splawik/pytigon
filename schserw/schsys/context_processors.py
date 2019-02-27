@@ -62,22 +62,24 @@ def test_mobile(request):
 
 
 def test_tablet(request):
-    s = request.META["HTTP_USER_AGENT"].lower()
-    if 'tablet' in s:
-        return True
-    else:
-        return False
+    if 'HTTP_USER_AGENT' in request.META:
+        s = request.META["HTTP_USER_AGENT"].lower()
+        if 'tablet' in s:
+            return True
+    return False
 
 def test_ie(request):
-    if 'edge' in request.META['HTTP_USER_AGENT'].lower() or 'trident' in request.META['HTTP_USER_AGENT'].lower():
-        return True
-    else:
-        return False
+    if 'HTTP_USER_AGENT' in request.META:
+        if 'edge' in request.META['HTTP_USER_AGENT'].lower() or 'trident' in request.META['HTTP_USER_AGENT'].lower():
+            return True
+    return False
 
 
 def standard_web_browser(request):
     if 'browser_type' in request.GET:
         return int(request.GET['browser_type'])
+    if not 'HTTP_USER_AGENT' in request.META:
+        return 0
     if request and request.META['HTTP_USER_AGENT'].lower().startswith('py'):
         if 'WebKit' in request.META['HTTP_USER_AGENT']:
             return 3
