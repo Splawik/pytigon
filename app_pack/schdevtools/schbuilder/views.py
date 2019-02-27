@@ -859,7 +859,7 @@ def gen(request, pk):
     else:
         object_list.append((datetime.datetime.now().time().isoformat(), 'ERRORS:', ""))    
     
-    (exit_code, output_rab, err_tab) = post_install(root_path, base_path)
+    (exit_code, output_tab, err_tab) = post_install(root_path, base_path)
     if output_tab:
         for pos in output_tab:
             if pos:

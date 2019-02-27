@@ -43,3 +43,8 @@ xonsh
 hypercorn
 netifaces
 cython
+numba
+numpy
+numexpr
+pandas
+dukpy

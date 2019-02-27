@@ -773,6 +773,7 @@ class SchForm(ScrolledPanel):
             self.SetVirtualSize(size[0], max_y)
             self.wxdc = None
             self.draw_background(True, size)
+            self.Refresh()
             return
 
         #for pos in self.con
