@@ -52,7 +52,8 @@ class SchBrowserFrame(SchBaseFrame):
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_SHOW, self.on_show)
         self.Show()
-        wx.CallAfter(self.SetSize, (1024,768))
+        size = wx.GetApp().app_size
+        wx.CallAfter(self.SetSize, (size[0],size[1]))
 
     def on_show(self, event):
         if event.Show and not self.ctrl:

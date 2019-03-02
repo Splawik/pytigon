@@ -72,6 +72,7 @@ _INSPECTION = False
 _DEBUG = False
 _TRACE = False
 _VIDEO = False
+_APP_SIZE = (1024, 768)
 _RPC = False
 _WEBSOCKET = None
 
@@ -186,7 +187,8 @@ def process_argv(argv):
             global _TRACE
             _TRACE = True
         elif opt in ('--video',):
-            global _VIDEO
+            global _VIDEO, _APP_SIZE
+            _APP_SIZE = (1280, 720)
             _VIDEO = True
     return ret
 
@@ -374,6 +376,8 @@ class SchApp(App, _BASE_APP):
         config_name = os.path.join(SCR_PATH, "pytigon.ini")
         self.config = configparser.ConfigParser()
         self.config.read(config_name)
+
+        self.app_size = _APP_SIZE
 
         self.locale = None
         self.ext_app = []
@@ -1008,14 +1012,14 @@ def _main_run():
             wx.ID_ANY,
             app.title,
             wx.DefaultPosition,
-            wx.Size(1024, 768),
+            wx.Size(_APP_SIZE[0], _APP_SIZE[1]),
         )
     else:
         frame = appframe.SchAppFrame(
             app.gui_style,
             app.title,
             wx.DefaultPosition,
-            wx.Size(1024, 768),
+            wx.Size(_APP_SIZE[0], _APP_SIZE[1]),
             video = _VIDEO
         )
 
