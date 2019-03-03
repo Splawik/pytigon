@@ -102,7 +102,7 @@ if CRT:
     CFG_START = f"""
 server {{
     listen {VIRTUAL_PORT};
-    client_max_body_size 20M;
+    client_max_body_size 50M;
     server_name www.{VIRTUAL_HOST};
     charset utf-8;
 
@@ -117,7 +117,7 @@ else:
 CFG_START += f"""
 server {{
     listen {VIRTUAL_PORT};
-    client_max_body_size 20M;
+    client_max_body_size 50M;
     server_name {VIRTUAL_HOST};
     charset utf-8;
 
