@@ -429,16 +429,24 @@ class SchPage(wx.Window, Signal):
         return True
 
     def has_parm(self, param):
+        if param in self._ctrl_dict:
+            return True
         return self.item_exist(param)
 
     def get_parm(self, param):
-        ctrl = self.get_item(param)
+        print(param)
+        if param in self._ctrl_dict:
+            ctrl = self._ctrl_dict[param]
+        else:
+            ctrl = self.get_item(param)
         if ctrl:
             return ctrl.GetValue()
         else:
             return None
 
     def get_item(self, ctrl_name):
+        if ctrl_name in self._ctrl_dict:
+            return self._ctrl_dict[ctrl_name]
         if self.body != None and hasattr(self.body, ctrl_name):
             return getattr(self.body, ctrl_name)
         if self.header != None and hasattr(self.header, ctrl_name):
@@ -455,6 +463,8 @@ class SchPage(wx.Window, Signal):
         Args:
             ctrl_name -  name of control element
         """
+        if ctrl_name in self._ctrl_dict:
+            return True
         if self.body and hasattr(self.body, ctrl_name):
             return True
         if self.header and hasattr(self.header, ctrl_name):
