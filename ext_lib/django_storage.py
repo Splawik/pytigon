@@ -52,7 +52,7 @@ class FSStorage(Storage):
     def _save(self, name, content):
         with unwrap_errors(name):
             self.fs.makedirs(dirname(name), recreate=True)
-            self.fs.setfile(name, content)
+            self.fs.setbinfile(name, content)
         return name
 
     def delete(self, name):
