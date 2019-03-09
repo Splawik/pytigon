@@ -231,6 +231,7 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
                 prj,
                 prj,
                 prj,
+                prj,
                 "http://127.0.0.1",
                 port,
                 prj,
