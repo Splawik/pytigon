@@ -133,6 +133,9 @@ CFG_ELEM = """
     location ^~ /%s/static/ {
         alias /var/www/pytigon/static/;
     }
+    location ^~ /%s/site_media/ {
+        alias /home/www-data/.pytigon/%s/media/;
+    }
     location ~ /%s(.*)/socket.io/$ {
         proxy_http_version 1.1;
 
@@ -225,6 +228,7 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
         conf.write(
             CFG_ELEM
             % (
+                prj,
                 prj,
                 prj,
                 "http://127.0.0.1",
