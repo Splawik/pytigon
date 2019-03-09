@@ -80,10 +80,10 @@ def usage():
     print(process_argv.__doc__)
 
 def process_argv(argv):
-    """Run pytigon application: pytigon.py [option]... arg
+    """Run pytigon application: pytigon [option]... arg
 
     command line arguments:
-        arg: application package name, schdevtools for example
+        arg: project name, schdevtools for example
              or address of http server, http://www.pytigon.cloud for example
              or pytigon script name, test.schdevtools.schsimplescripts.ptig for example
              or pytigon installation file name

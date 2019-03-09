@@ -36,7 +36,6 @@ def run(param=None):
     ext_lib_path = os.path.join(base_path, "ext_lib")
     if not ext_lib_path in sys.path:
         sys.path.append(ext_lib_path)
-
     os.environ['PYTIGON_ROOT_PATH'] = base_path
     if len(argv)>1 and argv[1].startswith('manage'):
         if '_' in argv[1]:
@@ -66,7 +65,7 @@ def run(param=None):
             script = x2[1]
         else:
             app = x[1]
-            script = run.py
+            script = "run.py"
 
         path3 = os.path.join(PRJ_PATH, app)
         subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + argv[2:])
@@ -106,8 +105,38 @@ def run(param=None):
     elif len(argv)>1 and ( argv[1].endswith('.py') or argv[1][-4:-1] == ".py" ):
         subprocess.run([get_executable(),] + argv[1:])
     else:
-        from schcli.pytigon import main
-        main()
+        help = False
+        if len(argv) > 1 and argv[1] == '--help':
+            help = True
+        try:
+            if help:
+                print("First form:")
+                print("===========")
+            from schcli.pytigon import main
+            main()
+        except SystemExit:
+            if help:
+                print("Second form:")
+                print("============")
+                print("Manage pytigon application: pytigon manage_{{project_name}} options")
+                print("    to see all options run pytigon manage_{{project_name}} --help")
+                print("")
+                print("Third option:")
+                print("=============")
+                print("Run web server: pytigon runserver_{{project_name}} options")
+                print("    to see all options run pytigon runserver_{{project_name}} --help")
+                print("")
+                print("The fourth option:")
+                print("==================")
+                print("Run python script: pytigon {{script_name}}.py")
+                print("    run python script in pytigon enviroment")
+                print("")
+                print("The fifth option:")
+                print("=================")
+                print("Run python script in project directory: pytigon run_{{project_name}}/{{script_name}}.py")
+                print("    run python script in pytigon enviroment")
+                print("")
+
 
 if __name__ == '__main__':
     run(sys.argv)

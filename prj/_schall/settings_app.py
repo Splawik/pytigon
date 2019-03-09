@@ -49,7 +49,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
 
 
 app_pack_folders = []
-base_apps_path = APP_PACK_PATH
+base_apps_path = PRJ_PATH
 for ff in os.listdir(base_apps_path):
     if os.path.isdir( os.path.join(base_apps_path,ff)):
         if not ff.startswith('_'):
@@ -59,7 +59,7 @@ for app_pack in app_pack_folders:
     try:
         x = __import__(app_pack+".apps")
         if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
-            APP_PACKS.append(app_pack)
+            PRJS.append(app_pack)
             apps = x.apps.APPS
             for pos in apps:
                 if '.' in pos:
@@ -174,5 +174,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 12:16:31'
+GEN_TIME = '2019.03.09 18:11:07'
 
