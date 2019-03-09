@@ -52,7 +52,7 @@ window.MOUNTED_COMPONENTS = 0
 
 
 def app_init(
-    appset_name,
+    prj_name,
     application_template,
     menu_id,
     lang,
@@ -67,7 +67,7 @@ def app_init(
 
     moment.locale(lang)
     window.ACTIVE_PAGE = None
-    window.APPSET_NAME = appset_name
+    window.PRJ_NAME = prj_name
     window.APPLICATION_TEMPLATE = application_template
     window.MENU = None
     window.PUSH_STATE = True

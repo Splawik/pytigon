@@ -89,12 +89,12 @@ def post_install(base_path, app_path):
 
 def install():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
-    appset_name = settings.APPSET_NAME
+    prj_name = settings.PRJ_NAME
     data_path = settings.DATA_PATH
     root_path = settings.ROOT_PATH
-    app_pack_path = settings.APP_PACK_PATH
-    app_data_path = os.path.join(data_path, appset_name)
-    db_path = os.path.join(app_data_path, appset_name+".db")
+    prj_path = settings.PRJ_PATH
+    app_data_path = os.path.join(data_path, prj_name)
+    db_path = os.path.join(app_data_path, prj_name+".db")
     if os.path.exists(db_path):
         return True
     else:
@@ -103,8 +103,8 @@ def install():
         else:
             db_profile = 'default'
 
-        db_path_new = os.path.join(app_data_path, appset_name + ".new")
-        db_path_old = os.path.join(app_data_path, appset_name + ".old")
+        db_path_new = os.path.join(app_data_path, prj_name + ".new")
+        db_path_old = os.path.join(app_data_path, prj_name + ".old")
         new_db = False
         old_db = False
 
@@ -132,7 +132,7 @@ def install():
                 temp_path = os.path.join(data_path, 'temp')
                 if not os.path.exists(temp_path):
                     os.mkdir(temp_path)
-                json_path = os.path.join(temp_path, appset_name + '.json')
+                json_path = os.path.join(temp_path, prj_name + '.json')
                 cmd(['dumpdata', '--database', db_profile, '--format', 'json', '--indent', '4',
                      '-e', 'auth', '-e', 'contenttypes', '-e', 'sessions', '-e', 'sites', '-e', 'admin',
                      '--output', json_path])
@@ -144,7 +144,7 @@ def install():
             User.objects.db_manager(db_profile).create_superuser('auto', 'auto@pytigon.com', 'anawa')
             if db_profile != 'default':
                 User.objects.db_manager('default').create_superuser('auto', 'auto@pytigon.com', 'anawa')
-    ret = post_install(root_path, app_pack_path)
+    ret = post_install(root_path, prj_path)
     if ret:
         for pos in ret:
             print(pos)
@@ -157,10 +157,10 @@ def export_to_local_db():
         db_profile = 'default'
 
     if db_profile != 'default':
-        appset_name = settings.APPSET_NAME
+        prj_name = settings.PRJ_NAME
         data_path = settings.DATA_PATH
-        app_data_path = os.path.join(data_path, appset_name)
-        db_path = os.path.join(app_data_path, appset_name+".db")
+        app_data_path = os.path.join(data_path, prj_name)
+        db_path = os.path.join(app_data_path, prj_name+".db")
 
         if os.path.exists(db_path):
             os.rename(db_path, db_path + "." + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + ".bak")
@@ -170,7 +170,7 @@ def export_to_local_db():
         temp_path = os.path.join(data_path, 'temp')
         if not os.path.exists(temp_path):
             os.mkdir(temp_path)
-        json_path = os.path.join(temp_path, appset_name + '.json')
+        json_path = os.path.join(temp_path, prj_name + '.json')
         cmd(['dumpdata', '--database', 'default', '--format', 'json', '--indent', '4',
              '-e', 'auth', '-e', 'contenttypes', '-e', 'sessions', '-e', 'sites', '-e', 'admin',
              '--output', json_path])
@@ -186,11 +186,11 @@ def extract_ptig(zip_file, name):
     ret.append("Install file: " + name)
     test_update = True
 
-    extract_to = os.path.join(settings.APP_PACK_PATH, name)
+    extract_to = os.path.join(settings.PRJ_PATH, name)
     ret.append("install to: " + extract_to)
 
-    if not os.path.exists(settings.APP_PACK_PATH):
-        os.mkdir(settings.APP_PACK_PATH)
+    if not os.path.exists(settings.PRJ_PATH):
+        os.mkdir(settings.PRJ_PATH)
     if not os.path.exists(extract_to):
         os.mkdir(extract_to)
         test_update = False

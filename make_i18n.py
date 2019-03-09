@@ -44,6 +44,6 @@ if len(ARGV) < 2:
     make_messages('./schcli', './schcli/locale', 'pytigon')
 else:
     for app_name in ARGV[1:]:
-        path1 = os.path.join('./app_pack', app_name)
+        path1 = os.path.join('./prj', app_name)
         path2 = os.path.join(path1, 'locale')
         make_messages(path1, path2, 'django', 'LC_MESSAGES')

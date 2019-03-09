@@ -10,7 +10,7 @@ else:
 
 from schserw import settings
 
-sys.path.insert(0,os.path.join(settings.APP_PACK_PATH, '_schall'))
+sys.path.insert(0,os.path.join(settings.PRJ_PATH, '_schall'))
 sys.path.insert(0,os.path.join(base_path, "python/lib/python%d.%d/site-packages" % (sys.version_info[0], sys.version_info[1]) ))
 sys.path.insert(0,base_path)
 

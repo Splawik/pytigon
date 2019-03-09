@@ -162,7 +162,7 @@ def process_argv(argv):
             ret['embeded_browser'] = True
         elif opt in ('-s', '--embededserver'):
             ret['address'] = 'embeded'
-            ret['extern_app_set'] = True
+            ret['extern_prj'] = True
         elif opt == '--no_gui':
             ret['nogui'] = True
         elif opt in ('-m', '--menu_always'):
@@ -198,10 +198,10 @@ if _PARAM == None:
 
 from schserw import settings as schserw_settings
 
-sys.path.append(schserw_settings.APP_PACK_PATH)
+sys.path.append(schserw_settings.PRJ_PATH)
 
 from schlib.schtools.install_init import init
-init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
+init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.PRJ_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
 import wx
 _ = wx.GetTranslation
@@ -211,7 +211,7 @@ def process_adv_argv():
     if not ('args' in _PARAM and len(_PARAM['args']) > 0):
         _app = wx.App()
 
-        choices = [ff for ff in os.listdir(schserw_settings.APP_PACK_PATH + "/") if not ff.startswith('_')]
+        choices = [ff for ff in os.listdir(schserw_settings.PRJ_PATH + "/") if not ff.startswith('_')]
         dlg = wx.SingleChoiceDialog(None, _('select the application to run'), _("Pytigon"), choices,wx.CHOICEDLG_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
             arg = dlg.GetStringSelection()
@@ -227,7 +227,7 @@ def process_adv_argv():
     else:
         arg = _PARAM['args'][0].strip()
     if not (arg == 'embeded' or '.' in arg or '/' in arg):
-        CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
+        CWD_PATH = schserw_settings.PRJ_PATH + "/" + arg
         if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
             print(_("Application pack: '%s' does not exists") % arg)
             sys.exit(0)
@@ -787,10 +787,10 @@ def _main_init():
         app.embeded_browser = True
     else:
         app.embeded_browser = False
-    if 'extern_app_set' in _PARAM:
-        extern_app_set = True
+    if 'extern_prj' in _PARAM:
+        extern_prj = True
     else:
-        extern_app_set = False
+        extern_prj = False
     if 'address' in _PARAM:
         address = _PARAM['address']
 
@@ -802,21 +802,21 @@ def _main_init():
             x = prg_name.split('.')
             if len(x)==2 or ( len(x)>2 and x[-2].lower()=='inst'):
                 prg_name2 = x[0]
-                path = os.path.join(schserw_settings.APP_PACK_PATH, '_schremote')
+                path = os.path.join(schserw_settings.PRJ_PATH, '_schremote')
                 sys.path.append(path)
                 if not pytigon_install.install(args[0], prg_name2):
                     return (None, None)
                 #sys.path.remove(path)
                 return (None, None)
-                CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + prg_name2
+                CWD_PATH = schserw_settings.PRJ_PATH + "/" + prg_name2
             else:
                 if len(x)>3:
                     prg_name2 = x[0]
                     app_name2 = x[-2]
-                    app_pack = x[-3]
-                    CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + app_pack.strip()
+                    prj = x[-3]
+                    CWD_PATH = schserw_settings.PRJ_PATH + "/" + prj.strip()
                     if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
-                        print(_("Application pack: '%s' does not exists") % app_pack.strip())
+                        print(_("Application pack: '%s' does not exists") % prj.strip())
                         return (None, None)
                     wx.CallAfter(app.run_script, app_name2, args[0])
                 else:
@@ -826,7 +826,7 @@ def _main_init():
             arg = args[0].strip()
             if arg == 'embeded' or '.' in arg or '/' in arg:
                 if arg != 'embeded':
-                    CWD_PATH = schserw_settings.APP_PACK_PATH + '/_schremote'
+                    CWD_PATH = schserw_settings.PRJ_PATH + '/_schremote'
 
                 tmp = arg.replace('//', '$$$')
                 if '/' in arg:
@@ -839,9 +839,9 @@ def _main_init():
                 else:
                     address = arg
 
-                extern_app_set = True
+                extern_prj = True
             else:
-                CWD_PATH = schserw_settings.APP_PACK_PATH + "/" + arg
+                CWD_PATH = schserw_settings.PRJ_PATH + "/" + arg
                 if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
                     print(_("Application pack: '%s' does not exists") % arg)
                     return (None, None)

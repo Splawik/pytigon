@@ -11,17 +11,17 @@ init_paths()
 
 from schserw import settings
 
-APPSET = "_schall"
+PRJ_NAME = "_schall"
 PORT = '8000'
 
 if 'PYTHON_SERVICE_ARGUMENT' in os.environ:
-    APPSET = os.environ['PYTHON_SERVICE_ARGUMENT']
-    app_path = os.path.join(settings.APP_PACK_PATH, APPSET)
+    PRJ_NAME = os.environ['PYTHON_SERVICE_ARGUMENT']
+    app_path = os.path.join(settings.PRJ_PATH, PRJ_NAME)
     if not app_path in sys.path:
         sys.path.insert(0,app_path)
 
 
 if __name__ == '__main__':
     from pytigon_run import run
-    cmd = ['android', 'runserver_' + APPSET, '-b', '0.0.0.0', '-p', PORT]
+    cmd = ['android', 'runserver_' + PRJ_NAME, '-b', '0.0.0.0', '-p', PORT]
     run(cmd)

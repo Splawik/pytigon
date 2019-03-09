@@ -53,20 +53,20 @@ def upgrade_test(zip_path, out_path):
     return False
 
 
-def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=None):
+def init(prj, root_path, data_path, prj_path, static_app_path, paths=None):
     _root_path = os.path.normpath(root_path)
     _data_path = os.path.normpath(data_path)
-    _app_pack_path = os.path.normpath(app_pack_path)
+    _prj_path = os.path.normpath(prj_path)
     _static_app_path = os.path.normpath(static_app_path)
 
-    test1 = 0 if os.path.exists(_app_pack_path) else 1
+    test1 = 0 if os.path.exists(_prj_path) else 1
     test2 = 0 if os.path.exists(_data_path) else 1
     test3 = 0 if os.path.exists(_static_app_path) else 1
 
     if not test1:
-        if upgrade_test(os.path.join(os.path.join(_root_path, "install"), "app_pack.zip"),_app_pack_path):
+        if upgrade_test(os.path.join(os.path.join(_root_path, "install"), "prj.zip"),_prj_path):
             test1 = 2
-            print("Upgrade app_pack")
+            print("Upgrade prj")
 
     if not test2:
         if upgrade_test(os.path.join(os.path.join(_root_path, "install"), ".pytigon.zip"), _data_path):
@@ -74,15 +74,15 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
             print("Upgrade data")
 
     if test1:
-        p2 = os.path.join(_root_path, 'app_pack')
+        p2 = os.path.join(_root_path, 'prj')
         if os.path.exists(p2) and test1 == 1:
-            copy_tree(p2, _app_pack_path, preserve_mode=0, preserve_times=0)
+            copy_tree(p2, _prj_path, preserve_mode=0, preserve_times=0)
         else:
-            zip_file = os.path.join(os.path.join(_root_path, "install"), "app_pack.zip")
+            zip_file = os.path.join(os.path.join(_root_path, "install"), "prj.zip")
             if os.path.exists(zip_file):
-                if not os.path.exists(_app_pack_path):
-                    os.makedirs(_app_pack_path)
-                extractall(zipfile.ZipFile(zip_file), _app_pack_path)
+                if not os.path.exists(_prj_path):
+                    os.makedirs(_prj_path)
+                extractall(zipfile.ZipFile(zip_file), _prj_path)
 
     if test2:
         zip_file2 = os.path.join(os.path.join(_root_path, "install"), ".pytigon.zip")
@@ -100,11 +100,11 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
             os.makedirs(os.path.join(media_path,'filer_private'))
             os.makedirs(os.path.join(media_path,'filer_public_tumbnails'))
             os.makedirs(os.path.join(media_path,'filer_private_thumbnails'))
-        app_packs = [ff for ff in os.listdir(_app_pack_path) if not ff.startswith('_')]
+        prjs = [ff for ff in os.listdir(_prj_path) if not ff.startswith('_')]
 
         tmp = os.getcwd()
-        for app in app_packs:
-            path = os.path.join(_app_pack_path, app)
+        for app in prjs:
+            path = os.path.join(_prj_path, app)
             if os.path.isdir(path):
                 db_path = os.path.join(os.path.join(_data_path, app), f"{app}.db")
                 os.chdir(path)
@@ -134,19 +134,19 @@ def init(app_pack, root_path, data_path, app_pack_path, static_app_path, paths=N
         if os.path.exists(p2):
             copy_tree(p2, _static_app_path, preserve_mode=0, preserve_times=0)
 
-    _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', app_pack]
+    _paths = ['', 'cache', 'plugins_cache', '_schall',  'schdevtools', prj]
     for p in _paths:
         _mkdir(_data_path, p)
     if paths:
         for p in paths:
             _mkdir(p)
 
-    applib = os.path.join(os.path.join(_app_pack_path, app_pack), "applib")
+    applib = os.path.join(os.path.join(_prj_path, prj), "applib")
     if os.path.exists(applib):
         if not applib in sys.path:
             sys.path.append(applib)
         if test1 or test2 or test3:
-            ret = post_install(_root_path, os.path.join(_app_pack_path, app_pack))
+            ret = post_install(_root_path, os.path.join(_prj_path, prj))
             if ret:
                 for pos in ret:
                     print(pos)

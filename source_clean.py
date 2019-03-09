@@ -2,8 +2,8 @@
 import os
 import PythonTidy
 
-#dirnames = ['./schcli', './schlib', './schserw', './app_pack', './templates_src']
-dirnames = ['./app_pack/schods', ]
+#dirnames = ['./schcli', './schlib', './schserw', './prj', './templates_src']
+dirnames = ['./prj/schods', ]
 
 signature="""#!/usr/bin/python
 # -*- coding: utf-8 -*-

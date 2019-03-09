@@ -1,0 +1,36 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+% load staticfiles
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'vue/vue.js' %}
+    
+    
+    {% jscript_link 'app/_schdata/js/subreport.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+    
+
+%% body_footer
+    {{block.super}}
+    
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
+    {% component 'app/schcomponents/components/xterm.js' %}
+    
+    
+
+%% component_init
+    .var component_init = [ "vs_editor", "wysiwyg_edit", "xterm",  ];  

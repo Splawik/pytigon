@@ -15,7 +15,7 @@ pip-delete-this-directory.txt
 # Translations
 *.mo
 
-/app_pack/schdevtools/schbuilder/migrations
+/prj/schdevtools/schbuilder/migrations
 migrations/
 
 .idea/
@@ -32,19 +32,19 @@ global_db_settings.py
 # font cache
 *.pkl
 
-app_pack/schbhp/
-app_pack/schdocs/
-app_pack/scheditor/
-app_pack/schhomemonitoring/
-app_pack/schintranet/
-app_pack/schit/
-app_pack/schmicroerp/
-app_pack/schodf/
-app_pack/schpolb/
-app_pack/schpytigondemo/
-app_pack/schpytigondoc/
-app_pack/schwebtrapper/
-app_pack/standard_components/
+prj/schbhp/
+prj/schdocs/
+prj/scheditor/
+prj/schhomemonitoring/
+prj/schintranet/
+prj/schit/
+prj/schmicroerp/
+prj/schodf/
+prj/schpolb/
+prj/schpytigondemo/
+prj/schpytigondoc/
+prj/schwebtrapper/
+prj/standard_components/
 
 ext_lib_cli_lin/
 ext_prg/

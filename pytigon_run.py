@@ -40,24 +40,24 @@ def run(param=None):
     os.environ['PYTIGON_ROOT_PATH'] = base_path
     if len(argv)>1 and argv[1].startswith('manage'):
         if '_' in argv[1]:
-            from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+            from schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
                 STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
 
             x = argv[1].split('_',1)
             app = x[1]
 
-            if not os.path.exists(APP_PACK_PATH) or not os.path.exists(DATA_PATH):
+            if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from schlib.schtools.install_init import init
-                init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
+                init(app, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-            path3 = os.path.join(APP_PACK_PATH, app)
+            path3 = os.path.join(PRJ_PATH, app)
             os.chdir(path3)
             subprocess.run([get_executable(), "manage.py"] + argv[2:])
             os.chdir(base_path)
         else:
             subprocess.run([get_executable(), "manage.py"] + argv[2:])
     elif len(argv) > 1 and argv[1].startswith('run_'):
-        from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+        from schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
             STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
         x = argv[1].split('_', 1)
         if '/' in x[1]:
@@ -68,21 +68,21 @@ def run(param=None):
             app = x[1]
             script = run.py
 
-        path3 = os.path.join(APP_PACK_PATH, app)
+        path3 = os.path.join(PRJ_PATH, app)
         subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + argv[2:])
 
     elif len(argv)>1 and argv[1].startswith('runserver'):
         if '_' in argv[1]:
-            from schserw.settings import ROOT_PATH, DATA_PATH, APP_PACK_PATH, \
+            from schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
                 STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
             x = argv[1].split('_', 1)
             app = x[1]
 
-            if not os.path.exists(APP_PACK_PATH) or not os.path.exists(DATA_PATH):
+            if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from schlib.schtools.install_init import init
-                init(app, ROOT_PATH, DATA_PATH, APP_PACK_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
+                init(app, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-            path3 = os.path.join(APP_PACK_PATH, app)
+            path3 = os.path.join(PRJ_PATH, app)
             os.chdir(path3)
             options = []
             if not '-b' in argv[2:]:

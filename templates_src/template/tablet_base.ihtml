@@ -75,10 +75,10 @@
                     a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
                         %% logo
                             span class=logo-lg
-                                % if appset_title|length > 20:
-                                    small...{{appset_title}}
+                                % if prj_title|length > 20:
+                                    small...{{prj_title}}
                                 % else:
-                                    {{appset_title}}
+                                    {{prj_title}}
                 {{block.super}}
 
 %% body_start

@@ -88,7 +88,7 @@ class InstallWizard(Wizard):
         event.Skip()
 
     def install(self):
-        extract_to = os.path.join(settings.APP_PACK_PATH, self.app_name)
+        extract_to = os.path.join(settings.PRJ_PATH, self.app_name)
         extract_ptig(self.zip_file, self.app_name)
         ini_file = os.path.join(extract_to, "install.ini")
         created = False

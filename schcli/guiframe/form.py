@@ -397,10 +397,10 @@ class SchForm(ScrolledPanel):
     #        if base.startswith('http://127.0.0.2'):
     #            if url.startswith('/app_media'):
     #                if ':' in wx.GetApp().root_path:
-    #                    url2 = wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
+    #                    url2 = wx.GetApp().root_path + '/prj' + url.replace('/app_media', '')
     #                    url2 = norm_path(url2)
     #                else:
-    #                    url2 = 'file://' + wx.GetApp().root_path + '/app_pack' + url.replace('/app_media', '')
+    #                    url2 = 'file://' + wx.GetApp().root_path + '/prj' + url.replace('/app_media', '')
     #                    url2 = norm_path(url2)
     #        else:
     #            url2 = base + url

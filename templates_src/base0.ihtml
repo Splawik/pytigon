@@ -61,12 +61,12 @@
                 %% menu_start
                 %% menu
                     %% topmenu_start
-                    %for app_info in app_manager|args:app_pack|call:"get_apps_width_perm":
+                    %for app_info in app_manager|args:prj|call:"get_apps_width_perm":
                         %% topmenu
                     %% topmenu_end
 
                     %% submenu_start
-                    %for item_info in app_manager|args:app_pack|call:"get_app_items_width_perm":
+                    %for item_info in app_manager|args:prj|call:"get_app_items_width_perm":
                         %% submenu
                     %% submenu_end
 

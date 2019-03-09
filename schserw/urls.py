@@ -63,36 +63,36 @@ _urlpatterns.extend([
     url( make_href('sw.js'), schserw.schsys.views.sw),
 ])
 
-def app_description(app_pack):
-    file_name = os.path.join(os.path.join(settings.APP_PACK_PATH, app_pack), 'settings_app.py')
+def app_description(prj):
+    file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), 'settings_app.py')
     try:
         with open(file_name, "rt") as f:
             txt = f.read()
             for pos in txt.split('\n'):
-                if pos.startswith('APPSET_TITLE'):
+                if pos.startswith('PRJ_TITLE'):
                     return pos.split('=')[1].split('\"')[1]
-        return app_pack
+        return prj
     except:
-        return app_pack
+        return prj
 
-if len(settings.APP_PACKS) > 0:
-    for app_pack in settings.APP_PACKS:
-        if app_pack.startswith('_'):
+if len(settings.PRJS) > 0:
+    for prj in settings.PRJS:
+        if prj.startswith('_'):
             continue
-        #u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'),
-        #        {'app_pack': app_pack, 'start_page': True }, name='start'+app_pack )
-        u = url(r'^'+app_pack+'/$', TemplateView.as_view(template_name='schapp/index.html'),
-                {'start_page': True }, name='start'+app_pack )
+        #u = url(r'^'+prj+'/$', TemplateView.as_view(template_name='schapp/index.html'),
+        #        {'prj': prj, 'start_page': True }, name='start'+prj )
+        u = url(r'^'+prj+'/$', TemplateView.as_view(template_name='schapp/index.html'),
+                {'start_page': True }, name='start'+prj )
         _urlpatterns.append(u)
 
-    app_packs = [ (pos, app_description(pos)) for pos in settings.APP_PACKS ]
+    prjs = [ (pos, app_description(pos)) for pos in settings.PRJS ]
 
     u=url(r'^$', TemplateView.as_view(template_name='schapp/index_all.html'),
-          {'app_packs': app_packs }, name='start')
+          {'prjs': prjs }, name='start')
 
     _urlpatterns.append(u)
 else:
-    #u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'app_pack': None }, name='start')
+    #u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'prj': None }, name='start')
     u = url(r'^$', TemplateView.as_view(template_name='schapp/index.html'), name='start')
     _urlpatterns.append(u)
 

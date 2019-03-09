@@ -48,7 +48,7 @@ except getopt.GetoptError:
     usage()
     sys.exit(2)
 
-APP_SET = None
+PRJ = None
 VIEW = None
 ARGUMENTS = {}
 USERNAME = None
@@ -56,11 +56,11 @@ PASSWORD = None
 
 if len(args) > 0:
     x = args[0].split(":")
-    APP_SET = x[0]
+    PRJ = x[0]
     if len(x) > 1:
         VIEW = x[1]
 
-if not APP_SET:
+if not PRJ:
     usage()
     sys.exit()
 
@@ -81,7 +81,7 @@ for (opt, arg) in opts:
     elif opt in ("-p", "--password"):
         PASSWORD = arg
 
-CWD_PATH = os.path.join(paths["APP_PACK_PATH"], APP_SET)
+CWD_PATH = os.path.join(paths["PRJ_PATH"], PRJ)
 sys.path.insert(0, CWD_PATH)
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"

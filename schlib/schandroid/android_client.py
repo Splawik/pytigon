@@ -56,11 +56,11 @@ init_paths()
 from schserw import settings as schserw_settings
 from schlib.schtools.install_init import init
 
-init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.APP_PACK_PATH,
+init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.PRJ_PATH,
      schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
 
-if not schserw_settings.APP_PACK_PATH in sys.path:
-    sys.path.append(schserw_settings.APP_PACK_PATH)
+if not schserw_settings.PRJ_PATH in sys.path:
+    sys.path.append(schserw_settings.PRJ_PATH)
 
 p1 = p2 = None
 if 'SECONDARY_STORAGE' in os.environ:
@@ -145,17 +145,17 @@ class InterfaceManager(BoxLayout):
                       markup=True, halign = 'center')
         self.add_widget(label)
 
-        base_apps_path = os.path.join(os.path.join(STORAGE, "pytigon"), "app_pack")
+        base_apps_path = os.path.join(os.path.join(STORAGE, "pytigon"), "prj")
         l = [pos for pos in os.listdir(base_apps_path) if not pos.startswith('_')]
         apps = []
-        for app_pack in l:
-            base_apps_path2 = os.path.join(base_apps_path, app_pack)
+        for prj in l:
+            base_apps_path2 = os.path.join(base_apps_path, prj)
             try:
-                x = __import__(app_pack + ".apps")
+                x = __import__(prj + ".apps")
                 if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:
-                    apps.append(app_pack)
+                    apps.append(prj)
             except:
-                print("Error importing module: ", app_pack + ".apps")
+                print("Error importing module: ", prj + ".apps")
 
         if len(apps) > 1:
             if len(apps) > MAX_SEL_APP:

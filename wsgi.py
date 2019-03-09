@@ -6,7 +6,7 @@ if base_path == "":
 else:
     os.chdir(base_path)
 
-base_path += "app_pack/_schall/"
+base_path += "prj/_schall/"
 
 
 sys.path.insert(0,base_path + "./")

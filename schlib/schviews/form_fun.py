@@ -47,12 +47,12 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
         mimetype
     """
     template_name2 = template_name
-    app_pack = ""
+    prj = ""
     for app in settings.APPS:
         if '.' in app and app_name in app:
             _app = app.split('.')[0]
             if not _app.startswith('_'):
-                app_pack = app.split('.')[0]
+                prj = app.split('.')[0]
             break
 
     if request.POST or request.FILES:
@@ -114,9 +114,9 @@ def form(request, app_name, form_class, template_name, object_id=None, form_end=
             else:
                 user_dict = f.process_empty(request)
             user_dict['form'] = f
-            user_dict['app_pack'] = app_pack
+            user_dict['prj'] = prj
         else:
-            user_dict = {'form': f,  'app_pack': app_pack}
+            user_dict = {'form': f,  'prj': prj}
             if object_id:
                 user_dict.update({'object_id': object_id})
             if param:

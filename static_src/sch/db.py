@@ -13,7 +13,7 @@ def open_database(on_open):
     if not window.indexedDB:
         console.log("Your Browser does not support IndexedDB")
     else:
-        request = window.indexedDB.open(window.APPSET_NAME, 1)
+        request = window.indexedDB.open(window.PRJ_NAME, 1)
 
         def _onerror(event):
             console.log("Error opening DB", event)
@@ -99,7 +99,7 @@ def on_sys_sync(fun):
             fun("OK-refresh")
         else:
             fun("OK-no cache")
-    caches.delete("PYTIGON_"+window.APPSET_NAME).then(_fun)
+    caches.delete("PYTIGON_"+window.PRJ_NAME).then(_fun)
 
 _UA = window.navigator.userAgent
 _MSIE = _UA.indexOf("MSIE ")

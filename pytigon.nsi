@@ -91,16 +91,16 @@ Section "pytigon - client"
   File /r  /x __pycache__ /x *.pyc /x *.pyo schcli\*.*
   SetOutPath $INSTDIR\schappdata
   File /r  /x __pycache__ /x *.pyc /x *.pyo schappdata\*.*
-  ;SetOutPath $INSTDIR\app_pack\_schmsg
-  ;File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schmsg\*.*
-  SetOutPath $INSTDIR\app_pack\_schtasks
-  File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schtasks\*.*
-  SetOutPath $INSTDIR\app_pack\_schtools
-  File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schtools\*.*
-  SetOutPath $INSTDIR\app_pack\_schwiki
-  File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\_schwiki\*.*
-  SetOutPath $INSTDIR\app_pack\schdevtools
-  File /r  /x __pycache__ /x *.pyc /x *.pyo app_pack\schdevtools\*.*
+  ;SetOutPath $INSTDIR\prj\_schmsg
+  ;File /r  /x __pycache__ /x *.pyc /x *.pyo prj\_schmsg\*.*
+  SetOutPath $INSTDIR\prj\_schtasks
+  File /r  /x __pycache__ /x *.pyc /x *.pyo prj\_schtasks\*.*
+  SetOutPath $INSTDIR\prj\_schtools
+  File /r  /x __pycache__ /x *.pyc /x *.pyo prj\_schtools\*.*
+  SetOutPath $INSTDIR\prj\_schwiki
+  File /r  /x __pycache__ /x *.pyc /x *.pyo prj\_schwiki\*.*
+  SetOutPath $INSTDIR\prj\schdevtools
+  File /r  /x __pycache__ /x *.pyc /x *.pyo prj\schdevtools\*.*
   SetOutPath $INSTDIR\install
   File /r install\*.prj
 

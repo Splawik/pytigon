@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-01-30 18:20:08
+// Transcrypt'ed from Python, 2019-03-09 13:28:22
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -2372,7 +2372,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'db', {
@@ -2390,7 +2389,7 @@ function pytigon () {
 							console.log ('Your Browser does not support IndexedDB');
 						}
 						else {
-							var request = window.indexedDB.open (window.APPSET_NAME, 1);
+							var request = window.indexedDB.open (window.PRJ_NAME, 1);
 							var _onerror = function (event) {
 								console.log ('Error opening DB', event);
 							};
@@ -2467,7 +2466,7 @@ function pytigon () {
 								fun ('OK-no cache');
 							}
 						};
-						caches.delete ('PYTIGON_' + window.APPSET_NAME).then (_fun);
+						caches.delete ('PYTIGON_' + window.PRJ_NAME).then (_fun);
 					};
 					var _UA = window.navigator.userAgent;
 					var _MSIE = _UA.indexOf ('MSIE ');
@@ -2588,7 +2587,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'offline', {
@@ -2642,7 +2640,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'page', {
@@ -2671,7 +2668,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'popup', {
@@ -3365,7 +3361,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenu', {
@@ -3543,7 +3538,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tbl', {
@@ -3728,7 +3722,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tools', {
@@ -4323,7 +4316,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4411,7 +4403,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	(function () {
 		var __name__ = '__main__';
 		var Page = __init__ (__world__.page).Page;
@@ -4458,10 +4449,10 @@ function pytigon () {
 		var process_on_click = __init__ (__world__.click_process).process_on_click;
 		window.PS = null;
 		window.MOUNTED_COMPONENTS = 0;
-		var app_init = function (appset_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
+		var app_init = function (prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
 			moment.locale (lang);
 			window.ACTIVE_PAGE = null;
-			window.APPSET_NAME = appset_name;
+			window.PRJ_NAME = prj_name;
 			window.APPLICATION_TEMPLATE = application_template;
 			window.MENU = null;
 			window.PUSH_STATE = true;
@@ -4935,7 +4926,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

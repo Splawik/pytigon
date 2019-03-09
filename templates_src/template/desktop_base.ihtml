@@ -66,7 +66,7 @@
         .function base_fragment_init() {}
     %% component_init
         .component_init = null
-    .pytigon.app_init('{{appset_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+    .pytigon.app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
 
 
 %% jquery_ready_start
@@ -166,11 +166,11 @@
         a href={{base_path}},,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
             %% logo
                 span class=logo-lg
-                    % if appset_title|length > 20:
-                        small...{{appset_title}}
+                    % if prj_title|length > 20:
+                        small...{{prj_title}}
                     % else:
                         strong
-                            {{appset_title}}
+                            {{prj_title}}
 
     <ul class="nav nav-tabs win-header" id='tabs' role='tablist'>
 

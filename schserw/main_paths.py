@@ -50,8 +50,8 @@ def get_main_paths():
     ret['TEMP_PATH'] = tempfile.gettempdir()
 
     if platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ:
-        ret['APP_PACK_PATH'] = os.path.join(os.path.join(os.path.join(ret['DATA_PATH'], '..'), 'pytigon'), 'app_pack')
+        ret['PRJ_PATH'] = os.path.join(os.path.join(os.path.join(ret['DATA_PATH'], '..'), 'pytigon'), 'prj')
     else:
-        ret['APP_PACK_PATH'] = os.path.join(ret['ROOT_PATH'], 'app_pack')
+        ret['PRJ_PATH'] = os.path.join(ret['ROOT_PATH'], 'prj')
 
     return ret

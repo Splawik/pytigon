@@ -203,11 +203,11 @@ class AppManager:
                 return app[0]
         return ""
 
-    def _get_apps(self, app_set=None):
+    def _get_apps(self, prj=None):
         ret = []
 
-        if app_set:
-            _temp = __import__(app_set+".apps")
+        if prj:
+            _temp = __import__(prj+".apps")
             apps = _temp.apps.APPS
         else:
             apps = None
@@ -216,7 +216,7 @@ class AppManager:
             if apps:
                 test = False
                 name = _app if type(_app) == str else _app.name
-                if name.startswith(app_set):
+                if name.startswith(prj):
                     test = True
                 else:
                     for app in apps:
@@ -266,9 +266,9 @@ class AppManager:
                 pass
         return ret
 
-    def get_apps(self, app_set=None):
+    def get_apps(self, prj=None):
         ret = []
-        items = self.get_app_items(app_set)
+        items = self.get_app_items(prj)
         for item in items:
             append = True
             for pos in ret:
@@ -288,8 +288,8 @@ class AppManager:
             i += 1
         return 0
 
-    def get_app_items(self, app_pack=settings.APPSET_NAME):
-        apps = self._get_apps(app_pack)
+    def get_app_items(self, prj=settings.PRJ_NAME):
+        apps = self._get_apps(prj)
         ret = []
         for app in apps:
             if app.app_name != None and app.app_name != '':
@@ -312,7 +312,7 @@ class AppManager:
                         if hasattr(module2, 'AdditionalUrls'):
                             # AdditionalUrls: url, title, right, icon, module,
                             if callable(module2.AdditionalUrls):
-                                urls2 = module2.AdditionalUrls(app_pack, self.request.LANGUAGE_CODE[:2].lower())
+                                urls2 = module2.AdditionalUrls(prj, self.request.LANGUAGE_CODE[:2].lower())
                             else:
                                 urls2 = module2.AdditionalUrls
                             for pos in urls2:
@@ -346,14 +346,14 @@ class AppManager:
                 #    pass
         return ret
 
-    def get_apps_width_perm(self, app_pack=settings.APPSET_NAME):
+    def get_apps_width_perm(self, prj=settings.PRJ_NAME):
         ret = []
-        items = self.get_app_items(app_pack)
+        items = self.get_app_items(prj)
         no_empty_apps = []
         for item in items:
             if not item.app_name in no_empty_apps:
                 no_empty_apps.append(item.app_name)
-        for item in self.get_apps(app_pack):
+        for item in self.get_apps(prj):
             if item.app_name in settings.HIDE_APPS:
                 continue
             if item.app_name in no_empty_apps:                
@@ -364,9 +364,9 @@ class AppManager:
                     ret.append(item)
         return ret
 
-    def get_app_items_width_perm(self, app_pack=settings.APPSET_NAME):
+    def get_app_items_width_perm(self, prj=settings.PRJ_NAME):
         ret = []
-        for item in self.get_app_items(app_pack):
+        for item in self.get_app_items(prj):
             if item.app_name in settings.HIDE_APPS:
                 continue
             if not item.app_perms or self.request.user.has_module_perms(item.app_name):
@@ -430,9 +430,9 @@ def sch_standard(request):
 
         default_template2 - default template for browser
 
-        appset_name - appset name
+        prj_name - prj name
 
-        appset_title - appset title
+        prj_title - prj title
 
         show_title_bar - show title bar
 
@@ -527,16 +527,16 @@ def sch_standard(request):
         i+=1
 
     url_app_base = url_base
-    app_pack = None
-    if len(settings.APP_PACKS) > 0:
-        for _app_pack in settings.APP_PACKS:
-            if not _app_pack.startswith('_'):
-                if ('/'+_app_pack+'/') in request.path:
-                    url_app_base =  url_base + "/" + _app_pack
-                    app_pack = _app_pack
+    prj = None
+    if len(settings.PRJS) > 0:
+        for _prj in settings.PRJS:
+            if not _prj.startswith('_'):
+                if ('/'+_prj+'/') in request.path:
+                    url_app_base =  url_base + "/" + _prj
+                    prj = _prj
                     break
-    if not app_pack:
-        app_pack = settings.APPSET_NAME
+    if not prj:
+        prj = settings.PRJ_NAME
 
     lng = request.LANGUAGE_CODE[:2].lower()
 
@@ -600,8 +600,8 @@ def sch_standard(request):
         'application_type': b_type2,
         'default_template': d_template,
         'default_template2': d_template2,
-        'appset_name': settings.APPSET_NAME,
-        'appset_title': settings.APPSET_TITLE,
+        'prj_name': settings.PRJ_NAME,
+        'prj_title': settings.PRJ_TITLE,
         'show_title_bar': show_title_bar,
         'get': get,
         'settings': settings,
@@ -609,7 +609,7 @@ def sch_standard(request):
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
         'autologin': request.session.get('autologin', False),
-        'app_pack': app_pack,
+        'prj': prj,
         'offline_support': settings.OFFLINE_SUPPORT,
         'gen_time': gmt_str,
         'btn_size': settings.BOOTSTRAP_BUTTON_SIZE_CLASS,

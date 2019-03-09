@@ -324,7 +324,7 @@ def plugins(request, app, plugin_name):
         f = open(settings.STATIC_ROOT + '/' + app + '/' + plugin_name + '.zip', 'rb')
     except:
         try:
-            f = open(settings.ROOT_PATH + '/app_pack/' + app + '/schplugins/' + plugin_name + '.zip', 'rb')
+            f = open(settings.ROOT_PATH + '/prj/' + app + '/schplugins/' + plugin_name + '.zip', 'rb')
         except:
             raise Http404
     s = f.read()
@@ -341,7 +341,7 @@ def sw(request):
         _static_root = settings.STATIC_ROOT
     else:
         _static_root = settings.STATICFILES_DIRS[0]
-    static_root = os.path.join(os.path.join(_static_root, 'app'),settings.APPSET_NAME)
+    static_root = os.path.join(os.path.join(_static_root, 'app'),settings.PRJ_NAME)
 
     sw_path = os.path.join(static_root, "sw.js")
     buf = ""

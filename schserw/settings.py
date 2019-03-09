@@ -27,7 +27,7 @@ from .main_paths import get_main_paths
 import django_cache_url
 
 
-APPSET_NAME = "_schall"
+PRJ_NAME = "_schall"
 GEN_TIME = '0000.00.00 00:00:00'
 
 if (sys.argv and ((sys.argv[0].endswith('manage.py') and 'runserver' in sys.argv) or '--debug' in sys.argv)) \
@@ -53,7 +53,7 @@ ROOT_PATH = paths['ROOT_PATH']
 DATA_PATH = paths['DATA_PATH']
 LOG_PATH = paths['LOG_PATH']
 TEMP_PATH = paths['TEMP_PATH']
-APP_PACK_PATH = paths['APP_PACK_PATH']
+PRJ_PATH = paths['PRJ_PATH']
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -89,7 +89,7 @@ else:
     #STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
     STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
-MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, APPSET_NAME), 'media')
+MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
 UPLOAD_PATH = MEDIA_ROOT
 
 ADMIN_MEDIA_PREFIX = '/media/'
@@ -175,7 +175,7 @@ if not 'PYTIGON_WITHOUT_CHANNELS' in os.environ  and platform_name()!='Android':
 
 HIDE_APPS = []
 
-APP_PACKS = []
+PRJS = []
 
 if PRODUCTION_VERSION:
     LOGGING = {

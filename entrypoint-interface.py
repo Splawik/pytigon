@@ -7,7 +7,7 @@ from os import environ
 
 from schlib.schtools.tools import get_executable
 
-BASE_APPS_PATH = "/var/www/pytigon/app_pack"
+BASE_APPS_PATH = "/var/www/pytigon/prj"
 sys.path.append(BASE_APPS_PATH)
 
 if "VIRTUAL_HOST" in environ:
@@ -84,9 +84,9 @@ if "ASGI_SERVER_NAME" in environ:
 
 START_CLIENT_PORT = 8000
 
-APP_PACKS = []
-APP_PACK_FOLDERS = []
-MAIN_APP_PACK = None
+PRJS = []
+PRJ_FOLDERS = []
+MAIN_PRJ = None
 NO_ASGI = []
 
 if PORT_80_REDIRECT:
@@ -170,9 +170,9 @@ CFG_END = """
     "$TIMEOUT", TIMEOUT
 )
 
-if not os.path.exists("/var/www/pytigon/app_pack/_schtools"):
+if not os.path.exists("/var/www/pytigon/prj/_schtools"):
     unzip = subprocess.Popen(
-        "unzip /var/www/pytigon/install/app_pack.zip -d /var/www/pytigon/app_pack/",
+        "unzip /var/www/pytigon/install/prj.zip -d /var/www/pytigon/prj/",
         shell=True,
     )
     unzip.wait()
@@ -188,32 +188,32 @@ def create_sym_links(source_path, dest_path):
                 os.symlink(s_path, d_path)
 
 
-create_sym_links("/pytigon/app_pack/", "/var/www/pytigon/app_pack/")
+create_sym_links("/pytigon/prj/", "/var/www/pytigon/prj/")
 create_sym_links("/pytigon/static/app/", "/var/www/pytigon/static/app/")
 
 for ff in os.listdir(BASE_APPS_PATH):
     if os.path.isdir(os.path.join(BASE_APPS_PATH, ff)):
         if not ff.startswith("_"):
-            APP_PACK_FOLDERS.append(ff)
+            PRJ_FOLDERS.append(ff)
 
-for app_pack in APP_PACK_FOLDERS:
-    base_apps_pack2 = os.path.join(BASE_APPS_PATH, app_pack)
+for prj in PRJ_FOLDERS:
+    base_apps_pack2 = os.path.join(BASE_APPS_PATH, prj)
     try:
-        x = __import__(app_pack + ".apps")
+        x = __import__(prj + ".apps")
     except:
         continue
     if hasattr(x.apps, "NO_ASGI") and x.apps.NO_ASGI:
-        NO_ASGI.append(app_pack)
+        NO_ASGI.append(prj)
 
     if hasattr(x.apps, "PUBLIC") and x.apps.PUBLIC:
-        if hasattr(x.apps, "MAIN_APP_PACK") and x.apps.MAIN_APP_PACK:
-            MAIN_APP_PACK = app_pack
+        if hasattr(x.apps, "MAIN_PRJ") and x.apps.MAIN_PRJ:
+            MAIN_PRJ = prj
         else:
-            APP_PACKS.append(app_pack)
+            PRJS.append(prj)
 
-if not MAIN_APP_PACK and len(APP_PACKS) == 1:
-    MAIN_APP_PACK = APP_PACKS[0]
-    APP_PACKS = []
+if not MAIN_PRJ and len(PRJS) == 1:
+    MAIN_PRJ = PRJS[0]
+    PRJS = []
 
 with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
     if PORT_80_REDIRECT:
@@ -221,43 +221,43 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
 
     conf.write(CFG_START)
     port = START_CLIENT_PORT
-    for app_pack in APP_PACKS:
+    for prj in PRJS:
         conf.write(
             CFG_ELEM
             % (
-                app_pack,
-                app_pack,
+                prj,
+                prj,
                 "http://127.0.0.1",
                 port,
-                app_pack,
-                app_pack,
+                prj,
+                prj,
                 "http://127.0.0.1",
                 port,
-                app_pack,
+                prj,
             )
         )
         port += 1
-    if MAIN_APP_PACK:
+    if MAIN_PRJ:
         conf.write(CFG_END % ("http://127.0.0.1", port))
 
-    if MAIN_APP_PACK:
-        APP_PACKS.append(MAIN_APP_PACK)
+    if MAIN_PRJ:
+        PRJS.append(MAIN_PRJ)
 
 port = START_CLIENT_PORT
 
 ret_tab = []
-for app_pack in APP_PACKS:
+for prj in PRJS:
 
-    if app_pack in NOWP:
-        count = NOWP[app_pack]
+    if prj in NOWP:
+        count = NOWP[prj]
     else:
         count = (
             NOWP["default-main"]
-            if app_pack == MAIN_APP_PACK
+            if prj == MAIN_PRJ
             else NOWP["default-additional"]
         )
 
-    if app_pack in NO_ASGI:
+    if prj in NO_ASGI:
         server = f"gunicorn -b 0.0.0.0:{port} -w {count} --access-logfile /var/log/pytigon-access.log --log-file /var/log/pytigon-err.log wsgi -t {TIMEOUT}"
     else:
         server1 = f"hypercorn -b 0.0.0.0:{port} -w {count} --access-log /var/log/pytigon-access.log --error-log /var/log/pytigon-err.log asgi:application"
@@ -266,7 +266,7 @@ for app_pack in APP_PACKS:
 
         server = (server1, server2, server3)[ASGI_SERVER_ID]
 
-    path = f"/var/www/pytigon/app_pack/{app_pack}"
+    path = f"/var/www/pytigon/prj/{prj}"
 
     cmd = f"cd {path} && exec {server}"
 
@@ -275,10 +275,10 @@ for app_pack in APP_PACKS:
     ret_tab.append(subprocess.Popen(cmd, shell=True))
 
 if not "NO_EXECUTE_TASKS" in environ:
-    for app_pack in APP_PACKS:
+    for prj in PRJS:
         cmd = "cd /var/www/pytigon && exec %s pytigon_task.py %s" % (
             get_executable(),
-            app_pack,
+            prj,
         )
         print(cmd)
         ret_tab.append(subprocess.Popen(cmd, shell=True))
