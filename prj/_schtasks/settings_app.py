@@ -28,12 +28,12 @@ try:
 except:
     setup_databases = None
 
-PRJ_TITLE = "Developer tools"
-PRJ_NAME = "schdevtools"
+PRJ_TITLE = "Tasks"
+PRJ_NAME = "_schtasks"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
 UPLOAD_PATH = MEDIA_ROOT
 
-THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
+THEMES = ['auto', 'auto', 'auto']
 
 LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
 ROOT_PATH = _rp
@@ -42,7 +42,7 @@ if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
 if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
         and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
-    URL_ROOT_FOLDER='schdevtools'
+    URL_ROOT_FOLDER='_schtasks'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
@@ -50,8 +50,8 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
 from schlib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-START_PAGE = 'None'
-SHOW_LOGIN_WIN = True
+START_PAGE = 'toolbar(file(exit),clipboard)'
+SHOW_LOGIN_WIN = False
 PACKS = []
 
 for app in APPS:
@@ -126,6 +126,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 14:55:15'
-OFFLINE_SUPPORT = True
+GEN_TIME = '2019.03.09 16:04:00'
 
