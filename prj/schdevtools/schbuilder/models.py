@@ -34,7 +34,7 @@ field_defaults = {
     'DateTimeField': {},
     'DecimalField': {},
     'EmailField': {},
-    'FileField': {},
+    'FileField': { "param": "upload_to='upload/'", },
     'FilePathField': {},
     'FloatField': {},
     'ImageField': {},

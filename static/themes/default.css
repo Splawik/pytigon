@@ -140,7 +140,9 @@ div.bootstrap-table div.columns.pull-right {
   margin-top: 5px !important; }
 
 div.bootstrap-table div.fixed-table-toolbar {
-  padding-left: 37px; }
+  padding-left: 57px; }
+  div.bootstrap-table div.fixed-table-toolbar div.columns button {
+    width: 50px; }
 
 div.bootstrap-table div.search input {
   height: 35px !important; }

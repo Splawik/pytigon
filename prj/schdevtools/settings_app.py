@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Developer tools"
 PRJ_NAME = "schdevtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
 
@@ -126,6 +126,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 14:55:15'
+GEN_TIME = '2019.03.12 07:15:39'
 OFFLINE_SUPPORT = True
 

@@ -90,7 +90,7 @@ else:
     STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, 'upload')
 
 ADMIN_MEDIA_PREFIX = '/media/'
 

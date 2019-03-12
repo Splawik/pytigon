@@ -879,3 +879,11 @@ def append_get_param(href, parm):
 @register.filter(name='markdown', is_safe=True)
 def _markdown(value):
     return markdown.markdown(value, extras=['tables', 'codehilite'])
+
+
+@register.filter(name='preferred_enctype')
+def _preferred_enctype(form):
+    for field in form.visible_fields():
+        if type(field.field).__name__ in ('FileField', 'ImageField'):
+            return "multipart/form-data"
+    return "application/x-www-form-urlencoded"

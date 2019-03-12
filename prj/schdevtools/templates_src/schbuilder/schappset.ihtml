@@ -26,7 +26,7 @@
 
 
 %% list_content_actions
-    % new_row _("New application set")
+    % new_row _("New project")
     % list_action "prj_import/edit" _("Import")
     % list_action "restart_server" _("Restart server") target="_top" active=False
     % list_action "update" _("Update server from git")

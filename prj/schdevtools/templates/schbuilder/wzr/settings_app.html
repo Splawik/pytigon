@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "{{prj.title}}"
 PRJ_NAME = "{{prj.name}}"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['{{prj.desktop_gui_type}}', '{{prj.tablet_gui_type}}', '{{prj.smartfon_gui_type}}']
 
