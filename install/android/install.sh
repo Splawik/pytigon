@@ -7,6 +7,10 @@ else
     cd ..
 fi
 
+rm -Rf ./pytigon/static_src
+rm -Rf ./pytigon/_android/transcrypt/demos
+rm -Rf ./pytigon/_android/transcrypt/development
+
 if [ ! -d ./python-for-android  ]; then
     git clone https://github.com/kivy/python-for-android.git
     yes | cp pytigon/install/android/Dockerfile python-for-android/Dockerfile

@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-03-12 20:30:27
+// Transcrypt'ed from Python, 2019-03-13 20:04:55
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -2588,7 +2588,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'offline', {
@@ -4324,7 +4323,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4936,7 +4934,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

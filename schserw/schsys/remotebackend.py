@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
@@ -25,5 +24,5 @@ class RemoteUserBackendMod(RemoteUserBackend):
     """Backend for apache authorization"""
 
     def clean_username(self, username):
-        """Replace '\' in username. For username in format: domain\user cleaned version is domain_users."""
+        """Replace '\\' in username. For username in format: domain\\user cleaned version is domain_users."""
         return username.lower().replace('\\','_').strip()

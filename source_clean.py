@@ -46,7 +46,7 @@ def tidy_clean(dirname):
                                         f2.write(buf)
                                         f2.close()
                                 except:
-                                       print name
+                                       print(name)
                         else:
                                 f = open(name,"r")
                                 buf = f.read()
@@ -54,7 +54,7 @@ def tidy_clean(dirname):
                                 f2 = open(name+".clean", "w")
                                 f2.write(buf)
                                 f2.close()
-                                print name
+                                print(name)
 
                         f = open(name,"r")
                         buf = f.read()

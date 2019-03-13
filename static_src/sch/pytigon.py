@@ -63,8 +63,6 @@ def app_init(
     start_page,
     gen_time,
 ):
-    nonlocal PS
-
     moment.locale(lang)
     window.ACTIVE_PAGE = None
     window.PRJ_NAME = prj_name
@@ -303,7 +301,7 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
         if not title:
             title = jQuery.trim(jQuery(elem).text())
         if txt:
-            value = jQuery("<div>" + txt + "</div>").find('head').find("title").text()
+            value = jQuery("<div>" + txt + "</div>").find("head").find("title").text()
             if value:
                 title = value
 
