@@ -12,3 +12,7 @@ git+https://github.com/Splawik/Transcrypt.git@es5
 xonsh 
 sqlparse
 django-js-asset
+django-cache-url
+pendulum
+netifaces
+
