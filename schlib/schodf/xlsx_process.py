@@ -108,7 +108,7 @@ def transform_xlsx(stream_in, stream_out, transform_list):
                 set_sheet(ws_name)
                 ws.append(pos)
 
-        if data_table:
-            append_to_data_table(wb, data_table)
+    if data_table:
+        append_to_data_table(wb, data_table)
 
     wb.save(stream_out)
