@@ -62,7 +62,7 @@ class InterfaceManager2(InterfaceManager):
         global SERVICE, CTX
         SERVICE = autoclass("cloud.pytigon.ServicePytigon")
         CTX = autoclass("org.kivy.android.PythonActivity").mActivity
-        CTX.nativeSetEnv("PYTIGON_APP", self.app)
+        CTX.nativeSetenv("PYTIGON_APP", self.app)
         SERVICE.start(CTX, self.app)
 
     def create_webview(self):
