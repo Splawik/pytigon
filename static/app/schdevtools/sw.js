@@ -1,1 +1,1 @@
-CACHE_NAME = 'PYTIGON_schdevtools';
+CACHE_NAME = 'PYTIGON_';

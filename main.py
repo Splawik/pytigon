@@ -1,13 +1,3 @@
-from android.permissions import request_permissions, check_permission, Permission
-
-PERMISSION = [
-    Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE, Permission.INTERNET, Permission.INSTALL_SHORTCUT,
-    Permission.VIBRATE, Permission.ACCESS_WIFI_STATE, Permission.CHANGE_WIFI_STATE, Permission.ACCESS_NETWORK_STATE,
-]
-
-if not check_permission(Permission.WRITE_EXTERNAL_STORAGE):
-    request_permissions(PERMISSION)
-
 from schlib.schandroid.android_client import InterfaceManager, PytigonApp
 
 import socket
