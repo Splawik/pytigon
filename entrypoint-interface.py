@@ -39,6 +39,11 @@ else:
     CRT = ""
     KEY = ""
 
+if "NGINX_INCLUDE" in environ:
+    NGINX_INCLUDE = environ["NGINX_INCLUDE"]
+else:
+    NGINX_INCLUDE = None
+
 # NUMBER_OF_WORKER_PROCESSES struct:
 # 1. NUMBER_FOR_MAIN_APP, for example: 4
 # 2. NUMBER_FOR_MAIN_APP:NUMBER_FOR_ADDITIONAL_APP, for example: 4:1
@@ -243,6 +248,8 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
         )
         port += 1
     if MAIN_PRJ:
+        if NGINX_INCLUDE:
+            conf.write("    include %s\n\n" % NGINX_INCLUDE)
         conf.write(CFG_END % ("http://127.0.0.1", port))
 
     if MAIN_PRJ:
