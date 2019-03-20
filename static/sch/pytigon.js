@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-03-13 20:04:55
+// Transcrypt'ed from Python, 2019-03-20 17:09:07
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -2588,6 +2588,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'offline', {
@@ -3416,7 +3417,7 @@ function pytigon () {
 							var title2 = jQuery.trim (title);
 							var menu_item = TabMenuItem (_id, title2, href, data);
 							self.titles [title2] = menu_item;
-							var menu_pos = vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-raised btn-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, title2, _id]));
+							var menu_pos = vsprintf ("<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-outline-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>", list ([_id, _id, title2, title2, _id]));
 							var append_left = jQuery ('#tabs2').hasClass ('append-left');
 							if (append_left) {
 								jQuery ('#tabs2').prepend (menu_pos);
@@ -4323,6 +4324,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4934,6 +4936,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();

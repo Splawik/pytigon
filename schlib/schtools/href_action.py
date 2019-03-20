@@ -25,7 +25,7 @@ from django.utils.html import escape
 STANDARD_ACTIONS = {
     'default': {
         'target': '_top',
-        'class': "btn {{btn_size}} btn-secondary",
+        'class': "btn {{btn_size}} btn-outline-secondary",
         'class_in_menu': "",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'attrs_in_menu': '',
@@ -36,12 +36,12 @@ STANDARD_ACTIONS = {
     },
     'new_row': {
         'target': 'popup_edit',
-        'class': "btn {{btn_size}} btn-secondary edit new-row"
+        'class': "btn {{btn_size}} btn-outline-secondary edit new-row"
     },
     'edit': {
         'target':  "popup_edit",
         'title': _('Update'),
-        'class': "btn {{btn_size}} btn-secondary edit",
+        'class': "btn {{btn_size}} btn-outline-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{tp}{id}/{action}/",
         'icon': 'edit fa fa-lg fa-pencil',
@@ -49,7 +49,7 @@ STANDARD_ACTIONS = {
     'edit2': {
         'target':  "popup_edit",
         'titl': _('Update'),
-        'class': "btn {{btn_size}} btn-secondary edit",
+        'class': "btn {{btn_size}} btn-outline-secondary edit",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{tp}{id}/{action}/",
         'icon': 'edit fa fa-lg fa-pencil',
@@ -57,7 +57,7 @@ STANDARD_ACTIONS = {
     'delete': {
         'target': "popup_delete",
         'title': _('Delete'),
-        'class': "popup_delete btn {{btn_size}} btn-danger",
+        'class': "popup_delete btn {{btn_size}} btn-outline-danger",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{tp}{id}/{action}/",
         'icon': 'delete fa fa-lg fa-trash-o'
@@ -65,28 +65,28 @@ STANDARD_ACTIONS = {
     'delete2': {
         'target': "popup_delete",
         'title': _('Delete'),
-        'class': "popup_delete btn {{btn_size}} btn-danger",
+        'class': "popup_delete btn {{btn_size}} btn-outline-danger",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{tp}{id}/{action}/",
         'icon': 'delete fa fa-lg fa-trash-o'
     },
     'field_list': {
         'target': 'inline',
-        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'class': "popup_inline btn {{btn_size}} btn-outline-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{ap}table/{object_name}/{id}/{x1}/-/form/sublist/",
         'icon': 'grid fa fa-lg fa-caret-down',
     },
     'field_list_get': {
         'target': 'inline',
-        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'class': "popup_inline btn {{btn_size}} btn-outline-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{ap}{object_name}/{id}/{x1}/-/form/get/",
         'icon': "grid fa fa-lg fa-caret-down",
     },
     'field_action': {
         'target': 'inline',
-        'class': "popup_inline btn {{btn_size}} btn-secondary",
+        'class': "popup_inline btn {{btn_size}} btn-outline-secondary",
         'attrs': "data-role='button' data-inline='true' data-mini='true'",
         'url': "{ap}{object_name}/{id}/{x1}/-/form/sublist/",
         'icon': 'grid fa fa-lg fa-angle-double-down',

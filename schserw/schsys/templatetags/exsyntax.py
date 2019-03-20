@@ -157,9 +157,9 @@ def list_action(context, action, title="", icon_name="", target='_top', attrs=''
     if attrs:
         ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "{tp}action/%s/" % action)
     elif active:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_close no_cancel", url if url else "{tp}action/%s/" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-outline-secondary no_close no_cancel", url if url else "{tp}action/%s/" % action)
     else:
-        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-secondary no_ok no_cancel", url if url else "{tp}action/%s/" % action)
+        ret = action_fun(context, action, title, icon_name, target, "data-role='button'", "btn btn-outline-secondary no_ok no_cancel", url if url else "{tp}action/%s/" % action)
     return ret
 
 

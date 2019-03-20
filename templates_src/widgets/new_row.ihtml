@@ -2,7 +2,7 @@
 %extends "widgets/action.html"
 
 %% action_class
-    {% if action.target == '_top' %}popup{% endif %} btn ladda-button new-row
+    {% if action.target == '_top' %}popup{% endif %}
 
 %% description
     % if description:
