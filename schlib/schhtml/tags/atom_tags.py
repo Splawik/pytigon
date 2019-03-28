@@ -110,12 +110,11 @@ class ImgTag(AtomTag):
         if self.src:
             http = self.parser.get_http_object()
             try:
-                (status, ur) = http.get(self, self.src)
-                if status == 404:
+                response = http.get(self, self.src)
+                if response.ret_code == 404:
                     img = None
                 else:
-                    img = http.ptr()
-                    http.clear_ptr()
+                    img = response.ptr()
             except:
                 img = None
             if img:

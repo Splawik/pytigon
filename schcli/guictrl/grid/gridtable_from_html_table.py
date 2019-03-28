@@ -323,12 +323,11 @@ class SimpleDataTable(SchGridTableBase):
             href += "?pk=" + ",".join([str(pos.data) for pos in self.get_sel_rows()[0]])
         data = { 'action': 'copy', }
         http = wx.GetApp().get_http(self._parent)
-        http.post(self._parent, href, parm = data, json_data = True)
+        response = http.post(self._parent, href, parm = data, json_data = True)
         try:
-            s = http.json()
+            s = response.json()
         except:
             s = None
-        http.clear_ptr()
         return s
 
     def paste(self, data):
@@ -337,10 +336,9 @@ class SimpleDataTable(SchGridTableBase):
 
         data2 = { 'action': 'paste', 'data': data }
         http = wx.GetApp().get_http(self._parent)
-        http.post(self._parent, href, parm = data2, json_data = True)
+        response = http.post(self._parent, href, parm = data2, json_data = True)
         try:
-            s = http.json()
+            s = response.json()
         except:
             s = None
-        http.clear_ptr()
         return s

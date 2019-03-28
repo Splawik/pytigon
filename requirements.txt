@@ -12,7 +12,6 @@ html5lib
 lxml
 markdown2
 requests
-wsgi_intercept
 openpyxl
 httpie
 cffi

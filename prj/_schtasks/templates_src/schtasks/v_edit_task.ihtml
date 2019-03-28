@@ -36,9 +36,8 @@
         def transfer(self):
             http = wx.GetApp().http
             parm = { 'id': "{{object.id}}", 'id_start': self.start_id } 
-            http.post(self, "/tasks/get_messages", parm=parm)
-            s = http.str()
-            http.clear_ptr()
+            response = http.post(self, "/tasks/get_messages", parm=parm)
+            s = response.str()
             lines = self.schjson.loads(s)
             self.cmd.append_texts(lines)
             for line in lines:
@@ -66,9 +65,8 @@
 
                 http = wx.GetApp().http
 
-                http.post(self, "/tasks/put_message", parm=parm)
-                s = http.str()
-                http.clear_ptr()
+                response = http.post(self, "/tasks/put_message", parm=parm)
+                s = response.str()
 
                 self.txt.SetValue("")
             

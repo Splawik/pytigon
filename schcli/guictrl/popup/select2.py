@@ -99,9 +99,8 @@ class Select2Popup(wx.MiniFrame):
         s = event.GetString()
         href = '/select2/fields/auto.json?term=%s&page=1&context=&field_id=%s' % (s, self.href_id)
         http = wx.GetApp().get_http(self.combo)
-        http.get(self, href)
-        tab = schjson.loads(http.str())
-        http.clear_ptr()
+        response = http.get(self, href)
+        tab = schjson.loads(response.str())
         if not ('err' in tab and tab['err'] != 'nil'):
             self.list_ctrl.Clear()
             if len(tab['results'])>0:

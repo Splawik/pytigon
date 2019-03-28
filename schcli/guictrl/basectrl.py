@@ -206,16 +206,14 @@ class SchBaseCtrl(object):
 
     def load_data_from_server(self, path):
         http = wx.GetApp().get_http(self.parent)
-        http.get(self, str(path))
-        s = http.ptr()
-        http.clear_ptr()
+        response = http.get(self, str(path))
+        s = response.ptr()
         return s
 
     def load_string_from_server(self, path):
         http = wx.GetApp().get_http(self.parent)
-        http.get(self, str(path))
-        s = http.str()
-        http.clear_ptr()
+        response = http.get(self, str(path))
+        s = response.str()
         return s
 
     def refresh_tdata(self, html_src=None):

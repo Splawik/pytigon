@@ -153,13 +153,12 @@ class BaseWebBrowser(object):
         self.status['address'] = page
         if 'pdf_info' in page:
             http = wx.GetApp().get_http(self)
-            http.get(self, str(page), user_agent='webkit')
-            p = http.ptr()
+            response = http.get(self, str(page), user_agent='webkit')
+            p = response.ptr()
             f = NamedTemporaryFile(delete=False)
             f.write(p)
             name = f.name
             f.close()
-            http.clear_ptr()
             okno = wx.GetApp().GetTopWindow().new_main_page('^standard/pdfviewer/pdfviewer.html', page, None)
             okno.body['PDFVIEWER'].LoadFile(name, True)
             return False
@@ -436,9 +435,8 @@ class BaseWebBrowser(object):
 
     def _local_request(self, uri, parm=None):
         http = wx.GetApp().get_http(self)
-        http.get(self, uri, user_agent='embeded', parm=parm)
-        s = http.ptr()
-        http.clear_ptr()
+        response = http.get(self, uri, user_agent='embeded', parm=parm)
+        s = response.ptr()
         return s
 
     def _get_http_file(self, uri):

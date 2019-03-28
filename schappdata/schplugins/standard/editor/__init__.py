@@ -122,10 +122,9 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         def load_from_url(self, url, ext):
             self.set_ext(ext)
             http = wx.GetApp().http
-            http.get(self, url)
-            txt = http.str()
+            response = http.get(self, url)
+            txt = response.str()
             self.AddText(txt)
-            http.clear_ptr()
             self.url = url
 
         def on_save(self, event):
@@ -136,7 +135,6 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
             http = wx.GetApp().get_http(self)
             if self.href:
                 http.post(self, self.href, {'data': self.GetText().encode('utf-8')})
-            http.clear_ptr()
 
         def can_copy(self):
             if self.GetSelectionEnd() - self.GetSelectionStart() != 0:

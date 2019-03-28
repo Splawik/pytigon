@@ -626,16 +626,15 @@ class SchForm(ScrolledPanel):
                 parm = createparm.create_parm(self.address, self.get_parm_obj())
                 http = wx.GetApp().get_http(self)
                 if parm:
-                    (err, url) = http.get(self, str(parm[0] + parm[1]
+                    response = http.get(self, str(parm[0] + parm[1]
                                                     + parm[2]))
                 else:
-                    (err, url) = http.get(self, self.address)
-                if err == 404:
+                    response = http.get(self, self.address)
+                if response.ret_code == 404:
                     return
 
                 mp = ShtmlParser()
-                mp.process(http.str(), 'local')
-                http.clear_ptr()
+                mp.process(response.str(), 'local')
                 if self.form_type == 'panel':
                     strona = mp.get_panel()
                 elif self.form_type == 'header':
@@ -921,16 +920,15 @@ class SchForm(ScrolledPanel):
             http = wx.GetApp().get_http(ctrl)
 
             if upload:
-                (err, adr2) = http.post(self, adr, post, upload=True)
+                response = http.post(self, adr, post, upload=True)
             else:
                 if post:
-                    (err, adr2) = http.post(self, adr, post)
+                    response = http.post(self, adr, post)
                 else:
-                    (err, adr2) = http.get(self, adr)
+                    response = http.get(self, adr)
 
-            if 'text/plain' in http.ret_content_type:
-                s = http.str()
-                http.clear_ptr()
+            if 'text/plain' in response.ret_content_type:
+                s = response.str()
                 if title:
                     edit_name = title
                 else:
@@ -939,18 +937,15 @@ class SchForm(ScrolledPanel):
                 okno.body.EDITOR.SetValue(s)
                 okno.body.EDITOR.GotoPos(0)
             else:
-                if 'application' in http.ret_content_type:
+                if 'application' in response.ret_content_type:
                     wx.GetApp().GetTopWindow()._open_binary_data(http, href)
-                    http.clear_ptr()
                     return
 
-                s = http.str()
-                http.clear_ptr()
+                s = response.str()
                 mp = ShtmlParser()
-                mp.process(s, adr2)
+                mp.process(s, response.new_url)
                 if 'target' in mp.var:
                     target = mp.var['target']
-                http.clear_ptr()
 
                 if href and hasattr(self, 'filter_http_result'):
                     f = self.filter_http_result(target, href, mp)
@@ -971,16 +966,16 @@ class SchForm(ScrolledPanel):
                         href = None
 
                     if self.GetParent().address_or_parser.__class__.__name__ == 'ShtmlParser':
-                        self.GetParent().address_or_parser.address = adr2
+                        self.GetParent().address_or_parser.address = response.new_url
                     else:
-                        self.GetParent().address_or_parser  = adr2
+                        self.GetParent().address_or_parser  = response.new_url
 
                     return
                 if target in ('_blank', 'inline', 'popup_edit', 'popup_info', 'popup_delete', '_self',):
                     self.GetParent().active_ctrl = ctrl
                     win = self.new_child_page(mp, is_null(mp.title, title), parameters=self.get_parm_obj())
                     if win:
-                        win.body.set_address_parm(str(adr2))
+                        win.body.set_address_parm(str(response.new_url))
                     return
                 if target == '_top':
                     self.new_main_page(mp, is_null(mp.title, title), parameters=self.get_parm_obj(), panel=None)

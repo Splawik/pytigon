@@ -76,11 +76,10 @@ class SchThreadWindow(wx.Panel):
 
     def timer(self):
         http = wx.GetApp().http
-        http.get(self, 'http://local.net/schsys/thread_short_info/'
+        response = http.get(self, 'http://local.net/schsys/thread_short_info/'
                   + self.thread_name)
-        info_json = http.str()
+        info_json = response.str()
         info = schjson.loads(info_json)
-        http.clear_ptr()
 
         if type(info)==str and info == '$$$':
             self.closed = True
@@ -102,9 +101,7 @@ class SchThreadWindow(wx.Panel):
 
     def on_kill(self, event):
         http = wx.GetApp().http
-        http.get(self, 'http://local.net/schsys/thread_kill/'
-                  + self.thread_name)
-        http.clear_ptr()
+        http.get(self, 'http://local.net/schsys/thread_kill/' + self.thread_name)
 
 
 class SchThreadManager(object):

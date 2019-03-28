@@ -40,9 +40,8 @@ def init_plugin(app,mainframe,desktop,mgr,menubar,toolbar,accel):
 
     def Component(parent, **kwds):
         http = wx.GetApp().get_http(parent)
-        http.get(parent, "/schsys/widget_web?browser_type=1")
-        buf = http.str()
-        http.clear_ptr()
+        response = http.get(parent, "/schsys/widget_web?browser_type=1")
+        buf = response.str()
         elem = kwds['param']['component_elem']
         url = 'http://127.0.0.2/data?' + b64encode(buf.encode('utf-8')).decode('utf-8')
         obj = schcli.guictrl.ctrl.HTML2(parent, **kwds)

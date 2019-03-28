@@ -34,8 +34,8 @@ class DbDict(object):
 
     def filter(self, parent, f):
         http = wx.GetApp().get_http(parent)
-        http.get(self, str(self.href), {'query': f.encode('utf-8')})
-        s = http.str()
+        response = http.get(self, str(self.href), {'query': f.encode('utf-8')})
+        s = response.str()
         try:
             self.tab = schjson.loads(s)
         except:
@@ -44,7 +44,6 @@ class DbDict(object):
         for pos in self.tab:
             self.tab2.append((pos['value'], ))
         self.tab = self.tab2
-        http.clear_ptr()
 
     def __iter__(self):
         for x in self.tab:

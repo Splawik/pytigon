@@ -74,10 +74,9 @@ def init_plugin_sch_web(app, mainframe, desktop, mgr, menubar, toolbar, accel, b
         def _redirect_to_local(self, event):
             self.redirect_to_local = False
             http = wx.GetApp().get_http(self)
-            http.get(self, str(self.url), user_agent='webkit')
-            s = http.str(conwert_local_path=True)
+            response = http.get(self, str(self.url), user_agent='webkit')
+            s = response.str(conwert_local_path=True)
             self.ctrl.load_html_string(s, 'file://')
-            http.clear_ptr()
             self.redirect_to_local = True
 
         def _navigation(self, web_view, frame, request, navigation_action, policy_decision):
@@ -122,9 +121,8 @@ def init_plugin_sch_web(app, mainframe, desktop, mgr, menubar, toolbar, accel, b
 
         def _redirect_to_str(self, url):
             http = wx.GetApp().get_http(self)
-            http.get(self, str(url), user_agent='webkit')
-            s = http.str(conwert_local_path=True)
-            http.clear_ptr()
+            response = http.get(self, str(url), user_agent='webkit')
+            s = response.str(conwert_local_path=True)
             return s
 
         def _load_resource(self, web_view, web_frame, web_resource, request, response):

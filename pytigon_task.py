@@ -91,18 +91,16 @@ http = httpclient.HttpClient("http://127.0.0.2")
 if VIEW:
     if USERNAME:
         parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-        ret, newaddr = http.post(
+        response = http.post(
             None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
         )
-        http.clear_ptr()
     if ARGUMENTS or FORCE_GET:
         ret, newaddr = http.post(
             None, VIEW, ARGUMENTS
         )  # , credentials=(USERNAME, PASSWORD))
     else:
         ret, newaddr = http.get(None, VIEW)  # , credentials=(USERNAME, PASSWORD))
-    print(http.str())
-    http.clear_ptr()
+    print(response.str())
 else:
     from apps import APPS
     from schlib.schtools import sch_import
@@ -142,10 +140,9 @@ else:
 
     if USERNAME:
         parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-        ret, newaddr = http.post(
+        response = http.post(
             None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
         )
-        http.clear_ptr()
 
     if run_scheduler == True:
         scheduler.run()

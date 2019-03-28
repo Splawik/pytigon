@@ -124,9 +124,8 @@ class DataPopupControl(ComboCtrl):
             self.href2=None
 
         self.http = wx.GetApp().get_http(self)
-        self.http.get(self, str(self.href) + "size/")
-        self.size = schjson.loads(self.http.str())
-        self.http.clear_ptr()
+        response = self.http.get(self, str(self.href) + "size/")
+        self.size = schjson.loads(response.str())
 
         self.simpleDialog = True
         if self.GetTextCtrl():
@@ -213,11 +212,10 @@ class DataPopupControl(ComboCtrl):
             if not str(value) == "":
                 self.http = wx.GetApp().get_http(self)
                 x = b32encode(value.encode('utf-8'))
-                self.http.post(self, str(self.href) + "test/", {"value": x})
-                tab = schjson.loads(self.http.str())
+                response = self.http.post(self, str(self.href) + "test/", {"value": x})
+                tab = schjson.loads(self.response.str())
                 ret = tab[0]
 
-                self.http.clear_ptr()
                 if ret != 1:
                     if ret == 2:
                         self.OnButtonClick()

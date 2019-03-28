@@ -196,6 +196,14 @@ _PARAM = process_argv(sys.argv[1:])
 if _PARAM == None:
     sys.exit(0)
 
+import asyncio
+from asyncio.events import get_event_loop
+
+if 'channels' in _PARAM or 'rpc' in _PARAM:
+    LOOP = get_event_loop()
+else:
+    LOOP = None
+
 from schserw import settings as schserw_settings
 
 sys.path.append(schserw_settings.PRJ_PATH)
@@ -247,8 +255,6 @@ process_adv_argv()
 
 if 'channels' in _PARAM or 'rpc' in _PARAM:
     from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
-    import asyncio
-    from asyncio.events import get_event_loop
 
     class SChAsyncApp(WxAsyncApp):
         async def MainLoop(self):
@@ -487,30 +493,31 @@ class SchApp(App, _BASE_APP):
             href = "/"
 
         self.http = httpclient.AppHttp(address+"/", self)
-        ret, newaddr = self.http.get(self, href)
-        if ret != 200:
+        response = self.http.get(self, href)
+        if response.ret_code != 200:
             if not login(href, auth_type='basic'):
                 return 0
             else:
                 self.authorized = True
-            ret, newaddr = self.http.get(href, "/")
+            response = self.http.get(href, "/")
 
-        if ret != 200:
-            return ret
+        if response.ret_code != 200:
+            return response
 
         if app and app != '':
             self.images = image.SchImage('/' + app + '/site_media/app.png')
-            self.http.get(self, '/' + app + '/')
+            response = self.http.get(self, '/' + app + '/')
         else:
             self.images = image.SchImage('/site_media/app.png')
-            self.http.get(self, '/')
-        ret_str = self.http.str()
+            response = self.http.get(self, '/')
+
+        ret_str = response.str()
+
         self.mp = SimpleTabParser()
         self.mp.feed(ret_str)
         self.mp.close()
-        self.http.clear_ptr()
 
-        return ret
+        return response.ret_code
 
     def _re_init(self, address, app):
         self.base_address = address
@@ -521,14 +528,13 @@ class SchApp(App, _BASE_APP):
             self.base_path = self.base_address
 
         if app and app != '':
-            self.http.get(self, '/' + app + '/')
+            response = self.http.get(self, '/' + app + '/')
         else:
-            self.http.get(self, '/')
-        ret = self.http.str()
+            response = self.http.get(self, '/')
+        ret = response.str()
         self.mp = SimpleTabParser()
         self.mp.feed(ret)
         self.mp.close()
-        self.http.clear_ptr()
 
     def make_href(self, href):
         if self.base_app and href.startswith('/'):
@@ -583,7 +589,7 @@ class SchApp(App, _BASE_APP):
 
         Args:
             win: wx.Window derived object
-            address_or_parser: can be: address of http page (str type) or
+            address_or_parser: can be: address of read_htmlhttp page (str type) or
             :class:'~schlib.schparser.html_parsers.ShtmlParser'
             parameters: dict
 
@@ -594,7 +600,7 @@ class SchApp(App, _BASE_APP):
 
             if parameters and type(parameters) == dict:
                 adr = address_or_parser
-                (err, url) = http.post(self, adr, parm=parameters)
+                response = http.post(self, adr, parm=parameters)
             else:
                 if parameters:
                     adrtmp = createparm.create_parm(address_or_parser, parameters)
@@ -604,14 +610,13 @@ class SchApp(App, _BASE_APP):
                         adr = address_or_parser
                 else:
                     adr = address_or_parser
-                (err, url) = http.get(win, adr)
-            if err == 404:
+                response = http.get(win, adr)
+            if response.ret_code == 404:
                 raise Exception('http', '404')
-            ptr = http.str()
+            ptr = response.str()
             mp = ShtmlParser()
             mp.process(ptr, address_or_parser)
             mp.address = adr
-            http.clear_ptr()
         else:
             adr = None
             if address_or_parser:
@@ -687,13 +692,12 @@ class SchApp(App, _BASE_APP):
                 if not os.path.exists(home_dir + plugins_cache + str(plugin)
                                               + '.zip'):
                     http = wx.GetApp().http
-                    http.get(self, '/schsys/plugins/' + str(plugin) + '/')
-                    z_data = http.ptr()
+                    response = http.get(self, '/schsys/plugins/' + str(plugin) + '/')
+                    z_data = response.ptr()
                     x = open(home_dir + plugins_cache + str(plugin) + '.zip',
                              'wb')
                     x.write(z_data)
                     x.close()
-                    http.clear_ptr()
                     zip_name = home_dir + plugins_cache + str(plugin) + '.zip'
                     extract_to = home_dir + plugins_cache + str(app_name)
                     zip_handle = zipfile.ZipFile(zip_name)
@@ -975,14 +979,14 @@ def _main_init():
             password2 = 'anawa'
 
         ready_to_run = False
-        app.http.post(app, "/" + app_name + '/schsys/do_login/?from_pytigon=1' if app_name else '/schsys/do_login/?from_pytigon', {
+        response = app.http.post(app, "/" + app_name + '/schsys/do_login/?from_pytigon=1' if app_name else '/schsys/do_login/?from_pytigon', {
             #'csrfmiddlewaretoken': app.csrf_token,
             'username': username2,
             'password': password2,
             'next': address + "/" + app_name + '/schsys/ok/' if app_name else  address + '/schsys/ok/',
             'client_param': app._get_parm_for_server(),
         })
-        ret_str = app.http.str()
+        ret_str = response.str()
         if 'RETURN_OK' in ret_str:
             app.authorized = True
             ready_to_run = True
@@ -1077,8 +1081,8 @@ def _main_run():
         app.MainLoop()
     else:
         if 'channels' in _PARAM or 'rpc' in _PARAM:
-            loop = get_event_loop()
-            loop.run_until_complete(app.MainLoop())
+            #loop = get_event_loop()
+            LOOP.run_until_complete(app.MainLoop())
         else:
             app.MainLoop()
 

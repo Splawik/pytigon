@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Tasks"
 PRJ_NAME = "_schtasks"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['auto', 'auto', 'auto']
 
@@ -126,5 +126,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 16:04:00'
+GEN_TIME = '2019.03.28 20:53:36'
 

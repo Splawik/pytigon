@@ -56,9 +56,8 @@ class DataProxy:
         self.parm = dict()
         self.is_valid = True
 
-        self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_INFO, }))
-        ret = schjson.loads(self.http.str())
-        self.http.clear_ptr()
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_INFO, }))
+        ret = schjson.loads(response.str())
 
         self.col_names = ret["col_names"]
         self.col_types = ret["col_types"]
@@ -136,10 +135,10 @@ class DataProxy:
         if self.parm:
             for (key, value) in list(self.parm.items()):
                 c[key] = value
-        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm(c))
 
         try:
-            page = schjson.loads(self.http.str())
+            page = schjson.loads(response.str())
             retpage = page["page"]
         except:
             retpage = None
@@ -147,7 +146,6 @@ class DataProxy:
             #http_error(wx.GetApp().GetTopWindow(), self.http.str())
             self.http.show(wx.GetApp().GetTopWindow())
             retpage = []
-        self.http.clear_ptr()
         return retpage
 
 
@@ -158,10 +156,9 @@ class DataProxy:
         parm = {'cmd': CMD_COUNT}
         if 'value' in self.parm:
             parm['value']=self.parm['value']
-        self.http.post(self.parent, self.tabaddress, process_post_parm(parm))
-        s = self.http.str()
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm(parm))
+        s = response.str()
         ret = schjson.loads(s)
-        self.http.clear_ptr()
         self.max_count = int(ret["count"])
         return self.max_count
 
@@ -171,7 +168,6 @@ class DataProxy:
         delete = schjson.dumps(listaRecDelete)
         c = {'cmd': CMD_SYNC, 'update': update, 'insert': insert, 'delete': delete}
         self.http.post(self.parent, self.tabaddress, process_post_parm(c))
-        self.http.clear_ptr()
 
     def auto_update(self, col_name, col_names, rec):
         """Return transformed row after current row is changed"""
@@ -182,9 +178,8 @@ class DataProxy:
 
         c = {'cmd': CMD_AUTO, 'col_name': col_name2, 'col_names': col_names2, "rec": rec2}
 
-        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
-        ret = schjson.loads(self.http.str())
-        self.http.clear_ptr()
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        ret = schjson.loads(response.str())
         if ret == None:
             return rec
         else:
@@ -197,20 +192,16 @@ class DataProxy:
 
     def exec(self, parm):
         c = {'cmd': CMD_EXEC, 'value': parm}
-        self.http.post(self.parent, self.tabaddress, process_post_parm(c))
-        ret = schjson.loads(self.http.str())
-        self.http.clear_ptr()
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm(c))
+        ret = schjson.loads(response.str())
         return ret
 
     def get_default_rec(self):
         return self.default_rec
 
     def GetRecAsStr(self, nrRec):
-        self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_RECASSTR, 'nr': nrRec}))
-        ret = schjson.loads(self.http.str())
-
-        self.http.clear_ptr()
-
+        response = self.http.post(self.parent, self.tabaddress, process_post_parm({'cmd': CMD_RECASSTR, 'nr': nrRec}))
+        ret = schjson.loads(response.str())
         return ret["recasstr"]
 
     def GetColNames(self):

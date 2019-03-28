@@ -621,10 +621,9 @@ class SchAppFrame(SchBaseFrame):
 
         if panel=='pscript':
             http = wx.GetApp().get_http(self)
-            http.get(self, address)
-            ptr = http.str()
+            response = http.get(self, address)
+            ptr = response.str()
             exec(ptr)
-            http.clear_ptr()
             return
 
         if not address.startswith('^'):
@@ -1001,8 +1000,8 @@ class SchAppFrame(SchBaseFrame):
             page: web page address
         """
         http = wx.GetApp().get_http(self)
-        http.get(self, str(page)) #, user_agent='webkit')
-        form_frame = self._open_binary_data(http, page)
+        response = http.get(self, str(page)) #, user_agent='webkit')
+        form_frame = self._open_binary_data(response, page)
 
         def _after_init():
             form_frame.body.WEB.execute_javascript("document.title = '%s';" % page)
@@ -1018,13 +1017,13 @@ class SchAppFrame(SchBaseFrame):
             page: web page address
         """
         http = wx.GetApp().get_http(self)
-        http.get(self, str(page)) #, user_agent='webkit')
-        return self._open_binary_data(http, page)
+        response = http.get(self, str(page)) #, user_agent='webkit')
+        return self._open_binary_data(response, page)
     
     def _open_binary_data(self, http_ret, page):
         if 'application/vnd.oasis.opendocument' in http_ret.ret_content_type:
 
-            cd = http_ret.http.headers.get('content-disposition')
+            cd = http_ret.response.headers.get('content-disposition')
             if cd:
                 name = cd.split('filename=')[1]
             else:

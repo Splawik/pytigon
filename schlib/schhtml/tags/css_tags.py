@@ -42,12 +42,11 @@ class CssLink(BaseHtmlElemParser):
             href = self.attrs['href']
             http = self.parser.http
             try:
-                (status, ur) = http.get(self, href)
-                if status == 404:
+                response = http.get(self, href)
+                if response.ret_code == 404:
                     css_txt = None
                 else:
-                    css_txt = http.str()
-                    http.clear_ptr()
+                    css_txt = response.str()
             except:
                 css_txt = None
         if css_txt:

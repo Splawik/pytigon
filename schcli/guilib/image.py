@@ -151,9 +151,9 @@ def bitmap_from_href(href, size_type=SIZE_DEFAULT):
             bmp = wx.Bitmap()
     else:
         http = wx.GetApp().get_http(None)
-        if http.get(None, str(href))[0]!=404:
-            s = http.ptr()
-            http.clear_ptr()
+        response = http.get(None, str(href))[0]
+        if response.ret_code != 404:
+            s = response.ptr()
             stream = BytesIO(s)
             bmp = wx.Bitmap(wx.Image(stream))
         else:
@@ -231,16 +231,15 @@ class SchImage:
         self.one_image_size = one_image_size
         try:
             http = wx.GetApp().http
-            (status, ur) = http.get(self, address)
-            if status == 404:
+            response = http.get(self, address)
+            if response.ret_code  != 200:
                 print("I can't load image from:", address)
                 self.bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE,
                         wx.ART_TOOLBAR, (32, 32))
             else:
-                str = http.ptr()
+                str = response.ptr()
                 stream = io.BytesIO(str)
                 self.bmp = wx.Bitmap(wx.Image(stream))
-            http.clear_ptr()
         except:
             print(_("The exception while loading image from:"), address)
             self.bmp = wx.ArtProvider.GetBitmap(wx.ART_MISSING_IMAGE,

@@ -880,9 +880,9 @@ def gen(request, pk):
 
 def prj_export(request, pk):
     
-    prj = []
+    prj_tab = []
     prj = models.SChAppSet.objects.get(id=pk)
-    prj.append(obj_to_array(prj,prj_attr))
+    prj_tab.append(obj_to_array(prj,prj_attr))
     apps = prj.schapp_set.all()
     apps_array=[]
     for app in apps:
@@ -948,16 +948,16 @@ def prj_export(request, pk):
     
         tmp = obj_to_array(app, app_attr)
         apps_array.append([tmp, tables_array, choices_array, views_array, templates_array, appmenus_array, forms_array, tasks_array, consumers_array, files_array])
-    prj.append(apps_array)
+    prj_tab.append(apps_array)
     
     statics = prj.schstatic_set.all()
     statics_array=[]
     for static in statics:
         statics_array.append(obj_to_array(static,static_attr))
     
-    prj.append(statics_array)
+    prj_tab.append(statics_array)
     
-    ex_str = json.dumps(prj, indent=4)
+    ex_str = json.dumps(prj_tab, indent=4)
     return HttpResponse(ex_str, content_type="text/plain")
     
 

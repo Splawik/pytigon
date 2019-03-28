@@ -79,8 +79,8 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
         def load_from_url(self, url, ext):
             self.set_ext(ext)
             http = wx.GetApp().http
-            http.get(self, url)
-            txt = http.ptr()
+            response = http.get(self, url)
+            txt = response.ptr()
             io = BytesIO(txt)
             self.pil = Image.open(io)
             size = self.GetParent().GetSize()
@@ -99,14 +99,12 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
             if not resized:
                 self.SetVirtualSize(wx.Size(img.GetWidth(), img.GetHeight()))
                 self.SetScrollRate(20, 20)
-            http.clear_ptr()
             self.url = url
 
         def on_save(self, event):
             http = wx.GetApp().get_http(self)
             if self.href:
                 http.post(self, self.href, {'data': self.GetText()})
-            http.clear_ptr()
 
         def on_copy(self, event):
             self.Copy()

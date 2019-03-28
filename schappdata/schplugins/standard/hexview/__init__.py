@@ -57,10 +57,9 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         def load_from_url(self, url, ext):
             self.set_ext('txt')
             http = wx.GetApp().http
-            http.get(self, url + '0/')
-            txt = http.str()
+            response = http.get(self, url + '0/')
+            txt = response.str()
             self.print_hex(txt)
-            http.clear_ptr()
             self.url = url
 
         def on_save(self, event):
