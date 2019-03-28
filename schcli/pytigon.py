@@ -199,10 +199,7 @@ if _PARAM == None:
 import asyncio
 from asyncio.events import get_event_loop
 
-if 'channels' in _PARAM or 'rpc' in _PARAM:
-    LOOP = get_event_loop()
-else:
-    LOOP = None
+LOOP = get_event_loop()
 
 from schserw import settings as schserw_settings
 
