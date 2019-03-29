@@ -32,7 +32,7 @@ from threading import Thread
 
 from schlib.schfs.vfstools import norm_path
 from schlib.schtools.schjson import json_loads
-from schlib.schhttptools.asgi_bridge import get_or_post
+from schlib.schhttptools.asgi_bridge import get_or_post, websocket
 
 import threading
 import logging
@@ -442,3 +442,25 @@ def join_http_path(base, ext):
         return base+ext[1:]
     else:
         return base + ext
+
+
+async def local_websocket(path, input_queue, output):
+    global COOKIES_EMBEDED
+    global ASGI_APPLICATION
+
+    user_agent = ""
+    headers = []
+    headers.append((b'User-Agent', user_agent))
+    headers.append((b'Referer', path))
+
+    cookies = ""
+    if COOKIES_EMBEDED:
+        if 'csrftoken' in COOKIES_EMBEDED:
+            headers.append(('X-CSRFToken', COOKIES_EMBEDED['csrftoken'].split(';', 1)[0]))
+        for key, value in COOKIES_EMBEDED.items():
+            value2 = value.split(';',1)[0]
+            cookies += f"{key}={value2};"
+    if cookies:
+        headers.append((b"cookie", cookies.encode('utf-8')))
+
+    return await websocket(ASGI_APPLICATION, path, headers, input_queue, output)

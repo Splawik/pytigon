@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-import os, sys
 import urllib
-import asyncio
-import json
 import copy
 
 SCOPE_TEMPLATE = {
@@ -68,7 +65,7 @@ def get_scope_and_content_http_post(path, headers, params={}):
 
 
 def get_scope_websocket(path, headers):
-    scope = get_scope_and_content_http_get(path, headers)
+    scope, content  = get_scope_and_content_http_get(path, headers)
     scope['type'] = 'websocket'
     return scope
 
@@ -106,3 +103,42 @@ async def get_or_post(application, path, headers, params={}, post=False):
 
     return ret
 
+
+async def websocket(application, path, headers, input_queue, output):
+    ret = {}
+    status = 0
+    scope = get_scope_websocket(path.replace('ws://127.0.0.2/', ''), headers)
+
+    async def send(message):
+        nonlocal output
+        if 'type' in message:
+            if message['type'] == 'websocket.accept':
+                output.onOpen()
+            elif message['type'] == 'websocket.send':
+                text = None
+                binary = None
+                if 'text' in message:
+                    text = message['text']
+                if 'binary' in message:
+                    binary = message['binary']
+                output.onMessage(text, binary)
+            elif message['type'] == 'websocket.disconnect':
+                output.onClose(None, None, None)
+
+    async def receive():
+        nonlocal status
+        if status == 0:
+            status = 1
+            return {'type': 'websocket.connect'}
+        else:
+            nonlocal input_queue
+            item = await input_queue.get()
+            if item:
+                return {'type': 'websocket.receive', 'body': item}
+            else:
+                return {'type': 'websocket.disconnect'}
+
+    app_instance = application(scope)
+    application_queue = await app_instance(receive, send)
+
+    return ret

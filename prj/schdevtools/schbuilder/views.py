@@ -755,7 +755,7 @@ def gen(request, pk):
     for _app in apps:
         consumers = _app.schchannelconsumer_set.all()
         for consumer in consumers:
-            consumers_tab.append((app.name+"/"+consumer.url+"/", _app.name+".consumers."+consumer.name))
+            consumers_tab.append((app.name+"/"+consumer.url+"/socket.io/", _app.name+".consumers."+consumer.name))
     
     for pos in prj.get_ext_apps():
         if pos:

@@ -120,12 +120,16 @@ else:
         DATABASES['local'] = db_local
 
 
+CHANNELS_URL_TAB = [ 
+ ("^"+URL_ROOT_PREFIX+r"schbuilder/clock/socket.io/$", 'schbuilder.consumers.Clock'),
+]
+
 
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2019.03.22 17:58:25'
+GEN_TIME = '2019.03.29 22:03:58'
 OFFLINE_SUPPORT = True
 

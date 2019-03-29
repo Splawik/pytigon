@@ -250,7 +250,7 @@ def process_adv_argv():
 
 process_adv_argv()
 
-if 'channels' in _PARAM or 'rpc' in _PARAM:
+if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
     from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
 
     class SChAsyncApp(WxAsyncApp):
@@ -342,7 +342,7 @@ if _INSPECTION:
         sys.settrace(trace_calls)
 
 else:
-    if 'channels' in _PARAM or 'rpc' in _PARAM:
+    if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
         App = SChAsyncApp
     else:
         App = wx.App
@@ -514,6 +514,9 @@ class SchApp(App, _BASE_APP):
         self.mp.feed(ret_str)
         self.mp.close()
 
+        if hasattr(self, "StartCoroutine") and self.base_address.startswith('http://127.0.0.2'):
+            self.StartCoroutine(self.init_websockets, self)
+
         return response.ret_code
 
     def _re_init(self, address, app):
@@ -532,6 +535,15 @@ class SchApp(App, _BASE_APP):
         self.mp = SimpleTabParser()
         self.mp.feed(ret)
         self.mp.close()
+
+
+    async def init_websockets(self):
+        tasks = []
+        if self.websockets:
+            for key, value in self.websockets.items():
+                tasks.append(httpclient.local_websocket(self.base_address.replace('http://', "ws://")+key, value.input_queue, value))
+            if tasks:
+                await asyncio.wait(tasks)
 
     def make_href(self, href):
         if self.base_app and href.startswith('/'):
@@ -1049,35 +1061,65 @@ def _main_run():
         else:
             websockets = [ _WEBSOCKET, ]
 
+        if app.base_address.startswith('http://127.0.0.2'):
+            local = True
+        else:
+            local = False
+
         for websocket_id in websockets:
-            class PytigonClientProtocol(WebSocketClientProtocol):
-                def __init__(self):
-                    nonlocal app, websocket_id
-                    super().__init__()
-                    self.app = app
-                    self.websocket_id = websocket_id
-                    app.websockets[websocket_id] = self
+            if local:
+                class PytigonClientProtocol():
+                    def __init__(self, app):
+                        self.app = app
+                        self.websocket_id = websocket_id
+                        self.input_queue = asyncio.Queue()
 
-                def onConnect(self, response):
-                    self.app.on_websocket_connect(self, self.websocket_id, response)
+                    def onConnect(self, response):
+                        self.app.on_websocket_connect(self, self.websocket_id, response)
 
-                def onOpen(self):
-                    self.app.on_websocket_open(self, self.websocket_id)
+                    def onOpen(self):
+                        self.app.on_websocket_open(self, self.websocket_id)
 
-                def onMessage(self, msg, binary):
-                    self.app.on_websocket_message(self, websocket_id, msg, binary)
-                    # reactor.callLater(1, self.sendHello)
+                    def onClose(self, wasClean, code, reason):
+                        pass
 
-            ws_address = app.base_address.replace('http', 'ws').replace('https', 'wss')
-            ws_address += websocket_id
-            factory = WebSocketClientFactory(ws_address)
-            factory.protocol = PytigonClientProtocol
-            connectWS(factory)
+                    def onMessage(self, msg, binary):
+                        self.app.on_websocket_message(self, websocket_id, msg, binary)
+
+                app.websockets[websocket_id] = PytigonClientProtocol(app)
+
+            else:
+                class PytigonClientProtocol(WebSocketClientProtocol):
+                    def __init__(self):
+                        nonlocal app, websocket_id
+                        super().__init__()
+                        self.app = app
+                        self.websocket_id = websocket_id
+                        app.websockets[websocket_id] = self
+
+                    def onConnect(self, response):
+                        pass
+                        #self.app.on_websocket_connect(self, self.websocket_id, response)
+
+                    def onOpen(self):
+                        self.app.on_websocket_open(self, self.websocket_id)
+
+                    def onClose(self, wasClean, code, reason):
+                        pass
+
+                    def onMessage(self, msg, binary):
+                        self.app.on_websocket_message(self, websocket_id, msg, binary)
+
+                ws_address = app.base_address.replace('http', 'ws').replace('https', 'wss')
+                ws_address += websocket_id
+                factory = WebSocketClientFactory(ws_address)
+                factory.protocol = PytigonClientProtocol
+                connectWS(factory)
 
     if _INSPECTION == True:
         app.MainLoop()
     else:
-        if 'channels' in _PARAM or 'rpc' in _PARAM:
+        if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
             #loop = get_event_loop()
             LOOP.run_until_complete(app.MainLoop())
         else:
