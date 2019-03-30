@@ -294,7 +294,8 @@ if 'rpc' in _PARAM or 'websocket' in _PARAM:
         from twisted.web import xmlrpc, server
         _RPC = True
     if 'websocket' in _PARAM:
-        from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+        #from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+        from schlib.schhttptools.websocket import create_websocket_client
         _WEBSOCKET = _PARAM['websocket']
 
 if not 'channels' in _PARAM:
@@ -413,7 +414,9 @@ class SchApp(App, _BASE_APP):
         self.menu_always = False
         self.authorized = False
         self.rpc = None
+
         self.websockets = {}
+        self.websockets_callbacks = {}
 
         self.gui_style = \
             'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
@@ -432,6 +435,12 @@ class SchApp(App, _BASE_APP):
             colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
 
         self.ctrl_process = {}
+        class callback():
+            def on_websocket_message(msg, binary):
+                pass
+                #print("ZZZ:", msg, binary)
+
+        self.add_websoket_callback("/schbuilder/clock/socket.io/", callback)
 
     def register_ctrl_process_fun(self, tag, fun):
         """Register function, which is called when widget connected to the specified tag is created.
@@ -541,9 +550,19 @@ class SchApp(App, _BASE_APP):
         tasks = []
         if self.websockets:
             for key, value in self.websockets.items():
-                tasks.append(httpclient.local_websocket(self.base_address.replace('http://', "ws://")+key, value.input_queue, value))
+                if value.status == 1:
+                    value.status = 2
+                    tasks.append(httpclient.local_websocket(self.base_address.replace('http://', "ws://")+key, value.input_queue, value))
             if tasks:
                 await asyncio.wait(tasks)
+
+
+    def create_websocket(self, websocket_id, callback):
+        local = True if app.base_address.startswith('http://127.0.0.2') else False
+        create_websocket_client(self, websocket_id, local, callback)
+        if local:
+            self.StartCoroutine(self.init_websockets, self)
+
 
     def make_href(self, href):
         if self.base_app and href.startswith('/'):
@@ -728,18 +747,36 @@ class SchApp(App, _BASE_APP):
                          {'script': s.read()})
 
 
-    def on_websocket_connect(self, client, websocket_id, response):
-        print("On websocket connected", websocket_id, response.peer)
+    def add_websoket_callback(self, websocket_id, callback):
+        if websocket_id in self.websockets_callbacks:
+            self.websockets_callbacks[websocket_id].append(callback)
+        else:
+            self.websockets_callbacks[websocket_id] = [ callback, ]
 
-    def on_websocket_open(self, client, websocket_id):
-        print("On websocket open", websocket_id)
-
-    def on_websocket_message(self, client, websocket_id, msg, binary):
-        print("On websocket message:", websocket_id, msg, binary)
 
     def websocket_send(self, websocket_id, msg):
         if websocket_id in self.websockets:
             self.websocket[websocket_id].sendMessage(msg)
+
+
+    def on_websocket_callback(self, client, event_name, argv):
+        if client.websocket_id in self.websockets_callbacks:
+            for callback in self.websockets_callbacks[client.websocket_id]:
+                if hasattr(callback, event_name):
+                    getattr(callback, event_name)(**argv)
+
+
+    def on_websocket_connect(self, client, websocket_id, response):
+        return self.on_websocket_callback(client, "on_websocket_connect", { 'response': response})
+
+
+    def on_websocket_open(self, client, websocket_id):
+        return self.on_websocket_callback(client, "on_websocket_open", {})
+
+
+    def on_websocket_message(self, client, websocket_id, msg, binary):
+        return self.on_websocket_callback(client, "on_websocket_message", { 'msg': msg, 'binary': binary } )
+
 
 def login(base_href, auth_type=None, username = None):
     """Show login form"""
@@ -1061,60 +1098,10 @@ def _main_run():
         else:
             websockets = [ _WEBSOCKET, ]
 
-        if app.base_address.startswith('http://127.0.0.2'):
-            local = True
-        else:
-            local = False
+        local = True if app.base_address.startswith('http://127.0.0.2') else False
 
         for websocket_id in websockets:
-            if local:
-                class PytigonClientProtocol():
-                    def __init__(self, app):
-                        self.app = app
-                        self.websocket_id = websocket_id
-                        self.input_queue = asyncio.Queue()
-
-                    def onConnect(self, response):
-                        self.app.on_websocket_connect(self, self.websocket_id, response)
-
-                    def onOpen(self):
-                        self.app.on_websocket_open(self, self.websocket_id)
-
-                    def onClose(self, wasClean, code, reason):
-                        pass
-
-                    def onMessage(self, msg, binary):
-                        self.app.on_websocket_message(self, websocket_id, msg, binary)
-
-                app.websockets[websocket_id] = PytigonClientProtocol(app)
-
-            else:
-                class PytigonClientProtocol(WebSocketClientProtocol):
-                    def __init__(self):
-                        nonlocal app, websocket_id
-                        super().__init__()
-                        self.app = app
-                        self.websocket_id = websocket_id
-                        app.websockets[websocket_id] = self
-
-                    def onConnect(self, response):
-                        pass
-                        #self.app.on_websocket_connect(self, self.websocket_id, response)
-
-                    def onOpen(self):
-                        self.app.on_websocket_open(self, self.websocket_id)
-
-                    def onClose(self, wasClean, code, reason):
-                        pass
-
-                    def onMessage(self, msg, binary):
-                        self.app.on_websocket_message(self, websocket_id, msg, binary)
-
-                ws_address = app.base_address.replace('http', 'ws').replace('https', 'wss')
-                ws_address += websocket_id
-                factory = WebSocketClientFactory(ws_address)
-                factory.protocol = PytigonClientProtocol
-                connectWS(factory)
+            create_websocket_client(app, websocket_id, local)
 
     if _INSPECTION == True:
         app.MainLoop()
