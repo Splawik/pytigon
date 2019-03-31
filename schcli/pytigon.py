@@ -775,9 +775,9 @@ class SchApp(App, _BASE_APP):
         if client.websocket_id in self.websockets_callbacks:
             for callback in self.websockets_callbacks[client.websocket_id]:
                 if hasattr(callback, event_name):
-                    if 'subtype' in argv:
-                        if hasattr(callback, 'accept_subtype'):
-                            if not getattr(callback, 'accept_subtype')(argv['subtype']):
+                    if 'channel' in argv:
+                        if hasattr(callback, 'accept_channel'):
+                            if not getattr(callback, 'accept_channel')(argv['channel']):
                                 continue
                     getattr(callback, event_name)(**argv)
 
