@@ -524,8 +524,11 @@ class SchApp(App, _BASE_APP):
         self.mp.feed(ret_str)
         self.mp.close()
 
-        if hasattr(self, "StartCoroutine") and self.base_address.startswith('http://127.0.0.2'):
-            self.StartCoroutine(self.init_websockets, self)
+        if hasattr(self, "StartCoroutine"):
+            if self.base_address.startswith('http://127.0.0.2'):
+                self.StartCoroutine(self.init_websockets, self)
+            if _DEBUG:
+                self.StartCoroutine(self.test_websockets, self)
 
         return response.ret_code
 
@@ -763,7 +766,6 @@ class SchApp(App, _BASE_APP):
 
     async def websocket_send(self, websocket_id, msg):
         if websocket_id in self.websockets:
-            #obj = self.websockets[websocket_id].sendMessage(json_dumps(msg).encode('utf-8'))
             obj = self.websockets[websocket_id].send_message(msg)
             if obj:
                 await obj
@@ -773,6 +775,10 @@ class SchApp(App, _BASE_APP):
         if client.websocket_id in self.websockets_callbacks:
             for callback in self.websockets_callbacks[client.websocket_id]:
                 if hasattr(callback, event_name):
+                    if 'subtype' in argv:
+                        if hasattr(callback, 'accept_subtype'):
+                            if not getattr(callback, 'accept_subtype')(argv['subtype']):
+                                continue
                     getattr(callback, event_name)(**argv)
 
 
