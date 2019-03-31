@@ -526,8 +526,6 @@ class SchApp(App, _BASE_APP):
 
         if hasattr(self, "StartCoroutine") and self.base_address.startswith('http://127.0.0.2'):
             self.StartCoroutine(self.init_websockets, self)
-        self.StartCoroutine(self.test_websockets, self)
-
 
         return response.ret_code
 
