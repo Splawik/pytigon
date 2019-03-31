@@ -19,19 +19,23 @@
 
 import asyncio
 from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+from schlib.schtools.schjson import json_dumps, json_loads
 
 class PytigonClientProtocolBase():
     def onConnect(self, response):
-        self.app.on_websocket_connect(self, self.websocket_id, response)
+        print("OnConnect")
+        return self.app.on_websocket_connect(self, self.websocket_id, response)
 
     def onOpen(self):
-        self.app.on_websocket_open(self, self.websocket_id)
+        print("OnOpen")
+        return self.app.on_websocket_open(self, self.websocket_id)
 
     def onClose(self, wasClean, code, reason):
+        print("OnClose")
         pass
 
     def onMessage(self, msg, binary):
-        self.app.on_websocket_message(self, self.websocket_id, msg, binary)
+        return self.app.on_websocket_message(self, self.websocket_id, { "msg": msg })
 
 
 def create_websocket_client(app, websocket_id, local=False, callback=False):
@@ -44,20 +48,24 @@ def create_websocket_client(app, websocket_id, local=False, callback=False):
                 self.callbacks = []
                 self.status = 1
 
-            def sendMessage(self, msg):
-                self.input_queue.put(msg)
+            async def send_message(self, msg):
+                await self.input_queue.put(json_dumps(msg))
 
         app.websockets[websocket_id] = PytigonClientProtocol(app)
 
     else:
-        class PytigonClientProtocol(WebSocketClientProtocol, PytigonClientProtocolBase):
+        class PytigonClientProtocol(PytigonClientProtocolBase, WebSocketClientProtocol):
             def __init__(self):
                 nonlocal app, websocket_id
-                super().__init__()
+                PytigonClientProtocolBase.__init__(self)
+                WebSocketClientProtocol.__init__(self)
                 self.app = app
                 self.websocket_id = websocket_id
                 app.websockets[websocket_id] = self
                 self.status = 0
+
+            def send_message(self, msg):
+                super().sendMessage(json_dumps(msg).encode('utf-8'))
 
         ws_address = app.base_address.replace('http', 'ws').replace('https', 'wss')
         ws_address += websocket_id

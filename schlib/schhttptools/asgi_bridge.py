@@ -11,17 +11,17 @@ SCOPE_TEMPLATE = {
     'scheme': 'http',
     'query_string': b'',
     'headers': [
-        (b'host', b'127.0.0.1:8000'),
+        (b'host', b'127.0.0.2'),
         (b'user-agent', b'python-urllib3/0.6 asgi bridge'),
         (b'accept', b'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
         (b'accept-language', b'pl,en-US;q=0.7,en;q=0.3'),
         (b'accept-encoding', b'gzip, deflate'),
-        (b'origin', b'http://127.0.0.1:8000'),
+        (b'origin', b'http://127.0.0.2'),
         (b'connection', b'keep-alive'),
         (b'cache-control', b'max-age=0')
     ],
-    'client': ['127.0.0.1', 60748],
-    'server': ['127.0.0.1', 8000]
+    'client': ['127.0.0.2', 60748],
+    'server': ['127.0.0.2', 80]
 }
 
 def get_scope_and_content_http_get(path, headers):
@@ -42,9 +42,13 @@ def get_scope_and_content_http_get(path, headers):
         else:
             key = pos[0]
         for pos2 in scope['headers']:
-            key2 = pos2[0]
-            if key == key2:
-                del pos2
+            if type(pos2[0]) == str:
+                key2 = pos2[0].encode('utf-8')
+            else:
+                key2 = pos2[0]
+
+            if key.lower() == key2.lower():
+                scope['headers'].remove(pos2)
                 break
         scope['headers'].append((key, pos[1]))
 
@@ -72,12 +76,10 @@ def get_scope_websocket(path, headers):
 
 async def get_or_post(application, path, headers, params={}, post=False):
     ret = {}
-
     if post:
         scope, content = get_scope_and_content_http_post(path, headers, params)
     else:
         scope, content = get_scope_and_content_http_get(path, headers)
-
     async def send(message):
         nonlocal ret
         for key, value in message.items():
@@ -127,16 +129,12 @@ async def websocket(application, path, headers, input_queue, output):
 
     async def receive():
         nonlocal status
-        if status == 0:
-            status = 1
-            return {'type': 'websocket.connect'}
+        nonlocal input_queue
+        item = await input_queue.get()
+        if item:
+            return {'type': 'websocket.receive', 'text': item}
         else:
-            nonlocal input_queue
-            item = await input_queue.get()
-            if item:
-                return {'type': 'websocket.receive', 'body': item}
-            else:
-                return {'type': 'websocket.disconnect'}
+            return {'type': 'websocket.disconnect'}
 
     app_instance = application(scope)
     application_queue = await app_instance(receive, send)

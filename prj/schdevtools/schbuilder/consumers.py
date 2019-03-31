@@ -21,38 +21,21 @@ class Clock(AsyncJsonWebsocketConsumer):
 
     COUNT=1
     
-    async def connect(self):
-        # Called on connection.
-        # To accept the connection call:
+    async def connect(self): 
         await self.accept()
-        
-        while(True):
+     
+    async def receive_json(self, content):
+        print("RECEIVED: ", content)
+        await self.send_json({"txt": "hello world"})
+        #await self.close(code=4123)
+    
+        for i in range(0,10):
             await asyncio.sleep(1)
             await self.send_json({"clock": self.COUNT })
             self.COUNT+=1
-            
-        # Or accept the connection and specify a chosen subprotocol.
-        # A list of subprotocols specified by the connecting client
-        # will be available in self.scope['subprotocols']
-        #await self.accept("subprotocol")
-        # To reject the connection, call:
-        #await self.close()
-    
-    async def receive_json(self, content):
-        # Called with either text_data or bytes_data for each frame
-        # You can call:
-        print("RECEIVED: ", content)
-        await self.send_json({"txt": "hello world"})
-        # Or, to send a binary frame:
-        #await self.close()
-        # Or add a custom WebSocket error code!
-        #await self.close(code=4123)
-    
     
     async def disconnect(self, close_code):
-        # Called when the socket closes
         print("Websocket closed", close_code)
-            
     
 
 

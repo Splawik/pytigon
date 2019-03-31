@@ -282,6 +282,7 @@ from schcli.guilib.httperror import http_error
 from schcli.guiframe import browserframe
 from schlib.schtools import createparm
 from schlib.schparser.html_parsers import ShtmlParser
+from schlib.schtools.schjson import json_dumps, json_loads
 import schcli.guictrl.tag
 
 if 'rpc' in _PARAM or 'websocket' in _PARAM:
@@ -436,9 +437,9 @@ class SchApp(App, _BASE_APP):
 
         self.ctrl_process = {}
         class callback():
-            def on_websocket_message(msg, binary):
-                pass
-                #print("ZZZ:", msg, binary)
+            def on_websocket_message(msg):
+                #pass
+                print("CALLBACK:", msg)
 
         self.add_websoket_callback("/schbuilder/clock/socket.io/", callback)
 
@@ -525,6 +526,8 @@ class SchApp(App, _BASE_APP):
 
         if hasattr(self, "StartCoroutine") and self.base_address.startswith('http://127.0.0.2'):
             self.StartCoroutine(self.init_websockets, self)
+        self.StartCoroutine(self.test_websockets, self)
+
 
         return response.ret_code
 
@@ -545,6 +548,12 @@ class SchApp(App, _BASE_APP):
         self.mp.feed(ret)
         self.mp.close()
 
+    async def test_websockets(self):
+        count = 999
+        while True:
+            await asyncio.sleep(1)
+            await self.websocket_send("/schbuilder/clock/socket.io/", {"title": "Hello world %s" % count })
+            count -= 1
 
     async def init_websockets(self):
         tasks = []
@@ -754,9 +763,12 @@ class SchApp(App, _BASE_APP):
             self.websockets_callbacks[websocket_id] = [ callback, ]
 
 
-    def websocket_send(self, websocket_id, msg):
+    async def websocket_send(self, websocket_id, msg):
         if websocket_id in self.websockets:
-            self.websocket[websocket_id].sendMessage(msg)
+            #obj = self.websockets[websocket_id].sendMessage(json_dumps(msg).encode('utf-8'))
+            obj = self.websockets[websocket_id].send_message(msg)
+            if obj:
+                await obj
 
 
     def on_websocket_callback(self, client, event_name, argv):
@@ -774,8 +786,8 @@ class SchApp(App, _BASE_APP):
         return self.on_websocket_callback(client, "on_websocket_open", {})
 
 
-    def on_websocket_message(self, client, websocket_id, msg, binary):
-        return self.on_websocket_callback(client, "on_websocket_message", { 'msg': msg, 'binary': binary } )
+    def on_websocket_message(self, client, websocket_id, msg):
+        return self.on_websocket_callback(client, "on_websocket_message", msg )
 
 
 def login(base_href, auth_type=None, username = None):

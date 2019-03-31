@@ -306,7 +306,6 @@ class HttpClient:
             credentials - default False
             user_agent - default None
         """
-
         if address_str.startswith('data:'):
             x = address_str.split(',', 1)
             if len(x)==2:
