@@ -46,9 +46,9 @@ def auth(request, key, path):
         if len(users)==1:
             login(request, users[0])
             if path:
-                new_url = reverse('start')+path
+                new_url = make_href(path)
             else:
-                new_url = reverse('start')+objects[0].redirect_to
+                new_url = make_href(objects[0].redirect_to)
             return HttpResponseRedirect(new_url)
     
     new_url = reverse('start')
