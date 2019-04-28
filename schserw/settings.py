@@ -329,6 +329,7 @@ if CACHE_URL:
 
 
 SOCIALACCOUNT_ADAPTER = "schlib.schdjangoext.allauth.SocialAccountAdapter"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 try:
     from schserw.settings_local import *
