@@ -180,6 +180,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.azure',
 ]
 
 if not 'PYTIGON_WITHOUT_CHANNELS' in os.environ  and platform_name()!='Android':
