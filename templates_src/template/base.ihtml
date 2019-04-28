@@ -14,7 +14,7 @@
             div class=container login-container
                 div class=row align-items-center
                     div class=col
-                    div class=col
+                    div class=col-lg-6 col-xl-5
                         div class=card card-inverse login-card
                             div class=card-header
                                 {{prj_title|upper}}
@@ -44,7 +44,7 @@
                                     ._(or sign in with):
                                     br
                                     % for pos in app_manager.login_providers:
-                                        a href={% provider_login_url pos.0 %},,,class=btn btn-secondary
+                                        a href={% provider_login_url pos.0 %},,,class=btn btn-secondary my-1
                                             {{pos.1}}
 
                     div class=col
