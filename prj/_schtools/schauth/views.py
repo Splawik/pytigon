@@ -49,9 +49,17 @@ def auth(request, key, path):
                 new_url = make_href(path)
             else:
                 new_url = make_href(objects[0].redirect_to)
-            return HttpResponseRedirect(new_url)
+                if not new_url.startswith('/'):
+                    new_url = '/' + new_url
+    else:
+        new_url = make_href('/')
     
-    new_url = reverse('start')
+    p = request.get_full_path()
+    if '?' in p:
+        x = p.split('?', 1)
+        if x[1]:
+            new_url += '?' + x[1]
+    
     return HttpResponseRedirect(new_url)
     
 

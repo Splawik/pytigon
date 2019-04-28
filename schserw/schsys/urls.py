@@ -17,7 +17,7 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
@@ -30,6 +30,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from schlib.schdjangoext.tools import make_href
 import schserw.schsys.views
+
+from allauth.account import views
 
 from schlib.schtools.tools import is_in_dicts, get_from_dicts
 
@@ -83,8 +85,9 @@ urlpatterns = [
 
     url(r'^do_login/$', sch_login), #, { 'template_name': 'schapp/index.html'}),
     url(r'^do_logout/$', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
-
     url(r'^change_password/$', schserw.schsys.views.change_password),
+
+    url(r'^accounts/', include('allauth.urls')),
 
     url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$',schserw.schsys.views.message),
 

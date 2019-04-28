@@ -29,6 +29,7 @@ class AppConfigMod(AppConfig):
     def __init__(self, *argi, **argv):
         super().__init__(*argi, **argv)
 
+
     def import_models(self, all_models = None):
         if all_models == None:
             self.models = self.apps.all_models[self.label]
@@ -46,6 +47,8 @@ class AppConfigMod(AppConfig):
             except:
                 self.models_module = None
 
+    def __add__(self, other):
+        return self.name + other
 
 def get_app_config(app_name):
     if '.' in app_name:

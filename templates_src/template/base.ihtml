@@ -5,6 +5,7 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
+% load socialaccount
 
 
 %% login
@@ -37,6 +38,15 @@
                                         div class=col div_content_center
                                             button type=submit,,,class=btn btn-primary ...OK
                                         div class=col
+
+                            div class=card-block
+                                br
+                                a href={% provider_login_url 'github' %}
+                                    .Sign Up by GitHub
+                                br
+                                a href={% provider_login_url 'google' %}
+                                    .Sign Up by Google
+
                     div class=col
 
 

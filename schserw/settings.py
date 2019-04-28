@@ -155,12 +155,19 @@ else:
 
 MIDDLEWARE.insert(0, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.forms',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
@@ -168,6 +175,11 @@ INSTALLED_APPS = [
     'bootstrap4',
     'corsheaders',
     'schserw.schsys',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
 
 if not 'PYTIGON_WITHOUT_CHANNELS' in os.environ  and platform_name()!='Android':

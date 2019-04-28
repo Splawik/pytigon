@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Pytigon tools"
 PRJ_NAME = "_schtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['auto', 'auto', 'auto']
 
@@ -121,7 +121,7 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
- ("^"+URL_ROOT_PREFIX+r"schauth/shell/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schauth/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -130,5 +130,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 12:16:05'
+GEN_TIME = '2019.04.27 19:08:54'
 

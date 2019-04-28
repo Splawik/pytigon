@@ -16,6 +16,10 @@ import sys
 from schlib.schhtml.htmltools import superstrip
 
 
+from schcommander.models import *
+
+from schauth.models import *
+
 
 
 import os.path
