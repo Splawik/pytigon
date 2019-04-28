@@ -120,6 +120,12 @@ else:
     CFG_START = ""
 
 CFG_START += f"""
+
+map $http_upgrade $connection_upgrade {{
+    default upgrade;
+    ''      close;
+}}
+
 server {{
     listen {VIRTUAL_PORT};
     client_max_body_size 50M;
@@ -150,9 +156,16 @@ CFG_ELEM = """
     }    
     location ~ /%s(.*)$ {
         proxy_pass %s:%d/%s$1$is_args$args;
+        
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr$is_args$args;
         proxy_set_header X-Forwarded-For $remote_addr$is_args$args;
+
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+                
         proxy_connect_timeout       $TIMEOUT;
         proxy_send_timeout          $TIMEOUT;
         proxy_read_timeout          $TIMEOUT;
