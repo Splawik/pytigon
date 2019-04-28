@@ -338,6 +338,13 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_USERNAME_REQUIRED = True
 
 try:
+    import dj_email_url
+    email_config = dj_email_url.config()
+    vars().update(email_config)
+except:
+    pass
+
+try:
     from schserw.settings_local import *
 except:
     pass
