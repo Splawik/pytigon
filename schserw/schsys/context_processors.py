@@ -36,6 +36,8 @@ except:
 
 from schlib.schdjangoext.django_init import get_app_name
 
+from allauth.socialaccount.providers import registry
+
 
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
 # python client 3 - python client -> web client
@@ -384,6 +386,13 @@ class AppManager:
                         ret.append(item)
         return ret
 
+    def login_providers(self):
+        ret = []
+
+        for key, value in registry.provider_map.items():
+            ret.append((key, value.name, value))
+
+        return ret
 
 def sch_standard(request):
     """Content processor function
