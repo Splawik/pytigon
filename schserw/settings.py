@@ -331,6 +331,12 @@ if CACHE_URL:
 SOCIALACCOUNT_ADAPTER = "schlib.schdjangoext.allauth.SocialAccountAdapter"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_USERNAME_REQUIRED = True
+
 try:
     from schserw.settings_local import *
 except:
