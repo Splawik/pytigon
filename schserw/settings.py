@@ -26,7 +26,6 @@ from os import environ
 from .main_paths import get_main_paths
 import django_cache_url
 
-
 PRJ_NAME = "_schall"
 GEN_TIME = '0000.00.00 00:00:00'
 
@@ -327,6 +326,9 @@ CACHE_URL = os.environ.setdefault('CACHE_URL', '')
 if CACHE_URL:
     CACHES = {'default': django_cache_url.config()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
+
+SOCIALACCOUNT_ADAPTER = "schlib.schdjangoext.allauth.SocialAccountAdapter"
 
 try:
     from schserw.settings_local import *
