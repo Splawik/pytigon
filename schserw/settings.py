@@ -177,10 +177,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.azure',
 ]
 
 if not 'PYTIGON_WITHOUT_CHANNELS' in os.environ  and platform_name()!='Android':
@@ -331,13 +327,17 @@ if CACHE_URL:
 
 
 SOCIALACCOUNT_ADAPTER = "schlib.schdjangoext.allauth.SocialAccountAdapter"
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+if DEBUG:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+    ACCOUNT_EMAIL_REQUIRED = False
+else:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+    ACCOUNT_EMAIL_REQUIRED = True
+    ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+    ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1
+    ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+    ACCOUNT_USERNAME_REQUIRED = True
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-ACCOUNT_USERNAME_REQUIRED = True
 
 try:
     import dj_email_url

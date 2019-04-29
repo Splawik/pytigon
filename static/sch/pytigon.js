@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-03-20 21:51:51
+// Transcrypt'ed from Python, 2019-04-29 18:57:36
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -4505,6 +4505,9 @@ function pytigon () {
 					jQuery (this).attr ('enctype', 'multipart/form-data').attr ('encoding', 'multipart/form-data');
 					return true;
 				}
+				if (jQuery (this).attr ('target') == '_self') {
+					return true;
+				}
 				if (jQuery (this).attr ('target') == 'refresh_obj') {
 					if (refresh_fragment (jQuery (this), null, true, null, true)) {
 						return false;
@@ -4936,7 +4939,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

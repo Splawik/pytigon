@@ -108,6 +108,9 @@ def app_init(
             )
             return True
 
+        if jQuery(this).attr("target") == "_self":
+            return True
+
         if jQuery(this).attr("target") == "refresh_obj":
             if refresh_fragment(jQuery(this), None, True, None, True):
                 return False

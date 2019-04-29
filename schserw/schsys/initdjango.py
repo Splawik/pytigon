@@ -25,6 +25,9 @@ from django.db import models
 from copy import deepcopy
 from django.forms.forms import BaseForm
 
+
+from bootstrap4.forms import render_form
+
 import os
 import shutil
 from schlib.schfs.vfstools import extractall
@@ -33,6 +36,7 @@ import zipfile
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
 
 BaseForm._old_html_output = BaseForm._html_output
+BaseForm._old_as_p = BaseForm.as_p
 
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
@@ -44,6 +48,22 @@ def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_
     return self._old_html_output(normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row)
 
 BaseForm._html_output = _html_output
+
+
+def as_p(self):
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    return render_form(self)
+    #return self._html_output(
+    #    normal_row='<p%(html_class_attr)s>%(label)s %(field)s%(help_text)s</p>',
+    #    error_row='%s',
+    #    row_ender='</p>',
+    #    help_text_html=' <span class="helptext">%s</span>',
+    #    errors_on_separate_row=True,
+    #)
+
+BaseForm.as_p = as_p
+
+print("X0:", BaseForm)
 
 
 def widget_attrs(self, widget):

@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Pytigon portal"
 PRJ_NAME = "schportal"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['tablet_modern', 'tablet_modern', 'smartfon_standard']
 
@@ -126,7 +126,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 15:05:27'
+GEN_TIME = '2019.04.29 18:05:29'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 
@@ -134,6 +134,12 @@ if 'EMAIL_HOST_USER' in os.environ:
     EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 if 'EMAIL_HOST_PASSWORD' in os.environ:
     EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
+INSTALLED_APPS.append('allauth.socialaccount.providers.google')
+INSTALLED_APPS.append('allauth.socialaccount.providers.facebook')
+INSTALLED_APPS.append('allauth.socialaccount.providers.github')
+INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
+
 
 #EMAIL_HOST = 'smtp.gmail.com'
 #EMAIL_PORT = 587

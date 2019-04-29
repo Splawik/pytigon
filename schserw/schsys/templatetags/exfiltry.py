@@ -41,6 +41,7 @@ from schlib.schdjangoext.tools import make_href as mhref
 from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schlib.schtools.wiki import wiki_from_str, make_href, wikify
 
+from bootstrap4.forms import render_form
 
 register = template.Library()
 
@@ -887,3 +888,16 @@ def _preferred_enctype(form):
         if type(field.field).__name__ in ('FileField', 'ImageField'):
             return "multipart/form-data"
     return "application/x-www-form-urlencoded"
+
+
+class BootstrapForm():
+    def __init__(self, form):
+        self.form = form
+
+    def as_p(self):
+        return render_form(self.form)
+
+@register.filter(name='to_bootstrap')
+def to_bootstrap(form):
+    return BootstrapForm(form)
+
