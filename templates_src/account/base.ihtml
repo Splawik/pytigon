@@ -1,0 +1,14 @@
+% extends "base.html"
+
+% load exfiltry
+% load bootstrap4
+
+%% body_body
+    % with form|to_bootstrap as form:
+        title
+            ._(Authentication)
+        div class=to_bootstrap
+            {{block.super}}
+        script
+            jQuery(".to_bootstrap").find('button').addClass('btn btn-primary');
+            jQuery(".to_bootstrap").find('form').attr('target', '_self');
