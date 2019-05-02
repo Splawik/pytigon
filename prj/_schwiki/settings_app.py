@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Wiki"
 PRJ_NAME = "_schwiki"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['auto', 'auto', 'auto']
 
@@ -126,5 +126,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 12:13:57'
+GEN_TIME = '2019.05.02 20:00:49'
 

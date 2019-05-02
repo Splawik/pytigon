@@ -36,3 +36,4 @@
 
 %% row_edit
     % form:
+        "parent", "name", "direct_to_template", "url", "url_parm", "tags_mount"

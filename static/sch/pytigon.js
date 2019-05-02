@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-04-29 18:57:36
+// Transcrypt'ed from Python, 2019-05-02 14:20:19
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -3825,11 +3825,11 @@ function pytigon () {
 						var newElement = document.createElement ('div');
 						newElement.innerHTML = html;
 						var css = newElement.getElementsByTagName ('style');
-						var eval_fun = function (id, value) {
-							jQuery (value).attr ('scoped', 'scoped');
-							elem.append (value);
-						};
-						jQuery.each (css, eval_fun);
+						while (css.length > 0) {
+							var style = css.py_pop ();
+							style.attr ('scoped', 'scoped');
+							elem.append (style);
+						}
 					};
 					var MOUNT_INIT_FUN = list ([]);
 					var register_mount_fun = function (fun) {
@@ -4324,7 +4324,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4939,6 +4938,7 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
+
     return __all__;
 }
 window ['pytigon'] = pytigon ();

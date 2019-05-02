@@ -129,7 +129,7 @@
                 tr:::td
             br
 
-    div class=panel-body container-fluid wiki_container
+    div class=panel-body container-fluid wiki_container wiki_{{page_name|lower}} wiki_{{conf.subject|lower}}
         % if content
             % if wiki_path:
                 % wiki content wiki_path subject
@@ -138,3 +138,7 @@
         % else
             _(This page do not exists yet!)
 
+        % if conf:
+            % if conf.css:
+                style
+                    {{conf.css}}

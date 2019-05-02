@@ -371,9 +371,22 @@ class WikiConf(JSONModel):
     group_of_rights_to_edit = models.CharField('A group of rights to edit wiki', null=True, blank=True, editable=True, max_length=64)
     backup_copies = models.IntegerField('Number of backup copies', null=False, blank=False, editable=True, )
     publish_fun = models.TextField('Function called after publishing', null=True, blank=True, editable=False, )
-    css = models.TextField('Additional css styles', null=True, blank=True, editable=False, )
+    scss = models.TextField('Additional scss styles', null=True, blank=True, editable=False, )
+    css = models.TextField('Css styles', null=True, blank=True, editable=False, )
     
 
+    def get_css(self):
+        import sass
+        if self.scss:
+            buf = self.scss.replace('page_class', 'wiki_' + self.subject.lower())
+            style = sass.compile(string=buf, indented=True)
+            return style
+        return ""
+            
+    def save(self, *args, **kwargs):
+        self.css = self.get_css()
+        ret = super().save(*args, **kwargs)
+        return ret
     
 admin.site.register(WikiConf)
 

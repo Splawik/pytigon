@@ -120,17 +120,10 @@ def evalCSSFromHtml(html, elem):
 
     css = newElement.getElementsByTagName("style")
 
-    def eval_fun(id, value):
-        # elem.append("<style scoped></style>")
-        # if value.id:
-        # eval(value.innerHTML)
-        # s = jQuery("<style scoped></style>")
-        jQuery(value).attr("scoped", "scoped")
-        # s.innerHTML = value
-        elem.append(value)
-
-    jQuery.each(css, eval_fun)
-
+    while css.length > 0:
+        style = css.pop()
+        style.attr("scoped", "scoped")
+        elem.append(style)
 
 MOUNT_INIT_FUN = []
 

@@ -36,7 +36,7 @@
     % row_actions:
         .edit
         .field_edit/publish_fun,Publish function
-        .field_edit/css,CSS
+        .field_edit/scss,SCSS
         .delete
 
 

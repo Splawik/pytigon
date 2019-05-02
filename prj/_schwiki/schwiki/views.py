@@ -119,11 +119,18 @@ def view_page(request, app_or_subject, page_path):
         id = page.id
         content = None
     
+    
+    conf = None
+    if page:
+        conf_list = models.WikiConf.objects.filter(subject=page.subject)
+        if len(conf_list)>0:
+            conf = conf_list[0]
         
     c = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, 
          'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,
-         'description': desc if desc else page_name, 'only_content': True,
+         'description': desc if desc else page_name, 'only_content': True, 'conf': conf,
     }
+    
     
     if page and page.base_template:
         base_template = page.base_template
