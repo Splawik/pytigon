@@ -21,6 +21,7 @@ from popup import (
     refresh_current_object,
     refresh_current_page,
     refresh_current_app,
+    only_get
 )
 from tbl import init_table, datatable_onresize
 from tools import (
@@ -483,6 +484,7 @@ EVENT_TAB = [
     ("refresh_page", "*", True, False, refresh_current_page),
     ("refresh_app", "*", False, False, refresh_current_app),
     ("run_script", "*", False, False, get_and_run_script),
+    ("null", "*", False, False, only_get),
     # ('*', 'popup_info', True, False, on_popup_info),
     # ('*', 'popup_delete', True, False, on_popup_delete),
     # ('*', 'popup_inline', True, False, on_popup_inline),

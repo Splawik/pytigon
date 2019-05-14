@@ -511,6 +511,35 @@ def refresh_current_app(url, elem, e):
 def _none():
     pass
 
+
+def only_get(url, elem, e):
+    href = url
+    href2 = corect_href(url)
+    target = "refresh_obj"
+    src_obj = jQuery(elem)
+
+    refr_block = src_obj.closest('.refr_object')
+    if refr_block.hasClass('refr_source'):
+        src = refr_block
+    else:
+        src = refr_block.find('.refr_source')
+    if src.length>0:
+        src.attr('href', href2)
+        src.attr('action', href2)
+
+    def _on_data(data):
+        nonlocal href, src_obj, target
+
+        if (data and "_parent_refr" in data and 'YES' in data or 'OK' in data):
+            if not refresh_fragment(jQuery(elem), None, True):
+                return refresh_fragment(jQuery(elem), None, False)
+
+    if src_obj.hasClass("page-link"):
+        ajax_submit(src, _on_data)
+    else:
+        ajax_get(href2, _on_data)
+
+
 def popup_min_max(elm, max=True):
     elem = jQuery(elm)
     if elem.hasClass('modal-dialog'):

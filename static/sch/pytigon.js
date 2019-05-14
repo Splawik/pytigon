@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-05-02 14:20:19
+// Transcrypt'ed from Python, 2019-05-14 23:06:49
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -3262,6 +3262,36 @@ function pytigon () {
 					var _none = function () {
 						// pass;
 					};
+					var only_get = function (url, elem, e) {
+						var href = url;
+						var href2 = corect_href (url);
+						var target = 'refresh_obj';
+						var src_obj = jQuery (elem);
+						var refr_block = src_obj.closest ('.refr_object');
+						if (refr_block.hasClass ('refr_source')) {
+							var src = refr_block;
+						}
+						else {
+							var src = refr_block.find ('.refr_source');
+						}
+						if (src.length > 0) {
+							src.attr ('href', href2);
+							src.attr ('action', href2);
+						}
+						var _on_data = function (data) {
+							if (data && __in__ ('_parent_refr', data) && __in__ ('YES', data) || __in__ ('OK', data)) {
+								if (!(refresh_fragment (jQuery (elem), null, true))) {
+									return refresh_fragment (jQuery (elem), null, false);
+								}
+							}
+						};
+						if (src_obj.hasClass ('page-link')) {
+							ajax_submit (src, _on_data);
+						}
+						else {
+							ajax_get (href2, _on_data);
+						}
+					};
 					var popup_min_max = function (elm, max) {
 						if (typeof max == 'undefined' || (max != null && max .hasOwnProperty ("__kwargtrans__"))) {;
 							var max = true;
@@ -3350,6 +3380,7 @@ function pytigon () {
 						__all__.on_popup_in_form = on_popup_in_form;
 						__all__.on_popup_info = on_popup_info;
 						__all__.on_popup_inline = on_popup_inline;
+						__all__.only_get = only_get;
 						__all__.popup_maximize = popup_maximize;
 						__all__.popup_min_max = popup_min_max;
 						__all__.popup_minimize = popup_minimize;
@@ -3365,7 +3396,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenu', {
@@ -4324,6 +4354,7 @@ function pytigon () {
 			}
 		}
 	);
+
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4432,6 +4463,7 @@ function pytigon () {
 		var refresh_current_object = __init__ (__world__.popup).refresh_current_object;
 		var refresh_current_page = __init__ (__world__.popup).refresh_current_page;
 		var refresh_current_app = __init__ (__world__.popup).refresh_current_app;
+		var only_get = __init__ (__world__.popup).only_get;
 		var init_table = __init__ (__world__.tbl).init_table;
 		var datatable_onresize = __init__ (__world__.tbl).datatable_onresize;
 		var can_popup = __init__ (__world__.tools).can_popup;
@@ -4818,7 +4850,7 @@ function pytigon () {
 			}
 			return _on_menu_href (elem, title, url);
 		};
-		var EVENT_TAB = list ([tuple (['*', 'get_tbl_value', true, false, on_get_tbl_value]), tuple (['*', 'new_tbl_value', true, false, on_new_tbl_value]), tuple (['*', 'get_row', true, false, on_get_row]), tuple (['popup_edit', '*', true, false, on_popup_edit_new]), tuple (['popup_info', '*', true, false, on_popup_info]), tuple (['popup_delete', '*', true, false, on_popup_delete]), tuple (['inline', '*', true, false, on_popup_inline]), tuple (['_top', '*', true, false, on_new_tab]), tuple (['_top2', '*', true, false, on_new_tab]), tuple (['refresh_obj', '*', true, false, refresh_current_object]), tuple (['refresh_page', '*', true, false, refresh_current_page]), tuple (['refresh_app', '*', false, false, refresh_current_app]), tuple (['run_script', '*', false, false, get_and_run_script])]);
+		var EVENT_TAB = list ([tuple (['*', 'get_tbl_value', true, false, on_get_tbl_value]), tuple (['*', 'new_tbl_value', true, false, on_new_tbl_value]), tuple (['*', 'get_row', true, false, on_get_row]), tuple (['popup_edit', '*', true, false, on_popup_edit_new]), tuple (['popup_info', '*', true, false, on_popup_info]), tuple (['popup_delete', '*', true, false, on_popup_delete]), tuple (['inline', '*', true, false, on_popup_inline]), tuple (['_top', '*', true, false, on_new_tab]), tuple (['_top2', '*', true, false, on_new_tab]), tuple (['refresh_obj', '*', true, false, refresh_current_object]), tuple (['refresh_page', '*', true, false, refresh_current_page]), tuple (['refresh_app', '*', false, false, refresh_current_app]), tuple (['run_script', '*', false, false, get_and_run_script]), tuple (['null', '*', false, false, only_get])]);
 		var standard_on_data = function (src_obj, href) {
 			var _standard_on_data = function (data) {
 				if (data && __in__ ('_parent_refr', data)) {
@@ -4924,6 +4956,7 @@ function pytigon () {
 			__all__.on_popup_edit_new = on_popup_edit_new;
 			__all__.on_popup_info = on_popup_info;
 			__all__.on_popup_inline = on_popup_inline;
+			__all__.only_get = only_get;
 			__all__.process_on_click = process_on_click;
 			__all__.refresh_current_app = refresh_current_app;
 			__all__.refresh_current_object = refresh_current_object;

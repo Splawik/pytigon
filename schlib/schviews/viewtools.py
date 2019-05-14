@@ -74,7 +74,7 @@ def change_pos(request, app, tab, pk, forward=True, field=None, callback_fun=Non
         callback_fun(obj, obj2)
     obj.save()
     obj2.save()
-    return HttpResponse('YES')
+    return HttpResponse("""<head><meta name="TARGET" content="_parent_refr" /></head><body>YES</body>""")
 
 
 def duplicate_row(request, app, tab, pk, field=None):
