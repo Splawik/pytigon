@@ -884,9 +884,10 @@ def _markdown(value):
 
 @register.filter(name='preferred_enctype')
 def _preferred_enctype(form):
-    for field in form.visible_fields():
-        if type(field.field).__name__ in ('FileField', 'ImageField'):
-            return "multipart/form-data"
+    if hasattr(form, 'visible_fields'):
+        for field in form.visible_fields():
+            if type(field.field).__name__ in ('FileField', 'ImageField'):
+                return "multipart/form-data"
     return "application/x-www-form-urlencoded"
 
 

@@ -321,13 +321,13 @@ def prj_import_from_str(s):
     object_list = []
     prj = json.loads(s)
     with transaction.atomic():
-        prj = models.SChAppSet(**array_dict(prj[0], prj_attr))
-        prj.save()
+        prj_instence = models.SChAppSet(**array_dict(prj[0], prj_attr))
+        prj_instence.save()
     
         apps_array=prj[1]
         for app_pos in apps_array:
             app = models.SChApp(**array_dict(app_pos[0], app_attr))
-            app.parent=prj
+            app.parent=prj_instence
             app.save()
     
             tables_array = app_pos[1]
@@ -409,7 +409,7 @@ def prj_import_from_str(s):
         statics_array=prj[2]
         for static in statics_array:
             s = models.SChStatic(**array_dict(static, static_attr))
-            s.parent=prj
+            s.parent=prj_instence
             s.save()
     
     object_list.append((datetime.datetime.now().time().isoformat(), 'SUCCESS:', ""))    
