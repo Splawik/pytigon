@@ -40,33 +40,33 @@ if platform.system() == "Windows":
     # grouping pytigon applicactions in the windows taskbar
     import ctypes
 
-    myappid = 'slawomir_cholaj.pytigon.main.01'
+    myappid = "slawomir_cholaj.pytigon.main.01"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-CWD_PATH = os.path.join(os.getcwd(), '..')
+CWD_PATH = os.path.join(os.getcwd(), "..")
 SCR_PATH = os.path.dirname(__file__)
-if SCR_PATH == '':
+if SCR_PATH == "":
     SCR_PATH = CWD_PATH
 else:
-    SCR_PATH = os.path.join(SCR_PATH, '..')
+    SCR_PATH = os.path.join(SCR_PATH, "..")
 
 ROOT_PATH = SCR_PATH
 
-if ROOT_PATH.startswith('.'):
-    ROOT_PATH = CWD_PATH + '/' + ROOT_PATH
+if ROOT_PATH.startswith("."):
+    ROOT_PATH = CWD_PATH + "/" + ROOT_PATH
 sys.path.append(ROOT_PATH)
-sys.path.append(ROOT_PATH + '/schappdata')
+sys.path.append(ROOT_PATH + "/schappdata")
 
-os.environ["LD_LIBRARY_PATH"] = ROOT_PATH + '/ext_prg/tcc'
+os.environ["LD_LIBRARY_PATH"] = ROOT_PATH + "/ext_prg/tcc"
 
 from schlib import init_paths
 
 init_paths()
 
 if platform.system() == "Windows":
-    sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_win')
+    sys.path.insert(0, ROOT_PATH + "/ext_lib_cli_win")
 else:
-    sys.path.insert(0, ROOT_PATH + '/ext_lib_cli_lin')
+    sys.path.insert(0, ROOT_PATH + "/ext_lib_cli_lin")
 
 _INSPECTION = False
 _DEBUG = False
@@ -76,8 +76,10 @@ _APP_SIZE = (1024, 768)
 _RPC = False
 _WEBSOCKET = None
 
+
 def usage():
     print(process_argv.__doc__)
+
 
 def process_argv(argv):
     """Run pytigon application: pytigon [option]... arg
@@ -117,80 +119,85 @@ def process_argv(argv):
             --trace - show trace of python calls
     """
     try:
-        (opts, args) = getopt.getopt(argv, 'h:dmpbsu:p:', [
-            'help',
-            'username=',
-            'password=',
-            'embededbrowser',
-            'embededserver',
-            'websocket_id=',
-            'channels',
-            'migrate',
-            'loaddb',
-            'server_only',
-            'debug',
-            'rpc=',
-            'param=',
-            'inspection',
-            'trace',
-            'video',
-            'no_gui',
-            'no_splash',
-            'menu_always',
-        ])
+        (opts, args) = getopt.getopt(
+            argv,
+            "h:dmpbsu:p:",
+            [
+                "help",
+                "username=",
+                "password=",
+                "embededbrowser",
+                "embededserver",
+                "websocket_id=",
+                "channels",
+                "migrate",
+                "loaddb",
+                "server_only",
+                "debug",
+                "rpc=",
+                "param=",
+                "inspection",
+                "trace",
+                "video",
+                "no_gui",
+                "no_splash",
+                "menu_always",
+            ],
+        )
     except getopt.GetoptError:
         usage()
         return None
 
-    ret = { 'args': args}
+    ret = {"args": args}
 
     for (opt, arg) in opts:
-        if opt in ('-h', '--help'):
+        if opt in ("-h", "--help"):
             usage()
             return None
-        elif opt == '--migrate':
-            ret['sync'] = True
-        elif opt == '--loaddb':
-            ret['loaddb'] = True
-        elif opt == '--server_only':
-            ret['server_only'] = True
-        elif opt in ('-u' '--username'):
-            ret['username'] = arg
-        elif opt in ('-p' '--password'):
-            ret['password'] = arg
-        elif opt in ('-b' '--embededbrowser'):
-            ret['embeded_browser'] = True
-        elif opt in ('-s', '--embededserver'):
-            ret['address'] = 'embeded'
-            ret['extern_prj'] = True
-        elif opt == '--no_gui':
-            ret['nogui'] = True
-        elif opt in ('-m', '--menu_always'):
-            ret['menu_always'] = True
-        elif opt in ('--rpc'):
-            ret['rpc'] = int(arg)
-        elif opt in ('-p', '--param'):
-            ret['param'] = arg
-        elif opt in ('--channels'):
-            ret['channels'] = True
-        elif opt in ('--websocket_id',):
-            ret['websocket'] = arg
-        elif opt in ('--no_splash'):
-            ret['no_splash'] = True
-        elif opt in ('-d', '--debug'):
+        elif opt == "--migrate":
+            ret["sync"] = True
+        elif opt == "--loaddb":
+            ret["loaddb"] = True
+        elif opt == "--server_only":
+            ret["server_only"] = True
+        elif opt in ("-u" "--username"):
+            ret["username"] = arg
+        elif opt in ("-p" "--password"):
+            ret["password"] = arg
+        elif opt in ("-b" "--embededbrowser"):
+            ret["embeded_browser"] = True
+        elif opt in ("-s", "--embededserver"):
+            ret["address"] = "embeded"
+            ret["extern_prj"] = True
+        elif opt == "--no_gui":
+            ret["nogui"] = True
+        elif opt in ("-m", "--menu_always"):
+            ret["menu_always"] = True
+        elif opt in ("--rpc"):
+            ret["rpc"] = int(arg)
+        elif opt in ("-p", "--param"):
+            ret["param"] = arg
+        elif opt in ("--channels"):
+            ret["channels"] = True
+        elif opt in ("--websocket_id",):
+            ret["websocket"] = arg
+        elif opt in ("--no_splash"):
+            ret["no_splash"] = True
+        elif opt in ("-d", "--debug"):
             global _DEBUG
             _DEBUG = True
-        elif opt in ('--inspection',):
+        elif opt in ("--inspection",):
             global _INSPECTION
             _INSPECTION = True
-        elif opt in ('--trace',):
+        elif opt in ("--trace",):
             global _TRACE
             _TRACE = True
-        elif opt in ('--video',):
+        elif opt in ("--video",):
             global _VIDEO, _APP_SIZE
             _APP_SIZE = (1280, 720)
             _VIDEO = True
     return ret
+
 
 _PARAM = process_argv(sys.argv[1:])
 if _PARAM == None:
@@ -206,18 +213,38 @@ from schserw import settings as schserw_settings
 sys.path.append(schserw_settings.PRJ_PATH)
 
 from schlib.schtools.install_init import init
-init("_schall", schserw_settings.ROOT_PATH, schserw_settings.DATA_PATH, schserw_settings.PRJ_PATH, schserw_settings.STATIC_APP_ROOT, [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH])
+
+init(
+    "_schall",
+    schserw_settings.ROOT_PATH,
+    schserw_settings.DATA_PATH,
+    schserw_settings.PRJ_PATH,
+    schserw_settings.STATIC_APP_ROOT,
+    [schserw_settings.MEDIA_ROOT, schserw_settings.UPLOAD_PATH],
+)
 
 import wx
+
 _ = wx.GetTranslation
+
 
 def process_adv_argv():
     global _PARAM
-    if not ('args' in _PARAM and len(_PARAM['args']) > 0):
+    if not ("args" in _PARAM and len(_PARAM["args"]) > 0):
         _app = wx.App()
 
-        choices = [ff for ff in os.listdir(schserw_settings.PRJ_PATH + "/") if not ff.startswith('_')]
-        dlg = wx.SingleChoiceDialog(None, _('select the application to run'), _("Pytigon"), choices,wx.CHOICEDLG_STYLE)
+        choices = [
+            ff
+            for ff in os.listdir(schserw_settings.PRJ_PATH + "/")
+            if not ff.startswith("_")
+        ]
+        dlg = wx.SingleChoiceDialog(
+            None,
+            _("select the application to run"),
+            _("Pytigon"),
+            choices,
+            wx.CHOICEDLG_STYLE,
+        )
         if dlg.ShowModal() == wx.ID_OK:
             arg = dlg.GetStringSelection()
             dlg.Destroy()
@@ -230,8 +257,8 @@ def process_adv_argv():
         _app = None
 
     else:
-        arg = _PARAM['args'][0].strip()
-    if not (arg == 'embeded' or '.' in arg or '/' in arg):
+        arg = _PARAM["args"][0].strip()
+    if not (arg == "embeded" or "." in arg or "/" in arg):
         CWD_PATH = schserw_settings.PRJ_PATH + "/" + arg
         if not os.path.exists(os.path.join(CWD_PATH, "settings_app.py")):
             print(_("Application pack: '%s' does not exists") % arg)
@@ -240,7 +267,8 @@ def process_adv_argv():
             sys.path.insert(0, CWD_PATH)
             try:
                 from apps import GUI_COMMAND_LINE
-                x = GUI_COMMAND_LINE.split(' ')
+
+                x = GUI_COMMAND_LINE.split(" ")
                 param = process_argv(x)
                 for key, value in param.items():
                     if not key in _PARAM:
@@ -248,9 +276,10 @@ def process_adv_argv():
             except:
                 pass
 
+
 process_adv_argv()
 
-if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
+if "channels" in _PARAM or "rpc" in _PARAM or "websocket" in _PARAM:
     from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
 
     class SChAsyncApp(WxAsyncApp):
@@ -285,22 +314,26 @@ from schlib.schparser.html_parsers import ShtmlParser
 from schlib.schtools.schjson import json_dumps, json_loads
 import schcli.guictrl.tag
 
-if 'rpc' in _PARAM or 'websocket' in _PARAM:
+if "rpc" in _PARAM or "websocket" in _PARAM:
     import twisted.internet.asyncioreactor
+
     twisted.internet.asyncioreactor.install()
 
     from twisted.internet import reactor
     import twisted
-    if 'rpc' in _PARAM:
-        from twisted.web import xmlrpc, server
-        _RPC = True
-    if 'websocket' in _PARAM:
-        #from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
-        from schlib.schhttptools.websocket import create_websocket_client
-        _WEBSOCKET = _PARAM['websocket']
 
-if not 'channels' in _PARAM:
-    os.environ['PYTIGON_WITHOUT_CHANNELS'] = "1"
+    if "rpc" in _PARAM:
+        from twisted.web import xmlrpc, server
+
+        _RPC = True
+    if "websocket" in _PARAM:
+        # from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+        from schlib.schhttptools.websocket import create_websocket_client
+
+        _WEBSOCKET = _PARAM["websocket"]
+
+if not "channels" in _PARAM:
+    os.environ["PYTIGON_WITHOUT_CHANNELS"] = "1"
 
 # import gc
 # gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)
@@ -315,36 +348,47 @@ if _INSPECTION:
     App = wx.lib.mixins.inspection.InspectableApp
 
     if _TRACE:
+
         def trace_calls(frame, event, arg):
-            if event != 'call':
+            if event != "call":
                 return
             co = frame.f_code
             func_name = co.co_name
-            if func_name == 'write':
+            if func_name == "write":
                 # Ignore write() calls from print statements
                 return
-            for pos in ('process_window_event', 'idle', 'timer', 'update_ui'):
+            for pos in ("process_window_event", "idle", "timer", "update_ui"):
                 if pos in func_name:
                     return
-            if 'process_window_event' in func_name or 'idle' in func_name or 'idle' in func_name:
+            if (
+                "process_window_event" in func_name
+                or "idle" in func_name
+                or "idle" in func_name
+            ):
                 return
             func_line_no = frame.f_lineno
             func_filename = co.co_filename
-            if not 'wx/core' in func_filename:
+            if not "wx/core" in func_filename:
                 return
             caller = frame.f_back
             caller_line_no = caller.f_lineno
             caller_filename = caller.f_code.co_filename
-            print('Call to %s on line %s of %s from line %s of %s' % \
-                  (func_name, func_line_no, func_filename,
-                   caller_line_no, caller_filename))
+            print(
+                "Call to %s on line %s of %s from line %s of %s"
+                % (
+                    func_name,
+                    func_line_no,
+                    func_filename,
+                    caller_line_no,
+                    caller_filename,
+                )
+            )
             return
-
 
         sys.settrace(trace_calls)
 
 else:
-    if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
+    if "channels" in _PARAM or "rpc" in _PARAM or "websocket" in _PARAM:
         App = SChAsyncApp
     else:
         App = wx.App
@@ -352,6 +396,7 @@ else:
 if _RPC:
     _BASE_APP = xmlrpc.XMLRPC
 else:
+
     class _base:
         pass
 
@@ -370,11 +415,22 @@ class SchApp(App, _BASE_APP):
         if _RPC:
             xmlrpc.XMLRPC.__init__(self)
 
-        if not 'no_splash' in _PARAM and not 'nogui' in _PARAM and not 'server_only' in _PARAM:
-            bitmap = wx.Bitmap(SCR_PATH + '/pytigon_splash.jpeg', wx.BITMAP_TYPE_JPEG)
-            splash = wx.adv.SplashScreen(bitmap, wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
-                                         100, None, -1, wx.DefaultPosition, wx.DefaultSize,
-                                         wx.BORDER_SIMPLE | wx.STAY_ON_TOP)
+        if (
+            not "no_splash" in _PARAM
+            and not "nogui" in _PARAM
+            and not "server_only" in _PARAM
+        ):
+            bitmap = wx.Bitmap(SCR_PATH + "/pytigon_splash.jpeg", wx.BITMAP_TYPE_JPEG)
+            splash = wx.adv.SplashScreen(
+                bitmap,
+                wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT,
+                100,
+                None,
+                -1,
+                wx.DefaultPosition,
+                wx.DefaultSize,
+                wx.BORDER_SIMPLE | wx.STAY_ON_TOP,
+            )
             splash.Update()
             wx.Yield()
 
@@ -419,26 +475,34 @@ class SchApp(App, _BASE_APP):
         self.websockets = {}
         self.websockets_callbacks = {}
 
-        self.gui_style = \
-            'app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))'
+        self.gui_style = (
+            "app.gui_style = tree(toolbar(file(exit,open),clipboard, statusbar))"
+        )
 
-        self.COLOUR_HIGHLIGHT = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-        self.COLOUR_BACKGROUND = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE))
-        self.COLOUR_SHADOW = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW))
-        self.COLOUR_DKSHADOW = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW))
-        self.COLOUR_ACTIVECATPION = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION))
-        self.COLOUR_INFOBK = \
-            colour_to_html(wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK))
+        self.COLOUR_HIGHLIGHT = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+        )
+        self.COLOUR_BACKGROUND = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
+        )
+        self.COLOUR_SHADOW = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DSHADOW)
+        )
+        self.COLOUR_DKSHADOW = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW)
+        )
+        self.COLOUR_ACTIVECATPION = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVECAPTION)
+        )
+        self.COLOUR_INFOBK = colour_to_html(
+            wx.SystemSettings.GetColour(wx.SYS_COLOUR_INFOBK)
+        )
 
         self.ctrl_process = {}
-        class callback():
+
+        class callback:
             def on_websocket_message(msg):
-                #pass
+                # pass
                 print("CALLBACK:", msg)
 
         self.add_websoket_callback("/schbuilder/clock/socket.io/", callback)
@@ -462,13 +526,13 @@ class SchApp(App, _BASE_APP):
         if tag in self.ctrl_process:
             self.ctrl_process[tag].append(fun)
         else:
-            self.ctrl_process[tag] = [fun, ]
+            self.ctrl_process[tag] = [fun]
 
     # some XML-RPC function calls for twisted server
     def xmlrpc_stop(self):
         """Closes the wx application."""
         self.frame.Close()  # Sending closing event
-        return 'Shutdown initiated'
+        return "Shutdown initiated"
 
     def xmlrpc_title(self, title):
         """Set the main window title
@@ -494,15 +558,15 @@ class SchApp(App, _BASE_APP):
             self.base_path = urljoin(self.base_address, self.base_app)
         else:
             self.base_path = self.base_address
-        if app and app != '':
+        if app and app != "":
             href = "/" + app + "/"
         else:
             href = "/"
 
-        self.http = httpclient.AppHttp(address+"/", self)
+        self.http = httpclient.AppHttp(address + "/", self)
         response = self.http.get(self, href)
         if response.ret_code != 200:
-            if not login(href, auth_type='basic'):
+            if not login(href, auth_type="basic"):
                 return 0
             else:
                 self.authorized = True
@@ -511,12 +575,12 @@ class SchApp(App, _BASE_APP):
         if response.ret_code != 200:
             return response
 
-        if app and app != '':
-            self.images = image.SchImage('/' + app + '/site_media/app.png')
-            response = self.http.get(self, '/' + app + '/')
+        if app and app != "":
+            self.images = image.SchImage("/" + app + "/site_media/app.png")
+            response = self.http.get(self, "/" + app + "/")
         else:
-            self.images = image.SchImage('/site_media/app.png')
-            response = self.http.get(self, '/')
+            self.images = image.SchImage("/site_media/app.png")
+            response = self.http.get(self, "/")
 
         ret_str = response.str()
 
@@ -525,7 +589,7 @@ class SchApp(App, _BASE_APP):
         self.mp.close()
 
         if hasattr(self, "StartCoroutine"):
-            if self.base_address.startswith('http://127.0.0.2'):
+            if self.base_address.startswith("http://127.0.0.2"):
                 self.StartCoroutine(self.init_websockets, self)
             if _DEBUG:
                 self.StartCoroutine(self.test_websockets, self)
@@ -540,10 +604,10 @@ class SchApp(App, _BASE_APP):
         else:
             self.base_path = self.base_address
 
-        if app and app != '':
-            response = self.http.get(self, '/' + app + '/')
+        if app and app != "":
+            response = self.http.get(self, "/" + app + "/")
         else:
-            response = self.http.get(self, '/')
+            response = self.http.get(self, "/")
         ret = response.str()
         self.mp = SimpleTabParser()
         self.mp.feed(ret)
@@ -553,7 +617,9 @@ class SchApp(App, _BASE_APP):
         count = 999
         while True:
             await asyncio.sleep(1)
-            await self.websocket_send("/schbuilder/clock/socket.io/", {"title": "Hello world %s" % count })
+            await self.websocket_send(
+                "/schbuilder/clock/socket.io/", {"title": "Hello world %s" % count}
+            )
             count -= 1
 
     async def init_websockets(self):
@@ -562,30 +628,34 @@ class SchApp(App, _BASE_APP):
             for key, value in self.websockets.items():
                 if value.status == 1:
                     value.status = 2
-                    tasks.append(httpclient.local_websocket(self.base_address.replace('http://', "ws://")+key, value.input_queue, value))
+                    tasks.append(
+                        httpclient.local_websocket(
+                            self.base_address.replace("http://", "ws://") + key,
+                            value.input_queue,
+                            value,
+                        )
+                    )
             if tasks:
                 await asyncio.wait(tasks)
 
-
     def create_websocket(self, websocket_id, callback):
-        local = True if app.base_address.startswith('http://127.0.0.2') else False
+        local = True if app.base_address.startswith("http://127.0.0.2") else False
         create_websocket_client(self, websocket_id, local, callback)
         if local:
             self.StartCoroutine(self.init_websockets, self)
 
-
     def make_href(self, href):
-        if self.base_app and href.startswith('/'):
-            return '/' + self.base_app + href
+        if self.base_app and href.startswith("/"):
+            return "/" + self.base_app + href
         else:
             return href
 
     def SetTopWindow(self, frame):
         wx.App.SetTopWindow(self, frame)
-        icon = wx.Icon(SCR_PATH + '/pytigon.ico', wx.BITMAP_TYPE_ICO)
+        icon = wx.Icon(SCR_PATH + "/pytigon.ico", wx.BITMAP_TYPE_ICO)
         frame.SetIcon(icon)
 
-        if hasattr(frame, 'statusbar') and frame.statusbar:
+        if hasattr(frame, "statusbar") and frame.statusbar:
             self.thread_manager = SchThreadManager(self, frame.statusbar)
         if _INSPECTION:
             self.ShowInspectionTool()
@@ -617,7 +687,7 @@ class SchApp(App, _BASE_APP):
         """
         winparent = win
         while winparent:
-            if hasattr(winparent, 'get_app_http'):
+            if hasattr(winparent, "get_app_http"):
                 return winparent.get_app_http()
             winparent = winparent.GetParent()
         return self.http
@@ -650,7 +720,7 @@ class SchApp(App, _BASE_APP):
                     adr = address_or_parser
                 response = http.get(win, adr)
             if response.ret_code == 404:
-                raise Exception('http', '404')
+                raise Exception("http", "404")
             ptr = response.str()
             mp = ShtmlParser()
             mp.process(ptr, address_or_parser)
@@ -661,7 +731,7 @@ class SchApp(App, _BASE_APP):
                 mp = address_or_parser
             else:
                 mp = ShtmlParser()
-                mp.process('<html><body></body></html>')
+                mp.process("<html><body></body></html>")
                 mp.address = None
         return (mp, adr)
 
@@ -696,13 +766,13 @@ class SchApp(App, _BASE_APP):
 
     def get_working_dir(self):
         """return pytigon working director - ~/.pytigon"""
-        return os.path.join(os.path.expanduser('~'), '.pytigon/')
+        return os.path.join(os.path.expanduser("~"), ".pytigon/")
 
     def _get_parm_for_server(self):
-        ret = ''
+        ret = ""
         for pos in standard_tab_colour():
-            ret = ret + pos[0] + ':' + pos[1] + ','
-        return ret[:-1].replace('#', '')
+            ret = ret + pos[0] + ":" + pos[1] + ","
+        return ret[:-1].replace("#", "")
 
     def _install_plugins(self):
         home_dir = self.get_working_dir()
@@ -710,33 +780,32 @@ class SchApp(App, _BASE_APP):
         if p:
             sys.path.append(home_dir)
             for plugin in p:
-                if not '/' in plugin:
+                if not "/" in plugin:
                     continue
-                if plugin == '' or plugin.startswith('standard/'):
+                if plugin == "" or plugin.startswith("standard/"):
                     continue
                 print(plugin)
-                app_name = plugin.split('/')[0]
-                plugin_name = plugin.split('/')[1]
-                if plugin_name == 'install':
-                    plugins_cache = ''
+                app_name = plugin.split("/")[0]
+                plugin_name = plugin.split("/")[1]
+                if plugin_name == "install":
+                    plugins_cache = ""
                 else:
-                    plugins_cache = 'plugins_cache/'
+                    plugins_cache = "plugins_cache/"
                 if not os.path.exists(home_dir + plugins_cache + str(app_name)):
                     os.mkdir(home_dir + plugins_cache + str(app_name))
-                    ini = open(home_dir + plugins_cache + str(app_name)
-                               + '/__init__.py', 'w')
-                    ini.write(' ')
+                    ini = open(
+                        home_dir + plugins_cache + str(app_name) + "/__init__.py", "w"
+                    )
+                    ini.write(" ")
                     ini.close()
-                if not os.path.exists(home_dir + plugins_cache + str(plugin)
-                                              + '.zip'):
+                if not os.path.exists(home_dir + plugins_cache + str(plugin) + ".zip"):
                     http = wx.GetApp().http
-                    response = http.get(self, '/schsys/plugins/' + str(plugin) + '/')
+                    response = http.get(self, "/schsys/plugins/" + str(plugin) + "/")
                     z_data = response.ptr()
-                    x = open(home_dir + plugins_cache + str(plugin) + '.zip',
-                             'wb')
+                    x = open(home_dir + plugins_cache + str(plugin) + ".zip", "wb")
                     x.write(z_data)
                     x.close()
-                    zip_name = home_dir + plugins_cache + str(plugin) + '.zip'
+                    zip_name = home_dir + plugins_cache + str(plugin) + ".zip"
                     extract_to = home_dir + plugins_cache + str(app_name)
                     zip_handle = zipfile.ZipFile(zip_name)
                     extractall(zip_handle, extract_to)
@@ -745,24 +814,30 @@ class SchApp(App, _BASE_APP):
     def on_exit(self):
         if self.task_manager:
             if len(self.task_manager.list_threads(all=False)) > 0:
-                dlg = wx.MessageDialog(None, _("There are background tasks - kill?"), _("Warning"),
-                                       wx.YES_NO | wx.ICON_QUESTION)
+                dlg = wx.MessageDialog(
+                    None,
+                    _("There are background tasks - kill?"),
+                    _("Warning"),
+                    wx.YES_NO | wx.ICON_QUESTION,
+                )
                 result = dlg.ShowModal()
                 if result == wx.ID_YES:
                     self.task_manager.kill_all()
 
     def run_script(self, app_name, script_path):
         with open(script_path, "rb") as s:
-            wx.CallAfter(self.GetTopWindow().new_main_page, '/' + app_name + '/run_script/', "Run script",
-                         {'script': s.read()})
-
+            wx.CallAfter(
+                self.GetTopWindow().new_main_page,
+                "/" + app_name + "/run_script/",
+                "Run script",
+                {"script": s.read()},
+            )
 
     def add_websoket_callback(self, websocket_id, callback):
         if websocket_id in self.websockets_callbacks:
             self.websockets_callbacks[websocket_id].append(callback)
         else:
-            self.websockets_callbacks[websocket_id] = [ callback, ]
-
+            self.websockets_callbacks[websocket_id] = [callback]
 
     async def websocket_send(self, websocket_id, msg):
         if websocket_id in self.websockets:
@@ -770,31 +845,29 @@ class SchApp(App, _BASE_APP):
             if obj:
                 await obj
 
-
     def on_websocket_callback(self, client, event_name, argv):
         if client.websocket_id in self.websockets_callbacks:
             for callback in self.websockets_callbacks[client.websocket_id]:
                 if hasattr(callback, event_name):
-                    if 'channel' in argv:
-                        if hasattr(callback, 'accept_channel'):
-                            if not getattr(callback, 'accept_channel')(argv['channel']):
+                    if "channel" in argv:
+                        if hasattr(callback, "accept_channel"):
+                            if not getattr(callback, "accept_channel")(argv["channel"]):
                                 continue
                     getattr(callback, event_name)(**argv)
 
-
     def on_websocket_connect(self, client, websocket_id, response):
-        return self.on_websocket_callback(client, "on_websocket_connect", { 'response': response})
-
+        return self.on_websocket_callback(
+            client, "on_websocket_connect", {"response": response}
+        )
 
     def on_websocket_open(self, client, websocket_id):
         return self.on_websocket_callback(client, "on_websocket_open", {})
 
-
     def on_websocket_message(self, client, websocket_id, msg):
-        return self.on_websocket_callback(client, "on_websocket_message", msg )
+        return self.on_websocket_callback(client, "on_websocket_message", msg)
 
 
-def login(base_href, auth_type=None, username = None):
+def login(base_href, auth_type=None, username=None):
     """Show login form"""
     dlg = LoginDialog(None, 101, _("Pytigon - login"), username=username)
 
@@ -803,32 +876,40 @@ def login(base_href, auth_type=None, username = None):
         username = dlg.text1.GetValue()
         password = dlg.text2.GetValue()
 
-        parm = {'username': username,
-                'password': password,
-                'next': '/schsys/ok/',
-                'client_param': wx.GetApp()._get_parm_for_server(),
-                }
+        parm = {
+            "username": username,
+            "password": password,
+            "next": "/schsys/ok/",
+            "client_param": wx.GetApp()._get_parm_for_server(),
+        }
 
         if auth_type == None:
-            wx.GetApp().http.post(wx.GetApp(), '/schsys/do_login/?from_pytigon=1', parm, credentials=(username, password))
+            wx.GetApp().http.post(
+                wx.GetApp(),
+                "/schsys/do_login/?from_pytigon=1",
+                parm,
+                credentials=(username, password),
+            )
 
             ret_str = wx.GetApp().http.str()
-            if 'RETURN_OK' in ret_str:
+            if "RETURN_OK" in ret_str:
                 dlg.Destroy()
                 return True
             else:
-                if not 'id_password' in ret_str:
+                if not "id_password" in ret_str:
                     dlg.Destroy()
                     return False
                 else:
-                    dlg.message.SetLabel(_('Failed login attempt!'))
+                    dlg.message.SetLabel(_("Failed login attempt!"))
         else:
-            ret, newaddr = wx.GetApp().http.get(wx.GetApp(), base_href, credentials=(username, password))
+            ret, newaddr = wx.GetApp().http.get(
+                wx.GetApp(), base_href, credentials=(username, password)
+            )
             if ret == 200:
                 dlg.Destroy()
                 return True
             else:
-                dlg.message.SetLabel(_('Failed login attempt! http error: %s') % ret)
+                dlg.message.SetLabel(_("Failed login attempt! http error: %s") % ret)
     dlg.Destroy()
     return False
 
@@ -836,47 +917,47 @@ def login(base_href, auth_type=None, username = None):
 def _main_init():
     global CWD_PATH, _PARAM, app
 
-    args = _PARAM['args']
+    args = _PARAM["args"]
     apps = []
-    address = 'http://127.0.0.2'
+    address = "http://127.0.0.2"
     app_title = _("Pytigon")
-    app_name = ''
+    app_name = ""
 
     app = SchApp()
-    if 'menu_always' in _PARAM:
+    if "menu_always" in _PARAM:
         app.menu_always = True
-    if 'rpc' in _PARAM:
-        app.rpc = int(_PARAM['rpc'])
-    if 'param' in _PARAM:
-        app.param = _PARAM['param']
-    if 'embeded_browser' in _PARAM:
+    if "rpc" in _PARAM:
+        app.rpc = int(_PARAM["rpc"])
+    if "param" in _PARAM:
+        app.param = _PARAM["param"]
+    if "embeded_browser" in _PARAM:
         app.embeded_browser = True
     else:
         app.embeded_browser = False
-    if 'extern_prj' in _PARAM:
+    if "extern_prj" in _PARAM:
         extern_prj = True
     else:
         extern_prj = False
-    if 'address' in _PARAM:
-        address = _PARAM['address']
+    if "address" in _PARAM:
+        address = _PARAM["address"]
 
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
+    os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
 
     if len(args) > 0:
-        if '.ptig' in args[0].lower():
-            prg_name = args[0].split('/')[-1].split('\\')[-1]
-            x = prg_name.split('.')
-            if len(x)==2 or ( len(x)>2 and x[-2].lower()=='inst'):
+        if ".ptig" in args[0].lower():
+            prg_name = args[0].split("/")[-1].split("\\")[-1]
+            x = prg_name.split(".")
+            if len(x) == 2 or (len(x) > 2 and x[-2].lower() == "inst"):
                 prg_name2 = x[0]
-                path = os.path.join(schserw_settings.PRJ_PATH, '_schremote')
+                path = os.path.join(schserw_settings.PRJ_PATH, "_schremote")
                 sys.path.append(path)
                 if not pytigon_install.install(args[0], prg_name2):
                     return (None, None)
-                #sys.path.remove(path)
+                # sys.path.remove(path)
                 return (None, None)
                 CWD_PATH = schserw_settings.PRJ_PATH + "/" + prg_name2
             else:
-                if len(x)>3:
+                if len(x) > 3:
                     prg_name2 = x[0]
                     app_name2 = x[-2]
                     prj = x[-3]
@@ -890,17 +971,17 @@ def _main_init():
                     return (None, None)
         else:
             arg = args[0].strip()
-            if arg == 'embeded' or '.' in arg or '/' in arg:
-                if arg != 'embeded':
-                    CWD_PATH = schserw_settings.PRJ_PATH + '/_schremote'
+            if arg == "embeded" or "." in arg or "/" in arg:
+                if arg != "embeded":
+                    CWD_PATH = schserw_settings.PRJ_PATH + "/_schremote"
 
-                tmp = arg.replace('//', '$$$')
-                if '/' in arg:
-                    x = tmp.split('/', 1)
-                    address = x[0].replace('$$$', '//')
-                    if len(x)>1:
+                tmp = arg.replace("//", "$$$")
+                if "/" in arg:
+                    x = tmp.split("/", 1)
+                    address = x[0].replace("$$$", "//")
+                    if len(x) > 1:
                         app_name = x[1]
-                        if app_name.endswith('/'):
+                        if app_name.endswith("/"):
                             app_name = app_name[:-1]
                 else:
                     address = arg
@@ -916,55 +997,60 @@ def _main_init():
 
     httpclient.init_embeded_django()
 
-    if not ( 'channels' in _PARAM or 'rpc' in _PARAM):
+    if not ("channels" in _PARAM or "rpc" in _PARAM):
         wx.Yield()
 
     import settings_app
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings_app'
+
+    os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
     from django.conf import settings
-    if 'sync' in _PARAM:
+
+    if "sync" in _PARAM:
         from django.core.management.commands.migrate import Command as migrate_command
+
         migrate = migrate_command()
         try:
-            migrate.run_from_argv(['manage.py', 'migrate'])
+            migrate.run_from_argv(["manage.py", "migrate"])
         except SystemExit:
             pass
-    if 'loaddb' in _PARAM:
+    if "loaddb" in _PARAM:
         from django.core.management.commands.loaddata import Command as load_command
+
         load = load_command()
         try:
-            load.run_from_argv(['manage.py', 'loaddata'])
+            load.run_from_argv(["manage.py", "loaddata"])
         except:
             pass
 
     cwd = CWD_PATH
     inst_dir = SCR_PATH
-    if inst_dir == '':
+    if inst_dir == "":
         inst_dir = cwd
 
-    settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/schappdata/schplugins')
-    settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/schappdata/schplugins')
-    settings.TEMPLATES[0]['DIRS'].insert(0, inst_dir + '/../templates')
-    settings.TEMPLATES[0]['DIRS'].insert(0, cwd + '/templates')
+    settings.TEMPLATES[0]["DIRS"].insert(0, inst_dir + "/schappdata/schplugins")
+    settings.TEMPLATES[0]["DIRS"].insert(0, cwd + "/schappdata/schplugins")
+    settings.TEMPLATES[0]["DIRS"].insert(0, inst_dir + "/../templates")
+    settings.TEMPLATES[0]["DIRS"].insert(0, cwd + "/templates")
 
     for a in apps:
         settings.INSTALLED_APPS.append(a)
 
     port = 0
-    if 'server_only' in _PARAM:
+    if "server_only" in _PARAM:
         port = 80
-        if ':' in address:
-            l = address.split(':')
+        if ":" in address:
+            l = address.split(":")
             if len(l) == 3:
                 port = int(l[2])
-        address = 'embeded'
-    if address == 'embeded':
+        address = "embeded"
+    if address == "embeded":
         import socket
         from schlib.schdjangoext.server import run_server
-        if 'server_only' in _PARAM:
-            address = '127.0.0.1'
+
+        if "server_only" in _PARAM:
+            address = "127.0.0.1"
         else:
-            address = '127.0.0.3'
+            address = "127.0.0.3"
         if port == 0:
             port = 8000
         test = True
@@ -979,14 +1065,15 @@ def _main_init():
                 port += 1
 
         server = run_server(address, port, prod=False)
-        address = 'http://' + address + ':' + str(port)
+        address = "http://" + address + ":" + str(port)
     else:
         from schlib.schtasks.base_task import get_process_manager
+
         app.task_manager = get_process_manager()
         server = None
 
-    settings.BASE_URL = 'http://' + address
-    settings.URL_ROOT_FOLDER = ''
+    settings.BASE_URL = "http://" + address
+    settings.URL_ROOT_FOLDER = ""
 
     init_ret = app._init2(address, app_name)
     if init_ret != 200:
@@ -1007,69 +1094,81 @@ def _main_init():
 
     autologin = True
     for row in tab:
-        if row[0].data == 'autologin':
-            if row[1].data == '1':
+        if row[0].data == "autologin":
+            if row[1].data == "1":
                 autologin = True
             else:
                 autologin = False
-        elif row[0].data == 'gui_style':
+        elif row[0].data == "gui_style":
             app.gui_style = row[1].data
-        elif row[0].data == 'csrf_token':
+        elif row[0].data == "csrf_token":
             app.csrf_token = row[1].data
-        elif 'start_page' in row[0].data:
-            app.start_pages.extend([x for x in row[1].data.split(';') if x and x != 'None'])
-        elif row[0].data == 'title':
+        elif "start_page" in row[0].data:
+            app.start_pages.extend(
+                [x for x in row[1].data.split(";") if x and x != "None"]
+            )
+        elif row[0].data == "title":
             app.title = row[1].data
-        elif row[0].data == 'plugins':
+        elif row[0].data == "plugins":
             if row[1].data and row[1].data != "":
-                app.plugins = row[1].data.split(';')
+                app.plugins = row[1].data.split(";")
 
-    if 'server_only' in _PARAM:
-        app.gui_style = 'app.gui_style = tray(file(exit,open))'
+    if "server_only" in _PARAM:
+        app.gui_style = "app.gui_style = tray(file(exit,open))"
 
     app._install_plugins()
 
     ready_to_run = True
 
-
-    if not app.authorized and ( (autologin and not 'username' in _PARAM) or ('username' in _PARAM and 'password' in _PARAM)):
-        if 'username' in _PARAM:
-            username2 = _PARAM['username']
-            password2 = _PARAM['password']
+    if not app.authorized and (
+        (autologin and not "username" in _PARAM)
+        or ("username" in _PARAM and "password" in _PARAM)
+    ):
+        if "username" in _PARAM:
+            username2 = _PARAM["username"]
+            password2 = _PARAM["password"]
         else:
-            username2 = 'auto'
-            password2 = 'anawa'
+            username2 = "auto"
+            password2 = "anawa"
 
         ready_to_run = False
-        response = app.http.post(app, "/" + app_name + '/schsys/do_login/?from_pytigon=1' if app_name else '/schsys/do_login/?from_pytigon', {
-            #'csrfmiddlewaretoken': app.csrf_token,
-            'username': username2,
-            'password': password2,
-            'next': address + "/" + app_name + '/schsys/ok/' if app_name else  address + '/schsys/ok/',
-            'client_param': app._get_parm_for_server(),
-        })
+        response = app.http.post(
+            app,
+            "/" + app_name + "/schsys/do_login/?from_pytigon=1"
+            if app_name
+            else "/schsys/do_login/?from_pytigon",
+            {
+                #'csrfmiddlewaretoken': app.csrf_token,
+                "username": username2,
+                "password": password2,
+                "next": address + "/" + app_name + "/schsys/ok/"
+                if app_name
+                else address + "/schsys/ok/",
+                "client_param": app._get_parm_for_server(),
+            },
+        )
         ret_str = response.str()
-        if 'RETURN_OK' in ret_str:
+        if "RETURN_OK" in ret_str:
             app.authorized = True
             ready_to_run = True
-    if not app.authorized and 'username' in _PARAM:
+    if not app.authorized and "username" in _PARAM:
         ready_to_run = False
         href = "/" + app_name + "/" if app_name else "/"
-        if login(href, auth_type=None, username=_PARAM['username']):
+        if login(href, auth_type=None, username=_PARAM["username"]):
             app.authorized = True
             ready_to_run = True
     if reinit:
         app._re_init(address, app_name)
-    return (ready_to_run, True if 'nogui' in _PARAM else False)
+    return (ready_to_run, True if "nogui" in _PARAM else False)
 
 
 def _main_run():
     app = wx.GetApp()
     app.locale = wx.Locale(wx.LANGUAGE_DEFAULT)
-    app.locale.AddCatalogLookupPathPrefix(SCR_PATH + '/schcli/locale')
+    app.locale.AddCatalogLookupPathPrefix(SCR_PATH + "/schcli/locale")
 
-    app.locale.AddCatalog('wx')
-    app.locale.AddCatalog('pytigon')
+    app.locale.AddCatalog("wx")
+    app.locale.AddCatalog("pytigon")
 
     if app.embeded_browser:
         frame = browserframe.SchBrowserFrame(
@@ -1086,12 +1185,12 @@ def _main_run():
             app.title,
             wx.DefaultPosition,
             wx.Size(_APP_SIZE[0], _APP_SIZE[1]),
-            video = _VIDEO
+            video=_VIDEO,
         )
 
     frame.CenterOnScreen()
 
-    if not 'tray' in app.gui_style:
+    if not "tray" in app.gui_style:
         frame.Show()
 
     destroy_fun_tab = frame.destroy_fun_tab
@@ -1109,12 +1208,12 @@ def _main_run():
         reactor.listenTCP(app.rpc, server.Site(app))
 
     if _WEBSOCKET:
-        if ';' in _WEBSOCKET:
-            websockets  = _WEBSOCKET.split(';')
+        if ";" in _WEBSOCKET:
+            websockets = _WEBSOCKET.split(";")
         else:
-            websockets = [ _WEBSOCKET, ]
+            websockets = [_WEBSOCKET]
 
-        local = True if app.base_address.startswith('http://127.0.0.2') else False
+        local = True if app.base_address.startswith("http://127.0.0.2") else False
 
         for websocket_id in websockets:
             create_websocket_client(app, websocket_id, local)
@@ -1122,8 +1221,8 @@ def _main_run():
     if _INSPECTION == True:
         app.MainLoop()
     else:
-        if 'channels' in _PARAM or 'rpc' in _PARAM or 'websocket' in _PARAM:
-            #loop = get_event_loop()
+        if "channels" in _PARAM or "rpc" in _PARAM or "websocket" in _PARAM:
+            # loop = get_event_loop()
             LOOP.run_until_complete(app.MainLoop())
         else:
             app.MainLoop()
@@ -1142,11 +1241,11 @@ def main():
     ready_to_run, nogui = _main_init()
     if ready_to_run:
         if nogui:
-            while (True):
+            while True:
                 time.sleep(100)
         else:
             _main_run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

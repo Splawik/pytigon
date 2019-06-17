@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Data structures"
 PRJ_NAME = "_schdata"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['tablet_modern', 'tablet_modern', 'auto']
 
@@ -126,5 +126,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 12:16:44'
+GEN_TIME = '2019.06.17 21:20:55'
 
