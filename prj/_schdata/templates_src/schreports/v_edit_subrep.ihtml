@@ -28,7 +28,7 @@
                             a class=menu-item bg-primary popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/edit__rep/,,,name=update/inline,,,title=update,,,target=_top
                                 i class=fa fa-pencil-square-o fa-2x
                                 
-                            a class=menu-item bg-danger popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/delete/,,,name=delete,,,title=delete,,,target=_top
+                            a class=menu-item bg-danger popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/delete/,,,name=delete,,,title=delete,,,target=popup_delete
                                 i class=fa fa-trash-o fa-2x
                                                                                                 
                             a class=menu-item,,,data-inline=true,,,href={{base_pat}}schreports/table/Report/{{object.id}}/action/move_down,,,name=move_down,,,title=Move down
