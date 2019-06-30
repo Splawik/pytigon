@@ -262,7 +262,7 @@ with open("/etc/nginx/sites-available/pytigon", "wt") as conf:
         port += 1
     if MAIN_PRJ:
         if NGINX_INCLUDE:
-            conf.write("    include %s\n\n" % NGINX_INCLUDE)
+            conf.write("    include %s;\n\n" % NGINX_INCLUDE)
         conf.write(CFG_END % ("http://127.0.0.1", port))
 
     if MAIN_PRJ:
