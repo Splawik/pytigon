@@ -43,7 +43,6 @@ ASGI_APPLICATION = None
 
 def init_embeded_django():
     global ASGI_APPLICATION
-    os.environ['EMBEDED_DJANGO_SERVER'] = '1'
     import django
     django.setup()
     from channels.routing import get_default_application

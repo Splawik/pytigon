@@ -58,6 +58,7 @@ sys.path.append(ROOT_PATH)
 sys.path.append(ROOT_PATH + "/schappdata")
 
 os.environ["LD_LIBRARY_PATH"] = ROOT_PATH + "/ext_prg/tcc"
+os.environ['EMBEDED_DJANGO_SERVER'] = '1'
 
 from schlib import init_paths
 
