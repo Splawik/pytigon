@@ -32,7 +32,7 @@ from django.core import serializers
 
 from schlib.schdjangoext.tools import make_href
 from schlib.schhtml.htmlviewer import stream_from_html
-from schlib.schdjangoext.odf_render import render_odf, render_xlsx
+from schlib.schdjangoext.spreadsheet_render import render_odf, render_ooxml
 from schlib.schtools import schjson
 from schlib.schparser.html_parsers import SimpleTabParserBase
 
@@ -144,11 +144,8 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
             else:
                 template2 = template
 
-        #try:
-        #    TemplateResponse.__init__(self, request, template2, context,
-        #                              content_type, status, current_app, charset=charset, using=using)
-        #except:
         TemplateResponse.__init__(self, request, template2, context, content_type, status, current_app)
+
 
     def _get_model_template(self, context, doc_type):
         if context and 'object' in context:
@@ -185,7 +182,7 @@ class ExtTemplateResponse(LocalizationTemplateResponse):
                 transform_list = list(context['object_list'])
             else:
                 transform_list = context['object']
-            stream_out = render_xlsx(self.template_name, transform_list)
+            stream_out = render_ooxml(self.template_name, transform_list)
             self.content = stream_out.getvalue()
             file_in_name = os.path.basename(self.template_name[0])
             self['Content-Disposition'] = 'attachment; filename=%s' % file_in_name

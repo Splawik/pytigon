@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-The module enables the dynamic creation of documents in a ods format (https://en.wikipedia.org/wiki/OpenDocument).
-Process of documents creation begins with the creation of the template. It is also in ods format.
+The module enables the dynamic creation of documents in a odf format (https://en.wikipedia.org/wiki/OpenDocument).
+Process of documents creation begins with the creation of the template. It is also in odf format.
 Template is a normal static document supplemented with dynamic structures placed in comments to the selected cells.
 The syntax of these additional comments is consistent with django. There are additional syntax elements
 to control the place where dynamic structures are activated.
@@ -38,14 +38,19 @@ from django.conf import settings
 from django.template.exceptions import TemplateDoesNotExist
 
 from schlib.schfs.vfstools import get_temp_filename
-from schlib.schodf.odf_process import DocTransform
-
-from schlib.schodf.xlsx_process import transform_xlsx
-
+from schlib.schspreadsheet.odf_process import OdfDocTransform
+from schlib.schspreadsheet.ooxml_process import OOXmlDocTransform
 
 template_dirs = getattr(settings, 'TEMPLATES')[0]['DIRS']
 
-class DocTemplateTransform(DocTransform):
+
+class OdfDocTemplateTransform(OdfDocTransform):
+    def process_template(self, doc_str, context):
+        return Template('{% load exsyntax %}' + doc_str).render(context)
+
+
+
+class OOXmlDocTemplateTransform(OOXmlDocTransform):
     def process_template(self, doc_str, context):
         return Template('{% load exsyntax %}' + doc_str).render(context)
 
@@ -81,7 +86,7 @@ class DefaultTbl(object):
     self.row=row
 
 
-def render_odf(template_name, context_instance=None, debug=None):
+def _render_doc(doc_type, template_name, context_instance=None, debug=None):
     """Render odf file content, save rendered file and return its name
 
     Args:
@@ -126,8 +131,13 @@ def render_odf(template_name, context_instance=None, debug=None):
         else:
             name = template_name
         name_out = get_temp_filename()
-        doc = DocTemplateTransform(name, name_out)
+        if doc_type == 'ODF':
+            doc = OdfDocTemplateTransform(name, name_out)
+        else:
+            doc = OOXmlDocTemplateTransform(name, name_out)
+
         ret = doc.process(context_instance, debug)
+
         if ret != 1:
             ret2 = (None, name)
             os.remove(name_out)
@@ -136,18 +146,11 @@ def render_odf(template_name, context_instance=None, debug=None):
     return ret2
 
 
-def render_to_response_odf(template_name, context_instance=None, debug=None):
-    """Render odf file content, save it to HttpResponse (see django.http.HttpResponse)
 
-    Args:
-        template_name - name of template. Template is odf file with special syntax.
-        context_instance - see django.template.Context
-        debug - if True - print some additional information to console
+def _render_doc_to_response(doc_type, doc_content_type, template_name, context_instance=None, debug=None):
 
-    Returns:
-        HttpResponse object
-    """
-    s = render_odf(template_name, context_instance, debug)
+    s = _render_doc(doc_type, template_name, context_instance, debug)
+
     if not s[0]:
         response = None
     else:
@@ -165,36 +168,38 @@ def render_to_response_odf(template_name, context_instance=None, debug=None):
     return response
 
 
-def render_xlsx(template_name, transform_list):
-    name = None
-    if template_name.__class__ in (list, tuple):
-        test = False
-        for tname in template_name:
-            if tname[0] == '/':
-                name = tname
-                if os.path.exists(name):
-                    test = True
-                    break
-            else:
-                for template_dir in template_dirs:
-                    name = template_dir + '/' + tname
-                    if os.path.exists(name):
-                        test = True
-                        break
-                if test:
-                    break
-        if not test:
-            raise TemplateDoesNotExist(";".join(template_name))
-    else:
-        name = template_name
+def render_odf(template_name, context_instance=None, debug=None):
+    return _render_doc('ODF', template_name, context_instance, debug)
 
-    if os.path.exists(name):
-        stream_in = open(name, "rb")
-    else:
-        stream_in = None
-    stream_out = io.BytesIO()
-    transform_xlsx(stream_in, stream_out, transform_list)
-    if stream_in:
-        stream_in.close()
 
-    return stream_out
+def render_ooxml(template_name, context_instance=None, debug=None):
+    return _render_doc('ODXML', template_name, context_instance, debug)
+
+
+def render_to_response_odf(template_name, context_instance=None, debug=None):
+    """Render odf file content, save it to HttpResponse (see django.http.HttpResponse)
+
+    Args:
+        template_name - name of template. Template is odf file with special syntax.
+        context_instance - see django.template.Context
+        debug - if True - print some additional information to console
+
+    Returns:
+        HttpResponse object
+    """
+    return _render_doc_to_response('ODF', 'application/vnd.oasis.opendocument.spreadsheet', template_name, context_instance, debug)
+
+
+def render_to_response_ooxml(template_name, context_instance=None, debug=None):
+    """Render odf file content, save it to HttpResponse (see django.http.HttpResponse)
+
+    Args:
+        template_name - name of template. Template is ooxml file with special syntax.
+        context_instance - see django.template.Context
+        debug - if True - print some additional information to console
+
+    Returns:
+        HttpResponse object
+    """
+    return _render_doc_to_response('OOXML', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', template_name, context_instance, debug)
+

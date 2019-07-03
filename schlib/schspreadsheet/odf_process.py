@@ -9,6 +9,7 @@
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
+# for more details.
 
 #Pytigon - wxpython and django application framework
 
@@ -42,7 +43,7 @@ def _enumerate_childs(node, tab=None):
     return rettab
 
 
-class DocTransform:
+class OdfDocTransform:
     """Transformate odf file"""
 
     def __init__(self, file_name_in, file_name_out=None):
@@ -226,7 +227,7 @@ class DocTransform:
         doc_content = z.read('content.xml').decode('utf-8')
         z.close()
         
-        if delete_from_zip(self.file_name_out, 'content.xml')==0:
+        if delete_from_zip(self.file_name_out, ['content.xml',])==0:
             return
 
         doc = xml.dom.minidom.parseString(doc_content.replace('&apos;', "'").\
@@ -277,6 +278,6 @@ class DocTransform:
         return 1
 
 if __name__ == '__main__':
-    x = DocTransform("./test/test.ods", "./test/test_out.ods")
+    x = OdfDocTransform("./test/test.ods", "./test/test_out.ods")
     context = { 'test': 1 }
     x.process(context, False)

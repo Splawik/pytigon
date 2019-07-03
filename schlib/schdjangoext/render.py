@@ -19,7 +19,7 @@
 
 from django.template import loader, Context
 
-from schlib.schdjangoext.odf_render import render_odf, render_xlsx
+from schlib.schdjangoext.spreadsheet_render import render_odf, render_xlsx
 from schlib.schhtml.htmlviewer import stream_from_html
 import os
 

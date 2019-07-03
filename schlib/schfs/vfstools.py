@@ -81,18 +81,21 @@ def get_temp_filename(base_name=None):
         return os.path.join(gettempdir(),boundary)
 
 
-def delete_from_zip(zip_name, del_file_name):
+
+def delete_from_zip(zip_name, del_file_names):
     """Delete one file from zip
 
     Args:
         zip_name - name of zip file
-        del_file_name - name of file to delete
+        del_file_names - name of file to delete
     """
+    del_file_names2 = [pos.lower() for pos in del_file_names]
+
     tmpname = get_temp_filename()
     zin = zipfile.ZipFile (zip_name, 'r')
     zout = zipfile.ZipFile (tmpname, 'w', zipfile.ZIP_STORED)
     for item in zin.infolist():
-        if item.filename.lower() != del_file_name.lower():
+        if not item.filename.lower() in del_file_names2:
             buffer = zin.read(item.filename)
             zout.writestr(item, buffer)
     zout.close()
