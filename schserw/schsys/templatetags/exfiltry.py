@@ -324,7 +324,7 @@ def genericfloatformat(text, arg="{: .2f}"):
 def genericfloatnullformat(text, arg="{: .2f}"):
     try:
         f = float(text)
-        if f:
+        if not f:
             return "-"
         else:
             return genericfloatformat(text, arg)
@@ -333,19 +333,19 @@ def genericfloatnullformat(text, arg="{: .2f}"):
 
 @register.filter(name='floatformat2')
 def floatformat2(text):
-    return genericfloatformat(text, "{ .2f}")
+    return genericfloatformat(text, "{: .2f}")
 
 @register.filter(name='floatformat3')
 def floatformat3(text):
-    return genericfloatformat(text, "{ .3f}")
+    return genericfloatformat(text, "{: .3f}")
 
 @register.filter(name='floatnullformat')
 def floatnullformat(text):
-    return genericfloatnullformat(text, "{ .2f}")
+    return genericfloatnullformat(text, "{: .2f}")
 
 @register.filter(name='floatnullformat3')
 def floatnullformat3(text):
-    return genericfloatnullformat(text, "{ .3f}")
+    return genericfloatnullformat(text, "{: .3f}")
 
 
 @register.filter(name='amount')
