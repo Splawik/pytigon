@@ -145,7 +145,7 @@ class OOXmlDocTransform(OdfDocTransform):
                     labels2 = labels + [key,]
                     labels2.sort(key=key_for_addr)
                     old = None                
-                    for l in lables2:                    
+                    for l in labels2:                    
                         if l == key:
                             break
                         old = l
@@ -278,11 +278,11 @@ class OOXmlDocTransform(OdfDocTransform):
         self.shared_strings = [ pos.text for pos in d2 ]
         id = 1
         while True:
-            if True:
+            try:
                 sheet_name = "xl/worksheets/sheet%d.xml" % id
                 sheet_str  = self.zip_file.read(sheet_name)
                 sheet = etree.XML(sheet_str)                
-                if True:
+                try:
                     sheet_rels_name = "xl/worksheets/_rels/sheet%d.xml.rels" % id
                     sheet_rels_str = self.zip_file.read(sheet_rels_name)
                     root = etree.XML(sheet_rels_str)
@@ -305,9 +305,11 @@ class OOXmlDocTransform(OdfDocTransform):
                                     print(comment_list)
                                     comment_list.remove(comment)
                         self.to_update.append((comments_name, root))
-
+                except:
+                    pass
                 sheet2 = self.handle_sheet(sheet, django_context)
                 self.to_update.append((sheet_name, sheet2))
+            except:
                 break
             id += 1
         if 'extended_transformations' in django_context:
