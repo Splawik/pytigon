@@ -19,7 +19,7 @@
 
 from django.template import loader, Context
 
-from schlib.schdjangoext.spreadsheet_render import render_odf, render_xlsx
+from schlib.schdjangoext.spreadsheet_render import render_odf, render_ooxml
 from schlib.schhtml.htmlviewer import stream_from_html
 import os
 
@@ -81,7 +81,7 @@ def render_doc(context):
         else:
             transform_list = context['object']
 
-        stream_out = render_xlsx(templates, transform_list)
+        stream_out = render_ooxml(templates, transform_list)
         ret_content = stream_out.getvalue()
         ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0])
         ret_attr['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
