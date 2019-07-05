@@ -319,8 +319,8 @@ class OOXmlDocTransform(OdfDocTransform):
         delete_from_zip(self.file_name_out, [pos[0] for pos in self.to_update])
 
         z = zipfile.ZipFile(self.file_name_out, 'a', zipfile.ZIP_DEFLATED)
-        for pos in self.to_update:            
-            z.writestr(pos[0], etree.tostring(pos[1], pretty_print=True).replace('<tmp>', '').replace('</tmp>', ''))
+        for pos in self.to_update:                        
+            z.writestr(pos[0], etree.tostring(pos[1], pretty_print=True).decode('utf-8').replace('<tmp>', '').replace('</tmp>', ''))
         z.close()
 
         return 1
