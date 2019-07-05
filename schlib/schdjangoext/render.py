@@ -76,15 +76,13 @@ def render_doc(context):
         return ret_attr, ret_content
 
     elif doc_type == 'xlsx':
-        #if ol:
-        #    transform_list = list(context['object_list'])
-        #else:
-        #    transform_list = context['object']
-
-        stream_out = render_ooxml(templates, Context(context))
-        ret_content = stream_out.getvalue()
-        ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0])
-        ret_attr['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        file_out, file_in = render_ooxml(templates, Context(context))
+        if file_out:
+            with open(file_out, "rb") as f:
+                ret_content = f.read()
+            os.remove(file_out)
+            ret_attr['Content-Disposition'] = 'attachment; filename=%s' % os.path.basename(templates[0])
+            ret_attr['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return ret_attr, ret_content
 
     elif doc_type == 'pdf':
