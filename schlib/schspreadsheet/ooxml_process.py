@@ -161,24 +161,27 @@ class OOXmlDocTransform(OdfDocTransform):
                     if '@' in value2:
                         x = value2.split('@')
                         values = [x[0], x[1]]
-                        if not x[0].startswith('^'):
+                        if not x[0].startswith('^') and not x[1].startswith('$'):
                             values[0] = '^' + values[0]
-                        if not x[1].startswith('$'):
                             values[1] = '$' + values[1]
                     else:
                         values = [ value2 ]
                     for v in values:
-                        print("A1:", v)
-                        if v.startswith('^'):
-                            value3 = v[1:]
+                        if v.startswith('^') or v.startswith('!!'):
+                            if v.startswith('!!'):
+                                value3 = v[2:]
+                            else:
+                                value3 = v[1:]
                             gparent = parent.getparent()
                             gparent.insert(gparent.index(parent), etree.XML("<tmp>%s</tmp>" % value3))
                         elif v.startswith('$'):
                             value3 = v[1:]
                             gparent = parent.getparent()
                             gparent.insert(gparent.index(parent)+1, etree.XML("<tmp>%s</tmp>" % value3))
+                        elif v.startswith('!'):
+                            parent.insert(parent.index(d[0]) + after, etree.XML("<tmp>%s</tmp>" % v[1:]))
                         else:
-                            parent.insert(parent.index(d[0])+after, etree.XML("<tmp>%s</tmp>" % value2))
+                            parent.insert(parent.index(d[0])+after, etree.XML("<tmp>%s</tmp>" % v))
             
 
     def shared_strings_to_inline(self, sheet):        
@@ -191,14 +194,17 @@ class OOXmlDocTransform(OdfDocTransform):
                 id = -1
             if id>=0:
                 s = self.shared_strings[id]
-                if s.startswith(':') and ('{{' in s or '{%' in s):
+                if s.startswith(':') and not s.startswith(':=') and ('{{' in s or '{%' in s):
                     pos.remove(v)
                     pos.attrib['t'] = ''
                     pos.append(etree.XML("<v>%s</v>" % s[1:]))
-                elif s.startswith('@') and ('{{' in s or '{%' in s):
+                elif (s.startswith('@') or s.startswith(':=')) and ('{{' in s or '{%' in s):
                     pos.remove(v)
                     pos.attrib['t'] = ''
-                    pos.append(etree.XML("<f>%s</f>" % s[1:]))
+                    if s.startswith(':='):
+                        pos.append(etree.XML("<f>%s</f>" % s[2:]))
+                    else:
+                        pos.append(etree.XML("<f>%s</f>" % s[1:]))
                 else:
                     pos.attrib['t'] = 'inlineStr'
                     pos.remove(v)
