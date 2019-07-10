@@ -13,7 +13,7 @@
 #Pytigon - wxpython and django application framework
 
 #author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+#copyright: "Copyright (C) ????/2019 Slawomir Cholaj"
 #license: "LGPL 3.0"
 #version: "0.1a"
 
@@ -24,7 +24,9 @@
 import zipfile
 import shutil
 import os
+import sys
 from lxml import etree
+from xml.sax.saxutils import escape
 import email.generator
 
 from django.template import Context
@@ -137,7 +139,6 @@ class OOXmlDocTransform(OdfDocTransform):
             for key, value in self.comments.items():
                 key2 = key.upper()
                 value2 = value.strip()
-                print(key2, value2)
                 after = 0
                 if key in labels:
                     label = key
@@ -194,17 +195,22 @@ class OOXmlDocTransform(OdfDocTransform):
                 id = -1
             if id>=0:
                 s = self.shared_strings[id]
-                if s.startswith(':') and not s.startswith(':=') and ('{{' in s or '{%' in s):
-                    pos.remove(v)
-                    pos.attrib['t'] = ''
-                    pos.append(etree.XML("<v>%s</v>" % s[1:]))
-                elif (s.startswith('@') or s.startswith(':=')) and ('{{' in s or '{%' in s):
+                
+                if (s.startswith('@') or s.startswith(':=')) and ('{{' in s or '{%' in s):
                     pos.remove(v)
                     pos.attrib['t'] = ''
                     if s.startswith(':='):
                         pos.append(etree.XML("<f>%s</f>" % s[2:]))
                     else:
                         pos.append(etree.XML("<f>%s</f>" % s[1:]))
+                elif s.startswith(':?') and ('{{' in s or '{%' in s):
+                    pos.remove(v)
+                    pos.attrib['t'] = ''
+                    pos.append(etree.XML("<vauto>%s</vauto>" % s[2:]))
+                elif s.startswith(':') and ('{{' in s or '{%' in s):
+                    pos.remove(v)
+                    pos.attrib['t'] = ''
+                    pos.append(etree.XML("<v>%s</v>" % s[1:]))
                 else:
                     pos.attrib['t'] = 'inlineStr'
                     pos.remove(v)
@@ -256,6 +262,27 @@ class OOXmlDocTransform(OdfDocTransform):
                     addr = d.attrib['ref']
                     d.attrib['ref'] = "A1:"+ max_addr
         
+        auto_list = sheet.findall(".//vauto", namespaces=sheet.nsmap)
+        for pos in auto_list:
+            parent = pos.getparent()
+            txt = pos.text
+            parent.remove(pos)
+            if txt != "":
+                try:
+                    x = float(txt)                                        
+                    parent.append(etree.XML("<v>%s</v>" % txt))
+                    continue
+                except:
+                    pass
+            
+            parent.attrib['t'] = 'inlineStr'            
+            try:
+                if txt:
+                    parent.append(etree.XML("<is><t>%s</t></is>" % escape(txt)))
+                else:
+                    parent.append(etree.XML("<is><t></t></is>"))
+            except:
+                print(txt)
 
     def handle_sheet(self, sheet, django_context):
         self.shared_strings_to_inline(sheet)
@@ -306,31 +333,25 @@ class OOXmlDocTransform(OdfDocTransform):
                                 if '{{' in pos2.text or '{%' in pos2.text:
                                     self.comments[ref] = pos2.text
                                     comment = pos2.getparent().getparent().getparent()                                                                        
-                                    print(comment)
                                     comment_list = comment.getparent()                                    
-                                    print(comment_list)
                                     comment_list.remove(comment)
                         self.to_update.append((comments_name, root))
-                except:
+                except KeyError:
                     pass
                 sheet2 = self.handle_sheet(sheet, django_context)
                 self.to_update.append((sheet_name, sheet2))
-            except:
+            except KeyError:
                 break
             id += 1
         if 'extended_transformations' in django_context:
             for pos in django_context['extended_transformations']:
                 self.extended_transformation(pos[0], pos[1])
-
         self.zip_file.close()
-        
         delete_from_zip(self.file_name_out, [pos[0] for pos in self.to_update])
-
         z = zipfile.ZipFile(self.file_name_out, 'a', zipfile.ZIP_DEFLATED)
         for pos in self.to_update:                        
             z.writestr(pos[0], etree.tostring(pos[1], pretty_print=True).decode('utf-8').replace('<tmp>', '').replace('</tmp>', ''))
         z.close()
-
         return 1
 
 if __name__ == '__main__':
