@@ -902,3 +902,21 @@ class BootstrapForm():
 def to_bootstrap(form):
     return BootstrapForm(form)
 
+
+@register.filter(name='ooxml')
+def ooxml(value):
+    if type(value) in (datetime.datetime, datetime.date):
+        if value:
+            return value.isoformat()
+        else:
+            return '0'
+    elif type(value) in (float, int):
+        if value:
+            return str(value)
+        else:
+            return '0'
+    else :
+        if value:
+            return str(value)
+        else:
+            return ""
