@@ -25,6 +25,10 @@ import zipfile
 import shutil
 import os
 import sys
+import datetime 
+
+import dateutil.parser
+
 from lxml import etree
 from xml.sax.saxutils import escape
 import email.generator
@@ -35,9 +39,7 @@ from django.template import Template
 from schlib.schspreadsheet.odf_process import OdfDocTransform
 from schlib.schfs.vfstools import delete_from_zip
 
-
 SECTION_WIDTH = ord('Z')-ord('A')+1
-
 
 def filter_attr(tab, attr, value):
     check_type = 0
@@ -93,6 +95,11 @@ def key_for_addr(excel_addr):
     col, row, col_as_int = col_row(excel_addr)
     return row * 1000 + col_as_int
 
+
+def date_to_float(d):
+    dt= d - datetime.datetime(1899, 12, 30)  
+    return dt.days + dt.seconds/86400
+    
 
 class OOXmlDocTransform(OdfDocTransform):
     """Transformate odf file"""
@@ -174,15 +181,15 @@ class OOXmlDocTransform(OdfDocTransform):
                             else:
                                 value3 = v[1:]
                             gparent = parent.getparent()
-                            gparent.insert(gparent.index(parent), etree.XML("<tmp>%s</tmp>" % value3))
+                            gparent.insert(gparent.index(parent), etree.XML("<tmp>%s</tmp>" % escape(value3)))
                         elif v.startswith('$'):
                             value3 = v[1:]
                             gparent = parent.getparent()
-                            gparent.insert(gparent.index(parent)+1, etree.XML("<tmp>%s</tmp>" % value3))
+                            gparent.insert(gparent.index(parent)+1, etree.XML("<tmp>%s</tmp>" % escape(value3)))
                         elif v.startswith('!'):
-                            parent.insert(parent.index(d[0]) + after, etree.XML("<tmp>%s</tmp>" % v[1:]))
+                            parent.insert(parent.index(d[0]) + after, etree.XML("<tmp>%s</tmp>" % escape(v[1:])))
                         else:
-                            parent.insert(parent.index(d[0])+after, etree.XML("<tmp>%s</tmp>" % v))
+                            parent.insert(parent.index(d[0])+after, etree.XML("<tmp>%s</tmp>" % escape(v)))
             
 
     def shared_strings_to_inline(self, sheet):        
@@ -195,30 +202,31 @@ class OOXmlDocTransform(OdfDocTransform):
                 id = -1
             if id>=0:
                 s = self.shared_strings[id]
-                
-                if (s.startswith('@') or s.startswith(':=')) and ('{{' in s or '{%' in s):
-                    pos.remove(v)
-                    pos.attrib['t'] = ''
-                    if s.startswith(':='):
-                        pos.append(etree.XML("<f>%s</f>" % s[2:]))
+                if s:
+                    if (s.startswith('@') or s.startswith(':=')) and ('{{' in s or '{%' in s):
+                        pos.remove(v)
+                        pos.attrib['t'] = ''
+                        if s.startswith(':='):
+                            pos.append(etree.XML("<f>%s</f>" % escape(s[2:])))
+                        else:
+                            pos.append(etree.XML("<f>%s</f>" % escape(s[1:])))
+                    elif s.startswith(':?') and ('{{' in s or '{%' in s):
+                        pos.remove(v)
+                        pos.attrib['t'] = ''
+                        pos.append(etree.XML("<vauto>%s</vauto>" % escape(s[2:])))
+                    elif s.startswith(':') and ('{{' in s or '{%' in s):
+                        pos.remove(v)
+                        pos.attrib['t'] = ''
+                        pos.append(etree.XML("<v>%s</v>" % escape(s[1:])))
                     else:
-                        pos.append(etree.XML("<f>%s</f>" % s[1:]))
-                elif s.startswith(':?') and ('{{' in s or '{%' in s):
-                    pos.remove(v)
-                    pos.attrib['t'] = ''
-                    pos.append(etree.XML("<vauto>%s</vauto>" % s[2:]))
-                elif s.startswith(':') and ('{{' in s or '{%' in s):
-                    pos.remove(v)
-                    pos.attrib['t'] = ''
-                    pos.append(etree.XML("<v>%s</v>" % s[1:]))
-                else:
-                    pos.attrib['t'] = 'inlineStr'
-                    pos.remove(v)
-                    pos.append(etree.XML("<is><t>%s</t></is>" % s))
-
+                        pos.attrib['t'] = 'inlineStr'
+                        pos.remove(v)
+                        pos.append(etree.XML("<is><t>%s</t></is>" % escape(s)))
+                        
 
     def transform_template(self, template_str, context):
-        template = Template(template_str)
+        template_header = "{% load exfiltry %}{% load exsyntax %}"
+        template = Template(template_header+template_str)
         return template.render(context)
 
 
@@ -267,10 +275,18 @@ class OOXmlDocTransform(OdfDocTransform):
             parent = pos.getparent()
             txt = pos.text
             parent.remove(pos)
-            if txt != "":
+            if txt != "" and txt != None:
+                if (len(txt)==10 or len(txt)==19) and txt[4]=='-' and txt[7] == '-':
+                    try:
+                        d = dateutil.parser.parse(txt)
+                        x = date_to_float(d)                    
+                        parent.append(etree.XML("<v>%f</v>" % x))
+                        continue
+                    except:
+                        pass                
                 try:
                     x = float(txt)                                        
-                    parent.append(etree.XML("<v>%s</v>" % txt))
+                    parent.append(etree.XML("<v>%s</v>" % escape(txt)))
                     continue
                 except:
                     pass
