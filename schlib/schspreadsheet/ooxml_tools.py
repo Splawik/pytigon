@@ -60,3 +60,20 @@ def make_update_filter_fun(cache_field_name, pivot_table_name, pivot_field_name,
             return False
             
         return _update_filter
+
+def make_group_fun(pivot_field_no, values_on):
+    def _update_group(doc_transform, root):
+        nonlocal pivot_field_no, values_on
+        values_tab = values_on.split(';')
+        fields = root.findall('.//pivotFields/pivotField', namespaces=root.nsmap)
+        field = fields[pivot_field_no]
+        items = field.findall(".//item", root.nsmap)
+        for item in items:
+            if 'n' in item.attrib and item.attrib['n'] in values_tab:
+                if 'sd' in item.attrib:
+                    del item.attrib['sd']
+            else:
+                item.attrib['sd'] = '0'                    
+        return True
+    
+    return _update_group
