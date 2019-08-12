@@ -31,7 +31,7 @@ from django.forms.widgets import HiddenInput, CheckboxSelectMultiple
 from django.template.loader import get_template
 from django.template import Context, Template
 from django.db.models.query import QuerySet
-from django.db.models import Count, Min, Sum, Avg
+from django.db.models import Count, Max, Min, Sum, Avg
 from django.utils.safestring import mark_safe
 
 import markdown2 as markdown
