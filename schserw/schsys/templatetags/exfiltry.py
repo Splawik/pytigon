@@ -920,3 +920,8 @@ def ooxml(value):
             return str(value)
         else:
             return ""
+
+
+@register.filter(name='nbsp')
+def nbsp(value):
+    return value.replace(' ', '&nbsp;')
