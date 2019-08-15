@@ -134,7 +134,8 @@ USER ${USER}
 # install python-for-android from current branch
 RUN virtualenv --python=python3 venv \
     && . venv/bin/activate \
+    && pip3 install --upgrade Cython==0.28.6 \
     && pip3 install -e .
 
-RUN apt install -y libncurses5-dev libncursesw5-dev libtinfo-dev libtinfo5
-RUN apt install -y autoconf libtool cmake libffi-dev pkg-config
+RUN sudo apt install -y libncurses5-dev libncursesw5-dev libtinfo-dev libtinfo5
+RUN sudo apt install -y autoconf libtool cmake libffi-dev pkg-config
