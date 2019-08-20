@@ -127,12 +127,20 @@ class OOXmlDocTransform(OdfDocTransform):
 
     def doc_process(self, doc, debug):
         pass
-
+    
     def extended_transformation(self, xml_name, script):
-        content = self.zip_file.read(xml_name)
-        root = etree.XML(content)
-        if script(self, root):
-            self.to_update.append((xml_name, root))
+        xml = None
+        for pos in self.to_update:
+            if xml_name == pos[0]:
+                xml = pos[1]
+                break
+        if xml:
+            script(self, xml)
+        else:
+            content = self.zip_file.read(xml_name)
+            root = etree.XML(content)
+            if script(self, root):
+                self.to_update.append((xml_name, root))   
 
     def add_comments(self, sheet):
         if self.comments:
