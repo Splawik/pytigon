@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2019-05-14 23:06:49
+// Transcrypt'ed from Python, 2019-09-01 13:21:11
 
     var __symbols__ = ['__py3.7__', '__esv5__'];
     var __all__ = {};
@@ -2372,7 +2372,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'db', {
@@ -2588,7 +2587,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'offline', {
@@ -2642,7 +2640,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'page', {
@@ -2671,7 +2668,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'popup', {
@@ -3546,7 +3542,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tabmenuitem', {
@@ -3574,7 +3569,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tbl', {
@@ -3759,7 +3753,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'tools', {
@@ -4354,7 +4347,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	__nest__ (
 		__all__,
 		'widget', {
@@ -4442,7 +4434,6 @@ function pytigon () {
 			}
 		}
 	);
-
 	(function () {
 		var __name__ = '__main__';
 		var Page = __init__ (__world__.page).Page;
@@ -4971,7 +4962,6 @@ function pytigon () {
 			__all__.sync_and_run = sync_and_run;
 		__pragma__ ('</all>')
 	}) ();
-
     return __all__;
 }
 window ['pytigon'] = pytigon ();

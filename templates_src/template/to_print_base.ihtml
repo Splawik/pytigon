@@ -45,16 +45,15 @@
         {% jscript_link 'bootstrap/js/bootstrap.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
 
-    {% jscript_link 'bootstrap_plugins/bootstrap-daterangepicker/daterangepicker.js' %}
+    {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
 
     {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
 
-
-    {% jscript_link 'jquery_plugins/ladda/spin.min.js' %}
-    {% jscript_link 'jquery_plugins/ladda/ladda.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
 
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
-    {% jscript_link 'bootstrap_plugins/bootstrap-typeahead.js' %}
+    {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
 
     %% ext_js_scripts
 

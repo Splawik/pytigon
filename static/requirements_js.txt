@@ -1,0 +1,32 @@
+jquery: https://github.com/jquery/jquery
+
+jquery_plugins/daterangepicker: https://github.com/dangrossman/daterangepicker
+jquery_plugins/perfect-scrollbar: https://github.com/mdbootstrap/perfect-scrollbar
+jquery_plugins/pivottable: https://github.com/nicolaskruchten/pivottable
+jquery_plugins/select2: https://github.com/select2/select2
+jquery_plugins/handsontable: https://github.com/Splawik/handsontable
+jquery_plugins/form: https://github.com/jquery-form/form
+jquery_plugins/stickyheader: https://gist.github.com/jeanmarc78/2387a822eaa3d1eb68cec96d3e20bc3c
+jquery_plugins/treeview
+jquery_plugins/draggable
+jquery_plugins/text3d
+jquery_plugins/csrf
+jquery_plugins/unique-element-id: https://github.com/jamierumbelow/jquery.unique-element-id
+
+
+
+bootstrap: https://getbootstrap.com/
+
+bootstrap_plugins/bootstrap-hover-dropdown: https://github.com/MatchbookLab/bootstrap-hover-dropdown
+bootstrap_plugins/bootstrap-select: https://github.com/snapappointments/bootstrap-select/
+bootstrap_plugins/bootstrap-slider: https://www.eyecon.ro/bootstrap-slider/
+bootstrap_plugins/bootstrap-table: https://github.com/wenzhixin/bootstrap-table/
+bootstrap_plugins/bootstrap-tree: https://github.com/jhfrench/bootstrap-tree
+bootstrap_plugins/summernote: https://github.com/summernote/summernote
+bootstrap_plugins/twbs-pagination: https://github.com/josecebe/twbs-pagination
+bootstrap_plugins/typeahead: https://github.com/biggora/bootstrap-ajax-typeahead
+bootstrap_plugins/ladda-bootstrap: https://github.com/msurguy/ladda-bootstrap/tree/master/dist
+
+django_select2: https://github.com/applegrew/django-select2
+filer: https://github.com/divio/django-filer
+
