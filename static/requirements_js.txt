@@ -1,3 +1,20 @@
+vanillajs_plugins/css_fab: https://codepen.io/Drkn/pen/grjJQv
+vanillajs_plugins/d3: https://github.com/d3/d3
+vanillajs_plugins/dygraph: http://dygraphs.com/
+vanillajs_plugins/leaflet: https://leafletjs.com/
+vanillajs_plugins/moment.js: https://github.com/moment/moment/
+vanillajs_plugins/pdfjs: https://mozilla.github.io/pdf.js/
+vanillajs_plugins/pygments: http://pygments.org/
+vanillajs_plugins/sprintf: https://github.com/maritz/sprintf.js
+vanillajs_plugins/tether: http://tether.io/
+vanillajs_plugins/video-js: https://github.com/videojs/video.js
+vanillajs_plugins/vs: https://microsoft.github.io/monaco-editor/
+vanillajs_plugins/xterm: https://github.com/xtermjs/xterm.js
+vanillajs_plugins/plotly: https://plot.ly/javascript/
+vanillajs_plugins/popper: https://popper.js.org/
+vanillajs_plugins/cookie: https://github.com/js-cookie/js-cookie
+vanillajs_plugins/lz-string: https://github.com/pieroxy/lz-string
+
 jquery: https://github.com/jquery/jquery
 
 jquery_plugins/daterangepicker: https://github.com/dangrossman/daterangepicker
@@ -6,14 +23,9 @@ jquery_plugins/pivottable: https://github.com/nicolaskruchten/pivottable
 jquery_plugins/select2: https://github.com/select2/select2
 jquery_plugins/handsontable: https://github.com/Splawik/handsontable
 jquery_plugins/form: https://github.com/jquery-form/form
-jquery_plugins/stickyheader: https://gist.github.com/jeanmarc78/2387a822eaa3d1eb68cec96d3e20bc3c
-jquery_plugins/treeview
-jquery_plugins/draggable
-jquery_plugins/text3d
-jquery_plugins/csrf
+jquery_plugins/draggable: https://css-tricks.com/snippets/jquery/draggable-without-jquery-ui/
+jquery_plugins/csrf: https://docs.djangoproject.com/en/dev/ref/csrf/
 jquery_plugins/unique-element-id: https://github.com/jamierumbelow/jquery.unique-element-id
-
-
 
 bootstrap: https://getbootstrap.com/
 
