@@ -115,8 +115,8 @@
 
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
     {% css_link 'bootstrap_plugins/modal-fullscreen.css' %}
+    {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
 
-    {% css_link 'jquery_plugins/ladda/ladda-themeless.min.css' %}
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
 
     {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
