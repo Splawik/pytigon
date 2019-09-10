@@ -20,129 +20,130 @@
 import os
 import sys
 import getopt
-import time
 
-from schserw.main_paths import get_main_paths
+if __name__ == '__main__':
 
-paths = get_main_paths()
+    from schserw.main_paths import get_main_paths
 
-from schlib.schtasks import schschedule
-from schlib.schhttptools import httpclient
+    paths = get_main_paths()
 
-import logging
+    from schlib.schtasks import schschedule
+    from schlib.schhttptools import httpclient
 
-LOGGER = logging.getLogger("pytigon_task")
+    import logging
 
-
-def usage():
-    print(
-        "pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset"
-    )
+    LOGGER = logging.getLogger("pytigon_task")
 
 
-try:
-    opts, args = getopt.getopt(
-        sys.argv[1:], "ha:u:p:", ["help", "arguments=", "username=", "password="]
-    )
-except getopt.GetoptError:
-    usage()
-    sys.exit(2)
+    def usage():
+        print(
+            "pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset"
+        )
 
-PRJ = None
-VIEW = None
-ARGUMENTS = {}
-USERNAME = None
-PASSWORD = None
 
-if len(args) > 0:
-    x = args[0].split(":")
-    PRJ = x[0]
-    if len(x) > 1:
-        VIEW = x[1]
+    try:
+        opts, args = getopt.getopt(
+            sys.argv[1:], "ha:u:p:", ["help", "arguments=", "username=", "password="]
+        )
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
 
-if not PRJ:
-    usage()
-    sys.exit()
+    PRJ = None
+    VIEW = None
+    ARGUMENTS = {}
+    USERNAME = None
+    PASSWORD = None
 
-ARGUMENTS = {}
-FORCE_GET = False
-for (opt, arg) in opts:
-    if opt in ("-h", "--help"):
+    if len(args) > 0:
+        x = args[0].split(":")
+        PRJ = x[0]
+        if len(x) > 1:
+            VIEW = x[1]
+
+    if not PRJ:
         usage()
         sys.exit()
-    elif opt in ("-a", "--arguments"):
-        pos = arg.replace("__", " ").split("=")
-        if len(pos) == 2:
-            ARGUMENTS[pos[0]] = pos[1]
+
+    ARGUMENTS = {}
+    FORCE_GET = False
+    for (opt, arg) in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-a", "--arguments"):
+            pos = arg.replace("__", " ").split("=")
+            if len(pos) == 2:
+                ARGUMENTS[pos[0]] = pos[1]
+            else:
+                FORCE_GET = True
+        elif opt in ("-u", "--username"):
+            USERNAME = arg
+        elif opt in ("-p", "--password"):
+            PASSWORD = arg
+
+    CWD_PATH = os.path.join(paths["PRJ_PATH"], PRJ)
+    sys.path.insert(0, CWD_PATH)
+
+    os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
+    httpclient.init_embeded_django()
+    http = httpclient.HttpClient("http://127.0.0.2")
+
+    if VIEW:
+        if USERNAME:
+            parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
+            response = http.post(
+                None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
+            )
+        if ARGUMENTS or FORCE_GET:
+            ret, newaddr = http.post(
+                None, VIEW, ARGUMENTS
+            )  # , credentials=(USERNAME, PASSWORD))
         else:
-            FORCE_GET = True
-    elif opt in ("-u", "--username"):
-        USERNAME = arg
-    elif opt in ("-p", "--password"):
-        PASSWORD = arg
-
-CWD_PATH = os.path.join(paths["PRJ_PATH"], PRJ)
-sys.path.insert(0, CWD_PATH)
-
-os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
-httpclient.init_embeded_django()
-http = httpclient.HttpClient("http://127.0.0.2")
-
-if VIEW:
-    if USERNAME:
-        parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-        response = http.post(
-            None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
-        )
-    if ARGUMENTS or FORCE_GET:
-        ret, newaddr = http.post(
-            None, VIEW, ARGUMENTS
-        )  # , credentials=(USERNAME, PASSWORD))
+            ret, newaddr = http.get(None, VIEW)  # , credentials=(USERNAME, PASSWORD))
+        print(response.str())
     else:
-        ret, newaddr = http.get(None, VIEW)  # , credentials=(USERNAME, PASSWORD))
-    print(response.str())
-else:
-    from apps import APPS
-    from schlib.schtools import sch_import
-    from schlib.schdjangoext.django_manage import cmd
-    from django.conf import settings
-    from asgiref.sync import sync_to_async
+        from apps import APPS
+        from schlib.schtools import sch_import
+        from schlib.schdjangoext.django_manage import cmd
+        from django.conf import settings
+        from asgiref.sync import sync_to_async
 
-    mail_conf = None
-    if hasattr(settings, "EMAIL_IMAP_HOST"):
-        mail_conf = {}
-        mail_conf["server"] = settings.EMAIL_IMAP_HOST
-        mail_conf["username"] = settings.EMAIL_HOST_USER
-        mail_conf["password"] = settings.EMAIL_HOST_PASSWORD
-        mail_conf["inbox"] = settings.EMAIL_IMAP_INBOX
-        mail_conf["outbox"] = settings.EMAIL_IMAP_OUTBOX
+        mail_conf = None
+        if hasattr(settings, "EMAIL_IMAP_HOST"):
+            mail_conf = {}
+            mail_conf["server"] = settings.EMAIL_IMAP_HOST
+            mail_conf["username"] = settings.EMAIL_HOST_USER
+            mail_conf["password"] = settings.EMAIL_HOST_PASSWORD
+            mail_conf["inbox"] = settings.EMAIL_IMAP_INBOX
+            mail_conf["outbox"] = settings.EMAIL_IMAP_OUTBOX
 
-    xmlrpc_port = None
-    if hasattr(settings, "XMLRPC_PORT"):
-        xmlrpc_port = settings.XMLRPC_PORT
+        xmlrpc_port = None
+        if hasattr(settings, "XMLRPC_PORT"):
+            xmlrpc_port = settings.XMLRPC_PORT
 
-    scheduler = schschedule.SChScheduler(mail_conf, xmlrpc_port)
+        scheduler = schschedule.SChScheduler(mail_conf, xmlrpc_port)
 
-    run_scheduler = False
+        run_scheduler = False
 
-    for app in APPS:
-        try:
-            module = sch_import(app + ".tasks")
-        except:
-            LOGGER.exception("An error occurred durring import task")
-
-        if hasattr(module, "init_schedule"):
-            run_scheduler = True
+        for app in APPS:
             try:
-                module.init_schedule(scheduler, cmd, http)
+                module = sch_import(app + ".tasks")
             except:
-                LOGGER.exception("An error occurred durring init_schedule")
+                LOGGER.exception("An error occurred durring import task")
 
-    if USERNAME:
-        parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-        response = http.post(
-            None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
-        )
+            if hasattr(module, "init_schedule"):
+                run_scheduler = True
+                try:
+                    module.init_schedule(scheduler, cmd, http)
+                except:
+                    LOGGER.exception("An error occurred durring init_schedule")
 
-    if run_scheduler == True:
-        scheduler.run()
+        if USERNAME:
+            parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
+            response = http.post(
+                None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
+            )
+
+        if run_scheduler == True:
+            scheduler.run()

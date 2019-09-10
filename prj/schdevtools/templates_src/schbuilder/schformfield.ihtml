@@ -31,8 +31,9 @@
                 x = self.field_list.GetValue()
                 http = wx.GetApp().get_http(self.add_field)
                 adr = "{{request.path}}"+self.add_field.href+x+"/add/"
-                (err, adr2) = http.get(self, str(adr))
-                self.new_child_page(adr2)
+                ret = http.get(self, str(adr))                
+                self.new_child_page(ret.new_url)
+
 
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:

@@ -26,6 +26,7 @@ jquery_plugins/form: https://github.com/jquery-form/form
 jquery_plugins/draggable: https://css-tricks.com/snippets/jquery/draggable-without-jquery-ui/
 jquery_plugins/csrf: https://docs.djangoproject.com/en/dev/ref/csrf/
 jquery_plugins/unique-element-id: https://github.com/jamierumbelow/jquery.unique-element-id
+jquery_plugins/sidebar-menu: https://github.com/huang-x-h/sidebar-menu
 
 bootstrap: https://getbootstrap.com/
 

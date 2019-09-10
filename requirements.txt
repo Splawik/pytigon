@@ -1,3 +1,10 @@
+#Pillow
+#lxml
+#Twisted
+#numba
+#numpy
+#pandas
+
 Django
 Twisted[tls,http2]
 channels
