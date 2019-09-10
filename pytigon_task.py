@@ -107,7 +107,6 @@ if __name__ == '__main__':
         from schlib.schtools import sch_import
         from schlib.schdjangoext.django_manage import cmd
         from django.conf import settings
-        from asgiref.sync import sync_to_async
 
         mail_conf = None
         if hasattr(settings, "EMAIL_IMAP_HOST"):
