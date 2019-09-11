@@ -5,7 +5,7 @@
 
 % load exfiltry
 % load exsyntax
-% load staticfiles
+% load static
 
 %% indexhead
     table style=width: 100%;,,,border=1

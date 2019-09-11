@@ -6,7 +6,6 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
-% load staticfiles
 
 %% js_extrascipts
     {{block.super}}
@@ -27,15 +26,15 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
     {% component 'app/schcomponents/components/plotly.js' %}
-    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
     {% component 'app/schcomponents/components/d3.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "wysiwyg_edit", "plotly", "vs_editor", "d3",  ];  
+    .var component_init = [ "plotly", "wysiwyg_edit", "d3", "vs_editor",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

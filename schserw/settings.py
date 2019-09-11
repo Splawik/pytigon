@@ -169,7 +169,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.forms',
     'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     'django_select2',
     'bootstrap4',
     'corsheaders',

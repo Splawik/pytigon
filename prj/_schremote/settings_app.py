@@ -31,7 +31,7 @@ except:
 PRJ_TITLE = "Pytigon web client"
 PRJ_NAME = "_schremote"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
-UPLOAD_PATH = MEDIA_ROOT
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
 THEMES = ['tablet_modern', 'tablet_modern', 'tablet_traditional']
 
@@ -130,5 +130,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.03.09 12:16:36'
+GEN_TIME = '2019.09.11 17:49:33'
 
