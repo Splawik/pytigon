@@ -40,8 +40,10 @@ def make_update_filter_fun(cache_field_name, pivot_table_name, pivot_field_name,
                     
             if id>=0:
                 xml_name = pivot_table_name
-                content = doc_transform.zip_file.read(xml_name)
-                root2 = etree.XML(content)
+                ret = doc_transform.get_xml_content(xml_name)
+                root2 = ret['data']
+                #content = doc_transform.zip_file.read(xml_name)
+                #root2 = etree.XML(content)
                 fields2 = root2.findall('.//pivotFields/pivotField', namespaces=root2.nsmap)
                 for field2 in fields2:
                     if 'name' in field2.attrib and field2.attrib['name'] == pivot_field_name:
@@ -54,8 +56,8 @@ def make_update_filter_fun(cache_field_name, pivot_table_name, pivot_field_name,
                                 else:
                                     item.attrib['h'] = '1'
                         break
-                
-                doc_transform.to_update.append( (xml_name, root2), )
+                if not ret['from_cache']:
+                    doc_transform.to_update.append( (xml_name, root2), )
             
             return False
             

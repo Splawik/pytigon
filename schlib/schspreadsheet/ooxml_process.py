@@ -127,20 +127,39 @@ class OOXmlDocTransform(OdfDocTransform):
 
     def doc_process(self, doc, debug):
         pass
-    
-    def extended_transformation(self, xml_name, script):
+
+
+    def get_xml_content(self, xml_name):
         xml = None
         for pos in self.to_update:
             if xml_name == pos[0]:
                 xml = pos[1]
                 break
         if xml:
-            script(self, xml)
-        else:
-            content = self.zip_file.read(xml_name)
-            root = etree.XML(content)
-            if script(self, root):
-                self.to_update.append((xml_name, root))   
+            return { 'data': xml, 'from_cache': True }
+
+        content = self.zip_file.read(xml_name)
+        return { 'data': etree.XML(content), 'from_cache': False }
+
+    def extended_transformation(self, xml_name, script):
+        ret = self.get_xml_content(xml_name)
+        xml = ret['data']
+        ret2 = script(self, xml)
+        if ret2 and not ret['from_cache']:
+            self.to_update.append((xml_name, xml))
+
+        #xml = None
+        #for pos in self.to_update:
+        #    if xml_name == pos[0]:
+        #        xml = pos[1]
+        #        break
+        #if xml:
+        #    script(self, xml)
+        #else:
+        #    content = self.zip_file.read(xml_name)
+        #    root = etree.XML(content)
+        #    if script(self, root):
+        #        self.to_update.append((xml_name, root))
 
     def add_comments(self, sheet):
         if self.comments:
