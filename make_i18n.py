@@ -41,7 +41,7 @@ def make_messages(src_path, path, name, outpath=None):
             po.save_as_mofile(mo_filename)
 
 if len(ARGV) < 2:
-    make_messages('./schcli', './schcli/locale', 'pytigon')
+    make_messages('./pytigon_gui', './pytigon_gui/locale', 'pytigon')
 else:
     for app_name in ARGV[1:]:
         path1 = os.path.join('./prj', app_name)

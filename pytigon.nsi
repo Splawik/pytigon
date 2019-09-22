@@ -44,8 +44,8 @@ Section "pytigon - server"
   File /r  /x __pycache__ /x *.pyc /x *.pyo ext_lib\*.*
   SetOutPath $INSTDIR\ext_prg
   File /r  /x __pycache__ /x *.pyc /x *.pyo ext_prg\*.*
-  SetOutPath $INSTDIR\schlib
-  File /r  /x __pycache__ /x *.pyc /x *.pyo schlib\*.*
+  SetOutPath $INSTDIR\pytigon_lib
+  File /r  /x __pycache__ /x *.pyc /x *.pyo pytigon_lib\*.*
   SetOutPath $INSTDIR\schserw
   File /r  /x __pycache__ /x *.pyc /x *.pyo schserw\*.*
   SetOutPath $INSTDIR\static
@@ -87,8 +87,8 @@ SectionEnd
 Section "pytigon - client"
 
   SectionIn 1 3
-  SetOutPath $INSTDIR\schcli
-  File /r  /x __pycache__ /x *.pyc /x *.pyo schcli\*.*
+  SetOutPath $INSTDIR\pytigon_gui
+  File /r  /x __pycache__ /x *.pyc /x *.pyo pytigon_gui\*.*
   SetOutPath $INSTDIR\schappdata
   File /r  /x __pycache__ /x *.pyc /x *.pyo schappdata\*.*
   ;SetOutPath $INSTDIR\prj\_schmsg

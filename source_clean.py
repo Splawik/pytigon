@@ -2,7 +2,7 @@
 import os
 import PythonTidy
 
-#dirnames = ['./schcli', './schlib', './schserw', './prj', './templates_src']
+#dirnames = ['./pytigon_gui', './pytigon_lib', './schserw', './prj', './templates_src']
 dirnames = ['./prj/schods', ]
 
 signature="""#!/usr/bin/python

@@ -1,4 +1,4 @@
-from schlib.schandroid.android_client import InterfaceManager, PytigonApp
+from pytigon_lib.schandroid.android_client import InterfaceManager, PytigonApp
 
 import socket
 import fcntl
