@@ -1,0 +1,21 @@
+{# -*- coding: utf-8 -*- #}
+{% block widget_content %}
+        {% if standard_web_browser %}
+                <a href="{{url}}" class="popup btn btn-secondary " name="{{name}}" title="{{title}}" target="{{target}}" data-role="button" data-inline="true" {% block data_icon %}data-icon="plus{% endblock %}">
+                        {% block description %}
+                                {% if description %}
+                                        <span class="fa fa-plus"></span> {{description}}
+                                  {% else %}
+                                        <span class="fa fa-plus"></span>
+                                {% endif %}
+                        {% endblock %}
+                </a>
+          {% else %}
+                {% if name %}
+                        <ctrlbutton name="{{name}}" label="{{title}}" href="{{url}}"></ctrlbutton>
+                  {% else %}
+                        <ctrlbutton label="{{title}}" href="{{url}}"></ctrlbutton>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+

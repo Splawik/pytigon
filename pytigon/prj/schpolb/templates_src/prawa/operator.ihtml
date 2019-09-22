@@ -1,0 +1,75 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "gen": "wx.ART_EXECUTABLE_FILE",
+                    "gen2": "client://categories/applications-multimedia.png",
+                    "oper_imp_lokal", "client://status/dialog-information.png"
+                    "spr_praw": wx.ART_TIP
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=520 form_height=620 table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % if perms.prawa.add_operator
+        % new_row "Nowy pracownik"
+    % list_action "oper_import" "Importuj operatorów"
+    % list_action "spr_praw" "Sprawdzenie praw"
+    % list_action "regenerate_user_groups" "Generowanie aktualnych uprawnień"
+    % list_action "gen_wnioski_wg_softlaba" "Wnioski wg Softlaba"
+
+%% list_row_header
+    th...Aktywny
+    th...Login
+    th...Imię
+    th...Nazwisko
+    th...Dział
+    th...Lokalizacja
+    th...Przełożony
+
+%% list_row_attr
+    {% if not object.aktywny %}class=danger{% endif %}
+
+%% list_row
+    td align=center
+        %if object.aktywny
+            .&#10004;
+    td...{{object.login}}
+    td...{{object.imie}}
+    td...{{object.nazwisko}}
+    td...{{object.dzial.opis}}
+    td...{{object.lokalizacja}}
+    td...{{object.przelozony}}
+
+%% dialog_type
+    .modal-lg
+
+%% id_extra
+    % if object.has_attachements:
+        % row_actions:
+            .field_action,Attachements,fa fa-2x fa-paperclip,,,+bg-primary,../../../../../../schattachements/table/Attachements//prawa__Operator__{{object.id}}__potwierdzenia/form/list/
+    % else:
+        % row_actions:
+            .field_action,Attachements,fa fa-2x fa-paperclip,,,,../../../../../../schattachements/table/Attachements//prawa__Operator__{{object.id}}__potwierdzenia/form/list/
+
+%% list_row_actions
+    % if perms.prawa.change_operator
+        % row_actions:...edit;gen-popup_edit,Zmień uprawnienia
+    % if perms.prawa.delete_operator
+        % row_actions:...delete
+

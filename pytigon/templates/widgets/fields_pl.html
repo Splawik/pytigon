@@ -1,0 +1,10 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% for pos in fields %}
+        <div class="col-12 col-sm-{{pos.1}}">
+                {% inline_form %}
+                        '{{pos.0}}'
+                {% endinline_form %}
+        </div>
+{% endfor %}
+

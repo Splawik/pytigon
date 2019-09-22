@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load exfiltry %}
+{% load bootstrap4 %}
+{% block body_body %}
+        {% with form|to_bootstrap as form %}
+                <title>
+                        Authentication
+                </title>
+                <div class="to_bootstrap">
+                        {{block.super}}
+                </div>
+                <script>
+var __name__ = '__main__';
+jQuery ('.to_bootstrap').find ('button').addClass ('btn btn-primary');
+jQuery ('.to_bootstrap').find ('form').attr ('target', '_self');
+__pragma__ ('<all>')
+	__all__.__name__ = __name__;
+__pragma__ ('</all>')
+</script>
+        {% endwith %}
+{% endblock %}
+

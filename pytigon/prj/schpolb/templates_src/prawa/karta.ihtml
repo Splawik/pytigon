@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+html lang=pl
+    head
+        meta charset=utf-8
+        style type=text/css{:}
+            body:
+                width: 21cm
+                border: 2px
+            .tab_body: 
+                padding: 0.8cm
+                font-size: 1em
+            .podpis:
+                text-align: center
+                font-size: small
+            .podpisy:
+                page-break-after: always 
+            table thead:
+                background: #999
+                color: #fff
+            table tbody:
+                background: transparent
+                color: #000
+    body
+        table width=100%,,,class=tab_body
+            tr:::td style=text-align: center;
+                h2...WNIOSEK O PRZYDZIELENIE PRAW DOSTĘPU DO SYSTEMU INFORMATYCZNEGO
+            tr:::td...Proszę o przydzielenie użytkownikowi:  <strong> JAN KOWALSKI </strong>
+            tr:::td...dział: <strong> FIT </strong>
+            tr:::td...lokalizacja (biuro,zakład itp): <strong>Świerże Górne</strong>
+            tr:::td...imię i nazwisko przełożonego: <strong>Sławomir Chołaj</strong>
+            tr:::td...prawa dostępu do systemów informatycznych wynikającego z przynależności do grup użytkowników: 
+            tr:::td
+                strong
+                    Grupa 1, 
+                    Grupa 2, 
+                    Grupa 3
+            tr:::td...z dniem: <strong>2013-10-01</strong>
+            tr:::td...Przyznanie nowych praw jest równoznaczne z likwidacją starych (o ile istnieje). 
+            tr:::td...Dodatkowe uwagi dotyczące praw nie mieszczących się w ogólnym szablonie nadawania praw: (gotowe pakiety (np. MS Office.):
+            tr:::td... .....................................................................................................................................................................................
+            tr:::td... .....................................................................................................................................................................................
+            tr:::td... .....................................................................................................................................................................................
+        br
+        br
+        table width=100%,,,class=podpisy
+            tr
+                td class=podpis...<br />................................................................................................... 
+                td class=podpis...<br />................................................................................................... 
+            tr
+                td class=podpis...(sporządził – data i podpis) 
+                td class=podpis...(zatwierdził – data i podpis)			  
+            tr
+                td class=podpis...<br />................................................................................................... 
+                td... &nbsp
+            tr
+                td class=podpis...(wykonał - data i podpis)
+                td &nbsp

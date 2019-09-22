@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+        
+%% scroll
+
+%% list_content_actions
+    % list_action "test" "Test"
+
+%% list_row_header
+    th...Softlab ID
+    th...Description
+    th...Date
+    th...Author
+    th...Tested
+    th...Published
+    
+%% list_row
+    td...{{object.softlab_id}}
+    td...{{object.description}}
+    td...{{object.date}}
+    td...{{object.author}}
+    td...{{object.tested}}
+    td...{{object.published}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:

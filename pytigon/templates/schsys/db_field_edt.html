@@ -1,0 +1,160 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% if form_width or form_height %}
+                {{ block.super }}
+          {% else %}
+                {% with  form_width=960 form_height=1200 title=tab|add:"."|add:verbose_field_name %}
+                        {{ block.super }}
+                {% endwith %}
+        {% endif %}
+{% endblock %}
+{% block pythoncode %}
+        <script language="python">
+        {% block pythoncodeinit %}
+        def init_form(self):
+            self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
+            self.save_btn.Disable()
+            self.modified = False
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(1000)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            self.EDITOR.SetSavePoint()
+            self.set_acc_key_tab(self,self.get_acc_tab())
+            #self.Bind(wx.EVT_MENU, self.on_click, id=ID_SAVE)
+            #self.EDITOR.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
+        {% endblock %}
+        #def on_key_pressed(self, event):
+        #    key = event.GetKeyCode()
+        #    print "OnKeyPressed:", key
+        #    if key == ord('S') and event.ControlDown():
+        #        self.save()
+        #        return
+        #    event.Skip()
+        def get_acc_tab(self):
+            return [(wx.ACCEL_CTRL, ord('S'), self.on_save),
+                    (wx.ACCEL_ALT, ord('J'), self.on_down),
+                    (wx.ACCEL_ALT, ord('K'), self.on_up),
+                    (wx.ACCEL_ALT, ord('H'), self.on_left),
+                    (wx.ACCEL_ALT, ord('L'), self.on_right),
+                    (wx.ACCEL_ALT, ord('F'), self.on_page_up),
+                    (wx.ACCEL_ALT, ord('B'), self.on_page_down),
+                   ]
+        def on_down(self, event):
+            self.EDITOR.LineDown()
+        def on_up(self, event):
+            self.EDITOR.LineUp()
+        def on_left(self, event):
+            pos = self.EDITOR.GetCurrentPos()-1
+            if pos>=0:
+                self.EDITOR.SetCurrentPos(pos)
+                self.EDITOR.SetSelection(pos, pos)
+                self.EDITOR.EnsureCaretVisible()
+        def on_right(self, event):
+            pos = self.EDITOR.GetCurrentPos()+1
+            if pos>=0:
+                self.EDITOR.SetCurrentPos(pos)
+                self.EDITOR.SetSelection(pos, pos)
+                self.EDITOR.EnsureCaretVisible()
+        def on_page_up(self, event):
+            self.EDITOR.PageUp()
+        def on_page_down(self, event):
+            self.EDITOR.PageDown()
+        def on_save(self, event):
+            self.save()
+        def on_close(self):
+            self.tuser.Stop()
+        def on_info_cmd(self, edt_ctrl, pos):
+            edt_ctrl.CallTipSetBackground("yellow")
+            edt_ctrl.CallTipShow(pos, '''lots of of text: blah, blah, blah''')
+        def on_auto_comp_cmd(self, edt_ctrl, pos):
+            kw = []
+            kw.append("zzzzzz?2")
+            kw.append("aaaaa?2")
+            kw.append("this_is_a_longer_value")
+            kw.sort()  # Python sorts are case sensitive
+            edt_ctrl.AutoCompSetIgnoreCase(False)  # so this needs to match
+            edt_ctrl.AutoCompShow(0, (" ").join(kw))
+        def can_close(self):
+            if self.EDITOR.GetModify():
+                dlg = wx.MessageDialog(self, 'Content has been changed, save?',
+                                             'Warning!',
+                                              wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL | wx.YES_DEFAULT
+                                    )
+                ret = dlg.ShowModal()
+                if ret == wx.ID_YES:
+                    self.save()
+                    return True
+                if ret != wx.ID_CANCEL:
+                    #event.Skip()
+                    return True
+                return False
+                #dlg.Destroy()
+            else:
+                return True
+                #event.Skip()
+        def on_click(self, event):
+            self.save()
+        def save(self):
+            self.EDITOR.save()
+            self.EDITOR.SetSavePoint()
+        def set_modified(self, modified):
+            self.modified = modified
+            if modified:
+                self.save_btn.Enable()
+            else:
+                self.save_btn.Disable()
+        def on_timer_user(self, event):
+            modified = self.EDITOR.GetModify()
+            if modified != self.modified:
+                self.set_modified(modified)
+</script>
+{% endblock %}
+{% block form_bar %}{% endblock %}
+{% block body %}
+        {% if standard_web_browser %}
+                {{ block.super }}
+          {% else %}
+                <table width="100%" class="form_bar">
+                        <tr>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRLCLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRLCLOSEBUTTON>
+                                </td>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRLNOBG_BUTTON width="36" height="36" name="save_btn" SRC="client://actions/document-save.png"></CTRLNOBG_BUTTON>
+                                </td>
+                                <td width="5"></td>
+                                <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                        <span class="form_title">
+                                                {% block form_title %}
+                                                        Edycja: {{title}}
+                                                {% endblock %}
+                                        </span>
+                                </td>
+                        </tr>
+                </table>
+                <hr></hr>
+                {% block edit_area_sc %}
+                        <table width="800">
+                                <tr>
+                                        <td></td>
+                                </tr>
+                        </table>
+                        <CTRLSTYLEDTEXT NAME="EDITOR" WIDTH="100%" HEIGHT="100%" MINHEIGHT="400" MINWIDTH="800" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                                <DATA>{{txt|bencode}}</DATA>
+                        </CTRLSTYLEDTEXT>
+                {% endblock %}
+        {% endif %}
+{% endblock %}
+{% block content %}
+        {% if standard_web_browser %}
+                {% block edit_area %}
+                        <sch-vseditor value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></sch-vseditor>
+                {% endblock %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+

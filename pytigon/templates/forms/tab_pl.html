@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_rect %}
+        width: 620, height: 360
+{% endblock %}
+{% block form_header %}
+        {% if not readonly %}
+                <p>
+                        {% new_row "Nowe zagrożenie" %}
+                </p>
+        {% endif %}
+{% endblock %}
+{% block table_header232 %}
+        <tr><td> Id </td><td>  Element </td><td> Action </td></tr>
+{% endblock %}
+{% block table_content323 %}
+        <tr>
+                <td>
+                        <a {% view_row 250 300 "Informacje szczegółowe" %}>{{object.id}}</a>
+                </td>
+                {% block table_content_obiekt %}
+                        <td>{{object}}</td>
+                {% endblock %}
+                <td>
+                        {% if readonly %}
+                                <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="wybierz">wybierz</a>
+                          {% else %}
+                                {% edit_row "popraw" %}
+                                {% delete_row "usuń" %}
+                        {% endif %}
+                </td>
+        </tr>
+{% endblock %}
+{% block table_footer %}
+    <tr><td> - </td><td>  - </td><td>  <a href="add" class="popup" name="insert" title="nowy element">nowy element</a> </td></tr>
+{% endblock %}
+

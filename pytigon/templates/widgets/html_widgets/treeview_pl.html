@@ -1,0 +1,75 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% block js_standard %}{% endblock %}
+        {% block widget_content %}
+                <div class="tree"{% if not standard_web_browser %} width='300' height='120'{% endif %}>
+                        <ul class="root">
+                                {% recursetree obj %}
+                                        <li class="{%if not node.is_root_node and not node.parent == node.get_root %}hide hide_node{%else%}show_node{%endif%}">
+                                                {% if not node.is_leaf_node %}
+                                                        {% if node.is_root_node or node.parent == node.get_root %}
+                                                                {% if node.is_root_node %}
+                                                                        <span class="root">
+                                                                                <i class="fa fa-minus">
+                                                                                        {{node.name}}
+                                                                                </i>
+                                                                        </span>
+                                                                  {% else %}
+                                                                        <span class="root">
+                                                                                <i class="fa fa-plus">
+                                                                                        {{node.name}}
+                                                                                </i>
+                                                                        </span>
+                                                                {% endif %}
+                                                          {% else %}
+                                                                <span>
+                                                                        <i class="fa fa-plus">
+                                                                                {{node.name}}
+                                                                        </i>
+                                                                </span>
+                                                        {% endif %}
+                                                        <ul class="children">
+                                                                {{ children }}
+                                                        </ul>
+                                                  {% else %}
+                                                        <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
+                                                                {% if data|slugify == "" %}
+                                                                        {{node.name}}
+                                                                  {% else %}
+                                                                        {{data|format:node.name}}
+                                                                {% endif %}
+                                                        </a>
+                                                {% endif %}
+                                        </li>
+                                {% endrecursetree %}
+                        </ul>
+                </div>
+        {% endblock %}
+        {% block js %}
+                <link href="{{ STATIC_URL }}bootstrap_plugins/bootstrap-tree/tree.css" rel="stylesheet" type="text/css" media="screen"></link>
+        {% endblock %}
+        {% block js2 %}
+                <script >
+    function on_click(e){
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if(children.is(":visible")){
+            children.hide('fast');
+            $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus').removeClass('fa-minus')
+        }
+        else{
+            children.show('fast');
+            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus').removeClass('fa-plus')
+        }
+        if(e){
+            e.stopPropagation()
+        }
+    }
+    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li > span').on('click', on_click);
+    $('.hide_node').hide().removeClass('hide')
+
+</script>
+        {% endblock %}
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "dzial_import": "client://status/mail-attachment.png",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=600 form_height=210 table_type='datatable':
+        {{ block.super }}
+
+%% list_content_actions
+    % new_row "Nowy dział"
+    % list_action "dzial_import" "Import działów"
+
+
+%% list_row_header
+    th...Nazwa
+    th...Opis
+    th...Profil
+
+
+%% list_row
+    td...{{object.nazwa}}
+    td...{{object.opis}}
+    td...{{object.profil}}
+    

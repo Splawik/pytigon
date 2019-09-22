@@ -1,4 +1,4 @@
-schcli/*
+pytigon_gui/*
 install/android/*
 install/appimage/*
 install/linux_install.py

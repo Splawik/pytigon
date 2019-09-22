@@ -1,0 +1,19 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% block content %}
+        {% block form_title %}{% endblock %}
+        <form method="post" action="." class="form" id="form">
+                {% csrf_token %}
+                <ul class="form" id="form">
+                        {{ form.as_ul }}
+                        <li><input type="submit" value="Odśwież" /></li>
+                </ul>
+        </form>
+        <br />
+        {% if tabela %}
+                {% block table %}{% endblock %}
+        {% endif %}
+        <br />
+        {% block form_stopka %}{% endblock %}
+{% endblock %}
+

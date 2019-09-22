@@ -1,0 +1,35 @@
+{# -*- coding: utf-8 -*- #}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block action_widget_content %}
+        {% if standard_web_browser %}
+                <a href="{{action.url|safe}}" class="{% block action_class %}{% endblock %}{{action.tag_class}}" title="{{action.title}}" target="{{action.target}}" name="{{action.name}}" {{action.attrs|safe}}>
+                        {% if browser_type == 'mobile' %}
+                                {% if not action.icon %}
+                                        {{action.title}}
+                                {% endif %}
+                          {% else %}
+                                {% if action.icon %}
+                                        <span class="{{action.icon}}"></span>
+                                        {% if action.icon2 %}
+                                                <span class="{{action.icon2}}"></span>
+                                        {% endif %}
+                                  {% else %}
+                                        {{action.title}}
+                                {% endif %}
+                        {% endif %}
+                </a>
+          {% else %}
+                <ctrlbutton name="{{action.name}}" label="{{action.title}}" title="{{action.title}}" href="{{action.url}}"></ctrlbutton>
+                {% comment %}
+                        {% if action.icon %}
+                                <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}} src="{{action.icon}}"></a>
+                          {% else %}
+                                <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}}>
+                                        {{action.title}}
+                                </a>
+                        {% endif %}
+                {% endcomment %}
+        {% endif %}
+{% endblock %}
+

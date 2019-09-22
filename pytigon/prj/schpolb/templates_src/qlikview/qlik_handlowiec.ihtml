@@ -1,0 +1,41 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=800 form_height=600 scroll_table=True
+        {{ block.super }}
+
+
+%% list_row_header
+    th...Firma
+    th...LogoH
+    th...NazwaH
+    th...Region
+
+
+%% list_row
+    td...{{object.FIRMA_ID}}
+    td...{{object.LogoH}}
+    td...{{object.NazwaH}}
+    td...{{object.Region}}
+
+
+%% list_row_actions
+
+
+%% row_edit
+    {{form.as_table}}

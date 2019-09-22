@@ -1,0 +1,530 @@
+{# -*- coding: utf-8 -*- #}
+{% extends 'base0.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load bootstrap4 %}
+{% load socialaccount %}
+{% block login %}
+        {% if not user.is_authenticated %}
+                {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                        <div class="container login-container">
+                                <div class="row align-items-center">
+                                        <div class="col"></div>
+                                        <div class="col-lg-6 col-xl-5">
+                                                <div class="card card-inverse login-card">
+                                                        <div class="card-header">
+                                                                {{prj_title|upper}}
+                                                        </div>
+                                                        <div class="card-block">
+                                                                <br />
+                                                                Sign in:
+                                                                <br />
+                                                                <form class="login-form" action="{{base_path}}schsys/do_login/?next={% if request_path != Null %}{{ request_path }}&next_after_error={{request.path}}{% else %}{{request.path}}{% endif %}" method="post" name="signin">
+                                                                        <div class="form-group">
+                                                                                <label class="control-label" for="username_ ">User name</label>
+                                                                                <div class="input-group">
+                                                                                        <div class="input-group-addon fa fa-user"></div>
+                                                                                        <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" />
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                                <label class="control-label" for="password_">Password</label>
+                                                                                <div class="input-group">
+                                                                                        <div class="input-group-addon fa fa-key"></div>
+                                                                                        <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" />
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                                <div class="col"></div>
+                                                                                <div class="col div_content_center">
+                                                                                        <button type="submit" class="btn btn-primary btn-lg ">OK</button>
+                                                                                </div>
+                                                                                <div class="col"></div>
+                                                                        </div>
+                                                                </form>
+                                                        </div>
+                                                        {% if app_manager.login_providers %}
+                                                                <div class="card-block">
+                                                                        <br />
+                                                                        or sign in with:
+                                                                        <br />
+                                                                        {% for pos in app_manager.login_providers %}
+                                                                                <a href="{% provider_login_url pos.0 %}" class="btn btn-secondary my-1">
+                                                                                        {{pos.1}}
+                                                                                </a>
+                                                                        {% endfor %}
+                                                                </div>
+                                                        {% endif %}
+                                                        {% if settings.ACCOUNT_EMAIL_REQUIRED %}
+                                                                <div class="card-block">
+                                                                        <br />
+                                                                        <a href="{{base_path}}schsys/accounts/password/reset/">
+                                                                                I forgot my password
+                                                                        </a>
+                                                                </div>
+                                                        {% endif %}
+                                                </div>
+                                        </div>
+                                        <div class="col"></div>
+                                </div>
+                        </div>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block change_password %}
+        {% if standard_web_browser %}
+                <div class="modal fade" id="change_passwd" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                        <div class="modal-header">
+                                                <h3>Change Password</h3>
+                                        </div>
+                                        <form role="form" action="{{base_path}}schsys/change_password/" method="post" name="change_password">
+                                                <div class="modal-body">
+                                                        {% csrf_token %}
+                                                        <div class="form-group">
+                                                                <label class="control-label" for="current_password">Current Password</label>
+                                                                <input class="form-control" name="current_password" type="password" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                                <label class="control-label" for="new_password">New Password</label>
+                                                                <input class="form-control" name="new_password" type="password" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                                <label class="control-label" for="confirm_password">Confirm Password</label>
+                                                                <input class="form-control" name="confirm_password" type="password" />
+                                                        </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                        <button href="#" class="btn" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-secondary">OK</button>
+                                                </div>
+                                        </form>
+                                </div>
+                        </div>
+                </div>
+        {% endif %}
+{% endblock %}
+{% block messages %}
+        {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                        <a href="#" class="close" data-dismiss="alert"> &times;</a>
+                        {% for message in messages %}
+                                {% ifequal message|slice:"-1:" '!' %}
+                                                <ul class="errorlist">
+                                                        <li>{{message}}</li>
+                                                </ul>
+                                        {% else %}
+                                                <ul class="messagelist">
+                                                        <li>{{message}}</li>
+                                                </ul>
+                                {% endifequal %}
+                        {% endfor %}
+                </div>
+        {% endif %}
+{% endblock %}
+{% block body %}
+        {% if not form_ext and show_form %}
+                {% block dialog_start %}{% endblock %}
+                {% if form_delete or form_info %}
+                        {% if standard_web_browser %}
+                                <div id="Dialog">
+                        {% endif %}
+                        {% if form_info %}
+                                {% block form_info %}
+                                        <div class="form_info">
+                                                <table name="tabsort" class="listctrl table table-bordered" width="100%">
+                                                        <tr>
+                                                                <th>Field</th>
+                                                                <th>Value</th>
+                                                        </tr>
+                                                        {% for field in object|getfields %}
+                                                                <tr>
+                                                                        <td>{{ field.verbose_name }}</td>
+                                                                        <td>{{ object|getfield:field.name }}</td>
+                                                                </tr>
+                                                        {% endfor %}
+                                                </table>
+                                        </div>
+                                        {% block form_ok_cancel_info %}{% endblock %}
+                                {% endblock %}
+                                {% if standard_web_browser %}
+                                        {% if title %}
+                                                <script>
+var __name__ = '__main__';
+jQuery ('#ModalLabelInfo').html ('{{title}}');
+__pragma__ ('<all>')
+	__all__.__name__ = __name__;
+__pragma__ ('</all>')
+</script>
+                                        {% endif %}
+                                {% endif %}
+                          {% else %}
+                                {% block form_delete %}
+                                        <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" id="DialogFormDelete" name="DialogFormDelete">
+                                                {% csrf_token %}
+                                                {% block form_delete_content %}
+                                                        <h4>Delete the item?</h4>
+                                                        <div class="form_delete">
+                                                                {% block form_delete_object %}
+                                                                        <table class="table table-stripe ui-responsive" data-role="table">
+                                                                                <thead>
+                                                                                        <tr>
+                                                                                                <th>Field</th>
+                                                                                                <th>Value</th>
+                                                                                        </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                        {% for field in object|getfields %}
+                                                                                                <tr>
+                                                                                                        <td>{{ field.verbose_name }}:</td>
+                                                                                                        <td>{{ object|getfield:field.name| truncatechars:1024 }}</td>
+                                                                                                </tr>
+                                                                                        {% endfor %}
+                                                                                </tbody>
+                                                                        </table>
+                                                                {% endblock %}
+                                                                <br />
+                                                        </div>
+                                                {% endblock %}
+                                                {% block form_ok_cancel_del %}{% endblock %}
+                                        </form>
+                                {% endblock %}
+                                <script>
+var __name__ = '__main__';
+jQuery ('#ModalLabelDelete').html ('{{title}}');
+__pragma__ ('<all>')
+	__all__.__name__ = __name__;
+__pragma__ ('</all>')
+</script>
+                        {% endif %}
+                        {% if standard_web_browser %}
+                                </div>
+                        {% endif %}
+                  {% else %}
+                        {% block row_edit_start %}
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                        <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
+                                {% endif %}
+                        {% endblock %}
+                        {% block row_edit_header %}
+                                {% if form %}
+                                        {{ form.errors }}
+                                {% endif %}
+                        {% endblock %}
+                        {% block row_edit_all %}
+                                <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}">
+                                        {% csrf_token %}
+                                        {% block row_edit_form %}
+                                                <table width="100%">
+                                                        {% if form %}
+                                                                {% if field %}
+                                                                        <tr>
+                                                                                <td>
+                                                                                        {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                                                                                </td>
+                                                                        </tr>
+                                                                  {% else %}
+                                                                        {% block row_edit %}
+                                                                                {{form.as_table}}
+                                                                        {% endblock %}
+                                                                {% endif %}
+                                                        {% endif %}
+                                                </table>
+                                        {% endblock %}
+                                </form>
+                                {% block row_edit_footer %}{% endblock %}
+                                {% block form_ok_cancel %}{% endblock %}
+                        {% endblock %}
+                        {% block row_edit_end %}
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                        </div>
+                                {% endif %}
+                        {% endblock %}
+                        {% if title %}
+                                <script>
+var __name__ = '__main__';
+jQuery ('#ModalLabel').html ('{{title}}');
+__pragma__ ('<all>')
+	__all__.__name__ = __name__;
+__pragma__ ('</all>')
+</script>
+                        {% endif %}
+                {% endif %}
+                {% block dialog_end %}{% endblock %}
+          {% else %}
+                {% if form_grid %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block content %}
+        {% if debug_on %}
+                <div id="debug">
+                        <h2>Queries</h2>
+                        <p>
+                                {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
+                                {% ifnotequal sql_queries|length 0 %}
+                                        (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
+                                {% endifnotequal %}
+                        </p>
+                        <table id="debugQueryTable" style="display: none;">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">SQL</th>
+                                    <th scope="col">Time</th>
+                                </tr>
+                                {% for query in sql_queries %}
+                                        <tr class="{% cycle 'odd' 'even' %}">
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ query.sql|escape }}</td>
+                                                <td>{{ query.time }}</td>
+                                        </tr>
+                                {% endfor %}
+                        </table>
+                </div>
+        {% endif %}
+        {% if not form_delete %}
+                {% block list_page_start %}{% endblock %}
+                {% block list_page_header %}{% endblock %}
+                {% block list_page %}
+                        {% block list_content_start %}
+                                {% if standard_web_browser %}
+                                {% endif %}
+                        {% endblock %}
+                        {% block list_content_header %}
+                                <div>
+                                        <div class="table container col-12" style="{% if get %}border:none;margin-top:-40px;{% endif %}">
+                                                {% block list_content_header_first_row %}
+                                                        {% if not get %}
+                                                                <div class="tr row list_content_header list_content_header_first_row">
+                                                                        <div class="td col-sm-12 hidden-sm-down text-center">
+                                                                                {% block list_content_title %}
+                                                                                        <h4 style="white-space:nowrap;" class="txt3d wiki-title">{{title|wiki_href|safe}}</h4>
+                                                                                {% endblock %}
+                                                                        </div>
+                                                                </div>
+                                                        {% endif %}
+                                                {% endblock %}
+                                                {% block list_content_header_two_row %}
+                                                        {% if form %}
+                                                                <div class="tr row list_content_header list_content_header_two_row">
+                                                                        <div class="td col-md-12 col-sm-12" colspan="3">
+                                                                                {% block list_filter_form %}
+                                                                                        <form method="post" action="{{request.path}}" href="{{request.path}}" role="form" class="refr_source table_filter form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_obj">
+                                                                                                {% csrf_token %}
+                                                                                                {% block form_filter %}
+                                                                                                        {% if form %}
+                                                                                                                {% block form_content %}
+                                                                                                                        {{ form.non_field_errors }}
+                                                                                                                        {% block form_table_filter %}
+                                                                                                                                {% inline_form %}
+                                                                                                                                {% endinline_form %}
+                                                                                                                        {% endblock %}
+                                                                                                                        {% block form_content_button %}
+                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh">
+                                                                                                                                        <span class="fa fa-refresh"></span>
+                                                                                                                                </button>
+                                                                                                                        {% endblock %}
+                                                                                                                {% endblock %}
+                                                                                                        {% endif %}
+                                                                                                {% endblock %}
+                                                                                        </form>
+                                                                                {% endblock %}
+                                                                        </div>
+                                                                </div>
+                                                          {% else %}
+                                                                <form method="post" action="{{request.path}}" href="{{request.path}}" role="form" class="refr_source table_filter form-inline" target="refresh_obj"></form>
+                                                        {% endif %}
+                                                {% endblock %}
+                                                {% block list_content_header_third_row %}
+                                                        <div class="tr row list_content_header list_content_header_third_row">
+                                                                <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
+                                                                        <div class="dropdown">
+                                                                                {% if standard_web_browser and object_list %}
+                                                                                        {% if table_type == 'datatable' %}
+                                                                                                <div class="dropdown">
+                                                                                                        <button type="button" class="btn btn-secondary {{btn_size}} dropdown-toggle" data-toggle="dropdown">
+                                                                                                                <span class="fa fa-bars"></span>
+                                                                                                        </button>
+                                                                                                        <div class="dropdown-menu">
+                                                                                                                <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
+                                                                                                                <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
+                                                                                                                <a href="{{base_url}}tools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        {% endif %}
+                                                                                {% endif %}
+                                                                                {% block list_content_actions %}{% endblock %}
+                                                                        </div>
+                                                                </div>
+                                                                {% if is_paginated and table_type != 'datatable' %}
+                                                                        <div class="td col-sm-4 col-xs-7 text-right" align="right"></div>
+                                                                {% endif %}
+                                                        </div>
+                                                {% endblock %}
+                                        </div>
+                                </div>
+                                {% if standard_web_browser %}
+                                        <div class="new_row"></div>
+                                        {% if table_type == 'datatable' and not get %}
+                                                <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-toggle="button">
+                                                        <i class="fa fa-times"></i>
+                                                </button>
+                                        {% endif %}
+                                {% endif %}
+                        {% endblock %}
+                        {% if standard_web_browser %}
+                                <div class="tableframe">
+                        {% endif %}
+                        {% block list_content_body %}
+                                {% block list_content_paginator %}
+                                        {% if standard_web_browser and table_type != 'datatable' %}
+                                                {% if is_paginated %}
+                                                        <ul class="pagination simple_pagination">
+                                                                {% if page_obj.has_previous %}
+                                                                        <li class="page-item">
+                                                                                <a class="page-link" target="refresh_obj" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
+                                                                        </li>
+                                                                  {% else %}
+                                                                        <li class="disabled page-item">
+                                                                                <a class="page-link">
+                                                                                        <span> &laquo;</span>
+                                                                                </a>
+                                                                        </li>
+                                                                {% endif %}
+                                                                {% for i in paginator.page_range %}
+                                                                        {% if page_obj.number == i %}
+                                                                                <li class="active page-item">
+                                                                                        <a class="page-link">
+                                                                                                <span>
+                                                                                                {{ i }}
+                                                                                                        <span class="sr-only">
+                                                                                                                (current)
+                                                                                                        </span>
+                                                                                                </span>
+                                                                                        </a>
+                                                                                </li>
+                                                                          {% else %}
+                                                                                <li class="page-item">
+                                                                                        <a class="page-link" target="refresh_obj" href="?page={{ i }}&only_table=1">
+                                                                                                {{ i }}
+                                                                                        </a>
+                                                                                </li>
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                                {% if page_obj.has_next %}
+                                                                        <li class="page-item">
+                                                                                <a class="page-link" target="refresh_obj" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
+                                                                        </li>
+                                                                  {% else %}
+                                                                        <li class="disabled page-item">
+                                                                                <a class="page-link">
+                                                                                        <span> &raquo;</span>
+                                                                                </a>
+                                                                        </li>
+                                                                {% endif %}
+                                                        </ul>
+                                                {% endif %}
+                                          {% else %}
+                                                {% paginator %}
+                                        {% endif %}
+                                {% endblock %}
+                                <div class="tabsort_panel">
+                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                {% if table_type == 'scrolled' or not table_type %}
+                                                        <div class="tbl_scroll" style="overflow-y: auto;">
+                                                {% endif %}
+                                        {% endif %}
+                                        <table id="tabsort" name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_class %}{% endblock %}>
+                                                {% block list_full_row_header %}
+                                                        <thead>
+                                                                <tr>
+                                                                        {% block list_row_header_start %}
+                                                                                {% if not no_id %}
+                                                                                        <th data-field="cid" data-sortable="true">
+                                                                                                {% id_num 'Id' %}
+                                                                                        </th>
+                                                                                {% endif %}
+                                                                        {% endblock %}
+                                                                        {% block list_row_header %}{% endblock %}
+                                                                        {% block list_row_header_end %}
+                                                                                <th data-field="caction">
+                                                                                        Action
+                                                                                </th>
+                                                                        {% endblock %}
+                                                                </tr>
+                                                        </thead>
+                                                {% endblock %}
+                                                {% block list_table %}
+                                                        {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
+                                                                <tbody>
+                                                                        {% if object_list %}
+                                                                                {% for object in object_list %}
+                                                                                        {% block list_full_row %}
+                                                                                                <tr {% block list_row_attr %}{% endblock %}>
+                                                                                                        {% block list_row_start %}
+                                                                                                                {% if not no_id %}
+                                                                                                                        <td>
+                                                                                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                                                                                        {% block id_extra %}
+                                                                                                                                                {% if get %}
+                                                                                                                                                        {% get_row object.id %}
+                                                                                                                                                  {% else %}
+                                                                                                                                                        {% view_row object.id %}
+                                                                                                                                                {% endif %}
+                                                                                                                                        {% endblock %}
+                                                                                                                                </div>
+                                                                                                                        </td>
+                                                                                                                {% endif %}
+                                                                                                        {% endblock %}
+                                                                                                        {% block list_row %}
+                                                                                                                <td>{{object}}</td>
+                                                                                                        {% endblock %}
+                                                                                                        {% block list_row_end %}
+                                                                                                                <td>
+                                                                                                                        <div class="td_action" style="white-space:nowrap">
+                                                                                                                                {% block list_row_actions %}
+                                                                                                                                        {% if readonly %}
+                                                                                                                                                <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
+                                                                                                                                          {% else %}
+                                                                                                                                                {% row_actions %}
+                                                                                                                                                edit;delete
+                                                                                                                                                {% endrow_actions %}
+                                                                                                                                        {% endif %}
+                                                                                                                                {% endblock %}
+                                                                                                                        </div>
+                                                                                                                </td>
+                                                                                                        {% endblock %}
+                                                                                                </tr>
+                                                                                        {% endblock %}
+                                                                                        {% block list_row2 %}{% endblock %}
+                                                                                {% endfor %}
+                                                                        {% endif %}
+                                                                </tbody>
+                                                        {% endif %}
+                                                {% endblock %}
+                                                {% block list_table_footer %}{% endblock %}
+                                        </table>
+                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                {% if table_type == 'scrolled' or not table_type %}
+                                                        </div>
+                                                {% endif %}
+                                        {% endif %}
+                                </div>
+                        {% endblock %}
+                        {% if standard_web_browser %}
+                                </div>
+                        {% endif %}
+                        {% block list_content_footer %}{% endblock %}
+                        {% block list_content_end %}
+                                {% if standard_web_browser %}
+                                {% endif %}
+                        {% endblock %}
+                {% endblock %}
+                {% block list_page_footer %}{% endblock %}
+                {% block list_page_end %}{% endblock %}
+        {% endif %}
+{% endblock %}
+

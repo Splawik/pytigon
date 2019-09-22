@@ -1,0 +1,47 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% scroll
+
+%% list_content_actions
+
+%% list_row_header
+    th...Lp
+    th...Numer w Castoramie
+    th...Symbol kar.
+    th...Opis
+    th...Ilosc
+    th...Cena
+    th...Netto
+
+%% list_row
+    td...{{object.lp}}
+    td...{{object.castorama_kar}}
+    td...{{object.symkar}}
+    td...{{object.opis}}
+    td...{{object.ilosc}}
+    td...{{object.cena}}
+    td...{{object.netto}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:

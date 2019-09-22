@@ -1,0 +1,239 @@
+{# -*- coding: utf-8 -*- #}
+{% extends 'template/desktop.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block ext_js_scripts %}
+        {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
+{% endblock %}
+{% block theme_css_links %}
+        {{block.super}}
+        {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
+{% endblock %}
+{% block menu_start %}
+        <div class="control-sidebar-bg"></div>
+{% endblock %}
+{% block topmenu_start %}{% endblock %}
+{% block topmenu %}{% endblock %}
+{% block topmenu_end %}{% endblock %}
+{% block submenu_start %}{% endblock %}
+{% block submenu %}
+        {% ifchanged item_info.app_name %}
+                {% if not forloop.first %}
+                        </ul></li>
+                        <li class="treeview">
+                  {% else %}
+                        <li class="treeview active">
+                {% endif %}
+                <a href="#">
+                        {% if item_info.user_param.icon %}
+                                <i class="fa {{item_info.user_param.icon}}"></i>
+                          {% else %}
+                                <i class="fa fa-link"></i>
+                        {% endif %}
+                        {% if item_info.app_name in request.get_full_path %}
+                                <span><strong>{{item_info.app_title}}</strong></span>
+                          {% else %}
+                                <span>{{item_info.app_title}}</span>
+                        {% endif %}
+                        <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu sidebar-submenu">
+        {% endifchanged %}
+        <li>
+                <a href="{{base_path}}{{item_info.url}}" class="menu-href ladda-button" data-toggle="tooltip" title="{{item_info.description}}">
+                        {% if item_info.icon %}
+                                {% if standard_web_browser %}
+                                        {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
+                                  {% else %}
+                                        {{item_info.icon}}
+                                {% endif %}
+                          {% else %}
+                                <i class="fa fa-circle-o"></i>
+                        {% endif %}
+                        {{item_info.description}}
+                </a>
+        </li>
+        {% if forloop.last %}
+                </ul></li>
+        {% endif %}
+{% endblock %}
+{% block submenu_end %}{% endblock %}
+{% block menu_end %}{% endblock %}
+{% block menu %}
+        <button class="main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %}" role="button" title="Toggle navigation">
+                <span class="fa fa-bars"></span>
+        </button>
+        <aside class="main-sidebar collapse show" id="menu" role="dialog">
+                <section class="sidebar">
+                        <ul class="sidebar-menu">
+                                <li class="bg-primary">
+                                        <a href="{{base_path}}" class="logo txt3d text-white" style="white-space:nowrap;text-align: center;" target="_parent">
+                                                {% block logo %}
+                                                        <span class="logo-lg">
+                                                                {% if prj_title|length > 20 %}
+                                                                        <small>{{prj_title}}</small>
+                                                                  {% else %}
+                                                                        {{prj_title}}
+                                                                {% endif %}
+                                                        </span>
+                                                {% endblock %}
+                                        </a>
+                                </li>
+                                {{block.super}}
+                        </ul>
+                </section>
+        </aside>
+{% endblock %}
+{% block body_start %}
+        {% if form_ext or not show_form %}
+                {% if user.is_authenticated %}
+                        <body bgcolor="#{{color_body}}">
+                  {% else %}
+                        {{block.super}}
+                {% endif %}
+                <div class="content-wrapper">
+        {% endif %}
+{% endblock %}
+{% block body_init %}
+        <section class="content" id="panel">
+        <header class="main-header win-header bg-primary">
+                <nav class="navbar navbar-toggleable-md bg-primary">
+                        {% if ie %}
+                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
+                          {% else %}
+                                <img src="{% get_static_prefix %}images/reload/reload.svg" id="loading-indicator" style="display:none"></img>
+                        {% endif %}
+                        {% comment %}
+                                <a href="#" class="sidebar-toggle" role="button" title="Toggle navigation">
+                                        <span class="fa fa-bars"></span>
+                                </a>
+                        {% endcomment %}
+                        {% if not NO_TABS and application_type == 'modern' %}
+                                <div class="navbar-nav tabbable" id="tab_tabs2">
+                                        <ul class="nav nav-tabs" role="tablist" id="tabs2"></ul>
+                                </div>
+                        {% endif %}
+                        <div class="navbar-collapse align-self-end">
+                                <ul class="nav">
+                                        {% if settings.SEARCH_PATH %}
+                                                <li id="search" class="nav-item search">
+                                                        <form action="{{base_path}}schsys/search/" title="Search results">
+                                                                <div class="input-group">
+                                                                        <input class="form-control" placeholder="Search" name="q" />
+                                                                        <div class="input-group-addon">
+                                                                                <i class="fa fa-search"></i>
+                                                                        </div>
+                                                                </div>
+                                                        </form>
+                                                </li>
+                                        {% endif %}
+                                        {% block drop_down_blocks %}{% endblock %}
+                                        {% if user.is_authenticated %}
+                                                <li class="nav-item dropdown user user-menu">
+                                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                                <span class="fa fa-user"></span>
+                                                                <span class="hidden-sm-down">{{user.username}}</span>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                                <div class="dropdown-block">
+                                                                        <p>
+                                                                        username:
+                                                                                <strong>{{user.username}}</strong>
+                                                                        </p>
+                                                                        <p>
+                                                                        first name:
+                                                                                <strong>{{user.first_name}}</strong>
+                                                                        </p>
+                                                                        <p>
+                                                                        last name:
+                                                                                <strong>{{user.last_name}}</strong>
+                                                                        </p>
+                                                                        <p>
+                                                                        email:
+                                                                                <strong>{{user.email}}</strong>
+                                                                        </p>
+                                                                        <p>
+                                                                        last login:
+                                                                                <strong>{{user.last_login|isoformat}}</strong>
+                                                                        </p>
+                                                                        <p>
+                                                                        date joined:
+                                                                                <strong>{{user.date_joined|isoformat}}</strong>
+                                                                        </p>
+                                                                </div>
+                                                                <div class="dropdown-footer">
+                                                                        <div class="pull-left">
+                                                                                <button class="system_menu btn btn-secondary {{btn_size}} btn-flat" href="#" action="{{base_path}}admin/?schtml=1" title="Administration">Administraction</button>
+                                                                        </div>
+                                                                        <div class="pull-right">
+                                                                                <button href="#" class="btn btn-secondary {{btn_size}} btn-flat" data-toggle="modal" data-target="#change_passwd">Change password</button>
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                </li>
+                                                {% if not autologin %}
+                                                        <li class="nav-item dropdown user user-menu">
+                                                                <a class="system_menu" href="#" action="{{base_path}}schsys/do_logout/?schtml=1" title="Logout">
+                                                                        <span class="fa fa-power-off"></span>
+                                                                </a>
+                                                        </li>
+                                                {% endif %}
+                                          {% else %}
+                                                <li class="nav-item dropdown user user-menu">
+                                                        <a class="system_menu" href="#" action="{{base_path}}schsys/login/?schtml=1" title="Login">
+                                                                <span class="fa fa-sign-in"></span>
+                                                        </a>
+                                                </li>
+                                        {% endif %}
+                                </ul>
+                        </div>
+                </nav>
+        </header>
+        {{block.super}}
+{% endblock %}
+{% block tabs %}
+        {% if application_type != 'modern' %}
+                {{block.super}}
+          {% else %}
+                <div>
+                        {% if not NO_TABS and application_type == 'modern' %}
+                                <div class="tab-content win-content" id="tabs2_content"></div>
+                        {% endif %}
+                        {% with NO_TABS=True %}
+                                {{block.super}}
+                        {% endwith %}
+                </div>
+        {% endif %}
+        </section></div>
+{% endblock %}
+{% block body_end %}
+        {% if form_ext or not show_form %}
+                {% if 'smartfon' in client_type %}
+                        <script>
+                            jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+                            var obj1_off =  { 'width': '256px' };
+                            var obj1_on =  { 'width': '0px' };
+                            var obj2_off =  { 'margin-left': '256px', 'margin-right': '-256px' };
+                            var obj2_on =  { 'margin-left': '0px', 'margin-right': '0px' };
+                            var obj1 = jQuery('#menu');
+                            var obj2 = jQuery('#panel');
+                            animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
+                        </script>
+                  {% else %}
+                        <script>
+                            jQuery.sidebarMenu(jQuery('.sidebar-menu'));
+                            var obj1_off =  { 'width': '256px' };
+                            var obj1_on =  { 'width': '0px' };
+                            var obj2_off =  { 'margin-left': '256px' };
+                            var obj2_on =  { 'margin-left': '0px' };
+                            var obj1 = jQuery('#menu');
+                            var obj2 = jQuery('#panel');
+                            animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
+                        </script>
+                {% endif %}
+        {% endif %}
+        {{block.super}}
+{% endblock %}
+{% block loading-indicator: %}{% endblock %}
+

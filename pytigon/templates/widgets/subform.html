@@ -1,0 +1,12 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% block subform_frame %}
+                <div class="subform_frame refr_object refr_source" href="{{href}}">
+                        <div class="subform_content refr_target">
+                                {% block subform_content %}{% endblock %}
+                        </div>
+                </div>
+        {% endblock %}
+{% endblock %}
+

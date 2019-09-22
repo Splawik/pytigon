@@ -1,0 +1,18 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block nav %}{% endblock %}
+{% block login %}{% endblock %}
+{% block body %}
+        {% block heading %}{% endblock %}
+        {% block panel %}{% endblock %}
+        {% block style_content_start %}{% endblock %}
+        {% block content0 %}{% endblock %}
+        {% block no_content %}
+                {% block content %}{% endblock %}
+        {% endblock %}
+        {% block style_content_stop %}{% endblock %}
+        {% block footer %}{% endblock %}
+{% endblock %}
+

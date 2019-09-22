@@ -1,0 +1,33 @@
+{% extends 'template/schweb_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load staticfiles %}
+{% block indexhead %}
+        <table style="width: 100%;" border="1">
+                {% if user.is_authenticated %}
+                        <tr><td> login </td><td> 0 </td></tr>
+                  {% else %}
+                        <tr><td> login </td><td> 1 </td></tr>
+                {% endif %}
+                <tr><td> autologin </td><td> 1 </td></tr>
+                <tr><td> csrf_token </td><td> {%csrf_token%} </td></tr>
+                <tr><td> riot_elements </td><td> </td></tr>
+                <tr><td> gui_style </td><td> tree(toolbar(browse)) </td></tr>
+                <tr><td> hybrid </td><td> 0 </td></tr>
+                <tr><td> title  </td><td> Web trapper </td></tr>
+                <tr><td> start_page </td><td> None </td></tr>
+                <tr><td> plugins </td><td> None </td></tr>
+        </table>
+{% endblock %}
+{% block toolbars_start %}
+        <tr>
+                <td></td>
+                <td></td>
+                <td>Google</td>
+                <td>1</td>
+                <td>client://apps/utilities-terminal.png</td>
+                <td>html</td>
+                <td>Google,http://www.google.com?schtml=browser_panel</td>
+        </tr>
+{% endblock %}
+

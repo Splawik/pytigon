@@ -1,0 +1,177 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% scroll
+
+%% list_page_header
+    h3...Demo - standard controls
+
+%% list_page
+    table border=1,,,width=100%
+        tr
+            th...Nazwa
+            th...Widget
+        tr
+            td...Link
+            td:::a href=http://www.onet.pl,,,TARGET=_top...ONET
+        tr
+            td...Bitmap button
+            td:::ctrlbutton src={{ STATIC_URL }}icons/calendar.png
+        tr
+            td...Button
+            td:::ctrlbutton LABEL=button
+        tr
+            td...Checkbox
+            td:::ctrlcheckbox label=checkbox,,,value=True
+        tr
+            td...Check list box
+            td
+                ctrlchecklistbox
+                    tdata
+                        tr:::td...abc
+                        tr:::td...def
+                        tr:::td...ghi
+        tr
+            td...Choice
+            td
+                CTRLCHOICE
+                    tdata
+                        tr:::td...abc
+                        tr:::td...def
+                        tr:::td...ghi
+        tr
+            td...Gauge
+            td:::CTRLGAUGE VALUE=50
+        tr
+            td...List box
+            td
+                CTRLLISTBOX width=100%-200,,,height=200px
+                    tdata
+                        tr:::td...abc
+                        tr:::td...def
+                        tr:::td...ghi
+        tr
+            td...List
+            td
+                CTRLLIST width=100%-200,,,height=200px
+                    tr
+                        td...Nazwisko
+                        td...Imie
+                        td...Ulica
+                    tr
+                        td...Cholaj
+                        td...Slawomir
+                        td...Barakuda
+                    tr
+                        td...Kowalski
+                        td...Jan
+                        td...Sklodowskiej 4/74
+        tr
+            td...List
+            td
+                CTRLTABLE width=100%-200,,,height=200px
+                    tr
+                        td...Nazwisko
+                        td...Imie
+                        td...Ulica
+                    tr
+                        td...Cholaj
+                        td...Slawomir
+                        td...Barakuda
+                    tr
+                        td...Kowalski
+                        td...Jan
+                        td...Sklodowskiej 4/74
+        tr
+            td...Radio box
+            td
+                CTRLRADIOBOX
+                    tr:::td...abc
+                    tr:::td...def
+                    tr:::td...ghi
+        tr
+            td...Radio button
+            td:::CTRLRADIOBUTTON LABEL=LABEL
+        tr
+            td...Slider
+            td:::CTRLSLIDER width=100%-200
+        tr
+            td...Spin button
+            td:::CTRLSPINBUTTON width=200px
+        tr
+            td...Spin
+            td:::CTRLSPIN
+        tr
+            td...Static text
+            td:::CTRLSTATICTEXT LABEL=static text
+        tr
+            td...Text
+            td:::CTRLTEXT STRVALUE=HELLO WORLD!
+        tr
+            td...Colour select
+            td:::CTRLCOLOURSELECT
+        tr
+            td...Tree
+            td:::ctrltree width=400,,,height=200
+                li...TEKST
+                li...TEKST 2
+                    ul
+                        li...TEKST 11
+                        li...TEKST 22
+                li...TEKST 3
+        tr
+            td...File browser button
+            td:::CTRLFILEBROWSEBUTTON
+        tr
+            td...Callendar
+            td:::ctrlcalendar
+        tr
+            td...Date picker
+            td:::ctrldatepicker
+        tr
+            td...Editable list box
+            td:::CTRLEDITABLELISTBOX width=400,,,height=300
+        tr
+            td...Mask text
+            td:::CTRLMASKTEXT
+        tr
+            td...Num
+            td:::CTRLNUM
+        tr
+            td...Kwota
+            td:::CTRLKWOTA
+        tr
+            td...Time
+            td:::CTRLTIME
+
+        tr
+            td...Styled text
+            td:::CTRLSTYLEDTEXT
+        tr
+            td...Ticker
+            td:::CTRLTICKER STRVALUE=HELLO WORLD!
+        tr
+            td...htmllistbox
+            td
+                ctrlhtmllistbox width=400
+                    tr:::td...[b]test1[/b]
+                    tr:::td...[strong]test2[/strong]
+                    tr:::td...[h1]test test test[/h1]
+        tr
+            td...shell
+            td
+                CTRLSHELL width=600,,,height=800
+        tr
+            td...Tree list
+            td:::ctrltreelist label=NAZWISKO||IMIE||WIEK,,,width=400,,,height=200
+                li...TEKST 1||A||B
+                li...TEKST 2||ZORRO||BBB
+                    ul
+                        li...TEKST 11||HEJ||BBB
+                        li...TEKST 22||ZORRO||ABBA
+                li...TEKST 3||OKO||ZA OKO
+                

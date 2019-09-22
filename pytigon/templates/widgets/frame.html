@@ -1,0 +1,15 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% block js_standard %}{% endblock %}
+        {% block widget_content %}
+                {% if standard_web_browser %}
+                        <div class="inline_frame refr_target refr_object refr_source" href="{{href}}" width="100%" height="{{height}}"></div>
+                  {% else %}
+                        <ctrlhtml name="{{id}}" src="{{path}}{{href}}" width="100%" height="{{height}}"></ctrlhtml>
+                {% endif %}
+        {% endblock %}
+        {% block js %}{% endblock %}
+        {% block js2 %}{% endblock %}
+{% endblock %}
+

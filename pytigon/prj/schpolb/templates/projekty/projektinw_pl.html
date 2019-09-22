@@ -1,0 +1,81 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+        def filter_url(self, target, href):
+            return href
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='simple' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}{% endblock %}
+{% block list_content_actions %}
+        {% if perms.projekty.add_projektinw %}
+                {% new_row_inline "Nowy projekt" %}
+        {% endif %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Numer</th>
+        <th>Data</th>
+        <th>Projektant</th>
+        <th>Opis projektu</th>
+        <th>Lokalizacja</th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.numer}}</td>
+        <td>{{object.data_start|isoformat}}</td>
+        <td>{{object.projektant}}</td>
+        <td>{{object.opis_projektu}}</td>
+        <td>{{object.lokalizacja}}</td>
+{% endblock %}
+{% block id_extra %}
+        {% row_actions %}
+                field_list/etapprojektuinw_set,Etapy projektu,object.id
+                field_action,:::fa-paperclip,attachements,,,,../../../../../../attachements/table/Attachements/projekty__ProjektInw__{{object.id}}__default/form/sublist
+        {% endrow_actions %}
+{% endblock %}
+{% block list_row_attr %}
+        {% if object.status == '0' %}
+                class=warning
+        {% endif %}
+        {% if object.status == '1' %}
+                class=active
+        {% endif %}
+        {% if object.status == '2' %}
+                class=info
+        {% endif %}
+        {% if object.status == '5' %}
+                class=success
+        {% endif %}
+        {% if object.status == '9' %}
+                class=danger
+        {% endif %}
+{% endblock %}
+{% block list_row_actions %}
+        {% if perms.projekty.change_projektinw %}
+                {% row_actions %}
+                        edit/inline
+                        projekt_status?status=0,Projekt nierozpoczęty,,refresh_obj
+                        projekt_status?status=1,Projekt w trakcie,,refresh_obj
+                        projekt_status?status=2,Realizacja inwestycji,,refresh_obj
+                        projekt_status?status=5,Projekt zamknięty - sukces,,refresh_obj
+                        projekt_status?status=9,Projekt zamknięty - klapa,,refresh_obj
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New event type"
+
+%% list_row_header
+    th...Group
+    th...Name
+    th...Title
+    th...Description
+    th...External name
+    th...Active
+
+%% list_row
+    td...{{object.group}}
+    td...{{object.name}}
+    td...{{object.title}}
+    td...{{object.description}}
+    td...{{object.external_name}}
+    td...{{object.active}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:

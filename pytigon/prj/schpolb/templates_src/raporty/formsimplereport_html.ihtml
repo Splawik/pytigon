@@ -1,0 +1,38 @@
+{# -*- coding: utf-8 -*- #}
+% extends "base_mail.html"
+
+% load exfiltry
+% load exsyntax
+
+%% content 
+    {{report.json_header|safe}}
+    div class=pure-table-bordered
+        table class=pure-table
+            thead
+                % for col in columns:            
+                        th...{{col.0}}
+            tbody
+                % for row in object_list            
+                    tr style=color:{% if colors %}#{{row|last}}{% else %}#000000{% endif %};
+                        % for pos in row|slice:sli:
+                            %if pos|class_name == 'str':
+                                td align=left...{{pos}}
+                            % else:
+                                %if pos|class_name == 'date':
+                                    td align=left...{{pos|isoformat}}
+                                % else:
+                                    %if pos|class_name == 'datetime':
+                                        td align=left...{{pos|isoformat}}
+                                    % else:
+                                        %if pos|class_name == 'int':
+                                            td align=right...{{pos}}
+                                        %else:
+                                            %if pos|class_name == 'float':
+                                                td align=right...{{pos|floatnullformat}}
+                                            %else:
+                                                %if pos|class_name == 'Decimal':
+                                                    td align=right...{{pos|amount}}
+                                                % else:
+                                                    td align=left...{{pos}}
+    {{report.json_footer|safe}}
+        

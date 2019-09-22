@@ -1,0 +1,85 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% block cache %}
+        <meta http-equiv="Cache-control" content="public" />
+{% endblock %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            from pytigon_gui.guilib.events import ID_RETVALUE
+            self.find_value = ""
+            self.listclick=False
+            self.retlist = None
+            self.list1.block_refresh()
+            self.list1.SetFocus()
+            self.list1.Bind(wx.EVT_LISTBOX, self.on_list_selected)
+            self.list1.Bind(wx.EVT_LISTBOX_DCLICK, self.on_list_ret)
+            self.list1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
+            self.list1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+            self.list1.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+            self.Bind(wx.EVT_NAVIGATION_KEY, self.OnNavigationKey)
+            aTable = [(0, wx.WXK_RETURN, ID_RETVALUE),]
+            self.SetAcceleratorTable(wx.AcceleratorTable(aTable))
+            self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RETVALUE)
+            self.refr()
+        def on_key_down(self, event):
+            print("on_key_down", event)
+            if event.KeyCode == wx.WXK_ESCAPE:
+                self.OnExit(event)
+            elif event.KeyCode == wx.WXK_DOWN or (event.AltDown() and event.KeyCode == ord('J')):
+                id = self.list1.GetSelection()
+                if id != wx.NOT_FOUND:
+                    if id < self.list1.GetCount()-1:
+                        self.list1.SetSelection(id+1)
+            elif event.KeyCode == wx.WXK_UP or (event.AltDown() and event.KeyCode == ord('K')):
+                id = self.list1.GetSelection()
+                if id != wx.NOT_FOUND:
+                    if id > 0:
+                        self.list1.SetSelection(id-1)
+            elif event.KeyCode == wx.WXK_TAB:
+                return self.OnExit(event)
+            else:
+                event.Skip()
+        def OnExit(self, event):
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+        def find_value_str(self):
+            return self.find_value
+        def OnLDown(self, event):
+            self.listclick=True
+            event.Skip()
+        def OnLUp(self, event):
+            self.listclick=False
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+            if self.retlist:
+                self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+            else:
+                event.Skip()
+        def refr(self, value=None):
+            if value:
+                self.find_value = value
+            if hasattr(self,'choices'):
+                self.list1.Clear()
+                for item in self.choices:
+                    self.list1.Append(item[0])
+                self.listclick=False
+                self.list1.find_and_select(self.find_value_str())
+        def OnNavigationKey(self, event):
+            id = self.list1.GetSelection()
+            self.retlist = self.choices[id]
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+        def on_list_selected(self, event):
+            id = event.GetSelection()
+            self.retlist = self.choices[id]
+        def on_list_ret(self, event):
+            self.on_list_selected(event)
+            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+</script>
+{% endblock %}
+{% block form_bar %}{% endblock %}
+{% block content %}
+        <CTRLLISTBOX name="list1" width="100%" height="100%"></CTRLLISTBOX>
+{% endblock %}
+

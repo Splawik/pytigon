@@ -1,0 +1,11 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Castorama - stany magazynowe'
+        % for pos in log:
+            {{pos}} <br>

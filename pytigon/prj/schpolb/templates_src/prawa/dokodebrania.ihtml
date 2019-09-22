@@ -1,0 +1,63 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "zatwierdz2": "wx.ART_FILE_SAVE",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=650 form_height=250 table_type='datatable':
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row "Nowy wniosek"
+
+
+%% list_row_header
+    th...Operator
+    th...Data odebrania
+    th...Sporządził
+    th...Zatwierdził
+    th...Uwagi
+
+%% list_row
+    td...{{object.parent}}
+    td...{{object.data_odebrania|isoformat}}
+    td...{{object.sporzadzil}}
+    td...{{object.zatwierdzil}}
+    td...{{object.uwagi}}
+
+%% id_extra
+    % if object.has_attachements:
+        % row_actions:
+            .field_action,:::fa-paperclip,attachements,,+class='btn-info',,../../../../../../attachements/table/Attachements/prawa__DokOdebrania__{{object.id}}__default/form/list
+    % else:
+        % row_actions:
+            .field_action,:::fa-paperclip,attachements,,,,../../../../../../attachements/table/Attachements/prawa__DokOdebrania__{{object.id}}__default/form/list
+
+%% list_row_actions
+    td
+        % if object.zatwierdzil
+            % row_actions:...pdf,Do pdf;edit;delete
+        % else        
+            % row_actions:
+                .zatwierdz2,Zatwierdź,,refresh_obj
+                .pdf,Do pdf
+                .edit
+                .delete        
+
+%% row_edit
+    % form:
+            'parent', 'data_odebrania', 'uwagi'

@@ -1,0 +1,25 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with scroll_table=True no_id=True title="Grupy wzajemnie wykluczające się:"
+        {{ block.super }}
+
+
+%% list_row_header
+    th...Grupa praw
+    th...Połączenie z grupą zabronione
+
+
+%% list_row_header_end
+
+
+%% list_table
+    % for grupa in object_list:
+        tr
+            td... <strong>{{ grupa.0 }}</strong> <br/> <i>({{ grupa.1 }})</i>
+            td... <strong>{{ grupa.2 }}</strong><br/> <i>{{ grupa.3 }}</i>

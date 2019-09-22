@@ -1,0 +1,8 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "template/only_content.html" %}
+{% block body %}
+        {% with show_form=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+

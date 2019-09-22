@@ -1,0 +1,16 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% scroll
+
+%% list_page_header
+    h3...Plots
+    
+%% list_page
+    sch-plotly width=800px,,,height=600px,,,plotly-name=test
+    p
+        sch-plotly-status

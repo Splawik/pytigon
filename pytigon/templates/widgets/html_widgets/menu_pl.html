@@ -1,0 +1,28 @@
+{% extends "widgets/html_widgets/treeview.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block widget_content %}
+        {% if standard_web_browser %}
+                <div class="btn-group">
+                        <button type="button" class="btn">{{title}}</button>
+                        <button type="button" class="btn" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                                {{data}}
+                        </ul>
+                </div>
+          {% else %}
+                {% if style == 'toolbar' %}
+                        <ctrlmenutoolbarbutton label="{{title}}" src="client://actions/go-jump.png">
+                                {{data}}
+                        </ctrlmenutoolbarbutton>
+                  {% else %}
+                        <ctrlmenubutton label="{{title}}" src="client://actions/go-jump.png">
+                                {{data}}
+                        </ctrlmenubutton>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+

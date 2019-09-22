@@ -1,0 +1,82 @@
+{# -*- coding: utf-8 -*- #}
+{% extends 'base0.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block init %}{% endblock %}
+{% block js_scripts %}
+        {% block header_base %}{% endblock %}
+        {% block extrahead %}
+                {% block scroll %}
+                        <meta name="NO_VSCROLLBAR" content="True" />
+                {% endblock %}
+        {% endblock %}
+{% endblock %}
+{% block jquery_ready %}{% endblock %}
+{% block extrastyle %}{% endblock %}
+{% block body %}
+        {% with NO_CHECK_AUTH=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block content %}
+        {% block table_list %}
+            {% block form_start %}
+                    {% if standard_web_browser %}
+                            <div id="FormErrorMsgFrame">
+                                <div id="FormErrorMsgWindow">
+                                    <div id="FormErrorMsg"></div>
+                                </div>
+                                <table width="100%">
+                                    <tr>
+                                        <td align="center">
+                                            <input type="button" value="Zamknij" onClick="jQuery('#FormErrorMsgFrame').hide()" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="jqmWindow" id="FormFrame"></div>
+                            <br />
+                        <p></p>
+                    {% endif %}
+            {% endblock %}
+            {% block form %}
+                    {% block form_header0 %}
+                        {% if standard_web_browser %}
+                                <h1>
+                                    {% block form_title %}
+                                        {{title}}
+                                    {% endblock %}
+                                </h1>
+                        {% endif %}
+                        {% block form_header %}{% endblock %}
+                    {% endblock %}
+                    <form method="post" action="." class="table_filter">
+                        {% block form_filter %}
+                                {% if form %}
+                                        <ul class="form">
+                                                {{ form.as_ul }}
+                                                <li><input type="submit" value="Odśwież" /></li>
+                                        </ul>
+                                        <br />
+                                {% endif %}
+                        {% endblock %}
+                    </form>
+                    {% block table_start %}
+                        <table id="tabsort" class="tabsort">
+                    {% endblock %}
+                    {% block table %}
+                        {% block table_header %}{% endblock %}
+                        {% if object_list %}
+                                {% for object in object_list %}
+                                        {% block table_content %}{% endblock %}
+                                {% endfor %}
+                        {% endif %}
+                        {% block table_footer %}{% endblock %}
+                    {% endblock %}
+                    {% block table_stop %}
+                        </table><p></p>
+                    {% endblock %}
+            {% endblock %}
+        {% endblock %}
+{% endblock %}
+

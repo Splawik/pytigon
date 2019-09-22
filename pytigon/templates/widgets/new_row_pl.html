@@ -1,0 +1,13 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "widgets/action.html" %}
+{% block action_class %}
+        {% if action.target == '_top' %}popup{% endif %}
+{% endblock %}
+{% block description %}
+        {% if description %}
+                <span class="fa fa-plus"></span> {{description}}
+          {% else %}
+                <span class="fa fa-plus"></span>
+        {% endif %}
+{% endblock %}
+

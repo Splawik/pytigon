@@ -1,0 +1,7 @@
+{% extends default_template %}
+{% block all %}
+        {% with SHOW_LOGIN_WIN=True request_path=URL_APP_BASE %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+

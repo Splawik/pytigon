@@ -1,0 +1,44 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type="datatable":
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % list_action "synchr_prac" "Synchronizuj"
+
+%% list_row_header
+    th...Login name
+    th...Nazwisko i imię
+    th...Lokalizacja
+    th...Dział
+
+%% list_row
+    td...{{object.loginname}}
+    td...{{object.nazwisko}} {{object.imie}}
+    td...{{object.oddz}}
+    td...{{object.dzial}}
+    
+%% list_row_actions
+    % row_actions:
+        .edit
+
+%% row_edit
+    % form:

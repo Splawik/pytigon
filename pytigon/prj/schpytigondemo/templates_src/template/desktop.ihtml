@@ -1,0 +1,48 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'vue/vue.js' %}
+    
+    
+    {% jscript_link 'app/_schdata/js/subreport.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+    
+
+%% body_footer
+    {{block.super}}
+    
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/summernote.js' %}
+    {% component 'app/schpytigondemo/components/plotly_status.js' %}
+    {% component 'app/schcomponents/components/handsontable.js' %}
+    {% component 'app/schcomponents/components/pivottable.js' %}
+    {% component 'app/schcomponents/components/plotly.js' %}
+    {% component 'app/schcomponents/components/d3.js' %}
+    {% component 'app/schcomponents/components/xterm.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/video-js.js' %}
+    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
+    {% component 'app/schcomponents/components/txtarea_editor.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
+    {% component 'app/schcomponents/components/leaflet.js' %}
+    
+    
+
+%% component_init
+    .var component_init = [ "summernote", "plotly_status", "handsontable", "pivottable", "plotly", "d3", "xterm", "vs_editor", "video-js", "wysiwyg_edit", "txtarea_editor", "code_editor", "leaflet",  ];  
+
+%% botstrap_css
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

@@ -1,0 +1,58 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New employee"
+    % list_action "sync" "Synchronize with AD"
+    % list_action "compare" "Compare with AD"
+
+%% list_row_header
+    th...Surname
+    th...Name
+    th...email
+    th...Company
+    th...Department
+    th...Location
+    th...Title
+    th...External id
+    th...Postal code
+    th...City
+    th...Telephone number
+    th...Mobile tel. number
+    th...Manager name
+    th...Active
+    
+
+%% list_row
+    td...{{object.surname}}
+    td...{{object.name}}
+    td...{{object.email}}
+    td...{{object.company}}
+    td...{{object.department}}
+    td...{{object.location}}
+    td...{{object.title}}
+    td...{{object.external_id}}
+    td...{{object.postalCode}}
+    td...{{object.city}}
+    td...{{object.telephoneNumber}}
+    td...{{object.mobile}}
+    td...{{object.manager_name}}
+    td...{{object.active}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:

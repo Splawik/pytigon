@@ -1,0 +1,32 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='AD - local'
+        {{ block.super }}
+
+%% user_header
+    th...Email
+    th...Company
+    th...Departament
+    th...Title
+    th...External id
+    th...Postal code
+    th...City
+    th...Street
+    th...Telephone nr
+    th...Mobile tel. nr
+    th...Manager
+
+%% user_row
+    tr
+        % for pos in object:
+            % if pos.1:
+                td...{{pos.0}}
+            % else:
+                td style=background:#ff0;
+                    {{pos.0}}

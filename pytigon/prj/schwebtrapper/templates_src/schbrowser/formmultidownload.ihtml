@@ -1,0 +1,43 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "tasks/v_edit_task.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% pythoncode
+    % if object:
+        {{ block.super }}
+
+%% all
+    %with show_title_bar=1 title='Download' form_edit=False:
+        {{ block.super }}
+
+%% form_content
+    table class=filter_form_frame,,,width=100%
+        div class=inline-form-body
+            {{ form.non_field_errors }}
+            % form:
+        div class=inline-form-body
+            div class=form-group
+                div class=controls
+                div class=controls
+                    input type=submit,,,value=Odśwież,,,class=btn btn-info,,,target=_self,,,height=44
+
+%% list_content_body
+    % if object_list:
+        textarea
+            {% for pos in object_list %}{{pos}}
+            {% endfor %}
+
+%% task_title
+
+%% task_status
+
+%% wx_task_progress
+
+%% wx_task_input
+
+
+

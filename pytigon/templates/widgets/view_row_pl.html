@@ -1,0 +1,11 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "widgets/action.html" %}
+{% block action_class %}
+        popup_info btn {{btn_size}} btn-outline-info
+{% endblock %}
+{% block action_widget_content %}
+        {% with standard_web_browser=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+

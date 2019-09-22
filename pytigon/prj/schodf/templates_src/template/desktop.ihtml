@@ -1,0 +1,26 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+%% js_extrascipts
+    {{block.super}}
+    
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    
+
+%% body_footer
+    {{block.super}}
+    
+
+%% component_init
+     .component_init = []; 

@@ -1,0 +1,16 @@
+{# -*- coding: utf-8 -*- #}
+{% extends template_name %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block js_standard %}{% endblock %}
+{% block js %}
+        {% if standard_web_browser %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js2 %}
+        {% if standard_web_browser %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+

@@ -1,0 +1,55 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % list_action "sync" "Synchronizuj z AD"
+    % list_action "errors" "Sprawdź poprawność"
+
+%% list_row_header
+    th...company
+    th...l
+    th...employeeID
+    th...sAMAccountName
+    th...sn
+    th...givenName
+    th...title
+    th...mail
+    th...mobile
+    th...manager_name
+
+%% list_row
+    td...{{object.company}}
+    td...{{object.l}}
+    td...{{object.employeeID}}
+    td...{{object.sAMAccountName}}
+    td...{{object.sn}}
+    td...{{object.givenName}}
+    td...{{object.title}}
+    td...{{object.mail}}
+    td...{{object.mobile}}
+    td...{{object.manager_name}}
+
+%% list_row_actions
+    
+%% row_edit
+    % form:

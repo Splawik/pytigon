@@ -1,0 +1,23 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with form_width=800 form_height=600 show_title_bar=1 title='Transformator danych w arkuszu'
+        {{ block.super }}
+
+
+%% user_header
+    % for col in columns:
+        th...{{col.0}}
+
+%% user_row
+    tr
+        % for pos in object:
+            td...{{pos}}
+
+%% list_table_footer

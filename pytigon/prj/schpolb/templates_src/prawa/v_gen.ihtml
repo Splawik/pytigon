@@ -1,0 +1,102 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+
+%% extrastyle
+    style type=text/css{:}
+        div.checkboxselectmultiple:
+            height: 320px
+
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "zatwierdz": "wx.ART_FILE_SAVE",
+                    "sporzadzil": "client://categories/applications-office.png",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+
+%% all
+    %with form_width=750 form_height=610 table_type='datatable' form_edit=True:
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row "Nowy wniosek"
+
+
+%% list_row_header
+    th...Data dok 2.
+    th...Operator
+    th...Data uprawnień
+    th...Sporządził
+    th...Zatwierdził
+    th style=width:100px...Uwagi
+
+
+%% list_row
+    td...{{object.data|isoformat}}
+    td...{{object.parent}}
+    td...{{object.data_przydzial|isoformat}}
+    td...{{object.sporzadzil}}
+    td...{{object.zatwierdzil}}
+    td...{{object.uwagi}}
+        
+%% id_extra
+    % if object.has_attachements:
+        % row_actions:
+            .field_action,:::fa-paperclip,attachements,,+class='btn-raised btn-info',,../../../../../../attachements/table/Attachements/prawa__DokPrzydzielenia__{{object.id}}__default/form/list
+    % else:
+        % row_actions:
+            .field_action,:::fa-paperclip,attachements,,,,../../../../../../attachements/table/Attachements/prawa__DokPrzydzielenia__{{object.id}}__default/form/list
+
+%% list_row_actions
+    %if not object.zatwierdzil
+        % row_actions:
+            .zatwierdz,Zatwierdź,,refresh_obj
+            .sporzadzil,Podpisz,,refresh_obj 
+            .pdf,Do pdf
+            .edit
+            .delete        
+    % else
+        % row_actions:...pdf
+
+
+
+%% form_info
+    table name=tabsort,,,class=tabsort table-bordered
+        tr
+            th...Pole
+            th...Wartość
+        tr
+            td...Operator
+            td...{{object.parent.nazwisko}} {{object.parent.imie}}
+        tr
+            td...Lokalizacja
+            td...{{object.parent.lokalizacja.nazwa}}
+        tr
+            td...Dział
+            td...{{object.parent.dzial.nazwa}}
+        tr
+            td...Przełożony
+            td...{{object.parent.przelozony.nazwisko}} {{object.parent.przelozony.imie}}
+        tr
+            td...Data przydziału uprawnień
+            td...{{object.data_przydzial|isoformat}}
+        tr
+            td...Grupy
+            td
+                % for grupa in object.grupy.all
+                    {{grupa.nazwa}};
+        tr
+            td...Uwagi
+            td...{{object.uwagi}}

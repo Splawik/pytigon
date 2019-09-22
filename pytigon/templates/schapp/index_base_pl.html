@@ -1,0 +1,9 @@
+{% extends default_template %}
+{% block heading %}{% endblock %}
+{% block body_body %}
+        {% if not application_type == 'modern' %}
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+{% block content %}{% endblock %}
+

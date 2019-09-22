@@ -1,0 +1,49 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Raport  z importu'
+        {{ block.super }}
+
+%% list_page_footer
+    .Import pliku z danymi pracowników, format pliku:
+    ul
+        li...format pliku xlsx
+        li...dozwolone nazwy kolumn:
+            ul
+                li...surname
+                li...name
+                li...email
+                li...company
+                li...department
+                li...location
+                li...title
+                li...external_id
+                li...postalCode
+                li...city
+                li...street
+                li...telephoneNumber
+                li...mobile
+                li...manager_name
+                li...active
+        li...kolumny konieczne - zestaw 1 (do wyboru z 2):
+            ul
+                li...surname
+                li...name
+                li...company
+        li...kolumny konieczne - zestaw 2
+            ul
+                li...email
+
+%% user_header
+    th...Komunikat
+
+
+%% user_row
+    tr
+        td... {{object}}
+

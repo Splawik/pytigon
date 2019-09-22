@@ -1,0 +1,45 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            import datetime
+            import wx.lib.agw.aui as aui
+            self.now_fun = datetime.datetime.now
+            self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            self.WEB.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            wx.GetApp().GetTopWindow().desktop.Bind(aui.EVT_AUINOTEBOOK_BG_RIGHT_UP, self.on_new_page)
+                        
+        def OnKeyDown(self, event):
+            key = event.GetKeyCode()
+            if key in (ord('G'), ord('L')) and event.ControlDown():
+                self.new_child_page("^standard/webview/gotopanel.html", title="Go")
+                return
+            event.Skip()
+            
+        def on_new_page(self, event):
+            from pytigon_gui.guilib.events import ID_WEB_NEW_WINDOW
+            wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
+
+%% form_bar
+
+%% extrahead
+    meta name=NO_VSCROLLBAR,,,content=True
+%% extrahead2
+    table style=width: 100%;,,,border=1
+        % if user.is_authenticated
+          [ login | 0 ]
+        % else
+          [ login | 1 ]
+        [ gui_style | 3 ]
+        [ hybrid | 1 ]
+        [ csrf_token | {{csrf_token}} ]
+    meta name=NO_VSCROLLBAR,,,content=True
+
+%% content
+    CTRLHTML2 NAME=WEB,,,WIDTH=100%,,,HEIGHT=100%

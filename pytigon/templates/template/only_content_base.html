@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+{% extends default_template2 %}
+{% block page_start %}{% endblock %}
+{% block page_head %}{% endblock %}
+{% block body_start %}{% endblock %}
+{% block body_header %}{% endblock %}
+{% block nav %}{% endblock %}
+{% block login %}{% endblock %}
+{% block body_init %}{% endblock %}
+{% block panel %}{% endblock %}
+{% block messages %}{% endblock %}
+{% block navglobal %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block tabs %}
+        <head>
+                <meta charset="utf-8" />
+                <title>
+                        {{title}}
+                </title>
+        </head>
+        {% with NO_TABS=True %}
+                {{block.super}}
+        {% endwith %}
+{% endblock %}
+{% block html_widgets_init %}{% endblock %}
+{% block body_footer %}{% endblock %}
+{% block page_footer %}{% endblock %}
+{% block body_end %}{% endblock %}
+{% block page_end %}{% endblock %}
+
