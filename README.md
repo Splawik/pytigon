@@ -35,7 +35,7 @@ Key capabilities of Pytigon:
    - django server integrated with wxPython client program
 
 - All in one Pytigon IDE - ide allows you to create program and
-  make instalation program.
+  make installation program.
 
 
 Instalation
@@ -43,7 +43,7 @@ Instalation
 
 1. Windows
 
-   - Download and run instalation program. Instalation program contain
+   - Download and run installation program. Installation program contain
      python enviroment with all needed libraries.
    
 2. Linux
