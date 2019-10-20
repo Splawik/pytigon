@@ -33,7 +33,6 @@ import codecs
 import signal
 import os
 import io
-import ctypes 
 import time
 import configparser
 
@@ -41,7 +40,7 @@ from django.db import transaction
 from django.urls import reverse
 
 from pytigon_lib.schviews.viewtools import change_pos, duplicate_row
-from pytigon_lib.schtasks.base_task import get_process_manager
+#from pytigon_lib.schtasks.base_task import get_process_manager
 import pytigon_lib.schindent.indent_style
 from pytigon_lib.schindent.indent_tools import convert_js
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
@@ -209,11 +208,13 @@ def copy_files_and_dirs(src, dst):
         raise shutil.Error(errors)
 
 def run_python_shell_task2(request):
+    from pytigon_lib.schtasks.base_task import get_process_manager
     id = get_process_manager().put(request, "python-shell", "python3", '-i')
     new_url = make_href("../../schsys/thread/%d/edit/" % id)
     return HttpResponseRedirect(new_url)
 
 def run_python_shell_task_base(request, base_path, prj_name):
+    from pytigon_lib.schtasks.base_task import get_process_manager
     command = "from app_sets.%s.manage import *" % prj_name
     pconsole = settings.PYTHON_CONSOLE.split(' ')
     pconsole[0]=">>>" + pconsole[0]
@@ -672,7 +673,8 @@ def gen(request, pk):
             txt2 = t.render(Context({'prj': prj} ))
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
-                codejs = codejs.split("__pragma__ ('<all>')",1)[0]
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','/static/sch/org.transcrypt.__runtime__.js')
+                #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
             f = open_and_create_dir(dest_path if dest_path else os.path.join(static_scripts,static_file.name+".js"),"wb")
@@ -681,7 +683,8 @@ def gen(request, pk):
         if typ=='R':
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
-                codejs = codejs.split("__pragma__ ('<all>')",1)[0]
+                #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','.././../../sch/org.transcrypt.__runtime__.js')
             except:
                 codejs = ""
             f = open_and_create_dir(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'),"wb")
@@ -1138,6 +1141,7 @@ def installer(request, pk):
 
 def restart_server(request):
     
+    import ctypes 
     restarted = False
     try:
         if platform.system() == "Linux":

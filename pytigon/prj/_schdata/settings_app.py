@@ -19,7 +19,9 @@ init_paths()
 from pytigon_lib.schdjangoext.django_init import get_app_config
 from pytigon_lib.schtools.platform_info import platform_name
 
-from apps import APPS, MAIN_PRJ
+from pytigon.schserw.settings import *
+
+from apps import APPS, PUBLIC, MAIN_PRJ
 
 try:
     from global_db_settings import setup_databases
@@ -58,7 +60,9 @@ for app in APPS:
         if not pack in PACKS:
             PACKS.append(pack)
             p1 = os.path.join(LOCAL_ROOT_PATH, pack)
-            if not p1 in sys.path:  sys.path.append(p1)
+            if not p1 in sys.path: sys.path.append(p1)
+            p2 = os.path.join(PRJ_PATH_ALT, pack)
+            if not p2 in sys.path: sys.path.append(p2)
 
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
@@ -124,5 +128,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.09.11 17:49:42'
+GEN_TIME = '2019.10.20 19:23:59'
 

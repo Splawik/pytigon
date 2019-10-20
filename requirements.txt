@@ -42,7 +42,7 @@ django_redis
 django-cache-url
 django-allauth
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
-git+https://github.com/Splawik/Transcrypt.git@es5
+Transcrypt
 django-sql-explorer
 pendulum
 cefpython3

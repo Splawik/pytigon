@@ -16,7 +16,13 @@ extra_files += package_files("pytigon/templates")
 extra_files += package_files("pytigon/ext_prg")
 extra_files += package_files("pytigon/schappdata")
 extra_files += package_files("pytigon", ".html")
-#extra_files.append("../README.md")
+extra_files += package_files("pytigon/install")
+extra_files.append("pytigon.ini")
+extra_files.append("pytigon_splash.jpeg")
+extra_files.append("pytigon.svg")
+extra_files.append("pytigon.png")
+extra_files.append("pytigon.ico")
+
 
 setup(
     name="pytigon",
@@ -25,14 +31,14 @@ setup(
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
     license="LGPLv3",
-    packages=find_packages(),
-    package_data={"": extra_files, },
+    packages=find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]),
+    package_data={"": extra_files},
     install_requires=[
         "pytigon-lib",
         "Twisted[tls,http2]",
         "channels",
         "asgiref",
-        #"django_python3_ldap",
+        # "django_python3_ldap",
         "django-bootstrap4",
         "django_select2",
         "django-cors-headers",
@@ -56,8 +62,8 @@ setup(
         "hypercorn",
         "xonsh",
         "dukpy",
-        #"git+https://github.com/Splawik/django-filer.git@feature/django2-support",
-        #"git+https://github.com/Splawik/Transcrypt.git@es5",
+        # "git+https://github.com/Splawik/django-filer.git@feature/django2-support",
+        # "git+https://github.com/Splawik/Transcrypt.git@es5",
         "netifaces",
         "cython",
         "numba",
@@ -79,3 +85,6 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )
+
+# print(extra_files)
+# print(find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]))

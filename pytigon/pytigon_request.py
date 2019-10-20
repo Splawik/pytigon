@@ -52,5 +52,5 @@ def request(url, params=None):
         response = HTTP.post(None, url, params)
     else:
         response = HTTP.get(None, url)
-    print(response.str())
+    return response
 

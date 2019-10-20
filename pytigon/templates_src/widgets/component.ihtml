@@ -1,2 +1,2 @@
 % load static
-script src={% static href %}
+script type=module,,,src={% static href %}

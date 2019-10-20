@@ -1,5 +1,7 @@
+// Transcrypt'ed from Python, 2019-10-20 21:23:32
+import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '.././../../sch/org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
-var from_dict = function (d, py_name) {
+export var from_dict = function (d, py_name) {
 	if (__in__ (py_name, d)) {
 		return d [py_name];
 	}
@@ -7,7 +9,7 @@ var from_dict = function (d, py_name) {
 		return dict ({});
 	}
 };
-var transform_event_data = function (data) {
+export var transform_event_data = function (data) {
 	var ret = dict ({});
 	if (__in__ ('destination', data)) {
 		ret ['destination'] = data ['destination'];
@@ -16,14 +18,10 @@ var transform_event_data = function (data) {
 		ret ['event_name'] = data ['event_name'];
 	}
 	if (__in__ ('points', data)) {
-		var pp = list ([]);
-		var __iterable0__ = data ['points'];
-		for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
-			var point = __iterable0__ [__index0__];
+		var pp = [];
+		for (var point of data ['points']) {
 			var p = dict ({});
-			var __iterable1__ = list (['curveNumber', 'pointNumber', 'x', 'y', 'z', 'lat', 'lon']);
-			for (var __index1__ = 0; __index1__ < len (__iterable1__); __index1__++) {
-				var key = __iterable1__ [__index1__];
+			for (var key of ['curveNumber', 'pointNumber', 'x', 'y', 'z', 'lat', 'lon']) {
 				if (point.hasOwnProperty (key)) {
 					p [key] = point [key];
 				}
@@ -34,11 +32,11 @@ var transform_event_data = function (data) {
 	}
 	return ret;
 };
-var _plotly = function (resolve, reject) {
+export var _plotly = function (resolve, reject) {
 	var base_path = window.BASE_PATH + 'static/vanillajs_plugins';
 	var base_plotly_path = window.BASE_PATH + 'schreports/plot_service/';
 	var _on_loadjs = function () {
-		var props = list (['width', 'height', 'plotlyName', 'param']);
+		var props = ['width', 'height', 'plotlyName', 'param'];
 		var template = "<div name='plotlydiv' v-bind:style='{ width: width, height: height} ></div>";
 		var process_response_data = function (this_obj, data) {
 			if (__in__ ('redirect', data) && data ['redirect']) {
@@ -137,9 +135,7 @@ var _plotly = function (resolve, reject) {
 					window.MOUNTED_COMPONENTS++;
 				}
 				if (events) {
-					var __iterable0__ = events;
-					for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
-						var pos = __iterable0__ [__index0__];
+					for (var pos of events) {
 						if (__in__ ('=>', pos)) {
 							var x = pos.py_split ('=>');
 							var _callback = function (data1) {
@@ -205,3 +201,5 @@ var _plotly = function (resolve, reject) {
 	load_js (base_path + '/plotly-latest.min.js', _on_loadjs);
 };
 Vue.component ('sch-plotly', _plotly);
+
+//# sourceMappingURL=input.map

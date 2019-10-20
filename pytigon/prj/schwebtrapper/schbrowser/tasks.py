@@ -10,11 +10,11 @@ import datetime
 import time
 from queue import Empty
 
-from pytigon_lib.schhttptools import httpclient
+from schlib.schhttptools import httpclient
 from html.parser import HTMLParser
-from pytigon_lib.schhtml.parser import Parser
+from schlib.schhtml.parser import Parser
 import re
-from pytigon_lib.schtools.schjson import json_dumps
+from schlib.schtools.schjson import json_dumps
 import urllib.parse
 import requests
  

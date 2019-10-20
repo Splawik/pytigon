@@ -23,10 +23,10 @@ import sys
 import datetime
 
 import time
-from pytigon_lib.schdjangoext.tools import import_model
+from schlib.schdjangoext.tools import import_model
 from pyexcel_odsr import get_data
-from pytigon_lib.schtools.schjson import json_dumps, json_loads
-from pytigon_lib.schfs.vfstools import get_temp_filename
+from schlib.schtools.schjson import json_dumps, json_loads
+from schlib.schfs.vfstools import get_temp_filename
 import openpyxl
 import csv
  

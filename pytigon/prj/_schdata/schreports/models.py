@@ -20,8 +20,8 @@ from schtools.models import *
 
 
 
-from pytigon_lib.schtools.schjson import json_dumps, json_loads
-#from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schtools.schjson import json_dumps, json_loads
+#from schlib.schdjangoext.django_ihtml import ihtml_to_html
 #from django.template import Context, Template
 from django.db.models import Max, Min
 

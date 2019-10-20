@@ -23,6 +23,20 @@ import os
 
 from pytigon_lib.schtools.tools import get_executable
 from pytigon_lib.schtools.platform_info import platform_name
+from os import environ
+
+environ["START_PATH"] = os.path.abspath(os.getcwd())
+
+
+def schserw_init_prj_path(app):
+    import pytigon.schserw.settings
+    p1 = os.path.join(pytigon.schserw.settings.PRJ_PATH, app)
+    sys.path.append(pytigon.schserw.settings.PRJ_PATH)
+    if not os.path.exists(p1):
+        p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
+        if os.path.exists(p2):
+            pytigon.schserw.settings.PRJ_PATH = pytigon.schserw.settings.PRJ_PATH_ALT
+
 
 def run(param=None):
     if param:
@@ -44,6 +58,7 @@ def run(param=None):
 
             x = argv[1].split('_',1)
             app = x[1]
+            schserw_init_prj_path(app)
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
@@ -56,8 +71,6 @@ def run(param=None):
         else:
             subprocess.run([get_executable(), "manage.py"] + argv[2:])
     elif len(argv) > 1 and argv[1].startswith('run_'):
-        from pytigon.schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
-            STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
         x = argv[1].split('_', 1)
         if '/' in x[1]:
             x2 = x[1].split('/', 1)
@@ -67,15 +80,23 @@ def run(param=None):
             app = x[1]
             script = "run.py"
 
+        schserw_init_prj_path(app)
+
+        from pytigon.schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
+            STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
+
         path3 = os.path.join(PRJ_PATH, app)
         subprocess.run([get_executable(), ] + [os.path.join(path3, script),] + argv[2:])
 
     elif len(argv)>1 and argv[1].startswith('runserver'):
         if '_' in argv[1]:
-            from pytigon.schserw import ROOT_PATH, DATA_PATH, PRJ_PATH, \
-                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
             x = argv[1].split('_', 1)
             app = x[1]
+
+            schserw_init_prj_path(app)
+
+            from pytigon.schserw import ROOT_PATH, DATA_PATH, PRJ_PATH, \
+                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
@@ -112,6 +133,14 @@ def run(param=None):
             if help:
                 print("First form:")
                 print("===========")
+            app = None
+            for pos in argv[1:]:
+                if not pos.startswith('-'):
+                    app=pos
+                    break
+
+            schserw_init_prj_path(app)
+
             from pytigon_gui.pytigon import main
             main()
         except SystemExit:

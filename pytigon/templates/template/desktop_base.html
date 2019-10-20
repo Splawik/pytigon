@@ -38,24 +38,27 @@
         {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
         {% block ext_js_scripts %}{% endblock %}
-        {% jscript_link 'sch/pytigon.js' %}
         {% jscript_link 'sch/inline_dialog.js' %}
         {% block theme_js_scripts %}{% endblock %}
 {% endblock %}
 {% block jquery_init %}
+        import {app_init,jquery_ready} from  "{% get_static_prefix %}sch/pytigon.js";
+        import {init_db,init_sync} from  "{% get_static_prefix %}sch/db.js";
+        import {register_fragment_init_fun,animate_combo} from '{% get_static_prefix %}sch/tools.js';
+        window.animate_combo = animate_combo;
         {% block js_app_init %}
                 function base_fragment_init() {}
         {% endblock %}
         {% block component_init %}
                 component_init = null
         {% endblock %}
-        pytigon.app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+        app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
 {% endblock %}
 {% block jquery_ready_start %}
         jQuery(document).ready(function() {
 {% endblock %}
 {% block jquery_ready %}
-        pytigon.jquery_ready();
+        jquery_ready();
         base_fragment_init();
 {% endblock %}
 {% block jquery_ready_end %}

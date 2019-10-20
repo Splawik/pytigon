@@ -1,7 +1,4 @@
 /* main settings */
-not(.login_background) div.content-wrapper {
-  background-color: #fff; }
-
 .app_chose_title {
   color: gold !important;
   text-align: center;

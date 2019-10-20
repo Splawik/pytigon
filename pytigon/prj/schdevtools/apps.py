@@ -1,4 +1,4 @@
-APPS=['schbuilder','_schtools.schcommander','_schtools.schauth',]
+APPS=['schbuilder','_schtools.schauth',]
 PUBLIC = True
 MAIN_PRJ = False
 GUI_COMMAND_LINE="--no_splash --websocket_id=/schbuilder/clock/socket.io/"

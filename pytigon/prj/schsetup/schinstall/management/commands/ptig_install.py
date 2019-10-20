@@ -8,7 +8,7 @@ import getopt
 
 from zipfile import ZipFile
 
-from pytigon_lib.schtools.install import extract_ptig
+from schlib.schtools.install import extract_ptig
 
 class Command(BaseCommand):
     help ="Install .ptig file"

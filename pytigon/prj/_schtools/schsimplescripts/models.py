@@ -19,7 +19,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 import datetime
-from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
 from schsimplescripts.script_tools import decode_script
 
 

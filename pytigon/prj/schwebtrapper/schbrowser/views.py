@@ -25,11 +25,11 @@ import datetime
 import json
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from .models import history
-from pytigon_lib.schhttptools import httpclient
+from schlib.schhttptools import httpclient
 from html.parser import HTMLParser
 import re
-from pytigon_lib.schtasks.task import get_process_manager
-from pytigon_lib.schhttptools import httpclient
+from schlib.schtasks.task import get_process_manager
+from schlib.schhttptools import httpclient
  
 
 PFORM = form_with_perms('schbrowser') 

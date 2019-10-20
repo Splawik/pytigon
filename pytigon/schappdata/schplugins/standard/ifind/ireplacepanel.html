@@ -6,19 +6,17 @@
 {% block pythoncode %}
         <script language="python">
         def init_form(self):
-            #self['SEARCH'].ShowSearchButton(True)
-            #self['SEARCH'].ShowCancelButton(True)
-            self['SEARCH'].Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+            self.SEARCH.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
             self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearch)
-            self['NEXT'].Bind(wx.EVT_BUTTON, self.OnNext)
-            self['PREV'].Bind(wx.EVT_BUTTON, self.OnPrev)
-            self['EXIT'].Bind(wx.EVT_BUTTON, self.OnExit)
-            self['REPLACE'].Bind(wx.EVT_BUTTON, self.OnReplace)
-            self['REPLACE_ALL'].Bind(wx.EVT_BUTTON, self.OnReplaceAll)
+            self.NEXT.Bind(wx.EVT_BUTTON, self.OnNext)
+            self.PREV.Bind(wx.EVT_BUTTON, self.OnPrev)
+            self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
+            self.REPLACE.Bind(wx.EVT_BUTTON, self.OnReplace)
+            self.REPLACE_ALL.Bind(wx.EVT_BUTTON, self.OnReplaceAll)
             self.search_txt = ""
-            self['SEARCH'].SetFocus()
+            self.SEARCH.SetFocus()
         def SearchText(self, regex=False, back=False, corectSelection=False):
-            editor = self.get_parent_form()['EDITOR']
+            editor = self.get_parent_form().EDITOR
             text   = self.search_txt
             flags = wx.stc.STC_FIND_MATCHCASE
             if regex:
@@ -53,7 +51,7 @@
         def Search(self):
             self.SearchText()
         def OnKeyUp(self, event):
-            value = self['SEARCH'].GetValue()
+            value = self.SEARCH.GetValue()
             if value!=self.search_txt:
                 self.search_txt=value
                 self.SearchText()
@@ -62,12 +60,12 @@
             self.any_parent_command('Cancel', True)
         def OnReplace(self, event):
             editor = self.GetParentPanel()['EDITOR']
-            editor.ReplaceSelection(self['REPLACE_TXT'].GetValue())
+            editor.ReplaceSelection(self.REPLACE_TXT.GetValue())
         def OnReplaceAll(self, event):
-            editor = self.get_parent_panel()['EDITOR']
-            self.search_txt=self['SEARCH'].GetValue()
+            editor = self.get_parent_form().EDITOR
+            self.search_txt=self.SEARCH.GetValue()
             while(self.SearchText()>0):
-                editor.ReplaceSelection(self['REPLACE_TXT'].GetValue())
+                editor.ReplaceSelection(self.REPLACE_TXT.GetValue())
 </script>
 {% endblock %}
 {% block content %}

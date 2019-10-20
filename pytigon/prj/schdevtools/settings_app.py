@@ -19,7 +19,7 @@ init_paths()
 from pytigon_lib.schdjangoext.django_init import get_app_config
 from pytigon_lib.schtools.platform_info import platform_name
 
-from schserw.settings import *
+from pytigon.schserw.settings import *
 
 from apps import APPS, PUBLIC, MAIN_PRJ
 
@@ -60,7 +60,9 @@ for app in APPS:
         if not pack in PACKS:
             PACKS.append(pack)
             p1 = os.path.join(LOCAL_ROOT_PATH, pack)
-            if not p1 in sys.path:  sys.path.append(p1)
+            if not p1 in sys.path: sys.path.append(p1)
+            p2 = os.path.join(PRJ_PATH_ALT, pack)
+            if not p2 in sys.path: sys.path.append(p2)
 
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
@@ -122,7 +124,6 @@ else:
 
 CHANNELS_URL_TAB = [ 
  ("^"+URL_ROOT_PREFIX+r"schbuilder/clock/socket.io/$", 'schbuilder.consumers.Clock'),
- ("^"+URL_ROOT_PREFIX+r"schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -131,6 +132,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.09.11 17:48:45'
+GEN_TIME = '2019.10.20 19:22:17'
 OFFLINE_SUPPORT = True
 

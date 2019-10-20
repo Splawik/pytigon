@@ -20,9 +20,9 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from django.template import RequestContext,Context, Template
 import markdown2 as markdown
-from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
-from pytigon_lib.schtools.wiki import wikify, wiki_from_str, make_href
-from pytigon_lib.schtools.tools import norm_indent
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schtools.wiki import wikify, wiki_from_str, make_href
+from schlib.schtools.tools import norm_indent
 from django.template.loader import select_template
 from datetime import datetime
 from collections import namedtuple

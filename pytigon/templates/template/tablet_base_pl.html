@@ -207,10 +207,10 @@
         {% endif %}
         </section></div>
 {% endblock %}
-{% block body_end %}
+{% block jquery_init %}
+        {{block.super}}
         {% if form_ext or not show_form %}
                 {% if 'smartfon' in client_type %}
-                        <script>
                             jQuery.sidebarMenu(jQuery('.sidebar-menu'));
                             var obj1_off =  { 'width': '256px' };
                             var obj1_on =  { 'width': '0px' };
@@ -219,9 +219,7 @@
                             var obj1 = jQuery('#menu');
                             var obj2 = jQuery('#panel');
                             animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-                        </script>
                   {% else %}
-                        <script>
                             jQuery.sidebarMenu(jQuery('.sidebar-menu'));
                             var obj1_off =  { 'width': '256px' };
                             var obj1_on =  { 'width': '0px' };
@@ -230,10 +228,8 @@
                             var obj1 = jQuery('#menu');
                             var obj2 = jQuery('#panel');
                             animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-                        </script>
                 {% endif %}
         {% endif %}
-        {{block.super}}
 {% endblock %}
 {% block loading-indicator: %}{% endblock %}
 

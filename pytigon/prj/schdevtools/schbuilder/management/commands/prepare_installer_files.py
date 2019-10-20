@@ -8,7 +8,7 @@ import getopt
 
 from django.conf import settings
 
-from pytigon_lib.schtools.install import install
+from schlib.schtools.install import install
 from schbuilder.views import prj_export
 from schbuilder.models import SChAppSet
 

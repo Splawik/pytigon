@@ -7,7 +7,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-ex1-collapse" aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand txt3d" href="#">{{appset_title}}</a>
+                <a class="navbar-brand txt3d" href="#">{{prj_title}}</a>
                 <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
                         <ul class="navbar-nav mr-auto">
 {% endblock %}
@@ -47,7 +47,7 @@
                                         {% if not autologin %}
                                                 <a class="dropdown-item system_menu" href="#" action="{{base_path}}schsys/do_logout/?schtml=1" title="Logout">Logout</a>
                                         {% endif %}
-                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#change_passwd">Zmiana hasła</a>
+                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#change_passwd">Change password</a>
                                         {% if user.is_superuser %}
                                                 <a class="dropdown-item system_menu" href="#" action="{{base_path}}admin/?schtml=1" title="Administration">Administraction</a>
                                         {% endif %}

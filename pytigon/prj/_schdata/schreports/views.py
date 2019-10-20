@@ -22,10 +22,10 @@ import os
 import sys
 import datetime
 
-from pytigon_lib.schtools.schjson import json_dumps, json_loads
-from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
-from pytigon_lib.schdjangoext.fastform import form_from_str
-from pytigon_lib.schviews import make_path
+from schlib.schtools.schjson import json_dumps, json_loads
+from schlib.schdjangoext.django_ihtml import ihtml_to_html
+from schlib.schdjangoext.fastform import form_from_str
+from schlib.schviews import make_path
 from schelements.models import DocReg, DocType, DocHead, OrgChartElem
 from django.db.models import F
 from schelements.views import year_ago

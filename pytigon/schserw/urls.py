@@ -28,6 +28,9 @@ from django.views.generic import TemplateView
 import django.views.i18n
 import django.conf.urls.i18n
 import django_select2.urls
+import django.contrib.staticfiles
+from django.contrib.staticfiles import views
+#import django.contrib.staticfiles.views.serve
 
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
@@ -54,7 +57,8 @@ _urlpatterns.extend([
     url('schsys/jsi18n/$', django.views.i18n.JavaScriptCatalog, {'packages': ('django.conf', )}),
     url('schsys/i18n/', include(django.conf.urls.i18n)),
     url('schplugins/(?P<template_name>.*)', views.plugin_template),
-    url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+    #url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+    url('site_media/(.*)$', django.contrib.staticfiles.views.serve, {'document_root': settings.MEDIA_ROOT}),
     url('select2/', include(django_select2.urls)),
     url('favicon.ico', views.favicon),
     url(make_href('sw.js'), views.sw),

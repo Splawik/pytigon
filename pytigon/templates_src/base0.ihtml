@@ -107,7 +107,7 @@
     %% page_footer
 
         %% js_extrascipts_init
-            script type=text/javascript
+            script type=module
                 %% jquery_init
                 %% jquery_init_once
                 %% jquery_ready_all

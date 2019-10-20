@@ -57,17 +57,21 @@
 
     %% ext_js_scripts
 
-    {% jscript_link 'sch/pytigon.js' %}
+
     {% jscript_link 'sch/inline_dialog.js' %}
 
     %% theme_js_scripts
 
 %% jquery_init
+    .import {app_init,jquery_ready} from  "{% get_static_prefix %}sch/pytigon.js";
+    .import {init_db,init_sync} from  "{% get_static_prefix %}sch/db.js";
+    .import {register_fragment_init_fun,animate_combo} from '{% get_static_prefix %}sch/tools.js';
+    .window.animate_combo = animate_combo;
     %% js_app_init
         .function base_fragment_init() {}
     %% component_init
         .component_init = null
-    .pytigon.app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+    .app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
 
 
 %% jquery_ready_start
@@ -75,7 +79,7 @@
 
 
 %% jquery_ready
-    .pytigon.jquery_ready();
+    .jquery_ready();
     .base_fragment_init();
 
 
