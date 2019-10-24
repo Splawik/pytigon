@@ -53,12 +53,12 @@ def run(param=None):
     os.environ['PYTIGON_ROOT_PATH'] = base_path
     if len(argv)>1 and argv[1].startswith('manage'):
         if '_' in argv[1]:
-            from pytigon.schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
-                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
-
             x = argv[1].split('_',1)
             app = x[1]
             schserw_init_prj_path(app)
+
+            from pytigon.schserw.settings import ROOT_PATH, DATA_PATH, PRJ_PATH, \
+                STATIC_APP_ROOT, MEDIA_ROOT, UPLOAD_PATH
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
