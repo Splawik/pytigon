@@ -1,4 +1,4 @@
-app: pytigon
+app: ptig
 
 ingredients:
   dist: bionic
@@ -18,32 +18,30 @@ ingredients:
     - libmysqlclient-dev 
     - zip
     - libpng-dev 
+    - postgresql-client 
+    - postgresql-client-common 
+    - libpq-dev
     
   script:
     - virtualenv venv -p $(which python3.7) --always-copy
     - venv/bin/pip install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk2/ubuntu-18.04/ wxPython
-    - venv/bin/pip install Pillow mysql psycopg2 cefpython3
-    - wget -c https://github.com/Splawik/pytigon/archive/master.zip
-    - unzip master.zip
-    - venv/bin/pip install -r pytigon-master/requirements.txt 
-    - venv/bin/pip install -r pytigon-master/requirements_gui.txt 
+    - venv/bin/pip install Pillow mysql psycopg2-binary cefpython3
+    - venv/bin/pip install git+https://github.com/Splawik/pytigon-lib.git git+https://github.com/Splawik/pytigon.git git+https://github.com/Splawik/pytigon-gui.git
 
 script:
   - mkdir opt
-  - cp -R ../pytigon-master opt/pytigon
-  - cp -Rf ../venv/lib/python3.*/site-packages/* usr/lib/python3/dist-packages/    
-  - cp opt/pytigon/pytigon.png usr/share/icons/hicolor/48x48/apps/pytigon.png
-  - cp opt/pytigon/pytigon.png .
+  - cp -Rf ../venv/lib/python3.*/site-packages/* usr/lib/python3/dist-packages/
+  - strip -s usr/lib/python3/dist-packages/cefpython3/*.so
+  - strip -s usr/lib/python3/dist-packages/wx/*.so    
+  - cp usr/lib/python3/dist-packages/pytigon/pytigon.png usr/share/icons/hicolor/48x48/apps/pytigon.png
+  - cp usr/lib/python3/dist-packages/pytigon/pytigon.png .
   - cat > pytigon.desktop <<EOF
   - [Desktop Entry]
   - Type=Application
-  - Name=pytigon
+  - Name=ptig
   - Icon=pytigon
-  - Exec=pytigon
+  - Exec=python3.7 -m pytigon.ptig
   - Categories=Utility;
   - MimeType=application/pytigon;
   - EOF
-  - ( cd opt/pytigon/ ; ../../usr/bin/python3.7 manage.py compile_templates )
-  - ( cd usr/bin/ ; ln -s ../../opt/pytigon/appimage_pytigon.py pytigon )
-  - chmod a+x opt/pytigon/appimage_pytigon.py
   
