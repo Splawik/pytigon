@@ -23,10 +23,10 @@ import sys
 import datetime
 
 from .models import Page
-from schlib.schdjangoext.fastform import form_from_str
+from pytigon_lib.schdjangoext.fastform import form_from_str
 from django.template.loader import select_template
-from schlib.schviews import make_path
-from schlib.schtools.schjson import json_loads, json_dumps
+from pytigon_lib.schviews import make_path
+from pytigon_lib.schtools.schjson import json_loads, json_dumps
 from base64 import b32decode, b32encode
 
 template_start_wiki = """

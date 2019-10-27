@@ -52,6 +52,7 @@ class WebViewMemoryHandler(wx.html2.WebViewHandler):
         self.fs = wx.FileSystem()
 
     def GetFile(self, uri):
+        print(uri)
         if uri.startswith('http://127.0.0.2/?:'):
             if uri != "http://127.0.0.2/?:":
                 self.browser.run_command_from_js(uri[19:])
@@ -191,7 +192,7 @@ def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, 
                 progress2 = 100
             return self.progress_changed(progress2)
 
-        def load_url(self, url):
+        def load_url(self, url, cookies=None):
             if not self.local and url.startswith('http://127.0.0.2'):
                 self.local = True
                 self.RegisterHandler(WebViewMemoryHandler(self))

@@ -23,8 +23,8 @@ import sys
 import datetime
 
 from django.http import HttpResponse
-from schlib.schtasks.base_task import get_process_manager
-from schlib.schtools.schjson import json_dumps, json_loads
+from pytigon_lib.schtasks.base_task import get_process_manager
+from pytigon_lib.schtools.schjson import json_dumps, json_loads
 
  
 

@@ -26,7 +26,7 @@
                         return
         def filter_url(self, target, href):
             if '/edit/' in href:
-                from schlib.schmodels import import_model
+                from pytigon_lib.schmodels import import_model
                 model = import_model('{{app}}', '{{tab}}')
                 id = href.split('/')[-3]
                 obj = model.objects.get(id=id)

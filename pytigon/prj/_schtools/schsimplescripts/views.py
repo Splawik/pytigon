@@ -23,8 +23,8 @@ import sys
 import datetime
 
 from django.http import Http404
-from schlib.schdjangoext.django_ihtml import ihtml_to_html
-from schlib.schdjangoext.fastform import form_from_str
+from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
+from pytigon_lib.schdjangoext.fastform import form_from_str
 from schsimplescripts.script_tools import decode_script
 
 SCRIPT_TEMPLATE = """

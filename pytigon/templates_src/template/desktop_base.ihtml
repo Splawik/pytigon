@@ -10,8 +10,7 @@
     script language=javascript
         .window.BASE_PATH = '{{base_path}}';
 
-    % if request.get_host == '127.0.0.2':
-        {% jscript_link 'sch/schXMLHttpRequest.js' %}
+    {% jscript_link 'sch/schXMLHttpRequest.js' %}
 
     {% jscript_link 'system/browser-polyfill.min.js' %}
 

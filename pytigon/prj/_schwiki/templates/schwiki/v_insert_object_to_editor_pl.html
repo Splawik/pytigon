@@ -1,0 +1,83 @@
+<script>
+var __name__ = '__main__';
+var robj = object.closest ('.refr_object');
+var editor_div = robj.find ("div[name='vseditor']");
+var ed = editor_div.data ('editor');
+var repeat = 2;
+while (repeat > 0) {
+	var pos = ed.getPosition ();
+	var text = ed.getValue ();
+	var tab = text.py_split ('\n');
+	var line = tab [pos.lineNumber - 1];
+	if (line.startswith ('@')) {
+		if ('{{edit_form}}' == 'True') {
+			var x = line.py_split (':');
+			var href = ('{{app_path}}table/PageObjectsConf/action/edit_page_object/?name=' + x [0].__getslice__ (1, null, 1)) + '&page_id={{page.id}}';
+			on_popup_edit_new (href, object [0], null);
+		}
+		var repeat = 0;
+	}
+	else {
+		if (!('{{pk}}')) {
+			alert ('Select new wiki object type or point to existing element to edit proporties');
+			break;
+		}
+		var max = 0;
+		var __iterable0__ = tab;
+		for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
+			var l = __iterable0__ [__index0__];
+			if (l.startswith ('@{{object.name}}')) {
+				var x = l.py_split ('_');
+				if (len (x) > 1) {
+					var xx = x [1].py_split (':');
+					try {
+						var n = int (xx [0]);
+						if (n > max) {
+							var max = n;
+						}
+					}
+					catch (__except0__) {
+						// pass;
+					}
+				}
+			}
+		}
+		var range = new monaco.Range (pos.lineNumber, 1, pos.lineNumber, 1);
+		var id = dict ({'major': 1, 'minor': 1});
+		if ('{{edit_form}}' == 'True') {
+			var edit_form = '_' + str (max + 1);
+		}
+		else {
+			var edit_form = '';
+		}
+		var text = ('@{{object.name}}' + edit_form) + '{% if object.inline_editing %}:\n{% else %}\n{% endif %}';
+		var op = dict ({'identifier': id, 'range': range, 'text': text, 'forceMoveMarkers': true});
+		ed.executeEdits ('pytigon', list ([op]));
+		ed.setPosition (pos);
+		editor_div.data ('vue-editor').save (null);
+		repeat--;
+	}
+}
+__pragma__ ('<all>')
+	__all__.__name__ = __name__;
+	__all__.ed = ed;
+	__all__.edit_form = edit_form;
+	__all__.editor_div = editor_div;
+	__all__.href = href;
+	__all__.id = id;
+	__all__.l = l;
+	__all__.line = line;
+	__all__.max = max;
+	__all__.n = n;
+	__all__.op = op;
+	__all__.pos = pos;
+	__all__.range = range;
+	__all__.repeat = repeat;
+	__all__.robj = robj;
+	__all__.tab = tab;
+	__all__.text = text;
+	__all__.x = x;
+	__all__.xx = xx;
+__pragma__ ('</all>')
+</script>
+

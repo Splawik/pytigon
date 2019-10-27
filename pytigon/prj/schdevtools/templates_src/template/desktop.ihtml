@@ -58,7 +58,7 @@
     .init_sync(sync_struct);
 
     .function bootstrap_init(elem) {
-    .    elem.bootstrapMaterialDesign();
+    .    //elem.bootstrapMaterialDesign();
     .};
 
     .register_fragment_init_fun(bootstrap_init);

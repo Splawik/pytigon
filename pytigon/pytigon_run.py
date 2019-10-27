@@ -29,13 +29,14 @@ environ["START_PATH"] = os.path.abspath(os.getcwd())
 
 
 def schserw_init_prj_path(app):
-    import pytigon.schserw.settings
-    p1 = os.path.join(pytigon.schserw.settings.PRJ_PATH, app)
-    sys.path.append(pytigon.schserw.settings.PRJ_PATH)
-    if not os.path.exists(p1):
-        p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
-        if os.path.exists(p2):
-            pytigon.schserw.settings.PRJ_PATH = pytigon.schserw.settings.PRJ_PATH_ALT
+    if app:
+        import pytigon.schserw.settings
+        p1 = os.path.join(pytigon.schserw.settings.PRJ_PATH, app)
+        sys.path.append(pytigon.schserw.settings.PRJ_PATH)
+        if not os.path.exists(p1):
+            p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
+            if os.path.exists(p2):
+                pytigon.schserw.settings.PRJ_PATH = pytigon.schserw.settings.PRJ_PATH_ALT
 
 
 def run(param=None):

@@ -22,7 +22,7 @@ import os
 import sys
 import datetime
 
-from schlib.schtable.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
+from pytigon_lib.schtable.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
 from schtools.models import Parameter
 import django.contrib.auth
  

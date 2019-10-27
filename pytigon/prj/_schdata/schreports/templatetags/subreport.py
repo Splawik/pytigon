@@ -14,9 +14,9 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.template.base import token_kwargs, TemplateSyntaxError
 from django.template.base import Node
 
-from schlib.schhtml.parser import Parser
-from schlib.schtools.wiki import wiki_from_str
-from schlib.schdjangoext.tools import make_href
+from pytigon_lib.schhtml.parser import Parser
+from pytigon_lib.schtools.wiki import wiki_from_str
+from pytigon_lib.schdjangoext.tools import make_href
 
 register = template.Library()
 

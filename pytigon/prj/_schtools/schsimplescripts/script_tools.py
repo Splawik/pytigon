@@ -1,4 +1,4 @@
-from schlib.schdjangoext.django_ihtml import ihtml_to_html
+from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 
 def _transform_view(name, txt1, txt2):
     fun = ""

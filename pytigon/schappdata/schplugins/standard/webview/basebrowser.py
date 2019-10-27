@@ -428,6 +428,10 @@ class BaseWebBrowser(object):
                 fun_id = fun_id.split('//127.0.0.2')[1]
             cmd = """window.ajax_get_response_fun['%s'](decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id,txt)
             self.execute_javascript(cmd)
+        elif l[0] == 'action':
+            x = split2(l[1], '??')
+            print(x)
+            #cmd = f"window.get_action_data("""
         return
 
     def clear_history(self):
@@ -440,6 +444,8 @@ class BaseWebBrowser(object):
         return s
 
     def _get_http_file(self, uri):
+        if 'schXML' in uri:
+            print(uri)
         if uri.startswith('http://127.0.0.2'):
             if uri.startswith('http://127.0.0.2/data') and '?' in uri:
                 data = split2(uri, '?')
