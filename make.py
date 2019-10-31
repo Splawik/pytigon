@@ -6,8 +6,7 @@ import sass
 
 path = os.getcwd()
 
-WD_PATH = os.path.join(os.getcwd(), "..")
-script_path = os.path.dirname(__file__).replace("make.py", "")
+script_path = os.path.abspath(os.path.join(os.path.dirname(__file__).replace("make.py", ""), "pytigon"))
 
 if script_path == "":
     script_path = path
