@@ -7,12 +7,13 @@ idna
 setuptools
 pytz
 urllib3
-six 
-git+https://github.com/Splawik/Transcrypt.git@es5
-xonsh 
+six
+Transcrypt
+xonsh
 sqlparse
 django-js-asset
 django-cache-url
 pendulum
 netifaces
-
+pytigon-lib
+pytigon
