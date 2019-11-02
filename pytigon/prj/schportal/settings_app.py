@@ -67,7 +67,9 @@ for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
+        #TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
+        TEMPLATES[0]['DIRS'].append( os.path.join(ROOT_PATH, aa[0], "templates"))
+        TEMPLATES[0]['DIRS'].append( os.path.join(LOCAL_ROOT_PATH, aa[0], "templates"))
         if len(aa)==2:
             pp = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", aa[0]))
             if not pp in sys.path: sys.path.append(pp)
@@ -128,7 +130,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.10.20 19:24:16'
+GEN_TIME = '2019.11.02 13:02:43'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

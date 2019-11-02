@@ -67,13 +67,13 @@ for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
+        #TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
+        TEMPLATES[0]['DIRS'].append( os.path.join(ROOT_PATH, aa[0], "templates"))
+        TEMPLATES[0]['DIRS'].append( os.path.join(LOCAL_ROOT_PATH, aa[0], "templates"))
         if len(aa)==2:
             pp = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", aa[0]))
             if not pp in sys.path: sys.path.append(pp)
             LOCALE_PATHS.append(os.path.join(pp, "locale"))
-        else:
-            LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
@@ -94,6 +94,8 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
+        else:
+            LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
@@ -152,5 +154,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.11.02 11:16:01'
+GEN_TIME = '2019.11.02 13:02:34'
 
