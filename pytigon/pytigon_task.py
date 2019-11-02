@@ -29,6 +29,9 @@ if __name__ == '__main__':
 
     paths = get_main_paths()
 
+    sys.path.append(paths['PRJ_PATH'])
+    sys.path.append(paths['PRJ_PATH_ALT'])
+
     from pytigon_lib.schtasks import schschedule
     from pytigon_lib.schhttptools import httpclient
 
