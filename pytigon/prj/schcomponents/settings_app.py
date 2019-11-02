@@ -67,18 +67,17 @@ for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        #TEMPLATES[0]['DIRS'].append(os.path.dirname(os.path.abspath(__file__))+"/../"+aa[0]+"/templates")
-        TEMPLATES[0]['DIRS'].append( os.path.join(ROOT_PATH, aa[0], "templates"))
-        TEMPLATES[0]['DIRS'].append( os.path.join(LOCAL_ROOT_PATH, aa[0], "templates"))
-        if len(aa)==2:
-            pp = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", aa[0]))
-            if not pp in sys.path: sys.path.append(pp)
-            LOCALE_PATHS.append(os.path.join(pp, "locale"))
-        else:
-            LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
+        for root_path in [LOCAL_ROOT_PATH, ROOT_PATH]:
+            base_path = os.path.join(root_path, "prj", aa[0])
+            if os.path.exists(base_path):
+                TEMPLATES[0]['DIRS'].append(os.path.join(base_path, "templates"))
+                if len(aa)==2:
+                    if not base_path in sys.path: sys.path.append(base_path)
+                    LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
+LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (PRJ_NAME, PRJ_NAME))
 
@@ -130,5 +129,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.11.02 13:02:10'
+GEN_TIME = '2019.11.02 13:57:09'
 
