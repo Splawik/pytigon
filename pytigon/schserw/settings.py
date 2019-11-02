@@ -53,7 +53,12 @@ SHOW_LOGIN_WIN = True
 paths = get_main_paths()
 
 SERW_PATH = paths["SERW_PATH"]
-ROOT_PATH = paths["ROOT_PATH"]
+
+if 'PYTIGON_ROOT_PATH' in environ:
+    ROOT_PATH = environ['PYTIGON_ROOT_PATH']
+else:
+    ROOT_PATH = paths["ROOT_PATH"]
+
 DATA_PATH = paths["DATA_PATH"]
 LOG_PATH = paths["LOG_PATH"]
 TEMP_PATH = paths["TEMP_PATH"]

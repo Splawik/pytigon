@@ -27,7 +27,7 @@ try:
 except:
     pass
     
-from schlib.schtools.tools import get_executable
+from pytigon_lib.schtools.tools import get_executable
 
 def read_and_forward_pty_output(consumer):
     max_read_bytes = 1024 * 20

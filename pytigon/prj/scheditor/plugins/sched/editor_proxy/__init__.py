@@ -20,7 +20,7 @@
 import wx
 import types
 from base64 import b32encode, b32decode
-from schcli.guilib.image import bitmap_from_href
+from pytigon_gui.guilib.image import bitmap_from_href
 
 def init_plugin(
     app,

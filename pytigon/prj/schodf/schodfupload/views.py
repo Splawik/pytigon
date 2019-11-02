@@ -22,8 +22,8 @@ import os
 import sys
 import datetime
 
-from schlib.schfs.vfstools import get_temp_filename
-from schlib.schdjangoext.spreadsheet_render import render_to_response_odf
+from pytigon_lib.schfs.vfstools import get_temp_filename
+from pytigon_lib.schdjangoext.spreadsheet_render import render_to_response_odf
 
 class y(object):
     name =  "Hello world!"

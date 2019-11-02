@@ -8,11 +8,11 @@
 %% pythoncode
     script language=python
         from base64 import b32encode, b32decode
-        from schlib.schtools.schhtmlgen import Html as Hgen
-        from schlib.schtasks.task import get_process_manager
+        from pytigon_lib.schtools.schhtmlgen import Html as Hgen
+        from pytigon_lib.schtasks.task import get_process_manager
         from PIL import Image
-        from schlib.schtools.tools import extend_fun_to, bencode, bdecode
-        from schcli.guilib.image import bitmap_from_href
+        from pytigon_lib.schtools.tools import extend_fun_to, bencode, bdecode
+        from pytigon_gui.guilib.image import bitmap_from_href
         from wx.lib import platebtn
 
         def init_form(self):
@@ -133,7 +133,7 @@
                 self.pbutton.Disable()
             
         def _transform_item(self, item):
-            from schlib.schfs.vfstools import norm_path
+            from pytigon_lib.schfs.vfstools import norm_path
             item2 = norm_path(item)
             if len(item2)>32:
                 x = item2[-28:]

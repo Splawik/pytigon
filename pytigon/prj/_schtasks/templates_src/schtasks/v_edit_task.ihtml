@@ -8,7 +8,7 @@
 %% pythoncode
     script language=python
         def init_form(self):
-            from schlib.schtools import schjson
+            from pytigon_lib.schtools import schjson
             self.schjson = schjson
             
             if hasattr(self, "txt"):
