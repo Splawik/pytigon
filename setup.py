@@ -27,7 +27,7 @@ extra_files.append("pytigon.ico")
 
 setup(
     name="pytigon",
-    version="0.91",
+    version="0.92",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",

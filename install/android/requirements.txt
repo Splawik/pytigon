@@ -15,5 +15,6 @@ django-js-asset
 django-cache-url
 pendulum
 netifaces
+git+https://github.com/Splawik/django-filer.git@feature/django2-support
 pytigon-lib
 pytigon

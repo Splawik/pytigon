@@ -38,7 +38,7 @@ RUN curl https://raw.githubusercontent.com/kadwanev/retry/1.0.1/retry \
     --output /usr/local/bin/retry && chmod +x /usr/local/bin/retry
 
 ENV ANDROID_NDK_HOME="${ANDROID_HOME}/android-ndk"
-ENV ANDROID_NDK_VERSION="17c"
+ENV ANDROID_NDK_VERSION="19"
 ENV ANDROID_NDK_HOME_V="${ANDROID_NDK_HOME}-r${ANDROID_NDK_VERSION}"
 
 # get the latest version from https://developer.android.com/ndk/downloads/index.html
@@ -47,8 +47,8 @@ ENV ANDROID_NDK_DL_URL="https://dl.google.com/android/repository/${ANDROID_NDK_A
 
 # download and install Android NDK
 RUN ${RETRY} curl --location --progress-bar --insecure \
-        "${ANDROID_NDK_DL_URL}" \
-        --output "${ANDROID_NDK_ARCHIVE}" \
+    "${ANDROID_NDK_DL_URL}" \
+    --output "${ANDROID_NDK_ARCHIVE}" \
     && mkdir --parents "${ANDROID_NDK_HOME_V}" \
     && unzip -q "${ANDROID_NDK_ARCHIVE}" -d "${ANDROID_HOME}" \
     && ln -sfn "${ANDROID_NDK_HOME_V}" "${ANDROID_NDK_HOME}" \
@@ -65,8 +65,8 @@ ENV ANDROID_SDK_TOOLS_DL_URL="https://dl.google.com/android/repository/${ANDROID
 
 # download and install Android SDK
 RUN ${RETRY} curl --location --progress-bar --insecure \
-        "${ANDROID_SDK_TOOLS_DL_URL}" \
-        --output "${ANDROID_SDK_TOOLS_ARCHIVE}" \
+    "${ANDROID_SDK_TOOLS_DL_URL}" \
+    --output "${ANDROID_SDK_TOOLS_ARCHIVE}" \
     && mkdir --parents "${ANDROID_SDK_HOME}" \
     && unzip -q "${ANDROID_SDK_TOOLS_ARCHIVE}" -d "${ANDROID_SDK_HOME}" \
     && rm -rf "${ANDROID_SDK_TOOLS_ARCHIVE}"
@@ -74,7 +74,7 @@ RUN ${RETRY} curl --location --progress-bar --insecure \
 # update Android SDK, install Android API, Build Tools...
 RUN mkdir --parents "${ANDROID_SDK_HOME}/.android/" \
     && echo '### User Sources for Android SDK Manager' \
-        > "${ANDROID_SDK_HOME}/.android/repositories.cfg"
+    > "${ANDROID_SDK_HOME}/.android/repositories.cfg"
 
 # accept Android licenses (JDK necessary!)
 RUN ${RETRY} apt -y install -qq --no-install-recommends openjdk-8-jdk \
@@ -95,7 +95,7 @@ ENV WORK_DIR="${HOME_DIR}" \
 
 # install system dependencies
 RUN ${RETRY} apt -y install -qq --no-install-recommends \
-        python3 virtualenv python3-pip wget lbzip2 patch sudo \
+    python3 virtualenv python3-pip wget lbzip2 patch sudo \
     && apt -y autoremove
 
 # build dependencies
@@ -103,15 +103,15 @@ RUN ${RETRY} apt -y install -qq --no-install-recommends \
 RUN dpkg --add-architecture i386 \
     && ${RETRY} apt -y update -qq \
     && ${RETRY} apt -y install -qq --no-install-recommends \
-        build-essential ccache git python3 python3-dev \
-        libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 \
-        libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 \
-        zip zlib1g-dev zlib1g:i386 \
+    build-essential ccache git python3 python3-dev \
+    libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 \
+    libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 \
+    zip zlib1g-dev zlib1g:i386 \
     && apt -y autoremove
 
 # specific recipes dependencies (e.g. libffi requires autoreconf binary)
 RUN ${RETRY} apt -y install -qq --no-install-recommends \
-        libffi-dev autoconf automake cmake gettext libltdl-dev libtool pkg-config \
+    libffi-dev autoconf automake cmake gettext libltdl-dev libtool pkg-config \
     && apt -y autoremove \
     && apt -y clean
 
@@ -124,7 +124,9 @@ RUN usermod -append --groups sudo ${USER}
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 
-RUN pip3 install --upgrade cython==0.28.6
+
+#RUN pip install --upgrade Cython==0.28.6 \
+#    && rm -rf ~/.cache/
 
 WORKDIR ${WORK_DIR}
 COPY --chown=user:user . ${WORK_DIR}
@@ -134,8 +136,9 @@ USER ${USER}
 # install python-for-android from current branch
 RUN virtualenv --python=python3 venv \
     && . venv/bin/activate \
-    && pip3 install --upgrade Cython==0.28.6 \
     && pip3 install -e .
+
+RUN /home/user/venv/bin/python3 -m pip install --upgrade cython==0.28.6
 
 RUN sudo apt install -y libncurses5-dev libncursesw5-dev libtinfo-dev libtinfo5
 RUN sudo apt install -y autoconf libtool cmake libffi-dev pkg-config

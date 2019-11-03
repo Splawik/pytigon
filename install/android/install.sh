@@ -18,17 +18,19 @@ fi
 
 if [ ! -d ./venv  ]; then
     virtualenv --python=python3.7 venv
-    venv/bin/python -m pip install -r pytigon/install/android/requirements.txt
+    venv/bin/python -m pip install -r pytigon/install/android/requirements.txt 
 else
-    venv/bin/python -m pip install --upgrade -r pytigon/install/android/requirements.txt
-fi
+    venv/bin/python -m pip install --upgrade -r pytigon/install/android/requirements.txt 
+fi 
 
 yes | cp -Rf venv/lib/python3.7/site-packages/* pytigon/_android
 cd pytigon
 export  DATA_PATH=$HOME/prj/pytigon-android/data
 rm -r $DATA_PATH
-python3.7 manage.py compile_templates
-cp ./prj/install.ini $DATA_PATH
+cd pytigon
+../../venv/bin/python manage.py compile_templates
+cp ./prj/install.ini $DATA_PATH 
+cd ..
 cd ..
 cd data
 zip .pytigon.zip -r *
