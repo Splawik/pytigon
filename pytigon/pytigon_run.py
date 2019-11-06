@@ -15,7 +15,7 @@
 # author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
 # copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
 # license: "LGPL 3.0"
-# version: "0.1a"
+# version: "0.92"
 
 import sys
 import subprocess
