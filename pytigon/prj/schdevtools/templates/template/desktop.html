@@ -16,20 +16,20 @@
 {% block body_footer %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schcomponents/components/d3.js' %}
-        {% component 'app/schcomponents/components/plotly.js' %}
+        {% component 'app/schdevtools/components/test.js' %}
         {% component 'app/schcomponents/components/txtarea_editor.js' %}
         {% component 'app/schcomponents/components/summernote.js' %}
-        {% component 'app/schcomponents/components/video-js.js' %}
         {% component 'app/schcomponents/components/pivottable.js' %}
-        {% component 'app/schdevtools/components/test.js' %}
-        {% component 'app/schcomponents/components/leaflet.js' %}
-        {% component 'app/schcomponents/components/code_editor.js' %}
         {% component 'app/schcomponents/components/handsontable.js' %}
         {% component 'app/schcomponents/components/vs_editor.js' %}
+        {% component 'app/schcomponents/components/video-js.js' %}
+        {% component 'app/schcomponents/components/plotly.js' %}
+        {% component 'app/schcomponents/components/d3.js' %}
+        {% component 'app/schcomponents/components/code_editor.js' %}
+        {% component 'app/schcomponents/components/leaflet.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "d3", "plotly", "txtarea_editor", "summernote", "video-js", "pivottable", "test", "leaflet", "code_editor", "handsontable", "vs_editor",  ];
+        var component_init = [ "test", "txtarea_editor", "summernote", "pivottable", "handsontable", "vs_editor", "video-js", "plotly", "d3", "code_editor", "leaflet",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
@@ -44,7 +44,7 @@
         let sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
         init_sync(sync_struct);
         function bootstrap_init(elem) {
-            //elem.bootstrapMaterialDesign();
+            elem.bootstrapMaterialDesign();
         };
         register_fragment_init_fun(bootstrap_init);
         {{ block.super }}

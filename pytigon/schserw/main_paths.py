@@ -61,6 +61,7 @@ def get_main_paths():
         ret["PRJ_PATH"] = os.path.join(
             os.path.join(os.path.join(ret["DATA_PATH"], ".."), "pytigon"), "prj"
         )
+        ret["PRJ_PATH_ALT"] = os.path.join(ret["ROOT_PATH"], "prj")
     else:
         if 'START_PATH' in environ:
             cwd_prj = os.path.join(environ['START_PATH'], "prj")
