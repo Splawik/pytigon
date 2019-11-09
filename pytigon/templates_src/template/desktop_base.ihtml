@@ -210,8 +210,8 @@
                             strong...{{user.date_joined|isoformat}}
                     div class=dropdown-footer
                         % if user.is_superuser:
-                        div class=pull-left
-                            button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}admin/?schtml=1,,,title=_(Administration)..._(Administraction)
+                            div class=pull-left
+                                button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}schsetup/?schtml=1,,,title=_(Setup)..._(Setup)
                         div class=pull-right
                             button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
