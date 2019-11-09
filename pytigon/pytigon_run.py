@@ -213,13 +213,11 @@ def run(param=None):
 
             ret = schserw_init_prj_path(app, param)
 
-            if ret:
-                app=ret[0]
-                argv[1] = ret[0]
-                PRJ_PATH=ret[1]
-
             from pytigon.schserw import settings as schserw_settings
-            schserw_settings.PRJ_PATH = PRJ_PATH
+
+            if ret:
+                argv[1] = ret[0]
+                schserw_settings.PRJ_PATH=ret[1]
 
             from pytigon_gui.pytigon import main
             main()
