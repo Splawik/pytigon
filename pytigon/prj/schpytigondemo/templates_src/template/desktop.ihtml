@@ -25,24 +25,24 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/leaflet.js' %}
+    {% component 'app/schcomponents/components/handsontable.js' %}
+    {% component 'app/schcomponents/components/pivottable.js' %}
+    {% component 'app/schcomponents/components/plotly.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
+    {% component 'app/schpytigondemo/components/plotly_status.js' %}
+    {% component 'app/schcomponents/components/video-js.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
+    {% component 'app/schcomponents/components/d3.js' %}
     {% component 'app/schcomponents/components/summernote.js' %}
     {% component 'app/schcomponents/components/xterm.js' %}
-    {% component 'app/schcomponents/components/leaflet.js' %}
-    {% component 'app/schcomponents/components/d3.js' %}
-    {% component 'app/schpytigondemo/components/plotly_status.js' %}
-    {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
     {% component 'app/schcomponents/components/txtarea_editor.js' %}
-    {% component 'app/schcomponents/components/plotly.js' %}
-    {% component 'app/schcomponents/components/code_editor.js' %}
-    {% component 'app/schcomponents/components/pivottable.js' %}
-    {% component 'app/schcomponents/components/vs_editor.js' %}
-    {% component 'app/schcomponents/components/video-js.js' %}
-    {% component 'app/schcomponents/components/handsontable.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "summernote", "xterm", "leaflet", "d3", "plotly_status", "wysiwyg_edit", "txtarea_editor", "plotly", "code_editor", "pivottable", "vs_editor", "video-js", "handsontable",  ];  
+    .var component_init = [ "leaflet", "handsontable", "pivottable", "plotly", "vs_editor", "wysiwyg_edit", "plotly_status", "video-js", "code_editor", "d3", "summernote", "xterm", "txtarea_editor",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

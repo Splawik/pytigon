@@ -23,13 +23,13 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'app/schcomponents/components/code_editor.js' %}
     {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "code_editor", "vs_editor",  ];  
+    .var component_init = [ "vs_editor", "code_editor",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
