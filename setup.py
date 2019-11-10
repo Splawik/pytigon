@@ -23,11 +23,12 @@ extra_files.append("pytigon_splash.jpeg")
 extra_files.append("pytigon.svg")
 extra_files.append("pytigon.png")
 extra_files.append("pytigon.ico")
+extra_files.append("ptig")
 
 
 setup(
     name="pytigon",
-    version="0.92",
+    version="0.93",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
