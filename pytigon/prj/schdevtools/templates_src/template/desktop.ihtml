@@ -11,8 +11,8 @@
     {{block.super}}
     {% jscript_link 'vue/vue.js' %}
     
-    {% jscript_link 'app/schdevtools/js/test_javascript.js' %}
-    {% jscript_link 'app/schdevtools/js/test_python.js' %}
+    {% module_link 'app/schdevtools/js/test_javascript.js' %}
+    {% module_link 'app/schdevtools/js/test_python.js' %}
     
     
 
@@ -27,22 +27,22 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'app/schcomponents/components/code_editor.js' %}
-    {% component 'app/schcomponents/components/handsontable.js' %}
-    {% component 'app/schcomponents/components/txtarea_editor.js' %}
-    {% component 'app/schcomponents/components/plotly.js' %}
-    {% component 'app/schcomponents/components/video-js.js' %}
-    {% component 'app/schcomponents/components/vs_editor.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
     {% component 'app/schcomponents/components/leaflet.js' %}
-    {% component 'app/schcomponents/components/pivottable.js' %}
-    {% component 'app/schcomponents/components/d3.js' %}
+    {% component 'app/schdevtools/components/test.js' %}
     {% component 'app/schcomponents/components/summernote.js' %}
+    {% component 'app/schcomponents/components/video-js.js' %}
+    {% component 'app/schcomponents/components/pivottable.js' %}
+    {% component 'app/schcomponents/components/txtarea_editor.js' %}
+    {% component 'app/schcomponents/components/handsontable.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
+    {% component 'app/schcomponents/components/plotly.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schcomponents/components/d3.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "code_editor", "handsontable", "txtarea_editor", "plotly", "video-js", "vs_editor", "test", "leaflet", "pivottable", "d3", "summernote",  ];  
+    .var component_init = [ "leaflet", "test", "summernote", "video-js", "pivottable", "txtarea_editor", "handsontable", "code_editor", "plotly", "vs_editor", "d3",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
@@ -58,7 +58,7 @@
     .init_sync(sync_struct);
 
     .function bootstrap_init(elem) {
-    .    elem.bootstrapMaterialDesign();
+    .    //elem.bootstrapMaterialDesign();
     .};
 
     .register_fragment_init_fun(bootstrap_init);

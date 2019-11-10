@@ -29,6 +29,7 @@ compiled_files = os.listdir("./static_src/sch/__target__/")
 for name in compiled_files:
     src = os.path.join("./static_src/sch/__target__/", name)
     dst = os.path.join("./static/sch/", name)
+    print(src, "=>", dst)
     copyfile(src, dst)
 
 

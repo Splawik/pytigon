@@ -54,8 +54,9 @@
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
 
-    %% ext_js_scripts
+    {% module_link 'sch/pytigon.js' %}
 
+    %% ext_js_scripts
 
     {% jscript_link 'sch/inline_dialog.js' %}
 

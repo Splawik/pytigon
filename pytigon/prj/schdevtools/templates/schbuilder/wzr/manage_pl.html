@@ -11,7 +11,7 @@ if 'PYTIGON_ROOT_PATH' in environ:
     _rp = environ['PYTIGON_ROOT_PATH']
     _rp2 = os.path.abspath(os.path.join(_rp, ".."))
 else:
-    _rp= os.path.abspath(os.path.join(_lp, "..", ".."))
+    _rp= os.path.abspath(os.path.join(_lp, "..", "..", ".."))
 if not _rp in sys.path: sys.path.insert(0, _rp)
 if _rp2 and not _rp2 in sys.path: sys.path.append(_rp2)
 

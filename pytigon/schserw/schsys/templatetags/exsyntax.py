@@ -439,6 +439,9 @@ def ok_cancel(context):
 def jscript_link(context, href):
     return  {'href':  mark_safe(href)}
 
+@inclusion_tag('widgets/module_link.html')
+def module_link(context, href):
+    return  {'href':  mark_safe(href)}
 
 @inclusion_tag('widgets/css_link.html')
 def css_link(context, href):
