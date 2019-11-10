@@ -25,11 +25,11 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/vs_editor.js' %}
     {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
     {% component 'app/schcomponents/components/xterm.js' %}
-    {% component 'app/schcomponents/components/vs_editor.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "wysiwyg_edit", "xterm", "vs_editor",  ];  
+    .var component_init = [ "vs_editor", "wysiwyg_edit", "xterm",  ];  

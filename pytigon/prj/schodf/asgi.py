@@ -6,7 +6,7 @@ _lp = os.path.dirname(os.path.abspath(__file__))
 if 'PYTIGON_ROOT_PATH' in os.environ:
     _rp = os.environ['PYTIGON_ROOT_PATH']
 else:
-    _rp = os.path.abspath(os.path.join(_lp, "..", ".."))
+    _rp = os.path.abspath(os.path.join(_lp, "..", "..", ".."))
 
 if not _lp in sys.path: sys.path.insert(0,_lp)
 if not _rp in sys.path: sys.path.insert(0,_rp)
