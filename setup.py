@@ -35,6 +35,7 @@ setup(
     license="LGPLv3",
     packages=find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]),
     package_data={"": extra_files},
+    scripts=['pytigon/ptig',],
     install_requires=[
         "pytigon-lib",
         "Twisted[tls,http2]",
