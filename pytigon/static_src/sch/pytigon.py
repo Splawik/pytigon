@@ -51,6 +51,25 @@ window.PS = None
 window.MOUNTED_COMPONENTS = 0
 
 
+window.REINIT = None
+
+def app_reinit():
+    if window.REINIT:
+        return app_init(
+            window.REINIT[0],
+            window.REINIT[1],
+            window.REINIT[2],
+            window.REINIT[3],
+            window.REINIT[4],
+            window.REINIT[5],
+            window.REINIT[6],
+            window.REINIT[7],
+            window.REINIT[8],
+            window.REINIT[9]
+        )
+
+window.app_reinit = app_reinit
+
 def app_init(
     prj_name,
     application_template,
@@ -63,6 +82,7 @@ def app_init(
     start_page,
     gen_time,
 ):
+
     moment.locale(lang)
     window.ACTIVE_PAGE = None
     window.PRJ_NAME = prj_name
@@ -83,6 +103,53 @@ def app_init(
     window.COMPONENT_INIT = component_init
     window.LANG = lang
     window.GEN_TIME = gen_time
+
+    if jQuery("#dialog-form-modal").length == 0:
+        window.REINIT = [
+            prj_name,
+            application_template,
+            menu_id,
+            lang,
+            base_path,
+            base_fragment_init,
+            component_init,
+            offline_support,
+            start_page,
+            gen_time
+        ]
+
+        def _on_login_submit(e):
+            self = jQuery(this)
+            e.preventDefault()
+
+            def _on_login_submit2(data):
+                nonlocal href, self
+                jQuery('body').removeClass('login_background')
+
+                start = data.indexOf("<body>")
+                end = data.lastIndexOf("</body>")
+
+                if start > 0 and end > 0:
+                    title = jQuery("<div>" + data + "</div>").find("title").text()
+                    data = data.substring(start + 6, end - 1)
+                    data = "<title>" + title +"</title>" + data + ""
+                mount_html(jQuery('body'), data, False)
+                app_reinit()
+                window.init2()
+                if window.window.BASE_FRAGMENT_INIT:
+                    window.BASE_FRAGMENT_INIT()
+                if window.WAIT_ICON:
+                    window.WAIT_ICON.stop()
+                if window.WAIT_ICON2:
+                    jQuery("#loading-indicator").hide()
+                    window.WAIT_ICON2 = False
+
+            ajax_submit(jQuery(this), _on_login_submit2)
+
+        jQuery("body").on("submit", "form.login-form", _on_login_submit)
+
+        return
+
 
     if offline_support:
         if navigator.onLine and service_worker_and_indexedDB_test():
@@ -164,6 +231,7 @@ def app_init(
     jQuery("#tabs2_content").on("submit", "form", _on_submit)
     jQuery("#dialog-form-modal").on("submit", "form", _on_submit)
     jQuery("#search").on("submit", "form", _on_submit)
+
 
     # jQuery('#menu').perfectScrollbar()
 
@@ -407,40 +475,47 @@ def _on_error(request, settings):
     #    jQuery('#dialog-form-error').modal()
 
 
-def jquery_ready():
-    jQuery(document).ajaxError(_on_error)
+def init2():
+    if jQuery("#dialog-form-modal").length > 0:
+        jQuery(document).ajaxError(_on_error)
 
-    def _on_hide(e):
-        mount_html(
-            jQuery(this).find("div.dialog-data"),
-            "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
-            False,
-            False,
-        )
+        def _on_hide(e):
+            mount_html(
+                jQuery(this).find("div.dialog-data"),
+                "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
+                False,
+                False,
+            )
 
-    jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
+        jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
 
-    def _local_fun():
-        console.log("collapsed")
+        def _local_fun():
+            console.log("collapsed")
 
-    jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
+        jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
 
-    if window.APPLICATION_TEMPLATE == "traditional":
-        window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
-        # __new__(Vue({'el': '#body_body'}))
-    else:
-        if window.APPLICATION_TEMPLATE == "modern":
-            txt = jQuery(".page").html()
-            txt2 = jQuery.trim(txt)
-            if txt2:
-                txt = jQuery.trim(jQuery(".page")[0].outerHTML)
-                jQuery(".page").remove()
-                menu = get_menu()
-                menu.new_page(jQuery("title").text(), txt, window.location.href)
-        else:
+        if window.APPLICATION_TEMPLATE == "traditional":
             window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
-            if window.APPLICATION_TEMPLATE == "to_print":
-                __new__(Vue({"el": "#body_body"}))
+            # __new__(Vue({'el': '#body_body'}))
+        else:
+            if window.APPLICATION_TEMPLATE == "modern":
+                txt = jQuery(".page").html()
+                txt2 = jQuery.trim(txt)
+                if txt2:
+                    txt = jQuery.trim(jQuery(".page")[0].outerHTML)
+                    jQuery(".page").remove()
+                    menu = get_menu()
+                    menu.new_page(jQuery("title").text(), txt, window.location.href)
+            else:
+                window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
+                if window.APPLICATION_TEMPLATE == "to_print":
+                    __new__(Vue({"el": "#body_body"}))
+
+
+window.init2 = init2
+
+def jquery_ready():
+    init2()
 
 
 def on_new_tab(url, elem, e):

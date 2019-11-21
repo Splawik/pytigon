@@ -31,13 +31,12 @@
                     %% css_end
                         </style>
 
-                % if not show_form:
-                    %%js_scripts
-                        %% js_scripts_base
+                %if not 'no_scripts' in request.GET:
+                    % if not show_form:
+                        %%js_scripts
+                            %% js_scripts_base
 
-
-                %% js_extrascipts
-
+                    %% js_extrascipts
 
             % else
                 %% pythoncode
@@ -49,6 +48,7 @@
     %% body_start
         <body bgcolor="#{{color_body}}" border="1">
     %% body_header
+
 
     %% body
         %if not user.is_authenticated and not NO_CHECK_AUTH and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
@@ -103,18 +103,20 @@
         %% html_widgets_init
 
         %% body_footer
+        %if not 'no_scripts' in request.GET:
+            %% body_footer_scripts
 
     %% page_footer
-
-        %% js_extrascipts_init
-            script type=module
-                %% jquery_init
-                %% jquery_init_once
-                %% jquery_ready_all
-                    %% jquery_ready_start
-                    %% jquery_ready
-                    %% jquery_ready_end
-                %% js_script_body
+        %if not 'no_scripts' in request.GET:
+            %% js_extrascipts_init
+                script type=module
+                    %% jquery_init
+                    %% jquery_init_once
+                    %% jquery_ready_all
+                        %% jquery_ready_start
+                        %% jquery_ready
+                        %% jquery_ready_end
+                    %% js_script_body
 
         %% page_finish
 

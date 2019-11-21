@@ -225,7 +225,6 @@
                 a class=system_menu,,,href=#,,,action={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
                     span class=fa fa-sign-in
 
-
     <div id="menu" class="tab-content menu-content win-header">
 
 
@@ -311,6 +310,7 @@
     % if standard_web_browser:
         {{ form.media.js }}
     % if not show_form:
+        </div>
         </body>
 
 

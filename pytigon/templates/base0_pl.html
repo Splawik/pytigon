@@ -33,12 +33,14 @@
                                                 </style>
                                         {% endblock %}
                                 {% endif %}
-                                {% if not show_form %}
-                                        {% block js_scripts %}
-                                                {% block js_scripts_base %}{% endblock %}
-                                        {% endblock %}
+                                {% if not 'no_scripts' in request.GET %}
+                                        {% if not show_form %}
+                                                {% block js_scripts %}
+                                                        {% block js_scripts_base %}{% endblock %}
+                                                {% endblock %}
+                                        {% endif %}
+                                        {% block js_extrascipts %}{% endblock %}
                                 {% endif %}
-                                {% block js_extrascipts %}{% endblock %}
                           {% else %}
                                 {% block pythoncode %}{% endblock %}
                                 {% block icss %}{% endblock %}
@@ -110,20 +112,25 @@
                 {% endif %}
                 {% block html_widgets_init %}{% endblock %}
                 {% block body_footer %}{% endblock %}
+                {% if not 'no_scripts' in request.GET %}
+                        {% block body_footer_scripts %}{% endblock %}
+                {% endif %}
         {% endblock %}
         {% block page_footer %}
-                {% block js_extrascipts_init %}
-                        <script type="module">
-                                {% block jquery_init %}{% endblock %}
-                                {% block jquery_init_once %}{% endblock %}
-                                {% block jquery_ready_all %}
-                                        {% block jquery_ready_start %}{% endblock %}
-                                        {% block jquery_ready %}{% endblock %}
-                                        {% block jquery_ready_end %}{% endblock %}
-                                {% endblock %}
-                                {% block js_script_body %}{% endblock %}
-                        </script>
-                {% endblock %}
+                {% if not 'no_scripts' in request.GET %}
+                        {% block js_extrascipts_init %}
+                                <script type="module">
+                                        {% block jquery_init %}{% endblock %}
+                                        {% block jquery_init_once %}{% endblock %}
+                                        {% block jquery_ready_all %}
+                                                {% block jquery_ready_start %}{% endblock %}
+                                                {% block jquery_ready %}{% endblock %}
+                                                {% block jquery_ready_end %}{% endblock %}
+                                        {% endblock %}
+                                        {% block js_script_body %}{% endblock %}
+                                </script>
+                        {% endblock %}
+                {% endif %}
                 {% block page_finish %}{% endblock %}
         {% endblock %}
         {% block body_end %}</body>{% endblock %}

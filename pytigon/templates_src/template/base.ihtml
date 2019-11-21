@@ -22,7 +22,7 @@
                                 br
                                 ._(Sign in):
                                 br
-                                form class=login-form,,,action={{base_path}}schsys/do_login/?next={% if request_path != Null %}{{ request_path }}&next_after_error={{request.path}}{% else %}{{request.path}}{% endif %},,,method=post,,,name=signin
+                                form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %},,,method=post,,,name=signin
                                     div class=form-group
                                         label class=control-label,,,for=username_ ..._(User name)
                                         div class=input-group
