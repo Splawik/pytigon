@@ -28,7 +28,7 @@ extra_files.append("ptig")
 
 setup(
     name="pytigon",
-    version="0.93",
+    version="0.94",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
@@ -88,6 +88,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     python_requires=">=3",
+    zip_safe=False,
 )
 
 # print(extra_files)
