@@ -1,4 +1,5 @@
 __pragma__("alias", "S", "$")
+__pragma__("alias", "js_import", "import")
 
 LOADED_FILES = {}
 
@@ -105,28 +106,36 @@ def fragment_init(elem=None):
         fun(elem2)
 
 
-def evalJSFromHtml(html):
-    newElement = document.createElement("div")
-    newElement.innerHTML = html
+def split_html(html):
+    temp = document.createElement("div")
+    temp.innerHTML = html
 
-    scripts = newElement.getElementsByTagName("script")
+    scripts = temp.getElementsByTagName("script")
+    styles = temp.getElementsByTagName("style")
 
+    scripts2 = Array.prototype.slice.call(scripts)
+    styles2 = Array.prototype.slice.call(styles)
+
+    def remove_elements(id, element):
+        element.parentNode.removeChild(element)
+
+    jQuery.each(scripts, remove_elements)
+    jQuery.each(styles, remove_elements)
+
+    return (temp.innerHTML, scripts2, styles2)
+
+
+def eval_scripts(scripts):
     def eval_fun(id, value):
         eval(value.innerHTML)
-
     jQuery.each(scripts, eval_fun)
 
 
-def evalCSSFromHtml(html, elem):
-    newElement = document.createElement("div")
-    newElement.innerHTML = html
-
-    css = newElement.getElementsByTagName("style")
-
-    while css.length > 0:
-        style = css.pop()
-        style.attr("scoped", "scoped")
-        elem.append(style)
+def eval_styles(styles, elem):
+    while styles.length > 0:
+        style = styles.pop()
+        styles.attr("scoped", "scoped")
+        elem.append(styles)
 
 
 MOUNT_INIT_FUN = []
@@ -142,7 +151,10 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     if component_init and window.COMPONENT_INIT and len(window.COMPONENT_INIT) > 0:
         try:
             elem.empty()
-            res = Vue.compile("<div>" + html_txt + "</div>")
+
+            ret = split_html(html_txt)
+
+            res = Vue.compile("<div>"+ret[0]+"</div>")
             if elem and elem.length > 0:
                 vm = __new__(
                     Vue({"render": res.render, "staticRenderFns": res.staticRenderFns})
@@ -155,8 +167,8 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
 
                 jQuery.each(component.S__el.childNodes, _append)
 
-                evalJSFromHtml(html_txt)
-                evalCSSFromHtml(html_txt, elem)
+                eval_scripts(ret[1])
+                eval_styles(ret[2])
         except:
             elem.html(html_txt)
     else:
@@ -618,3 +630,4 @@ def get_and_run_script(url, elem, e):
         object = None
 
     ajax_get(url, _on_load_js)
+

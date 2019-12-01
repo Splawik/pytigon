@@ -60,8 +60,7 @@ function set_action_data(data) {
 function get_action_data(id) {
     if (id in ACTIONS) {
         return ACTIONS[id];
-    }
-    else {
+    } else {
         return null;
     }
 }
@@ -70,16 +69,15 @@ function delete_action_data(id) {
     if (id in ACTIONS) {
         delete ACTIONS[id];
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 function str2ab(str) {
-    var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
     var bufView = new Uint16Array(buf);
-    for (var i=0, strLen=str.length; i<strLen; i++) {
+    for (var i = 0, strLen = str.length; i < strLen; i++) {
         bufView[i] = str.charCodeAt(i);
     }
     return buf;
@@ -141,38 +139,34 @@ function init_python() {
         this.send = function(vData) {
             if (this.sch_local_request && self.url.includes(PSEUDO_IP)) {
                 var data = {}
+
                 function _on_response(txt) {
                     self.readyState = 4;
                     if (self.responseType == 'arraybuffer') {
                         self.response = str2ab(txt);
-                    }
-                    else {
+                    } else {
                         self.responseText = txt;
                     }
                     self.status = 200;
-                    if(self.onreadystatechange != null) self.onreadystatechange();
-                    if(self.onload != null) self.onload();
+                    if (self.onreadystatechange != null) self.onreadystatechange();
+                    if (self.onload != null) self.onload();
                     return;
                 }
                 data['callback'] = _on_response;
-                if(vData) {
+                if (vData) {
                     data['action'] = 'post';
                     data['data'] = vData;
-                }
-                else {
+                } else {
                     data['action'] = 'get';
                     data['data'] = null;
                 }
                 id = set_action_data(data);
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', "http://127.0.0.2/?:action??"+id);
+                xhr.open('GET', "http://127.0.0.2/?:action??" + id);
                 try {
                     xhr.send();
-                }
-                catch(e) {
-                }
-            }
-            else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
+                } catch (e) {}
+            } else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
                 self.readyState = 4;
                 self.responseText = request();
                 self.response = self.responseText;
@@ -181,8 +175,7 @@ function init_python() {
                 if (self.onreadystatechange != null) self.onreadystatechange();
                 if (self.onload != null) self.onload();
                 return null;
-            }
-            else {
+            } else {
                 return actual.send(vData)
             }
         };
@@ -237,3 +230,13 @@ function init_python() {
     }
     window.XMLHttpRequest = modXMLHttpRequest;
 })();
+
+
+function import_module(html_txt) {
+    var encodedJs = encodeURIComponent(html_txt);
+    var dataUri = 'data:text/javascript;charset=utf-8,' + encodedJs;
+    import(dataUri);
+}
+
+window.import_module = import_module;
+

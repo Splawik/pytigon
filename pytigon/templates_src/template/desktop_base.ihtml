@@ -21,6 +21,7 @@
     {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
     {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
 
+
     {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 
     {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
@@ -54,6 +55,8 @@
     {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
     {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
 
+
+    {% module_link 'sch/components.js' %}
     {% module_link 'sch/pytigon.js' %}
 
     %% ext_js_scripts

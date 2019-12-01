@@ -34,9 +34,9 @@ def schserw_init_prj_path(app, param=None):
 
         if app=='.':
             p1 = environ["START_PATH"]
-            parts = p1.replace('\\', '/').split('/')
+            parts = p1.replace('\\', '/').rsplit('/',1)
             mod_app = parts[-1]
-            path2 = os.path.join(parts[0] if parts[0] else '/', *parts[1:-1])
+            path2 = p1[0:len(parts[0])]
             sys.path.append(path2)
             return (mod_app, path2)
         else:
@@ -45,9 +45,8 @@ def schserw_init_prj_path(app, param=None):
             if not os.path.exists(p1):
                 p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
                 if os.path.exists(p2):
-                    pytigon.schserw.settings.PRJ_PATH = (
-                        pytigon.schserw.settings.PRJ_PATH_ALT
-                    )
+                    pytigon.schserw.settings._PRJ_PATH = pytigon.schserw.settings.PRJ_PATH
+                    pytigon.schserw.settings.PRJ_PATH = pytigon.schserw.settings.PRJ_PATH_ALT
 
             if platform_name() != "Windows":
                 os.environ["LD_LIBRARY_PATH"] = os.path.abspath(

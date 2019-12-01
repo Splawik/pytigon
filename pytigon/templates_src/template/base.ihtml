@@ -110,8 +110,7 @@
                     %% form_ok_cancel_info
                 % if standard_web_browser:
                     % if title:
-                        script
-                            jQuery('#ModalLabelInfo').html('{{title}}')
+                        set-field element=#ModalLabelInfo,,,title={{title}}
             % else:
                 %% form_delete
                     form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
@@ -133,8 +132,7 @@
                                 br
                         %% form_ok_cancel_del
 
-                script
-                    jQuery('#ModalLabelDelete').html('{{title}}')
+                set-field element=#ModalLabelDelete,,,title={{title}}
 
             % if standard_web_browser:
                 </div>
@@ -165,8 +163,7 @@
                 % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                     </div>
             % if title:
-                script
-                    jQuery('#ModalLabel').html('{{title}}')
+                set-field element=#ModalLabel,,,title={{title}}
 
         %% dialog_end
     % else:
