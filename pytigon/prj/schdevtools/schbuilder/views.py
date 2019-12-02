@@ -466,7 +466,11 @@ def gen(request, pk):
     
     prj = models.SChAppSet.objects.get(id=pk)
     root_path = settings.ROOT_PATH
-    base_path = os.path.join(settings.PRJ_PATH, prj.name)
+    
+    if hasattr(settings,"_PRJ_PATH"):
+        base_path = os.path.join(settings._PRJ_PATH, prj.name)
+    else:
+        base_path = os.path.join(settings.PRJ_PATH, prj.name)
     src_path = os.path.join(settings.PRJ_PATH, "schdevtools")
     object_list = []
     gmt = time.gmtime()

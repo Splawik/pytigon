@@ -23,7 +23,7 @@
     {% for prj_tab in static_for_ext_apps %}{% for css_static2 in prj_tab.2 %}{% spec '[' %} css_link 'app/{{prj_tab.0}}/css/{{css_static2.name}}.css' {% spec ']' %}
     {% endfor %}{% endfor %}
 
-%% body_footer
+%% body_footer_scripts
     {% spec '{' %}block.super{% spec '}' %}
     {% if component_elements %}
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
