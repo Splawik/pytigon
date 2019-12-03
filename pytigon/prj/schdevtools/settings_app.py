@@ -33,7 +33,7 @@ PRJ_NAME = "schdevtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 
-THEMES = ['desktop_modern', 'tablet_standard', 'smartfon_standard']
+THEMES = ['tablet_modern', 'tablet_standard', 'smartfon_standard']
 
 LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
 ROOT_PATH = _rp
@@ -133,6 +133,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.11.29 15:17:08'
+GEN_TIME = '2019.12.03 19:45:50'
 OFFLINE_SUPPORT = True
 

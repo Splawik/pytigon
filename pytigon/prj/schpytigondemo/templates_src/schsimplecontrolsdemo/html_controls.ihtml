@@ -23,14 +23,12 @@
             sch-maker x=51.113007,,,y=21.191859,,,txt=To jest test 6
             sch-maker x=51.213007,,,y=21.291859,,,txt=To jest test 7
 
-        sch-htmleditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
         sch-handsontable width=800px,,,height=600px
 
         sch-plotly width=800px,,,height=600px
         sch-pivottable width=800px,,,height=600px
         sch-video width=800px,,,height=600px,,,src=/static/SampleVideo_1080x720_2mb.mp4
         
-        sch-codeeditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
         sch-vseditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
     
     % comment:
@@ -40,9 +38,10 @@
         txtarea_editor width=800px,,,height=600px,,,rel_id=txt_test
 
         pivottable width=800px,,,height=600px
+        sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/
 
 
-    sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/
+    wysiwyg-edit width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
     sch-leaflet width=800px,,,height=600px,,,x=51.613007,,,y=21.491859
         sch-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
         sch-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2

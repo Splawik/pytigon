@@ -211,8 +211,8 @@
         </section></div>
 {% endblock %}
 {% block jquery_init %}
-        {{block.super}}
         {% if form_ext or not show_form %}
+                window.init_callback = function() {
                 {% if 'smartfon' in client_type %}
                             jQuery.sidebarMenu(jQuery('.sidebar-menu'));
                             var obj1_off =  { 'width': '256px' };
@@ -232,7 +232,9 @@
                             var obj2 = jQuery('#panel');
                             animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
                 {% endif %}
+                }
         {% endif %}
+        {{block.super}}
 {% endblock %}
 {% block loading-indicator: %}{% endblock %}
 

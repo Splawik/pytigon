@@ -81,6 +81,7 @@ def app_init(
     offline_support,
     start_page,
     gen_time,
+    callback=None
 ):
 
     moment.locale(lang)
@@ -364,6 +365,8 @@ def app_init(
 
     # alert(window.location.pathname)
     # alert(base_path)
+    if hasattr(window, "init_callback"):
+        window.init_callback()
 
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
