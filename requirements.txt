@@ -5,7 +5,7 @@
 #numpy
 #pandas
 
-Django==2.2.4
+Django==2.2.8
 Twisted[tls,http2]
 channels
 ldap3
