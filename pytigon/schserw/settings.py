@@ -23,7 +23,7 @@ from fs.mountfs import MountFS
 from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
-from .main_paths import get_main_paths
+from pytigon_lib.schtools.main_paths import get_main_paths
 import django_cache_url
 
 PRJ_NAME = "_schall"
@@ -53,20 +53,13 @@ SHOW_LOGIN_WIN = True
 paths = get_main_paths()
 
 SERW_PATH = paths["SERW_PATH"]
-
-if 'PYTIGON_ROOT_PATH' in environ:
-    ROOT_PATH = environ['PYTIGON_ROOT_PATH']
-else:
-    ROOT_PATH = paths["ROOT_PATH"]
-
 DATA_PATH = paths["DATA_PATH"]
 LOG_PATH = paths["LOG_PATH"]
 TEMP_PATH = paths["TEMP_PATH"]
 PRJ_PATH = paths["PRJ_PATH"]
-if 'PRJ_PATH_ALT' in paths:
-    PRJ_PATH_ALT = paths['PRJ_PATH_ALT']
-else:
-    PRJ_PATH_ALT = PRJ_PATH
+PRJ_PATH_ALT = paths['PRJ_PATH_ALT']
+ROOT_PATH = paths["ROOT_PATH"]
+STATIC_ROOT = paths["STATIC_PATH"]
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -89,7 +82,6 @@ MEDIA_URL = "/site_media/"
 APPEND_SLASH = False
 
 STATICFILES_DIRS = []
-STATIC_ROOT = ROOT_PATH + "/static"
 
 from pytigon_lib.schtools.platform_info import platform_name
 
@@ -375,3 +367,4 @@ try:
     from pytigon.schserw import *
 except:
     pass
+

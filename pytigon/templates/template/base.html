@@ -184,7 +184,9 @@
                                                 {% block form_ok_cancel_del %}{% endblock %}
                                         </form>
                                 {% endblock %}
-                                <set-field element="#ModalLabelDelete" title="{{title}}"></set-field>
+                                {% if standard_web_browser %}
+                                        <set-field element="#ModalLabelDelete" title="{{title}}"></set-field>
+                                {% endif %}
                         {% endif %}
                         {% if standard_web_browser %}
                                 </div>
@@ -229,8 +231,10 @@
                                         </div>
                                 {% endif %}
                         {% endblock %}
-                        {% if title %}
-                                <set-field element="#ModalLabel" title="{{title}}"></set-field>
+                        {% if standard_web_browser %}
+                                {% if title %}
+                                        <set-field element="#ModalLabel" title="{{title}}"></set-field>
+                                {% endif %}
                         {% endif %}
                 {% endif %}
                 {% block dialog_end %}{% endblock %}

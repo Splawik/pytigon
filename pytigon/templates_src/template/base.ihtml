@@ -132,7 +132,8 @@
                                 br
                         %% form_ok_cancel_del
 
-                set-field element=#ModalLabelDelete,,,title={{title}}
+                % if standard_web_browser:
+                    set-field element=#ModalLabelDelete,,,title={{title}}
 
             % if standard_web_browser:
                 </div>
@@ -162,8 +163,9 @@
             %% row_edit_end
                 % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                     </div>
-            % if title:
-                set-field element=#ModalLabel,,,title={{title}}
+            % if standard_web_browser:
+                % if title:
+                    set-field element=#ModalLabel,,,title={{title}}
 
         %% dialog_end
     % else:

@@ -25,6 +25,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 import inspect
 from pytigon_lib.schfs.vfstools import norm_path
 from django.template import engines
+import pytigon
 
 field_default = {'null':False,'blank':False,'editable':True,}
 field_defaults = {
@@ -955,7 +956,7 @@ class SChTemplate( models.Model):
     
     def get_blocks(self):
         ret=[]
-        form_path = os.path.join(os.path.dirname(__file__)+"/../../../templates_src/form.ihtml")
+        form_path = os.path.join(os.path.dirname(pytigon.__file__),"templates_src", "form.ihtml")
         f = open(form_path, "rt")
         buf = f.read()
         f.close()
