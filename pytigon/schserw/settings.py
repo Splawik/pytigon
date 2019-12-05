@@ -60,6 +60,7 @@ PRJ_PATH = paths["PRJ_PATH"]
 PRJ_PATH_ALT = paths['PRJ_PATH_ALT']
 ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
+STATIC_APP_ROOT = paths["STATIC_PATH_APP"]
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -88,13 +89,13 @@ from pytigon_lib.schtools.platform_info import platform_name
 # if platform_name()=='Android':
 #    STATIC_ROOT = STATICFILES_DIRS[0]
 
-if platform_name() == "Android" or "PYTIGON_APP_IMAGE" in environ:
-    STATIC_APP_ROOT = os.path.join(
-        os.path.join(os.path.join(DATA_PATH, ".."), "pytigon"), "app_static"
-    )
-else:
-    # STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
-    STATIC_APP_ROOT = STATIC_ROOT + "/app"
+#if platform_name() == "Android" or "PYTIGON_APP_IMAGE" in environ:
+#    STATIC_APP_ROOT = os.path.join(
+#        os.path.join(os.path.join(DATA_PATH, ".."), "pytigon"), "app_static"
+#    )
+#else:
+#    # STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
+#    STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")

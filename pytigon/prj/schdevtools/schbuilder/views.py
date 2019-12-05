@@ -59,6 +59,8 @@ try:
 except:
     sass =  None
 
+import pytigon.schserw.settings
+
  
 _template="""
         [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
@@ -467,7 +469,7 @@ def gen(request, pk):
     prj = models.SChAppSet.objects.get(id=pk)
     root_path = settings.ROOT_PATH
     
-    if hasattr(settings,"_PRJ_PATH"):
+    if hasattr(pytigon.schserw.settings,"_PRJ_PATH"):
         base_path = os.path.join(settings._PRJ_PATH, prj.name)
     else:
         base_path = os.path.join(settings.PRJ_PATH, prj.name)

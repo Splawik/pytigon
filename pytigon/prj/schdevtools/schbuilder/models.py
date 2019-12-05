@@ -956,13 +956,14 @@ class SChTemplate( models.Model):
     
     def get_blocks(self):
         ret=[]
-        form_path = os.path.join(os.path.dirname(pytigon.__file__),"templates_src", "form.ihtml")
+        form_path = os.path.join(os.path.dirname(pytigon.__file__),"templates", "base0.html")
         f = open(form_path, "rt")
         buf = f.read()
         f.close()
         for line in buf.split('\n'):
-            if "%%" in line:
-                ret.append(superstrip(line).replace(' ',''))
+            line2 = line.strip()
+            if line2.startswith('{% block'):
+                ret.append(line2.split(' ',3)[2])
         return ret
     
     def get_template_widgets(self):
