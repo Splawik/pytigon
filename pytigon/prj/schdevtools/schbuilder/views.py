@@ -470,7 +470,7 @@ def gen(request, pk):
     root_path = settings.ROOT_PATH
     
     if hasattr(pytigon.schserw.settings,"_PRJ_PATH"):
-        base_path = os.path.join(settings._PRJ_PATH, prj.name)
+        base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH, prj.name)
     else:
         base_path = os.path.join(settings.PRJ_PATH, prj.name)
     src_path = os.path.join(settings.PRJ_PATH, "schdevtools")

@@ -57,7 +57,7 @@ DATA_PATH = paths["DATA_PATH"]
 LOG_PATH = paths["LOG_PATH"]
 TEMP_PATH = paths["TEMP_PATH"]
 PRJ_PATH = paths["PRJ_PATH"]
-PRJ_PATH_ALT = paths['PRJ_PATH_ALT']
+PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
 ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
 STATIC_APP_ROOT = paths["STATIC_PATH_APP"]
@@ -89,11 +89,11 @@ from pytigon_lib.schtools.platform_info import platform_name
 # if platform_name()=='Android':
 #    STATIC_ROOT = STATICFILES_DIRS[0]
 
-#if platform_name() == "Android" or "PYTIGON_APP_IMAGE" in environ:
+# if platform_name() == "Android" or "PYTIGON_APP_IMAGE" in environ:
 #    STATIC_APP_ROOT = os.path.join(
 #        os.path.join(os.path.join(DATA_PATH, ".."), "pytigon"), "app_static"
 #    )
-#else:
+# else:
 #    # STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
 #    STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
@@ -157,7 +157,7 @@ else:
         "django.contrib.auth.middleware.RemoteUserMiddleware",
     ]
 
-MIDDLEWARE.insert(0, "whitenoise.middleware.WhiteNoiseMiddleware")
+MIDDLEWARE.insert(0, "schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
 
 
 AUTHENTICATION_BACKENDS = (
@@ -174,7 +174,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.forms",
     "whitenoise.runserver_nostatic",
-    'django.contrib.staticfiles',
+    "django.contrib.staticfiles",
     "django_select2",
     "bootstrap4",
     "corsheaders",
