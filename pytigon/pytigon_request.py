@@ -22,7 +22,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
 
-from pytigon.schserw.main_paths import get_main_paths
+from pytigon_lib.schtools.main_paths import get_main_paths
 
 from pytigon_lib.schhttptools import httpclient
 

@@ -25,7 +25,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
 
 if __name__ == '__main__':
 
-    from pytigon.schserw.main_paths import get_main_paths
+    from pytigon_lib.schtools.main_paths import get_main_paths
 
     paths = get_main_paths()
 
