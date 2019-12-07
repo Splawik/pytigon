@@ -104,7 +104,7 @@ ADMIN_MEDIA_PREFIX = "/media/"
 
 SECRET_KEY = "anawa"
 
-ROOT_URLCONF = "schserw.urls"
+ROOT_URLCONF = "pytigon.schserw.urls"
 
 TEMPLATES = [
     {
@@ -112,7 +112,7 @@ TEMPLATES = [
         "DIRS": [ROOT_PATH + "/templates", ROOT_PATH + "/schappdata/schplugins"],
         "OPTIONS": {
             "context_processors": [
-                "schserw.schsys.context_processors.sch_standard",
+                "pytigon.schserw.schsys.context_processors.sch_standard",
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.request",
                 "django.template.context_processors.debug",
@@ -128,7 +128,7 @@ TEMPLATES = [
                 "pytigon_lib.schdjangoext.python_style_template_loader.FSLoader",
                 "django.template.loaders.app_directories.Loader",
             ],
-            "builtins": ["schserw.schsys.templatetags.defexfiltry"],
+            "builtins": ["pytigon.schserw.schsys.templatetags.defexfiltry"],
             "debug": DEBUG,
         },
     }
@@ -143,7 +143,7 @@ if "EMBEDED_DJANGO_SERVER" in environ:
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
-        "schserw.schmiddleware.csrf.DisableCSRF",
+        "pytigon.schserw.schmiddleware.csrf.DisableCSRF",
     ]
 else:
     MIDDLEWARE = [
@@ -157,7 +157,7 @@ else:
         "django.contrib.auth.middleware.RemoteUserMiddleware",
     ]
 
-MIDDLEWARE.insert(0, "schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
+MIDDLEWARE.insert(0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
 
 
 AUTHENTICATION_BACKENDS = (
@@ -178,7 +178,7 @@ INSTALLED_APPS = [
     "django_select2",
     "bootstrap4",
     "corsheaders",
-    "schserw.schsys",
+    "pytigon.schserw.schsys",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -272,7 +272,7 @@ BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 
 AUTO_RENDER_SELECT2_STATICS = False
 
-ASGI_APPLICATION = "schserw.routing.application"
+ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 # if  PRODUCTION_VERSION and platform_name()!='Android':
 #    CHANNEL_LAYERS = {
