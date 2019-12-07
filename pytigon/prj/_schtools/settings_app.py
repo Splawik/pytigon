@@ -67,8 +67,8 @@ for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        for root_path in [LOCAL_ROOT_PATH, ROOT_PATH]:
-            base_path = os.path.join(root_path, "prj", aa[0])
+        for root_path in [LOCAL_ROOT_PATH, os.path.join(ROOT_PATH, "prj")]:
+            base_path = os.path.join(root_path,  aa[0])
             if os.path.exists(base_path):
                 TEMPLATES[0]['DIRS'].append(os.path.join(base_path, "templates"))
                 if len(aa)==2:
@@ -133,5 +133,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.11.10 15:37:56'
+GEN_TIME = '2019.12.07 14:47:56'
 
