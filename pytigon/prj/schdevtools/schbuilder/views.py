@@ -52,7 +52,7 @@ from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon_lib.schtools.install import post_install
 
-from ext_lib.pygettext import main as gtext
+from pytigon.ext_lib.pygettext import main as gtext
 
 try:
     import sass
