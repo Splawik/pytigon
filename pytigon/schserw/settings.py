@@ -61,6 +61,7 @@ PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
 ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
 STATIC_APP_ROOT = paths["STATIC_PATH_APP"]
+PYTIGON_PATH = paths["PYTIGON_PATH"]
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -109,7 +110,7 @@ ROOT_URLCONF = "pytigon.schserw.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [ROOT_PATH + "/templates", ROOT_PATH + "/schappdata/schplugins"],
+        "DIRS": [PYTIGON_PATH+ "/templates",  PYTIGON_PATH + "/schappdata/schplugins", DATA_PATH + "/plugins_cache"],
         "OPTIONS": {
             "context_processors": [
                 "pytigon.schserw.schsys.context_processors.sch_standard",
@@ -266,6 +267,7 @@ PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
+BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 
 # SEARCH_PATH = "/schwiki/%s/search/"
