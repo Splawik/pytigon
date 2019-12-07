@@ -285,7 +285,7 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 #        },
 #    }
 
-DEFAULT_FILE_STORAGE = "pytigon.django_storage.FSStorage"
+DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 
 
 def DEFAULT_FILE_STORAGE_FS():
