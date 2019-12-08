@@ -110,7 +110,7 @@ ROOT_URLCONF = "pytigon.schserw.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [PYTIGON_PATH+ "/templates",  PYTIGON_PATH + "/schappdata/schplugins", DATA_PATH + "/plugins_cache"],
+        "DIRS": [PYTIGON_PATH+ "/templates",  PYTIGON_PATH + "/appdata/plugins", DATA_PATH + "/plugins"],
         "OPTIONS": {
             "context_processors": [
                 "pytigon.schserw.schsys.context_processors.sch_standard",

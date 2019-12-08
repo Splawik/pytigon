@@ -51,6 +51,7 @@ from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon_lib.schtools.install import post_install
+from pytigon_lib.schtools.cc import import_plugin
 
 from pytigon.ext_lib.pygettext import main as gtext
 
@@ -1146,6 +1147,9 @@ def installer(request, pk):
 
 
 def restart_server(request):
+    
+    module = import_plugin("schbuilderlib.test1", "schdevtools")
+    print(module.sum(2,2))
     
     import ctypes 
     restarted = False

@@ -324,7 +324,7 @@ def plugins(request, app, plugin_name):
         f = open(settings.STATIC_ROOT + '/' + app + '/' + plugin_name + '.zip', 'rb')
     except:
         try:
-            f = open(settings.ROOT_PATH + '/prj/' + app + '/schplugins/' + plugin_name + '.zip', 'rb')
+            f = open(settings.ROOT_PATH + '/prj/' + app + '/plugins/' + plugin_name + '.zip', 'rb')
         except:
             raise Http404
     s = f.read()

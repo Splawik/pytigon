@@ -89,8 +89,8 @@ Section "pytigon - client"
   SectionIn 1 3
   SetOutPath $INSTDIR\pytigon_gui
   File /r  /x __pycache__ /x *.pyc /x *.pyo pytigon_gui\*.*
-  SetOutPath $INSTDIR\schappdata
-  File /r  /x __pycache__ /x *.pyc /x *.pyo schappdata\*.*
+  SetOutPath $INSTDIR\appdata
+  File /r  /x __pycache__ /x *.pyc /x *.pyo appdata\*.*
   ;SetOutPath $INSTDIR\prj\_schmsg
   ;File /r  /x __pycache__ /x *.pyc /x *.pyo prj\_schmsg\*.*
   SetOutPath $INSTDIR\prj\_schtasks
