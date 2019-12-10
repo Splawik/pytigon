@@ -50,8 +50,7 @@ from pytigon_lib.schtools.install import extract_ptig
 from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
 
-from pytigon_lib.schtools.install import post_install
-from pytigon_lib.schtools.cc import import_plugin
+from pytigon_lib.schtools.cc import import_plugin, make
 
 from pytigon.ext_lib.pygettext import main as gtext
 
@@ -869,7 +868,7 @@ def gen(request, pk):
     else:
         object_list.append((datetime.datetime.now().time().isoformat(), 'ERRORS:', ""))    
     
-    (exit_code, output_tab, err_tab) = post_install(root_path, base_path)
+    (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path)
     if output_tab:
         for pos in output_tab:
             if pos:
