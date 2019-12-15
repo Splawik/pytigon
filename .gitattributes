@@ -1,5 +1,5 @@
-static/* linguist-vendored
-ext_lib/* linguist-vendored
-ext_prg/* linguist-vendored
-schappdata/media/* linguist-vendored
-templates/* linguist-vendored
+pytigon/static/* linguist-vendored
+pytigon/ext_lib/* linguist-vendored
+pytigon/ext_prg/* linguist-vendored
+pytigon/schappdata/media/* linguist-vendored
+pytigon/templates/* linguist-vendored
