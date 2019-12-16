@@ -629,13 +629,15 @@ def gen(request, pk):
     
     static_files = prj.schstatic_set.all()
     
-    if settings.STATIC_APP_ROOT:
-        static_root = os.path.join(settings.STATIC_APP_ROOT, prj.name)
-    else:
-        if settings.STATIC_ROOT:
-            static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),prj.name)
-        else:
-            static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),prj.name)
+    #if settings.STATIC_APP_ROOT:
+    #    static_root = os.path.join(settings.STATIC_APP_ROOT, prj.name)
+    #else:
+    #    if settings.STATIC_ROOT:
+    #        static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),prj.name)
+    #    else:
+    #        static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),prj.name)
+    
+    static_root = os.path.join(base_path, "static", prj.name)
     
     static_scripts = os.path.join(static_root,'js')
     static_style = os.path.join(static_root,'css')
@@ -714,8 +716,8 @@ def gen(request, pk):
     component_elements = []
     
     if prj.custom_tags:
-        component_elements += [ 'app/'+pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
-    component_elements += [ 'app/' + prj.name + "/components/" + pos.name for pos in static_files if pos.type in ('R',) ]
+        component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
+    component_elements += [ prj.name + "/components/" + pos.name for pos in static_files if pos.type in ('R',) ]
     
     js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
@@ -749,8 +751,8 @@ def gen(request, pk):
                 static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
     
                 if prj2.custom_tags:
-                    component_elements += [ 'app/'+pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
-                component_elements += [ 'app/' + prj2.name + "/components/" + pos.name for pos in static_files2 if pos.type in ('R',) ]
+                    component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
+                component_elements += [ prj2.name + "/components/" + pos.name for pos in static_files2 if pos.type in ('R',) ]
     
     template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements) })
     

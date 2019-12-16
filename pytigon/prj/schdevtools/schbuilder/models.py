@@ -18,6 +18,8 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from schauth.models import *
 
+from standard_components.models import *
+
 
 
 import os.path

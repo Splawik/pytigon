@@ -11,15 +11,15 @@
     {{block.super}}
     {% jscript_link 'vue/vue.js' %}
     
-    {% module_link 'app/schdevtools/js/test_javascript.js' %}
-    {% module_link 'app/schdevtools/js/test_python.js' %}
+    {% module_link 'schdevtools/js/test_javascript.js' %}
+    {% module_link 'schdevtools/js/test_python.js' %}
     
     
 
 %% extrastyle
     {{block.super}}
-    {% css_link 'app/schdevtools/css/style.css' %}
-    {% css_link 'app/schdevtools/css/test_icss.css' %}
+    {% css_link 'schdevtools/css/style.css' %}
+    {% css_link 'schdevtools/css/test_icss.css' %}
     
     
 
@@ -27,22 +27,23 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'app/schcomponents/components/plotly.js' %}
-    {% component 'app/schcomponents/components/code_editor.js' %}
-    {% component 'app/schcomponents/components/video-js.js' %}
-    {% component 'app/schcomponents/components/pivottable.js' %}
-    {% component 'app/schcomponents/components/summernote.js' %}
-    {% component 'app/schcomponents/components/d3.js' %}
-    {% component 'app/schdevtools/components/test.js' %}
-    {% component 'app/schcomponents/components/handsontable.js' %}
-    {% component 'app/schcomponents/components/vs_editor.js' %}
-    {% component 'app/schcomponents/components/txtarea_editor.js' %}
-    {% component 'app/schcomponents/components/leaflet.js' %}
+    {% component 'schcomponents/components/vs_editor.js' %}
+    {% component 'schdevtools/components/test.js' %}
+    {% component 'schcomponents/components/video-js.js' %}
+    {% component 'schcomponents/components/d3.js' %}
+    {% component 'schcomponents/components/summernote.js' %}
+    {% component 'schcomponents/components/txtarea_editor.js' %}
+    {% component 'schcomponents/components/plotly.js' %}
+    {% component 'schcomponents/components/wysiwyg_edit.js' %}
+    {% component 'schcomponents/components/xterm.js' %}
+    {% component 'schcomponents/components/pivottable.js' %}
+    {% component 'schcomponents/components/handsontable.js' %}
+    {% component 'schcomponents/components/leaflet.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "plotly", "code_editor", "video-js", "pivottable", "summernote", "d3", "test", "handsontable", "vs_editor", "txtarea_editor", "leaflet",  ];  
+    .var component_init = [ "vs_editor", "test", "video-js", "d3", "summernote", "txtarea_editor", "plotly", "wysiwyg_edit", "xterm", "pivottable", "handsontable", "leaflet",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

@@ -48,7 +48,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
 
 from pytigon_lib.schtools.install_init import init
-init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_APP_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
+init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
 START_PAGE = 'None'
 SHOW_LOGIN_WIN = True
@@ -67,7 +67,7 @@ for app in APPS:
     if not app in [ x if type(x)==str else x.label for x in INSTALLED_APPS]:
         INSTALLED_APPS.append(get_app_config(app))
         aa = app.split('.')
-        for root_path in [LOCAL_ROOT_PATH, os.path.join(ROOT_PATH, "prj")]:
+        for root_path in [PRJ_PATH, PRJ_PATH_ALT]:
             base_path = os.path.join(root_path,  aa[0])
             if os.path.exists(base_path):
                 TEMPLATES[0]['DIRS'].append(os.path.join(base_path, "templates"))
@@ -153,5 +153,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.12.07 14:48:40'
+GEN_TIME = '2019.12.16 23:08:21'
 
