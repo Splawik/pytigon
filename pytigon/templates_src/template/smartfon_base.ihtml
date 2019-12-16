@@ -5,8 +5,6 @@
 % load exfiltry
 % load exsyntax
 
-
-
 %% menu_start
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary win-header" id="topmenu">
 
@@ -59,5 +57,3 @@
         </ul>
 
     </div></nav>
-
-

@@ -13,11 +13,11 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schcomponents/components/vs_editor.js' %}
         {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
+        {% component 'app/schcomponents/components/vs_editor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "vs_editor", "wysiwyg_edit",  ];
+        var component_init = [ "wysiwyg_edit", "vs_editor",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

@@ -14,22 +14,22 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schcomponents/components/vs_editor.js' %}
-        {% component 'app/schcomponents/components/d3.js' %}
-        {% component 'app/schcomponents/components/txtarea_editor.js' %}
-        {% component 'app/schcomponents/components/code_editor.js' %}
-        {% component 'app/schcomponents/components/video-js.js' %}
         {% component 'app/schpytigondemo/components/plotly_status.js' %}
-        {% component 'app/schcomponents/components/summernote.js' %}
-        {% component 'app/schcomponents/components/leaflet.js' %}
-        {% component 'app/schcomponents/components/pivottable.js' %}
-        {% component 'app/schcomponents/components/plotly.js' %}
         {% component 'app/schcomponents/components/handsontable.js' %}
+        {% component 'app/schcomponents/components/code_editor.js' %}
+        {% component 'app/schcomponents/components/summernote.js' %}
+        {% component 'app/schcomponents/components/video-js.js' %}
+        {% component 'app/schcomponents/components/leaflet.js' %}
+        {% component 'app/schcomponents/components/txtarea_editor.js' %}
+        {% component 'app/schcomponents/components/vs_editor.js' %}
+        {% component 'app/schcomponents/components/pivottable.js' %}
         {% component 'app/schcomponents/components/xterm.js' %}
+        {% component 'app/schcomponents/components/plotly.js' %}
+        {% component 'app/schcomponents/components/d3.js' %}
         {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "vs_editor", "d3", "txtarea_editor", "code_editor", "video-js", "plotly_status", "summernote", "leaflet", "pivottable", "plotly", "handsontable", "xterm", "wysiwyg_edit",  ];
+        var component_init = [ "plotly_status", "handsontable", "code_editor", "summernote", "video-js", "leaflet", "txtarea_editor", "vs_editor", "pivottable", "xterm", "plotly", "d3", "wysiwyg_edit",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
