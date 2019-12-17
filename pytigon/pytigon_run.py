@@ -78,7 +78,7 @@ def run(param=None):
                 ROOT_PATH,
                 DATA_PATH,
                 PRJ_PATH,
-                STATIC_APP_ROOT,
+                STATIC_ROOT,
                 MEDIA_ROOT,
                 UPLOAD_PATH,
             )
@@ -95,7 +95,7 @@ def run(param=None):
                     ROOT_PATH,
                     DATA_PATH,
                     PRJ_PATH,
-                    STATIC_APP_ROOT,
+                    STATIC_ROOT,
                     [MEDIA_ROOT, UPLOAD_PATH],
                 )
 
@@ -121,7 +121,7 @@ def run(param=None):
             ROOT_PATH,
             DATA_PATH,
             PRJ_PATH,
-            STATIC_APP_ROOT,
+            STATIC_ROOT,
             MEDIA_ROOT,
             UPLOAD_PATH,
         )
@@ -144,7 +144,7 @@ def run(param=None):
                 ROOT_PATH,
                 DATA_PATH,
                 PRJ_PATH,
-                STATIC_APP_ROOT,
+                STATIC_ROOT,
                 MEDIA_ROOT,
                 UPLOAD_PATH,
             )
@@ -161,7 +161,7 @@ def run(param=None):
                     ROOT_PATH,
                     DATA_PATH,
                     PRJ_PATH,
-                    STATIC_APP_ROOT,
+                    STATIC_ROOT,
                     [MEDIA_ROOT, UPLOAD_PATH],
                 )
 
