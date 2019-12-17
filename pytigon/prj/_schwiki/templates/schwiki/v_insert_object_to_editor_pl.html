@@ -1,9 +1,11 @@
 <script>
+// Transcrypt'ed from Python, 2019-12-17 21:22:24
+import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __globals__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
-var robj = object.closest ('.refr_object');
-var editor_div = robj.find ("div[name='vseditor']");
-var ed = editor_div.data ('editor');
-var repeat = 2;
+export var robj = object.closest ('.refr_object');
+export var editor_div = robj.find ("div[name='vseditor']");
+export var ed = editor_div.data ('editor');
+export var repeat = 2;
 while (repeat > 0) {
 	var pos = ed.getPosition ();
 	var text = ed.getValue ();
@@ -23,9 +25,7 @@ while (repeat > 0) {
 			break;
 		}
 		var max = 0;
-		var __iterable0__ = tab;
-		for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
-			var l = __iterable0__ [__index0__];
+		for (var l of tab) {
 			if (l.startswith ('@{{object.name}}')) {
 				var x = l.py_split ('_');
 				if (len (x) > 1) {
@@ -52,32 +52,12 @@ while (repeat > 0) {
 		}
 		var text = ('@{{object.name}}' + edit_form) + '{% if object.inline_editing %}:\n{% else %}\n{% endif %}';
 		var op = dict ({'identifier': id, 'range': range, 'text': text, 'forceMoveMarkers': true});
-		ed.executeEdits ('pytigon', list ([op]));
+		ed.executeEdits ('pytigon', [op]);
 		ed.setPosition (pos);
 		editor_div.data ('vue-editor').save (null);
 		repeat--;
 	}
 }
-__pragma__ ('<all>')
-	__all__.__name__ = __name__;
-	__all__.ed = ed;
-	__all__.edit_form = edit_form;
-	__all__.editor_div = editor_div;
-	__all__.href = href;
-	__all__.id = id;
-	__all__.l = l;
-	__all__.line = line;
-	__all__.max = max;
-	__all__.n = n;
-	__all__.op = op;
-	__all__.pos = pos;
-	__all__.range = range;
-	__all__.repeat = repeat;
-	__all__.robj = robj;
-	__all__.tab = tab;
-	__all__.text = text;
-	__all__.x = x;
-	__all__.xx = xx;
-__pragma__ ('</all>')
-</script>
+
+//# sourceMappingURL=input.map</script>
 
