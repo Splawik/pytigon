@@ -1,0 +1,30 @@
+{% extends 'template/desktop_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load bootstrap4 %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'vue/vue.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+{% endblock %}
+{% block body_footer_scripts %}
+        {{block.super}}
+        <script language='javascript'>var global_vue_bus = new Vue ();</script>
+        {% component 'schcomponents/components/vs_editor.js' %}
+        {% component 'schcomponents/components/d3.js' %}
+        {% component 'schcomponents/components/video-js.js' %}
+        {% component 'schcomponents/components/summernote.js' %}
+        {% component 'schcomponents/components/txtarea_editor.js' %}
+        {% component 'schcomponents/components/plotly.js' %}
+        {% component 'schcomponents/components/wysiwyg_edit.js' %}
+        {% component 'schcomponents/components/xterm.js' %}
+        {% component 'schcomponents/components/pivottable.js' %}
+        {% component 'schcomponents/components/handsontable.js' %}
+        {% component 'schcomponents/components/leaflet.js' %}
+{% endblock %}
+{% block component_init %}
+        var component_init = [ "vs_editor", "d3", "video-js", "summernote", "txtarea_editor", "plotly", "wysiwyg_edit", "xterm", "pivottable", "handsontable", "leaflet",  ];
+{% endblock %}
+
