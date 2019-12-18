@@ -61,6 +61,7 @@ PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
 ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
 PYTIGON_PATH = paths["PYTIGON_PATH"]
+PLATFORM_TYPE = paths["PLATFORM_TYPE"]
 
 ADMINS = []
 MANAGERS = ADMINS
@@ -86,16 +87,6 @@ STATICFILES_DIRS = []
 
 from pytigon_lib.schtools.platform_info import platform_name
 
-# if platform_name()=='Android':
-#    STATIC_ROOT = STATICFILES_DIRS[0]
-
-# if platform_name() == "Android" or "PYTIGON_APP_IMAGE" in environ:
-#    STATIC_APP_ROOT = os.path.join(
-#        os.path.join(os.path.join(DATA_PATH, ".."), "pytigon"), "app_static"
-#    )
-# else:
-#    # STATIC_APP_ROOT = STATICFILES_DIRS[0] + "/app"
-#    STATIC_APP_ROOT = STATIC_ROOT + "/app"
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
@@ -157,8 +148,8 @@ else:
         "django.contrib.auth.middleware.RemoteUserMiddleware",
     ]
 
-MIDDLEWARE.insert(0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
-
+if PLATFORM_TYPE != "webserwer":
+    MIDDLEWARE.insert(0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
