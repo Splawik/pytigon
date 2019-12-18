@@ -5,23 +5,23 @@
 {% block js_extrascipts %}
         {{block.super}}
         {% jscript_link 'vue/vue.js' %}
-        {% module_link 'app/_schdata/js/subreport.js' %}
+        {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
-        {% css_link 'app/schportal/css/portal.css' %}
-        {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+        {% css_link 'schportal/css/portal.css' %}
+        {% css_link '_schwiki/css/wiki_editor.css' %}
 {% endblock %}
-{% block body_footer %}
+{% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schcomponents/components/vs_editor.js' %}
-        {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
-        {% component 'app/schcomponents/components/d3.js' %}
-        {% component 'app/schcomponents/components/plotly.js' %}
+        {% component 'schcomponents/components/vs_editor.js' %}
+        {% component 'schcomponents/components/plotly.js' %}
+        {% component 'schcomponents/components/d3.js' %}
+        {% component 'schcomponents/components/wysiwyg_edit.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "vs_editor", "wysiwyg_edit", "d3", "plotly",  ];
+        var component_init = [ "vs_editor", "plotly", "d3", "wysiwyg_edit",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
