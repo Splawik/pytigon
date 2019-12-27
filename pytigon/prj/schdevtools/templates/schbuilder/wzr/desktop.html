@@ -9,7 +9,7 @@
 
 %% js_extrascipts
     {% spec '{' %}block.super{% spec '}' %}
-    {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.min.js' {% spec "]" %}{% spec "[" %} jscript_link 'vue/httpVueLoader.js' {% spec "]" %}
+    {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.min.js' {% spec "]" %}{% spec "[" %} jscript_link 'vue/httpVueLoader.js' {% spec "]" %}{% spec "[" %} jscript_link 'vue/vue-wc-wrapper.global.js' {% spec "]" %}
     {% endif %}
     {% for js_static in js_static_files %}{% spec '[' %} module_link '{{prj.name}}/js/{{js_static.name}}.js' {% spec ']' %}
     {% endfor %}

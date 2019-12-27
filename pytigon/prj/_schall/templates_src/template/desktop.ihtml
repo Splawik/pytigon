@@ -9,7 +9,7 @@
 
 %% js_extrascipts
     {{block.super}}
-    {% jscript_link 'vue/vue.js' %}
+    {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
     
     
     
@@ -23,13 +23,12 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'schcomponents/components/vs_editor.js' %}
-    {% component 'schcomponents/components/code_editor.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "vs_editor", "code_editor",  ];  
+    .var component_init = [ "ptig-codeeditor.js",  ];  
 
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

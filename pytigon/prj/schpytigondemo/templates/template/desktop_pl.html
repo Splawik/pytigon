@@ -4,7 +4,7 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}
+        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
         {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
@@ -14,23 +14,20 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/pivottable.js' %}
-        {% component 'schcomponents/components/video-js.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'my-component.vue' %}
-        {% component 'fab-button.vue' %}
-        {% component 'schcomponents/components/xterm.js' %}
-        {% component 'schcomponents/components/txtarea_editor.js' %}
-        {% component 'schcomponents/components/handsontable.js' %}
-        {% component 'schcomponents/components/plotly.js' %}
-        {% component 'schcomponents/components/leaflet.js' %}
-        {% component 'schcomponents/components/d3.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schpytigondemo/components/plotly_status.js' %}
-        {% component 'schcomponents/components/vs_editor.js' %}
-        {% component 'schcomponents/components/wysiwyg_edit.js' %}
-        {% component 'schcomponents/components/summernote.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "pivottable.js", "video-js.js", "my-component.vue", "fab-button.vue", "xterm.js", "txtarea_editor.js", "handsontable.js", "plotly.js", "leaflet.js", "d3.js", "plotly_status.js", "vs_editor.js", "wysiwyg_edit.js", "summernote.js",  ];
+        var component_init = [ "ptig-xterm.js", "ptig-leaflet.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "my-component.vue", "ptig-spreadsheet.js", "ptig-video.js", "plotly_status.js", "ptig-codeeditor.js", "ptig-pivottable.js", "ptig-d3.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

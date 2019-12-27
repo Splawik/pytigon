@@ -4,7 +4,7 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.js' %}
+        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
@@ -12,19 +12,17 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/xterm.js' %}
-        {% component 'schcomponents/components/plotly.js' %}
-        {% component 'schcomponents/components/handsontable.js' %}
-        {% component 'schcomponents/components/summernote.js' %}
-        {% component 'schcomponents/components/txtarea_editor.js' %}
-        {% component 'schcomponents/components/video-js.js' %}
-        {% component 'schcomponents/components/wysiwyg_edit.js' %}
-        {% component 'schcomponents/components/vs_editor.js' %}
-        {% component 'schcomponents/components/leaflet.js' %}
-        {% component 'schcomponents/components/pivottable.js' %}
-        {% component 'schcomponents/components/d3.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "xterm", "plotly", "handsontable", "summernote", "txtarea_editor", "video-js", "wysiwyg_edit", "vs_editor", "leaflet", "pivottable", "d3",  ];
+        var component_init = [ "ptig-xterm.js", "ptig-leaflet.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-spreadsheet.js", "ptig-video.js", "ptig-codeeditor.js", "ptig-pivottable.js", "ptig-d3.js",  ];
 {% endblock %}
 

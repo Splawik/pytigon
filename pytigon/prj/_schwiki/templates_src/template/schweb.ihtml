@@ -20,5 +20,5 @@
         [ hybrid | 0 ]
         [ title  | Wiki ]
         [ start_page | None ]
-        [ plugins | riot:standard_components/txtarea_editor ]
+        [ plugins | None ]
 

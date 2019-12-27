@@ -118,7 +118,6 @@
 
     {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
     {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
-    {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
 
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
 
@@ -128,9 +127,9 @@
 
     {{ form.media.css }}
 
-
     %% botstrap_css
-        {% css_link 'bootstrap/css/bootstrap.min.css' %}
+        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+        {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
 
     %% theme_css_links
         {% css_link 'sch/select2-material.css' %}
@@ -138,8 +137,6 @@
     %% theme_css_links_spec
         {% css_link 'themes/default.css' %}
         {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
-
-
 
 %% css_start
     <style type="text/css">

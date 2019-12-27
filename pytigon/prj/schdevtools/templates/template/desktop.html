@@ -4,7 +4,7 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.js' %}
+        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
         {% module_link 'schdevtools/js/test_javascript.js' %}
         {% module_link 'schdevtools/js/test_python.js' %}
 {% endblock %}
@@ -16,65 +16,19 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/d3.js' %}
-        {% component 'schcomponents/components/pivottable.js' %}
+        {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schdevtools/components/test.js' %}
-        {% component 'schcomponents/components/summernote.js' %}
-        {% component 'schcomponents/components/vs_editor.js' %}
-        {% component 'schcomponents/components/leaflet.js' %}
-        {% component 'schcomponents/components/video-js.js' %}
-        {% component 'schcomponents/components/txtarea_editor.js' %}
-        {% component 'schcomponents/components/xterm.js' %}
-        {% component 'schcomponents/components/plotly.js' %}
-        {% component 'schcomponents/components/handsontable.js' %}
-        {% component 'schcomponents/components/wysiwyg_edit.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "d3", "pivottable", "test", "summernote", "vs_editor", "leaflet", "video-js", "txtarea_editor", "xterm", "plotly", "handsontable", "wysiwyg_edit",  ];
-{% endblock %}
-{% block botstrap_css %}
-        {% comment %}
-                {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
-        {% endcomment %}
-        {% css_link 'themes/bmd/css/bootstrap-material-design.min.css' %}
-        <style ==>>
-                :root {
-                    --blue: #007bff;
-                    --indigo: #6610f2;
-                    --purple: #6f42c1;
-                    --pink: #e83e8c;
-                    --red: #dc3545;
-                    --orange: #fd7e14;
-                    --yellow: #ffc107;
-                    --green: #28a745;
-                    --teal: #20c997;
-                    --cyan: #17a2b8;
-                    --white: #fff;
-                    --gray: #6c757d;
-                    --gray-dark: #343a40;
-                    --primary: #007bff;
-                    --secondary: #6c757d;
-                    --success: #28a745;
-                    --info: #17a2b8;
-                    --warning: #ffc107;
-                    --danger: #dc3545;
-                    --light: #f8f9fa;
-                    --dark: #343a40;
-                    --breakpoint-xs: 0;
-                    --breakpoint-sm: 576px;
-                    --breakpoint-md: 768px;
-                    --breakpoint-lg: 992px;
-                    --breakpoint-xl: 1200px;
-                    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-                }
-        </style>
-{% endblock %}
-{% block bootstrap_js %}
-        {% comment %}
-                {{ block.super }}
-        {% endcomment %}
-        {% jscript_link 'themes/bmd/js/bootstrap-material-design.min.js' %}
+        var component_init = [ "ptig-leaflet.js", "ptig-video.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "ptig-pivottable.js", "ptig-spreadsheet.js", "test.js", "ptig-plotly.js", "ptig-d3.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block js_app_init %}
         let db_struct = [ ["devparam", {"keyPath": "key"}] ];
@@ -85,10 +39,10 @@
         }
         let sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
         init_sync(sync_struct);
-        function bootstrap_init(elem) {
-            elem.bootstrapMaterialDesign();
-        };
-        register_fragment_init_fun(bootstrap_init);
+        //.function bootstrap_init(elem) {
+        //.    elem.bootstrapMaterialDesign();
+        //.};
+        //.register_fragment_init_fun(bootstrap_init);
         {{ block.super }}
 {% endblock %}
 {% block logo %}

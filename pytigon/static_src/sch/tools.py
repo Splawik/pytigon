@@ -128,6 +128,7 @@ def split_html(html):
 def eval_scripts(scripts):
     def eval_fun(id, value):
         eval(value.innerHTML)
+
     jQuery.each(scripts, eval_fun)
 
 
@@ -148,13 +149,17 @@ def register_mount_fun(fun):
 
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
-    if component_init and window.COMPONENT_INIT and len(window.COMPONENT_INIT) > 0:
+    if (
+        component_init
+        and window.COMPONENT_INIT
+        and len(window.COMPONENT_INIT) > 0
+    ):
         try:
             elem.empty()
 
             ret = split_html(html_txt)
 
-            res = Vue.compile("<div>"+ret[0]+"</div>")
+            res = Vue.compile("<div>" + ret[0] + "</div>")
             if elem and elem.length > 0:
                 vm = __new__(
                     Vue({"render": res.render, "staticRenderFns": res.staticRenderFns})

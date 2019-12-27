@@ -685,6 +685,7 @@ def gen(request, pk):
                 #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
+            print(dest_path if dest_path else os.path.join(static_scripts,static_file.name+".js"))
             f = open_and_create_dir(dest_path if dest_path else os.path.join(static_scripts,static_file.name+".js"),"wb")
             f.write(codejs.encode('utf-8'))
             f.close()        
@@ -695,6 +696,7 @@ def gen(request, pk):
                 codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
             except:
                 codejs = ""
+            print(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'))    
             f = open_and_create_dir(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'),"wb")
             f.write(codejs.encode('utf-8'))
             f.close()        
