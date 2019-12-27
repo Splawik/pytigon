@@ -9,7 +9,11 @@
                         <input type="hidden" name="{{field.name}}" />
                 {% endif %}
           {% else %}
-                {% bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
+                {% if field.field.widget.input_type == 'checkbox' %}
+                        {% bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class='form-check abc-checkbox abc-checkbox-primary' placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
+                  {% else %}
+                        {% bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
+                {% endif %}
         {% endif %}
   {% else %}
         <tr>

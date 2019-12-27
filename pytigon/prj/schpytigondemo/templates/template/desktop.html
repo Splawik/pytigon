@@ -4,34 +4,58 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.js' %}
-        {% module_link 'app/_schdata/js/subreport.js' %}
+        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}
+        {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
-        {% css_link 'app/_schwiki/css/wiki_editor.css' %}
+        {% css_link '_schwiki/css/wiki_editor.css' %}
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schpytigondemo/components/plotly_status.js' %}
-        {% component 'app/schcomponents/components/handsontable.js' %}
-        {% component 'app/schcomponents/components/code_editor.js' %}
-        {% component 'app/schcomponents/components/summernote.js' %}
-        {% component 'app/schcomponents/components/video-js.js' %}
-        {% component 'app/schcomponents/components/leaflet.js' %}
-        {% component 'app/schcomponents/components/txtarea_editor.js' %}
-        {% component 'app/schcomponents/components/vs_editor.js' %}
-        {% component 'app/schcomponents/components/pivottable.js' %}
-        {% component 'app/schcomponents/components/xterm.js' %}
-        {% component 'app/schcomponents/components/plotly.js' %}
-        {% component 'app/schcomponents/components/d3.js' %}
-        {% component 'app/schcomponents/components/wysiwyg_edit.js' %}
+        {% component 'schcomponents/components/pivottable.js' %}
+        {% component 'schcomponents/components/video-js.js' %}
+        {% component 'my-component.vue' %}
+        {% component 'fab-button.vue' %}
+        {% component 'schcomponents/components/xterm.js' %}
+        {% component 'schcomponents/components/txtarea_editor.js' %}
+        {% component 'schcomponents/components/handsontable.js' %}
+        {% component 'schcomponents/components/plotly.js' %}
+        {% component 'schcomponents/components/leaflet.js' %}
+        {% component 'schcomponents/components/d3.js' %}
+        {% component 'schpytigondemo/components/plotly_status.js' %}
+        {% component 'schcomponents/components/vs_editor.js' %}
+        {% component 'schcomponents/components/wysiwyg_edit.js' %}
+        {% component 'schcomponents/components/summernote.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "plotly_status", "handsontable", "code_editor", "summernote", "video-js", "leaflet", "txtarea_editor", "vs_editor", "pivottable", "xterm", "plotly", "d3", "wysiwyg_edit",  ];
+        var component_init = [ "pivottable.js", "video-js.js", "my-component.vue", "fab-button.vue", "xterm.js", "txtarea_editor.js", "handsontable.js", "plotly.js", "leaflet.js", "d3.js", "plotly_status.js", "vs_editor.js", "wysiwyg_edit.js", "summernote.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+{% endblock %}
+{% block js_app_init %}
+        {% comment %}
+                <function bootstrap_init(elem) {>
+                        <var checkbox;></var>
+                        <let checkboxes =" elem.find(".form-check");"></let>
+                        <checkboxes.addClass("checkbox");></checkboxes.addClass("checkbox");>
+                        <for(checkbox of checkboxes) {>
+                                <let label =" checkbox.querySelector("label.form-check-label");"></let>
+                                <if(label) {>
+                                        <let input =" checkbox.querySelector("input");"></let>
+                                        <label.appendChild(input);></label.appendChild(input);>
+                                        <label.classList.remove('form-check-label');></label.classList.remove('form-check-label');>
+                                </if(label)>
+                                }
+                        </for(checkbox>
+                        }
+                        <elem.bootstrapMaterialDesign();></elem.bootstrapMaterialDesign();>
+                </function>
+                };
+                <register_fragment_init_fun(bootstrap_init);></register_fragment_init_fun(bootstrap_init);>
+        {% endcomment %}
+        {{ block.super }}
 {% endblock %}
 

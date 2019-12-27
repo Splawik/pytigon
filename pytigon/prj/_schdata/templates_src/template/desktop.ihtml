@@ -9,7 +9,7 @@
 
 %% js_extrascipts
     {{block.super}}
-    {% jscript_link 'vue/vue.js' %}
+    {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}
     
     {% module_link '_schdata/js/subreport.js' %}
     
@@ -30,7 +30,7 @@
     
 
 %% component_init
-    .var component_init = [ "vs_editor", "wysiwyg_edit",  ];  
+    .var component_init = [ "vs_editor.js", "wysiwyg_edit.js",  ];  
 
 
 %% botstrap_css

@@ -10,6 +10,11 @@
         {{ block.super }}
 
 %% list_page_header
+    .AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    br
+    my-component
+    .BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
     h3...TEST TITLE:
 
 

@@ -9,7 +9,7 @@
 
 %% js_extrascipts
     {% spec '{' %}block.super{% spec '}' %}
-    {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.js' {% spec "]" %}
+    {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.min.js' {% spec "]" %}{% spec "[" %} jscript_link 'vue/httpVueLoader.js' {% spec "]" %}
     {% endif %}
     {% for js_static in js_static_files %}{% spec '[' %} module_link '{{prj.name}}/js/{{js_static.name}}.js' {% spec ']' %}
     {% endfor %}
@@ -27,7 +27,7 @@
     {% spec '{' %}block.super{% spec '}' %}
     {% if component_elements %}
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% for component_elem in component_elements %}{% spec "[" %} component '{{component_elem}}.js' {% spec ']' %}
+    {% for component_elem in component_elements %}{% spec "[" %} component '{{component_elem}}' {% spec ']' %}
     {% endfor %}
     {% endif %}
 

@@ -92,6 +92,7 @@
         {% css_link 'jquery_plugins/daterangepicker/daterangepicker.css' %}
         {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
         {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
+        {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
         {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
         {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
         {% css_link 'themes/select2-bootstrap.css' %}
@@ -426,7 +427,7 @@
 {% endblock %}
 {% block tabsort_class %}
         {% if table_type == 'datatable' %}
-                class="tabsort table datatable table-hover table-striped table-condensed {%if get %}table_get{% endif %}"
+                class="tabsort table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
                 data-method="get"
                 data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}list/{% endif %}"
                 data-side-pagination="server"
@@ -443,7 +444,7 @@
                 data-mobile-responsive="true"
                 data-id-field="cid"
           {% else %}
-                class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
+                class="tabsort table table-hover table-sm table-striped {%if get %}table_get{% endif %}"
         {% endif %}
 {% endblock %}
 {% block row_edit_header %}

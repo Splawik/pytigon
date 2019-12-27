@@ -904,7 +904,7 @@ def field(context, form_field, fieldformat=None):
 
     label_class = "control-label float-left"
     offset = ""
-    form_group_class = "form-group row group_%s" % type(field.field).__name__.lower()
+    form_group_class = "form-group bmd-form-group row group_%s" % type(field.field).__name__.lower()
     field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = False
     show_label = True
@@ -977,6 +977,9 @@ def field(context, form_field, fieldformat=None):
 
         if offset and type(field.field.widget) in (CheckboxInput, RadioSelect, CheckboxSelectMultiple, FileInput):
             field_class += " " + offset
+
+        #if type(field.field.widget) in (CheckboxInput, RadioSelect, CheckboxSelectMultiple):
+        #    field.field.widget.attrs["class"] = 'custom-control-input'
 
     ret = {}
     ret['form'] = context['form']

@@ -22,7 +22,7 @@
                                 h4...{{forloop.counter}}
                                 span class=fa fa-bars fa-3x
                                 
-                            a class=menu-item,,,data-inline=,,,true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_up,,,name=move_up,,,title=Move up
+                            a class=menu-item,,,data-inline=,,,true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_up/,,,name=move_up,,,title=Move up
                                 i class=fa fa-hand-o-left fa-2x
 
                             a class=menu-item bg-primary popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/edit__rep/,,,name=update/inline,,,title=update,,,target=_top
@@ -31,7 +31,7 @@
                             a class=menu-item bg-danger popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/delete/,,,name=delete,,,title=delete,,,target=popup_delete
                                 i class=fa fa-trash-o fa-2x
                                                                                                 
-                            a class=menu-item,,,data-inline=true,,,href={{base_pat}}schreports/table/Report/{{object.id}}/action/move_down,,,name=move_down,,,title=Move down
+                            a class=menu-item,,,data-inline=true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_down/,,,name=move_down,,,title=Move down
                                 i class=fa fa-hand-o-right fa-2x
                                 
 

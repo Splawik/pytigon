@@ -681,7 +681,7 @@ def gen(request, pk):
             txt2 = t.render(Context({'prj': prj} ))
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
-                codejs = codejs.replace('./org.transcrypt.__runtime__.js','/static/sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
                 #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
@@ -692,7 +692,7 @@ def gen(request, pk):
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
                 #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
-                codejs = codejs.replace('./org.transcrypt.__runtime__.js','.././../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
             except:
                 codejs = ""
             f = open_and_create_dir(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'),"wb")
@@ -716,8 +716,9 @@ def gen(request, pk):
     component_elements = []
     
     if prj.custom_tags:
-        component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
-    component_elements += [ prj.name + "/components/" + pos.name for pos in static_files if pos.type in ('R',) ]
+        #component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
+        component_elements += [ pos for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '.' in pos ]    
+    component_elements += [ prj.name + "/components/" + pos.name + ".js" for pos in static_files if pos.type in ('R',) ]
     
     js_static_files = [ pos for pos in static_files if pos.type in ('J', 'P') ]
     css_static_files = [ pos for pos in static_files if pos.type in ('C', 'I') ]
@@ -751,8 +752,8 @@ def gen(request, pk):
                 static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
     
                 if prj2.custom_tags:
-                    component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]    
-                component_elements += [ prj2.name + "/components/" + pos.name for pos in static_files2 if pos.type in ('R',) ]
+                    component_elements += [ pos for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '.' in pos ]    
+                component_elements += [ prj2.name + "/components/" + pos.name + ".js" for pos in static_files2 if pos.type in ('R',) ]
     
     template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements) })
     

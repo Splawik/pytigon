@@ -186,13 +186,13 @@ form .row .row {
   padding-right: 0px; }
   .form-group label {
     font-style: italic;
-    font-size: 0.7rem;
-    line-height: normal; }
+    font-size: 0.7rem; }
   .form-group textarea {
     line-height: 1.5;
     height: 8rem; }
-  .form-group div.checkbox label {
-    padding-right: 10px; }
+  .form-group div.checkbox label, .form-group div.abc-checkbox label {
+    padding-right: 10px;
+    padding-top: 4px; }
 
 .bootstrap-datetimepicker-widget {
   width: auto !important;
@@ -349,7 +349,7 @@ div.modal-header button.maximize, div.modal-header button.minimize {
   margin-left: 0px;
   margin-right: 50px; }
 
-form.table_filter label::after {
+form.table_filter label:not(.form-check-label)::after {
   content: ":"; }
 
 form.table_filter label.nocolon::after {
@@ -504,6 +504,9 @@ label.upload {
 .label-floating .form-control:focus::-webkit-input-placeholder {
   transition: none; }
 
+.form-control {
+  padding: 0.5rem 0; }
+
 form.form-inline .label-floating label.control-label {
   position: absolute; }
 
@@ -640,11 +643,8 @@ a, button {
 .form2columns .checkbox {
   margin-left: 0px !important; }
 
-div.modal-body label::after {
+div.modal-body label:not(.form-check-label)::after {
   content: ":"; }
-
-.checkbox label::after {
-  content: none !important; }
 
 .tbl_scroll {
   min-height: 11rem; }

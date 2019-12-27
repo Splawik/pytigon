@@ -925,3 +925,15 @@ def ooxml(value):
 @register.filter(name='nbsp')
 def nbsp(value):
     return value.replace(' ', '&nbsp;')
+
+
+@register.filter(name='ext')
+def ext(value, arg):
+    if value.lower().endswith(arg.lower()):
+        return True
+    else:
+        return False
+
+@register.filter(name='base_name')
+def base_name(value):
+    return value.split('/')[-1].split('.')[0]

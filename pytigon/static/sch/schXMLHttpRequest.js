@@ -127,7 +127,7 @@ function init_python() {
             if (self.onload != null) return self.onload();
         }
 
-        this.open = function(sMethod, sUrl, bAsync, sUser, sPassword) {
+        this.open = function(sMethod, sUrl, bAsync=true, sUser=null, sPassword=null) {
             self.url = sUrl;
             if (self.url.includes(PYTHON_IP) || self.url.includes(PSEUDO_IP)) {
                 self.sch_local_request = true;
@@ -195,6 +195,7 @@ function init_python() {
             });
         });
 
+        
         ["readyState", "responseText", "status"].forEach(function(item) {
             Object.defineProperty(self, item, {
                 get: function() {
