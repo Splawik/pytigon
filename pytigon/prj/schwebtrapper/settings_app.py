@@ -122,7 +122,7 @@ else:
         }
         DATABASES['local'] = db_local
 
-
+print(DATABASES)
 
 try:
     from settings_app_local import *
