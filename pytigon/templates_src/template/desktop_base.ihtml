@@ -244,9 +244,13 @@
             {{item_info.description}}
     % else
         a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
-            %if item_info.icon:
-                <i class="fa {{item_info.icon}}"></i>
+            % if item_info.icon:
+                % if standard_web_browser:
+                    {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
+                % else:
+                    {{item_info.icon}}
             {{item_info.description}}
+
     % if forloop.last
         </div>
 

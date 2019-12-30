@@ -28,7 +28,7 @@ try:
 except:
     setup_databases = None
 
-PRJ_TITLE = "Pytigon demo - controls"
+PRJ_TITLE = "Pytigon demo"
 PRJ_NAME = "schpytigondemo"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
@@ -133,7 +133,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2019.12.28 13:09:46'
+GEN_TIME = '2019.12.29 18:30:54'
 
 
 XMLRPC_PORT = 7080

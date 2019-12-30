@@ -1,5 +1,5 @@
 .menu-content {
-  background-color: #eee;
+  background-color: #aaa;
   margin-bottom: 3px; }
   .menu-content a.menu-href {
     padding: 5px 2px 15px 2px;
@@ -12,9 +12,10 @@
   top: 0px;
   width: 200px;
   padding: 5px;
-  font-size: 1.2rem; }
+  font-size: 1.2rem;
+  background: gold; }
   #logo_place a {
-    color: gold;
+    color: white;
     white-space: nowrap;
     text-align: center;
     width: 200px;
@@ -36,8 +37,8 @@
   #tabs li a.active {
     color: white; }
   #tabs .nav-link.active, #tabs .nav-item.show .nav-link {
-    background-color: #eee !important;
-    border-color: #ddd #ddd transparent; }
+    background-color: #aaa !important;
+    border-color: #ddd transparent; }
   #tabs li.nav-item:nth-child(1) a.active {
     background-color: #3F51B5 !important; }
   #tabs li.nav-item:nth-child(2) a.active {
@@ -59,7 +60,7 @@
   overflow-y: hidden;
   color: white; }
   #menu div.tab-tab a.btn {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.02);
     border: none;
     color: white;
     box-shadow: none;

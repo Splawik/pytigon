@@ -18,7 +18,7 @@
         [ riot_elements | ]
         [ gui_style | modern(toolbar(file(exit),clipboard,nav)) ]
         [ hybrid | 0 ]
-        [ title  | Pytigon demo - controls ]
+        [ title  | Pytigon demo ]
         [ start_page | None ]
         [ plugins | standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell; ]
 

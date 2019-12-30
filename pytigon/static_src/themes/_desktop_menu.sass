@@ -1,12 +1,14 @@
-$indigo: #3F51B5 
+$menubg: #aaa
+$indigo: #3F51B5
 $orange: #FF9800
 $green: #4CAF50
 $red: #F44336
 $blue_gray: #607D8B
 $teal: #009688
 
+
 .menu-content 
-    background-color: #eee
+    background-color: $menubg
     margin-bottom: 3px
 
     a.menu-href 
@@ -21,9 +23,9 @@ $teal: #009688
     width: 200px
     padding: 5px
     font-size: 1.2rem
-
-    a 
-        color: gold
+    background: gold
+    a
+        color: white
         white-space: nowrap
         text-align: center
         width: 200px
@@ -49,8 +51,8 @@ $teal: #009688
         color: white
 
     .nav-link.active, .nav-item.show .nav-link 
-        background-color: #eee !important
-        border-color: #ddd #ddd transparent
+        background-color: $menubg !important
+        border-color: #ddd transparent
 
     li.nav-item:nth-child(1) a.active 
         background-color: $indigo !important
@@ -82,7 +84,7 @@ $teal: #009688
         color: white
         
         a.btn 
-            background-color: rgba(255,255,255,0.1)
+            background-color: rgba(255,255,255,0.02)
             border: none
             color: white
             box-shadow: none

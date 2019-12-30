@@ -40,8 +40,8 @@ ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] \
-        and not 'pytigon' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
+if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] and not 'pytigon' in sys.argv[0]\
+        and not 'ptig' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
     URL_ROOT_FOLDER='schwebtrapper'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
@@ -122,12 +122,12 @@ else:
         }
         DATABASES['local'] = db_local
 
-print(DATABASES)
+
 
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2019.12.27 19:12:51'
+GEN_TIME = '2019.12.29 10:08:12'
 
