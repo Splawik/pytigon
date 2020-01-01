@@ -2,6 +2,9 @@ import os
 from django.conf import settings
 from whitenoise.middleware import WhiteNoiseMiddleware
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
+from django.core.files.storage import default_storage
+from fs.osfs import OSFS
+
 
 class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
     def __init__(self, get_response=None, settings=settings):
@@ -16,7 +19,16 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                     static_path = os.path.join(prj_path, "static", prj_name)
                     if prj_name not in maps:
                         maps[prj_name] = [static_path, self.static_prefix + prj_name + "/"]
+            fs = None
+            if default_storage.fs:
+                for pos in default_storage.fs.mounts:
+                    if pos[0] == '/static/':
+                        fs = pos[1]
+                        break
             for key in maps:
                 pos = maps[key]
                 self.add_files(pos[0], prefix=pos[1])
                 print("Static map: ", pos[0], pos[1])
+                if fs:
+                    if os.path.exists((pos[0])):
+                        fs.add_fs(key, OSFS(pos[0]))

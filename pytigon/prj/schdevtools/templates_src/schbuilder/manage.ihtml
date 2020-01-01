@@ -35,8 +35,8 @@
                                 option value=createsuperuser...createsuperuser
 
                         td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                            CTRLNOBG_BUTTON width=36,,,height=36,,,name=insert_cmd,,,label=cmd,,,SRC=client://actions/list-add.png
+                            CTRL-NOBG_BUTTON width=36,,,height=36,,,name=insert_cmd,,,label=cmd,,,SRC=client://actions/list-add.png
     table width=100%
         tr
             td cellpadding=0
-                CTRLSHELL width=100%,,,height=100%
+                CTRL-SHELL width=100%,,,height=100%

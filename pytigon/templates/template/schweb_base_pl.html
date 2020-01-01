@@ -189,7 +189,7 @@
                                 <table width="100%" class="form_bar">
                                         <tr>
                                                 <td cellpadding="0" align="right" valign="top" width="36" height="36">
-                                                        <CTRLCLOSEBUTTON width="36" height="36" name="exit" SRC="&emblems/emblem-unreadable.png" label="Close"></CTRLCLOSEBUTTON>
+                                                        <CTRL-CLOSEBUTTON width="36" height="36" name="exit" SRC="&emblems/emblem-unreadable.png" label="Close"></CTRL-CLOSEBUTTON>
                                                 </td>
                                                 <td width="5"></td>
                                                 <td align="center" border="0" border-color="#{{color_body_0_7}}">
@@ -202,13 +202,13 @@
                                         </tr>
                                 </table>
                                 <hr></hr>
-                                <CTRLCOLLAPSIBLE_PANEL label="errors" width="100%" collapse_height="70">
+                                <CTRL-COLLAPSIBLE_PANEL label="errors" width="100%" collapse_height="70">
                                         {% if form.non_field_errors %}
                                                 <data>
                                                         {{form.non_field_errors|tostr|bencode}}
                                                 </data>
                                         {% endif %}
-                                </CTRLCOLLAPSIBLE_PANEL>
+                                </CTRL-COLLAPSIBLE_PANEL>
                         {% endif %}
                 {% endif %}
         {% endblock %}
@@ -235,7 +235,7 @@
         <table width="100%" cellspacing="0" cellpadding="3">
                 <tr>
                         <td align="center">
-                                <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" />
+                                <CTRL-BUTTON id="wx.ID_CANCEL" TARGET="_parent" />
                         </td>
                 </tr>
         </table>
@@ -245,7 +245,7 @@
         <table width="100%">
                 <tr>
                         <td>
-                                <CTRLGRID width="100%" height="100%" src="{{request.path}}grid//" />
+                                <CTRL-GRID width="100%" height="100%" src="{{request.path}}grid//" />
                         </td>
                 </tr>
         </table>

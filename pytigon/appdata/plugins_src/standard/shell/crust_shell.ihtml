@@ -11,4 +11,4 @@
     .Python shell
 
 %% body
-    CTRLCRUST_SHELL NAME=SHELL,,,WIDTH=100%,,,HEIGHT=100%,,,keymap=standard
+    CTRL-CRUST_SHELL NAME=SHELL,,,WIDTH=100%,,,HEIGHT=100%,,,keymap=standard

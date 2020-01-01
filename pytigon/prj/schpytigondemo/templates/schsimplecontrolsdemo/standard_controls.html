@@ -1,0 +1,239 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}{% endblock %}
+{% block list_page_header %}
+        <h3>Demo - standard controls</h3>
+{% endblock %}
+{% block list_page %}
+        <table border="1" width="100%">
+                <tr>
+                        <th>Nazwa</th>
+                        <th>Widget</th>
+                </tr>
+                <tr>
+                        <td>Link</td>
+                        <td><a href="http://www.onet.pl" TARGET="_top">ONET</a></td>
+                </tr>
+                <tr>
+                        <td>Bitmap button</td>
+                        <td><CTRL-BUTTON src="{{ STATIC_URL }}icons/calendar.png"></CTRL-BUTTON></td>
+                </tr>
+                <tr>
+                        <td>Button</td>
+                        <td><CTRL-BUTTON LABEL="button"></CTRL-BUTTON></td>
+                </tr>
+                <tr>
+                        <td>Checkbox</td>
+                        <td><CTRL-CHECKBOX label="checkbox" value="True"></CTRL-CHECKBOX></td>
+                </tr>
+                <tr>
+                        <td>Check list box</td>
+                        <td>
+                                <CTRL-CHECKLISTBOX>
+                                        <tdata>
+                                                <tr><td>abc</td></tr>
+                                                <tr><td>def</td></tr>
+                                                <tr><td>ghi</td></tr>
+                                        </tdata>
+                                </CTRL-CHECKLISTBOX>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Choice</td>
+                        <td>
+                                <CTRL-CHOICE>
+                                        <tdata>
+                                                <tr><td>abc</td></tr>
+                                                <tr><td>def</td></tr>
+                                                <tr><td>ghi</td></tr>
+                                        </tdata>
+                                </CTRL-CHOICE>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Gauge</td>
+                        <td><CTRL-GAUGE VALUE="50"></CTRL-GAUGE></td>
+                </tr>
+                <tr>
+                        <td>List box</td>
+                        <td>
+                                <CTRL-LISTBOX width="100%-200" height="200px">
+                                        <tdata>
+                                                <tr><td>abc</td></tr>
+                                                <tr><td>def</td></tr>
+                                                <tr><td>ghi</td></tr>
+                                        </tdata>
+                                </CTRL-LISTBOX>
+                        </td>
+                </tr>
+                <tr>
+                        <td>List</td>
+                        <td>
+                                <CTRL-LIST width="100%-200" height="200px">
+                                        <tr>
+                                                <td>Nazwisko</td>
+                                                <td>Imie</td>
+                                                <td>Ulica</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Cholaj</td>
+                                                <td>Slawomir</td>
+                                                <td>Barakuda</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Kowalski</td>
+                                                <td>Jan</td>
+                                                <td>Sklodowskiej 4/74</td>
+                                        </tr>
+                                </CTRL-LIST>
+                        </td>
+                </tr>
+                <tr>
+                        <td>List</td>
+                        <td>
+                                <CTRL-TABLE width="100%-200" height="200px">
+                                        <tr>
+                                                <td>Nazwisko</td>
+                                                <td>Imie</td>
+                                                <td>Ulica</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Cholaj</td>
+                                                <td>Slawomir</td>
+                                                <td>Barakuda</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Kowalski</td>
+                                                <td>Jan</td>
+                                                <td>Sklodowskiej 4/74</td>
+                                        </tr>
+                                </CTRL-TABLE>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Radio box</td>
+                        <td>
+                                <CTRL-RADIOBOX>
+                                        <tr><td>abc</td></tr>
+                                        <tr><td>def</td></tr>
+                                        <tr><td>ghi</td></tr>
+                                </CTRL-RADIOBOX>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Radio button</td>
+                        <td><CTRL-RADIOBUTTON LABEL="LABEL"></CTRL-RADIOBUTTON></td>
+                </tr>
+                <tr>
+                        <td>Slider</td>
+                        <td><CTRL-SLIDER width="100%-200"></CTRL-SLIDER></td>
+                </tr>
+                <tr>
+                        <td>Spin button</td>
+                        <td><CTRL-SPINBUTTON width="200px"></CTRL-SPINBUTTON></td>
+                </tr>
+                <tr>
+                        <td>Spin</td>
+                        <td><CTRL-SPIN></CTRL-SPIN></td>
+                </tr>
+                <tr>
+                        <td>Static text</td>
+                        <td><CTRL-STATICTEXT LABEL="static text"></CTRL-STATICTEXT></td>
+                </tr>
+                <tr>
+                        <td>Text</td>
+                        <td><CTRL-TEXT STRVALUE="HELLO WORLD!"></CTRL-TEXT></td>
+                </tr>
+                <tr>
+                        <td>Colour select</td>
+                        <td><CTRL-COLOURSELECT></CTRL-COLOURSELECT></td>
+                </tr>
+                <tr>
+                        <td>Tree</td>
+                        <td><CTRL-TREE width="400" height="200">
+                                <li>TEKST</li>
+                                <li>
+                                TEKST 2
+                                        <ul>
+                                                <li>TEKST 11</li>
+                                                <li>TEKST 22</li>
+                                        </ul>
+                                </li>
+                                <li>TEKST 3</li>
+                          </CTRL-TREE></td>
+                </tr>
+                <tr>
+                        <td>File browser button</td>
+                        <td><CTRL-FILEBROWSEBUTTON></CTRL-FILEBROWSEBUTTON></td>
+                </tr>
+                <tr>
+                        <td>Callendar</td>
+                        <td><CTRL-CALENDAR></CTRL-CALENDAR></td>
+                </tr>
+                <tr>
+                        <td>Date picker</td>
+                        <td><CTRL-DATEPICKER></CTRL-DATEPICKER></td>
+                </tr>
+                <tr>
+                        <td>Editable list box</td>
+                        <td><CTRL-EDITABLELISTBOX width="400" height="300"></CTRL-EDITABLELISTBOX></td>
+                </tr>
+                <tr>
+                        <td>Mask text</td>
+                        <td><CTRL-MASKTEXT></CTRL-MASKTEXT></td>
+                </tr>
+                <tr>
+                        <td>Num</td>
+                        <td><CTRL-NUM></CTRL-NUM></td>
+                </tr>
+                <tr>
+                        <td>Amount</td>
+                        <td><CTRL-KWOTA></CTRL-KWOTA></td>
+                </tr>
+                <tr>
+                        <td>Time</td>
+                        <td><CTRL-TIME></CTRL-TIME></td>
+                </tr>
+                <tr>
+                        <td>Styled text</td>
+                        <td><CTRL-STYLEDTEXT></CTRL-STYLEDTEXT></td>
+                </tr>
+                <tr>
+                        <td>Ticker</td>
+                        <td><CTRL-TICKER STRVALUE="HELLO WORLD!"></CTRL-TICKER></td>
+                </tr>
+                <tr>
+                        <td>htmllistbox</td>
+                        <td>
+                                <CTRL-HTMLLISTBOX width="400">
+                                        <tr><td>[b]test1[/b]</td></tr>
+                                        <tr><td>[strong]test2[/strong]</td></tr>
+                                        <tr><td>[h1]test test test[/h1]</td></tr>
+                                </CTRL-HTMLLISTBOX>
+                        </td>
+                </tr>
+                <tr>
+                        <td>shell</td>
+                        <td>
+                                <CTRL-SHELL width="600" height="800"></CTRL-SHELL>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Tree list</td>
+                        <td><CTRL-TREELIST label="NAZWISKO||IMIE||WIEK" width="400" height="200">
+                                <li>TEKST 1||A||B</li>
+                                <li>
+                                TEKST 2||ZORRO||BBB
+                                        <ul>
+                                                <li>TEKST 11||HEJ||BBB</li>
+                                                <li>TEKST 22||ZORRO||ABBA</li>
+                                        </ul>
+                                </li>
+                                <li>TEKST 3||OKO||ZA OKO</li>
+                          </CTRL-TREELIST></td>
+                </tr>
+        </table>
+{% endblock %}
+

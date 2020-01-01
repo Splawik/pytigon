@@ -74,15 +74,15 @@
         table width=100%,,,class=form_bar
             tr
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                    CTRL-CLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
+                    CTRL-NOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_txt,,,label=insert,,,SRC=client://actions/list-add.png
+                    CTRL-NOBG_BUTTON width=36,,,height=36,,,name=_insert_txt,,,label=insert,,,SRC=client://actions/list-add.png
                 td cellpadding=0,,,valign=top,,,width=250,,,height=36
-                    ctrlbitmapcombobox width=250,,,name=_icon,,,onload=self.init_default_icons=True
+                    CTRL-BITMAPCOMBOBOX width=250,,,name=_icon,,,onload=self.init_default_icons=True
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=_insert_icon,,,label=icon,,,SRC=client://actions/list-add.png
+                    CTRL-NOBG_BUTTON width=36,,,height=36,,,name=_insert_icon,,,label=icon,,,SRC=client://actions/list-add.png
                 td width=5
                 td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
                     span class=form_title
@@ -132,7 +132,7 @@
                                 %for pos in object.get_blocks
                                     li...{{pos|safe}}
                 td
-                    CTRLSTYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                    CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                         DATA...{{txt|bencode}}
 
 %% content

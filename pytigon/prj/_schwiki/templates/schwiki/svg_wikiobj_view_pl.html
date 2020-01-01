@@ -1,0 +1,20 @@
+        <div class="row"></div>
+        [% if perms.wiki.add_page %]
+        <a class="wiki-object-edit" href="[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1" target="popup_edit">
+                svg
+                <span class="fa fa-cog fa-2"></span>
+        </a>
+        [% endif %]
+        <div class="div_float">
+                <div style="width:{% if param.svgsize %}{{param.svgsize}}{% else %}100%{% endif %};{% if param.textright %}float:left;{% else %}float:right;{% endif %}"
+                 class="{% if param.svgclass %}{{param.svgclass}}{% else %}svg_float {% if param.textright %}svg_float_left{% else %}svg_float_right{% endif %}{% endif %}"
+                >
+                {{param.src|safe}}
+                </div>
+                {% if param.text %}
+                        <div {% if textclass %}class="{{param.textclass}}" {% else %}class="text_float" {% endif %}style="{{param.textstyle}}">
+                                {{param.text|safe}}
+                        </div>
+                {% endif %}
+        </div>
+

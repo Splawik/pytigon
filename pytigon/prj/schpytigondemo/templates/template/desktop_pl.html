@@ -4,7 +4,10 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+        {% jscript_link 'vue/vue.min.js' %}
+        {% jscript_link 'vue/httpVueLoader.js' %}
+        {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+        {% jscript_link 'system/require.js' %}
         {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
@@ -15,19 +18,19 @@
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
         {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-video.js' %}
-        {% component 'schcomponents/components/ptig-plotly.js' %}
-        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schcomponents/components/ptig-pivottable.js' %}
-        {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schpytigondemo/components/plotly_status.js' %}
         {% component 'my-component.vue' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
-        {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
+        {% component 'schpytigondemo/components/plotly_status.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-wysiwygedit.js", "ptig-video.js", "ptig-plotly.js", "ptig-spreadsheet.js", "ptig-pivottable.js", "ptig-xterm.js", "plotly_status.js", "my-component.vue", "ptig-codeeditor.js", "ptig-leaflet.js", "ptig-d3.js",  ];
+        var component_init = [ "ptig-wysiwygedit.js", "ptig-pivottable.js", "my-component.vue", "ptig-spreadsheet.js", "ptig-d3.js", "ptig-video.js", "plotly_status.js", "ptig-xterm.js", "ptig-leaflet.js", "ptig-codeeditor.js", "ptig-plotly.js",  ];
 {% endblock %}
 {% block js_app_init %}
         {% comment %}

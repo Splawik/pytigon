@@ -14,8 +14,8 @@
                 {{data}}
     % else:
         % if style == 'toolbar':
-            ctrlmenutoolbarbutton label={{title}},,,src=client://actions/go-jump.png
+            CTRL-MENUTOOLBARBUTTON label={{title}},,,src=client://actions/go-jump.png
                 {{data}}
         % else:
-            ctrlmenubutton label={{title}},,,src=client://actions/go-jump.png
+            CTRL-MENUBUTTON label={{title}},,,src=client://actions/go-jump.png
                 {{data}}

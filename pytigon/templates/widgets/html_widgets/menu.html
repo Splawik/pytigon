@@ -15,13 +15,13 @@
                 </div>
           {% else %}
                 {% if style == 'toolbar' %}
-                        <ctrlmenutoolbarbutton label="{{title}}" src="client://actions/go-jump.png">
+                        <CTRL-MENUTOOLBARBUTTON label="{{title}}" src="client://actions/go-jump.png">
                                 {{data}}
-                        </ctrlmenutoolbarbutton>
+                        </CTRL-MENUTOOLBARBUTTON>
                   {% else %}
-                        <ctrlmenubutton label="{{title}}" src="client://actions/go-jump.png">
+                        <CTRL-MENUBUTTON label="{{title}}" src="client://actions/go-jump.png">
                                 {{data}}
-                        </ctrlmenubutton>
+                        </CTRL-MENUBUTTON>
                 {% endif %}
         {% endif %}
 {% endblock %}

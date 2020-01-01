@@ -142,9 +142,9 @@
         table width=100%,,,class=form_bar
             tr
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                    CTRL-CLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
                 td cellpadding=0,,,valign=top,,,width=36,,,height=36
-                    CTRLNOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
+                    CTRL-NOBG_BUTTON width=36,,,height=36,,,name=save_btn,,,SRC=client://actions/document-save.png
                 td width=5
                 td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
                     span class=form_title
@@ -155,7 +155,7 @@
             table width=800
                 tr
                     td
-            CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+            CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                 DATA...{{txt|bencode}}
 
 

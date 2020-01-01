@@ -51,13 +51,13 @@
                 <input type="hidden" name="parent" value="{{object.parent.id}}" id="id_parent" />
                 {% if not standard_web_browser %}
                         {% form_item url %}
-                                <CTRLCHOICE name="url" value="'{{object.url}}'">
+                                <CTRL-CHOICE name="url" value="'{{object.url}}'">
                                         <tdata>
                                                 {% for url in object.get_urls %}
                                                         <tr><td>{{url}}</td></tr>
                                                 {% endfor %}
                                         </tdata>
-                                </CTRLCHOICE>
+                                </CTRL-CHOICE>
                         {% endform_item %}
                   {% else %}
                         {% form_item url %}
@@ -81,7 +81,7 @@
                 'url_type'
         {% endform %}
         {% form_item icon %}
-                <ctrlbitmapcombobox class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></ctrlbitmapcombobox>
+                <CTRL-BITMAPCOMBOBOX class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></CTRL-BITMAPCOMBOBOX>
         {% endform_item %}
         {% form %}
                 'icon_size'

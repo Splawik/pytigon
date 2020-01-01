@@ -1,0 +1,70 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'vue/vue.min.js' %}
+    {% jscript_link 'vue/httpVueLoader.js' %}
+    {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+    {% jscript_link 'system/require.js' %}
+    
+    
+    {% module_link '_schdata/js/subreport.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    {% css_link '_schwiki/css/wiki_editor.css' %}
+    
+
+%% body_footer_scripts
+    {{block.super}}
+    
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+    {% component 'schcomponents/components/ptig-pivottable.js' %}
+    {% component 'my-component.vue' %}
+    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-video.js' %}
+    {% component 'schpytigondemo/components/plotly_status.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-leaflet.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-plotly.js' %}
+    
+    
+
+%% component_init
+    .var component_init = [ "ptig-wysiwygedit.js", "ptig-pivottable.js", "my-component.vue", "ptig-spreadsheet.js", "ptig-d3.js", "ptig-video.js", "plotly_status.js", "ptig-xterm.js", "ptig-leaflet.js", "ptig-codeeditor.js", "ptig-plotly.js",  ];  
+
+
+%% js_app_init 
+    % comment:
+        function bootstrap_init(elem) {
+            var checkbox;
+            let checkboxes = elem.find(".form-check");
+            checkboxes.addClass("checkbox");
+            for(checkbox of checkboxes) {
+                let label = checkbox.querySelector("label.form-check-label");
+                if(label) {
+                    let input = checkbox.querySelector("input");
+                    label.appendChild(input);
+                    label.classList.remove('form-check-label');
+                }
+            }
+            elem.bootstrapMaterialDesign();
+        };
+        register_fragment_init_fun(bootstrap_init);
+    
+    {{ block.super }}
+    
+
+

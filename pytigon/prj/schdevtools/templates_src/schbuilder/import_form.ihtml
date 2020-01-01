@@ -12,5 +12,5 @@
     . ../
 
 %% row_edit_form
-    CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=calc(100%-top-button_size_dy),,,MINHEIGHT=400
+    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=calc(100%-top-button_size_dy),,,MINHEIGHT=400
         DATA

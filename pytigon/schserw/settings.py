@@ -20,6 +20,7 @@
 import os
 import sys
 from fs.mountfs import MountFS
+from fs.multifs import MultiFS
 from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
@@ -280,12 +281,17 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 #    }
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
-
+STATIC_FS = None
 
 def DEFAULT_FILE_STORAGE_FS():
+    global STATIC_FS
+    print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFff")
     _m = MountFS()
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
-    _m.mount("static", OSFS(settings.STATIC_ROOT))
+    STATIC_FS = MultiFS()
+    STATIC_FS.add_fs("static_main",  OSFS(settings.STATIC_ROOT))
+    _m.mount("static", STATIC_FS)
+    #_m.mount("static", OSFS(settings.STATIC_ROOT))
     _m.mount("app", OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS(settings.DATA_PATH))
     try:

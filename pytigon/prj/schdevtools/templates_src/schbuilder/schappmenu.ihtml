@@ -51,7 +51,7 @@
         input type=hidden,,,name=parent,,,value={{object.parent.id}},,,id=id_parent
         % if not standard_web_browser:
             % form_item url:
-                CTRLCHOICE name=url,,,value='{{object.url}}'
+                CTRL-CHOICE name=url,,,value='{{object.url}}'
                     tdata
                         %for url in object.get_urls
                             tr:::td...{{url}}
@@ -69,7 +69,7 @@
     % form:
         'url_type'
     % form_item icon:
-        ctrlbitmapcombobox class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
+        CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
     % form:
         'icon_size'
 

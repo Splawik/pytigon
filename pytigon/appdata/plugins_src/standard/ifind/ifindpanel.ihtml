@@ -80,11 +80,11 @@
     table
         tr
             td cellpadding=0,,,width=36,,,height=36
-                ctrlnobg_button width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
-            td:::CTRLSEARCH NAME=SEARCH,,,width=200
+                CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+            td:::CTRL-SEARCH NAME=SEARCH,,,width=200
             td cellpadding=0,,,width=36,,,height=36
-                ctrlnobg_button width=36,,,height=36,,,NAME=NEXT,,,SRC=wx.ART_GO_DOWN
+                CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=NEXT,,,SRC=wx.ART_GO_DOWN
             td cellpadding=0,,,width=36,,,height=36
-                ctrlnobg_button width=36,,,height=36,,,NAME=PREV,,,SRC=wx.ART_GO_UP
-            td:::CTRLCHECKBOX label=Whole Word
-            td:::CTRLCHECKBOX label=Regular Expression
+                CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=PREV,,,SRC=wx.ART_GO_UP
+            td:::CTRL-CHECKBOX label=Whole Word
+            td:::CTRL-CHECKBOX label=Regular Expression

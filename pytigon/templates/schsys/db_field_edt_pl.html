@@ -120,10 +120,10 @@
                 <table width="100%" class="form_bar">
                         <tr>
                                 <td cellpadding="0" valign="top" width="36" height="36">
-                                        <CTRLCLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRLCLOSEBUTTON>
+                                        <CTRL-CLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRL-CLOSEBUTTON>
                                 </td>
                                 <td cellpadding="0" valign="top" width="36" height="36">
-                                        <CTRLNOBG_BUTTON width="36" height="36" name="save_btn" SRC="client://actions/document-save.png"></CTRLNOBG_BUTTON>
+                                        <CTRL-NOBG_BUTTON width="36" height="36" name="save_btn" SRC="client://actions/document-save.png"></CTRL-NOBG_BUTTON>
                                 </td>
                                 <td width="5"></td>
                                 <td align="center" border="0" border-color="#{{color_body_0_7}}">
@@ -142,9 +142,9 @@
                                         <td></td>
                                 </tr>
                         </table>
-                        <CTRLSTYLEDTEXT NAME="EDITOR" WIDTH="100%" HEIGHT="100%" MINHEIGHT="400" MINWIDTH="800" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                        <CTRL-STYLEDTEXT NAME="EDITOR" WIDTH="100%" HEIGHT="100%" MINHEIGHT="400" MINWIDTH="800" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
                                 <DATA>{{txt|bencode}}</DATA>
-                        </CTRLSTYLEDTEXT>
+                        </CTRL-STYLEDTEXT>
                 {% endblock %}
         {% endif %}
 {% endblock %}

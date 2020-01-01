@@ -33,7 +33,7 @@
 %% content
     table width=100%,,,height=100%
         tr
-            td:::CTRLSTATICTEXT LABEL=Address:
-            td:::CTRLTEXT NAME=GOHREF,,,width=100%-200
-            td:::CTRLBITMAPBUTTON NAME=GO,,,SRC=client://actions/go-jump.png
-            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+            td:::CTRL-STATICTEXT LABEL=Address:
+            td:::CTRL-TEXT NAME=GOHREF,,,width=100%-200
+            td:::CTRL-BITMAPBUTTON NAME=GO,,,SRC=client://actions/go-jump.png
+            td:::CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK

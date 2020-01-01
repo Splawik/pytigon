@@ -64,6 +64,7 @@
 
     %% theme_js_scripts
 
+
 %% jquery_init
     .import {app_init,jquery_ready} from  "{% get_static_prefix %}sch/pytigon.js";
     .import {init_db,init_sync} from  "{% get_static_prefix %}sch/db.js";

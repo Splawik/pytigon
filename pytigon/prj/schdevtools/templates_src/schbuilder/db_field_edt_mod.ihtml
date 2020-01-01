@@ -18,7 +18,7 @@
                 .def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
         tr
             td
-                CTRLSTYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                     DATA...{{txt|bencode}}
 
 

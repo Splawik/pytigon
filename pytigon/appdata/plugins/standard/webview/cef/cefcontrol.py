@@ -19,6 +19,7 @@
 
 
 import platform
+from django.core.files.storage import default_storage
 
 import wx
 
@@ -229,9 +230,12 @@ class ClientHandler:
     def _OnResourceResponse(self, browser, frame, request, requestStatus, requestError, response, data):
         if request.GetUrl().startswith("http://127.0.0.2/") or request.GetUrl().startswith("memory://127.0.0.2/"):
             uri = request.GetUrl()
+            print("R: ", uri)
             data, file_name = self.htmlwin._get_http_file(uri.replace('memory:', 'http:'))
             if file_name:
-                with open(file_name, "rb") as f:
+                print("RESOURCE: ", file_name)
+                with default_storage.open(file_name, "rb") as f:
+                #with open(file_name, "rb") as f:
                     data = f.read()
 
         if type(data) == str:

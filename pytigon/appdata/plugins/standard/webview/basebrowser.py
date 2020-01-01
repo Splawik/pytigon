@@ -465,7 +465,7 @@ class BaseWebBrowser(object):
                 uri2='/static/themes/bootstrap/images/ui' + uri2.split('/images/ui')[1].split('#')[0]
 
             if uri.startswith('http://127.0.0.2/static') and not '?' in uri:
-                path = wx.GetApp().scr_path+uri.replace('http://127.0.0.2', '')
+                path = uri.replace('http://127.0.0.2', '')
                 return (None, path)
             elif '/site_media/' in uri and not '?' in uri:
                 path = wx.GetApp().cwd+uri.replace('http://127.0.0.2', '').replace('site_media', 'media')

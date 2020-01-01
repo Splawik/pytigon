@@ -87,16 +87,16 @@
 %% content
     table width=100%,,,height=100%
         tr
-            td:::CTRLTEXT NAME=SEARCH
-            td:::CTRLBITMAPBUTTON NAME=PREV,,,SRC=wx.ART_GO_UP
-            td:::CTRLCHECKBOX label=Whole Word
-            td:::CTRLBUTTON label=Replace,,,NAME=REPLACE
+            td:::CTRL-TEXT NAME=SEARCH
+            td:::CTRL-BITMAPBUTTON NAME=PREV,,,SRC=wx.ART_GO_UP
+            td:::CTRL-CHECKBOX label=Whole Word
+            td:::CTRL-BUTTON label=Replace,,,NAME=REPLACE
             td width=99%
-            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+            td:::CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
         tr
-            td:::CTRLTEXT NAME=REPLACE_TXT,,,WIDTH=200
-            td:::CTRLBITMAPBUTTON NAME=NEXT,,,SRC=wx.ART_GO_DOWN
-            td:::CTRLCHECKBOX label=Regular Expression
-            td:::CTRLBUTTON label=Replace all,,,NAME=REPLACE_ALL
+            td:::CTRL-TEXT NAME=REPLACE_TXT,,,WIDTH=200
+            td:::CTRL-BITMAPBUTTON NAME=NEXT,,,SRC=wx.ART_GO_DOWN
+            td:::CTRL-CHECKBOX label=Regular Expression
+            td:::CTRL-BUTTON label=Replace all,,,NAME=REPLACE_ALL
             td width=99%
             td

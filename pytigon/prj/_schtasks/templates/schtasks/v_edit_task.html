@@ -1,0 +1,202 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            from pytigon_lib.schtools import schjson
+            self.schjson = schjson
+            if hasattr(self, "txt"):
+                self.txt.Bind(wx.EVT_TEXT_ENTER, self.on_enter)
+            self.start_id = 0
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(1000)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            if hasattr(self, "task_progress"):
+                self.task_progress.SetValue(0)
+        def reinit(self):
+            if hasattr(self, "start_id"):
+                start_id = self.start_id
+            else:
+                start_id = 0
+            if hasattr(self, 'tuser'):
+                self.tuser.Stop()
+            self.init_form()
+            self.start_id = start_id
+        def transfer(self):
+            http = wx.GetApp().http
+            parm = { 'id': "{{object.id}}", 'id_start': self.start_id }
+            response = http.post(self, "/tasks/get_messages", parm=parm)
+            s = response.str()
+            lines = self.schjson.loads(s)
+            self.cmd.append_texts(lines)
+            for line in lines:
+                if line!="":
+                    if line.startswith('$$$'):
+                        x = line[3:].split(':')
+                        fun = x[0]
+                        if len(x)>1:
+                            parm = x[1]
+                        else:
+                            parm = None
+                        if fun == 'PROGRESS':
+                            if hasattr(self, 'task_progress'):
+                                self.task_progress.SetValue(int(parm))
+                self.start_id += 1
+        def on_close(self):
+            self.tuser.Stop()
+        def on_enter(self, event):
+            if hasattr(self, 'txt'):
+                value = self.txt.GetValue()
+                parm = { 'id': '{{object.id}}', 'message': value + "\n" }
+                http = wx.GetApp().http
+                response = http.post(self, "/tasks/put_message", parm=parm)
+                s = response.str()
+                self.txt.SetValue("")
+        def on_timer_user(self, event):
+            return self.transfer()
+</script>
+{% endblock %}
+{% block all %}
+        {% with show_title_bar=1 title='Edit task' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_body %}
+        {{ block.super }}
+{% endblock %}
+{% block body %}
+        {% if not show_form and object %}
+                {{ block.super }}
+                <div class="content">
+                        <div class="panel">
+                                <div class="panel-body">
+                                        {% with show_form=True %}
+                                                {{ block.super }}
+                                        {% endwith %}
+                                        {% if standard_web_browser %}
+                                                <button type="button" class="btn btn-danger" id="kill_task">Kill task</button>
+                                                <script>
+// Transcrypt'ed from Python, 2019-12-17 21:22:09
+import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __globals__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
+var __name__ = '__main__';
+export var _on_kill = function () {
+	window.location = '/';
+};
+jQuery ('#kill_task').click (_on_kill);
+
+//# sourceMappingURL=input.map</script>
+                                        {% endif %}
+                                </div>
+                        </div>
+                </div>
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block list_content_body %}{% endblock %}
+{% block row_edit_form %}
+        {% block task_title %}
+                <h3 class="panel-title">{{object.title}} (id={{object.id}})</h3>
+                <br />
+        {% endblock %}
+        <table class="tasks_tbl table">
+                {% block task_status %}
+                        <tr>
+                                <th>status</th>
+                                <td>{{object.status}}</td>
+                        </tr>
+                        <tr>
+                                <th>username</th>
+                                <td>{{object.username}}</td>
+                        </tr>
+                        <tr>
+                                <th>time_from</th>
+                                <td>{{object.time_from|isoformat_short}}</td>
+                        </tr>
+                        {% if object.status > 1 %}
+                                <tr>
+                                        <th>time_to</th>
+                                        <td>{{object.time_to|isoformat_short}}</td>
+                                </tr>
+                        {% endif %}
+                {% endblock %}
+                {% if standard_web_browser %}
+                        {% if object.status < 2 %}
+                                <tr><td colspan="2">
+                                        <div class="ext_padding">
+                                                <div class="form-group">
+                                                        <label class="control-label" for="cmd">
+                                                                Enter command:
+                                                        </label>
+                                                        <input type="text" class="form-control" id="cmd" name="cmd" aria-describedby="cmdStatus" />
+                                                </div>
+                                        </div>
+                                  </td></tr>
+                        {% endif %}
+                        <tr><td colspan="2">
+                                <div id="cmd_list_{{object.id}}" style="overflow-y:scroll;height:100px;">
+                                        {% if object.status > 1 %}
+                                                {% for message in messages %}
+                                                        {% if not '$$$' in message %}
+                                                                {{message}} <br />
+                                                        {% endif %}
+                                                {% endfor %}
+                                        {% endif %}
+                                </div>
+                          </td></tr>
+                        {% if object.status < 2 %}
+                                <tr>
+                                        <th>Progress:</th>
+                                        <td>
+                                                <div class="progress">
+                                                        <div id="task_progress" class="progress-bar progress-bar-striped active" role="progressbar" style="width: 50%"></div>
+                                                </div>
+                                        </td>
+                                </tr>
+                        {% endif %}
+                        {% if object.status < 2 %}
+                                <script >
+</script>
+                        {% endif %}
+                  {% else %}
+                        {% block wx_task_progress %}
+                                <tr>
+                                        <td colspan="2" width="100%-10">
+                                                <CTRLGAUGE name="task_progress" width="100%-10"></CTRLGAUGE>
+                                        </td>
+                                </tr>
+                        {% endblock %}
+                        {% block wx_task_input %}
+                                <tr>
+                                        <td colspan="2" width="100%-10">
+                                                <strong>Enter command: <br /></strong>
+                                                <CTRLTEXT name="txt" param="PROCESS_ENTER" width="100%-10"></CTRLTEXT>
+                                        </td>
+                                </tr>
+                        {% endblock %}
+                        </table><table>
+                        {% block wx_task_list %}
+                                <tr>
+                                        <td width="100%">
+                                                <CTRLHTMLLISTBOX name="cmd" width="100%-10" height="100%-50"></CTRLHTMLLISTBOX>
+                                        </td>
+                                </tr>
+                        {% endblock %}
+                {% endif %}
+        </table>
+{% endblock %}
+{% block form_ok_cancel %}
+        {% if not standard_web_browser %}
+                <table width="100%" cellspacing="0" cellpadding="3">
+                        <tr>
+                                <td align="center">
+                                        <CTRLBUTTON id="wx.ID_CANCEL" TARGET="_parent" value="close" />
+                                        <input type="submit" value="Kill task" name="OKBUTTON" />
+                                </td>
+                        </tr>
+                </table>
+        {% endif %}
+{% endblock %}
+

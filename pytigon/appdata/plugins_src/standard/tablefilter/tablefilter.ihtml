@@ -108,7 +108,7 @@
     table width=100%,,,height=100%
         tr
             td
-                CTRLTEXT NAME=SEARCH,,,WIDTH=300
+                CTRL-TEXT NAME=SEARCH,,,WIDTH=300
             td width=99%
             td
-                CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+                CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK

@@ -520,10 +520,18 @@ def load_js(path, fun):
 
         def _onload():
             # jQuery.globalEval(req.responseText)
-
+            _requirejs = window.requirejs
+            _require = window.require
+            _define = window.define
+            window.requirejs = None
+            window.require = None
+            window.define = None
             script = document.createElement("script")
             script.text = req.responseText
             document.head.appendChild(script).parentNode.removeChild(script)
+            window.requirejs = _requirejs
+            window.require = _require
+            window.define = _define
 
             on_load_js(path)
 

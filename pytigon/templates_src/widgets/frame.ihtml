@@ -8,7 +8,7 @@
         % if standard_web_browser:
             div class=inline_frame refr_target refr_object refr_source,,,href={{href}},,,width=100%,,,height={{height}}
         % else
-            ctrlhtml name={{id}},,,src={{path}}{{href}},,,width=100%,,,height={{height}}
+            CTRL-HTML name={{id}},,,src={{path}}{{href}},,,width=100%,,,height={{height}}
 
     %% js
 

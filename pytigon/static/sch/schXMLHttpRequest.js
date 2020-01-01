@@ -241,3 +241,9 @@ function import_module(html_txt) {
 
 window.import_module = import_module;
 
+
+function jsimp(module) {
+    return import(module);
+}
+
+window.jsimp = jsimp

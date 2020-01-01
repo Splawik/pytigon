@@ -28,10 +28,10 @@
     % if standard_web_browser
         {{ block.super }}
     % else
-        <ctrlhtml2 id='{{id}}' class='{{id}}' {{def_param|safe}}>
+        <CTRL-HTML2 id='{{id}}' class='{{id}}' {{def_param|safe}}>
             tdata
                 tr
                     td
                         {{ block.super|bencode }}
-        </ctrlhtml2>
+        </CTRL-HTML2>
 

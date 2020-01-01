@@ -10,6 +10,6 @@
                     <span class="fa fa-plus"></span>
     % else
         % if name:
-            ctrlbutton name={{name}},,,label={{title}},,,href={{url}}
+            CTRL-BUTTON name={{name}},,,label={{title}},,,href={{url}}
         % else:
-            ctrlbutton label={{title}},,,href={{url}}
+            CTRL-BUTTON label={{title}},,,href={{url}}

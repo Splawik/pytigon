@@ -20,7 +20,7 @@
                         {% endif %}
                 </a>
           {% else %}
-                <ctrlbutton name="{{action.name}}" label="{{action.title}}" title="{{action.title}}" href="{{action.url}}"></ctrlbutton>
+                <CTRL-BUTTON name="{{action.name}}" label="{{action.title}}" title="{{action.title}}" href="{{action.url}}"></CTRL-BUTTON>
                 {% comment %}
                         {% if action.icon %}
                                 <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}} src="{{action.icon}}"></a>

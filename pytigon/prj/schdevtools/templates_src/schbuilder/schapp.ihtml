@@ -16,10 +16,10 @@
             table width=100%,,,class=form_bar
                 tr
                     td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
-                        CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                        CTRL-CLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
                     % if not form_edit and not form_delete and not form_info
                         td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
-                            CTRLNOBG_BUTTON width=36,,,height=36,,,NAME=UP,,,label=_(Open in toolbar),,,SRC=client://actions/go-top.png,,,href={{request.path|replace:"/table/SChAppSet/|/table/SChAppSet_up/"}},,,target=_top2_toolbar_Aplikacje__Lista_aplikacji
+                            CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=UP,,,label=_(Open in toolbar),,,SRC=client://actions/go-top.png,,,href={{request.path|replace:"/table/SChAppSet/|/table/SChAppSet_up/"}},,,target=_top2_toolbar_Aplikacje__Lista_aplikacji
                     td width=5
                     td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
                         span class=form_title

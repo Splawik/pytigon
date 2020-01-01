@@ -14,14 +14,6 @@
 
     % comment:
         sch-d3 width=400px,,,height=200px
-        sch-leaflet width=800px,,,height=600px,,,x=51.613007,,,y=21.491859
-            sch-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
-            sch-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2
-            sch-maker x=51.813007,,,y=21.791859,,,txt=To jest test 3
-            sch-maker x=51.913007,,,y=21.891859,,,txt=To jest test 4
-            sch-maker x=51.013007,,,y=21.991859,,,txt=To jest test 5
-            sch-maker x=51.113007,,,y=21.191859,,,txt=To jest test 6
-            sch-maker x=51.213007,,,y=21.291859,,,txt=To jest test 7
 
         sch-handsontable width=800px,,,height=600px
 
@@ -40,8 +32,13 @@
         pivottable width=800px,,,height=600px
         sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/
 
+        ptig-pivottable width=800px,,,height=600px
+        br
 
+    ptig-codeeditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
+    br
     ptig-wysiwygedit width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
+    br
     ptig-leaflet width=800px,,,height=600px,,,x=51.613007,,,y=21.491859
         ptig-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
         ptig-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2
@@ -50,4 +47,10 @@
         ptig-maker x=51.013007,,,y=21.991859,,,txt=To jest test 5
         ptig-maker x=51.113007,,,y=21.191859,,,txt=To jest test 6
         ptig-maker x=51.213007,,,y=21.291859,,,txt=To jest test 7
+    br
     ptig-spreadsheet width=800px,,,height=600px
+    br
+    ptig-d3 width=400px,,,height=200px
+    br
+    ptig-video width=800px,,,height=600px,,,src=/static/SampleVideo_1080x720_2mb.mp4
+

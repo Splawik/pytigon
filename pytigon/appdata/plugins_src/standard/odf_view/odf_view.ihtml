@@ -31,11 +31,11 @@
 %% content
     table width=100%
         tr
-            td:::CTRLSTATICTEXT LABEL=downloaded files:
-            td:::CTRLBITMAPBUTTON NAME=deleteall,,,SRC=wx.ART_TICK_MARK
-            td:::CTRLBITMAPBUTTON NAME=goto,,,SRC=wx.ART_TICK_MARK
+            td:::CTRL-STATICTEXT LABEL=downloaded files:
+            td:::CTRL-BITMAPBUTTON NAME=deleteall,,,SRC=wx.ART_TICK_MARK
+            td:::CTRL-BITMAPBUTTON NAME=goto,,,SRC=wx.ART_TICK_MARK
             td width=99%
-            td:::CTRLBITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+            td:::CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
         
     table name=tabsort,,,class=tabsort
         tr 

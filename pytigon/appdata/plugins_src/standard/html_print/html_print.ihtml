@@ -70,30 +70,30 @@
                 table
                     tr
                         td
-                            ctrlbutton src=wx.ART_GO_UP,,,name=btn_up
+                            CTRL-BUTTON src=wx.ART_GO_UP,,,name=btn_up
                     tr
                         td
-                            ctrlbutton src=wx.ART_PRINT,,,name=btn_print
+                            CTRL-BUTTON src=wx.ART_PRINT,,,name=btn_print
                     tr
                         td
-                            ctrlbutton src=wx.ART_FILE_SAVE_AS,,,name=btn_save
+                            CTRL-BUTTON src=wx.ART_FILE_SAVE_AS,,,name=btn_save
                     tr
                         td
-                            ctrlbutton src=wx.ART_ADD_BOOKMARK,,,name=btn_zoom_in
+                            CTRL-BUTTON src=wx.ART_ADD_BOOKMARK,,,name=btn_zoom_in
                     tr
                         td
-                            CTRLSTATICTEXT name=zoom_value,,,label=100%
+                            CTRL-STATICTEXT name=zoom_value,,,label=100%
                     tr
                         td
-                            ctrlbutton src=wx.ART_DEL_BOOKMARK,,,name=btn_zoom_out
+                            CTRL-BUTTON src=wx.ART_DEL_BOOKMARK,,,name=btn_zoom_out
                     tr
                         td
-                            CTRLNUM name=page_nr,,,value=1,,,width=45,,,param=PROCESS_ENTER
+                            CTRL-NUM name=page_nr,,,value=1,,,width=45,,,param=PROCESS_ENTER
                             br 
-                            CTRLNUM name=page_count,,,value=1,,,width=45,,,readonly=1
+                            CTRL-NUM name=page_count,,,value=1,,,width=45,,,readonly=1
                     tr
                         td
-                            ctrlbutton src=wx.ART_GO_DOWN,,,name=btn_down
+                            CTRL-BUTTON src=wx.ART_GO_DOWN,,,name=btn_down
 
             td
-                ctrlhtmlprint id=htmlprint,,,width=100%-55,,,height=100%
+                CTRL-HTMLPRINT id=htmlprint,,,width=100%-55,,,height=100%
