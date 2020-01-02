@@ -9,7 +9,10 @@
 
 %% js_extrascipts
     {{block.super}}
-    {% jscript_link 'vue/vue.min.js' %}{% jscript_link 'vue/httpVueLoader.js' %}{% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+    {% jscript_link 'vue/vue.min.js' %}
+    {% jscript_link 'vue/httpVueLoader.js' %}
+    {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+    {% jscript_link 'system/require.js' %}
     
     
     
