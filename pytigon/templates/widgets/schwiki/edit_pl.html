@@ -13,17 +13,17 @@
         {% if standard_web_browser %}
                 <textarea name="content" rows="30" cols="80">{{content}}</textarea>
           {% else %}
-                <CTRLSTYLEDTEXT name="content" WIDTH="100%" HEIGHT="100%" SRC="wiki">
+                <CTRL-STYLEDTEXT name="content" WIDTH="100%" HEIGHT="100%" SRC="wiki">
                         <data>
                                 {{content|bencode}}
                         </data>
-                </CTRLSTYLEDTEXT>
+                </CTRL-STYLEDTEXT>
         {% endif %}
 {% endblock %}
 {% block form_ok_cancel %}
         {% if not standard_web_browser %}
-                <CTRLBUTTON NAME="Anuluj" label="Anuluj" TARGET="_parent"></CTRLBUTTON>
-                <CTRLBUTTON href="/schwiki/{{page_name}}/save/" DEFAULTVALUE="1" PARAM="post" TARGET="_parent_refr" label="OK" FIELDS="POST:content,csrfmiddlewaretoken"></CTRLBUTTON>
+                <CTRL-BUTTON NAME="Anuluj" label="Anuluj" TARGET="_parent"></CTRL-BUTTON>
+                <CTRL-BUTTON href="/schwiki/{{page_name}}/save/" DEFAULTVALUE="1" PARAM="post" TARGET="_parent_refr" label="OK" FIELDS="POST:content,csrfmiddlewaretoken"></CTRL-BUTTON>
         {% endif %}
 {% endblock %}
 

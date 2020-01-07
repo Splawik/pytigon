@@ -87,7 +87,7 @@ function str2ab(str) {
 function init_python() {
     return new Promise((resolve, reject) => {
         window.languagePluginUrl = PYTHON_URL;
-        languagePluginLoader.then(() => {
+        languagePluginLoader.then( function () {
             var packages = [];
             var p;
             pyodide._module.packages.dependencies['Pillow'] = [];
@@ -236,7 +236,12 @@ function init_python() {
 function import_module(html_txt) {
     var encodedJs = encodeURIComponent(html_txt);
     var dataUri = 'data:text/javascript;charset=utf-8,' + encodedJs;
-    import(dataUri);
+    try {
+        import(dataUri);
+    }
+    catch (err) {
+        console.log("Dynamic import is not supported");
+    }
 }
 
 window.import_module = import_module;

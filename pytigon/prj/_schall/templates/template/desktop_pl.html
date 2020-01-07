@@ -4,19 +4,21 @@
 {% load bootstrap4 %}
 {% block js_extrascipts %}
         {{block.super}}
-        {% jscript_link 'vue/vue.js' %}
+        {% jscript_link 'vue/vue.min.js' %}
+        {% jscript_link 'vue/httpVueLoader.js' %}
+        {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+        {% jscript_link 'system/require.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}
 {% endblock %}
-{% block body_footer %}
+{% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'app/schcomponents/components/code_editor.js' %}
-        {% component 'app/schcomponents/components/vs_editor.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "code_editor", "vs_editor",  ];
+        var component_init = [ "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

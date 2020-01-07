@@ -4,6 +4,7 @@ from whitenoise.middleware import WhiteNoiseMiddleware
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 from django.core.files.storage import default_storage
 from fs.osfs import OSFS
+from django.http import HttpResponse, HttpResponseNotFound
 
 
 class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
@@ -32,3 +33,16 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                 if fs:
                     if os.path.exists((pos[0])):
                         fs.add_fs(key, OSFS(pos[0]))
+
+    def __call__(self, request):
+        response = None
+
+        if '/static' in request.path:
+            response = self.process_request(request)
+
+        if response is None:
+            if not request.path.endswith('.map'):
+                response = self.get_response(request)
+            else:
+                response = HttpResponseNotFound("File: " + request.path + " does'nt exists")
+        return response

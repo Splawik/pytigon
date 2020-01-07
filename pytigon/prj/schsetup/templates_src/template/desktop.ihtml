@@ -28,14 +28,14 @@
     {{block.super}}
     
     .<script language='javascript'>var global_vue_bus = new Vue ();</script>
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "ptig-codeeditor.js", "ptig-xterm.js", "ptig-wysiwygedit.js",  ];  
+    .var component_init = [ "ptig-xterm.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];  
 
 %% extrahead
     {{block.super}}

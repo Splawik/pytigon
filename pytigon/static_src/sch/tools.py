@@ -553,7 +553,7 @@ def load_many_js(paths, fun):
         if counter == 0:
             fun()
 
-    for path in paths.split(";"):
+    for path in paths:
         if path.length > 0:
             counter = counter + 1
             load_js(path, _fun)
@@ -644,3 +644,21 @@ def get_and_run_script(url, elem, e):
 
     ajax_get(url, _on_load_js)
 
+
+def register_vue_component(name, component, js_libs=None, css_libs=None):
+    def _component(resolve, reject):
+        def _on_loadjs():
+            resolve(component())
+
+        if js_libs:
+            load_many_js(js_libs, _on_loadjs)
+        else:
+            _on_loadjs()
+
+        if css_libs:
+            for css_lib in css_libs:
+                load_css(css_lib)
+
+    Vue.component(name, _component)
+
+window.register_vue_component = register_vue_component

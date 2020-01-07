@@ -17,20 +17,20 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-pivottable.js' %}
-        {% component 'my-component.vue' %}
-        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-        {% component 'schcomponents/components/ptig-d3.js' %}
-        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schpytigondemo/components/plotly_status.js' %}
-        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
         {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'my-component.vue' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-wysiwygedit.js", "ptig-pivottable.js", "my-component.vue", "ptig-spreadsheet.js", "ptig-d3.js", "ptig-video.js", "plotly_status.js", "ptig-xterm.js", "ptig-leaflet.js", "ptig-codeeditor.js", "ptig-plotly.js",  ];
+        var component_init = [ "plotly_status.js", "ptig-pivottable.js", "ptig-leaflet.js", "my-component.vue", "ptig-codeeditor.js", "ptig-xterm.js", "ptig-video.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-d3.js", "ptig-spreadsheet.js",  ];
 {% endblock %}
 {% block js_app_init %}
         {% comment %}
