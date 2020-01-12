@@ -237,7 +237,7 @@ function import_module(html_txt) {
     var encodedJs = encodeURIComponent(html_txt);
     var dataUri = 'data:text/javascript;charset=utf-8,' + encodedJs;
     try {
-        import(dataUri);
+        require(dataUri);
     }
     catch (err) {
         console.log("Dynamic import is not supported");
@@ -248,7 +248,7 @@ window.import_module = import_module;
 
 
 function jsimp(module) {
-    return import(module);
+    return require(module);
 }
 
 window.jsimp = jsimp
