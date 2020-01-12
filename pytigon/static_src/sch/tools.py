@@ -14,6 +14,15 @@ def register_fragment_init_fun(fun):
 
 window.register_fragment_init_fun = register_fragment_init_fun
 
+def _set_field(elem):
+    f = elem.find('set-field')
+    if f:
+        element_sel = f.attr('element')
+        title = f.attr('title')
+        jQuery(element_sel).html(title)
+
+register_fragment_init_fun(_set_field)
+
 
 def fragment_init(elem=None):
     global FIRST_INIT, FRAGMENT_INIT_FUN

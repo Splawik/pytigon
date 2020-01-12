@@ -90,7 +90,7 @@ def on_popup_inline(url, elem, e):
     if jelem.hasClass("delete"):
         return on_popup_delete(url, elem, e)
     if jelem.hasClass("info"):
-        return on_popup_delete(url, elem, e)
+        return on_popup_info(url, elem, e)
 
     jelem.attr("data-style", "zoom-out")
     jelem.attr("data-spinner-color", "#FF0000")

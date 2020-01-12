@@ -22,7 +22,10 @@ export var app_reinit = function() {
   }
 };
 window.app_reinit = app_reinit;
-export var app_init = function(prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time) {
+export var app_init = function(prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time, callback) {
+  if (typeof callback == "undefined" || callback != null && callback.hasOwnProperty("__kwargtrans__")) {
+    var callback = null;
+  }
   moment.locale(lang);
   window.ACTIVE_PAGE = null;
   window.PRJ_NAME = prj_name;
@@ -244,6 +247,9 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
   };
   window.init_start_wiki_page = _init_start_wiki_page;
   _init_start_wiki_page();
+  if (hasattr(window, "init_callback")) {
+    window.init_callback();
+  }
 };
 export var _on_menu_href = function(elem, title, url, txt) {
   if (typeof title == "undefined" || title != null && title.hasOwnProperty("__kwargtrans__")) {
