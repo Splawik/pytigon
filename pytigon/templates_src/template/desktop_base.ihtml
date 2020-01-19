@@ -21,7 +21,6 @@
     {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
     {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
 
-
     {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 
     {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
@@ -74,7 +73,6 @@
     %% component_init
         .component_init = null
     .app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
-
 
 %% jquery_ready_start
     .jQuery(document).ready(function() {

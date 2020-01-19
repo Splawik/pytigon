@@ -32,11 +32,11 @@ def schserw_init_prj_path(app, param=None):
     if app:
         import pytigon.schserw.settings
 
-        if app=='.':
+        if app == ".":
             p1 = environ["START_PATH"]
-            parts = p1.replace('\\', '/').rsplit('/',1)
+            parts = p1.replace("\\", "/").rsplit("/", 1)
             mod_app = parts[-1]
-            path2 = p1[0:len(parts[0])]
+            path2 = p1[0 : len(parts[0])]
             sys.path.append(path2)
             return (mod_app, path2)
         else:
@@ -45,8 +45,12 @@ def schserw_init_prj_path(app, param=None):
             if not os.path.exists(p1):
                 p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
                 if os.path.exists(p2):
-                    pytigon.schserw.settings._PRJ_PATH = pytigon.schserw.settings.PRJ_PATH
-                    pytigon.schserw.settings.PRJ_PATH = pytigon.schserw.settings.PRJ_PATH_ALT
+                    pytigon.schserw.settings._PRJ_PATH = (
+                        pytigon.schserw.settings.PRJ_PATH
+                    )
+                    pytigon.schserw.settings.PRJ_PATH = (
+                        pytigon.schserw.settings.PRJ_PATH_ALT
+                    )
 
             if platform_name() != "Windows":
                 os.environ["LD_LIBRARY_PATH"] = os.path.abspath(
@@ -54,6 +58,7 @@ def schserw_init_prj_path(app, param=None):
                 )
         return None
     return None
+
 
 def run(param=None):
     if param:
@@ -84,8 +89,8 @@ def run(param=None):
             )
 
             if ret:
-                app=ret[0]
-                PRJ_PATH=ret[1]
+                app = ret[0]
+                PRJ_PATH = ret[1]
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
@@ -135,10 +140,13 @@ def run(param=None):
 
     elif len(argv) > 1 and argv[1].startswith("runserver"):
         if "_" in argv[1]:
+            print("X1")
             x = argv[1].split("_", 1)
             app = x[1]
 
             ret = schserw_init_prj_path(app, param)
+
+            print("A1")
 
             from pytigon.schserw.settings import (
                 ROOT_PATH,
@@ -150,8 +158,10 @@ def run(param=None):
             )
 
             if ret:
-                app=ret[0]
-                PRJ_PATH=ret[1]
+                app = ret[0]
+                PRJ_PATH = ret[1]
+
+            print("A2")
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
@@ -171,19 +181,52 @@ def run(param=None):
             if not "-b" in argv[2:]:
                 options = ["-b", "0.0.0.0:8000"]
 
+            print("A3")
+
             options.append("asgi:application")
             tmp = sys.argv
             sys.argv = [""] + argv[2:] + options
+
+            print("A4")
 
             if platform_name() == "Android":
                 from daphne.cli import CommandLineInterface
 
                 CommandLineInterface.entrypoint()
             else:
+                print("A5")
+
                 from hypercorn.__main__ import main
 
-                main()
+                print("A6")
 
+                if "--with-gui" in argv:
+                    # print(argv)
+                    # argv.remove("--with-gui")
+                    sys.argv.remove("--with-gui")
+                    #import webview
+                    from pytigon_lib.schbrowser.cef_run import run
+                    from multiprocessing import Process
+
+                    print("A7")
+
+                    p = Process(target=main)
+                    p.start()
+                    print("A8")
+
+                    #try:
+                        #window = webview.create_window(
+                        #    "Pytigon", "http://127.0.0.1:8000", width=1280, height=720
+                        #)
+                        #webview.start(debug=True)
+                    run("http://127.0.0.1:8000", "Pytigon")
+                    #except:
+                    #    pass
+                    print("A9")
+                    p.kill()
+                else:
+                    main()
+            print("X2")
             sys.argv = tmp
 
             os.chdir(base_path)
@@ -216,9 +259,10 @@ def run(param=None):
 
             if ret:
                 argv[1] = ret[0]
-                schserw_settings.PRJ_PATH=ret[1]
+                schserw_settings.PRJ_PATH = ret[1]
 
             from pytigon_gui.pytigon import main
+
             main()
 
         except SystemExit:

@@ -92,7 +92,7 @@
         table width=100%
             tr
                 td width=200
-                    ctrltree name=_panel,,,width=200,,,height=calc(100% - top - 20)
+                    ctrl-tree name=_panel,,,width=200,,,height=calc(100% - top - 20)
                         li...{{object}}
                             ul
                                 li...object.fields
