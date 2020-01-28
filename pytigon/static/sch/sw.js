@@ -19,6 +19,10 @@ var on_install = function (event) {
 self.addEventListener ('install', on_install);
 
 var on_fetch = function (event) {
+    console.log(event.request.url);
+    if (event.request.url.startsWith('127.0.0.2')) {
+        alert("X1");
+    }
     if (event.request.method === 'POST') {
       return;
     }
@@ -53,3 +57,4 @@ var on_fetch = function (event) {
     event.respondWith(caches.match(event.request).then(resp))
 };
 self.addEventListener ('fetch', on_fetch);
+

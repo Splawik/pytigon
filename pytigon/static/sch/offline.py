@@ -29,7 +29,7 @@ def install_service_worker():
 
 def service_worker_and_indexedDB_test():
     if hasattr(navigator, 'serviceWorker') and hasattr(window, "indexedDB") and \
-        (location.hostname == "localhost" or location.hostname == "127.0.0.1" or location.protocol == 'https:'):
+        (location.hostname == "localhost" or location.hostname == "127.0.0.1" or location.hostname == "127.0.0.2" or location.protocol == 'https:'):
         return True
     else:
         return False

@@ -24,6 +24,7 @@ from django.core.files.storage import default_storage
 import wx
 
 from cefpython3 import cefpython as cef
+from pytigon_lib.schbrowser.schcef import initialize, shutdown, create_browser
 
 CEF_INITIATED = False
 TIMER = None

@@ -140,7 +140,7 @@ function init_python() {
             if (this.sch_local_request && self.url.includes(PSEUDO_IP)) {
                 var data = {}
 
-                function _on_response(txt) {
+                function _on_response(txt, py_callback) {
                     self.readyState = 4;
                     if (self.responseType == 'arraybuffer') {
                         self.response = str2ab(txt);
@@ -152,6 +152,15 @@ function init_python() {
                     if (self.onload != null) self.onload();
                     return;
                 }
+
+                if(vData) {
+                    py_function(['post', self.url, vData], _on_response);
+                }
+                else {
+                    py_function(['get', self.url, null]);
+                }
+
+                /*
                 data['callback'] = _on_response;
                 if (vData) {
                     data['action'] = 'post';
@@ -166,6 +175,7 @@ function init_python() {
                 try {
                     xhr.send();
                 } catch (e) {}
+                */
             } else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
                 self.readyState = 4;
                 self.responseText = request();

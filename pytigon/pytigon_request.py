@@ -49,8 +49,8 @@ def init(prj, username, password):
 
 def request(url, params=None):
     if params:
-        response = HTTP.post(None, url, params)
+        response = HTTP.post(None, url, params, user_agent="embeded")
     else:
-        response = HTTP.get(None, url)
+        response = HTTP.get(None, url, user_agent="embeded")
     return response
 

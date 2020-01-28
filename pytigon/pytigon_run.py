@@ -19,7 +19,9 @@
 
 import sys
 import subprocess
+from multiprocessing import Process
 import os
+import configparser
 
 from pytigon_lib.schtools.tools import get_executable
 from pytigon_lib.schtools.platform_info import platform_name
@@ -59,6 +61,15 @@ def schserw_init_prj_path(app, param=None):
         return None
     return None
 
+
+def get_app_conf(path):
+    config_file = os.path.join(path, "install.ini")
+    if os.path.exists(config_file):
+        config = configparser.ConfigParser()
+        config.read(config_file)
+        return config
+    else:
+        return None
 
 def run(param=None):
     if param:
@@ -140,13 +151,10 @@ def run(param=None):
 
     elif len(argv) > 1 and argv[1].startswith("runserver"):
         if "_" in argv[1]:
-            print("X1")
             x = argv[1].split("_", 1)
             app = x[1]
 
             ret = schserw_init_prj_path(app, param)
-
-            print("A1")
 
             from pytigon.schserw.settings import (
                 ROOT_PATH,
@@ -160,8 +168,6 @@ def run(param=None):
             if ret:
                 app = ret[0]
                 PRJ_PATH = ret[1]
-
-            print("A2")
 
             if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
                 from pytigon_lib.schtools.install_init import init
@@ -179,56 +185,45 @@ def run(param=None):
             os.chdir(path3)
             options = []
             if not "-b" in argv[2:]:
+                address = "0.0.0.0:8000"
                 options = ["-b", "0.0.0.0:8000"]
-
-            print("A3")
-
+            else:
+                id = argv[2:].index("-b")
+                if id >= 0:
+                    address = argv[2:][id+1]
             options.append("asgi:application")
             tmp = sys.argv
             sys.argv = [""] + argv[2:] + options
-
-            print("A4")
 
             if platform_name() == "Android":
                 from daphne.cli import CommandLineInterface
 
                 CommandLineInterface.entrypoint()
             else:
-                print("A5")
-
                 from hypercorn.__main__ import main
-
-                print("A6")
-
                 if "--with-gui" in argv:
-                    # print(argv)
-                    # argv.remove("--with-gui")
                     sys.argv.remove("--with-gui")
-                    #import webview
-                    from pytigon_lib.schbrowser.cef_run import run
-                    from multiprocessing import Process
 
-                    print("A7")
+                    from pytigon.schserw import settings as schserw_settings
+                    if ret:
+                        argv[1] = ret[0]
+                        schserw_settings.PRJ_PATH = ret[1]
 
-                    p = Process(target=main)
+                    p = Process(target=main, args=(sys.argv[1:],))
                     p.start()
-                    print("A8")
 
-                    #try:
-                        #window = webview.create_window(
-                        #    "Pytigon", "http://127.0.0.1:8000", width=1280, height=720
-                        #)
-                        #webview.start(debug=True)
-                    run("http://127.0.0.1:8000", "Pytigon")
-                    #except:
-                    #    pass
-                    print("A9")
+                    from pytigon_lib.schbrowser.schcef import run
+                    conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
+                    if conf:
+                        title = conf['DEFAULT']['PRJ_TITLE']
+                        run("http://"+address.replace('0.0.0.0', '127.0.0.1'), title)
+                    else:
+                        run("http://"+address.replace('0.0.0.0', '127.0.0.1'), "Pytigon application")
+
                     p.kill()
                 else:
                     main()
-            print("X2")
             sys.argv = tmp
-
             os.chdir(base_path)
 
     elif len(argv) > 1 and (argv[1].endswith(".py") or argv[1][-4:-1] == ".py"):
@@ -261,9 +256,17 @@ def run(param=None):
                 argv[1] = ret[0]
                 schserw_settings.PRJ_PATH = ret[1]
 
-            from pytigon_gui.pytigon import main
-
-            main()
+            if '-b' in sys.argv or '--embeded-browser' in sys.argv:
+                from pytigon_lib.schbrowser.schcef import run
+                conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
+                if conf:
+                    title = conf['DEFAULT']['PRJ_TITLE']
+                    run("http://127.0.0.2", title)
+                else:
+                    run("http://127.0.0.2", "Pytigon application")
+            else:
+                from pytigon_gui.pytigon import main
+                main()
 
         except SystemExit:
             if help:

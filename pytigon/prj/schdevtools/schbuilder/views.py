@@ -499,7 +499,8 @@ def gen(request, pk):
             f.write(prj.license_file)
     with open(os.path.join(base_path, "install.ini"), "wt") as f:
         f.write("[DEFAULT]\nPRJ_NAME=%s\n" % prj.name)
-        f.write("GEN_TIME='%s'\n\n" % gmt_str)
+        f.write("PRJ_TITLE=%s\n" % prj.title)
+        f.write("GEN_TIME='%s'\n" % gmt_str)
         if prj.install_file:
             f.write(prj.install_file)
     if prj.app_main:
