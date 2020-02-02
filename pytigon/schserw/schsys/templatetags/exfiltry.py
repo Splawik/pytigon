@@ -425,8 +425,8 @@ def readonly_transform(value, arg):
         return value.replace('/_', '/')
 
 
-@register.filter(name='childs')
-def childs(value):
+@register.filter(name='children')
+def children(value):
     set_name = value._meta.model_name
     if hasattr(value, set_name + '_set'):
         o = getattr(value, set_name + '_set')

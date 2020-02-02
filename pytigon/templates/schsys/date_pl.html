@@ -5,6 +5,7 @@
 {% block pythoncode %}
         <script language="python">
         import datetime
+        from pytigon_lib.schparser.html_parsers import Td
         def init_form(self):
             self.cal1.SetFocus()
             data=wx.DateTime()
@@ -37,10 +38,10 @@
             date = self.cal1.GetDate()
             if self.is_time:
                 retdate = datetime.datetime(date.GetYear(), date.GetMonth()+1, date.GetDay(), 0, 0)
-                self.parent_combo.set_rec(retdate.isoformat().replace('T',' ')[:16], [retdate,], dismiss=True)
+                self.parent_combo.set_rec(retdate.isoformat().replace('T',' ')[:16], Td(retdate.isoformat().replace('T',' ')[:16]), dismiss=True)
             else:
                 retdate = datetime.date(date.GetYear(), date.GetMonth()+1, date.GetDay())
-                self.parent_combo.set_rec(retdate.isoformat(), [retdate,], dismiss=True)
+                self.parent_combo.set_rec(retdate.isoformat()[:10], Td(retdate.isoformat()[:10]), dismiss=True)
 </script>
 {% endblock %}
 {% block form_bar %}{% endblock %}

@@ -62,7 +62,7 @@
 
 %% id_extra
     % with gtree=get|get_or_tree:
-        %if object|childs
+        %if object|children
             a href={{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_obj,,,class=button btn btn-outline-primary ladda-button,,,name=+
                 span class=fa fa-lg fa-plus
         %else

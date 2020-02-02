@@ -216,9 +216,9 @@ def run(param=None):
                     conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
                     if conf:
                         title = conf['DEFAULT']['PRJ_TITLE']
-                        run("http://"+address.replace('0.0.0.0', '127.0.0.1'), title)
+                        run("http://"+address.replace('0.0.0.0', '127.0.0.1')+"/"+app+"/", app, title)
                     else:
-                        run("http://"+address.replace('0.0.0.0', '127.0.0.1'), "Pytigon application")
+                        run("http://"+address.replace('0.0.0.0', '127.0.0.1')+"/"+app+"/", app, "Pytigon application")
 
                     p.kill()
                 else:
@@ -226,7 +226,7 @@ def run(param=None):
             sys.argv = tmp
             os.chdir(base_path)
 
-    elif len(argv) > 1 and (argv[1].endswith(".py") or argv[1][-4:-1] == ".py"):
+    elif len(argv) > 1 and (argv[1].endswith(".py") or argv[1][-4:-1] == ".py" or argv[1]=='-m'):
         app = argv[1]
 
         ret = schserw_init_prj_path(app, param)
@@ -239,6 +239,7 @@ def run(param=None):
         if len(argv) > 1 and argv[1] == "--help":
             help = True
         try:
+            print(sys.argv)
             if help:
                 print("First form:")
                 print("===========")
@@ -247,11 +248,11 @@ def run(param=None):
                 if not pos.startswith("-"):
                     app = pos
                     break
-
+            print("X1:", app)
             ret = schserw_init_prj_path(app, param)
 
             from pytigon.schserw import settings as schserw_settings
-
+            print(ret)
             if ret:
                 argv[1] = ret[0]
                 schserw_settings.PRJ_PATH = ret[1]
@@ -260,10 +261,13 @@ def run(param=None):
                 from pytigon_lib.schbrowser.schcef import run
                 conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
                 if conf:
-                    title = conf['DEFAULT']['PRJ_TITLE']
-                    run("http://127.0.0.2", title)
+                    try:
+                        title = conf['DEFAULT']['PRJ_TITLE']
+                    except:
+                        title = "Pytigon"
+                    run("http://127.0.0.2", app, title)
                 else:
-                    run("http://127.0.0.2", "Pytigon application")
+                    run("http://127.0.0.2", app, "Pytigon application")
             else:
                 from pytigon_gui.pytigon import main
                 main()

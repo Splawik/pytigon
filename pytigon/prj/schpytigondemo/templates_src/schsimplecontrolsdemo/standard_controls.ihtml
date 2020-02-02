@@ -13,86 +13,153 @@
 %% list_page
     table border=1,,,width=100%
         tr
-            th...Nazwa
-            th...Widget
+            th width=20%...Nazwa
+            th width=40%...wx Widget
+            th width=40%...html widget 
         tr
             td...Link
             td:::a href=http://www.onet.pl,,,TARGET=_top...ONET
+            td:::a href=http://www.onet.pl,,,TARGET=_top...ONET
         tr
             td...Bitmap button
-            td:::CTRL-BUTTON src={{ STATIC_URL }}icons/calendar.png
+            td:::ctrl-button src={{ STATIC_URL }}icons/calendar.png
+            td
+                a href=#
+                    img src={{ STATIC_URL }}icons/calendar.png
+            
         tr
             td...Button
-            td:::CTRL-BUTTON LABEL=button
+            td:::ctrl-button label=button
+            td:::button type=button...button
         tr
             td...Checkbox
-            td:::CTRL-CHECKBOX label=checkbox,,,value=True
+            td:::ctrl-checkbox label=checkbox,,,value=True
+            td
+                div class=form-check
+                    input class=form-check-input,,,type=checkbox,,,value=,,,id=defaultCheck1
+                    label class=form-check-label,,,for=defaultCheck1...checkbox
         tr
             td...Check list box
             td
-                CTRL-CHECKLISTBOX
-                    tdata
-                        tr:::td...abc
-                        tr:::td...def
-                        tr:::td...ghi
+                ctrl-checklistbox
+                    option...abc
+                    option...def
+                    option...ghi
+            td
+                div class=form-check
+                    input class=form-check-input,,,type=checkbox,,,value=,,,id=defaultCheck1
+                    label class=form-check-label,,,for=defaultCheck1...abc
+                div class=form-check
+                    input class=form-check-input,,,type=checkbox,,,value=,,,id=defaultCheck2
+                    label class=form-check-label,,,for=defaultCheck1...def                
+                div class=form-check
+                    input class=form-check-input,,,type=checkbox,,,value=,,,id=defaultCheck3
+                    label class=form-check-label,,,for=defaultCheck1...ghi                
         tr
             td...Choice
             td
-                CTRL-CHOICE
-                    tdata
-                        tr:::td...abc
-                        tr:::td...def
-                        tr:::td...ghi
+                ctrl-choice
+                    option...abc
+                    option...def
+                    option...ghi
+            td
+                select class=browser-default custom-select
+                    option value=abc,,,selected...abc
+                    option value=def...def
+                    option value=ghi...ghi
         tr
             td...Gauge
-            td:::CTRL-GAUGE VALUE=50
+            td:::ctrl-gauge value=50
+            td
+                div class=progress
+                    div class=progress-bar,,,role=progressba,,,style=width: 50%,,,aria-valuenow=50,,,aria-valuemin=0,,,aria-valuemax=100
         tr
             td...List box
             td
-                CTRL-LISTBOX width=100%-200,,,height=200px
-                    tdata
-                        tr:::td...abc
-                        tr:::td...def
-                        tr:::td...ghi
+                ctrl-listbox width=100%-200,,,height=200px
+                    option...abc
+                    option...def
+                    option...ghi
+            td
+                ul class=nav flex-column
+                    li class=nav-item
+                        a class=nav-link active,,,href=#...abc
+                    li class=nav-item
+                        a class=nav-link,,,href=#...def
+                    li class=nav-item
+                        a class=nav-link,,,href=#...ghi
         tr
             td...List
             td
-                CTRL-LIST width=100%-200,,,height=200px
-                    tr
-                        td...Nazwisko
-                        td...Imie
-                        td...Ulica
-                    tr
-                        td...Cholaj
-                        td...Slawomir
-                        td...Barakuda
-                    tr
-                        td...Kowalski
-                        td...Jan
-                        td...Sklodowskiej 4/74
-        tr
-            td...List
+                % if not standard_web_browser:
+                    ctrl-list width=100%-200,,,height=200px
+                        tr
+                            td...Name
+                            td...Address
+                            td...Age
+                        tr
+                            td...Kowalski
+                            td...Warszawa
+                            td...35
+                        tr
+                            td...Nowak
+                            td...Kozienice
+                            td...84
             td
-                CTRL-TABLE width=100%-200,,,height=200px
+                table class=table table-dark
+                    thead
+                        tr
+                            th scope=col...Name
+                            th scope=col...Address
+                            th scope=col...Age
+                    tbody
+                        tr
+                            td scope=row...Kowalski
+                            td scope=row...Warszawa
+                            td scope=row...35
+                        tr
+                            td scope=row...Nowak
+                            td scope=row...Kozienice
+                            td scope=row...84
+        tr
+            td...Grid
+            td
+                % if not standard_web_browser:
+                    CTRL-TABLE width=100%-200,,,height=200px
+                        tr
+                            th scope=col...Name
+                            th scope=col...Address
+                            th scope=col...Age
+                        tr
+                            td scope=row...Kowalski
+                            td scope=row...Warszawa
+                            td scope=row...35
+                        tr
+                            td scope=row...Nowak
+                            td scope=row...Kozienice
+                            td scope=row...84
+            td
+                table class=table
                     tr
-                        td...Nazwisko
-                        td...Imie
-                        td...Ulica
+                        th scope=col...Name
+                        th scope=col...Address
+                        th scope=col...Age
                     tr
-                        td...Cholaj
-                        td...Slawomir
-                        td...Barakuda
+                        td scope=row...Kowalski
+                        td scope=row...Warszawa
+                        td scope=row...35
                     tr
-                        td...Kowalski
-                        td...Jan
-                        td...Sklodowskiej 4/74
+                        td scope=row...Nowak
+                        td scope=row...Kozienice
+                        td scope=row...84
+                        
         tr
             td...Radio box
             td
                 CTRL-RADIOBOX
-                    tr:::td...abc
-                    tr:::td...def
-                    tr:::td...ghi
+                    option...abc
+                    option...def
+                    option...ghi
         tr
             td...Radio button
             td:::CTRL-RADIOBUTTON LABEL=LABEL

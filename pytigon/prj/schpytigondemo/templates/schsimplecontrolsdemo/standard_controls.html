@@ -9,116 +9,209 @@
 {% block list_page %}
         <table border="1" width="100%">
                 <tr>
-                        <th>Nazwa</th>
-                        <th>Widget</th>
+                        <th width="20%">Nazwa</th>
+                        <th width="40%">wx Widget</th>
+                        <th width="40%">html widget</th>
                 </tr>
                 <tr>
                         <td>Link</td>
                         <td><a href="http://www.onet.pl" TARGET="_top">ONET</a></td>
+                        <td><a href="http://www.onet.pl" TARGET="_top">ONET</a></td>
                 </tr>
                 <tr>
                         <td>Bitmap button</td>
-                        <td><CTRL-BUTTON src="{{ STATIC_URL }}icons/calendar.png"></CTRL-BUTTON></td>
+                        <td><ctrl-button src="{{ STATIC_URL }}icons/calendar.png"></ctrl-button></td>
+                        <td>
+                                <a href="#">
+                                        <img src="{{ STATIC_URL }}icons/calendar.png"></img>
+                                </a>
+                        </td>
                 </tr>
                 <tr>
                         <td>Button</td>
-                        <td><CTRL-BUTTON LABEL="button"></CTRL-BUTTON></td>
+                        <td><ctrl-button label="button"></ctrl-button></td>
+                        <td><button type="button">button</button></td>
                 </tr>
                 <tr>
                         <td>Checkbox</td>
-                        <td><CTRL-CHECKBOX label="checkbox" value="True"></CTRL-CHECKBOX></td>
+                        <td><ctrl-checkbox label="checkbox" value="True"></ctrl-checkbox></td>
+                        <td>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                                        <label class="form-check-label" for="defaultCheck1">checkbox</label>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>Check list box</td>
                         <td>
-                                <CTRL-CHECKLISTBOX>
-                                        <tdata>
-                                                <tr><td>abc</td></tr>
-                                                <tr><td>def</td></tr>
-                                                <tr><td>ghi</td></tr>
-                                        </tdata>
-                                </CTRL-CHECKLISTBOX>
+                                <ctrl-checklistbox>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-checklistbox>
+                        </td>
+                        <td>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                                        <label class="form-check-label" for="defaultCheck1">abc</label>
+                                </div>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" />
+                                        <label class="form-check-label" for="defaultCheck1">def</label>
+                                </div>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" />
+                                        <label class="form-check-label" for="defaultCheck1">ghi</label>
+                                </div>
                         </td>
                 </tr>
                 <tr>
                         <td>Choice</td>
                         <td>
-                                <CTRL-CHOICE>
-                                        <tdata>
-                                                <tr><td>abc</td></tr>
-                                                <tr><td>def</td></tr>
-                                                <tr><td>ghi</td></tr>
-                                        </tdata>
-                                </CTRL-CHOICE>
+                                <ctrl-choice>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-choice>
+                        </td>
+                        <td>
+                                <select class="browser-default custom-select">
+                                        <option value="abc" selected>abc</option>
+                                        <option value="def">def</option>
+                                        <option value="ghi">ghi</option>
+                                </select>
                         </td>
                 </tr>
                 <tr>
                         <td>Gauge</td>
-                        <td><CTRL-GAUGE VALUE="50"></CTRL-GAUGE></td>
+                        <td><ctrl-gauge value="50"></ctrl-gauge></td>
+                        <td>
+                                <div class="progress">
+                                        <div class="progress-bar" role="progressba" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>List box</td>
                         <td>
-                                <CTRL-LISTBOX width="100%-200" height="200px">
-                                        <tdata>
-                                                <tr><td>abc</td></tr>
-                                                <tr><td>def</td></tr>
-                                                <tr><td>ghi</td></tr>
-                                        </tdata>
-                                </CTRL-LISTBOX>
+                                <ctrl-listbox width="100%-200" height="200px">
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-listbox>
+                        </td>
+                        <td>
+                                <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                                <a class="nav-link active" href="#">abc</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="#">def</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="#">ghi</a>
+                                        </li>
+                                </ul>
                         </td>
                 </tr>
                 <tr>
                         <td>List</td>
                         <td>
-                                <CTRL-LIST width="100%-200" height="200px">
-                                        <tr>
-                                                <td>Nazwisko</td>
-                                                <td>Imie</td>
-                                                <td>Ulica</td>
-                                        </tr>
-                                        <tr>
-                                                <td>Cholaj</td>
-                                                <td>Slawomir</td>
-                                                <td>Barakuda</td>
-                                        </tr>
-                                        <tr>
-                                                <td>Kowalski</td>
-                                                <td>Jan</td>
-                                                <td>Sklodowskiej 4/74</td>
-                                        </tr>
-                                </CTRL-LIST>
+                                {% if not standard_web_browser %}
+                                        <ctrl-list width="100%-200" height="200px">
+                                                <tr>
+                                                        <td>Name</td>
+                                                        <td>Address</td>
+                                                        <td>Age</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>Kowalski</td>
+                                                        <td>Warszawa</td>
+                                                        <td>35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>Nowak</td>
+                                                        <td>Kozienice</td>
+                                                        <td>84</td>
+                                                </tr>
+                                        </ctrl-list>
+                                {% endif %}
+                        </td>
+                        <td>
+                                <table class="table table-dark">
+                                        <thead>
+                                                <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Age</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td scope="row">Kowalski</td>
+                                                        <td scope="row">Warszawa</td>
+                                                        <td scope="row">35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Nowak</td>
+                                                        <td scope="row">Kozienice</td>
+                                                        <td scope="row">84</td>
+                                                </tr>
+                                        </tbody>
+                                </table>
                         </td>
                 </tr>
                 <tr>
-                        <td>List</td>
+                        <td>Grid</td>
                         <td>
-                                <CTRL-TABLE width="100%-200" height="200px">
+                                {% if not standard_web_browser %}
+                                        <CTRL-TABLE width="100%-200" height="200px">
+                                                <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Age</th>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Kowalski</td>
+                                                        <td scope="row">Warszawa</td>
+                                                        <td scope="row">35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Nowak</td>
+                                                        <td scope="row">Kozienice</td>
+                                                        <td scope="row">84</td>
+                                                </tr>
+                                        </CTRL-TABLE>
+                                {% endif %}
+                        </td>
+                        <td>
+                                <table class="table">
                                         <tr>
-                                                <td>Nazwisko</td>
-                                                <td>Imie</td>
-                                                <td>Ulica</td>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Age</th>
                                         </tr>
                                         <tr>
-                                                <td>Cholaj</td>
-                                                <td>Slawomir</td>
-                                                <td>Barakuda</td>
+                                                <td scope="row">Kowalski</td>
+                                                <td scope="row">Warszawa</td>
+                                                <td scope="row">35</td>
                                         </tr>
                                         <tr>
-                                                <td>Kowalski</td>
-                                                <td>Jan</td>
-                                                <td>Sklodowskiej 4/74</td>
+                                                <td scope="row">Nowak</td>
+                                                <td scope="row">Kozienice</td>
+                                                <td scope="row">84</td>
                                         </tr>
-                                </CTRL-TABLE>
+                                </table>
                         </td>
                 </tr>
                 <tr>
                         <td>Radio box</td>
                         <td>
                                 <CTRL-RADIOBOX>
-                                        <tr><td>abc</td></tr>
-                                        <tr><td>def</td></tr>
-                                        <tr><td>ghi</td></tr>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
                                 </CTRL-RADIOBOX>
                         </td>
                 </tr>

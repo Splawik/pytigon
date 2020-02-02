@@ -23,7 +23,6 @@
             self.Bind(wx.EVT_MENU, self.OnExit, id=ID_RETVALUE)
             self.refr()
         def on_key_down(self, event):
-            print("on_key_down", event)
             if event.KeyCode == wx.WXK_ESCAPE:
                 self.OnExit(event)
             elif event.KeyCode == wx.WXK_DOWN or (event.AltDown() and event.KeyCode == ord('J')):
@@ -43,7 +42,11 @@
         def OnExit(self, event):
             id = self.list1.GetSelection()
             self.retlist = self.choices[id]
-            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+            if self.retlist:
+                if 'value' in self.retlist.attrs:
+                    self.parent_combo.set_rec(self.retlist.attrs['value'], self.retlist, dismiss=True)
+                else:
+                    self.parent_combo.set_rec(self.retlist.data, self.retlist, dismiss=True)
         def find_value_str(self):
             return self.find_value
         def OnLDown(self, event):
@@ -54,7 +57,10 @@
             id = self.list1.GetSelection()
             self.retlist = self.choices[id]
             if self.retlist:
-                self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+                if 'value' in self.retlist.attrs:
+                    self.parent_combo.set_rec(self.retlist.attrs['value'], self.retlist, dismiss=True)
+                else:
+                    self.parent_combo.set_rec(self.retlist.data, self.retlist, dismiss=True)
             else:
                 event.Skip()
         def refr(self, value=None):
@@ -63,19 +69,27 @@
             if hasattr(self,'choices'):
                 self.list1.Clear()
                 for item in self.choices:
-                    self.list1.Append(item[0])
+                    self.list1.Append(item.data)
                 self.listclick=False
                 self.list1.find_and_select(self.find_value_str())
         def OnNavigationKey(self, event):
             id = self.list1.GetSelection()
             self.retlist = self.choices[id]
-            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+            if self.retlist:
+                if 'value' in self.retlist.attrs:
+                    self.parent_combo.set_rec(self.retlist.attrs['value'], self.retlist, dismiss=True)
+                else:
+                    self.parent_combo.set_rec(self.retlist.data, self.retlist, dismiss=True)
         def on_list_selected(self, event):
             id = event.GetSelection()
             self.retlist = self.choices[id]
         def on_list_ret(self, event):
             self.on_list_selected(event)
-            self.parent_combo.set_rec(self.retlist[0], self.retlist, dismiss=True)
+            if self.retlist:
+                if 'value' in self.retlist.attrs:
+                    self.parent_combo.set_rec(self.retlist.attrs['value'], self.retlist, dismiss=True)
+                else:
+                    self.parent_combo.set_rec(self.retlist.data, self.retlist, dismiss=True)
 </script>
 {% endblock %}
 {% block form_bar %}{% endblock %}
