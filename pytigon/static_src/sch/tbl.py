@@ -193,6 +193,6 @@ def _on_fragment_init(elem):
     tbl = elem.find(".tabsort")
     if tbl.length > 0:
         init_table(tbl, table_type)
-
+    elem.find('.tree').treegrid()
 
 register_fragment_init_fun(_on_fragment_init)

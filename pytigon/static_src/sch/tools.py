@@ -555,19 +555,28 @@ window.load_js = load_js
 
 def load_many_js(paths, fun):
     counter = 1
+    next_step = None
 
     def _fun():
-        nonlocal counter
+        nonlocal counter, next_step
         counter = counter - 1
         if counter == 0:
-            fun()
+            if next_step != None:
+                load_many_js(next_step, fun)
+            else:
+                fun()
 
     for path in paths:
         if path.length > 0:
-            counter = counter + 1
-            load_js(path, _fun)
+            if next_step != None:
+                next_step.append(path)
+            else:
+                if path == '|':
+                    next_step = []
+                else:
+                    counter = counter + 1
+                    load_js(path, _fun)
     _fun()
-
 
 window.load_many_js = load_many_js
 

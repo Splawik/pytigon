@@ -17,20 +17,23 @@
 {% block body_footer_scripts %}
         {{block.super}}
         <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/ptig-d3.js' %}
-        {% component 'schcomponents/components/ptig-plotly.js' %}
-        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-money.js' %}
+        {% component 'schpytigondemo/components/plotly_status.js' %}
+        {% component 'schcomponents/components/ptig-calendar.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'my-component.vue' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schcomponents/components/ptig-leaflet.js' %}
-        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schpytigondemo/components/plotly_status.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-mask.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-d3.js", "ptig-plotly.js", "ptig-pivottable.js", "my-component.vue", "ptig-codeeditor.js", "ptig-wysiwygedit.js", "ptig-video.js", "ptig-leaflet.js", "ptig-spreadsheet.js", "ptig-xterm.js", "plotly_status.js",  ];
+        var component_init = [ "ptig-money.js", "plotly_status.js", "ptig-calendar.js", "ptig-wysiwygedit.js", "my-component.vue", "ptig-codeeditor.js", "ptig-leaflet.js", "ptig-xterm.js", "ptig-d3.js", "ptig-video.js", "ptig-plotly.js", "ptig-mask.js", "ptig-spreadsheet.js", "ptig-pivottable.js",  ];
 {% endblock %}
 {% block js_app_init %}
         {% comment %}

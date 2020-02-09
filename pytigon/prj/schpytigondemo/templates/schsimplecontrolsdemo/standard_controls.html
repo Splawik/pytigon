@@ -166,7 +166,7 @@
                         <td>Grid</td>
                         <td>
                                 {% if not standard_web_browser %}
-                                        <CTRL-TABLE width="100%-200" height="200px">
+                                        <ctrl-table width="100%-200" height="200px">
                                                 <tr>
                                                         <th scope="col">Name</th>
                                                         <th scope="col">Address</th>
@@ -182,7 +182,7 @@
                                                         <td scope="row">Kozienice</td>
                                                         <td scope="row">84</td>
                                                 </tr>
-                                        </CTRL-TABLE>
+                                        </ctrl-table>
                                 {% endif %}
                         </td>
                         <td>
@@ -208,124 +208,237 @@
                 <tr>
                         <td>Radio box</td>
                         <td>
-                                <CTRL-RADIOBOX>
+                                <ctrl-radiobox>
                                         <option>abc</option>
                                         <option>def</option>
                                         <option>ghi</option>
-                                </CTRL-RADIOBOX>
+                                </ctrl-radiobox>
+                        </td>
+                        <td>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r1" name="radioexample1" />
+                                        <label class="custom-control-label" for="r1">abc</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r2" name="radioexample1" />
+                                        <label class="custom-control-label" for="r2">def</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r3" name="radioexample1" />
+                                        <label class="custom-control-label" for="r3">ghi</label>
+                                </div>
                         </td>
                 </tr>
                 <tr>
                         <td>Radio button</td>
-                        <td><CTRL-RADIOBUTTON LABEL="LABEL"></CTRL-RADIOBUTTON></td>
+                        <td><ctrl-radiobutton label="abc"></ctrl-radiobutton></td>
+                        <td>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r4"  name="radioexample2" />
+                                        <label class="custom-control-label" for="r4">abc</label>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>Slider</td>
-                        <td><CTRL-SLIDER width="100%-200"></CTRL-SLIDER></td>
-                </tr>
-                <tr>
-                        <td>Spin button</td>
-                        <td><CTRL-SPINBUTTON width="200px"></CTRL-SPINBUTTON></td>
-                </tr>
-                <tr>
-                        <td>Spin</td>
-                        <td><CTRL-SPIN></CTRL-SPIN></td>
+                        <td><ctrl-slider></ctrl-slider></td>
+                        <td>
+                                <label for="range1">Example range</label>
+                                <input type="range" class="custom-range" id="range1" />
+                        </td>
                 </tr>
                 <tr>
                         <td>Static text</td>
-                        <td><CTRL-STATICTEXT LABEL="static text"></CTRL-STATICTEXT></td>
+                        <td><ctrl-statictext label="static text"></ctrl-statictext></td>
+                        <td><p>static text</p></td>
                 </tr>
                 <tr>
                         <td>Text</td>
-                        <td><CTRL-TEXT STRVALUE="HELLO WORLD!"></CTRL-TEXT></td>
+                        <td><ctrl-text strvalue="hello world!"></ctrl-text></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_txt" class="col-form-label">Example text</label>
+                                        <input type="text" class="form-control" id="example_txt" value="Hello world!" />
+                                </div>
+                        </td>
                 </tr>
                 <tr>
-                        <td>Colour select</td>
-                        <td><CTRL-COLOURSELECT></CTRL-COLOURSELECT></td>
+                        <td>Color select</td>
+                        <td><ctrl-colourselect></ctrl-colourselect></td>
+                        <td>
+                                <input type="color" id="example_color" />
+                        </td>
                 </tr>
                 <tr>
                         <td>Tree</td>
-                        <td><CTRL-TREE width="400" height="200">
-                                <li>TEKST</li>
+                        <td><ctrl-tree width="400" height="200">
+                                <li>TEXT</li>
                                 <li>
-                                TEKST 2
+                                TEXT 2
                                         <ul>
-                                                <li>TEKST 11</li>
-                                                <li>TEKST 22</li>
+                                                <li>TEXT 11</li>
+                                                <li>TEXT 22</li>
                                         </ul>
                                 </li>
-                                <li>TEKST 3</li>
-                          </CTRL-TREE></td>
+                                <li>TEXT 3</li>
+                          </ctrl-tree></td>
+                        <td>
+                              <table class="tree">
+                                <tr class="treegrid-1">
+                                        <td>TEXT</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-2">
+                                        <td>TEXT 2</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-3 treegrid-parent-2">
+                                        <td>TEXT 11</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-4 treegrid-parent-2">
+                                        <td>TEXT 12</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-5">
+                                        <td>TEXT 3</td>
+                                        <td>Additional info</td>
+                                </tr>
+                              </table>
+                        </td>
                 </tr>
                 <tr>
                         <td>File browser button</td>
-                        <td><CTRL-FILEBROWSEBUTTON></CTRL-FILEBROWSEBUTTON></td>
+                        <td><ctrl-filebrowsebutton></ctrl-filebrowsebutton></td>
+                        <td>
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" />
+                                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                <p class="upload"></p>
+                                        </div>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
-                        <td>Callendar</td>
-                        <td><CTRL-CALENDAR></CTRL-CALENDAR></td>
+                        <td>Calendar</td>
+                        <td>
+                                <ctrl-calendar></ctrl-calendar>
+                        </td>
+                        <td>
+                                <ptig-calendar></ptig-calendar>
+                        </td>
                 </tr>
                 <tr>
                         <td>Date picker</td>
-                        <td><CTRL-DATEPICKER></CTRL-DATEPICKER></td>
+                        <td><ctrl-datepicker></ctrl-datepicker></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_date" class="control-label float-left">Example date</label>
+                                        <div class="controls float-left datefield">
+                                                <div style="position: relative">
+                                                        <input type="text" class="form-control" id="example_date" />
+                                                        <i class="fa fa-calendar" style="position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>Editable list box</td>
-                        <td><CTRL-EDITABLELISTBOX width="400" height="300"></CTRL-EDITABLELISTBOX></td>
+                        <td><ctrl-editablelistbox width="400" height="300"></ctrl-editablelistbox></td>
+                        <td></td>
                 </tr>
                 <tr>
                         <td>Mask text</td>
-                        <td><CTRL-MASKTEXT></CTRL-MASKTEXT></td>
+                        <td><ctrl-masktext></ctrl-masktext></td>
+                        <td>
+                                <the-mask :mask="['(##) ####-####', '(##) #####-####']"></the-mask>
+                        </td>
                 </tr>
                 <tr>
-                        <td>Num</td>
-                        <td><CTRL-NUM></CTRL-NUM></td>
+                        <td>Number</td>
+                        <td><ctrl-num></ctrl-num></td>
+                        <td><input type="number" min="1" max="10" /></td>
                 </tr>
                 <tr>
                         <td>Amount</td>
-                        <td><CTRL-KWOTA></CTRL-KWOTA></td>
+                        <td><ctrl-amount></ctrl-amount></td>
+                        <td><vue-numeric currency="PLN" currency-symbol-position="suffix"></vue-numeric></td>
                 </tr>
                 <tr>
                         <td>Time</td>
-                        <td><CTRL-TIME></CTRL-TIME></td>
+                        <td><ctrl-time></ctrl-time></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_time" class="control-label float-left">Example time control</label>
+                                        <div class="controls float-left datetimefield">
+                                                <div style="position: relative">
+                                                        <input type="text" class="form-control" id="example_time" />
+                                                        <i class="fa fa-clock" style="position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>Styled text</td>
-                        <td><CTRL-STYLEDTEXT></CTRL-STYLEDTEXT></td>
+                        <td><ctrl-styledtext></ctrl-styledtext></td>
+                        <td></td>
                 </tr>
                 <tr>
                         <td>Ticker</td>
-                        <td><CTRL-TICKER STRVALUE="HELLO WORLD!"></CTRL-TICKER></td>
+                        <td><ctrl-ticker strvalue="HELLO WORLD!"></ctrl-ticker></td>
+                        <td>
+                                <div class="ticker-wrap" width="400px" height="40px">
+                                        <div class="ticker">
+                                                <div class="ticker__item">Hello world!</div>
+                                                <div class="ticker__item">Hello from Pytigon!</div>
+                                        </div>
+                                </div>
+                        </td>
                 </tr>
                 <tr>
                         <td>htmllistbox</td>
                         <td>
-                                <CTRL-HTMLLISTBOX width="400">
-                                        <tr><td>[b]test1[/b]</td></tr>
-                                        <tr><td>[strong]test2[/strong]</td></tr>
-                                        <tr><td>[h1]test test test[/h1]</td></tr>
-                                </CTRL-HTMLLISTBOX>
+                                {% if not standard_web_browser %}
+                                        <ctrl-htmllistbox width="400">
+                                                <tr><td>[b]test1[/b]</td></tr>
+                                                <tr><td>[strong]test2[/strong]</td></tr>
+                                                <tr><td>[h1]test test test[/h1]</td></tr>
+                                        </ctrl-htmllistbox>
+                                {% endif %}
                         </td>
+                        <td></td>
                 </tr>
                 <tr>
                         <td>shell</td>
                         <td>
-                                <CTRL-SHELL width="600" height="800"></CTRL-SHELL>
+                                <ctrl-shell width="600" height="800"></ctrl-shell>
                         </td>
+                        <td></td>
                 </tr>
                 <tr>
                         <td>Tree list</td>
-                        <td><CTRL-TREELIST label="NAZWISKO||IMIE||WIEK" width="400" height="200">
-                                <li>TEKST 1||A||B</li>
-                                <li>
-                                TEKST 2||ZORRO||BBB
-                                        <ul>
-                                                <li>TEKST 11||HEJ||BBB</li>
-                                                <li>TEKST 22||ZORRO||ABBA</li>
-                                        </ul>
-                                </li>
-                                <li>TEKST 3||OKO||ZA OKO</li>
-                          </CTRL-TREELIST></td>
+                        <td>
+                                {% if not standard_web_browser %}
+                                        <ctrl-treelist label="Title||Description||Description 2" width="400" height="200">
+                                                <li>text 1||Description a1||Description b1</li>
+                                                <li>
+                                                text2 2||Description a2||Description b2
+                                                        <ul>
+                                                                <li>text 21||Description a21||Description b21</li>
+                                                                <li>text 22||Description a22||Description b22</li>
+                                                        </ul>
+                                                </li>
+                                                <li>text 3||Description a3||Description b3</li>
+                                        </ctrl-treelist>
+                                {% endif %}
+                        </td>
+                        <td></td>
                 </tr>
         </table>
 {% endblock %}

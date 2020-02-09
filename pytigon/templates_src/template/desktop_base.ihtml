@@ -37,6 +37,7 @@
     {% jscript_link 'jquery_plugins/unique-element-id/jquery.unique-element-id.js' %}
     {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}
     {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
+    {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
 
     %% bootstrap_js
         {% jscript_link 'bootstrap/js/bootstrap.js' %}
@@ -118,7 +119,7 @@
     {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
 
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
-
+    {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
     {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
     {% css_link 'themes/select2-bootstrap.css' %}
 

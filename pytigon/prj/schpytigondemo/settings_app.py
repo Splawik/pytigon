@@ -133,7 +133,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.02.02 13:01:43'
+GEN_TIME = '2020.02.09 13:58:50'
 
 
 XMLRPC_PORT = 7080

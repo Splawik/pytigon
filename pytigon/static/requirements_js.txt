@@ -14,6 +14,7 @@ vanillajs_plugins/plotly: https://plot.ly/javascript/
 vanillajs_plugins/popper: https://popper.js.org/
 vanillajs_plugins/cookie: https://github.com/js-cookie/js-cookie
 vanillajs_plugins/lz-string: https://github.com/pieroxy/lz-string
+vanillajs_plugins/input-masking: https://github.com/estelle/input-masking
 
 jquery: https://github.com/jquery/jquery
 
@@ -27,6 +28,8 @@ jquery_plugins/draggable: https://css-tricks.com/snippets/jquery/draggable-witho
 jquery_plugins/csrf: https://docs.djangoproject.com/en/dev/ref/csrf/
 jquery_plugins/unique-element-id: https://github.com/jamierumbelow/jquery.unique-element-id
 jquery_plugins/sidebar-menu: https://github.com/huang-x-h/sidebar-menu
+jquery_plugins/jquery-treegrid http://maxazan.github.io/jquery-treegrid/
+jquery_plugins/fullcalendar: https://github.com/fullcalendar/fullcalendar
 
 bootstrap: https://getbootstrap.com/
 

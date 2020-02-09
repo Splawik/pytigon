@@ -125,7 +125,7 @@
             td...Grid
             td
                 % if not standard_web_browser:
-                    CTRL-TABLE width=100%-200,,,height=200px
+                    ctrl-table width=100%-200,,,height=200px
                         tr
                             th scope=col...Name
                             th scope=col...Address
@@ -156,88 +156,166 @@
         tr
             td...Radio box
             td
-                CTRL-RADIOBOX
+                ctrl-radiobox
                     option...abc
                     option...def
                     option...ghi
+            td
+                div class=custom-control custom-radio
+                    input type=radio,,,class=custom-control-input,,,id=r1,,,name=radioexample1
+                    label class=custom-control-label,,,for=r1...abc
+                div class=custom-control custom-radio
+                    input type=radio,,,class=custom-control-input,,,id=r2,,,name=radioexample1
+                    label class=custom-control-label,,,for=r2...def
+                div class=custom-control custom-radio
+                    input type=radio,,,class=custom-control-input,,,id=r3,,,name=radioexample1
+                    label class=custom-control-label,,,for=r3...ghi
         tr
             td...Radio button
-            td:::CTRL-RADIOBUTTON LABEL=LABEL
+            td:::ctrl-radiobutton label=abc
+            td
+                div class=custom-control custom-radio
+                    input type=radio,,,class=custom-control-input,,,id=r4,,,,,,name=radioexample2
+                    label class=custom-control-label,,,for=r4...abc
         tr
             td...Slider
-            td:::CTRL-SLIDER width=100%-200
-        tr
-            td...Spin button
-            td:::CTRL-SPINBUTTON width=200px
-        tr
-            td...Spin
-            td:::CTRL-SPIN
+            td:::ctrl-slider
+            td
+                label for=range1...Example range
+                input type=range,,,class=custom-range,,,id=range1
         tr
             td...Static text
-            td:::CTRL-STATICTEXT LABEL=static text
+            td:::ctrl-statictext label=static text
+            td:::p...static text
         tr
             td...Text
-            td:::CTRL-TEXT STRVALUE=HELLO WORLD!
+            td:::ctrl-text strvalue=hello world!
+            td
+                div class=form-group
+                    label for=example_txt,,,class=col-form-label...Example text
+                    input type=text,,,class=form-control,,,id=example_txt,,,value=Hello world!
         tr
-            td...Colour select
-            td:::CTRL-COLOURSELECT
+            td...Color select
+            td:::ctrl-colourselect
+            td
+                input type=color,,,id=example_color
         tr
             td...Tree
-            td:::CTRL-TREE width=400,,,height=200
-                li...TEKST
-                li...TEKST 2
+            td:::ctrl-tree width=400,,,height=200
+                li...TEXT
+                li...TEXT 2
                     ul
-                        li...TEKST 11
-                        li...TEKST 22
-                li...TEKST 3
+                        li...TEXT 11
+                        li...TEXT 22
+                li...TEXT 3
+            td
+               table class=tree
+                tr class=treegrid-1
+                    td...TEXT
+                    td...Additional info
+                tr class=treegrid-2
+                    td...TEXT 2
+                    td...Additional info
+                tr class=treegrid-3 treegrid-parent-2
+                    td...TEXT 11
+                    td...Additional info
+                tr class=treegrid-4 treegrid-parent-2
+                    td...TEXT 12
+                    td...Additional info
+                tr class=treegrid-5
+                    td...TEXT 3
+                    td...Additional info
         tr
             td...File browser button
-            td:::CTRL-FILEBROWSEBUTTON
+            td:::ctrl-filebrowsebutton
+            td
+                div class=input-group
+                    div class=input-group-prepend
+                        span class=input-group-text,,,id=inputGroupFileAddon01...Upload
+                    div class=custom-file
+                        input type=file,,,class=custom-file-input,,,id=inputGroupFile01
+                        label class=custom-file-label,,,for=inputGroupFile01...Choose file
+                        p class=upload    
         tr
-            td...Callendar
-            td:::CTRL-CALENDAR
+            td...Calendar
+            td
+                ctrl-calendar
+            td
+                ptig-calendar
         tr
             td...Date picker
-            td:::CTRL-DATEPICKER
+            td:::ctrl-datepicker
+            td  
+                div class=form-group
+                    label for=example_date,,,class=control-label float-left...Example date
+                    div class=controls float-left datefield
+                        div style=position: relative
+                            input type=text,,,class=form-control,,,id=example_date
+                            i class=fa fa-calendar,,,style=position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;                    
         tr
             td...Editable list box
-            td:::CTRL-EDITABLELISTBOX width=400,,,height=300
+            td:::ctrl-editablelistbox width=400,,,height=300
+            td
         tr
             td...Mask text
-            td:::CTRL-MASKTEXT
+            td:::ctrl-masktext
+            td
+                the-mask :mask=['(##) ####-####', '(##) #####-####']
         tr
-            td...Num
-            td:::CTRL-NUM
+            td...Number
+            td:::ctrl-num
+            td:::input type=number,,,min=1,,,max=10
         tr
             td...Amount
-            td:::CTRL-KWOTA
+            td:::ctrl-amount
+            td:::vue-numeric currency=PLN,,,currency-symbol-position=suffix
         tr
             td...Time
-            td:::CTRL-TIME
+            td:::ctrl-time
+            td
+                div class=form-group
+                    label for=example_time,,,class=control-label float-left...Example time control
+                    div class=controls float-left datetimefield
+                        div style=position: relative
+                            input type=text,,,class=form-control,,,id=example_time
+                            i class=fa fa-clock,,,style=position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;                    
 
         tr
             td...Styled text
-            td:::CTRL-STYLEDTEXT
+            td:::ctrl-styledtext
+            td
         tr
             td...Ticker
-            td:::CTRL-TICKER STRVALUE=HELLO WORLD!
+            td:::ctrl-ticker strvalue=HELLO WORLD!
+            td
+                div class=ticker-wrap,,,width=400px,,,height=40px
+                    div class=ticker
+                        div class=ticker__item...Hello world!
+                        div class=ticker__item...Hello from Pytigon!
         tr
             td...htmllistbox
             td
-                CTRL-HTMLLISTBOX width=400
-                    tr:::td...[b]test1[/b]
-                    tr:::td...[strong]test2[/strong]
-                    tr:::td...[h1]test test test[/h1]
+                % if not standard_web_browser:
+                    ctrl-htmllistbox width=400
+                        tr:::td...[b]test1[/b]
+                        tr:::td...[strong]test2[/strong]
+                        tr:::td...[h1]test test test[/h1]
+            td
         tr
             td...shell
             td
-                CTRL-SHELL width=600,,,height=800
+                ctrl-shell width=600,,,height=800
+            td
         tr
             td...Tree list
-            td:::CTRL-TREELIST label=NAZWISKO||IMIE||WIEK,,,width=400,,,height=200
-                li...TEKST 1||A||B
-                li...TEKST 2||ZORRO||BBB
-                    ul
-                        li...TEKST 11||HEJ||BBB
-                        li...TEKST 22||ZORRO||ABBA
-                li...TEKST 3||OKO||ZA OKO
+            td
+                % if not standard_web_browser:
+                    ctrl-treelist label=Title||Description||Description 2,,,width=400,,,height=200
+                        li...text 1||Description a1||Description b1
+                        li...text2 2||Description a2||Description b2
+                            ul
+                                li...text 21||Description a21||Description b21
+                                li...text 22||Description a22||Description b22
+                        li...text 3||Description a3||Description b3
+            td
+    
