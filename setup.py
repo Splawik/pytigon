@@ -28,14 +28,14 @@ extra_files.append("ptig")
 
 setup(
     name="pytigon",
-    version="0.95",
+    version="0.96",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
     license="LGPLv3",
     packages=find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]),
     package_data={"": extra_files},
-    scripts=['pytigon/ptig',],
+    scripts=["pytigon/ptig"],
     install_requires=[
         "pytigon-lib",
         "Twisted[tls,http2]",
@@ -68,10 +68,10 @@ setup(
         "Transcrypt",
         "netifaces",
         "cython",
-        #"numba",
-        #"numpy",
-        #"numexpr",
-        #"pandas",
+        # "numba",
+        # "numpy",
+        # "numexpr",
+        # "pandas",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
