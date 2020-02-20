@@ -151,7 +151,7 @@
 {% block content %}
         {% if standard_web_browser %}
                 {% block edit_area %}
-                        <sch-vseditor value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></sch-vseditor>
+                        <ptig-codeeditor value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></ptig-codeeditor>
                 {% endblock %}
           {% else %}
                 {{ block.super }}

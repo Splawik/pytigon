@@ -1,0 +1,11 @@
+.md svg.diagram {
+    display: block;
+    font-family: Menlo,Consolas,monospace;
+    font-size: 13.101793589999144px;
+    text-align: center;
+    stroke-linecap: round;
+    stroke-width: 2px;
+    page-break-inside: avoid;
+    stroke: #000;
+    fill: #000;
+}
