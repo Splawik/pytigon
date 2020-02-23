@@ -14,6 +14,6 @@ export var ptig_markdeep = function () {
 	};
 	return dict ({'props': props, 'template': template, 'mounted': mounted});
 };
-register_vue_component ('ptig-markdeep', ptig_markdeep, [BASE_PATH + '/markdeep.min.js'], [BASE_PATH + '/whitepaper.css', BASE_PATH + '/diagram.css']);
+register_vue_component ('ptig-markdeep', ptig_markdeep, [BASE_PATH + '/markdeep.min.js'], [BASE_PATH + '/company-api.css', BASE_PATH + '/diagram.css']);
 
 //# sourceMappingURL=input.map

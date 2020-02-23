@@ -12,5 +12,6 @@ Urls  = (
     ('../schwiki/simplecontrols/userwiki/view/?schtml=desktop',_('Wiki'),None,'client://status/weather-clear.png'),
     ('form/TestForm/?schtml=desktop',_('Form'),None,'client://categories/preferences-desktop.png'),
     ('sum/2/3/?schtml=desktop',_('Json'),None,'client://mimetypes/x-office-spreadsheet.png'),
+    ('markdeep?schtml=desktop',_('Markdeep'),None,'png://apps/preferences-desktop-multimedia.png'),
 )
 UserParam = {}

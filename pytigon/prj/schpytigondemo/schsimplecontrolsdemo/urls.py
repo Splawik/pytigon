@@ -13,6 +13,7 @@ urlpatterns = [
      url(r'^htmlcontrols', TemplateView.as_view(template_name='schsimplecontrolsdemo/html_controls.html'), {}), 
      url(r'^extendedcontrols', TemplateView.as_view(template_name='schsimplecontrolsdemo/extended_controls.html'), {}), 
     
+     url(r'^markdeep', TemplateView.as_view(template_name='schsimplecontrolsdemo/markdeep.html'), {}), 
     
     
     url('form/TestForm/$', views.view_testform, {}),
