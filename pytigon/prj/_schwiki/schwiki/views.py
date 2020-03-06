@@ -161,10 +161,10 @@ def edit_page(request, app_or_subject, page_name):
     return HttpResponseRedirect(redir)
     
 
-@dict_to_template('schwiki/v_insert_object_to_editor.html')
 
 
 
+@dict_to_json
 
 def insert_object_to_editor(request, pk):
     
@@ -181,7 +181,7 @@ def insert_object_to_editor(request, pk):
         object = None
         edit_form = "True"
     
-    return { 'pk': pk, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
+    return { 'pk': pk, 'object_name': object.name, 'object_inline_editing': object.inline_editing, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
     
 
 

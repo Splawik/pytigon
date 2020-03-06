@@ -16,6 +16,7 @@ urlpatterns = [
      url(r'^markdeep', TemplateView.as_view(template_name='schsimplecontrolsdemo/markdeep.html'), {}), 
     
     
+    
     url('form/TestForm/$', views.view_testform, {}),
 ]
 

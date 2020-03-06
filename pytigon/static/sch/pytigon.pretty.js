@@ -2,11 +2,11 @@
 import{AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, 
 __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, 
 callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip}from "./org.transcrypt.__runtime__.js";
-import{process_on_click}from "./click_process.js";
+import{process_href, process_on_click}from "./click_process.js";
 import{img_field}from "./widget.js";
 import{sync_and_run}from "./db.js";
 import{install_service_worker, service_worker_and_indexedDB_test}from "./offline.js";
-import{ajax_get, ajax_load, ajax_post, ajax_submit, can_popup, corect_href, get_and_run_script, get_table_type, history_push_state, load_css, load_js, load_many_js, mount_html, register_fragment_init_fun, register_mount_fun, remove_page_from_href}from "./tools.js";
+import{ajax_get, ajax_load, ajax_post, ajax_submit, can_popup, corect_href, get_and_run_script, get_table_type, history_push_state, load_css, load_js, load_many_js, mount_html, process_resize, register_fragment_init_fun, register_mount_fun, register_resize_fun, remove_page_from_href}from "./tools.js";
 import{datatable_onresize, init_table}from "./tbl.js";
 import{on_cancel_inline, on_delete_ok, on_edit_ok, on_get_row, on_get_tbl_value, on_new_tbl_value, on_popup_delete, on_popup_edit_new, on_popup_info, on_popup_inline, only_get, refresh_current_app, refresh_current_object, refresh_current_page, refresh_fragment, ret_ok}from "./popup.js";
 import{get_menu}from "./tabmenu.js";
@@ -91,7 +91,8 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
     }
   };
   sync_and_run("sys", _on_sync);
-  jQuery(window).resize(datatable_onresize);
+  jQuery(window).resize(process_resize);
+  register_resize_fun(datatable_onresize);
   var _on_submit = function(e) {
     var self = jQuery(this);
     if (jQuery(this).hasClass("DialogForm")) {

@@ -47,6 +47,7 @@ export var process_href = function(href, elem) {
     return href;
   }
 };
+window.process_href = process_href;
 export var process_on_click = function(event_tab, elem) {
   if (typeof elem == "undefined" || elem != null && elem.hasOwnProperty("__kwargtrans__")) {
     var elem = null;

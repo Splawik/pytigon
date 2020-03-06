@@ -1,4 +1,4 @@
-!!!
+^^^
 http = wx.GetApp().get_http(self)
 http.post(self, "/tools/get_user_param/", parm={ 'param': 'appset_up' })
 path = http.str()

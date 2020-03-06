@@ -134,7 +134,12 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         def save(self):
             http = wx.GetApp().get_http(self)
             if self.href:
-                http.post(self, self.href, {'data': self.GetText().encode('utf-8')})
+                #http.post(self, self.href, {'data': self.GetText().encode('utf-8')})
+                v = self.GetTextRaw()
+                if type(v) == str:
+                    http.post(self, self.href, {'data': self.GetText().encode('utf-8')})
+                else:
+                    http.post(self, self.href, {'data': self.GetTextRaw()})
 
         def can_copy(self):
             if self.GetSelectionEnd() - self.GetSelectionStart() != 0:

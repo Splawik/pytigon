@@ -41,11 +41,13 @@ from tools import (
     register_mount_fun,
     remove_page_from_href,
     get_and_run_script,
+    register_resize_fun,
+    process_resize
 )
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
-from click_process import process_on_click
+from click_process import process_on_click, process_href
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -125,6 +127,9 @@ def app_init(
 
             def _on_login_submit2(data):
                 nonlocal href, self
+
+                window.location.pathname = window.BASE_PATH
+
                 jQuery('body').removeClass('login_background')
 
                 start = data.indexOf("<body>")
@@ -161,7 +166,9 @@ def app_init(
             location.reload()
 
     sync_and_run("sys", _on_sync)
-    jQuery(window).resize(datatable_onresize)
+    #jQuery(window).resize(datatable_onresize)
+    jQuery(window).resize(process_resize)
+    register_resize_fun(datatable_onresize)
 
     def _on_submit(e):
         self = jQuery(this)

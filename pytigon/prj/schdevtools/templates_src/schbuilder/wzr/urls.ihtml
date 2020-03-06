@@ -1,4 +1,4 @@
-!!!## -- coding: utf-8 --
+^^^## -- coding: utf-8 --
 {% load exfiltry %}
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _

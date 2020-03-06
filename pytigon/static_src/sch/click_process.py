@@ -36,6 +36,8 @@ def process_href(href, elem):
     else:
         return href
 
+window.process_href = process_href
+
 def process_on_click(event_tab, elem=None):
     def _on_click(e):
         nonlocal event_tab

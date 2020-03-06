@@ -5,7 +5,7 @@ LOADED_FILES = {}
 
 FIRST_INIT = True
 FRAGMENT_INIT_FUN = []
-
+RESIZE_FUN = []
 
 def register_fragment_init_fun(fun):
     global FRAGMENT_INIT_FUN
@@ -26,7 +26,7 @@ register_fragment_init_fun(_set_field)
 
 def fragment_init(elem=None):
     global FIRST_INIT, FRAGMENT_INIT_FUN
-
+    console.log("fragment_init")
     if elem:
         elem2 = elem
     else:
@@ -85,9 +85,9 @@ def fragment_init(elem=None):
 
     elem2.find(".inline_frame").each(load_inline_frame)
 
-    elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"width": "calc(100% - 48px)"}
-    )
+    elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2( { "width": "15em" })
+    #    {"width": "calc(100% - 48px)"}
+    #)
     elem2.find(".django-select2.select2-full-width").djangoSelect2(
         {"width": "calc(100%)"}
     )
@@ -112,8 +112,10 @@ def fragment_init(elem=None):
     # datatable_onresize()
 
     for fun in FRAGMENT_INIT_FUN:
+        #setTimeout(fun, 1, elem2)
         fun(elem2)
 
+window.fragment_init = fragment_init
 
 def split_html(html):
     temp = document.createElement("div")
@@ -126,7 +128,8 @@ def split_html(html):
     styles2 = Array.prototype.slice.call(styles)
 
     def remove_elements(id, element):
-        element.parentNode.removeChild(element)
+        if element:
+            element.parentNode.removeChild(element)
 
     jQuery.each(scripts, remove_elements)
     jQuery.each(styles, remove_elements)
@@ -158,38 +161,30 @@ def register_mount_fun(fun):
 
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
+    vue_load = False
     if (
         component_init
         and window.COMPONENT_INIT
         and len(window.COMPONENT_INIT) > 0
     ):
-        try:
-            elem.empty()
+        elem.empty()
 
-            ret = split_html(html_txt)
+        ret = split_html(html_txt)
 
-            res = Vue.compile("<div>" + ret[0] + "</div>")
-            if elem and elem.length > 0:
-                vm = __new__(
-                    Vue({"render": res.render, "staticRenderFns": res.staticRenderFns})
-                )
-                component = vm.S__mount()
+        res = Vue.compile("<div>" + ret[0] + "</div>")
+        if elem and elem.length > 0:
+            vm = __new__(
+                Vue({"render": res.render, "staticRenderFns": res.staticRenderFns})
+            )
+            component = vm.S__mount()
 
-                def _append(index, value):
-                    if value:
-                        elem[0].appendChild(value)
+            def _append(index, value):
+                if value:
+                    elem[0].appendChild(value)
 
-                jQuery.each(component.S__el.childNodes, _append)
-
-                eval_scripts(ret[1])
-                eval_styles(ret[2])
-        except:
-            elem.html(html_txt)
+            jQuery.each(component.S__el.childNodes, _append)
     else:
         elem.html(html_txt)
-
-    if run_fragment_init:
-        fragment_init(elem)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
@@ -198,6 +193,9 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     if elem.hasClass("refr_replace"):
         elem_tmp = elem.contents()
         elem.replaceWith(elem_tmp)
+
+    if run_fragment_init:
+        fragment_init(elem)
 
 
 def save_as(blob, file_name):
@@ -346,8 +344,8 @@ def _req_post(req, url, data, complete, content_type):
         pass
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    if data.length:
-        req.setRequestHeader("Content-length", data.length)
+    #if data.length:
+    #    req.setRequestHeader("Content-length", data.length)
         # req.setRequestHeader("Connection", "close")
 
     req.send(data)
@@ -652,15 +650,19 @@ window.icons = {
 
 
 def get_and_run_script(url, elem, e):
-    def _on_load_js(html_text):
-        nonlocal elem, e
-        object = jQuery(elem)
-        x = jQuery(html_text).html()
-        if x:
-            eval(x)
-        object = None
-
-    ajax_get(url, _on_load_js)
+    #def _on_load_js(html_text):
+    #    nonlocal elem, e
+    #    object = jQuery(elem)
+    #    x = jQuery(html_text).html()
+    #    if x:
+    #        eval(x)
+    #    object = None
+    #
+    #ajax_get(url, _on_load_js)
+    try:
+        __import__()
+    except:
+        pass
 
 
 def register_vue_component(name, component, js_libs=None, css_libs=None):
@@ -680,3 +682,26 @@ def register_vue_component(name, component, js_libs=None, css_libs=None):
     Vue.component(name, _component)
 
 window.register_vue_component = register_vue_component
+
+
+def register_resize_fun(fun, priority=0):
+    global RESIZE_FUN
+    RESIZE_FUN.append((fun, priority))
+
+window.register_resize_fun = register_resize_fun
+
+def process_resize():
+    global RESIZE_FUN
+
+    def sort_fun(elem1, elem2):
+        if elem1[1] > elem2[1]:
+            return 1
+        elif elem1[1] == elem2[1]:
+            return 0
+        else:
+            return -1
+
+    for pos in RESIZE_FUN.js_sort(sort_fun):
+        pos[0]()
+
+window.process_resize = process_resize

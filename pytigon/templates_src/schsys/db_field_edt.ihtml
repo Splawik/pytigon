@@ -163,7 +163,6 @@
 %% content
     % if standard_web_browser
         %% edit_area
-            ptig-codeeditor value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}}
+            ptig-codeeditor value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}},,,width=100%,,,height=100%
     % else:
         {{ block.super }}
-

@@ -1,4 +1,4 @@
-!!!{# -*- coding: utf-8 -*- #}
+^^^{# -*- coding: utf-8 -*- #}
 
 %extends 'template/desktop_base.html'|translate:lang
 {% load exfiltry %}{% load exsyntax %}

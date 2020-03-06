@@ -11,6 +11,7 @@ from tools import (
     get_table_type,
     register_fragment_init_fun,
     remove_page_from_href,
+    process_resize,
 )
 
 from tbl import datatable_refresh, datatable_onresize, init_table
@@ -346,8 +347,7 @@ def on_popup_delete(url, elem, e):
 
 
 def on_dialog_load():
-    pass
-
+    process_resize()
 
 def _dialog_loaded(is_modal, elem):
     obj = elem.closest(".refr_object")

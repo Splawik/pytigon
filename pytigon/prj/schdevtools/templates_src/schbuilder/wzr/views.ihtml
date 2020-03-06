@@ -1,4 +1,4 @@
-!!!#!/usr/bin/python
+^^^#!/usr/bin/python
 {% load exfiltry %}
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
