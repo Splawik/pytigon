@@ -614,6 +614,8 @@ def gen(request, pk):
                     file_name += ".pyx"
                 else:
                     file_name += '.c'
+            elif file_obj.file_type == 's':
+                file_name = base_path + "/" + app.name+"/schema.py"
             else: 
                 file_name = None
                 
@@ -645,6 +647,7 @@ def gen(request, pk):
     static_components = os.path.join(static_root,'components')
     
     offline_support = False
+    vue_init = ""
     
     for static_file in static_files:
         txt = static_file.code
@@ -715,7 +718,8 @@ def gen(request, pk):
             f = open_and_create_dir(dest_path,"wb")
             f.write(txt2.encode('utf-8'))
             f.close()        
-    
+        if static_file.type=='G':
+            vue_init += txt
     component_elements = []
     
     if prj.custom_tags:
@@ -758,7 +762,7 @@ def gen(request, pk):
                     component_elements += [ pos for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '.' in pos ]    
                 component_elements += [ prj2.name + "/components/" + pos.name + ".js" for pos in static_files2 if pos.type in ('R',) ]
     
-    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements) })
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements), 'vue_init': vue_init })
     
     
     #print(component_elements)

@@ -95,13 +95,17 @@
         {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
         {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
         {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
-        {% css_link 'themes/select2-bootstrap.css' %}
+                {% comment %}
+                        {% css_link 'themes/select2-bootstrap.css' %}
+                {% endcomment %}
         {{ form.media.css }}
         {% block botstrap_css %}
                 {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
                 {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
         {% endblock %}
         {% block theme_css_links %}
+                {% comment %}
+                {% endcomment %}
                 {% css_link 'sch/select2-material.css' %}
         {% endblock %}
         {% block theme_css_links_spec %}

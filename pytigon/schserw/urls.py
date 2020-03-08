@@ -32,6 +32,9 @@ import django.contrib.staticfiles
 from django.contrib.staticfiles import views
 #import django.contrib.staticfiles.views.serve
 
+from django.urls import path
+from django.contrib.auth.mixins import LoginRequiredMixin
+from graphene_django.views import GraphQLView
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -42,6 +45,12 @@ from .schsys import views
 import logging
 logger = logging.getLogger(__name__)
 
+
+if hasattr(settings, "GRAPHENE_PUBLIC"):
+    PytigonGraphQLView = GraphQLView
+else:
+    class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
+        pass
 
 _urlpatterns = []
 
@@ -62,6 +71,7 @@ _urlpatterns.extend([
     url('select2/', include(django_select2.urls)),
     url('favicon.ico', views.favicon),
     url(make_href('sw.js'), views.sw),
+    path('graphql', PytigonGraphQLView.as_view(graphiql=True)),
 ])
 
 def app_description(prj):

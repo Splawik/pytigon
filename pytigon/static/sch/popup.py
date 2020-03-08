@@ -135,7 +135,7 @@ def on_popup_inline(url, elem, e):
     return False
 
 
-def on_popup_in_form(elem):
+def on_popup_in_form(elem, absolute=False):
     jQuery(elem).attr("data-style", "zoom-out")
     jQuery(elem).attr("data-spinner-color", "#FF0000")
     window.WAIT_ICON = Ladda.create(elem)
@@ -149,13 +149,17 @@ def on_popup_in_form(elem):
     id = window.COUNTER
 
     href2 = corect_href(jQuery(elem).attr("href"))
+    if absolute:
+        add_html = ABSOLUTE_HTML
+    else:
+        add_html = INLINE_TABLE_HTML
     new_fragment = jQuery(
         "<div class='refr_source refr_object inline_dialog hide' id='IDIAL_"
         + id
         + "' href='"
         + href2
         + "'>"
-        + INLINE_TABLE_HTML.replace("{{title}}", elem.getAttribute("title"))
+        + add_html.replace("{{title}}", elem.getAttribute("title"))
         + "</div>"
     )
     new_fragment.insertAfter(jQuery(elem).closest("div.form-group"))
@@ -520,7 +524,7 @@ def ret_ok(id, title):
 
 
 def on_get_tbl_value(url, elem, e):
-    on_popup_in_form(elem)
+    on_popup_in_form(elem, True)
 
 
 def on_new_tbl_value(url, elem, e):

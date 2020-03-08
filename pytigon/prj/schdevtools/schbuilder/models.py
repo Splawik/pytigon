@@ -255,6 +255,7 @@ Static_CHOICES = (
     ("R","vue.js component (included in desktop.html)"),
     ("I","sass to css (included in desktop.html)"),
     ("U","custom file (embeded translation for .pyj, .vue, .sass)"),
+    ("G","Vue globals"),
     
     )
 
@@ -268,6 +269,7 @@ FileType_CHOICES = (
     ("l","Library code"),
     ("C","Library c code"),
     ("x","Library cython code"),
+    ("s","GraphQL schema"),
     
     )
 

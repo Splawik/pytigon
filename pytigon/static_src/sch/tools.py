@@ -84,11 +84,11 @@ def fragment_init(elem=None):
 
     elem2.find(".inline_frame").each(load_inline_frame)
 
-    elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2( { "width": "15em" })
+    elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2( { "width": "12em", "minimumInputLength": 1 })
     #    {"width": "calc(100% - 48px)"}
     #)
     elem2.find(".django-select2.select2-full-width").djangoSelect2(
-        {"width": "calc(100%)"}
+        {"width": "calc(100%)", "minimumInputLength": 1}
     )
 
     def init_select2_ctrl():

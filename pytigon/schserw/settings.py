@@ -174,6 +174,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "graphene_django",
 ]
 
 if (
@@ -353,6 +354,11 @@ else:
     ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
     ACCOUNT_USERNAME_REQUIRED = True
 
+GRAPHENE = {
+    'SCHEMA': 'pytigon.schserw.schsys.schema.schema' # Where your Graphene schema lives
+}
+
+GRAPHENE_PUBLIC = False
 
 try:
     import dj_email_url

@@ -1,5 +1,5 @@
 span.select2-selection {
-    height: calc(3.21875rem + 2px) !important;
+    height: calc(2.5rem + 2px) !important;
     //margin-top: 22px;
     border: none !important;
     border-bottom: 1px #ddd solid !important;
@@ -16,7 +16,7 @@ span.select2-selection:focus {
 span.select2-selection span.select2-selection__rendered {
     padding: 0px !important;
     padding-top: 15px !important;
-    height: calc(3.21875rem + 2px);
+    height: calc(2.2rem + 2px);
 }
 
 ul.select2-results__options {
@@ -28,4 +28,8 @@ a.foreignkey_button {
     margin-left: 8px !important;
     margin-right: 0px !important;
     padding: 12px;
+}
+
+span.select2-selection__arrow {
+    top: 12px !important;
 }

@@ -20,12 +20,12 @@
 {% block edit_area %}
         <div class="refresh_after_close" style="width:100%;height:calc( 100% - 30px );">
                 <ptig-codeeditor value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}" width="100%" height="100%">
-                        {% with formformat="7:7:7/7:7:7" %}
-                                {% get_table_row "wikiobj_id" "wiki" "PageObjectsConf" "name__icontains" label="Type of wiki object" filter="1" is_get_button=False %}
-                        {% endwith %}
+                        <div class="col-7">
+                                {% get_table_row "wikiobj_id" "schwiki" "wiki" "PageObjectsConf" "name__icontains" label="Type of wiki object" filter="1" is_get_button=True %}
+                        </div>
                         {% with formformat="5:5:5/5:5:5" %}
-                                <insert-object>
-                                        {% action "new_object" "Modify or create a wiki object" url="{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}" target="run_script" tag_class="+col-5" %}
+                                <insert-object app_path="{{app_path}}">
+                                        {% action "new_object" "Modify or create a wiki object" url="{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}" target="run_script" %}
                                 </insert-object>
                         {% endwith %}
                 </ptig-codeeditor>

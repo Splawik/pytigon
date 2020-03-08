@@ -211,6 +211,10 @@ def one_line_block(value):
     """Clean value by removing unnecessary spaces and characters: '\n', '\t' """
     return value.replace('        ', ' ').replace('    ', ' ').replace('  ', ' ').replace('\n', '').replace('\t', '')
 
+@register.filter(name='one_line_code')
+def one_line_code(value):
+    """Clean value by removing unnecessary spaces and characters: '\n', '\t' """
+    return value.replace('\n', '').replace('\r', '').replace('\t', '')
 
 @register.filter(name='arg')
 def arg_fun(value, arg):

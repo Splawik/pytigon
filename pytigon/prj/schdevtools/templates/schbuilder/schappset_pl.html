@@ -18,8 +18,6 @@
                 return True
             return href
 </script>
-{% endblock %}
-{% block all %}
         {% with edit_vscroll=True table_type='datatable' %}
                 {{ block.super }}
         {% endwith %}
@@ -60,8 +58,6 @@
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
 
         {% endrow_actions %}
-{% endblock %}
-{% block dialog_type %}
         modal-lg
 {% endblock %}
 {% block row_edit %}

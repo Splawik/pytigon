@@ -177,11 +177,15 @@ def insert_object_to_editor(request, pk):
             edit_form = "True"
         else:
             edit_form = "False"
+        object_name = object.name
+        object_inline_editing = object.inline_editing
     else:
         object = None
         edit_form = "True"
+        object_name = None
+        object_inline_editing = None
     
-    return { 'pk': pk, 'object_name': object.name, 'object_inline_editing': object.inline_editing, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
+    return { 'pk': pk, 'object_name': object_name, 'object_inline_editing': object_inline_editing, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
     
 
 

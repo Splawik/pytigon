@@ -43,7 +43,7 @@ from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext.fields import ForeignKey, ModelSelect2WidgetExt
 from pytigon_lib.schdjangoext.models import TreeModel
-from pytigon_lib.schtools.wiki import wiki_from_str, make_href, wikify
+from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 
 
 
@@ -1003,7 +1003,7 @@ def field(context, form_field, fieldformat=None):
 
 
 @inclusion_tag('widgets/get_table_row.html')
-def get_table_row(context, field_or_name, app_name=None, table_name=None, search_fields=None, filter=None, label = None,
+def get_table_row(context, field_or_name, prj=None, app_name=None, table_name=None, search_fields=None, filter=None, label = None,
                    initial = None, is_get_button=True, is_new_button=False, get_target="popup_edit", new_target="inline"):
     if type(field_or_name) in (SafeText, str,):
         model = import_model(app_name, table_name)
@@ -1037,20 +1037,20 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
 
     if TreeModel in model.__bases__:
         if filter:
-            href1 = make_href("/%s/table/%s/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name, filter))
-            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+            href1 = make_href("/%s/%s/table/%s/%s/0/form/gettree/?schtml=1" % (prj, _app_name, _table_name, filter))
+            href2 = make_href("/%s/%s/table/%s/-/add/?schtml=1" % (prj, _app_name, _table_name))
         else:
-            href1 = make_href("/%s/table/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name))
-            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+            href1 = make_href("/%s/%s/table/%s/0/form/gettree/?schtml=1" % (prj, _app_name, _table_name))
+            href2 = make_href("/%s/%s/table/%s/-/add/?schtml=1" % (prj, _app_name, _table_name))
     else:
         _filter = filter if filter else "-"
-        href1 = make_href("/%s/table/%s/%s/form/get/?schtml=1" % (_app_name, _table_name, _filter))
-        href2 = make_href("/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter))
+        href1 = make_href("/%s/%s/table/%s/%s/form/get/?schtml=1" % (prj, _app_name, _table_name, _filter))
+        href2 = make_href("/%s/%s/table/%s/%s/add/?schtml=1" % (prj, _app_name, _table_name, _filter))
 
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-
+            print("X1:", href1, href2)
             self.fields[_name] = forms.ChoiceField(
                 label = _label,
                 widget=ModelSelect2WidgetExt(href1, href2, is_new_button, is_get_button, _label,

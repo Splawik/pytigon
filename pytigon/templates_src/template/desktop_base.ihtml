@@ -121,7 +121,8 @@
     {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
     {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
     {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
-    {% css_link 'themes/select2-bootstrap.css' %}
+        % comment:
+            {% css_link 'themes/select2-bootstrap.css' %}
 
 
     {{ form.media.css }}
@@ -131,6 +132,7 @@
         {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
 
     %% theme_css_links
+        % comment:
         {% css_link 'sch/select2-material.css' %}
 
     %% theme_css_links_spec

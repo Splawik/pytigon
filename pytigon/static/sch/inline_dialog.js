@@ -28,8 +28,31 @@ var INLINE_DIALOG_UPDATE_HTML = "\
 var INLINE_TABLE_HTML = "\
 <div style='position:relative'>\
     <div class='dark_background'></div>\
-    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\
-        <div class='modal-content'>\
+    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%; height:100%'>\
+        <div class='modal-content style:'height:100%'>\
+            <div class='modal-header'>\
+                <h4 class='modal-title'>{{title}}</h4>\
+                <button type='button' class='btn btn-outline-secondary minimize' data-dismiss='modal' onclick='popup_minimize(this)' style='diplay:none;'> \
+                    <span class='fa fa-window-minimize'></span> \
+                </button> \
+                <button type='button' class='btn btn-outline-secondary maximize' data-dismiss='modal' onclick='popup_maximize(this)'> \
+                    <span class='fa fa-window-maximize'></span> \
+                </button> \
+                <button type='button' class='close btn-raised' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>\
+            </div>\
+            <div class='modal-body inline-table-modal-body'>\
+                <div class='refr_target dialog-data-inner'></div>\
+            </div>\
+        </div>\
+    </div>\
+</div>\
+";
+
+var ABSOLUTE_HTML = "\
+<div style='position:absolute; z-index:99; height:500px'>\
+    <div class='dark_background'></div>\
+    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%; height: 100%;'>\
+        <div class='modal-content' style='height:100%;'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>{{title}}</h4>\
                 <button type='button' class='btn btn-outline-secondary minimize' data-dismiss='modal' onclick='popup_minimize(this)' style='diplay:none;'> \
