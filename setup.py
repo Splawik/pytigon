@@ -55,6 +55,7 @@ setup(
         "django-cache-url",
         "django-allauth",
         "django-sql-explorer",
+        "graphene-django",
         "easy_thumbnails",
         "whitenoise",
         "markdown2",
