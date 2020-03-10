@@ -28,7 +28,7 @@ extra_files.append("ptig")
 
 setup(
     name="pytigon",
-    version="0.96",
+    version="0.97",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
@@ -69,10 +69,6 @@ setup(
         "Transcrypt",
         "netifaces",
         "cython",
-        # "numba",
-        # "numpy",
-        # "numexpr",
-        # "pandas",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -11,8 +11,6 @@
             else:
                 return False
 </script>
-{% endblock %}
-{% block pythoncode %}
         <script language="python">
         def init_form(self):
             self.treewin.Body.filter_url = self.filter_url
@@ -50,8 +48,6 @@
             else:
                 return None
 </script>
-{% endblock %}
-{% block content %}
         <CTRL-HTML name="treewin" src="/{{app}}/table/{{tab}}/{{parent_pk}}/form/_tree?schtml=1" width="100%" height="100%"></CTRL-HTML>
 {% endblock %}
 

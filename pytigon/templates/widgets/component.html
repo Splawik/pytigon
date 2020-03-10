@@ -4,7 +4,6 @@
         <script type="text/javascript ">
         Vue.component('{{href|base_name}}', httpVueLoader('{% static href %}'));
 </script>
-  {% else %}
         <script type="module" src="{% static href %}"></script>
 {% endif %}
 
