@@ -12,6 +12,7 @@ urlpatterns = [
      url(r'^administration', TemplateView.as_view(template_name='schadmin/administration.html'), {}), 
      url(r'^filemanager', TemplateView.as_view(template_name='schadmin/filemanager.html'), {}), 
      url(r'^sqlexplore', TemplateView.as_view(template_name='schadmin/sqlexplore.html'), {}), 
+     url(r'^graphql', TemplateView.as_view(template_name='schadmin/graphql.html'), {}), 
     
     
 ]

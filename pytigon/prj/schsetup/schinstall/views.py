@@ -95,6 +95,18 @@ def view_upload_ptig(request, *argi, **argv):
     return PFORM(request, upload_ptig, 'schinstall/formupload_ptig.html', {})
 
 
+class download_ptig(forms.Form):
+    project = forms.ChoiceField(label=_('Project'), required=True, choices=models.get_projects)
+    export_db = forms.NullBooleanField(label=_('Export database'), required=True, )
+    export_prj_source = forms.NullBooleanField(label=_('Export project source'), required=True, )
+    
+    
+    
+
+def view_download_ptig(request, *argi, **argv):
+    return PFORM(request, download_ptig, 'schinstall/formdownload_ptig.html', {})
+
+
 
 
  
