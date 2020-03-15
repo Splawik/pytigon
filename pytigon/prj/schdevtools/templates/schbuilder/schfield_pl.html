@@ -12,7 +12,6 @@
                 print('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
                 self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
 </script>
-          {% else %}
                 <script language="python">
             def init_form(self):
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
@@ -37,8 +36,6 @@
                     return None
 </script>
         {% endif %}
-{% endblock %}
-{% block all %}
         {% with form_width=720 form_height=480 show_title_bar=1 title="Fields" vform=True %}
                 {{ block.super }}
         {% endwith %}

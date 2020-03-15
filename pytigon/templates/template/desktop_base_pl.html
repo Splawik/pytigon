@@ -458,6 +458,7 @@
 {% endblock %}
 {% block row_edit_header %}
         {% if form %}
+                {{form.errors}}
                 {% if form.errors %}
                         <div class="alert alert-danger alert-dismissable alert-link">
                                 <button class="close" type="button" data-dismiss="alert" aria-hidden="true"> &#215;</button>

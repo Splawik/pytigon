@@ -1,10 +1,14 @@
 span.select2-selection {
-    height: calc(2.5rem + 2px) !important;
+    //height: calc(2.5rem + 2px) !important;
     //margin-top: 22px;
     border: none !important;
     border-bottom: 1px #ddd solid !important;
     border-radius: 0px !important;
     font-size: 16px !important;
+}
+
+span.select2-selection--single {
+    height: calc(2.5rem + 2px) !important;
 }
 
 span.select2-selection:focus {

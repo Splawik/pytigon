@@ -315,9 +315,6 @@ class Page(JSONModel):
     def transform_template_name(self, request, template_name):
         return "schwiki/edit_wiki_content.html"
     
-    def get_form(self, view, request, form_class, adding):
-        return None
-    
     def get_page_for_wiki(self, wiki_str, user=None):
         wiki_word = wiki_from_str(wiki_str)
         return Page.get_page(user, self.subject, wiki_word)
