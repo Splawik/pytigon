@@ -32,10 +32,12 @@
 </style>
                         {% endblock %}
                 </head>
+{% block body %}
         {% block body_start %}<body>{% endblock %}
         {% block header %}{% endblock %}
         {% block content %}{% endblock %}
         {% block footer %}{% endblock %}
         {% block body_stop %}</body>{% endblock %}
+{% endblock %}
 {% block page_stop %}</html>{% endblock %}
 

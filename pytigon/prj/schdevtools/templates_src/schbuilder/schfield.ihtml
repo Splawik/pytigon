@@ -19,9 +19,12 @@
         script language=python
             def init_form(self):
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
                 pass
+                
 
             def filter_http_result(self, target, href, mp):
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
                         self.tabsort.grid.SetFocus()
@@ -82,10 +85,10 @@
 %% list_row_actions
     {{block.super}}
     {% if not forloop.first %}
-        % row_actions:...field_up,Move up,[|client://actions/go-up.png]
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png],refresh_page
     {% endif %}
     {% if not forloop.last %}
-        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png],refresh_page
     {% endif %}
     
     % row_actions:...field_duplicate,Duplicate,[|client://actions/go-bottom.png]

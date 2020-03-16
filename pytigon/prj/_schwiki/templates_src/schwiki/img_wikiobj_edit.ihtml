@@ -43,7 +43,7 @@
         .img_form .img_form_view_text {
             padding: 0px 0.7rem
         }
-
+        
     div class=img_form
         div class=row
             div class=container col-12 col-sm-6 img_form_images
