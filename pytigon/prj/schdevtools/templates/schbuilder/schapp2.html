@@ -29,6 +29,8 @@
                         dlg.Destroy()
                         return True
 </script>
+{% endblock %}
+{% block all %}
         {% with form_width=320 form_height=50 show_title_bar=1 title="Applications" %}
                 {{ block.super }}
         {% endwith %}

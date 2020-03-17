@@ -12,32 +12,27 @@
                 print('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
                 self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
 </script>
+          {% else %}
                 <script language="python">
             def init_form(self):
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
                 pass
             def filter_http_result(self, target, href, mp):
-                print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
-                        self.tabsort.grid.SetFocus()
-                        self.GetParent().refresh_html()
                         if 'field_down' in href:
                             self.tabsort.grid.goto_next_row()
                         else:
                             self.tabsort.grid.goto_prev_row()
-                    return True
                 elif 'field_duplicate' in href:
                     if 'YES' in str(mp.get_body()[0]):
                         self.tabsort.grid.SetFocus()
                         self.GetParent().refresh_html()
                         self.tabsort.grid.goto_last_row()
-                    return True
-                else:
-                    return None
 </script>
         {% endif %}
+{% endblock %}
+{% block all %}
         {% with form_width=720 form_height=480 show_title_bar=1 title="Fields" vform=True %}
                 {{ block.super }}
         {% endwith %}

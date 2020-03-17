@@ -7,6 +7,7 @@
 
 Django<3
 Twisted[tls,http2]
+pyquery
 channels
 ldap3
 django_python3_ldap

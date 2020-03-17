@@ -9,6 +9,8 @@
                 self.tabsort.grid.default_command = 'code'
 </script>
         {% endif %}
+{% endblock %}
+{% block all %}
         {% with form_width=960 form_height=1200 show_title_bar=0 title="Templates" %}
                 {{ block.super }}
         {% endwith %}

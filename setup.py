@@ -39,6 +39,7 @@ setup(
     install_requires=[
         "pytigon-lib",
         "Twisted[tls,http2]",
+        "pyquery",
         "channels",
         "asgiref",
         # "django_python3_ldap",

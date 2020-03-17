@@ -11,6 +11,8 @@
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 </script>
         {% endif %}
+{% endblock %}
+{% block all %}
         {% with form_width=720 form_height=480 show_title_bar=0 title="Menu" vform=True %}
                 {{ block.super }}
         {% endwith %}

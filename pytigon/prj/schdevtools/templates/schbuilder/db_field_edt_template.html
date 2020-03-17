@@ -48,6 +48,8 @@
             self.EDITOR.SetCurrentPos(pos)
             self.EDITOR.SetFocus()
 
+{% endblock %}
+{% block all %}
         {% with form_width=800 form_height=1200 title=tab|add:"."|add:verbose_field_name %}
                 {{ block.super }}
         {% endwith %}
