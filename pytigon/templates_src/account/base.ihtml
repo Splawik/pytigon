@@ -3,6 +3,15 @@
 % load exfiltry
 % load bootstrap4
 
+%% login_header
+
+%% login
+    div class=row
+        div class=col-2
+        div class=col-8
+            %% content 
+        div class=col-2
+
 %% body_body
     % with form|to_bootstrap as form:
         title
@@ -12,3 +21,5 @@
         script
             jQuery(".to_bootstrap").find('button').addClass('btn btn-primary');
             jQuery(".to_bootstrap").find('form').attr('target', '_self');
+
+%% login_footer
