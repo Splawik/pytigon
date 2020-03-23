@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 import importlib
 
@@ -27,18 +27,14 @@ from channels.auth import AuthMiddlewareStack
 
 urls_tab = []
 
-if hasattr(settings, 'CHANNELS_URL_TAB'):
+if hasattr(settings, "CHANNELS_URL_TAB"):
     for row in settings.CHANNELS_URL_TAB:
         u = row[0]
-        tmp = row[1].split('.')
-        m = importlib.import_module('.'.join(tmp[:-1]))
-        o = getattr(m,tmp[-1])
-        urls_tab.append(url(u,o))
+        tmp = row[1].split(".")
+        m = importlib.import_module(".".join(tmp[:-1]))
+        o = getattr(m, tmp[-1])
+        urls_tab.append(url(u, o))
 
-application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
-        URLRouter(
-            urls_tab
-        )
-    ),
-})
+application = ProtocolTypeRouter(
+    {"websocket": AuthMiddlewareStack(URLRouter(urls_tab))}
+)

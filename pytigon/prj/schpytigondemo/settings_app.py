@@ -124,6 +124,7 @@ else:
 
 
 CHANNELS_URL_TAB = [ 
+ ("^"+URL_ROOT_PREFIX+r"schsimplecontrolsdemo/teleconference/socket.io/$", 'schsimplecontrolsdemo.consumers.teleconference'),
  ("^"+URL_ROOT_PREFIX+r"schcommander/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
@@ -133,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.02.23 16:27:10'
+GEN_TIME = '2020.03.23 18:23:08'
 
 
 XMLRPC_PORT = 7080

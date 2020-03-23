@@ -12,7 +12,9 @@
 %% list_page_header
     .AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     br
-    my-component
+    
+    room
+    
     .BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 
     h3...TEST TITLE:
