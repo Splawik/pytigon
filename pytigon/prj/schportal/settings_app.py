@@ -123,13 +123,17 @@ else:
         DATABASES['local'] = db_local
 
 
+CHANNELS_URL_TAB = [ 
+ ("^"+URL_ROOT_PREFIX+r"teleconference/teleconference/socket.io/$", 'teleconference.consumers.teleconference'),
+]
+
 
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2020.03.02 20:02:17'
+GEN_TIME = '2020.03.23 20:21:28'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 
