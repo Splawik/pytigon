@@ -123,7 +123,7 @@ else:
         DATABASES['local'] = db_local
 
 
-CHANNELS_URL_TAB = [ 
+CHANNELS_URL_TAB += [ 
  ("^"+URL_ROOT_PREFIX+r"teleconference/teleconference/socket.io/$", 'teleconference.consumers.teleconference'),
 ]
 
@@ -133,7 +133,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.03.23 20:21:28'
+GEN_TIME = '2020.03.25 17:47:41'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

@@ -149,6 +149,9 @@ else:
         "django.contrib.auth.middleware.RemoteUserMiddleware",
     ]
 
+#if DEBUG:
+#    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+
 if PLATFORM_TYPE != "webserwer":
     MIDDLEWARE.insert(0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
 
@@ -177,12 +180,17 @@ INSTALLED_APPS = [
     "graphene_django",
 ]
 
+#if DEBUG:
+#    INSTALLED_APPS.append("debug_toolbar")
+
 if (
     not "PYTIGON_WITHOUT_CHANNELS" in os.environ
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
     INSTALLED_APPS.append("channels")
+
+CHANNELS_URL_TAB = []
 
 HIDE_APPS = []
 
@@ -367,6 +375,23 @@ try:
     vars().update(email_config)
 except:
     pass
+
+
+#if DEBUG:
+#    DEBUG_TOOLBAR_PANELS = [
+#        'debug_toolbar.panels.versions.VersionsPanel',
+#        'debug_toolbar.panels.timer.TimerPanel',
+#        'debug_toolbar.panels.settings.SettingsPanel',
+#        'debug_toolbar.panels.headers.HeadersPanel',
+#        'debug_toolbar.panels.request.RequestPanel',
+#        'debug_toolbar.panels.sql.SQLPanel',
+#        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#        'debug_toolbar.panels.templates.TemplatesPanel',
+#        'debug_toolbar.panels.cache.CachePanel',
+#        'debug_toolbar.panels.signals.SignalsPanel',
+#        'debug_toolbar.panels.logging.LoggingPanel',
+#        'debug_toolbar.panels.redirects.RedirectsPanel',
+#    ]
 
 try:
     from pytigon.schserw import *

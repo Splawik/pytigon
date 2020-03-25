@@ -123,7 +123,7 @@ else:
         DATABASES['local'] = db_local
 
 {% if consumers %}
-CHANNELS_URL_TAB = [ 
+CHANNELS_URL_TAB += [ 
 {% for consumer in consumers %} ("^"+URL_ROOT_PREFIX+r"{{consumer.0}}$", '{{consumer.1}}'),
 {% endfor %}]
 {% endif %}

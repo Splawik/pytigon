@@ -123,7 +123,7 @@ else:
         DATABASES['local'] = db_local
 
 
-CHANNELS_URL_TAB = [ 
+CHANNELS_URL_TAB += [ 
  ("^"+URL_ROOT_PREFIX+r"schbuilder/clock/socket.io/$", 'schbuilder.consumers.Clock'),
 ]
 
@@ -133,6 +133,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.03.17 16:52:35'
+GEN_TIME = '2020.03.24 17:42:02'
 OFFLINE_SUPPORT = True
 

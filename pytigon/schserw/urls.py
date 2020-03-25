@@ -74,6 +74,12 @@ _urlpatterns.extend([
     path('graphql', PytigonGraphQLView.as_view(graphiql=True)),
 ])
 
+#if settings.DEBUG:
+#    import debug_toolbar
+#    _urlpatterns += [
+#        url(r'^__debug__/', include(debug_toolbar.urls)),
+#    ]
+
 def app_description(prj):
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), 'settings_app.py')
     try:
