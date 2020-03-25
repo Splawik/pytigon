@@ -30,21 +30,21 @@
     .    var global_vue_bus = new Vue (vue_init);
     .</script>
     {% component 'schcomponents/components/ptig-calendar.js' %}
-    {% component 'schcomponents/components/ptig-markdeep.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
-    {% component 'schcomponents/components/ptig-pivottable.js' %}
-    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-    {% component 'schcomponents/components/ptig-xterm.js' %}
-    {% component 'schcomponents/components/ptig-video.js' %}
-    {% component 'schcomponents/components/ptig-money.js' %}
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
-    {% component 'schcomponents/components/ptig-leaflet.js' %}
     {% component 'schcomponents/components/ptig-mask.js' %}
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-leaflet.js' %}
+    {% component 'schcomponents/components/ptig-video.js' %}
     {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-money.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+    {% component 'schcomponents/components/ptig-markdeep.js' %}
     {% component 'schcomponents/components/ptig-plotly.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-pivottable.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "ptig-calendar.js", "ptig-markdeep.js", "ptig-d3.js", "ptig-pivottable.js", "ptig-spreadsheet.js", "ptig-xterm.js", "ptig-video.js", "ptig-money.js", "ptig-webrtc.js", "ptig-leaflet.js", "ptig-mask.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js", "ptig-plotly.js",  ];  
+    .var component_init = [ "ptig-calendar.js", "ptig-mask.js", "ptig-leaflet.js", "ptig-video.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "ptig-money.js", "ptig-d3.js", "ptig-spreadsheet.js", "ptig-markdeep.js", "ptig-plotly.js", "ptig-webrtc.js", "ptig-codeeditor.js", "ptig-pivottable.js",  ];  
