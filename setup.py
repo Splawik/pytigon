@@ -28,7 +28,7 @@ extra_files.append("ptig")
 
 setup(
     name="pytigon",
-    version="0.97",
+    version="0.98",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
