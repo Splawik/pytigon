@@ -1,24 +1,42 @@
-// Transcrypt'ed from Python, 2020-03-29 20:35:00
+// Transcrypt'ed from Python, 2020-03-31 22:19:53
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../sch/org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
-export var init_webrtc = function (url, local, remote, traceback, streaming) {
-	var initiator = null;
+export var init_webrtc = function (url, host, local, remote, traceback, streaming) {
+	if (host) {
+		var initiator = false;
+	}
+	else {
+		var initiator = true;
+	}
 	var pc = null;
 	var ws = new WebSocket (url.py_replace ('http', 'ws').py_replace ('https', 'wss'));
 	var PeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
 	var IceCandidate = window.RTCIceCandidate || window.RTCIceCandidate;
 	var SessionDescription = window.RTCSessionDescription || window.RTCSessionDescription;
 	navigator.getUserMedia = navigator.getUserMedia || navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
+	var timer = null;
 	var _on_remove = function () {
 		console.log ('close on remove');
 		if (pc) {
 			pc.close ();
 		}
 		ws.close ();
+		ws = null;
+		if (timer) {
+			window.clearInterval (timer);
+			var timer = null;
+		}
 	};
 	local.on_remove = _on_remove;
 	var _success = function (stream) {
-		pc = new PeerConnection (null);
+		var configuration = dict ({' iceServers': [dict ({'urls': 'stun:stun.l.google.com:19302'})]});
+		var on_timer = function () {
+			if (ws) {
+				ws.send (JSON.stringify (dict ({'ping': 1})));
+			}
+		};
+		var timer = setInterval (on_timer, 10000);
+		pc = new PeerConnection (configuration);
 		var _onaddstream = function (event) {
 			remote.srcObject = event.stream;
 			remote.play ();
@@ -87,17 +105,7 @@ export var init_webrtc = function (url, local, remote, traceback, streaming) {
 		navigator.getUserMedia (constraints, _success, _fail);
 	};
 	var _socketCallback = function (event) {
-		if (event.data == 'magic_overload') {
-			alert ('Sorry, but this node is overloaded!');
-		}
-		else if (event.data == 'owner') {
-			initiator = false;
-			initialize ();
-		}
-		else if (event.data == 'guest') {
-			initiator = true;
-			initialize ();
-		}
+		initialize ();
 	};
 	ws.onmessage = _socketCallback;
 	var createOffer = function () {
@@ -168,7 +176,7 @@ export var TEMPLATE = '        <div class=\"container bs-docs-container\">\n' +
     '\n' +
     '';
 export var ptig_webrtc = function () {
-	var props = ['src'];
+	var props = ['src', 'host'];
 	var mounted = function () {
 		var remote = this.$el.getElementsByClassName ('webrtc_remote') [0];
 		var local = this.$el.getElementsByClassName ('webrtc_local') [0];
@@ -176,7 +184,7 @@ export var ptig_webrtc = function () {
 		var streaming = this.$el.getElementsByClassName ('webrtc_streaming') [0];
 		var url = window.location;
 		var src = ((url.protocol + '//') + url.host) + this.src;
-		init_webrtc (src, local, remote, traceback, streaming);
+		init_webrtc (src, this.host, local, remote, traceback, streaming);
 	};
 	return dict ({'props': props, 'template': TEMPLATE, 'mounted': mounted});
 };

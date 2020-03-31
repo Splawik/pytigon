@@ -101,7 +101,11 @@ ROOT_URLCONF = "pytigon.schserw.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [PYTIGON_PATH+ "/templates",  PYTIGON_PATH + "/appdata/plugins", DATA_PATH + "/plugins"],
+        "DIRS": [
+            PYTIGON_PATH + "/templates",
+            PYTIGON_PATH + "/appdata/plugins",
+            DATA_PATH + "/plugins",
+        ],
         "OPTIONS": {
             "context_processors": [
                 "pytigon.schserw.schsys.context_processors.sch_standard",
@@ -149,11 +153,13 @@ else:
         "django.contrib.auth.middleware.RemoteUserMiddleware",
     ]
 
-#if DEBUG:
+# if DEBUG:
 #    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 if PLATFORM_TYPE != "webserwer":
-    MIDDLEWARE.insert(0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2")
+    MIDDLEWARE.insert(
+        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
+    )
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -180,7 +186,7 @@ INSTALLED_APPS = [
     "graphene_django",
 ]
 
-#if DEBUG:
+# if DEBUG:
 #    INSTALLED_APPS.append("debug_toolbar")
 
 if (
@@ -266,7 +272,7 @@ ALLOWED_HOSTS = ["*"]
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
-BOOTSTRAP4 = { 'use_custom_controls': False, }
+BOOTSTRAP4 = {"use_custom_controls": False}
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""
@@ -278,26 +284,29 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
-# if  PRODUCTION_VERSION and platform_name()!='Android':
-#    CHANNEL_LAYERS = {
-#        "default": {
-#            "BACKEND": "channels_redis.core.RedisChannelLayer",
-#            #"ROUTING": "schserw.routing.channel_routing",
-#            "CONFIG": {
-#                "hosts": [("127.0.0.1", 6379)],
-#            },
-#        },
-#    }
+if PRODUCTION_VERSION:
+    if platform_name() != "Android":
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                # "ROUTING": "schserw.routing.channel_routing",
+                "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+            }
+        }
+else:
+    CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 STATIC_FS = None
+
 
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS
     _m = MountFS()
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
-    STATIC_FS.add_fs("static_main",  OSFS(settings.STATIC_ROOT))
+    STATIC_FS.add_fs("static_main", OSFS(settings.STATIC_ROOT))
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS(settings.DATA_PATH))
@@ -363,7 +372,7 @@ else:
     ACCOUNT_USERNAME_REQUIRED = True
 
 GRAPHENE = {
-    'SCHEMA': 'pytigon.schserw.schsys.schema.schema' # Where your Graphene schema lives
+    "SCHEMA": "pytigon.schserw.schsys.schema.schema"  # Where your Graphene schema lives
 }
 
 GRAPHENE_PUBLIC = False
@@ -377,7 +386,7 @@ except:
     pass
 
 
-#if DEBUG:
+# if DEBUG:
 #    DEBUG_TOOLBAR_PANELS = [
 #        'debug_toolbar.panels.versions.VersionsPanel',
 #        'debug_toolbar.panels.timer.TimerPanel',

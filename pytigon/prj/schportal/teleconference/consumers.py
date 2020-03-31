@@ -14,83 +14,36 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 
 from channels.generic.http import AsyncHttpConsumer
 
-GLOBAL_NODES = {}
-
-class Node(object):
-    def __init__(self, name, clients=[]):
-        self.name = name
-        self.clients = clients
-
-    def __repr__(self):
-        return "Node '{0}'".format(self.name)
-
- 
 
 
-class teleconference(AsyncWebsocketConsumer):
+
+class teleconference(AsyncJsonWebsocketConsumer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.current_node = None
+        self.room_group_name = "default"
     
     async def connect(self):
-        global GLOBAL_NODES
-        slug = "default"
-    
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
-        
-        status = 0
-        if slug not in GLOBAL_NODES:
-            GLOBAL_NODES[slug] = Node(slug, [self])
-        else:
-            if GLOBAL_NODES[slug].clients[0]==None:
-               GLOBAL_NODES[slug].clients[0] = self
-            else:
-                GLOBAL_NODES[slug].clients.append(self)
-                if len(GLOBAL_NODES[slug].clients) > 2:
-                    status = 2
-                else:
-                    status = 1
-    
-        self.current_node = GLOBAL_NODES[slug]
-    
-        #await self.send(text_data=["owner", "guest", "magic_overload"][status])
-        await self.send(text_data=["owner", "guest", "guest"][status])
-    
-        #if len(self.current_node.clients) == 1:
-        #    await self.send(text_data="owner")
-        #elif len(self.current_node.clients) > 2:
-        #    await self.send(text_data="magic_overload")
-        #else:
-        #    await self.send(text_data="guest")
-     
+        await self.send_json({"hello": self.room_group_name})
     
     async def disconnect(self, close_code):
-        if self.current_node.clients[0] == self:
-           self.current_node.clients[0] = None
-        else:
-            self.current_node.clients.remove(self)
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
         print("DDDDDDDDDDDDDDDDDIIIIIIIIIIIISSSSSSSSSSCONNECT")
     
-    async def receive(self, text_data, bytes_data=None):
-        if self == self.current_node.clients[0]:
-            for client in self.current_node.clients[1:]:
-                if client == None:
-                    continue
-                await client.send(text_data=text_data)    
-        else:
-            if self.current_node.clients[0]:
-                await self.current_node.clients[0].send(text_data=text_data)
-            
-        #for client in self.current_node.clients:
-        #    if client is self:
-        #        continue
-        #    if client == None:
-        #        continue
-        #    await client.send(text_data=text_data)    
+    async def receive_json(self, content):
+        print("receive", content)
+        if not 'ping' in content:        
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "chat_message", "message": content}
+            )
     
+    async def chat_message(self, event):
+        message = event["message"]
+        await self.send_json(message)
     
     
 
 
- 
+
