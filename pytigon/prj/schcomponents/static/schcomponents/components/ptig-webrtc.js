@@ -1,8 +1,9 @@
-// Transcrypt'ed from Python, 2020-04-05 16:24:31
+// Transcrypt'ed from Python, 2020-04-05 16:34:35
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../sch/org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
 export var get_configuration = function (server, username, password) {
-	var ret = dict ({'iceServers': [dict ({'urls': 'stun:' + server, 'username': username, 'credential': password}), dict ({'urls': 'turn:' + server, 'username': username, 'credential': password})]});
+	var ret = {};
+	ret.iceServers = [{'urls': 'stun:' + server, 'username': username, 'credential': password}, {'urls': 'turn:' + server, 'username': username, 'credential': password}];
 	print (ret);
 	return ret;
 };
@@ -42,7 +43,7 @@ export var init_webrtc = function (url, host, room, local, remote, traceback, st
 		var ws_onmessage = ws.onmessage;
 		var on_timer = function () {
 			if (ws) {
-				ws.send (JSON.stringify (dict ({'ping': 1})));
+				ws.send (JSON.stringify ({'ping': 1}));
 			}
 			if (pc && !(host) && !(connected)) {
 				createOffer ();
@@ -127,7 +128,7 @@ export var init_webrtc = function (url, host, room, local, remote, traceback, st
 		traceback.setAttribute ('class', 'bg-danger');
 	};
 	var initialize = function () {
-		var constraints = dict ({'audio': true, 'video': true});
+		var constraints = {'audio': true, 'video': true};
 		navigator.getUserMedia (constraints, _success, _fail);
 	};
 	var _socketCallback = function (event) {
@@ -135,10 +136,10 @@ export var init_webrtc = function (url, host, room, local, remote, traceback, st
 		if (signal.status) {
 			if (signal.status == 'connected') {
 				if (host) {
-					ws.send (JSON.stringify (dict ({'init_consumer': 1, 'room': room, 'host': host})));
+					ws.send (JSON.stringify ({'init_consumer': 1, 'room': room, 'host': host}));
 				}
 				else {
-					ws.send (JSON.stringify (dict ({'init_consumer': 1, 'room': room})));
+					ws.send (JSON.stringify ({'init_consumer': 1, 'room': room}));
 				}
 			}
 			else if (signal.status == 'initiated') {
@@ -227,7 +228,7 @@ export var ptig_webrtc = function () {
 		var src = ((url.protocol + '//') + url.host) + this.src;
 		init_webrtc (src, this.host, this.roomId, local, remote, traceback, streaming);
 	};
-	return dict ({'props': props, 'template': TEMPLATE, 'mounted': mounted});
+	return {'props': props, 'template': TEMPLATE, 'mounted': mounted};
 };
 register_vue_component ('ptig-webrtc', ptig_webrtc, [BASE_PATH + '/adapter-latest.js']);
 
