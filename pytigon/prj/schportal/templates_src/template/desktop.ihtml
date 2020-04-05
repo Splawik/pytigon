@@ -32,18 +32,18 @@
     .    vue_init="";
     .    var global_vue_bus = new Vue (vue_init);
     .</script>
+    {% component 'schportal/components/teleconference.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
     {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component '_schwiki/components/insert_object.js' %}
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
     {% component 'schcomponents/components/ptig-plotly.js' %}
     {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
-    {% component 'schportal/components/teleconference.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "ptig-codeeditor.js", "insert_object.js", "ptig-webrtc.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-d3.js", "teleconference.js",  ];  
+    .var component_init = [ "teleconference.js", "ptig-webrtc.js", "ptig-d3.js", "ptig-codeeditor.js", "insert_object.js", "ptig-plotly.js", "ptig-wysiwygedit.js",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

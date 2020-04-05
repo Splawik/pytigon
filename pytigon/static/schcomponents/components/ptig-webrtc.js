@@ -1,7 +1,10 @@
-// Transcrypt'ed from Python, 2020-03-31 22:19:53
+// Transcrypt'ed from Python, 2020-04-05 12:32:17
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../sch/org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
-export var init_webrtc = function (url, host, local, remote, traceback, streaming) {
+export var get_configuration = function (server, username, password) {
+	return dict ({' iceServers': [dict ({'urls': __mod__ ('stun:%s', server), 'username': username, 'credential': password}), dict ({'urls': __mod__ ('turn:%s', server), 'username': username, 'credential': password})]});
+};
+export var init_webrtc = function (url, host, room, local, remote, traceback, streaming) {
 	if (host) {
 		var initiator = false;
 	}
@@ -15,45 +18,56 @@ export var init_webrtc = function (url, host, local, remote, traceback, streamin
 	var SessionDescription = window.RTCSessionDescription || window.RTCSessionDescription;
 	navigator.getUserMedia = navigator.getUserMedia || navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
 	var timer = null;
+	var connected = false;
 	var _on_remove = function () {
 		console.log ('close on remove');
 		if (pc) {
 			pc.close ();
 		}
+		pc = null;
 		ws.close ();
 		ws = null;
 		if (timer) {
 			window.clearInterval (timer);
-			var timer = null;
+			timer = null;
 		}
 	};
 	local.on_remove = _on_remove;
 	var _success = function (stream) {
-		var configuration = dict ({' iceServers': [dict ({'urls': 'stun:stun.l.google.com:19302'})]});
+		var server = 'pytigon.cloud';
+		var username = 'auto';
+		var password = 'anawa';
+		var ws_onmessage = ws.onmessage;
 		var on_timer = function () {
 			if (ws) {
 				ws.send (JSON.stringify (dict ({'ping': 1})));
 			}
-		};
-		var timer = setInterval (on_timer, 10000);
-		pc = new PeerConnection (configuration);
-		var _onaddstream = function (event) {
-			remote.srcObject = event.stream;
-			remote.play ();
-			logStreaming (true);
-		};
-		pc.onaddstream = _onaddstream;
-		var _onremovestream = function (event) {
-			print ('onremovestream:');
-			print (event);
-		};
-		pc.onremovestream = _onremovestream;
-		var _onicecandidate = function (event) {
-			if (event.candidate) {
-				ws.send (JSON.stringify (event.candidate));
+			if (pc && !(host) && !(connected)) {
+				createOffer ();
 			}
 		};
-		pc.addEventListener ('icecandidate', _onicecandidate);
+		timer = setInterval (on_timer, 10000);
+		var init_pc = function () {
+			pc = new PeerConnection (get_configuration (server, username, password));
+			var _onaddremotestream = function (event) {
+				remote.srcObject = event.stream;
+				remote.play ();
+				logStreaming (true);
+			};
+			pc.onaddstream = _onaddremotestream;
+			var _onremovestream = function (event) {
+				print ('onremovestream:');
+				print (event);
+			};
+			pc.onremovestream = _onremovestream;
+			var _onicecandidate = function (event) {
+				if (event.candidate) {
+					ws.send (JSON.stringify (event.candidate));
+				}
+			};
+			pc.addEventListener ('icecandidate', _onicecandidate);
+		};
+		init_pc ();
 		var log_video_loaded = function (event) {
 			var video = event.target;
 			print (video.id);
@@ -79,6 +93,17 @@ export var init_webrtc = function (url, host, local, remote, traceback, streamin
 			else if (signal.candidate) {
 				pc.addIceCandidate (new IceCandidate (signal));
 			}
+			else if (signal.destroy) {
+				if (pc) {
+					pc.close ();
+				}
+				init_pc ();
+				pc.addStream (stream);
+				connected = false;
+			}
+			else {
+				ws_onmessage (event);
+			}
 		};
 		ws.onmessage = _onmessage;
 		if (stream) {
@@ -96,16 +121,28 @@ export var init_webrtc = function (url, host, local, remote, traceback, streamin
 	};
 	var _fail = function () {
 		var argi = tuple ([].slice.apply (arguments).slice (0));
-		traceback.text (Array.prototype.join.call (argi, ' '));
-		traceback.attr ('class', 'bg-danger');
-		console.error.apply (console, argi);
+		traceback.innerHTML = Array.prototype.join.call (argi, ' ');
+		traceback.setAttribute ('class', 'bg-danger');
 	};
 	var initialize = function () {
 		var constraints = dict ({'audio': true, 'video': true});
 		navigator.getUserMedia (constraints, _success, _fail);
 	};
 	var _socketCallback = function (event) {
-		initialize ();
+		var signal = JSON.parse (event.data);
+		if (signal.status) {
+			if (signal.status == 'connected') {
+				if (host) {
+					ws.send (JSON.stringify (dict ({'init_consumer': 1, 'room': room, 'host': host})));
+				}
+				else {
+					ws.send (JSON.stringify (dict ({'init_consumer': 1, 'room': room})));
+				}
+			}
+			else if (signal.status == 'initiated') {
+				initialize ();
+			}
+		}
 	};
 	ws.onmessage = _socketCallback;
 	var createOffer = function () {
@@ -129,6 +166,7 @@ export var init_webrtc = function (url, host, local, remote, traceback, streamin
 				var set_local_description = function () {
 					log ('Sent response');
 					ws.send (JSON.stringify (answer));
+					var connected = true;
 				};
 				pc.setLocalDescription (answer, set_local_description, _fail);
 			};
@@ -139,6 +177,7 @@ export var init_webrtc = function (url, host, local, remote, traceback, streamin
 	var receiveAnswer = function (answer) {
 		log ('received answer');
 		pc.setRemoteDescription (new SessionDescription (answer));
+		connected = true;
 	};
 	var log = function () {
 		var argi = tuple ([].slice.apply (arguments).slice (0));
@@ -176,7 +215,7 @@ export var TEMPLATE = '        <div class=\"container bs-docs-container\">\n' +
     '\n' +
     '';
 export var ptig_webrtc = function () {
-	var props = ['src', 'host'];
+	var props = ['src', 'host', 'roomId'];
 	var mounted = function () {
 		var remote = this.$el.getElementsByClassName ('webrtc_remote') [0];
 		var local = this.$el.getElementsByClassName ('webrtc_local') [0];
@@ -184,7 +223,7 @@ export var ptig_webrtc = function () {
 		var streaming = this.$el.getElementsByClassName ('webrtc_streaming') [0];
 		var url = window.location;
 		var src = ((url.protocol + '//') + url.host) + this.src;
-		init_webrtc (src, this.host, local, remote, traceback, streaming);
+		init_webrtc (src, this.host, this.roomId, local, remote, traceback, streaming);
 	};
 	return dict ({'props': props, 'template': TEMPLATE, 'mounted': mounted});
 };
