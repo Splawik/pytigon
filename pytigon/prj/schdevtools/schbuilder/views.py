@@ -774,7 +774,7 @@ def gen(request, pk):
     for _app in apps:
         consumers = _app.schchannelconsumer_set.all()
         for consumer in consumers:
-            consumers_tab.append((_app.name+"/"+consumer.url+"/socket.io/", _app.name+".consumers."+consumer.name))
+            consumers_tab.append((_app.name+"/"+consumer.url+"/channel/", _app.name+".consumers."+consumer.name))
     
     for pos in prj.get_ext_apps():
         if pos:
@@ -785,7 +785,7 @@ def gen(request, pk):
                 for _app in tab2:
                     consumers = _app.schchannelconsumer_set.all()
                     for consumer in consumers:
-                        consumers_tab.append((_app.name+"/"+consumer.url+"/socket.io/", _app.name+".consumers."+consumer.name))
+                        consumers_tab.append((_app.name+"/"+consumer.url+"/channel/", _app.name+".consumers."+consumer.name))
                 
     template_to_file(base_path, "settings_app", "settings_app.py",  {'prj': prj, 'gmtime': gmt_str, 'offline_support': offline_support, 'consumers': consumers_tab })
     

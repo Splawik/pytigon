@@ -20,15 +20,13 @@
             vue_init="";
             var global_vue_bus = new Vue (vue_init);
         </script>
-        ABC
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
         {% component '_schwiki/components/insert_object.js' %}
         {% component 'schcomponents/components/ptig-xterm.js' %}
-        DEF
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js", "insert_object.js", "ptig-xterm.js",  ];
+        var component_init = [ "insert_object.js", "ptig-xterm.js", "ptig-wysiwygedit.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block extrahead %}
         {{block.super}}

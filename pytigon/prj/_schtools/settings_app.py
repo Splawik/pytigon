@@ -123,8 +123,8 @@ else:
         DATABASES['local'] = db_local
 
 
-CHANNELS_URL_TAB = [ 
- ("^"+URL_ROOT_PREFIX+r"schauth/shell/socket.io/$", 'schcommander.consumers.ShellConsumer'),
+CHANNELS_URL_TAB += [ 
+ ("^"+URL_ROOT_PREFIX+r"schcommander/shell/channel/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -133,5 +133,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.01.02 19:18:57'
+GEN_TIME = '2020.04.05 19:31:08'
 

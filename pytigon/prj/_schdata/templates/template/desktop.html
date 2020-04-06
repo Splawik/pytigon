@@ -15,12 +15,15 @@
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
-        <script language='javascript'>var global_vue_bus = new Vue ();</script>
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        <script language='javascript'>
+            vue_init="";
+            var global_vue_bus = new Vue (vue_init);
+        </script>
         {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
+        var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}

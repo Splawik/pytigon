@@ -124,7 +124,7 @@ else:
 
 
 CHANNELS_URL_TAB += [ 
- ("^"+URL_ROOT_PREFIX+r"teleconference/teleconference/socket.io/$", 'teleconference.consumers.teleconference'),
+ ("^"+URL_ROOT_PREFIX+r"teleconference/teleconference/channel/$", 'teleconference.consumers.teleconference'),
 ]
 
 
@@ -133,7 +133,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.04.05 09:32:02'
+GEN_TIME = '2020.04.06 18:56:32'
 
 SEARCH_PATH = "/schwiki/%s/search/"
 

@@ -63,42 +63,6 @@ class teleconference(AsyncWebsocketConsumer):
                 continue
             await client.send(text_data=text_data)    
     
-        print("receive: ", text_data)
-    
-        #text_data_json = json.loads(text_data)
-        #message = text_data_json["message"]
-        #print(message)
-        #await self.save_chat(message)
-        # print(text_data_json,self.scope["user"])
-    
-        # Send message to room group
-        #await self.channel_layer.group_send(
-        #    self.room_group_name,
-        #    {
-        #        "type": "chat_message",
-        #        "message": message,
-        ##        "username": self.scope["user"].username,
-        #    },
-        #)
-    
-        # Receive message from room group
-    
-    #async def chat_message(self, event):
-    #    message = event["message"]
-    #    print(message)
-    #    # Send message to WebSocket
-    #    await self.send(
-    #        text_data=json.dumps({"message": message, "user": event["username"]})
-    #    )
-    
-    #@database_sync_to_async
-    #async def save_chat(self, message):
-    #    #if "AnonymousUser" != str(self.scope["user"]):
-    #    #    room = Room.objects.last()
-    #    #    msg = ChatMessage.objects.create(
-    #    #        room=room, user=self.scope["user"], message=message
-    #    #    )
-    #    return True
     
     
 

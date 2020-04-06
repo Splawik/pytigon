@@ -9,6 +9,10 @@
 
 %% js_extrascipts
     {{block.super}}
+    {% jscript_link 'vue/vue.min.js' %}
+    {% jscript_link 'vue/httpVueLoader.js' %}
+    {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
+    {% jscript_link 'system/require.js' %}
     
     
     
@@ -22,6 +26,13 @@
 %% body_footer_scripts
     {{block.super}}
     
+    .<script language='javascript'>
+    .    vue_init="";
+    .    var global_vue_bus = new Vue (vue_init);
+    .</script>
+    {% component '_schwiki/components/insert_object.js' %}
+    
+    
 
 %% component_init
-     .component_init = []; 
+    .var component_init = [ "insert_object.js",  ];  
