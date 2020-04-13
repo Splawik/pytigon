@@ -286,7 +286,7 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PRODUCTION_VERSION:
     if "CHANNELS_REDIS" in environ:
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = environ['CHANNELS_REDIS'].split(':')+['6379']
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (environ['CHANNELS_REDIS'].split(':')+['6379'])[:2]
     else:
         CHANNELS_REDIS_SERVER = '127.0.0.1'
         CHANNELS_REDIS_PORT = '6379'
