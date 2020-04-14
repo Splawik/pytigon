@@ -1,6 +1,5 @@
 from graphene_django import DjangoObjectType
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.conf import settings
 import graphene
 import graphql_jwt
@@ -26,7 +25,7 @@ mutation {
 
 class UserType(DjangoObjectType):
     class Meta:
-        model = User
+        model = get_user_model()
 
 class UserMutation(graphene.Mutation):
     class Arguments:
@@ -39,9 +38,9 @@ class UserMutation(graphene.Mutation):
     def mutate(self, info, username, email, id="0"):
         idd = int(id)
         if idd > 0:
-            _user = User.objects.get(pk=idd)
+            _user = get_user_model().objects.get(pk=idd)
         else:
-            _user = User()
+            _user = get_user_model()()
         _user.username = username
         _user.email = email
         _user.save()
@@ -51,7 +50,7 @@ class Query(graphene.ObjectType):
     users = graphene.List(UserType)
 
     def resolve_users(self, info):
-        return User.objects.all()
+        return get_user_model().objects.all()
 
 class Mutation(graphene.ObjectType):
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()

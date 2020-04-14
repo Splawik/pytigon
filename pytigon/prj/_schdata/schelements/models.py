@@ -20,8 +20,6 @@ from schtools.models import *
 
 
 
-from django.contrib.auth.models import User, Group
-from django.template.base import Template
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from django.template.loader import select_template
 import datetime

@@ -24,7 +24,7 @@ import datetime
 
 from django.urls import reverse
 from django.contrib.auth import login
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
  
 
@@ -42,7 +42,7 @@ def auth(request, key, path):
     objects = models.UrlWithAuth.objects.filter(key=key)
     if len(objects) == 1:
         username = objects[0].username
-        users = User.objects.filter(username=username)
+        users = get_user_model().objects.filter(username=username)
         if len(users)==1:
             login(request, users[0])
             if path:
