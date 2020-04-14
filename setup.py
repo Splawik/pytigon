@@ -56,6 +56,7 @@ setup(
         "django-cache-url",
         "django-allauth",
         "django-sql-explorer",
+        "django-graphql-jwt",
         "graphene-django",
         "easy_thumbnails",
         "whitenoise",

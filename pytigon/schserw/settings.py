@@ -19,6 +19,7 @@
 
 import os
 import sys
+import datetime
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
 from fs.osfs import OSFS
@@ -162,6 +163,7 @@ if PLATFORM_TYPE != "webserwer":
     )
 
 AUTHENTICATION_BACKENDS = (
+    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
@@ -378,7 +380,16 @@ else:
     ACCOUNT_USERNAME_REQUIRED = True
 
 GRAPHENE = {
-    "SCHEMA": "pytigon.schserw.schsys.schema.schema"  # Where your Graphene schema lives
+    "SCHEMA": "pytigon.schserw.schsys.schema.schema",
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
+
+GRAPHQL_JWT = {
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=5),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
 
 GRAPHENE_PUBLIC = False

@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.conf import settings
 import graphene
+import graphql_jwt
 import importlib
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -53,7 +54,12 @@ class Query(graphene.ObjectType):
         return User.objects.all()
 
 class Mutation(graphene.ObjectType):
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
+
     update_user = UserMutation.Field()
+
 
 for app in settings.INSTALLED_APPS:
     if isinstance(app, AppConfigMod):

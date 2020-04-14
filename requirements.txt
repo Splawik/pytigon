@@ -42,6 +42,7 @@ django-mailer
 django_redis
 django-cache-url
 django-allauth
+django-graphql-jwt
 git+https://github.com/Splawik/django-filer.git@feature/django2-support
 Transcrypt
 django-sql-explorer
