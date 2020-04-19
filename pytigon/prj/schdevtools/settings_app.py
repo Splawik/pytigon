@@ -21,7 +21,7 @@ from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon.schserw.settings import *
 
-from apps import APPS, PUBLIC, MAIN_PRJ
+from apps import APPS, APPS_EXT, PUBLIC, MAIN_PRJ
 
 try:
     from global_db_settings import setup_databases
@@ -75,6 +75,9 @@ for app in APPS:
                     if not base_path in sys.path: sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
+for app in APPS_EXT:
+    INSTALLED_APPS.append(app)
+    
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
 LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
@@ -133,6 +136,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.04.14 20:41:40'
+GEN_TIME = '2020.04.19 08:11:06'
 OFFLINE_SUPPORT = True
 

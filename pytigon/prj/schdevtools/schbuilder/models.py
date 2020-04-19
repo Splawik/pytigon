@@ -325,7 +325,7 @@ class SChAppSet( models.Model):
     encoded_zip = models.TextField('Encoded zip file', null=True, blank=True, editable=False, )
     
 
-    def get_ext_apps(self, tab=None):
+    def get_ext_pytigon_apps(self, tab=None):
         if tab:
             ret = tab
         else:
@@ -347,9 +347,26 @@ class SChAppSet( models.Model):
         else:
             return ret
         for a in l:
-            if a !='':
+            if a !='' and not a.startswith('@'):
                 if not a in ret:
                     ret.append(a)
+        return ret
+    
+    def get_ext_apps(self, tab=None):
+        if tab:
+            ret = tab
+        else:
+            ret = []
+        if self.ext_apps:
+            l=self.ext_apps.split(',')
+        else:
+            return ret
+        for a in l:
+            if a.startswith('@'):
+                a = a[1:]
+                if a !='':
+                    if not a in ret:
+                        ret.append(a)
         return ret
     
     def get_ext_apps_without_pack(self):
@@ -357,7 +374,7 @@ class SChAppSet( models.Model):
         if self.ext_apps:
             l=self.ext_apps.split(',')
             for a in l:
-                if a !='':
+                if a !='' and not a.startswith('@'):
                     if '.' in a:
                         ret.append(a.split('.')[1])
                     else:
@@ -369,10 +386,11 @@ class SChAppSet( models.Model):
         if self.ext_apps:
             l=self.ext_apps.split(',')
             for a in l:
-                elms=a.split('.')
-                if len(elms)>1:
-                    module=elms[-2]
-                    ret.append(module)
+                if not a.startswith('@'):
+                    elms=a.split('.')
+                    if len(elms)>1:
+                        module=elms[-2]
+                        ret.append(module)
         return ret
     
     

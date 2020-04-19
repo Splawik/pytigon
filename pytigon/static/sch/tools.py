@@ -127,12 +127,18 @@ def split_html(html):
     scripts2 = Array.prototype.slice.call(scripts)
     styles2 = Array.prototype.slice.call(styles)
 
-    def remove_elements(id, element):
+    def remove_element(element):
         if element:
             element.parentNode.removeChild(element)
 
-    jQuery.each(scripts, remove_elements)
-    jQuery.each(styles, remove_elements)
+    elemets_to_delete = []
+
+    for script in scripts:
+        elemets_to_delete.append(script)
+    for style in styles:
+        elemets_to_delete.append(style)
+    for element in elemets_to_delete:
+        remove_element(element)
 
     return (temp.innerHTML, scripts2, styles2)
 
@@ -166,17 +172,33 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
         component_init
         and window.COMPONENT_INIT
         and len(window.COMPONENT_INIT) > 0
+        and not 'raw_html' in html_txt
     ):
         elem.empty()
+
+        if '{!{' in html_txt or '}!}' in html_txt:
+            html_txt = html_txt.replace('{!{', '{&#8203;{').replace('}!}', '}&#8203;}')
 
         ret = split_html(html_txt)
 
         res = Vue.compile("<div>" + ret[0] + "</div>")
         if elem and elem.length > 0:
             vm = __new__(
-                Vue({"render": res.render, "staticRenderFns": res.staticRenderFns})
+                #Vue({"render": res.render, "staticRenderFns": res.staticRenderFns, "data": window.global_vue_bus.S__data} )
+                Vue({"render": res.render, "staticRenderFns": res.staticRenderFns, "data": window.vue_init})
             )
+
+            def on_error(err, vm, info):
+                elem.html(html_txt)
+                console.log(err)
+                console.log(info)
+
+            old_err_handler = Vue.config.errorHandler
+            Vue.config.errorHandler = on_error
+
             component = vm.S__mount()
+
+            Vue.config.errorHandler = old_err_handler
 
             def _append(index, value):
                 if value:

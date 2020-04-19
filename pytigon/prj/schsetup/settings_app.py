@@ -21,7 +21,7 @@ from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon.schserw.settings import *
 
-from apps import APPS, PUBLIC, MAIN_PRJ
+from apps import APPS, APPS_EXT, PUBLIC, MAIN_PRJ
 
 try:
     from global_db_settings import setup_databases
@@ -75,10 +75,10 @@ for app in APPS:
                     if not base_path in sys.path: sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
+for app in APPS_EXT:
+    INSTALLED_APPS.append(app)
+    
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
-TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
-LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
-
 INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
@@ -99,6 +99,9 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
+LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
+
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (PRJ_NAME, PRJ_NAME))
 
 DATABASES = {
@@ -153,5 +156,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.04.12 22:04:31'
+GEN_TIME = '2020.04.19 20:02:43'
 

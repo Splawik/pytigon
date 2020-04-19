@@ -60,6 +60,9 @@ class ShellConsumer(WebsocketConsumer):
                 size = x['resize']
                 if self.fd:
                     self.set_winsize(self.fd, size['rows'], size['cols'])
+            if 'ping' in x:
+                self.send(text_data="pong")
+    
     
     def connect(self):
         print('Connecting.......')

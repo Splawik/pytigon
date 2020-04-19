@@ -53,6 +53,7 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
       var self = jQuery(this);
       e.preventDefault();
       var _on_login_submit2 = function(data) {
+        window.location.pathname = window.BASE_PATH;
         jQuery("body").removeClass("login_background");
         var start = data.indexOf("<body>");
         var end = data.lastIndexOf("</body>");

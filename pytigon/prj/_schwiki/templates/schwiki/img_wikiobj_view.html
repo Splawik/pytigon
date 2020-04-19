@@ -1,5 +1,4 @@
 <style >
-
     .img_form_view {
         padding: 1px;
         position: relative;
@@ -43,7 +42,8 @@
     .img_form_view:hover span a {
         color: #fff;
     }
-
+</style>
+<div class="row">
         [% if perms.wiki.add_page %]
         <a class="wiki-object-edit" href="[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1" target="popup_edit">
                 img
@@ -72,5 +72,5 @@
                         {% endif %}
                 {% endif %}
         {% endfor %}
-</style>
+</div>
 

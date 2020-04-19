@@ -22,7 +22,11 @@ from schtasks.models import *
 
 from schcommander.models import *
 
+from schtools.models import *
+
 from schreports.models import *
+
+from schelements.models import *
 
 
 

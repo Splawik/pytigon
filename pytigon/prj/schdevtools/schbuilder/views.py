@@ -735,7 +735,7 @@ def gen(request, pk):
     
     if prj.ext_apps:
         prj_tab = []
-        tab = prj.get_ext_apps()
+        tab = prj.get_ext_pytigon_apps()
         for pos in tab:
             if pos:
                 x = pos.split('.')[0]
@@ -776,7 +776,7 @@ def gen(request, pk):
         for consumer in consumers:
             consumers_tab.append((_app.name+"/"+consumer.url+"/channel/", _app.name+".consumers."+consumer.name))
     
-    for pos in prj.get_ext_apps():
+    for pos in prj.get_ext_pytigon_apps():
         if pos:
             x = pos.split('.')
             tab1 = models.SChAppSet.objects.filter(name=x[0])
