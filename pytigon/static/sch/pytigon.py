@@ -128,7 +128,11 @@ def app_init(
             def _on_login_submit2(data):
                 nonlocal href, self
 
-                window.location.pathname = window.BASE_PATH
+                #window.location.pathname = window.BASE_PATH
+                if window.PUSH_STATE:
+                    history_push_state("", window.BASE_PATH)
+                else:
+                    window.location.pathname = window.BASE_PATH
 
                 jQuery('body').removeClass('login_background')
 

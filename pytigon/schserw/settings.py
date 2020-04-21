@@ -286,7 +286,7 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
-if PRODUCTION_VERSION:
+if PRODUCTION_VERSION and '--with-gui' not in sys.argv:
     if "CHANNELS_REDIS" in environ:
         CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (environ['CHANNELS_REDIS'].split(':')+['6379'])[:2]
     else:

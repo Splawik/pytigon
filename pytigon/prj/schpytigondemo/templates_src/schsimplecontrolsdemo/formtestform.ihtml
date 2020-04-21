@@ -3,14 +3,10 @@
 
 % load exfiltry
 % load exsyntax
-% load pinax_calendars_tags
 
 %% all
     %with form_width=800 form_height=600 show_title_bar=1 title='Form'
         {{ block.super }}
-
-    {% calendar events %}
-
 
 %% list_page_header
     .AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

@@ -5,7 +5,8 @@
 #numpy
 #pandas
 
-Django<3
+#Django<3
+Django
 Twisted[tls,http2]
 pyquery
 channels
@@ -43,9 +44,10 @@ django_redis
 django-cache-url
 django-allauth
 django-graphql-jwt
-git+https://github.com/Splawik/django-filer.git@feature/django2-support
+django-filer
 Transcrypt
-django-sql-explorer
+git+https://github.com/rob-deutsch/django-sql-explorer.git@django3
+#django-sql-explorer
 pendulum
 cefpython3
 xonsh

@@ -17,16 +17,16 @@
 {% endblock %}
 {% block pythoncode %}
         <script language="python">
-        
         def init_form(self):
             self.GetParent().register_signal(self, "refresh_controls")
         def refresh_controls(self):
             print("refresh_controls")
             self.GetParent().refresh_html()
             print("refresh_controls_2")
-
+</script>
+        {% if standard_web_browser %}
                 <link rel="Stylesheet" type="text/css" href="^auto/schwiki/css/wiki.css"></link>
-        </script>
+        {% endif %}
 {% endblock %}
 {% block table_title %}{% endblock %}
 {% block scroll %}{% endblock %}

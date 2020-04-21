@@ -23,7 +23,7 @@
                                 {% endblock %}
                         </title>
                         {% if standard_web_browser %}
-                                {% if not show_form %}
+                                {% if not show_form and not 'no_scripts' in request.GET %}
                                         {% block css_links %}{% endblock %}
                                         {% block css_start %}
                                                 <style type="text/css">

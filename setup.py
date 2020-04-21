@@ -55,7 +55,8 @@ setup(
         "django_redis",
         "django-cache-url",
         "django-allauth",
-        "django-sql-explorer",
+        #"django-sql-explorer"
+        "git+https://github.com/rob-deutsch/django-sql-explorer.git@django3",
         "django-graphql-jwt",
         "graphene-django",
         "easy_thumbnails",
@@ -67,6 +68,7 @@ setup(
         "polib",
         "hypercorn",
         "xonsh",
+        "django-filer"
         # "git+https://github.com/Splawik/django-filer.git@feature/django2-support",
         "Transcrypt",
         "netifaces",
