@@ -67,7 +67,7 @@ setup(
         "polib",
         "hypercorn",
         "xonsh",
-        "django-filer"
+        "django-filer",
         # "git+https://github.com/Splawik/django-filer.git@feature/django2-support",
         "Transcrypt",
         "netifaces",
