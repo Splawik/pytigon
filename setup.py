@@ -28,7 +28,7 @@ extra_files.append("ptig")
 
 setup(
     name="pytigon",
-    version="0.98",
+    version="0.99",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
@@ -55,8 +55,7 @@ setup(
         "django_redis",
         "django-cache-url",
         "django-allauth",
-        #"django-sql-explorer"
-        "git+https://github.com/rob-deutsch/django-sql-explorer.git@django3",
+        # "django-sql-explorer"
         "django-graphql-jwt",
         "graphene-django",
         "easy_thumbnails",
@@ -73,6 +72,9 @@ setup(
         "Transcrypt",
         "netifaces",
         "cython",
+    ],
+    dependency_links=[
+        "https://github.com/rob-deutsch/django-sql-explorer/tarball/master#egg=package-1.0"
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
