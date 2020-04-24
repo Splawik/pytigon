@@ -68,13 +68,11 @@ setup(
         "hypercorn",
         "xonsh",
         "django-filer",
-        # "git+https://github.com/Splawik/django-filer.git@feature/django2-support",
         "Transcrypt",
         "netifaces",
         "cython",
     ],
-    dependency_links=[
-        "https://github.com/rob-deutsch/django-sql-explorer/tarball/master#egg=package-1.0"
+    dependency_links=[ "https://github.com/rob-deutsch/django-sql-explorer/tarball/master#egg=package-1.0",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
