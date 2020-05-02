@@ -17,7 +17,7 @@ extra_files += package_files("pytigon/ext_prg")
 extra_files += package_files("pytigon/appdata")
 extra_files += package_files("pytigon/install")
 
-extra_files += package_files("pytigon/prj/prj")
+extra_files += package_files("pytigon/prj")
 
 extra_files.append("pytigon.ini")
 extra_files.append("pytigon_splash.jpeg")
