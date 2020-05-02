@@ -15,16 +15,20 @@ extra_files = package_files("pytigon/static")
 extra_files += package_files("pytigon/templates")
 extra_files += package_files("pytigon/ext_prg")
 extra_files += package_files("pytigon/appdata")
-extra_files += package_files("pytigon", ".html")
 extra_files += package_files("pytigon/install")
-extra_files += package_files("pytigon/prj")
+
+extra_files += package_files("pytigon/prj/prj")
+
 extra_files.append("pytigon.ini")
 extra_files.append("pytigon_splash.jpeg")
 extra_files.append("pytigon.svg")
 extra_files.append("pytigon.png")
 extra_files.append("pytigon.ico")
 extra_files.append("ptig")
+extra_files.append("../requirements.txt")
 
+for pos in extra_files:
+    print("File: ", pos)
 
 with open("requirements.txt") as f:
     tmp = f.read().strip().split("\n")
@@ -33,7 +37,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="pytigon",
-    version="0.99",
+    version="0.100",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
