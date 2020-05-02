@@ -26,6 +26,11 @@ extra_files.append("pytigon.ico")
 extra_files.append("ptig")
 
 
+with open("requirements.txt") as f:
+    tmp = f.read().strip().split("\n")
+    install_requires = [pos for pos in tmp if "://" not in pos]
+    dependency_links = [pos for pos in tmp if "://" in pos]
+
 setup(
     name="pytigon",
     version="0.99",
@@ -36,44 +41,8 @@ setup(
     packages=find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]),
     package_data={"": extra_files},
     scripts=["pytigon/ptig"],
-    install_requires=[
-        "pytigon-lib",
-        "Twisted[tls,http2]",
-        "pyquery",
-        "channels",
-        "asgiref",
-        # "django_python3_ldap",
-        "django-bootstrap4",
-        "django_select2",
-        "django-cors-headers",
-        "django-bulk_update",
-        "dj-database-url",
-        "dj-email-url",
-        "django-mptt",
-        "django_polymorphic",
-        "django-mailer",
-        "django_redis",
-        "django-cache-url",
-        "django-allauth",
-        # "django-sql-explorer"
-        "django-graphql-jwt",
-        "graphene-django",
-        "easy_thumbnails",
-        "whitenoise",
-        "markdown2",
-        "ldap3",
-        "pypyodbc",
-        "daphne",
-        "polib",
-        "hypercorn",
-        "xonsh",
-        "django-filer",
-        "Transcrypt",
-        "netifaces",
-        "cython",
-    ],
-    dependency_links=[ "https://github.com/rob-deutsch/django-sql-explorer/tarball/master#egg=package-1.0",
-    ],
+    install_requires=install_requires,
+    dependency_links=dependency_links,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
@@ -92,5 +61,3 @@ setup(
     zip_safe=False,
 )
 
-# print(extra_files)
-# print(find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]))
