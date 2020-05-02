@@ -168,6 +168,11 @@ def register_mount_fun(fun):
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
     vue_load = False
+
+    def _on_remove(index, value):
+        value.on_remove()
+    jQuery.each(elem.find('.call_on_remove'), _on_remove)
+
     if (
         component_init
         and window.COMPONENT_INIT
