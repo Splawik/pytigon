@@ -3,7 +3,7 @@ from popup import refresh_fragment
 from tabmenu import get_menu
 
 
-def get_value(elem, name):
+def _get_value(elem, name):
     if elem.length > 0:
         x = elem.closest('.refr_object')
         if x.length > 0:
@@ -21,7 +21,7 @@ def process_href(href, elem):
             if process:
                 if ']]' in pos:
                     x2 = pos.split(']]', 1)
-                    value = get_value(elem, x2[0])
+                    value = _get_value(elem, x2[0])
                     if value and value != "None":
                         ret.append(value+x2[1])
                     else:

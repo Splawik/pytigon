@@ -57,7 +57,7 @@ else:
 class CodeEditor(stc.StyledTextCtrl):
     def __init__(self, *args, **kwds):
         stc.StyledTextCtrl.__init__(self, *args, **kwds)
-        self.SetKeysUnicode(True)
+        #self.SetKeys(True)
         self.SetCodePage(65001)
         #self.SetCodePage(0)
         self.CmdKeyAssign(ord('B'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
