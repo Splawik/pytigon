@@ -1,4 +1,4 @@
-APPS=['schbuilder','_schtools.schauth','schcomponents.standard_components',]
+APPS=['schbuilder','_schtools.schauth','schcomponents.standard_components','_schtools.schcommander',]
 APPS_EXT=[]
 PUBLIC = True
 MAIN_PRJ = False

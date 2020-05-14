@@ -3,6 +3,7 @@
 {% block pythoncode %}
         <script language="python">
         def init_form(self):
+            self.GOHREF.SetWindowStyleFlag(wx.TE_PROCESS_ENTER)
             self.GOHREF.Bind(wx.EVT_TEXT_ENTER, self.OnGoTo)
             self.GO.Bind(wx.EVT_BUTTON, self.OnGoTo)
             self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)

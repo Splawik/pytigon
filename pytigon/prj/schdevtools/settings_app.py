@@ -128,6 +128,7 @@ else:
 
 CHANNELS_URL_TAB += [ 
  ("^"+URL_ROOT_PREFIX+r"schbuilder/clock/channel/$", 'schbuilder.consumers.Clock'),
+ ("^"+URL_ROOT_PREFIX+r"schcommander/shell/channel/$", 'schcommander.consumers.ShellConsumer'),
 ]
 
 
@@ -136,6 +137,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.04.19 08:11:06'
+GEN_TIME = '2020.05.14 19:53:13'
 OFFLINE_SUPPORT = True
 

@@ -4,6 +4,7 @@
 {% load exsyntax %}
 {% load static %}
 {% block ext_js_scripts %}
+        {{block.super}}
         {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
 {% endblock %}
 {% block theme_css_links %}

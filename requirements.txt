@@ -19,6 +19,7 @@ django_polymorphic
 django_python3_ldap
 django_redis
 django_select2
+django_compressor
 easy_thumbnails
 graphene-django
 html5lib

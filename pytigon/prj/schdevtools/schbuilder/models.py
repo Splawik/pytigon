@@ -20,6 +20,8 @@ from schauth.models import *
 
 from standard_components.models import *
 
+from schcommander.models import *
+
 
 
 import os.path

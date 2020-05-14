@@ -7,13 +7,16 @@
 % load exsyntax
 % load bootstrap4
 
-%% js_extrascipts
+%% ext_js_scripts
     {% spec '{' %}block.super{% spec '}' %}
     {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.min.js' {% spec "]" %}
     {% spec "[" %} jscript_link 'vue/httpVueLoader.js' {% spec "]" %}
     {% spec "[" %} jscript_link 'vue/vue-wc-wrapper.global.js' {% spec "]" %}
     {% spec "[" %} jscript_link 'system/require.js' {% spec "]" %}
     {% endif %}
+    
+%% js_extrascipts
+    {% spec '{' %}block.super{% spec '}' %}
     {% for js_static in js_static_files %}{% spec '[' %} module_link '{{prj.name}}/js/{{js_static.name}}.js' {% spec ']' %}
     {% endfor %}
     {% for prj_tab in static_for_ext_apps %}{% for js_static2 in prj_tab.1 %}{% spec '[' %} module_link '{{prj_tab.0}}/js/{{js_static2.name}}.js' {% spec ']' %}

@@ -62,6 +62,7 @@ PRJ_PATH = paths["PRJ_PATH"]
 PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
 ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
+print("STATIC_ROOT:", STATIC_ROOT)
 PYTIGON_PATH = paths["PYTIGON_PATH"]
 PLATFORM_TYPE = paths["PLATFORM_TYPE"]
 
@@ -98,6 +99,13 @@ ADMIN_MEDIA_PREFIX = "/media/"
 SECRET_KEY = "anawa"
 
 ROOT_URLCONF = "pytigon.schserw.urls"
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 
 TEMPLATES = [
     {
@@ -186,6 +194,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "graphene_django",
+    "compressor",
 ]
 
 # if DEBUG:
