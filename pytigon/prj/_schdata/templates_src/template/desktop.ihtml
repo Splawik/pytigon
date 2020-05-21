@@ -7,13 +7,16 @@
 % load exsyntax
 % load bootstrap4
 
-%% js_extrascipts
+%% ext_js_scripts
     {{block.super}}
     {% jscript_link 'vue/vue.min.js' %}
     {% jscript_link 'vue/httpVueLoader.js' %}
     {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
     {% jscript_link 'system/require.js' %}
     
+    
+%% js_extrascipts
+    {{block.super}}
     {% module_link '_schdata/js/subreport.js' %}
     
     

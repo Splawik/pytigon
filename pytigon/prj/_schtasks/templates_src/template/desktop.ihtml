@@ -7,9 +7,12 @@
 % load exsyntax
 % load bootstrap4
 
-%% js_extrascipts
+%% ext_js_scripts
     {{block.super}}
     
+    
+%% js_extrascipts
+    {{block.super}}
     
     
 
