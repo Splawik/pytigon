@@ -1091,3 +1091,32 @@ def wiki (context, wiki_str, path=None, section = None,  only_header=True):
 def subtemplate(context, template_string):
     t = Template(template_string)
     return mark_safe(t.render(context))
+
+@register.simple_tag(takes_context=True)
+def table_td(context, name, title=""):
+    if ':' in name:
+        field_name, t = name.split(':')
+    else:
+        field_name = name
+        t = 'text'
+    if title:
+        t2 = title
+    else:
+        t2 = ""
+    oid = getattr(context['object'], 'id')
+    value = getattr(context['object'], field_name)
+    return (
+        f"<td>"
+        f"<a "
+        f"class='editable' "
+        f"data-name='{field_name}' "
+        f"data-type='{t}' "
+        f"data-pk='{oid}' "
+        f"data-url='../../../{oid}/{field_name}/editable/editor/' "
+        f"data-title='{t2}' "
+        f"href='#' "
+        f">"
+        f"{value}"
+        f"</a>"
+        f"</td>"
+    )
