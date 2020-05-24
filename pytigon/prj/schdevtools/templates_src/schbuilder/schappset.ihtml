@@ -36,11 +36,13 @@
     th...Name
 
 
-%% list_row
+%% list_row222
     td
         a class=editable,,,data-name=name,,,data-type=text,,,data-pk={{object.id}},,,data-url=../../../{{object.id}}/name/editable/editor/,,,data-title=Enter name,,,href=#
             {{object.name}}
 
+%% list_row
+    % table_td 'name:text'
 
 %% list_row_actions
     % row_actions: ===>
