@@ -34,7 +34,11 @@
         <th>Name</th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.name}}</td>
+        <td>
+                <a class="editable" data-name="name" data-type="text" data-pk="{{object.id}}" data-url="../../../{{object.id}}/name/editable/editor/" data-title="Enter name" href="#">
+                        {{object.name}}
+                </a>
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

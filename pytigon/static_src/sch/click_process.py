@@ -59,6 +59,9 @@ def process_on_click(event_tab, elem=None):
         if not href:
             return True
 
+        if src_obj.hasClass('editable'):
+            return True
+
         href = process_href(href, src_obj)
 
         for pos in event_tab:

@@ -379,6 +379,7 @@ def app_init(
     if hasattr(window, "init_callback"):
         window.init_callback()
 
+    jQuery.fn.editable.defaults.mode = 'inline'
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None, url=None, txt=None):

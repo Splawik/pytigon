@@ -85,6 +85,10 @@
     padding-bottom: 0.25rem;
     padding-left: 0.75rem;
     vertical-align: middle; }
+    .tabsort_panel .table td .editable-inline, .table_panel .table td .editable-inline, .subform_content .table td .editable-inline {
+      width: 0px; }
+      .tabsort_panel .table td .editable-inline .form-group, .table_panel .table td .editable-inline .form-group, .subform_content .table td .editable-inline .form-group {
+        margin-top: 0px; }
   .tabsort_panel table.table-striped tbody tr:nth-of-type(odd), .table_panel table.table-striped tbody tr:nth-of-type(odd), .subform_content table.table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, 0.02); }
   .tabsort_panel table.table-striped tbody tr:nth-of-type(even), .table_panel table.table-striped tbody tr:nth-of-type(even), .subform_content table.table-striped tbody tr:nth-of-type(even) {

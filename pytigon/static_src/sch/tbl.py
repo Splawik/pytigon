@@ -127,6 +127,12 @@ def init_table(table, table_type):
                 }
             )
 
+        def init_bootstrap_table(e, data):
+            table.find('a.editable').editable()
+            print("EDITABLE!")
+
+        table.on('post-body.bs.table', init_bootstrap_table)
+
         table_panel = jQuery(table).closest(".content")
         btn = table_panel.find(".tabsort-toolbar-expand")
         if btn:
