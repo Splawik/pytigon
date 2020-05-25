@@ -380,6 +380,7 @@ def app_init(
         window.init_callback()
 
     jQuery.fn.editable.defaults.mode = 'inline'
+    jQuery.fn.combodate.defaults['maxYear'] = 2025
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 def _on_menu_href(elem, title=None, url=None, txt=None):

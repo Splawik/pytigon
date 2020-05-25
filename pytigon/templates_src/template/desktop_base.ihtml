@@ -42,6 +42,7 @@
 
         {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+
         {% jscript_link 'bootstrap_plugins/bootstrap4-editable/js/bootstrap4-editable.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
@@ -49,6 +50,7 @@
         {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
         {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}
 
         {% jscript_link 'sch/inline_dialog.js' %}
         %% theme_js_scripts
@@ -111,6 +113,7 @@
 
         {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
         {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}
 
         {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
         {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}

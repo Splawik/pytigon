@@ -1092,13 +1092,16 @@ def subtemplate(context, template_string):
     t = Template(template_string)
     return mark_safe(t.render(context))
 
-@register.simple_tag(takes_context=True)
-def table_td(context, name, title=""):
+def editable_base(context, name, title, url):
     if ':' in name:
         field_name, t = name.split(':')
     else:
         field_name = name
         t = 'text'
+    date_str = ""
+    if "date" in t:
+        t = "combodate"
+        date_str = """ data-format="YYYY-MM-DD" data-viewformat="YYYY-MM-DD" data-template="YYYY-MM-DD" """
     if title:
         t2 = title
     else:
@@ -1106,7 +1109,6 @@ def table_td(context, name, title=""):
     oid = getattr(context['object'], 'id')
     value = getattr(context['object'], field_name)
     return (
-        f"<td>"
         f"<a "
         f"class='editable' "
         f"data-name='{field_name}' "
@@ -1115,8 +1117,29 @@ def table_td(context, name, title=""):
         f"data-url='../../../{oid}/{field_name}/editable/editor/' "
         f"data-title='{t2}' "
         f"href='#' "
+        f"{date_str}"
         f">"
         f"{value}"
         f"</a>"
-        f"</td>"
     )
+
+@register.simple_tag(takes_context=True)
+def editable(context, name, title="", url=None):
+    if url:
+        url2 = url
+    else:
+        url2 = '../../../{oid}/{field_name}/editable/editor/'
+    return mark_safe(editable_base(context, name, title, url2))
+
+@register.simple_tag(takes_context=True)
+def td_editable(context, name, title=""):
+    if context['standard_web_browser']:
+        url = '../../../{oid}/{field_name}/editable/editor/'
+        return mark_safe("<td>%s</td>" % editable_base(context, name, title, url))
+    else:
+        if ':' in name:
+            field_name, t = name.split(':')
+        else:
+            field_name = name
+        ret = "<td>%s</td>" % getattr(context['object'], field_name)
+        return mark_safe(ret)

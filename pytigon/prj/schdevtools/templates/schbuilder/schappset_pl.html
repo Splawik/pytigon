@@ -33,15 +33,8 @@
 {% block list_row_header %}
         <th>Name</th>
 {% endblock %}
-{% block list_row222 %}
-        <td>
-                <a class="editable" data-name="name" data-type="text" data-pk="{{object.id}}" data-url="../../../{{object.id}}/name/editable/editor/" data-title="Enter name" href="#">
-                        {{object.name}}
-                </a>
-        </td>
-{% endblock %}
 {% block list_row %}
-        {% table_td 'name:text' %}
+        {% td_editable 'name:text' %}
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
