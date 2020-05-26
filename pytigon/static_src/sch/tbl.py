@@ -128,7 +128,7 @@ def init_table(table, table_type):
             )
 
         def init_bootstrap_table(e, data):
-            table.find('a.editable').editable()
+            table.find('a.editable').editable({'step': 'any'})
             #{'format': 'yyyy-mm-dd',  'viewformat': 'yyyy-mm-dd',   'datepicker': { 'weekStart': 1 } } )
             #print("EDITABLE!")
 

@@ -46,9 +46,9 @@ else:
     DB_DEBUG = False
     PRODUCTION_VERSION = True
 
-if sys.argv and sys.argv[0].endswith("pytigon"):
+if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
-    DEBUG = True
+    #DEBUG = True
 
 SHOW_LOGIN_WIN = True
 
@@ -295,7 +295,7 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
-if PRODUCTION_VERSION and '--with-gui' not in sys.argv:
+if PRODUCTION_VERSION and '--with-gui' not in sys.argv and platform_name() != "Windows":
     if "CHANNELS_REDIS" in environ:
         CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (environ['CHANNELS_REDIS'].split(':')+['6379'])[:2]
     else:
