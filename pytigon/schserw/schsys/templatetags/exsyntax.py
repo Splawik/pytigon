@@ -1110,7 +1110,7 @@ def editable_base(context, name, title, url):
     value = getattr(context['object'], field_name)
     return (
         f"<a "
-        f"class='editable' "
+        f"class='editable autoopen' "
         f"data-name='{field_name}' "
         f"data-type='{t}' "
         f"data-pk='{oid}' "

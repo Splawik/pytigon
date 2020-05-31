@@ -28,7 +28,7 @@ div.content {
   overflow-y: auto;
   overflow-x: hidden; }
 
-img.tablet_menu_icon {
+img.tablet_menu_icon, a.menu-href svg {
   position: relative;
   left: -5px;
   margin-right: -2px; }

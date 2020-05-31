@@ -129,8 +129,20 @@ def init_table(table, table_type):
 
         def init_bootstrap_table(e, data):
             table.find('a.editable').editable({'step': 'any'})
-            #{'format': 'yyyy-mm-dd',  'viewformat': 'yyyy-mm-dd',   'datepicker': { 'weekStart': 1 } } )
-            #print("EDITABLE!")
+
+            def on_hidden_editable(e, reason):
+                if reason == 'save' or reason == 'nochange':
+                    next = jQuery(this).closest('tr').js_next().find('.editable')
+                    if next.length > 0:
+                        if next.hasClass('autoopen'):
+                            def edit_next():
+                                nonlocal next
+                                next.editable('show')
+                            setTimeout(edit_next, 300)
+                        else:
+                           next.focus()
+
+            table.find('a.editable').on('hidden', on_hidden_editable)
 
         table.on('post-body.bs.table', init_bootstrap_table)
 

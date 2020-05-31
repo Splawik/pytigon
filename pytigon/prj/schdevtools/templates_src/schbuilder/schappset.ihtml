@@ -5,20 +5,27 @@
 %load exsyntax
 
 %% pythoncode
-    script language=python
-        def filter_url(self, target, href):
-            if '/run' in href:
-                import subprocess
-                import threading
-                import sys
-                def app_process():
-                    cmd = wx.GetApp().scr_path+"/pytigon.py"
-                    appset = href.split('_')[-1].split('?')[0]
-                    arg = " "+appset
-                    subprocess.call([sys.executable, cmd, arg], shell=False)
-                threading.Thread(target = app_process).start()
-                return True
-            return href
+    % if not form_list:
+        script language=python
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+    % else:
+        script language=python
+            def filter_url(self, target, href):
+                if '/run' in href:
+                    import subprocess
+                    import threading
+                    import sys
+                    def app_process():
+                        cmd = wx.GetApp().scr_path+"/pytigon.py"
+                        appset = href.split('_')[-1].split('?')[0]
+                        arg = " "+appset
+                        subprocess.call([sys.executable, cmd, arg], shell=False)
+                    threading.Thread(target = app_process).start()
+                    return True
+                return href
 
 %% all
     %with edit_vscroll=True table_type='datatable'
@@ -59,6 +66,8 @@
         field_edit/license_file,license.txt(Distribute),license_txt,_top
         field_edit/install_file,install.ini(Distribute),install_ini,_top
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
+        field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_top
+
 
 %% dialog_type
     .modal-lg
@@ -82,3 +91,14 @@
             {{form.custom_tags|textfiel_row_col:"4x100"}}
         % form_item user_param:
             {{form.user_param|textfiel_row_col:"4x100"}}
+
+    % if standard_web_browser:
+        %form "^/6":
+            .icon,icon_size
+    % else:
+        tr 
+            td..._(Icon)
+            td
+                CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
+        % form "^/12":
+            .icon_size

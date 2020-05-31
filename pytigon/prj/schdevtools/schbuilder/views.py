@@ -459,6 +459,7 @@ def view_install(request, *argi, **argv):
 
 
 
+
 @dict_to_template('schbuilder/v_gen.html')
 
 
@@ -557,7 +558,7 @@ def gen(request, pk):
         for template in templates:
             str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")
     
-        appmenus = app.schappmenu_set.all()
+        appmenus = list(app.schappmenu_set.all())
         
         if app.user_param:
             user_param = str(dict([ pos.split('=') for pos in app.user_param.split('\n') if pos and '=' in pos ]))
@@ -897,6 +898,8 @@ def gen(request, pk):
 
 
 
+
+
 def prj_export(request, pk):
     
     prj_tab = []
@@ -980,6 +983,8 @@ def prj_export(request, pk):
     return HttpResponse(ex_str, content_type="text/plain")
     
 
+
+
 @dict_to_template('schbuilder/v_prj_import.html')
 
 
@@ -990,6 +995,8 @@ def prj_import(request):
     ex_str = request.POST['EDITOR']
     return prj_import_from_str(ex_str)
     
+
+
 
 
 
@@ -1013,6 +1020,8 @@ def manage(request, pk):
     #new_url = "../../schsys/thread/%d/edit/" % id
     return HttpResponseRedirect(new_url)
     
+
+
 
 
 
@@ -1053,10 +1062,14 @@ def template_edit(request, pk):
 
 
 
+
+
 def edit(request):
     
     return TemplateView.as_view(template_name='schbuilder/import_form.html')(request)
     
+
+
 
 
 
@@ -1083,6 +1096,8 @@ def template_edit2(request, pk):
     
     return HttpResponseRedirect(new_url)
     
+
+
 
 @dict_to_template('schbuilder/v_installer.html')
 
@@ -1155,6 +1170,8 @@ def installer(request, pk):
 
 
 
+
+
 def restart_server(request):
     
     module = import_plugin("schbuilderlib.test1", "schdevtools")
@@ -1206,6 +1223,8 @@ def restart_server(request):
 
 
 
+
+
 def template_edit3(request, pk):
     
     view = models.SChView.objects.get(id=pk)
@@ -1230,6 +1249,8 @@ def template_edit3(request, pk):
 
 
 
+
+
 def update(request):
     
     #g = git.cmd.Git(settings.ROOT_PATH)
@@ -1239,6 +1260,8 @@ def update(request):
     return HttpResponse("GIT PULL", content_type="text/plain")
     
     
+
+
 
 @dict_to_template('schbuilder/v_translate_sync.html')
 
@@ -1318,6 +1341,8 @@ def translate_sync(request, pk):
     
     
 
+
+
 @dict_to_template('schbuilder/v_locale_gen.html')
 
 
@@ -1339,6 +1364,8 @@ def locale_gen(request, pk):
 
 
 
+
+
 def download_installer(request, name):
     
     installer = os.path.join(os.path.join(settings.DATA_PATH, 'temp'), name+".ptig")
@@ -1349,6 +1376,7 @@ def download_installer(request, name):
             return response
     return HttpResponse(_("No installer file to download"))
     
+
 
 
  

@@ -50,6 +50,9 @@
                         field_edit/doc,Doc,[|client://apps/help-browser.png],_top
                 {% endrow_actions %}
         {% endif %}
+        {% row_actions %}
+        field_edit/extra_code,Extra code,[|client://actions/format-justify-center.png],_top
+        {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
         {{ form.view_type.as_hidden }}

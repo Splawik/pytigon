@@ -325,6 +325,9 @@ class SChAppSet( models.Model):
     license_file = models.TextField('license.txt', null=True, blank=True, editable=False, )
     install_file = models.TextField('install.ini', null=True, blank=True, editable=False, )
     encoded_zip = models.TextField('Encoded zip file', null=True, blank=True, editable=False, )
+    icon = models.CharField('Icon', null=True, blank=True, editable=True, max_length=256)
+    icon_size = models.CharField('Icon size', null=False, blank=False, editable=True, default='1',choices=IconSize_CHOICES,max_length=1)
+    icon_code = models.TextField('Icon code (svg)', null=True, blank=True, editable=False, )
     
 
     def get_ext_pytigon_apps(self, tab=None):
@@ -395,6 +398,14 @@ class SChAppSet( models.Model):
                         ret.append(module)
         return ret
     
+    def icon_exists(self):
+        return self.icon or self.icon_code
+    
+    def get_icon(self):
+        if self.icon_code:
+            return "data:image/svg+xml;utf8," + self.icon_code
+        else:
+            return self.icon
     
     def __str__(self):
         return self.name
@@ -435,6 +446,9 @@ class SChApp( models.Model):
     consumer_code = models.TextField('Consumer code', null=True, blank=True, editable=True, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     user_param = models.TextField('Urser parameter', null=True, blank=True, editable=True, )
+    icon = models.CharField('Icon', null=True, blank=True, editable=True, max_length=256)
+    icon_size = models.CharField('Icon size', null=False, blank=False, editable=True, default='1',choices=IconSize_CHOICES,max_length=1)
+    icon_code = models.TextField('Icon code', null=True, blank=True, editable=False, )
     
 
     def get_models(self):
@@ -525,6 +539,15 @@ class SChApp( models.Model):
             if len(x)>1:
                 return x[1]
         return ""
+    
+    def icon_exists(self):
+        return self.icon or self.icon_code
+    
+    def get_icon(self):
+        if self.icon_code:
+            return "data:image/svg+xml;utf8," + self.icon_code
+        else:
+            return self.icon
     
     def __str__(self):
         return self.name
@@ -793,9 +816,10 @@ class SChView( models.Model):
     param = models.CharField('Param', null=True, blank=True, editable=True, max_length=255)
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=255)
     view_code = models.TextField('View code', null=True, blank=True, editable=False, )
-    doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     url_params = models.CharField('Url params', null=True, blank=True, editable=True, max_length=255)
     ret_type = models.CharField('Return value type', null=False, blank=False, editable=True, default='U',choices=ViewRetType_CHOICES,max_length=1)
+    extra_code = models.TextField('Extra code', null=True, blank=True, editable=False, )
+    doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     
 
     def init_new(self, request, view, param=None):
@@ -862,6 +886,19 @@ class SChView( models.Model):
     
     def clean_url(self):
         return self.url.replace('$', '')
+        
+    def view_code_start(self):
+        if self.extra_code:
+            return self.extra_code.split('[[[GEN]]]')[0]
+        else:
+            return ""
+        
+    def view_code_end(self):
+        if self.extra_code:
+            x = self.extra_code.split('[[[GEN]]]')
+            if len(x)>1:
+                return x[1]
+        return ""
     
 admin.site.register(SChView)
 
@@ -1025,8 +1062,9 @@ class SChAppMenu( models.Model):
     url = models.CharField('Url', null=False, blank=False, editable=True, max_length=255)
     url_type = models.CharField('Url type', null=True, blank=True, editable=True, default='-',choices=Url_CHOICES,max_length=16)
     perms = models.CharField('Perms', null=True, blank=True, editable=True, max_length=255)
-    icon = models.CharField('Icon', null=False, blank=False, editable=True, max_length=255)
+    icon = models.CharField('Icon', null=True, blank=True, editable=True, max_length=255)
     icon_size = models.CharField('Icon size', null=False, blank=False, editable=True, default='1',choices=IconSize_CHOICES,max_length=1)
+    icon_code = models.TextField('Icon code (svg)', null=True, blank=True, editable=False, )
     
 
     def not_standard_icon_size(self):
@@ -1034,6 +1072,15 @@ class SChAppMenu( models.Model):
             return False
         else:
             return True
+    
+    def icon_exists(self):
+        return self.icon or self.icon_code
+    
+    def get_icon(self):
+        if self.icon_code:
+            return "data:image/svg+xml;utf8," + self.icon_code
+        else:
+            return self.icon
     
     def get_perms(self):
         if self.perms and self.perms!=" ":

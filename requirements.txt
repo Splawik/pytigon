@@ -39,3 +39,4 @@ unidecode
 wasmer
 whitenoise
 xonsh
+plotly

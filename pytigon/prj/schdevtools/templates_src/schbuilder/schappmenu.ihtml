@@ -38,6 +38,7 @@
     {% if not forloop.last %}
         % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
+    % row_actions:...field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_top
 
 
 %% table_header_edit
@@ -72,4 +73,3 @@
         CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
     % form:
         'icon_size'
-

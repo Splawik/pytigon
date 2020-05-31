@@ -455,6 +455,13 @@ def sch_standard(request):
 
         DEBUG: settings.DEBUG
     """
+
+    #parameters = request.session.get('standard_parameters', None).copy()
+    #if parameters:
+    #    parameters['app_manager'] =  AppManager(request)
+    #    parameters['settings'] = settings
+    #    return parameters
+
     standard = standard_web_browser(request)
     ie = test_ie(request)
 
@@ -587,7 +594,7 @@ def sch_standard(request):
 
     ret = {
         'standard_web_browser': standard,
-        'app_manager': AppManager(request),
+#        'app_manager': AppManager(request),
         'form_edit': form_edit,
         'form_add': form_add,
         'form_delete': form_delete,
@@ -613,7 +620,6 @@ def sch_standard(request):
         'prj_title': settings.PRJ_TITLE,
         'show_title_bar': show_title_bar,
         'get': get,
-        'settings': settings,
         'uuid': 'x'+str(uuid.uuid4()),
         'lang': request.LANGUAGE_CODE[:2].lower(),
         'DEBUG': settings.DEBUG,
@@ -626,5 +632,16 @@ def sch_standard(request):
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])
+
+    #ret['app_manager'] =  None
+    #ret['settings'] = None
+
+    #print("A1")
+    #request.session['standard_parameters'] = ret.copy()
+    #print("A2", request.session['standard_parameters'])
+
+    ret['app_manager'] =  AppManager(request)
+    ret['settings'] = settings
+
     return ret
 

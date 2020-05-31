@@ -871,6 +871,10 @@ def to_html_icon(icon_str, additional_class=""):
     elif icon_str.startswith('client://'):
         src = mhref("/static/icons/22x22/%s" % icon_str[9:])
         return "<img src='%s' class='%s'></img>" % (src, additional_class)
+    elif icon_str.startswith('data:image/svg+xml'):
+        x = icon_str.split(',',1)
+        svg_code = x[1]
+        return svg_code
     else:
         return "<i class='fa fa-circle-o'></i>"
 
