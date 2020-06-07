@@ -37,6 +37,7 @@ from django.contrib.auth import get_user_model
 
 
 
+
 def auth(request, key, path):
     
     objects = models.UrlWithAuth.objects.filter(key=key)
@@ -62,6 +63,7 @@ def auth(request, key, path):
     
     return HttpResponseRedirect(new_url)
     
+
 
 
 

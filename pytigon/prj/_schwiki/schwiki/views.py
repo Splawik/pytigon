@@ -65,6 +65,7 @@ template_simple = """
 
 
 
+
 def view_page(request, app_or_subject, page_path):
     
     desc = request.GET.get('desc','')
@@ -148,6 +149,8 @@ def view_page(request, app_or_subject, page_path):
 
 
 
+
+
 def edit_page(request, app_or_subject, page_name):
     
     page = Page.get_page(request, subject=app_or_subject, name=page_name)    
@@ -160,6 +163,8 @@ def edit_page(request, app_or_subject, page_name):
     
     return HttpResponseRedirect(redir)
     
+
+
 
 
 
@@ -187,6 +192,8 @@ def insert_object_to_editor(request, pk):
     
     return { 'pk': pk, 'object_name': object_name, 'object_inline_editing': object_inline_editing, 'object': object, 'page_id': page_id, 'page': page, 'edit_form': edit_form }
     
+
+
 
 
 
@@ -265,6 +272,8 @@ def edit_page_object(request):
     return HttpResponseRedirect(url)
     
 
+
+
 @dict_to_template('schwiki/v_publish.html')
 
 
@@ -292,6 +301,8 @@ def publish(request, pk):
     return { "OK": True, 'object_list': object_list }
     
 
+
+
 @dict_to_template('schwiki/v_search.html')
 
 
@@ -304,6 +315,7 @@ def search(request, q):
     
     return { "object_list": object_list, 'q': search_txt }
     
+
 
 
  

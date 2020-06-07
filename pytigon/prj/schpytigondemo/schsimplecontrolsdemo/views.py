@@ -72,12 +72,14 @@ def view_testform(request, *argi, **argv):
 
 
 
+
 @dict_to_json
 
 def json_test(request, x, y):
     
     return (int(x)+int(y), x, y)
     
+
 
 
 

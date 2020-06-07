@@ -6,6 +6,6 @@ Title = _('Editor')
 Perms = False
 Index = ''
 Urls  = (
-    ('save/?schtml=pscript',_('save'),None,'fa://paperclip.png'),
+    ('save/?schtml=pscript',_('save'),None,"""fa://paperclip.png"""),
 )
 UserParam = {}

@@ -41,6 +41,7 @@ def view_{{form.name|lower}}(request, *argi, **argv):
 
 {% endfor %}
 {% for view in views %}{% if view.view_code and view.view_code != '' %}
+{{view.view_code_start}}
 {% if view.ret_type == 'T' %}@dict_to_template('{{view.parent.name}}/v_{{view.name|lower}}.html'){% endif %}
 {% if view.ret_type == 'O' %}@dict_to_odf('{{view.parent.name}}/v_{{view.name|lower}}.ods'){% endif %}
 {% if view.ret_type == 'P' %}@dict_to_pdf('{{view.parent.name}}/v_{{view.name|lower}}_pdf.html'){% endif %}
@@ -52,6 +53,7 @@ def {{view.get_name}}(request{% if view.param %}, {{view.param}}{% endif %}):
     """{% endif %}
     {% for line in view.view_code.splitlines %}{{line|safe}}
     {% endfor %}
+{{view.view_code_end}}
 {% endif %}{% endfor %}
 
 {% if app.view_code %}{{app.view_code|second_section|safe}} {% endif %}

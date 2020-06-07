@@ -82,6 +82,7 @@ def view_multidownload(request, *argi, **argv):
 
 
 
+
 def search(request):
     
     q = request.GET.get('term', request.POST.get('term', None))
@@ -106,6 +107,7 @@ def search(request):
     json_data = json.dumps(out_tab)
     return HttpResponse(json_data, content_type="application/x-javascript")
     
+
 
 
  

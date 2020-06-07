@@ -25,8 +25,7 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.http import Http404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 
 from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schtable.dbtable import DbTable
@@ -377,3 +376,39 @@ def search(request, **argv):
         return HttpResponseRedirect(make_href((settings.SEARCH_PATH %  q2)+ "?only_content=1"))
     else:
         return Http404()
+
+
+def redirect_site_media_protected(request):
+    url = request.path.replace('media', 'media_protected')
+    response = HttpResponse()
+    response['X-Accel-Redirect'] = url
+    response['Content-Type'] = ''
+    return response
+
+def site_media_protected(request):
+    if hasattr(settings, 'PROTECTED_MEDIA_PERMISSIONS'):
+        x = request.path.split('media/', 1)
+        if len(x) == 2:
+            path = x[1]
+            for row in settings.PROTECTED_MEDIA_PERMISSIONS:
+                result = re.match(row[0], path)
+                if result:
+                    if row[1] == 'is_authenticated':
+                        if request.user.is_authenticated:
+                            return redirect_site_media_protected(request)
+                    elif row[1] == 'username':
+                        if ( "{%s}" % request.username ) in path:
+                            return redirect_site_media_protected(request)
+                    elif row[1] == 'email':
+                        if ("{%s}" % request.email) in path:
+                            return redirect_site_media_protected(request)
+                    else:
+                        if request.user.has_perm(row[1]):
+                            return redirect_site_media_protected(request)
+
+            return HttpResponseForbidden()
+    else:
+        if request.user.is_authenticated:
+            return redirect_site_media_protected(request)
+        else:
+            return HttpResponseForbidden()

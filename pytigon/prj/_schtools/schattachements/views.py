@@ -35,6 +35,7 @@ import mimetypes
 
 
 
+
 def download(request, pk):
     
     obj=models.Attachements.objects.get(id=pk)
@@ -45,6 +46,7 @@ def download(request, pk):
     response['Content-Disposition'] = "attachment; filename=%s" %  obj.file.name
     return response
     
+
 
 
  

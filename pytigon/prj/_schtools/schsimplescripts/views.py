@@ -47,6 +47,7 @@ SCRIPT_TEMPLATE = """
 
 
 
+
 def run(request, pk):
     
     script = models.Scripts.objects.get(pk=pk)
@@ -79,6 +80,8 @@ def run(request, pk):
 
 
 
+
+
 def run_script_by_name(request, script_name):
     
     script = models.Scripts.objects.get(name=script_name)
@@ -90,6 +93,8 @@ def run_script_by_name(request, script_name):
     else:
         raise Http404("Script does not exist")
     
+
+
 
 
 
@@ -130,6 +135,7 @@ def run_script(request, **argv):
     return HttpResponse("Error")
     
     
+
 
 
  

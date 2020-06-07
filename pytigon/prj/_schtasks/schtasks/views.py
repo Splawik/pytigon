@@ -89,6 +89,7 @@ def view_tasklistform(request, *argi, **argv):
 
 
 
+
 def put(request):
     
     fun = request.POST.get("func", "")
@@ -98,6 +99,8 @@ def put(request):
     ret = get_process_manager().put(username, title, fun, **param)
     return HttpResponse(json_dumps(ret), content_type = "application/json")
     
+
+
 
 
 
@@ -117,6 +120,8 @@ def put_message(request):
 
 
 
+
+
 def get_messages(request):
     
     id = request.POST.get("id", 0)
@@ -124,6 +129,8 @@ def get_messages(request):
     ret = get_process_manager().get_messages(int(id), int(id_start))
     return HttpResponse(json_dumps(ret), content_type = "application/json")
     
+
+
 
 
 
@@ -142,6 +149,8 @@ def pop_messages(request):
 
 
 
+
+
 def kill_thread(request):
     
     id = request.POST.get("id", 0)
@@ -154,12 +163,16 @@ def kill_thread(request):
 
 
 
+
+
 def remove_thread(request):
     
     id = request.POST.get("id", 0)
     ret = get_process_manager().remove_thread(int(id))
     return HttpResponse(json_dumps(ret), content_type = "application/json")
     
+
+
 
 
 
@@ -188,6 +201,8 @@ def list_threads(request):
 
 
 
+
+
 def thread_info(request):
     
     id = request.POST.get("id", 0)
@@ -209,6 +224,8 @@ def thread_info(request):
 
 
 
+
+
 def kill_all(request):
     
     id = request.POST.get("id", 0)
@@ -221,11 +238,15 @@ def kill_all(request):
 
 
 
+
+
 def wait_for_result(request):
     
     ret = get_process_manager().wait_for_result()
     return HttpResponse(json_dumps(ret), content_type = "application/json")
     
+
+
 
 @dict_to_template('schtasks/v_edit_task.html')
 
@@ -245,6 +266,8 @@ def edit_task(request, id):
         return { 'object': object, 'messages': messages }
     
 
+
+
 @dict_to_template('schtasks/v_kill_task.html')
 
 
@@ -262,6 +285,7 @@ def kill_task(request, id):
         messages = task_manager.get_messages(int(id))
         return { 'object': object, 'messages': messages }
     
+
 
 
 

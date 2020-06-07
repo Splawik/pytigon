@@ -48,7 +48,7 @@ else:
 
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
-    #DEBUG = True
+    # DEBUG = True
 
 SHOW_LOGIN_WIN = True
 
@@ -60,9 +60,10 @@ LOG_PATH = paths["LOG_PATH"]
 TEMP_PATH = paths["TEMP_PATH"]
 PRJ_PATH = paths["PRJ_PATH"]
 PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
-ROOT_PATH = paths["ROOT_PATH"]
 STATIC_ROOT = paths["STATIC_PATH"]
-print("STATIC_ROOT:", STATIC_ROOT)
+STATICFILES_DIR = paths["STATICFILES_DIR"]
+ROOT_PATH = paths["ROOT_PATH"]
+
 PYTIGON_PATH = paths["PYTIGON_PATH"]
 PLATFORM_TYPE = paths["PLATFORM_TYPE"]
 
@@ -83,16 +84,20 @@ BASE_URL = "http://127.0.0.1:81"
 URL_ROOT_FOLDER = ""
 STATIC_URL = "/static/"
 MEDIA_URL = "/site_media/"
+MEDIA_URL_PROTECTED = "/protected_site_media/"
 
 APPEND_SLASH = False
 
 STATICFILES_DIRS = []
-
+if STATICFILES_DIR != STATIC_ROOT:
+    STATICFILES_DIRS.append(STATICFILES_DIR)
+print(STATIC_ROOT)
 from pytigon_lib.schtools.platform_info import platform_name
 
-
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
+MEDIA_ROOT_PROTECTED = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "protected_media")
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
+UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
@@ -101,10 +106,11 @@ SECRET_KEY = "anawa"
 ROOT_URLCONF = "pytigon.schserw.urls"
 
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
     # other finders..
-    'compressor.finders.CompressorFinder',
+    "compressor.finders.CompressorFinder",
 )
 
 TEMPLATES = [
@@ -184,7 +190,6 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sites",
     "django.forms",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django_select2",
     "bootstrap4",
@@ -195,6 +200,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "graphene_django",
     "compressor",
+    "whitenoise.runserver_nostatic",
 ]
 
 # if DEBUG:
@@ -295,30 +301,43 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
-if PRODUCTION_VERSION and '--with-gui' not in sys.argv and platform_name() != "Windows":
+if PRODUCTION_VERSION and "--with-gui" not in sys.argv and platform_name() != "Windows":
     if "CHANNELS_REDIS" in environ:
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (environ['CHANNELS_REDIS'].split(':')+['6379'])[:2]
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
+            environ["CHANNELS_REDIS"].split(":") + ["6379"]
+        )[:2]
     else:
-        CHANNELS_REDIS_SERVER = '127.0.0.1'
-        CHANNELS_REDIS_PORT = '6379'
+        CHANNELS_REDIS_SERVER = "127.0.0.1"
+        CHANNELS_REDIS_PORT = "6379"
 
     if platform_name() != "Android":
         CHANNEL_LAYERS = {
             "default": {
                 "BACKEND": "channels_redis.core.RedisChannelLayer",
                 # "ROUTING": "schserw.routing.channel_routing",
-                "CONFIG": {"hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]},
+                "CONFIG": {
+                    "hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]
+                },
             }
         }
 else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
-
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
+
+# STATICFILES_STORAGE = DEFAULT_FILE_STORAGE
+# COMPRESS_STORAGE = DEFAULT_FILE_STORAGE
+# COMPRESS_URL = STATIC_URL
+#COMPRESS_STORAGE = "compressor.storage.BrotliCompressorFileStorage"
+COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
+
+
 STATIC_FS = None
 
+print("A0")
 
 def DEFAULT_FILE_STORAGE_FS():
+    print("A1")
     global STATIC_FS
     _m = MountFS()
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
@@ -359,6 +378,9 @@ def DEFAULT_FILE_STORAGE_FS():
             _m.mount("osfs", OSFS("c:\\"))
         else:
             _m.mount("osfs", OSFS("/"))
+
+    print("A2")
+
     return _m
 
 
@@ -390,15 +412,13 @@ else:
 
 GRAPHENE = {
     "SCHEMA": "pytigon.schserw.schsys.schema.schema",
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
+    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],
 }
 
 GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=5),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
+    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
 
 GRAPHENE_PUBLIC = False
@@ -432,4 +452,3 @@ try:
     from pytigon.schserw import *
 except:
     pass
-

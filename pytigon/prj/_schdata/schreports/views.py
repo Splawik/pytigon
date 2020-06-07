@@ -102,6 +102,7 @@ def view__filterformreport(request, *argi, **argv):
 
 
 
+
 def new_rep(request, rep_type,  doc_type_name):
     
     #new_rep/(?P<rep_type>\w+)/(?P<doc_type_name>\w+)/$
@@ -125,6 +126,8 @@ def new_rep(request, rep_type,  doc_type_name):
     else:
         return HttpResponse("Error - document type: %s doesn't exists" % doc_type_name)
     
+
+
 
 
 
@@ -177,6 +180,8 @@ def edit__rep(request, rep_id):
 
 
 
+
+
 def new_subrep(request, parent_rep_id, rep_type):
     
     rep_parent = models.Report.objects.get(pk=parent_rep_id)
@@ -189,6 +194,8 @@ def new_subrep(request, parent_rep_id, rep_type):
     url = make_href("/schreports/table/Report/%d/edit__rep/" % rep.id)
     return HttpResponseRedirect(url)
     
+
+
 
 
 
@@ -222,10 +229,14 @@ def edit_subrep(request, parent_rep_id, rep_type,view_type):
 
 
 
+
+
 def move_up(request, pk):
     
     return move_rep(pk, "-1")
     
+
+
 
 
 
@@ -242,6 +253,8 @@ def move_down(request, pk):
 
 
 
+
+
 def edit__rep2(request, dochead_id):
     
     reps = models.Report.objects.filter(order=dochead_id)
@@ -251,6 +264,8 @@ def edit__rep2(request, dochead_id):
     else:
         return HttpResponse("Error - report doesn't exist")
     
+
+
 
 
 
@@ -274,11 +289,15 @@ def repaction(request, dochead_id, rep_action):
 
 
 
+
+
 def move_to(request, rep_id, to_pos):
     
     return move_rep(rep_id, int(to_pos))
     
     
+
+
 
 
 
@@ -353,6 +372,8 @@ def plot_service(request, **argv):
 
 
 
+
+
 def new_group(request, group_type, parent_id):
     
     #new_group/(?P<group_type>\w+)/(?P<parent_id\d+)/$
@@ -381,6 +402,8 @@ def new_group(request, group_type, parent_id):
     url = make_href("/schreports/table/CommonGroup/%d/edit__group/" % group.id)
     return HttpResponseRedirect(url)
     
+
+
 
 
 
@@ -437,6 +460,8 @@ def edit__group(request, group_id):
 
 
 
+
+
 def list_group_by_tag(request, group_tag):
     
     groups = models.CommonGroup.objects.filter(tag_name=group_tag)
@@ -447,6 +472,7 @@ def list_group_by_tag(request, group_tag):
         url = make_href("/schreports/table/CommonGroup/0/form/tree/?only_content=1")
     return HttpResponseRedirect(url)    
     
+
 
 
  

@@ -6,8 +6,8 @@ Title = _('Browser')
 Perms = False
 Index = 'None'
 Urls  = (
-    ('table/bookmarks/0/form/tree?schtml=desktop',_('Bookmarks'),None,'client://actions/bookmark-new.png'),
-    ('table/history/-/form/list?schtml=desktop',_('History'),None,'client://emblems/emblem-photos.png'),
-    ('form/MultiDownload/?schtml=desktop',_('Download'),None,'client://status/folder-open.png'),
+    ('table/bookmarks/0/form/tree?schtml=desktop',_('Bookmarks'),None,"""client://actions/bookmark-new.png"""),
+    ('table/history/-/form/list?schtml=desktop',_('History'),None,"""client://emblems/emblem-photos.png"""),
+    ('form/MultiDownload/?schtml=desktop',_('Download'),None,"""client://status/folder-open.png"""),
 )
 UserParam = {}

@@ -33,6 +33,7 @@ import time
 
 
 
+
 @dict_to_json
 
 def gen_task1(request):
@@ -41,6 +42,8 @@ def gen_task1(request):
     task_manager.put(request, "Task title fun1", "@tasks_demo:fun1", user_parm = 123)
     return { "ret": "OK" }
     
+
+
 
 
 
@@ -57,6 +60,8 @@ def gen_task2(request):
 
 
 
+
+
 @dict_to_json
 
 def gen_task3(request):
@@ -65,6 +70,8 @@ def gen_task3(request):
     task_manager.put(request, "Task title fun3", "@tasks_demo:fun3", user_parm = 123)
     return { "ret": "OK" }
     
+
+
 
 
 
@@ -85,6 +92,7 @@ def from_script(request):
     return { "test": "OK", 'id': id, 'date_rap': date_rap, 'date_gen': date_gen, 'count': c }
         
     
+
 
 
  

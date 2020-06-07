@@ -50,6 +50,7 @@ def view_importtableform(request, *argi, **argv):
 
 
 
+
 def autocomplete_search(request, type):
     
     q = request.GET.get('query', request.POST.get('query', None))
@@ -70,6 +71,8 @@ def autocomplete_search(request, type):
     json_data = json.dumps(out_tab)
     return HttpResponse(json_data, content_type='application/x-javascript')
     
+
+
 
 
 
@@ -102,6 +105,8 @@ def set_user_param(request, **argv):
 
 
 
+
+
 def get_user_param(request, **argv):
     
     key = request.POST.get('param', None)
@@ -114,6 +119,8 @@ def get_user_param(request, **argv):
     else:
         return HttpResponse("")
     
+
+
 
 @dict_to_template('schtools/v_import_table.html')
 
@@ -245,6 +252,7 @@ def import_table(request, app, table):
     
     return { 'form': form }
     
+
 
 
  

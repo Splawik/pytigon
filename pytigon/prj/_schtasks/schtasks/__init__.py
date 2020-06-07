@@ -6,6 +6,6 @@ Title = _('Tasks')
 Perms = False
 Index = 'None'
 Urls  = (
-    ('form/TaskListForm/?schtml=desktop',_('Task list'),None,'client://status/image-loading.png'),
+    ('form/TaskListForm/?schtml=desktop',_('Task list'),None,"""client://status/image-loading.png"""),
 )
 UserParam = {}

@@ -6,6 +6,6 @@ Title = _('OdfUpload')
 Perms = True
 Index = ''
 Urls  = (
-    ('odf_upload/?schtml=desktop',_('Odf upload'),None,'wx.ART_REDO'),
+    ('odf_upload/?schtml=desktop',_('Odf upload'),None,"""wx.ART_REDO"""),
 )
 UserParam = {}

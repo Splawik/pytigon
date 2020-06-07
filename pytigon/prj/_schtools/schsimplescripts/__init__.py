@@ -6,9 +6,10 @@ Title = _('Simple scripts')
 Perms = True
 Index = 'None'
 Urls  = (
-    ('table/Scripts/-/form/list/?schtml=desktop',_('Scripts'),'simplescript.change_scripts','client://apps/utilities-terminal.png'),
+    ('table/Scripts/-/form/list/?schtml=desktop',_('Scripts'),'simplescript.change_scripts',"""client://apps/utilities-terminal.png"""),
 )
 UserParam = {}
+
 from django.utils.translation import ugettext_lazy as _
 
 def AdditionalUrls(app_pack, lang):

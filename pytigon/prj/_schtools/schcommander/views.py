@@ -186,10 +186,13 @@ def view_setup(request, *argi, **argv):
 
 
 
+
 def grid(request, folder, value):
     
     return vfstable_view(request, folder, value)
     
+
+
 
 
 
@@ -206,6 +209,8 @@ def open(request, file_name):
 
 
 
+
+
 def save(request, file_name):
     
     return vfssave(request, file_name)
@@ -216,10 +221,13 @@ def save(request, file_name):
 
 
 
+
+
 def open_page(request, file_name, page):
     
     return vfsopen_page(request, file_name, page)
     
+
 
 
  

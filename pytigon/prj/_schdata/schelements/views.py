@@ -152,6 +152,7 @@ def view__filterformdochead(request, *argi, **argv):
 
 
 
+
 def view_doc_heads(request, filter, target, vtype):
     
     regs = models.DocReg.objects.filter(name = filter.replace('_','/'))
@@ -168,6 +169,8 @@ def view_doc_heads(request, filter, target, vtype):
     else:
         return HttpResponse("Error - %s document register doesn't exists" % filter)
     
+
+
 
 
 
@@ -191,10 +194,14 @@ def view_doc_items(request, parent_id):
 
 
 
+
+
 def edit_head(request, id):
     
     return HttpResponse("Error")
     
+
+
 
 
 
@@ -206,6 +213,8 @@ def edit_item(request, id):
     return HttpResponse("Error")
     
 
+
+
 @dict_to_template('schelements/v_approve.html')
 
 
@@ -216,6 +225,8 @@ def approve(request, pk):
     return change_status(request, pk, action='accept')    
     
 
+
+
 @dict_to_template('schelements/v_discard.html')
 
 
@@ -225,6 +236,7 @@ def discard(request, pk):
     
     return change_status(request, pk, action='undo')    
     
+
 
 
  

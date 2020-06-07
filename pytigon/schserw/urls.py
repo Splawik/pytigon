@@ -78,11 +78,11 @@ _urlpatterns.extend(
         url("schsys/i18n/", include(django.conf.urls.i18n)),
         url("plugins/(?P<template_name>.*)", views.plugin_template),
         # url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-        url(
-            "site_media/(.*)$",
-            django.contrib.staticfiles.views.serve,
-            {"document_root": settings.MEDIA_ROOT},
-        ),
+        #url(
+        #    "site_media/(.*)$",
+        #    django.contrib.staticfiles.views.serve,
+        #    {"document_root": settings.MEDIA_ROOT},
+        #),
         url("select2/", include(django_select2.urls)),
         url("favicon.ico", views.favicon),
         url(make_href("sw.js"), views.sw),
@@ -90,6 +90,14 @@ _urlpatterns.extend(
         path("admin/", admin.site.urls),
     ]
 )
+
+
+if settings.DEBUG:
+    _urlpatterns.append(url("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
+    _urlpatterns.append(url("site_media_protected/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT_PROTECTED}))
+else:
+    _urlpatterns.append(url("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
+    _urlpatterns.append(url("site_media_protected/(.*)$", views.site_media_protected))
 
 # if settings.DEBUG:
 #    import debug_toolbar
