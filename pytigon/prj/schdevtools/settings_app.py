@@ -3,6 +3,10 @@ import os
 import sys
 from urllib.parse import urlparse
 
+PRJ_TITLE = "Developer tools"
+PRJ_NAME = "schdevtools"
+THEMES = ['tablet_modern', 'tablet_standard', 'smartfon_standard']
+
 _lp = os.path.dirname(os.path.abspath(__file__))
 
 if 'PYTIGON_ROOT_PATH' in os.environ:
@@ -14,7 +18,7 @@ if not _lp in sys.path: sys.path.insert(0,_lp)
 if not _rp in sys.path: sys.path.insert(0,_rp)
 
 from pytigon_lib import init_paths
-init_paths()
+init_paths(PRJ_NAME)
 
 from pytigon_lib.schdjangoext.django_init import get_app_config
 from pytigon_lib.schtools.platform_info import platform_name
@@ -28,13 +32,8 @@ try:
 except:
     setup_databases = None
 
-PRJ_TITLE = "Developer tools"
-PRJ_NAME = "schdevtools"
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), 'media')
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
-
-THEMES = ['tablet_modern', 'tablet_standard', 'smartfon_standard']
-
 LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
 ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
@@ -46,6 +45,7 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
+    MEDIA_URL_PROTECTED = '/'+URL_ROOT_FOLDER+'/site_media_protected/'
 
 from pytigon_lib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -137,6 +137,6 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.02 19:22:56'
+GEN_TIME = '2020.06.10 21:17:20'
 OFFLINE_SUPPORT = True
 

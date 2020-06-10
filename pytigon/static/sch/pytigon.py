@@ -128,6 +128,11 @@ def app_init(
             def _on_login_submit2(data):
                 nonlocal href, self
 
+                if 'login-form' in data:
+                    jQuery('#login_txt1').addClass('d-none')
+                    jQuery('#login_txt2').removeClass('d-none')
+                    return
+
                 #window.location.pathname = window.BASE_PATH
                 if window.PUSH_STATE:
                     history_push_state("", window.BASE_PATH)

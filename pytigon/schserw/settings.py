@@ -91,7 +91,7 @@ APPEND_SLASH = False
 STATICFILES_DIRS = []
 if STATICFILES_DIR != STATIC_ROOT:
     STATICFILES_DIRS.append(STATICFILES_DIR)
-print(STATIC_ROOT)
+
 from pytigon_lib.schtools.platform_info import platform_name
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
@@ -325,19 +325,15 @@ else:
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 
-# STATICFILES_STORAGE = DEFAULT_FILE_STORAGE
-# COMPRESS_STORAGE = DEFAULT_FILE_STORAGE
-# COMPRESS_URL = STATIC_URL
-#COMPRESS_STORAGE = "compressor.storage.BrotliCompressorFileStorage"
+if PLATFORM_TYPE == 'webserver':
+    COMPRESS_ENABLED = True
+else:
+    COMPRESS_ENABLED = True
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
-
 
 STATIC_FS = None
 
-print("A0")
-
 def DEFAULT_FILE_STORAGE_FS():
-    print("A1")
     global STATIC_FS
     _m = MountFS()
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
@@ -378,8 +374,6 @@ def DEFAULT_FILE_STORAGE_FS():
             _m.mount("osfs", OSFS("c:\\"))
         else:
             _m.mount("osfs", OSFS("/"))
-
-    print("A2")
 
     return _m
 

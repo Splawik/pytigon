@@ -17,7 +17,8 @@
                                                         </div>
                                                         <div class="card-block">
                                                                 <br />
-                                                                Sign in:
+                                                                <p id="login_txt1">Sign in:</p>
+                                                                <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
                                                                 <br />
                                                                 <form class="login-form" action="{{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %}" method="post" name="signin">
                                                                         <div class="form-group">
