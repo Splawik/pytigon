@@ -2,12 +2,15 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load bootstrap4 %}
-{% block js_extrascipts %}
+{% block ext_js_scripts %}
         {{block.super}}
         {% jscript_link 'vue/vue.min.js' %}
         {% jscript_link 'vue/httpVueLoader.js' %}
         {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
         {% jscript_link 'system/require.js' %}
+{% endblock %}
+{% block js_extrascipts %}
+        {{block.super}}
         {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
@@ -21,18 +24,18 @@
             vue_init = { username: "",theme: "",time_str: "" };
             var global_vue_bus = new Vue (vue_init);
         </script>
-        {% component '_schwiki/components/insert_object.js' %}
-        {% component 'schcomponents/components/ptig-d3.js' %}
-        {% component 'schcomponents/components/ptig-plotly.js' %}
-        {% component 'schportal/components/teleconference.js' %}
-        {% component 'schportal/components/timer_init.js' %}
         {% component 'schcomponents/components/ptig-time.js' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schportal/components/teleconference.js' %}
         {% component 'schcomponents/components/ptig-webrtc.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
         {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component '_schwiki/components/insert_object.js' %}
+        {% component 'schportal/components/timer_init.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "insert_object.js", "ptig-d3.js", "ptig-plotly.js", "teleconference.js", "timer_init.js", "ptig-time.js", "ptig-codeeditor.js", "ptig-webrtc.js", "ptig-wysiwygedit.js",  ];
+        var component_init = [ "ptig-time.js", "ptig-codeeditor.js", "teleconference.js", "ptig-webrtc.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-d3.js", "insert_object.js", "timer_init.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}

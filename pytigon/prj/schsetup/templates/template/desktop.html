@@ -2,12 +2,15 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load bootstrap4 %}
-{% block js_extrascipts %}
+{% block ext_js_scripts %}
         {{block.super}}
         {% jscript_link 'vue/vue.min.js' %}
         {% jscript_link 'vue/httpVueLoader.js' %}
         {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
         {% jscript_link 'system/require.js' %}
+{% endblock %}
+{% block js_extrascipts %}
+        {{block.super}}
         {% module_link '_schdata/js/subreport.js' %}
 {% endblock %}
 {% block extrastyle %}
@@ -20,13 +23,13 @@
             vue_init="";
             var global_vue_bus = new Vue (vue_init);
         </script>
-        {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
-        {% component '_schwiki/components/insert_object.js' %}
         {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
+        {% component '_schwiki/components/insert_object.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-xterm.js", "ptig-codeeditor.js", "insert_object.js", "ptig-wysiwygedit.js",  ];
+        var component_init = [ "ptig-wysiwygedit.js", "ptig-xterm.js", "insert_object.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block extrahead %}
         {{block.super}}
