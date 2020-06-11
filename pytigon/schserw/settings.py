@@ -25,10 +25,13 @@ from fs.multifs import MultiFS
 from fs.osfs import OSFS
 from django.conf import settings
 from os import environ
-from pytigon_lib.schtools.main_paths import get_main_paths
+from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
 import django_cache_url
 
-PRJ_NAME = "_schall"
+prj_name = get_prj_name()
+if not prj_name:
+    prj_name = "_schall"
+
 GEN_TIME = "0000.00.00 00:00:00"
 
 if (
@@ -94,8 +97,8 @@ if STATICFILES_DIR != STATIC_ROOT:
 
 from pytigon_lib.schtools.platform_info import platform_name
 
-MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
-MEDIA_ROOT_PROTECTED = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "protected_media")
+MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, prj_name), "media")
+MEDIA_ROOT_PROTECTED = os.path.join(os.path.join(DATA_PATH, prj_name), "protected_media")
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
