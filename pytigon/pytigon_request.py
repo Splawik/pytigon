@@ -32,7 +32,7 @@ HTTP = None
 def init(prj, username, password):
     global HTTP
 
-    paths = get_main_paths()
+    paths = get_main_paths(prj)
     cwd_path = os.path.join(paths["PRJ_PATH"], prj)
     sys.path.insert(0, cwd_path)
 

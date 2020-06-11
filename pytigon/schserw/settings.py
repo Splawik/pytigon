@@ -171,10 +171,6 @@ else:
 # if DEBUG:
 #    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
-if PLATFORM_TYPE != "webserwer":
-    MIDDLEWARE.insert(
-        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
-    )
 
 AUTHENTICATION_BACKENDS = (
     "graphql_jwt.backends.JSONWebTokenBackend",
@@ -200,8 +196,13 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "graphene_django",
     "compressor",
-    "whitenoise.runserver_nostatic",
 ]
+
+if PLATFORM_TYPE != "webserwer":
+    MIDDLEWARE.insert(
+        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
+    )
+    INSTALLED_APPS.append("whitenoise.runserver_nostatic")
 
 # if DEBUG:
 #    INSTALLED_APPS.append("debug_toolbar")
@@ -328,7 +329,7 @@ DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 if PLATFORM_TYPE == 'webserver':
     COMPRESS_ENABLED = True
 else:
-    COMPRESS_ENABLED = True
+    COMPRESS_ENABLED = False
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
