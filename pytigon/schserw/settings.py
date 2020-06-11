@@ -198,7 +198,7 @@ INSTALLED_APPS = [
     "compressor",
 ]
 
-if PLATFORM_TYPE != "webserwer":
+if PLATFORM_TYPE != "webserver":
     MIDDLEWARE.insert(
         0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
     )
