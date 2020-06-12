@@ -29,7 +29,6 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
             for key in maps:
                 pos = maps[key]
                 self.add_files(pos[0], prefix=pos[1])
-                print("Static map: ", pos[0], pos[1])
                 if fs:
                     if os.path.exists((pos[0])):
                         fs.add_fs(key, OSFS(pos[0]))
