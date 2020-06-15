@@ -184,9 +184,14 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
         if '{!{' in html_txt or '}!}' in html_txt:
             html_txt = html_txt.replace('{!{', '{&#8203;{').replace('}!}', '}&#8203;}')
 
+
         ret = split_html(html_txt)
 
-        res = Vue.compile("<div>" + ret[0] + "</div>")
+        sc = ret[0]
+        if '[[' in sc or ']]' in sc:
+            sc = sc.replace('[[', '{{').replace(']]', '}}')
+
+        res = Vue.compile("<div>" + sc + "</div>")
         if elem and elem.length > 0:
             vm = __new__(
                 #Vue({"render": res.render, "staticRenderFns": res.staticRenderFns, "data": window.global_vue_bus.S__data} )

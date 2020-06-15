@@ -7,6 +7,11 @@
         <h3>Demo - standard controls</h3>
 {% endblock %}
 {% block list_page %}
+    <ptig-scroll-action>
+      <template v-slot="{offset_top, offset_bottom, top_is_visible, bottom_is_visible, v}">
+        <p v-bind:style="{ position: 'absolute', top: v*100+'px' }">
+                [[ offset_top ]]/[[ offset_bottom ]]/[[ top_is_visible ]]/[[ bottom_is_visible ]]/[[ v ]]
+        </p>
         <table border="1" width="100%">
                 <tr>
                         <th width="20%">Nazwa</th>
@@ -441,5 +446,7 @@
                         <td></td>
                 </tr>
         </table>
+      </template>
+    </ptig-scroll-action>
 {% endblock %}
 
