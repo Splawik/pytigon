@@ -199,6 +199,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "graphene_django",
     "compressor",
+    "django_q",
 ]
 
 if PLATFORM_TYPE != "webserver":

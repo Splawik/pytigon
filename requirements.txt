@@ -22,6 +22,8 @@ django_select2
 django_compressor
 easy_thumbnails
 graphene-django
+django-graphql-jwt
+django-q
 html5lib
 https://github.com/groveco/django-sql-explorer/tarball/master#egg=package-1.0
 hypercorn
