@@ -41,4 +41,4 @@
     {% endif %}
 
 %% component_init
-    {% if component_elements %}.var component_init = [ {% for pos in component_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ];  {% else %} .component_init = []; {% endif %}
+    {% if component_elements %}.var component_init = [ {% for pos in component_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ];  {% else %} .var component_init = []; {% endif %}

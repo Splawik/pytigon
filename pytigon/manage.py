@@ -2,11 +2,7 @@
 import os
 import sys
 
-print("A1")
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
-
-print("A2")
 
 base_path = __file__.replace("manage.py", "")
 if base_path == "":

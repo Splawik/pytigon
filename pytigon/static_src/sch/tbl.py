@@ -37,15 +37,15 @@ def datetable_set_height():
 def datatable_refresh(table):
     table.bootstrapTable("refresh")
 
-
+__pragma__('jsiter')
 def _rowStyle(value, row, index):
     x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information")
     if x.length > 0:
-        c = x.attr("class").replace("td_information", "")
+        c = x.attr("class").replace("td_information", "").replace(" ", "")
         if c.length > 0:
             return {"classes": c}
     return {}
-
+__pragma__('nojsiter')
 
 def prepare_datatable(table):
     def _local_fun(index):

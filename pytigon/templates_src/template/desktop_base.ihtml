@@ -65,7 +65,7 @@
     %% js_app_init
         .function base_fragment_init() {}
     %% component_init
-        .component_init = null
+        .var component_init = null
     .app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
 
 %% jquery_ready_start

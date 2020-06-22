@@ -50,10 +50,10 @@ class upload_ptig(forms.Form):
                         config = configparser.ConfigParser()
                         config.read_string(initdata.decode('utf-8'))
                         
-                        if 'APPSET_NAME' in config['DEFAULT']:
-                            appset_name = config['DEFAULT']['APPSET_NAME']
-                            if appset_name:                
-                                ret = extract_ptig(archive, appset_name)
+                        if 'PRJ_NAME' in config['DEFAULT']:
+                            prj_name = config['DEFAULT']['PRJ_NAME']
+                            if prj_name:
+                                ret = extract_ptig(archive, prj_name)
                                 return { 'object_list': ret, 'status': 2 }
                         return { 'object_list': [['Invalid install file'],], 'status': 2 }
                     else:
