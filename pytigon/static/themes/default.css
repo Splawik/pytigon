@@ -529,15 +529,12 @@ a.disabled {
 .input-group-addon {
   padding: 0px 0.7rem; }
 
-div.daterangepicker button.applyBtn {
-  position: relative;
-  top: 25px;
-  left: 0px; }
-
-div.daterangepicker button.cancelBtn {
-  position: absolute;
-  top: 4px;
-  right: 4px; }
+div.daterangepicker .drp-buttons {
+  text-align: center; }
+  div.daterangepicker .drp-buttons button.cancelBtn {
+    position: absolute;
+    top: 4px;
+    right: 4px; }
 
 @-webkit-keyframes ticker {
   0% {
