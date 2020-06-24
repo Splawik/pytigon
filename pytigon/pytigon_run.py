@@ -54,6 +54,12 @@ def schserw_init_prj_path(app, param=None):
                         pytigon.schserw.settings.PRJ_PATH_ALT
                     )
 
+            if not pytigon.schserw.settings.PRJ_PATH in sys.path:
+                sys.path.append(pytigon.schserw.settings.PRJ_PATH)
+
+            if not pytigon.schserw.settings.PRJ_PATH_ALT in sys.path:
+                sys.path.append(pytigon.schserw.settings.PRJ_PATH_ALT)
+
             if platform_name() != "Windows":
                 os.environ["LD_LIBRARY_PATH"] = os.path.abspath(
                     os.path.join(pytigon.schserw.settings.DATA_PATH, "ext_prg", "tcc")
