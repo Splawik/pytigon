@@ -47,13 +47,16 @@ if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.ar
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
     MEDIA_URL_PROTECTED = '/'+URL_ROOT_FOLDER+'/site_media_protected/'
 
-
+from pytigon_lib.schtools.main_paths import get_main_paths
+paths = get_main_paths()
 app_pack_folders = []
-base_apps_path = PRJ_PATH
-for ff in os.listdir(base_apps_path):
-    if os.path.isdir( os.path.join(base_apps_path,ff)):
-        if not ff.startswith('_'):
-            app_pack_folders.append(ff)
+for base_apps_path in (paths['PRJ_PATH'], paths['PRJ_PATH_ALT']):
+    for ff in os.listdir(base_apps_path):
+        if os.path.isdir( os.path.join(base_apps_path,ff)):
+            if not ff.startswith('_'):
+                if not ff in app_pack_folders:
+                    app_pack_folders.append(ff)
+
 for app_pack in app_pack_folders:
     base_apps_path2 = os.path.join(base_apps_path, app_pack)
     try:
@@ -180,5 +183,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.10 21:22:56'
+GEN_TIME = '2020.06.24 13:19:26'
 
