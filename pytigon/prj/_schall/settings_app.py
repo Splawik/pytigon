@@ -54,10 +54,13 @@ for base_apps_path in (paths['PRJ_PATH'], paths['PRJ_PATH_ALT']):
     if not base_apps_path in sys.path:
         sys.path.append(base_apps_path)
     for ff in os.listdir(base_apps_path):
-        if os.path.isdir( os.path.join(base_apps_path,ff)):
+        p = os.path.join(base_apps_path,ff)
+        if os.path.isdir(p):
             if not ff.startswith('_'):
                 if not ff in app_pack_folders:
                     app_pack_folders.append(ff)
+                    if not p in sys.path:
+                        sys.path.append(p)
 
 for app_pack in app_pack_folders:
     base_apps_path2 = os.path.join(base_apps_path, app_pack)
@@ -185,5 +188,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.24 13:47:06'
+GEN_TIME = '2020.06.24 14:15:37'
 
