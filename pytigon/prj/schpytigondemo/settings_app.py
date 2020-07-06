@@ -39,8 +39,7 @@ ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] and not 'pytigon' in sys.argv[0]\
-        and not 'ptig' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
+if PRODUCTION_VERSION and  PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER='schpytigondemo'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
@@ -137,7 +136,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.15 14:23:30'
+GEN_TIME = '2020.07.06 16:08:16'
 
 
 XMLRPC_PORT = 7080

@@ -39,8 +39,7 @@ ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] and not 'pytigon' in sys.argv[0]\
-        and not 'ptig' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
+if PRODUCTION_VERSION and  PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER='schsetup'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
@@ -79,6 +78,7 @@ for app in APPS_EXT:
     INSTALLED_APPS.append(app)
     
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
 INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
@@ -99,7 +99,6 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
-TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
 LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (PRJ_NAME, PRJ_NAME))
@@ -156,5 +155,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.10 21:23:21'
+GEN_TIME = '2020.07.06 16:14:11'
 

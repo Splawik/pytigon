@@ -39,20 +39,19 @@ ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path: sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and platform_name()!='Android' and not 'main.py' in sys.argv[0] and not 'pytigon' in sys.argv[0]\
-        and not 'ptig' in sys.argv[0] and not 'pytigon_task.py' in sys.argv[0] and not MAIN_PRJ:
+if PRODUCTION_VERSION and  PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER='scheditor'
     URL_ROOT_PREFIX = URL_ROOT_FOLDER+"/"
     STATIC_URL = '/'+URL_ROOT_FOLDER+'/static/'
     MEDIA_URL = '/'+URL_ROOT_FOLDER+'/site_media/'
     MEDIA_URL_PROTECTED = '/'+URL_ROOT_FOLDER+'/site_media_protected/'
 
+from pytigon_lib.schtools.install_init import init
 
 from fs.osfs import OSFS
 from django.core.files.storage import default_storage
 default_storage.fs.mount('os', OSFS("/"))
 
-from pytigon_lib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
 START_PAGE = 'None'
@@ -141,5 +140,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.06.10 21:23:06'
+GEN_TIME = '2020.07.06 16:14:01'
 
