@@ -19,6 +19,7 @@ import time
 from threading import Thread
 import subprocess
 import struct
+import getpass
 
 try:
     import pty
@@ -26,7 +27,9 @@ try:
     import termios
 except:
     pass
-    
+
+from django.conf import settings
+
 from pytigon_lib.schtools.tools import get_executable
 
 def read_and_forward_pty_output(consumer):
@@ -78,6 +81,8 @@ class ShellConsumer(WebsocketConsumer):
         if child_pid == 0:
             env2 = os.environ.copy()
             env2['TERM'] = 'xterm'
+            if settings.PLATFORM_TYPE == "webserver" and getpass.getuser()=='www-data':
+                env2['HOME'] = '/home/www-data'        
             subprocess.run([get_executable(),"-m", "xonsh"], env = env2)
         else:
             self.fd = fd

@@ -306,7 +306,7 @@ AUTO_RENDER_SELECT2_STATICS = False
 
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
-if PRODUCTION_VERSION and "--with-gui" not in sys.argv and platform_name() != "Windows":
+if PLATFORM_TYPE == "webserver":
     if "CHANNELS_REDIS" in environ:
         CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
             environ["CHANNELS_REDIS"].split(":") + ["6379"]
@@ -315,16 +315,15 @@ if PRODUCTION_VERSION and "--with-gui" not in sys.argv and platform_name() != "W
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
 
-    if platform_name() != "Android":
-        CHANNEL_LAYERS = {
-            "default": {
-                "BACKEND": "channels_redis.core.RedisChannelLayer",
-                # "ROUTING": "schserw.routing.channel_routing",
-                "CONFIG": {
-                    "hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]
-                },
-            }
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            # "ROUTING": "schserw.routing.channel_routing",
+            "CONFIG": {
+                "hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]
+            },
         }
+    }
 else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
