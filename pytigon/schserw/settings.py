@@ -281,6 +281,10 @@ if PRODUCTION_VERSION:
         },
     }
 
+if 'PYTIGON_TASK' in environ:
+    LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log', '_task.log')
+    LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace('.log', '_task.log')
+
 LOCALE_PATHS = [SERW_PATH + "/locale"]
 
 # CSRF_USE_SESSIONS = True

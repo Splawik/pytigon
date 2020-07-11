@@ -248,6 +248,7 @@ def app_init(
     jQuery("#tabs2_content").on("submit", "form", _on_submit)
     jQuery("#dialog-form-modal").on("submit", "form", _on_submit)
     jQuery("#search").on("submit", "form", _on_submit)
+    jQuery("#wiki_start").on("submit", "form", _on_submit)
 
 
     # jQuery('#menu').perfectScrollbar()

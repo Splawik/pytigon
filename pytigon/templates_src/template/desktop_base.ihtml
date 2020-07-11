@@ -42,6 +42,8 @@
 
         {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js' %}
 
         {% jscript_link 'bootstrap_plugins/bootstrap4-editable/js/bootstrap4-editable.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
@@ -397,10 +399,11 @@
         .data-show-columns="true"
         .data-icons-prefix="fa"
         .data-icons="icons"
-        .data-mobile-responsive="true"
         .data-id-field="cid"
         .data-multiple-select-row="true"
-        .data-click-to-select="true"
+        {# .data-click-to-select="true" #}
+        .data-mobile-responsive="true"
+        {# .data-show-refresh="true" #}
     % else:
         .class="tabsort table table-hover table-sm table-striped {%if get %}table_get{% endif %}"
 

@@ -152,17 +152,22 @@ def init_table(table, table_type):
 
             def _handle_toolbar_expand(elem):
                 panel = table_panel.find(".fixed-table-toolbar")
+                panel2 = jQuery(".list_content_header_two_row")
                 if jQuery(this).hasClass("active"):
                     panel.show()
+                    panel2.show()
                     datatable_onresize()
                 else:
                     panel.hide()
+                    panel2.hide()
                     datatable_onresize()
 
             table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand)
             if btn.hasClass("active"):
                 panel = table_panel.find(".fixed-table-toolbar")
+                panel2 = jQuery(".list_content_header_two_row")
                 panel.hide()
+                panel2.hide()
                 datatable_onresize()
 
 

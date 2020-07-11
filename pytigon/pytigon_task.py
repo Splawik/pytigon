@@ -92,6 +92,7 @@ if __name__ == '__main__':
     CWD_PATH2 = os.path.join(paths["PRJ_PATH_ALT"], PRJ)
     sys.path.insert(0, CWD_PATH2)
 
+    os.environ["PYTIGON_TASK"] = "1"
     os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
     httpclient.init_embeded_django()
     http = httpclient.HttpClient("http://127.0.0.2")
