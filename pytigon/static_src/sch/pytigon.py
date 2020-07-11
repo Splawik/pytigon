@@ -235,7 +235,8 @@ def app_init(
             if window.ACTIVE_PAGE:
                 mount_html(window.ACTIVE_PAGE.page, data)
             else:
-                _on_menu_href(self, self.attr("title"), None, data)
+                mount_html(jQuery("#wiki_start"), data)
+                #_on_menu_href(self, self.attr("title"), None, data)
 
             if window.WAIT_ICON:
                 window.WAIT_ICON.stop()
@@ -249,6 +250,7 @@ def app_init(
     jQuery("#dialog-form-modal").on("submit", "form", _on_submit)
     jQuery("#search").on("submit", "form", _on_submit)
     jQuery("#wiki_start").on("submit", "form", _on_submit)
+    jQuery("#body_body").on("submit", "form", _on_submit)
 
 
     # jQuery('#menu').perfectScrollbar()

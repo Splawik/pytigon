@@ -54,6 +54,10 @@
                     % if user.is_superuser:
                         a class=dropdown-item system_menu,,,href=#,,,action={{base_path}}schsetup/?schtml=1,,,title=_(Setup)..._(Setup)
     % else:
+        li class=nav-item dropdown
+            a class=nav-link dropdown-toggle,,,href={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                {# span class=fa fa-sign-in #}
+                ._(Login)
         </ul>
 
     </div></nav>
