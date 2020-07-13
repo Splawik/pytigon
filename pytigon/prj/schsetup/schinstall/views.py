@@ -50,8 +50,8 @@ class upload_ptig(forms.Form):
                         config = configparser.ConfigParser()
                         config.read_string(initdata.decode('utf-8'))
                         
-                        if 'APPSET_NAME' in config['DEFAULT']:
-                            appset_name = config['DEFAULT']['APPSET_NAME']
+                        if 'PRJ_NAME' in config['DEFAULT']:
+                            appset_name = config['DEFAULT']['PRJ_NAME']
                             if appset_name:                
                                 ret = extract_ptig(archive, appset_name)
                                 return { 'object_list': ret, 'status': 2 }
