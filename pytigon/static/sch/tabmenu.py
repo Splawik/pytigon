@@ -110,9 +110,11 @@ class TabMenu:
             window.ACTIVE_PAGE = None
             if window.PUSH_STATE:
                 history_push_state("", window.BASE_PATH)
-            if jQuery('#wiki_start').find('.content').length == 0:
+            #if jQuery('#wiki_start').find('.content').length == 0:
+            if jQuery('#body_desktop').find('.content').length == 0:
                 window.init_start_wiki_page()
-            jQuery('#wiki_start').show()
+            #jQuery('#wiki_start').show()
+            jQuery('#body_desktop').show()
 
 def get_menu():
     if not window.MENU:

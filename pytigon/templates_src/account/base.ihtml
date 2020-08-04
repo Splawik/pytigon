@@ -12,7 +12,7 @@
             %% content 
         div class=col-2
 
-%% body_body
+%% body_desktop
     % with form|to_bootstrap as form:
         title
             ._(Authentication)

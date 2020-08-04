@@ -96,6 +96,12 @@
                 <div class="content-wrapper">
         {% endif %}
 {% endblock %}
+{% block body_end %}
+        {% if form_ext or not show_form %}
+                </div>
+        {% endif %}
+        {{block.super}}
+{% endblock %}
 {% block body_init %}
         <section class="content" id="panel">
         <header class="main-header win-header bg-primary">
@@ -209,7 +215,10 @@
                         {% endwith %}
                 </div>
         {% endif %}
-        </section></div>
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        </section>
 {% endblock %}
 {% block jquery_init %}
         {% if form_ext or not show_form %}

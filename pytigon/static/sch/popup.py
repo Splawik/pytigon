@@ -603,7 +603,7 @@ def refresh_current_object(url, elem, e):
                 mount_html(window.ACTIVE_PAGE.page, data)
                 window.ACTIVE_PAGE.set_href(href)
             else:
-                mount_html(jQuery("#body_body"), data)
+                mount_html(jQuery("#body_desktop"), data)
             window.ACTIVE_PAGE.set_href(href)
             get_menu().get_active_item().url = href
             if window.PUSH_STATE:

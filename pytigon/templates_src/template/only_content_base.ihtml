@@ -6,10 +6,6 @@
 
 %% page_head
 
-%% body_start
-
-%% body_header
-
 %% nav
 
 %% login
@@ -31,6 +27,10 @@
             {{title}}
     % with NO_TABS=True:
         {{block.super}}
+
+%% body_desktop
+    % with ONLY_CONTENT=True:
+        {{ block.super }}
 
 %% html_widgets_init
 

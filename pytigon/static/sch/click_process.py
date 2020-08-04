@@ -95,11 +95,12 @@ def process_on_click(event_tab, elem=None):
                     if window.ACTIVE_PAGE:
                         mount_html(window.ACTIVE_PAGE.page, data)
                     else:
-                        mount_html(jQuery('#wiki_start'), data)
+                        #mount_html(jQuery('#wiki_start'), data)
+                        mount_html(jQuery('#body_desktop'), data)
                         return
                     window.ACTIVE_PAGE.set_href(href)
                 else:
-                    mount_html(jQuery('#body_body'), data)
+                    mount_html(jQuery('#body_desktop'), data)
                 window.ACTIVE_PAGE.set_href(href)
                 get_menu().get_active_item().url = href
                 if window.PUSH_STATE:
@@ -111,5 +112,5 @@ def process_on_click(event_tab, elem=None):
     else:
         jQuery('#tabs2_content').on("click", "a", _on_click)
         jQuery('#dialog-form-modal').on("click", "a", _on_click)
-        jQuery('#body_body').on("click", "a", _on_click)
-        jQuery('#wiki_start').on("click", "a", _on_click)
+        jQuery('#body_desktop').on("click", "a", _on_click)
+        #jQuery('#wiki_start').on("click", "a", _on_click)

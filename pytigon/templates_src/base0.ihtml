@@ -85,20 +85,19 @@
                             {% else %}
                                 ul class=messagelist
                                     li...{{message}}
+
+            %% body_desktop
+                %if user.is_authenticated or not settings.SHOW_LOGIN_WIN or NO_CHECK_AUTH:
+                    %% panel
+                    %% navglobal
+                    %% sidebar
+                    %% style_content_start
+                    %% content_start
+                    %% no_content
+                        %% content
+                    %% content_end
+                    %% style_content_end
             %% tabs
-                %% body_body
-                    %if user.is_authenticated or not settings.SHOW_LOGIN_WIN or NO_CHECK_AUTH:
-                        %% panel
-                        %% navglobal
-                        %% sidebar
-
-                        %% style_content_start
-                        %% content_start
-                        %% no_content
-                            %% content
-                        %% content_end
-                        %% style_content_end
-
 
         %% html_widgets_init
 

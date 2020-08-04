@@ -235,7 +235,8 @@ def app_init(
             if window.ACTIVE_PAGE:
                 mount_html(window.ACTIVE_PAGE.page, data)
             else:
-                mount_html(jQuery("#wiki_start"), data)
+                #mount_html(jQuery("#wiki_start"), data)
+                mount_html(jQuery("#body_desktop"), data)
                 #_on_menu_href(self, self.attr("title"), None, data)
 
             if window.WAIT_ICON:
@@ -249,8 +250,8 @@ def app_init(
     jQuery("#tabs2_content").on("submit", "form", _on_submit)
     jQuery("#dialog-form-modal").on("submit", "form", _on_submit)
     jQuery("#search").on("submit", "form", _on_submit)
-    jQuery("#wiki_start").on("submit", "form", _on_submit)
-    jQuery("#body_body").on("submit", "form", _on_submit)
+    #jQuery("#wiki_start").on("submit", "form", _on_submit)
+    jQuery("#body_desktop").on("submit", "form", _on_submit)
 
 
     # jQuery('#menu').perfectScrollbar()
@@ -371,10 +372,12 @@ def app_init(
         ):
 
             def _on_load(responseText, status, response):
-                pass
+                print("_init_strart_wiki_page::_on_load")
+                #pass
 
             ajax_load(
-                jQuery("#wiki_start"),
+                #jQuery("#wiki_start"),
+                jQuery("#body_desktop"),
                 base_path + start_page + "?only_content&schtml=1",
                 _on_load,
             )
@@ -423,13 +426,14 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
             def _on_new_win(data):
                 nonlocal href, href2, title
 
-                jQuery("#wiki_start").hide()
+                #jQuery("#wiki_start").hide()
+                jQuery("#body_desktop").hide()
 
                 if window.APPLICATION_TEMPLATE == "modern":
                     id = menu.new_page(title, data, href2)
                 else:
-                    mount_html(jQuery("#body_body"), data)
-                    window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
+                    mount_html(jQuery("#body_desktop"), data)
+                    window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
                     window.ACTIVE_PAGE.set_href(href2)
                     if window.PUSH_STATE:
                         id = jQuery(elem).attr("id")
@@ -519,21 +523,21 @@ def init2():
         jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
 
         if window.APPLICATION_TEMPLATE == "traditional":
-            window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
+            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
             # __new__(Vue({'el': '#body_body'}))
         else:
-            if window.APPLICATION_TEMPLATE == "modern":
-                txt = jQuery(".page").html()
-                txt2 = jQuery.trim(txt)
-                if txt2:
-                    txt = jQuery.trim(jQuery(".page")[0].outerHTML)
-                    jQuery(".page").remove()
-                    menu = get_menu()
-                    menu.new_page(jQuery("title").text(), txt, window.location.href)
-            else:
-                window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
-                if window.APPLICATION_TEMPLATE == "to_print":
-                    __new__(Vue({"el": "#body_body"}))
+            #if window.APPLICATION_TEMPLATE == "modern":
+            #    txt = jQuery(".page").html()
+            #    txt2 = jQuery.trim(txt)
+            #    if txt2:
+            #        txt = jQuery.trim(jQuery(".page")[0].outerHTML)
+            #        jQuery(".page").remove()
+            #        menu = get_menu()
+            #        menu.new_page(jQuery("title").text(), txt, window.location.href)
+            #else:
+            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
+            if window.APPLICATION_TEMPLATE == "to_print":
+                __new__(Vue({"el": "#body_desktop"}))
 
 
 window.init2 = init2
@@ -601,7 +605,7 @@ def standard_on_data(src_obj, href):
                 mount_html(window.ACTIVE_PAGE.page, data)
                 window.ACTIVE_PAGE.set_href(href)
             else:
-                mount_html(jQuery("#body_body"), data)
+                mount_html(jQuery("#body_desktop"), data)
             window.ACTIVE_PAGE.set_href(href)
             get_menu().get_active_item().url = href
             if window.PUSH_STATE:
@@ -680,8 +684,8 @@ def _on_popstate(e):
             menu = get_menu().activate(e.state, False)
         else:
             x = e.state
-            mount_html(jQuery("#body_body"), LZString.decompress(x[0]))
-            window.ACTIVE_PAGE = Page(0, jQuery("#body_body"))
+            mount_html(jQuery("#body_desktop"), LZString.decompress(x[0]))
+            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
             window.ACTIVE_PAGE.set_href(document.location)
 
             if window.APPLICATION_TEMPLATE == "standard":
@@ -692,7 +696,7 @@ def _on_popstate(e):
         if window.APPLICATION_TEMPLATE == "modern":
             pass
         else:
-            mount_html(jQuery("#body_body"), "", False, False)
+            mount_html(jQuery("#body_desktop"), "", False, False)
             window.ACTIVE_PAGE = None
             if window.APPLICATION_TEMPLATE == "standard":
                 jQuery("a.menu-href").removeClass("btn-warning")

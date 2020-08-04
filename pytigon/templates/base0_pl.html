@@ -94,22 +94,21 @@
                                         {% endfor %}
                                 {% endif %}
                         {% endblock %}
-                        {% block tabs %}
-                                {% block body_body %}
-                                        {% if user.is_authenticated or not settings.SHOW_LOGIN_WIN or NO_CHECK_AUTH %}
-                                                {% block panel %}{% endblock %}
-                                                {% block navglobal %}{% endblock %}
-                                                {% block sidebar %}{% endblock %}
-                                                {% block style_content_start %}{% endblock %}
-                                                {% block content_start %}{% endblock %}
-                                                {% block no_content %}
-                                                        {% block content %}{% endblock %}
-                                                {% endblock %}
-                                                {% block content_end %}{% endblock %}
-                                                {% block style_content_end %}{% endblock %}
-                                        {% endif %}
-                                {% endblock %}
+                        {% block body_desktop %}
+                                {% if user.is_authenticated or not settings.SHOW_LOGIN_WIN or NO_CHECK_AUTH %}
+                                        {% block panel %}{% endblock %}
+                                        {% block navglobal %}{% endblock %}
+                                        {% block sidebar %}{% endblock %}
+                                        {% block style_content_start %}{% endblock %}
+                                        {% block content_start %}{% endblock %}
+                                        {% block no_content %}
+                                                {% block content %}{% endblock %}
+                                        {% endblock %}
+                                        {% block content_end %}{% endblock %}
+                                        {% block style_content_end %}{% endblock %}
+                                {% endif %}
                         {% endblock %}
+                        {% block tabs %}{% endblock %}
                 {% endif %}
                 {% block html_widgets_init %}{% endblock %}
                 {% block body_footer %}{% endblock %}

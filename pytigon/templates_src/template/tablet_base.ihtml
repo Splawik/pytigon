@@ -90,6 +90,12 @@
             {{block.super}}
         <div class="content-wrapper">
 
+%% body_end
+    % if form_ext or not show_form:
+        </div>
+    {{block.super}}
+
+
 %% body_init
     <section class="content" id="panel">
 
@@ -165,8 +171,10 @@
                 div class=tab-content win-content,,,id=tabs2_content
             % with NO_TABS=True:
                 {{block.super}}
-    </section></div>
 
+%% body_footer
+    {{block.super}}
+    </section>
 
 %% jquery_init
     % if form_ext or not show_form:

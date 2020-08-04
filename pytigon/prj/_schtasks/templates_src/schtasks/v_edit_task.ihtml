@@ -79,8 +79,6 @@
     %with show_title_bar=1 title='Edit task':
         {{ block.super }}
 
-%% body_body
-    {{ block.super }}
 
 %% body
     % if not show_form and object:

@@ -2,8 +2,8 @@
 {% extends default_template2 %}
 {% block page_start %}{% endblock %}
 {% block page_head %}{% endblock %}
-{% block body_start %}{% endblock %}
-{% block body_header %}{% endblock %}
+{% block body_start2 %}{% endblock %}
+{% block body_header2 %}{% endblock %}
 {% block nav %}{% endblock %}
 {% block login %}{% endblock %}
 {% block body_init %}{% endblock %}
@@ -20,6 +20,11 @@
         </head>
         {% with NO_TABS=True %}
                 {{block.super}}
+        {% endwith %}
+{% endblock %}
+{% block body_desktop %}
+        {% with ONLY_CONTENT=True %}
+                {{ block.super }}
         {% endwith %}
 {% endblock %}
 {% block html_widgets_init %}{% endblock %}

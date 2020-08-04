@@ -291,22 +291,14 @@
                 ul class=nav nav-tabs win-header append-left,,,id=tabs2
                 div class=tab-content,,,id=tabs2_content
         {{block.super}}
-    % if standard_web_browser < 5 and application_type == 'modern':
-        div id=wiki_start
 
-%% body_body
-    % if standard_web_browser < 5 and application_type != 'modern':
-        div id=wiki_start
-
-    % if standard_web_browser >= 5:
-	    {{block.super}}
+%% body_desktop
+    % if ONLY_CONTENT:
+        {{block.super}}
     % else:
-        % if application_type == 'modern':
-            div class=container-fluid tab-pane refr_target refr_object win-content page
-                {{block.super}}
-        % else:
-            div id=body_body,,,class=container-fluid tab-pane refr_target refr_object win-content page
-                {{block.super}}
+        div id=body_desktop,,,class=container-fluid tab-pane refr_target refr_object win-content page
+            {{block.super}}
+
 
 %% body_end
     % if standard_web_browser:
