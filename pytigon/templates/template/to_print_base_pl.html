@@ -49,7 +49,7 @@
                 }
         {% endblock %}
         {% block component_init %}
-                component_init = null
+                var component_init = null
         {% endblock %}
         pytigon.app_init('{{prj_name}}', 'to_print', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
 {% endblock %}
@@ -117,7 +117,7 @@
                 </title>
         </head>
         {% with NO_TABS=True %}
-                <div id="body_body" class="container-fluid tab-pane refr_target refr_object win-content page">
+                <div id="body_desktop" class="container-fluid tab-pane refr_target refr_object win-content page">
                         {{block.super}}
                 </div>
         {% endwith %}

@@ -25,7 +25,6 @@ graphene-django
 django-graphql-jwt
 django-q
 html5lib
-https://github.com/groveco/django-sql-explorer/tarball/master#egg=package-1.0
 hypercorn
 ldap3
 libsass
@@ -42,3 +41,5 @@ wasmer
 whitenoise
 xonsh
 plotly
+https://github.com/groveco/django-sql-explorer/tarball/master#egg=package-1.0
+https://github.com/OmenApps/django-polymorphic/tarball/master

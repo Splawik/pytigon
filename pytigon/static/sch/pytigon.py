@@ -42,7 +42,8 @@ from tools import (
     remove_page_from_href,
     get_and_run_script,
     register_resize_fun,
-    process_resize
+    process_resize,
+    fragment_init
 )
 from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
@@ -252,7 +253,7 @@ def app_init(
     jQuery("#search").on("submit", "form", _on_submit)
     #jQuery("#wiki_start").on("submit", "form", _on_submit)
     jQuery("#body_desktop").on("submit", "form", _on_submit)
-
+    fragment_init(jQuery("#body_desktop"))
 
     # jQuery('#menu').perfectScrollbar()
 
@@ -427,9 +428,9 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
                 nonlocal href, href2, title
 
                 #jQuery("#wiki_start").hide()
-                jQuery("#body_desktop").hide()
 
                 if window.APPLICATION_TEMPLATE == "modern":
+                    jQuery("#body_desktop").hide()
                     id = menu.new_page(title, data, href2)
                 else:
                     mount_html(jQuery("#body_desktop"), data)

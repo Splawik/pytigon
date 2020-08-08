@@ -319,11 +319,6 @@
                 </div>
                 {{block.super}}
         {% endif %}
-        {% comment %}
-                {% if standard_web_browser < 5 and application_type == 'modern' %}
-                        <div id="wiki_start"></div>
-                {% endif %}
-        {% endcomment %}
 {% endblock %}
 {% block body_desktop %}
         {% if ONLY_CONTENT %}
@@ -333,20 +328,6 @@
                         {{block.super}}
                 </div>
         {% endif %}
-        {% comment %}
-                {% if standard_web_browser < 5 and application_type != 'modern' %}
-                        <div id="wiki_start"></div>
-                {% endif %}
-                {% if standard_web_browser >= 5 %}
-                        {{block.super}}
-                  {% else %}
-                        {% if application_type == 'modern' %}
-                                <div id="body_desktop_tabs" class="container-fluid tab-pane refr_target refr_object win-content page">
-                                        {{block.super}}
-                                </div>
-                        {% endif %}
-                {% endif %}
-        {% endcomment %}
 {% endblock %}
 {% block body_end %}
         {% if standard_web_browser %}

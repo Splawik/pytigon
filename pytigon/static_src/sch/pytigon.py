@@ -428,9 +428,9 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
                 nonlocal href, href2, title
 
                 #jQuery("#wiki_start").hide()
-                jQuery("#body_desktop").hide()
 
                 if window.APPLICATION_TEMPLATE == "modern":
+                    jQuery("#body_desktop").hide()
                     id = menu.new_page(title, data, href2)
                 else:
                     mount_html(jQuery("#body_desktop"), data)
