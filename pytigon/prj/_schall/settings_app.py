@@ -51,16 +51,17 @@ from pytigon_lib.schtools.main_paths import get_main_paths
 paths = get_main_paths()
 app_pack_folders = []
 for base_apps_path in (paths['PRJ_PATH'], paths['PRJ_PATH_ALT']):
-    if not base_apps_path in sys.path:
-        sys.path.append(base_apps_path)
-    for ff in os.listdir(base_apps_path):
-        p = os.path.join(base_apps_path,ff)
-        if os.path.isdir(p):
-            if not ff.startswith('_'):
-                if not ff in app_pack_folders:
-                    app_pack_folders.append(ff)
-                    if not p in sys.path:
-                        sys.path.append(p)
+    if os.path.exists(base_apps_path):
+        if not base_apps_path in sys.path:
+            sys.path.append(base_apps_path)
+        for ff in os.listdir(base_apps_path):
+            p = os.path.join(base_apps_path,ff)
+            if os.path.isdir(p):
+                if not ff.startswith('_'):
+                    if not ff in app_pack_folders:
+                        app_pack_folders.append(ff)
+                        if not p in sys.path:
+                            sys.path.append(p)
 
 for app_pack in app_pack_folders:
     base_apps_path2 = os.path.join(base_apps_path, app_pack)
@@ -187,5 +188,5 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.08.07 19:56:26'
+GEN_TIME = '2020.08.15 08:55:34'
 
