@@ -41,5 +41,6 @@ wasmer
 whitenoise
 xonsh
 plotly
+django-log-viewer
 https://github.com/groveco/django-sql-explorer/tarball/master#egg=package-1.0
 https://github.com/OmenApps/django-polymorphic/tarball/master

@@ -88,6 +88,7 @@ _urlpatterns.extend(
         url(make_href("sw.js"), views.sw),
         path("graphql", PytigonGraphQLView.as_view(graphiql=True)),
         path("admin/", admin.site.urls),
+        path('admin/log_viewer/', include('log_viewer.urls')),
     ]
 )
 

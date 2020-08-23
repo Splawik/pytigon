@@ -200,6 +200,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "compressor",
     "django_q",
+    "log_viewer",
 ]
 
 if PLATFORM_TYPE != "webserver":
@@ -280,6 +281,9 @@ if PRODUCTION_VERSION:
             },
         },
     }
+
+LOG_VIEWER_FILES = ['pytigon.log', 'pytigon-err.log',]
+LOG_VIEWER_FILES_DIR = LOG_PATH
 
 if 'PYTIGON_TASK' in environ:
     LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log', '_task.log')
