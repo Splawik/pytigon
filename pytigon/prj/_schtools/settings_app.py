@@ -135,5 +135,13 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.07.07 19:43:55'
+GEN_TIME = '2020.08.26 18:00:45'
+
+for key, value in os.environ.items():
+    if key.startswith("PYTIGON_"):
+        key2 = key[8:]
+        if key2 in globals():
+            globals()[key2] = type(globals()[key2])(value)
+        else:
+            globals()[key2] = value
 

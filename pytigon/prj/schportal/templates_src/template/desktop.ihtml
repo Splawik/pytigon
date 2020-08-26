@@ -35,20 +35,20 @@
     .    vue_init = { username: "",theme: "",time_str: "" };
     .    var global_vue_bus = new Vue (vue_init);
     .</script>
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
-    {% component 'schcomponents/components/ptig-plotly.js' %}
-    {% component 'schportal/components/timer_init.js' %}
     {% component '_schwiki/components/insert_object.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
     {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
     {% component 'schportal/components/teleconference.js' %}
     {% component 'schcomponents/components/ptig-time.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-plotly.js' %}
+    {% component 'schportal/components/timer_init.js' %}
     {% component 'schcomponents/components/ptig-codeeditor.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "ptig-webrtc.js", "ptig-plotly.js", "timer_init.js", "insert_object.js", "ptig-d3.js", "ptig-wysiwygedit.js", "teleconference.js", "ptig-time.js", "ptig-codeeditor.js",  ];  
+    .var component_init = [ "insert_object.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "teleconference.js", "ptig-time.js", "ptig-d3.js", "ptig-plotly.js", "timer_init.js", "ptig-codeeditor.js",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

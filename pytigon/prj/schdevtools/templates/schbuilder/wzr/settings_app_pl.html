@@ -138,3 +138,11 @@ except:
 GEN_TIME = '{{gmtime}}'
 {% if offline_support %}OFFLINE_SUPPORT = True
 {% endif %}
+for key, value in os.environ.items():
+    if key.startswith("PYTIGON_"):
+        key2 = key[8:]
+        if key2 in globals():
+            globals()[key2] = type(globals()[key2])(value)
+        else:
+            globals()[key2] = value
+
