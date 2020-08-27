@@ -284,25 +284,11 @@ if PRODUCTION_VERSION:
 
     if 'PYTIGON_TASK' in environ:
         LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log',
-                                                                                                        '_task.log')
+                                                                                                        '-task.log')
         LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace(
             '.log', '_task.log')
 
-    if "LOGS_TO_DOCKER" in environ and environ["LOGS_TO_DOCKER"]:
-        LOGGING['handlers'] = {
-           "logfile": {
-               "level": "INFO",
-               "class": 'logging.StreamHandler',
-               "formatter": "standard",
-           },
-           "errorlogfile": {
-               "level": "WARNING",
-               "class": 'logging.StreamHandler',
-               "formatter": "standard",
-           },
-        }
-
-LOG_VIEWER_FILES = ['pytigon.log', 'pytigon-err.log',]
+LOG_VIEWER_FILES = ['pytigon.log', 'pytigon-err.log','pytigon-task.log','pytigon-err-task.log',]
 LOG_VIEWER_FILES_DIR = LOG_PATH
 LOG_VIEWER_PATTERNS = ['[',]
 
