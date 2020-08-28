@@ -238,7 +238,7 @@ if PRODUCTION_VERSION:
         "handlers": {
             "logfile": {
                 "level": "INFO",
-                "class": "logging.handlers.RotatingFileHandler",
+                "class": "logging.handlers.FileHandler",
                 "filename": LOG_PATH + "/pytigon.log",
                 "maxBytes": 50000,
                 "backupCount": 2,
@@ -246,7 +246,7 @@ if PRODUCTION_VERSION:
             },
             "errorlogfile": {
                 "level": "WARNING",
-                "class": "logging.handlers.RotatingFileHandler",
+                "class": "logging.handlers.FileHandler",
                 "filename": LOG_PATH + "/pytigon-err.log",
                 "maxBytes": 50000,
                 "backupCount": 2,
