@@ -282,7 +282,20 @@ if PRODUCTION_VERSION:
         },
     }
 
-    if 'PYTIGON_TASK' in environ:
+    if 'LOGS_TO_DOCKER' in environ and environ['LOGS_TO_DOCKER']:
+        LOGGING["handlers"] = {
+            "logfile": {
+                "level": "INFO",
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+            },
+            "errorlogfile": {
+                "level": "WARNING",
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+            },
+        }
+    elif 'PYTIGON_TASK' in environ:
         LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log',
                                                                                                         '-task.log')
         LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace(
