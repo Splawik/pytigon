@@ -13,7 +13,7 @@ from queue import Empty
 {% if app.tasks_code %}{{app.tasks_code|first_section|safe}} {% endif %}
 
 {% for task in tasks %}
-def {{task.name}}(cproxy, *args, **kwargs):
+def {{task.name}}(cproxy=None, **kwargs):
     {% if task.doc %}"""{% for line in task.doc.splitlines %}
     {{line|safe}}{% endfor %}
     """{% endif %}

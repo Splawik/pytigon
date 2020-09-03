@@ -62,7 +62,7 @@ def init_schedule(scheduler, cmd, http):
  
 
 
-def fun1(cproxy, *args, **kwargs):
+def fun1(cproxy=None, **kwargs):
     
     output_queue.put((int(id), "Hello world!\n"))
     time.sleep(30)
@@ -71,7 +71,7 @@ def fun1(cproxy, *args, **kwargs):
     return "OK"
     
 
-def fun2(cproxy, *args, **kwargs):
+def fun2(cproxy=None, **kwargs):
     
     while True:
         try:
@@ -89,7 +89,7 @@ def fun2(cproxy, *args, **kwargs):
     return "OK"
     
 
-def fun3(cproxy, *args, **kwargs):
+def fun3(cproxy=None, **kwargs):
     
     i = 0
     while True:

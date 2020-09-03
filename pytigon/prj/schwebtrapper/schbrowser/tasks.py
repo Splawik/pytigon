@@ -20,19 +20,21 @@ import requests
  
 
 
-def download_task(cproxy, *args, **kwargs):
+def download_task(cproxy=None, **kwargs):
     
     base_address, url = kwargs['user_parm']
     path = urllib.parse.urljoin(base_address, url)
-    cproxy.log(url)
+    if cproxy:
+        cproxy.log(url)
     r = requests.get(path)
     file_name = url.split('?')[0].split('/')[-1]
     with open("/tmp/"+file_name, "wb") as f:
         f.write(r.content)
-    cproxy.log("finish")
+    if cproxy:
+        cproxy.log("finish")
     
 
-def scan_html(cproxy, *args, **kwargs):
+def scan_html(cproxy=None, **kwargs):
     
     parm = kwargs['user_parm']
     base_address = parm['base_address']
