@@ -61,6 +61,9 @@ except:
 
 import pytigon.schserw.settings
 
+from django_q.tasks import async_task, result
+from pytigon_lib.schtasks.publish import publish
+
  
 _template="""
         [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
@@ -1005,9 +1008,17 @@ def prj_import(request):
 
 def manage(request, pk):
     
+    
+    
     prj = models.SChAppSet.objects.get(id=pk)
     base_path = os.path.join(settings.PRJ_PATH, prj.name)
     src_path = os.path.join(settings.PRJ_PATH, "schdevtools") 
+    
+    #task_id = async_task("schbuilder.views.test")
+    #print("TASK_ID: ", task_id)
+    #new_url = "../../../tasks/form/TaskListForm/%s/edit2__task" % task_id
+    #return HttpResponseRedirect(new_url)
+            
     command = "import sys; sys.path.append('%s'); from manage import *" % base_path
     pconsole = settings.PYTHON_CONSOLE.split(' ')
     pconsole[0]=">>>" + pconsole[0]

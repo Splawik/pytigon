@@ -22,23 +22,24 @@
             var global_vue_bus = new Vue (vue_init);
         </script>
         {% component 'schcomponents/components/ptig-webrtc.js' %}
-        {% component 'schcomponents/components/ptig-plotly.js' %}
-        {% component 'schcomponents/components/ptig-pivottable.js' %}
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-d3.js' %}
-        {% component 'schcomponents/components/ptig-money.js' %}
-        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schcomponents/components/ptig-calendar.js' %}
-        {% component 'schcomponents/components/ptig-mask.js' %}
-        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schcomponents/components/ptig-leaflet.js' %}
-        {% component 'schcomponents/components/ptig-scroll-action.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-calendar.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'schcomponents/components/ptig-time.js' %}
-        {% component 'schcomponents/components/ptig-markdeep.js' %}
+        {% component 'schcomponents/components/ptig-task.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-markdeep.js' %}
+        {% component 'schcomponents/components/ptig-scroll-action.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+        {% component 'schcomponents/components/ptig-mask.js' %}
+        {% component 'schcomponents/components/ptig-money.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-webrtc.js", "ptig-plotly.js", "ptig-pivottable.js", "ptig-wysiwygedit.js", "ptig-d3.js", "ptig-money.js", "ptig-spreadsheet.js", "ptig-xterm.js", "ptig-calendar.js", "ptig-mask.js", "ptig-video.js", "ptig-leaflet.js", "ptig-scroll-action.js", "ptig-time.js", "ptig-markdeep.js", "ptig-codeeditor.js",  ];
+        var component_init = [ "ptig-webrtc.js", "ptig-xterm.js", "ptig-leaflet.js", "ptig-plotly.js", "ptig-calendar.js", "ptig-wysiwygedit.js", "ptig-time.js", "ptig-task.js", "ptig-video.js", "ptig-codeeditor.js", "ptig-markdeep.js", "ptig-scroll-action.js", "ptig-pivottable.js", "ptig-spreadsheet.js", "ptig-mask.js", "ptig-money.js", "ptig-d3.js",  ];
 {% endblock %}
 

@@ -23,6 +23,7 @@ django_compressor
 easy_thumbnails
 graphene-django
 django-graphql-jwt
+django-q-email
 django-q
 html5lib
 hypercorn

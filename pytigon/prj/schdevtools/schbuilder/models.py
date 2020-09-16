@@ -22,6 +22,10 @@ from standard_components.models import *
 
 from schcommander.models import *
 
+from schtools.models import *
+
+from schtasks.models import *
+
 
 
 import os.path
@@ -1221,8 +1225,11 @@ class SChTask( models.Model):
 
     parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
-    code = models.TextField('Code', null=True, blank=True, editable=True, )
-    doc = models.TextField('Doc', null=True, blank=True, editable=True, )
+    code = models.TextField('Code', null=True, blank=True, editable=False, )
+    doc = models.TextField('Doc', null=True, blank=True, editable=False, )
+    perms = models.CharField('Perms', null=True, blank=True, editable=True, max_length=255)
+    publish = ext_models.NullBooleanField('Publish', null=True, blank=True, editable=True, )
+    publish_group = models.CharField('Publish group', null=True, blank=True, editable=True, max_length=64)
     
 
     def transform_template_name(self, request, template_name):

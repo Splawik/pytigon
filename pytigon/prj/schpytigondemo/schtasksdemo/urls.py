@@ -12,6 +12,8 @@ urlpatterns = [
     url('gen_task2', views.gen_task2, {}),
     url('gen_task3', views.gen_task3, {}),
     url('from_script/$', views.from_script, {}),
+    url('task2/$', views.task2, {}),
+    
     
     
 ]

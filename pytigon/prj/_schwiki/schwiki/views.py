@@ -28,6 +28,7 @@ from django.template.loader import select_template
 from pytigon_lib.schviews import make_path
 from pytigon_lib.schtools.schjson import json_loads, json_dumps
 from base64 import b32decode, b32encode
+from django.views.decorators.cache import cache_page
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -60,7 +61,7 @@ template_simple = """
 
 
 
-
+@cache_page(60 * 15)
 
 
 

@@ -9,6 +9,8 @@ import sys
 import datetime
 import time
 from queue import Empty
+from pytigon_lib.schtasks.publish import publish
+
 
 import asyncio
 
@@ -59,6 +61,7 @@ def init_schedule(scheduler, cmd, http):
 
     scheduler.add_task("M(day=31, at='22:07')", hello1, name="monthly", scheduler=scheduler)
     scheduler.add_task("M", hello1, name="monthly", scheduler=scheduler)
+
  
 
 
@@ -71,22 +74,16 @@ def fun1(cproxy=None, **kwargs):
     return "OK"
     
 
+@publish("demo")
 def fun2(cproxy=None, **kwargs):
     
-    while True:
-        try:
-            id, value = input_queue.get()
-            if value == '^C':
-                return
-        except:
-            print("except")
-            pass
-        else:
-            if type(value) == bytes:
-                output_queue.put((int(id), value.decode('utf-8')))
-            else:
-                output_queue.put((int(id), value))
-    return "OK"
+    if cproxy:
+        cproxy.send_event("<ul class='data'></ul>")
+    for i in range(0,30):
+        if cproxy:
+            cproxy.send_event("<li>item %d</li> ===>> .data" % i)
+        time.sleep(1)
+    return "Hello world"
     
 
 def fun3(cproxy=None, **kwargs):

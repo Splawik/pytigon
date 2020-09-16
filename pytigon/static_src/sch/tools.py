@@ -737,3 +737,39 @@ def process_resize():
         pos[0]()
 
 window.process_resize = process_resize
+
+def send_to_dom(html_text, base_elem):
+    if '===' in html_text:
+        if '===>>' in html_text:
+            x = html_text.split('===>>')
+            html = x[0]
+            selector = x[1].strip()
+            replace = False
+        elif '===>' in html_text:
+            x = html_text.split('===>')
+            html = x[0]
+            selector = x[1].strip()
+            replace = True
+        else:
+            x = html_text.split('===>')
+            html = x[0]
+            selector = x[1].strip()
+            replace = True
+    else:
+        html = html_text
+        selector = '|'
+        replace = False
+
+    if selector == '|':
+        elem = jQuery(base_elem)
+    elif selector.startswith('^'):
+        elem = jQuery(selector[1:])
+    else:
+        elem = jQuery(base_elem).find(selector.replace('|', ''))
+    if replace:
+        elem.html(html)
+    else:
+        elem.append(html)
+    return True
+
+window.send_to_dom = send_to_dom

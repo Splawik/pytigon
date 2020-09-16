@@ -25,26 +25,26 @@
             vue_init = { username: "",theme: "" };
             var global_vue_bus = new Vue (vue_init);
         </script>
-        {% component 'schcomponents/components/ptig-plotly.js' %}
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-        {% component 'schcomponents/components/ptig-mask.js' %}
-        {% component 'schdevtools/components/test.js' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
-        {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schcomponents/components/ptig-time.js' %}
-        {% component 'schcomponents/components/ptig-scroll-action.js' %}
-        {% component 'schcomponents/components/ptig-money.js' %}
-        {% component 'schcomponents/components/ptig-video.js' %}
-        {% component 'schcomponents/components/ptig-d3.js' %}
-        {% component 'schcomponents/components/ptig-pivottable.js' %}
         {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-time.js' %}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
         {% component 'schcomponents/components/ptig-webrtc.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schdevtools/components/test.js' %}
+        {% component 'schcomponents/components/ptig-xterm.js' %}
         {% component 'schcomponents/components/ptig-calendar.js' %}
-        {% component 'schcomponents/components/ptig-markdeep.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+        {% component 'schcomponents/components/ptig-markdeep.js' %}
+        {% component 'schcomponents/components/ptig-mask.js' %}
+        {% component 'schcomponents/components/ptig-scroll-action.js' %}
+        {% component 'schcomponents/components/ptig-video.js' %}
+        {% component 'schcomponents/components/ptig-money.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-mask.js", "test.js", "ptig-codeeditor.js", "ptig-xterm.js", "ptig-time.js", "ptig-scroll-action.js", "ptig-money.js", "ptig-video.js", "ptig-d3.js", "ptig-pivottable.js", "ptig-leaflet.js", "ptig-webrtc.js", "ptig-calendar.js", "ptig-markdeep.js", "ptig-spreadsheet.js",  ];
+        var component_init = [ "ptig-leaflet.js", "ptig-time.js", "ptig-plotly.js", "ptig-webrtc.js", "ptig-codeeditor.js", "ptig-d3.js", "test.js", "ptig-xterm.js", "ptig-calendar.js", "ptig-pivottable.js", "ptig-wysiwygedit.js", "ptig-spreadsheet.js", "ptig-markdeep.js", "ptig-mask.js", "ptig-scroll-action.js", "ptig-video.js", "ptig-money.js",  ];
 {% endblock %}
 {% block js_app_init %}
         let db_struct = [ ["devparam", {"keyPath": "key"}] ];

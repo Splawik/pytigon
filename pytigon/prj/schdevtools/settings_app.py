@@ -128,6 +128,7 @@ else:
 CHANNELS_URL_TAB += [ 
  ("^"+URL_ROOT_PREFIX+r"schbuilder/clock/channel/$", 'schbuilder.consumers.Clock'),
  ("^"+URL_ROOT_PREFIX+r"schcommander/shell/channel/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schtasks/show_task_events/channel/$", 'schtasks.consumers.TaskEventsConsumer'),
 ]
 
 
@@ -136,7 +137,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.08.26 18:00:11'
+GEN_TIME = '2020.09.16 19:18:09'
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

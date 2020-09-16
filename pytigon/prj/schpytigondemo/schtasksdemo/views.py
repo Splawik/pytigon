@@ -24,6 +24,7 @@ import datetime
 
 from pytigon_lib.schtasks.task import get_process_manager
 import time
+from django_q.tasks import async_task, result
  
 
 
@@ -52,9 +53,8 @@ def gen_task1(request):
 
 def gen_task2(request):
     
-    task_manager = get_process_manager()
-    task_manager.put(request, "Task title fun2", "@tasks_demo:fun2", user_parm = 123)
-    return { "ret": "OK" }
+    task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id="spec")
+    return { "ret": task_id }    
     
 
 
@@ -91,6 +91,20 @@ def from_script(request):
         
     return { "test": "OK", 'id': id, 'date_rap': date_rap, 'date_gen': date_gen, 'count': c }
         
+    
+
+
+
+@dict_to_template('schtasksdemo/v_task2.html')
+
+
+
+
+def task2(request, **argv):
+    
+    id = "spec"
+    task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id=id)
+    return { "task_id": task_id, "id": "demo__"+id }
     
 
 

@@ -14,8 +14,46 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 
 from channels.generic.http import AsyncHttpConsumer
 
+from pytigon_lib.schtasks.publish import CommunicationByCacheReceiver 
 
 
+class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
+
+    async def connect(self):
+        print('Connecting.......')
+        self.exit = False
+        await self.accept()
+        self.receiver = None
+        self.finish = False
+        self.commands = []
+                
+    async def receive_json(self, content):
+        if 'ping' in content:
+            await self.send_json({ 'status': 'pong' })
+        if 'id' in content:
+            id = content['id']
+            self.receiver = CommunicationByCacheReceiver(id, self)
+            while not self.finish:
+                if self.receiver:
+                    self.commands = []
+                    self.receiver.process()
+                    for command in self.commands:
+                        await self.send_json(command)
+                await asyncio.sleep(1)
+            
+    async def disconnect(self, close_code):
+        print('Disconnect.......')
+    
+    def handle_start(self):
+        self.commands.append({'status': 'start'})
+    
+    def handle_event(self, value):
+        self.commands.append({'status': 'event', 'data': value})
+    
+    def handle_end(self):
+        self.commands.append({'status': 'stop'})
+    
+    
 
 
-
+ 

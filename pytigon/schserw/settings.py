@@ -418,7 +418,8 @@ CACHE_URL = os.environ.setdefault("CACHE_URL", "")
 if CACHE_URL:
     CACHES = {"default": django_cache_url.config()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-
+else:
+    CACHES = { "default": { 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache' } }
 
 SOCIALACCOUNT_ADAPTER = "pytigon_lib.schdjangoext.allauth.SocialAccountAdapter"
 if DEBUG:
@@ -453,15 +454,26 @@ try:
 except:
     pass
 
-Q_CLUSTER = {
-    'name': 'DjangORM',
-    'workers': 2,
-    'timeout': 90,
-    'retry': 120,
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default'
-}
+if "EMBEDED_DJANGO_SERVER" in environ:
+    Q_CLUSTER = {
+        'name': 'DjangORM',
+        'workers': 1,
+        'timeout': 360,
+        'retry': 480,
+        'queue_limit': 10,
+        'bulk': 10,
+        'orm': 'default'
+    }
+else:
+    Q_CLUSTER = {
+        'name': 'DjangORM',
+        'workers': 2,
+        'timeout': 360,
+        'retry': 480,
+        'queue_limit': 50,
+        'bulk': 10,
+        'orm': 'default'
+    }
 
 try:
     from pytigon.schserw import *
