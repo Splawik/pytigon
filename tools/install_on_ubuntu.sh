@@ -9,9 +9,9 @@ apt install libffi-dev
 apt install libjpeg-dev
 
 
-cd /var
-mkdir www
-cd /var/www
+cd /home
+mkdir www-data
+cd /home/www-data
 git clone  https://github.com/Splawik/pytigon.git
 cd pytigon
 bash install.sh
@@ -28,10 +28,10 @@ apt install redis-server
 #    iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 #to /etc/rc.local
 
-cp  /var/www/pytigon/tools/pytigon-nginx /etc/nginx/sites-available/
+cp  /home/www-data/pytigon/tools/pytigon-nginx /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/pytigon-nginx /etc/nginx/sites-enabled/pytigon-nginx
 
-cp  /var/www/pytigon/tools/pytigon-uwsgi.service  /etc/systemd/system/
+cp  /home/www-data/pytigon/tools/pytigon-uwsgi.service  /etc/systemd/system/
 
 systemctl enable pytigon-uwsgi
 
@@ -39,5 +39,5 @@ systemctl enable pytigon-uwsgi
 #mysql -uroot -ppassword
 #CREATE SCHEMA `pytigon` DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci ;
 
-cd /var/www/pytigon
+cd /home/www-data/pytigon
 chown -R www-data:www-data .
