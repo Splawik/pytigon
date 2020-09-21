@@ -1014,10 +1014,16 @@ def manage(request, pk):
     base_path = os.path.join(settings.PRJ_PATH, prj.name)
     src_path = os.path.join(settings.PRJ_PATH, "schdevtools") 
     
+    #id = "spec"
+    #task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id=id)
+    #return { "task_id": task_id, "id": "demo__"+id }
+    
+    
     #task_id = async_task("schbuilder.views.test")
     #print("TASK_ID: ", task_id)
-    #new_url = "../../../tasks/form/TaskListForm/%s/edit2__task" % task_id
-    #return HttpResponseRedirect(new_url)
+    task_id = async_task("schbuilder.tasks.test")
+    new_url = "../../../tasks/form/TaskListForm/%s/edit2__task" % task_id
+    return HttpResponseRedirect(new_url)
             
     command = "import sys; sys.path.append('%s'); from manage import *" % base_path
     pconsole = settings.PYTHON_CONSOLE.split(' ')

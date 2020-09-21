@@ -78,7 +78,7 @@ def fun1(cproxy=None, **kwargs):
 def fun2(cproxy=None, **kwargs):
     
     if cproxy:
-        cproxy.send_event("<ul class='data'></ul>")
+        cproxy.send_event("<ul class='data'></ul><div name='task_end_info' style='display: none;'>Finish</div>")
     for i in range(0,30):
         if cproxy:
             cproxy.send_event("<li>item %d</li> ===>> .data" % i)
