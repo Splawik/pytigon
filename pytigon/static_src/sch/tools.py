@@ -792,7 +792,6 @@ class WebComponent(object):
         self.js = js
         self.css = css
 
-
     def make_component(self):
         self.options['tag'] = self.name
         self.options['shadow'] = self.shadow
@@ -806,19 +805,11 @@ class WebComponent(object):
                     connectedCallback(component)
                 load_many_js(self.js, _on_loadjs)
             self.options['connectedCallback'] = _connectedCallback
-        elif not self.shadow:
-            connectedCallback = self.options['connectedCallback']
-            def _connectedCallback(component):
-                nonlocal self, connectedCallback
-                def _on_loadjs():
-                    nonlocal connectedCallback, component
-                    connectedCallback(component)
-                window.setTimeout(_on_loadjs,1)
-            self.options['connectedCallback'] = _connectedCallback
 
         if self.css:
             for css in self.css:
                 load_css(css)
+
         ottavino.component(self.options)
 
     def fun(self, name):
