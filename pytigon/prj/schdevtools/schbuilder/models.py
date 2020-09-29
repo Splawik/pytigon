@@ -258,10 +258,10 @@ Static_CHOICES = (
     ("C","css (included in desktop.html)"),
     ("J","javascript (included in desktop.html)"),
     ("P","python to javascript (included in desktop.html)"),
-    ("R","vue.js component (included in desktop.html)"),
+    ("R","component (included in desktop.html)"),
     ("I","sass to css (included in desktop.html)"),
-    ("U","custom file (embeded translation for .pyj, .vue, .sass)"),
-    ("G","Vue globals"),
+    ("U","custom file (embeded translation for .pyj, .webc, .sass)"),
+    ("G","component globals"),
     
     )
 

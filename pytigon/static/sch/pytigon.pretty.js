@@ -2,11 +2,12 @@
 import{AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, 
 __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, 
 callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip}from "./org.transcrypt.__runtime__.js";
+import{GlobalBus}from "./component.js";
 import{process_href, process_on_click}from "./click_process.js";
 import{img_field}from "./widget.js";
 import{sync_and_run}from "./db.js";
 import{install_service_worker, service_worker_and_indexedDB_test}from "./offline.js";
-import{ajax_get, ajax_load, ajax_post, ajax_submit, can_popup, corect_href, get_and_run_script, get_table_type, history_push_state, load_css, load_js, load_many_js, mount_html, process_resize, register_fragment_init_fun, register_mount_fun, register_resize_fun, remove_page_from_href}from "./tools.js";
+import{ajax_get, ajax_load, ajax_post, ajax_submit, can_popup, corect_href, fragment_init, get_and_run_script, get_table_type, history_push_state, load_css, load_js, load_many_js, mount_html, process_resize, register_fragment_init_fun, register_mount_fun, register_resize_fun, remove_page_from_href}from "./tools.js";
 import{datatable_onresize, init_table}from "./tbl.js";
 import{on_cancel_inline, on_delete_ok, on_edit_ok, on_get_row, on_get_tbl_value, on_new_tbl_value, on_popup_delete, on_popup_edit_new, on_popup_info, on_popup_inline, only_get, refresh_current_app, refresh_current_object, refresh_current_page, refresh_fragment, ret_ok}from "./popup.js";
 import{get_menu}from "./tabmenu.js";
@@ -53,7 +54,16 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
       var self = jQuery(this);
       e.preventDefault();
       var _on_login_submit2 = function(data) {
-        window.location.pathname = window.BASE_PATH;
+        if (__in__("login-form", data)) {
+          jQuery("#login_txt1").addClass("d-none");
+          jQuery("#login_txt2").removeClass("d-none");
+          return;
+        }
+        if (window.PUSH_STATE) {
+          history_push_state("", window.BASE_PATH);
+        } else {
+          window.location.pathname = window.BASE_PATH;
+        }
         jQuery("body").removeClass("login_background");
         var start = data.indexOf("<body>");
         var end = data.lastIndexOf("</body>");
@@ -143,7 +153,7 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
       if (window.ACTIVE_PAGE) {
         mount_html(window.ACTIVE_PAGE.page, data);
       } else {
-        _on_menu_href(self, self.attr("title"), null, data);
+        mount_html(jQuery("#body_desktop"), data);
       }
       if (window.WAIT_ICON) {
         window.WAIT_ICON.stop();
@@ -158,6 +168,8 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
   jQuery("#tabs2_content").on("submit", "form", _on_submit);
   jQuery("#dialog-form-modal").on("submit", "form", _on_submit);
   jQuery("#search").on("submit", "form", _on_submit);
+  jQuery("#body_desktop").on("submit", "form", _on_submit);
+  fragment_init(jQuery("#body_desktop"));
   if (jQuery("#menu").length > 0) {
     window.PS = new PerfectScrollbar("#menu");
     var _on_resize = function() {
@@ -239,12 +251,14 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
       jQuery("body").on("expanded.pushMenu collapsed.pushMenu", _on_timeout);
     };
     jQuery(_local_fun);
+    window.GLOBAL_BUS = GlobalBus();
   }
   var _init_start_wiki_page = function() {
     if (start_page && start_page != "None" && window.location.pathname == base_path) {
       var _on_load = function(responseText, status, response) {
+        print("_init_strart_wiki_page::_on_load");
       };
-      ajax_load(jQuery("#wiki_start"), base_path + start_page + "?only_content&schtml=1", _on_load);
+      ajax_load(jQuery("#body_desktop"), base_path + start_page + "?only_content&schtml=1", _on_load);
     }
   };
   window.init_start_wiki_page = _init_start_wiki_page;
@@ -252,6 +266,8 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
   if (hasattr(window, "init_callback")) {
     window.init_callback();
   }
+  jQuery.fn.editable.defaults.mode = "inline";
+  jQuery.fn.combodate.defaults["maxYear"] = 2025;
 };
 export var _on_menu_href = function(elem, title, url, txt) {
   if (typeof title == "undefined" || title != null && title.hasOwnProperty("__kwargtrans__")) {
@@ -295,12 +311,12 @@ export var _on_menu_href = function(elem, title, url, txt) {
       }
       var href2 = corect_href(href);
       var _on_new_win = function(data) {
-        jQuery("#wiki_start").hide();
         if (window.APPLICATION_TEMPLATE == "modern") {
+          jQuery("#body_desktop").hide();
           var id = menu.new_page(title, data, href2);
         } else {
-          mount_html(jQuery("#body_body"), data);
-          window.ACTIVE_PAGE = Page(0, jQuery("#body_body"));
+          mount_html(jQuery("#body_desktop"), data);
+          window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
           window.ACTIVE_PAGE.set_href(href2);
           if (window.PUSH_STATE) {
             var id = jQuery(elem).attr("id");
@@ -378,22 +394,11 @@ export var init2 = function() {
     };
     jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun);
     if (window.APPLICATION_TEMPLATE == "traditional") {
-      window.ACTIVE_PAGE = Page(0, jQuery("#body_body"));
+      window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
     } else {
-      if (window.APPLICATION_TEMPLATE == "modern") {
-        var txt = jQuery(".page").html();
-        var txt2 = jQuery.trim(txt);
-        if (txt2) {
-          var txt = jQuery.trim(jQuery(".page")[0].outerHTML);
-          jQuery(".page").remove();
-          var menu = get_menu();
-          menu.new_page(jQuery("title").text(), txt, window.location.href);
-        }
-      } else {
-        window.ACTIVE_PAGE = Page(0, jQuery("#body_body"));
-        if (window.APPLICATION_TEMPLATE == "to_print") {
-          new Vue(dict({"el":"#body_body"}));
-        }
+      window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
+      if (window.APPLICATION_TEMPLATE == "to_print") {
+        new Vue(dict({"el":"#body_desktop"}));
       }
     }
   }
@@ -425,7 +430,7 @@ export var standard_on_data = function(src_obj, href) {
         mount_html(window.ACTIVE_PAGE.page, data);
         window.ACTIVE_PAGE.set_href(href);
       } else {
-        mount_html(jQuery("#body_body"), data);
+        mount_html(jQuery("#body_desktop"), data);
       }
       window.ACTIVE_PAGE.set_href(href);
       get_menu().get_active_item().url = href;
@@ -444,8 +449,8 @@ export var _on_popstate = function(e) {
       var menu = get_menu().activate(e.state, false);
     } else {
       var x = e.state;
-      mount_html(jQuery("#body_body"), LZString.decompress(x[0]));
-      window.ACTIVE_PAGE = Page(0, jQuery("#body_body"));
+      mount_html(jQuery("#body_desktop"), LZString.decompress(x[0]));
+      window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
       window.ACTIVE_PAGE.set_href(document.location);
       if (window.APPLICATION_TEMPLATE == "standard") {
         jQuery("a.menu-href").removeClass("btn-warning");
@@ -456,7 +461,7 @@ export var _on_popstate = function(e) {
   } else {
     if (window.APPLICATION_TEMPLATE == "modern") {
     } else {
-      mount_html(jQuery("#body_body"), "", false, false);
+      mount_html(jQuery("#body_desktop"), "", false, false);
       window.ACTIVE_PAGE = null;
       if (window.APPLICATION_TEMPLATE == "standard") {
         jQuery("a.menu-href").removeClass("btn-warning");

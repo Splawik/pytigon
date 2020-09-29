@@ -9,10 +9,7 @@
 
 %% ext_js_scripts
     {% spec '{' %}block.super{% spec '}' %}
-    {% if component_elements %}{% spec "[" %} jscript_link 'vue/vue.min.js' {% spec "]" %}
-    {% spec "[" %} jscript_link 'vue/httpVueLoader.js' {% spec "]" %}
-    {% spec "[" %} jscript_link 'vue/vue-wc-wrapper.global.js' {% spec "]" %}
-    {% spec "[" %} jscript_link 'system/require.js' {% spec "]" %}
+    {% if component_elements %}{% spec "[" %} jscript_link 'system/require.js' {% spec "]" %}
     {% endif %}
     
 %% js_extrascipts
@@ -33,8 +30,8 @@
     {% spec '{' %}block.super{% spec '}' %}
     {% if component_elements %}
     .<script language='javascript'>
-    .    {% if vue_init %}vue_init = { {{vue_init|one_line_code|safe}} };{% else %}vue_init="";{% endif %}
-    .    var global_vue_bus = new Vue (vue_init);
+    .    {% if initial_state %}initial_state = { {{initial_state|one_line_code|safe}} };{% else %}initial_state={};{% endif %}
+    .    GLOBAL_BUS.set_state(initial_state);
     .</script>
     {% for component_elem in component_elements %}{% spec "[" %} component '{{component_elem}}' {% spec ']' %}
     {% endfor %}

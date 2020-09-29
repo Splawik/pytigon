@@ -6,7 +6,7 @@ import{get_menu}from "./tabmenu.js";
 import{refresh_fragment}from "./popup.js";
 import{ajax_get, corect_href, mount_html}from "./tools.js";
 var __name__ = "click_process";
-export var get_value = function(elem, py_name) {
+export var _get_value = function(elem, py_name) {
   if (elem.length > 0) {
     var x = elem.closest(".refr_object");
     if (x.length > 0) {
@@ -27,7 +27,7 @@ export var process_href = function(href, elem) {
       if (process) {
         if (__in__("]]", pos)) {
           var x2 = pos.py_split("]]", 1);
-          var value = get_value(elem, x2[0]);
+          var value = _get_value(elem, x2[0]);
           if (value && value != "None") {
             ret.append(value + x2[1]);
           } else {
@@ -69,6 +69,9 @@ export var process_on_click = function(event_tab, elem) {
     if (!href) {
       return true;
     }
+    if (src_obj.hasClass("editable")) {
+      return true;
+    }
     var href = process_href(href, src_obj);
     for (var pos of event_tab) {
       if (pos[0] == "*" || pos[0] == target) {
@@ -104,12 +107,12 @@ export var process_on_click = function(event_tab, elem) {
           if (window.ACTIVE_PAGE) {
             mount_html(window.ACTIVE_PAGE.page, data);
           } else {
-            mount_html(jQuery("#wiki_start"), data);
+            mount_html(jQuery("#body_desktop"), data);
             return;
           }
           window.ACTIVE_PAGE.set_href(href);
         } else {
-          mount_html(jQuery("#body_body"), data);
+          mount_html(jQuery("#body_desktop"), data);
         }
         window.ACTIVE_PAGE.set_href(href);
         get_menu().get_active_item().url = href;
@@ -125,8 +128,7 @@ export var process_on_click = function(event_tab, elem) {
   } else {
     jQuery("#tabs2_content").on("click", "a", _on_click);
     jQuery("#dialog-form-modal").on("click", "a", _on_click);
-    jQuery("#body_body").on("click", "a", _on_click);
-    jQuery("#wiki_start").on("click", "a", _on_click);
+    jQuery("#body_desktop").on("click", "a", _on_click);
   }
 };
 

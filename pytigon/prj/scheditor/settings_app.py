@@ -132,6 +132,7 @@ else:
 
 CHANNELS_URL_TAB += [ 
  ("^"+URL_ROOT_PREFIX+r"schcommander/shell/channel/$", 'schcommander.consumers.ShellConsumer'),
+ ("^"+URL_ROOT_PREFIX+r"schtasks/show_task_events/channel/$", 'schtasks.consumers.TaskEventsConsumer'),
 ]
 
 
@@ -140,7 +141,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.08.26 18:01:00'
+GEN_TIME = '2020.09.29 20:47:54'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

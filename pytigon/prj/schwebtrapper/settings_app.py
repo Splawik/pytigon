@@ -125,13 +125,17 @@ else:
         DATABASES['local'] = db_local
 
 
+CHANNELS_URL_TAB += [ 
+ ("^"+URL_ROOT_PREFIX+r"schtasks/show_task_events/channel/$", 'schtasks.consumers.TaskEventsConsumer'),
+]
+
 
 try:
     from settings_app_local import *
 except:
     pass
 
-GEN_TIME = '2020.09.03 20:22:28'
+GEN_TIME = '2020.09.29 20:47:13'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

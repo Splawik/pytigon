@@ -167,56 +167,12 @@ def register_mount_fun(fun):
 
 def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
-    vue_load = False
 
     def _on_remove(index, value):
         value.on_remove()
     jQuery.each(elem.find('.call_on_remove'), _on_remove)
 
-    if (
-        component_init
-        and window.COMPONENT_INIT
-        and len(window.COMPONENT_INIT) > 0
-        and not 'raw_html' in html_txt
-    ):
-        elem.empty()
-
-        if '{!{' in html_txt or '}!}' in html_txt:
-            html_txt = html_txt.replace('{!{', '{&#8203;{').replace('}!}', '}&#8203;}')
-
-
-        ret = split_html(html_txt)
-
-        sc = ret[0]
-        if '[[' in sc or ']]' in sc:
-            sc = sc.replace('[[', '{{').replace(']]', '}}')
-
-        res = Vue.compile("<div>" + sc + "</div>")
-        if elem and elem.length > 0:
-            vm = __new__(
-                #Vue({"render": res.render, "staticRenderFns": res.staticRenderFns, "data": window.global_vue_bus.S__data} )
-                Vue({"render": res.render, "staticRenderFns": res.staticRenderFns, "data": window.vue_init})
-            )
-
-            def on_error(err, vm, info):
-                elem.html(html_txt)
-                console.log(err)
-                console.log(info)
-
-            old_err_handler = Vue.config.errorHandler
-            Vue.config.errorHandler = on_error
-
-            component = vm.S__mount()
-
-            Vue.config.errorHandler = old_err_handler
-
-            def _append(index, value):
-                if value:
-                    elem[0].appendChild(value)
-
-            jQuery.each(component.S__el.childNodes, _append)
-    else:
-        elem.html(html_txt)
+    elem.html(html_txt)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
@@ -535,6 +491,25 @@ def load_css(path):
 
 window.load_css = load_css
 
+def load_css(path, on_load = None):
+    global LOADED_FILES
+    if not (LOADED_FILES and path in LOADED_FILES):
+        LOADED_FILES[path] = None
+        req = __new__(XMLHttpRequest())
+
+        def _onload():
+            nonlocal req, on_load
+            if on_load:
+                on_load(req)
+            else:
+                jQuery('<style type="text/css"></style>').html(req.responseText).appendTo(
+                    "head"
+                )
+
+        req.onload = _onload
+
+        req.open("GET", path, True)
+        req.send("")
 
 def on_load_js(path):
     global LOADED_FILES
@@ -544,7 +519,6 @@ def on_load_js(path):
             for fun in functions:
                 fun()
         LOADED_FILES[path] = None
-
 
 def load_js(path, fun):
     global LOADED_FILES
@@ -696,26 +670,6 @@ def get_and_run_script(url, elem, e):
     except:
         pass
 
-
-def register_vue_component(name, component, js_libs=None, css_libs=None):
-    def _component(resolve, reject):
-        def _on_loadjs():
-            resolve(component())
-
-        if js_libs:
-            load_many_js(js_libs, _on_loadjs)
-        else:
-            _on_loadjs()
-
-        if css_libs:
-            for css_lib in css_libs:
-                load_css(css_lib)
-
-    Vue.component(name, _component)
-
-window.register_vue_component = register_vue_component
-
-
 def register_resize_fun(fun, priority=0):
     global RESIZE_FUN
     RESIZE_FUN.append((fun, priority))
@@ -774,56 +728,3 @@ def send_to_dom(html_text, base_elem):
 
 window.send_to_dom = send_to_dom
 
-
-def component_fun(component, name):
-    def decorator(funct):
-        component[name] = funct
-        return funct
-    return decorator
-
-window.component_fun = component_fun
-
-
-class WebComponent(object):
-    def __init__(self, name, shadow=False, js=None, css=None):
-        self.name = name
-        self.shadow = shadow
-        self.options = {}
-        self.js = js
-        self.css = css
-
-    def make_component(self):
-        self.options['tag'] = self.name
-        self.options['shadow'] = self.shadow
-
-        if self.js and 'connectedCallback' in self.options:
-            connectedCallback = self.options['connectedCallback']
-            def _connectedCallback(component):
-                nonlocal self, connectedCallback
-                def _on_loadjs():
-                    nonlocal connectedCallback, component
-                    connectedCallback(component)
-                load_many_js(self.js, _on_loadjs)
-            self.options['connectedCallback'] = _connectedCallback
-
-        if self.css:
-            for css in self.css:
-                load_css(css)
-
-        ottavino.component(self.options)
-
-    def fun(self, name):
-        def decorator(funct):
-            nonlocal self
-            self.options[name] = funct
-            return funct
-        return decorator
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.make_component()
-
-
-window.WebComponent = WebComponent

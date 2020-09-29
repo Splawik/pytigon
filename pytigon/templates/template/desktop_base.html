@@ -11,7 +11,10 @@
         {% compress js %}
                 {% jscript_link 'sch/schXMLHttpRequest.js' %}
                 {% jscript_link 'system/browser-polyfill.min.js' %}
-                {% jscript_link 'system/ottavino.js' %}
+                {% comment %}
+                        {% jscript_link 'system/ottavino.js' %}
+                {% endcomment %}
+                {% jscript_link 'system/index.nomodule.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
                 {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
                 {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}

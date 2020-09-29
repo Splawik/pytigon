@@ -651,7 +651,7 @@ def gen(request, pk):
     static_components = os.path.join(static_root,'components')
     
     offline_support = False
-    vue_init = ""
+    initial_state = ""
     
     for static_file in static_files:
         txt = static_file.code
@@ -668,8 +668,8 @@ def gen(request, pk):
             elif '.sass' in static_file.name:
                 dest_path = os.path.join(static_root,static_file.name.replace('.sass', '.css'))
                 typ = 'I'
-            elif '.vue' in static_file.name:
-                dest_path = os.path.join(static_root,static_file.name.replace('.vue', '.js'))
+            elif '.webc' in static_file.name:
+                dest_path = os.path.join(static_root,static_file.name.replace('.webc', '.js'))
                 typ = 'R'
                         
         if typ=='C':
@@ -723,7 +723,7 @@ def gen(request, pk):
             f.write(txt2.encode('utf-8'))
             f.close()        
         if static_file.type=='G':
-            vue_init += txt
+            initial_state += txt
     component_elements = []
     
     if prj.custom_tags:
@@ -766,7 +766,7 @@ def gen(request, pk):
                     component_elements += [ pos for pos in prj2.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '.' in pos ]    
                 component_elements += [ prj2.name + "/components/" + pos.name + ".js" for pos in static_files2 if pos.type in ('R',) ]
     
-    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements), 'vue_init': vue_init })
+    template_to_file(base_path, "desktop", "templates_src/template/desktop.ihtml",  {'prj': prj, 'js_static_files': set(js_static_files), 'css_static_files': set(css_static_files), 'static_for_ext_apps': static_for_ext_apps, 'component_elements': set(component_elements), 'initial_state': initial_state })
     
     
     #print(component_elements)

@@ -1,0 +1,10 @@
+{# -*- coding: utf-8 -*- #}
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-wysiwygedit width=100%,,,height=400px
+        p...I am going straight to the anonymous slot.

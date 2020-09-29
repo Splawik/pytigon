@@ -9,9 +9,6 @@
 
 %% ext_js_scripts
     {{block.super}}
-    {% jscript_link 'vue/vue.min.js' %}
-    {% jscript_link 'vue/httpVueLoader.js' %}
-    {% jscript_link 'vue/vue-wc-wrapper.global.js' %}
     {% jscript_link 'system/require.js' %}
     
     
@@ -29,8 +26,8 @@
     {{block.super}}
     
     .<script language='javascript'>
-    .    vue_init="";
-    .    var global_vue_bus = new Vue (vue_init);
+    .    initial_state="";
+    .    GLOBAL_BUS.set_state(initial_state);
     .</script>
     {% component 'schcomponents/components/ptig-codeeditor.js' %}
     

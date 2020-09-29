@@ -28,8 +28,13 @@ class TabMenu:
     def new_page(self, title_alternate, data, href):
         _id = "tab" + self.id
 
-        tmp = jQuery(data).find('header').find("title").text()
-        title =jQuery.trim(tmp)
+        #tmp = jQuery(data).find('header').find("title").text()
+        r = __new__(RegExp("<title[^>]*>([^<]+)<\/title>"))
+        try:
+            tmp = data.match(r)[1]
+            title =jQuery.trim(tmp)
+        except:
+            title = ""
         if not title:
             title = title_alternate
         title2 = jQuery.trim(title)

@@ -49,6 +49,7 @@ from offline import service_worker_and_indexedDB_test, install_service_worker
 from db import sync_and_run
 from widget import img_field
 from click_process import process_on_click, process_href
+from component import GlobalBus
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -364,6 +365,7 @@ def app_init(
             # jQuery(window).resize(datatable_onresize)
 
         jQuery(_local_fun)
+        window.GLOBAL_BUS = GlobalBus()
 
     def _init_start_wiki_page():
         if (
