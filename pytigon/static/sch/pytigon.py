@@ -53,7 +53,7 @@ from component import GlobalBus
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
-
+window.GLOBAL_BUS = GlobalBus()
 
 window.REINIT = None
 
@@ -365,7 +365,7 @@ def app_init(
             # jQuery(window).resize(datatable_onresize)
 
         jQuery(_local_fun)
-        window.GLOBAL_BUS = GlobalBus()
+
 
     def _init_start_wiki_page():
         if (

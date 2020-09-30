@@ -15,13 +15,11 @@
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
-        <script language='javascript'>
-            initial_state="";
-            GLOBAL_BUS.set_state(initial_state);
-        </script>
         {% component '_schwiki/components/insert_object.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "insert_object.js",  ];
+                var initial_state={};
+                GLOBAL_BUS.set_state(initial_state);
+                var component_init = [ "insert_object.js",  ];
 {% endblock %}
 

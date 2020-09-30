@@ -29,13 +29,11 @@
 %% body_footer_scripts
     {% spec '{' %}block.super{% spec '}' %}
     {% if component_elements %}
-    .<script language='javascript'>
-    .    {% if initial_state %}initial_state = { {{initial_state|one_line_code|safe}} };{% else %}initial_state={};{% endif %}
-    .    GLOBAL_BUS.set_state(initial_state);
-    .</script>
     {% for component_elem in component_elements %}{% spec "[" %} component '{{component_elem}}' {% spec ']' %}
     {% endfor %}
     {% endif %}
 
 %% component_init
-    {% if component_elements %}.var component_init = [ {% for pos in component_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ];  {% else %} .var component_init = []; {% endif %}
+    {% if component_elements %}{% if initial_state %}    .var initial_state = { {{initial_state|one_line_code|safe}} };{% else %}    .var initial_state={};{% endif %}
+        .GLOBAL_BUS.set_state(initial_state);
+        .var component_init = [ {% for pos in component_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ];  {% else %} .var component_init = []; {% endif %}

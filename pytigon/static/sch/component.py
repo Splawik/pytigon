@@ -71,6 +71,7 @@ def set_state(component, state):
                             if element_selector.startswith("style-"):
                                 node.style[element_selector[6:]] = value2
                             elif element_selector.startswith("attr-"):
+                                old_value = node.getAttribute(element_selector[5:], "")
                                 node.setAttribute(element_selector[5:], value2)
                             elif element_selector.startswith("class-"):
                                 cls = element_selector[6:]
@@ -147,7 +148,8 @@ class GlobalBus():
 
     def set_state(self, state):
         if state:
-            for key, value in state.items():
+            state2 = dict(state)
+            for key, value in state2.items():
                 if not (key in self.state and self.state[key] != value):
                     self.state[key] = value
                     self.emit(key, value)

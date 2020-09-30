@@ -1,6 +1,12 @@
-// Transcrypt'ed from Python, 2020-09-29 22:47:26
+// Transcrypt'ed from Python, 2020-09-30 20:05:59
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../sch/org.transcrypt.__runtime__.js';
 var __name__ = '__main__';
+export var TAG = 'insert-object';
+export var TEMPLATE = '        <div name=\"insert_element\" class=\"col-5\">\n' +
+    '                <slot></slot>\n' +
+    '        </div>\n' +
+    '\n' +
+    '';
 export var handle_click = function (app_path, object, context) {
 	var robj = object.closest ('.refr_object');
 	var editor_div = robj.find ("div[name='vseditor']");
@@ -65,30 +71,32 @@ export var handle_click = function (app_path, object, context) {
 		}
 	}
 };
-export var insert_object = function () {
-	var template = "<div name='insert_element' class='col-5'><slot></slot></div>";
-	var props = ['app_path'];
-	var mounted = function () {
-		var self = this;
-		var button = this.$el.childNodes [0];
+var comp = DefineWebComponent (TAG, true);
+try {
+	comp.__enter__ ();
+	comp.options ['template'] = TEMPLATE;
+	var init = comp.fun ('init') (function (component) {
+		var div = component.root.querySelector ('div');
+		var button = component.querySelector ('button');
 		button.style.height = '100%';
 		var on_click = function () {
 			var on_get = function (content) {
-				handle_click (self.app_path, window.jQuery (button), content);
+				handle_click (component.getAttribute ('app_path'), jQuery (button), content);
 			};
 			ajax_json (window.process_href (button.href, window.jQuery (button)), dict ({}), on_get);
 			return false;
 		};
 		button.onclick = on_click;
-		var _fragment_init = function () {
-			var obj = jQuery (self.$el);
-			var frame = obj.closest ('.refresh_after_close');
-			window.fragment_init (frame);
-		};
-		Vue.nextTick (_fragment_init);
-	};
-	return dict ({'template': template, 'mounted': mounted, 'props': props});
-};
-Vue.component ('insert-object', insert_object ());
+		var obj = jQuery (component);
+		var frame = obj.closest ('.refresh_after_close');
+		window.fragment_init (frame);
+	});
+	comp.__exit__ ();
+}
+catch (__except0__) {
+	if (! (comp.__exit__ (__except0__.name, __except0__, __except0__.stack))) {
+		throw __except0__;
+	}
+}
 
 //# sourceMappingURL=input.map
