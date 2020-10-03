@@ -16,11 +16,11 @@ Urls  = (
     ('xterm?schtml=desktop',_('Xterm'),None,"""png://apps/utilities-terminal.png"""),
     ('calendar?schtml=desktop',_('Calendar'),None,"""png://actions/appointment-new.png"""),
     ('mask?schtml=desktop',_('Mask edit'),None,"""png://actions/format-text-underline.png"""),
-    ('money?schtml=desktop',_('Money edit'),None,"""png://status/weather-clear.png"""),
     ('markdeep?schtml=desktop',_('Markdeep'),None,"""png://mimetypes/text-x-generic.png"""),
     ('webrtc?schtml=desktop',_('WebRTC'),None,"""png://status/network-transmit-receive.png"""),
     ('time?schtml=desktop',_('Time edit'),None,"""png://actions/appointment-new.png"""),
     ('scrollaction?schtml=desktop',_('Scroll actions'),None,"""ART_GO_DOWN"""),
     ('plotly?schtml=desktop',_('Plotly'),None,"""ART_FRAME_ICON"""),
+    ('Ui5?schtml=desktop',_('Sap ui5'),None,"""ART_NEW"""),
 )
 UserParam = {}

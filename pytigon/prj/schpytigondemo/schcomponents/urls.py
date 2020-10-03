@@ -19,7 +19,6 @@ urlpatterns = [
      url(r'^xterm', TemplateView.as_view(template_name='schcomponents/xterm.html'), {}), 
      url(r'^calendar', TemplateView.as_view(template_name='schcomponents/calendar.html'), {}), 
      url(r'^mask', TemplateView.as_view(template_name='schcomponents/mask.html'), {}), 
-     url(r'^money', TemplateView.as_view(template_name='schcomponents/money.html'), {}), 
      url(r'^markdeep', TemplateView.as_view(template_name='schcomponents/markdeep.html'), {}), 
      url(r'^webrtc', TemplateView.as_view(template_name='schcomponents/webrtc.html'), {}), 
      url(r'^time', TemplateView.as_view(template_name='schcomponents/time.html'), {}), 
