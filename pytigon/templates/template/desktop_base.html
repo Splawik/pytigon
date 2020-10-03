@@ -10,8 +10,6 @@
         </script>
         {% compress js %}
                 {% jscript_link 'sch/pytigon-tools.js' %}
-                {% jscript_link 'system/browser-polyfill.min.js' %}
-                {% jscript_link 'system/index.nomodule.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
                 {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
                 {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
@@ -45,6 +43,7 @@
                 {% jscript_link 'sch/inline_dialog.js' %}
                 {% block theme_js_scripts %}{% endblock %}
                 {% block ext_js_scripts %}{% endblock %}
+                {% jscript_link 'components/sap-ui-core.js' %}
         {% endcompress %}
         {% module_link 'sch/pytigon.js' %}
 {% endblock %}
