@@ -28,24 +28,34 @@
 %% body_footer_scripts
     {{block.super}}
     
-    .<script language='javascript'>
-    .    initial_state = { username: "",theme: "",time_str: "" };
-    .    GLOBAL_BUS.set_state(initial_state);
-    .</script>
-    {% component '_schwiki/components/insert_object.js' %}
+    {% component 'schcomponents/components/ptig-task.js' %}
+    {% component 'schcomponents/components/ptig-video.js' %}
+    {% component 'schcomponents/components/ptig-leaflet.js' %}
     {% component 'schcomponents/components/ptig-webrtc.js' %}
-    {% component 'schportal/components/teleconference.js' %}
-    {% component 'schportal/components/timer_init.js' %}
-    {% component 'schcomponents/components/ptig-time.js' %}
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-plotly.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schportal/components/timer_init.js' %}
+    {% component 'schcomponents/components/ptig-margin-left.js' %}
     {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component '_schwiki/components/insert_object.js' %}
+    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+    {% component 'schcomponents/components/ptig-markdeep.js' %}
+    {% component 'schcomponents/components/ptig-time.js' %}
+    {% component 'schcomponents/components/ptig-calendar.js' %}
+    {% component 'schcomponents/components/ptig-scroll-action.js' %}
+    {% component 'schportal/components/teleconference.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+    {% component 'schcomponents/components/ptig3-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-mask.js' %}
+    {% component 'schcomponents/components/ptig-pivottable.js' %}
     
     
 
 %% component_init
-    .var component_init = [ "insert_object.js", "ptig-webrtc.js", "teleconference.js", "timer_init.js", "ptig-time.js", "ptig-codeeditor.js", "ptig-plotly.js", "ptig-d3.js", "ptig-wysiwygedit.js",  ];  
+        .var initial_state = { username: "",theme: "",time_str: "" };
+        .GLOBAL_BUS.set_state(initial_state);
+        .var component_init = [ "ptig-task.js", "ptig-video.js", "ptig-leaflet.js", "ptig-webrtc.js", "ptig-plotly.js", "ptig-xterm.js", "timer_init.js", "ptig-margin-left.js", "ptig-d3.js", "insert_object.js", "ptig-spreadsheet.js", "ptig-markdeep.js", "ptig-time.js", "ptig-calendar.js", "ptig-scroll-action.js", "teleconference.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js", "ptig3-codeeditor.js", "ptig-mask.js", "ptig-pivottable.js",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

@@ -16,6 +16,7 @@ class Command(BaseCommand):
         print(settings.PRJ_PATH, settings.PRJ_NAME)
         l = len(base_path)
         itemplate_path = os.path.join(base_path, "templates_src")
+        print(itemplate_path)
         for root, dirs, files in os.walk(itemplate_path):
             for f in files:
                 if f.endswith('.ihtml'):

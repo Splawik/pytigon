@@ -22,6 +22,8 @@ from schwiki.models import *
 
 from schreports.models import *
 
+from standard_components.models import *
+
 
 
 

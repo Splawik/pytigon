@@ -15,15 +15,13 @@
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
-        <script language='javascript'>
-            initial_state="";
-            GLOBAL_BUS.set_state(initial_state);
-        </script>
         {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
-        var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js",  ];
+                var initial_state={};
+                GLOBAL_BUS.set_state(initial_state);
+                var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
