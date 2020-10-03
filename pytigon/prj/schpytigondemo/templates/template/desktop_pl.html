@@ -22,7 +22,6 @@
         {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schcomponents/components/ptig-calendar.js' %}
         {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schcomponents/components/ptig-money.js' %}
         {% component 'schcomponents/components/ptig-webrtc.js' %}
         {% component 'schcomponents/components/ptig-task.js' %}
         {% component 'schcomponents/components/ptig-mask.js' %}
@@ -40,7 +39,7 @@
 {% block component_init %}
                 var initial_state={};
                 GLOBAL_BUS.set_state(initial_state);
-                var component_init = [ "ptig-markdeep.js", "ptig-spreadsheet.js", "ptig-scroll-action.js", "ptig-video.js", "ptig-calendar.js", "ptig-xterm.js", "ptig-money.js", "ptig-webrtc.js", "ptig-task.js", "ptig-mask.js", "ptig-plotly.js", "ptig-d3.js", "ptig-margin-left.js", "ptig3-codeeditor.js", "ptig-time.js", "ptig-pivottable.js", "ptig-leaflet.js", "insert_object.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
+                var component_init = [ "ptig-markdeep.js", "ptig-spreadsheet.js", "ptig-scroll-action.js", "ptig-video.js", "ptig-calendar.js", "ptig-xterm.js", "ptig-webrtc.js", "ptig-task.js", "ptig-mask.js", "ptig-plotly.js", "ptig-d3.js", "ptig-margin-left.js", "ptig3-codeeditor.js", "ptig-time.js", "ptig-pivottable.js", "ptig-leaflet.js", "insert_object.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
 {% endblock %}
 {% block js_app_init %}
         {% comment %}
