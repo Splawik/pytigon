@@ -6,15 +6,19 @@ import sass
 
 path = os.getcwd()
 
-script_path = os.path.abspath(os.path.join(os.path.dirname(__file__).replace("make.py", ""), "pytigon"))
+script_path = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__).replace("make.py", ""), "pytigon", "static_src"
+    )
+)
 
 if script_path == "":
     script_path = path
 else:
     os.chdir(script_path)
 
-os.chdir("./static_src/sch")
-sys.argv = ["", "--xpath", script_path, "--map", "pytigon.py"]
+# os.chdir("./static_src/")
+sys.argv = ["", "--xpath", script_path, "--map", "pytigon_js/pytigon.py"]
 print(os.getcwd())
 from transcrypt.__main__ import main
 
@@ -24,11 +28,11 @@ main()
 
 os.chdir(script_path)
 
-compiled_files = os.listdir("./static_src/sch/__target__/")
+compiled_files = os.listdir("./pytigon_js/__target__/")
 
 for name in compiled_files:
-    src = os.path.join("./static_src/sch/__target__/", name)
-    dst = os.path.join("./static/sch/", name)
+    src = os.path.join("./pytigon_js/__target__/", name)
+    dst = os.path.join("../static/pytigon_js/", name)
     print(src, "=>", dst)
     copyfile(src, dst)
 
@@ -51,5 +55,6 @@ p = Path("./static_src/")
 for pos in p.glob("**/*.sass"):
     if not pos.stem.startswith("_"):
         scss_compile(pos.parent.as_posix(), pos.name)
+
 
 os.chdir(path)

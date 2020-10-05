@@ -689,7 +689,7 @@ def gen(request, pk):
             txt2 = t.render(Context({'prj': prj} ))
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
-                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../pytigon_js/org.transcrypt.__runtime__.js').replace('__globals__,', '')
                 #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
@@ -701,7 +701,7 @@ def gen(request, pk):
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
                 #codejs = codejs.split("__pragma__ ('<all>')",1)[0]
-                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../sch/org.transcrypt.__runtime__.js').replace('__globals__,', '')
+                codejs = codejs.replace('./org.transcrypt.__runtime__.js','../../pytigon_js/org.transcrypt.__runtime__.js').replace('__globals__,', '')
             except:
                 codejs = ""
             print(dest_path if dest_path else os.path.join(static_components, static_file.name+'.js'))    

@@ -12,7 +12,7 @@
         .window.BASE_PATH = '{{base_path}}';
 
     % compress js:
-        {% jscript_link 'sch/pytigon-tools.js' %}
+        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
         {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
         {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
         {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
@@ -50,16 +50,15 @@
         {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
 
-        {% jscript_link 'sch/inline_dialog.js' %}
         %% theme_js_scripts
         %% ext_js_scripts
 
-    {% module_link 'sch/pytigon.js' %}
+    {% module_link 'pytigon_js/pytigon.js' %}
 
 %% jquery_init
-    .import {app_init,jquery_ready} from  "{% get_static_prefix %}sch/pytigon.js";
-    .import {init_db,init_sync} from  "{% get_static_prefix %}sch/db.js";
-    .import {register_fragment_init_fun,animate_combo} from '{% get_static_prefix %}sch/tools.js';
+    .import {app_init,jquery_ready} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
+    .import {init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon_js.db.js";
+    .import {register_fragment_init_fun,animate_combo} from '{% get_static_prefix %}pytigon_js/pytigon_js.tools.js';
     .window.animate_combo = animate_combo;
     %% js_app_init
         .function base_fragment_init() {}
@@ -126,7 +125,7 @@
 
         %% theme_css_links
             % comment:
-            {% css_link 'sch/select2-material.css' %}
+            {% css_link 'themes/select2-material.css' %}
 
         %% theme_css_links_spec
             {% css_link 'themes/default.css' %}
