@@ -420,6 +420,7 @@ def _on_menu_href(elem, title=None, url=None, txt=None):
         if window.APPLICATION_TEMPLATE == "modern" and menu.is_open(title):
             menu.activate(title)
         else:
+            menu.register(title)
             if url:
                 href = url
             else:
