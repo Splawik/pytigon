@@ -1,6 +1,6 @@
 ## -- coding: utf-8 --
 
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.utils.translation import ugettext_lazy as _
 from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
@@ -8,10 +8,10 @@ from . import views
 
 
 urlpatterns = [
-    url('table/DocHead/(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>)docheadlist/', views.view_doc_heads, {}),
-    url('table/DocItem/(?P<parent_id>\d+)/docitemlist/', views.view_doc_items, {}),
-    url('table/DocHead/(?P<id>\d+)/edit_head/', views.edit_head, {}),
-    url('table/DocItem/(?P<id>\d+)/edit_item/', views.edit_item, {}),
+    re_path('table/DocHead/(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>)docheadlist/', views.view_doc_heads, {}),
+    re_path('table/DocItem/(?P<parent_id>\d+)/docitemlist/', views.view_doc_items, {}),
+    re_path('table/DocHead/(?P<id>\d+)/edit_head/', views.edit_head, {}),
+    re_path('table/DocItem/(?P<id>\d+)/edit_item/', views.edit_item, {}),
     gen_row_action('DocHead', 'approve', views.approve),
     gen_row_action('DocHead', 'discard', views.discard),
     

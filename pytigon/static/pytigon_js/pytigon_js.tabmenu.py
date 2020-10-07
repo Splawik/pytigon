@@ -41,6 +41,8 @@ class TabMenu:
         title2 = jQuery.trim(title)
         menu_item = TabMenuItem(_id, title2, href, data)
         self.titles[title2] = menu_item
+        if title_alternate and title_alternate != title2:
+            self.titles[title_alternate] = menu_item
         menu_pos = vsprintf(
             "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-outline-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
             [_id, _id, title2, title2, _id],

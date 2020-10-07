@@ -822,6 +822,7 @@ class SChView( models.Model):
     view_code = models.TextField('View code', null=True, blank=True, editable=False, )
     url_params = models.CharField('Url params', null=True, blank=True, editable=True, max_length=255)
     ret_type = models.CharField('Return value type', null=False, blank=False, editable=True, default='U',choices=ViewRetType_CHOICES,max_length=1)
+    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     extra_code = models.TextField('Extra code', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     
@@ -853,10 +854,16 @@ class SChView( models.Model):
     def get_url(self):
         name = self.get_name()
         if self.view_type == 'u':
-            if self.url_params and self.url_params!="":
-                return "url('%s', views.%s, %s)" % (self.url, name, self.url_params)
+            if '(?P' in self.url:
+                if self.url_params and self.url_params!="":
+                    return "re_path('%s', views.%s, %s)" % (self.url, name, self.url_params)
+                else:
+                    return "re_path('%s', views.%s)" % (self.url, name)
             else:
-                return "url('%s', views.%s)" % (self.url, name)
+                if self.url_params and self.url_params!="":
+                    return "path('%s', views.%s, %s)" % (self.url, name, self.url_params)
+                else:
+                    return "path('%s', views.%s)" % (self.url, name)            
         else:
             if self.view_type == 'r':
                 bname='gen_row_action'
@@ -956,6 +963,7 @@ class SChTemplate( models.Model):
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
     static_files = models.ManyToManyField(SChStatic, null=True, blank=True, editable=True, verbose_name='Static files', )
     tags_mount = models.CharField('Mount component tags', null=True, blank=True, editable=True, max_length=256)
+    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     
 
     def get_url_name(self):
@@ -973,7 +981,10 @@ class SChTemplate( models.Model):
                 param = self.url_parm
             else:
                 param = ""
-            return "url(r'^%s', TemplateView.as_view(template_name='%s/%s'), {%s})" % (url_name, app_name, template_name, param )
+            if '(?P' in self.url:
+                return "re_path(r'^%s', TemplateView.as_view(template_name='%s/%s'), {%s})" % (url_name, app_name, template_name, param )
+            else:
+                return "path('%s', TemplateView.as_view(template_name='%s/%s'), {%s})" % (url_name, app_name, template_name, param )
         else:
             return None
                 
@@ -1135,6 +1146,7 @@ class SChForm( models.Model):
     process_code = models.TextField('Process code', null=True, blank=True, editable=True, )
     end_class_code = models.TextField('End class code', null=True, blank=True, editable=True, )
     end_code = models.TextField('End code', null=True, blank=True, editable=True, )
+    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     doc = models.TextField('Doc', null=True, blank=True, editable=True, )
     
 

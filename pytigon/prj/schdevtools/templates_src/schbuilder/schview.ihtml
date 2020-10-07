@@ -51,7 +51,7 @@
         {{object.get_view_type_display}}
                 
     % form:
-        "ret_type", "parent", "name", "url_params"
+        "ret_type", "parent", "name", "url_params", "asynchronous"
     
     % if object.view_type == 'u'
         % form:

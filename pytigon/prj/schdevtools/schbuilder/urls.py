@@ -1,6 +1,6 @@
 ## -- coding: utf-8 --
 
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.utils.translation import ugettext_lazy as _
 from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
@@ -30,7 +30,7 @@ urlpatterns = [
     gen_tab_action('SChAppSet', 'update', views.update),
     gen_row_action('SChLocale', 'translate_sync', views.translate_sync),
     gen_row_action('SChAppSet', 'locale_gen', views.locale_gen),
-    url('download_installer/(?P<name>\w+)/$', views.download_installer, {}),
+    re_path('download_installer/(?P<name>\w+)/$', views.download_installer, {}),
     
     
     
@@ -62,12 +62,12 @@ urlpatterns = [
     
     
     
-     url(r'^devtools', TemplateView.as_view(template_name='schbuilder/devtools.html'), {}), 
+     path('devtools', TemplateView.as_view(template_name='schbuilder/devtools.html'), {}), 
     
     
     
-    url('form/Installer/$', views.view_installer, {}),
-    url('form/Install/$', views.view_install, {}),
+    path('form/Installer/$', views.view_installer, {}),
+    path('form/Install/$', views.view_install, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)

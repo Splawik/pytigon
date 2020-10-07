@@ -20,7 +20,8 @@
 import importlib
 import os
 
-from django.conf.urls import url, include
+#from django.conf.urls import include
+from django.urls import include, path, re_path
 from django.conf import settings
 from django.views.generic import TemplateView
 
@@ -63,29 +64,29 @@ _urlpatterns = []
 if settings.URL_ROOT_FOLDER:
     urlpatterns = [
         # path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
-        url(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns))
+        path(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns))
     ]
 else:
     urlpatterns = _urlpatterns
 
 _urlpatterns.extend(
     [
-        url(
+        path(
             "schsys/jsi18n/$",
             django.views.i18n.JavaScriptCatalog,
             {"packages": ("django.conf",)},
         ),
-        url("schsys/i18n/", include(django.conf.urls.i18n)),
-        url("plugins/(?P<template_name>.*)", views.plugin_template),
+        path("schsys/i18n/", include(django.conf.urls.i18n)),
+        path("plugins/<str:template_name>", views.plugin_template),
         # url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
         #url(
         #    "site_media/(.*)$",
         #    django.contrib.staticfiles.views.serve,
         #    {"document_root": settings.MEDIA_ROOT},
         #),
-        url("select2/", include(django_select2.urls)),
-        url("favicon.ico", views.favicon),
-        url(make_href("sw.js"), views.sw),
+        path("select2/", include(django_select2.urls)),
+        path("favicon.ico", views.favicon),
+        path(make_href("sw.js"), views.sw),
         path("graphql", PytigonGraphQLView.as_view(graphiql=True)),
         path("admin/", admin.site.urls),
         path('admin/log_viewer/', include('log_viewer.urls')),
@@ -94,11 +95,11 @@ _urlpatterns.extend(
 
 
 if settings.DEBUG:
-    _urlpatterns.append(url("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
-    _urlpatterns.append(url("site_media_protected/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT_PROTECTED}))
+    _urlpatterns.append(re_path("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
+    _urlpatterns.append(re_path("site_media_protected/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT_PROTECTED}))
 else:
-    _urlpatterns.append(url("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
-    _urlpatterns.append(url("site_media_protected/(.*)$", views.site_media_protected))
+    _urlpatterns.append(re_path("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
+    _urlpatterns.append(re_path("site_media_protected/(.*)$", views.site_media_protected))
 
 # if settings.DEBUG:
 #    import debug_toolbar
@@ -126,8 +127,8 @@ if len(settings.PRJS) > 0:
             continue
         # u = url(r'^'+prj+'/$', TemplateView.as_view(template_name='schapp/index.html'),
         #        {'prj': prj, 'start_page': True }, name='start'+prj )
-        u = url(
-            r"^" + prj + "/$",
+        u = path(
+            prj + "/$",
             TemplateView.as_view(template_name="schapp/index.html"),
             {"start_page": True},
             name="start" + prj,
@@ -136,8 +137,7 @@ if len(settings.PRJS) > 0:
 
     prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
 
-    u = url(
-        r"^$",
+    u = path("",
         TemplateView.as_view(template_name="schapp/index_all.html"),
         {"prjs": prjs},
         name="start",
@@ -146,8 +146,7 @@ if len(settings.PRJS) > 0:
     _urlpatterns.append(u)
 else:
     # u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'prj': None }, name='start')
-    u = url(
-        r"^$", TemplateView.as_view(template_name="schapp/index.html"), name="start"
+    u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start"
     )
     _urlpatterns.append(u)
 
@@ -186,7 +185,7 @@ for app in settings.INSTALLED_APPS:
             module_name = "%s.urls" % str(pos)
             m = importlib.import_module(module_name)
             if hasattr(m, "gen"):
-                _urlpatterns.append(url(r"^%s/" % str(elementy[-1]), include(m)))
+                _urlpatterns.append(path("%s/" % str(elementy[-1]), include(m)))
     except ModuleNotFoundError as e:
         x = pos.split(".")[0]
         y = e.name.split(".")[0]
