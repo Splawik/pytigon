@@ -20,7 +20,7 @@
 import importlib
 import os
 
-#from django.conf.urls import include
+# from django.conf.urls import include
 from django.urls import include, path, re_path
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -77,29 +77,49 @@ _urlpatterns.extend(
             {"packages": ("django.conf",)},
         ),
         path("schsys/i18n/", include(django.conf.urls.i18n)),
-        path("plugins/<str:template_name>", views.plugin_template),
+        path("plugins/<path:template_name>", views.plugin_template),
         # url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-        #url(
+        # url(
         #    "site_media/(.*)$",
         #    django.contrib.staticfiles.views.serve,
         #    {"document_root": settings.MEDIA_ROOT},
-        #),
+        # ),
         path("select2/", include(django_select2.urls)),
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
         path("graphql", PytigonGraphQLView.as_view(graphiql=True)),
         path("admin/", admin.site.urls),
-        path('admin/log_viewer/', include('log_viewer.urls')),
+        path("admin/log_viewer/", include("log_viewer.urls")),
     ]
 )
 
 
 if settings.DEBUG:
-    _urlpatterns.append(re_path("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
-    _urlpatterns.append(re_path("site_media_protected/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT_PROTECTED}))
+    _urlpatterns.append(
+        re_path(
+            "site_media/(.*)$",
+            django.contrib.staticfiles.views.serve,
+            {"document_root": settings.MEDIA_ROOT},
+        )
+    )
+    _urlpatterns.append(
+        re_path(
+            "site_media_protected/(.*)$",
+            django.contrib.staticfiles.views.serve,
+            {"document_root": settings.MEDIA_ROOT_PROTECTED},
+        )
+    )
 else:
-    _urlpatterns.append(re_path("site_media/(.*)$", django.contrib.staticfiles.views.serve, {"document_root": settings.MEDIA_ROOT}))
-    _urlpatterns.append(re_path("site_media_protected/(.*)$", views.site_media_protected))
+    _urlpatterns.append(
+        re_path(
+            "site_media/(.*)$",
+            django.contrib.staticfiles.views.serve,
+            {"document_root": settings.MEDIA_ROOT},
+        )
+    )
+    _urlpatterns.append(
+        re_path("site_media_protected/(.*)$", views.site_media_protected)
+    )
 
 # if settings.DEBUG:
 #    import debug_toolbar
@@ -137,7 +157,8 @@ if len(settings.PRJS) > 0:
 
     prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
 
-    u = path("",
+    u = path(
+        "",
         TemplateView.as_view(template_name="schapp/index_all.html"),
         {"prjs": prjs},
         name="start",
@@ -146,8 +167,7 @@ if len(settings.PRJS) > 0:
     _urlpatterns.append(u)
 else:
     # u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'prj': None }, name='start')
-    u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start"
-    )
+    u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start")
     _urlpatterns.append(u)
 
 # if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ or not settings.PRODUCTION_VERSION:
