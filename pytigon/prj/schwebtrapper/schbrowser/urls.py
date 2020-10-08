@@ -14,7 +14,7 @@ urlpatterns = [
     
     
     
-    path('form/MultiDownload/$', views.view_multidownload, {}),
+    path('form/MultiDownload/', views.view_multidownload, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schbrowser', views)

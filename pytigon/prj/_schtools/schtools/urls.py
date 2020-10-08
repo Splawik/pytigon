@@ -16,7 +16,7 @@ urlpatterns = [
     
     
     
-    path('form/ImportTableForm/$', views.view_importtableform, {}),
+    path('form/ImportTableForm/', views.view_importtableform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schtools', views)

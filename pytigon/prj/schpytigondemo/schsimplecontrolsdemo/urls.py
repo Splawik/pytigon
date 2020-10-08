@@ -17,7 +17,7 @@ urlpatterns = [
     
     
     
-    path('form/TestForm/$', views.view_testform, {}),
+    path('form/TestForm/', views.view_testform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schsimplecontrolsdemo', views)

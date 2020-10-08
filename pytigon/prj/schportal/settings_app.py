@@ -126,7 +126,7 @@ else:
 
 
 CHANNELS_URL_TAB += [ 
- ("^"+URL_ROOT_PREFIX+r"teleconference/teleconference/channel/$", 'teleconference.consumers.teleconference'),
+ (URL_ROOT_PREFIX+"teleconference/teleconference/channel/", 'teleconference.consumers.teleconference'),
 ]
 
 
@@ -135,7 +135,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.10.08 19:30:32'
+GEN_TIME = '2020.10.08 21:20:56'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

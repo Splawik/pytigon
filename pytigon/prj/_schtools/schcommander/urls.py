@@ -21,14 +21,14 @@ urlpatterns = [
     
     
     
-    path('form/FileManager/$', views.view_filemanager, {}),
-    path('form/Move/$', views.view_move, {}),
-    path('form/Copy/$', views.view_copy, {}),
-    path('form/MkDir/$', views.view_mkdir, {}),
-    path('form/Rename/$', views.view_rename, {}),
-    path('form/NewFile/$', views.view_newfile, {}),
-    path('form/Delete/$', views.view_delete, {}),
-    path('form/Setup/$', views.view_setup, {}),
+    path('form/FileManager/', views.view_filemanager, {}),
+    path('form/Move/', views.view_move, {}),
+    path('form/Copy/', views.view_copy, {}),
+    path('form/MkDir/', views.view_mkdir, {}),
+    path('form/Rename/', views.view_rename, {}),
+    path('form/NewFile/', views.view_newfile, {}),
+    path('form/Delete/', views.view_delete, {}),
+    path('form/Setup/', views.view_setup, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schcommander', views)

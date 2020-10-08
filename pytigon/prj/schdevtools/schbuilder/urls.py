@@ -66,8 +66,8 @@ urlpatterns = [
     
     
     
-    path('form/Installer/$', views.view_installer, {}),
-    path('form/Install/$', views.view_install, {}),
+    path('form/Installer/', views.view_installer, {}),
+    path('form/Install/', views.view_install, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schbuilder', views)

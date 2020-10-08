@@ -14,7 +14,7 @@ urlpatterns = [
     
     
     
-    path('form/OdfUploadForm/$', views.view_odfuploadform, {}),
+    path('form/OdfUploadForm/', views.view_odfuploadform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schodfupload', views)

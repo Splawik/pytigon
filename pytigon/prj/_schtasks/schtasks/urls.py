@@ -25,7 +25,7 @@ urlpatterns = [
     
     
     
-    path('form/TaskListForm/$', views.view_tasklistform, {}),
+    path('form/TaskListForm/', views.view_tasklistform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schtasks', views)

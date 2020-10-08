@@ -12,7 +12,7 @@ urlpatterns = [
     {% endfor %}{% for template in templates %}{% if template.direct_to_template %} {{template.get_url|safe}}, {% endif %}
     {% endfor %}
     {% for form in forms %}{% if not form.name|is_ %}
-    path('form/{{form.name}}/$', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
+    path('form/{{form.name}}/', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
 ]
 
 gen = generic_table_start(urlpatterns, '{{app.name}}', views)
