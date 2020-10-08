@@ -26,6 +26,9 @@ class TabMenu:
             history_push_state(menu_item.title, menu_item.url)
         datatable_onresize()
 
+    def register(self, title):
+        self.titles[title] = "$$$"
+
     def new_page(self, title_alternate, data, href):
         _id = "tab" + self.id
 

@@ -17,8 +17,8 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-from django.conf.urls import url, include
-
+#from django.conf.urls import url, include
+from django.urls import path, re_path, include
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
 
@@ -77,31 +77,30 @@ def sch_login(request, *argi, **argv):
 
 
 urlpatterns = [
-    url(r'^ok/$', views.ok, name='ok'),
-    url(r'^(?P<id>.+)/(?P<title>.+)/ret_ok/$', views.ret_ok, name='ret_ok'),
+    path('ok/', views.ok, name='ok'),
+    path('<int:id>/<str:title>/ret_ok/', views.ret_ok, name='ret_ok'),
 
-    url(r'^login/$', TemplateView.as_view(template_name='schapp/login.html')),
+    path('login/', TemplateView.as_view(template_name='schapp/login.html')),
 
-    url(r'^do_login/$', sch_login), #, { 'template_name': 'schapp/index.html'}),
-    url(r'^do_logout/$', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
-    url(r'^change_password/$', views.change_password),
+    path('do_login/', sch_login), #, { 'template_name': 'schapp/index.html'}),
+    path('do_logout/', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
+    path(r'^change_password/$', views.change_password),
 
-    url(r'^accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
 
-    url(r'^message/(?P<titleid>.+)/(?P<messageid>.+)/(?P<id>\d+)/$', views.message),
+    path('message/<str:titleid>/(<str:messageid>/<int:id>/', views.message),
 
-    url(r'^datedialog/(?P<action>\w+)/$', views.datedialog),
-    url(r'^listdialog/(?P<action>\w+)/$', views.listdialog),
-    url(r'^treedialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<action>\w+)/$',
-        views.treedialog),
-    url(r'^tabdialog/(?P<app>\w+)/(?P<tab>\w+)/(?P<id>[\d-]*)/(?P<action>\w+)/$', views.tabdialog),
-    url(r'^table/(?P<app>\w+)/(?P<tab>\w+)/grid/$', views.tbl),
+    path('datedialog/<str:action>/', views.datedialog),
+    path('listdialog/<str:action>/', views.listdialog),
+    path('treedialog/<str:app>/<str:tab>/<int:id>/<str:action>/',views.treedialog),
+    path('tabdialog/<str:app>/<str:tab>/<int:id>/<str:action>/', views.tabdialog),
+    path('table/<str:app>/<str:tab>/grid/', views.tbl),
 
-    url(r'^widget_web$', TemplateView.as_view(template_name='schsys/widget_web.html') ),
-    url(r'^plugins/(?P<app>\w+)/(?P<plugin_name>[\w_]+)/$', views.plugins),
+    path('widget_web', TemplateView.as_view(template_name='schsys/widget_web.html') ),
+    path('plugins/<str:app>/<path:plugin_name>/', views.plugins),
 
-    url('app_time_stamp/$', views.app_time_stamp, {}),
-    url('search/$', views.search, {}),
+    path('app_time_stamp/', views.app_time_stamp, {}),
+    path('search/', views.search, {}),
 ]
 
 
