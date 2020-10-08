@@ -126,7 +126,7 @@ else:
 
 {% if consumers %}
 CHANNELS_URL_TAB += [ 
-{% for consumer in consumers %} ("^"+URL_ROOT_PREFIX+r"{{consumer.0}}$", '{{consumer.1}}'),
+{% for consumer in consumers %} (URL_ROOT_PREFIX+"{{consumer.0}}", '{{consumer.1}}'),
 {% endfor %}]
 {% endif %}
 

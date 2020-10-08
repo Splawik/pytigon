@@ -1,6 +1,6 @@
 ## -- coding: utf-8 --
 
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.utils.translation import ugettext_lazy as _
 from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
@@ -18,15 +18,14 @@ urlpatterns = [
 ]
 
 gen = generic_table_start(urlpatterns, 'schadmin', views)
-from django.conf.urls import include
 from django.contrib import admin
 from pytigon_lib.schtools.platform_info import platform_name
 
-urlpatterns.append(url(r'^admin/', admin.site.urls))
-urlpatterns.append(url(r'^explorer/', include('explorer.urls')))
+urlpatterns.append(path('admin/', admin.site.urls))
+urlpatterns.append(path('explorer/', include('explorer.urls')))
 
 if platform_name()!='Android':
-    urlpatterns.append(url(r'^filer/', include('filer.urls')))
+    urlpatterns.append(path('filer/', include('filer.urls')))
 
 
 

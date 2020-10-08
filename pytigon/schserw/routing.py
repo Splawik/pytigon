@@ -20,7 +20,8 @@
 
 import importlib
 
-from django.conf.urls import url
+from django.urls import path, re_path
+
 from django.conf import settings
 
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -34,7 +35,10 @@ if hasattr(settings, "CHANNELS_URL_TAB"):
         tmp = row[1].split(".")
         m = importlib.import_module(".".join(tmp[:-1]))
         o = getattr(m, tmp[-1])
-        urls_tab.append(url(u, o))
+        if '(?P' in u:
+            urls_tab.append(re_path(u, o))
+        else:
+            urls_tab.append(path(u, o))
 
 
 class LifespanApp:
