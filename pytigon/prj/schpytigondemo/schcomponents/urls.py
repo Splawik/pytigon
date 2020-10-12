@@ -23,6 +23,9 @@ urlpatterns = [
      path('webrtc', TemplateView.as_view(template_name='schcomponents/webrtc.html'), {}), 
      path('time', TemplateView.as_view(template_name='schcomponents/time.html'), {}), 
      path('scrollaction', TemplateView.as_view(template_name='schcomponents/scrollaction.html'), {}), 
+     path('test', TemplateView.as_view(template_name='schcomponents/test.html'), {}), 
+     path('svg', TemplateView.as_view(template_name='schcomponents/svg.html'), {}), 
+     path('select2', TemplateView.as_view(template_name='schcomponents/select2.html'), {}), 
     
     
 ]

@@ -198,6 +198,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "graphene_django",
+    "django_filters",
     "compressor",
     "django_q",
     "log_viewer",

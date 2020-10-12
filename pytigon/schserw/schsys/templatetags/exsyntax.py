@@ -1143,3 +1143,7 @@ def td_editable(context, name, title=""):
             field_name = name
         ret = "<td>%s</td>" % getattr(context['object'], field_name)
         return mark_safe(ret)
+
+@inclusion_tag('widgets/svg_standard_style.html')
+def svg_standard_style(context,):
+    return {}

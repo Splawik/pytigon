@@ -21,6 +21,8 @@ Urls  = (
     ('time?schtml=desktop',_('Time edit'),None,"""png://actions/appointment-new.png"""),
     ('scrollaction?schtml=desktop',_('Scroll actions'),None,"""ART_GO_DOWN"""),
     ('plotly?schtml=desktop',_('Plotly'),None,"""ART_FRAME_ICON"""),
-    ('Ui5?schtml=desktop',_('Sap ui5'),None,"""ART_NEW"""),
+    ('test?schtml=desktop',_('Test'),None,"""png://actions/document-properties.png"""),
+    ('svg?schtml=desktop',_('Svg'),None,"""png://actions/edit-find-replace.png"""),
+    ('select2?schtml=desktop',_('Select2'),None,"""png://actions/edit-find.png"""),
 )
 UserParam = {}

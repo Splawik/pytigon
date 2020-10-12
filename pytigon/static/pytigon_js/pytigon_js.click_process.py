@@ -46,15 +46,14 @@ def process_on_click(event_tab, elem=None):
         nonlocal event_tab
 
         target = jQuery(e.currentTarget).attr("target")
-        if target == "_blank" or target == "_parent":
-            return True
 
-        src_obj = jQuery(this)
+        #src_obj = jQuery(this)
+        src_obj = jQuery(e.currentTarget)
 
         if "xlink:href" in e.currentTarget.attributes:
-            href = jQuery(this).attr("xlink:href")
+            href = src_obj.attr("xlink:href")
         else:
-            href = jQuery(this).attr("href")
+            href = src_obj.attr("href")
 
         if href and "#" in href:
             return True
@@ -67,6 +66,12 @@ def process_on_click(event_tab, elem=None):
 
         href = process_href(href, src_obj)
 
+        if target == "_blank" or target == "_parent":
+            e.preventDefault()
+            window.open(href, target)
+            return
+            #return True
+
         for pos in event_tab:
             if pos[0] == "*" or pos[0] == target:
                 if pos[1] == "*" or src_obj.hasClass(pos[1]):
@@ -77,7 +82,7 @@ def process_on_click(event_tab, elem=None):
                     else:
                         url = href
                     e.preventDefault()
-                    pos[4](url, this, e)
+                    pos[4](url, e.currentTarget, e)
                     return True
 
         e.preventDefault()
@@ -121,3 +126,5 @@ def process_on_click(event_tab, elem=None):
         jQuery("#dialog-form-modal").on("click", "a", _on_click)
         jQuery("#body_desktop").on("click", "a", _on_click)
         # jQuery('#wiki_start').on("click", "a", _on_click)
+
+    window.handle_click =_on_click

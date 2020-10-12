@@ -1,0 +1,13 @@
+^^^
+@keyframes showing {
+    from { opacity:0; }
+    to { opacity:1; }
+}
+.popover__message {
+    visibility: hidden;
+}
+.popover__source:hover ~ .popover__message {
+    visibility: visible;
+    animation-name: showing;
+    animation-duration: 1s;
+}
