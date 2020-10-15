@@ -164,10 +164,11 @@ class CodeEditor(stc.StyledTextCtrl):
     def _enter_key(self):
         (line, space_len) = self.GetCurLine()
         pos = self.GetCurrentPos()
+        col = self.GetColumn(pos)
         indent = self.GetLineIndentation(self.GetCurrentLine())
         if space_len > indent:
             space_len = indent
-        if line.rstrip()[-1:] == ':':
+        if line[:col].rstrip()[-1:] == ':':
             space_len += 4
         txt = '\n' + ' ' * space_len
         self.InsertText(pos, txt)

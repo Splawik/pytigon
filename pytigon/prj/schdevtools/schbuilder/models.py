@@ -334,6 +334,10 @@ class SChAppSet( models.Model):
     icon_code = models.TextField('Icon code (svg)', null=True, blank=True, editable=False, )
     
 
+    filter_fields = {
+        'name': ['exact', 'icontains', 'istartswith'],
+    }
+    
     def get_ext_pytigon_apps(self, tab=None):
         if tab:
             ret = tab
@@ -455,6 +459,10 @@ class SChApp( models.Model):
     icon_code = models.TextField('Icon code', null=True, blank=True, editable=False, )
     
 
+    filter_fields = {
+        'name': ['exact', 'icontains', 'istartswith'],
+    }
+    
     def get_models(self):
         ret = ["'self'", ]
         for app in self.parent.schapp_set.all():

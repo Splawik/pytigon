@@ -1,26 +1,12 @@
-from .models import PageObjectsConf
-
-from graphene import Node
-from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.types import DjangoObjectType
-
-
-class _PageObjectsConf(DjangoObjectType):
-    class Meta:
-        model = PageObjectsConf
-        interfaces = ( Node, )
-        filter_fields = {
-            'app': ['exact', 'icontains', 'istartswith'],
-            'name': ['exact', 'icontains', 'istartswith'],
-        }
-
+from . import models
+from pytigon_lib.schdjangoext.graphql import add_graphql_to_class
 
 def extend_query(query_class):
-    class query(query_class):        
-        pageobjectsconf = Node.Field(_PageObjectsConf)
-        all_pageobjectsconf = DjangoFilterConnectionField(_PageObjectsConf)
-
-    return query
+    for model_name in dir(models):
+        model = getattr(models, model_name)
+        if hasattr(model, "_meta") and hasattr(model, "filter_fields"):
+            add_graphql_to_class(model, getattr(model, "filter_fields"), query_class)
+    return query_class
 
 def extend_mutation(mutation_class):
     return mutation_class

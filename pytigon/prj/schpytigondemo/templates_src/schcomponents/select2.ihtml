@@ -13,5 +13,5 @@
         br
         ptig-select2 width=300px,,,href=/x,,,target=_popup,,,multiple=multiple
             graphql
-                { allPageobjectsconf(name_Istartswith: "$$$") { edges { node { id, text:name }}} }
+                { pageobjectsconfAll(name_Istartswith: "$$$") { edges { node { id, text:name }}} }
                 

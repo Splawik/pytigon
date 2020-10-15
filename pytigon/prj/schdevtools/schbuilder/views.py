@@ -569,6 +569,7 @@ def gen(request, pk):
             user_param = '{}'
         
         template_to_file(base_path, "app_init", app.name+"/__init__.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
+        template_to_file(base_path, "schema", app.name+"/schema.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
     
         for file_obj in app.schfiles_set.all():
             if file_obj.file_type=='f':

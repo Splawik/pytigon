@@ -23,9 +23,11 @@ mutation {
 }
 """
 
+
 class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
+
 
 class UserMutation(graphene.Mutation):
     class Arguments:
@@ -46,13 +48,15 @@ class UserMutation(graphene.Mutation):
         _user.save()
         return UserMutation(user=_user)
 
-class Query(graphene.ObjectType):
+
+class _Query:
     users = graphene.List(UserType)
 
     def resolve_users(self, info):
         return get_user_model().objects.all()
 
-class Mutation(graphene.ObjectType):
+
+class _Mutation:
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
@@ -65,18 +69,33 @@ for app in settings.INSTALLED_APPS:
         pos = app.name
     else:
         pos = app
-        if pos.startswith('django') or pos.startswith('debug') or pos.startswith('registration') \
-        or pos.startswith('bootstrap_admin') or pos.startswith('channels')\
-        or pos.startswith('bootstrap4'):
+        if (
+            pos.startswith("django")
+            or pos.startswith("debug")
+            or pos.startswith("registration")
+            or pos.startswith("bootstrap_admin")
+            or pos.startswith("channels")
+            or pos.startswith("bootstrap4")
+        ):
             continue
-    module_name = '%s.schema' % str(pos)
+    module_name = "%s.schema" % str(pos)
     try:
         m = importlib.import_module(module_name)
-        if hasattr(m, 'extend_query'):
-            Query = m.extend_query(Query)
-        if hasattr(m, 'extend_mutation'):
-            Mutation = m.extend_mutation(Mutation)
+        if hasattr(m, "extend_query"):
+            _Query = m.extend_query(_Query)
+        if hasattr(m, "extend_mutation"):
+            _Mutation = m.extend_mutation(_Mutation)
+        print("XXX")
     except ModuleNotFoundError:
         pass
+
+
+class Query(graphene.ObjectType, _Query):
+    pass
+
+
+class Mutation(graphene.ObjectType, _Mutation):
+    pass
+
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

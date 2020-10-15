@@ -217,6 +217,11 @@ class PageObjectsConf( models.Model):
     doc = models.TextField('Documentaction', null=True, blank=True, editable=False, )
     
 
+    filter_fields = {
+        'app': ['exact', 'icontains', 'istartswith'],
+        'name': ['exact', 'icontains', 'istartswith'],
+    }
+    
     def __str__(self):
         return self.name
     

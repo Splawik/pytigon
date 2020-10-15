@@ -13,22 +13,22 @@
             self.GOLINE.SetMax(999999)
             self.GOLINE.SetValue('')
         def on_go_to(self, event):
-            editor = self.get_parent_panel()['EDITOR']
+            editor = self.get_parent_form().EDITOR
             value = self.GOLINE.GetValue()
             editor.GotoLine(int(value)-1)
             self.on_exit(event)
         def on_exit(self, event):
-            self.any_parent_command('cancel', True)
+            self.any_parent_command('on_child_form_cancel')
 </script>
 {% endblock %}
 {% block content %}
         <table width="100%" height="100%">
                 <tr>
-                        <td><CTRLSTATICTEXT LABEL="Go to line:"></CTRLSTATICTEXT></td>
-                        <td><CTRLNUM NAME="GOLINE" STYLE="wx.TE_PROCESS_ENTER"></CTRLNUM></td>
-                        <td><CTRLBITMAPBUTTON NAME="GO" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
+                        <td><CTRL-STATICTEXT LABEL="Go to line:"></CTRL-STATICTEXT></td>
+                        <td><CTRL-NUM NAME="GOLINE" STYLE="wx.TE_PROCESS_ENTER"></CTRL-NUM></td>
+                        <td><CTRL-BITMAPBUTTON NAME="GO" SRC="wx.ART_TICK_MARK"></CTRL-BITMAPBUTTON></td>
                         <td width="99%"></td>
-                        <td><CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
                 </tr>
         </table>
 {% endblock %}

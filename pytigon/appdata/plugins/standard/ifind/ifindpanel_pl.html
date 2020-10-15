@@ -10,7 +10,9 @@
             self.SEARCH.ShowCancelButton(True)
             self.SEARCH.Bind(wx.EVT_TEXT, self.OnDoSearch)
             self.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearchNext)
+            self.SEARCH.Bind(wx.EVT_TEXT_ENTER, self.OnDoSearchNext)
             self.NEXT.Bind(wx.EVT_BUTTON, self.OnNext)
+            self.NEXT.SetDefault()
             self.PREV.Bind(wx.EVT_BUTTON, self.OnPrev)
             self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
             self.SEARCH.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.OnCancelBtn)
@@ -52,7 +54,7 @@
         def OnDoSearch(self, event):
             self.SearchText(corectSelection=True)
         def OnDoSearchNext(self, event):
-            self.SearchText(corectSelection=True, next=True)
+            self.SearchText(corectSelection=Tr  ue, next=True)
         def OnNext(self, event):
             self.SearchText(corectSelection=True, next=True)
         def OnPrev(self, event):
