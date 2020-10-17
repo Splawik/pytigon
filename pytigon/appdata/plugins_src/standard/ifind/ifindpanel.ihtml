@@ -64,7 +64,7 @@
             self.SearchText(corectSelection=True)
 
         def OnDoSearchNext(self, event):
-            self.SearchText(corectSelection=Tr  ue, next=True)
+            self.SearchText(corectSelection=True, next=True)
 
         def OnNext(self, event):
             self.SearchText(corectSelection=True, next=True)
