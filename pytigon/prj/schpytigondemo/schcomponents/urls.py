@@ -26,6 +26,7 @@ urlpatterns = [
      path('test', TemplateView.as_view(template_name='schcomponents/test.html'), {}), 
      path('svg', TemplateView.as_view(template_name='schcomponents/svg.html'), {}), 
      path('select2', TemplateView.as_view(template_name='schcomponents/select2.html'), {}), 
+     path('db', TemplateView.as_view(template_name='schcomponents/db.html'), {}), 
     
     
 ]

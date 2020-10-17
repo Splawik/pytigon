@@ -24,5 +24,6 @@ Urls  = (
     ('test?schtml=desktop',_('Test'),None,"""png://actions/document-properties.png"""),
     ('svg?schtml=desktop',_('Svg'),None,"""png://actions/edit-find-replace.png"""),
     ('select2?schtml=desktop',_('Select2'),None,"""png://actions/edit-find.png"""),
+    ('db?schtml=desktop',_('Db'),None,"""png://actions/address-book-new.png"""),
 )
 UserParam = {}

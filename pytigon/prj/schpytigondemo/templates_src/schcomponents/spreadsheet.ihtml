@@ -6,4 +6,4 @@
 
 
 %% content
-    <ptig-spreadsheet width="90%"></ptig-spreadsheet>
+    ptig-spreadsheet width=100%,,,height=100%
