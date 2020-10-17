@@ -434,6 +434,7 @@ function define_custom_element(tag, shadow, options) {
       if ("global_state_actions" in options) {
         this.global_state_actions = options["global_state_actions"];
       } else this.global_state_actions = {};
+      if ("constructor" in options) options["constructor"](this);
       if (shadow) {
         const shadowRoot = this.attachShadow({ mode: "open" });
         if ("template" in options) {
@@ -448,7 +449,6 @@ function define_custom_element(tag, shadow, options) {
         if ("init" in options) options["init"](this);
         this.attributes_init();
       }
-      if ("constructor" in options) options["constructor"](this);
       if (this.global_state_actions) {
         window.GLOBAL_BUS.register(this);
       }

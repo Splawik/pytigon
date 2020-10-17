@@ -6,7 +6,7 @@
 
 
 %% content
-    ptig-leaflet width=100%,,,height=600px,,,x=51.613007,,,y=21.491859
+    ptig-leaflet width=100%,,,height=100%,,,x=51.613007,,,y=21.491859
         ptig-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
         ptig-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2
         ptig-maker x=51.813007,,,y=21.791859,,,txt=To jest test 3
