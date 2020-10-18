@@ -72,7 +72,7 @@ else:
 _urlpatterns.extend(
     [
         path(
-            "schsys/jsi18n/$",
+            "schsys/jsi18n/",
             django.views.i18n.JavaScriptCatalog,
             {"packages": ("django.conf",)},
         ),

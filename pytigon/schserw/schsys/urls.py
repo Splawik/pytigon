@@ -84,7 +84,7 @@ urlpatterns = [
 
     path('do_login/', sch_login), #, { 'template_name': 'schapp/index.html'}),
     path('do_logout/', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
-    path(r'^change_password/$', views.change_password),
+    path('change_password/', views.change_password),
 
     path('accounts/', include('allauth.urls')),
 
