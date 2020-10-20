@@ -20,20 +20,16 @@
 import importlib
 import os
 
-# from django.conf.urls import include
 from django.urls import include, path, re_path
 from django.conf import settings
 from django.views.generic import TemplateView
-
-# from django.urls import path #include
 
 import django.views.i18n
 import django.conf.urls.i18n
 import django_select2.urls
 import django.contrib.staticfiles
 from django.contrib.staticfiles import views
-
-# import django.contrib.staticfiles.views.serve
+from django.views.decorators.csrf import csrf_exempt
 
 from django.urls import path
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -63,7 +59,6 @@ _urlpatterns = []
 
 if settings.URL_ROOT_FOLDER:
     urlpatterns = [
-        # path(settings.URL_ROOT_FOLDER+"/", include(urlpatterns)),
         path(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns))
     ]
 else:
@@ -78,21 +73,14 @@ _urlpatterns.extend(
         ),
         path("schsys/i18n/", include(django.conf.urls.i18n)),
         path("plugins/<path:template_name>", views.plugin_template),
-        # url('site_media/(.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-        # url(
-        #    "site_media/(.*)$",
-        #    django.contrib.staticfiles.views.serve,
-        #    {"document_root": settings.MEDIA_ROOT},
-        # ),
         path("select2/", include(django_select2.urls)),
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
-        path("graphql", PytigonGraphQLView.as_view(graphiql=True)),
+        path("graphql", csrf_exempt(PytigonGraphQLView.as_view(graphiql=True))),
         path("admin/", admin.site.urls),
         path("admin/log_viewer/", include("log_viewer.urls")),
     ]
 )
-
 
 if settings.DEBUG:
     _urlpatterns.append(
@@ -121,12 +109,6 @@ else:
         re_path("site_media_protected/(.*)$", views.site_media_protected)
     )
 
-# if settings.DEBUG:
-#    import debug_toolbar
-#    _urlpatterns += [
-#        url(r'^__debug__/', include(debug_toolbar.urls)),
-#    ]
-
 
 def app_description(prj):
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
@@ -140,42 +122,6 @@ def app_description(prj):
     except:
         return prj
 
-
-if len(settings.PRJS) > 0:
-    for prj in settings.PRJS:
-        if prj.startswith("_"):
-            continue
-        # u = url(r'^'+prj+'/$', TemplateView.as_view(template_name='schapp/index.html'),
-        #        {'prj': prj, 'start_page': True }, name='start'+prj )
-        u = path(
-            prj + "/$",
-            TemplateView.as_view(template_name="schapp/index.html"),
-            {"start_page": True},
-            name="start" + prj,
-        )
-        _urlpatterns.append(u)
-
-    prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
-
-    u = path(
-        "",
-        TemplateView.as_view(template_name="schapp/index_all.html"),
-        {"prjs": prjs},
-        name="start",
-    )
-
-    _urlpatterns.append(u)
-else:
-    # u=url(r'^$', TemplateView.as_view(template_name='schapp/index.html'),  {'prj': None }, name='start')
-    u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start")
-    _urlpatterns.append(u)
-
-# if settings.DEBUG or platform_name()=='Android' or 'PYTIGON_APP_IMAGE' in environ or not settings.PRODUCTION_VERSION:
-#    if 'PYTIGON_APP_IMAGE' in environ:
-#        _urlpatterns += static(str(settings.STATIC_URL+"app/"), document_root=str(settings.STATIC_APP_ROOT))
-#    _urlpatterns += static(str(settings.STATIC_URL), document_root=str(settings.STATIC_URL))
-
-# SHOW_ERROR = False
 
 for app in settings.INSTALLED_APPS:
     if isinstance(app, AppConfigMod):
@@ -191,8 +137,7 @@ for app in settings.INSTALLED_APPS:
             or pos.startswith("bootstrap4")
         ):
             continue
-        # if pos == 'schserw.schsys':
-        #    SHOW_ERROR = True
+
     elementy = pos.split(".")
     module = __import__(pos)
 
@@ -213,3 +158,54 @@ for app in settings.INSTALLED_APPS:
             logger.exception(f"URLs error: {pos}")
     except:
         logger.exception(f"URLs error: {pos}")
+
+tmp = []
+for item in _urlpatterns:
+    if hasattr(item, "url_patterns"):
+        for item2 in item.url_patterns:
+            if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith('../'):
+                print("A1")
+                tmp.append(item2)
+                item.url_patterns.remove(item2)
+
+for item in tmp:
+    item.pattern._route = item.pattern._route.replace('../','')
+    _urlpatterns.append(item)
+
+if len(settings.PRJS) > 0:
+    for prj in settings.PRJS:
+        if prj.startswith("_"):
+            continue
+
+        test = True
+        for item in _urlpatterns:
+            if item.pattern and hasattr(item.pattern, "_route") and item.pattern._route == prj + "/":
+                test = False
+                break
+        if test:
+            u = path(
+                prj + "/",
+                TemplateView.as_view(template_name="schapp/index.html"),
+                {"start_page": True},
+                name="start" + prj,
+            )
+            _urlpatterns.append(u)
+
+    prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
+
+    u = path(
+        "",
+        TemplateView.as_view(template_name="schapp/index_all.html"),
+        {"prjs": prjs},
+        name="start",
+    )
+    _urlpatterns.append(u)
+else:
+    test = True
+    for item in _urlpatterns:
+        if item.pattern and hasattr(item.pattern, "_route") and item.pattern._route == "":
+            test = False
+            break
+    if test:
+        u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start")
+        _urlpatterns.append(u)

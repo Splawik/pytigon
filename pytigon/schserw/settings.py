@@ -158,6 +158,7 @@ if "EMBEDED_DJANGO_SERVER" in environ:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "pytigon.schserw.schmiddleware.csrf.DisableCSRF",
+        "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
     ]
 else:
     MIDDLEWARE = [
@@ -169,6 +170,7 @@ else:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
+        "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
     ]
 
 # if DEBUG:
@@ -451,9 +453,9 @@ GRAPHENE = {
 }
 
 GRAPHQL_JWT = {
-    "JWT_VERIFY_EXPIRATION": True,
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
-    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
+    "JWT_VERIFY_EXPIRATION": False,
+    #"JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
+    #"JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
 
 GRAPHENE_PUBLIC = False

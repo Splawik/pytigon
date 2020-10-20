@@ -179,6 +179,11 @@ def date_dec(value, arg):
         return None
 
 
+@register.filter(name='fromtimestamp')
+def fromtimestamp(dt):
+    return datetime.datetime.fromtimestamp(dt)
+
+
 @register.filter(name='onlyclass')
 def onlyclass(value, arg):
     """Filter from list of objects (value) position with arg class"""
@@ -483,7 +488,7 @@ def isoformat(value):
         return ""
 
 @register.filter(name='isoformat_short')
-def isoformat(value):
+def isoformat_short(value):
     if value:
         iso = value.isoformat()[:16].replace('T', ' ')
         return iso
