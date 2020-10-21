@@ -86,7 +86,7 @@ urlpatterns = [
     path('do_logout/', django.contrib.auth.views.LogoutView.as_view(next_page = make_href("/") ) ),
     path('change_password/', views.change_password),
 
-    path('accounts/', include('allauth.urls')),
+    #path('accounts/', include('allauth.urls')),
 
     path('message/<str:titleid>/(<str:messageid>/<int:id>/', views.message),
 

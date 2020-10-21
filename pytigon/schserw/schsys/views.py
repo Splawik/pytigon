@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 """Module contains base views for pytigon applications"""
 
@@ -25,7 +25,12 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseRedirect,
+    HttpResponseForbidden,
+)
 
 from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schtable.dbtable import DbTable
@@ -67,11 +72,7 @@ if page:
 </body>
 """
 
-MESSAGE_LIST = {
-    'null': '',
-    'error': 'Program error',
-    'warning': 'Program warning',
-}
+MESSAGE_LIST = {"null": "", "error": "Program error", "warning": "Program warning"}
 
 
 def change_password(request):
@@ -90,11 +91,11 @@ def change_password(request):
             user.save()
             return HttpResponseRedirect(make_href("/schsys/do_logout/?schtml=1"))
         else:
-            messages.add_message(request, messages.ERROR, 'Bad old password')
-            return HttpResponseRedirect(make_href('/'))
+            messages.add_message(request, messages.ERROR, "Bad old password")
+            return HttpResponseRedirect(make_href("/"))
     else:
-        messages.add_message(request, messages.ERROR, 'Bad confirmed password')
-        return HttpResponseRedirect(make_href('/'))
+        messages.add_message(request, messages.ERROR, "Bad confirmed password")
+        return HttpResponseRedirect(make_href("/"))
 
 
 def ok(request):
@@ -103,6 +104,9 @@ def ok(request):
     Args:
         request - django request
     """
+    print("--------------------------------------------------------------")
+    print(request.user)
+    print("--------------------------------------------------------------")
     return HttpResponse(_RET_OK)
 
 
@@ -114,7 +118,7 @@ def ret_ok(request, id, title):
         id
         title
     """
-    if request.META['HTTP_USER_AGENT'].lower().startswith('py'):
+    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
         return HttpResponse(_RET_OK_SHTML % (id, title))
     else:
         return HttpResponse(_RET_OK_HTML % (id, title))
@@ -130,12 +134,12 @@ def message(request, titleid, messageid, id):
     """
     global MESSAGE_LIST
     title = MESSAGE_LIST[titleid]
-    if id != '0':
+    if id != "0":
         message = MESSAGE_LIST[messageid] % id
     else:
         message = MESSAGE_LIST[messageid]
-    c =  {'title': title.decode('utf-8'), 'message': message.decode('utf-8')}
-    return render_to_response('schsys/message.html', context=c, request=request)
+    c = {"title": title.decode("utf-8"), "message": message.decode("utf-8")}
+    return render_to_response("schsys/message.html", context=c, request=request)
 
 
 def tbl(request, app, tab, value=None, template_name=None):
@@ -151,14 +155,14 @@ def tbl(request, app, tab, value=None, template_name=None):
         p = request.POST.copy()
         d = {}
         for (key, val) in list(p.items()):
-            if key=='csrfmiddlewaretoken':
+            if key == "csrfmiddlewaretoken":
                 d[str(key)] = val
             else:
                 d[str(key)] = schjson.loads(val)
     else:
         d = {}
-    if value and value != '':
-        d['value'] = b32decode(value.encode('ascii'))
+    if value and value != "":
+        d["value"] = b32decode(value.encode("ascii"))
     dbtab = DbTable(app, tab)
     retstr = dbtab.command(d)
     return HttpResponse(retstr)
@@ -175,31 +179,33 @@ def datedialog(request, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p['value'].encode('ascii'))
+        value = b32decode(p["value"].encode("ascii"))
     else:
-        value = ''
-    if action == 'size':
+        value = ""
+    if action == "size":
         return HttpResponse(schjson.dumps((280, 200)))
-    if action == 'dialog':
+    if action == "dialog":
         if value.__class__ == int:
             import datetime
+
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             value = d
-        c = {'value': value}
-        return render_to_response('schsys/date.html', context=c, request=request)
-    if action == 'test':
+        c = {"value": value}
+        return render_to_response("schsys/date.html", context=c, request=request)
+    if action == "test":
         if value.__class__ == int:
             import datetime
+
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
-            return HttpResponse(schjson.dumps((1, d.isoformat(), (d, ))))
+            return HttpResponse(schjson.dumps((1, d.isoformat(), (d,))))
         else:
-            if type(value)==bytes:
-                value = value.decode('utf-8')
+            if type(value) == bytes:
+                value = value.decode("utf-8")
             return HttpResponse(schjson.dumps((1, value, (value,))))
-        return HttpResponse('')
-    return HttpResponse('')
+        return HttpResponse("")
+    return HttpResponse("")
 
 
 def listdialog(request, action):
@@ -213,21 +219,21 @@ def listdialog(request, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p['value'].encode('ascii')).decode('utf-8')
+        value = b32decode(p["value"].encode("ascii")).decode("utf-8")
         if value == None:
-            value = ''
+            value = ""
     else:
-        value = ''
+        value = ""
 
-    if action == 'size':
+    if action == "size":
         return HttpResponse(schjson.dumps((250, 300)))
-    if action == 'dialog':
-        c = {'value': value}
-        ret = render_to_response('schsys/list.html', context=c, request=request)
+    if action == "dialog":
+        c = {"value": value}
+        ret = render_to_response("schsys/list.html", context=c, request=request)
         return ret
-    if action == 'test':
-        return HttpResponse(schjson.dumps((2, None, (None, ))))
-    return HttpResponse('')
+    if action == "test":
+        return HttpResponse(schjson.dumps((2, None, (None,))))
+    return HttpResponse("")
 
 
 def treedialog(request, app, tab, id, action):
@@ -244,14 +250,14 @@ def treedialog(request, app, tab, id, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p['value'].encode('ascii'))
+        value = b32decode(p["value"].encode("ascii"))
         if value == None:
-            value = ''
+            value = ""
     else:
-        value = ''
-    if action == 'size':
+        value = ""
+    if action == "size":
         return HttpResponse(schjson.dumps((450, 400)))
-    if action == 'dialog':
+    if action == "dialog":
         model = import_model(app, tab)
         obj = None
         parent_pk = -1
@@ -261,11 +267,21 @@ def treedialog(request, app, tab, id, action):
                 id2 = obj.parent.id
                 if id2 and id2 > 0:
                     parent_pk = id2
-        c = {'value': value, 'app': app, 'tab': tab, 'pk': id, 'parent_pk': parent_pk, 'model': model, 'object': obj,}
-        return render_to_response('schsys/get_from_tree.html', context=c, request=request)
-    if action == 'test':
-        return HttpResponse(schjson.dumps((2, None, (None, ))))
-    return HttpResponse('')
+        c = {
+            "value": value,
+            "app": app,
+            "tab": tab,
+            "pk": id,
+            "parent_pk": parent_pk,
+            "model": model,
+            "object": obj,
+        }
+        return render_to_response(
+            "schsys/get_from_tree.html", context=c, request=request
+        )
+    if action == "test":
+        return HttpResponse(schjson.dumps((2, None, (None,))))
+    return HttpResponse("")
 
 
 def tabdialog(request, app, tab, id, action):
@@ -283,23 +299,32 @@ def tabdialog(request, app, tab, id, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p['value'].encode('ascii'))
+        value = b32decode(p["value"].encode("ascii"))
         if value == None:
-            value = ''
+            value = ""
     else:
-        value = ''
-    if action == 'size':
+        value = ""
+    if action == "size":
         return HttpResponse(schjson.dumps((450, 400)))
-    if action == 'dialog':
+    if action == "dialog":
         model = import_model(app, tab)
         obj = None
         if int(id) >= 0:
             obj = model.objects.get(id=id)
-        c = {'value': value, 'app': app, 'tab': tab, 'id': id, 'model': model, 'obj': obj,}
-        return render_to_response('schsys/get_from_tab.html', context=c, request=request)
-    if action == 'test':
-        return HttpResponse(schjson.dumps((2, None, (None, ))))
-    return HttpResponse('')
+        c = {
+            "value": value,
+            "app": app,
+            "tab": tab,
+            "id": id,
+            "model": model,
+            "obj": obj,
+        }
+        return render_to_response(
+            "schsys/get_from_tab.html", context=c, request=request
+        )
+    if action == "test":
+        return HttpResponse(schjson.dumps((2, None, (None,))))
+    return HttpResponse("")
 
 
 def plugin_template(request, template_name):
@@ -312,23 +337,27 @@ def plugin_template(request, template_name):
     global APP
     if not APP:
         import wx
+
         APP = wx.GetApp()
-    c = {'app':  APP }
+    c = {"app": APP}
     return render_to_response(template_name, context=c, request=request)
 
 
 def plugins(request, app, plugin_name):
     f = None
     try:
-        f = open(settings.STATIC_ROOT + '/' + app + '/' + plugin_name + '.zip', 'rb')
+        f = open(settings.STATIC_ROOT + "/" + app + "/" + plugin_name + ".zip", "rb")
     except:
         try:
-            f = open(settings.ROOT_PATH + '/prj/' + app + '/plugins/' + plugin_name + '.zip', 'rb')
+            f = open(
+                settings.ROOT_PATH + "/prj/" + app + "/plugins/" + plugin_name + ".zip",
+                "rb",
+            )
         except:
             raise Http404
     s = f.read()
     f.close()
-    return HttpResponse(s, mimetype='application/zip')
+    return HttpResponse(s, mimetype="application/zip")
 
 
 def favicon(request):
@@ -340,7 +369,7 @@ def sw(request):
         _static_root = settings.STATIC_ROOT
     else:
         _static_root = settings.STATICFILES_DIRS[0]
-    static_root = os.path.join(os.path.join(_static_root, 'app'),settings.PRJ_NAME)
+    static_root = os.path.join(os.path.join(_static_root, "app"), settings.PRJ_NAME)
 
     sw_path = os.path.join(static_root, "sw.js")
     buf = ""
@@ -354,52 +383,64 @@ def sw(request):
     if os.path.exists(standard_sw_path):
         with open(standard_sw_path, "rt") as sw:
             buf2 = sw.read()
-            buf2 = buf2.replace('//++//', buf)
-    return HttpResponse(buf2.encode('utf-8'), content_type="application/javascript; charset=utf-8")
+            buf2 = buf2.replace("//++//", buf)
+    return HttpResponse(
+        buf2.encode("utf-8"), content_type="application/javascript; charset=utf-8"
+    )
 
 
 @dict_to_json
 def app_time_stamp(request, **argv):
     if settings.GEN_TIME:
-        return {'TIME': settings.GEN_TIME}
+        return {"TIME": settings.GEN_TIME}
     else:
         gmt = time.gmtime()
-        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
-        return {'TIME': gmt_str}
+        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
+            gmt[0],
+            gmt[1],
+            gmt[2],
+            gmt[3],
+            gmt[4],
+            gmt[5],
+        )
+        return {"TIME": gmt_str}
 
 
 def search(request, **argv):
     q = request.POST.get("q", "")
-    q2 = b32encode(q.encode('utf-8')).decode('utf-8')
+    q2 = b32encode(q.encode("utf-8")).decode("utf-8")
     print("Q:", q2)
     if hasattr(settings, "SEARCH_PATH"):
-        return HttpResponseRedirect(make_href((settings.SEARCH_PATH %  q2)+ "?only_content=1"))
+        return HttpResponseRedirect(
+            make_href((settings.SEARCH_PATH % q2) + "?only_content=1")
+        )
     else:
         return Http404()
 
 
 def redirect_site_media_protected(request):
-    url = request.path.replace('media', 'media_protected')
+    url = request.path.replace("media", "media_protected")
     response = HttpResponse()
-    response['X-Accel-Redirect'] = url
-    response['Content-Type'] = ''
+    response["X-Accel-Redirect"] = url
+    response["Content-Type"] = ""
     return response
 
+
 def site_media_protected(request):
-    if hasattr(settings, 'PROTECTED_MEDIA_PERMISSIONS'):
-        x = request.path.split('media/', 1)
+    if hasattr(settings, "PROTECTED_MEDIA_PERMISSIONS"):
+        x = request.path.split("media/", 1)
         if len(x) == 2:
             path = x[1]
             for row in settings.PROTECTED_MEDIA_PERMISSIONS:
                 result = re.match(row[0], path)
                 if result:
-                    if row[1] == 'is_authenticated':
+                    if row[1] == "is_authenticated":
                         if request.user.is_authenticated:
                             return redirect_site_media_protected(request)
-                    elif row[1] == 'username':
-                        if ( "{%s}" % request.username ) in path:
+                    elif row[1] == "username":
+                        if ("{%s}" % request.username) in path:
                             return redirect_site_media_protected(request)
-                    elif row[1] == 'email':
+                    elif row[1] == "email":
                         if ("{%s}" % request.email) in path:
                             return redirect_site_media_protected(request)
                     else:

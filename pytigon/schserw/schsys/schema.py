@@ -63,6 +63,15 @@ class _Mutation:
 
     update_user = UserMutation.Field()
 
+class PublicQuery(graphene.ObjectType, _Query):
+    pass
+
+
+class PublicMutation(graphene.ObjectType, _Mutation):
+    pass
+
+
+public_schema = graphene.Schema(query=PublicQuery, mutation=PublicMutation)
 
 for app in settings.INSTALLED_APPS:
     if isinstance(app, AppConfigMod):
@@ -97,5 +106,7 @@ class Query(graphene.ObjectType, _Query):
 class Mutation(graphene.ObjectType, _Mutation):
     pass
 
-
 schema = graphene.Schema(query=Query, mutation=Mutation)
+
+if settings.GRAPHENE_PUBLIC:
+    public_schema = schema

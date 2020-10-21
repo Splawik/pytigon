@@ -59,8 +59,12 @@
                                                         {% if settings.ACCOUNT_EMAIL_REQUIRED %}
                                                                 <div class="card-block">
                                                                         <br />
-                                                                        <a href="{{base_path}}schsys/accounts/password/reset/">
+                                                                        <a href="{{base_path}}accounts/password/reset/">
                                                                                 I forgot my password
+                                                                        </a>
+                                                                        |
+                                                                        <a href="{{base_path}}accounts/signup/">
+                                                                                Register
                                                                         </a>
                                                                 </div>
                                                         {% endif %}

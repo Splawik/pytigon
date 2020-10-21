@@ -36,6 +36,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import admin
 from graphene_django.views import GraphQLView
 
+from pytigon.schserw.schsys.schema import public_schema
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
 from pytigon_lib.schdjangoext.tools import make_href
@@ -47,12 +48,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-if hasattr(settings, "GRAPHENE_PUBLIC"):
-    PytigonGraphQLView = GraphQLView
-else:
+PytigonGraphQLViewPublic = GraphQLView
 
-    class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
-        pass
+class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
+    pass
 
 
 _urlpatterns = []
@@ -76,8 +75,10 @@ _urlpatterns.extend(
         path("select2/", include(django_select2.urls)),
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
-        path("graphql", csrf_exempt(PytigonGraphQLView.as_view(graphiql=True))),
+        path("graphql/", csrf_exempt(PytigonGraphQLView.as_view(graphiql=True))),
+        path("graphql_public/", csrf_exempt(PytigonGraphQLViewPublic.as_view(graphiql=True, schema=public_schema))),
         path("admin/", admin.site.urls),
+        path('accounts/', include('allauth.urls')),
         path("admin/log_viewer/", include("log_viewer.urls")),
     ]
 )
