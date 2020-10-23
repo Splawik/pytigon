@@ -47,6 +47,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+admin.site.enable_nav_sidebar = False
 
 PytigonGraphQLViewPublic = GraphQLView
 
