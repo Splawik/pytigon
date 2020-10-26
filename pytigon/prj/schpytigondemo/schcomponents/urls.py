@@ -8,6 +8,7 @@ from . import views
 
 
 urlpatterns = [
+    path('form/', views.form, {}),
      path('codeeditor', TemplateView.as_view(template_name='schcomponents/code_editor.html'), {}), 
      path('d3', TemplateView.as_view(template_name='schcomponents/d3.html'), {}), 
      path('spreadsheet', TemplateView.as_view(template_name='schcomponents/spreadsheet.html'), {}), 
@@ -27,6 +28,7 @@ urlpatterns = [
      path('svg', TemplateView.as_view(template_name='schcomponents/svg.html'), {}), 
      path('select2', TemplateView.as_view(template_name='schcomponents/select2.html'), {}), 
      path('db', TemplateView.as_view(template_name='schcomponents/db.html'), {}), 
+     path('form', TemplateView.as_view(template_name='schcomponents/form.html'), {}), 
     
     
 ]

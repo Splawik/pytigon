@@ -22,6 +22,7 @@ import os
 import sys
 import datetime
 
+import json 
 
 
 
@@ -30,3 +31,20 @@ import datetime
 
 
 
+
+@dict_to_json
+
+def form(request, **argv):
+    
+    json_data = json.loads(request.body)
+    print("-------------------------------------------------------")
+    print(json_data)
+    print("-------------------------------------------------------")
+    return {
+        '.result': "Hello world!<br/>" + str(json_data)
+    }
+    
+
+
+
+ 
