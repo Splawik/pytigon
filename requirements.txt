@@ -30,7 +30,7 @@ html5lib
 hypercorn
 ldap3
 libsass
-markdown2
+markdown
 netifaces
 polib
 pyexcel_odsr

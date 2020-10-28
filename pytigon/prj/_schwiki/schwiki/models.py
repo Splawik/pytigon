@@ -19,7 +19,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 from django.template import RequestContext,Context, Template
-import markdown2 as markdown
+import markdown
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.wiki import wikify, wiki_from_str, make_href
 from pytigon_lib.schtools.tools import norm_indent
@@ -66,7 +66,7 @@ def _get_wiki_object(page, buf, name, paragraf):
 
 
 def _get_markdown_object(buf):
-    return markdown.markdown("\n".join(buf), extras=['tables', 'codehilite'])
+    return markdown.markdown("\n".join(buf), extensions=['extra', 'admonition'])
 
 
 def html_from_wiki(page, wiki_str):
