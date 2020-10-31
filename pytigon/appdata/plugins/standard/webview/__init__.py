@@ -31,7 +31,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     #    return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
     # else:
     # try:
-    if True:
+    if False:
         from .cef import init_plugin_cef
 
         return init_plugin_cef(

@@ -252,10 +252,11 @@ body:not(.modal-open) .dark_background {
   pointer-events: none; }
 
 .inline-table-modal-body, .inline-update-modal-body {
-  padding: 30px; }
+  padding: 30px;
+  overflow: hidden; }
 
 .modal-fullscreen .modal-header {
-  padding-bottom: 2rem; }
+  padding: 5px; }
 
 .modal-fullscreen .modal-footer {
   padding-top: 1.5rem;
@@ -289,10 +290,9 @@ select.form-control {
   top: 0px;
   right: 0px;
   bottom: 0px;
-  margin: 3px !important; }
-
-.modal-fullscreen .modal-content {
-  height: 100%; }
+  margin: 0px !important; }
+  .modal-fullscreen .modal-content {
+    height: 100%; }
 
 div.modal-header button.maximize, div.modal-header button.minimize {
   position: absolute;

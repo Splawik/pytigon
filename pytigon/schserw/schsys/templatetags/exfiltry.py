@@ -34,7 +34,7 @@ from django.db.models.query import QuerySet
 from django.db.models import Count, Max, Min, Sum, Avg
 from django.utils.safestring import mark_safe
 
-import markdown #2 as markdown
+import markdown
 
 from pytigon_lib.schdjangoext.tools import make_href as mhref
 
@@ -892,7 +892,7 @@ def append_get_param(href, parm):
 
 @register.filter(name='markdown', is_safe=True)
 def _markdown(value):
-    return markdown.markdown(value, extras=['tables', 'fenced_code'])
+    return markdown.markdown(value, extensions=['abbr', 'attr_list', 'def_list', 'fenced_code', 'footnotes', 'md_in_html', 'tables', 'admonition', 'codehilite',])
 
 
 @register.filter(name='preferred_enctype')

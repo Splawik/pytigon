@@ -110,10 +110,11 @@ body:not(.modal-open) .dark_background
 
 .inline-table-modal-body, .inline-update-modal-body
     padding: 30px
+    overflow: hidden
 
 .modal-fullscreen
     .modal-header
-        padding-bottom: 2rem
+        padding: 5px
 
     .modal-footer
         padding-top: 1.5rem
@@ -153,11 +154,10 @@ select.form-control
     top: 0px
     right: 0px
     bottom: 0px
-    margin: 3px !important
+    margin: 0px !important
 
-
-.modal-fullscreen .modal-content
-    height: 100%
+    .modal-content
+        height: 100%
 
 
 div.modal-header button.maximize, div.modal-header button.minimize 

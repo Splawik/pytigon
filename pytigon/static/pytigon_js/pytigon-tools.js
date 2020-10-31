@@ -92,10 +92,10 @@ var INLINE_DIALOG_UPDATE_HTML =
 
 var INLINE_TABLE_HTML =
   "\
-<div style='position:relative'>\
+<div style='position:relative' style='height:100vh'>\
     <div class='dark_background'></div>\
     <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%; height:100%'>\
-        <div class='modal-content style:'height:100%'>\
+        <div class='modal-content' style='height:100%'>\
             <div class='modal-header'>\
                 <h4 class='modal-title'>{{title}}</h4>\
                 <button type='button' class='btn btn-outline-secondary minimize' data-dismiss='modal' onclick='popup_minimize(this)' style='diplay:none;'> \

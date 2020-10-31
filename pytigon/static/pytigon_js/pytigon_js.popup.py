@@ -130,6 +130,8 @@ def on_popup_inline(url, elem, e):
         if window.WAIT_ICON:
             window.WAIT_ICON.stop()
             window.WAIT_ICON = None
+        window.process_resize()
+
 
     ajax_load(elem2, href2, _on_load)
     return False

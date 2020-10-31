@@ -85,7 +85,7 @@
 %% list_content_actions
     % if not standard_web_browser == 6:
         % if perms.schwiki.add_page:
-            table width=100%
+            table width=100%,,,style=table-layout: fixed
                 tr
                     td class=wiki_view_actions,,,style=width:100%;border:0px;padding:0px;
                         % action "edit" _("Edit page") url="{{base_path}}schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/"

@@ -94,7 +94,6 @@ for app in settings.INSTALLED_APPS:
             _Query = m.extend_query(_Query)
         if hasattr(m, "extend_mutation"):
             _Mutation = m.extend_mutation(_Mutation)
-        print("XXX")
     except ModuleNotFoundError:
         pass
 

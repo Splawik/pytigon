@@ -44,7 +44,7 @@ def _get_wiki_object(page, buf, name, paragraf):
         if name in d:
             c = d[name]
         else:
-            c = ""
+            c = {}
 
         inline_content = norm_indent(buf)
         if conf.inline_wiki:
@@ -66,7 +66,7 @@ def _get_wiki_object(page, buf, name, paragraf):
 
 
 def _get_markdown_object(buf):
-    return markdown.markdown("\n".join(buf), extensions=['extra', 'admonition'])
+    return markdown.markdown("\n".join(buf), extensions=['abbr', 'attr_list', 'def_list', 'fenced_code', 'footnotes', 'md_in_html', 'tables', 'admonition', 'codehilite'])
 
 
 def html_from_wiki(page, wiki_str):

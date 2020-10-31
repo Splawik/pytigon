@@ -19,7 +19,6 @@ else:
 
 # os.chdir("./static_src/")
 sys.argv = ["", "--xpath", script_path, "--map", "pytigon_js/pytigon.py"]
-print(os.getcwd())
 from transcrypt.__main__ import main
 
 sys.path.insert(0, script_path)
@@ -36,7 +35,6 @@ for name in compiled_files:
     print(src, "=>", dst)
     copyfile(src, dst)
 
-
 def scss_compile(parent_path, name):
     input_path = os.path.join(parent_path, name)
     output_path = os.path.join(
@@ -49,12 +47,10 @@ def scss_compile(parent_path, name):
             f2.write(buf)
             print("Saving result in: ", output_path)
 
-
-p = Path("./static_src/")
+p = Path("../static_src/")
 
 for pos in p.glob("**/*.sass"):
     if not pos.stem.startswith("_"):
         scss_compile(pos.parent.as_posix(), pos.name)
-
 
 os.chdir(path)
