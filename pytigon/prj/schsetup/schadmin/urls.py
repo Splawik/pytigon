@@ -21,7 +21,6 @@ gen = generic_table_start(urlpatterns, 'schadmin', views)
 from django.contrib import admin
 from pytigon_lib.schtools.platform_info import platform_name
 
-urlpatterns.append(path('admin/', admin.site.urls))
 urlpatterns.append(path('explorer/', include('explorer.urls')))
 
 if platform_name()!='Android':

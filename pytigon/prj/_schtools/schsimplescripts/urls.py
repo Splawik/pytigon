@@ -10,7 +10,7 @@ from . import views
 urlpatterns = [
     gen_row_action('Scripts', 'run', views.run),
     re_path('run/(?P<script_name>\w+)/$', views.run_script_by_name, {}),
-    path('run_script/$', views.run_script, {}),
+    path('run_script/', views.run_script, {}),
     
     
     

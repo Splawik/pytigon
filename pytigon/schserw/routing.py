@@ -36,9 +36,9 @@ if hasattr(settings, "CHANNELS_URL_TAB"):
         m = importlib.import_module(".".join(tmp[:-1]))
         o = getattr(m, tmp[-1])
         if '(?P' in u:
-            urls_tab.append(re_path(u, o))
+            urls_tab.append(re_path(u, o.as_asgi()))
         else:
-            urls_tab.append(path(u, o))
+            urls_tab.append(path(u, o.as_asgi()))
 
 
 class LifespanApp:

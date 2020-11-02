@@ -25,25 +25,7 @@ import platform
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     import pytigon_gui.guictrl.ctrl
     from base64 import b64encode
-
-    # if platform.system() == "Linux":
-    #    from .wxwebview import init_plugin_web_view
-    #    return init_plugin_web_view(app,mainframe,desktop,mgr,menubar,toolbar,accel,BaseWebBrowser)
-    # else:
-    # try:
-    if False:
-        from .cef import init_plugin_cef
-
-        return init_plugin_cef(
-            app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
-        )
-    else:
-        # except:
-        from .wxwebview import init_plugin_web_view
-
-        return init_plugin_web_view(
-            app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
-        )
+    import platform
 
     def Component(parent, **kwds):
         http = wx.GetApp().get_http(parent)
@@ -56,3 +38,16 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         return obj
 
     pytigon_gui.guictrl.ctrl.COMPONENT = Component
+
+    if platform.system() == "Windows":
+        from .cef import init_plugin_cef
+
+        return init_plugin_cef(
+            app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
+        )
+    else:
+        from .wxwebview import init_plugin_web_view
+
+        return init_plugin_web_view(
+            app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
+        )
