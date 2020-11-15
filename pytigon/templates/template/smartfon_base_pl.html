@@ -29,7 +29,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         {% endifchanged %}
-        <a class="menu-href dropdown-item" href="{{base_path}}{{item_info.url}}">{{item_info.description}}</a>
+        <a class="menu-href dropdown-item" href="{{base_path}}{{item_info.url}}" target="_parent">{{item_info.description}}</a>
     {% if forloop.last %}
                 </div></li>
     {% endif %}

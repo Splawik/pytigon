@@ -55,6 +55,7 @@
 
     {% module_link 'pytigon_js/pytigon.js' %}
 
+
 %% jquery_init
     .import {app_init,jquery_ready} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
     .import {init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon_js.db.js";
@@ -168,13 +169,13 @@
 %% topmenu
     %if forloop.first:
         li class=nav-item topmenu
-            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_top
+            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
                 % if app_info.icon_exists:
                     {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
                 {{app_info.app_title}}
     %else:
         li class=nav-item topmenu
-            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_top
+            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
                 % if app_info.icon_exists:
                     {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
                 {{app_info.app_title}}
@@ -207,19 +208,20 @@
                     div class=dropdown-footer
                         % if user.is_superuser:
                             div class=pull-left
-                                button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}schsetup/?schtml=1,,,title=_(Setup)..._(Setup)
+                                button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
                         div class=pull-right
                             button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
             %if not autologin:
                 li class=nav-item dropdown user user-menu
-                    a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)
+                    a class=system_menu,,,href={{base_path}}schsys/do_logout/?schtml=1,,,target=_top,,,title=_(Logout)
                         span class=fa fa-power-off
         % else:
             li class=nav-item dropdown user user-menu
-                a class=system_menu,,,href=#,,,action={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                a class=system_menu,,,href={{base_path}}schsys/login/?schtml=1,,,target=_top,,,title=_(Login)
                     span class=fa fa-sign-in
 
+    <perfectscrollbar />
     <div id="menu" class="tab-content menu-content win-header">
 
 %% submenu
@@ -231,12 +233,12 @@
             <div id="{{item_info.app_name}}" class="tab-pane tab-tab active" role="tabpanel">
 
     % if item_info.url|is_menu_checked:request.get_full_path:
-        a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button,,,target=_parent,,,data-style=zoom-in,,,{{item_info.description}}
             %if item_info.icon:
                 <i class="fa {{item_info.icon}}"></i>
             {{item_info.description}}
     % else
-        a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in
+        a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in,,,target=_parent,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
                     {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
@@ -250,12 +252,6 @@
 
 %% menu_end
     </div>
-
-
-%% style_content_start...<div class="content {%if get %}content_get{% endif %}">
-
-
-%% style_content_end...</div>
 
 
 %% body_start

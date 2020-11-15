@@ -1,6 +1,8 @@
 __pragma__("alias", "S", "$")
 __pragma__("alias", "js_import", "import")
 
+import pytigon_js.resources as rc
+
 LOADED_FILES = {}
 
 FIRST_INIT = True
@@ -165,14 +167,20 @@ def register_mount_fun(fun):
     MOUNT_INIT_FUN.append(fun)
 
 
-def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
+def mount_html(elem, data_or_html, run_fragment_init=True, component_init=True):
     global MOUNT_INIT_FUN
 
     def _on_remove(index, value):
         value.on_remove()
+
     jQuery.each(elem.find('.call_on_remove'), _on_remove)
 
-    elem.html(html_txt)
+    if type(data_or_html) == str:
+        elem.html(data_or_html)
+    else:
+        elem.html("")
+        elem[0].appendChild(data_or_html)
+
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
@@ -185,6 +193,7 @@ def mount_html(elem, html_txt, run_fragment_init=True, component_init=True):
     if run_fragment_init:
         fragment_init(elem)
 
+    process_resize()
 
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
@@ -295,9 +304,9 @@ def _req_post(req, url, data, complete, content_type):
         process_blob = True
     except:
         pass
-
+    print("POST>>>: ", url)
     def _onload():
-        nonlocal process_blob
+        nonlocal process_blob, complete, url
         if process_blob:
             disp = req.getResponseHeader("Content-Disposition")
             if disp and "attachment" in disp:
@@ -307,10 +316,12 @@ def _req_post(req, url, data, complete, content_type):
                 reader = __new__(FileReader())
 
                 def _on_reader_load():
+                    nonlocal req, reader
                     if req.status != 200 and req.status != 0:
                         console.log(reader.result)
                         window.open().document.write(reader.result)
                         complete("Error - details on new page")
+                    print("<<<POST3: ", url)
                     complete(reader.result)
 
                 reader.onload = _on_reader_load
@@ -339,10 +350,37 @@ def _req_post(req, url, data, complete, content_type):
     req.send(data)
 
 
+
+
+
+
+
+
+
+
+
+
+def _req_post_new(req, url, data, complete, content_type):
+    __pragma__('jsiter')
+
+    def get_response_text(response):
+        return response.text()
+
+    headers = { "X-CSRFToken": Cookies.js_get("csrftoken"), }
+
+    x1 = fetch(url, { 'method': 'post', 'headers':headers, 'body': data, })
+    x2 = x1.then(get_response_text)
+    x3 = x2.then(complete)
+
+    __pragma__('nojsiter')
+
 def ajax_post(url, data, complete, process_req=None):
     req = __new__(XMLHttpRequest())
     if process_req:
         process_req(req)
+
+    #fetch(url, {mode: 'cors'}).then(complete)
+
     _req_post(req, url, data, complete)
 
 
@@ -436,6 +474,8 @@ def can_popup():
 
 
 def corect_href(href, only_table=False):
+    if not href:
+        return href
     if only_table:
         if "only_table" in href:
             return href
@@ -728,3 +768,178 @@ def send_to_dom(html_text, base_elem):
 
 window.send_to_dom = send_to_dom
 
+
+def get_elem_from_string(html, selectors=None):
+    temp = document.createElement("div")
+    temp.innerHTML = html
+    if selectors:
+        element = temp.querySelector(selectors)
+        return element
+    else:
+        return temp
+
+window.get_elem_from_string = get_elem_from_string
+
+def is_hidden(el):
+    style = window.getComputedStyle(el)
+    return style.display == 'none'
+
+window.is_hidden = is_hidden
+
+def is_visible(el):
+    return not is_hidden(el)
+
+window.is_visible = is_visible
+
+
+TEMPLATES = {
+    'MODAL_EDIT': rc.MODAL_EDIT,
+    'MODAL_INFO': rc.MODAL_INFO,
+    'MODAL_DELETE': rc.MODAL_DELETE,
+    'MODAL_ERROR': rc.MODAL_ERROR,
+    'INLINE_EDIT': rc.INLINE_EDIT,
+    'INLINE_INFO': rc.INLINE_INFO,
+    'INLINE_DELETE': rc.INLINE_DELETE,
+    'INLINE_ERROR': rc.INLINE_ERROR
+}
+
+def get_template(template_name, param):
+    global TEMPLATES
+    if template_name in TEMPLATES:
+        return TEMPLATES[template_name].format(param)
+    return None
+
+
+# ajax_region ajax_link ref_frame
+# refr
+
+def get_ajax_region(element):
+    if element.classList.contains("ajax-region"):
+        return element
+    else:
+        return element.closest(".ajax-region")
+
+def get_ajax_link(element):
+    if element.classList.contains("ajax-link"):
+        return element
+    region = get_ajax_region(element)
+    if region:
+        if region.classList.contains("ajax-link"):
+            return region
+        else:
+            return region.querySelector("ajax-link")
+    return None
+
+def get_ajax_frame(element):
+    region = get_ajax_region(element)
+    if region:
+        if region.classList.contains("ajax-frame"):
+            return region
+        else:
+            return region.querySelector("ajax-frame")
+    return None
+
+
+def super_query_selector(element, selector):
+    x = selector.split('/')
+    e = element
+    for pos in x:
+        if pos=='..':
+            e = e.parentElement
+        elif pos == '.':
+            pass
+        elif pos.startswith('^'):
+            e = e.closest(pos[1:])
+        else:
+            e = e.querySelector(pos)
+        if not e:
+            return None
+    return e
+
+def super_insert(base_element, selector, inserted_element):
+    if selector and ':' in selector:
+        x = selector.split(':')
+        if x[0]:
+            element  = super_query_selector(base_element, x[0])
+        else:
+            element = base_element
+        selector2 = x[1]
+    else:
+        if selector:
+            element = super_query_selector(base_element, selector)
+        else:
+            element = base_element
+        selector2 = None
+
+    if not element:
+        return None
+
+    if selector2 == 'overwrite':
+        element.innerHTML = ""
+        element.appendChild(inserted_element)
+    elif selector2 == 'append_first':
+        element.insertBefore(inserted_element, element.firstChild)
+    elif selector2 == 'after':
+        element.parentElement.insertBefore(inserted_element, element.nextSibling)
+    elif selector2 == 'before':
+        element.parentElement.insertBefore(inserted_element, element)
+    else: #selector2 == "append"
+        element.parentElement.insertBefore(inserted_element, element.nextSibling)
+
+    return element
+
+
+class Loading():
+    def __init__(self, element):
+        self.load_type = None
+        self.element = element
+        if element:
+            if element.classList.contains("ladda-button"):
+                self.load_type = "ladda"
+                self.ladda = None
+        if not self.load_type:
+            loading_indicator = document.getElementById("loading-indicator")
+            if loading_indicator:
+                self.load_type = "global"
+                self.loading_indicator = loading_indicator
+
+    def create(self):
+        if self.load_type == 'ladda':
+            self.ladda = window.Ladda.create(self.element)
+
+    def start(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.start()
+        elif self.load_type == 'global':
+            self.loading_indicator.style.display = "block"
+
+    def set_progress(self, progress):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.setProgress(progress)
+
+    def stop(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.stop()
+        elif self.load_type == 'global':
+            self.loading_indicator.style.display = "none"
+
+    def remove(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.remove()
+            self.ladda = None
+
+
+def remove_element(element):
+    def _on_remove(index, value):
+        value.on_remove()
+    jQuery.each(jQuery(element).find('.call_on_remove'), _on_remove)
+
+    def _on_remove_aside(index, value):
+        dialog = value.firstElementChild
+        if dialog and dialog.hasAttribute('modal'):
+            jQuery(dialog).modal('hide')
+        else:
+            aside.remove()
+    jQuery.each(jQuery(element).find('aside'), _on_remove_aside)
+
+    element.remove()

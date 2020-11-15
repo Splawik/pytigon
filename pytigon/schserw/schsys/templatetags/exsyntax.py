@@ -153,7 +153,7 @@ def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_cla
 
 
 @inclusion_tag('widgets/list_action.html')
-def list_action(context, action, title="", icon_name="", target='_top', attrs='', tag_class="", url="", active=False):
+def list_action(context, action, title="", icon_name="", target='_parent', attrs='', tag_class="", url="", active=False):
     if attrs:
         ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url if url else "{tp}action/%s/" % action)
     elif active:

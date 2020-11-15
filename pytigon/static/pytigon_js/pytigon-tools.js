@@ -237,6 +237,7 @@ function init_python() {
   });
 }
 
+/*
 (function () {
   var oldXMLHttpRequest = XMLHttpRequest;
   modXMLHttpRequest = function () {
@@ -297,22 +298,6 @@ function init_python() {
           py_function(["get", self.url, null]);
         }
 
-        /*
-                data['callback'] = _on_response;
-                if (vData) {
-                    data['action'] = 'post';
-                    data['data'] = vData;
-                } else {
-                    data['action'] = 'get';
-                    data['data'] = null;
-                }
-                id = set_action_data(data);
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', "http://127.0.0.2/?:action??" + id);
-                try {
-                    xhr.send();
-                } catch (e) {}
-                */
       } else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
         self.readyState = 4;
         self.responseText = request();
@@ -398,6 +383,7 @@ function init_python() {
   };
   window.XMLHttpRequest = modXMLHttpRequest;
 })();
+*/
 
 function import_module(html_txt) {
   var encodedJs = encodeURIComponent(html_txt);

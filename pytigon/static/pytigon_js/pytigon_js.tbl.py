@@ -231,3 +231,12 @@ def _on_fragment_init(elem):
 
 
 register_fragment_init_fun(_on_fragment_init)
+
+def table_loadeddata(event):
+    if getattr(event, 'data'):
+        if event.data and 'RETURN_OK' in event.data:
+            jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
+    else:
+        jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
+
+window.table_loadeddata = table_loadeddata

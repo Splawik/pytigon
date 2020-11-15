@@ -822,7 +822,7 @@ def append_class_to_attrs(obj, arg):
                 ret += "%s='%s' " % ('class', pos[1].replace('"',"").replace("'","") +" "+arg+" ")
             else:
                 if len(pos)==2:
-                    ret += "%s='%s' " % pos
+                    ret += "%s=%s " % (pos[0], pos[1])
                 else:
                     ret += pos[0] + ' '
         if not test:

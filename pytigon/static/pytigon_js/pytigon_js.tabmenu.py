@@ -1,8 +1,23 @@
-from pytigon_js.page import Page
-from pytigon_js.tabmenuitem import TabMenuItem
 from pytigon_js.tbl import datatable_onresize
-from pytigon_js.tools import history_push_state, mount_html
+from pytigon_js.tools import history_push_state, mount_html, corect_href
 
+class Page:
+    def __init__(self, id, page):
+        self.id = id
+        self.page = page
+
+    def set_href(self, href):
+        self.page.attr('_href', href)
+
+    def get_href(self):
+        return self.page.attr('_href')
+
+class TabMenuItem:
+    def __init__(self, id, title, url, data=None):
+        self.id = id
+        self.title = jQuery.trim(title)
+        self.url = url
+        self.data = data
 
 class TabMenu:
     def __init__(self):
@@ -137,3 +152,80 @@ def get_menu():
     if not window.MENU:
         window.MENU = TabMenu()
     return window.MENU
+
+#'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
+def on_menu_href(elem, title=None, url=None, txt=None):
+    if window.APPLICATION_TEMPLATE != "traditional":
+        menu = get_menu()
+        classname = jQuery(elem).attr("class")
+        if classname and "btn" in classname:
+            if window.WAIT_ICON:
+                window.WAIT_ICON.stop()
+            jQuery(elem).attr("data-style", "zoom-out")
+            jQuery(elem).attr("data-spinner-color", "#FF0000")
+            window.WAIT_ICON = Ladda.create(elem)
+        else:
+            window.WAIT_ICON = None
+
+        if window.APPLICATION_TEMPLATE == "modern" and menu.is_open(title):
+            menu.activate(title)
+        else:
+            menu.register(title)
+            if url:
+                href = url
+            else:
+                href = jQuery(elem).attr("href")
+            href2 = corect_href(href)
+
+            def _on_new_win(data):
+                nonlocal href, href2, title
+
+                #jQuery("#wiki_start").hide()
+
+                if window.APPLICATION_TEMPLATE == "modern":
+                    jQuery("#body_desktop").hide()
+                    id = menu.new_page(title, data, href2)
+                else:
+                    mount_html(jQuery("#body_desktop"), data)
+                    window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
+                    window.ACTIVE_PAGE.set_href(href2)
+                    if window.PUSH_STATE:
+                        id = jQuery(elem).attr("id")
+                        if not id:
+                            id = "menu_id_" + window.MENU_ID
+                            window.MENU_ID = window.MENU_ID + 1
+                            jQuery(elem).attr("id", id)
+                        history_push_state(title, href, [data, id])
+
+                if window.WAIT_ICON:
+                    window.WAIT_ICON.stop()
+                    window.WAIT_ICON = None
+
+                if window.WAIT_ICON2:
+                    jQuery("#loading-indicator").hide()
+                    window.WAIT_ICON2 = False
+
+            if (
+                window.APPLICATION_TEMPLATE == "standard"
+                and classname
+                and "btn" in classname
+            ):
+                jQuery("a.menu-href").removeClass("btn-warning")
+                jQuery(elem).addClass("btn-warning")
+
+            if txt:
+                _on_new_win(txt.innerHTML)
+            else:
+                if window.WAIT_ICON:
+                    window.WAIT_ICON.start()
+                else:
+                    window.WAIT_ICON2 = True
+                    jQuery("#loading-indicator").show()
+                ajax_get(href2, _on_new_win)
+                jQuery(".navbar-ex1-collapse").collapse("hide")
+
+        jQuery(".auto-hide").trigger("click")
+
+        return False
+
+window.on_menu_href = on_menu_href

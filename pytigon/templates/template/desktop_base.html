@@ -162,7 +162,7 @@
 {% block topmenu %}
         {% if forloop.first %}
                 <li class="nav-item topmenu">
-                        <a class="nav-link first_pos active" data-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_top">
+                        <a class="nav-link first_pos active" data-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
                                 {% if app_info.icon_exists %}
                                         {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
                                 {% endif %}
@@ -171,7 +171,7 @@
                 </li>
           {% else %}
                 <li class="nav-item topmenu">
-                        <a class="nav-link" data-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_top">
+                        <a class="nav-link" data-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
                                 {% if app_info.icon_exists %}
                                         {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
                                 {% endif %}
@@ -220,7 +220,7 @@
                                         <div class="dropdown-footer">
                                                 {% if user.is_superuser %}
                                                         <div class="pull-left">
-                                                                <button class="system_menu btn btn-secondary {{btn_size}} btn-flat" href="#" action="{{base_path}}schsetup/?schtml=1" title="Setup">Setup</button>
+                                                                <button class="system_menu btn btn-secondary {{btn_size}} btn-flat" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</button>
                                                         </div>
                                                 {% endif %}
                                                 <div class="pull-right">
@@ -231,19 +231,20 @@
                         </li>
                         {% if not autologin %}
                                 <li class="nav-item dropdown user user-menu">
-                                        <a class="system_menu" href="#" action="{{base_path}}schsys/do_logout/?schtml=1" title="Logout">
+                                        <a class="system_menu" href="{{base_path}}schsys/do_logout/?schtml=1" target="_top" title="Logout">
                                                 <span class="fa fa-power-off"></span>
                                         </a>
                                 </li>
                         {% endif %}
                   {% else %}
                         <li class="nav-item dropdown user user-menu">
-                                <a class="system_menu" href="#" action="{{base_path}}schsys/login/?schtml=1" title="Login">
+                                <a class="system_menu" href="{{base_path}}schsys/login/?schtml=1" target="_top" title="Login">
                                         <span class="fa fa-sign-in"></span>
                                 </a>
                         </li>
                 {% endif %}
         </ul>
+        <perfectscrollbar />
         <div id="menu" class="tab-content menu-content win-header">
 {% endblock %}
 {% block submenu %}
@@ -256,14 +257,14 @@
                 {% endif %}
         {% endifchanged %}
         {% if item_info.url|is_menu_checked:request.get_full_path %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button" data-style="zoom-in">
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
                         {% if item_info.icon %}
                                 <i class="fa {{item_info.icon}}"></i>
                         {% endif %}
                         {{item_info.description}}
                 </a>
           {% else %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button" data-style="zoom-in">
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
                         {% if item_info.icon %}
                                 {% if standard_web_browser %}
                                         {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
@@ -281,8 +282,6 @@
 {% block menu_end %}
         </div>
 {% endblock %}
-{% block style_content_start %}<div class="content {%if get %}content_get{% endif %}">{% endblock %}
-{% block style_content_end %}</div>{% endblock %}
 {% block body_start %}
         {% block body_start_0 %}
                 {% if not show_form %}

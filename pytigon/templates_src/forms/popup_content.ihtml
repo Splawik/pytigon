@@ -13,10 +13,8 @@
 %% body
     %% heading
     %% panel
-    %% style_content_start
     %% content0
     %% no_content
         %% content
-    %% style_content_stop
 
     %% footer

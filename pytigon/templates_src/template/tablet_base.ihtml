@@ -48,7 +48,7 @@
         <ul class="treeview-menu sidebar-submenu">
 
     li
-        a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,data-toggle=tooltip,,,title={{item_info.description}}
+        a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,target=_parent,,,data-toggle=tooltip,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
                     {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
@@ -69,18 +69,20 @@
     button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
         span class=fa fa-bars
 
-    aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
-        section class=sidebar
-            ul class=sidebar-menu
-                li class=bg-primary
-                    a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_parent
-                        %% logo
-                            span class=logo-lg
-                                % if prj_title|length > 20:
-                                    small...{{prj_title}}
-                                % else:
-                                    {{prj_title}}
-                {{block.super}}
+    sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}
+        sys-perfectscrollbar
+        aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
+            section class=sidebar
+                ul class=sidebar-menu
+                    li class=bg-primary
+                        a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;text-align: center;,,,target=_top
+                            %% logo
+                                span class=logo-lg
+                                    % if prj_title|length > 20:
+                                        small...{{prj_title}}
+                                    % else:
+                                        {{prj_title}}
+                    {{block.super}}
 
 %% body_start
     % if form_ext or not show_form:
@@ -147,18 +149,18 @@
                                 div class=dropdown-footer
                                     % if user.is_superuser:
                                         div class=pull-left
-                                            button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href=#,,,action={{base_path}}schsetup/?schtml=1,,,title=_(Setup)..._(Setup)
+                                            a class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
                                             &nbsp;
                                     div class=pull-left
                                         button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
 
                         %if not autologin:
                             li class=nav-item dropdown user user-menu
-                                a class=system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)
+                                a class=system_menu,,,href={{base_path}}schsys/do_logout/?schtml=1,,,target=_top,,,title=_(Logout)
                                     span class=fa fa-power-off
                     % else:
                         li class=nav-item dropdown user user-menu
-                            a class=system_menu,,,href=#,,,action={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                            a class=system_menu,,,href={{base_path}}schsys/login/?schtml=1,,,target=_top,,,title=_(Login)
                                 span class=fa fa-sign-in
     {{block.super}}
 
@@ -174,30 +176,7 @@
 
 %% body_footer
     {{block.super}}
+    {% module_link 'schcomponents/components/sys-components.js' %}
     </section>
-
-%% jquery_init
-    % if form_ext or not show_form:
-        .window.init_callback = function() {
-        % if 'smartfon' in client_type:
-            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
-            .    var obj1_off =  { 'width': '256px' };
-            .    var obj1_on =  { 'width': '0px' };
-            .    var obj2_off =  { 'margin-left': '256px', 'margin-right': '-256px' };
-            .    var obj2_on =  { 'margin-left': '0px', 'margin-right': '0px' };
-            .    var obj1 = jQuery('#menu');
-            .    var obj2 = jQuery('#panel');
-            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-        % else:
-            .    jQuery.sidebarMenu(jQuery('.sidebar-menu'));
-            .    var obj1_off =  { 'width': '256px' };
-            .    var obj1_on =  { 'width': '0px' };
-            .    var obj2_off =  { 'margin-left': '256px' };
-            .    var obj2_on =  { 'margin-left': '0px' };
-            .    var obj1 = jQuery('#menu');
-            .    var obj2 = jQuery('#panel');
-            .    animate_combo(jQuery('.sidebar-toggle'), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, 'fast', datatable_onresize);
-        }
-    {{block.super}}
 
 %% loading-indicator:

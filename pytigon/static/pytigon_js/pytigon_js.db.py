@@ -187,13 +187,14 @@ def sync_and_run(tbl, fun):
                 param_get_request.onerror = _on_param_error
                 param_get_request.onsuccess = _on_param_success
 
-            try:
+            #try:
+            if True:
                 x = JSON.parse(responseText)
                 time = x["TIME"]
                 get_table("param", _on_open_param, False)
-            except:
-                console.log(responseText)
-                window.open().document.write(responseText)
+            #except:
+            #    console.log(responseText)
+            #    window.open().document.write(responseText)
                 # win = window.open("data:text/html," + responseText, "_blank", "width=200,height=100")
                 # win.focus()
 

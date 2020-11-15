@@ -33,7 +33,7 @@
                     {{item_info.app_name}}
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-    a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url}}...{{item_info.description}}
+    a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url}},,,target=_parent...{{item_info.description}}
 
   % if forloop.last
         </div></li>
@@ -49,10 +49,10 @@
 
                 div class=dropdown-menu dropdown-menu-right,,,aria-labelledby=navbarDropdownMenuLink
                     %if not autologin:
-                        a class=dropdown-item system_menu,,,href=#,,,action={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout)..._(Logout)
+                        a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout),,,target=_top..._(Logout)
                     a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
-                        a class=dropdown-item system_menu,,,href=#,,,action={{base_path}}schsetup/?schtml=1,,,title=_(Setup)..._(Setup)
+                        a class=dropdown-item system_menu,,,href={{base_path}}schsetup/?schtml=1,,,title=_(Setup),,,target=_top..._(Setup)
     % else:
         li class=nav-item dropdown
             a class=nav-link dropdown-toggle,,,href={{base_path}}schsys/login/?schtml=1,,,title=_(Login)

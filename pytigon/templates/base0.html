@@ -99,23 +99,21 @@
                                         {% block panel %}{% endblock %}
                                         {% block navglobal %}{% endblock %}
                                         {% block sidebar %}{% endblock %}
-                                        {% block style_content_start %}{% endblock %}
                                         {% block content_start %}{% endblock %}
                                         {% block no_content %}
                                                 {% block content %}{% endblock %}
                                         {% endblock %}
                                         {% block content_end %}{% endblock %}
-                                        {% block style_content_end %}{% endblock %}
                                 {% endif %}
                         {% endblock %}
                         {% block tabs %}{% endblock %}
                 {% endif %}
                 {% block html_widgets_init %}{% endblock %}
                 {% block body_footer %}{% endblock %}
-                {% if not 'no_scripts' in request.GET %}
-                        {% block body_footer_scripts %}{% endblock %}
-                {% endif %}
         {% endblock %}
+        {% if not 'no_scripts' in request.GET %}
+                {% block body_footer_scripts %}{% endblock %}
+        {% endif %}
         {% block page_footer %}
                 {% if not 'no_scripts' in request.GET %}
                         {% block js_extrascipts_init %}

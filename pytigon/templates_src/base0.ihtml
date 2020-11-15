@@ -91,19 +91,17 @@
                     %% panel
                     %% navglobal
                     %% sidebar
-                    %% style_content_start
                     %% content_start
                     %% no_content
                         %% content
                     %% content_end
-                    %% style_content_end
             %% tabs
 
         %% html_widgets_init
 
         %% body_footer
-        %if not 'no_scripts' in request.GET:
-            %% body_footer_scripts
+    %if not 'no_scripts' in request.GET:
+        %% body_footer_scripts
 
     %% page_footer
         %if not 'no_scripts' in request.GET:

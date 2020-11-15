@@ -23,7 +23,7 @@
                                 p id=login_txt1..._(Sign in):
                                 p id=login_txt2,,,class=d-none..._(Wrong login or password, try again):
                                 br
-                                form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %},,,method=post,,,name=signin
+                                form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %},,,method=post,,,name=signin,,,target=_top
                                     div class=form-group
                                         label class=control-label,,,for=username_ ..._(User name)
                                         div class=input-group
@@ -94,264 +94,272 @@
                             li...{{message}}
 
 %% body
-    % if not form_ext and show_form
-        %% dialog_start
-        % if form_delete or form_info
-            % if standard_web_browser:
-                <div id="Dialog">
-            % if form_info:
-                %% form_info
-                    div class=form_info
-                        table name=tabsort,,,class=listctrl table table-bordered,,,width=100%
-                            tr
-                                th..._(Field)
-                                th..._(Value)
-                            % for field in object|getfields:
+    section class=body-body
+        % if not form_ext and show_form
+            %% dialog_start
+            % if form_delete or form_info
+                % if standard_web_browser:
+                    <div id="Dialog">
+                % if form_info:
+                    %% form_info
+                        div class=form_info
+                            table name=tabsort,,,class=listctrl table table-bordered,,,width=100%
                                 tr
-                                    td...{{ field.verbose_name }}
-                                    td...{{ object|getfield:field.name }}
-                    %% form_ok_cancel_info
+                                    th..._(Field)
+                                    th..._(Value)
+                                % for field in object|getfields:
+                                    tr
+                                        td...{{ field.verbose_name }}
+                                        td...{{ object|getfield:field.name }}
+                        %% form_ok_cancel_info
+                    % if standard_web_browser:
+                        % if title:
+                            set-field element=#ModalLabelInfo,,,title={{title}}
+                % else:
+                    %% form_delete
+                        form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
+                            % csrf_token
+                            %% form_delete_content
+                                h4..._(Delete the item)?
+                                div class=form_delete
+                                    %% form_delete_object
+                                        table class=table table-stripe ui-responsive,,,data-role=table
+                                            thead
+                                                tr
+                                                    th..._(Field)
+                                                    th..._(Value)
+                                            tbody
+                                                % for field in object|getfields:
+                                                    tr
+                                                        td...{{ field.verbose_name }}:
+                                                        td...{{ object|getfield:field.name| truncatechars:1024 }}
+                                    br
+                            %% form_ok_cancel_del
+
+                    % if standard_web_browser:
+                        set-field element=#ModalLabelDelete,,,title={{title}}
+
+                % if standard_web_browser:
+                    </div>
+            % else:
+                %% row_edit_start
+                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
+                %% row_edit_header
+                    % if form:
+                        {{ form.errors }}
+                %% row_edit_all
+                    form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region=table
+                        % csrf_token
+                        %% row_edit_form
+                            table width=100%,,,style=table-layout:fixed;
+                                %if form
+                                    % if field:
+                                        tr
+                                            td
+                                                {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                                    % else:
+                                        %% row_edit
+                                            {{form.as_table}}
+                    %% row_edit_footer
+                    %% form_ok_cancel
+
+                %% row_edit_end
+                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        </div>
                 % if standard_web_browser:
                     % if title:
-                        set-field element=#ModalLabelInfo,,,title={{title}}
+                        set-field element=#ModalLabel,,,title={{title}}
+
+            %% dialog_end
+        % else:
+            % if form_grid:
             % else:
-                %% form_delete
-                    form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
-                        % csrf_token
-                        %% form_delete_content
-                            h4..._(Delete the item)?
-                            div class=form_delete
-                                %% form_delete_object
-                                    table class=table table-stripe ui-responsive,,,data-role=table
-                                        thead
-                                            tr
-                                                th..._(Field)
-                                                th..._(Value)
-                                        tbody
-                                            % for field in object|getfields:
-                                                tr
-                                                    td...{{ field.verbose_name }}:
-                                                    td...{{ object|getfield:field.name| truncatechars:1024 }}
-                                br
-                        %% form_ok_cancel_del
-
-                % if standard_web_browser:
-                    set-field element=#ModalLabelDelete,,,title={{title}}
-
-            % if standard_web_browser:
-                </div>
-        % else:
-            %% row_edit_start
-                % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                    <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
-            %% row_edit_header
-                % if form:
-                    {{ form.errors }}
-            %% row_edit_all
-                form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %}
-                    % csrf_token
-                    %% row_edit_form
-                        table width=100%,,,style=table-layout:fixed;
-                            %if form
-                                % if field:
-                                    tr
-                                        td
-                                            {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
-                                % else:
-                                    %% row_edit
-                                        {{form.as_table}}
-                %% row_edit_footer
-                %% form_ok_cancel
-
-            %% row_edit_end
-                % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                    </div>
-            % if standard_web_browser:
-                % if title:
-                    set-field element=#ModalLabel,,,title={{title}}
-
-        %% dialog_end
-    % else:
-        % if form_grid:
-        % else:
-            {{ block.super }}
+                {{ block.super }}
 
 %% content
-    % if debug_on:
-        div id=debug
-            h2...Queries
-            p
-                {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-                % ifnotequal sql_queries|length 0
-                    (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
-            table id=debugQueryTable,,,style=display: none;
-                tr
-                  th scope=col...#
-                  th scope=col...SQL
-                  th scope=col...Time
-                % for query in sql_queries:
-                    tr class={% cycle 'odd' 'even' %}
-                        td...{{ forloop.counter }}
-                        td...{{ query.sql|escape }}
-                        td...{{ query.time }}
+    div class=content ajax-region ajax-frame,,,data-region=page,,,href={{request.path}}
+        div class=page-content
+            % if debug_on:
+                div id=debug
+                    h2...Queries
+                    p
+                        {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
+                        % ifnotequal sql_queries|length 0
+                            (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
+                    table id=debugQueryTable,,,style=display: none;
+                        tr
+                          th scope=col...#
+                          th scope=col...SQL
+                          th scope=col...Time
+                        % for query in sql_queries:
+                            tr class={% cycle 'odd' 'even' %}
+                                td...{{ forloop.counter }}
+                                td...{{ query.sql|escape }}
+                                td...{{ query.time }}
 
-    % if not form_delete:
+            % if not form_delete:
 
-        %% list_page_start
-        %% list_page_header
+                %% list_page_start
+                %% list_page_header
 
-        %% list_page
-            %% list_content_start
-                % if standard_web_browser:
-            %% list_content_header
-                div
-                    div class=table container col-12,,,style={% if get %}border:none;margin-top:-40px;{% endif %}
-                        %%list_content_header_first_row
-                            % if not get:
-                                div class=tr row list_content_header list_content_header_first_row
-                                    div class=td col-sm-12 hidden-sm-down text-center
-                                        %% list_content_title
-                                            h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
-                        %%list_content_header_two_row
-                            % if form:
-                                div class=tr row list_content_header list_content_header_two_row
-                                    div class=td col-md-12 col-sm-12,,,colspan=3
-                                        %% list_filter_form
-                                            form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_obj
-                                                % csrf_token
-                                                %% form_filter
-                                                    %if form
-                                                        %% form_content
-                                                            {{ form.non_field_errors }}
-                                                            %% form_table_filter
-                                                                % inline_form:
-                                                            %% form_content_button
-                                                                button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
-                                                                    span class=fa fa-refresh
-                            % else:
-                                form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,target=refresh_obj
-                        %%list_content_header_third_row
-                            div class=tr row list_content_header list_content_header_third_row
-                                div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
-                                    div class=dropdown
-                                        % if standard_web_browser and object_list:
-                                            % if table_type == 'datatable':
-                                                div class=dropdown
-                                                    button type=button,,,class=btn btn-secondary {{btn_size}} dropdown-toggle,,,data-toggle=dropdown
-                                                        span class=fa fa-bars
-                                                    div class=dropdown-menu
-                                                        a href=../../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
-                                                        a href=../../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
-                                                        a href={{base_url}}tools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
-                                        %% list_content_actions
-                                % if is_paginated and table_type != 'datatable':
-                                    div class=td col-sm-4 col-xs-7 text-right,,,align=right
-
-                % if standard_web_browser:
-                    div class=new_row
-                    % if table_type == 'datatable' and not get:
-                        button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
-                            i class=fa fa-times
-
-            % if standard_web_browser:
-                <div class="tableframe">
-
-            %% list_content_body
-                %% list_content_paginator
-                    % if standard_web_browser and table_type != 'datatable':
-                        % if is_paginated
-                            ul class=pagination simple_pagination
-                                % if page_obj.has_previous:
-                                    li class=page-item
-                                        a class=page-link,,,target=refresh_obj,,,href=?page={{ page_obj.previous_page_number }}&only_table=1... &laquo;
-                                % else:
-                                    li class=disabled page-item
-                                        a class=page-link
-                                            span... &laquo;
-
-                                % for i in paginator.page_range:
-                                    % if page_obj.number == i:
-                                        li class=active page-item
-                                            a class=page-link
-                                                span...{{ i }}
-                                                    span class=sr-only
-                                                        (current)
+                %% list_page
+                    %% list_content_start
+                        % if standard_web_browser:
+                    %% list_content_header
+                        div
+                            div class=table container col-12,,,style={% if get %}border:none;margin-top:-40px;{% endif %}
+                                %%list_content_header_first_row
+                                    % if not get:
+                                        div class=tr row list_content_header list_content_header_first_row
+                                            div class=td col-sm-12 hidden-sm-down text-center
+                                                %% list_content_title
+                                                    h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
+                                %%list_content_header_two_row
+                                    % if form:
+                                        div class=tr row list_content_header list_content_header_two_row
+                                            div class=td col-md-12 col-sm-12,,,colspan=3
+                                                %% list_filter_form
+                                                    form method=post,,,action={{request.path}},,,role=form,,,class=table_filter ajax-link form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_frame,,,data-region=page,,,data-remote-elem=div.ajax-region div
+                                                        % csrf_token
+                                                        %% form_filter
+                                                            %if form
+                                                                %% form_content
+                                                                    {{ form.non_field_errors }}
+                                                                    %% form_table_filter
+                                                                        % inline_form:
+                                                                    %% form_content_button
+                                                                        button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
+                                                                            span class=fa fa-refresh
                                     % else:
-                                        li class=page-item
-                                            a class=page-link,,,target=refresh_obj,,,href=?page={{ i }}&only_table=1
-                                                {{ i }}
+                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,target=refresh_obj
+                                %%list_content_header_third_row
+                                    div class=tr row list_content_header list_content_header_third_row
+                                        div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
+                                            div class=dropdown
+                                                % if standard_web_browser and object_list:
+                                                    % if table_type == 'datatable':
+                                                        div class=dropdown
+                                                            button type=button,,,class=btn btn-secondary {{btn_size}} dropdown-toggle,,,data-toggle=dropdown
+                                                                span class=fa fa-bars
+                                                            div class=dropdown-menu
+                                                                a href=../../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
+                                                                a href=../../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
+                                                                a href={{base_url}}tools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
+                                                %% list_content_actions
+                                        % if is_paginated and table_type != 'datatable':
+                                            div class=td col-sm-4 col-xs-7 text-right,,,align=right
 
-                                % if page_obj.has_next:
-                                    li class=page-item
-                                        a class=page-link,,,target=refresh_obj,,,href=?page={{ page_obj.next_page_number }}&only_table=1... &raquo;
+                        % if standard_web_browser:
+                            div class=new_row
+                            % if table_type == 'datatable' and not get:
+                                button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
+                                    i class=fa fa-times
+
+                    % if standard_web_browser:
+                        <div class="tableframe">
+
+                    %% list_content_body
+                        %% list_content_paginator
+                            % if standard_web_browser and table_type != 'datatable':
+                                % if is_paginated
+                                    ul class=pagination simple_pagination
+                                        % if page_obj.has_previous:
+                                            li class=page-item
+                                                a class=page-link,,,target=refresh_obj,,,href=?page={{ page_obj.previous_page_number }}&only_table=1... &laquo;
+                                        % else:
+                                            li class=disabled page-item
+                                                a class=page-link
+                                                    span... &laquo;
+
+                                        % for i in paginator.page_range:
+                                            % if page_obj.number == i:
+                                                li class=active page-item
+                                                    a class=page-link
+                                                        span...{{ i }}
+                                                            span class=sr-only
+                                                                (current)
+                                            % else:
+                                                li class=page-item
+                                                    a class=page-link,,,target=refresh_obj,,,href=?page={{ i }}&only_table=1
+                                                        {{ i }}
+
+                                        % if page_obj.has_next:
+                                            li class=page-item
+                                                a class=page-link,,,target=refresh_obj,,,href=?page={{ page_obj.next_page_number }}&only_table=1... &raquo;
+                                        % else:
+                                            li class=disabled page-item
+                                                a class=page-link
+                                                    span... &raquo;
+                            % else:
+                                {% paginator %}
+
+                        div class=tabsort_panel
+                            % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                                %if table_type == 'scrolled' or not table_type:
+                                    <div class="tbl_scroll" style="overflow-y: auto;">
                                 % else:
-                                    li class=disabled page-item
-                                        a class=page-link
-                                            span... &raquo;
-                    % else:
-                        {% paginator %}
+                                    <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
 
-                div class=tabsort_panel
-                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                        %if table_type == 'scrolled' or not table_type:
-                            <div class="tbl_scroll" style="overflow-y: auto;">
-                    table id=tabsort,,,name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
-                        %% list_full_row_header
-                            thead
-                                tr
-                                    %% list_row_header_start
-                                        % if not no_id
-                                            th data-field=cid,,,data-sortable=true
-                                                {% id_num 'Id' %}
-                                    %% list_row_header
-                                    %% list_row_header_end
-                                        th data-field=caction
-                                            ._(Action)
-                        %% list_table
-                            %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
-                                tbody
-                                    % if object_list
-                                        %for object in object_list
-                                            %% list_full_row
-                                                tr {% block list_row_attr %}{% endblock %}
-                                                    %% list_row_start
-                                                        % if not no_id
-                                                            td
-                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                    %% id_extra
-                                                                        %if get:
-                                                                            {% get_row object.id %}
-                                                                        %else:
-                                                                            {% view_row object.id %}
-                                                                </div>
-                                                    %% list_row
-                                                        td...{{object}}
-                                                    %% list_row_end
-                                                        td
-                                                            div class=td_action,,,style=white-space:nowrap
-                                                                %% list_row_actions
-                                                                    % if readonly
-                                                                        a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
-                                                                    % else
-                                                                        % row_actions:...edit;delete
-                                            %% list_row2
+                            table name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
+                                %% list_full_row_header
+                                    thead
+                                        tr
+                                            %% list_row_header_start
+                                                % if not no_id
+                                                    th data-field=cid,,,data-sortable=true
+                                                        {% id_num 'Id' %}
+                                            %% list_row_header
+                                            %% list_row_header_end
+                                                th data-field=caction
+                                                    ._(Action)
+                                %% list_table
+                                    %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
+                                        tbody
+                                            % if object_list
+                                                %for object in object_list
+                                                    %% list_full_row
+                                                        tr {% block list_row_attr %}{% endblock %}
+                                                            %% list_row_start
+                                                                % if not no_id
+                                                                    td
+                                                                        <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                            %% id_extra
+                                                                                %if get:
+                                                                                    {% get_row object.id %}
+                                                                                %else:
+                                                                                    {% view_row object.id %}
+                                                                        </div>
+                                                            %% list_row
+                                                                td...{{object}}
+                                                            %% list_row_end
+                                                                td
+                                                                    div class=td_action,,,style=white-space:nowrap
+                                                                        %% list_row_actions
+                                                                            % if readonly
+                                                                                a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
+                                                                            % else
+                                                                                % row_actions:...edit;delete
+                                                    %% list_row2
 
-                        %% list_table_footer
+                                %% list_table_footer
 
 
-                    % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                        %if table_type == 'scrolled' or not table_type:
-                            </div>
+                            % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                                %if table_type == 'scrolled' or not table_type:
+                                    </div>
+                                % else:
+                                    </div>
 
-            % if standard_web_browser:
-                </div>
+                    % if standard_web_browser:
+                        </div>
 
-            %% list_content_footer
+                    %% list_content_footer
 
-            %% list_content_end
-                % if standard_web_browser:
+                    %% list_content_end
+                        % if standard_web_browser:
 
-        %% list_page_footer
+                %% list_page_footer
 
-        %% list_page_end
+                %% list_page_end
 

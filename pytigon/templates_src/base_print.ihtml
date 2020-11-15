@@ -15,11 +15,9 @@
 
     %% body
         .<body>
-        %% style_content_start
         %% content0
         %% no_content
             %% content...content
-        %% style_content_stop
 
         %% footer
 
