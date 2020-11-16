@@ -4,196 +4,8 @@ __pragma__("alias", "js_import", "import")
 import pytigon_js.resources as rc
 
 LOADED_FILES = {}
-
-FIRST_INIT = True
-FRAGMENT_INIT_FUN = []
 RESIZE_FUN = []
 
-def register_fragment_init_fun(fun):
-    global FRAGMENT_INIT_FUN
-    FRAGMENT_INIT_FUN.append(fun)
-
-
-window.register_fragment_init_fun = register_fragment_init_fun
-
-def _set_field(elem):
-    f = elem.find('set-field')
-    if f:
-        element_sel = f.attr('element')
-        title = f.attr('title')
-        jQuery(element_sel).html(title)
-
-register_fragment_init_fun(_set_field)
-
-
-def fragment_init(elem=None):
-    global FIRST_INIT, FRAGMENT_INIT_FUN
-    if elem:
-        elem2 = elem
-    else:
-        elem2 = window.ACTIVE_PAGE.page
-
-    format = {
-        "singleDatePicker": True,
-        "showDropdowns": True,
-        "buttonClasses": "btn",
-        "applyClass": "btn-success align-top",
-        "cancelClass": "btn-danger btn-sm align-top",
-        "timePicker24Hour": True,
-        "autoApply": True,
-        "locale": {
-            "format": "YYYY-MM-DD",
-            "separator": "-",
-            "applyLabel": "&nbsp; OK &nbsp;",
-            "cancelLabel": "<i class='fa fa-close'></i>",
-        },
-    }
-
-    d = elem2.find("div.form-group .datefield input")
-    d.daterangepicker(format)
-
-    format["locale"]["format"] = "YYYY-MM-DD HH:mm"
-    format["timePicker"] = True
-    format["timePickerIncrement"] = 30
-
-    d = elem2.find("div.form-group .datetimefield input")
-    d.daterangepicker(format)
-
-    jQuery(".selectpicker").selectpicker()
-
-    def _on_blur(e):
-        if e["type"] == "focus" or this.value.length > 0:
-            test = True
-        else:
-            test = False
-        jQuery(this).parents(".form-group").toggleClass("focused", test)
-
-    elem2.find(".label-floating .form-control").on("focus blur", _on_blur).trigger(
-        "blur"
-    )
-
-    def load_inline_frame():
-        frame = jQuery(this)
-        frame.append(INLINE_FRAME_HTML)
-        obj2 = frame.find("div.frame-data-inner")
-        if obj2.length > 0:
-            url = frame.attr("href")
-
-            def complete(txt):
-                pass
-
-            ajax_load(obj2, url, complete)
-
-    elem2.find(".inline_frame").each(load_inline_frame)
-
-    #elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2( { "width": "12em", "minimumInputLength": 1 })
-    elem2.find(".django-select2:not(.select2-full-width)").djangoSelect2( { "width": "calc(100% - 48px)", "minimumInputLength": 1 })
-    #    {"width": "calc(100% - 48px)"}
-    #)
-    elem2.find(".django-select2.select2-full-width").djangoSelect2(
-        {"width": "calc(100%)", "minimumInputLength": 1}
-    )
-
-    def init_select2_ctrl():
-        sel2 = jQuery(this)
-        src = sel2.closest(".input-group")
-        if src.length == 1:
-            if src[0].hasAttribute("item_id"):
-                id = src.attr("item_id")
-                if id:
-                    text = src.attr("item_str")
-                    sel2.append(jQuery("<option>", {"value": id, "text": text}))
-                    sel2.val(id.toString())
-                    sel2.trigger("change")
-
-    elem2.find(".django-select2").each(init_select2_ctrl)
-
-    if window.BASE_FRAGMENT_INIT:
-        window.BASE_FRAGMENT_INIT()
-
-    # datatable_onresize()
-
-    for fun in FRAGMENT_INIT_FUN:
-        #setTimeout(fun, 1, elem2)
-        fun(elem2)
-
-window.fragment_init = fragment_init
-
-def split_html(html):
-    temp = document.createElement("div")
-    temp.innerHTML = html
-
-    scripts = temp.getElementsByTagName("script")
-    styles = temp.getElementsByTagName("style")
-
-    scripts2 = Array.prototype.slice.call(scripts)
-    styles2 = Array.prototype.slice.call(styles)
-
-    def remove_element(element):
-        if element:
-            element.parentNode.removeChild(element)
-
-    elemets_to_delete = []
-
-    for script in scripts:
-        elemets_to_delete.append(script)
-    for style in styles:
-        elemets_to_delete.append(style)
-    for element in elemets_to_delete:
-        remove_element(element)
-
-    return (temp.innerHTML, scripts2, styles2)
-
-
-def eval_scripts(scripts):
-    def eval_fun(id, value):
-        eval(value.innerHTML)
-
-    jQuery.each(scripts, eval_fun)
-
-
-def eval_styles(styles, elem):
-    while styles.length > 0:
-        style = styles.pop()
-        styles.attr("scoped", "scoped")
-        elem.append(styles)
-
-
-MOUNT_INIT_FUN = []
-
-
-def register_mount_fun(fun):
-    global MOUNT_INIT_FUN
-    MOUNT_INIT_FUN.append(fun)
-
-
-def mount_html(elem, data_or_html, run_fragment_init=True, component_init=True):
-    global MOUNT_INIT_FUN
-
-    def _on_remove(index, value):
-        value.on_remove()
-
-    jQuery.each(elem.find('.call_on_remove'), _on_remove)
-
-    if type(data_or_html) == str:
-        elem.html(data_or_html)
-    else:
-        elem.html("")
-        elem[0].appendChild(data_or_html)
-
-
-    if MOUNT_INIT_FUN:
-        for fun in MOUNT_INIT_FUN:
-            fun(elem)
-
-    if elem.hasClass("refr_replace"):
-        elem_tmp = elem.contents()
-        elem.replaceWith(elem_tmp)
-
-    if run_fragment_init:
-        fragment_init(elem)
-
-    process_resize()
 
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
@@ -282,19 +94,7 @@ def ajax_get(url, complete, process_req=None):
     # req.overrideMimeType('text/plain; charset=x-user-defined')
     req.send(None)
 
-
 window.ajax_get = ajax_get
-
-
-def ajax_load(elem, url, complete):
-    def _onload(responseText):
-        mount_html(elem, responseText)
-        complete(responseText)
-
-    ajax_get(url, _onload)
-
-
-window.ajax_load = ajax_load
 
 
 def _req_post(req, url, data, complete, content_type):
@@ -930,16 +730,24 @@ class Loading():
 
 
 def remove_element(element):
-    def _on_remove(index, value):
-        value.on_remove()
-    jQuery.each(jQuery(element).find('.call_on_remove'), _on_remove)
+    if element:
+        def _on_remove(index, value):
+            value.on_remove()
 
-    def _on_remove_aside(index, value):
-        dialog = value.firstElementChild
-        if dialog and dialog.hasAttribute('modal'):
-            jQuery(dialog).modal('hide')
+        if type(element) == str:
+            elements = document.querySelectorAll(element)
         else:
-            aside.remove()
-    jQuery.each(jQuery(element).find('aside'), _on_remove_aside)
+            elements = [element,]
 
-    element.remove()
+        for element2 in elements:
+            jQuery.each(jQuery(element2).find('.call_on_remove'), _on_remove)
+
+            def _on_remove_aside(index, value):
+                dialog = value.firstElementChild
+                if dialog and dialog.hasAttribute('modal'):
+                    jQuery(dialog).modal('hide')
+                else:
+                    aside.remove()
+            jQuery.each(jQuery(element2).find('aside'), _on_remove_aside)
+
+            element2.remove()

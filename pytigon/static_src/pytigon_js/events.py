@@ -1,6 +1,6 @@
-from pytigon_js.tabmenu import get_menu, on_menu_href
-from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, mount_html, get_and_run_script, get_template, super_insert, remove_element
-from ajax_region import get_ajax_region, refresh_ajax_frame
+from pytigon_js.tabmenu import get_menu
+from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_and_run_script, get_template, super_insert, remove_element
+from ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
 REGISTERED_EVENT_TYPES = []
@@ -69,7 +69,7 @@ window.register_global_event = register_global_event
 
 def _get_value(elem, name):
     if elem.length > 0:
-        x = elem.closest(".refr_object")
+        x = elem.closest(".ajax-region")
         if x.length > 0:
             x2 = x.find(sprintf("[name='%s']", name))
             if x2.length > 0:
@@ -353,7 +353,7 @@ def on_new_tab(target_element, data_element, new_url, param, event):
     data_element2 = data_element.querySelector('section.body-body')
     if not data_element2:
         data_element2 = data_element
-    return on_menu_href(target_element, title, new_url, data_element2)
+    return get_menu().on_menu_href(target_element, title, new_url, data_element2)
 
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:

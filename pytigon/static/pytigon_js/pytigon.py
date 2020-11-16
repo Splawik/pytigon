@@ -2,7 +2,7 @@ __pragma__("alias", "jquery_is", "js_is")
 
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
-from pytigon_js.tabmenu import Page, get_menu, on_menu_href
+from pytigon_js.tabmenu import Page, get_menu
 from pytigon_js.tbl import init_table, datatable_onresize
 from pytigon_js.tools import (
     can_popup,
@@ -10,26 +10,21 @@ from pytigon_js.tools import (
     get_table_type,
     ajax_get,
     ajax_post,
-    ajax_load,
     ajax_submit,
     load_css,
     load_js,
     load_many_js,
     history_push_state,
-    mount_html,
-    register_fragment_init_fun,
-    register_mount_fun,
     remove_page_from_href,
     get_and_run_script,
     register_resize_fun,
     process_resize,
-    fragment_init
 )
 from pytigon_js.offline import service_worker_and_indexedDB_test, install_service_worker
 from pytigon_js.db import sync_and_run
 from pytigon_js.component import GlobalBus
 from pytigon_js.events import register_global_event
-
+from pytigon_js.ajax_region import ajax_load
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -118,20 +113,20 @@ def dom_content_loaded():
     if jQuery("#dialog-form-modal").length > 0:
         jQuery(document).ajaxError(_on_error)
 
-        def _on_hide(e):
-            mount_html(
-                jQuery(this).find("div.dialog-data"),
-                "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
-                False,
-                False,
-            )
+        #def _on_hide(e):
+        #    mount_html(
+        #        jQuery(this).find("div.dialog-data"),
+        #        "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
+        #        False,
+        #        False,
+        #    )
 
-        jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
+        #jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
 
-        def _local_fun():
-            console.log("collapsed")
+        #def _local_fun():
+        #    console.log("collapsed")
 
-        jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
+        #jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
 
         if window.APPLICATION_TEMPLATE == "traditional":
             window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
@@ -295,41 +290,41 @@ def _on_error(request, settings):
     #    jQuery('#dialog-form-error').modal()
 
 
-def init2():
-    if jQuery("#dialog-form-modal").length > 0:
-        jQuery(document).ajaxError(_on_error)
-
-        def _on_hide(e):
-            mount_html(
-                jQuery(this).find("div.dialog-data"),
-                "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
-                False,
-                False,
-            )
-
-        jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
-
-        def _local_fun():
-            console.log("collapsed")
-
-        jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
-
-        if window.APPLICATION_TEMPLATE == "traditional":
-            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
-            # __new__(Vue({'el': '#body_body'}))
-        else:
-            #if window.APPLICATION_TEMPLATE == "modern":
-            #    txt = jQuery(".page").html()
-            #    txt2 = jQuery.trim(txt)
-            #    if txt2:
-            #        txt = jQuery.trim(jQuery(".page")[0].outerHTML)
-            #        jQuery(".page").remove()
-            #        menu = get_menu()
-            #        menu.new_page(jQuery("title").text(), txt, window.location.href)
-            #else:
-            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
-            #if window.APPLICATION_TEMPLATE == "to_print":
-            #    __new__(Vue({"el": "#body_desktop"}))
+# def init2():
+#     if jQuery("#dialog-form-modal").length > 0:
+#         jQuery(document).ajaxError(_on_error)
+#
+#         def _on_hide(e):
+#             mount_html(
+#                 jQuery(this).find("div.dialog-data"),
+#                 "<div class='alert alert-info' role='alert'>Sending data - please wait</div>",
+#                 False,
+#                 False,
+#             )
+#
+#         jQuery("div.dialog-form").on("hide.bs.modal", _on_hide)
+#
+#         def _local_fun():
+#             console.log("collapsed")
+#
+#         jQuery(".navbar-ex1-collapse").on("hidden.bs.collapse", _local_fun)
+#
+#         if window.APPLICATION_TEMPLATE == "traditional":
+#             window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
+#             # __new__(Vue({'el': '#body_body'}))
+#         else:
+#             #if window.APPLICATION_TEMPLATE == "modern":
+#             #    txt = jQuery(".page").html()
+#             #    txt2 = jQuery.trim(txt)
+#             #    if txt2:
+#             #        txt = jQuery.trim(jQuery(".page")[0].outerHTML)
+#             #        jQuery(".page").remove()
+#             #        menu = get_menu()
+#             #        menu.new_page(jQuery("title").text(), txt, window.location.href)
+#             #else:
+#             window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
+#             #if window.APPLICATION_TEMPLATE == "to_print":
+#             #    __new__(Vue({"el": "#body_desktop"}))
 
 
 #window.init2 = init2
@@ -391,27 +386,27 @@ def jquery_ready():
 #]
 
 
-def standard_on_data(src_obj, href):
-    def _standard_on_data(data):
-        nonlocal href, src_obj
-
-        if data and "_parent_refr" in data:
-            refresh_fragment(src_obj)
-        else:
-            if window.APPLICATION_TEMPLATE == "modern":
-                mount_html(window.ACTIVE_PAGE.page, data)
-                window.ACTIVE_PAGE.set_href(href)
-            else:
-                mount_html(jQuery("#body_desktop"), data)
-            window.ACTIVE_PAGE.set_href(href)
-            get_menu().get_active_item().url = href
-            if window.PUSH_STATE:
-                history_push_state("title", href)
-
-    return _standard_on_data
-
-
-window.standard_on_data = standard_on_data
+# def standard_on_data(src_obj, href):
+#     def _standard_on_data(data):
+#         nonlocal href, src_obj
+#
+#         if data and "_parent_refr" in data:
+#             refresh_fragment(src_obj)
+#         else:
+#             if window.APPLICATION_TEMPLATE == "modern":
+#                 mount_html(window.ACTIVE_PAGE.page, data)
+#                 window.ACTIVE_PAGE.set_href(href)
+#             else:
+#                 mount_html(jQuery("#body_desktop"), data)
+#             window.ACTIVE_PAGE.set_href(href)
+#             get_menu().get_active_item().url = href
+#             if window.PUSH_STATE:
+#                 history_push_state("title", href)
+#
+#     return _standard_on_data
+#
+#
+# window.standard_on_data = standard_on_data
 
 
 def _on_popstate(e):

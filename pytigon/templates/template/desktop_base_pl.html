@@ -48,8 +48,6 @@
 {% block jquery_init %}
         import {app_init,jquery_ready} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
         import {init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon_js.db.js";
-        import {register_fragment_init_fun,animate_combo} from '{% get_static_prefix %}pytigon_js/pytigon_js.tools.js';
-        window.animate_combo = animate_combo;
         {% block js_app_init %}
                 function base_fragment_init() {}
         {% endblock %}
@@ -321,7 +319,7 @@
         {% if ONLY_CONTENT %}
                 {{block.super}}
           {% else %}
-                <div id="body_desktop" class="container-fluid tab-pane refr_target refr_object win-content page">
+                <div id="body_desktop" class="container-fluid tab-pane ajax-region ajax-frame win-content page">
                         {{block.super}}
                 </div>
         {% endif %}
@@ -343,90 +341,6 @@
                                 <img src="{% get_static_prefix %}images/reload/reload.svg" id="loading-indicator" style="display:none"></img>
                         {% endif %}
         {% endblock %}
-        <div id="dialog-form-modal"  class="dialog-form modal refr_object" role="dialog" aria-hidden="true" aria-labelledby="ModalLabel">
-                <div class="modal-dialog {% block modal_dialog_class %}modal-lg{% endblock %}" role="document">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <h5 class="modal-title" id="ModalLabel">{{title}}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                        <div class="container-fluid">
-                                                <div class="dialog-data refr_target"></div>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                        {% block content_start_ok_cancel %}
-                                                <button type="button" class="btn btn-secondary btn_cancel" data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-primary btn_ok" onclick="javascript:on_edit_ok(this, false);return false;">OK</button>
-                                        {% endblock %}
-                                </div>
-                        </div>
-                </div>
-        </div>
-        <div class="dialog-form-info modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="ModalLabelInfo">
-                <div class="modal-dialog">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <h5 class="modal-title" id="ModalLabelInfo">{% if title %}{{title}}{% else %}Object information{% endif %}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                        <div class="container-fluid">
-                                                <div class="dialog-data-info"></div>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                        </div>
-                </div>
-        </div>
-        <div class="dialog-form-delete modal refr_object" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="ModalLabelDelete" title="{{title}}">
-                <div class="modal-dialog">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <h5 class="modal-title" id="ModalLabelDelete">{% if title %}{{title}}{% else %}Delete object {% endif %}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                        <div class="container-fluid">
-                                                <div class="dialog-data-delete"></div>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-danger" onclick="javascript:on_delete_ok($(this).parent().parent().find('form:first'));return false;">OK</button>
-                                </div>
-                        </div>
-                </div>
-        </div>
-        <div id="dialog-form-error" class="modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="ModalLabelError" title="{{title}}">
-                <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <h5 class="modal-title" id="ModalLabeError">{% if title %}{{title}}{% else %}Error information{% endif %}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                        </button>
-                                </div>
-                                <div class="modal-body">
-                                        <div class="container-fluid">
-                                                <div id="dialog-data-error" class="alert alert-danger alert-dismissable"></div>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                        </div>
-                </div>
-        </div>
 {% endblock %}
 {% block tabsort_class %}
         {% if table_type == 'datatable' %}

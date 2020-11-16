@@ -1,7 +1,6 @@
 from pytigon_js.tools import (
     ajax_get,
     ajax_post,
-    ajax_load,
     ajax_submit,
     load_css,
     load_js,

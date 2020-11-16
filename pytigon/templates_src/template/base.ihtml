@@ -232,7 +232,7 @@
                                                                         button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh)
                                                                             span class=fa fa-refresh
                                     % else:
-                                        form method=post,,,action={{request.path}},,,href={{request.path}},,,role=form,,,class=refr_source table_filter form-inline,,,target=refresh_obj
+                                        form method=post,,,action={{request.path}},,,role=form,,,class=ajax-link table_filter form-inline,,,target=refresh_frame
                                 %%list_content_header_third_row
                                     div class=tr row list_content_header list_content_header_third_row
                                         div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar

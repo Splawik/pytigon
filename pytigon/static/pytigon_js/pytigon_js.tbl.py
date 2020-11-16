@@ -3,10 +3,8 @@ __pragma__("alias", "jquery_is", "js_is")
 from pytigon_js.tools import (
     ajax_post,
     ajax_post,
-    register_fragment_init_fun,
     get_table_type,
     load_js,
-    mount_html,
 )
 
 
@@ -107,8 +105,8 @@ def init_table(table, table_type):
             return False
 
         def queryParams(p):
-            refr_block = jQuery(table).closest(".refr_object")
-            src = refr_block.find(".refr_source")
+            refr_block = jQuery(table).closest(".ajax-frame")
+            src = refr_block.find(".ajax-link")
             if src.length > 0 and src.prop("tagName") == "FORM":
                 p["form"] = src.serialize()
             return p
@@ -213,24 +211,7 @@ def datatable_onresize():
     jQuery(".content1").each(content_set_height)
     jQuery(".content2").each(content_set_height)
 
-
 window.datatable_onresize = datatable_onresize
-
-
-def _on_fragment_init(elem):
-    # elem.find('.win-content').bind('resize', datatable_onresize)
-    datatable_onresize()
-    table_type = get_table_type(elem)
-    # if table_type != 'datatable':
-    # pg = elem.find('.pagination')
-    # paginate = init_pagintor(pg)
-    tbl = elem.find(".tabsort")
-    if tbl.length > 0:
-        init_table(tbl, table_type)
-    elem.find(".tree").treegrid()
-
-
-register_fragment_init_fun(_on_fragment_init)
 
 def table_loadeddata(event):
     if getattr(event, 'data'):

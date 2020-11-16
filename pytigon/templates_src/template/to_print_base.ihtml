@@ -147,7 +147,7 @@
         title
             {{title}}
     % with NO_TABS=True:
-        div id=body_desktop,,,class=container-fluid tab-pane refr_target refr_object win-content page
+        div id=body_desktop,,,class=container-fluid tab-pane ajax-region ajax-frame win-content page
             {{block.super}}
 
 %% html_widgets_init
