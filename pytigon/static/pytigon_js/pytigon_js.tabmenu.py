@@ -1,5 +1,4 @@
-from pytigon_js.tbl import datatable_onresize
-from pytigon_js.tools import history_push_state, corect_href, remove_element
+from pytigon_js.tools import history_push_state, corect_href, remove_element, process_resize
 from pytigon_js.ajax_region import mount_html
 
 class Page:
@@ -40,7 +39,6 @@ class TabMenu:
         jQuery(sprintf("#li_%s a", menu_item.id)).tab("show")
         if push_state and window.PUSH_STATE:
             history_push_state(menu_item.title, menu_item.url)
-        datatable_onresize()
 
     def register(self, title):
         self.titles[title] = "$$$"
@@ -95,6 +93,8 @@ class TabMenu:
             self.active_item = menu_item
             if window.PUSH_STATE:
                 history_push_state(menu_item.title, menu_item.url)
+
+            process_resize(document.getElementById(menu_item.id))
 
         if append_left:
             jQuery("#tabs2 a:first").on("shown.bs.tab", _on_show_tab)

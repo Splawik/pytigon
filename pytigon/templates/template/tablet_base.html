@@ -175,7 +175,7 @@
                                                                 <div class="dropdown-footer">
                                                                         {% if user.is_superuser %}
                                                                                 <div class="pull-left">
-                                                                                        <a class="system_menu btn btn-secondary {{btn_size}} btn-flat" href="{{base_path}}schsetup/?schtml=1" target="_parent" title="Setup">Setup</a>
+                                                                                        <a class="system_menu btn btn-secondary {{btn_size}} btn-flat" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>
                                                                                         &nbsp;
                                                                                 </div>
                                                                         {% endif %}
@@ -187,7 +187,7 @@
                                                 </li>
                                                 {% if not autologin %}
                                                         <li class="nav-item dropdown user user-menu">
-                                                                <a class="system_menu" href="{{base_path}}schsys/do_logout/?schtml=1" target="_parent" title="Logout">
+                                                                <a class="system_menu" href="{{base_path}}schsys/do_logout/?schtml=1" target="_top" title="Logout">
                                                                         <span class="fa fa-power-off"></span>
                                                                 </a>
                                                         </li>

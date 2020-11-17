@@ -4,8 +4,6 @@ __pragma__("alias", "js_import", "import")
 import pytigon_js.resources as rc
 
 LOADED_FILES = {}
-RESIZE_FUN = []
-
 
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
@@ -510,27 +508,6 @@ def get_and_run_script(url, elem, e):
     except:
         pass
 
-def register_resize_fun(fun, priority=0):
-    global RESIZE_FUN
-    RESIZE_FUN.append((fun, priority))
-
-window.register_resize_fun = register_resize_fun
-
-def process_resize():
-    global RESIZE_FUN
-
-    def sort_fun(elem1, elem2):
-        if elem1[1] > elem2[1]:
-            return 1
-        elif elem1[1] == elem2[1]:
-            return 0
-        else:
-            return -1
-
-    for pos in RESIZE_FUN.js_sort(sort_fun):
-        pos[0]()
-
-window.process_resize = process_resize
 
 def send_to_dom(html_text, base_elem):
     if '===' in html_text:
@@ -751,3 +728,36 @@ def remove_element(element):
             jQuery.each(jQuery(element2).find('aside'), _on_remove_aside)
 
             element2.remove()
+
+
+def process_resize(target_element):
+    param = {}
+    param['w'] = window.innerWidth
+    param['h'] = window.innerHeight
+    body_rect = document.body.getBoundingClientRect()
+    elements1 = target_element.querySelectorAll('.flexible_size')
+    elements2 = target_element.querySelectorAll('.flexible_size_round2')
+    for elements in (elements1, elements2):
+        for elem in elements:
+            elem_rect = elem.getBoundingClientRect()
+            if elem.parentElement:
+                parent_rect = elem.getBoundingClientRect()
+                param['parent_offset_x'] = elem_rect.top - parent_rect.top
+                param['parent_offset_y'] = elem_rect.left - parent_rect.left
+            else:
+                param['parent_offset_y'] = 0
+                param['parent_offset_x'] = 0
+            param['body_offset_y'] = elem_rect.top - body_rect.top
+            param['body_offset_x'] = elem_rect.left - body_rect.left
+
+            if hasattr(elem, "process_resize"):
+                elem.process_resize(param)
+            else:
+                size_desc = elem.hasAttribute('data-size')
+                if size_desc:
+                    size_style = size_desc.format(param)
+                    elem.style.cssText = size_style
+                else:
+                    elem.style.height = param['h'] - param['body_offset_y']
+
+window.process_resize = process_resize

@@ -3,7 +3,7 @@ __pragma__("alias", "jquery_is", "js_is")
 #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
 
 from pytigon_js.tabmenu import Page, get_menu
-from pytigon_js.tbl import init_table, datatable_onresize
+#from pytigon_js.tbl import datatable_onresize
 from pytigon_js.tools import (
     can_popup,
     corect_href,
@@ -17,8 +17,6 @@ from pytigon_js.tools import (
     history_push_state,
     remove_page_from_href,
     get_and_run_script,
-    register_resize_fun,
-    process_resize,
 )
 from pytigon_js.offline import service_worker_and_indexedDB_test, install_service_worker
 from pytigon_js.db import sync_and_run
@@ -34,16 +32,16 @@ window.GLOBAL_BUS = GlobalBus()
 window.START_MENU_ID = None
 
 
-def _on_resize(event, target_element):
-    datatable_onresize()
+#def _on_resize(event, target_element):
+#    datatable_onresize()
 
-register_global_event("shown.bs.tab", _on_resize, "#tabs2")
+#register_global_event("shown.bs.tab", _on_resize, "#tabs2")
 
-def _on_timeout_resize(evetn, target_element):
-    window.setTimeout(datatable_onresize, 300)
+#def _on_timeout_resize(evetn, target_element):
+#    window.setTimeout(datatable_onresize, 300)
 
-register_global_event("expanded.pushMenu", _on_timeout_resize, None)
-register_global_event("collapsed.pushMenu", _on_timeout_resize, None)
+#register_global_event("expanded.pushMenu", _on_timeout_resize, None)
+#register_global_event("collapsed.pushMenu", _on_timeout_resize, None)
 
 #register_global_event("submit", on_login_submit, "form.login-form")
 #register_global_event("submit", form_on_submit,  "form")
@@ -201,8 +199,8 @@ def app_init(
     #    sync_and_run("sys", _on_sync)
     #jQuery(window).resize(datatable_onresize)
 
-    register_resize_fun(datatable_onresize)
-    jQuery(window).resize(process_resize)
+    #register_resize_fun(datatable_onresize)
+    #jQuery(window).resize(process_resize)
 
 
     #jQuery("#tabs2_content").on("submit", "form", form_on_submit)
