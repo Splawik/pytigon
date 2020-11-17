@@ -1,5 +1,5 @@
-from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, process_resize, get_table_type
-from pytigon_js.tbl import datatable_onresize, init_table
+from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, get_table_type
+from pytigon_js.tbl import init_table
 
 
 MOUNT_INIT_FUN = []
@@ -25,8 +25,6 @@ def mount_html(dest_elem, data_or_html):
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
             fun(dest_elem)
-
-    process_resize()
 
 def datetime_init(dest_elem):
     format = {
@@ -104,7 +102,7 @@ def select2_init(dest_elem):
 register_mount_fun(select2_init)
 
 def datatable_init(dest_elem):
-    datatable_onresize()
+    #datatable_onresize()
     table_type = get_table_type(jQuery(dest_elem))
     tbl = jQuery(dest_elem).find(".tabsort")
     if tbl.length > 0:
@@ -112,7 +110,7 @@ def datatable_init(dest_elem):
     jQuery(dest_elem).find(".tree").treegrid()
 
 register_mount_fun(datatable_init)
-
+register_mount_fun(process_resize)
 
 def get_ajax_region(element, region_name=None):
     if element.classList.contains("ajax-region") and ((not region_name) or element.getAttribute('data-region') == region_name):
@@ -217,11 +215,19 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
         _callback(None)
 
 
-def ajax_load(elem, url, complete):
+def ajax_load(element, url, complete):
     def _onload(responseText):
-        mount_html(elem, responseText)
+        mount_html(element, responseText)
         complete(responseText)
 
     ajax_get(url, _onload)
 
 window.ajax_load = ajax_load
+
+
+def clean_popups(element):
+    elements = element.querySelectorAll('aside')
+    for el in elements:
+        el.remove()
+
+window.clean_popups = clean_popups

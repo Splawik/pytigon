@@ -1,8 +1,9 @@
 from pytigon_js.tabmenu import get_menu
-from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_and_run_script, get_template, super_insert, remove_element
+from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_and_run_script, get_template, super_insert, remove_element, process_resize
 from ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
+#RESIZE_FUN = []
 REGISTERED_EVENT_TYPES = []
 
 def _chcek_element(element, selector):
@@ -313,7 +314,7 @@ def on_popup_error(target_element, data_element, new_url, param, event):
 
 def _on_inline(target_element, data_element, url, param, event, template_name):
     dialog_slot = document.createElement("aside")
-    dialog_slot.innerHTML = get_template(template_name, {})
+    dialog_slot.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
 
     inline_position = target_element.getAttribute('data-inline-position')
     super_insert(target_element, inline_position, dialog_slot)
@@ -325,13 +326,15 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     content.appendChild(data_element)
 
     def on_hidden(event):
-        nonlocal region
-        obj = region.querySelector('aside')
-        obj.remove()
+        nonlocal target_element
+        region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
+        if region:
+            obj = region.querySelector('aside')
+            obj.remove()
 
     dialog = jQuery(dialog_slot.firstElementChild)
     if dialog:
-        dialog.on('.btn-close', on_hidden)
+        dialog.on("click", "button.btn-close", on_hidden)
 
 def on_inline(target_element, data_element, new_url, param, event):
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
@@ -363,7 +366,6 @@ def on_replace_app(target_element, data_element, new_url, param, event):
 
     window.MENU = None
     mount_html(jQuery('section.body-body'), data_element.querySelector('section.body-body'), False)
-
 
 def refresh_frame(target_element, data_element, new_url, param, event):
     dialog = None
@@ -447,3 +449,8 @@ EVENT_CLICK_TAB = [
 
     ("null", "*", False, False, only_get),
 ]
+
+def on_resize(event):
+    process_resize(document.body)
+
+window.addEventListener('resize', on_resize)

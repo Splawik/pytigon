@@ -8,14 +8,14 @@ from pytigon_js.tools import (
 )
 
 
-def datetable_set_height():
+def datetable_set_height(element):
 
-    if jQuery(this).hasClass("table_get"):
+    if jQuery(element).hasClass("table_get"):
         return
-    if not jQuery(this).jquery_is(":visible"):
+    if not jQuery(element).jquery_is(":visible"):
         return
 
-    elem = jQuery(this).closest(".tabsort_panel")
+    elem = jQuery(element).closest(".tabsort_panel")
 
     table_offset = elem.offset().top
     dy_win = jQuery(window).height()
@@ -29,7 +29,7 @@ def datetable_set_height():
     if not panel.jquery_is(":visible"):
         dy += panel.height() - 15
 
-    jQuery(this).bootstrapTable("resetView", {"height": dy - 5})
+    jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
 
 
 def datatable_refresh(table):
@@ -90,7 +90,6 @@ def datatable_ajax(params):
 
 def init_table(table, table_type):
     if table_type == "datatable":
-
         def onLoadSuccess(data):
             prepare_datatable(table)
 
@@ -99,7 +98,7 @@ def init_table(table, table_type):
                 jQuery(table).closest(".fixed-table-container").find(
                     ".fixed-table-pagination ul.pagination a"
                 ).addClass("page-link")
-                datatable_onresize()
+                #datatable_onresize()
 
             setTimeout(_pagination, 0)
             return False
@@ -162,11 +161,11 @@ def init_table(table, table_type):
                 if jQuery(this).hasClass("active"):
                     panel.show()
                     panel2.show()
-                    datatable_onresize()
+                    #datatable_onresize()
                 else:
                     panel.hide()
                     panel2.hide()
-                    datatable_onresize()
+                  #onresize()
 
             table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand)
             if btn.hasClass("active"):
@@ -174,44 +173,49 @@ def init_table(table, table_type):
                 panel2 = jQuery(".list_content_header_two_row")
                 panel.hide()
                 panel2.hide()
-                datatable_onresize()
+                #datatable_onresize()
 
+        def _process_resize(size_object):
+            nonlocal table
+            datetable_set_height(table[0])
 
-def content_set_height():
-    if not jQuery(this).jquery_is(":visible"):
-        return
+        table[0].process_resize = _process_resize
 
-    if jQuery(this).closest(".tabsort").length > 0:
-        return
-
-    if jQuery(this).closest("#dialog-form-modal").length > 0:
-        return
-
-    # elem = jQuery(this).findclosest('.tab-pane')
-    # content_offset = elem.offset().top
-    # content_offset = elem.offset().height()
-    # dy_win = jQuery('.desktop_content').height()
-    # console.log(content_offset)
-    # console.log(dy_win)
-    content_offset = jQuery(this).offset().top
-    dy_win = jQuery(window).height()
-
-    dy = dy_win - content_offset - 30
-    if dy < 200:
-        dy = 200
+# def content_set_height():
+#     if not jQuery(this).jquery_is(":visible"):
+#         return
+#
+#     if jQuery(this).closest(".tabsort").length > 0:
+#         return
+#
+#     if jQuery(this).closest("#dialog-form-modal").length > 0:
+#         return
+#
+#     # elem = jQuery(this).findclosest('.tab-pane')
+#     # content_offset = elem.offset().top
+#     # content_offset = elem.offset().height()
+#     # dy_win = jQuery('.desktop_content').height()
+#     # console.log(content_offset)
+#     # console.log(dy_win)
+#     content_offset = jQuery(this).offset().top
+#     dy_win = jQuery(window).height()
+#
+#     dy = dy_win - content_offset - 30
+#     if dy < 200:
+#         dy = 200
 
     # console.log(content_offset2)
 
-    jQuery(this).height(dy)
+   # jQuery(this).height(dy)
 
 
-def datatable_onresize():
-    jQuery(".datatable:not(.table_get)").each(datetable_set_height)
-    jQuery(".content").each(content_set_height)
-    jQuery(".content1").each(content_set_height)
-    jQuery(".content2").each(content_set_height)
+#def datatable_onresize():
+#    jQuery(".datatable:not(.table_get)").each(datetable_set_height)
+#    jQuery(".content").each(content_set_height)
+#    jQuery(".content1").each(content_set_height)
+#    jQuery(".content2").each(content_set_height)
 
-window.datatable_onresize = datatable_onresize
+#window.datatable_onresize = datatable_onresize
 
 def table_loadeddata(event):
     if getattr(event, 'data'):

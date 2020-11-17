@@ -25,81 +25,63 @@ MODAL_BASE = """
 </div>
 """
 
-MODAL_EDIT_FOOTER = """ 
-<button type="button" class="btn btn-secondary btn_cancel" data-dismiss="modal">Cancel</button>
+EDIT_FOOTER = """ 
+<button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Cancel</button>
 <button type="button" class="btn btn-primary" data-region="table" target="refresh_frame">OK</button>
 """
 
-MODAL_INFO_FOOTER = """
-<button type = "button" class ="btn btn-secondary" data-dismiss="modal">Close</button>
+INFO_FOOTER = """
+<button type = "button" class ="btn btn-secondary btn-close" data-dismiss="modal">Close</button>
 """
 
-MODAL_DELETE_FOOTER = """
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+DELETE_FOOTER = """
+<button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Cancel</button>
 <button type="button" class="btn btn-danger" data-region="table" target="refresh_frame">OK</button>
 """
 
-MODAL_ERROR_FOOTER = """
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+ERROR_FOOTER = """
+<button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Close</button>
 """
 
-MODAL_EDIT = MODAL_BASE.replace("{{modal_footer}}", MODAL_EDIT_FOOTER)
-MODAL_INFO = MODAL_BASE.replace("{{modal_footer}}", MODAL_INFO_FOOTER)
-MODAL_DELETE = MODAL_BASE.replace("{{modal_footer}}", MODAL_DELETE_FOOTER)
-MODAL_ERROR = MODAL_BASE.replace("{{modal_footer}}", MODAL_ERROR_FOOTER)
+MODAL_EDIT = MODAL_BASE.replace("{{modal_footer}}", EDIT_FOOTER)
+MODAL_INFO = MODAL_BASE.replace("{{modal_footer}}", INFO_FOOTER)
+MODAL_DELETE = MODAL_BASE.replace("{{modal_footer}}", DELETE_FOOTER)
+MODAL_ERROR = MODAL_BASE.replace("{{modal_footer}}", ERROR_FOOTER)
 
+INLINE = """
+    <div class="dialog-data"></div>
+"""
 
-INLINE_EDIT = """
+INLINE_BASE = """
 <div style='position:relative'>
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h4 class='modal-title'>Modal title</h4>
+                <h4 class='modal-title'>{title}</h4>
                 <button type='button' class='btn btn-outline-secondary minimize' data-dismiss='modal' onclick='popup_minimize(this)' style='diplay:none;'> 
                     <span class='fa fa-window-minimize'></span> 
                 </button> 
-                <button type='button' class='btn btn-outline-secondary maximize' data-dismiss='modal' onclick='popup_maximize(this)'> 
+                <button type='button' class='btn btn-outline-secondary maximize' data-dismiss='modal' onclick='popup_maximize(this);return false;'> 
                     <span class='fa fa-window-maximize'></span> 
                 </button> 
-                <button type='button' class='close btn-raised' data-dismiss='modal' aria-label='Close' onclick='on_cancel_inline($(this));return false'><span aria-hidden='true'>&times;</span></button>
+                <button type='button' class='close btn-raised btn-close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
             </div>
-            <div class='modal-body inline-update-modal-body'>
-                <div class='refr_target dialog-data'></div>
+            <div class='modal-body'>
+                <div class='dialog-data'></div>
             </div>
             <div class='modal-footer'>
-                <button type='button' class='btn btn-secondary btn-close' onclick='on_cancel_inline($(this));return false'>Cancel</button>
-                <button type='button' class='btn btn-primary' data-region="table" target="refresh_frame">OK</button>
+                {{modal_footer}}
             </div>
         </div>
     </div>
 </div>
 """
 
-INLINE_INFO = """
-<div class='panel panel-default'>
-    <div class='panel-body'>
-        <div class='refr_target dialog-data'></div>
-    </div>
-    <div class='panel-footer'>
-        <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>
-    </div>
-</div>
-"""
-
-
-INLINE_DELETE = """
-<div class='panel panel-default alert alert-danger'>
-    <div class='panel-body'>
-        <div class='refr_target dialog-data'></div>
-    </div>
-    <div class='panel-footer'>
-        <button type='button' class='btn btn-default' onclick='on_cancel_inline($(this));return false'>Cancel</button>
-        <button type='button' class='btn btn-primary' onclick='on_delete_ok($(this));return false'>OK</button>
-    </div>
-</div>
-"""
-
+INLINE_EDIT = INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER)
+INLINE_INFO = INLINE_BASE.replace("{{modal_footer}}", INFO_FOOTER)
+INLINE_DELETE = INLINE_BASE.replace("{{modal_footer}}", DELETE_FOOTER)
+INLINE_ERROR = INLINE_BASE.replace("{{modal_footer}}", ERROR_FOOTER)
 
 # ====================================================================================================================================================================================
 
