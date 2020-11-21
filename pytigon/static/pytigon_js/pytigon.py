@@ -7,7 +7,7 @@ from pytigon_js.offline import service_worker_and_indexedDB_test, install_servic
 from pytigon_js.db import sync_and_run
 from pytigon_js.component import GlobalBus
 from pytigon_js.events import register_global_event
-from pytigon_js.ajax_region import ajax_load
+from pytigon_js.ajax_region import ajax_load, mount_html
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -31,7 +31,8 @@ def _on_key(e):
 register_global_event("keypress", _on_key, None)
 
 
-#def dom_content_loaded():
+def dom_content_loaded():
+    mount_html(document.querySelector('section.body-body'), None)
 #    if jQuery("#dialog-form-modal").length > 0:
 #        jQuery(document).ajaxError(_on_error)
 #        if window.APPLICATION_TEMPLATE == "traditional":
@@ -74,7 +75,8 @@ def app_init(
     window.LANG = lang
     window.GEN_TIME = gen_time
 
-    #document.addEventListener("DOMContentLoaded", dom_content_loaded)
+    if APPLICATION_TEMPLATE == "traditional":
+        document.addEventListener("DOMContentLoaded", dom_content_loaded)
 
     if offline_support:
         if navigator.onLine and service_worker_and_indexedDB_test():
