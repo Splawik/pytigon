@@ -388,7 +388,12 @@ div.tab-content .modal-dialog-inline {
   /* W3C Markup */
   background-image: radial-gradient(ellipse farthest-side at left top, #CCCCCC 0%, #224466 100%);
   min-height: 100vh !important;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px; }
   .login_background div.content-wrapper {
     background: transparent; }
 
@@ -702,7 +707,8 @@ div.modal-body label:not(.form-check-label)::after {
   min-height: 11rem; }
 
 .tabsort .tbl_scroll {
-  min-height: auto; }
+  min-height: auto;
+  overflow-y: visible !important; }
 
 .content {
   position: relative; }

@@ -11,16 +11,17 @@ def register_mount_fun(fun):
 def mount_html(dest_elem, data_or_html):
     global MOUNT_INIT_FUN
 
-    def _on_remove(index, value):
-        value.on_remove()
+    if data_or_html != None:
+        def _on_remove(index, value):
+            value.on_remove()
 
-    jQuery.each(jQuery(dest_elem).find('.call_on_remove'), _on_remove)
+        jQuery.each(jQuery(dest_elem).find('.call_on_remove'), _on_remove)
 
-    if type(data_or_html) == str:
-        dest_elem.innerHTML = data_or_html
-    else:
-        dest_elem.innerHTML = ""
-        dest_elem.appendChild(data_or_html)
+        if type(data_or_html) == str:
+            dest_elem.innerHTML = data_or_html
+        else:
+            dest_elem.innerHTML = ""
+            dest_elem.appendChild(data_or_html)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:

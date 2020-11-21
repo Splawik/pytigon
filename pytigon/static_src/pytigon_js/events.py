@@ -122,8 +122,8 @@ def on_click_default_action(event, target_element):
     target = target_element.getAttribute("target")
 
     if window.APPLICATION_TEMPLATE == "traditional":
-        if target and target in ('_self', '_parent', '_top'):
-            return
+        if not target or (target and target in ('_self', '_parent', '_top')):
+            return False
 
     src_obj = jQuery(target_element)
 
@@ -432,6 +432,7 @@ EVENT_CLICK_TAB = [
     ("refresh_page", "*", True, False, refresh_page),
     ("refresh_app", "*", False, False, refresh_app),
     ("run_script", "*", False, False, get_and_run_script),
+
 
     ("null", "*", False, False, only_get),
 ]
