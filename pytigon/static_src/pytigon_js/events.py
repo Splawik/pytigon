@@ -1,9 +1,8 @@
 from pytigon_js.tabmenu import get_menu
 from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_and_run_script, get_template, super_insert, remove_element, process_resize
-from ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
+from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
-#RESIZE_FUN = []
 REGISTERED_EVENT_TYPES = []
 
 def _chcek_element(element, selector):
@@ -53,7 +52,6 @@ def on_global_event(event):
             element = event.target
             while element:
                 if _chcek_element(element, pos[2]):
-                    print("EVENT: ", pos, element)
                     return pos[1](event, element)
                 element = element.parentElement
                 if element and element.tagName.lower()=='body':
@@ -122,6 +120,11 @@ def on_click_default_action(event, target_element):
     global EVENT_CLICK_TAB
 
     target = target_element.getAttribute("target")
+
+    if window.APPLICATION_TEMPLATE == "traditional":
+        if target and target in ('_self', '_parent', '_top'):
+            return
+
     src_obj = jQuery(target_element)
 
     href = target_element.getAttribute("xlink:href")
@@ -206,44 +209,6 @@ def on_click_default_action(event, target_element):
         event.preventDefault()
         return True
 
-
-def out():
-    event.preventDefault()
-
-    href2 = corect_href(href)
-
-    def _on_data(data):
-        nonlocal href, src_obj, target
-
-        if (data and "_parent_refr" in data) or target in (
-                "refresh_obj",
-                "refresh_page",
-        ):
-            if target == "refresh_obj":
-                if not refresh_fragment(src_obj, None, True):
-                    refresh_fragment(src_obj)
-            else:
-                refresh_fragment(src_obj)
-        else:
-            if window.APPLICATION_TEMPLATE == "modern":
-                if window.ACTIVE_PAGE:
-                    mount_html(window.ACTIVE_PAGE.page, data)
-                else:
-                    # mount_html(jQuery('#wiki_start'), data)
-                    mount_html(jQuery("#body_desktop"), data)
-                    return
-                window.ACTIVE_PAGE.set_href(href)
-            else:
-                mount_html(jQuery("#body_desktop"), data)
-            window.ACTIVE_PAGE.set_href(href)
-            get_menu().get_active_item().url = href
-            if window.PUSH_STATE:
-                history_push_state("title", href)
-    if data:
-        ajax_get(href2, _on_data)
-    else:
-        ajax_post(href2, data, _on_data)
-
 def _on_menu_click(event, target_element):
     if window.APPLICATION_TEMPLATE != "traditional":
         event.preventDefault()
@@ -271,6 +236,8 @@ register_global_event("submit", on_click_default_action, "form")
 
 def _on_popup(target_element, data_element, url, param, event, template_name):
     dialog_slot = document.createElement("aside")
+    dialog_slot.setAttribute("class", "plug")
+
     dialog_slot.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
 
     region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
@@ -283,11 +250,12 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     target_element.setAttribute("data-spinner-color", "#FF0000")
 
     content = dialog_slot.querySelector("div.dialog-data")
-    content.appendChild(data_element)
+
+    mount_html(content, data_element)
 
     def on_hidden(event):
         nonlocal region
-        obj = region.querySelector('aside')
+        obj = region.querySelector('.plug')
         obj.remove()
 
     dialog = jQuery(dialog_slot.firstElementChild)
@@ -313,10 +281,22 @@ def on_popup_error(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR")
 
 def _on_inline(target_element, data_element, url, param, event, template_name):
-    dialog_slot = document.createElement("aside")
-    dialog_slot.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
-
     inline_position = target_element.getAttribute('data-inline-position')
+
+    if inline_position and inline_position.split(':')[0].endswith('tr'):
+        dialog_slot = document.createElement("tr")
+        child = document.createElement("td")
+        child.setAttribute("colspan", "100")
+        dialog_slot.appendChild(child)
+        dialog_slot2 = child
+    else:
+        dialog_slot = document.createElement("aside")
+        dialog_slot2 = dialog_slot
+
+    dialog_slot.setAttribute("class", "plug")
+
+    dialog_slot2.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
+
     super_insert(target_element, inline_position, dialog_slot)
 
     target_element.setAttribute("data-style", "zoom-out")
@@ -329,7 +309,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         nonlocal target_element
         region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
         if region:
-            obj = region.querySelector('aside')
+            obj = region.querySelector('.plug')
             obj.remove()
 
     dialog = jQuery(dialog_slot.firstElementChild)
@@ -365,11 +345,11 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         window.location.pathname = window.BASE_PATH
 
     window.MENU = None
-    mount_html(jQuery('section.body-body'), data_element.querySelector('section.body-body'), False)
+    mount_html(document.querySelector('section.body-body'), data_element.querySelector('section.body-body'), False)
 
 def refresh_frame(target_element, data_element, new_url, param, event):
     dialog = None
-    aside = target_element.closest('aside')
+    aside = target_element.closest('.plug')
     if aside:
         dialog = aside.firstElementChild
     def _callback():
@@ -391,9 +371,15 @@ def refresh_frame(target_element, data_element, new_url, param, event):
     refresh_ajax_frame(target_element, None, data_element2, _callback)
 
 def refresh_page(target_element, data_element, new_url, param, event):
-    frame = target_element.closest("section.body-body")
+    frame = target_element.closest("div.content")
     if frame and frame.firstElementChild:
-        mount_html(jQuery(frame.firstElementChild), data_element)
+        data_element2 = data_element.querySelector('div.content')
+        if data_element2:
+            if data_element2.firstElementChild:
+                data_element2 = data_element2.firstElementChild
+        if not data_element2:
+            data_element2 = data_element
+        mount_html(frame, data_element2)
 
 def refresh_app(target_element, data_element, new_url, param, event):
     window.location.href = window.BASE_PATH;

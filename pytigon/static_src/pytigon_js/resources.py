@@ -4,7 +4,7 @@ MODAL = """
 
 MODAL_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
-    <div class="modal-dialog {modal_dialog_class}" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLabel">{title}</h5>

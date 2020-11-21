@@ -1,4 +1,4 @@
-from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, get_table_type
+from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, get_table_type, super_insert
 from pytigon_js.tbl import init_table
 
 
@@ -61,6 +61,15 @@ def selectpicker_init(dest_elem):
 
 register_mount_fun(selectpicker_init)
 
+def moveelement_init(dest_elem):
+    objs = dest_elem.querySelectorAll('.move-element')
+    if objs:
+        for obj in objs:
+            if obj.hasAttribute('data-position'):
+                obj.classList.remove("move-element")
+                super_insert(dest_elem,  obj.getAttribute('data-position'), obj)
+
+register_mount_fun(moveelement_init)
 
 def label_floating_init(dest_elem):
     def _on_blur(e):
@@ -226,7 +235,7 @@ window.ajax_load = ajax_load
 
 
 def clean_popups(element):
-    elements = element.querySelectorAll('aside')
+    elements = element.querySelectorAll('.plug')
     for el in elements:
         el.remove()
 

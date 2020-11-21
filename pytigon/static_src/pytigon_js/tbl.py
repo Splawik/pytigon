@@ -7,6 +7,7 @@ from pytigon_js.tools import (
     load_js,
 )
 
+from pytigon_js.events import refresh_page
 
 def datetable_set_height(element):
 
@@ -161,11 +162,10 @@ def init_table(table, table_type):
                 if jQuery(this).hasClass("active"):
                     panel.show()
                     panel2.show()
-                    #datatable_onresize()
                 else:
                     panel.hide()
                     panel2.hide()
-                  #onresize()
+                process_resize(document.body)
 
             table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand)
             if btn.hasClass("active"):
@@ -181,46 +181,13 @@ def init_table(table, table_type):
 
         table[0].process_resize = _process_resize
 
-# def content_set_height():
-#     if not jQuery(this).jquery_is(":visible"):
-#         return
-#
-#     if jQuery(this).closest(".tabsort").length > 0:
-#         return
-#
-#     if jQuery(this).closest("#dialog-form-modal").length > 0:
-#         return
-#
-#     # elem = jQuery(this).findclosest('.tab-pane')
-#     # content_offset = elem.offset().top
-#     # content_offset = elem.offset().height()
-#     # dy_win = jQuery('.desktop_content').height()
-#     # console.log(content_offset)
-#     # console.log(dy_win)
-#     content_offset = jQuery(this).offset().top
-#     dy_win = jQuery(window).height()
-#
-#     dy = dy_win - content_offset - 30
-#     if dy < 200:
-#         dy = 200
-
-    # console.log(content_offset2)
-
-   # jQuery(this).height(dy)
-
-
-#def datatable_onresize():
-#    jQuery(".datatable:not(.table_get)").each(datetable_set_height)
-#    jQuery(".content").each(content_set_height)
-#    jQuery(".content1").each(content_set_height)
-#    jQuery(".content2").each(content_set_height)
-
-#window.datatable_onresize = datatable_onresize
 
 def table_loadeddata(event):
     if getattr(event, 'data'):
         if event.data and 'RETURN_OK' in event.data:
             jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
+        else:
+            refresh_page(event.target, event.data, None, None, None)
     else:
         jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
 

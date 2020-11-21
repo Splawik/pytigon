@@ -36,7 +36,7 @@
 {% block list_content_actions %}
         {% new_row "New project" %}
         {% list_action "prj_import/edit" "Import" %}
-        {% list_action "restart_server" "Restart server" target="_top" active=False %}
+        {% list_action "restart_server" "Restart server" target="_parent" active=False %}
         {% list_action "update" "Update server from git" %}
 {% endblock %}
 {% block list_row_header %}
@@ -53,21 +53,21 @@
         gen,Build,[|client://categories/applications-multimedia.png]
         |
         field_list/schapp_set,Applications,[|client://apps/preferences-system-windows.png]
-        field_edit/user_app_template,Application template,[|client://mimetypes/text-x-script.png],_top
-        field_edit/app_main,Application main entrypoint,[|client://mimetypes/application-x-executable.png],_top
+        field_edit/user_app_template,Application template,[|client://mimetypes/text-x-script.png],_parent
+        field_edit/app_main,Application main entrypoint,[|client://mimetypes/application-x-executable.png],_parent
         field_edit/doc,Doc,[|client://apps/help-browser.png],_top2
-        field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_top
+        field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_parent
         field_list/schlocale_set,Locale,[|client://apps/preferences-system-network-proxy.png]
         manage,Manage,[|client://categories/preferences-system.png]
         delete
         run,Run,[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
-        field_edit/readme_file,readme.txt(Distribute),[|fa://navicon.png],_top
-        field_edit/license_file,license.txt(Distribute),license_txt,_top
-        field_edit/install_file,install.ini(Distribute),install_ini,_top
-        field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_top
-        field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_top
+        field_edit/readme_file,readme.txt(Distribute),[|fa://navicon.png],_parent
+        field_edit/license_file,license.txt(Distribute),license_txt,_parent
+        field_edit/install_file,install.ini(Distribute),install_ini,_parent
+        field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_parent
+        field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_parent
 
         {% endrow_actions %}
 {% endblock %}

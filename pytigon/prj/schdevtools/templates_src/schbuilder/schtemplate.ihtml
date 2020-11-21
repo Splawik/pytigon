@@ -29,7 +29,7 @@
 
 %% list_row_actions
     % row_actions:
-        .field_edit/template_code,Code,[|client://mimetypes/x-office-presentation.png],_top
+        .field_edit/template_code,Code,[|client://mimetypes/x-office-presentation.png],_parent
         .edit
         .delete
 

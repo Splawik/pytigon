@@ -13,7 +13,7 @@
     table width=100%
         tr
             td
-                % list_action "downloadi" _("Download installer") target="_top" url=url
+                % list_action "downloadi" _("Download installer") target="_parent" url=url
 
 
 %% user_header

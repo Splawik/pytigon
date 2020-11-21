@@ -6,4 +6,4 @@
 
 
 %% content
-    ptig-codeeditor value={{'Sample text'|bencode}},,,title=Hello world!,,,width=100%,,,height=400px
+    ptig-codeeditor class=flexible_size,,,value={{'Sample text'|bencode}},,,title=Hello world!,,,width=100%

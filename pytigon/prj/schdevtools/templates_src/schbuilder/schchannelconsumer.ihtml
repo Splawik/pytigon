@@ -38,8 +38,8 @@
 %% list_row_actions
     {{ block.super }}
     % row_actions:
-        .field_edit/consumer_code,Code,[|client://mimetypes/text-x-generic-template.png],_top
-        .field_edit/doc,Doc,[|client://apps/help-browser.png],_top
+        .field_edit/consumer_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+        .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
     
 %% row_edit
     {{ form.consumer_type.as_hidden }}

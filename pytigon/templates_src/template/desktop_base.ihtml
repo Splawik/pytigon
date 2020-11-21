@@ -256,16 +256,9 @@
     %% body_start_0
         % if not show_form:
             % if standard_web_browser:
-                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
-                    <body class="login_background">
-                % else:
-                    {{ SHOW_LOGIN_WIN }}
-                    <body>
+                <body>
             % else:
-                %if not user.is_authenticated and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
-                    <body bgcolor="#{{color_body_1_5}}" class="login_background">
-                % else:
-                    <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
+                <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
     %% form_bar
 
 

@@ -25,6 +25,7 @@ class Clock(AsyncJsonWebsocketConsumer):
         await self.accept()
      
     async def receive_json(self, content):
+        print("RECEIVED: ", content)
         await self.send_json({"txt": "hello world"})
         #await self.close(code=4123)
     

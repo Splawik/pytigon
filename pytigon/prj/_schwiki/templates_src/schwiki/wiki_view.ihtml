@@ -65,11 +65,9 @@
 
 
 %% content_start
-    <div id="{{uuid}}" class="content wiki-frame refr_object refr_target refr_source refr_replace" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
-    {{ block.super }}
+    <div id="{{uuid}}" class="content ajax-region ajax-frame wiki-frame" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
 
 %% content_end
-    {{ block.super }}
     </div>
     
 %% list_content_header
@@ -95,8 +93,8 @@
                     td class=wiki_view_actions,,,style=width:100%;border:0px;padding:0px;
                         % action "edit" _("Edit page") url="{{base_path}}schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/"
                         
-                        % with ap="wiki" object_name="Page" id=object.id format='txt':
-                            % action "any_field_edit-inline/content_src" _("Edit page source")
+                        % with ap="wiki" object_name="Page" id=object.id format='txt': 
+                            % action "any_field_edit-inline/content_src" _("Edit page source") attrs="data-inline-position='^tr:after'"
 
 %% form
     % if perms.schwiki.add_page

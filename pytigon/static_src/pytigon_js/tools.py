@@ -102,7 +102,6 @@ def _req_post(req, url, data, complete, content_type):
         process_blob = True
     except:
         pass
-    print("POST>>>: ", url)
     def _onload():
         nonlocal process_blob, complete, url
         if process_blob:
@@ -119,7 +118,6 @@ def _req_post(req, url, data, complete, content_type):
                         console.log(reader.result)
                         window.open().document.write(reader.result)
                         complete("Error - details on new page")
-                    print("<<<POST3: ", url)
                     complete(reader.result)
 
                 reader.onload = _on_reader_load
@@ -148,36 +146,24 @@ def _req_post(req, url, data, complete, content_type):
     req.send(data)
 
 
-
-
-
-
-
-
-
-
-
-
-def _req_post_new(req, url, data, complete, content_type):
-    __pragma__('jsiter')
-
-    def get_response_text(response):
-        return response.text()
-
-    headers = { "X-CSRFToken": Cookies.js_get("csrftoken"), }
-
-    x1 = fetch(url, { 'method': 'post', 'headers':headers, 'body': data, })
-    x2 = x1.then(get_response_text)
-    x3 = x2.then(complete)
-
-    __pragma__('nojsiter')
+# def _req_post_new(req, url, data, complete, content_type):
+#     __pragma__('jsiter')
+#
+#     def get_response_text(response):
+#         return response.text()
+#
+#     headers = { "X-CSRFToken": Cookies.js_get("csrftoken"), }
+#
+#     x1 = fetch(url, { 'method': 'post', 'headers':headers, 'body': data, })
+#     x2 = x1.then(get_response_text)
+#     x3 = x2.then(complete)
+#
+#     __pragma__('nojsiter')
 
 def ajax_post(url, data, complete, process_req=None):
     req = __new__(XMLHttpRequest())
     if process_req:
         process_req(req)
-
-    #fetch(url, {mode: 'cors'}).then(complete)
 
     _req_post(req, url, data, complete)
 
@@ -660,6 +646,9 @@ def super_insert(base_element, selector, inserted_element):
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
     elif selector2 == 'before':
         element.parentElement.insertBefore(inserted_element, element)
+    elif selector2 == "class":
+        for c in inserted_element.classList:
+            element.classList.add(c)
     else: #selector2 == "append"
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
 
@@ -725,7 +714,7 @@ def remove_element(element):
                     jQuery(dialog).modal('hide')
                 else:
                     aside.remove()
-            jQuery.each(jQuery(element2).find('aside'), _on_remove_aside)
+            jQuery.each(jQuery(element2).find('.plug'), _on_remove_aside)
 
             element2.remove()
 
@@ -737,7 +726,10 @@ def process_resize(target_element):
     body_rect = document.body.getBoundingClientRect()
     elements1 = target_element.querySelectorAll('.flexible_size')
     elements2 = target_element.querySelectorAll('.flexible_size_round2')
-    for elements in (elements1, elements2):
+    elements3 = []
+    if target_element.classList.contains("flexible_size") or target_element.classList.contains("flexible_size_round2"):
+        elements3.append(target_element)
+    for elements in (elements1, elements2, elements3):
         for elem in elements:
             elem_rect = elem.getBoundingClientRect()
             if elem.parentElement:

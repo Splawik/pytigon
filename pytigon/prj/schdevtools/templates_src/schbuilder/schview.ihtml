@@ -35,14 +35,14 @@
     {{ block.super }}
     % if object.ret_type == 'T':
         % row_actions:
-            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_top
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
             .template_edit3,Template,[|client://mimetypes/x-office-presentation.png]
-            .field_edit/doc,Doc,[|client://apps/help-browser.png],_top
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
     % else:
         % row_actions:
-            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_top
-            .field_edit/doc,Doc,[|client://apps/help-browser.png],_top
-    % row_actions:...field_edit/extra_code,Extra code,[|client://actions/format-justify-center.png],_top
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+    % row_actions:...field_edit/extra_code,Extra code,[|client://actions/format-justify-center.png],_parent
 
     
 %% row_edit

@@ -7,6 +7,7 @@
 {% block login %}
         {% if not user.is_authenticated %}
                 {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                        <div class="login_background"></div>
                         <div class="container login-container">
                                 <div class="row align-items-center">
                                         <div class="col"></div>
@@ -25,14 +26,14 @@
                                                                                 <label class="control-label" for="username_ ">User name</label>
                                                                                 <div class="input-group">
                                                                                         <div class="input-group-addon fa fa-user"></div>
-                                                                                        <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" />
+                                                                                        <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" autocomplete="username" />
                                                                                 </div>
                                                                         </div>
                                                                         <div class="form-group">
                                                                                 <label class="control-label" for="password_">Password</label>
                                                                                 <div class="input-group">
                                                                                         <div class="input-group-addon fa fa-key"></div>
-                                                                                        <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" />
+                                                                                        <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" autocomplete="current-password"" />
                                                                                 </div>
                                                                         </div>
                                                                         <div class="row">
@@ -89,15 +90,15 @@
                                                         {% csrf_token %}
                                                         <div class="form-group">
                                                                 <label class="control-label" for="current_password">Current Password</label>
-                                                                <input class="form-control" name="current_password" type="password" />
+                                                                <input class="form-control" name="current_password" type="password" autocomplete="current-password" />
                                                         </div>
                                                         <div class="form-group">
                                                                 <label class="control-label" for="new_password">New Password</label>
-                                                                <input class="form-control" name="new_password" type="password" />
+                                                                <input class="form-control" name="new_password" type="password" autocomplete="new-password" />
                                                         </div>
                                                         <div class="form-group">
                                                                 <label class="control-label" for="confirm_password">Confirm Password</label>
-                                                                <input class="form-control" name="confirm_password" type="password" />
+                                                                <input class="form-control" name="confirm_password" type="password" autocomplete="new-password" />
                                                         </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -200,7 +201,7 @@
                           {% else %}
                                 {% block row_edit_start %}
                                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                <div name="modal-type-ref" class="{% block dialog_type %}{% endblock %}">
+                                                <div class="move-element {% block dialog_type %}{% endblock %}" data-position="^.modal-dialog:class">
                                         {% endif %}
                                 {% endblock %}
                                 {% block row_edit_header %}
@@ -252,280 +253,286 @@
                 {% endif %}
         </section>
 {% endblock %}
+{% block content_start %}
+        <div class="content ajax-region x2 ajax-frame" data-region="page" href="{{request.path}}">
+        {{ block.super }}
+{% endblock %}
+{% block content_end %}
+        {{ block.super }}
+        </div>
+{% endblock %}
 {% block content %}
-        <div class="content ajax-region ajax-frame" data-region="page" href="{{request.path}}">
-                <div class="page-content">
-                        {% if debug_on %}
-                                <div id="debug">
-                                        <h2>Queries</h2>
-                                        <p>
-                                                {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-                                                {% ifnotequal sql_queries|length 0 %}
-                                                        (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
-                                                {% endifnotequal %}
-                                        </p>
-                                        <table id="debugQueryTable" style="display: none;">
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">SQL</th>
-                                                    <th scope="col">Time</th>
+        <div class="page-content">
+                {% if debug_on %}
+                        <div id="debug">
+                                <h2>Queries</h2>
+                                <p>
+                                        {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
+                                        {% ifnotequal sql_queries|length 0 %}
+                                                (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
+                                        {% endifnotequal %}
+                                </p>
+                                <table id="debugQueryTable" style="display: none;">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">SQL</th>
+                                            <th scope="col">Time</th>
+                                        </tr>
+                                        {% for query in sql_queries %}
+                                                <tr class="{% cycle 'odd' 'even' %}">
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{{ query.sql|escape }}</td>
+                                                        <td>{{ query.time }}</td>
                                                 </tr>
-                                                {% for query in sql_queries %}
-                                                        <tr class="{% cycle 'odd' 'even' %}">
-                                                                <td>{{ forloop.counter }}</td>
-                                                                <td>{{ query.sql|escape }}</td>
-                                                                <td>{{ query.time }}</td>
-                                                        </tr>
-                                                {% endfor %}
-                                        </table>
-                                </div>
-                        {% endif %}
-                        {% if not form_delete %}
-                                {% block list_page_start %}{% endblock %}
-                                {% block list_page_header %}{% endblock %}
-                                {% block list_page %}
-                                        {% block list_content_start %}
-                                                {% if standard_web_browser %}
-                                                {% endif %}
-                                        {% endblock %}
-                                        {% block list_content_header %}
-                                                <div>
-                                                        <div class="table container col-12" style="{% if get %}border:none;margin-top:-40px;{% endif %}">
-                                                                {% block list_content_header_first_row %}
-                                                                        {% if not get %}
-                                                                                <div class="tr row list_content_header list_content_header_first_row">
-                                                                                        <div class="td col-sm-12 hidden-sm-down text-center">
-                                                                                                {% block list_content_title %}
-                                                                                                        <h4 style="white-space:nowrap;" class="txt3d wiki-title">{{title|wiki_href|safe}}</h4>
-                                                                                                {% endblock %}
-                                                                                        </div>
-                                                                                </div>
-                                                                        {% endif %}
-                                                                {% endblock %}
-                                                                {% block list_content_header_two_row %}
-                                                                        {% if form %}
-                                                                                <div class="tr row list_content_header list_content_header_two_row">
-                                                                                        <div class="td col-md-12 col-sm-12" colspan="3">
-                                                                                                {% block list_filter_form %}
-                                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="page" data-remote-elem="div.ajax-region div">
-                                                                                                                {% csrf_token %}
-                                                                                                                {% block form_filter %}
-                                                                                                                        {% if form %}
-                                                                                                                                {% block form_content %}
-                                                                                                                                        {{ form.non_field_errors }}
-                                                                                                                                        {% block form_table_filter %}
-                                                                                                                                                {% inline_form %}
-                                                                                                                                                {% endinline_form %}
-                                                                                                                                        {% endblock %}
-                                                                                                                                        {% block form_content_button %}
-                                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh">
-                                                                                                                                                        <span class="fa fa-refresh"></span>
-                                                                                                                                                </button>
-                                                                                                                                        {% endblock %}
-                                                                                                                                {% endblock %}
-                                                                                                                        {% endif %}
-                                                                                                                {% endblock %}
-                                                                                                        </form>
-                                                                                                {% endblock %}
-                                                                                        </div>
-                                                                                </div>
-                                                                          {% else %}
-                                                                                <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame"></form>
-                                                                        {% endif %}
-                                                                {% endblock %}
-                                                                {% block list_content_header_third_row %}
-                                                                        <div class="tr row list_content_header list_content_header_third_row">
-                                                                                <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
-                                                                                        <div class="dropdown">
-                                                                                                {% if standard_web_browser and object_list %}
-                                                                                                        {% if table_type == 'datatable' %}
-                                                                                                                <div class="dropdown">
-                                                                                                                        <button type="button" class="btn btn-secondary {{btn_size}} dropdown-toggle" data-toggle="dropdown">
-                                                                                                                                <span class="fa fa-bars"></span>
-                                                                                                                        </button>
-                                                                                                                        <div class="dropdown-menu">
-                                                                                                                                <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
-                                                                                                                                <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
-                                                                                                                                <a href="{{base_url}}tools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
-                                                                                                                        </div>
-                                                                                                                </div>
-                                                                                                        {% endif %}
-                                                                                                {% endif %}
-                                                                                                {% block list_content_actions %}{% endblock %}
-                                                                                        </div>
-                                                                                </div>
-                                                                                {% if is_paginated and table_type != 'datatable' %}
-                                                                                        <div class="td col-sm-4 col-xs-7 text-right" align="right"></div>
-                                                                                {% endif %}
-                                                                        </div>
-                                                                {% endblock %}
-                                                        </div>
-                                                </div>
-                                                {% if standard_web_browser %}
-                                                        <div class="new_row"></div>
-                                                        {% if table_type == 'datatable' and not get %}
-                                                                <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-toggle="button">
-                                                                        <i class="fa fa-times"></i>
-                                                                </button>
-                                                        {% endif %}
-                                                {% endif %}
-                                        {% endblock %}
+                                        {% endfor %}
+                                </table>
+                        </div>
+                {% endif %}
+                {% if not form_delete %}
+                        {% block list_page_start %}{% endblock %}
+                        {% block list_page_header %}{% endblock %}
+                        {% block list_page %}
+                                {% block list_content_start %}
                                         {% if standard_web_browser %}
-                                                <div class="tableframe">
                                         {% endif %}
-                                        {% block list_content_body %}
-                                                {% block list_content_paginator %}
-                                                        {% if standard_web_browser and table_type != 'datatable' %}
-                                                                {% if is_paginated %}
-                                                                        <ul class="pagination simple_pagination">
-                                                                                {% if page_obj.has_previous %}
-                                                                                        <li class="page-item">
-                                                                                                <a class="page-link" target="refresh_obj" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
-                                                                                        </li>
-                                                                                  {% else %}
-                                                                                        <li class="disabled page-item">
-                                                                                                <a class="page-link">
-                                                                                                        <span> &laquo;</span>
-                                                                                                </a>
-                                                                                        </li>
-                                                                                {% endif %}
-                                                                                {% for i in paginator.page_range %}
-                                                                                        {% if page_obj.number == i %}
-                                                                                                <li class="active page-item">
-                                                                                                        <a class="page-link">
-                                                                                                                <span>
-                                                                                                                {{ i }}
-                                                                                                                        <span class="sr-only">
-                                                                                                                                (current)
-                                                                                                                        </span>
-                                                                                                                </span>
-                                                                                                        </a>
-                                                                                                </li>
-                                                                                          {% else %}
-                                                                                                <li class="page-item">
-                                                                                                        <a class="page-link" target="refresh_obj" href="?page={{ i }}&only_table=1">
-                                                                                                                {{ i }}
-                                                                                                        </a>
-                                                                                                </li>
-                                                                                        {% endif %}
-                                                                                {% endfor %}
-                                                                                {% if page_obj.has_next %}
-                                                                                        <li class="page-item">
-                                                                                                <a class="page-link" target="refresh_obj" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
-                                                                                        </li>
-                                                                                  {% else %}
-                                                                                        <li class="disabled page-item">
-                                                                                                <a class="page-link">
-                                                                                                        <span> &raquo;</span>
-                                                                                                </a>
-                                                                                        </li>
-                                                                                {% endif %}
-                                                                        </ul>
+                                {% endblock %}
+                                {% block list_content_header %}
+                                        <div>
+                                                <div class="table container col-12" style="{% if get %}border:none;margin-top:-40px;{% endif %}">
+                                                        {% block list_content_header_first_row %}
+                                                                {% if not get %}
+                                                                        <div class="tr row list_content_header list_content_header_first_row">
+                                                                                <div class="td col-sm-12 hidden-sm-down text-center">
+                                                                                        {% block list_content_title %}
+                                                                                                <h4 style="white-space:nowrap;" class="txt3d wiki-title">{{title|wiki_href|safe}}</h4>
+                                                                                        {% endblock %}
+                                                                                </div>
+                                                                        </div>
                                                                 {% endif %}
-                                                          {% else %}
-                                                                {% paginator %}
-                                                        {% endif %}
-                                                {% endblock %}
-                                                <div class="tabsort_panel">
-                                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                                {% if table_type == 'scrolled' or not table_type %}
-                                                                        <div class="tbl_scroll" style="overflow-y: auto;">
+                                                        {% endblock %}
+                                                        {% block list_content_header_two_row %}
+                                                                {% if form %}
+                                                                        <div class="tr row list_content_header list_content_header_two_row">
+                                                                                <div class="td col-md-12 col-sm-12" colspan="3">
+                                                                                        {% block list_filter_form %}
+                                                                                                <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="page" data-remote-elem="div.ajax-region div">
+                                                                                                        {% csrf_token %}
+                                                                                                        {% block form_filter %}
+                                                                                                                {% if form %}
+                                                                                                                        {% block form_content %}
+                                                                                                                                {{ form.non_field_errors }}
+                                                                                                                                {% block form_table_filter %}
+                                                                                                                                        {% inline_form %}
+                                                                                                                                        {% endinline_form %}
+                                                                                                                                {% endblock %}
+                                                                                                                                {% block form_content_button %}
+                                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh">
+                                                                                                                                                <span class="fa fa-refresh"></span>
+                                                                                                                                        </button>
+                                                                                                                                {% endblock %}
+                                                                                                                        {% endblock %}
+                                                                                                                {% endif %}
+                                                                                                        {% endblock %}
+                                                                                                </form>
+                                                                                        {% endblock %}
+                                                                                </div>
+                                                                        </div>
                                                                   {% else %}
-                                                                        <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
+                                                                        <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame"></form>
                                                                 {% endif %}
-                                                        {% endif %}
-                                                        <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_class %}{% endblock %}>
-                                                                {% block list_full_row_header %}
-                                                                        <thead>
-                                                                                <tr>
-                                                                                        {% block list_row_header_start %}
-                                                                                                {% if not no_id %}
-                                                                                                        <th data-field="cid" data-sortable="true">
-                                                                                                                {% id_num 'Id' %}
-                                                                                                        </th>
+                                                        {% endblock %}
+                                                        {% block list_content_header_third_row %}
+                                                                <div class="tr row list_content_header list_content_header_third_row">
+                                                                        <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
+                                                                                <div class="dropdown">
+                                                                                        {% if standard_web_browser and object_list %}
+                                                                                                {% if table_type == 'datatable' %}
+                                                                                                        <div class="dropdown">
+                                                                                                                <button type="button" class="btn btn-secondary {{btn_size}} dropdown-toggle" data-toggle="dropdown">
+                                                                                                                        <span class="fa fa-bars"></span>
+                                                                                                                </button>
+                                                                                                                <div class="dropdown-menu">
+                                                                                                                        <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
+                                                                                                                        <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
+                                                                                                                        <a href="{{base_url}}tools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
+                                                                                                                </div>
+                                                                                                        </div>
                                                                                                 {% endif %}
-                                                                                        {% endblock %}
-                                                                                        {% block list_row_header %}{% endblock %}
-                                                                                        {% block list_row_header_end %}
-                                                                                                <th data-field="caction">
-                                                                                                        Action
+                                                                                        {% endif %}
+                                                                                        {% block list_content_actions %}{% endblock %}
+                                                                                </div>
+                                                                        </div>
+                                                                        {% if is_paginated and table_type != 'datatable' %}
+                                                                                <div class="td col-sm-4 col-xs-7 text-right" align="right"></div>
+                                                                        {% endif %}
+                                                                </div>
+                                                        {% endblock %}
+                                                </div>
+                                        </div>
+                                        {% if standard_web_browser %}
+                                                <div class="new_row"></div>
+                                                {% if table_type == 'datatable' and not get %}
+                                                        <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-toggle="button">
+                                                                <i class="fa fa-times"></i>
+                                                        </button>
+                                                {% endif %}
+                                        {% endif %}
+                                {% endblock %}
+                                {% if standard_web_browser %}
+                                        <div class="tableframe">
+                                {% endif %}
+                                {% block list_content_body %}
+                                        {% block list_content_paginator %}
+                                                {% if standard_web_browser and table_type != 'datatable' %}
+                                                        {% if is_paginated %}
+                                                                <ul class="pagination simple_pagination">
+                                                                        {% if page_obj.has_previous %}
+                                                                                <li class="page-item">
+                                                                                        <a class="page-link" target="refresh_frame" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
+                                                                                </li>
+                                                                          {% else %}
+                                                                                <li class="disabled page-item">
+                                                                                        <a class="page-link">
+                                                                                                <span> &laquo;</span>
+                                                                                        </a>
+                                                                                </li>
+                                                                        {% endif %}
+                                                                        {% for i in paginator.page_range %}
+                                                                                {% if page_obj.number == i %}
+                                                                                        <li class="active page-item">
+                                                                                                <a class="page-link">
+                                                                                                        <span>
+                                                                                                        {{ i }}
+                                                                                                                <span class="sr-only">
+                                                                                                                        (current)
+                                                                                                                </span>
+                                                                                                        </span>
+                                                                                                </a>
+                                                                                        </li>
+                                                                                  {% else %}
+                                                                                        <li class="page-item">
+                                                                                                <a class="page-link" target="refresh_frame" href="?page={{ i }}&only_table=1">
+                                                                                                        {{ i }}
+                                                                                                </a>
+                                                                                        </li>
+                                                                                {% endif %}
+                                                                        {% endfor %}
+                                                                        {% if page_obj.has_next %}
+                                                                                <li class="page-item">
+                                                                                        <a class="page-link" target="refresh_frame" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
+                                                                                </li>
+                                                                          {% else %}
+                                                                                <li class="disabled page-item">
+                                                                                        <a class="page-link">
+                                                                                                <span> &raquo;</span>
+                                                                                        </a>
+                                                                                </li>
+                                                                        {% endif %}
+                                                                </ul>
+                                                        {% endif %}
+                                                  {% else %}
+                                                        {% paginator %}
+                                                {% endif %}
+                                        {% endblock %}
+                                        <div class="tabsort_panel">
+                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                        {% if table_type == 'scrolled' or not table_type %}
+                                                                <div class="tbl_scroll" style="overflow-y: auto;">
+                                                          {% else %}
+                                                                <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
+                                                        {% endif %}
+                                                {% endif %}
+                                                <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_class %}{% endblock %}>
+                                                        {% block list_full_row_header %}
+                                                                <thead>
+                                                                        <tr>
+                                                                                {% block list_row_header_start %}
+                                                                                        {% if not no_id %}
+                                                                                                <th data-field="cid" data-sortable="true">
+                                                                                                        {% id_num 'Id' %}
                                                                                                 </th>
-                                                                                        {% endblock %}
-                                                                                </tr>
-                                                                        </thead>
-                                                                {% endblock %}
-                                                                {% block list_table %}
-                                                                        {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
-                                                                                <tbody>
-                                                                                        {% if object_list %}
-                                                                                                {% for object in object_list %}
-                                                                                                        {% block list_full_row %}
-                                                                                                                <tr {% block list_row_attr %}{% endblock %}>
-                                                                                                                        {% block list_row_start %}
-                                                                                                                                {% if not no_id %}
-                                                                                                                                        <td>
-                                                                                                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                                                                                                        {% block id_extra %}
-                                                                                                                                                                {% if get %}
-                                                                                                                                                                        {% get_row object.id %}
-                                                                                                                                                                  {% else %}
-                                                                                                                                                                        {% view_row object.id %}
-                                                                                                                                                                {% endif %}
-                                                                                                                                                        {% endblock %}
-                                                                                                                                                </div>
-                                                                                                                                        </td>
-                                                                                                                                {% endif %}
-                                                                                                                        {% endblock %}
-                                                                                                                        {% block list_row %}
-                                                                                                                                <td>{{object}}</td>
-                                                                                                                        {% endblock %}
-                                                                                                                        {% block list_row_end %}
+                                                                                        {% endif %}
+                                                                                {% endblock %}
+                                                                                {% block list_row_header %}{% endblock %}
+                                                                                {% block list_row_header_end %}
+                                                                                        <th data-field="caction">
+                                                                                                Action
+                                                                                        </th>
+                                                                                {% endblock %}
+                                                                        </tr>
+                                                                </thead>
+                                                        {% endblock %}
+                                                        {% block list_table %}
+                                                                {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
+                                                                        <tbody>
+                                                                                {% if object_list %}
+                                                                                        {% for object in object_list %}
+                                                                                                {% block list_full_row %}
+                                                                                                        <tr {% block list_row_attr %}{% endblock %}>
+                                                                                                                {% block list_row_start %}
+                                                                                                                        {% if not no_id %}
                                                                                                                                 <td>
-                                                                                                                                        <div class="td_action" style="white-space:nowrap">
-                                                                                                                                                {% block list_row_actions %}
-                                                                                                                                                        {% if readonly %}
-                                                                                                                                                                <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
+                                                                                                                                        <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                                                                                                {% block id_extra %}
+                                                                                                                                                        {% if get %}
+                                                                                                                                                                {% get_row object.id %}
                                                                                                                                                           {% else %}
-                                                                                                                                                                {% row_actions %}
-                                                                                                                                                                edit;delete
-                                                                                                                                                                {% endrow_actions %}
+                                                                                                                                                                {% view_row object.id %}
                                                                                                                                                         {% endif %}
                                                                                                                                                 {% endblock %}
                                                                                                                                         </div>
                                                                                                                                 </td>
-                                                                                                                        {% endblock %}
-                                                                                                                </tr>
-                                                                                                        {% endblock %}
-                                                                                                        {% block list_row2 %}{% endblock %}
-                                                                                                {% endfor %}
-                                                                                        {% endif %}
-                                                                                </tbody>
-                                                                        {% endif %}
-                                                                {% endblock %}
-                                                                {% block list_table_footer %}{% endblock %}
-                                                        </table>
-                                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                                {% if table_type == 'scrolled' or not table_type %}
-                                                                        </div>
-                                                                  {% else %}
-                                                                        </div>
+                                                                                                                        {% endif %}
+                                                                                                                {% endblock %}
+                                                                                                                {% block list_row %}
+                                                                                                                        <td>{{object}}</td>
+                                                                                                                {% endblock %}
+                                                                                                                {% block list_row_end %}
+                                                                                                                        <td>
+                                                                                                                                <div class="td_action" style="white-space:nowrap">
+                                                                                                                                        {% block list_row_actions %}
+                                                                                                                                                {% if readonly %}
+                                                                                                                                                        <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
+                                                                                                                                                  {% else %}
+                                                                                                                                                        {% row_actions %}
+                                                                                                                                                        edit;delete
+                                                                                                                                                        {% endrow_actions %}
+                                                                                                                                                {% endif %}
+                                                                                                                                        {% endblock %}
+                                                                                                                                </div>
+                                                                                                                        </td>
+                                                                                                                {% endblock %}
+                                                                                                        </tr>
+                                                                                                {% endblock %}
+                                                                                                {% block list_row2 %}{% endblock %}
+                                                                                        {% endfor %}
+                                                                                {% endif %}
+                                                                        </tbody>
                                                                 {% endif %}
+                                                        {% endblock %}
+                                                        {% block list_table_footer %}{% endblock %}
+                                                </table>
+                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                        {% if table_type == 'scrolled' or not table_type %}
+                                                                </div>
+                                                          {% else %}
+                                                                </div>
                                                         {% endif %}
-                                                </div>
-                                        {% endblock %}
-                                        {% if standard_web_browser %}
-                                                </div>
-                                        {% endif %}
-                                        {% block list_content_footer %}{% endblock %}
-                                        {% block list_content_end %}
-                                                {% if standard_web_browser %}
                                                 {% endif %}
-                                        {% endblock %}
+                                        </div>
                                 {% endblock %}
-                                {% block list_page_footer %}{% endblock %}
-                                {% block list_page_end %}{% endblock %}
-                        {% endif %}
-                </div>
+                                {% if standard_web_browser %}
+                                        </div>
+                                {% endif %}
+                                {% block list_content_footer %}{% endblock %}
+                                {% block list_content_end %}
+                                        {% if standard_web_browser %}
+                                        {% endif %}
+                                {% endblock %}
+                        {% endblock %}
+                        {% block list_page_footer %}{% endblock %}
+                        {% block list_page_end %}{% endblock %}
+                {% endif %}
         </div>
 {% endblock %}
 

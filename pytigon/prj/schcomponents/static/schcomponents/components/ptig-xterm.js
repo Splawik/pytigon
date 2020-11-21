@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2020-11-17 21:52:43
+// Transcrypt'ed from Python, 2020-11-21 18:50:56
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../pytigon_js/org.transcrypt.__runtime__.js';
 import {DefineWebComponent} from '../../pytigon_js/pytigon_js.component.js';
 var __name__ = '__main__';
@@ -10,7 +10,7 @@ export var BASE_PATH = window.BASE_PATH + 'static/vanillajs_plugins/xterm';
 var comp = DefineWebComponent (TAG, true, [BASE_PATH + '/xterm.js', BASE_PATH + '/fit.js'], [BASE_PATH + '/xterm.css']);
 try {
 	comp.__enter__ ();
-	comp.options ['attributes'] = dict ([['width', null], ['height', null]]);
+	comp.options ['attributes'] = dict ([['width', null]]);
 	comp.options ['template'] = TEMPLATE;
 	var init = comp.fun ('init') (function (component) {
 		var div = component.root.querySelector ('div');
@@ -62,8 +62,12 @@ try {
 			};
 			term.on ('key', _on_key);
 			websocket.onmessage = _on_message;
-			jQuery (window).resize (_fit_to_screen);
-			_fit_to_screen ();
+			var _process_resize = function (size_object) {
+				component.set_state (dict ([['height', ((size_object ['h'] - size_object ['body_offset_y']) - 3) + 'px']]));
+				_fit_to_screen ();
+			};
+			component.process_resize = _process_resize;
+			window.process_resize (component);
 		};
 		websocket.onopen = _on_websocket_open;
 	});

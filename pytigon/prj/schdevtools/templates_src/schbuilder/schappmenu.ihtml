@@ -38,7 +38,7 @@
     {% if not forloop.last %}
         % row_actions:...field_down,Move down,[|client://actions/go-down.png]
     {% endif %}
-    % row_actions:...field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_top
+    % row_actions:...field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_parent
 
 
 %% table_header_edit
