@@ -32,13 +32,10 @@ def datetable_set_height(element):
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
 
-
 def datatable_refresh(table):
     table.bootstrapTable("refresh")
 
-
 __pragma__("jsiter")
-
 
 def _rowStyle(value, row, index):
     x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information")
@@ -47,7 +44,6 @@ def _rowStyle(value, row, index):
         if c.length > 0:
             return {"classes": c}
     return {}
-
 
 __pragma__("nojsiter")
 

@@ -1,5 +1,5 @@
 from pytigon_js.tabmenu import get_menu
-from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_and_run_script, get_template, super_insert, remove_element, process_resize
+from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize
 from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
@@ -431,8 +431,6 @@ EVENT_CLICK_TAB = [
     ("refresh_frame", "*", True, False, refresh_frame),
     ("refresh_page", "*", True, False, refresh_page),
     ("refresh_app", "*", False, False, refresh_app),
-    ("run_script", "*", False, False, get_and_run_script),
-
 
     ("null", "*", False, False, only_get),
 ]

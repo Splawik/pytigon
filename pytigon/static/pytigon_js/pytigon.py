@@ -11,9 +11,7 @@ from pytigon_js.ajax_region import ajax_load, mount_html
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
-
 window.GLOBAL_BUS = GlobalBus()
-
 window.START_MENU_ID = None
 
 
@@ -33,12 +31,6 @@ register_global_event("keypress", _on_key, None)
 
 def dom_content_loaded():
     mount_html(document.querySelector('section.body-body'), None)
-#    if jQuery("#dialog-form-modal").length > 0:
-#        jQuery(document).ajaxError(_on_error)
-#        if window.APPLICATION_TEMPLATE == "traditional":
-#            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
-#       else:
-#            window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"))
 
 def app_init(
     prj_name,

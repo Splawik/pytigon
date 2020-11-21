@@ -8,6 +8,8 @@ def register_mount_fun(fun):
     global MOUNT_INIT_FUN
     MOUNT_INIT_FUN.append(fun)
 
+window.register_mount_fun = register_mount_fun
+
 def mount_html(dest_elem, data_or_html):
     global MOUNT_INIT_FUN
 
@@ -26,6 +28,8 @@ def mount_html(dest_elem, data_or_html):
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
             fun(dest_elem)
+
+window.mount_html = mount_html
 
 def datetime_init(dest_elem):
     format = {
@@ -139,6 +143,8 @@ def get_ajax_region(element, region_name=None):
         else:
             return element.closest(".ajax-region")
 
+window.get_ajax_region = get_ajax_region
+
 def get_ajax_link(element, region_name=None):
     if element.classList.contains("ajax-link") and ((not region_name) or element.getAttribute('data-region') == region_name):
         return element
@@ -158,6 +164,8 @@ def get_ajax_link(element, region_name=None):
     else:
         return None
 
+window.get_ajax_link = get_ajax_link
+
 def get_ajax_frame(element, region_name=None):
     region = get_ajax_region(element, region_name)
     if region:
@@ -174,6 +182,8 @@ def get_ajax_frame(element, region_name=None):
         return get_ajax_frame(element, None)
     else:
         return None
+
+window.get_ajax_frame = get_ajax_frame
 
 def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=None):
     frame = get_ajax_frame(element, region_name)
@@ -224,6 +234,7 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
     else:
         _callback(None)
 
+window.refresh_ajax_frame = refresh_ajax_frame
 
 def ajax_load(element, url, complete):
     def _onload(responseText):
@@ -234,10 +245,3 @@ def ajax_load(element, url, complete):
 
 window.ajax_load = ajax_load
 
-
-def clean_popups(element):
-    elements = element.querySelectorAll('.plug')
-    for el in elements:
-        el.remove()
-
-window.clean_popups = clean_popups

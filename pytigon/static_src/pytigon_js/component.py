@@ -1,23 +1,4 @@
-from pytigon_js.tools import (
-    ajax_get,
-    ajax_post,
-    ajax_submit,
-    load_css,
-    load_js,
-    load_many_js,
-)
-
-
-def component_fun(component, name):
-    def decorator(funct):
-        component[name] = funct
-        return funct
-
-    return decorator
-
-
-window.component_fun = component_fun
-
+from pytigon_js.tools import load_css, load_many_js
 
 def set_state(component, state):
     spec = ("!", "?", "*", "0", "+", "-", "%")
@@ -153,7 +134,6 @@ class DefineWebComponent(object):
     def __exit__(self, type, value, traceback):
         self.make_component()
 
-
 window.DefineWebComponent = DefineWebComponent
 
 
@@ -185,3 +165,5 @@ class GlobalBus:
     def unregister(self, component):
         if component in self.components:
             self.components.remove(component)
+
+window.GlobalBus = GlobalBus

@@ -5,6 +5,46 @@ import pytigon_js.resources as rc
 
 LOADED_FILES = {}
 
+class Loading():
+    def __init__(self, element):
+        self.load_type = None
+        self.element = element
+        if element:
+            if element.classList.contains("ladda-button"):
+                self.load_type = "ladda"
+                self.ladda = None
+        if not self.load_type:
+            loading_indicator = document.getElementById("loading-indicator")
+            if loading_indicator:
+                self.load_type = "global"
+                self.loading_indicator = loading_indicator
+
+    def create(self):
+        if self.load_type == 'ladda':
+            self.ladda = window.Ladda.create(self.element)
+
+    def start(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.start()
+        elif self.load_type == 'global':
+            self.loading_indicator.style.display = "block"
+
+    def set_progress(self, progress):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.setProgress(progress)
+
+    def stop(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.stop()
+        elif self.load_type == 'global':
+            self.loading_indicator.style.display = "none"
+
+    def remove(self):
+        if self.load_type == 'ladda' and self.ladda:
+            self.ladda.remove()
+            self.ladda = None
+
+
 def save_as(blob, file_name):
     url = window.URL.createObjectURL(blob)
 
@@ -146,20 +186,6 @@ def _req_post(req, url, data, complete, content_type):
     req.send(data)
 
 
-# def _req_post_new(req, url, data, complete, content_type):
-#     __pragma__('jsiter')
-#
-#     def get_response_text(response):
-#         return response.text()
-#
-#     headers = { "X-CSRFToken": Cookies.js_get("csrftoken"), }
-#
-#     x1 = fetch(url, { 'method': 'post', 'headers':headers, 'body': data, })
-#     x2 = x1.then(get_response_text)
-#     x3 = x2.then(complete)
-#
-#     __pragma__('nojsiter')
-
 def ajax_post(url, data, complete, process_req=None):
     req = __new__(XMLHttpRequest())
     if process_req:
@@ -195,23 +221,13 @@ def ajax_submit(form, complete, data_filter=None, process_req=None):
         data = __new__(FormData(form[0]))
         if data_filter:
             data = data_filter(data)
-        # if not form.f("div").find("#progress").length == 1:
 
-        # var parameters = [];
-        # for(var pair of data.entries()) {
-        #    parameters.push(
-        #        encodeURIComponent(pair[0]) + '=' +
-        #        encodeURIComponent(pair[1])
-        #    )
-        # }
-        # data = parameters.join('&');
         content_type = "multipart/form-data; boundary=..."
 
         if not form.find("#progress").length == 1:
             form.find("div.inline-form-body").append(
                 "<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>"
             )
-            # form.closest("div").append("<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>")
         else:
             jQuery("#progress").width("0%")
 
@@ -231,89 +247,22 @@ def ajax_submit(form, complete, data_filter=None, process_req=None):
 window.ajax_submit = ajax_submit
 
 
-def get_page(elem):
-    if elem.hasClass(".tab-pane"):
-        return elem
-    else:
-        return elem.closest(".tab-pane")
 
-
-def get_table_type(elem):
-    tabsort = elem.find(".tabsort")
-    if tabsort.length == 0:
-        tabsort = get_page(elem).find(".tabsort")
-    if tabsort.length > 0:
-        ret = tabsort.attr("table_type")
-        if ret:
-            return ret
-    return ""
-
-
-def can_popup():
-    if jQuery(".modal-open").length > 0:
-        # if jQuery("div.dialog-form").hasClass('show') or jQuery("div.dialog-form-delete").hasClass('show') or jQuery("div.dialog-form-info").hasClass('show'):
-        return False
-    else:
-        return True
-
-
-def corect_href(href, only_table=False):
-    if not href:
-        return href
-    if only_table:
-        if "only_table" in href:
-            return href
-    elif "only_content" in href:
-        return href
-
-    if only_table:
-        if "?" in href:
-            return href + "&only_table=1"
-        else:
-            return href + "?only_table=1"
-    else:
-        if "?" in href:
-            return href + "&only_content=1"
-        else:
-            return href + "?only_content=1"
-
-
-def remove_page_from_href(href):
-    x = href.split("?")
-    if len(x) > 1:
-        x2 = x[1].split("&")
-        if len(x2) > 1:
-            x3 = []
-            for pos in x2:
-                if not "page=" in pos:
-                    x3.append(pos)
-            return x[0] + "?" + ("".join(x3))
-        else:
-            if "page=" in x2[0]:
-                return x2
-            else:
-                return href
-    return href
-
-
-def load_css(path):
-    global LOADED_FILES
-    if not (LOADED_FILES and path in LOADED_FILES):
-        LOADED_FILES[path] = None
-        req = __new__(XMLHttpRequest())
-
-        def _onload():
-            jQuery('<style type="text/css"></style>').html(req.responseText).appendTo(
-                "head"
-            )
-
-        req.onload = _onload
-
-        req.open("GET", path, True)
-        req.send("")
-
-
-window.load_css = load_css
+# def load_css(path):
+#     global LOADED_FILES
+#     if not (LOADED_FILES and path in LOADED_FILES):
+#         LOADED_FILES[path] = None
+#         req = __new__(XMLHttpRequest())
+#
+#         def _onload():
+#             jQuery('<style type="text/css"></style>').html(req.responseText).appendTo(
+#                 "head"
+#             )
+#
+#         req.onload = _onload
+#
+#         req.open("GET", path, True)
+#         req.send("")
 
 def load_css(path, on_load = None):
     global LOADED_FILES
@@ -334,6 +283,8 @@ def load_css(path, on_load = None):
 
         req.open("GET", path, True)
         req.send("")
+
+window.load_css = load_css
 
 def on_load_js(path):
     global LOADED_FILES
@@ -454,11 +405,6 @@ def animate_combo(
 
 window.animate_combo = animate_combo
 
-# window.icons = {
-#    'refresh': 'fa-refresh', 'toggle': 'fa-toggle-on fa-lg', 'columns': 'fa-th-list', 'detailOpen': 'fa-plus-square',
-#     'detailClose': 'fa-minus-square'
-# }
-
 window.icons = {
     "time": "fa fa-clock-o",
     "date": "fa fa-calendar",
@@ -477,22 +423,6 @@ window.icons = {
     "detailOpen": "fa-plus",
     "detailClose": "fa-minus",
 }
-
-
-def get_and_run_script(url, elem, e):
-    #def _on_load_js(html_text):
-    #    nonlocal elem, e
-    #    object = jQuery(elem)
-    #    x = jQuery(html_text).html()
-    #    if x:
-    #        eval(x)
-    #    object = None
-    #
-    #ajax_get(url, _on_load_js)
-    try:
-        __import__()
-    except:
-        pass
 
 
 def send_to_dom(html_text, base_elem):
@@ -572,37 +502,6 @@ def get_template(template_name, param):
         return TEMPLATES[template_name].format(param)
     return None
 
-
-# ajax_region ajax_link ref_frame
-# refr
-
-def get_ajax_region(element):
-    if element.classList.contains("ajax-region"):
-        return element
-    else:
-        return element.closest(".ajax-region")
-
-def get_ajax_link(element):
-    if element.classList.contains("ajax-link"):
-        return element
-    region = get_ajax_region(element)
-    if region:
-        if region.classList.contains("ajax-link"):
-            return region
-        else:
-            return region.querySelector("ajax-link")
-    return None
-
-def get_ajax_frame(element):
-    region = get_ajax_region(element)
-    if region:
-        if region.classList.contains("ajax-frame"):
-            return region
-        else:
-            return region.querySelector("ajax-frame")
-    return None
-
-
 def super_query_selector(element, selector):
     x = selector.split('/')
     e = element
@@ -618,6 +517,8 @@ def super_query_selector(element, selector):
         if not e:
             return None
     return e
+
+window.super_query_selector = super_query_selector
 
 def super_insert(base_element, selector, inserted_element):
     if selector and ':' in selector:
@@ -654,45 +555,8 @@ def super_insert(base_element, selector, inserted_element):
 
     return element
 
+window.super_insert = super_insert
 
-class Loading():
-    def __init__(self, element):
-        self.load_type = None
-        self.element = element
-        if element:
-            if element.classList.contains("ladda-button"):
-                self.load_type = "ladda"
-                self.ladda = None
-        if not self.load_type:
-            loading_indicator = document.getElementById("loading-indicator")
-            if loading_indicator:
-                self.load_type = "global"
-                self.loading_indicator = loading_indicator
-
-    def create(self):
-        if self.load_type == 'ladda':
-            self.ladda = window.Ladda.create(self.element)
-
-    def start(self):
-        if self.load_type == 'ladda' and self.ladda:
-            self.ladda.start()
-        elif self.load_type == 'global':
-            self.loading_indicator.style.display = "block"
-
-    def set_progress(self, progress):
-        if self.load_type == 'ladda' and self.ladda:
-            self.ladda.setProgress(progress)
-
-    def stop(self):
-        if self.load_type == 'ladda' and self.ladda:
-            self.ladda.stop()
-        elif self.load_type == 'global':
-            self.loading_indicator.style.display = "none"
-
-    def remove(self):
-        if self.load_type == 'ladda' and self.ladda:
-            self.ladda.remove()
-            self.ladda = None
 
 
 def remove_element(element):
@@ -718,6 +582,7 @@ def remove_element(element):
 
             element2.remove()
 
+window.remove_element = remove_element
 
 def process_resize(target_element):
     param = {}
@@ -753,3 +618,63 @@ def process_resize(target_element):
                     elem.style.height = param['h'] - param['body_offset_y']
 
 window.process_resize = process_resize
+
+def get_page(elem):
+    if elem.hasClass(".tab-pane"):
+        return elem
+    else:
+        return elem.closest(".tab-pane")
+
+def get_table_type(elem):
+    tabsort = elem.find(".tabsort")
+    if tabsort.length == 0:
+        tabsort = get_page(elem).find(".tabsort")
+    if tabsort.length > 0:
+        ret = tabsort.attr("table_type")
+        if ret:
+            return ret
+    return ""
+
+def can_popup():
+    if jQuery(".modal-open").length > 0:
+        return False
+    else:
+        return True
+
+def corect_href(href, only_table=False):
+    if not href:
+        return href
+    if only_table:
+        if "only_table" in href:
+            return href
+    elif "only_content" in href:
+        return href
+
+    if only_table:
+        if "?" in href:
+            return href + "&only_table=1"
+        else:
+            return href + "?only_table=1"
+    else:
+        if "?" in href:
+            return href + "&only_content=1"
+        else:
+            return href + "?only_content=1"
+
+
+def remove_page_from_href(href):
+    x = href.split("?")
+    if len(x) > 1:
+        x2 = x[1].split("&")
+        if len(x2) > 1:
+            x3 = []
+            for pos in x2:
+                if not "page=" in pos:
+                    x3.append(pos)
+            return x[0] + "?" + ("".join(x3))
+        else:
+            if "page=" in x2[0]:
+                return x2
+            else:
+                return href
+    return href
