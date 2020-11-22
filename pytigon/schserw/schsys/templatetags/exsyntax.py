@@ -115,7 +115,7 @@ def view_row(context, title = "", icon_name = "", target = "popup_info", attrs =
 
 @inclusion_tag('widgets/get_row.html')
 def get_row(context, title = "", icon_name = "", target = "", attrs = "", tag_class = "", url = ""):
-    ret = action_fun(context, 'get_row', title, icon_name, target, attrs, tag_class, url)
+    ret = action_fun(context, 'get', title, icon_name, target, attrs, tag_class, url)
     ret['id'] = context['object'].id
     ret['text'] = str(context['object'])
     return ret
@@ -908,7 +908,7 @@ def field(context, form_field, fieldformat=None):
 
     label_class = "control-label float-left"
     offset = ""
-    form_group_class = "form-group bmd-form-group row group_%s" % type(field.field).__name__.lower()
+    form_group_class = "form-group group_%s" % type(field.field).__name__.lower()
     field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = False
     show_label = True
@@ -1037,15 +1037,15 @@ def get_table_row(context, field_or_name, prj=None, app_name=None, table_name=No
 
     if TreeModel in model.__bases__:
         if filter:
-            href1 = make_href("/%s/%s/table/%s/%s/0/form/gettree/?schtml=1" % (prj, _app_name, _table_name, filter))
-            href2 = make_href("/%s/%s/table/%s/-/add/?schtml=1" % (prj, _app_name, _table_name))
+            href1 = make_href("/%s/table/%s/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name, filter))
+            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
         else:
-            href1 = make_href("/%s/%s/table/%s/0/form/gettree/?schtml=1" % (prj, _app_name, _table_name))
-            href2 = make_href("/%s/%s/table/%s/-/add/?schtml=1" % (prj, _app_name, _table_name))
+            href1 = make_href("/%s/table/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name))
+            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
     else:
         _filter = filter if filter else "-"
-        href1 = make_href("/%s/%s/table/%s/%s/form/get/?schtml=1" % (prj, _app_name, _table_name, _filter))
-        href2 = make_href("/%s/%s/table/%s/%s/add/?schtml=1" % (prj, _app_name, _table_name, _filter))
+        href1 = make_href("/%s/table/%s/%s/form/get/?schtml=1" % (_app_name, _table_name, _filter))
+        href2 = make_href("/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter))
 
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -1055,7 +1055,8 @@ def get_table_row(context, field_or_name, prj=None, app_name=None, table_name=No
                 label = _label,
                 widget=ModelSelect2WidgetExt(href1, href2, is_new_button, is_get_button, _label,
                     model=model,
-                    search_fields=[_search_fields, "description__icontains"],
+                    #search_fields=[_search_fields, "description__icontains"],
+                    search_fields=[_search_fields, ],
                     queryset = _queryset,
                 ),
             )

@@ -3,8 +3,8 @@
 
 %% action_widget_content
     % if standard_web_browser:
-        a href={{action.url}},,,class=btn btn-secondary ladda-button get_row,,,name={{action.name}},,,title={{action.title}},,,data-role=button,,,data-inline=true,,,data-style=zoom-out,,,data-spinner-color=#FF0000,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}}
-            span class=fa fa-level-down ladda-label
+        a class=btn btn-secondary get_row ajax-link,,,title={{action.title}},,,data-role=button,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}},,,target=refresh_frame,,,data-region=get_row
+            span class=fa fa-level-down
                 %% description
                     {{action.title}}
     % else

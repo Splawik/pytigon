@@ -819,7 +819,7 @@ class AccountOperation( models.Model):
     date = models.DateTimeField('Date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=255)
     payment = models.CharField('Name of payment', null=True, blank=True, editable=True, max_length=64)
-    account_state = ext_models.ForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set')
+    account_state = ext_models.ForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set', search_fields=['parent__name__icontains',])
     sign = models.IntegerField('Sign - debit or credit', null=False, blank=False, editable=True, )
     amount = models.DecimalField('Amount', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     enabled = ext_models.NullBooleanField('Enabled', null=True, blank=True, editable=False, default=False,)

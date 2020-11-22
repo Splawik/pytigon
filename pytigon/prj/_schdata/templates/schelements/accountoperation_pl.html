@@ -46,10 +46,12 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                parent,date,description,payment
+                parent,description,payment
         {% endform %}
-        <div class="row">
-                {% get_table_row form.account_state search_fields="parent__name__icontains" %}
+        <div class="ajax-region" data-region="get_row">
+                <div class="row">
+                        {% get_table_row form.account_state search_fields="parent__name__icontains" %}
+                </div>
         </div>
         {% form %}
                 sign,amount

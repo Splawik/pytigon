@@ -98,6 +98,26 @@ def select2_init(dest_elem):
         {"width": "calc(100%)", "minimumInputLength": 1}
     )
 
+    def set_select2_value(sel2, id, text):
+        sel2.append(jQuery("<option>", {"value": id, "text": text}))
+        sel2.val(id.toString())
+        sel2.trigger("change")
+
+    controls = dest_elem.querySelectorAll(".django-select2")
+    if controls:
+        for control in controls:
+            def _onloadeddata(event):
+                nonlocal control
+                if hasattr(event, 'data_source'):
+                    src_elem = event.data_source
+                    if src_elem:
+                        id = src_elem.getAttribute('data-id')
+                        text = src_elem.getAttribute('data-text')
+                        set_select2_value(jQuery(control), id, text)
+            control.onloadeddata = _onloadeddata
+            control.classList.add('ajax-frame')
+            control.setAttribute('data-region', "get_row")
+
     def init_select2_ctrl():
         sel2 = jQuery(this)
         src = sel2.closest(".input-group")
@@ -106,14 +126,15 @@ def select2_init(dest_elem):
                 id = src.attr("item_id")
                 if id:
                     text = src.attr("item_str")
-                    sel2.append(jQuery("<option>", {"value": id, "text": text}))
-                    sel2.val(id.toString())
-                    sel2.trigger("change")
-
+                    set_select2_value(sel2, id, text)
+                    #sel2.append(jQuery("<option>", {"value": id, "text": text}))
+                    #sel2.val(id.toString())
+                    #sel2.trigger("change")
 
     jQuery(dest_elem).find(".django-select2").each(init_select2_ctrl)
 
 register_mount_fun(select2_init)
+
 
 def datatable_init(dest_elem):
     #datatable_onresize()
@@ -135,7 +156,9 @@ def get_ajax_region(element, region_name=None):
             while ret:
                 if ret.getAttribute('data-region')==region_name:
                     return ret
-                ret = ret.closest('.ajax-region')
+                ret = ret.parentElement
+                if ret:
+                    ret = ret.closest('.ajax-region')
             if region_name:
                 return get_ajax_region(element, None)
             else:
@@ -194,7 +217,7 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
     loading = Loading(element)
 
     def _callback(data):
-        nonlocal frame, callback, loading
+        nonlocal link, frame, callback, loading
 
         loading.stop()
         loading.remove()
@@ -203,6 +226,7 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
             evt = document.createEvent("HTMLEvents")
             evt.initEvent("loadeddata", False, True)
             evt.data = data
+            evt.data_source = link
             frame.dispatchEvent(evt)
         else:
             mount_html(frame, data)

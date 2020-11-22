@@ -1,5 +1,5 @@
 from pytigon_js.tabmenu import get_menu
-from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize
+from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup
 from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
@@ -234,7 +234,62 @@ register_global_event("click", on_click_default_action, "a")
 register_global_event("click", on_click_default_action, "button")
 register_global_event("submit", on_click_default_action, "form")
 
+def _on_inline(target_element, data_element, url, param, event, template_name):
+    inline_position = target_element.getAttribute('data-inline-position')
+
+    if inline_position and inline_position.split(':')[0].endswith('tr'):
+        dialog_slot = document.createElement("tr")
+        child = document.createElement("td")
+        child.setAttribute("colspan", "100")
+        dialog_slot.appendChild(child)
+        dialog_slot2 = child
+    else:
+        dialog_slot = document.createElement("div")
+        dialog_slot.classList.add("row")
+        dialog_slot2 = dialog_slot
+
+    dialog_slot.classList.add("plug")
+
+    dialog_slot2.innerHTML = get_template(template_name.replace('MODAL', 'INLINE'), { 'title': _get_title(target_element, data_element, url) })
+
+    target_element.setAttribute("data-style", "zoom-out")
+    target_element.setAttribute("data-spinner-color", "#FF0000")
+
+    content = dialog_slot.querySelector("div.dialog-data")
+    content.appendChild(data_element)
+
+    super_insert(target_element, inline_position, dialog_slot)
+    mount_html(dialog_slot, None)
+
+    def on_hidden(event):
+        nonlocal target_element
+        region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
+        if region:
+            obj = region.querySelector('.plug')
+            obj.remove()
+
+    dialog = jQuery(dialog_slot.firstElementChild)
+    if dialog:
+        dialog.on("click", "button.btn-close", on_hidden)
+
+def on_inline(target_element, data_element, new_url, param, event):
+    return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
+
+def on_inline_edit_new(target_element, data_element, new_url, param, event):
+    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_EDIT")
+
+def on_inline_info(target_element, data_element, new_url, param, event):
+    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_INFO")
+
+def on_inline_delete(target_element, data_element, new_url, param, event):
+    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_DELETE")
+
+def on_inline_error(target_element, data_element, new_url, param, event):
+    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_ERROR")
+
 def _on_popup(target_element, data_element, url, param, event, template_name):
+    if not can_popup():
+        return _on_inline(target_element, data_element, url, param, event, template_name)
     dialog_slot = document.createElement("aside")
     dialog_slot.setAttribute("class", "plug")
 
@@ -280,56 +335,6 @@ def on_popup_delete(target_element, data_element, new_url, param, event):
 def on_popup_error(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR")
 
-def _on_inline(target_element, data_element, url, param, event, template_name):
-    inline_position = target_element.getAttribute('data-inline-position')
-
-    if inline_position and inline_position.split(':')[0].endswith('tr'):
-        dialog_slot = document.createElement("tr")
-        child = document.createElement("td")
-        child.setAttribute("colspan", "100")
-        dialog_slot.appendChild(child)
-        dialog_slot2 = child
-    else:
-        dialog_slot = document.createElement("aside")
-        dialog_slot2 = dialog_slot
-
-    dialog_slot.setAttribute("class", "plug")
-
-    dialog_slot2.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
-
-    super_insert(target_element, inline_position, dialog_slot)
-
-    target_element.setAttribute("data-style", "zoom-out")
-    target_element.setAttribute("data-spinner-color", "#FF0000")
-
-    content = dialog_slot.querySelector("div.dialog-data")
-    content.appendChild(data_element)
-
-    def on_hidden(event):
-        nonlocal target_element
-        region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
-        if region:
-            obj = region.querySelector('.plug')
-            obj.remove()
-
-    dialog = jQuery(dialog_slot.firstElementChild)
-    if dialog:
-        dialog.on("click", "button.btn-close", on_hidden)
-
-def on_inline(target_element, data_element, new_url, param, event):
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
-
-def on_inline_edit_new(target_element, data_element, new_url, param, event):
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_EDIT")
-
-def on_inline_info(target_element, data_element, new_url, param, event):
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_INFO")
-
-def on_inline_delete(target_element, data_element, new_url, param, event):
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_DELETE")
-
-def on_inline_error(target_element, data_element, new_url, param, event):
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_ERROR")
 
 def on_new_tab(target_element, data_element, new_url, param, event):
     title = _get_title(target_element, data_element, new_url)
@@ -368,7 +373,9 @@ def refresh_frame(target_element, data_element, new_url, param, event):
     else:
         data_element2 = data_element
 
-    refresh_ajax_frame(target_element, None, data_element2, _callback)
+    data_region = target_element.getAttribute('data-region')
+
+    refresh_ajax_frame(target_element, data_region, data_element2, _callback)
 
 def refresh_page(target_element, data_element, new_url, param, event):
     frame = target_element.closest("div.content")
@@ -411,17 +418,17 @@ EVENT_CLICK_TAB = [
     #("*", "new_tbl_value", True, False, on_new_tbl_value),
     #("*", "get_row", True, False, on_get_row),
 
-    ("popup", "*", True, False, on_popup),
-    ("popup_edit", "*", True, False, on_popup_edit_new),
-    ("popup_info", "*", True, False, on_popup_info),
-    ("popup_delete", "*", True, False, on_popup_delete),
-    ("popup_error", "*", True, False, on_popup_error),
-
     ("inline", "*", True, False, on_inline),
     ("inline_edit", "*", True, False, on_inline_edit_new),
     ("inline_info", "*", True, False, on_inline_info),
     ("inline_delete", "*", True, False, on_inline_delete),
     ("inline_error", "*", True, False, on_inline_error),
+
+    ("popup", "*", True, False, on_popup),
+    ("popup_edit", "*", True, False, on_popup_edit_new),
+    ("popup_info", "*", True, False, on_popup_info),
+    ("popup_delete", "*", True, False, on_popup_delete),
+    ("popup_error", "*", True, False, on_popup_error),
 
     ("_top", "*", False, False, on_replace_app),
     ("_top2", "*", True, False, on_new_tab),
