@@ -46,13 +46,15 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                parent,description,payment
+                parent,description,payment,account_state
         {% endform %}
-        <div class="ajax-region" data-region="get_row">
-                <div class="row">
-                        {% get_table_row form.account_state search_fields="parent__name__icontains" %}
+        {% comment %}
+                <div class="ajax-region" data-region="get_row">
+                        <div class="row">
+                                {% get_table_row form.account_state search_fields="parent__name__icontains" %}
+                        </div>
                 </div>
-        </div>
+        {% endcomment %}
         {% form %}
                 sign,amount
         {% endform %}

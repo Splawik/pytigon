@@ -550,7 +550,9 @@ def super_insert(base_element, selector, inserted_element):
     elif selector2 == "class":
         for c in inserted_element.classList:
             element.classList.add(c)
-    else: #selector2 == "append"
+    elif selector2 == "append":
+        element.appendChild(inserted_element)
+    else:
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
 
     return element

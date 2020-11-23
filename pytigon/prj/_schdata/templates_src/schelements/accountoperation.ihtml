@@ -47,10 +47,11 @@
 
 %% row_edit
     % form:
-        .parent,description,payment
-    div class=ajax-region,,,data-region=get_row
-        div class=row
-            % get_table_row form.account_state search_fields="parent__name__icontains"
+        .parent,description,payment,account_state
+    % comment:
+        div class=ajax-region,,,data-region=get_row
+            div class=row
+                % get_table_row form.account_state search_fields="parent__name__icontains"
     % form:
         .sign,amount
 

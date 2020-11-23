@@ -245,7 +245,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         dialog_slot2 = child
     else:
         dialog_slot = document.createElement("div")
-        dialog_slot.classList.add("row")
+        dialog_slot.classList.add("col-12")
         dialog_slot2 = dialog_slot
 
     dialog_slot.classList.add("plug")
