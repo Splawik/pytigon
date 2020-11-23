@@ -34,6 +34,8 @@ import inspect
 from pytigon_lib.schfs.vfstools import norm_path
 from django.template import engines
 import pytigon
+from django.conf import settings
+
 
 field_default = {'null':False,'blank':False,'editable':True,}
 field_defaults = {

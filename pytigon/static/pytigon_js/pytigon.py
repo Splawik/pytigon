@@ -93,7 +93,8 @@ def app_init(
 
             ajax_load(
                 #jQuery("#wiki_start"),
-                jQuery("#body_desktop"),
+                #jQuery("#body_desktop"),
+                document.querySelector('#body_desktop'),
                 base_path + start_page + "?only_content&schtml=1",
                 _on_load,
             )

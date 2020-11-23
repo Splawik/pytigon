@@ -142,8 +142,8 @@ def _req_post(req, url, data, complete, content_type):
         process_blob = True
     except:
         pass
-    def _onload():
-        nonlocal process_blob, complete, url
+    def _onload(event):
+        nonlocal req, process_blob, complete, url
         if process_blob:
             disp = req.getResponseHeader("Content-Disposition")
             if disp and "attachment" in disp:
@@ -617,7 +617,7 @@ def process_resize(target_element):
                     size_style = size_desc.format(param)
                     elem.style.cssText = size_style
                 else:
-                    elem.style.height = param['h'] - param['body_offset_y']
+                    elem.style.height = (param['h'] - param['body_offset_y'] - 5) + 'px'
 
 window.process_resize = process_resize
 

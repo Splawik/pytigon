@@ -69,7 +69,7 @@
         {% endif %}
 {% endblock %}
 {% block content_start %}
-        <div id="{{uuid}}" class="content ajax-region ajax-frame wiki-frame" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
+        <div id="{{uuid}}" class="flexible_size content ajax-region ajax-frame wiki-frame" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
 {% endblock %}
 {% block content_end %}
         </div>

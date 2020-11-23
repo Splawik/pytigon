@@ -149,7 +149,7 @@
                                 div class=dropdown-footer
                                     % if user.is_superuser:
                                         div class=pull-left
-                                            a class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
+                                            button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
                                             &nbsp;
                                     div class=pull-left
                                         button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)

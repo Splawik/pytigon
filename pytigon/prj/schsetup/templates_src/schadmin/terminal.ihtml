@@ -8,4 +8,4 @@
 %% scroll
     
 %% list_page
-    ptig-xterm width=100%,,,height=100%,,,href={{base_path}}schcommander/shell/channel/
+    ptig-xterm class=flexible_size,,,width=100%,,,href={{base_path}}schcommander/shell/channel/
