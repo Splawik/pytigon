@@ -72,7 +72,22 @@ def moveelement_init(dest_elem):
         for obj in objs:
             if obj.hasAttribute('data-position'):
                 obj.classList.remove("move-element")
-                super_insert(dest_elem,  obj.getAttribute('data-position'), obj)
+                data_position = obj.getAttribute('data-position')
+
+                parent = obj.parentElement
+                elem2 = super_insert(dest_elem,  obj.getAttribute('data-position'), obj)
+
+                if data_position.endswith(':class'):
+                    def _on_remove():
+                        nonlocal obj, elem2
+                        for c in obj.classList:
+                            elem2.classList.remove(c)
+                else:
+                    def _on_remove():
+                        nonlocal obj
+                        obj.remove()
+                parent.on_remove = _on_remove
+                parent.classList.add("call_on_remove")
 
 register_mount_fun(moveelement_init)
 

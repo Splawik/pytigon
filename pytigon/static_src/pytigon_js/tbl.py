@@ -58,6 +58,12 @@ def prepare_datatable(table):
 
     table.find("div.second_row").each(_local_fun)
 
+def prepare0(table):
+    refr_block = table.closest(".ajax-frame")
+    if refr_block:
+        tables = refr_block[0].querySelectorAll('div.fixed-table-header table.tabsort')
+        for table in tables:
+            table.classList.remove('flexible_size')
 
 def datatable_ajax(params):
     url = params["url"]
@@ -88,6 +94,7 @@ def datatable_ajax(params):
 def init_table(table, table_type):
     if table_type == "datatable":
         def onLoadSuccess(data):
+            nonlocal table
             prepare_datatable(table)
 
             def _pagination():
@@ -98,6 +105,11 @@ def init_table(table, table_type):
                 #datatable_onresize()
 
             setTimeout(_pagination, 0)
+            return False
+
+        def onPostHeader(data):
+            nonlocal table
+            prepare0(table)
             return False
 
         def queryParams(p):
@@ -111,6 +123,7 @@ def init_table(table, table_type):
             table.bootstrapTable(
                 {
                     "onLoadSuccess": onLoadSuccess,
+                    "onPostHeader": onPostHeader,
                     "height": 350,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
@@ -121,6 +134,7 @@ def init_table(table, table_type):
             table.bootstrapTable(
                 {
                     "onLoadSuccess": onLoadSuccess,
+                    "onPostHeader": onPostHeader,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
@@ -176,7 +190,6 @@ def init_table(table, table_type):
             datetable_set_height(table[0])
 
         table[0].process_resize = _process_resize
-
 
 def table_loadeddata(event):
     if getattr(event, 'data'):

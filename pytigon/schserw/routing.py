@@ -35,7 +35,7 @@ if hasattr(settings, "CHANNELS_URL_TAB"):
         tmp = row[1].split(".")
         m = importlib.import_module(".".join(tmp[:-1]))
         o = getattr(m, tmp[-1])
-        if '(?P' in u:
+        if "(?P" in u:
             urls_tab.append(re_path(u, o.as_asgi()))
         else:
             urls_tab.append(path(u, o.as_asgi()))
@@ -46,17 +46,19 @@ class LifespanApp:
         self.scope = scope
 
     async def __call__(self, receive, send):
-        if self.scope['type'] == 'lifespan':
+        if self.scope["type"] == "lifespan":
             while True:
                 message = await receive()
-                if message['type'] == 'lifespan.startup':
-                    await send({'type': 'lifespan.startup.complete'})
-                elif message['type'] == 'lifespan.shutdown':
-                    await send({'type': 'lifespan.shutdown.complete'})
+                if message["type"] == "lifespan.startup":
+                    await send({"type": "lifespan.startup.complete"})
+                elif message["type"] == "lifespan.shutdown":
+                    await send({"type": "lifespan.shutdown.complete"})
                     return
 
+
 application = ProtocolTypeRouter(
-    {   "websocket": AuthMiddlewareStack(URLRouter(urls_tab)),
-        "lifespan": LifespanApp,
-     }
+    {
+        "websocket": AuthMiddlewareStack(URLRouter(urls_tab)),
+        # "lifespan": LifespanApp,
+    }
 )
