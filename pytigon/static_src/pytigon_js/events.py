@@ -341,7 +341,7 @@ def on_new_tab(target_element, data_element, new_url, param, event):
     data_element2 = data_element.querySelector('section.body-body')
     if not data_element2:
         data_element2 = data_element
-    return get_menu().on_menu_href(target_element, title, new_url, data_element2)
+    return get_menu().on_menu_href(target_element, data_element2, title, new_url)
 
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:

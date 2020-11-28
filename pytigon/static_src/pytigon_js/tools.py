@@ -483,7 +483,7 @@ def super_query_selector(element, selector):
 window.super_query_selector = super_query_selector
 
 def super_insert(base_element, insert_selector, inserted_element):
-    if selector and ':' in insert_selector:
+    if insert_selector and ':' in insert_selector:
         x = insert_selector.split(':')
         if x[0]:
             element  = super_query_selector(base_element, x[0])
@@ -594,7 +594,9 @@ def process_resize(target_element):
                     size_style = size_desc.format(param)
                     elem.style.cssText = size_style
                 else:
-                    elem.style.height = (param['h'] - param['body_offset_y'] - 5) + 'px'
+                    h = (param['h'] - param['body_offset_y'] - 5) + 'px'
+                    elem.style.height = h
+                    elem.setAttribute('height', h)
 
 window.process_resize = process_resize
 

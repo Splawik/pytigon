@@ -142,7 +142,7 @@ class TabMenu:
 
 
     #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
-    def on_menu_href(self, elem, title=None, url=None, txt=None):
+    def on_menu_href(self, elem, txt, title=None, url=None):
         if window.APPLICATION_TEMPLATE == "modern":
             if self.is_open(title):
                 self.activate(title)
