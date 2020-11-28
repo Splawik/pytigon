@@ -372,6 +372,18 @@ def history_push_state(title, url, data=None):
 window.history_push_state = history_push_state
 
 
+def get_elem_from_string(html, selectors=None):
+    temp = document.createElement("div")
+    temp.innerHTML = html
+    if selectors:
+        element = temp.querySelector(selectors)
+        return element
+    else:
+        return temp
+
+window.get_elem_from_string = get_elem_from_string
+
+
 def animate_combo(
     button,
     obj1,
@@ -424,55 +436,6 @@ window.icons = {
     "detailClose": "fa-minus",
 }
 
-
-def send_to_dom(html_text, base_elem):
-    if '===' in html_text:
-        if '===>>' in html_text:
-            x = html_text.split('===>>')
-            html = x[0]
-            selector = x[1].strip()
-            replace = False
-        elif '===>' in html_text:
-            x = html_text.split('===>')
-            html = x[0]
-            selector = x[1].strip()
-            replace = True
-        else:
-            x = html_text.split('===>')
-            html = x[0]
-            selector = x[1].strip()
-            replace = True
-    else:
-        html = html_text
-        selector = '|'
-        replace = False
-
-    if selector == '|':
-        elem = jQuery(base_elem)
-    elif selector.startswith('^'):
-        elem = jQuery(selector[1:])
-    else:
-        elem = jQuery(base_elem).find(selector.replace('|', ''))
-    if replace:
-        elem.html(html)
-    else:
-        elem.append(html)
-    return True
-
-window.send_to_dom = send_to_dom
-
-
-def get_elem_from_string(html, selectors=None):
-    temp = document.createElement("div")
-    temp.innerHTML = html
-    if selectors:
-        element = temp.querySelector(selectors)
-        return element
-    else:
-        return temp
-
-window.get_elem_from_string = get_elem_from_string
-
 def is_hidden(el):
     style = window.getComputedStyle(el)
     return style.display == 'none'
@@ -483,7 +446,6 @@ def is_visible(el):
     return not is_hidden(el)
 
 window.is_visible = is_visible
-
 
 TEMPLATES = {
     'MODAL_EDIT': rc.MODAL_EDIT,
@@ -520,17 +482,17 @@ def super_query_selector(element, selector):
 
 window.super_query_selector = super_query_selector
 
-def super_insert(base_element, selector, inserted_element):
-    if selector and ':' in selector:
-        x = selector.split(':')
+def super_insert(base_element, insert_selector, inserted_element):
+    if selector and ':' in insert_selector:
+        x = insert_selector.split(':')
         if x[0]:
             element  = super_query_selector(base_element, x[0])
         else:
             element = base_element
         selector2 = x[1]
     else:
-        if selector:
-            element = super_query_selector(base_element, selector)
+        if insert_selector:
+            element = super_query_selector(base_element, insert_selector)
         else:
             element = base_element
         selector2 = None
@@ -538,20 +500,20 @@ def super_insert(base_element, selector, inserted_element):
     if not element:
         return None
 
-    if selector2 == 'overwrite':
+    if selector2 in ('overwrite', '>'):
         element.innerHTML = ""
         element.appendChild(inserted_element)
-    elif selector2 == 'append_first':
+    elif selector2 in ('append_first', '<<'):
         element.insertBefore(inserted_element, element.firstChild)
-    elif selector2 == 'after':
+    elif selector2 in ("append", '>>'):
+        element.appendChild(inserted_element)
+    elif selector2 in ('after', ')'):
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
-    elif selector2 == 'before':
+    elif selector2 in ('before', '('):
         element.parentElement.insertBefore(inserted_element, element)
     elif selector2 == "class":
         for c in inserted_element.classList:
             element.classList.add(c)
-    elif selector2 == "append":
-        element.appendChild(inserted_element)
     else:
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
 
@@ -559,6 +521,21 @@ def super_insert(base_element, selector, inserted_element):
 
 window.super_insert = super_insert
 
+
+_OPERATOR = ( '>>', '<<', '>', '(', ')', )
+
+def send_to_dom(html_text, base_elem):
+    nonlocal _OPERATOR
+    for operator in _OPERATOR:
+        if '===' + operator:
+            x = html_text.split('===' + operator)
+            html = x[0]
+            insert_selector  = x[1] + ":" + operator
+            inserted_element = get_elem_from_string(html_text, None)
+            return super_insert(base_elem, insert_selector, inserted_element)
+    return None
+
+window.send_to_dom = send_to_dom
 
 
 def remove_element(element):
