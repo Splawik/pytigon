@@ -33,17 +33,25 @@ def _chcek_element(element, selector):
 
 def _get_title(element, data_element, url):
     title = element.getAttribute("title")
-    if (not title) and data_element:
+    if data_element:
         title_element = data_element.querySelector('title')
         if title_element:
-            title = title_element.innerHTML.strip()
-    if not title:
+            title_alt = title_element.innerHTML.strip()
+        else:
+            title_alt = ""
+    else:
+        title_alt = ""
+    if not title and not title_alt:
         url2 = url.split("?")[0]
         if len(url2) > 16:
             title = "..." + url2[-13:]
         else:
             title = url2
-    return title
+    else:
+        if not title:
+            title = title_alt
+            title_alt = ""
+    return title, title_alt
 
 def on_global_event(event):
     global EVENT_TAB
@@ -225,7 +233,6 @@ def _on_menu_click(event, target_element):
             )
             jQuery("#navbar-ex1-collapse").collapse("hide")
         else:
-            # on_menu_href(target_element)
             on_click_default_action(event, target_element)
 
 register_global_event("click", _on_menu_click, "a.menu-href")
@@ -250,7 +257,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
     dialog_slot.classList.add("plug")
 
-    dialog_slot2.innerHTML = get_template(template_name.replace('MODAL', 'INLINE'), { 'title': _get_title(target_element, data_element, url) })
+    dialog_slot2.innerHTML = get_template(template_name.replace('MODAL', 'INLINE'), { 'title': _get_title(target_element, data_element, url)[0] })
 
     target_element.setAttribute("data-style", "zoom-out")
     target_element.setAttribute("data-spinner-color", "#FF0000")
@@ -293,7 +300,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     dialog_slot = document.createElement("aside")
     dialog_slot.setAttribute("class", "plug")
 
-    dialog_slot.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url) })
+    dialog_slot.innerHTML = get_template(template_name, { 'title': _get_title(target_element, data_element, url)[0] })
 
     region = get_ajax_region(target_element, target_element.getAttribute('data-region'))
     if not region:
@@ -337,11 +344,11 @@ def on_popup_error(target_element, data_element, new_url, param, event):
 
 
 def on_new_tab(target_element, data_element, new_url, param, event):
-    title = _get_title(target_element, data_element, new_url)
+    title, title_alt = _get_title(target_element, data_element, new_url)
     data_element2 = data_element.querySelector('section.body-body')
     if not data_element2:
         data_element2 = data_element
-    return get_menu().on_menu_href(target_element, data_element2, title, new_url)
+    return get_menu().on_menu_href(target_element, data_element2, title, title_alt, new_url)
 
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:

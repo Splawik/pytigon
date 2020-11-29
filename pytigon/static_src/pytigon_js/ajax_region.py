@@ -10,8 +10,16 @@ def register_mount_fun(fun):
 
 window.register_mount_fun = register_mount_fun
 
-def mount_html(dest_elem, data_or_html):
+def mount_html(dest_elem, data_or_html, link=None):
     global MOUNT_INIT_FUN
+
+    if getattr(dest_elem, 'onloadeddata') and dest_elem.onloadeddata:
+        evt = document.createEvent("HTMLEvents")
+        evt.initEvent("loadeddata", False, True)
+        evt.data = data_or_html
+        evt.data_source = link
+        dest_elem.dispatchEvent(evt)
+        return
 
     if data_or_html != None:
         def _on_remove(index, value):
@@ -237,14 +245,14 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
         loading.stop()
         loading.remove()
 
-        if getattr(frame,'onloadeddata') and frame.onloadeddata:
-            evt = document.createEvent("HTMLEvents")
-            evt.initEvent("loadeddata", False, True)
-            evt.data = data
-            evt.data_source = link
-            frame.dispatchEvent(evt)
-        else:
-            mount_html(frame, data)
+        #if getattr(frame,'onloadeddata') and frame.onloadeddata:
+        #    evt = document.createEvent("HTMLEvents")
+        #    evt.initEvent("loadeddata", False, True)
+        #    evt.data = data
+        #    evt.data_source = link
+        #    frame.dispatchEvent(evt)
+        #else:
+        mount_html(frame, data, link)
         callback()
 
     if data_element:
@@ -277,7 +285,7 @@ window.refresh_ajax_frame = refresh_ajax_frame
 
 def ajax_load(element, url, complete):
     def _onload(responseText):
-        mount_html(element, responseText)
+        mount_html(element, responseText, None)
         complete(responseText)
 
     ajax_get(url, _onload)

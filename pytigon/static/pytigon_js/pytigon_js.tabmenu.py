@@ -43,25 +43,16 @@ class TabMenu:
     def register(self, title):
         self.titles[title] = "$$$"
 
-    def new_page(self, title_alternate, data, href):
+    def new_page(self, title, data_or_html, href, title_alt=None):
         _id = "tab" + self.id
 
-        r = __new__(RegExp("<title[^>]*>([^<]+)<\/title>"))
-        try:
-            tmp = data.match(r)[1]
-            title = jQuery.trim(tmp)
-        except:
-            title = ""
-        if not title:
-            title = title_alternate
-        title2 = jQuery.trim(title)
-        menu_item = TabMenuItem(_id, title2, href, data)
-        self.titles[title2] = menu_item
-        if title_alternate and title_alternate != title2:
-            self.titles[title_alternate] = menu_item
+        menu_item = TabMenuItem(_id, title, href, data_or_html)
+        self.titles[title] = menu_item
+        if title_alt and title_alt != title:
+            self.titles[title_alt] = menu_item
         menu_pos = vsprintf(
             "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-outline-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
-            [_id, _id, title2, title2, _id],
+            [_id, _id, title, title, _id],
         )
 
         append_left = jQuery("#tabs2").hasClass("append-left")
@@ -81,7 +72,7 @@ class TabMenu:
         self.active_item = menu_item
 
         if window.PUSH_STATE:
-            history_push_state(title2, href)
+            history_push_state(title, href)
 
         def _on_show_tab(e):
             nonlocal menu_item
@@ -102,7 +93,7 @@ class TabMenu:
             jQuery("#tabs2 a:last").on("shown.bs.tab", _on_show_tab)
             jQuery("#tabs2 a:last").tab("show")
 
-        mount_html(document.getElementById(_id), data)
+        mount_html(document.getElementById(_id), data_or_html, None)
 
         def _on_button_click(event):
             get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""))
@@ -142,7 +133,7 @@ class TabMenu:
 
 
     #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
-    def on_menu_href(self, elem, txt, title=None, url=None):
+    def on_menu_href(self, elem, data_or_html, title, title_alt=None, url=None):
         if window.APPLICATION_TEMPLATE == "modern":
             if self.is_open(title):
                 self.activate(title)
@@ -155,12 +146,12 @@ class TabMenu:
                 href2 = corect_href(href)
 
                 jQuery("#body_desktop").hide()
-                self.new_page(title, txt.innerHTML, href2)
+                self.new_page(title, data_or_html.innerHTML, href2, title_alt)
 
             jQuery(".auto-hide").trigger("click")
             return False
         else:
-            mount_html(document.querySelector("#body_desktop"), txt)
+            mount_html(document.querySelector("#body_desktop"), data_or_html, None)
             jQuery(".auto-hide").trigger("click")
             return False
 
