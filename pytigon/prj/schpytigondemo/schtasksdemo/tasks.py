@@ -83,7 +83,7 @@ def fun2(cproxy=None, **kwargs):
     for i in range(0,30):
         print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
         if cproxy:
-            cproxy.send_event("<li>item %d</li> ===>> .data" % i)
+            cproxy.send_event("<li>item %d</li> ===<< .data" % i)
         time.sleep(1)
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3")
     return "Hello world"

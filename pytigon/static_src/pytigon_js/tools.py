@@ -515,7 +515,10 @@ def super_insert(base_element, insert_selector, inserted_element):
         for c in inserted_element.classList:
             element.classList.add(c)
     else:
-        element.parentElement.insertBefore(inserted_element, element.nextSibling)
+        if hasattr(element, selector2):
+            getattr(element, selector2)(inserted_element)
+        else:
+            element.appendChild(inserted_element)
 
     return element
 
@@ -527,7 +530,7 @@ _OPERATOR = ( '>>', '<<', '>', '(', ')', )
 def send_to_dom(html_text, base_elem):
     nonlocal _OPERATOR
     for operator in _OPERATOR:
-        if '===' + operator:
+        if '===' + operator in html_text:
             x = html_text.split('===' + operator)
             html = x[0]
             insert_selector  = x[1] + ":" + operator

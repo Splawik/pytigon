@@ -527,7 +527,7 @@ _OPERATOR = ( '>>', '<<', '>', '(', ')', )
 def send_to_dom(html_text, base_elem):
     nonlocal _OPERATOR
     for operator in _OPERATOR:
-        if '===' + operator:
+        if '===' + operator in html_text:
             x = html_text.split('===' + operator)
             html = x[0]
             insert_selector  = x[1] + ":" + operator
