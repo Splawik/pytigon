@@ -131,7 +131,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.11.28 12:28:09'
+GEN_TIME = '2020.12.01 19:03:42'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

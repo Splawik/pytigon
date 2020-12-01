@@ -531,7 +531,7 @@ def send_to_dom(html_text, base_elem):
             x = html_text.split('===' + operator)
             html = x[0]
             insert_selector  = x[1] + ":" + operator
-            inserted_element = get_elem_from_string(html_text, None)
+            inserted_element = get_elem_from_string(html, None)
             return super_insert(base_elem, insert_selector, inserted_element)
     return None
 

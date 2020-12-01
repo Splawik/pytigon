@@ -77,12 +77,15 @@ def fun1(cproxy=None, **kwargs):
 @publish("demo")
 def fun2(cproxy=None, **kwargs):
     
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
     if cproxy:
-        cproxy.send_event("<ul class='data'></ul><div name='task_end_info' style='display: none;'>Finish</div>")
+        cproxy.send_event("<ul class='data'></ul><div name='task_end_info' style='display: none;'>Finish</div>===>>.message")
     for i in range(0,30):
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
         if cproxy:
             cproxy.send_event("<li>item %d</li> ===>> .data" % i)
         time.sleep(1)
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3")
     return "Hello world"
     
 
