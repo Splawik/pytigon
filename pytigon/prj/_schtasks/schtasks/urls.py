@@ -8,24 +8,8 @@ from . import views
 
 
 urlpatterns = [
-    path('put', views.put, {}),
-    path('put_message', views.put_message, {}),
-    path('get_messages', views.get_messages, {}),
-    path('pop_messages', views.pop_messages, {}),
-    path('kill_thread', views.kill_thread, {}),
-    path('remove_thread', views.remove_thread, {}),
-    path('list_thread', views.list_threads, {}),
-    path('thread_info', views.thread_info, {}),
-    path('kill_all', views.kill_all, {}),
-    path('wait_for_result', views.wait_for_result, {}),
-    re_path('form/TaskListForm/(?P<id>\d+)/(edit2__)*task', views.edit_task, {}),
-    re_path('form/TaskListForm/(?P<id>\d+)/delete2__task', views.kill_task, {}),
     
     
-    
-    
-    
-    path('form/TaskListForm/', views.view_tasklistform, {}),
 ]
 
 gen = generic_table_start(urlpatterns, 'schtasks', views)

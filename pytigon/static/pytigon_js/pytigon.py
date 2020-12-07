@@ -108,6 +108,43 @@ def app_init(
     jQuery.fn.editable.defaults.mode = 'inline'
     jQuery.fn.combodate.defaults['maxYear'] = 2025
 
+    activate_menu()
+    desktop = document.getElementById("body_desktop")
+    if desktop:
+        mount_html(desktop, None, None)
+
+def activate_menu():
+    pathname = window.location.pathname
+    if pathname.startswith(window.BASE_PATH):
+        pathname2 = pathname[len(window.BASE_PATH):]
+    else:
+        pathname2 = pathname
+
+    if pathname2:
+        menu = document.querySelector('sys-sidebarmenu')
+        #if menu:
+        #    menu.activate_url(pathname2)
+        #else:
+        a_tab = document.querySelectorAll("a.menu-href")
+        for a in a_tab:
+            if a.hasAttribute('href'):
+                href = a.getAttribute('href').split('?')[0]
+                if href.startswith('/' + pathname2):
+                    if menu:
+                        li = a.closest('li.treeview')
+                        if li and not li.classList.contains('active'):
+                            a = li.querySelector('a')
+                            if a:
+                                event = document.createEvent("MouseEvents")
+                                event.initMouseEvent("click", True, True, window, 1, 0, 0, 0, 0, False, False, False, False, 0, None)
+                                a.dispatchEvent(event)
+                    else:
+                        div = a.closest('.tab-tab')
+                        if div:
+                            id_elem = 'a_' + div.id
+                            x = document.getElementById(id_elem)
+                            if x:
+                                jQuery(x).tab('show')
 
 def _on_error(request, settings):
     if window.WAIT_ICON:

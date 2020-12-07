@@ -515,7 +515,10 @@ def super_insert(base_element, insert_selector, inserted_element):
         for c in inserted_element.classList:
             element.classList.add(c)
     else:
-        element.parentElement.insertBefore(inserted_element, element.nextSibling)
+        if hasattr(element, selector2):
+            getattr(element, selector2)(inserted_element)
+        else:
+            element.appendChild(inserted_element)
 
     return element
 

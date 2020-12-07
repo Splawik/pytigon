@@ -12,6 +12,3 @@
 
 %% content
     ptig-task websocket_href=/schtasks/show_task_events/channel/,,,task_id={{id}}
-        div class=message
-        div name=task_status
-        div name=task_end_info

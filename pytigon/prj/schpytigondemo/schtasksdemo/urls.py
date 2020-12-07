@@ -8,10 +8,6 @@ from . import views
 
 
 urlpatterns = [
-    path('gen_task1', views.gen_task1, {}),
-    path('gen_task2', views.gen_task2, {}),
-    path('gen_task3', views.gen_task3, {}),
-    path('from_script/', views.from_script, {}),
     path('task2/', views.task2, {}),
     
     

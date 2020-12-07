@@ -38,10 +38,7 @@
                 <i class="fa {{item_info.user_param.icon}}"></i>
             % else:
                 <i class="fa fa-link"></i>
-            % if item_info.app_name in request.get_full_path
-                <span><strong>{{item_info.app_title}}</strong></span>
-            % else
-                <span>{{item_info.app_title}}</span>
+            <span>{{item_info.app_title}}</span>
             <i class="fa fa-angle-left pull-right"></i>
         </a>
 

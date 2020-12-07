@@ -13,6 +13,7 @@ from pytigon_lib.schtasks.publish import publish
 
 
 import asyncio
+from pytigon_lib.schtasks.remote_screen import RemoteScreen
 
 def init_schedule(scheduler, cmd, http):        
     async def hello():
@@ -65,45 +66,19 @@ def init_schedule(scheduler, cmd, http):
  
 
 
-def fun1(cproxy=None, **kwargs):
-    
-    output_queue.put((int(id), "Hello world!\n"))
-    time.sleep(30)
-    output_queue.put((int(id), "line2!\n"))
-    output_queue.put((int(id), "the end!\n"))
-    return "OK"
-    
-
 @publish("demo")
 def fun2(cproxy=None, **kwargs):
     
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
-    if cproxy:
-        cproxy.send_event("<ul class='data'></ul><div name='task_end_info' style='display: none;'>Finish</div>===>>.message")
-    for i in range(0,30):
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
-        if cproxy:
-            cproxy.send_event("<li>item %d</li> ===<< .data" % i)
-        time.sleep(1)
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3")
+    with RemoteScreen(cproxy, direction="up") as out:
+        out.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
+        for i in range(0,30):
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
+            out.log("item %d" % i)
+            time.sleep(1)
+        out.info("Info info info")
+        out.warning("Warning warning warning")
+        out.error("Error error error")
     return "Hello world"
-    
-
-def fun3(cproxy=None, **kwargs):
-    
-    i = 0
-    while True:
-        if not input_queue.empty():
-            try:
-                id, value = input_queue.get(False)
-                if value == '^C':
-                    return "BREAK"
-            except:
-                pass
-        output_queue.put((int(id), "LICZNIK: " + str(i)))
-        time.sleep(1)
-        i += 1
-    return "OK"
     
 
 

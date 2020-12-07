@@ -165,19 +165,11 @@
     <ul class="nav nav-tabs win-header" id='tabs' role='tablist'>
 
 %% topmenu
-    %if forloop.first:
-        li class=nav-item topmenu
-            a class=nav-link first_pos active,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
-                % if app_info.icon_exists:
-                    {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
-                {{app_info.app_title}}
-    %else:
-        li class=nav-item topmenu
-            a class=nav-link,,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
-                % if app_info.icon_exists:
-                    {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
-                {{app_info.app_title}}
-
+    li class=nav-item topmenu
+        a class=nav-link first_pos {% if forloop.first %}active{% endif %},,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
+            % if app_info.icon_exists:
+                {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
+            {{app_info.app_title}}
 
 %%topmenu_end
     </ul>

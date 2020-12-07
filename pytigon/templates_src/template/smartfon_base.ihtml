@@ -27,10 +27,7 @@
             </div></li>
         <li class="nav-item dropdown">
             a href=#,,,class=nav-link dropdown-toggle,,,data-toggle=dropdown
-                % if item_info.app_name in request.get_full_path
-                    <strong>{{item_info.app_name}}</strong>
-                % else
-                    {{item_info.app_name}}
+                {{item_info.app_name}}
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
     a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url}},,,target=_parent...{{item_info.description}}
