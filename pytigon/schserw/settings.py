@@ -458,7 +458,7 @@ GRAPHQL_JWT = {
     #"JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
 
-GRAPHENE_PUBLIC = True
+GRAPHENE_PUBLIC = False
 
 try:
     import dj_email_url

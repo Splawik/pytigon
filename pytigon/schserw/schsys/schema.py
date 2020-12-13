@@ -59,9 +59,6 @@ class _Query:
 class _Mutation:
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
-
-    update_user = UserMutation.Field()
 
 class PublicQuery(graphene.ObjectType, _Query):
     pass
@@ -103,7 +100,9 @@ class Query(graphene.ObjectType, _Query):
 
 
 class Mutation(graphene.ObjectType, _Mutation):
-    pass
+    refresh_token = graphql_jwt.Refresh.Field()
+    update_user = UserMutation.Field()
+
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
 
