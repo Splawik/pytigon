@@ -34,7 +34,6 @@ markdown
 netifaces
 polib
 pyexcel_odsr
-pypyodbc
 pyquery
 pytigon-lib
 requests
