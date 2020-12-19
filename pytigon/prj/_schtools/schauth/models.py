@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -45,6 +46,7 @@ class UrlWithAuth( models.Model):
 
     
 admin.site.register(UrlWithAuth)
+
 
 
 

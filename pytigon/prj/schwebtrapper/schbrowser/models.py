@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -41,7 +42,7 @@ class bookmarks( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     url = models.CharField('url', null=True, blank=True, editable=True, max_length=256)
     
@@ -70,6 +71,7 @@ class history( models.Model):
 
     
 admin.site.register(history)
+
 
 
 

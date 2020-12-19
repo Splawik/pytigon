@@ -108,10 +108,10 @@
                                 tr
                                     th..._(Field)
                                     th..._(Value)
-                                % for field in object|getfields:
+                                % for field in object|get_model_fields:
                                     tr
                                         td...{{ field.verbose_name }}
-                                        td...{{ object|getfield:field.name }}
+                                        td...{{ object|get_attr:field.name }}
                         %% form_ok_cancel_info
                     % if standard_web_browser:
                         % if title:
@@ -130,10 +130,10 @@
                                                     th..._(Field)
                                                     th..._(Value)
                                             tbody
-                                                % for field in object|getfields:
+                                                % for field in object|get_model_fields:
                                                     tr
                                                         td...{{ field.verbose_name }}:
-                                                        td...{{ object|getfield:field.name| truncatechars:1024 }}
+                                                        td...{{ object|get_attr:field.name| truncatechars:1024 }}
                                     br
                             %% form_ok_cancel_del
 
@@ -158,7 +158,7 @@
                                     % if field:
                                         tr
                                             td
-                                                {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                                                {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
                                     % else:
                                         %% row_edit
                                             {{form.as_table}}

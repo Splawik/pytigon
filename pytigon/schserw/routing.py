@@ -59,6 +59,6 @@ class LifespanApp:
 application = ProtocolTypeRouter(
     {
         "websocket": AuthMiddlewareStack(URLRouter(urls_tab)),
-        # "lifespan": LifespanApp,
+        "lifespan": LifespanApp,
     }
 )

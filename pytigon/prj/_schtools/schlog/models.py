@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -56,6 +57,7 @@ class Log( models.Model):
             return cls.objects.all()
     
 admin.site.register(Log)
+
 
 
 

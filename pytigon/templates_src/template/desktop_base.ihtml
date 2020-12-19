@@ -337,7 +337,7 @@
 %% row_edit_form
     %if form
         % if field:
-            {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
+            {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
         % else:
             %% row_edit
                 % form:

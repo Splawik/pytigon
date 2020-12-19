@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -35,7 +36,8 @@ from pytigon_lib.schfs.vfstools import norm_path
 from django.template import engines
 import pytigon
 from django.conf import settings
-
+import django.db.models.fields as fields
+import django.db.models.fields.related as related
 
 field_default = {'null':False,'blank':False,'editable':True,}
 field_defaults = {
@@ -119,47 +121,19 @@ def apppack():
 
 
 
-Field_CHOICES = (
-    ("AutoField","AutoField"),
-    ("BooleanField","BooleanField"),
-    ("CharField","CharField"),
-    ("CommaSeparatedIntegerField","CommaSeparatedIntegerField"),
-    ("DateField","DateField"),
-    ("DateTimeField","DateTimeField"),
-    ("DecimalField","DecimalField"),
-    ("EmailField","EmailField"),
-    ("FileField","FileField"),
-    ("FilePathField","FilePathField"),
-    ("FloatField","FloatField"),
-    ("ImageField","ImageField"),
-    ("IntegerField","IntegerField"),
-    ("GenericIPAddressField","GenericIPAddressField"),
-    ("NullBooleanField","NullBooleanField!"),
-    ("PositiveIntegerField","PositiveIntegerField"),
-    ("PositiveSmallIntegerField","PositiveSmallIntegerField"),
-    ("SlugField","SlugField"),
-    ("SmallIntegerField","SmallIntegerField"),
-    ("TextField","TextField"),
-    ("TimeField","TimeField"),
-    ("URLField","URLField"),
-    ("XMLField","XMLField"),
-    ("ForeignKey","ForeignKey"),
-    ("GForeignKey","GenericForeignKey!"),
-    ("ManyToManyField","ManyToManyField"),
-    ("GManyToManyField","GenericManyToManyField!"),
-    ("HiddenForeignKey","HiddenForeignKey"),
-    ("GHiddenForeignKey","GenericHiddenForeignKey!"),
-    ("UserField","UserField"),
-    ("ForeignKeyWidthIcon","ForeignKeyWidthIcon!"),
-    ("ManyToManyFieldWidthIcon","ManyToManyFieldWidthIcon!"),
-    ("AutocompleteTextField","AutocompleteTextField!"),
-    ("ForeignKeyExt","ForeignKeyExt!"),
-    ("TreeForeignKey","TreeForeignKey!"),
-    ("GTreeForeignKey","GTreeForeignKey!"),
-    
-    )
 
-Gui_CHOICES = (
+Field_CHOICES = [
+    ("PtigForeignKey","GenericForeignKey!"),
+    ("PtigManyToManyField","GenericManyToManyField!"),
+    ("PtigHiddenForeignKey","GenericHiddenForeignKey!"),
+    ("UserField","UserField"),
+    ("PtigForeignKeyWidthIcon","ForeignKeyWidthIcon!"),
+    ("PtigManyToManyFieldWidthIcon","ManyToManyFieldWidthIcon!"),
+    ("PtigTreeForeignKey","TreeForeignKey!"),
+    
+    ]
+
+Gui_CHOICES = [
     ("standard","standard"),
     ("modern","modern"),
     ("tree","tree"),
@@ -167,23 +141,23 @@ Gui_CHOICES = (
     ("dialog","dialog"),
     ("one_form","one_form"),
     
-    )
+    ]
 
-IconSize_CHOICES = (
+IconSize_CHOICES = [
     ("0","small"),
     ("1","medium"),
     ("2","large"),
     
-    )
+    ]
 
-View_CHOICES = (
+View_CHOICES = [
     ("t","Table action"),
     ("r","Row action"),
     ("u","View"),
     
-    )
+    ]
 
-Url_CHOICES = (
+Url_CHOICES = [
     ("Default","-"),
     ("desktop","desktop"),
     ("panel","panel"),
@@ -196,9 +170,9 @@ Url_CHOICES = (
     ("browser_header","browser_header"),
     ("browser_footer","browser_footer"),
     
-    )
+    ]
 
-FormField_CHOICES = (
+FormField_CHOICES = [
     ("BooleanField","BooleanField"),
     ("CharField","CharField"),
     ("ChoiceField","ChoiceField"),
@@ -222,9 +196,9 @@ FormField_CHOICES = (
     ("URLField","URLField"),
     ("UserField","UserField"),
     
-    )
+    ]
 
-ViewRetType_CHOICES = (
+ViewRetType_CHOICES = [
     ("T","Template"),
     ("O","Odf"),
     ("P","Pdf"),
@@ -232,9 +206,9 @@ ViewRetType_CHOICES = (
     ("X","Xml"),
     ("U","User defined"),
     
-    )
+    ]
 
-HtmlGui_CHOICES = (
+HtmlGui_CHOICES = [
     ("auto","auto"),
     ("desktop_standard","desktop_standard"),
     ("desktop_modern","desktop_modern"),
@@ -246,17 +220,17 @@ HtmlGui_CHOICES = (
     ("smartfon_modern","smartfon_modern"),
     ("smartfon_traditional","smartfon_traditional"),
     
-    )
+    ]
 
-ContentType_CHOICES = (
+ContentType_CHOICES = [
     ("pythonjs","pythonjs"),
     ("react_pjsx","react_pjsx"),
     ("css","css"),
     ("js","js"),
     
-    )
+    ]
 
-Static_CHOICES = (
+Static_CHOICES = [
     ("C","css (included in desktop.html)"),
     ("J","javascript (included in desktop.html)"),
     ("P","python to javascript (included in desktop.html)"),
@@ -265,9 +239,9 @@ Static_CHOICES = (
     ("U","custom file (embeded translation for .pyj, .webc, .sass)"),
     ("G","component globals"),
     
-    )
+    ]
 
-FileType_CHOICES = (
+FileType_CHOICES = [
     ("f","TemplateFilters"),
     ("t","TemplateTags"),
     ("c","Custom file"),
@@ -279,9 +253,9 @@ FileType_CHOICES = (
     ("x","Library cython code"),
     ("s","GraphQL schema"),
     
-    )
+    ]
 
-Consumer_CHOICES = (
+Consumer_CHOICES = [
     ("WebsocketConsumer","WebsocketConsumer"),
     ("AsyncWebsocketConsumer","AsyncWebsocketConsumer"),
     ("JsonWebsocketConsumer","JsonWebsocketConsumer"),
@@ -290,7 +264,7 @@ Consumer_CHOICES = (
     ("AsyncConsumer","AsyncConsumer"),
     ("SyncConsumer","SyncConsumer"),
     
-    )
+    ]
 
 
 
@@ -315,9 +289,9 @@ class SChAppSet( models.Model):
     plugins = models.CharField('Plugins', null=True, blank=True, editable=True, max_length=4096)
     gui_type = models.CharField('Gui type', null=False, blank=False, editable=True, choices=Gui_CHOICES,max_length=32)
     gui_elements = models.CharField('Gui elements', null=True, blank=True, editable=True, max_length=1024)
-    login_required = ext_models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
-    public = ext_models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
-    main = ext_models.NullBooleanField('Main project', null=True, blank=True, editable=True, default=False,)
+    login_required = models.NullBooleanField('Login required', null=True, blank=True, editable=True, default=False,)
+    public = models.NullBooleanField('Public', null=True, blank=True, editable=True, default=False,)
+    main = models.NullBooleanField('Main project', null=True, blank=True, editable=True, default=False,)
     start_page = models.CharField('Start page', null=True, blank=True, editable=True, max_length=255)
     user_app_template = models.TextField('User application template', null=True, blank=True, editable=False, )
     app_main = models.TextField('Main application entrypoint', null=True, blank=True, editable=False, )
@@ -443,7 +417,7 @@ class SChApp( models.Model):
         
     
 
-    parent = ext_models.ForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     module_title = models.CharField('Module title', null=True, blank=True, editable=True, max_length=32)
     title = models.CharField('Title', null=True, blank=True, editable=True, max_length=255)
@@ -583,7 +557,7 @@ class SChChoice( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     verbose_name = models.CharField('Verbose name', null=False, blank=False, editable=True, max_length=255)
     
@@ -608,7 +582,7 @@ class SChChoiceItem( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChChoice, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChChoice, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     value = models.CharField('Value', null=False, blank=False, editable=True, max_length=255)
     
@@ -633,7 +607,7 @@ class SChTable( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     base_table = models.CharField('Base table', null=True, blank=True, editable=True, max_length=255)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     verbose_name = models.CharField('Verbose name', null=False, blank=False, editable=True, max_length=255)
@@ -677,7 +651,7 @@ class SChField( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChTable, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChTable, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=True, blank=True, editable=True, max_length=255)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=Field_CHOICES,max_length=64)
@@ -750,21 +724,20 @@ class SChField( models.Model):
             module = 'models.'
         if self.is_rel():
             rel_model =self.rel_to.split('.')[-1]
-    
-            if self.type[0]=='G':
-                if 'ForeignKey' in self.type:
-                    ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-                        (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
-                else:
-                    ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-                        (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
+            #if self.type.startswith('Ptig'):
+            #    if 'ForeignKey' in self.type:
+            #        ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+            #            (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
+            #    else:
+            #        ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+            #            (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
+            #else:
+            if 'ForeignKey' in self.type:
+                ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+                    (self.name, module, self.type, rel_model, self.null, self.blank, self.editable, self.description)
             else:
-                if 'ForeignKey' in self.type:
-                    ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-                        (self.name, module, self.type, rel_model, self.null, self.blank, self.editable, self.description)
-                else:
-                    ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-                        (self.name, module, self.type, rel_model, self.null, self.blank, self.editable, self.description)
+                ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
+                    (self.name, module, self.type, rel_model, self.null, self.blank, self.editable, self.description)
         else:
             ret = "%s = %s%s('%s', null=%s, blank=%s, editable=%s, " % \
                 (self.name, module, self.type, self.description, self.null, self.blank, self.editable)
@@ -824,7 +797,7 @@ class SChView( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     view_type = models.CharField('View type', null=False, blank=False, editable=True, choices=View_CHOICES,max_length=1)
     param = models.CharField('Param', null=True, blank=True, editable=True, max_length=255)
@@ -832,7 +805,7 @@ class SChView( models.Model):
     view_code = models.TextField('View code', null=True, blank=True, editable=False, )
     url_params = models.CharField('Url params', null=True, blank=True, editable=True, max_length=255)
     ret_type = models.CharField('Return value type', null=False, blank=False, editable=True, default='U',choices=ViewRetType_CHOICES,max_length=1)
-    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
+    asynchronous = models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     extra_code = models.TextField('Extra code', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     
@@ -938,7 +911,7 @@ class SChStatic( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=Static_CHOICES,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     code = models.TextField('Code', null=True, blank=True, editable=False, )
@@ -965,15 +938,15 @@ class SChTemplate( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
-    direct_to_template = ext_models.NullBooleanField('Direct to template', null=True, blank=True, editable=True, )
+    direct_to_template = models.NullBooleanField('Direct to template', null=True, blank=True, editable=True, )
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=64)
     url_parm = models.CharField('Parameters passed to the template', null=True, blank=True, editable=True, max_length=128)
     template_code = models.TextField('Template code', null=True, blank=True, editable=False, )
     static_files = models.ManyToManyField(SChStatic, null=True, blank=True, editable=True, verbose_name='Static files', )
     tags_mount = models.CharField('Mount component tags', null=True, blank=True, editable=True, max_length=256)
-    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
+    asynchronous = models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     
 
     def get_url_name(self):
@@ -1082,7 +1055,7 @@ class SChAppMenu( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     url = models.CharField('Url', null=False, blank=False, editable=True, max_length=255)
     url_type = models.CharField('Url type', null=True, blank=True, editable=True, default='-',choices=Url_CHOICES,max_length=16)
@@ -1150,13 +1123,13 @@ class SChForm( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     module = models.CharField('Module', null=True, blank=True, editable=True, max_length=64)
     process_code = models.TextField('Process code', null=True, blank=True, editable=True, )
     end_class_code = models.TextField('End class code', null=True, blank=True, editable=True, )
     end_code = models.TextField('End code', null=True, blank=True, editable=True, )
-    asynchronous = ext_models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
+    asynchronous = models.NullBooleanField('Async', null=True, blank=True, editable=True, default=False,)
     doc = models.TextField('Doc', null=True, blank=True, editable=True, )
     
 
@@ -1178,10 +1151,10 @@ class SChFormField( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChForm, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChForm, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     type = models.CharField('Type', null=False, blank=False, editable=True, choices=FormField_CHOICES,max_length=64)
-    required = ext_models.NullBooleanField('Required', null=True, blank=True, editable=True, )
+    required = models.NullBooleanField('Required', null=True, blank=True, editable=True, )
     label = models.CharField('Label', null=False, blank=False, editable=True, max_length=64)
     initial = models.CharField('Initial', null=True, blank=True, editable=True, max_length=256)
     widget = models.CharField('Widget', null=True, blank=True, editable=True, max_length=64)
@@ -1245,12 +1218,12 @@ class SChTask( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     code = models.TextField('Code', null=True, blank=True, editable=False, )
     doc = models.TextField('Doc', null=True, blank=True, editable=False, )
     perms = models.CharField('Perms', null=True, blank=True, editable=True, max_length=255)
-    publish = ext_models.NullBooleanField('Publish', null=True, blank=True, editable=True, )
+    publish = models.NullBooleanField('Publish', null=True, blank=True, editable=True, )
     publish_group = models.CharField('Publish group', null=True, blank=True, editable=True, max_length=64)
     
 
@@ -1277,7 +1250,7 @@ class SChFiles( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     file_type = models.CharField('File  type', null=False, blank=False, editable=True, choices=FileType_CHOICES,max_length=3)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=256)
     content = models.TextField('Content', null=True, blank=True, editable=False, )
@@ -1301,7 +1274,7 @@ class SChLocale( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChAppSet, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     
 
@@ -1323,7 +1296,7 @@ class SChTranslate( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChLocale, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChLocale, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=1024)
     translation = models.CharField('Translation', null=True, blank=True, editable=True, max_length=1024)
     status = models.CharField('Status', null=True, blank=True, editable=False, max_length=16)
@@ -1347,7 +1320,7 @@ class SChChannelConsumer( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(SChApp, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=255)
     consumer_type = models.CharField('Consumer type', null=False, blank=False, editable=True, choices=Consumer_CHOICES,max_length=64)
     url = models.CharField('Url', null=True, blank=True, editable=True, max_length=255)
@@ -1366,6 +1339,13 @@ class SChChannelConsumer( models.Model):
     
 admin.site.register(SChChannelConsumer)
 
+
+
+
+
+tmp = [ pos for pos in dir(models) if (pos.endswith('Field') and pos != 'Field') or pos.endswith('Key') ]
+for pos in tmp:
+    Field_CHOICES.append((pos, pos))
 
 
 

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -58,6 +59,7 @@ class demo_tbl( models.Model):
 
     
 admin.site.register(demo_tbl)
+
 
 
 

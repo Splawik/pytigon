@@ -537,8 +537,8 @@ def gen(request, pk):
         for table in tables:
             object_list.append((datetime.datetime.now().time().isoformat(), 'create tab:', table.name))
             table.tree_table = 0
-            for field in table.schfield_set.filter(type__in=['GForeignKey','GManyToManyField', 'GHiddenForeignKey', 'GTreeForeignKey', 'GHiddenTreeForeignKey']):
-                if field.type in ('GTreeForeignKey', 'GHiddenTreeForeignKey'):
+            for field in table.schfield_set.filter(type__in=['PtigForeignKey','PtigManyToManyField', 'PtigHiddenForeignKey', 'PtigTreeForeignKey', 'PtigHiddenTreeForeignKey']):
+                if field.type in ('PtigTreeForeignKey', 'PtigHiddenTreeForeignKey'):       
                     is_tree_table = True
                     if table.base_table in (None, "", "models.Model") and not table.proxy_model:
                         table.base_table = 'TreeModel'

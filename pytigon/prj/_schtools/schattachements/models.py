@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -78,6 +79,7 @@ class Attachements( models.Model):
         super(Attachements, self).save(*args, **kwargs)
     
 admin.site.register(Attachements)
+
 
 
 

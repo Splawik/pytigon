@@ -3,7 +3,7 @@
 
 
 % if not standard_web_browser
-    input type=hidden,,,id=id_{{id}},,,name={{id}},,,value={{object|getfield:id}}
+    input type=hidden,,,id=id_{{id}},,,name={{id}},,,value={{object|get_attr:id}}
 
 
 %% all
@@ -11,7 +11,7 @@
 
     %% widget_content
         % if standard_web_browser
-            input type=hidden,,,id=id_{{id}},,,name={{id}},,,value={{object|getfield:id}}
+            input type=hidden,,,id=id_{{id}},,,name={{id}},,,value={{object|get_attr:id}}
 
         div id={{id}}_div
             {{data}}
@@ -35,7 +35,7 @@
                         {% if standard_web_browser %}$('#id_{{id}}').val($(this).attr(href).replace('action/','')){% else %}cmd_to_python('python|self.{{id}}.SetValue(\'' + $(this).attr(href).replace('action/','') + '\')'){% endif %}
 
                     return false
-            var {{id}}_var_id = '{{object|getfield:id}}'
+            var {{id}}_var_id = '{{object|get_attr:id}}'
             if({{id}}_var_id && {{id}}_var_id != 'None'):
                 $('#{{id}}_div').find('a').each(
                     function( index ):

@@ -193,6 +193,7 @@ INSTALLED_APPS = [
     "django.forms",
     "django.contrib.staticfiles",
     "django_select2",
+    "mptt",
     "bootstrap4",
     "corsheaders",
     "pytigon.schserw.schsys",

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -68,6 +69,7 @@ class Autocomplete( models.Model):
 
     
 admin.site.register(Autocomplete)
+
 
 
 

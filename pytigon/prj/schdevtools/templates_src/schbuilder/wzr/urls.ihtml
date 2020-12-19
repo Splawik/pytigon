@@ -11,7 +11,7 @@ urlpatterns = [
     {% for view in views %}{{view.get_url|safe}},
     {% endfor %}{% for template in templates %}{% if template.direct_to_template %} {{template.get_url|safe}}, {% endif %}
     {% endfor %}
-    {% for form in forms %}{% if not form.name|is_ %}
+    {% for form in forms %}{% if not form.name|is_private %}
     path('form/{{form.name}}/', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
 ]
 

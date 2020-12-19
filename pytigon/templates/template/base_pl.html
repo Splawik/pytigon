@@ -145,10 +145,10 @@
                                                                         <th>Field</th>
                                                                         <th>Value</th>
                                                                 </tr>
-                                                                {% for field in object|getfields %}
+                                                                {% for field in object|get_model_fields %}
                                                                         <tr>
                                                                                 <td>{{ field.verbose_name }}</td>
-                                                                                <td>{{ object|getfield:field.name }}</td>
+                                                                                <td>{{ object|get_attr:field.name }}</td>
                                                                         </tr>
                                                                 {% endfor %}
                                                         </table>
@@ -176,10 +176,10 @@
                                                                                                 </tr>
                                                                                         </thead>
                                                                                         <tbody>
-                                                                                                {% for field in object|getfields %}
+                                                                                                {% for field in object|get_model_fields %}
                                                                                                         <tr>
                                                                                                                 <td>{{ field.verbose_name }}:</td>
-                                                                                                                <td>{{ object|getfield:field.name| truncatechars:1024 }}</td>
+                                                                                                                <td>{{ object|get_attr:field.name| truncatechars:1024 }}</td>
                                                                                                         </tr>
                                                                                                 {% endfor %}
                                                                                         </tbody>
@@ -218,7 +218,7 @@
                                                                         {% if field %}
                                                                                 <tr>
                                                                                         <td>
-                                                                                                {{form|getvalue:field|as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                                                                                                {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
                                                                                         </td>
                                                                                 </tr>
                                                                           {% else %}

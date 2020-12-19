@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -71,6 +72,7 @@ class Scripts( models.Model):
         super(Scripts, self).save(*args, **kwargs) 
     
 admin.site.register(Scripts)
+
 
 
 

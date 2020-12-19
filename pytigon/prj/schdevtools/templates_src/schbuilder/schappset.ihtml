@@ -43,7 +43,7 @@
     th...Name
 
 %% list_row
-    % td_editable 'name:text'
+    % td_editable 'name' 'text'
 
 %% list_row_actions
     % row_actions: ===>

@@ -181,7 +181,7 @@
                 CTRL-COLLAPSIBLE_PANEL label=errors,,,width=100%,,,collapse_height=70
                     % if form.non_field_errors:
                         data
-                            {{form.non_field_errors|tostr|bencode}}
+                            {{form.non_field_errors|to_str|bencode}}
 
 
 %% form_ok_cancel

@@ -1,4 +1,5 @@
-^^^# -*- coding: utf-8 -*-
+^^^{% load exfiltry %}
+# -*- coding: utf-8 -*-
 
 import django
 from django.db import models
@@ -20,14 +21,14 @@ from {{app_item}}.models import *
 {% endfor %}
 
 
-{{app.model_code_start|safe}}
+{{app.model_code|first_section|safe}}
 
 {% if choices %}
 {% for choice in choices %}
-{{choice.name}} = (
+{{choice.name}} = [
     {% for item in choice.schchoiceitem_set.all %}("{{item.name|safe}}","{{item.value|safe}}"),
     {% endfor %}
-    )
+    ]
 {% endfor %}
 {% endif %}
 
@@ -50,7 +51,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
         {% endif %}
         {% if table.proxy_model %}proxy=True{% endif %}
     {% if not table.proxy_model %}{% if table.tree_tab == 1 %}
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     {% endif %}
 
     {% for field in table.schfield_set.all %}{{field.as_declaration|safe}}
@@ -62,4 +63,5 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
 
 {% endfor %}
 
-{{app.model_code_end|safe}}
+{{app.model_code|second_section|safe}}
+

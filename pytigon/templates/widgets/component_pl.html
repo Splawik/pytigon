@@ -1,8 +1,7 @@
 {% load exfiltry %}
 {% load static %}
-{% if href|ext:".vue" %}
+{% if href|has_ext:".vue" %}
         <script type="text/javascript ">
-        Vue.component('{{href|base_name}}', httpVueLoader('{% static href %}'));
 </script>
         
   {% else %}

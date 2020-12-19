@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -22,12 +23,13 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 
-file_manager_sort_choices = (
+file_manager_sort_choices = [
     ("N","Name"),
     ("S","Size"),
     ("T","Time"),
     
-    )
+    ]
+
 
 
 

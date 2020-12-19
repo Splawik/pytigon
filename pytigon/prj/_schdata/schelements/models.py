@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -27,7 +28,7 @@ from django.db import transaction
 
 
 
-element_type_choice = (
+element_type_choice = [
     ("C","Currency"),
     ("M","Material"),
     ("D","Device"),
@@ -40,30 +41,30 @@ element_type_choice = (
     ("DP","Production machine"),
     ("DV","Vehicle"),
     
-    )
+    ]
 
-target_type_choice = (
+target_type_choice = [
     ("F","Firm"),
     ("P","Person"),
     ("E","Employee"),
     ("S","Section"),
     
-    )
+    ]
 
-account_type_choice_2 = (
+account_type_choice_2 = [
     ("B","Balance"),
     ("O","Off-balance"),
     ("N","Non-financial"),
     
-    )
+    ]
 
-account_type_choice_1 = (
+account_type_choice_1 = [
     ("S","Synthetic"),
     ("A","Analytical"),
     
-    )
+    ]
 
-orgchart_type_choice = (
+orgchart_type_choice = [
     ("F","Firm"),
     ("D","Division"),
     ("R","Department"),
@@ -74,14 +75,14 @@ orgchart_type_choice = (
     ("P","Person"),
     ("M","Machine"),
     
-    )
+    ]
 
-accdoc_type_choices = (
+accdoc_type_choices = [
     ("A","Account"),
     
-    )
+    ]
 
-accdoc_status_choices = (
+accdoc_status_choices = [
     ("0","Edit"),
     ("1","Approved"),
     ("2","Settled"),
@@ -90,13 +91,13 @@ accdoc_status_choices = (
     ("5","Frozen"),
     ("9","Canceled"),
     
-    )
+    ]
 
-doctype_status = (
+doctype_status = [
     ("0","Disabled"),
     ("1","Activ"),
     
-    )
+    ]
 
 
 
@@ -139,10 +140,10 @@ class OrgChartElem(TreeModel):
         
         
     
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     type = models.CharField('Organisation type', null=False, blank=False, editable=True, choices=orgchart_type_choice,max_length=1)
     grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1')
     grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2')
@@ -276,10 +277,10 @@ class Classifier(TreeModel):
         
         
     
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
     
@@ -348,10 +349,10 @@ class DocType( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
-    correction = ext_models.NullBooleanField('Correction', null=True, blank=True, editable=True, )
+    correction = models.NullBooleanField('Correction', null=True, blank=True, editable=True, )
     head_form = models.TextField('Head form', null=True, blank=True, editable=False, )
     item_form = models.TextField('Item form', null=True, blank=True, editable=False, )
     save_head_fun = models.TextField('Save head function', null=True, blank=True, editable=False, )
@@ -378,8 +379,8 @@ class DocHead(JSONModel):
     
 
     parents = models.ManyToManyField('self', null=False, blank=False, editable=False, verbose_name='Parents', )
-    doc_type_parent = ext_models.HiddenForeignKey(DocType, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Document type parent', )
-    org_chart_parent = ext_models.HiddenForeignKey(OrgChartElem, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Organization chart parent', )
+    doc_type_parent = ext_models.PtigHiddenForeignKey(DocType, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Document type parent', )
+    org_chart_parent = ext_models.PtigHiddenForeignKey(OrgChartElem, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Organization chart parent', )
     number = models.CharField('Document number', null=True, blank=True, editable=True, max_length=32)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
     date = models.DateTimeField('Date', null=False, blank=False, editable=False, )
@@ -555,8 +556,8 @@ class DocItem(JSONModel):
         
     
 
-    parent = ext_models.HiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
-    parent_item = ext_models.HiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent item', )
+    parent = ext_models.PtigHiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
+    parent_item = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent item', )
     order = models.IntegerField('Order', null=False, blank=False, editable=False, default=1,)
     date = models.DateField('Date', null=False, blank=False, editable=False, )
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
@@ -681,7 +682,7 @@ class DocRegStatus( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(DocReg, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     order = models.IntegerField('Order', null=False, blank=False, editable=True, )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
@@ -710,7 +711,7 @@ class DocHeadStatus(JSONModel):
         
     
 
-    parent = ext_models.HiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     date = models.DateTimeField('Date', null=False, blank=False, editable=True, )
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=16)
     description = models.CharField('Description', null=True, blank=True, editable=False, max_length=64)
@@ -734,18 +735,18 @@ class Account(TreeModel):
         
         
     
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     
 
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     type1 = models.CharField('Type 1', null=True, blank=True, editable=False, choices=account_type_choice_1,max_length=1)
     type2 = models.CharField('Type 2', null=True, blank=True, editable=True, choices=account_type_choice_2,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=256)
-    root_classifier1 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
-    root_classifier2 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
-    root_classifier3 = ext_models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
-    enabled = ext_models.NullBooleanField('Enabled', null=False, blank=False, editable=True, default=True,)
+    root_classifier1 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
+    root_classifier2 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
+    root_classifier3 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
+    enabled = models.NullBooleanField('Enabled', null=False, blank=False, editable=True, default=True,)
     
 
     def save(self, *args, **kwargs):
@@ -794,7 +795,7 @@ class AccountState( models.Model):
     element = models.ForeignKey(Element, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Element', )
     debit = models.DecimalField('Debit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     credit = models.DecimalField('Credit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
-    aggregate = ext_models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
+    aggregate = models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
     
 
     
@@ -815,14 +816,14 @@ class AccountOperation( models.Model):
         
     
 
-    parent = ext_models.HiddenForeignKey(DocItem, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigHiddenForeignKey(DocItem, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     date = models.DateTimeField('Date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=255)
     payment = models.CharField('Name of payment', null=True, blank=True, editable=True, max_length=64)
-    account_state = ext_models.ForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set', search_fields=['parent__name__icontains',])
+    account_state = ext_models.PtigForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set', search_fields=['parent__name__icontains',])
     sign = models.IntegerField('Sign - debit or credit', null=False, blank=False, editable=True, )
     amount = models.DecimalField('Amount', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
-    enabled = ext_models.NullBooleanField('Enabled', null=True, blank=True, editable=False, default=False,)
+    enabled = models.NullBooleanField('Enabled', null=True, blank=True, editable=False, default=False,)
     
 
     def get_account_state(self, account, element, period, target, classifier1=None, classifier2=None, classifier3=None, subcode="", aggregate=False):
@@ -960,6 +961,7 @@ class BaseObject( models.Model):
         else:
             return None
     
+
 
 
 

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -87,7 +88,7 @@ class Report(JSONModel):
         
     
 
-    parent = ext_models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent', )
+    parent = ext_models.PtigForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent', )
     order = models.IntegerField('Order number', null=True, blank=True, editable=True, )
     report_def_name = models.CharField('Report definition name', null=False, blank=False, editable=True, max_length=64)
     date = models.DateTimeField('Date', null=True, blank=True, editable=True, )
@@ -171,7 +172,7 @@ class CommonGroupDef(BaseObject):
 
     on_new_elem_event = models.TextField('On new elemetn event', null=True, blank=True, editable=False, )
     allowed_new_fields = models.TextField('Allowed new fields', null=True, blank=True, editable=False, )
-    main_group = ext_models.NullBooleanField('Main group', null=True, blank=True, editable=True, )
+    main_group = models.NullBooleanField('Main group', null=True, blank=True, editable=True, )
     
 
     
@@ -192,7 +193,7 @@ class CommonGroup(JSONModel):
         
     
 
-    parent = ext_models.TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     gparent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent', related_name='gparentrel')
     title = models.CharField('Title', null=True, blank=True, editable=True, max_length=64)
     group_def_name = models.CharField('Group definition name', null=False, blank=False, editable=True, max_length=64)
@@ -271,6 +272,7 @@ class Plot( models.Model):
 
     
 admin.site.register(Plot)
+
 
 
 

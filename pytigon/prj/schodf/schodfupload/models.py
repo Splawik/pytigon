@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import django
@@ -42,6 +43,7 @@ class Rights( models.Model):
 
     
 admin.site.register(Rights)
+
 
 
 
