@@ -115,7 +115,7 @@
         {% if perms.schwiki.add_page %}
                 {{ block.super }}
           {% else %}
-                {% wiki content "" subject %}
+                {% markdown2html content "" subject %}
         {% endif %}
 {% endblock %}
 {% block list_content_body %}
@@ -129,7 +129,7 @@
                                                 </li>
                                           {% else %}
                                                 <li class="breadcrumb-item">
-                                                        {% wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
+                                                        {% markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
                                                 </li>
                                         {% endif %}
                                 {% endfor %}
@@ -150,7 +150,7 @@
                                                         {% if wiki_elem|lower == description|lower %}
                                                                 {{ wiki_elem }}
                                                           {% else %}
-                                                                {% wiki '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
+                                                                {% markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
                                                                 /
                                                         {% endif %}
                                                 {% endfor %}
@@ -164,9 +164,9 @@
         <div class="panel-body container-fluid wiki_container wiki_{{page_name|lower}} wiki_{{conf.subject|lower}}">
                 {% if content %}
                         {% if wiki_path %}
-                                {% wiki content wiki_path subject %}
+                                {% markdown2html content wiki_path subject %}
                           {% else %}
-                                {% wiki content "" subject %}
+                                {% markdown2html content "" subject %}
                         {% endif %}
                   {% else %}
                         (This page do not exists yet!)

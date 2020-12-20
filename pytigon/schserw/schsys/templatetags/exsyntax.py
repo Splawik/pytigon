@@ -493,23 +493,23 @@ def component(context, href):
 def spec(format):
     return format.replace('{', '{{').replace('}', '}}').replace('[', '{%').replace(']', '%}')
 
-#@register.simple_tag(takes_context=True)
-#def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True):
-#    ret = ""
-#    if 'request' in context:
-#        username = context['request'].user.username
-#    subpage = from_wiki_page.get_page_for_wiki(wiki_str, username)
-#    if subpage and subpage.content:
-#        if only_header:
-#            content = subpage.content.split("<div class='read_more'")[0]
-#        else:
-#            content = subpage.content
-#
-#        ret += "<div class='article-header'><div class='article-header-title'>" + subpage.get_href(path) + \
-#               "</div>" + content + "</div>\n"
-#    else:
-#        ret = wikify("[[" + wiki_str + "]]", path, from_wiki_page.subject)
-#    return mark_safe(ret)
+@register.simple_tag(takes_context=True)
+def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True):
+    ret = ""
+    if 'request' in context:
+        username = context['request'].user.username
+    subpage = from_wiki_page.get_page_for_wiki(wiki_str, username)
+    if subpage and subpage.content:
+        if only_header:
+            content = subpage.content.split("<div class='read_more'")[0]
+        else:
+            content = subpage.content
+
+        ret += "<div class='article-header'><div class='article-header-title'>" + subpage.get_href(path) + \
+               "</div>" + content + "</div>\n"
+    else:
+        ret = wikify("[[" + wiki_str + "]]", path, from_wiki_page.subject)
+    return mark_safe(ret)
 
 @register.simple_tag(takes_context=True)
 def markdown2html (context, markdown_str, path=None, section = None):
