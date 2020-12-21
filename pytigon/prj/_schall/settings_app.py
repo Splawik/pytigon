@@ -86,7 +86,6 @@ MEDIA_URL = '/site_media/'
 
 INSTALLED_APPS.append('easy_thumbnails')
 INSTALLED_APPS.append('filer')
-INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
 
@@ -188,7 +187,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.12.16 09:22:58'
+GEN_TIME = '2020.12.20 18:26:38'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

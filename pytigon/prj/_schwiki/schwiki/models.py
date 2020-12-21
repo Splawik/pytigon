@@ -54,12 +54,8 @@ def _get_wiki_object(page, buf, name, paragraf):
         context = {'param': c, 'inline_content': inline_content, 'object': conf, 'page': page, 'paragraf': paragraf, 'name': name, }
         if conf.view_dict:
             exec(conf.view_dict)
-            try:
-                context = locals()['get_view_dict'](context)
-            except:
-                print("================ ERROR ===================================")
-                print(conf.view_dict)
-                print("==========================================================")
+            context = locals()['get_view_dict'](context)
+
         template_name1 = (conf.app + "/" + conf.name).lower() + "_wikiobj_view.html"
         template_name2 = "schwiki/wikiobj_view.html"
 

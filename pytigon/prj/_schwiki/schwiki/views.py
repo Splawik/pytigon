@@ -68,7 +68,7 @@ template_simple = """
 
 
 def view_page(request, app_or_subject, page_path):
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
+    
     desc = request.GET.get('desc','')
     path, sep, page_name = page_path.rpartition('+')
     if page_name:
@@ -103,14 +103,13 @@ def view_page(request, app_or_subject, page_path):
     if page:
         id = page.id
         content = page.content
-        #try:
-        t = Template(template_simple + content)
-        print(template_simple+content)
-        c = RequestContext(request, {'object': page, 'wiki_path': path, })
-        #c = Context({'object': page, 'wiki_path': path, 'request': request })
-        content=t.render(c)
-        #except:
-        #    content = page.content
+        try: 
+            t = Template(template_simple + content)
+            c = RequestContext(request, {'object': page, 'wiki_path': path, })        
+            #c = Context({'object': page, 'wiki_path': path, 'request': request })    
+            content=t.render(c)
+        except:
+            content = page.content
     else:
         page = Page()
         page.name = page_name

@@ -79,7 +79,6 @@ for app in APPS_EXT:
     
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
-INSTALLED_APPS.append('mptt')
 
 INSTALLED_APPS.append('explorer')
 
@@ -156,7 +155,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.12.20 11:46:27'
+GEN_TIME = '2020.12.21 12:47:55'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
