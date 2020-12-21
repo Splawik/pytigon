@@ -1,4 +1,4 @@
-APPS=['sched','_schwiki.schwiki','_schtools.schcommander','_schtasks.schtasks','_schtools.schtools',]
+APPS=['sched','_schwiki.schwiki','_schtools.schcommander','_schtools.schtasks','_schtools.schtools',]
 APPS_EXT=[]
 PUBLIC = False
 MAIN_PRJ = False
