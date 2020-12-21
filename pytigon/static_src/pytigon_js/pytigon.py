@@ -8,6 +8,7 @@ from pytigon_js.db import sync_and_run
 from pytigon_js.component import GlobalBus
 from pytigon_js.events import register_global_event
 from pytigon_js.ajax_region import ajax_load, mount_html
+from pytigon_js.widget import *
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -26,11 +27,13 @@ def _on_key(e):
                     on_edit_ok(False, form)
                     return
 
+
 register_global_event("keypress", _on_key, None)
 
 
 def dom_content_loaded():
-    mount_html(document.querySelector('section.body-body'), None)
+    mount_html(document.querySelector("section.body-body"), None)
+
 
 def app_init(
     prj_name,
@@ -89,12 +92,12 @@ def app_init(
 
             def _on_load(responseText, status, response):
                 print("_init_strart_wiki_page::_on_load")
-                #pass
+                # pass
 
             ajax_load(
-                #jQuery("#wiki_start"),
-                #jQuery("#body_desktop"),
-                document.querySelector('#body_desktop'),
+                # jQuery("#wiki_start"),
+                # jQuery("#body_desktop"),
+                document.querySelector("#body_desktop"),
                 base_path + start_page + "?only_content&schtml=1",
                 _on_load,
             )
@@ -105,46 +108,64 @@ def app_init(
     if hasattr(window, "init_callback"):
         window.init_callback()
 
-    jQuery.fn.editable.defaults.mode = 'inline'
-    jQuery.fn.combodate.defaults['maxYear'] = 2025
+    jQuery.fn.editable.defaults.mode = "inline"
+    jQuery.fn.combodate.defaults["maxYear"] = 2025
 
     activate_menu()
     desktop = document.getElementById("body_desktop")
     if desktop:
         mount_html(desktop, None, None)
 
+
 def activate_menu():
     pathname = window.location.pathname
     if pathname.startswith(window.BASE_PATH):
-        pathname2 = pathname[len(window.BASE_PATH):]
+        pathname2 = pathname[len(window.BASE_PATH) :]
     else:
         pathname2 = pathname
 
     if pathname2:
-        menu = document.querySelector('sys-sidebarmenu')
-        #if menu:
+        menu = document.querySelector("sys-sidebarmenu")
+        # if menu:
         #    menu.activate_url(pathname2)
-        #else:
+        # else:
         a_tab = document.querySelectorAll("a.menu-href")
         for a in a_tab:
-            if a.hasAttribute('href'):
-                href = a.getAttribute('href').split('?')[0]
-                if href.startswith('/' + pathname2):
+            if a.hasAttribute("href"):
+                href = a.getAttribute("href").split("?")[0]
+                if href.startswith("/" + pathname2):
                     if menu:
-                        li = a.closest('li.treeview')
-                        if li and not li.classList.contains('active'):
-                            a = li.querySelector('a')
+                        li = a.closest("li.treeview")
+                        if li and not li.classList.contains("active"):
+                            a = li.querySelector("a")
                             if a:
                                 event = document.createEvent("MouseEvents")
-                                event.initMouseEvent("click", True, True, window, 1, 0, 0, 0, 0, False, False, False, False, 0, None)
+                                event.initMouseEvent(
+                                    "click",
+                                    True,
+                                    True,
+                                    window,
+                                    1,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    False,
+                                    False,
+                                    False,
+                                    False,
+                                    0,
+                                    None,
+                                )
                                 a.dispatchEvent(event)
                     else:
-                        div = a.closest('.tab-tab')
+                        div = a.closest(".tab-tab")
                         if div:
-                            id_elem = 'a_' + div.id
+                            id_elem = "a_" + div.id
                             x = document.getElementById(id_elem)
                             if x:
-                                jQuery(x).tab('show')
+                                jQuery(x).tab("show")
+
 
 def _on_error(request, settings):
     if window.WAIT_ICON:
@@ -170,8 +191,10 @@ def _on_error(request, settings):
             mount_html(jQuery("#dialog-data-error"), settings.responseText)
             jQuery("#dialog-form-error").modal()
 
+
 def jquery_ready():
     pass
+
 
 def _on_popstate(e):
     if e.state:
