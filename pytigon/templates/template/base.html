@@ -179,7 +179,7 @@
                                                                                                 {% for field in object|get_model_fields %}
                                                                                                         <tr>
                                                                                                                 <td>{{ field.verbose_name }}:</td>
-                                                                                                                <td>{{ object|get_attr:field.name| truncatechars:1024 }}</td>
+                                                                                                                <td>{{ object|get_attr:field.name|truncatechars:1024 }}</td>
                                                                                                         </tr>
                                                                                                 {% endfor %}
                                                                                         </tbody>

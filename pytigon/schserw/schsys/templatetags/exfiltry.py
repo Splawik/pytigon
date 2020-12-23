@@ -401,29 +401,29 @@ def date_dec(value, arg):
 
 #TODO do poprawy nazwa, albo wykasowanie jednej z funkcji
 
-#@register.filter(name='get_model_fields')
-#def get_model_fields(value):
-#    """Returns fields for model (value) without many_to_many fields"""
-#    ret = []
-#    if value and hasattr(value, '_meta'):
-#        for f in value._meta.fields:
-#            ret.append(f)
-#    return ret
-
-
 @register.filter(name='get_model_fields')
-def get_model_fields(obj):
-    if hasattr(obj, "_meta"):
-        ret = []
-        for field in obj._meta.get_fields():
-            if hasattr(obj, field.name):
-                if field.name == 'id':
-                    ret.insert(0, getattr(obj, field.name))
-                else:
-                    ret.append(getattr(obj, field.name))
-        return ret
-    else:
-        return obj
+def get_model_fields(value):
+    """Returns fields for model (value) without many_to_many fields"""
+    ret = []
+    if value and hasattr(value, '_meta'):
+        for f in value._meta.fields:
+            ret.append(f)
+    return ret
+
+
+#@register.filter(name='get_model_fields')
+#def get_model_fields(obj):
+#    if hasattr(obj, "_meta"):
+#        ret = []
+#        for field in obj._meta.get_fields():
+#            if hasattr(obj, field.name):
+#                if field.name == 'id':
+#                    ret.insert(0, getattr(obj, field.name))
+#                else:
+#                    ret.append(getattr(obj, field.name))
+#        return ret
+#    else:
+#        return []
 
 
 #TODO do poprawy nazwa
