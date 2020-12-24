@@ -682,3 +682,11 @@ def is_menu_checked(url, full_path):
             return False
     else:
         return False
+
+
+@register.filter(name='import_var')
+def _import_var(obj):
+    path = str(obj)
+    base_path, item = path.split(':')
+    m = importlib.import_module(base_path)
+    return getattr(m, item)
