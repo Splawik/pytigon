@@ -19,6 +19,6 @@ gen = generic_table_start(urlpatterns, '{{app.name}}', views)
 {% if app.urls_code %}{{app.urls_code|safe}}{% endif %}
 {% for table in tables %}{% if table.generic %}
 gen.standard('{{table.name}}', _('{{table.verbose_name}}'), _('{{table.verbose_name_plural}}')){% endif %}{% endfor %}
-{% for gfield in gfields %}{% if gfield.rel_to == "'self'" and gfield.name == "parent" %}
+{% for gfield in gfields %}{% if gfield.rel_to == "'self'" %}
 {% else %}
 gen.for_field('{{gfield.get_rel_to|safe}}', '{{gfield.get_relate_set_name|safe}}', _('{{gfield.parent.verbose_name}}'), _('{{gfield.parent.verbose_name_plural}}')){% endif %}{% endfor %}

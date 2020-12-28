@@ -274,8 +274,11 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
         loading.start()
 
         if post:
-            data = jQuery(link).serialize()
-            ajax_post(url, data, _callback)
+            if link.tagName.lower()=='form':
+                ajax_submit(jQuery(link), _callback)
+            else:
+                data = jQuery(link).serialize()
+                ajax_post(url, data, _callback)
         else:
             ajax_get(url, _callback)
     else:

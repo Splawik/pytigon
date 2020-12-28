@@ -93,12 +93,16 @@ def action(context, action, title = "", icon_name = "", target = "", attrs = "",
 # actions
 
 @inclusion_tag('widgets/view_row.html')
-def view_row(context, title = "", icon_name = "", target = "popup_info", attrs = "", tag_class = "", url = ""):
+def view_row(context, object, title = "", icon_name = "", target = "popup_info", attrs = "", tag_class = "", url = ""):
     if url:
         href=url
     else:
         href = "{tp}%s/_/view/" % context['object'].id
     ret = action_fun(context, 'view_row', title, icon_name, target, attrs,tag_class, href)
+    if hasattr(object, 'str'):
+        ret['title2'] = str(object)
+    else:
+        ret['title2'] = "Object(id=" + str(title) + ")"
     return ret
 
 
@@ -140,6 +144,19 @@ def new_row(context, title="", icon_name="", target='', attrs='', tag_class='', 
 def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row-inline/-"):
     return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
 
+
+@inclusion_tag('widgets/list_sublist.html')
+def list_sublist(context, app="", table_name="", filter="", title="", icon_name="fa fa-lg fa-caret-down", target="", attrs="", tag_class="", url="", action="field_list"):
+    if url:
+        url2 = url
+    else:
+        if filter:
+            url2 = "{bp}" + f"{app}/table/{table_name}//{filter}/form/sublist/"
+        else:
+            url2 = "{bp}" + f"{app}/table/{table_name}/{context['object'].id}/-/form/sublist/"
+
+    ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
+    return ret
 
 @inclusion_tag('widgets/list_action.html')
 def list_action(context, action, title="", icon_name="", target='_parent', attrs='', tag_class="", url="", active=False):

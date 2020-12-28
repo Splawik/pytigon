@@ -127,8 +127,8 @@ Field_CHOICES = [
     ("PtigManyToManyField","GenericManyToManyField!"),
     ("PtigHiddenForeignKey","GenericHiddenForeignKey!"),
     ("UserField","UserField"),
-    ("PtigForeignKeyWidthIcon","ForeignKeyWidthIcon!"),
-    ("PtigManyToManyFieldWidthIcon","ManyToManyFieldWidthIcon!"),
+    ("PtigForeignKeyWithIcon","ForeignKeyWithIcon!"),
+    ("PtigManyToManyFieldWithIcon","ManyToManyFieldWithIcon!"),
     ("PtigTreeForeignKey","TreeForeignKey!"),
     
     ]
