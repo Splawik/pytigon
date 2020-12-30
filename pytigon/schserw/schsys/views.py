@@ -45,14 +45,14 @@ APP = None
 _RET_OK = """
 <head>
     <meta name="TARGET" content="_parent_refr" />
-    <meta name="RETURN" content="RETURN_OK" />
+    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
 </head>
 <body>OK</body>
 """
 
 _RET_OK_HTML = """
 <head>
-    <meta name="RETURN" content="RETURN_OK" />
+    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
     <script>ret_ok(%s,"%s");</script>
 </head>
 <body></body>
@@ -60,7 +60,7 @@ _RET_OK_HTML = """
 
 _RET_OK_SHTML = """
 <head>
-    <meta name="RETURN" content="RETURN_OK" />
+    <meta name="RETURN" content="$$RETURN_OK" />
     <meta name="target" content="code" />
 </head>
 <body>

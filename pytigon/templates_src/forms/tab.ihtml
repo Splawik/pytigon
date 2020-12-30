@@ -8,27 +8,10 @@
 %% form_rect
     .width: 620, height: 360
 
-
 %% form_header
     % if not readonly
         p
             % new_row "Nowe zagrożenie"
-
-%% table_header232
-    [ Id |  Element | Action ]
-
-%% table_content323
-    tr
-        td
-            a {% view_row 250 300 "Informacje szczegółowe" %}...{{object.id}}
-        %% table_content_obiekt
-            td...{{object}}
-        td
-            % if readonly
-                a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=wybierz...wybierz
-            % else
-                % edit_row "popraw"
-                % delete_row "usuń"
 
 %% table_footer
   [ - |  - |  <a href="add" class="popup" name="insert" title="nowy element">nowy element</a> ]

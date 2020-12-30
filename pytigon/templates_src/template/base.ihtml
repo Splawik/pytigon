@@ -148,6 +148,7 @@
                         <div class="move-element {% block dialog_type %}{% endblock %}" data-position="^.modal-dialog:class">
                 %% row_edit_header
                     % if form:
+                        <meta name="RETURN" content="$$RETURN_RERUN" />
                         {{ form.errors }}
                 %% row_edit_all
                     form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region=table
@@ -306,7 +307,7 @@
                     div class=tabsort_panel
                         % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                             %if table_type == 'scrolled' or not table_type:
-                                <div class="tbl_scroll" style="overflow-y: auto;">
+                                <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
                             % else:
                                 <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
 

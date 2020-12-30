@@ -1,5 +1,5 @@
 from pytigon_js.tabmenu import get_menu
-from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup
+from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup, get_elem_from_string
 from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
@@ -318,7 +318,8 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     def on_hidden(event):
         nonlocal region
         obj = region.querySelector('.plug')
-        obj.remove()
+        if obj:
+            obj.remove()
 
     dialog = jQuery(dialog_slot.firstElementChild)
     if dialog:
@@ -371,6 +372,10 @@ def refresh_frame(target_element, data_element, new_url, param, event):
                 jQuery(dialog).modal('hide')
             else:
                 aside.remove()
+    def _callback_on_error():
+        nonlocal aside, dialog
+        if aside:
+            aside.style.opacity = "100%"
     if aside:
         aside.style.opacity = "50%"
 
@@ -382,12 +387,15 @@ def refresh_frame(target_element, data_element, new_url, param, event):
 
     data_region = target_element.getAttribute('data-region')
 
-    refresh_ajax_frame(target_element, data_region, data_element2, _callback)
+    refresh_ajax_frame(target_element, data_region, data_element2, _callback, _callback_on_error)
 
 def refresh_page(target_element, data_element, new_url, param, event):
     frame = target_element.closest("div.content")
     if frame and frame.firstElementChild:
-        data_element2 = data_element.querySelector('div.content')
+        if type(data_element) == str:
+            data_element2 = None
+        else:
+            data_element2 = data_element.querySelector('div.content')
         if data_element2:
             if data_element2.firstElementChild:
                 data_element2 = data_element2.firstElementChild

@@ -7,7 +7,7 @@ from pytigon_js.tools import (
     load_js,
 )
 
-from pytigon_js.events import refresh_page
+from pytigon_js.ajax_region import refresh_ajax_frame
 
 def datetable_set_height(element):
 
@@ -193,10 +193,11 @@ def init_table(table, table_type):
 
 def table_loadeddata(event):
     if getattr(event, 'data'):
-        if event.data and 'RETURN_OK' in event.data:
+        if event.data and '$$RETURN_REFRESH_PARENT' in event.data:
             jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
         else:
-            refresh_page(event.target, event.data, None, None, None)
+            refresh_ajax_frame(event.data_source, "error", event.data)
+            #refresh_frame(event.data_source, event.data, None, None, None)
     else:
         jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
 

@@ -1,6 +1,27 @@
 from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, get_table_type, super_insert
 from pytigon_js.tbl import init_table
 
+def data_type(data_or_html):
+    if data_or_html:
+        if type(data_or_html) == str:
+            if '$$RETURN_OK' in data_or_html:
+                return "$$RETURN_OK"
+            elif '$$RETURN_REFRESH_PARENT' in data_or_html:
+                return "$$RETURN_REFRESH_PARENT"
+            elif '$$RETURN_CANCEL' in data_or_html:
+                return "$$RETURN_CANCEL"
+            elif '$$RETURN_RERUN' in data_or_html:
+                return "$$RETURN_RERUN"
+            elif '$$RETURN_ERROR' in data_or_html:
+                return "$$RETURN_ERROR"
+        else:
+            meta_list = data_or_html.querySelectorAll('meta')
+            for pos in meta_list:
+                if pos.hasAttribute('name'):
+                    if pos.getAttribute('name').upper()=='RETURN':
+                        if pos.hasAttribute('content'):
+                            return pos.getAttribute('content').upper()
+    return "$$RETURN_HTML"
 
 MOUNT_INIT_FUN = []
 
@@ -231,7 +252,8 @@ def get_ajax_frame(element, region_name=None):
 
 window.get_ajax_frame = get_ajax_frame
 
-def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=None):
+def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=None, callback_on_error=None):
+    region = get_ajax_region(element, region_name)
     frame = get_ajax_frame(element, region_name)
     if not frame:
         return
@@ -240,20 +262,37 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
     loading = Loading(element)
 
     def _callback(data):
-        nonlocal link, frame, callback, loading
+        nonlocal link, frame, region, callback, loading
 
         loading.stop()
         loading.remove()
 
-        #if getattr(frame,'onloadeddata') and frame.onloadeddata:
-        #    evt = document.createEvent("HTMLEvents")
-        #    evt.initEvent("loadeddata", False, True)
-        #    evt.data = data
-        #    evt.data_source = link
-        #    frame.dispatchEvent(evt)
-        #else:
-        mount_html(frame, data, link)
-        callback()
+        dt = data_type(data)
+        if getattr(frame, 'onloadeddata') and frame.onloadeddata:
+            mount_html(frame, data, link)
+        else:
+            if dt == "$$RETURN_OK":
+                return refresh_ajax_frame(element, region_name, None,  callback, callback_on_error)
+            elif dt == "$$RETURN_REFRESH_PARENT":
+                return refresh_ajax_frame(region.parentElement, region_name, None, callback, callback_on_error)
+            elif dt == "$$RETURN_RERUN":
+                if region_name == "error":
+                    mount_html(frame, data, link)
+                else:
+                    return refresh_ajax_frame(element, "error", data, callback, callback_on_error)
+            elif dt == "$$RETURN_CANCEL":
+                pass
+            elif dt == "$$RETURN_ERROR":
+                window.open().document.write(data)
+            else:
+                mount_html(frame, data, link)
+
+        if dt in ("$$RETURN_ERROR", "$$RETURN_RERUN"):
+            if callback_on_error:
+                callback_on_error()
+        else:
+            if callback:
+                callback()
 
     if data_element:
         _callback(data_element)
@@ -270,6 +309,10 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
         url = link.getAttribute('src')
 
     if url:
+        if link.hasAttribute('data-region') and link.getAttribute('data-region') == 'table':
+            url = corect_href(url, True)
+        else:
+            url = corect_href(url)
         loading.create()
         loading.start()
 

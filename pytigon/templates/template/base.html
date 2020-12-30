@@ -206,6 +206,7 @@
                                 {% endblock %}
                                 {% block row_edit_header %}
                                         {% if form %}
+                                                <meta name="RETURN" content="$$RETURN_RERUN" />
                                                 {{ form.errors }}
                                         {% endif %}
                                 {% endblock %}
@@ -437,7 +438,7 @@
                                         <div class="tabsort_panel">
                                                 {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
                                                         {% if table_type == 'scrolled' or not table_type %}
-                                                                <div class="tbl_scroll" style="overflow-y: auto;">
+                                                                <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
                                                           {% else %}
                                                                 <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
                                                         {% endif %}
@@ -475,9 +476,9 @@
                                                                                                                                         <div {% block id_row_attr %}class="td_information"{% endblock %}>
                                                                                                                                                 {% block id_extra %}
                                                                                                                                                         {% if get %}
-                                                                                                                                                                {% get_row object.id %}
+                                                                                                                                                                {% get_row object object.id %}
                                                                                                                                                           {% else %}
-                                                                                                                                                                {% view_row object.id %}
+                                                                                                                                                                {% view_row object object.id %}
                                                                                                                                                         {% endif %}
                                                                                                                                                 {% endblock %}
                                                                                                                                         </div>

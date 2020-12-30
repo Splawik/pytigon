@@ -65,7 +65,7 @@ gen.for_field('DocReg', 'doctype_set', _('Type of document'), _('Types of docume
 gen.for_field('DocType', 'dochead_set', _('Document header'), _('Document headers'))
 gen.for_field('OrgChartElem', 'dochead_set', _('Document header'), _('Document headers'))
 gen.for_field('DocHead', 'docitem_set', _('Document item'), _('Document items'))
-gen.for_field('DocItem', 'docitem_set', _('Document item'), _('Document items'))
+
 gen.for_field('DocReg', 'docregstatus_set', _('Document status'), _('Document status'))
 gen.for_field('DocHead', 'docheadstatus_set', _('Document head status'), _('Documents head status'))
 
