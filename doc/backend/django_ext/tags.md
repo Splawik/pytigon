@@ -115,7 +115,7 @@ def action(context, action, title = "", icon_name = "", target = "", attrs = "",
 
 ---
 
-> def view_row(context, title = "", icon_name = "", target = "popup_info", attrs = "", tag_class = "", url = "")
+> def view_row(context, object, title = "", icon_name = "", target = "popup_info", attrs = "", tag_class = "", url = "")
 
 shortcut for: action="view_row", url="{tp}%s/\*/view/"
 
@@ -154,6 +154,14 @@ shortcut for: action="new_row/-"
 ### new_row_inline
 
 ---
+
+### list_sublist
+
+---
+
+> def list_sublist(context, filter="", app="", table_name="", title="", icon_name="fa fa-lg fa-caret-down", target="", attrs="", tag_class="", url="", action="field_list")
+
+## shortcut for sublist action
 
 > def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_class='', url="", action="new_row-inline/-")
 

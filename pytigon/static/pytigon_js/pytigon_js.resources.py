@@ -5,7 +5,7 @@ MODAL = """
 MODAL_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content ajax-region" data-region="error">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLabel">{title}</h5>
                 <button type="button" class="close" data-dismiss='modal' aria-label="Close">
@@ -14,7 +14,7 @@ MODAL_BASE = """
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <div class="dialog-data ajax-region"></div>
+                    <div class="dialog-data ajax-frame" data-region="error"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -27,7 +27,7 @@ MODAL_BASE = """
 
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-primary" data-region="table" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-primary" target="refresh_frame">OK</button>
 """
 
 INFO_FOOTER = """
@@ -36,7 +36,7 @@ INFO_FOOTER = """
 
 DELETE_FOOTER = """
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-danger" data-region="table" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-danger" target="refresh_frame">OK</button>
 """
 
 ERROR_FOOTER = """

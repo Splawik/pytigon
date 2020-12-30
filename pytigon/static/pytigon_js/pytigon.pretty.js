@@ -2,7 +2,8 @@
 import{AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, 
 __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, 
 callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip}from "./org.transcrypt.__runtime__.js";
-import{ajax_load}from "./pytigon_js.ajax_region.js";
+import{humanFileSize, img_field}from "./pytigon_js.widget.js";
+import{ajax_load, mount_html}from "./pytigon_js.ajax_region.js";
 import{register_global_event}from "./pytigon_js.events.js";
 import{GlobalBus}from "./pytigon_js.component.js";
 import{sync_and_run}from "./pytigon_js.db.js";
@@ -30,14 +31,7 @@ export var _on_key = function(e) {
 };
 register_global_event("keypress", _on_key, null);
 export var dom_content_loaded = function() {
-  if (jQuery("#dialog-form-modal").length > 0) {
-    jQuery(document).ajaxError(_on_error);
-    if (window.APPLICATION_TEMPLATE == "traditional") {
-      window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
-    } else {
-      window.ACTIVE_PAGE = Page(0, jQuery("#body_desktop"));
-    }
-  }
+  mount_html(document.querySelector("section.body-body"), null);
 };
 export var app_init = function(prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time, callback) {
   if (typeof callback == "undefined" || callback != null && callback.hasOwnProperty("__kwargtrans__")) {
@@ -64,7 +58,9 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
   window.COMPONENT_INIT = component_init;
   window.LANG = lang;
   window.GEN_TIME = gen_time;
-  document.addEventListener("DOMContentLoaded", dom_content_loaded);
+  if (APPLICATION_TEMPLATE == "traditional") {
+    document.addEventListener("DOMContentLoaded", dom_content_loaded);
+  }
   if (offline_support) {
     if (navigator.onLine && service_worker_and_indexedDB_test()) {
       install_service_worker();
@@ -81,7 +77,7 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
       var _on_load = function(responseText, status, response) {
         print("_init_strart_wiki_page::_on_load");
       };
-      ajax_load(jQuery("#body_desktop"), base_path + start_page + "?only_content&schtml=1", _on_load);
+      ajax_load(document.querySelector("#body_desktop"), base_path + start_page + "?only_content&schtml=1", _on_load);
     }
   };
   window.init_start_wiki_page = _init_start_wiki_page;
@@ -91,6 +87,50 @@ export var app_init = function(prj_name, application_template, menu_id, lang, ba
   }
   jQuery.fn.editable.defaults.mode = "inline";
   jQuery.fn.combodate.defaults["maxYear"] = 2025;
+  activate_menu();
+  var desktop = document.getElementById("body_desktop");
+  if (desktop) {
+    mount_html(desktop, null, null);
+  }
+};
+export var activate_menu = function() {
+  var pathname = window.location.pathname;
+  if (pathname.startswith(window.BASE_PATH)) {
+    var pathname2 = pathname.__getslice__(len(window.BASE_PATH), null, 1);
+  } else {
+    var pathname2 = pathname;
+  }
+  if (pathname2) {
+    var menu = document.querySelector("sys-sidebarmenu");
+    var a_tab = document.querySelectorAll("a.menu-href");
+    for (var a of a_tab) {
+      if (a.hasAttribute("href")) {
+        var href = a.getAttribute("href").py_split("?")[0];
+        if (href.startswith("/" + pathname2)) {
+          if (menu) {
+            var li = a.closest("li.treeview");
+            if (li && !li.classList.contains("active")) {
+              var a = li.querySelector("a");
+              if (a) {
+                var event = document.createEvent("MouseEvents");
+                event.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                a.dispatchEvent(event);
+              }
+            }
+          } else {
+            var div = a.closest(".tab-tab");
+            if (div) {
+              var id_elem = "a_" + div.id;
+              var x = document.getElementById(id_elem);
+              if (x) {
+                jQuery(x).tab("show");
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 };
 export var _on_error = function(request, settings) {
   if (window.WAIT_ICON) {
