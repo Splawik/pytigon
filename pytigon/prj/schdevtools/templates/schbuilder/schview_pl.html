@@ -2,6 +2,7 @@
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
+{% load builder_filters %}
 {% block pythoncode %}
         {% if form_list %}
                 <script language="python">

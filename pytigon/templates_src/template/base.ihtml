@@ -118,7 +118,7 @@
                             set-field element=#ModalLabelInfo,,,title={{title}}
                 % else:
                     %% form_delete
-                        form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,id=DialogFormDelete,,,name=DialogFormDelete
+                        form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,class=ajax-link,,,id=DialogFormDelete,,,name=DialogFormDelete
                             % csrf_token
                             %% form_delete_content
                                 h4..._(Delete the item)?
@@ -148,7 +148,7 @@
                         <div class="move-element {% block dialog_type %}{% endblock %}" data-position="^.modal-dialog:class">
                 %% row_edit_header
                     % if form:
-                        <meta name="RETURN" content="$$RETURN_RERUN" />
+                        <meta name="RETURN" content="$$RETURN_RELOAD" />
                         {{ form.errors }}
                 %% row_edit_all
                     form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region=table

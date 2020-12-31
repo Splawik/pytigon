@@ -25,6 +25,27 @@ MODAL_BASE = """
 </div>
 """
 
+MODAL_DELETE_BASE = """
+<div class="dialog-form modal" role="dialog" title="{title}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel">{title}</h5>
+            <button type="button" class="close" data-dismiss='modal' aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="dialog-data ajax-frame" data-region="error"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            {{modal_footer}}
+        </div>
+    </div>
+</div>
+"""
+
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-primary" target="refresh_frame">OK</button>
@@ -53,6 +74,34 @@ INLINE = """
 """
 
 INLINE_BASE = """
+<div style='position:relative'>
+    <div class='dark_background'></div>
+    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>
+        <div class="modal-content ajax-region" data-region="error">
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h4 class='modal-title'>{title}</h4>
+                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> 
+                        <span class='fa fa-window-minimize'></span> 
+                    </button> 
+                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> 
+                        <span class='fa fa-window-maximize'></span> 
+                    </button> 
+                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                </div>
+                <div class='modal-body'>
+                    <div class='dialog-data'></div>
+                </div>
+                <div class='modal-footer'>
+                    {{modal_footer}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+"""
+
+INLINE_DELETE_BASE = """
 <div style='position:relative'>
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>

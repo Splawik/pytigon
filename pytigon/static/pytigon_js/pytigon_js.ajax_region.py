@@ -6,12 +6,18 @@ def data_type(data_or_html):
         if type(data_or_html) == str:
             if '$$RETURN_OK' in data_or_html:
                 return "$$RETURN_OK"
+            elif '$$RETURN_NEW_ROW_OK' in data_or_html:
+                return "$$RETURN_NEW_ROW_OK"
+            elif '$$RETURN_UPDATE_ROW_OK' in data_or_html:
+                return "$$RETURN_UPDATE_ROW_OK"
             elif '$$RETURN_REFRESH_PARENT' in data_or_html:
                 return "$$RETURN_REFRESH_PARENT"
+            elif '$$RETURN_REFRESH' in data_or_html:
+                return "$$RETURN_REFRESH"
             elif '$$RETURN_CANCEL' in data_or_html:
                 return "$$RETURN_CANCEL"
-            elif '$$RETURN_RERUN' in data_or_html:
-                return "$$RETURN_RERUN"
+            elif '$$RETURN_RELOAD' in data_or_html:
+                return "$$RETURN_RELOAD"
             elif '$$RETURN_ERROR' in data_or_html:
                 return "$$RETURN_ERROR"
         else:
@@ -268,14 +274,14 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
         loading.remove()
 
         dt = data_type(data)
-        if getattr(frame, 'onloadeddata') and frame.onloadeddata:
+        if dt != "$$RETURN_ERROR" and getattr(frame, 'onloadeddata') and frame.onloadeddata:
             mount_html(frame, data, link)
         else:
-            if dt == "$$RETURN_OK":
+            if dt in ("$$RETURN_OK", "$$RETURN_REFRESH"):
                 return refresh_ajax_frame(element, region_name, None,  callback, callback_on_error)
-            elif dt == "$$RETURN_REFRESH_PARENT":
+            elif dt in( "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK", "$$RETURN_REFRESH_PARENT"):
                 return refresh_ajax_frame(region.parentElement, region_name, None, callback, callback_on_error)
-            elif dt == "$$RETURN_RERUN":
+            elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
                     mount_html(frame, data, link)
                 else:
@@ -283,11 +289,14 @@ def refresh_ajax_frame(element, region_name=None, data_element=None,  callback=N
             elif dt == "$$RETURN_CANCEL":
                 pass
             elif dt == "$$RETURN_ERROR":
-                window.open().document.write(data)
+                if type(data) == str:
+                    window.open().document.write(data)
+                else:
+                    window.open().document.write(data.innerHTML)
             else:
                 mount_html(frame, data, link)
 
-        if dt in ("$$RETURN_ERROR", "$$RETURN_RERUN"):
+        if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD"):
             if callback_on_error:
                 callback_on_error()
         else:

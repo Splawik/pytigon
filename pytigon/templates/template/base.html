@@ -162,7 +162,7 @@
                                         {% endif %}
                                   {% else %}
                                         {% block form_delete %}
-                                                <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" id="DialogFormDelete" name="DialogFormDelete">
+                                                <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" class="ajax-link" id="DialogFormDelete" name="DialogFormDelete">
                                                         {% csrf_token %}
                                                         {% block form_delete_content %}
                                                                 <h4>Delete the item?</h4>
@@ -206,7 +206,7 @@
                                 {% endblock %}
                                 {% block row_edit_header %}
                                         {% if form %}
-                                                <meta name="RETURN" content="$$RETURN_RERUN" />
+                                                <meta name="RETURN" content="$$RETURN_RELOAD" />
                                                 {{ form.errors }}
                                         {% endif %}
                                 {% endblock %}
