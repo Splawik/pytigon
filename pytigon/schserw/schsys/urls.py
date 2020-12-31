@@ -78,7 +78,7 @@ def sch_login(request, *argi, **argv):
 
 urlpatterns = [
     path('ok/', views.ok, name='ok'),
-    path('<int:id>/<str:title>/ret_ok/', views.ret_ok, name='ret_ok'),
+    #path('<int:id>/<str:title>/ret_ok/', views.ret_ok, name='ret_ok'),
 
     path('login/', TemplateView.as_view(template_name='schapp/login.html')),
 

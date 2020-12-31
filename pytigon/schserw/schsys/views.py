@@ -36,41 +36,42 @@ from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schtable.dbtable import DbTable
 from pytigon_lib.schtools import schjson
 from pytigon_lib.schviews.viewtools import render_to_response
+from pytigon_lib.schviews import actions
 from pytigon_lib.schdjangoext.tools import make_href
 
 from pytigon_lib.schviews.viewtools import dict_to_json
 
 APP = None
 
-_RET_OK = """
-<head>
-    <meta name="TARGET" content="_parent_refr" />
-    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
-</head>
-<body>OK</body>
-"""
+#_RET_OK = """
+#<head>
+#    <meta name="TARGET" content="_parent_refr" />
+#    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
+#</head>
+#<body>OK</body>
+#"""
 
-_RET_OK_HTML = """
-<head>
-    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
-    <script>ret_ok(%s,"%s");</script>
-</head>
-<body></body>
-"""
+#_RET_OK_HTML = """
+#<head>
+#    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
+#    <script>ret_ok(%s,"%s");</script>
+#</head>
+#<body></body>
+#"""
 
-_RET_OK_SHTML = """
-<head>
-    <meta name="RETURN" content="$$RETURN_OK" />
-    <meta name="target" content="code" />
-</head>
-<body>
-    <script language=python>
-page = self.get_parent_page().get_parent_page()
-if page:
-    page.signal('return_row', id=%s, title="%s")
-    </script>
-</body>
-"""
+#_RET_OK_SHTML = """
+#<head>
+#    <meta name="RETURN" content="$$RETURN_OK" />
+#    <meta name="target" content="code" />
+#</head>
+#<body>
+#    <script language=python>
+#page = self.get_parent_page().get_parent_page()
+#if page:
+#    page.signal('return_row', id=%s, title="%s")
+#    </script>
+#</body>
+#"""
 
 MESSAGE_LIST = {"null": "", "error": "Program error", "warning": "Program warning"}
 
@@ -104,24 +105,28 @@ def ok(request):
     Args:
         request - django request
     """
+
     print("--------------------------------------------------------------")
     print(request.user)
     print("--------------------------------------------------------------")
-    return HttpResponse(_RET_OK)
+
+    return actions.ok(request)
 
 
-def ret_ok(request, id, title):
-    """If form is OK redirect to this view
+#def ret_ok(request, id, title):
+#    """If form is OK redirect to this view
+#
+#    Args:
+#        request - django request
+#        id
+ #       title
+ #   """
+  #  return actions.ok(request)
 
-    Args:
-        request - django request
-        id
-        title
-    """
-    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
-        return HttpResponse(_RET_OK_SHTML % (id, title))
-    else:
-        return HttpResponse(_RET_OK_HTML % (id, title))
+#    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
+#        return HttpResponse(_RET_OK_SHTML % (id, title))
+#    else:
+#        return HttpResponse(_RET_OK_HTML % (id, title))
 
 
 def message(request, titleid, messageid, id):
