@@ -37,7 +37,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="pytigon",
-    version="0.111",
+    version="0.112",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
