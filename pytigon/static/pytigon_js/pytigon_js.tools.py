@@ -209,9 +209,10 @@ def ajax_json(url, data, complete, process_req=None):
 window.ajax_json = ajax_json
 
 
-def ajax_submit(form, complete, data_filter=None, process_req=None):
+def ajax_submit(_form, complete, data_filter=None, process_req=None):
     content_type = None
     req = __new__(XMLHttpRequest())
+    form = jQuery(_form)
 
     if process_req:
         process_req(req)

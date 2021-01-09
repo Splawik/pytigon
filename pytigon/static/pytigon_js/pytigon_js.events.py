@@ -152,15 +152,21 @@ def on_click_default_action(event, target_element):
     if href:
         href = process_href(href, jQuery(target_element))
 
-
     if target_element.tagName.lower() == 'form':
+
         if target_element.getAttribute("target") == "_blank":
             target_element.setAttribute("enctype", "multipart/form-data")
             target_element.setAttribute("encoding", "multipart/form-data")
             return True
+
         if target_element.getAttribute("target") == "_self":
             return True
-        param = jQuery(target_element).serialize()
+
+        if target_element.querySelector("[type='file']"):
+            param = "file"
+        else:
+            param = jQuery(target_element).serialize()
+
         if param and "pdf=on" in param:
             target_element.setAttribute("enctype", "multipart/form-data")
             target_element.setAttribute("encoding", "multipart/form-data")
@@ -177,7 +183,7 @@ def on_click_default_action(event, target_element):
             return
 
 
-    def _get_or_post(url, callback):
+    def _get_or_post(url, callback, data2=None):
         nonlocal target_element, target, param, event
 
         loading = Loading(target_element)
@@ -201,17 +207,22 @@ def on_click_default_action(event, target_element):
                 new_callback(target_element, data_element, new_url, param, event)
             else:
                 callback(target_element, data_element, url, param, event)
-
-        if param:
-            ajax_post(url, param, _callback)
+        if url:
+            if param:
+                ajax_post(url, param, _callback)
+            else:
+                ajax_get(url, _callback)
         else:
-            ajax_get(url, _callback)
-
+            _callback(data2)
 
     url, callback = _get_click_event_from_tab(target_element, target, href)
     if callback:
-        if url:
-            _get_or_post(url, callback)
+        if param=='file':
+            def _callback2(data2):
+                _get_or_post(None, callback, data2)
+            ajax_submit(target_element, _callback2, None, None)
+        elif url:
+            _get_or_post(url, callback, None)
         else:
             callback(target_element, None, None, None, event)
         event.preventDefault()

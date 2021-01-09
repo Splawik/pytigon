@@ -58,3 +58,32 @@ ret = ret.order_by('-id')
 
 if hasattr(self.form, 'process_empty_or_invalid'):
 return self.form.process_empty_or_invalid(self.request, ret)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# add
+
+url = r'(?P<add_param>[\w=_-]*)/add/$'
+
+if hasattr(self.model, 'init_new'):
+    if kwargs['add_param'] and kwargs['add_param'] != '-':
+        self.init_form = self.object.init_new(request, self, kwargs['add_param'])
+    else:
+        self.init_form = self.object.init_new(request, self)
+
+
+if self.object and hasattr(self.object, 'get_form_class'):
+    self.form_class = self.object.get_form_class(self, request, True)
+
