@@ -55,12 +55,6 @@ def inclusion_tag(file_name):
         return register.simple_tag(takes_context=True, name=getattr(func, '_decorated_function', func).__name__)(func2)
     return dec
 
-def mark_safe2(x):
-    if type(x)==str:
-        return mark_safe(x.replace('<', '[').replace('>', ']'))
-    else:
-        return x
-
 
 # row actions
 

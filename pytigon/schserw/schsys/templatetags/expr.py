@@ -22,9 +22,15 @@ import html
 
 from django import template
 from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+def mark_safe2(x):
+    if type(x)==str:
+        return mark_safe(x.replace('<', '[').replace('>', ']'))
+    else:
+        return x
 
 class ExprNode(template.Node):
     def __init__(self, expr_string, var_name, safe=True, escape=False):
