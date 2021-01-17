@@ -1,19 +1,26 @@
-__pragma__("alias", "jquery_is", "js_is")
+# from pytigon_js.tools import (
+#    ajax_post,
+#    ajax_post,
+#    get_table_type,
+#    load_js,
+# )
 
-from pytigon_js.tools import (
-    ajax_post,
-    ajax_post,
-    get_table_type,
-    load_js,
-)
+# from pytigon_js.ajax_region import refresh_ajax_frame
 
-from pytigon_js.ajax_region import refresh_ajax_frame
+
+def _is_visible(element):
+    test = RawJS('jQuery(element).is(":visible")')
+    if test:
+        return True
+    else:
+        return False
+
 
 def datetable_set_height(element):
 
     if jQuery(element).hasClass("table_get"):
         return
-    if not jQuery(element).jquery_is(":visible"):
+    if not _is_visible(element):
         return
 
     elem = jQuery(element).closest(".tabsort_panel")
@@ -27,15 +34,15 @@ def datetable_set_height(element):
         dy = 200
 
     panel = elem.find(".fixed-table-toolbar")
-    if not panel.jquery_is(":visible"):
+    if not _is_visible(panel):
         dy += panel.height() - 15
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
 
+
 def datatable_refresh(table):
     table.bootstrapTable("refresh")
 
-__pragma__("jsiter")
 
 def _rowStyle(value, row, index):
     x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information")
@@ -44,8 +51,6 @@ def _rowStyle(value, row, index):
         if c.length > 0:
             return {"classes": c}
     return {}
-
-__pragma__("nojsiter")
 
 
 def prepare_datatable(table):
@@ -58,12 +63,16 @@ def prepare_datatable(table):
 
     table.find("div.second_row").each(_local_fun)
 
+
 def prepare0(table):
     refr_block = table.closest(".ajax-frame")
     if refr_block:
-        tables = refr_block[0].querySelectorAll('div.fixed-table-header table.tabsort')
+        tables = Array.prototype.slice.call(
+            refr_block[0].querySelectorAll("div.fixed-table-header table.tabsort")
+        )
         for table in tables:
-            table.classList.remove('flexible_size')
+            table.classList.remove("flexible_size")
+
 
 def datatable_ajax(params):
     url = params["url"]
@@ -93,6 +102,7 @@ def datatable_ajax(params):
 
 def init_table(table, table_type):
     if table_type == "datatable":
+
         def onLoadSuccess(data):
             nonlocal table
             prepare_datatable(table)
@@ -102,7 +112,7 @@ def init_table(table, table_type):
                 jQuery(table).closest(".fixed-table-container").find(
                     ".fixed-table-pagination ul.pagination a"
                 ).addClass("page-link")
-                #datatable_onresize()
+                # datatable_onresize()
 
             setTimeout(_pagination, 0)
             return False
@@ -141,12 +151,12 @@ def init_table(table, table_type):
                 }
             )
 
-        def init_bootstrap_table(e, data):
+        def init_bootstrap_table(self, e, data):
             table.find("a.editable").editable({"step": "any"})
 
-            def on_hidden_editable(e, reason):
+            def on_hidden_editable(self, e, reason):
                 if reason == "save" or reason == "nochange":
-                    next = jQuery(this).closest("tr").js_next().find(".editable")
+                    next = jQuery(this).closest("tr").next().find(".editable")
                     if next.length > 0:
                         if next.hasClass("autoopen"):
 
@@ -166,7 +176,7 @@ def init_table(table, table_type):
         btn = table_panel.find(".tabsort-toolbar-expand")
         if btn:
 
-            def _handle_toolbar_expand(elem):
+            def _handle_toolbar_expand(self, elem):
                 panel = table_panel.find(".fixed-table-toolbar")
                 panel2 = jQuery(".list_content_header_two_row")
                 if jQuery(this).hasClass("active"):
@@ -183,7 +193,7 @@ def init_table(table, table_type):
                 panel2 = jQuery(".list_content_header_two_row")
                 panel.hide()
                 panel2.hide()
-                #datatable_onresize()
+                # datatable_onresize()
 
         def _process_resize(size_object):
             nonlocal table
@@ -191,14 +201,20 @@ def init_table(table, table_type):
 
         table[0].process_resize = _process_resize
 
+
 def table_loadeddata(event):
-    if getattr(event, 'data'):
-        if event.data and '$$RETURN_REFRESH_PARENT' in event.data:
-            jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
+    if getattr(event, "data"):
+        if event.data and "$$RETURN_REFRESH_PARENT" in event.data:
+            jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
+                "refresh"
+            )
         else:
             refresh_ajax_frame(event.data_source, "error", event.data)
-            #refresh_frame(event.data_source, event.data, None, None, None)
+            # refresh_frame(event.data_source, event.data, None, None, None)
     else:
-        jQuery(event.target).find('table[name=tabsort].datatable').bootstrapTable('refresh')
+        jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
+            "refresh"
+        )
+
 
 window.table_loadeddata = table_loadeddata

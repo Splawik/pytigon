@@ -1,6 +1,3 @@
-__pragma__("alias", "js_continue", "continue")
-
-
 INIT_DB_STRUCT = None
 
 
@@ -84,7 +81,7 @@ def get_list_from_table(table, on_open_list):
             cursor = evt.target.result
             if cursor:
                 items.push(cursor.value)
-                cursor.js_continue()
+                RawJS("cursor.continue()")
 
         cursor_request.onsuccess = onsuccess
 
@@ -143,7 +140,7 @@ def sync_and_run(tbl, fun):
         def complete(responseText):
             def _on_open_param(trans, db):
                 nonlocal tbl
-                param_get_request = db.js_get("time_sync_" + tbl)
+                param_get_request = db.get("time_sync_" + tbl)
 
                 def _on_param_error(event):
                     rec[2](fun)
@@ -187,19 +184,19 @@ def sync_and_run(tbl, fun):
                 param_get_request.onerror = _on_param_error
                 param_get_request.onsuccess = _on_param_success
 
-            #try:
+            # try:
             if True:
                 x = JSON.parse(responseText)
                 time = x["TIME"]
                 get_table("param", _on_open_param, False)
-            #except:
+            # except:
             #    console.log(responseText)
             #    window.open().document.write(responseText)
-                # win = window.open("data:text/html," + responseText, "_blank", "width=200,height=100")
-                # win.focus()
+            # win = window.open("data:text/html," + responseText, "_blank", "width=200,height=100")
+            # win.focus()
 
         def _on_request_init(request):
-            def _on_timeout(event):
+            def _on_timeout(self, event):
                 nonlocal fun
                 fun("timeout")
 

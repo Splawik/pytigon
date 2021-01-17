@@ -1,0 +1,146 @@
+.menu-content {
+  background-color: #aaa;
+  margin-bottom: 3px; }
+  .menu-content a.menu-href {
+    padding: 5px 2px 15px 2px;
+    margin: 5px 2px 5px 2px; }
+
+#logo_place {
+  position: absolute;
+  text-align: center;
+  left: 0px;
+  top: 0px;
+  width: 200px;
+  padding: 5px;
+  font-size: 1.2rem;
+  background: gold; }
+  #logo_place a {
+    color: white;
+    white-space: nowrap;
+    text-align: center;
+    width: 200px;
+    height: 30px;
+    display: block;
+    text-decoration: none !important; }
+
+#tabs {
+  padding-left: 200px;
+  background: black;
+  height: 40px; }
+  #tabs .nav-item {
+    background-color: rgba(255, 255, 255, 0.25); }
+  #tabs li.nav-item a {
+    color: white;
+    white-space: nowrap;
+    height: 41px;
+    box-shadow: none; }
+  #tabs li a.active {
+    color: white; }
+  #tabs .nav-link.active, #tabs .nav-item.show .nav-link {
+    background-color: #aaa !important;
+    border-color: #ddd transparent; }
+  #tabs li.nav-item:nth-child(1) a.active {
+    background-color: #3F51B5 !important; }
+  #tabs li.nav-item:nth-child(2) a.active {
+    background-color: #FF9800 !important; }
+  #tabs li.nav-item:nth-child(3) a.active {
+    background-color: #4CAF50 !important; }
+  #tabs li.nav-item:nth-child(4) a.active {
+    background-color: #F44336 !important; }
+  #tabs li.nav-item:nth-child(5) a.active {
+    background-color: #607D8B !important; }
+  #tabs li.nav-item:nth-child(6) a.active {
+    background-color: #009688 !important; }
+
+#menu div.tab-tab {
+  border-bottom: white;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: white; }
+  #menu div.tab-tab a.btn {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: none;
+    color: white;
+    box-shadow: none;
+    text-transform: none !important;
+    font-size: 0.7rem; }
+    #menu div.tab-tab a.btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none; }
+
+#menu div.tab-tab:nth-child(1) {
+  background-color: #3F51B5 !important; }
+
+#menu div.tab-tab:nth-child(2) {
+  background-color: #FF9800 !important; }
+
+#menu div.tab-tab:nth-child(3) {
+  background-color: #4CAF50 !important; }
+
+#menu div.tab-tab:nth-child(4) {
+  background-color: #F44336 !important; }
+
+#menu div.tab-tab:nth-child(5) {
+  background-color: #607D8B !important; }
+
+#menu div.tab-tab:nth-child(6) {
+  background-color: #009688 !important; }
+
+#tabs2 {
+  background-color: transparent;
+  margin-top: -32px;
+  padding-left: 10px;
+  position: absolute;
+  right: 10px; }
+  #tabs2 a {
+    background-color: #ddd !important;
+    white-space: nowrap;
+    box-shadow: none; }
+  #tabs2 a.active {
+    background-color: #fff !important; }
+  #tabs2 > li {
+    margin-left: 2px !important;
+    margin-right: 2px !important; }
+    #tabs2 > li > a {
+      background-color: rgba(250, 250, 250, 0.6) !important;
+      margin-bottom: 0px !important;
+      text-overflow: ellipsis;
+      max-width: 120px;
+      overflow: hidden;
+      font-size: small; }
+
+#tabs2_content {
+  background-color: #fff;
+  padding-top: 10 px; }
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto; }
+
+.desktop_content {
+  padding: 0px;
+  min-height: calc(100vh - 5px); }
+
+.content {
+  padding-top: 10px; }
+
+.drop_down_blocks {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 9px;
+  background: black;
+  height: 38px; }
+  .drop_down_blocks > li {
+    padding: 0px 16px; }
+    .drop_down_blocks > li > a {
+      color: white;
+      text-decoration: none !important; }
+
+#loading-indicator {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 40px; }

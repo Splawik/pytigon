@@ -1,11 +1,9 @@
-__pragma__("alias", "S", "$")
-__pragma__("alias", "js_import", "import")
-
-import pytigon_js.resources as rc
+# import pytigon_js.resources as rc
 
 LOADED_FILES = {}
 
-class Loading():
+
+class Loading:
     def __init__(self, element):
         self.load_type = None
         self.element = element
@@ -20,27 +18,27 @@ class Loading():
                 self.loading_indicator = loading_indicator
 
     def create(self):
-        if self.load_type == 'ladda':
+        if self.load_type == "ladda":
             self.ladda = window.Ladda.create(self.element)
 
     def start(self):
-        if self.load_type == 'ladda' and self.ladda:
+        if self.load_type == "ladda" and self.ladda:
             self.ladda.start()
-        elif self.load_type == 'global':
+        elif self.load_type == "global":
             self.loading_indicator.style.display = "block"
 
     def set_progress(self, progress):
-        if self.load_type == 'ladda' and self.ladda:
+        if self.load_type == "ladda" and self.ladda:
             self.ladda.setProgress(progress)
 
     def stop(self):
-        if self.load_type == 'ladda' and self.ladda:
+        if self.load_type == "ladda" and self.ladda:
             self.ladda.stop()
-        elif self.load_type == 'global':
+        elif self.load_type == "global":
             self.loading_indicator.style.display = "none"
 
     def remove(self):
-        if self.load_type == 'ladda' and self.ladda:
+        if self.load_type == "ladda" and self.ladda:
             self.ladda.remove()
             self.ladda = None
 
@@ -86,7 +84,7 @@ def download_binary_file(buf, content_disposition):
 
 
 def ajax_get(url, complete, process_req=None):
-    req = __new__(XMLHttpRequest())
+    req = XMLHttpRequest()
 
     if process_req:
         process_req(req)
@@ -106,7 +104,7 @@ def ajax_get(url, complete, process_req=None):
                 download_binary_file(req.response, disp)
                 complete(None)
             else:
-                reader = __new__(FileReader())
+                reader = FileReader()
 
                 def _on_reader_load():
                     if req.status != 200 and req.status != 0:
@@ -132,6 +130,7 @@ def ajax_get(url, complete, process_req=None):
     # req.overrideMimeType('text/plain; charset=x-user-defined')
     req.send(None)
 
+
 window.ajax_get = ajax_get
 
 
@@ -142,6 +141,7 @@ def _req_post(req, url, data, complete, content_type):
         process_blob = True
     except:
         pass
+
     def _onload(event):
         nonlocal req, process_blob, complete, url
         if process_blob:
@@ -150,7 +150,7 @@ def _req_post(req, url, data, complete, content_type):
                 download_binary_file(req.response, disp)
                 complete(None)
             else:
-                reader = __new__(FileReader())
+                reader = FileReader()
 
                 def _on_reader_load():
                     nonlocal req, reader
@@ -173,21 +173,21 @@ def _req_post(req, url, data, complete, content_type):
 
     req.open("POST", url, True)
 
-    req.setRequestHeader("X-CSRFToken", Cookies.js_get("csrftoken"))
+    req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
     if content_type:
         # req.setRequestHeader('Content-Type', content_type)
         pass
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    #if data.length:
+    # if data.length:
     #    req.setRequestHeader("Content-length", data.length)
-        # req.setRequestHeader("Connection", "close")
+    # req.setRequestHeader("Connection", "close")
 
     req.send(data)
 
 
 def ajax_post(url, data, complete, process_req=None):
-    req = __new__(XMLHttpRequest())
+    req = XMLHttpRequest()
     if process_req:
         process_req(req)
 
@@ -211,7 +211,7 @@ window.ajax_json = ajax_json
 
 def ajax_submit(_form, complete, data_filter=None, process_req=None):
     content_type = None
-    req = __new__(XMLHttpRequest())
+    req = XMLHttpRequest()
     form = jQuery(_form)
 
     if process_req:
@@ -219,7 +219,7 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None):
 
     if form.find("[type='file']").length > 0:
         # form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-        data = __new__(FormData(form[0]))
+        data = FormData(form[0])
         if data_filter:
             data = data_filter(data)
 
@@ -232,7 +232,7 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None):
         else:
             jQuery("#progress").width("0%")
 
-        def _progressHandlingFunction(e):
+        def _progressHandlingFunction(self, e):
             if e.lengthComputable:
                 jQuery("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")
 
@@ -246,7 +246,6 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None):
 
 
 window.ajax_submit = ajax_submit
-
 
 
 # def load_css(path):
@@ -265,27 +264,30 @@ window.ajax_submit = ajax_submit
 #         req.open("GET", path, True)
 #         req.send("")
 
-def load_css(path, on_load = None):
+
+def load_css(path, on_load=None):
     global LOADED_FILES
     if not (LOADED_FILES and path in LOADED_FILES):
         LOADED_FILES[path] = None
-        req = __new__(XMLHttpRequest())
+        req = XMLHttpRequest()
 
         def _onload():
             nonlocal req, on_load
             if on_load:
                 on_load(req)
             else:
-                jQuery('<style type="text/css"></style>').html(req.responseText).appendTo(
-                    "head"
-                )
+                jQuery('<style type="text/css"></style>').html(
+                    req.responseText
+                ).appendTo("head")
 
         req.onload = _onload
 
         req.open("GET", path, True)
         req.send("")
 
+
 window.load_css = load_css
+
 
 def on_load_js(path):
     global LOADED_FILES
@@ -296,6 +298,7 @@ def on_load_js(path):
                 fun()
         LOADED_FILES[path] = None
 
+
 def load_js(path, fun):
     global LOADED_FILES
     if LOADED_FILES and path in LOADED_FILES:
@@ -305,7 +308,7 @@ def load_js(path, fun):
             fun()
     else:
         LOADED_FILES[path] = [fun]
-        req = __new__(XMLHttpRequest())
+        req = XMLHttpRequest()
 
         def _onload():
             # jQuery.globalEval(req.responseText)
@@ -351,12 +354,13 @@ def load_many_js(paths, fun):
             if next_step != None:
                 next_step.append(path)
             else:
-                if path == '|':
+                if path == "|":
                     next_step = []
                 else:
                     counter = counter + 1
                     load_js(path, _fun)
     _fun()
+
 
 window.load_many_js = load_many_js
 
@@ -381,6 +385,7 @@ def get_elem_from_string(html, selectors=None):
         return element
     else:
         return temp
+
 
 window.get_elem_from_string = get_elem_from_string
 
@@ -437,27 +442,32 @@ window.icons = {
     "detailClose": "fa-minus",
 }
 
+
 def is_hidden(el):
     style = window.getComputedStyle(el)
-    return style.display == 'none'
+    return style.display == "none"
+
 
 window.is_hidden = is_hidden
+
 
 def is_visible(el):
     return not is_hidden(el)
 
+
 window.is_visible = is_visible
 
 TEMPLATES = {
-    'MODAL_EDIT': rc.MODAL_EDIT,
-    'MODAL_INFO': rc.MODAL_INFO,
-    'MODAL_DELETE': rc.MODAL_DELETE,
-    'MODAL_ERROR': rc.MODAL_ERROR,
-    'INLINE_EDIT': rc.INLINE_EDIT,
-    'INLINE_INFO': rc.INLINE_INFO,
-    'INLINE_DELETE': rc.INLINE_DELETE,
-    'INLINE_ERROR': rc.INLINE_ERROR
+    "MODAL_EDIT": MODAL_EDIT,
+    "MODAL_INFO": MODAL_INFO,
+    "MODAL_DELETE": MODAL_DELETE,
+    "MODAL_ERROR": MODAL_ERROR,
+    "INLINE_EDIT": INLINE_EDIT,
+    "INLINE_INFO": INLINE_INFO,
+    "INLINE_DELETE": INLINE_DELETE,
+    "INLINE_ERROR": INLINE_ERROR,
 }
+
 
 def get_template(template_name, param):
     global TEMPLATES
@@ -465,15 +475,16 @@ def get_template(template_name, param):
         return TEMPLATES[template_name].format(param)
     return None
 
+
 def super_query_selector(element, selector):
-    x = selector.split('/')
+    x = selector.split("/")
     e = element
     for pos in x:
-        if pos=='..':
+        if pos == "..":
             e = e.parentElement
-        elif pos == '.':
+        elif pos == ".":
             pass
-        elif pos.startswith('^'):
+        elif pos.startswith("^"):
             e = e.closest(pos[1:])
         else:
             e = e.querySelector(pos)
@@ -481,13 +492,15 @@ def super_query_selector(element, selector):
             return None
     return e
 
+
 window.super_query_selector = super_query_selector
 
+
 def super_insert(base_element, insert_selector, inserted_element):
-    if insert_selector and ':' in insert_selector:
-        x = insert_selector.split(':')
+    if insert_selector and ":" in insert_selector:
+        x = insert_selector.split(":")
         if x[0]:
-            element  = super_query_selector(base_element, x[0])
+            element = super_query_selector(base_element, x[0])
         else:
             element = base_element
         selector2 = x[1]
@@ -501,16 +514,16 @@ def super_insert(base_element, insert_selector, inserted_element):
     if not element:
         return None
 
-    if selector2 in ('overwrite', '>'):
+    if selector2 in ("overwrite", ">"):
         element.innerHTML = ""
         element.appendChild(inserted_element)
-    elif selector2 in ('append_first', '<<'):
+    elif selector2 in ("append_first", "<<"):
         element.insertBefore(inserted_element, element.firstChild)
-    elif selector2 in ("append", '>>'):
+    elif selector2 in ("append", ">>"):
         element.appendChild(inserted_element)
-    elif selector2 in ('after', ')'):
+    elif selector2 in ("after", ")"):
         element.parentElement.insertBefore(inserted_element, element.nextSibling)
-    elif selector2 in ('before', '('):
+    elif selector2 in ("before", "("):
         element.parentElement.insertBefore(inserted_element, element)
     elif selector2 == "class":
         for c in inserted_element.classList:
@@ -523,92 +536,108 @@ def super_insert(base_element, insert_selector, inserted_element):
 
     return element
 
+
 window.super_insert = super_insert
 
 
-_OPERATOR = ( '>>', '<<', '>', '(', ')', )
+_OPERATOR = (">>", "<<", ">", "(", ")")
+
 
 def send_to_dom(html_text, base_elem):
     nonlocal _OPERATOR
     for operator in _OPERATOR:
-        if '===' + operator in html_text:
-            x = html_text.split('===' + operator)
+        if "===" + operator in html_text:
+            x = html_text.split("===" + operator)
             html = x[0]
-            insert_selector  = x[1] + ":" + operator
+            insert_selector = x[1] + ":" + operator
             inserted_element = get_elem_from_string(html, None)
             return super_insert(base_elem, insert_selector, inserted_element)
     return None
+
 
 window.send_to_dom = send_to_dom
 
 
 def remove_element(element):
     if element:
+
         def _on_remove(index, value):
             value.on_remove()
 
-        if type(element) == str:
-            elements = document.querySelectorAll(element)
+        if isinstance(element, str):
+            elements = Array.prototype.slice.call(document.querySelectorAll(element))
         else:
-            elements = [element,]
+            elements = [element]
 
         for element2 in elements:
-            jQuery.each(jQuery(element2).find('.call_on_remove'), _on_remove)
+            jQuery.each(jQuery(element2).find(".call_on_remove"), _on_remove)
 
             def _on_remove_aside(index, value):
                 dialog = value.firstElementChild
-                if dialog and dialog.hasAttribute('modal'):
-                    jQuery(dialog).modal('hide')
+                if dialog and dialog.hasAttribute("modal"):
+                    jQuery(dialog).modal("hide")
                 else:
                     aside.remove()
-            jQuery.each(jQuery(element2).find('.plug'), _on_remove_aside)
+
+            jQuery.each(jQuery(element2).find(".plug"), _on_remove_aside)
 
             element2.remove()
 
+
 window.remove_element = remove_element
+
 
 def process_resize(target_element):
     param = {}
-    param['w'] = window.innerWidth
-    param['h'] = window.innerHeight
+    param["w"] = window.innerWidth
+    param["h"] = window.innerHeight
     body_rect = document.body.getBoundingClientRect()
-    elements1 = target_element.querySelectorAll('.flexible_size')
-    elements2 = target_element.querySelectorAll('.flexible_size_round2')
+    elements1 = Array.prototype.slice.call(
+        target_element.querySelectorAll(".flexible_size")
+    )
+    elements2 = Array.prototype.slice.call(
+        target_element.querySelectorAll(".flexible_size_round2")
+    )
     elements3 = []
-    if target_element.classList.contains("flexible_size") or target_element.classList.contains("flexible_size_round2"):
+    if target_element.classList.contains(
+        "flexible_size"
+    ) or target_element.classList.contains("flexible_size_round2"):
         elements3.append(target_element)
     for elements in (elements1, elements2, elements3):
         for elem in elements:
             elem_rect = elem.getBoundingClientRect()
             if elem.parentElement:
                 parent_rect = elem.getBoundingClientRect()
-                param['parent_offset_x'] = elem_rect.top - parent_rect.top
-                param['parent_offset_y'] = elem_rect.left - parent_rect.left
+                param["parent_offset_x"] = elem_rect.top - parent_rect.top
+                param["parent_offset_y"] = elem_rect.left - parent_rect.left
             else:
-                param['parent_offset_y'] = 0
-                param['parent_offset_x'] = 0
-            param['body_offset_y'] = elem_rect.top - body_rect.top
-            param['body_offset_x'] = elem_rect.left - body_rect.left
+                param["parent_offset_y"] = 0
+                param["parent_offset_x"] = 0
+            param["body_offset_y"] = elem_rect.top - body_rect.top
+            param["body_offset_x"] = elem_rect.left - body_rect.left
 
             if hasattr(elem, "process_resize"):
                 elem.process_resize(param)
             else:
-                size_desc = elem.hasAttribute('data-size')
+                size_desc = elem.hasAttribute("data-size")
                 if size_desc:
                     size_style = size_desc.format(param)
                     elem.style.cssText = size_style
                 else:
-                    h = (param['h'] - param['body_offset_y'] - 5) + 'px'
+                    h = (param["h"] - param["body_offset_y"] - 5) + "px"
                     elem.style.height = h
-                    elem.setAttribute('height', h)
+                    elem.setAttribute("height", h)
+
 
 window.process_resize = process_resize
+
 
 def get_page(elem):
     if elem.hasClass(".tab-pane"):
         return elem
     else:
         return elem.closest(".tab-pane")
+
 
 def get_table_type(elem):
     tabsort = elem.find(".tabsort")
@@ -620,11 +649,13 @@ def get_table_type(elem):
             return ret
     return ""
 
+
 def can_popup():
     if jQuery(".modal-open").length > 0:
         return False
     else:
         return True
+
 
 def corect_href(href, only_table=False):
     if not href:

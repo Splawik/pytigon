@@ -1,5 +1,6 @@
-from pytigon_js.tools import history_push_state, corect_href, remove_element, process_resize
-from pytigon_js.ajax_region import mount_html
+# from pytigon_js.tools import history_push_state, corect_href, remove_element, process_resize
+# from pytigon_js.ajax_region import mount_html
+
 
 class Page:
     def __init__(self, id, page):
@@ -7,10 +8,11 @@ class Page:
         self.page = page
 
     def set_href(self, href):
-        self.page.attr('_href', href)
+        self.page.attr("_href", href)
 
     def get_href(self):
-        return self.page.attr('_href')
+        return self.page.attr("_href")
+
 
 class TabMenuItem:
     def __init__(self, id, title, url, data=None):
@@ -18,6 +20,7 @@ class TabMenuItem:
         self.title = jQuery.trim(title)
         self.url = url
         self.data = data
+
 
 class TabMenu:
     def __init__(self):
@@ -74,7 +77,7 @@ class TabMenu:
         if window.PUSH_STATE:
             history_push_state(title, href)
 
-        def _on_show_tab(e):
+        def _on_show_tab(self, e):
             nonlocal menu_item
             window.ACTIVE_PAGE = Page(_id, jQuery("#" + _id), menu_item)
 
@@ -95,7 +98,7 @@ class TabMenu:
 
         mount_html(document.getElementById(_id), data_or_html, None)
 
-        def _on_button_click(event):
+        def _on_button_click(self, event):
             get_menu().remove_page(jQuery(this).attr("id").replace("button_", ""))
 
         jQuery(sprintf("#button_%s", _id)).click(_on_button_click)
@@ -131,7 +134,6 @@ class TabMenu:
                 window.init_start_wiki_page()
             jQuery("#body_desktop").show()
 
-
     #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
     def on_menu_href(self, elem, data_or_html, title, title_alt=None, url=None):
         if window.APPLICATION_TEMPLATE == "modern":
@@ -154,6 +156,7 @@ class TabMenu:
             mount_html(document.querySelector("#body_desktop"), data_or_html, None)
             jQuery(".auto-hide").trigger("click")
             return False
+
 
 def get_menu():
     if not window.MENU:

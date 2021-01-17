@@ -1,0 +1,54 @@
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh; }
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh; }
+
+div.content {
+  margin-top: 5px; }
+
+#loading-indicator {
+  position: absolute;
+  top: 0.5rem;
+  width: 48px;
+  right: 0.55rem; }
+
+.tabsort_panel {
+  margin-top: 0.5rem; }
+
+a.navbar-brand {
+  max-width: 180px;
+  margin-top: -0.5rem; }
+
+#topmenu {
+  margin-bottom: 2px;
+  position: relative;
+  padding: 0.5rem 0.5rem; }
+  #topmenu div.dropdown-menu a {
+    padding: 0.7rem 1.5rem; }
+  #topmenu ul.navbar-nav li.nav-item a {
+    font-size: 1rem; }
+
+#tabs2 {
+  background: rgba(0, 0, 0, 0.05); }
+  #tabs2 a.nav-link {
+    background-color: transparent !important;
+    white-space: nowrap; }
+  #tabs2 a.active {
+    background-color: #FFF !important; }
+  #tabs2 li.nav-item a {
+    display: block;
+    text-decoration: none !important; }
+  #tabs2 li.nav-item .close {
+    margin-top: 2px;
+    margin-right: 2px; }
+
+.tabsort-toolbar-expand2 {
+  position: absolute !important;
+  top: -14px;
+  left: initial;
+  background: #fc0 !important; }

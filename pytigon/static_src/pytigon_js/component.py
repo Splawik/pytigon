@@ -1,16 +1,19 @@
-from pytigon_js.tools import load_css, load_many_js
+# from pytigon_js.tools import load_css, load_many_js
+
 
 def set_state(component, state):
     spec = ("!", "?", "*", "0", "+", "-", "%")
-    if "state_actions" in component.options:
+    if component.options.hasOwnProperty("state_actions"):
         state_actions = component.options["state_actions"]
     else:
         state_actions = []
-    for key in Object.js_keys(state):
+    for key in Object.keys(state):
         value = state[key]
         if component.root != None:
             for c in (component.root, component):
-                nodes = c.querySelectorAll('[data-bind*="' + key + '"]')
+                nodes = Array.prototype.slice.call(
+                    c.querySelectorAll('[data-bind*="' + key + '"]')
+                )
                 for node in nodes:
                     xx = node.getAttribute("data-bind")
                     for x in xx.split(";"):
@@ -75,7 +78,7 @@ def set_state(component, state):
         component.state[key] = value
 
 
-class DefineWebComponent(object):
+class DefineWebComponent:
     def __init__(self, tag, shadow=False, js=None, css=None):
         self.tag = tag
         self.shadow = shadow
@@ -84,24 +87,26 @@ class DefineWebComponent(object):
         self.css = css
 
     def make_component(self):
-        if self.js and "init" in self.options:
+        if self.js and self.options.hasOwnProperty("init"):
             init = self.options["init"]
 
+            _component = self
+
             def _init(component):
-                nonlocal self, init
+                nonlocal _component, init
 
                 def _on_loadjs():
-                    nonlocal self, init, component
+                    nonlocal component
                     init(component)
 
-                load_many_js(self.js, _on_loadjs)
+                load_many_js(_component.js, _on_loadjs)
 
             self.options["init"] = _init
 
         if self.css:
             for css in self.css:
                 if self.shadow:
-                    if "template" in self.options:
+                    if self.options.hasOwnProperty("template"):
                         self.options["template"] = (
                             '<style>@import "'
                             + css
@@ -115,7 +120,7 @@ class DefineWebComponent(object):
                 else:
                     load_css(css)
 
-        if not "set_state" in self.options:
+        if not self.options.hasOwnProperty("set_state"):
             self.options["set_state"] = set_state
 
         define_custom_element(self.tag, self.shadow, self.options)
@@ -133,6 +138,7 @@ class DefineWebComponent(object):
 
     def __exit__(self, type, value, traceback):
         self.make_component()
+
 
 window.DefineWebComponent = DefineWebComponent
 
@@ -165,5 +171,6 @@ class GlobalBus:
     def unregister(self, component):
         if component in self.components:
             self.components.remove(component)
+
 
 window.GlobalBus = GlobalBus

@@ -10,6 +10,7 @@
         </script>
         {% compress js %}
                 {% jscript_link 'pytigon_js/pytigon-tools.js' %}
+                {% jscript_link 'pytigon_js/py_runtime.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
                 {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
                 {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
@@ -46,8 +47,7 @@
         {% module_link 'pytigon_js/pytigon.js' %}
 {% endblock %}
 {% block jquery_init %}
-        import {app_init,jquery_ready} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
-        import {init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon_js.db.js";
+        import {app_init,jquery_ready,init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
         {% block js_app_init %}
                 function base_fragment_init() {}
         {% endblock %}

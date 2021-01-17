@@ -1,14 +1,10 @@
-__pragma__("alias", "jquery_is", "js_is")
-
-#'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
-
-from pytigon_js.tabmenu import Page, get_menu
-from pytigon_js.offline import service_worker_and_indexedDB_test, install_service_worker
-from pytigon_js.db import sync_and_run
-from pytigon_js.component import GlobalBus
-from pytigon_js.events import register_global_event
-from pytigon_js.ajax_region import ajax_load, mount_html
-from pytigon_js.widget import *
+# from pytigon_js.tabmenu import Page, get_menu
+# from pytigon_js.offline import service_worker_and_indexedDB_test, install_service_worker
+# from pytigon_js.db import sync_and_run
+# from pytigon_js.component import GlobalBus
+# from pytigon_js.events import register_global_event
+# from pytigon_js.ajax_region import ajax_load, mount_html
+# from pytigon_js.widget import *
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -16,7 +12,7 @@ window.GLOBAL_BUS = GlobalBus()
 window.START_MENU_ID = None
 
 
-def _on_key(e):
+def _on_key(self, e):
     if e.which == 13:
         elem = jQuery(e.target)
         if elem.prop("tagName") != "TEXTAREA":
@@ -129,7 +125,7 @@ def activate_menu():
         # if menu:
         #    menu.activate_url(pathname2)
         # else:
-        a_tab = document.querySelectorAll("a.menu-href")
+        a_tab = Array.prototype.slice.call(document.querySelectorAll("a.menu-href"))
         for a in a_tab:
             if a.hasAttribute("href"):
                 href = a.getAttribute("href").split("?")[0]
@@ -196,7 +192,7 @@ def jquery_ready():
     pass
 
 
-def _on_popstate(e):
+def _on_popstate(self, e):
     if e.state:
         window.PUSH_STATE = False
         if window.APPLICATION_TEMPLATE == "modern":
