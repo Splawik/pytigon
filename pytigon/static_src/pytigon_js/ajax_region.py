@@ -129,7 +129,7 @@ def moveelement_init(dest_elem):
 
                     def _on_remove():
                         nonlocal obj, elem2
-                        for c in obj.classList:
+                        for c in Array.prototype.slice.call(obj.classList):
                             elem2.classList.remove(c)
 
                 else:
