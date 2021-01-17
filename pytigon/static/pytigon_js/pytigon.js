@@ -489,7 +489,7 @@ window.is_visible = is_visible;
 TEMPLATES = ({MODAL_EDIT: MODAL_EDIT, MODAL_INFO: MODAL_INFO, MODAL_DELETE: MODAL_DELETE, MODAL_ERROR: MODAL_ERROR, INLINE_EDIT: INLINE_EDIT, INLINE_INFO: INLINE_INFO, INLINE_DELETE: INLINE_DELETE, INLINE_ERROR: INLINE_ERROR});
 get_template = function flx_get_template (template_name, param) {
     if (_pyfunc_op_contains(template_name, TEMPLATES)) {
-        return _pymeth_format.call(TEMPLATES[template_name], param);
+        return _pymeth_replace.call(TEMPLATES[template_name], "{title}", param["title"]);
     }
     return null;
 };
@@ -551,7 +551,7 @@ super_insert = function flx_super_insert (base_element, insert_selector, inserte
     } else if (_pyfunc_op_contains(selector2, ["before", "("])) {
         element.parentElement.insertBefore(inserted_element, element);
     } else if (_pyfunc_op_equals(selector2, "class")) {
-        stub9_seq = inserted_element.classList;
+        stub9_seq = Array.prototype.slice.call(inserted_element.classList);
         if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
         for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
             c = stub9_seq[stub10_itr];

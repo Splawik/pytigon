@@ -26,7 +26,7 @@ from pytigon_lib.schtools.wiki import wikify, wiki_from_str, make_href
 from pytigon_lib.schtools.tools import norm_indent
 from django.template.loader import select_template
 from datetime import datetime
-import collections
+from collections import namedtuple
 
 template_content = """
 {# -*- coding: utf-8 -*- #}

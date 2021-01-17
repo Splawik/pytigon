@@ -137,7 +137,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.12.31 12:22:37'
+GEN_TIME = '2021.01.17 21:57:51'
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

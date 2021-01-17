@@ -472,7 +472,8 @@ TEMPLATES = {
 def get_template(template_name, param):
     global TEMPLATES
     if template_name in TEMPLATES:
-        return TEMPLATES[template_name].format(param)
+        #return TEMPLATES[template_name].format(param)
+        return TEMPLATES[template_name].replace('{title}', param['title'])
     return None
 
 
@@ -526,7 +527,7 @@ def super_insert(base_element, insert_selector, inserted_element):
     elif selector2 in ("before", "("):
         element.parentElement.insertBefore(inserted_element, element)
     elif selector2 == "class":
-        for c in inserted_element.classList:
+        for c in Array.prototype.slice.call(inserted_element.classList):
             element.classList.add(c)
     else:
         if hasattr(element, selector2):

@@ -1,25 +1,21 @@
-// Transcrypt'ed from Python, 2020-12-16 10:22:55
-import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../pytigon_js/org.transcrypt.__runtime__.js';
-import {DefineWebComponent} from '../../pytigon_js/pytigon_js.component.js';
-var __name__ = '__main__';
-export var TAG = 'ptig-script';
-export var BASE_PATH = window.BASE_PATH + 'static/';
-var comp = DefineWebComponent (TAG, true);
+var BASE_PATH, TAG, comp, init, stub1_context, stub2_err;
+TAG = "ptig-script";
+BASE_PATH = window.BASE_PATH + "static/";
+stub1_context = (new DefineWebComponent(TAG, true));
+comp = stub1_context.__enter__();
 try {
-	comp.__enter__ ();
-	var init = comp.fun ('init') (function (component) {
-		var src = component.getAttribute ('src');
-		var finish = function () {
-			// pass;
-		};
-		window.load_js (src, finish);
-	});
-	comp.__exit__ ();
-}
-catch (__except0__) {
-	if (! (comp.__exit__ (__except0__.name, __except0__, __except0__.stack))) {
-		throw __except0__;
-	}
-}
+    init = function flx_init (component) {
+        var finish, src;
+        src = component.getAttribute("src");
+        finish = (function flx_finish () {
+            return null;
+        }).bind(this);
 
-//# sourceMappingURL=input.map
+        window.load_js(src, finish);
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub2_err=err_0; }
+if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+} else { stub1_context.__exit__(null, null, null); }

@@ -1,9 +1,6 @@
-// Transcrypt'ed from Python, 2020-12-16 10:22:54
-import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__,  __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from '../../pytigon_js/org.transcrypt.__runtime__.js';
-import {DefineWebComponent} from '../../pytigon_js/pytigon_js.component.js';
-var __name__ = '__main__';
-export var TAG = 'ptig-webrtc';
-export var TEMPLATE = '        <div class=\"container bs-docs-container\">\n' +
+var BASE_PATH, TAG, TEMPLATE, comp, get_configuration, init, init_webrtc, stub1_context, stub2_err;
+TAG = "ptig-webrtc";
+TEMPLATE = '        <div class=\"container bs-docs-container\">\n' +
     '                <div class=\"row\">\n' +
     '                        <div class=\"videos\">\n' +
     '                                <div class=\"col-md-9\">\n' +
@@ -23,220 +20,275 @@ export var TEMPLATE = '        <div class=\"container bs-docs-container\">\n' +
     '        </div>\n' +
     '\n' +
     '';
-export var BASE_PATH = window.BASE_PATH + 'static/schcomponents/components';
-export var get_configuration = function (server, username, password) {
-	var ret = { iceServers: [ {"urls": "stun:" + server, "username": username, "credential": password }, {"urls":"turn:" + server, "username": username, "credential": password } ] };
-	print (ret);
-	return ret;
+BASE_PATH = window.BASE_PATH + "static/schcomponents/components";
+get_configuration = function flx_get_configuration (server, username, password) {
+    var ret;
+    ret = __pragma__("js", "{}", "{ iceServers: [ {\"urls\": \"stun:\" + server, \"username\": username, \"credential\": password }, {\"urls\":\"turn:\" + server, \"username\": username, \"credential\": password } ] };");
+    console.log(ret);
+    return ret;
 };
-export var init_webrtc = function (url, host, room, local, remote, traceback, streaming) {
-	if (host) {
-		var initiator = false;
-	}
-	else {
-		var initiator = true;
-	}
-	var pc = null;
-	var ws = new WebSocket (url.py_replace ('http', 'ws').py_replace ('https', 'wss'));
-	var PeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
-	var IceCandidate = window.RTCIceCandidate || window.RTCIceCandidate;
-	var SessionDescription = window.RTCSessionDescription || window.RTCSessionDescription;
-	navigator.getUserMedia = navigator.getUserMedia || navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia;
-	var timer = null;
-	var connected = false;
-	var _on_remove = function () {
-		console.log ('close on remove');
-		if (pc) {
-			pc.close ();
-		}
-		pc = null;
-		ws.close ();
-		ws = null;
-		if (timer) {
-			window.clearInterval (timer);
-			timer = null;
-		}
-	};
-	local.on_remove = _on_remove;
-	var _success = function (stream) {
-		var server = 'pytigon.cloud';
-		var username = 'auto';
-		var password = 'anawa';
-		var ws_onmessage = ws.onmessage;
-		var on_timer = function () {
-			if (ws) {
-				ws.send (JSON.stringify (dict ([['ping', 1]])));
-			}
-			if (pc && !(host) && !(connected)) {
-				createOffer ();
-			}
-		};
-		timer = setInterval (on_timer, 10000);
-		var init_pc = function () {
-			pc = new PeerConnection (get_configuration (server, username, password));
-			var _onaddremotestream = function (event) {
-				remote.srcObject = event.stream;
-				remote.play ();
-				logStreaming (true);
-			};
-			pc.onaddstream = _onaddremotestream;
-			var _onremovestream = function (event) {
-				print ('onremovestream:');
-				print (event);
-			};
-			pc.onremovestream = _onremovestream;
-			var _onicecandidate = function (event) {
-				if (event.candidate) {
-					ws.send (JSON.stringify (event.candidate));
-				}
-			};
-			pc.addEventListener ('icecandidate', _onicecandidate);
-		};
-		init_pc ();
-		var log_video_loaded = function (event) {
-			var video = event.target;
-			print (video.id);
-			print (video.videoWidth);
-			print (video.videoHeight);
-		};
-		var log_resized_video = function (event) {
-			log_video_loaded (event);
-		};
-		local.addEventListener ('loadedmetadata', log_video_loaded);
-		remote.addEventListener ('loadedmetadata', log_video_loaded);
-		remote.addEventListener ('onresize', log_resized_video);
-		var _onmessage = function (event) {
-			var signal = JSON.parse (event.data);
-			if (signal.sdp) {
-				if (initiator) {
-					receiveAnswer (signal);
-				}
-				else {
-					receiveOffer (signal);
-				}
-			}
-			else if (signal.candidate) {
-				pc.addIceCandidate (new IceCandidate (signal));
-			}
-			else if (signal.destroy) {
-				if (pc) {
-					pc.close ();
-				}
-				init_pc ();
-				pc.addStream (stream);
-				connected = false;
-			}
-			else {
-				ws_onmessage (event);
-			}
-		};
-		ws.onmessage = _onmessage;
-		if (stream) {
-			pc.addStream (stream);
-			local.srcObject = stream;
-			local.play ();
-		}
-		if (initiator) {
-			createOffer ();
-		}
-		else {
-			log ('Waiting for guest connection..');
-		}
-		logStreaming (false);
-	};
-	var _fail = function () {
-		var argi = tuple ([].slice.apply (arguments).slice (0));
-		traceback.innerHTML = Array.prototype.join.call (argi, ' ');
-		traceback.setAttribute ('class', 'bg-danger');
-	};
-	var initialize = function () {
-		var constraints = dict ([['audio', true], ['video', true]]);
-		navigator.getUserMedia (constraints, _success, _fail);
-	};
-	var _socketCallback = function (event) {
-		var signal = JSON.parse (event.data);
-		if (signal.status) {
-			if (signal.status == 'connected') {
-				if (host) {
-					ws.send (JSON.stringify (dict ([['init_consumer', 1], ['room', room], ['host', host]])));
-				}
-				else {
-					ws.send (JSON.stringify (dict ([['init_consumer', 1], ['room', room]])));
-				}
-			}
-			else if (signal.status == 'initiated') {
-				initialize ();
-			}
-		}
-	};
-	ws.onmessage = _socketCallback;
-	var createOffer = function () {
-		log ('Creating offer. Please wait.');
-		var _create_offer = function (offer) {
-			log ('Success offer');
-			var set_description = function () {
-				log ('Sending to remote..');
-				ws.send (JSON.stringify (offer));
-			};
-			pc.setLocalDescription (offer, set_description, _fail);
-		};
-		pc.createOffer (_create_offer, _fail);
-	};
-	var receiveOffer = function (offer) {
-		log ('Received offer.');
-		var set_remote_description = function () {
-			log ('Creating response');
-			var create_answer = function (answer) {
-				log ('Created response');
-				var set_local_description = function () {
-					log ('Sent response');
-					ws.send (JSON.stringify (answer));
-					var connected = true;
-				};
-				pc.setLocalDescription (answer, set_local_description, _fail);
-			};
-			pc.createAnswer (create_answer, _fail);
-		};
-		pc.setRemoteDescription (new SessionDescription (offer), set_remote_description, _fail);
-	};
-	var receiveAnswer = function (answer) {
-		log ('received answer');
-		pc.setRemoteDescription (new SessionDescription (answer));
-		connected = true;
-	};
-	var log = function () {
-		var argi = tuple ([].slice.apply (arguments).slice (0));
-		traceback.innerHTML = Array.prototype.join.call (argi, ' ');
-		console.log.apply (console, argi);
-	};
-	var logStreaming = function (is_streaming) {
-		if (is_streaming) {
-			streaming.innerHTML = '[streaming]';
-		}
-		else {
-			streaming.innerHTML = '[.]';
-		}
-	};
-};
-var comp = DefineWebComponent (TAG, true, [BASE_PATH + '/adapter-latest.js']);
-try {
-	comp.__enter__ ();
-	comp.options ['template'] = TEMPLATE;
-	var init = comp.fun ('init') (function (component) {
-		var remote = component.root.querySelector ('.webrtc_remote');
-		var local = component.root.querySelector ('.webrtc_local');
-		var traceback = component.root.querySelector ('.webrtc_traceback');
-		var streaming = component.root.querySelector ('webrtc_streaming');
-		var url = window.location;
-		var src = ((url.protocol + '//') + url.host) + component.getAttribute ('src');
-		init_webrtc (src, component.getAttribute ('host'), component.getAttribute ('roomId'), local, remote, traceback, streaming);
-	});
-	comp.__exit__ ();
-}
-catch (__except0__) {
-	if (! (comp.__exit__ (__except0__.name, __except0__, __except0__.stack))) {
-		throw __except0__;
-	}
-}
 
-//# sourceMappingURL=input.map
+init_webrtc = function flx_init_webrtc (url, host, room, local, remote, traceback, streaming) {
+    var IceCandidate, PeerConnection, SessionDescription, _fail, _on_remove, _socketCallback, _success, connected, createOffer, initialize, initiator, log, logStreaming, pc, receiveAnswer, receiveOffer, timer, ws;
+    if (_pyfunc_truthy(host)) {
+        initiator = false;
+    } else {
+        initiator = true;
+    }
+    pc = null;
+    ws = new WebSocket(_pymeth_replace.call(_pymeth_replace.call(url, "http", "ws"), "https", "wss"));
+    PeerConnection = _pyfunc_truthy(window.RTCPeerConnection) || window.webkitRTCPeerConnection;
+    IceCandidate = _pyfunc_truthy(window.RTCIceCandidate) || window.RTCIceCandidate;
+    SessionDescription = _pyfunc_truthy(window.RTCSessionDescription) || window.RTCSessionDescription;
+    navigator.getUserMedia = _pyfunc_truthy(navigator.getUserMedia) || _pyfunc_truthy(navigator.mediaDevices.getUserMedia) || navigator.webkitGetUserMedia;
+    timer = null;
+    connected = false;
+    _on_remove = (function flx__on_remove () {
+        console.log("close on remove");
+        if (_pyfunc_truthy(pc)) {
+            pc.close();
+        }
+        pc = null;
+        ws.close();
+        ws = null;
+        if (_pyfunc_truthy(timer)) {
+            window.clearInterval(timer);
+            timer = null;
+        }
+        return null;
+    }).bind(this);
+
+    local.on_remove = _on_remove;
+    _success = (function flx__success (stream) {
+        var _onmessage, init_pc, log_resized_video, log_video_loaded, on_timer, password, server, username, ws_onmessage;
+        server = "pytigon.cloud";
+        username = "auto";
+        password = "anawa";
+        ws_onmessage = ws.onmessage;
+        on_timer = (function flx_on_timer () {
+            if (_pyfunc_truthy(ws)) {
+                ws.send(JSON.stringify(({ping: 1})));
+            }
+            if ((_pyfunc_truthy(pc) && ((!_pyfunc_truthy(host))) && ((!_pyfunc_truthy(connected))))) {
+                createOffer();
+            }
+            return null;
+        }).bind(this);
+
+        timer = setInterval(on_timer, 10000);
+        init_pc = (function flx_init_pc () {
+            var _onaddremotestream, _onicecandidate, _onremovestream;
+            pc = new PeerConnection(get_configuration(server, username, password));
+            _onaddremotestream = (function flx__onaddremotestream (event) {
+                remote.srcObject = event.stream;
+                remote.play();
+                logStreaming(true);
+                return null;
+            }).bind(this);
+
+            pc.onaddstream = _onaddremotestream;
+            _onremovestream = (function flx__onremovestream (event) {
+                console.log("onremovestream:");
+                console.log(event);
+                return null;
+            }).bind(this);
+
+            pc.onremovestream = _onremovestream;
+            _onicecandidate = (function flx__onicecandidate (event) {
+                if (_pyfunc_truthy(event.candidate)) {
+                    ws.send(JSON.stringify(event.candidate));
+                }
+                return null;
+            }).bind(this);
+
+            pc.addEventListener("icecandidate", _onicecandidate);
+            return null;
+        }).bind(this);
+
+        init_pc();
+        log_video_loaded = (function flx_log_video_loaded (event) {
+            var video;
+            video = event.target;
+            console.log(video.id);
+            console.log(video.videoWidth);
+            console.log(video.videoHeight);
+            return null;
+        }).bind(this);
+
+        log_resized_video = (function flx_log_resized_video (event) {
+            log_video_loaded(event);
+            return null;
+        }).bind(this);
+
+        local.addEventListener("loadedmetadata", log_video_loaded);
+        remote.addEventListener("loadedmetadata", log_video_loaded);
+        remote.addEventListener("onresize", log_resized_video);
+        _onmessage = (function flx__onmessage (event) {
+            var signal;
+            signal = JSON.parse(event.data);
+            if (_pyfunc_truthy(signal.sdp)) {
+                if (_pyfunc_truthy(initiator)) {
+                    receiveAnswer(signal);
+                } else {
+                    receiveOffer(signal);
+                }
+            } else if (_pyfunc_truthy(signal.candidate)) {
+                pc.addIceCandidate(new IceCandidate(signal));
+            } else if (_pyfunc_truthy(signal.destroy)) {
+                if (_pyfunc_truthy(pc)) {
+                    pc.close();
+                }
+                init_pc();
+                pc.addStream(stream);
+                connected = false;
+            } else {
+                ws_onmessage(event);
+            }
+            return null;
+        }).bind(this);
+
+        ws.onmessage = _onmessage;
+        if (_pyfunc_truthy(stream)) {
+            pc.addStream(stream);
+            local.srcObject = stream;
+            local.play();
+        }
+        if (_pyfunc_truthy(initiator)) {
+            createOffer();
+        } else {
+            log("Waiting for guest connection..");
+        }
+        logStreaming(false);
+        return null;
+    }).bind(this);
+
+    _fail = (function flx__fail () {
+        var argi;
+        argi = Array.prototype.slice.call(arguments);
+        traceback.innerHTML = Array.prototype.join.call(argi, " ");
+        traceback.setAttribute("class", "bg-danger");
+        return null;
+    }).bind(this);
+
+    initialize = (function flx_initialize () {
+        var constraints;
+        constraints = ({audio: true, video: true});
+        navigator.getUserMedia(constraints, _success, _fail);
+        return null;
+    }).bind(this);
+
+    _socketCallback = (function flx__socketCallback (event) {
+        var signal;
+        signal = JSON.parse(event.data);
+        if (_pyfunc_truthy(signal.status)) {
+            if (_pyfunc_op_equals(signal.status, "connected")) {
+                if (_pyfunc_truthy(host)) {
+                    ws.send(JSON.stringify(({init_consumer: 1, room: room, host: host})));
+                } else {
+                    ws.send(JSON.stringify(({init_consumer: 1, room: room})));
+                }
+            } else if (_pyfunc_op_equals(signal.status, "initiated")) {
+                initialize();
+            }
+        }
+        return null;
+    }).bind(this);
+
+    ws.onmessage = _socketCallback;
+    createOffer = (function flx_createOffer () {
+        var _create_offer;
+        log("Creating offer. Please wait.");
+        _create_offer = (function flx__create_offer (offer) {
+            var set_description;
+            log("Success offer");
+            set_description = (function flx_set_description () {
+                log("Sending to remote..");
+                ws.send(JSON.stringify(offer));
+                return null;
+            }).bind(this);
+
+            pc.setLocalDescription(offer, set_description, _fail);
+            return null;
+        }).bind(this);
+
+        pc.createOffer(_create_offer, _fail);
+        return null;
+    }).bind(this);
+
+    receiveOffer = (function flx_receiveOffer (offer) {
+        var set_remote_description;
+        log("Received offer.");
+        set_remote_description = (function flx_set_remote_description () {
+            var create_answer;
+            log("Creating response");
+            create_answer = (function flx_create_answer (answer) {
+                var set_local_description;
+                log("Created response");
+                set_local_description = (function flx_set_local_description () {
+                    var connected;
+                    log("Sent response");
+                    ws.send(JSON.stringify(answer));
+                    connected = true;
+                    return null;
+                }).bind(this);
+
+                pc.setLocalDescription(answer, set_local_description, _fail);
+                return null;
+            }).bind(this);
+
+            pc.createAnswer(create_answer, _fail);
+            return null;
+        }).bind(this);
+
+        pc.setRemoteDescription(new SessionDescription(offer), set_remote_description, _fail);
+        return null;
+    }).bind(this);
+
+    receiveAnswer = (function flx_receiveAnswer (answer) {
+        log("received answer");
+        pc.setRemoteDescription(new SessionDescription(answer));
+        connected = true;
+        return null;
+    }).bind(this);
+
+    log = (function flx_log () {
+        var argi;
+        argi = Array.prototype.slice.call(arguments);
+        traceback.innerHTML = Array.prototype.join.call(argi, " ");
+        console.log.apply(console, argi);
+        return null;
+    }).bind(this);
+
+    logStreaming = (function flx_logStreaming (is_streaming) {
+        if (_pyfunc_truthy(is_streaming)) {
+            streaming.innerHTML = "[streaming]";
+        } else {
+            streaming.innerHTML = "[.]";
+        }
+        return null;
+    }).bind(this);
+
+    return null;
+};
+
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/adapter-latest.js"]));
+comp = stub1_context.__enter__();
+try {
+    comp.options["template"] = TEMPLATE;
+    init = function flx_init (component) {
+        var local, remote, src, streaming, traceback, url;
+        remote = component.root.querySelector(".webrtc_remote");
+        local = component.root.querySelector(".webrtc_local");
+        traceback = component.root.querySelector(".webrtc_traceback");
+        streaming = component.root.querySelector("webrtc_streaming");
+        url = window.location;
+        src = ((url.protocol + "//") + url.host) + component.getAttribute("src");
+        init_webrtc(src, component.getAttribute("host"), component.getAttribute("roomId"), local, remote, traceback, streaming);
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub2_err=err_0; }
+if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+} else { stub1_context.__exit__(null, null, null); }
+export {get_configuration, init_webrtc};
