@@ -56,7 +56,7 @@ def _get_title(element, data_element, url):
     return title, title_alt
 
 
-def on_global_event(event):
+def on_global_event(self, event):
     global EVENT_TAB
     for pos in EVENT_TAB:
         if pos[0] == event.type:
@@ -523,7 +523,7 @@ EVENT_CLICK_TAB = [
 ]
 
 
-def on_resize(event):
+def on_resize(self, event):
     process_resize(document.body)
 
 

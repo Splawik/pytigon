@@ -147,11 +147,11 @@ register_mount_fun(moveelement_init)
 
 def label_floating_init(dest_elem):
     def _on_blur(self, e):
-        if e["type"] == "focus" or this.value.length > 0:
+        if e["type"] == "focus" or self.value.length > 0:
             test = True
         else:
             test = False
-        jQuery(this).parents(".form-group").toggleClass("focused", test)
+        jQuery(self).parents(".form-group").toggleClass("focused", test)
 
     jQuery(dest_elem).find(".label-floating .form-control").on(
         "focus blur", _on_blur
@@ -191,8 +191,8 @@ def select2_init(dest_elem):
             control.classList.add("ajax-frame")
             control.setAttribute("data-region", "get_row")
 
-    def init_select2_ctrl():
-        sel2 = jQuery(this)
+    def init_select2_ctrl(self):
+        sel2 = jQuery(self)
         src = sel2.closest(".input-group")
         if src.length == 1:
             if src[0].hasAttribute("item_id"):

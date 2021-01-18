@@ -1135,7 +1135,7 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
                 if (_pyfunc_truthy(_pymeth_endswith.call(data_position, ":class"))) {
                     _on_remove = (function flx__on_remove () {
                         var c, stub5_seq, stub6_itr;
-                        stub5_seq = obj.classList;
+                        stub5_seq = Array.prototype.slice.call(obj.classList);
                         if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
                         for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
                             c = stub5_seq[stub6_itr];
@@ -1213,7 +1213,7 @@ select2_init = function flx_select2_init (dest_elem) {
             control.setAttribute("data-region", "get_row");
         }
     }
-    init_select2_ctrl = (function flx_init_select2_ctrl () {
+    init_select2_ctrl = function () {
         var id, sel2, src, text;
         sel2 = jQuery(this);
         src = sel2.closest(".input-group");
@@ -1227,7 +1227,7 @@ select2_init = function flx_select2_init (dest_elem) {
             }
         }
         return null;
-    }).bind(this);
+    };
 
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2")).each)(init_select2_ctrl);
     return null;
@@ -1742,7 +1742,7 @@ _get_title = function flx__get_title (element, data_element, url) {
     return [title, title_alt];
 };
 
-on_global_event = function flx_on_global_event (event) {
+on_global_event = function (event) {
     var element, pos, stub1_seq, stub2_itr;
     stub1_seq = EVENT_TAB;
     if ((typeof stub1_seq === "object") && (!Array.isArray(stub1_seq))) { stub1_seq = Object.keys(stub1_seq);}
@@ -2196,7 +2196,7 @@ only_get = function flx_only_get (target_element, data_element, url, param, even
 };
 
 EVENT_CLICK_TAB = [["inline", "*", true, false, on_inline], ["inline_edit", "*", true, false, on_inline_edit_new], ["inline_info", "*", true, false, on_inline_info], ["inline_delete", "*", true, false, on_inline_delete], ["inline_error", "*", true, false, on_inline_error], ["popup", "*", true, false, on_popup], ["popup_edit", "*", true, false, on_popup_edit_new], ["popup_info", "*", true, false, on_popup_info], ["popup_delete", "*", true, false, on_popup_delete], ["popup_error", "*", true, false, on_popup_error], ["_top", "*", false, false, on_replace_app], ["_top2", "*", true, false, on_new_tab], ["_self", "*", true, false, refresh_page], ["_parent", "*", true, false, on_new_tab], ["refresh_frame", "*", true, false, refresh_frame], ["refresh_page", "*", true, false, refresh_page], ["refresh_app", "*", false, false, refresh_app], ["null", "*", false, false, only_get]];
-on_resize = function flx_on_resize (event) {
+on_resize = function (event) {
     process_resize(document.body);
     return null;
 };
