@@ -2674,11 +2674,15 @@ init_table = function flx_init_table (table, table_type) {
 };
 
 table_loadeddata = function flx_table_loadeddata (event) {
+    var dt;
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {
-        if ((_pyfunc_truthy(event.data) && _pyfunc_op_contains("$$RETURN_REFRESH_PARENT", event.data))) {
+        dt = data_type(event.data);
+        if (_pyfunc_op_equals(dt, "$$RETURN_REFRESH_PARENT")) {
             ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+        } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
+            refresh_ajax_frame((_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement), "error", event.data);
         } else {
-            refresh_ajax_frame(event.data_source, "error", event.data);
+            refresh_ajax_frame((_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement), "page", event.data);
         }
     } else {
         ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");

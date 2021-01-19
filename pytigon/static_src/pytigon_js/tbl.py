@@ -204,12 +204,15 @@ def init_table(table, table_type):
 
 def table_loadeddata(event):
     if getattr(event, "data"):
-        if event.data and "$$RETURN_REFRESH_PARENT" in event.data:
+        dt = data_type(event.data)
+        if dt == "$$RETURN_REFRESH_PARENT":
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
                 "refresh"
             )
+        elif dt == "$$RETURN_ERROR":
+            refresh_ajax_frame(event.data_source if event.data_source else event.srcElement , "error", event.data)
         else:
-            refresh_ajax_frame(event.data_source, "error", event.data)
+            refresh_ajax_frame(event.data_source if event.data_source else event.srcElement, "page", event.data)
             # refresh_frame(event.data_source, event.data, None, None, None)
     else:
         jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
