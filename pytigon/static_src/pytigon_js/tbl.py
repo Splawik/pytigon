@@ -213,7 +213,6 @@ def table_loadeddata(event):
             refresh_ajax_frame(event.data_source if event.data_source else event.srcElement , "error", event.data)
         else:
             refresh_ajax_frame(event.data_source if event.data_source else event.srcElement, "page", event.data)
-            # refresh_frame(event.data_source, event.data, None, None, None)
     else:
         jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
             "refresh"
