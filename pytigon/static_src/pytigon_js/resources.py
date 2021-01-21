@@ -90,7 +90,7 @@ INLINE_BASE = """
                     <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                 </div>
                 <div class='modal-body'>
-                    <div class='dialog-data'></div>
+                    <div class='dialog-data ajax-frame' data-region='error'></div>
                 </div>
                 <div class='modal-footer'>
                     {{modal_footer}}
@@ -117,7 +117,7 @@ INLINE_DELETE_BASE = """
                 <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
             </div>
             <div class='modal-body'>
-                <div class='dialog-data'></div>
+                <div class='dialog-data ajax-frame' data-region='error'></div>
             </div>
             <div class='modal-footer'>
                 {{modal_footer}}
