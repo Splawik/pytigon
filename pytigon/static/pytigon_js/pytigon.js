@@ -1349,7 +1349,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
             mount_html(frame, data, link);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_REFRESH"])) {
-            return refresh_ajax_frame(element, region_name, null, callback, callback_on_error);
+            return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK", "$$RETURN_REFRESH_PARENT"])) {
             return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {

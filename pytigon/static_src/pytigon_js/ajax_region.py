@@ -327,7 +327,7 @@ def refresh_ajax_frame(
         else:
             if dt in ("$$RETURN_OK", "$$RETURN_REFRESH"):
                 return refresh_ajax_frame(
-                    element, region_name, None, callback, callback_on_error
+                    region.parentElement, region_name, None, callback, callback_on_error
                 )
             elif dt in (
                 "$$RETURN_NEW_ROW_OK",
