@@ -1014,7 +1014,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, ajax_load, data_type, datatable_init, datetime_init, get_ajax_frame, get_ajax_link, get_ajax_region, label_floating_init, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
+var MOUNT_INIT_FUN, _refresh_page, ajax_load, data_type, datatable_init, datetime_init, get_ajax_frame, get_ajax_link, get_ajax_region, label_floating_init, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1328,6 +1328,28 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name) {
 };
 
 window.get_ajax_frame = get_ajax_frame;
+_refresh_page = function flx__refresh_page (target_element, data_element) {
+    var data_element2, frame;
+    frame = target_element.closest("div.content");
+    if ((_pyfunc_truthy(frame) && _pyfunc_truthy(frame.firstElementChild))) {
+        if ((Object.prototype.toString.call(data_element).slice(8,-1).toLowerCase() === 'string')) {
+            data_element2 = null;
+        } else {
+            data_element2 = data_element.querySelector("div.content");
+        }
+        if (_pyfunc_truthy(data_element2)) {
+            if (_pyfunc_truthy(data_element2.firstElementChild)) {
+                data_element2 = data_element2.firstElementChild;
+            }
+        }
+        if ((!_pyfunc_truthy(data_element2))) {
+            data_element2 = data_element;
+        }
+        mount_html(frame, data_element2);
+    }
+    return null;
+};
+
 refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data_element, callback, callback_on_error) {
     var _callback, data, frame, link, loading, post, region, url;
     region_name = (region_name === undefined) ? null: region_name;
@@ -1365,6 +1387,8 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             } else {
                 (window.open().document.write)(data.innerHTML);
             }
+        } else if (_pyfunc_op_equals(region_name, "page")) {
+            _refresh_page(frame, data);
         } else {
             mount_html(frame, data, link);
         }

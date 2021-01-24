@@ -300,6 +300,21 @@ def get_ajax_frame(element, region_name=None):
 window.get_ajax_frame = get_ajax_frame
 
 
+def _refresh_page(target_element, data_element):
+    frame = target_element.closest("div.content")
+    if frame and frame.firstElementChild:
+        if isinstance(data_element, str):
+            data_element2 = None
+        else:
+            data_element2 = data_element.querySelector("div.content")
+        if data_element2:
+            if data_element2.firstElementChild:
+                data_element2 = data_element2.firstElementChild
+        if not data_element2:
+            data_element2 = data_element
+        mount_html(frame, data_element2)
+
+
 def refresh_ajax_frame(
     element, region_name=None, data_element=None, callback=None, callback_on_error=None
 ):
@@ -352,7 +367,10 @@ def refresh_ajax_frame(
                 else:
                     window.open().document.write(data.innerHTML)
             else:
-                mount_html(frame, data, link)
+                if region_name == 'page':
+                    _refresh_page(frame, data)
+                else:
+                    mount_html(frame, data, link)
 
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD"):
             if callback_on_error:

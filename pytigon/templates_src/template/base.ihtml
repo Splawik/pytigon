@@ -309,7 +309,7 @@
                             %if table_type == 'scrolled' or not table_type:
                                 <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
                             % else:
-                                <div class="ajax-region ajax-frame" data-region="table" onloadeddata="table_loadeddata(event);">
+                                <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
 
                         table name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_class %}{% endblock %}
                             %% list_full_row_header
