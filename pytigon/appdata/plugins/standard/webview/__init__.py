@@ -52,8 +52,10 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
                 app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
             )
         except:
-            from .wxwebview import init_plugin_web_view
-            return init_plugin_web_view(
-                app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
-            )
-
+            try:
+                from .wxwebview import init_plugin_web_view
+                return init_plugin_web_view(
+                    app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
+                )
+            except:
+                pass
