@@ -307,7 +307,9 @@
                     div class=tabsort_panel
                         % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
                             %if table_type == 'scrolled' or not table_type:
-                                <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                % comment:
+                                    <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
                             % else:
                                 <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
 
