@@ -66,7 +66,7 @@ class TabMenu:
             jQuery("#tabs2").append(menu_pos)
         jQuery("#tabs2_content").append(
             sprintf(
-                "<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s'></div>",
+                "<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s' data-region='page'></div>",
                 _id,
             )
         )

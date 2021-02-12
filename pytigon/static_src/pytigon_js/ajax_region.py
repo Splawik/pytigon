@@ -367,10 +367,10 @@ def refresh_ajax_frame(
                 else:
                     window.open().document.write(data.innerHTML)
             else:
-                if region_name == 'page':
-                    _refresh_page(frame, data)
-                else:
-                    mount_html(frame, data, link)
+                #if region_name == 'page':
+                #    _refresh_page(frame, data)
+                #else:
+                mount_html(frame, data, link)
 
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD"):
             if callback_on_error:

@@ -1387,8 +1387,6 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             } else {
                 (window.open().document.write)(data.innerHTML);
             }
-        } else if (_pyfunc_op_equals(region_name, "page")) {
-            _refresh_page(frame, data);
         } else {
             mount_html(frame, data, link);
         }
@@ -2373,7 +2371,7 @@ TabMenu.prototype.new_page = function (title, data_or_html, href, title_alt) {
     } else {
         _pymeth_append.call(jQuery("#tabs2"), menu_pos);
     }
-    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s'></div>", _id));
+    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s' data-region='page'></div>", _id));
     window.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
     this.active_item = menu_item;
     if (_pyfunc_truthy(window.PUSH_STATE)) {

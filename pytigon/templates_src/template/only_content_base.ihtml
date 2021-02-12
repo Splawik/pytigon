@@ -10,6 +10,8 @@
 
 %% login
 
+%% body_start
+
 %% body_init
 
 %% panel
@@ -27,6 +29,10 @@
             {{title}}
     % with NO_TABS=True:
         {{block.super}}
+
+%% content_start
+
+%% content_end
 
 %% body_desktop
     % with ONLY_CONTENT=True:

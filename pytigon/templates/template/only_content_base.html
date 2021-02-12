@@ -4,6 +4,7 @@
 {% block page_head %}{% endblock %}
 {% block nav %}{% endblock %}
 {% block login %}{% endblock %}
+{% block body_start %}{% endblock %}
 {% block body_init %}{% endblock %}
 {% block panel %}{% endblock %}
 {% block messages %}{% endblock %}
@@ -20,6 +21,8 @@
                 {{block.super}}
         {% endwith %}
 {% endblock %}
+{% block content_start %}{% endblock %}
+{% block content_end %}{% endblock %}
 {% block body_desktop %}
         {% with ONLY_CONTENT=True %}
                 {{ block.super }}
