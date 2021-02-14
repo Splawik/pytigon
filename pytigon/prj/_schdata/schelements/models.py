@@ -152,12 +152,27 @@ class OrgChartElem(TreeModel):
     code = models.CharField('Code', null=True, blank=True, editable=True, max_length=16)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     key =  models.ForeignKey('auth.Group', on_delete=models.CASCADE, null=True, blank=True,)
+    key_path = models.CharField('Key path', null=True, blank=True, editable=False, max_length=256)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
     
 
     def init_new(self, request, view, param=None):
         defaults = { 'type': 'S' }
         return defaults
+    
+    def save(self, *argi, **argv):
+        key_path = self.key
+        tab = self.parents()
+        for pos in tab:
+            if pos.key:
+                if key_path:
+                    key_path = pos.key + '/' + key_path
+                else:
+                    key_path = pos.key
+        
+        self.key_path = key_path
+        
+        super().save(*argi, **argv)
     
     def get_name(self):
         return self.name

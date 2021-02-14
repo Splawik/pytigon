@@ -1082,8 +1082,12 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
         if ((Object.prototype.toString.call(data_or_html).slice(8,-1).toLowerCase() === 'string')) {
             dest_elem.innerHTML = data_or_html;
+        } else if ((dest_elem.childNodes.length > 0)) {
+            dest_elem.replaceChild(data_or_html, dest_elem.childNodes[0]);
+            while (dest_elem.childNodes.length > 1) {
+                dest_elem.removeChild(dest_elem.childNodes[1]);
+            }
         } else {
-            dest_elem.innerHTML = "";
             dest_elem.appendChild(data_or_html);
         }
     }

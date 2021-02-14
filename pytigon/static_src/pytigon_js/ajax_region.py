@@ -65,8 +65,14 @@ def mount_html(dest_elem, data_or_html, link=None):
         if isinstance(data_or_html, str):
             dest_elem.innerHTML = data_or_html
         else:
-            dest_elem.innerHTML = ""
-            dest_elem.appendChild(data_or_html)
+            #dest_elem.innerHTML = ""
+            if dest_elem.childNodes.length>0:
+                #dest_elem.appendChild(data_or_html)
+                dest_elem.replaceChild(data_or_html, dest_elem.childNodes[0])
+                while dest_elem.childNodes.length>1:
+                    dest_elem.removeChild(dest_elem.childNodes[1])
+            else:
+                dest_elem.appendChild(data_or_html)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
@@ -367,9 +373,6 @@ def refresh_ajax_frame(
                 else:
                     window.open().document.write(data.innerHTML)
             else:
-                #if region_name == 'page':
-                #    _refresh_page(frame, data)
-                #else:
                 mount_html(frame, data, link)
 
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD"):
