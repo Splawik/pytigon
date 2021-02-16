@@ -437,13 +437,14 @@
                                         {% endblock %}
                                         <div class="tabsort_panel">
                                                 {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                        {% if table_type == 'scrolled' or not table_type %}
-                                                                {% comment %}
-                                                                        <div class="tbl_scroll ajax-region ajax-frame ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
-                                                                {% endcomment %}
-                                                                <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                                        {% if table_type == 'datatable' %}
+                                                                <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
                                                           {% else %}
-                                                                <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);" href="{{request.path}}">
+                                                                {% if table_type == 'scrolled' or not table_type %}
+                                                                        <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                                                  {% else %}
+                                                                        <div class="tbl_scroll ajax-link" data-region="table" href="{{request.path}}">
+                                                                {% endif %}
                                                         {% endif %}
                                                 {% endif %}
                                                 <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_class %}{% endblock %}>
