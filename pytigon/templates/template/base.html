@@ -380,7 +380,11 @@
                                         {% endif %}
                                 {% endblock %}
                                 {% if standard_web_browser %}
-                                        <div class="tableframe">
+                                        {% if table_type == 'datatable' %}
+                                                <div class="tableframe">
+                                          {% else %}
+                                                <div class="tableframe ajax-region ajax-frame" data-region="table">
+                                        {% endif %}
                                 {% endif %}
                                 {% block list_content_body %}
                                         {% block list_content_paginator %}

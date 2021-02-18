@@ -267,7 +267,10 @@
                                 i class=fa fa-times
 
                 % if standard_web_browser:
-                    <div class="tableframe">
+                    % if table_type == 'datatable':
+                        <div class="tableframe">
+                    % else:
+                        <div class="tableframe ajax-region ajax-frame" data-region="table">
 
                 %% list_content_body
                     %% list_content_paginator
