@@ -28,7 +28,7 @@ from pytigon_lib.schtools.platform_info import platform_name
 from os import environ
 
 environ["START_PATH"] = os.path.abspath(os.getcwd())
-
+environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
 def schserw_init_prj_path(app, param=None):
     if app:

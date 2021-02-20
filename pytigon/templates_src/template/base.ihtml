@@ -189,7 +189,7 @@
 
 
 %% content
-    div class=page-content
+    div class=page-content content
         % if debug_on:
             div id=debug
                 h2...Queries
@@ -230,7 +230,7 @@
                                     div class=tr row list_content_header list_content_header_two_row
                                         div class=td col-md-12 col-sm-12,,,colspan=3
                                             %% list_filter_form
-                                                form method=post,,,action={{request.path}},,,role=form,,,class=table_filter ajax-link form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_frame,,,data-region=page,,,data-remote-elem=div.ajax-region div
+                                                form method=post,,,action={{request.path}},,,role=form,,,class=table_filter ajax-link form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_frame,,,data-region=page
                                                     % csrf_token
                                                     %% form_filter
                                                         %if form

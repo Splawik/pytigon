@@ -421,7 +421,7 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     )
 
 
-def refresh_frame(target_element, data_element, new_url, param, event):
+def refresh_frame(target_element, data_element, new_url, param, event, data_region=None):
     dialog = None
     aside = target_element.closest(".plug")
     if aside:
@@ -449,26 +449,31 @@ def refresh_frame(target_element, data_element, new_url, param, event):
     else:
         data_element2 = data_element
 
-    data_region = target_element.getAttribute("data-region")
+    data_region2 = target_element.getAttribute("data-region")
+    if not data_element2:
+        data_region2 = data_region
 
     refresh_ajax_frame(
-        target_element, data_region, data_element2, _callback, _callback_on_error
+        target_element, data_region2, data_element2, _callback, _callback_on_error
     )
 
 
 def refresh_page(target_element, data_element, new_url, param, event):
-    frame = target_element.closest("div.content")
-    if frame and frame.firstElementChild:
-        if isinstance(data_element, str):
-            data_element2 = None
-        else:
-            data_element2 = data_element.querySelector("div.content")
-        if data_element2:
-            if data_element2.firstElementChild:
-                data_element2 = data_element2.firstElementChild
-        if not data_element2:
-            data_element2 = data_element
-        mount_html(frame, data_element2)
+    return refresh_frame(target_element, data_element, new_url, param, event, "page")
+
+#def refresh_page2(target_element, data_element, new_url, param, event):
+#    frame = target_element.closest("div.content")
+#    if frame and frame.firstElementChild:
+#        if isinstance(data_element, str):
+#            data_element2 = None
+#        else:
+#            data_element2 = data_element.querySelector("div.content")
+#        if data_element2:
+#            if data_element2.firstElementChild:
+#                data_element2 = data_element2.firstElementChild
+#        if not data_element2:
+#            data_element2 = data_element
+#        mount_html(frame, data_element2)
 
 
 def refresh_app(target_element, data_element, new_url, param, event):

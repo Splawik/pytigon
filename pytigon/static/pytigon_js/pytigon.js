@@ -2151,8 +2151,9 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     return null;
 };
 
-refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event) {
-    var _callback, _callback_on_error, aside, data_element2, data_region, dialog, f;
+refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
+    var _callback, _callback_on_error, aside, data_element2, data_region2, dialog, f;
+    data_region = (data_region === undefined) ? null: data_region;
     dialog = null;
     aside = target_element.closest(".plug");
     if (_pyfunc_truthy(aside)) {
@@ -2185,31 +2186,16 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     } else {
         data_element2 = data_element;
     }
-    data_region = target_element.getAttribute("data-region");
-    refresh_ajax_frame(target_element, data_region, data_element2, _callback, _callback_on_error);
+    data_region2 = target_element.getAttribute("data-region");
+    if ((!_pyfunc_truthy(data_element2))) {
+        data_region2 = data_region;
+    }
+    refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);
     return null;
 };
 
 refresh_page = function flx_refresh_page (target_element, data_element, new_url, param, event) {
-    var data_element2, frame;
-    frame = target_element.closest("div.content");
-    if ((_pyfunc_truthy(frame) && _pyfunc_truthy(frame.firstElementChild))) {
-        if ((Object.prototype.toString.call(data_element).slice(8,-1).toLowerCase() === 'string')) {
-            data_element2 = null;
-        } else {
-            data_element2 = data_element.querySelector("div.content");
-        }
-        if (_pyfunc_truthy(data_element2)) {
-            if (_pyfunc_truthy(data_element2.firstElementChild)) {
-                data_element2 = data_element2.firstElementChild;
-            }
-        }
-        if ((!_pyfunc_truthy(data_element2))) {
-            data_element2 = data_element;
-        }
-        mount_html(frame, data_element2);
-    }
-    return null;
+    return refresh_frame(target_element, data_element, new_url, param, event, "page");
 };
 
 refresh_app = function flx_refresh_app (target_element, data_element, new_url, param, event) {
