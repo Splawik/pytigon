@@ -65,6 +65,7 @@ field_defaults = {
     'URLField': {},
     'XMLField': {},
     'ForeignKey': { 'name': 'parent', 'description': 'Parent'},
+    'OneToOneField': { 'name': 'parent', 'description': 'Parent'},
     'ManyToManyField': { },
     'HiddenForeignKey': { 'name': 'parent', 'description': 'Parent' },
     'GForeignKey': { 'name': 'parent', 'description': 'Parent' },
@@ -690,7 +691,7 @@ class SChField( models.Model):
         return self.name
     
     def is_rel(self):
-        if 'Key' in self.type or 'Many' in self.type:
+        if 'Key' in self.type or 'Many' in self.type or 'OneToOne' in self.type:
             return True
         else:
             return False
@@ -732,7 +733,7 @@ class SChField( models.Model):
             #        ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
             #            (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
             #else:
-            if 'ForeignKey' in self.type:
+            if 'ForeignKey' in self.type or 'OneToOne' in self.type:
                 ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
                     (self.name, module, self.type, rel_model, self.null, self.blank, self.editable, self.description)
             else:
