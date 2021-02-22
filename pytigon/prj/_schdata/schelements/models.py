@@ -27,6 +27,26 @@ import datetime
 from django.db import transaction
 
 
+def limit_orgcharelem1():
+    return {}
+    
+def limit_orgcharelem2():
+    return {}
+    
+def limit_orgcharelem3():
+    return {}
+    
+def limit_orgcharelem4():
+    return {}
+    
+    
+LIMIT_ORG_CHART_ELEM1 = OverwritableCallable(limit_orgcharelem1)
+LIMIT_ORG_CHART_ELEM2 = OverwritableCallable(limit_orgcharelem2)
+LIMIT_ORG_CHART_ELEM3 = OverwritableCallable(limit_orgcharelem3)
+LIMIT_ORG_CHART_ELEM4 = OverwritableCallable(limit_orgcharelem4)
+
+
+
 
 element_type_choice = [
     ("C","Currency"),
@@ -161,14 +181,17 @@ class OrgChartElem(TreeModel):
         return defaults
     
     def save(self, *argi, **argv):
-        key_path = self.key
+        if self.key:
+            key_path = self.key.name
+        else:
+            key_path = ""
         tab = self.parents()
         for pos in tab:
             if pos.key:
                 if key_path:
-                    key_path = pos.key + '/' + key_path
+                    key_path = pos.key.name + '/' + key_path
                 else:
-                    key_path = pos.key
+                    key_path = pos.key.name
         
         self.key_path = key_path
         

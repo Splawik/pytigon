@@ -2187,7 +2187,7 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
         data_element2 = data_element;
     }
     data_region2 = target_element.getAttribute("data-region");
-    if ((!_pyfunc_truthy(data_element2))) {
+    if ((!_pyfunc_truthy(data_region2))) {
         data_region2 = data_region;
     }
     refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);

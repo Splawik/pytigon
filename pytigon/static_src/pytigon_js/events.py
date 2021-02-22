@@ -450,7 +450,7 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
         data_element2 = data_element
 
     data_region2 = target_element.getAttribute("data-region")
-    if not data_element2:
+    if not data_region2:
         data_region2 = data_region
 
     refresh_ajax_frame(
