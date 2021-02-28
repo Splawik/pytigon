@@ -46,8 +46,7 @@ gen = generic_table_start(urlpatterns, 'schelements', views)
 gen.for_field('DocType', 'dochead_set', 'Documents', prefix="doc", template_name="schelements/dochead2.html")
 
 
-gen.standard('Element', _('Element'), _('Element'))
-gen.standard('OrgChartElem', _('Organizational chart'), _('Organizational chart'))
+gen.standard('Element', _('Element'), _('Elements'))
 gen.standard('Classifier', _('Classifier'), _('Classifier'))
 gen.standard('DocReg', _('Document register'), _('Document registers'))
 gen.standard('DocType', _('Type of document'), _('Types of documents'))
@@ -63,7 +62,7 @@ gen.standard('AccountOperation', _('Account operation'), _('Account operations')
 
 gen.for_field('DocReg', 'doctype_set', _('Type of document'), _('Types of documents'))
 gen.for_field('DocType', 'dochead_set', _('Document header'), _('Document headers'))
-gen.for_field('OrgChartElem', 'dochead_set', _('Document header'), _('Document headers'))
+gen.for_field('Element', 'dochead_set', _('Document header'), _('Document headers'))
 gen.for_field('DocHead', 'docitem_set', _('Document item'), _('Document items'))
 
 gen.for_field('DocReg', 'docregstatus_set', _('Document status'), _('Document status'))

@@ -223,6 +223,8 @@ if (
 ):
     INSTALLED_APPS.append("channels")
 
+DEFAULT_AUTO_FIELD  = 'django.db.models.AutoField'
+
 CHANNELS_URL_TAB = []
 
 HIDE_APPS = []

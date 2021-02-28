@@ -27,28 +27,28 @@ import datetime
 from django.db import transaction
 
 
-def limit_orgcharelem1():
+def limit_element1():
     return {}
     
-def limit_orgcharelem2():
+def limit_element2():
     return {}
     
-def limit_orgcharelem3():
+def limit_element3():
     return {}
     
-def limit_orgcharelem4():
+def limit_element4():
     return {}
     
     
-LIMIT_ORG_CHART_ELEM1 = OverwritableCallable(limit_orgcharelem1)
-LIMIT_ORG_CHART_ELEM2 = OverwritableCallable(limit_orgcharelem2)
-LIMIT_ORG_CHART_ELEM3 = OverwritableCallable(limit_orgcharelem3)
-LIMIT_ORG_CHART_ELEM4 = OverwritableCallable(limit_orgcharelem4)
+LIMIT_ELEMENT1 = OverwritableCallable(limit_element1)
+LIMIT_ELEMENT2 = OverwritableCallable(limit_element2)
+LIMIT_ELEMENT3 = OverwritableCallable(limit_element3)
+LIMIT_ELEMENT4 = OverwritableCallable(limit_element4)
 
 
 
 
-element_type_choice = [
+simple_element_type_choice = [
     ("C","Currency"),
     ("M","Material"),
     ("D","Device"),
@@ -84,16 +84,30 @@ account_type_choice_1 = [
     
     ]
 
-orgchart_type_choice = [
-    ("F","Firm"),
-    ("D","Division"),
-    ("R","Department"),
-    ("S","Position"),
-    ("E","Employee"),
-    ("L","Location"),
-    ("O","Other"),
-    ("P","Person"),
-    ("M","Machine"),
+element_type_choice = [
+    ("O-GRP","Owner/Group"),
+    ("O-COM","Owner/Company"),
+    ("O-DIV","Owner/Division"),
+    ("O-DEP","Owner/Department"),
+    ("O-POS","Owner/Position"),
+    ("O-EMP","Owner/Employee"),
+    ("O-LOC","Owner/Location"),
+    ("O-PER","Owner/Person"),
+    ("O-DEV","Owner/Device"),
+    ("O-OTH","Owner/Other"),
+    ("I-GRP","Item/Group"),
+    ("I-SRV","Item/Service"),
+    ("I-INT","Item/Intellectual value"),
+    ("I-CUR","Item/Currency"),
+    ("I-MAT","Item/Material"),
+    ("I-RAW","Item/Raw material"),
+    ("I-PRD","Item/Product"),
+    ("I-IPR","Item/Intermediate product"),
+    ("I-MER","Item/Merchandise"),
+    ("I-DEV","Item/Device"),
+    ("I-PMA","Item/Production machine"),
+    ("I-VEH","Item/Vehicle"),
+    ("I-OTH","Item/Other"),
     
     ]
 
@@ -122,36 +136,11 @@ doctype_status = [
 
 
 
-class Element(JSONModel):
+class Element(TreeModel):
     
     class Meta:
         verbose_name = _("Element")
-        verbose_name_plural = _("Element")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        app_label = 'schelements'
-
-
-        ordering = ['id']
-        
-        
-    
-
-    type = models.CharField('Element type', null=False, blank=False, editable=True, choices=element_type_choice,max_length=3)
-    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
-    description = models.CharField('Description', null=True, blank=True, editable=True, max_length=256)
-    
-
-    def __str__(self):
-        return self.description
-    
-admin.site.register(Element)
-
-
-class OrgChartElem(TreeModel):
-    
-    class Meta:
-        verbose_name = _("Organizational chart")
-        verbose_name_plural = _("Organizational chart")
+        verbose_name_plural = _("Elements")
         default_permissions = ('add', 'change', 'delete', 'list')
         app_label = 'schelements'
 
@@ -164,11 +153,11 @@ class OrgChartElem(TreeModel):
     
 
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
-    type = models.CharField('Organisation type', null=False, blank=False, editable=True, choices=orgchart_type_choice,max_length=1)
-    grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1')
-    grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2')
-    grand_parent3 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 3', related_name='grandparent3')
-    grand_parent4 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 4', related_name='grandparent4')
+    type = models.CharField('Element type', null=False, blank=False, editable=True, choices=element_type_choice,max_length=8)
+    grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1', limit_choices_to=limit_element1)
+    grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2', limit_choices_to=limit_element2)
+    grand_parent3 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 3', related_name='grandparent3', limit_choices_to=limit_element3)
+    grand_parent4 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 4', related_name='grandparent4', limit_choices_to=limit_element4)
     code = models.CharField('Code', null=True, blank=True, editable=True, max_length=16)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     key =  models.ForeignKey('auth.Group', on_delete=models.CASCADE, null=True, blank=True,)
@@ -177,8 +166,9 @@ class OrgChartElem(TreeModel):
     
 
     def init_new(self, request, view, param=None):
-        defaults = { 'type': 'S' }
+        defaults = { 'type': param }
         return defaults
+    
     
     def save(self, *argi, **argv):
         if self.key:
@@ -200,28 +190,49 @@ class OrgChartElem(TreeModel):
     def get_name(self):
         return self.name
     
-    def firm(self):
+    def _get_parent_elem(element_type):
         tab = self.parents()
         for pos in tab:
-            if pos.type=='F':
+            if pos.type==element_type:
                 return pos
         return None
+        
+    
+    def company(self):
+        return self._get_parent_elem('O-COM')
     
     def division(self):
-        tab = self.parents()
-        for pos in tab:
-            if pos.type=='D':
-                return pos
-        return None
+        return self._get_parent_elem('O-DIV')
     
     def departament(self):
-        return None
+        return self._get_parent_elem('O-DEP')
     
     def position(self):
-        return None
+        return self._get_parent_elem('O-POS')
     
     def location(self):
-        return None
+        return self._get_parent_elem('O-LOC')
+    
+    def owner_group(self):
+        return self._get_parent_elem('O-GRP')
+    
+    def owner_grand_group(self):
+        grp =  self._get_parent_elem('O-GRP')
+        if grp:
+            return grp._get_parent_elem('O-GRP')
+        else:
+            return None
+    
+    def item_group(self):
+        return self._get_parent_elem('I-GRP')
+    
+    def item_grand_group(self):
+        grp =  self._get_parent_elem('I-GRP')
+        if grp:
+            return grp._get_parent_elem('I-GRP')
+        else:
+            return None
+    
     
     def related(self):
         ret = ""
@@ -276,7 +287,6 @@ class OrgChartElem(TreeModel):
         n.append("<a target='_refresh_data' href='../../0/form/tree'>/</a>")
         return n
     
-    
     def __str__(self):
         p = self.parents()
         if self.code and self.code!="":
@@ -296,10 +306,74 @@ class OrgChartElem(TreeModel):
             id = int(value)
         else:
             id = -1
-        return "/schsys/treedialog/schelements/OrgChart/%s/" % id
+        return "/schsys/treedialog/schelements/Element/%s/" % id
         
+    def redirect_href(self, view, request):
+        t = None
+        if type(self)==Element:
+            if 'add_param' in view.kwargs:
+                t = view.kwargs['add_param']
+            else:
+                t = self.type
+        if t:
+            s = self.get_structure()
+            if t in s:
+                redirect = s[t]['app'] + "/table/" + s[t]['table']
+                return request.path.replace('schelements/table/Element',redirect)
+        return None
     
-admin.site.register(OrgChartElem)
+    @staticmethod
+    def _get_new_buttons(elem_type="ROOT"):
+        buttons = []
+        s = Element.get_structure()
+        if elem_type in s:
+            if 'next' in s[elem_type]:
+                for item in s[elem_type]['next']:
+                    if item in s:
+                        button = {}
+                        button['type'] = item
+                        if 'title' in s[item]:
+                            button['title'] = s[item]['title']
+                        else:
+                            button['title'] = item
+                        if 'app' in s[item]:
+                            button['app'] = s[item]['app']
+                        else:
+                            button['app'] = ""
+                        if 'table' in s[item]:
+                            button['table'] = s[item]['table']
+                        else:
+                            button['table'] = ""
+    
+                        buttons.append(button)
+        return buttons
+        
+    @staticmethod
+    def get_root_new_buttons():
+        return Element._get_new_buttons("ROOT")
+    
+    def get_new_buttons(self):
+        if self.type in ('O-GRP', 'I-GRP'):
+            obj = self
+            while obj and obj.type in ('O-GRP', 'I-GRP'):
+                obj = obj.parent
+            if obj:
+                buttons = self._get_new_buttons(obj.type)
+            else:
+                buttons = self._get_new_buttons("ROOT")
+            if self.description and '(' in self.description and ')' in self.description:
+                ret = []
+                for button in buttons:
+                    if button['type'] in self.description:
+                        ret.append(button)
+                return ret
+            else:
+                return buttons
+            
+        else:
+            return self._get_new_buttons(self.type)
+    
+admin.site.register(Element)
 
 
 class Classifier(TreeModel):
@@ -418,7 +492,7 @@ class DocHead(JSONModel):
 
     parents = models.ManyToManyField('self', null=False, blank=False, editable=False, verbose_name='Parents', )
     doc_type_parent = ext_models.PtigHiddenForeignKey(DocType, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Document type parent', )
-    org_chart_parent = ext_models.PtigHiddenForeignKey(OrgChartElem, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Organization chart parent', )
+    org_chart_parent = ext_models.PtigHiddenForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Organization chart parent', )
     number = models.CharField('Document number', null=True, blank=True, editable=True, max_length=32)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
     date = models.DateTimeField('Date', null=False, blank=False, editable=False, )
@@ -824,7 +898,7 @@ class AccountState( models.Model):
     
 
     parent = models.ForeignKey(Account, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
-    target = models.ForeignKey(OrgChartElem, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Target', )
+    target = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Target', related_name='state_targets')
     classifier1value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 1 value', related_name='account_c1_set')
     classifier2value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 2 value', related_name='account_c2_set')
     classifier3value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 3 value', related_name='account_c3_set')
@@ -876,7 +950,7 @@ class AccountOperation( models.Model):
             _element = element    
     
         if type(target)==str:
-            _target = OrgChartElem.objects.filter(code=target)[0]
+            _target = Element.objects.filter(code=target)[0]
         else:
             _target = target
         

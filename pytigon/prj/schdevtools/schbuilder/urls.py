@@ -31,6 +31,8 @@ urlpatterns = [
     gen_row_action('SChLocale', 'translate_sync', views.translate_sync),
     gen_row_action('SChAppSet', 'locale_gen', views.locale_gen),
     re_path('download_installer/(?P<name>\w+)/$', views.download_installer, {}),
+    gen_row_action('SChChoiceItem', 'field_up', views.change_pos, {'app':'schbuilder', 'tab':'SChChoiceItem', 'forward':False, 'field': 'parent'}),
+    gen_row_action('SChChoiceItem', 'field_down', views.change_pos, {'app':'schbuilder', 'tab':'SChChoiceItem', 'forward':True, 'field': 'parent'}),
     
     
     
