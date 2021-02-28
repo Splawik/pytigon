@@ -53,10 +53,10 @@ def view_importtableform(request, *argi, **argv):
 
 def autocomplete_search(request, type):
     
-    q = request.GET.get('query', request.POST.get('query', None))
+    q = ^^^.get('query', request.POST.get('query', None))
     if not q:
         return HttpResponse(content_type='text/plain')
-    limit = request.GET.get('limit', request.POST.get('limit', 15))
+    limit = ^^^.get('limit', request.POST.get('limit', 15))
     try:
         limit = int(limit)
     except ValueError:
