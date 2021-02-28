@@ -24,6 +24,7 @@ import sys
 import datetime
 
 from django.urls import resolve
+from django.conf import settings
 
 def year_ago():
     dt = datetime.date.today()    
@@ -236,6 +237,30 @@ def approve(request, pk):
 def discard(request, pk):
     
     return change_status(request, pk, action='undo')    
+    
+
+
+
+
+
+
+
+
+def view_elements(request, code):
+    
+    if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
+        url_base = '/' + settings.URL_ROOT_FOLDER + '/'
+    else:
+        url_base = '/'
+    
+    id = 0
+    
+    if code:
+        objs = models.Element.objects.filter(code=code)
+        if len(objs)>0:
+            id = objs[0].pk
+            
+    return HttpResponseRedirect(url_base+('schelements/table/Element/%d/%d/form/treelist/?only_content=1' % (id,id)))
     
 
 

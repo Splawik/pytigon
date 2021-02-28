@@ -14,6 +14,7 @@ urlpatterns = [
     re_path('table/DocItem/(?P<id>\d+)/edit_item/', views.edit_item, {}),
     gen_row_action('DocHead', 'approve', views.approve),
     gen_row_action('DocHead', 'discard', views.discard),
+    path('view_elements/<slug:code>/', views.view_elements, {}),
     
     
     
