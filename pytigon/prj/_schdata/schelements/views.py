@@ -248,10 +248,10 @@ def discard(request, pk):
 
 def view_elements(request, code):
     
-    if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
-        url_base = '/' + settings.URL_ROOT_FOLDER + '/'
-    else:
-        url_base = '/'
+    #if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
+    #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
+    #else:
+    #    url_base = '/'
     
     id = 0
     
@@ -260,7 +260,7 @@ def view_elements(request, code):
         if len(objs)>0:
             id = objs[0].pk
             
-    return HttpResponseRedirect(url_base+('schelements/table/Element/%d/%d/form/treelist/?only_content=1' % (id,id)))
+    return HttpResponseRedirect(make_href('schelements/table/Element/%d/%d/form/treelist/?only_content=1' % (id,id)))
     
 
 

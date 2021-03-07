@@ -96,6 +96,7 @@ element_type_choice = [
     ("O-DEV","Owner/Device"),
     ("O-OTH","Owner/Other"),
     ("I-GRP","Item/Group"),
+    ("O-ALI","Owner/Alias"),
     ("I-SRV","Item/Service"),
     ("I-INT","Item/Intellectual value"),
     ("I-CUR","Item/Currency"),
@@ -108,6 +109,12 @@ element_type_choice = [
     ("I-PMA","Item/Production machine"),
     ("I-VEH","Item/Vehicle"),
     ("I-OTH","Item/Other"),
+    ("I-ALI","Item/Alias"),
+    ("C-SYS","Config/System"),
+    ("C-UNT","Config/Unit of measure"),
+    ("C-DIC","Config/Dictionary"),
+    ("C-OTH","Config/Other"),
+    ("C-ALI","Config/Alias"),
     
     ]
 
@@ -316,10 +323,11 @@ class Element(TreeModel):
             else:
                 t = self.type
         if t:
-            s = self.get_structure()
-            if t in s:
-                redirect = s[t]['app'] + "/table/" + s[t]['table']
-                return request.path.replace('schelements/table/Element',redirect)
+            if hasattr(self, "get_structure"):
+                s = self.get_structure()
+                if t in s:
+                    redirect = s[t]['app'] + "/table/" + s[t]['table']
+                    return request.path.replace('schelements/table/Element',redirect)
         return None
     
     @staticmethod
@@ -492,10 +500,12 @@ class DocHead(JSONModel):
 
     parents = models.ManyToManyField('self', null=False, blank=False, editable=False, verbose_name='Parents', )
     doc_type_parent = ext_models.PtigHiddenForeignKey(DocType, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Document type parent', )
-    org_chart_parent = ext_models.PtigHiddenForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Organization chart parent', )
+    parent_element = ext_models.PtigHiddenForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent element', )
     number = models.CharField('Document number', null=True, blank=True, editable=True, max_length=32)
-    description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
-    date = models.DateTimeField('Date', null=False, blank=False, editable=False, )
+    date_c = models.DateTimeField('Creation date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
+    date = models.DateField('Date', null=True, blank=True, editable=True, )
+    description = models.CharField('Description', null=True, blank=True, editable=True, max_length=128)
+    comments = models.CharField('Comments', null=True, blank=True, editable=True, max_length=256)
     status = models.CharField('Status', null=True, blank=True, editable=False, max_length=16)
     operator = models.CharField('Operator', null=True, blank=True, editable=False, max_length=32)
     param1 = models.CharField('Parameter 1', null=True, blank=True, editable=True, max_length=16)
@@ -535,16 +545,16 @@ class DocHead(JSONModel):
         
     
     @staticmethod
-    def template_for_list(context, doc_type):
+    def template_for_list(model, context, view, doc_type):
         if doc_type in ('html', 'json') and 'filter' in context:
             tmp = DocReg.objects.filter(name=context['filter'].replace('_','/'))
             if len(tmp)==1:
                 names = []
+                names.append(view.template_name)
                 x = tmp[0]
                 while x:
                     names.append((x.app+"/"+x.name.replace('/','_')+"_dochead_list.html").lower())
                     x = x.get_parent()
-                
                 template = select_template(names)
                 if template:
                     return template
@@ -650,6 +660,25 @@ class DocHead(JSONModel):
         
         return False        
         
+    def redirect_href(self, view, request):
+        t = None
+        if type(self)==DocHead:
+            if 'add_param' in view.kwargs and view.kwargs['add_param'] != '-':
+                t = view.kwargs['add_param']
+                if t:
+                    object_list = DocType.objects.filter(name=t)
+                    if len(object_list):
+                        t = object_list[0].parent.name
+            else:
+                t = self.doc_type_parent.parent.name
+        if t:
+            if hasattr(self, "get_structure"):
+                s = self.get_structure()
+                if t in s:
+                    redirect = s[t]['app'] + "/table/" + s[t]['table']
+                    return request.path.replace('schelements/table/DocHead',redirect)
+        return None
+    
     
 admin.site.register(DocHead)
 
@@ -671,18 +700,18 @@ class DocItem(JSONModel):
     parent = ext_models.PtigHiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
     parent_item = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent item', )
     order = models.IntegerField('Order', null=False, blank=False, editable=False, default=1,)
-    date = models.DateField('Date', null=False, blank=False, editable=False, )
-    description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
+    item = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Item', )
     amount = models.DecimalField('Amount', null=True, blank=True, editable=True, max_digits=16, decimal_places=2)
-    element = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Element', )
+    description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
     level = models.IntegerField('Level', null=False, blank=False, editable=False, default=0,)
+    active = models.BooleanField('Active item', null=False, blank=False, editable=True, default=True,)
     param1 = models.CharField('Parameter 1', null=True, blank=True, editable=False, max_length=16)
     param2 = models.CharField('Parameter 2', null=True, blank=True, editable=False, max_length=16)
     param3 = models.CharField('Parameter 3', null=True, blank=True, editable=False, max_length=16)
     
 
     @staticmethod
-    def template_for_list(context, doc_type):
+    def template_for_list(model, context, view, doc_type):
         if doc_type in ('html', 'json'):
             if 'parent_pk' in context['view'].kwargs:
                 parent_pk = int(context['view'].kwargs['parent_pk'])
@@ -702,29 +731,27 @@ class DocItem(JSONModel):
                     return template
                 
         return None
-        
-        
+    
+    
     def template_for_object(self, context, doc_type):
         if doc_type in ('html', 'json'):
             try:
-                obj = DocItem.objects.get(pk=self.id)            
+                obj = DocItem.objects.get(pk=self.id)
                 dochead = obj.parent
-                reg = dochead.doc_type_parent.parent            
-                names = []
-                names.append((reg.app+"/"+dochead.doc_type_parent.name+"_docitem_edit.html").lower())
-                names.append((reg.app+"/"+reg.name.replace('/', '_') + "_docitem_edit.html").lower())
-                
-                x = reg.get_parent()
-                while x:
-                    names.append(x.app+"/"+x.name.replace('/', '_') + "_docitem_edit.html")
-                    x = x.get_parent()
-                    
-                template = select_template(names)
-                if template:
-                    return template
             except:
-                return None
-                            
+                dochead = context['view'].object.parent
+    
+            reg = dochead.doc_type_parent.parent            
+            names = []
+            names.append((reg.app+"/"+dochead.doc_type_parent.parent.name+"_docitem_edit.html").lower())
+            names.append((reg.app+"/"+reg.name.replace('/', '_') + "_docitem_edit.html").lower())
+            x = reg.get_parent()
+            while x:
+                names.append(x.app+"/"+x.name.replace('/', '_') + "_docitem_edit.html")
+                x = x.get_parent()
+            template = select_template(names)
+            if template:
+                return template                            
         return None
         
     
@@ -753,7 +780,7 @@ class DocItem(JSONModel):
                 max_nr = 1
             
             if request.POST:
-                return { 'parent': str(parent.id), 'order': max_nr, 'date': datetime.datetime.now(), 'level': 0 }
+                return { 'parent': str(parent.id), 'order': max_nr, 'date_c': datetime.datetime.now(), 'level': 0 }
             
         return None
     
@@ -775,6 +802,31 @@ class DocItem(JSONModel):
                 exec(save_fun_src)
             
         super().save(*args, **kwargs)
+        
+    
+    
+    def redirect_href(self, view, request):
+        t = None
+        if type(self)==DocItem:
+            if 'add_param' in view.kwargs and view.kwargs['add_param']!='-':
+                t = view.kwargs['add_param']
+            else:
+                t = self.parent.doc_type_parent.parent.name
+        if t:
+            if hasattr(self.parent, "get_structure"):
+                s = self.parent.get_structure()
+                if t in s:
+                    old_path = request.path
+                    redirect = s[t]['app'] + "/table/" + s[t]['child_table']
+                    path = old_path.replace('schelements/table/DocItem',redirect)
+                    if path == old_path:
+                        if not '/'+s[t]['table']+'/' in old_path:
+                            path = old_path.replace('/schelements/', '/'+s[t]['app']+'/')
+                            path = path.replace('/DocHead/', '/'+s[t]['table']+'/')
+                        else:
+                            return None
+                    return path
+        return None
         
     
 admin.site.register(DocItem)

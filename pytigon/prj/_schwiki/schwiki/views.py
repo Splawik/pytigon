@@ -70,7 +70,7 @@ template_simple = """
 
 def view_page(request, app_or_subject, page_path):
     
-    desc = ^^^.get('desc','')
+    desc = request.GET.get('desc','')
     path, sep, page_name = page_path.rpartition('+')
     if page_name:
         page_name = page_name[0].upper()+page_name[1:]

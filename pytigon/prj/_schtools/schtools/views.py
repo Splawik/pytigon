@@ -14,6 +14,7 @@ from pytigon_lib.schviews.form_fun import form_with_perms
 from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
+from pytigon_lib.schviews import actions
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -53,10 +54,10 @@ def view_importtableform(request, *argi, **argv):
 
 def autocomplete_search(request, type):
     
-    q = ^^^.get('query', request.POST.get('query', None))
+    q = request.GET.get('query', request.POST.get('query', None))
     if not q:
         return HttpResponse(content_type='text/plain')
-    limit = ^^^.get('limit', request.POST.get('limit', 15))
+    limit = request.GET.get('limit', request.POST.get('limit', 15))
     try:
         limit = int(limit)
     except ValueError:
