@@ -379,7 +379,7 @@
                                                 {% endif %}
                                         {% endif %}
                                 {% endblock %}
-                                {% if standard_web_browser %}
+                                {% if standard_web_browser and standard_web_browser != 6 %}
                                         {% if table_type == 'datatable' %}
                                                 <div class="tableframe">
                                           {% else %}
@@ -440,7 +440,7 @@
                                                 {% endif %}
                                         {% endblock %}
                                         <div class="tabsort_panel">
-                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
                                                         {% if table_type == 'datatable' %}
                                                                 <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
                                                           {% else %}
@@ -521,7 +521,7 @@
                                                         {% endblock %}
                                                         {% block list_table_footer %}{% endblock %}
                                                 </table>
-                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
                                                         {% if table_type == 'scrolled' or not table_type %}
                                                                 </div>
                                                           {% else %}
@@ -530,7 +530,7 @@
                                                 {% endif %}
                                         </div>
                                 {% endblock %}
-                                {% if standard_web_browser %}
+                                {% if standard_web_browser and standard_web_browser != 6 %}
                                         </div>
                                 {% endif %}
                                 {% block list_content_footer %}{% endblock %}

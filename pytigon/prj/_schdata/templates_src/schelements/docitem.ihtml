@@ -26,18 +26,14 @@
 
 %% list_row_header
     th...order
-    th...date
     th...description
     th...amount
-    th...element
     th...level
 
 %% list_row
     td...{{object.order}}
-    td...{{object.date|isoformat}}
     td...{{object.description}}
     td...{{object.amount}}
-    td...{{object.element}}
     td...{{object.level}}
 
 
@@ -53,5 +49,5 @@
 
 %% row_edit
     % form:
-        .description,amount,element
+        .description,amount
 

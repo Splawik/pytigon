@@ -24,18 +24,14 @@
 {% endblock %}
 {% block list_row_header %}
         <th>order</th>
-        <th>date</th>
         <th>description</th>
         <th>amount</th>
-        <th>element</th>
         <th>level</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.order}}</td>
-        <td>{{object.date|isoformat}}</td>
         <td>{{object.description}}</td>
         <td>{{object.amount}}</td>
-        <td>{{object.element}}</td>
         <td>{{object.level}}</td>
 {% endblock %}
 {% block id_extra %}
@@ -52,7 +48,7 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                description,amount,element
+                description,amount
         {% endform %}
 {% endblock %}
 

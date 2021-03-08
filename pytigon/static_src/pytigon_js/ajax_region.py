@@ -346,17 +346,19 @@ def refresh_ajax_frame(
         ):
             mount_html(frame, data, link)
         else:
-            if dt in ("$$RETURN_OK", "$$RETURN_REFRESH"):
+            if dt in ("$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"):
                 return refresh_ajax_frame(
                     region.parentElement, region_name, None, callback, callback_on_error
                 )
             elif dt in (
+                "$$RETURN_OK",
                 "$$RETURN_NEW_ROW_OK",
                 "$$RETURN_UPDATE_ROW_OK",
-                "$$RETURN_REFRESH_PARENT",
             ):
+                elem = region.closest('.plug').parentElement
+                callback()
                 return refresh_ajax_frame(
-                    region.parentElement, region_name, None, callback, callback_on_error
+                    elem, region_name, None, None, callback_on_error
                 )
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
@@ -388,13 +390,14 @@ def refresh_ajax_frame(
 
     url = None
     post = False
-    if link.hasAttribute("href"):
-        url = link.getAttribute("href")
-    elif link.hasAttribute("action"):
-        url = link.getAttribute("action")
-        post = True
-    elif link.hasAttribute("src"):
-        url = link.getAttribute("src")
+    if link:
+        if link.hasAttribute("href"):
+            url = link.getAttribute("href")
+        elif link.hasAttribute("action"):
+            url = link.getAttribute("action")
+            post = True
+        elif link.hasAttribute("src"):
+            url = link.getAttribute("src")
 
     if url:
         if (

@@ -266,7 +266,7 @@
                             button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
                                 i class=fa fa-times
 
-                % if standard_web_browser:
+                % if standard_web_browser and standard_web_browser != 6:
                     % if table_type == 'datatable':
                         <div class="tableframe">
                     % else:
@@ -308,7 +308,7 @@
                             {% paginator %}
 
                     div class=tabsort_panel
-                        % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6:
                             % if table_type == 'datatable':
                                 <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
                             % else:
@@ -361,13 +361,13 @@
                             %% list_table_footer
 
 
-                        % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
+                        % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6:
                             %if table_type == 'scrolled' or not table_type:
                                 </div>
                             % else:
                                 </div>
 
-                % if standard_web_browser:
+                % if standard_web_browser and standard_web_browser != 6:
                     </div>
 
                 %% list_content_footer

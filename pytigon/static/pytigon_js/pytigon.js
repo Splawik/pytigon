@@ -1368,16 +1368,18 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     link = get_ajax_link(element, region_name);
     loading = new Loading(element);
     _callback = (function flx__callback (data) {
-        var dt;
+        var dt, elem;
         loading.stop();
         loading.remove();
         dt = data_type(data);
         if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
             mount_html(frame, data, link);
-        } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_REFRESH"])) {
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
             return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
-        } else if (_pyfunc_op_contains(dt, ["$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK", "$$RETURN_REFRESH_PARENT"])) {
-            return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
+            elem = region.closest(".plug").parentElement;
+            callback();
+            return refresh_ajax_frame(elem, region_name, null, null, callback_on_error);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {
             if (_pyfunc_op_equals(region_name, "error")) {
                 mount_html(frame, data, link);
@@ -1410,13 +1412,15 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     }
     url = null;
     post = false;
-    if (_pyfunc_truthy(link.hasAttribute("href"))) {
-        url = link.getAttribute("href");
-    } else if (_pyfunc_truthy(link.hasAttribute("action"))) {
-        url = link.getAttribute("action");
-        post = true;
-    } else if (_pyfunc_truthy(link.hasAttribute("src"))) {
-        url = link.getAttribute("src");
+    if (_pyfunc_truthy(link)) {
+        if (_pyfunc_truthy(link.hasAttribute("href"))) {
+            url = link.getAttribute("href");
+        } else if (_pyfunc_truthy(link.hasAttribute("action"))) {
+            url = link.getAttribute("action");
+            post = true;
+        } else if (_pyfunc_truthy(link.hasAttribute("src"))) {
+            url = link.getAttribute("src");
+        }
     }
     if (_pyfunc_truthy(url)) {
         if (((_pyfunc_truthy(link.hasAttribute("data-region"))) && ((_pyfunc_op_equals(link.getAttribute("data-region"), "table"))))) {
