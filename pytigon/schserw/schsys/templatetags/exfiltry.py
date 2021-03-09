@@ -145,6 +145,11 @@ def replace(value, replace_str):
     else:
         return value
 
+@register.filter(name='nbsp')
+def nbsp(value):
+    """replace_str: 'old_value|new_value' """
+    return value.replace(' ', '&nbsp;')
+
 @register.filter(name='hasattr')
 def filter_hasattr(obj, attr_name):
     return hasattr(obj, attr_name)
