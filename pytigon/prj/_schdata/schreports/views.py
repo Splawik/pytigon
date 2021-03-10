@@ -27,7 +27,7 @@ from pytigon_lib.schtools.schjson import json_dumps, json_loads
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schdjangoext.fastform import form_from_str
 from pytigon_lib.schviews import make_path
-from schelements.models import DocReg, DocType, DocHead, OrgChartElem
+from schelements.models import DocReg, DocType, DocHead, Element
 from django.db.models import F
 from schelements.views import year_ago
 

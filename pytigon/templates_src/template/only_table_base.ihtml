@@ -2,6 +2,10 @@
 
 % extends 'template/only_content.html'
 
+%% content_start
+
+%% content_end
+
 %% list_page_start
 
 %% list_page_header

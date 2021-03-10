@@ -31,8 +31,10 @@
         {{block.super}}
 
 %% content_start
+    <div class="content ajax-region" data-region="page" href="{{request.path}}">
 
 %% content_end
+    </div>
 
 %% body_desktop
     % with ONLY_CONTENT=True:
