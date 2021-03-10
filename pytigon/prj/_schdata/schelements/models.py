@@ -333,27 +333,29 @@ class Element(TreeModel):
     @staticmethod
     def _get_new_buttons(elem_type="ROOT"):
         buttons = []
-        s = Element.get_structure()
-        if elem_type in s:
-            if 'next' in s[elem_type]:
-                for item in s[elem_type]['next']:
-                    if item in s:
-                        button = {}
-                        button['type'] = item
-                        if 'title' in s[item]:
-                            button['title'] = s[item]['title']
-                        else:
-                            button['title'] = item
-                        if 'app' in s[item]:
-                            button['app'] = s[item]['app']
-                        else:
-                            button['app'] = ""
-                        if 'table' in s[item]:
-                            button['table'] = s[item]['table']
-                        else:
-                            button['table'] = ""
+        
+        if hasattr(self, "get_structure"):
+            s = Element.get_structure()
+            if elem_type in s:
+                if 'next' in s[elem_type]:
+                    for item in s[elem_type]['next']:
+                        if item in s:
+                            button = {}
+                            button['type'] = item
+                            if 'title' in s[item]:
+                                button['title'] = s[item]['title']
+                            else:
+                                button['title'] = item
+                            if 'app' in s[item]:
+                                button['app'] = s[item]['app']
+                            else:
+                                button['app'] = ""
+                            if 'table' in s[item]:
+                                button['table'] = s[item]['table']
+                            else:
+                                button['table'] = ""
     
-                        buttons.append(button)
+                            buttons.append(button)
         return buttons
         
     @staticmethod
@@ -700,8 +702,10 @@ class DocItem(JSONModel):
     parent = ext_models.PtigHiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
     parent_item = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent item', )
     order = models.IntegerField('Order', null=False, blank=False, editable=False, default=1,)
-    item = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Item', )
+    item = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Item', )
     amount = models.DecimalField('Amount', null=True, blank=True, editable=True, max_digits=16, decimal_places=2)
+    alt_amount = models.DecimalField('Amount', null=True, blank=True, editable=True, max_digits=16, decimal_places=2)
+    alt_unit = models.CharField('Alternate unit', null=True, blank=True, editable=True, max_length=32)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=255)
     level = models.IntegerField('Level', null=False, blank=False, editable=False, default=0,)
     active = models.BooleanField('Active item', null=False, blank=False, editable=True, default=True,)
