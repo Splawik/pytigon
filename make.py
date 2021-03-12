@@ -47,6 +47,16 @@ script_path = os.path.abspath(
     )
 )
 
+sass_path = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__).replace("make.py", ""),
+        "pytigon",
+        "static_src",
+        "themes",
+    )
+)
+
+
 if script_path == "":
     script_path = path
 else:
@@ -93,11 +103,13 @@ def scss_compile(parent_path, name):
             f2.write(buf)
             print("Saving result in: ", output_path)
 
+os.chdir(sass_path)
 
-p = Path("..")
+p = Path(sass_path)
 
 for pos in p.glob("**/*.sass"):
     if not pos.stem.startswith("_"):
+        print(pos.parent.as_posix())
         scss_compile(pos.parent.as_posix(), pos.name)
 
 os.chdir(path)

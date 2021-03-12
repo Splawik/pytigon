@@ -21,12 +21,14 @@
                 {{block.super}}
         {% endwith %}
 {% endblock %}
-{% block content_start %}
+{% block content_start2 %}
         <div class="content ajax-region" data-region="page" href="{{request.path}}">
 {% endblock %}
-{% block content_end %}
+{% block content_end2 %}
         </div>
 {% endblock %}
+{% block content_start %}{% endblock %}
+{% block content_end %}{% endblock %}
 {% block body_desktop %}
         {% with ONLY_CONTENT=True %}
                 {{ block.super }}

@@ -283,7 +283,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
     dialog_slot2.innerHTML = get_template(
         template_name.replace("MODAL", "INLINE"),
-        {"title": _get_title(target_element, data_element, url)[0]},
+        {"title": _get_title(target_element, data_element, url)[0], 'href': url},
     )
 
     target_element.setAttribute("data-style", "zoom-out")
@@ -346,7 +346,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     dialog_slot.setAttribute("class", "plug")
 
     dialog_slot.innerHTML = get_template(
-        template_name, {"title": _get_title(target_element, data_element, url)[0]}
+        template_name, {"title": _get_title(target_element, data_element, url)[0], 'href': url }
     )
 
     region = get_ajax_region(target_element, target_element.getAttribute("data-region"))

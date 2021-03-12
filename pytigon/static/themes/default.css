@@ -685,6 +685,9 @@ div.td_information {
   transform: rotate(315deg) !important;
   transition: .3s !important; }
 
+.tab-pane {
+  position: relative; }
+
 .tab-pane.container-fluid {
   padding-right: 5px !important;
   padding-left: 5px !important; }

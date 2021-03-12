@@ -13,7 +13,7 @@ MODAL_BASE = """
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
+                <div class="container-fluid ajax-region ajax-frame" data-region='page' href='{href}'>
                     <div class="dialog-data ajax-frame" data-region="error"></div>
                 </div>
             </div>
@@ -89,7 +89,7 @@ INLINE_BASE = """
                     </button> 
                     <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                 </div>
-                <div class='modal-body'>
+                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>
                     <div class='dialog-data ajax-frame' data-region='error'></div>
                 </div>
                 <div class='modal-footer'>

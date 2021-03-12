@@ -334,7 +334,7 @@ class Element(TreeModel):
     def _get_new_buttons(elem_type="ROOT"):
         buttons = []
         
-        if hasattr(self, "get_structure"):
+        if hasattr(Element, "get_structure"):
             s = Element.get_structure()
             if elem_type in s:
                 if 'next' in s[elem_type]:

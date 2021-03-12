@@ -2,7 +2,7 @@
 
 var DELETE_FOOTER, EDIT_FOOTER, ERROR_FOOTER, INFO_FOOTER, INLINE, INLINE_BASE, INLINE_DELETE, INLINE_DELETE_BASE, INLINE_EDIT, INLINE_ERROR, INLINE_INFO, MODAL, MODAL_BASE, MODAL_DELETE, MODAL_DELETE_BASE, MODAL_EDIT, MODAL_ERROR, MODAL_INFO;
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
-MODAL_BASE = "\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close\" data-dismiss='modal' aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid\">\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
+MODAL_BASE = "\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close\" data-dismiss='modal' aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame\" data-region='page' href='{href}'>\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
 MODAL_DELETE_BASE = "\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close\" data-dismiss='modal' aria-label=\"Close\">\n                <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n";
 EDIT_FOOTER = " \n<button type=\"button\" class=\"btn btn-secondary btn-close\" data-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" target=\"refresh_frame\">OK</button>\n";
 INFO_FOOTER = "\n<button type = \"button\" class =\"btn btn-secondary btn-close\" data-dismiss='modal'>Close</button>\n";
@@ -13,7 +13,7 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n                </div>\n                <div class='modal-body'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n";
+INLINE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n";
 INLINE_DELETE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                    <span class='fa fa-window-minimize'></span> \n                </button> \n                <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                    <span class='fa fa-window-maximize'></span> \n                </button> \n                <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
 INLINE_EDIT = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", "");
@@ -488,8 +488,13 @@ is_visible = function flx_is_visible (el) {
 window.is_visible = is_visible;
 TEMPLATES = ({MODAL_EDIT: MODAL_EDIT, MODAL_INFO: MODAL_INFO, MODAL_DELETE: MODAL_DELETE, MODAL_ERROR: MODAL_ERROR, INLINE_EDIT: INLINE_EDIT, INLINE_INFO: INLINE_INFO, INLINE_DELETE: INLINE_DELETE, INLINE_ERROR: INLINE_ERROR});
 get_template = function flx_get_template (template_name, param) {
+    var ret;
     if (_pyfunc_op_contains(template_name, TEMPLATES)) {
-        return _pymeth_replace.call(TEMPLATES[template_name], "{title}", param["title"]);
+        ret = _pymeth_replace.call(TEMPLATES[template_name], "{title}", param["title"]);
+        if (_pyfunc_op_contains("href", param)) {
+            ret = _pymeth_replace.call(ret, "{href}", param["href"]);
+        }
+        return ret;
     }
     return null;
 };
@@ -2034,7 +2039,7 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
         dialog_slot2 = dialog_slot;
     }
     dialog_slot.classList.add("plug");
-    dialog_slot2.innerHTML = get_template(_pymeth_replace.call(template_name, "MODAL", "INLINE"), ({title: _get_title(target_element, data_element, url)[0]}));
+    dialog_slot2.innerHTML = get_template(_pymeth_replace.call(template_name, "MODAL", "INLINE"), ({title: _get_title(target_element, data_element, url)[0], href: url}));
     target_element.setAttribute("data-style", "zoom-out");
     target_element.setAttribute("data-spinner-color", "#FF0000");
     content = dialog_slot.querySelector("div.dialog-data");
@@ -2085,7 +2090,7 @@ _on_popup = function flx__on_popup (target_element, data_element, url, param, ev
     }
     dialog_slot = document.createElement("aside");
     dialog_slot.setAttribute("class", "plug");
-    dialog_slot.innerHTML = get_template(template_name, ({title: _get_title(target_element, data_element, url)[0]}));
+    dialog_slot.innerHTML = get_template(template_name, ({title: _get_title(target_element, data_element, url)[0], href: url}));
     region = get_ajax_region(target_element, target_element.getAttribute("data-region"));
     if ((!_pyfunc_truthy(region))) {
         return null;
@@ -2365,7 +2370,7 @@ TabMenu.prototype.new_page = function (title, data_or_html, href, title_alt) {
     } else {
         _pymeth_append.call(jQuery("#tabs2"), menu_pos);
     }
-    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s' data-region='page'></div>", _id));
+    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s' data-region='page' href='%s'></div>", _id, href));
     window.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
     this.active_item = menu_item;
     if (_pyfunc_truthy(window.PUSH_STATE)) {
@@ -2693,7 +2698,7 @@ table_loadeddata = function flx_table_loadeddata (event) {
     var dt;
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {
         dt = data_type(event.data);
-        if (_pyfunc_op_equals(dt, "$$RETURN_REFRESH_PARENT")) {
+        if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
             ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
         } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
             refresh_ajax_frame((_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement), "error", event.data);

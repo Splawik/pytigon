@@ -30,11 +30,15 @@
     % with NO_TABS=True:
         {{block.super}}
 
-%% content_start
+%% content_start2
     <div class="content ajax-region" data-region="page" href="{{request.path}}">
 
-%% content_end
+%% content_end2
     </div>
+
+%% content_start
+
+%% content_end
 
 %% body_desktop
     % with ONLY_CONTENT=True:

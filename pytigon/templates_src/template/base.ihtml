@@ -212,6 +212,8 @@
     % if not form_delete:
 
         %% list_page_start
+            <div class="ajax-region" data-region="table">
+
         %% list_page_header
 
         %% list_page
@@ -271,7 +273,7 @@
                 % if table_type == 'datatable':
                     <div class="tableframe">
                 % else:
-                    <div class="tableframe ajax-region ajax-frame" data-region="table">
+                    <div class="tableframe ajax-frame" data-region="table">
 
             %% list_content_body
                 %% list_content_paginator
@@ -379,6 +381,7 @@
         %% list_page_footer
 
         %% list_page_end
+            </div>
 
     % if standard_web_browser and standard_web_browser < 5:
         </div>

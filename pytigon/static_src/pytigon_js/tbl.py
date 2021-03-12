@@ -205,7 +205,7 @@ def init_table(table, table_type):
 def table_loadeddata(event):
     if getattr(event, "data"):
         dt = data_type(event.data)
-        if dt == "$$RETURN_REFRESH_PARENT":
+        if dt in ("$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
                 "refresh"
             )

@@ -292,7 +292,9 @@
                 </div>
         {% endif %}
         {% if not form_delete %}
-                {% block list_page_start %}{% endblock %}
+                {% block list_page_start %}
+                        <div class="ajax-region" data-region="table">
+                {% endblock %}
                 {% block list_page_header %}{% endblock %}
                 {% block list_page %}
                         {% block list_content_start %}
@@ -385,7 +387,7 @@
                                 {% if table_type == 'datatable' %}
                                         <div class="tableframe">
                                   {% else %}
-                                        <div class="tableframe ajax-region ajax-frame" data-region="table">
+                                        <div class="tableframe ajax-frame" data-region="table">
                                 {% endif %}
                         {% endif %}
                         {% block list_content_body %}
@@ -542,7 +544,9 @@
                         {% endblock %}
                 {% endblock %}
                 {% block list_page_footer %}{% endblock %}
-                {% block list_page_end %}{% endblock %}
+                {% block list_page_end %}
+                        </div>
+                {% endblock %}
         {% endif %}
         {% if standard_web_browser and standard_web_browser < 5 %}
                 </div>

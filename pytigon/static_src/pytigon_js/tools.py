@@ -472,8 +472,10 @@ TEMPLATES = {
 def get_template(template_name, param):
     global TEMPLATES
     if template_name in TEMPLATES:
-        #return TEMPLATES[template_name].format(param)
-        return TEMPLATES[template_name].replace('{title}', param['title'])
+        ret = TEMPLATES[template_name].replace('{title}', param['title'])
+        if 'href' in param:
+            ret = ret.replace('{href}', param['href'])
+        return ret
     return None
 
 
