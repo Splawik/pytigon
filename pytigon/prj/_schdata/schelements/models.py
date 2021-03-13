@@ -25,7 +25,7 @@ from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from django.template.loader import select_template
 import datetime
 from django.db import transaction
-
+from django.contrib.contenttypes.models import ContentType
 
 def limit_element1():
     return {}
@@ -315,20 +315,58 @@ class Element(TreeModel):
             id = -1
         return "/schsys/treedialog/schelements/Element/%s/" % id
         
-    def redirect_href(self, view, request):
+    #def redirect_href(self, view, request):
+    #    t = None
+    #    if type(self)==Element:
+    #        if 'add_param' in view.kwargs:
+    #            t = view.kwargs['add_param']
+    #        else:
+    #            t = self.type
+    #    if t:
+    #        if hasattr(self, "get_structure"):
+    #            s = self.get_structure()
+    #            if t in s:
+    #                redirect = s[t]['app'] + "/table/" + s[t]['table']
+    #                return request.path.replace('schelements/table/Element',redirect)
+    #    return None
+    
+    
+    def get_derived_object(self, param=None):
         t = None
+        if hasattr(self, "get_structure"):
+            s = self.get_structure()
+    
         if type(self)==Element:
-            if 'add_param' in view.kwargs:
-                t = view.kwargs['add_param']
-            else:
-                t = self.type
-        if t:
             if hasattr(self, "get_structure"):
                 s = self.get_structure()
+                if param and 'view' in param and 'add_param' in param['view'].kwargs:
+                    t = param['view'].kwargs['add_param']
+                    if t=='-':
+                        return self
+                    if t in s:
+                        return ContentType.objects.get(app_label=s[t]['app'], model=s[t]['table']).model_class()()
+                else:
+                    t = self.type
+                    if t in s:
+                        if hasattr(self, s[t]['table'].lower()):
+                            print("OK")
+                            return getattr(self, s[t]['table'].lower())
+                        print("NOT OK")
+        return self
+    
+    
+    def template_for_object(self, context, doc_type):
+        if self.id and doc_type in ('html', 'json'):
+            if hasattr(self, "get_structure"):
+                s = self.get_structure()
+                t = self.type
                 if t in s:
-                    redirect = s[t]['app'] + "/table/" + s[t]['table']
-                    return request.path.replace('schelements/table/Element',redirect)
+                    names = [ s[t]['app'].lower() + '/' + s[t]['table'].lower()+".html", ]
+                    template = select_template(names)
+                    if template:
+                        return template
         return None
+    
     
     @staticmethod
     def _get_new_buttons(elem_type="ROOT"):
@@ -552,12 +590,12 @@ class DocHead(JSONModel):
             tmp = DocReg.objects.filter(name=context['filter'].replace('_','/'))
             if len(tmp)==1:
                 names = []
-                names.append(view.template_name)
                 x = tmp[0]
                 while x:
                     names.append((x.app+"/"+x.name.replace('/','_')+"_dochead_list.html").lower())
                     x = x.get_parent()
                 template = select_template(names)
+                names.append(view.template_name)
                 if template:
                     return template
                 
@@ -570,6 +608,8 @@ class DocHead(JSONModel):
                 obj = DocHead.objects.get(pk=self.id)            
                 reg = obj.doc_type_parent.parent
                 names = []
+                names.append('%s/%s'% (self._meta.app_label, self._meta.model.__name__))
+                names.append(context['view'].template_name)
                 names.append((reg.app+"/"+obj.doc_type_parent.name+"_dochead_edit.html").lower())        
                 names.append((reg.app+"/"+reg.name.replace('/', '_') + "_dochead_edit.html").lower())
                 x = reg.get_parent()
@@ -662,25 +702,24 @@ class DocHead(JSONModel):
         
         return False        
         
-    def redirect_href(self, view, request):
+    def get_derived_object(self, param=None):
         t = None
         if type(self)==DocHead:
-            if 'add_param' in view.kwargs and view.kwargs['add_param'] != '-':
-                t = view.kwargs['add_param']
-                if t:
-                    object_list = DocType.objects.filter(name=t)
-                    if len(object_list):
-                        t = object_list[0].parent.name
+            if param and 'view' in param and 'add_param' in param['view'].kwargs:
+                t = param['view'].kwargs['add_param']
+                if t=='-':
+                    return self
+                object_list = DocType.objects.filter(name=t)
+                if len(object_list):
+                    t = object_list[0].parent.name
+                return ContentType.objects.get(model=t.lower()+"dochead").model_class()()
+    
             else:
                 t = self.doc_type_parent.parent.name
-        if t:
-            if hasattr(self, "get_structure"):
-                s = self.get_structure()
-                if t in s:
-                    redirect = s[t]['app'] + "/table/" + s[t]['table']
-                    return request.path.replace('schelements/table/DocHead',redirect)
-        return None
-    
+                name = t.lower()+"dochead"
+                if hasattr(self, name):
+                    return getattr(self, name)
+        return self
     
 admin.site.register(DocHead)
 
@@ -729,7 +768,8 @@ class DocItem(JSONModel):
                 while x:
                     names.append(x.app+"/"+x.name.replace('/', '_') + "_docitem_list.html")
                     x = x.get_parent()
-                    
+                names.append(view.template_name)
+                print(names)
                 template = select_template(names)
                 if template:
                     return template
@@ -753,6 +793,9 @@ class DocItem(JSONModel):
             while x:
                 names.append(x.app+"/"+x.name.replace('/', '_') + "_docitem_edit.html")
                 x = x.get_parent()
+                
+            names.append(context['view'].template_name.replace(reg.app+'/', 'schelements/'))
+            print(names)
             template = select_template(names)
             if template:
                 return template                            
@@ -760,7 +803,6 @@ class DocItem(JSONModel):
         
     
     def get_form_source(self):
-        #obj = DocItem.objects.get(pk=self.id)            
         obj = self
         if obj.parent.doc_type_parent.item_form:
            return obj.parent.doc_type_parent.item_form 
@@ -807,31 +849,23 @@ class DocItem(JSONModel):
             
         super().save(*args, **kwargs)
         
-    
-    
-    def redirect_href(self, view, request):
+       
+    def get_derived_object(self, param=None):
         t = None
         if type(self)==DocItem:
-            if 'add_param' in view.kwargs and view.kwargs['add_param']!='-':
-                t = view.kwargs['add_param']
+            if param and 'view' in param and 'add_param' in param['view'].kwargs:
+                t = param['view'].kwargs['add_param']
+                if t=='-':
+                    return self
+                return ContentType.objects.get(model=t.lower()+"docitem").model_class()()
             else:
                 t = self.parent.doc_type_parent.parent.name
-        if t:
-            if hasattr(self.parent, "get_structure"):
-                s = self.parent.get_structure()
-                if t in s:
-                    old_path = request.path
-                    redirect = s[t]['app'] + "/table/" + s[t]['child_table']
-                    path = old_path.replace('schelements/table/DocItem',redirect)
-                    if path == old_path:
-                        if not '/'+s[t]['table']+'/' in old_path:
-                            path = old_path.replace('/schelements/', '/'+s[t]['app']+'/')
-                            path = path.replace('/DocHead/', '/'+s[t]['table']+'/')
-                        else:
-                            return None
-                    return path
-        return None
-        
+                name = t.lower()+"docitem"
+                if hasattr(self, name):
+                    print("OK")
+                    return getattr(self, name)
+                print("NOT OK")
+        return self
     
 admin.site.register(DocItem)
 

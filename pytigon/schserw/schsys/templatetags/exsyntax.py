@@ -93,10 +93,17 @@ def view_row(context, object, title = "", icon_name = "", target = "popup_info",
     else:
         href = "{tp}%s/_/view/" % context['object'].id
     ret = action_fun(context, 'view_row', title, icon_name, target, attrs,tag_class, href)
-    if hasattr(object, 'str'):
-        ret['title2'] = str(object)
+    if hasattr(object, 'get_derived_object'):
+        object2 = object.get_derived_object()
+        if hasattr(object2, 'str'):
+            ret['title2'] = str(object2)
+        else:
+            ret['title2'] = ("%s(id=" % type(object2).__name__) + str(title) + ")"
     else:
-        ret['title2'] = "Object(id=" + str(title) + ")"
+        if hasattr(object, 'str'):
+            ret['title2'] = str(object)
+        else:
+            ret['title2'] = ("%s(id=" % type(object).__name__ )+ str(title) + ")"
     return ret
 
 

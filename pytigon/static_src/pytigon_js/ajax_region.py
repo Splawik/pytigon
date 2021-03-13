@@ -120,6 +120,16 @@ def selectpicker_init(dest_elem):
 register_mount_fun(selectpicker_init)
 
 
+def auto_frame_init(dest_elem):
+    frame_list = Array.prototype.slice.call(
+        dest_elem.querySelectorAll(".auto-frame")
+    )
+    for elem in frame_list:
+        refresh_ajax_frame(elem)
+
+register_mount_fun(auto_frame_init)
+
+
 def moveelement_init(dest_elem):
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"))
     if objs:
@@ -130,6 +140,8 @@ def moveelement_init(dest_elem):
 
                 parent = obj.parentElement
                 elem2 = super_insert(dest_elem, obj.getAttribute("data-position"), obj)
+                if not elem2:
+                    continue
 
                 if data_position.endswith(":class"):
 

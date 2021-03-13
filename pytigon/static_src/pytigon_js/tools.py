@@ -242,7 +242,13 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None):
         if data_filter:
             data = data_filter(data)
 
-    _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
+    if (
+        _form[0].hasAttribute("data-region")
+        and _form[0].getAttribute("data-region") == "table"
+    ):
+        _req_post(req, corect_href(form.attr("action"), True), data, complete, content_type)
+    else:
+        _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
 
 
 window.ajax_submit = ajax_submit

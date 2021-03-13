@@ -76,7 +76,7 @@ INLINE = """
 INLINE_BASE = """
 <div style='position:relative'>
     <div class='dark_background'></div>
-    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>
+    <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class="modal-content ajax-region" data-region="error">
             <div class='modal-content'>
                 <div class='modal-header'>
@@ -104,7 +104,7 @@ INLINE_BASE = """
 INLINE_DELETE_BASE = """
 <div style='position:relative'>
     <div class='dark_background'></div>
-    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>
+    <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class='modal-content'>
             <div class='modal-header'>
                 <h4 class='modal-title'>{title}</h4>
