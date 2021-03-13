@@ -6,7 +6,7 @@ subreport_dragstart = function flx_subreport_dragstart (ev) {
 
 window.subreport_dragstart = subreport_dragstart;
 subreport_drop = function flx_subreport_drop (ev, base_path) {
-    var data, data2, href, target;
+    var _callback, data, data2, href, target;
     ev.preventDefault();
     if (_pyfunc_op_equals(ev.target.tagName, "LABEL")) {
         target = ev.target;
@@ -17,7 +17,12 @@ subreport_drop = function flx_subreport_drop (ev, base_path) {
     data2 = target.getAttribute("name");
     if ((!_pyfunc_op_equals(data2, data))) {
         href = ((((base_path + "schreports/table/Report/") + data) + "/") + data2) + "/action/move_to/";
-        ajax_get(href, standard_on_data(jQuery(target), href));
+        _callback = (function flx__callback (data) {
+            window.refresh_ajax_frame(target);
+            return null;
+        }).bind(this);
+
+        window.ajax_get(href, _callback);
     }
     return null;
 };

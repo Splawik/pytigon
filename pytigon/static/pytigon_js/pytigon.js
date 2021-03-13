@@ -13,8 +13,8 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n";
-INLINE_DELETE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document' style='max-width: 100%;'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                    <span class='fa fa-window-minimize'></span> \n                </button> \n                <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                    <span class='fa fa-window-maximize'></span> \n                </button> \n                <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
+INLINE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n";
+INLINE_DELETE_BASE = "\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> \n                    <span class='fa fa-window-minimize'></span> \n                </button> \n                <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> \n                    <span class='fa fa-window-maximize'></span> \n                </button> \n                <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
 INLINE_EDIT = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", "");
 INLINE_DELETE = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", "");
@@ -297,7 +297,11 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
             data = data_filter(data);
         }
     }
-    _req_post(req, corect_href(form.attr("action")), data, complete, content_type);
+    if (((_pyfunc_truthy((_form[0].hasAttribute)("data-region"))) && ((_pyfunc_op_equals(((_form[0].getAttribute)("data-region")), "table"))))) {
+        _req_post(req, corect_href(form.attr("action"), true), data, complete, content_type);
+    } else {
+        _req_post(req, corect_href(form.attr("action")), data, complete, content_type);
+    }
     return null;
 };
 
@@ -1019,7 +1023,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _refresh_page, ajax_load, data_type, datatable_init, datetime_init, get_ajax_frame, get_ajax_link, get_ajax_region, label_floating_init, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
+var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, datetime_init, get_ajax_frame, get_ajax_link, get_ajax_region, label_floating_init, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1128,26 +1132,42 @@ selectpicker_init = function flx_selectpicker_init (dest_elem) {
 };
 
 register_mount_fun(selectpicker_init);
+auto_frame_init = function flx_auto_frame_init (dest_elem) {
+    var elem, frame_list, stub5_seq, stub6_itr;
+    frame_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".auto-frame"));
+    stub5_seq = frame_list;
+    if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
+    for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+        elem = stub5_seq[stub6_itr];
+        refresh_ajax_frame(elem);
+    }
+    return null;
+};
+
+register_mount_fun(auto_frame_init);
 moveelement_init = function flx_moveelement_init (dest_elem) {
-    var _on_remove, data_position, elem2, obj, objs, parent, stub7_seq, stub8_itr;
+    var _on_remove, data_position, elem2, obj, objs, parent, stub10_itr, stub9_seq;
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"));
     if (_pyfunc_truthy(objs)) {
-        stub7_seq = objs;
-        if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-        for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-            obj = stub7_seq[stub8_itr];
+        stub9_seq = objs;
+        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
+        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
+            obj = stub9_seq[stub10_itr];
             if (_pyfunc_truthy(obj.hasAttribute("data-position"))) {
                 _pymeth_remove.call(obj.classList, "move-element");
                 data_position = obj.getAttribute("data-position");
                 parent = obj.parentElement;
                 elem2 = super_insert(dest_elem, obj.getAttribute("data-position"), obj);
+                if ((!_pyfunc_truthy(elem2))) {
+                    continue;
+                }
                 if (_pyfunc_truthy(_pymeth_endswith.call(data_position, ":class"))) {
                     _on_remove = (function flx__on_remove () {
-                        var c, stub5_seq, stub6_itr;
-                        stub5_seq = Array.prototype.slice.call(obj.classList);
-                        if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
-                        for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
-                            c = stub5_seq[stub6_itr];
+                        var c, stub7_seq, stub8_itr;
+                        stub7_seq = Array.prototype.slice.call(obj.classList);
+                        if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+                        for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+                            c = stub7_seq[stub8_itr];
                             _pymeth_remove.call(elem2.classList, c);
                         }
                         return null;
@@ -1188,7 +1208,7 @@ label_floating_init = function flx_label_floating_init (dest_elem) {
 
 register_mount_fun(label_floating_init);
 select2_init = function flx_select2_init (dest_elem) {
-    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub10_itr, stub9_seq;
+    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub11_seq, stub12_itr;
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({width: "calc(100% - 48px)", minimumInputLength: 1}));
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({width: "calc(100%)", minimumInputLength: 1}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
@@ -1200,10 +1220,10 @@ select2_init = function flx_select2_init (dest_elem) {
 
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"));
     if (_pyfunc_truthy(controls)) {
-        stub9_seq = controls;
-        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
-        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
-            control = stub9_seq[stub10_itr];
+        stub11_seq = controls;
+        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
+        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+            control = stub11_seq[stub12_itr];
             _onloadeddata = function (event) {
                 var id, src_elem, text;
                 if (_pyfunc_hasattr(event, "data_source")) {
@@ -1465,7 +1485,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, datetime_init, selectpicker_init, moveelement_init, label_floating_init, select2_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, datetime_init, selectpicker_init, auto_frame_init, moveelement_init, label_floating_init, select2_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;
@@ -1867,7 +1887,7 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
         pos = stub5_seq[stub6_itr];
         if ((_pyfunc_op_equals(pos[0], "*") || _pyfunc_op_equals(pos[0], target))) {
             if ((_pyfunc_op_equals(pos[1], "*") || target_element.classList.contains(pos[1]))) {
-                if (_pyfunc_truthy(pos[3])) {
+                if (((_pyfunc_truthy(target_element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(target_element.getAttribute("data-region"), "table"))))) {
                     url = corect_href(href, true);
                 } else if (_pyfunc_truthy(pos[2])) {
                     url = corect_href(href, false);

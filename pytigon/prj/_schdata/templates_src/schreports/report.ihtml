@@ -49,3 +49,5 @@
     % form:
         "parent", "parent_field_name", "order", "report_def_name", "date"
 
+%% dialog_type
+    .modal-max

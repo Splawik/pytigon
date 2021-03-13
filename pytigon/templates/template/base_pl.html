@@ -201,7 +201,7 @@
                           {% else %}
                                 {% block row_edit_start %}
                                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                <div class="move-element {% block dialog_type %}{% endblock %}" data-position="^.modal-dialog:class">
+                                                <div class="move-element {% block dialog_type %}modal-lg{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
                                         {% endif %}
                                 {% endblock %}
                                 {% block row_edit_header %}
@@ -211,7 +211,7 @@
                                         {% endif %}
                                 {% endblock %}
                                 {% block row_edit_all %}
-                                        <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="table">
+                                        <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="page">
                                                 {% csrf_token %}
                                                 {% block row_edit_form %}
                                                         <table width="100%" style="table-layout:fixed;">
@@ -234,11 +234,7 @@
                                         {% block row_edit_footer %}{% endblock %}
                                         {% block form_ok_cancel %}{% endblock %}
                                 {% endblock %}
-                                {% block row_edit_end %}
-                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                </div>
-                                        {% endif %}
-                                {% endblock %}
+                                {% block row_edit_end %}{% endblock %}
                                 {% if standard_web_browser %}
                                         {% if title %}
                                                 <set-field element="#ModalLabel" title="{{title}}"></set-field>
@@ -295,7 +291,11 @@
                 {% block list_page_start %}
                         <div class="ajax-region" data-region="table">
                 {% endblock %}
-                {% block list_page_header %}{% endblock %}
+                {% block list_page_header %}
+                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                <div class="move-element {% block sublist_type %}sublist-xl{% endblock %}" data-position=".modal-dialog:class"></div>
+                        {% endif %}
+                {% endblock %}
                 {% block list_page %}
                         {% block list_content_start %}
                                 {% if standard_web_browser %}
@@ -320,7 +320,7 @@
                                                                 <div class="tr row list_content_header list_content_header_two_row">
                                                                         <div class="td col-md-12 col-sm-12" colspan="3">
                                                                                 {% block list_filter_form %}
-                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="page">
+                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="{% if table_type == 'datatable'%}page{% else %}table{% endif %}">
                                                                                                 {% csrf_token %}
                                                                                                 {% block form_filter %}
                                                                                                         {% if form %}
