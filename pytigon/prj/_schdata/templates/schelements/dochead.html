@@ -77,6 +77,8 @@
                 {% block docitem_list %}
                         {% frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px" %}
                 {% endblock %}
+          {% else %}
+                <button type="button" class="btn btn-success" target="refresh_frame" rettype="RETURN_HTML_ERROR" data-region="subframe" get-param="redirect='1'" style="width:100%"> expand >> </button>
         {% endif %}
 {% endblock %}
 

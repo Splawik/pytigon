@@ -20,7 +20,7 @@ INLINE_INFO = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_fo
 INLINE_DELETE = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, corect_href, download_binary_file, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, super_insert, super_query_selector;
 LOADED_FILES = ({});
 Loading = function () {
     _pyfunc_op_instantiate(this, arguments);
@@ -262,10 +262,11 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
 };
 
 window.ajax_json = ajax_json;
-ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req) {
+ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req, url) {
     var _progressHandlingFunction, content_type, data, form, req;
     data_filter = (data_filter === undefined) ? null: data_filter;
     process_req = (process_req === undefined) ? null: process_req;
+    url = (url === undefined) ? null: url;
     content_type = null;
     req = new XMLHttpRequest();
     form = jQuery(_form);
@@ -297,10 +298,10 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
             data = data_filter(data);
         }
     }
-    if (((_pyfunc_truthy((_form[0].hasAttribute)("data-region"))) && ((_pyfunc_op_equals(((_form[0].getAttribute)("data-region")), "table"))))) {
-        _req_post(req, corect_href(form.attr("action"), true), data, complete, content_type);
+    if (_pyfunc_truthy(url)) {
+        _req_post(req, url, data, complete, content_type);
     } else {
-        _req_post(req, corect_href(form.attr("action")), data, complete, content_type);
+        _req_post(req, correct_href(form.attr("action"), _form[0]), data, complete, content_type);
     }
     return null;
 };
@@ -714,30 +715,39 @@ can_popup = function flx_can_popup () {
     return null;
 };
 
-corect_href = function flx_corect_href (href, only_table) {
-    only_table = (only_table === undefined) ? false: only_table;
+correct_href = function flx_correct_href (href, element) {
+    var only_table;
+    element = (element === undefined) ? null: element;
     if ((!_pyfunc_truthy(href))) {
         return href;
     }
-    if (_pyfunc_truthy(only_table)) {
-        if (_pyfunc_op_contains("only_table", href)) {
-            return href;
-        }
-    } else if (_pyfunc_op_contains("only_content", href)) {
-        return href;
+    only_table = false;
+    if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(element.getAttribute("data-region"), "table"))))) {
+        only_table = true;
     }
     if (_pyfunc_truthy(only_table)) {
+        if ((!_pyfunc_op_contains("only_table", href))) {
+            if (_pyfunc_op_contains("?", href)) {
+                href += "&only_table=1";
+            } else {
+                href += "?only_table=1";
+            }
+        }
+    } else if ((!_pyfunc_op_contains("only_content", href))) {
         if (_pyfunc_op_contains("?", href)) {
-            return href + "&only_table=1";
+            href += "&only_content=1";
         } else {
-            return href + "?only_table=1";
+            href += "?only_content=1";
         }
-    } else if (_pyfunc_op_contains("?", href)) {
-        return href + "&only_content=1";
-    } else {
-        return href + "?only_content=1";
     }
-    return null;
+    if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("get-param"))) && (_pyfunc_truthy(element.getAttribute("get-param"))))) {
+        if (_pyfunc_op_contains("?", href)) {
+            href = _pyfunc_op_add(href, "&" + element.getAttribute("get-param"));
+        } else {
+            href = _pyfunc_op_add(href, "?" + element.getAttribute("get-param"));
+        }
+    }
+    return href;
 };
 
 remove_page_from_href = function flx_remove_page_from_href (href) {
@@ -765,7 +775,7 @@ remove_page_from_href = function flx_remove_page_from_href (href) {
     return href;
 };
 
-export {Loading, save_as, download_binary_file, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, corect_href, remove_page_from_href};
+export {Loading, save_as, download_binary_file, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {
@@ -1044,6 +1054,10 @@ data_type = function flx_data_type (data_or_html) {
                 return "$$RETURN_RELOAD";
             } else if (_pyfunc_op_contains("$$RETURN_ERROR", data_or_html)) {
                 return "$$RETURN_ERROR";
+            } else if (_pyfunc_op_contains("$$RETURN_REFRESH_AUTO_FRAME", data_or_html)) {
+                return "$$RETURN_REFRESH_AUTO_FRAME";
+            } else if (_pyfunc_op_contains("$$RETURN_HTML_ERROR", data_or_html)) {
+                return "$$RETURN_HTML_ERROR";
             }
         } else {
             meta_list = Array.prototype.slice.call(data_or_html.querySelectorAll("meta"));
@@ -1397,6 +1411,9 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         loading.stop();
         loading.remove();
         dt = data_type(data);
+        if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && _pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("rettype"))))) {
+            dt = "$$" + element.getAttribute("rettype");
+        }
         if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
             mount_html(frame, data, link);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
@@ -1418,10 +1435,12 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             } else {
                 (window.open().document.write)(data.innerHTML);
             }
+        } else if (_pyfunc_op_equals(dt, "$$RETURN_REFRESH_AUTO_FRAME")) {
+            auto_frame_init(frame);
         } else {
             mount_html(frame, data, link);
         }
-        if (_pyfunc_op_contains(dt, ["$$RETURN_ERROR", "$$RETURN_RELOAD"])) {
+        if (_pyfunc_op_contains(dt, ["$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"])) {
             if (_pyfunc_truthy(callback_on_error)) {
                 callback_on_error();
             }
@@ -1448,16 +1467,12 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         }
     }
     if (_pyfunc_truthy(url)) {
-        if (((_pyfunc_truthy(link.hasAttribute("data-region"))) && ((_pyfunc_op_equals(link.getAttribute("data-region"), "table"))))) {
-            url = corect_href(url, true);
-        } else {
-            url = corect_href(url);
-        }
+        url = correct_href(url, element);
         loading.create();
         loading.start();
         if (_pyfunc_truthy(post)) {
             if ((_pyfunc_op_equals(_pymeth_lower.call(link.tagName), "form"))) {
-                ajax_submit(jQuery(link), _callback);
+                ajax_submit(jQuery(link), _callback, null, null, url);
             } else {
                 data = (jQuery(link).serialize)();
                 ajax_post(url, data, _callback);
@@ -1887,13 +1902,7 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
         pos = stub5_seq[stub6_itr];
         if ((_pyfunc_op_equals(pos[0], "*") || _pyfunc_op_equals(pos[0], target))) {
             if ((_pyfunc_op_equals(pos[1], "*") || target_element.classList.contains(pos[1]))) {
-                if (((_pyfunc_truthy(target_element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(target_element.getAttribute("data-region"), "table"))))) {
-                    url = corect_href(href, true);
-                } else if (_pyfunc_truthy(pos[2])) {
-                    url = corect_href(href, false);
-                } else {
-                    url = href;
-                }
+                url = correct_href(href, target_element);
                 return [url, pos[4]];
             }
         }
@@ -2476,7 +2485,7 @@ TabMenu.prototype.on_menu_href = function (elem, data_or_html, title, title_alt,
             } else {
                 href = (jQuery(elem).attr)("href");
             }
-            href2 = corect_href(href);
+            href2 = correct_href(href);
             (jQuery("#body_desktop").hide)();
             this.new_page(title, data_or_html.innerHTML, href2, title_alt);
         }
@@ -2636,11 +2645,10 @@ init_table = function flx_init_table (table, table_type) {
         }).bind(this);
 
         queryParams = (function flx_queryParams (p) {
-            var refr_block, src;
-            refr_block = (jQuery(table).closest)(".ajax-frame");
-            src = _pymeth_find.call(refr_block, ".ajax-link");
-            if (((src.length > 0) && ((_pyfunc_op_equals(src.prop("tagName"), "FORM"))))) {
-                p["form"] = src.serialize();
+            var link;
+            link = get_ajax_link(table[0], "page");
+            if ((_pyfunc_truthy(link) && ((_pyfunc_op_equals(_pymeth_lower.call(link.tagName), "form"))))) {
+                p["form"] = (jQuery(link).serialize)();
             }
             return p;
         }).bind(this);

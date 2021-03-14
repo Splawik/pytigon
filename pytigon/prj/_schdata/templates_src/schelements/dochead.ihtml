@@ -62,12 +62,13 @@
 
     % if object|args:request|call:"status_can_be_undo":
         % action "decline_status"|append_str:"/"|append_str:object.status "_(Discard status:) "|append_str:object.status "fa fa-undo" tag_class="+btn-danger" target='popup_edit' url=table_path|append_str:"{id}/action/discard/"
-        
+
+
 %% row_edit
     %% dochead_edit
         % form:
     % if object.id:
         %% docitem_list
             % frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px"
-            
-            
+    % else:
+        <button type="button" class="btn btn-success" target="refresh_frame" rettype="RETURN_HTML_ERROR" data-region="subframe" get-param="redirect='1'" style="width:100%"> expand >> </button>

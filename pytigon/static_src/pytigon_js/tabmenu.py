@@ -1,4 +1,4 @@
-# from pytigon_js.tools import history_push_state, corect_href, remove_element, process_resize
+# from pytigon_js.tools import history_push_state, correct_href, remove_element, process_resize
 # from pytigon_js.ajax_region import mount_html
 
 
@@ -145,7 +145,7 @@ class TabMenu:
                     href = url
                 else:
                     href = jQuery(elem).attr("href")
-                href2 = corect_href(href)
+                href2 = correct_href(href)
 
                 jQuery("#body_desktop").hide()
                 self.new_page(title, data_or_html.innerHTML, href2, title_alt)

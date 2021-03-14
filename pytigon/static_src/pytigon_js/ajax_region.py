@@ -1,4 +1,4 @@
-# from pytigon_js.tools import Loading, corect_href, ajax_get, ajax_post, get_table_type, super_insert
+# from pytigon_js.tools import Loading, correct_href, ajax_get, ajax_post, get_table_type, super_insert
 # from pytigon_js.tbl import init_table
 
 
@@ -21,6 +21,10 @@ def data_type(data_or_html):
                 return "$$RETURN_RELOAD"
             elif "$$RETURN_ERROR" in data_or_html:
                 return "$$RETURN_ERROR"
+            elif "$$RETURN_REFRESH_AUTO_FRAME" in data_or_html:
+                return "$$RETURN_REFRESH_AUTO_FRAME"
+            elif "$$RETURN_HTML_ERROR" in data_or_html:
+                return "$$RETURN_HTML_ERROR"
         else:
             meta_list = Array.prototype.slice.call(
                 data_or_html.querySelectorAll("meta")
@@ -345,12 +349,16 @@ def refresh_ajax_frame(
     loading = Loading(element)
 
     def _callback(data):
-        nonlocal link, frame, region, callback, loading
+        nonlocal element, link, frame, region, callback, loading
 
         loading.stop()
         loading.remove()
 
         dt = data_type(data)
+
+        if dt != "$$RETURN_ERROR" and element and element.hasAttribute('rettype'):
+            dt = '$$'+element.getAttribute('rettype')
+
         if (
             dt != "$$RETURN_ERROR"
             and getattr(frame, "onloadeddata")
@@ -386,10 +394,12 @@ def refresh_ajax_frame(
                     window.open().document.write(data)
                 else:
                     window.open().document.write(data.innerHTML)
+            elif dt == "$$RETURN_REFRESH_AUTO_FRAME":
+                auto_frame_init(frame)
             else:
                 mount_html(frame, data, link)
 
-        if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD"):
+        if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"):
             if callback_on_error:
                 callback_on_error()
         else:
@@ -412,19 +422,20 @@ def refresh_ajax_frame(
             url = link.getAttribute("src")
 
     if url:
-        if (
-            link.hasAttribute("data-region")
-            and link.getAttribute("data-region") == "table"
-        ):
-            url = corect_href(url, True)
-        else:
-            url = corect_href(url)
+        url = correct_href(url, element)
+        #if (
+        #    link.hasAttribute("data-region")
+        #    and link.getAttribute("data-region") == "table"
+        #):
+        #    url = corect_href(url, True)
+        #else:
+        #    url = corect_href(url)
         loading.create()
         loading.start()
 
         if post:
             if link.tagName.lower() == "form":
-                ajax_submit(jQuery(link), _callback)
+                ajax_submit(jQuery(link), _callback, None, None, url)
             else:
                 data = jQuery(link).serialize()
                 ajax_post(url, data, _callback)

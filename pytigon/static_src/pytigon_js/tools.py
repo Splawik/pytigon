@@ -209,7 +209,7 @@ def ajax_json(url, data, complete, process_req=None):
 window.ajax_json = ajax_json
 
 
-def ajax_submit(_form, complete, data_filter=None, process_req=None):
+def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
     content_type = None
     req = XMLHttpRequest()
     form = jQuery(_form)
@@ -242,13 +242,18 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None):
         if data_filter:
             data = data_filter(data)
 
-    if (
-        _form[0].hasAttribute("data-region")
-        and _form[0].getAttribute("data-region") == "table"
-    ):
-        _req_post(req, corect_href(form.attr("action"), True), data, complete, content_type)
+    if url:
+        _req_post(req, url, data, complete, content_type)
     else:
-        _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
+        _req_post(req, correct_href(form.attr("action"), _form[0]), data, complete, content_type)
+
+    #if (
+    #    _form[0].hasAttribute("data-region")
+    #    and _form[0].getAttribute("data-region") == "table"
+    #):
+    #    _req_post(req, corect_href(form.attr("action"), True), data, complete, content_type)
+    #else:
+    #    _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
 
 
 window.ajax_submit = ajax_submit
@@ -666,26 +671,34 @@ def can_popup():
         return True
 
 
-def corect_href(href, only_table=False):
+def correct_href(href, element=None):
     if not href:
         return href
-    if only_table:
-        if "only_table" in href:
-            return href
-    elif "only_content" in href:
-        return href
+
+    only_table = False
+    if element and element.hasAttribute("data-region") and element.getAttribute("data-region") == "table":
+        only_table=True
 
     if only_table:
-        if "?" in href:
-            return href + "&only_table=1"
-        else:
-            return href + "?only_table=1"
+        if not 'only_table' in href:
+            if "?" in href:
+                href += "&only_table=1"
+            else:
+                href += "?only_table=1"
     else:
-        if "?" in href:
-            return href + "&only_content=1"
-        else:
-            return href + "?only_content=1"
+        if not 'only_content' in href:
+            if "?" in href:
+                href += "&only_content=1"
+            else:
+                href += "?only_content=1"
 
+    if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
+        if '?' in href:
+            href += '&' + element.getAttribute("get-param")
+        else:
+            href += '?' + element.getAttribute("get-param")
+
+    return href
 
 def remove_page_from_href(href):
     x = href.split("?")

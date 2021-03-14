@@ -123,11 +123,16 @@ def init_table(table, table_type):
             return False
 
         def queryParams(p):
-            refr_block = jQuery(table).closest(".ajax-frame")
-            src = refr_block.find(".ajax-link")
-            if src.length > 0 and src.prop("tagName") == "FORM":
-                p["form"] = src.serialize()
+            nonlocal table
+            link = get_ajax_link(table[0], "page")
+            if link and link.tagName.lower()=='form':
+                p["form"] = jQuery(link).serialize()
             return p
+            #refr_block = jQuery(table).closest(".ajax-frame")
+            #src = refr_block.find(".ajax-link")
+            #if src.length > 0 and src.prop("tagName") == "FORM":
+            #    p["form"] = src.serialize()
+            #return p
 
         if table.hasClass("table_get"):
             table.bootstrapTable(
@@ -220,3 +225,4 @@ def table_loadeddata(event):
 
 
 window.table_loadeddata = table_loadeddata
+

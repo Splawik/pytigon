@@ -1,5 +1,5 @@
 # from pytigon_js.tabmenu import get_menu
-# from pytigon_js.tools import Loading, is_visible, corect_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup, get_elem_from_string
+# from pytigon_js.tools import Loading, is_visible, correct_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup, get_elem_from_string
 # from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
 
 EVENT_TAB = []
@@ -122,16 +122,18 @@ def _get_click_event_from_tab(target_element, target, href):
     for pos in EVENT_CLICK_TAB:
         if pos[0] == "*" or pos[0] == target:
             if pos[1] == "*" or target_element.classList.contains(pos[1]):
-                if (
-                        target_element.hasAttribute("data-region")
-                        and target_element.getAttribute("data-region") == "table"
-                ):
+                url = correct_href(href, target_element)
+
+                #if (
+                #        target_element.hasAttribute("data-region")
+                #        and target_element.getAttribute("data-region") == "table"
+                #):
                 #if pos[3]:
-                    url = corect_href(href, True)
-                elif pos[2]:
-                    url = corect_href(href, False)
-                else:
-                    url = href
+                #    url = corect_href(href, True)
+                #elif pos[2]:
+                #    url = corect_href(href, False)
+                #else:
+                #    url = href
                 return url, pos[4]
     return None, None
 
