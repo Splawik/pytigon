@@ -338,7 +338,7 @@ def _refresh_page(target_element, data_element):
 
 
 def refresh_ajax_frame(
-    element, region_name=None, data_element=None, callback=None, callback_on_error=None
+    element, region_name=None, data_element=None, callback=None, callback_on_error=None, data_if_none=None
 ):
     region = get_ajax_region(element, region_name)
     frame = get_ajax_frame(element, region_name)
@@ -378,7 +378,7 @@ def refresh_ajax_frame(
                 elem = region.closest('.plug').parentElement
                 callback()
                 return refresh_ajax_frame(
-                    elem, region_name, None, None, callback_on_error
+                    elem, region_name, None, None, callback_on_error, data
                 )
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
@@ -423,13 +423,6 @@ def refresh_ajax_frame(
 
     if url:
         url = correct_href(url, element)
-        #if (
-        #    link.hasAttribute("data-region")
-        #    and link.getAttribute("data-region") == "table"
-        #):
-        #    url = corect_href(url, True)
-        #else:
-        #    url = corect_href(url)
         loading.create()
         loading.start()
 
@@ -442,11 +435,9 @@ def refresh_ajax_frame(
         else:
             ajax_get(url, _callback)
     else:
-        _callback(None)
-
+        _callback(data_if_none)
 
 window.refresh_ajax_frame = refresh_ajax_frame
-
 
 def ajax_load(element, url, complete):
     def _onload(responseText):

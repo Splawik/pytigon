@@ -306,7 +306,8 @@
         .data-show-columns="true"
         .data-icons-prefix="fa"
         .data-icons="icons"
-        .data-id-field="cid"
+        .data-id-field="id"
+        .data-unique-id="id"
         .data-multiple-select-row="true"
         {# .data-click-to-select="true" #}
         .data-mobile-responsive="true"

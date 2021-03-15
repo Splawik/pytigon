@@ -102,6 +102,9 @@ def datatable_ajax(params):
 
 def init_table(table, table_type):
     if table_type == "datatable":
+        if table.hasClass("tmultiple-select"):
+            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true'></th>")
+        jQuery(table).find("tr:first").find('th:last').after("<th data-field='id' data-visible='false'>ID</th>")
 
         def onLoadSuccess(data):
             nonlocal table
@@ -216,6 +219,57 @@ def table_loadeddata(event):
             )
         elif dt == "$$RETURN_ERROR":
             refresh_ajax_frame(event.data_source if event.data_source else event.srcElement , "error", event.data)
+        elif dt == "$$RETURN_UPDATE_ROW_OK":
+            try:
+                if isinstance(event.data, str):
+                    _data = event.data
+                else:
+                    _data = event.data.innerHTML
+                pk = int(_data.split('id:')[1].strip())
+                table = event.data_source if event.data_source else event.srcElement
+                datatable = jQuery(table).find("table[name=tabsort].datatable")
+                link = get_ajax_link(table, "page")
+                url = None
+                if link:
+                    if link.hasAttribute("href"):
+                        url = link.getAttribute("href")
+                    elif link.hasAttribute("action"):
+                        url = link.getAttribute("action")
+                        post = True
+                    elif link.hasAttribute("src"):
+                        url = link.getAttribute("src")
+                if url:
+                    print(url)
+                    if '?' in url:
+                        url += "&pk=" + str(pk)
+                    else:
+                        url += "?pk=" + str(pk)
+                    url = url.replace('/form/', '/json/')
+                    def _update(data):
+                        nonlocal datatable
+                        d = JSON.parse(data)
+                        id2 = d['rows'][0]['id']
+                        datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
+                        #obj = datatable.bootstrapTable('getRowByUniqueId', id2)
+                        #id3 = obj['id']
+                        #datatable.bootstrapTable('updateRow', { 'index': id3, 'row': d['rows'][0] })
+
+
+                    ajax_get(url, _update)
+                    return
+            except:
+                pass
+
+            jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
+                "refresh"
+            )
+        elif dt in (
+                "$$RETURN_OK",
+                "$$RETURN_NEW_ROW_OK",
+            ):
+            jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
+                "refresh"
+            )
         else:
             refresh_ajax_frame(event.data_source if event.data_source else event.srcElement, "page", event.data)
     else:
