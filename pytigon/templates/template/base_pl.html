@@ -343,7 +343,7 @@
                                                                         </div>
                                                                 </div>
                                                           {% else %}
-                                                                <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame"></form>
+                                                                <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame" data-region="table"></form>
                                                         {% endif %}
                                                 {% endblock %}
                                                 {% block list_content_header_third_row %}
