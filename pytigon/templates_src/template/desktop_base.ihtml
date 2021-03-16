@@ -315,6 +315,7 @@
         .data-show-toggle="true"
         .data-loading-template="loading_template"
         .data-buttons-align="right"
+        .data-click-to-select="true"
         {# .data-click-to-select="true" #}
         .data-mobile-responsive="true"
     % else:

@@ -102,7 +102,7 @@ def datatable_ajax(params):
 
 def init_table(table, table_type):
     if table_type == "datatable":
-        if table.hasClass("tmultiple-select"):
+        if table.hasClass("multiple-select"):
             jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true'></th>")
         jQuery(table).find("tr:first").find('th:last').after("<th data-field='id' data-visible='false'>ID</th>")
 
