@@ -85,6 +85,7 @@ def datatable_ajax(params):
 
         def _on_post_data(data):
             d2 = JSON.parse(data)
+            print("POST:", data)
             success(d2)
 
         ajax_post(url, form, _on_post_data)
@@ -95,6 +96,7 @@ def datatable_ajax(params):
 
         def _on_get_data(data):
             d2 = JSON.parse(data)
+            print("GET:", data)
             success(d2)
 
         ajax_get(url, _on_get_data)
@@ -103,7 +105,10 @@ def datatable_ajax(params):
 def init_table(table, table_type):
     if table_type == "datatable":
         if table.hasClass("multiple-select"):
-            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true'></th>")
+            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true' data-visible='true'></th>")
+        else:
+            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true' data-visible='false'></th>")
+
         jQuery(table).find("tr:first").find('th:last').after("<th data-field='id' data-visible='false'>ID</th>")
 
         def onLoadSuccess(data):

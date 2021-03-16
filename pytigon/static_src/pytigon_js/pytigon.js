@@ -716,7 +716,7 @@ can_popup = function flx_can_popup () {
 };
 
 correct_href = function flx_correct_href (href, elements) {
-    var element, only_table, stub19_seq, stub20_itr, stub21_seq, stub22_itr;
+    var element, only_content, only_table, stub19_seq, stub20_itr, stub21_seq, stub22_itr, stub23_seq, stub24_itr;
     elements = (elements === undefined) ? null: elements;
     if ((!_pyfunc_truthy(href))) {
         return href;
@@ -727,7 +727,7 @@ correct_href = function flx_correct_href (href, elements) {
         if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
         for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
             element = stub19_seq[stub20_itr];
-            if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(element.getAttribute("data-region"), "table"))))) {
+            if ((((!_pyfunc_op_equals(element, null))) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals((_pymeth_lower.call(element.getAttribute("data-region"))), "table"))))) {
                 only_table = true;
             }
         }
@@ -740,18 +740,33 @@ correct_href = function flx_correct_href (href, elements) {
                 href += "?only_table=1";
             }
         }
-    } else if ((!_pyfunc_op_contains("only_content", href))) {
-        if (_pyfunc_op_contains("?", href)) {
-            href += "&only_content=1";
-        } else {
-            href += "?only_content=1";
+    } else {
+        only_content = true;
+        if ((!_pyfunc_op_equals(elements, null))) {
+            stub21_seq = elements;
+            if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
+            for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
+                element = stub21_seq[stub22_itr];
+                if ((((!_pyfunc_op_equals(element, null))) && (_pyfunc_truthy(element.hasAttribute("target"))) && ((_pyfunc_op_contains((_pymeth_lower.call(element.getAttribute("target"))), ["_top", "_blank"]))))) {
+                    only_content = false;
+                }
+            }
+        }
+        if (_pyfunc_truthy(only_content)) {
+            if ((!_pyfunc_op_contains("only_content", href))) {
+                if (_pyfunc_op_contains("?", href)) {
+                    href += "&only_content=1";
+                } else {
+                    href += "?only_content=1";
+                }
+            }
         }
     }
     if ((!_pyfunc_op_equals(elements, null))) {
-        stub21_seq = elements;
-        if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
-        for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
-            element = stub21_seq[stub22_itr];
+        stub23_seq = elements;
+        if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
+        for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
+            element = stub23_seq[stub24_itr];
             if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("get-param"))) && (_pyfunc_truthy(element.getAttribute("get-param"))))) {
                 if ((!(_pyfunc_op_contains(element.getAttribute("get-param"), href)))) {
                     if (_pyfunc_op_contains("?", href)) {
@@ -767,16 +782,16 @@ correct_href = function flx_correct_href (href, elements) {
 };
 
 remove_page_from_href = function flx_remove_page_from_href (href) {
-    var pos, stub23_seq, stub24_itr, x, x2, x3;
+    var pos, stub25_seq, stub26_itr, x, x2, x3;
     x = _pymeth_split.call(href, "?");
     if ((x.length > 1)) {
         x2 = _pymeth_split.call(x[1], "&");
         if ((x2.length > 1)) {
             x3 = [];
-            stub23_seq = x2;
-            if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
-            for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
-                pos = stub23_seq[stub24_itr];
+            stub25_seq = x2;
+            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
+            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
+                pos = stub25_seq[stub26_itr];
                 if ((!_pyfunc_op_contains("page=", pos))) {
                     _pymeth_append.call(x3, pos);
                 }
@@ -2621,6 +2636,7 @@ datatable_ajax = function flx_datatable_ajax (params) {
         _on_post_data = (function flx__on_post_data (data) {
             var d2;
             d2 = JSON.parse(data);
+            console.log("POST:" + " " + data);
             success(d2);
             return null;
         }).bind(this);
@@ -2632,6 +2648,7 @@ datatable_ajax = function flx_datatable_ajax (params) {
         _on_get_data = (function flx__on_get_data (data) {
             var d2;
             d2 = JSON.parse(data);
+            console.log("GET:" + " " + data);
             success(d2);
             return null;
         }).bind(this);
@@ -2644,8 +2661,10 @@ datatable_ajax = function flx_datatable_ajax (params) {
 init_table = function flx_init_table (table, table_type) {
     var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
     if (_pyfunc_op_equals(table_type, "datatable")) {
-        if (_pyfunc_truthy(table.hasClass("tmultiple-select"))) {
-            ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true'></th>");
+        if (_pyfunc_truthy(table.hasClass("multiple-select"))) {
+            ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true' data-visible='true'></th>");
+        } else {
+            ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true' data-visible='false'></th>");
         }
         ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:last")).after)("<th data-field='id' data-visible='false'>ID</th>");
         onLoadSuccess = (function flx_onLoadSuccess (data) {

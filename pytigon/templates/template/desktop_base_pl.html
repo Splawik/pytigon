@@ -324,7 +324,7 @@
 {% endblock %}
 {% block tabsort_class %}
         {% if table_type == 'datatable' %}
-                class="tabsort flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
+                class="tabsort not-multiple-select flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
                 data-method="get"
                 data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}list/{% endif %}"
                 data-side-pagination="server"
@@ -347,6 +347,7 @@
                 data-show-toggle="true"
                 data-loading-template="loading_template"
                 data-buttons-align="right"
+                data-click-to-select="true"
                 {# .data-click-to-select="true" #}
                 data-mobile-responsive="true"
           {% else %}

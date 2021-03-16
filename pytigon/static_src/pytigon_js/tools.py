@@ -678,7 +678,7 @@ def correct_href(href, elements=None):
     only_table = False
     if elements != None:
         for element in elements:
-            if element and element.hasAttribute("data-region") and element.getAttribute("data-region") == "table":
+            if element != None and element.hasAttribute("data-region") and element.getAttribute("data-region").lower() == "table":
                 only_table=True
 
     if only_table:
@@ -688,11 +688,19 @@ def correct_href(href, elements=None):
             else:
                 href += "?only_table=1"
     else:
-        if not 'only_content' in href:
-            if "?" in href:
-                href += "&only_content=1"
-            else:
-                href += "?only_content=1"
+        only_content = True
+        if elements != None:
+            for element in elements:
+                if element != None and element.hasAttribute("target") and element.getAttribute("target").lower() in ("_top", "_blank"):
+                    only_content = False
+
+        if only_content:
+            if not 'only_content' in href:
+                if "?" in href:
+                    href += "&only_content=1"
+                else:
+                    href += "?only_content=1"
+
     if elements != None:
         for element in elements:
             if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
