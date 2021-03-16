@@ -19,12 +19,10 @@
         </head>
         {% block body %}
                 <body>
-                {% block style_content_start %}{% endblock %}
                 {% block content0 %}{% endblock %}
                 {% block no_content %}
                         {% block content %}content{% endblock %}
                 {% endblock %}
-                {% block style_content_stop %}{% endblock %}
                 {% block footer %}{% endblock %}
         {% endblock %}
         {% block body_stop %}</body>{% endblock %}

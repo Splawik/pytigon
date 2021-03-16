@@ -481,7 +481,7 @@
                                                                         {% if object_list %}
                                                                                 {% for object in object_list %}
                                                                                         {% block list_full_row %}
-                                                                                                <tr {% block list_row_attr %}{% endblock %}>
+                                                                                                <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
                                                                                                         {% block list_row_start %}
                                                                                                                 {% if not no_id %}
                                                                                                                         <td>

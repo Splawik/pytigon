@@ -412,7 +412,7 @@ def refresh_ajax_frame(
 
     url = None
     post = False
-    if link:
+    if link != None:
         if link.hasAttribute("href"):
             url = link.getAttribute("href")
         elif link.hasAttribute("action"):
@@ -422,7 +422,7 @@ def refresh_ajax_frame(
             url = link.getAttribute("src")
 
     if url:
-        url = correct_href(url, element)
+        url = correct_href(url, (element, link))
         loading.create()
         loading.start()
 

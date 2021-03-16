@@ -99,7 +99,7 @@
     text-transform: none;
     padding: 0.5rem; }
   .tabsort_panel .btn, .tabsort_panel .list_content_header .btn, .table_panel .btn, .table_panel .list_content_header .btn, .subform_content .btn, .subform_content .list_content_header .btn {
-    box-shadow: none;
+    box-shadow: none !important;
     border: none !important;
     color: black;
     background-color: rgba(0, 0, 0, 0.05); }
@@ -136,14 +136,10 @@
 
 div.bootstrap-table div.columns.float-right {
   margin-right: 2px;
-  position: absolute;
-  left: 0px;
   margin-top: 5px !important; }
 
-div.bootstrap-table div.fixed-table-toolbar {
-  padding-left: 57px; }
-  div.bootstrap-table div.fixed-table-toolbar div.columns button {
-    width: 50px; }
+div.bootstrap-table div.fixed-table-toolbar div.columns button {
+  width: 50px; }
 
 div.bootstrap-table div.search input {
   height: 35px !important; }

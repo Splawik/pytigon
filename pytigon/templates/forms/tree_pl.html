@@ -116,8 +116,18 @@
                 data-locale="pl-PL"
                 data-show-columns="true"
                 data-icons-prefix="fa"
-                data-id-field="cid"
                 data-icons="icons"
+                data-id-field="id"
+                data-unique-id="id"
+                data-multiple-select-row="true"
+                data-show-button-icons="true"
+                data-show-refresh="true"
+                data-show-fullscreen="true"
+                data-show-toggle="true"
+                data-loading-template="loading_template"
+                data-buttons-align="right"
+                {# .data-click-to-select="true" #}
+                data-mobile-responsive="true"
           {% else %}
                 class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
         {% endif %}

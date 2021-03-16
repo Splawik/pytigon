@@ -554,21 +554,7 @@ def editable_base(context, name, title, url):
         t2 = ""
     oid = getattr(context['object'], 'id')
     value = getattr(context['object'], field_name)
-    return (
-        f"<a "
-        f"class='editable autoopen' "
-        f"data-name='{field_name}' "
-        f"data-type='{t}' "
-        f"data-pk='{oid}' "
-        #f"data-url='../../../{oid}/{field_name}/editable/editor/' "
-        f"data-url='{url}' "
-        f"data-title='{t2}' "
-        f"href='#' "
-        f"{date_str}"
-        f">"
-        f"{value}"
-        f"</a>"
-    )
+    return f"<a class='editable autoopen' data-name='{field_name}' data-type='{t}' data-pk='{oid}' data-url='{url.format(**locals())}' data-title='{t2}' href='#' {date_str}> {value} </a>"
 
 @register.simple_tag(takes_context=True)
 def editable(context, name, title="", url=None):

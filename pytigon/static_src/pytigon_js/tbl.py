@@ -137,6 +137,14 @@ def init_table(table, table_type):
             #    p["form"] = src.serialize()
             #return p
 
+        icons = {
+            'fullscreen': 'fa-arrows-alt',
+            'refresh': 'fa-refresh',
+            'toggleOff': 'fa-toggle-off',
+            'toggleOn': 'fa-toggle-on',
+            'columns': 'fa-th-list',
+        }
+
         if table.hasClass("table_get"):
             table.bootstrapTable(
                 {
@@ -146,6 +154,7 @@ def init_table(table, table_type):
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
+                    "icons": icons,
                 }
             )
         else:
@@ -156,6 +165,7 @@ def init_table(table, table_type):
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
+                    "icons": icons,
                 }
             )
 
@@ -219,7 +229,7 @@ def table_loadeddata(event):
             )
         elif dt == "$$RETURN_ERROR":
             refresh_ajax_frame(event.data_source if event.data_source else event.srcElement , "error", event.data)
-        elif dt == "$$RETURN_UPDATE_ROW_OK":
+        elif dt in ("$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"):
             try:
                 if isinstance(event.data, str):
                     _data = event.data
@@ -246,15 +256,14 @@ def table_loadeddata(event):
                         url += "?pk=" + str(pk)
                     url = url.replace('/form/', '/json/')
                     def _update(data):
-                        nonlocal datatable
+                        nonlocal datatable, dt
                         d = JSON.parse(data)
-                        id2 = d['rows'][0]['id']
-                        datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
-                        #obj = datatable.bootstrapTable('getRowByUniqueId', id2)
-                        #id3 = obj['id']
-                        #datatable.bootstrapTable('updateRow', { 'index': id3, 'row': d['rows'][0] })
-
-
+                        if dt == "$$RETURN_NEW_ROW_OK":
+                            datatable.bootstrapTable('append', d['rows'][0])
+                            datatable.bootstrapTable('scrollTo', 'bottom')
+                        else:
+                            id2 = d['rows'][0]['id']
+                            datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
                     ajax_get(url, _update)
                     return
             except:
@@ -265,7 +274,6 @@ def table_loadeddata(event):
             )
         elif dt in (
                 "$$RETURN_OK",
-                "$$RETURN_NEW_ROW_OK",
             ):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
                 "refresh"
@@ -280,3 +288,8 @@ def table_loadeddata(event):
 
 window.table_loadeddata = table_loadeddata
 
+
+def loading_template(message):
+    return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
+
+window.loading_template = loading_template

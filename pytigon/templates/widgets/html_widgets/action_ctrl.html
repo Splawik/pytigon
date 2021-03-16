@@ -1,13 +1,13 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% if not standard_web_browser %}
-        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|getfield:id}}" />
+        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}" />
 {% endif %}
 {% block all %}
         {% block js_standard %}{% endblock %}
         {% block widget_content %}
                 {% if standard_web_browser %}
-                        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|getfield:id}}" />
+                        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}" />
                 {% endif %}
                 <div id="{{id}}_div">
                         {{data}}
@@ -33,7 +33,7 @@
             return false
         }
     );
-    var {{id}}_var_id = '{{object|getfield:id}}';
+    var {{id}}_var_id = '{{object|get_attr:id}}';
     if({{id}}_var_id && {{id}}_var_id != 'None'){
         $('#{{id}}_div').find('a').each(
             function( index ){

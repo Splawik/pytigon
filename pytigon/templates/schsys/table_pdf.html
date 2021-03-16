@@ -138,13 +138,13 @@
         {% if object_list %}
                 <table width="100%">
                         <tr>
-                                {% for pos in object_list.0|get_fields_verbose_names %}
+                                {% for pos in object_list.0|get_model_fields_verbose_names %}
                                         <th>{{pos}}</th>
                                 {% endfor %}
                         </tr>
                         {% for row in object_list %}
                                 <tr>
-                                        {% for field in row|get_fields %}
+                                        {% for field in row|get_model_fields %}
                                                 <td align="left">{{field}}</td>
                                         {% endfor %}
                                 </tr>

@@ -122,7 +122,7 @@ def _get_click_event_from_tab(target_element, target, href):
     for pos in EVENT_CLICK_TAB:
         if pos[0] == "*" or pos[0] == target:
             if pos[1] == "*" or target_element.classList.contains(pos[1]):
-                url = correct_href(href, target_element)
+                url = correct_href(href, (target_element,))
 
                 #if (
                 #        target_element.hasAttribute("data-region")

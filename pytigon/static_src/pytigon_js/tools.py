@@ -245,7 +245,7 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
     if url:
         _req_post(req, url, data, complete, content_type)
     else:
-        _req_post(req, correct_href(form.attr("action"), _form[0]), data, complete, content_type)
+        _req_post(req, correct_href(form.attr("action"), (_form[0],)), data, complete, content_type)
 
     #if (
     #    _form[0].hasAttribute("data-region")
@@ -671,13 +671,15 @@ def can_popup():
         return True
 
 
-def correct_href(href, element=None):
+def correct_href(href, elements=None):
     if not href:
         return href
 
     only_table = False
-    if element and element.hasAttribute("data-region") and element.getAttribute("data-region") == "table":
-        only_table=True
+    if elements != None:
+        for element in elements:
+            if element and element.hasAttribute("data-region") and element.getAttribute("data-region") == "table":
+                only_table=True
 
     if only_table:
         if not 'only_table' in href:
@@ -691,13 +693,14 @@ def correct_href(href, element=None):
                 href += "&only_content=1"
             else:
                 href += "?only_content=1"
-
-    if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
-        if '?' in href:
-            href += '&' + element.getAttribute("get-param")
-        else:
-            href += '?' + element.getAttribute("get-param")
-
+    if elements != None:
+        for element in elements:
+            if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
+                if not element.getAttribute("get-param") in href:
+                    if '?' in href:
+                        href += '&' + element.getAttribute("get-param")
+                    else:
+                        href += '?' + element.getAttribute("get-param")
     return href
 
 def remove_page_from_href(href):

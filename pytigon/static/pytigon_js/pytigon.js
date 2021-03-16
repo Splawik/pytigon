@@ -301,7 +301,7 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
     if (_pyfunc_truthy(url)) {
         _req_post(req, url, data, complete, content_type);
     } else {
-        _req_post(req, correct_href(form.attr("action"), _form[0]), data, complete, content_type);
+        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
     }
     return null;
 };
@@ -715,15 +715,22 @@ can_popup = function flx_can_popup () {
     return null;
 };
 
-correct_href = function flx_correct_href (href, element) {
-    var only_table;
-    element = (element === undefined) ? null: element;
+correct_href = function flx_correct_href (href, elements) {
+    var element, only_table, stub19_seq, stub20_itr, stub21_seq, stub22_itr;
+    elements = (elements === undefined) ? null: elements;
     if ((!_pyfunc_truthy(href))) {
         return href;
     }
     only_table = false;
-    if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(element.getAttribute("data-region"), "table"))))) {
-        only_table = true;
+    if ((!_pyfunc_op_equals(elements, null))) {
+        stub19_seq = elements;
+        if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
+        for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
+            element = stub19_seq[stub20_itr];
+            if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals(element.getAttribute("data-region"), "table"))))) {
+                only_table = true;
+            }
+        }
     }
     if (_pyfunc_truthy(only_table)) {
         if ((!_pyfunc_op_contains("only_table", href))) {
@@ -740,27 +747,36 @@ correct_href = function flx_correct_href (href, element) {
             href += "?only_content=1";
         }
     }
-    if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("get-param"))) && (_pyfunc_truthy(element.getAttribute("get-param"))))) {
-        if (_pyfunc_op_contains("?", href)) {
-            href = _pyfunc_op_add(href, "&" + element.getAttribute("get-param"));
-        } else {
-            href = _pyfunc_op_add(href, "?" + element.getAttribute("get-param"));
+    if ((!_pyfunc_op_equals(elements, null))) {
+        stub21_seq = elements;
+        if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
+        for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
+            element = stub21_seq[stub22_itr];
+            if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("get-param"))) && (_pyfunc_truthy(element.getAttribute("get-param"))))) {
+                if ((!(_pyfunc_op_contains(element.getAttribute("get-param"), href)))) {
+                    if (_pyfunc_op_contains("?", href)) {
+                        href = _pyfunc_op_add(href, "&" + element.getAttribute("get-param"));
+                    } else {
+                        href = _pyfunc_op_add(href, "?" + element.getAttribute("get-param"));
+                    }
+                }
+            }
         }
     }
     return href;
 };
 
 remove_page_from_href = function flx_remove_page_from_href (href) {
-    var pos, stub19_seq, stub20_itr, x, x2, x3;
+    var pos, stub23_seq, stub24_itr, x, x2, x3;
     x = _pymeth_split.call(href, "?");
     if ((x.length > 1)) {
         x2 = _pymeth_split.call(x[1], "&");
         if ((x2.length > 1)) {
             x3 = [];
-            stub19_seq = x2;
-            if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
-            for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
-                pos = stub19_seq[stub20_itr];
+            stub23_seq = x2;
+            if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
+            for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
+                pos = stub23_seq[stub24_itr];
                 if ((!_pyfunc_op_contains("page=", pos))) {
                     _pymeth_append.call(x3, pos);
                 }
@@ -1393,12 +1409,13 @@ _refresh_page = function flx__refresh_page (target_element, data_element) {
     return null;
 };
 
-refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data_element, callback, callback_on_error) {
+refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data_element, callback, callback_on_error, data_if_none) {
     var _callback, data, frame, link, loading, post, region, url;
     region_name = (region_name === undefined) ? null: region_name;
     data_element = (data_element === undefined) ? null: data_element;
     callback = (callback === undefined) ? null: callback;
     callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
+    data_if_none = (data_if_none === undefined) ? null: data_if_none;
     region = get_ajax_region(element, region_name);
     frame = get_ajax_frame(element, region_name);
     if ((!_pyfunc_truthy(frame))) {
@@ -1421,7 +1438,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
             elem = region.closest(".plug").parentElement;
             callback();
-            return refresh_ajax_frame(elem, region_name, null, null, callback_on_error);
+            return refresh_ajax_frame(elem, region_name, null, null, callback_on_error, data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {
             if (_pyfunc_op_equals(region_name, "error")) {
                 mount_html(frame, data, link);
@@ -1456,7 +1473,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     }
     url = null;
     post = false;
-    if (_pyfunc_truthy(link)) {
+    if ((!_pyfunc_op_equals(link, null))) {
         if (_pyfunc_truthy(link.hasAttribute("href"))) {
             url = link.getAttribute("href");
         } else if (_pyfunc_truthy(link.hasAttribute("action"))) {
@@ -1467,7 +1484,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         }
     }
     if (_pyfunc_truthy(url)) {
-        url = correct_href(url, element);
+        url = correct_href(url, [element, link]);
         loading.create();
         loading.start();
         if (_pyfunc_truthy(post)) {
@@ -1481,7 +1498,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             ajax_get(url, _callback);
         }
     } else {
-        _callback(null);
+        _callback(data_if_none);
     }
     return null;
 };
@@ -1902,7 +1919,7 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
         pos = stub5_seq[stub6_itr];
         if ((_pyfunc_op_equals(pos[0], "*") || _pyfunc_op_equals(pos[0], target))) {
             if ((_pyfunc_op_equals(pos[1], "*") || target_element.classList.contains(pos[1]))) {
-                url = correct_href(href, target_element);
+                url = correct_href(href, [target_element]);
                 return [url, pos[4]];
             }
         }
@@ -2399,7 +2416,7 @@ TabMenu.prototype.new_page = function (title, data_or_html, href, title_alt) {
     } else {
         _pymeth_append.call(jQuery("#tabs2"), menu_pos);
     }
-    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame win-content page' id='%s' data-region='page' href='%s'></div>", _id, href));
+    _pymeth_append.call(jQuery("#tabs2_content"), sprintf("<div class='tab-pane container-fluid ajax-region ajax-frame ajax-link win-content page' id='%s' data-region='page' href='%s'></div>", _id, href));
     window.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id));
     this.active_item = menu_item;
     if (_pyfunc_truthy(window.PUSH_STATE)) {
@@ -2509,7 +2526,7 @@ get_menu = function flx_get_menu () {
 
 export {Page, TabMenuItem, TabMenu, get_menu};
 
-var _is_visible, _rowStyle, datatable_ajax, datatable_refresh, datetable_set_height, init_table, prepare0, prepare_datatable, table_loadeddata;
+var _is_visible, _rowStyle, datatable_ajax, datatable_refresh, datetable_set_height, init_table, loading_template, prepare0, prepare_datatable, table_loadeddata;
 _is_visible = function flx__is_visible (element) {
     var test;
     test = jQuery(element).is(":visible");
@@ -2625,8 +2642,12 @@ datatable_ajax = function flx_datatable_ajax (params) {
 };
 
 init_table = function flx_init_table (table, table_type) {
-    var _handle_toolbar_expand, _process_resize, btn, init_bootstrap_table, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
+    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
     if (_pyfunc_op_equals(table_type, "datatable")) {
+        if (_pyfunc_truthy(table.hasClass("tmultiple-select"))) {
+            ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true'></th>");
+        }
+        ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:last")).after)("<th data-field='id' data-visible='false'>ID</th>");
         onLoadSuccess = (function flx_onLoadSuccess (data) {
             var _pagination;
             prepare_datatable(table);
@@ -2653,10 +2674,11 @@ init_table = function flx_init_table (table, table_type) {
             return p;
         }).bind(this);
 
+        icons = ({fullscreen: "fa-arrows-alt", refresh: "fa-refresh", toggleOff: "fa-toggle-off", toggleOn: "fa-toggle-on", columns: "fa-th-list"});
         if (_pyfunc_truthy(table.hasClass("table_get"))) {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
         } else {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
         }
         init_bootstrap_table = function (e, data) {
             var on_hidden_editable;
@@ -2723,13 +2745,66 @@ init_table = function flx_init_table (table, table_type) {
 };
 
 table_loadeddata = function flx_table_loadeddata (event) {
-    var dt;
+    var _data, _update, datatable, dt, link, pk, post, table, url;
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {
         dt = data_type(event.data);
         if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
             ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
         } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
             refresh_ajax_frame((_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement), "error", event.data);
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"])) {
+            try {
+                if ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string')) {
+                    _data = event.data;
+                } else {
+                    _data = event.data.innerHTML;
+                }
+                pk = _pyfunc_int((_pymeth_strip.call(((_pymeth_split.call(_data, "id:")[1])))));
+                table = (_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement);
+                datatable = _pymeth_find.call(jQuery(table), "table[name=tabsort].datatable");
+                link = get_ajax_link(table, "page");
+                url = null;
+                if (_pyfunc_truthy(link)) {
+                    if (_pyfunc_truthy(link.hasAttribute("href"))) {
+                        url = link.getAttribute("href");
+                    } else if (_pyfunc_truthy(link.hasAttribute("action"))) {
+                        url = link.getAttribute("action");
+                        post = true;
+                    } else if (_pyfunc_truthy(link.hasAttribute("src"))) {
+                        url = link.getAttribute("src");
+                    }
+                }
+                if (_pyfunc_truthy(url)) {
+                    console.log(url);
+                    if (_pyfunc_op_contains("?", url)) {
+                        url = _pyfunc_op_add(url, "&pk=" + _pyfunc_str(pk));
+                    } else {
+                        url = _pyfunc_op_add(url, "?pk=" + _pyfunc_str(pk));
+                    }
+                    url = _pymeth_replace.call(url, "/form/", "/json/");
+                    _update = (function flx__update (data) {
+                        var d, id2;
+                        d = JSON.parse(data);
+                        if (_pyfunc_op_equals(dt, "$$RETURN_NEW_ROW_OK")) {
+                            datatable.bootstrapTable("append", d["rows"][0]);
+                            datatable.bootstrapTable("scrollTo", "bottom");
+                        } else {
+                            id2 = d["rows"][0]["id"];
+                            datatable.bootstrapTable("updateByUniqueId", ({id: id2, row: d["rows"][0]}));
+                        }
+                        return null;
+                    }).bind(this);
+
+                    ajax_get(url, _update);
+                    return null;
+                }
+            } catch(err_4) {
+                {
+                }
+            }
+            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK"])) {
+            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
         } else {
             refresh_ajax_frame((_pyfunc_truthy(event.data_source))? (event.data_source) : (event.srcElement), "page", event.data);
         }
@@ -2740,7 +2815,12 @@ table_loadeddata = function flx_table_loadeddata (event) {
 };
 
 window.table_loadeddata = table_loadeddata;
-export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata};
+loading_template = function flx_loading_template (message) {
+    return "<i class=\"fa fa-spinner fa-spin fa-fw fa-2x\"></i>";
+};
+
+window.loading_template = loading_template;
+export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template};
 
 var humanFileSize, img_field;
 humanFileSize = function flx_humanFileSize (bytes, si) {
