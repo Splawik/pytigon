@@ -20,6 +20,7 @@
 import re
 
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -41,9 +42,10 @@ class CatchNode(template.Node):
     def render(self, context):
         output = self.nodelist.render(context)
         if 'VAR' in context:
-            context['VAR'][self.var_name] = output
+            context['VAR'][self.var_name] =  mark_safe(output)
         else:
-            context['VAR'] = {self.var_name: output}
+            context['VAR'] = {self.var_name:  mark_safe(output)}
+        print(context['VAR'])
         return ''
 
 
