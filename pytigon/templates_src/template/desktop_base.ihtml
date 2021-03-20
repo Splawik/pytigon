@@ -153,7 +153,7 @@
                 li
                     div style=width:5px; height:10px;
     div id=logo_place
-        a href={{base_path}},,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_parent
+        a href={{base_path}},,,class=logo,,,style=white-space:nowrap;text-align: center;,,,target=_top
             %% logo
                 span class=logo-lg
                     % if prj_title|length > 20:
@@ -290,6 +290,11 @@
             % else:
                 img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator,,,style=display:none
 
+%% body_footer
+    {{block.super}}
+    {% module_link 'schcomponents/components/sys-components.js' %}
+
+
 %% tabsort_class
     % if table_type == 'datatable':
         .class="tabsort not-multiple-select flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
@@ -301,6 +306,7 @@
         .data-page-list="[64]"
         .data-search="true"
         .data-sortable="true"
+
         .data-toolbar="#{{uuid}}_toolbar"
         .data-locale="pl-PL"
         .data-show-columns="true"

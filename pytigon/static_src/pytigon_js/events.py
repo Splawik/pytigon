@@ -310,10 +310,44 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
             obj = region.querySelector(".plug")
             obj.remove()
 
-    dialog = jQuery(dialog_slot.firstElementChild)
-    if dialog:
-        dialog.on("click", "button.btn-close", on_hidden)
+    dialog = dialog_slot.firstElementChild
 
+    if dialog != None:
+        jQuery(dialog).on("click", "button.btn-close", on_hidden)
+
+    plug = dialog.closest('aside.plug')
+    if plug != None:
+        viewportOffset = dialog.getBoundingClientRect()
+        top = viewportOffset.top
+        bottom = top + viewportOffset.height
+        height = window.innerHeight
+        if bottom > height:
+            if height > viewportOffset.height:
+                top2 = (height - viewportOffset.height)/2
+            else:
+                top2 = 0
+            dy = top - top2
+
+            scroll_frame = plug.firstElementChild
+            sy = scroll_frame.scrollTop
+            scroll_frame.scrollTop = dy + sy
+    else:
+        plug = dialog.closest('.plug')
+        if plug != None:
+            scroll_frame = plug.closest(".fixed-table-body")
+            if scroll_frame != None:
+                rect1 = dialog.getBoundingClientRect()
+                rect2 = scroll_frame.getBoundingClientRect()
+                sy = scroll_frame.scrollTop
+
+                if rect1.top > rect2.top:
+                    if rect1.height < rect2.height:
+                        if rect1.top+rect1.height > rect2.top+rect2.height:
+                            scroll_frame.scrollTop = (int(sy) + (rect1.top+rect1.height - (rect2.top+rect2.height)))
+                    else:
+                        scroll_frame.scrollTop = (int(sy) + (rect1.top - rect2.top))
+                else:
+                    scroll_frame.scrollTop =  (int(sy) + (y1 -y2))
 
 def on_inline(target_element, data_element, new_url, param, event):
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
@@ -378,8 +412,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     if dialog:
         dialog.on("hidden.bs.modal", on_hidden)
         dialog.drags({"handle": ".modal-header"})
-        dialog.modal({"show": True})
-
+        dialog.modal({"show": True, "backdrop": False,})
 
 def on_popup(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL")

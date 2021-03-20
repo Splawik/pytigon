@@ -260,7 +260,8 @@ def view_elements(request, code):
         if len(objs)>0:
             id = objs[0].pk
             
-    return HttpResponseRedirect(make_href('schelements/table/Element/%d/%d/form/treelist/?only_content=1' % (id,id)))
+    href2 = make_href('/schelements/table/Element/%d/%d/form/treelist/?only_content' % (id,id), request.get_full_path())
+    return HttpResponseRedirect(href2)
     
 
 

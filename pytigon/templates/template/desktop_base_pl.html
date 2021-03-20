@@ -141,7 +141,7 @@
                 </ul>
         {% endcomment %}
         <div id="logo_place">
-                <a href="{{base_path}}" class="logo" style="white-space:nowrap;text-align: center;" target="_parent">
+                <a href="{{base_path}}" class="logo" style="white-space:nowrap;text-align: center;" target="_top">
                         {% block logo %}
                                 <span class="logo-lg">
                                         {% if prj_title|length > 20 %}
@@ -321,6 +321,10 @@
                                 <img src="{% get_static_prefix %}images/reload/reload.svg" id="loading-indicator" style="display:none"></img>
                         {% endif %}
         {% endblock %}
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        {% module_link 'schcomponents/components/sys-components.js' %}
 {% endblock %}
 {% block tabsort_class %}
         {% if table_type == 'datatable' %}

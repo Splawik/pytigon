@@ -22,6 +22,7 @@
         {% endwith %}
 {% endblock %}
 {% block content_start2 %}
+        {{block.super}}
         <div class="content ajax-region" data-region="page" href="{{request.path}}">
 {% endblock %}
 {% block content_end2 %}

@@ -369,6 +369,15 @@ div.tab-content .modal-dialog-inline {
 .modal-dialog .subform_frame {
   margin: 15px 15px; }
 
+div.modal-content.maximized {
+  position: fixed;
+  top: -5px;
+  left: -5px;
+  width: calc( 100% + 10px);
+  height: calc( 100vh + 10px);
+  z-index: 9000;
+  overflow: auto; }
+
 /* login form */
 .login_background {
   /* IE10+ */

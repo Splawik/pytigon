@@ -727,3 +727,28 @@ def remove_page_from_href(href):
             else:
                 return href
     return href
+
+def inline_maximize(elem):
+    dialog = elem.closest('div.modal-content')
+    if not dialog.classList.contains("maximized"):
+        dialog.classList.add("maximized")
+
+    b_min = dialog.querySelector('button.minimize')
+    b_max = dialog.querySelector('button.maximize')
+    b_min.style.display = "block"
+    b_max.style.display = "none"
+
+window.inline_maximize = inline_maximize
+
+def inline_minimize(elem):
+    dialog = elem.closest('div.modal-content')
+    if dialog.classList.contains("maximized"):
+        dialog.classList.remove("maximized")
+
+    b_min = dialog.querySelector('button.minimize')
+    b_max = dialog.querySelector('button.maximize')
+    b_min.style.display = "none"
+    b_max.style.display = "block"
+
+window.inline_minimize = inline_minimize
+

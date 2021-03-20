@@ -320,7 +320,7 @@
                                                                 <div class="tr row list_content_header list_content_header_two_row">
                                                                         <div class="td col-md-12 col-sm-12" colspan="3">
                                                                                 {% block list_filter_form %}
-                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="{% if table_type == 'datatable'%}page{% else %}table{% endif %}">
+                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="{% if table_type == 'datatable'%}table{% else %}table{% endif %}">
                                                                                                 {% csrf_token %}
                                                                                                 {% block form_filter %}
                                                                                                         {% if form %}
@@ -331,14 +331,21 @@
                                                                                                                                 {% endinline_form %}
                                                                                                                         {% endblock %}
                                                                                                                         {% block form_content_button %}
-                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh">
-                                                                                                                                        <span class="fa fa-refresh"></span>
-                                                                                                                                </button>
+                                                                                                                                {% if table_type != 'datatable' %}
+                                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="refresh_frame">
+                                                                                                                                                <span class="fa fa-refresh"></span>
+                                                                                                                                        </button>
+                                                                                                                                {% endif %}
                                                                                                                         {% endblock %}
                                                                                                                 {% endblock %}
                                                                                                         {% endif %}
                                                                                                 {% endblock %}
                                                                                         </form>
+                                                                                        {% if table_type == 'datatable' %}
+                                                                                                <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);">
+                                                                                                        <span class="fa fa-refresh"></span>
+                                                                                                </button>
+                                                                                        {% endif %}
                                                                                 {% endblock %}
                                                                         </div>
                                                                 </div>
@@ -446,7 +453,7 @@
                                 <div class="tabsort_panel">
                                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
                                                 {% if table_type == 'datatable' %}
-                                                        <div class="ajax-region ajax-frame ajax-link" data-region="table" onloadeddata="table_loadeddata(event);">
+                                                        <div class="ajax-frame ajax-link ajax-region" data-region="table" onloadeddata="table_loadeddata(event);">
                                                   {% else %}
                                                         {% if table_type == 'scrolled' or not table_type %}
                                                                 <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">

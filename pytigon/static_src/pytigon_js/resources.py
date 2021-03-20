@@ -81,10 +81,10 @@ INLINE_BASE = """
             <div class='modal-content'>
                 <div class='modal-header'>
                     <h4 class='modal-title'>{title}</h4>
-                    <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> 
+                    <button type='button' class='btn btn-outline-secondary minimize' onclick='inline_minimize(this)' style='diplay:none;'> 
                         <span class='fa fa-window-minimize'></span> 
                     </button> 
-                    <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> 
+                    <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> 
                         <span class='fa fa-window-maximize'></span> 
                     </button> 
                     <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -108,10 +108,10 @@ INLINE_DELETE_BASE = """
         <div class='modal-content'>
             <div class='modal-header'>
                 <h4 class='modal-title'>{title}</h4>
-                <button type='button' class='btn btn-outline-secondary minimize' onclick='popup_minimize(this)' style='diplay:none;'> 
+                <button type='button' class='btn btn-outline-secondary minimize' onclick='inline_minimize(this)' style='diplay:none;'> 
                     <span class='fa fa-window-minimize'></span> 
                 </button> 
-                <button type='button' class='btn btn-outline-secondary maximize' onclick='popup_maximize(this);return false;'> 
+                <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> 
                     <span class='fa fa-window-maximize'></span> 
                 </button> 
                 <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>

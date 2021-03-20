@@ -31,6 +31,7 @@
         {{block.super}}
 
 %% content_start2
+    {{block.super}}
     <div class="content ajax-region" data-region="page" href="{{request.path}}">
 
 %% content_end2

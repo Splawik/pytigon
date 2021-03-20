@@ -96,8 +96,7 @@
 
 
 %% body_init
-    <section class="content" id="panel">
-
+    <section id="panel">
     header class=main-header win-header bg-primary
 
         nav class=navbar navbar-toggleable-md bg-primary
