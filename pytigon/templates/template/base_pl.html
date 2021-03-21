@@ -80,7 +80,7 @@
 {% block change_password %}
         {% if standard_web_browser %}
                 <div class="modal fade" id="change_passwd" role="dialog">
-                        <div class="modal-dialog modal-sm">
+                        <div class="modal-dialog">
                                 <div class="modal-content">
                                         <div class="modal-header">
                                                 <h3>Change Password</h3>
@@ -88,22 +88,34 @@
                                         <form role="form" action="{{base_path}}schsys/change_password/" method="post" name="change_password">
                                                 <div class="modal-body">
                                                         {% csrf_token %}
-                                                        <div class="form-group">
-                                                                <label class="control-label" for="current_password">Current Password</label>
-                                                                <input class="form-control" name="current_password" type="password" autocomplete="current-password" />
+                                                        <p class="text-xl-center">
+                                                                <i class="fa fa-lock fa-5x"></i>
+                                                        </p>
+                                                        <label class="control-label" for="current_password">Current Password</label>
+                                                        <div class="input-group">
+                                                                  <div class="input-group-prepend">
+                                                                          <span class="input-group-text fa fa-key"></span>
+                                                                  </div>
+                                                              <input class="form-control" name="current_password" type="password" autocomplete="current-password" />
                                                         </div>
-                                                        <div class="form-group">
-                                                                <label class="control-label" for="new_password">New Password</label>
+                                                        <label class="control-label" for="new_password">New Password</label>
+                                                        <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                          <span class="input-group-text fa fa-sign-in"></span>
+                                                                </div>
                                                                 <input class="form-control" name="new_password" type="password" autocomplete="new-password" />
                                                         </div>
-                                                        <div class="form-group">
-                                                                <label class="control-label" for="confirm_password">Confirm Password</label>
+                                                        <label class="control-label" for="confirm_password">Confirm Password</label>
+                                                        <div class="form-group input-group">
+                                                                <div class="input-group-prepend">
+                                                                          <span class="input-group-text fa fa-sign-in"></span>
+                                                                </div>
                                                                 <input class="form-control" name="confirm_password" type="password" autocomplete="new-password" />
                                                         </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                        <button href="#" class="btn" data-dismiss="modal">Cancel</button>
-                                                        <button type="submit" class="btn btn-secondary">OK</button>
+                                                        <button href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">OK</button>
                                                 </div>
                                         </form>
                                 </div>

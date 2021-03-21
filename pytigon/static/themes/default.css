@@ -425,9 +425,6 @@ div.login-container > .row {
   .login-card span {
     color: white !important; }
 
-#change_passwd .modal-content {
-  width: 25rem; }
-
 .btn-circle {
   width: 30px;
   height: 30px;
