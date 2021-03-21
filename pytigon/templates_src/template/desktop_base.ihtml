@@ -306,7 +306,6 @@
         .data-page-list="[64]"
         .data-search="true"
         .data-sortable="true"
-
         .data-toolbar="#{{uuid}}_toolbar"
         .data-locale="pl-PL"
         .data-show-columns="true"

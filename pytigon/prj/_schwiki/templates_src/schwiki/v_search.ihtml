@@ -18,7 +18,7 @@
     tr
         td... {{object.subject}}
         td
-            a href={{base_path}}schwiki/{{object.subject}}/{{object.name}}/view/?desc={{object.description}},,,target=_top
+            a href={{base_path}}schwiki/{{object.subject}}/{{object.name}}/view/?only_content=1&desc={{object.description}},,,target=_parent
                 % if object.description:
                     {{object.description}}
                 % else: 

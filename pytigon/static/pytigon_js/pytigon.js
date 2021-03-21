@@ -1809,7 +1809,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
 window.sync_and_run = sync_and_run;
 export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 
-var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
+var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
 EVENT_TAB = [];
 REGISTERED_EVENT_TYPES = [];
 _chcek_element = function flx__chcek_element (element, selector) {
@@ -2113,6 +2113,18 @@ register_global_event("click", _on_menu_click, "a.menu-href");
 register_global_event("click", on_click_default_action, "a");
 register_global_event("click", on_click_default_action, "button");
 register_global_event("submit", on_click_default_action, "form");
+_get_scrolled_parent = function flx__get_scrolled_parent (node) {
+    if (_pyfunc_op_equals(node, null)) {
+        return null;
+    }
+    if ((node.scrollHeight > node.clientHeight)) {
+        return node;
+    } else {
+        return _get_scrolled_parent(node.parentNode);
+    }
+    return null;
+};
+
 _on_inline = function flx__on_inline (target_element, data_element, url, param, event, template_name) {
     var bottom, child, content, dialog, dialog_slot, dialog_slot2, dy, height, inline_position, on_hidden, plug, rect1, rect2, scroll_frame, sy, top, top2, viewportOffset;
     inline_position = target_element.getAttribute("data-inline-position");
@@ -2169,7 +2181,7 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
     } else {
         plug = dialog.closest(".plug");
         if ((!_pyfunc_op_equals(plug, null))) {
-            scroll_frame = plug.closest(".fixed-table-body");
+            scroll_frame = _get_scrolled_parent(plug);
             if ((!_pyfunc_op_equals(scroll_frame, null))) {
                 rect1 = dialog.getBoundingClientRect();
                 rect2 = scroll_frame.getBoundingClientRect();

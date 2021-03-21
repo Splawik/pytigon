@@ -271,6 +271,14 @@ register_global_event("click", on_click_default_action, "button")
 register_global_event("submit", on_click_default_action, "form")
 
 
+def _get_scrolled_parent(node):
+    if node == None:
+        return None
+    if node.scrollHeight > node.clientHeight:
+        return node
+    else:
+        return _get_scrolled_parent(node.parentNode)
+
 def _on_inline(target_element, data_element, url, param, event, template_name):
     inline_position = target_element.getAttribute("data-inline-position")
 
@@ -334,7 +342,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     else:
         plug = dialog.closest('.plug')
         if plug != None:
-            scroll_frame = plug.closest(".fixed-table-body")
+            scroll_frame = _get_scrolled_parent(plug)
             if scroll_frame != None:
                 rect1 = dialog.getBoundingClientRect()
                 rect2 = scroll_frame.getBoundingClientRect()
