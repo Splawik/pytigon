@@ -128,27 +128,43 @@
                             a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
                                 span class=fa fa-user
                                 span class=hidden-sm-down...{{user.username}}
-                            div class=dropdown-menu dropdown-menu-right
+                            div class=dropdown-menu dropdown-menu-right,,,style=width:470px
                                 div class=dropdown-block
-                                    p...username:
-                                        strong...{{user.username}}
-                                    p...first name:
-                                        strong...{{user.first_name}}
-                                    p...last name:
-                                        strong...{{user.last_name}}
-                                    p...email:
-                                        strong...{{user.email}}
-                                    p...last login:
-                                        strong...{{user.last_login|isoformat}}
-                                    p...date joined:
-                                        strong...{{user.date_joined|isoformat}}
-                                div class=dropdown-footer
-                                    % if user.is_superuser:
-                                        div class=pull-left
-                                            button class=system_menu btn btn-secondary {{btn_size}} btn-flat,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
-                                            &nbsp;
-                                    div class=pull-left
-                                        button href=#,,,class=btn btn-secondary {{btn_size}} btn-flat,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                                    p class=text-xl-center
+                                        i class=fa fa-info-circle fa-5x
+                                    table class=table table-hover
+                                        tr
+                                            th...username:
+                                            td...{{user.username}}
+                                        tr
+                                            th...first name:
+                                            td...{{user.first_name}}
+                                        tr
+                                            th...last name:
+                                            td...{{user.last_name}}
+                                        tr
+                                            th...email:
+                                            td...{{user.email}}
+                                        tr
+                                            th...last login:
+                                            td...{{user.last_login|isoformat}}
+                                        tr
+                                            th...date joined:
+                                            td...{{user.date_joined|isoformat}}
+
+                                nav class=navbar navbar-expand-sm navbar-dark bg-primary
+                                    button class=navbar-toggler,,,type="button,,,data-toggle=collapse,,,data-target=#navbar_setup
+                                        span class=navbar-toggler-icon
+                                    div class=collapse navbar-collapse,,,id=navbar_setup
+                                        ul class=navbar-nav mr-auto
+                                            li class=nav-item active
+                                                a class=nav-link,,,href=#,,,data-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                                            % if user.is_superuser:
+                                                li class=nav-item
+                                                    a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
+
+
+
 
                         %if not autologin:
                             li class=nav-item dropdown user user-menu
