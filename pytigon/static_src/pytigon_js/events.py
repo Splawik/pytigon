@@ -469,10 +469,25 @@ def on_replace_app(target_element, data_element, new_url, param, event):
 
 
 def refresh_frame(target_element, data_element, new_url, param, event, data_region=None):
+    f = target_element.getAttribute("data-remote-elem")
+    if f:
+        data_element2 = data_element.querySelector(f)
+    else:
+        data_element2 = data_element
+
+    data_region2 = target_element.getAttribute("data-region")
+    if not data_region2:
+        data_region2 = data_region
+    region = get_ajax_region(target_element, data_region2)
+    if data_region2 != 'error' and region.getAttribute("data-region") == "error":
+        region = get_ajax_region(region.parentElement, data_region2)
+
     dialog = None
     aside = target_element.closest(".plug")
-    if aside:
+    if aside and region.contains(aside):
         dialog = aside.firstElementChild
+    else:
+        aside = None
 
     def _callback():
         nonlocal aside, dialog
@@ -489,16 +504,6 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
 
     if aside:
         aside.style.opacity = "50%"
-
-    f = target_element.getAttribute("data-remote-elem")
-    if f:
-        data_element2 = data_element.querySelector(f)
-    else:
-        data_element2 = data_element
-
-    data_region2 = target_element.getAttribute("data-region")
-    if not data_region2:
-        data_region2 = data_region
 
     refresh_ajax_frame(
         target_element, data_region2, data_element2, _callback, _callback_on_error

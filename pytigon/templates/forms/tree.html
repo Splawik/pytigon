@@ -102,35 +102,11 @@
         {% endif %}
         {{ block.super }}
 {% endblock %}
-{% block tabsort_class %}
-        {% if table_type == 'datatable' %}
-                class="tabsort flexible_size not-multiple-select table datatable table-hover table-striped table-condensed {%if get %}table_get{% endif %}"
-                data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
-                data-side-pagination="server"
-                data-pagination="true"
-                data-page-size="64"
-                data-page-list="[64]"
-                data-search="true"
-                data-sortable="false"
-                data-toolbar="#{{uuid}}_toolbar"
-                data-locale="pl-PL"
-                data-show-columns="true"
-                data-icons-prefix="fa"
-                data-icons="icons"
-                data-id-field="id"
-                data-unique-id="id"
-                data-multiple-select-row="true"
-                data-show-button-icons="true"
-                data-show-refresh="true"
-                data-show-fullscreen="true"
-                data-show-toggle="true"
-                data-loading-template="loading_template"
-                data-buttons-align="right"
-                data-click-to-select="true"
-                {# .data-click-to-select="true" #}
-                data-mobile-responsive="true"
-          {% else %}
-                class="tabsort table table-hover table-striped {%if get %}table_get{% endif %}"
-        {% endif %}
+{% block tabsort_parameters_block %}
+        AAA {{multiple_select}} {{sort}}
+        {% with multiple_select=0 sort=0 %}
+                {{ block.super }}
+                BBB {{multiple_select}} {{sort}}
+        {% endwith %}
 {% endblock %}
 

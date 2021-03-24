@@ -609,13 +609,13 @@ class DocHead(JSONModel):
                 reg = obj.doc_type_parent.parent
                 names = []
                 names.append('%s/%s'% (self._meta.app_label, self._meta.model.__name__))
-                names.append(context['view'].template_name)
                 names.append((reg.app+"/"+obj.doc_type_parent.name+"_dochead_edit.html").lower())        
                 names.append((reg.app+"/"+reg.name.replace('/', '_') + "_dochead_edit.html").lower())
                 x = reg.get_parent()
                 while x:
                     names.append((x.app+"/"+x.name.replace('/', '_') + "_dochead_edit.html").lower())
                     x = x.get_parent()
+                names.append(context['view'].template_name)
             
                 template = select_template(names)
                 if template:

@@ -1476,7 +1476,9 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         }
         if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
             mount_html(frame, data, link);
-        } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH"])) {
+            return refresh_ajax_frame(region, region_name, null, callback, callback_on_error);
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT"])) {
             return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
             elem = region.closest(".plug").parentElement;
@@ -2301,12 +2303,28 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
 };
 
 refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
-    var _callback, _callback_on_error, aside, data_element2, data_region2, dialog, f;
+    var _callback, _callback_on_error, aside, data_element2, data_region2, dialog, f, region;
     data_region = (data_region === undefined) ? null: data_region;
+    f = target_element.getAttribute("data-remote-elem");
+    if (_pyfunc_truthy(f)) {
+        data_element2 = data_element.querySelector(f);
+    } else {
+        data_element2 = data_element;
+    }
+    data_region2 = target_element.getAttribute("data-region");
+    if ((!_pyfunc_truthy(data_region2))) {
+        data_region2 = data_region;
+    }
+    region = get_ajax_region(target_element, data_region2);
+    if ((((!_pyfunc_op_equals(data_region2, "error"))) && ((_pyfunc_op_equals(region.getAttribute("data-region"), "error"))))) {
+        region = get_ajax_region(region.parentElement, data_region2);
+    }
     dialog = null;
     aside = target_element.closest(".plug");
-    if (_pyfunc_truthy(aside)) {
+    if ((_pyfunc_truthy(aside) && (_pyfunc_truthy(region.contains(aside))))) {
         dialog = aside.firstElementChild;
+    } else {
+        aside = null;
     }
     _callback = (function flx__callback () {
         if (_pyfunc_truthy(aside)) {
@@ -2328,16 +2346,6 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
 
     if (_pyfunc_truthy(aside)) {
         aside.style.opacity = "50%";
-    }
-    f = target_element.getAttribute("data-remote-elem");
-    if (_pyfunc_truthy(f)) {
-        data_element2 = data_element.querySelector(f);
-    } else {
-        data_element2 = data_element;
-    }
-    data_region2 = target_element.getAttribute("data-region");
-    if ((!_pyfunc_truthy(data_region2))) {
-        data_region2 = data_region;
     }
     refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);
     return null;
@@ -2896,7 +2904,7 @@ table_loadeddata = function flx_table_loadeddata (event) {
                     }
                     url = _pymeth_replace.call(url, "/form/", "/json/");
                     _update = (function flx__update (data) {
-                        var d, id2;
+                        var d, id2, row;
                         try {
                             d = JSON.parse(data);
                             if (_pyfunc_op_equals(dt, "$$RETURN_NEW_ROW_OK")) {
@@ -2904,7 +2912,12 @@ table_loadeddata = function flx_table_loadeddata (event) {
                                 datatable.bootstrapTable("scrollTo", "bottom");
                             } else {
                                 id2 = d["rows"][0]["id"];
-                                datatable.bootstrapTable("updateByUniqueId", ({id: id2, row: d["rows"][0]}));
+                                row = datatable.bootstrapTable("getRowByUniqueId", id2);
+                                if (_pyfunc_truthy(row)) {
+                                    datatable.bootstrapTable("updateByUniqueId", ({id: id2, row: d["rows"][0]}));
+                                } else {
+                                    datatable.bootstrapTable("refresh");
+                                }
                             }
                         } catch(err_7) {
                             {

@@ -277,7 +277,11 @@ def table_loadeddata(event):
                                 datatable.bootstrapTable('scrollTo', 'bottom')
                             else:
                                 id2 = d['rows'][0]['id']
-                                datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
+                                row = datatable.bootstrapTable('getRowByUniqueId', id2)
+                                if row:
+                                    datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
+                                else:
+                                    datatable.bootstrapTable("refresh")
                         except:
                             datatable.bootstrapTable("refresh")
 

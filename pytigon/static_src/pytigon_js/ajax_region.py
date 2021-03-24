@@ -366,7 +366,11 @@ def refresh_ajax_frame(
         ):
             mount_html(frame, data, link)
         else:
-            if dt in ("$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"):
+            if dt in ("$$RETURN_REFRESH",):
+                return refresh_ajax_frame(
+                    region, region_name, None, callback, callback_on_error
+                )
+            elif dt in ("$$RETURN_REFRESH_PARENT",):
                 return refresh_ajax_frame(
                     region.parentElement, region_name, None, callback, callback_on_error
                 )

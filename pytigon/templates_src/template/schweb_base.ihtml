@@ -239,4 +239,4 @@
                                                 input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44
 
 
-%% tabsort_class...class=tabsort
+%% tabsort_parameters...class=tabsort

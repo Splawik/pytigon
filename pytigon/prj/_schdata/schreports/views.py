@@ -31,7 +31,7 @@ from schelements.models import DocReg, DocType, DocHead, Element
 from django.db.models import F
 from schelements.views import year_ago
 
-def move_rep(id, to_pos = "+1"):
+def move_rep(request, id, to_pos = "+1"):
     obj = models.Report.objects.get(pk=id)
     url = make_path('ok')
     if not obj.parent:
@@ -68,8 +68,7 @@ def move_rep(id, to_pos = "+1"):
             obj.order = order
         obj.save()
 
-    url = make_path('ok')
-    return HttpResponseRedirect(url)
+    return actions.refresh(request)
  
 
 PFORM = form_with_perms('schreports') 
@@ -234,7 +233,7 @@ def edit_subrep(request, parent_rep_id, rep_type,view_type):
 
 def move_up(request, pk):
     
-    return move_rep(pk, "-1")
+    return move_rep(request, pk, "-1")
     
 
 
@@ -246,7 +245,7 @@ def move_up(request, pk):
 
 def move_down(request, pk):
     
-    return move_rep(pk, "+1")
+    return move_rep(request, pk, "+1")
     
 
 
@@ -294,7 +293,7 @@ def repaction(request, dochead_id, rep_action):
 
 def move_to(request, rep_id, to_pos):
     
-    return move_rep(rep_id, int(to_pos))
+    return move_rep(request, rep_id, int(to_pos))
     
     
 

@@ -338,17 +338,17 @@
         {{block.super}}
         {% module_link 'schcomponents/components/sys-components.js' %}
 {% endblock %}
-{% block tabsort_class %}
+{% block tabsort_parameters %}
         {% if table_type == 'datatable' %}
-                class="tabsort not-multiple-select flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
+                class="tabsort {%if multiple_select %}multiple-select {% endif %}flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
                 data-method="get"
-                data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}list/{% endif %}"
+                data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
                 data-side-pagination="server"
                 data-pagination="true"
                 data-page-size="64"
                 data-page-list="[64]"
                 data-search="true"
-                data-sortable="true"
+                data-sortable="{% if sort %}true{% else %}false{% endif %}"
                 data-toolbar="#{{uuid}}_toolbar"
                 data-locale="pl-PL"
                 data-show-columns="true"
@@ -364,7 +364,7 @@
                 data-loading-template="loading_template"
                 data-buttons-align="right"
                 data-click-to-select="true"
-                {# .data-click-to-select="true" #}
+                {% if multiple_select %}data-click-to-select="true"{% endif %}
                 data-mobile-responsive="true"
           {% else %}
                 class="tabsort table table-hover table-sm table-striped {%if get %}table_get{% endif %}"
