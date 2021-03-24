@@ -10,13 +10,13 @@
             input type=hidden,,,name={{field.name}}
     % else:
         % if field.field.widget.input_type == 'select2':
-            <div class="ajax-region get_row" data-region='get_row'><div class='get_row'>
+            <div class="ajax-region get_row row" data-region='get_row'>
         % if field.field.widget.input_type == 'checkbox':
             % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class='form-check abc-checkbox abc-checkbox-primary' placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
         % else:
             % bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
         % if field.field.widget.input_type == 'select2':
-            </div></div>
+            </div>
 % else:
     tr
         td

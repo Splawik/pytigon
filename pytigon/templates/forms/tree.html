@@ -103,10 +103,8 @@
         {{ block.super }}
 {% endblock %}
 {% block tabsort_parameters_block %}
-        AAA {{multiple_select}} {{sort}}
         {% with multiple_select=0 sort=0 %}
                 {{ block.super }}
-                BBB {{multiple_select}} {{sort}}
         {% endwith %}
 {% endblock %}
 

@@ -602,10 +602,8 @@ button.select2-selection__clear {
   right: -70px;
   bottom: 13px; }
 
-form div.get_row {
-  width: 100%; }
-  form div.get_row span.select2-container {
-    margin-left: 5px; }
+form div.get_row span.select2-container {
+  margin-left: 5px; }
 
 .txt3d {
   font-weight: 900;

@@ -426,17 +426,16 @@ if CACHE_URL:
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 else:
     #CACHES = { "default": { 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache' } }
-    if not DEBUG:
-        CACHES = {
-            'default': {
-                'BACKEND': 'diskcache.DjangoCache',
-                'LOCATION': TEMP_PATH,
-                'TIMEOUT': 300,
-                'OPTIONS': {
-                    'size_limit': 2 ** 30   # 1 gigabyte
-                },
+    CACHES = {
+        'default': {
+            'BACKEND': 'diskcache.DjangoCache',
+            'LOCATION': TEMP_PATH,
+            'TIMEOUT': 300,
+            'OPTIONS': {
+                'size_limit': 2 ** 30   # 1 gigabyte
             },
-        }
+        },
+    }
 
 
 SOCIALACCOUNT_ADAPTER = "pytigon_lib.schdjangoext.allauth.SocialAccountAdapter"
