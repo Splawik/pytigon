@@ -94,7 +94,7 @@ class Report(JSONModel):
     date = models.DateTimeField('Date', null=True, blank=True, editable=True, )
     
 
-    def template_for_object(self, context, doc_type):
+    def template_for_object(self, view, context, doc_type):
         if doc_type=='pdf':
             x = ReportDef.objects.filter(name=self.report_def_name)
             if x.count()>0:

@@ -355,7 +355,7 @@ class Element(TreeModel):
         return self
     
     
-    def template_for_object(self, context, doc_type):
+    def template_for_object(self, view, context, doc_type):
         if self.id and doc_type in ('html', 'json'):
             if hasattr(self, "get_structure"):
                 s = self.get_structure()
@@ -543,7 +543,7 @@ class DocHead(JSONModel):
     parent_element = ext_models.PtigHiddenForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent element', )
     number = models.CharField('Document number', null=True, blank=True, editable=True, max_length=32)
     date_c = models.DateTimeField('Creation date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
-    date = models.DateField('Date', null=True, blank=True, editable=True, )
+    date = models.DateField('Date', null=True, blank=True, editable=True, default=datetime.date.today,)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=128)
     comments = models.CharField('Comments', null=True, blank=True, editable=True, max_length=256)
     status = models.CharField('Status', null=True, blank=True, editable=False, max_length=16)
@@ -585,7 +585,7 @@ class DocHead(JSONModel):
         
     
     @staticmethod
-    def template_for_list(model, context, view, doc_type):
+    def template_for_list(view, model, context, doc_type):
         if doc_type in ('html', 'json') and 'filter' in context:
             tmp = DocReg.objects.filter(name=context['filter'].replace('_','/'))
             if len(tmp)==1:
@@ -602,21 +602,29 @@ class DocHead(JSONModel):
         return None
         
         
-    def template_for_object(self, context, doc_type):
-        if self.id and doc_type in ('html', 'json'):
+    def template_for_object(self, view, context, doc_type):
+        if doc_type in ('html', 'json'):
             try:
-                obj = DocHead.objects.get(pk=self.id)            
-                reg = obj.doc_type_parent.parent
+                if 'add_param' in view.kwargs:
+                    objects = DocType.objects.filter(name=view.kwargs['add_param'])
+                    doc_type = objects[0]
+                    reg = doc_type.parent
+                    obj = None
+                else: 
+                    obj = DocHead.objects.get(pk=self.id)            
+                    reg = obj.doc_type_parent.parent
                 names = []
                 names.append('%s/%s'% (self._meta.app_label, self._meta.model.__name__))
-                names.append((reg.app+"/"+obj.doc_type_parent.name+"_dochead_edit.html").lower())        
+                if obj:
+                    names.append((reg.app+"/"+obj.doc_type_parent.name+"_dochead_edit.html").lower())        
+                else:
+                    names.append((reg.app+"/"+doc_type.name+"_dochead_edit.html").lower())        
                 names.append((reg.app+"/"+reg.name.replace('/', '_') + "_dochead_edit.html").lower())
                 x = reg.get_parent()
                 while x:
                     names.append((x.app+"/"+x.name.replace('/', '_') + "_dochead_edit.html").lower())
                     x = x.get_parent()
                 names.append(context['view'].template_name)
-            
                 template = select_template(names)
                 if template:
                     return template
@@ -640,7 +648,7 @@ class DocHead(JSONModel):
         return None
     
     
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):        
         if self.id:
             obj = DocHead.objects.get(pk=self.id)
             save_fun_src = None
@@ -655,7 +663,28 @@ class DocHead(JSONModel):
                     x = x.get_parent()
             if save_fun_src:
                 exec(save_fun_src)
+    
+        print("Object:", self)
+        print("Object 1:", self.date_c)
+        print("Object 2:", self.number)
+        print("Object 3:", self.pk)
+        print("Object 4:", self.id)
+    
+        if not self.pk:
+            self.date_c = datetime.datetime.now()
             
+            y = "%04d" % datetime.date.today().year
+            objects = DocHead.objects.filter(doc_type_parent=self.doc_type_parent, number__startswith=y).order_by('-number')
+            if len(objects)>0:
+                tmp = objects[0].number
+                try:
+                    max_num = int(tmp[5:])+1
+                except:
+                    max_num = 1
+            else:
+                max_num = 1
+            self.number = "%s/%06d" % (y, max_num)
+        
         super().save(*args, **kwargs)
         
     def get_visible_statuses(self, request=None):
@@ -754,7 +783,7 @@ class DocItem(JSONModel):
     
 
     @staticmethod
-    def template_for_list(model, context, view, doc_type):
+    def template_for_list(view, model, context, doc_type):
         if doc_type in ('html', 'json'):
             if 'parent_pk' in context['view'].kwargs:
                 parent_pk = int(context['view'].kwargs['parent_pk'])
@@ -777,7 +806,7 @@ class DocItem(JSONModel):
         return None
     
     
-    def template_for_object(self, context, doc_type):
+    def template_for_object(self, view, context, doc_type):
         if doc_type in ('html', 'json'):
             try:
                 obj = DocItem.objects.get(pk=self.id)

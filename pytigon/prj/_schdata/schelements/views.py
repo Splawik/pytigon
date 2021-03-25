@@ -117,8 +117,8 @@ PFORM = form_with_perms('schelements')
 
 
 class _FilterFormDocHead(forms.Form):
-    date_from = forms.DateField(label=_('Date from'), required=True, initial=year_ago,)
-    date_to = forms.DateField(label=_('Data to'), required=True, )
+    date_from = forms.DateField(label=_('Date from'), required=False, initial=year_ago,)
+    date_to = forms.DateField(label=_('Data to'), required=False, )
     target = forms.CharField(label=_('Target'), required=False, max_length=None, min_length=None)
     number = forms.CharField(label=_('Number'), required=False, max_length=None, min_length=None)
     
