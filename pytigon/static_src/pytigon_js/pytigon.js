@@ -182,6 +182,7 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
 window.ajax_get = ajax_get;
 _req_post = function flx__req_post (req, url, data, complete, content_type) {
     var _onload, process_blob;
+    content_type = (content_type === undefined) ? null: content_type;
     process_blob = false;
     try {
         req.responseType = "blob";
@@ -227,6 +228,7 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     req.open("POST", url, true);
     req.setRequestHeader("X-CSRFToken", _pymeth_get.call(Cookies, "csrftoken"));
     if (_pyfunc_truthy(content_type)) {
+        req.setRequestHeader("Content-Type", content_type);
     } else {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     }
@@ -234,14 +236,15 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     return null;
 };
 
-ajax_post = function flx_ajax_post (url, data, complete, process_req) {
+ajax_post = function flx_ajax_post (url, data, complete, process_req, content_type) {
     var req;
     process_req = (process_req === undefined) ? null: process_req;
+    content_type = (content_type === undefined) ? null: content_type;
     req = new XMLHttpRequest();
     if (_pyfunc_truthy(process_req)) {
         process_req(req);
     }
-    _req_post(req, url, data, complete);
+    _req_post(req, url, data, complete, content_type);
     return null;
 };
 
@@ -257,7 +260,7 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
     }).bind(this);
 
     data2 = JSON.stringify(data);
-    ajax_post(url, data2, _complete, process_req);
+    ajax_post(url, data2, _complete, null, "application/json");
     return null;
 };
 
@@ -2209,22 +2212,27 @@ on_inline = function flx_on_inline (target_element, data_element, new_url, param
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE");
 };
 
+window.on_inline = on_inline;
 on_inline_edit_new = function flx_on_inline_edit_new (target_element, data_element, new_url, param, event) {
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE_EDIT");
 };
 
+window.on_inline_edit_new = on_inline_edit_new;
 on_inline_info = function flx_on_inline_info (target_element, data_element, new_url, param, event) {
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE_INFO");
 };
 
+window.on_inline_inf = on_inline_info;
 on_inline_delete = function flx_on_inline_delete (target_element, data_element, new_url, param, event) {
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE_DELETE");
 };
 
+window.on_inline_delete = on_inline_delete;
 on_inline_error = function flx_on_inline_error (target_element, data_element, new_url, param, event) {
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE_ERROR");
 };
 
+window.on_inline_error = on_inline_error;
 _on_popup = function flx__on_popup (target_element, data_element, url, param, event, template_name) {
     var content, dialog, dialog_slot, on_hidden, region;
     if ((!_pyfunc_truthy(can_popup()))) {
@@ -2264,22 +2272,27 @@ on_popup = function flx_on_popup (target_element, data_element, new_url, param, 
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL");
 };
 
+window.on_popup = on_popup;
 on_popup_edit_new = function flx_on_popup_edit_new (target_element, data_element, new_url, param, event) {
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_EDIT");
 };
 
+window.on_popup_edit_new = on_popup_edit_new;
 on_popup_info = function flx_on_popup_info (target_element, data_element, new_url, param, event) {
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_INFO");
 };
 
+window.on_popup_info = on_popup_info;
 on_popup_delete = function flx_on_popup_delete (target_element, data_element, new_url, param, event) {
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_DELETE");
 };
 
+window.on_popup_delete = on_popup_delete;
 on_popup_error = function flx_on_popup_error (target_element, data_element, new_url, param, event) {
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR");
 };
 
+window.on_popup_error = on_popup_error;
 on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, param, event) {
     var data_element2, stub9_, title, title_alt;
     stub9_ = _get_title(target_element, data_element, new_url);

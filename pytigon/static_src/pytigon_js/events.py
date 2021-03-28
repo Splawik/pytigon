@@ -359,31 +359,32 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
 def on_inline(target_element, data_element, new_url, param, event):
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
+window.on_inline = on_inline
 
 
 def on_inline_edit_new(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_EDIT"
     )
-
+window.on_inline_edit_new = on_inline_edit_new
 
 def on_inline_info(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_INFO"
     )
-
+window.on_inline_inf = on_inline_info
 
 def on_inline_delete(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_DELETE"
     )
-
+window.on_inline_delete = on_inline_delete
 
 def on_inline_error(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_ERROR"
     )
-
+window.on_inline_error = on_inline_error
 
 def _on_popup(target_element, data_element, url, param, event, template_name):
     if not can_popup():
@@ -424,25 +425,25 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
 
 def on_popup(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL")
-
+window.on_popup = on_popup
 
 def on_popup_edit_new(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_EDIT")
-
+window.on_popup_edit_new = on_popup_edit_new
 
 def on_popup_info(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_INFO")
-
+window.on_popup_info = on_popup_info
 
 def on_popup_delete(target_element, data_element, new_url, param, event):
     return _on_popup(
         target_element, data_element, new_url, param, event, "MODAL_DELETE"
     )
-
+window.on_popup_delete = on_popup_delete
 
 def on_popup_error(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR")
-
+window.on_popup_error = on_popup_error
 
 def on_new_tab(target_element, data_element, new_url, param, event):
     title, title_alt = _get_title(target_element, data_element, new_url)
@@ -452,7 +453,6 @@ def on_new_tab(target_element, data_element, new_url, param, event):
     return get_menu().on_menu_href(
         target_element, data_element2, title, title_alt, new_url
     )
-
 
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:
@@ -466,7 +466,6 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         data_element.querySelector("section.body-body"),
         False,
     )
-
 
 def refresh_frame(target_element, data_element, new_url, param, event, data_region=None):
     f = target_element.getAttribute("data-remote-elem")

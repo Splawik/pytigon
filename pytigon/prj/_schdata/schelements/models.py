@@ -6,8 +6,8 @@ from django.db import models
 
 from pytigon_lib.schdjangoext.fields import *
 from pytigon_lib.schdjangoext.models import *
-
 import pytigon_lib.schdjangoext.fields as ext_models
+from pytigon_lib.schtools import schjson
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -594,6 +594,12 @@ class DocHead(JSONModel):
                 while x:
                     names.append((x.app+"/"+x.name.replace('/','_')+"_dochead_list.html").lower())
                     x = x.get_parent()
+                
+                if 'target' in view.kwargs and view.kwargs['target'] == 'calendar':
+                    names2 = []
+                    for name in names:
+                        names2.append(name.replace(".html", "_calendar.html"))
+                    names = names2
                 template = select_template(names)
                 names.append(view.template_name)
                 if template:
@@ -664,26 +670,22 @@ class DocHead(JSONModel):
             if save_fun_src:
                 exec(save_fun_src)
     
-        print("Object:", self)
-        print("Object 1:", self.date_c)
-        print("Object 2:", self.number)
-        print("Object 3:", self.pk)
-        print("Object 4:", self.id)
-    
         if not self.pk:
             self.date_c = datetime.datetime.now()
             
             y = "%04d" % datetime.date.today().year
-            objects = DocHead.objects.filter(doc_type_parent=self.doc_type_parent, number__startswith=y).order_by('-number')
+            t = self.doc_type_parent.name
+            objects = DocHead.objects.filter(doc_type_parent=self.doc_type_parent, number__startswith=t+"/"+y).order_by('-number')
             if len(objects)>0:
                 tmp = objects[0].number
+                
                 try:
-                    max_num = int(tmp[5:])+1
+                    max_num = int(tmp.split('/')[-1])+1
                 except:
                     max_num = 1
             else:
                 max_num = 1
-            self.number = "%s/%06d" % (y, max_num)
+            self.number = "%s/%s/%06d" % (t, y, max_num)
         
         super().save(*args, **kwargs)
         
@@ -749,6 +751,7 @@ class DocHead(JSONModel):
                 if hasattr(self, name):
                     return getattr(self, name)
         return self
+    
     
 admin.site.register(DocHead)
 

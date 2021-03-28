@@ -134,7 +134,7 @@ def ajax_get(url, complete, process_req=None):
 window.ajax_get = ajax_get
 
 
-def _req_post(req, url, data, complete, content_type):
+def _req_post(req, url, data, complete, content_type=None):
     process_blob = False
     try:
         req.responseType = "blob"
@@ -175,8 +175,8 @@ def _req_post(req, url, data, complete, content_type):
 
     req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
     if content_type:
-        # req.setRequestHeader('Content-Type', content_type)
-        pass
+        req.setRequestHeader('Content-Type', content_type)
+        #pass
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
     # if data.length:
@@ -186,12 +186,12 @@ def _req_post(req, url, data, complete, content_type):
     req.send(data)
 
 
-def ajax_post(url, data, complete, process_req=None):
+def ajax_post(url, data, complete, process_req=None, content_type=None):
     req = XMLHttpRequest()
     if process_req:
         process_req(req)
 
-    _req_post(req, url, data, complete)
+    _req_post(req, url, data, complete, content_type)
 
 
 window.ajax_post = ajax_post
@@ -203,7 +203,9 @@ def ajax_json(url, data, complete, process_req=None):
         complete(_data)
 
     data2 = JSON.stringify(data)
-    ajax_post(url, data2, _complete, process_req)
+    ajax_post(url, data2, _complete, None, "application/json")
+
+
 
 
 window.ajax_json = ajax_json
