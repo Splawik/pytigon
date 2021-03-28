@@ -15,13 +15,13 @@
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
-        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
         {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
 {% endblock %}
 {% block component_init %}
                 var initial_state={};
                 GLOBAL_BUS.set_state(initial_state);
-                var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js",  ];
+                var component_init = [ "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
 {% endblock %}
 {% block botstrap_css %}
         {% css_link 'themes/bootswatch/materia.bootstrap.min.css' %}
