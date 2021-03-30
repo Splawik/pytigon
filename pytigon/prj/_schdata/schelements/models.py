@@ -752,6 +752,10 @@ class DocHead(JSONModel):
                     return getattr(self, name)
         return self
     
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        return standard_table_action(cls, list_view, request, data, ['copy', 'paste', 'delete'])
+        
     
 admin.site.register(DocHead)
 

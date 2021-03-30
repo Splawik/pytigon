@@ -179,6 +179,7 @@ def init_table(table, table_type):
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
                     "icons": icons,
+                    'buttonsOrder':  [ 'refresh', 'toggle', 'fullscreen', 'menu', 'select', 'columns']
                 }
             )
 
@@ -314,3 +315,92 @@ def loading_template(message):
     return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
 
 window.loading_template = loading_template
+
+def datatable_action(btn, action):
+    div = btn.closest('div.tableframe')
+    datatable = div.querySelector("table[name=tabsort].datatable")
+    url = datatable.getAttribute('data-url')+"../table_action/"
+
+    pk_tab = []
+    tab = jQuery(datatable).bootstrapTable('getSelections')
+    for item in tab:
+        pk_tab.append(str(item.id))
+    pk_list_str = ",".join(pk_tab)
+
+    def _callback(data):
+        if 'RETURN_ACTION' in data:
+            if data['RETURN_ACTION'] == None:
+                return
+        jQuery(datatable).bootstrapTable("refresh")
+
+    ajax_json(url + "?pks=" + pk_list_str, { 'action': action  }, _callback)
+
+
+window.datatable_action = datatable_action
+
+def on_check():
+    datatable = this
+
+    container = getattr(datatable, "$container")[0]
+    menu_btn = container.querySelector("button[name=menu]")
+
+    for item in datatable.getHiddenColumns():
+        if item.field == 'state':
+            datatable.showColumn('state')
+            menu_btn.style.display = "block"
+            if menu_btn.classList.contains("btn-secondary"):
+                div = container.closest('div.tableframe')
+                if div.hasAttribute('data-actions'):
+                    actions = div.getAttribute('data-actions').split(';')
+                else:
+                    actions = []
+
+                dropdown = document.createElement("div")
+                dropdown.classList.add("dropleft")
+
+                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
+                html += "<div class='dropdown-menu'>"
+                for s in actions:
+                    if '/' in s:
+                        x = s.split('/')
+                    else:
+                        x = (s, s)
+                    html += "<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '" + x[0].strip() +  "');\">" + x[1].strip() + "</button>"
+                    #html += "<a class ='dropdown-item' href=../action/?'" + x[0] + "' target='" + x[2] + "'>" + x[1] + "</a>"
+                html += "</div>"
+
+                dropdown.innerHTML = html
+                menu_btn.replaceWith(dropdown)
+            return
+    datatable.hideColumn('state')
+    menu_btn.style.display = "none"
+
+#def on_menu():
+#    datatable = this
+#    alert(datatable)
+
+def datatable_buttons(obj):
+    return {
+        "select": {
+            'text': 'Select rows',
+            'icon': 'fa-check',
+            'event': {
+                'click': on_check,
+            },
+            'attributes': {
+                'title': 'Add a new row to the table'
+            }
+        },
+        "menu": {
+            'text': 'Menu',
+            'icon': 'fa-bars',
+            #'event': {
+            #    'click': on_menu,
+            #},
+            'attributes': {
+                'title': 'Menu',
+                'style': "display: none;",
+            }
+        }
+    }
+window.datatable_buttons = datatable_buttons

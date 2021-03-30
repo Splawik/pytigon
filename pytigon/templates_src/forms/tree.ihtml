@@ -78,6 +78,6 @@
     {{ block.super }}
 
 
-%% tabsort_parameters_block
-    % with multiple_select=0 sort=0:
+%% tabsort_parameters_block2
+    % with not_multiple_select=0 sort=0:
         {{ block.super }}

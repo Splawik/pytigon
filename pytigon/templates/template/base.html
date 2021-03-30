@@ -404,7 +404,7 @@
                         {% endblock %}
                         {% if standard_web_browser and standard_web_browser != 6 %}
                                 {% if table_type == 'datatable' %}
-                                        <div class="tableframe">
+                                        <div class="tableframe" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
                                   {% else %}
                                         <div class="tableframe ajax-frame" data-region="table">
                                 {% endif %}

@@ -266,13 +266,14 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
 
 window.ajax_json = ajax_json;
 ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req, url) {
-    var _progressHandlingFunction, content_type, data, form, req;
+    var _progressHandlingFunction, complete2, content_type, data, form, req;
     data_filter = (data_filter === undefined) ? null: data_filter;
     process_req = (process_req === undefined) ? null: process_req;
     url = (url === undefined) ? null: url;
     content_type = null;
     req = new XMLHttpRequest();
     form = jQuery(_form);
+    complete2 = complete;
     if (_pyfunc_truthy(process_req)) {
         process_req(req);
     }
@@ -300,11 +301,20 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         if (_pyfunc_truthy(data_filter)) {
             data = data_filter(data);
         }
+        if ((_pyfunc_truthy(data) && _pyfunc_op_contains("pdf=on", data))) {
+            content_type = "multipart/form-data";
+            complete2 = (function flx_complete2 (data) {
+                open_pdf(data);
+                complete("");
+                return null;
+            }).bind(this);
+
+        }
     }
     if (_pyfunc_truthy(url)) {
-        _req_post(req, url, data, complete, content_type);
+        _req_post(req, url, data, complete2, content_type);
     } else {
-        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
+        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete2, content_type);
     }
     return null;
 };
@@ -2641,7 +2651,7 @@ get_menu = function flx_get_menu () {
 
 export {Page, TabMenuItem, TabMenu, get_menu};
 
-var _is_visible, _rowStyle, datatable_ajax, datatable_refresh, datetable_set_height, init_table, loading_template, prepare0, prepare_datatable, table_loadeddata;
+var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, on_check, prepare0, prepare_datatable, table_loadeddata;
 _is_visible = function flx__is_visible (element) {
     var test;
     test = jQuery(element).is(":visible");
@@ -2812,7 +2822,7 @@ init_table = function flx_init_table (table, table_type) {
         if (_pyfunc_truthy(table.hasClass("table_get"))) {
             table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
         } else {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons, buttonsOrder: ["refresh", "toggle", "fullscreen", "menu", "select", "columns"]}));
         }
         init_bootstrap_table = function (e, data) {
             var on_hidden_editable;
@@ -2965,7 +2975,87 @@ loading_template = function flx_loading_template (message) {
 };
 
 window.loading_template = loading_template;
-export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template};
+datatable_action = function flx_datatable_action (btn, action) {
+    var _callback, datatable, div, item, pk_list_str, pk_tab, stub3_seq, stub4_itr, tab, url;
+    div = btn.closest("div.tableframe");
+    datatable = div.querySelector("table[name=tabsort].datatable");
+    url = datatable.getAttribute("data-url") + "../table_action/";
+    pk_tab = [];
+    tab = (jQuery(datatable).bootstrapTable)("getSelections");
+    stub3_seq = tab;
+    if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+    for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+        item = stub3_seq[stub4_itr];
+        _pymeth_append.call(pk_tab, _pyfunc_str(item.id));
+    }
+    pk_list_str = _pymeth_join.call(",", pk_tab);
+    _callback = (function flx__callback (data) {
+        if (_pyfunc_op_contains("RETURN_ACTION", data)) {
+            if (_pyfunc_op_equals(data["RETURN_ACTION"], null)) {
+                return null;
+            }
+        }
+        (jQuery(datatable).bootstrapTable)("refresh");
+        return null;
+    }).bind(this);
+
+    ajax_json((url + "?pks=") + pk_list_str, ({action: action}), _callback);
+    return null;
+};
+
+window.datatable_action = datatable_action;
+on_check = function flx_on_check () {
+    var actions, container, datatable, div, dropdown, html, item, menu_btn, s, stub5_seq, stub6_itr, stub7_seq, stub8_itr, x;
+    datatable = this;
+    container = _pyfunc_getattr(datatable, "$container")[0];
+    menu_btn = container.querySelector("button[name=menu]");
+    stub7_seq = datatable.getHiddenColumns();
+    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+        item = stub7_seq[stub8_itr];
+        if (_pyfunc_op_equals(item.field, "state")) {
+            datatable.showColumn("state");
+            menu_btn.style.display = "block";
+            if (_pyfunc_truthy(menu_btn.classList.contains("btn-secondary"))) {
+                div = container.closest("div.tableframe");
+                if (_pyfunc_truthy(div.hasAttribute("data-actions"))) {
+                    actions = _pymeth_split.call(div.getAttribute("data-actions"), ";");
+                } else {
+                    actions = [];
+                }
+                dropdown = document.createElement("div");
+                dropdown.classList.add("dropleft");
+                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown'><i class='fa fa-bars'></i></button>";
+                html += "<div class='dropdown-menu'>";
+                stub5_seq = actions;
+                if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
+                for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+                    s = stub5_seq[stub6_itr];
+                    if (_pyfunc_op_contains("/", s)) {
+                        x = _pymeth_split.call(s, "/");
+                    } else {
+                        x = [s, s];
+                    }
+                    html = _pyfunc_op_add(html, (((("<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '") + _pymeth_strip.call(x[0])) + ("');\">")) + _pymeth_strip.call(x[1])) + "</button>");
+                }
+                html += "</div>";
+                dropdown.innerHTML = html;
+                menu_btn.replaceWith(dropdown);
+            }
+            return null;
+        }
+    }
+    datatable.hideColumn("state");
+    menu_btn.style.display = "none";
+    return null;
+};
+
+datatable_buttons = function flx_datatable_buttons (obj) {
+    return ({select: ({text: "Select rows", icon: "fa-check", event: ({click: on_check}), attributes: ({title: "Add a new row to the table"})}), menu: ({text: "Menu", icon: "fa-bars", attributes: ({title: "Menu", style: "display: none;"})})});
+};
+
+window.datatable_buttons = datatable_buttons;
+export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check, datatable_buttons};
 
 var humanFileSize, img_field;
 humanFileSize = function flx_humanFileSize (bytes, si) {
