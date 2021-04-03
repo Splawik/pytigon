@@ -53,10 +53,10 @@ def change_status(request, pk, action='accept'):
     if reg_status:
         if action=='accept':
             form_txt = reg_status.accept_form
-            fun = content_to_function(reg_status.accept_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form")
+            fun = content_to_function(reg_status.accept_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
         else:
             form_txt = reg_status.undo_form
-            fun = content_to_function(reg_status.undo_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form")
+            fun = content_to_function(reg_status.undo_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
 
         params = {
             'request': request,

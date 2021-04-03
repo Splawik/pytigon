@@ -859,6 +859,47 @@ class DocItem(JSONModel):
                 print("NOT OK")
         return self
     
+    def get_period(self):
+        return "%04d-%02d" % (self.parent.date.year, self.parent.date.month)
+    
+    def new_account_operation(self, target, account_name, description, sign, amount, element, classifier1value=None, classifier2value=None, classifier3value=None, subcode=None, payment=None, save=True):
+        account = Account.objects.get(name=account_name)
+        period = self.get_period()
+        object_list = AccountState.objects.filter(
+            parent=account, 
+            element=element, 
+            target=target, 
+            classifier1value = classifier1value, 
+            classifier2value = classifier2value, 
+            classifier3value = classifier3value,
+            period = period
+        )
+        if object_list.count() > 0:
+            object = object_list[0]
+        else:
+            object = AccountState()
+            object.parent = account
+            object.element = element
+            object.target = target
+            object.classifier1value = classifier1value
+            object.classifier2value = classifier2value
+            object.classifier3value = classifier3value
+            object.period = period
+            object.debit = 0
+            object.credit = 0
+            object.save()
+        account_operation = AccountOperation()
+        account_operation.parent = self
+        account_operation.description = description
+        account_operation.payment = payment
+        account_operation.account_state = object
+        account_operation.sign = sign
+        account_operation.amount = amount
+        account_operation.enabled = False
+        if save:
+            account_operation.save()
+        return account_operation
+    
 admin.site.register(DocItem)
 
 
@@ -1013,8 +1054,21 @@ class AccountState( models.Model):
     debit = models.DecimalField('Debit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     credit = models.DecimalField('Credit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     aggregate = models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
+    date_c = models.DateTimeField('Creation date', null=False, blank=False, editable=True, default=datetime.datetime.now,)
     
 
+    def __str__(self):
+        s = self.target.name + "/" + self.parent.name
+        if self.classifier1value:
+            s+= "/"+classifier1value
+        if self.classifier2value:
+            s+= "/"+classifier2value
+        if self.classifier3value:
+            s+= "/"+classifier3value
+        if self.subcode:
+            s+=self.subcode
+        s+="("+self.element.name+")"
+        return s
     
 admin.site.register(AccountState)
 
@@ -1034,7 +1088,8 @@ class AccountOperation( models.Model):
     
 
     parent = ext_models.PtigHiddenForeignKey(DocItem, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
-    date = models.DateTimeField('Date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
+    date = models.DateField('Date', null=False, blank=False, editable=True, default=datetime.date.today,)
+    date_c = models.DateTimeField('Creation date', null=False, blank=False, editable=False, default=datetime.datetime.now,)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=255)
     payment = models.CharField('Name of payment', null=True, blank=True, editable=True, max_length=64)
     account_state = ext_models.PtigForeignKey(AccountState, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Account state', related_name='accountoper_set', search_fields=['parent__name__icontains',])
