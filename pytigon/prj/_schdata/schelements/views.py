@@ -26,6 +26,10 @@ import datetime
 from django.urls import resolve
 from django.conf import settings
 
+from pytigon_lib.schtools.tools import content_to_function
+from pytigon_lib.schdjangoext.fastform import form_from_str
+
+
 def year_ago():
     dt = datetime.date.today()    
     try:
@@ -44,70 +48,60 @@ def change_status(request, pk, action='accept'):
         reg_status = reg_status_list[0]
     else: 
         reg_status = None
+    form = None
 
     if reg_status:
-
         if action=='accept':
-            proc = reg_status.accept_proc
+            form_txt = reg_status.accept_form
+            fun = content_to_function(reg_status.accept_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form")
         else:
-            proc = reg_status.undo_proc
-        exec(proc)
+            form_txt = reg_status.undo_form
+            fun = content_to_function(reg_status.undo_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form")
 
-        if 'get_form' in locals():
-            form_class = locals()['get_form'](request, doc_head, reg_status, doc_type, doc_reg)
+        params = {
+            'request': request,
+            'doc_head': doc_head,
+            'doc_type': doc_type,
+            'doc_reg': doc_reg,
+        }
+        if form_txt:
+            form_class = form_from_str(form_txt, params)
         else:
             form_class = None
-            
-        if 'get_description' in locals():
-            description = locals()['get_description'](request, doc_head, reg_status, doc_type, doc_reg)
-        else:
-            description = None
 
-        if request.POST:
+        if (not form_class) or request.POST :
             if form_class:
                 form = form_class(request.GET, request.POST)
             else:
                 form = None
-            
-            doc_status = models.DocHeadStatus()
-            doc_status.parent = doc_head
-            
-            
-            if action == 'accept':
-                errors = locals()['accept'](request, doc_head, reg_status, doc_type, doc_reg, form, doc_status)
-                new_status = action_name
-            else:
-                errors, new_status = locals()['undo'](request, doc_head, reg_status, doc_type, doc_reg, form, doc_status)
-                        
-            if not errors:
-                
-                doc_status.name = new_status
-                if action=='accept':
-                    doc_status.description = new_status + " <- " + doc_head.status
-                else:
-                    doc_status.description = action_name + " -> " + new_status
 
-                doc_head.status = new_status
-                doc_head.save()
-                
-                if action != 'accept':
-                    models.DocItem.objects.filter(parent=doc_head, level__gte = reg_status.order).delete()
-                
-                doc_status.date = datetime.datetime.now()
-                doc_status.operator = request.user.username
-                doc_status.save()
-                
-                
-                return { 'redirect': '/schsys/ok/' }
-            else:
-                return { 'error': status }
-        else:        
+            if (not form) or form.is_valid():
+                doc_status = models.DocHeadStatus()
+                doc_status.parent = doc_head
+
+                errors = fun(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form)
+                if not errors:
+                    if action_name and action_name != doc_head.status:
+                        doc_head.status = action_name
+                        doc_head.save()
+
+                    if action != 'accept':
+                        models.DocItem.objects.filter(parent=doc_head, level__gte = reg_status.order).delete()
+
+                    doc_status.date = datetime.datetime.now()
+                    doc_status.operator = request.user.username
+                    doc_status.save()
+
+                    return actions.update_row_ok(request, int(doc_head.id), str(doc_head))
+                else:
+                    return { 'error': new_status }
+        if not form:
             if form_class:
                 form = form_class()
             else:
                 form = None
             return { 'error': False, 'form': form, 'doc_head': doc_head, 'doc_type': doc_type, 'doc_reg': doc_reg, 'reg_status': reg_status, 
-                'action_name': action_name, 'description': description 
+                'action_name': action_name,
             }
     else:
         return { 'error': "Status %s doesn't exists" % action_name }

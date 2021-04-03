@@ -81,6 +81,7 @@ def row_actions(parser, token):
 
 @inclusion_tag('widgets/action.html')
 def action(context, action, title = "", icon_name = "", target = "", attrs = "", tag_class = "", url = ""):
+    print("====>>", action, target)
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url)
     return ret
 

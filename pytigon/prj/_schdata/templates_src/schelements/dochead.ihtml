@@ -58,10 +58,18 @@
     % with object|args:request|call:"get_visible_statuses" as vs:    
         % if vs:
             % for row in vs:
-                % action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target='popup_edit' url=table_path|append_str:"{id}/action/approve/"
+                % if row.order > object.get_reg_status.order:
+                    % action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/"
 
-    % if object|args:request|call:"status_can_be_undo":
-        % action "decline_status"|append_str:"/"|append_str:object.status "_(Discard status:) "|append_str:object.status "fa fa-undo" tag_class="+btn-danger" target='popup_edit' url=table_path|append_str:"{id}/action/discard/"
+    % with object|args:request|call:"get_visible_statuses" as vs:    
+        % if vs:
+            % for row in vs:
+                % if row.order < object.get_reg_status.order:
+                    % action "decline_status"|append_str:"/"|append_str:row.name "_(Back to status:)"|append_str:row.name row.icon target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/"
+
+    % comment:
+        % if object|args:request|call:"status_can_be_undo":
+            % action "decline_status"|append_str:"/"|append_str:object.status "_(Discard status:) "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/"
 
 
 %% row_edit

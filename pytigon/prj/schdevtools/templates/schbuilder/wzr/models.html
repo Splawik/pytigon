@@ -51,7 +51,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
         {% endif %}
         {% if table.proxy_model %}proxy=True{% endif %}
     {% if not table.proxy_model %}{% if table.tree_tab == 1 %}
-    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    {% if not table.fields_have_parent %}parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children'){% endif %}
     {% endif %}
 
     {% for field in table.schfield_set.all %}{{field.as_declaration|safe}}

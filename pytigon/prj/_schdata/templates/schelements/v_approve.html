@@ -17,8 +17,8 @@
                 {% if description %}
                         {{ description|safe }}
                   {% else %}
-                        (Are you sure you want to accept the document)? <br>
-                        (You accept the status): {{ action_name }}
+                        <h3>Are you sure you want to accept the document? <br></h3>
+                        <h4>You accept the status: {{ action_name }}</h4>
                 {% endif %}
         {% endif %}
         <br />

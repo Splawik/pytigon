@@ -151,7 +151,7 @@
 {% block content %}
         {% if standard_web_browser %}
                 {% block edit_area %}
-                        <ptig-codeeditor class="flexible_size" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}" width="100%"></ptig-codeeditor>
+                        <ptig-codeeditor class="flexible_size" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}" width="100%" function-title="{{object|args:field_name|call:"get_editor_header"}}"></ptig-codeeditor>
                 {% endblock %}
           {% else %}
                 {{ block.super }}

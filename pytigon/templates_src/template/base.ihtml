@@ -155,7 +155,7 @@
             % else:
                 %% row_edit_start
                     % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5:
-                        <div class="move-element {% block dialog_type %}modal-lg{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
+                        <div class="move-element {% block dialog_type %}modal-lg v-autosize{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
                 %% row_edit_header
                     % if form:
                         <meta name="RETURN" content="$$RETURN_RELOAD" />

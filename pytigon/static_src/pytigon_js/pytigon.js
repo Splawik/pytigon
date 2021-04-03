@@ -266,14 +266,13 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
 
 window.ajax_json = ajax_json;
 ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req, url) {
-    var _progressHandlingFunction, complete2, content_type, data, form, req;
+    var _progressHandlingFunction, content_type, data, form, req;
     data_filter = (data_filter === undefined) ? null: data_filter;
     process_req = (process_req === undefined) ? null: process_req;
     url = (url === undefined) ? null: url;
     content_type = null;
     req = new XMLHttpRequest();
     form = jQuery(_form);
-    complete2 = complete;
     if (_pyfunc_truthy(process_req)) {
         process_req(req);
     }
@@ -301,20 +300,11 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         if (_pyfunc_truthy(data_filter)) {
             data = data_filter(data);
         }
-        if ((_pyfunc_truthy(data) && _pyfunc_op_contains("pdf=on", data))) {
-            content_type = "multipart/form-data";
-            complete2 = (function flx_complete2 (data) {
-                open_pdf(data);
-                complete("");
-                return null;
-            }).bind(this);
-
-        }
     }
     if (_pyfunc_truthy(url)) {
-        _req_post(req, url, data, complete2, content_type);
+        _req_post(req, url, data, complete, content_type);
     } else {
-        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete2, content_type);
+        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
     }
     return null;
 };

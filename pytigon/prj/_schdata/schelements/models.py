@@ -26,6 +26,7 @@ from django.template.loader import select_template
 import datetime
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
+from pytigon_lib.schtools.tools import content_to_function
 
 def limit_element1():
     return {}
@@ -47,29 +48,6 @@ LIMIT_ELEMENT4 = OverwritableCallable(limit_element4)
 
 
 
-
-simple_element_type_choice = [
-    ("C","Currency"),
-    ("M","Material"),
-    ("D","Device"),
-    ("I","Intellectual"),
-    ("S","Service"),
-    ("R","Raw material"),
-    ("N","Intermediate"),
-    ("P","Product"),
-    ("DI","Device IT"),
-    ("DP","Production machine"),
-    ("DV","Vehicle"),
-    
-    ]
-
-target_type_choice = [
-    ("F","Firm"),
-    ("P","Person"),
-    ("E","Employee"),
-    ("S","Section"),
-    
-    ]
 
 account_type_choice_2 = [
     ("B","Balance"),
@@ -118,22 +96,6 @@ element_type_choice = [
     
     ]
 
-accdoc_type_choices = [
-    ("A","Account"),
-    
-    ]
-
-accdoc_status_choices = [
-    ("0","Edit"),
-    ("1","Approved"),
-    ("2","Settled"),
-    ("3","Posted 1"),
-    ("4","Posted 2"),
-    ("5","Frozen"),
-    ("9","Canceled"),
-    
-    ]
-
 doctype_status = [
     ("0","Disabled"),
     ("1","Activ"),
@@ -156,7 +118,7 @@ class Element(TreeModel):
         
         
     
-    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    
     
 
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
@@ -424,33 +386,6 @@ class Element(TreeModel):
 admin.site.register(Element)
 
 
-class Classifier(TreeModel):
-    
-    class Meta:
-        verbose_name = _("Classifier")
-        verbose_name_plural = _("Classifier")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        app_label = 'schelements'
-
-
-        ordering = ['id']
-        
-        
-    
-    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    
-
-    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
-    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
-    description = models.CharField('Description', null=False, blank=False, editable=True, max_length=64)
-    
-
-    def __str__(self):
-        return self.description
-    
-admin.site.register(Classifier)
-
-
 class DocReg( models.Model):
     
     class Meta:
@@ -491,6 +426,7 @@ class DocReg( models.Model):
             return self.name.rsplit('/',1)[1]
         else:
             return self.name
+    
     
 admin.site.register(DocReg)
 
@@ -578,7 +514,7 @@ class DocHead(JSONModel):
             if len(docs)==1: 
                 self.doc_type_parent = docs[0]
                 self.date = datetime.datetime.now()
-                self.status = 'edit'
+                self.status = 'draft'
                 self.operator = request.user.username
                 
         return None
@@ -668,7 +604,7 @@ class DocHead(JSONModel):
                         break
                     x = x.get_parent()
             if save_fun_src:
-                exec(save_fun_src)
+                content_to_function(save_fun_src, "object")(self)
     
         if not self.pk:
             self.date_c = datetime.datetime.now()
@@ -699,8 +635,7 @@ class DocHead(JSONModel):
                     ret = []
                     for status in statuses:
                         if status.can_set_proc:
-                            exec(status.can_set_proc)
-                            data = locals()['can_set_proc'](request, self)
+                            data = content_to_function(status.can_set_proc, "request, doc_head")(request, self)
                             if data:
                                 ret.append(status)
                         else:
@@ -720,8 +655,7 @@ class DocHead(JSONModel):
             if len(statuses)==1:
                 status = statuses[0]
                 if status.can_undo_proc:
-                    exec(status.can_undo_proc)
-                    data = locals()['can_undo_proc'](request, self)
+                    data = content_to_function(status.can_undo_proc, "request, doc_head")(request, self)
                     if data:
                         return True
                     else:
@@ -732,6 +666,28 @@ class DocHead(JSONModel):
                 return True
         
         return False        
+    
+    
+    def get_reg_status(self):
+        reg = self.doc_type_parent.parent
+        statuses = reg.docregstatus_set.filter(name=self.status)
+        if len(statuses)>0:
+            return statuses[0]
+        return None
+    
+    
+    def get_undo_target(self):
+        print("F1")
+        reg = self.doc_type_parent.parent
+        print("F2")
+        statuses = reg.docregstatus_set.filter(name=self.status)
+        if len(statuses)>0:
+            status = statuses[0]
+            print("F3")
+            return status.get_undo_target()
+        print("F4")
+        return "refresh_frame"
+        
         
     def get_derived_object(self, param=None):
         t = None
@@ -929,8 +885,31 @@ class DocRegStatus( models.Model):
     undo_proc = models.TextField('Undo status procedure', null=True, blank=True, editable=False, )
     can_set_proc = models.TextField('Check if status can be set', null=True, blank=True, editable=False, )
     can_undo_proc = models.TextField('Check if status can be removed', null=True, blank=True, editable=False, )
+    accept_form = models.TextField('Form for accept', null=True, blank=True, editable=False, )
+    undo_form = models.TextField('Form for undo', null=True, blank=True, editable=False, )
     
 
+    def get_editor_header(self, field_name):
+        if field_name == "can_set_proc":
+            return "def can_set_proc(request, doc_head):"
+        elif field_name == "can_undo_proc":
+            return "def can_undo_proc(request, doc_head):"
+        elif field_name == "accept_proc":
+            return "def accept_proc(request, doc_head, reg_status, doc_type, doc_reg, form):"
+        elif field_name == "undo_proc":
+            return "def undo_proc(request, doc_head, reg_status, doc_type, doc_reg, form):"
+            
+    def get_accept_target(self):
+        if self.accept_form:
+            return "popup_edit"
+        else:
+            return "refresh_frame"
+    
+    def get_undo_target(self):
+        if self.undo_form:
+            return "popup_edit"
+        else:
+            return "refresh_frame"
     
 admin.site.register(DocRegStatus)
 
@@ -973,7 +952,7 @@ class Account(TreeModel):
         
         
     
-    parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    
     
 
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
@@ -981,9 +960,9 @@ class Account(TreeModel):
     type2 = models.CharField('Type 2', null=True, blank=True, editable=True, choices=account_type_choice_2,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=256)
-    root_classifier1 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
-    root_classifier2 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
-    root_classifier3 = ext_models.PtigForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
+    root_classifier1 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
+    root_classifier2 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
+    root_classifier3 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
     enabled = models.NullBooleanField('Enabled', null=False, blank=False, editable=True, default=True,)
     
 
@@ -1025,9 +1004,9 @@ class AccountState( models.Model):
 
     parent = models.ForeignKey(Account, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Parent', )
     target = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Target', related_name='state_targets')
-    classifier1value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 1 value', related_name='account_c1_set')
-    classifier2value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 2 value', related_name='account_c2_set')
-    classifier3value = models.ForeignKey(Classifier, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 3 value', related_name='account_c3_set')
+    classifier1value = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 1 value', related_name='account_c1_set')
+    classifier2value = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 2 value', related_name='account_c2_set')
+    classifier3value = models.ForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Classifier 3 value', related_name='account_c3_set')
     period = models.CharField('Period', null=True, blank=True, editable=True, max_length=10)
     subcode = models.CharField('Subcode', null=True, blank=True, editable=True, max_length=16)
     element = models.ForeignKey(Element, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Element', )

@@ -19,8 +19,8 @@
         % if description:
             {{ description|safe }}
         % else:
-            _(Are you sure you want to accept the document)? <br>
-            _(You accept the status): {{ action_name }}
+            h3..._(Are you sure you want to accept the document)? <br>
+            h4..._(You accept the status): {{ action_name }}
     br    
     % if form:
         % form:

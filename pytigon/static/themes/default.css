@@ -300,6 +300,10 @@ div.modal-header button.maximize, div.modal-header button.minimize {
   padding: 15px;
   margin-top: -15px; }
 
+div.v-autosize div.modal-body {
+  max-height: calc( 100vh - 10rem);
+  overflow-y: auto; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
