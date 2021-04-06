@@ -54,22 +54,22 @@
         {% endwith %}
 {% endblock %}
 {% block list_row_header %}
-        <th>type1</th>
-        <th>type2</th>
-        <th>name</th>
-        <th>description</th>
-        <th>root_classifier1</th>
-        <th>root_classifier2</th>
-        <th>root_classifier3</th>
+        <th>Type 1</th>
+        <th>Type 2</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Classifier 1</th>
+        <th>Classifier 2</th>
+        <th>Classifier 3</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.type1}}</td>
         <td>{{object.type2}}</td>
         <td>{{object.name}}</td>
         <td>{{object.description}}</td>
-        <td>{{object.root_classifier1}}</td>
-        <td>{{object.root_classifier2}}</td>
-        <td>{{object.root_classifier3}}</td>
+        <td>{{object.root_classifier1|none_to_empty}}</td>
+        <td>{{object.root_classifier2|none_to_empty}}</td>
+        <td>{{object.root_classifier3|none_to_empty}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

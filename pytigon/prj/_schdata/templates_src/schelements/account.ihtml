@@ -52,22 +52,22 @@
 
 
 %% list_row_header
-    th...type1
-    th...type2
-    th...name
-    th...description
-    th...root_classifier1
-    th...root_classifier2
-    th...root_classifier3
+    th...Type 1
+    th...Type 2
+    th...Name
+    th...Description
+    th...Classifier 1
+    th...Classifier 2
+    th...Classifier 3
 
 %% list_row
     td...{{object.type1}}
     td...{{object.type2}}
     td...{{object.name}}
     td...{{object.description}}
-    td...{{object.root_classifier1}}
-    td...{{object.root_classifier2}}
-    td...{{object.root_classifier3}}
+    td...{{object.root_classifier1|none_to_empty}}
+    td...{{object.root_classifier2|none_to_empty}}
+    td...{{object.root_classifier3|none_to_empty}}
 
 %% list_row_actions
     % row_actions:

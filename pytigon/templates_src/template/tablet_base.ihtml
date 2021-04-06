@@ -103,7 +103,10 @@
             % if ie:
                 img src={% get_static_prefix %}images/reload/reload.gif,,,id=loading-indicator,,,style=display:none
             % else:
-                img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator,,,style=display:none
+                i class=fa fa-spinner fa-pulse fa-3x fa-fw text-secondary,,,id=loading-indicator,,,style=display:none
+
+            % comment:
+                img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator
 
             % comment:
                 a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation

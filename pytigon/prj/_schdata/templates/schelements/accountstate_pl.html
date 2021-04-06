@@ -37,16 +37,16 @@
 {% endblock %}
 {% block list_row %}
         <td>{{object.parent.name}}</td>
-        <td>{{object.subcode}}</td>
+        <td>{{object.subcode|none_to_empty}}</td>
         <td>{{object.parent}}</td>
-        <td>{{object.target}}</td>
-        <td>{{object.period}}</td>
+        <td>{{object.target|none_to_empty}}</td>
+        <td>{{object.period|none_to_empty}}</td>
         <td>{{object.debit}}</td>
         <td>{{object.credit}}</td>
         <td>{{object.element}}</td>
-        <td>{{object.classifier1value}}</td>
-        <td>{{object.classifier2value}}</td>
-        <td>{{object.classifier3value}}</td>
+        <td>{{object.classifier1value|none_to_empty}}</td>
+        <td>{{object.classifier2value|none_to_empty}}</td>
+        <td>{{object.classifier3value|none_to_empty}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

@@ -214,6 +214,18 @@ def to_str(value):
         ret = ""
     return ret
 
+@register.filter(name='none_to_empty')
+def none_to_empty(value):
+    """Converts value to str, None to '' """
+    if value:
+        try:
+            ret = str(value)
+        except:
+            ret = ""
+    else:
+        ret = ""
+    return ret
+
 @register.filter(name='to_int')
 def to_int(value):
     try:

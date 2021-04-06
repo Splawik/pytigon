@@ -103,7 +103,7 @@
         {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
         {% css_link 'bootstrap_plugins/bootstrap4-editable/css/bootstrap-editable.css' %}
 
-        {% css_link 'fonts/font-awesome/css/font-awesome.min.css' %}
+        {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
 
         {% css_link 'jquery_plugins/daterangepicker/daterangepicker.css' %}
 
@@ -303,7 +303,7 @@
             % if ie:
                 img src={% get_static_prefix %}images/reload/reload.gif,,,id=loading-indicator,,,style=display:none
             % else:
-                img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator,,,style=display:none
+                i class=fa fa-spinner fa-pulse fa-3x fa-fw text-warning,,,id=loading-indicator,,,style=display:none
 
 %% body_footer
     {{block.super}}

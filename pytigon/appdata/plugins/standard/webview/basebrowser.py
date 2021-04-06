@@ -453,7 +453,7 @@ class BaseWebBrowser(object):
                 return (s, None)
             elif uri.startswith('http://127.0.0.2/fonts/'):
                 if uri.startswith('http://127.0.0.2/fonts/fontawesome'):
-                    uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/font-awesome/fonts/')
+                    uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/fonts/fork-awesome/fonts/')
                 else:
                     uri2 = uri.replace('127.0.0.2/fonts/', '127.0.0.2/static/themes/bootstrap-material-design/fonts/')
             elif uri.startswith('http://127.0.0.2/file/'):

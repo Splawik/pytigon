@@ -53,6 +53,9 @@ account_type_choice_2 = [
     ("B","Balance"),
     ("O","Off-balance"),
     ("N","Non-financial"),
+    ("V","Inventory"),
+    ("I","Inventory income"),
+    ("D","Disposal"),
     
     ]
 

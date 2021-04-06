@@ -94,7 +94,7 @@ def change_status(request, pk, action='accept'):
 
                     return actions.update_row_ok(request, int(doc_head.id), str(doc_head))
                 else:
-                    return { 'error': new_status }
+                    return { 'error': errors, 'form': form, 'doc_head': doc_head, 'doc_type': doc_type, 'doc_reg': doc_reg, 'reg_status': reg_status, 'action_name': action_name, }
         if not form:
             if form_class:
                 form = form_class()

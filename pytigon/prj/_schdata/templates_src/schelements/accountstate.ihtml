@@ -39,16 +39,16 @@
 
 %% list_row
     td...{{object.parent.name}}
-    td...{{object.subcode}}
+    td...{{object.subcode|none_to_empty}}
     td...{{object.parent}}
-    td...{{object.target}}
-    td...{{object.period}}
+    td...{{object.target|none_to_empty}}
+    td...{{object.period|none_to_empty}}
     td...{{object.debit}}
     td...{{object.credit}}
     td...{{object.element}}
-    td...{{object.classifier1value}}
-    td...{{object.classifier2value}}
-    td...{{object.classifier3value}}
+    td...{{object.classifier1value|none_to_empty}}
+    td...{{object.classifier2value|none_to_empty}}
+    td...{{object.classifier3value|none_to_empty}}
 
 %% list_row_actions
     % row_actions:
