@@ -255,10 +255,10 @@
                                                             %% form_content_button
                                                                 % if table_type != 'datatable':
                                                                     button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,target=refresh_frame
-                                                                        span class=fa fa-refresh
+                                                                        {% icon "fa-refresh fa-lg" %}
                                             % if table_type == 'datatable':
                                                 button value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,onclick=datatable_refresh(this);
-                                                    span class=fa fa-refresh
+                                                    {% icon "fa-refresh fa-lg" %}
 
                             % else:
                                 form method=post,,,action={{request.path}},,,role=form,,,class=ajax-link table_filter form-inline,,,target=refresh_frame,,,data-region=table
@@ -270,7 +270,7 @@
                                             % if table_type == 'datatable':
                                                 div class=dropdown
                                                     button type=button,,,class=btn btn-secondary {{btn_size}} dropdown-toggle,,,data-toggle=dropdown
-                                                        span class=fa fa-bars
+                                                        {% icon "fa-bars fa-lg" %}
                                                     div class=dropdown-menu
                                                         a href=../../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
                                                         a href=../../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
@@ -283,7 +283,7 @@
                     div class=new_row
                     % if table_type == 'datatable' and not get:
                         button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button
-                            i class=fa fa-times
+                            {% icon "fa-times fa-lg" %}
 
             % if standard_web_browser and standard_web_browser != 6:
                 % if table_type == 'datatable':

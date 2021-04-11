@@ -21,6 +21,7 @@ from base64 import b64encode
 import re
 import itertools
 import html
+import os
 
 from django import template
 from django.utils.translation import gettext_lazy as _
@@ -31,12 +32,13 @@ from django.utils.safestring import mark_safe
 from django.template.base import token_kwargs, TemplateSyntaxError, Node
 
 from pytigon_lib.schtools.href_action import standard_dict, actions_dict, action_fun
-from pytigon_lib.schdjangoext.tools import import_model
+from pytigon_lib.schdjangoext.tools import import_model, make_href
 
 from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext.fields import ModelSelect2WidgetExt
 from pytigon_lib.schdjangoext.models import TreeModel
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
+from pytigon_lib.schdjangoext.tools import make_href as mhref
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 from django.utils.safestring import SafeText
@@ -704,3 +706,90 @@ def do_html_widget(parser, token):
     parser.delete_first_token()
     return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
 
+
+ICON_CACHE = {}
+
+def _read_icon_file(path):
+    tmp = None
+    path_tab = path.split('/')
+    with open(os.path.join(settings.STATIC_ROOT, *path_tab), "rt") as f:
+        tmp = f.read()
+    return tmp
+
+def _read_user_icon_file(path):
+    tmp = None
+    path_tab = path.split('/')
+    with open(os.path.join(settings.MEDIA_ROOT, *path_tab), "rt") as f:
+        tmp = f.read()
+    return tmp
+
+@register.simple_tag(takes_context=False)
+def icon(class_str, width=None, height=None):
+    global ICON_CACHE
+
+    if class_str.startswith('fa://'):
+        return mark_safe("<i class='fa fa-%s'></i>" % (class_str[5:].replace('.png','')))
+    elif class_str.startswith('fa-') :
+        return mark_safe("<i class='fa %s'></i>" % class_str)
+    elif class_str.startswith('bi-'):
+        x = re.findall('bi-' + r'[\w-]+', class_str)
+        if x:
+            icon_name = x[0].replace('bi-','')
+            if not icon_name in ICON_CACHE:
+                tmp = _read_icon_file("icons/bootstrap-icons/"+icon_name.replace('--','/')+".svg")
+                if tmp:
+                    ICON_CACHE[icon_name] = tmp
+                else:
+                    return mark_safe("<i></i>")
+            icon = ICON_CACHE[icon_name]
+            if width:
+                icon = icon.replace('width="16"', ('width="%d"' % width)).replace('height="16"', 'height="%d"' % (height if height else width))
+            return mark_safe("<i>%s</i>" % icon)
+    elif class_str.startswith('icon-'):
+        x = re.findall('icon-' + r'[\w-]+', class_str)
+        if x:
+            icon_name = x[0].replace('icon-','')
+            if not icon_name in ICON_CACHE:
+                tmp = _read_user_icon_file("icons/"+icon_name.replace('--','/')+".svg")
+                if tmp:
+                    ICON_CACHE[icon_name] = tmp
+                else:
+                    return mark_safe("<i></i>")
+            icon = ICON_CACHE[icon_name]
+            return mark_safe("<i>%s</i>" % icon)
+    elif class_str.startswith('svg-'):
+        x = re.findall('svg-' + r'[\w-]+', class_str)
+        if x:
+            icon_name = x[0].replace('svg-','')
+            if not icon_name in ICON_CACHE:
+                tmp = _read_icon_file("icons/scalable/"+icon_name.replace('--','/')+".svg")
+                if tmp:
+                    ICON_CACHE[icon_name] = tmp
+                else:
+                    return mark_safe("<i></i>")
+            icon = ICON_CACHE[icon_name]
+            return mark_safe("<i>%s</i>" % icon)
+    elif class_str.startswith('png://'):
+        x = class_str[6:]
+        x2 = x.split(' ',1)
+        src = mhref("/static/icons/22x22/%s" % x2[0])
+        if len(x2)>1:
+            return mark_safe("<img src='%s'></img>" % src)
+        else:
+            return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+    elif class_str.startswith('client://'):
+        x = class_str[9:]
+        x2 = x.split(' ', 1)
+        src = mhref("/static/icons/22x22/%s" % x2[0])
+        if len(x2)>1:
+            return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+        else:
+            return mark_safe("<img src='%s'></img>" % src)
+    elif class_str.startswith('data:image/svg+xml'):
+        x = class_str.split(',',1)
+        svg_code = x[1]
+        return mark_safe(svg_code)
+    elif 'fa-' in class_str:
+        return mark_safe("<i class='fa %s'></i>" % class_str)
+    else:
+        return mark_safe("<i class='fa fa-circle-o fa-lg'></i>")

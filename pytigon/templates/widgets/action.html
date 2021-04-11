@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% load exfiltry %}
 {% load exsyntax %}
 {% block action_widget_content %}
@@ -10,9 +9,9 @@
                                 {% endif %}
                           {% else %}
                                 {% if action.icon %}
-                                        <span class="{{action.icon}}"></span>
+                                        {% icon action.icon %}
                                         {% if action.icon2 %}
-                                                <span class="{{action.icon2}}"></span>
+                                                {% icon action.icon2 %}
                                         {% endif %}
                                   {% else %}
                                         {{action.title}}

@@ -9,9 +9,9 @@
                                 {% endif %}
                           {% else %}
                                 {% if pos.icon %}
-                                        <span class="{{pos.icon}}"></span>
+                                        {% icon pos.icon %}
                                         {% if action.icon2 %}
-                                                <span class="{{action.icon2}}"></span>
+                                                {% icon action.icon2 %}
                                         {% endif %}
                                   {% else %}
                                         {{pos.title}}
@@ -21,7 +21,9 @@
         {% endfor %}
         {% if actions2 %}
                 <div class="btn-group dropdown">
-                        <button class="btn {{btn_size}} btn-outline-primary" data-toggle="dropdown"><span class="fa fa-bars fa-lg"></span></button>
+                        <button class="btn {{btn_size}} btn-outline-primary" data-toggle="dropdown">
+                                {% icon "fa-bars fa-lg" %}
+                        </button>
                         <div class="dropdown-menu dropdown-menu-right">
                                 {% for pos in actions2 %}
                                         <a test="True" href="{{pos.url|safe}}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}>

@@ -35,11 +35,12 @@
 
         <a href="#">
             % if item_info.user_param.icon:
-                <i class="fa {{item_info.user_param.icon}}"></i>
+                {% icon item_info.user_param.icon|append_str:" fa-lg" %}
             % else:
-                <i class="fa fa-link"></i>
+                {% icon "fa-link fa-lg" %}
             <span>{{item_info.app_title}}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            {% icon "fa-angle-left fa-lg pull-rigth" %}
+
         </a>
 
         <ul class="treeview-menu sidebar-submenu">
@@ -48,11 +49,12 @@
         a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,target=_parent,,,data-toggle=tooltip,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
-                    {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
+                    {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
                 % else:
                     {{item_info.icon}}
             % else:
-                i class=fa fa-circle-o
+                {% icon "bi-record" width=22 %}
+
             {{item_info.description}}
 
     % if forloop.last
@@ -64,7 +66,7 @@
 
 %% menu
     button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
-        span class=fa fa-bars
+        {% icon "fa-bars fa-lg" %}
 
     sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}
         sys-perfectscrollbar
@@ -110,7 +112,8 @@
 
             % comment:
                 a href=#,,,class=sidebar-toggle,,,role=button,,,title=Toggle navigation
-                    span class=fa fa-bars
+                    {% icon "fa-bars fa-lg" %}
+
 
             % if not NO_TABS and application_type == 'modern':
                 div class=navbar-nav tabbable,,,id=tab_tabs2
@@ -124,12 +127,13 @@
                                 div class=input-group
                                     input class=form-control,,,placeholder=_(Search),,,name=q
                                     div class=input-group-addon
-                                        i class=fa fa-search
+                                        {% icon "fa-search fa-lg" %}
+
                     %% drop_down_blocks
                     % if user.is_authenticated:
                         li class=nav-item dropdown user user-menu
                             a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
-                                span class=fa fa-user
+                                {% icon "fa-user fa-lg" %}
                                 span class=hidden-sm-down...{{user.username}}
                             div class=dropdown-menu dropdown-menu-right,,,style=width:470px
                                 div class=dropdown-block
@@ -172,11 +176,11 @@
                         %if not autologin:
                             li class=nav-item dropdown user user-menu
                                 a class=system_menu,,,href={{base_path}}schsys/do_logout/?schtml=1,,,target=_top,,,title=_(Logout)
-                                    span class=fa fa-power-off
+                                    {% icon "fa-power-off fa-lg" %}
                     % else:
                         li class=nav-item dropdown user user-menu
                             a class=system_menu,,,href={{base_path}}schsys/login/?schtml=1,,,target=_top,,,title=_(Login)
-                                span class=fa fa-sign-in
+                                {% icon "fa-sign-in fa-lg" %}
     {{block.super}}
 
 %% tabs

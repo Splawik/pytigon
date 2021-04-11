@@ -168,7 +168,7 @@
     li class=nav-item topmenu
         a class=nav-link first_pos {% if forloop.first %}active{% endif %},,,data-toggle=tab,,,id=a_{{app_info.app_name}},,,href=#{{app_info.app_name}},,,target=_parent
             % if app_info.icon_exists:
-                {{app_info.get_icon|to_html_icon:"tablet_menu_icon"|safe}}
+                {% icon app_info.get_icon|append_str:" tablet_meni_icon" width=22 %}
             {{app_info.app_title}}
 
 %%topmenu_end
@@ -179,7 +179,7 @@
         % if user.is_authenticated:
             li class=nav-item dropdown user user-menu
                 a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown
-                    span class=fa fa-user
+                    {% icon "fa-user fa-lg" %}
                     span class=hidden-sm-down...{{user.username}}
                 div class=dropdown-menu dropdown-menu-right,,,style=width:470px
                     div class=dropdown-block
@@ -220,11 +220,11 @@
             %if not autologin:
                 li class=nav-item dropdown user user-menu
                     a class=system_menu,,,href={{base_path}}schsys/do_logout/?schtml=1,,,target=_top,,,title=_(Logout)
-                        span class=fa fa-power-off
+                        {% icon "fa-power-off fa-lg" %}
         % else:
             li class=nav-item dropdown user user-menu
                 a class=system_menu,,,href={{base_path}}schsys/login/?schtml=1,,,target=_top,,,title=_(Login)
-                    span class=fa fa-sign-in
+                    {% icon "fa-sign-in fa-lg" %}
 
     <perfectscrollbar />
     <div id="menu" class="tab-content menu-content win-header">
@@ -240,15 +240,18 @@
     % if item_info.url|is_menu_checked:request.get_full_path:
         a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button,,,target=_parent,,,data-style=zoom-in,,,{{item_info.description}}
             %if item_info.icon:
-                <i class="fa {{item_info.icon}}"></i>
+                {% icon item_info.icon|append_str:" fa-lg" %}
+
             {{item_info.description}}
     % else
         a href={{base_path}}{{item_info.url}},,,class=btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button,,,data-style=zoom-in,,,target=_parent,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
-                    {{item_info.icon|to_html_icon:"tablet_menu_icon"|safe}}
+                    {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
                 % else:
                     {{item_info.icon}}
+            % else:
+                {% icon "bi-record" width=22 %}
             {{item_info.description}}
 
     % if forloop.last

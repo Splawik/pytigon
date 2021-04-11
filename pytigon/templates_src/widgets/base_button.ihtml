@@ -1,13 +1,10 @@
-{# -*- coding: utf-8 -*- #}
+% load exsyntax
 
 %% widget_content
     % if standard_web_browser
-        a href={{url}},,,class=popup btn btn-secondary ,,,name={{name}},,,title={{title}},,,target={{target}},,,data-role=button,,,data-inline=true,,,{% block data_icon %}data-icon=plus{% endblock %}
+        a href={{url}},,,class=popup btn btn-secondary,,,name={{name}},,,title={{title}},,,target={{target}},,,data-role=button,,,data-inline=true,,,{% block data_icon %}data-icon=plus{% endblock %}
             %% description
-                % if description
-                    <span class="fa fa-plus"></span> {{description}}
-                % else
-                    <span class="fa fa-plus"></span>
+                {% icon "fa-plus fa-lg" %}{%% if description %}{{description}}{% endif %}
     % else
         % if name:
             CTRL-BUTTON name={{name}},,,label={{title}},,,href={{url}}

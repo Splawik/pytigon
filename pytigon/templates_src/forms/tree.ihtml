@@ -1,10 +1,7 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "form.html"
 
 % load exfiltry
 % load exsyntax
-
 
 %% list_content_title
     % if parent_pk > 0:
@@ -67,14 +64,14 @@
         % with gtree=get|get_or_tree:
             %if object|model_has_children
                 a href={{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_page,,,class=button btn btn-outline-primary,,,name=+
-                    span class=fa fa-lg fa-plus
+                    {% icon "fa-plus fa-lg" %}
             %else
                 % if get:
                     span class=button btn
-                        span class=fa fa-lg fa-ban
+                        {% icon "fa-ban fa-lg" %}
                 % else:
                     a href={{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/,,,target=refresh_page,,,class=button btn,,,name=+
-                        span class=fa fa-lg fa-plus-square-o
+                        {% icon "fa-plus-square-o fa-lg" %}
     {{ block.super }}
 
 

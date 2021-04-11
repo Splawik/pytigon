@@ -1,12 +1,13 @@
-{# -*- coding: utf-8 -*- #}
-%extends "widgets/action.html"
+% extends "widgets/action.html"
+
+% load exsyntax
 
 %% action_widget_content
     % if standard_web_browser:
         a class=btn btn-secondary get_row ajax-link,,,title={{action.title}},,,data-role=button,,,{% block action_data_icon %}data-icon=plus{% endblock %},,,data-id={{id}},,,data-text={{text}},,,target=refresh_frame,,,data-region=get_row
-            span class=fa fa-level-down
-                %% description
-                    {{action.title}}
+            {% icon "fa-level-down fa-lg" %}
+            %% description
+                {{action.title}}
     % else
         a name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{path}}{{action.url}},,,data-id={{id}},,,data-text={{text}}
             {{action.title}}

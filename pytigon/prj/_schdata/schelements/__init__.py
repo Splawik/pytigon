@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+
+
 from django.utils.translation import ugettext_lazy as _
 
 ModuleTitle = _('main tools')
@@ -6,9 +7,9 @@ Title = _('Elements')
 Perms = False
 Index = ''
 Urls  = (
-    ('table/Element/0/form/tree/?schtml=desktop',_('Elements'),None,"""client://mimetypes/x-office-drawing.png"""),
+    ('table/Element/0/form/tree/?schtml=desktop',_('Elements'),None,"""bi-stack"""),
     ('table/DocReg/-/form/list/?schtml=desktop',_('Documents register'),None,"""client://actions/folder-new.png"""),
-    ('table/DocType/-/form/list/?schtml=desktop',_('Types of documents'),None,"""ART_NEW"""),
+    ('table/DocType/-/form/list/?schtml=desktop',_('Types of documents'),None,""""""),
     ('table/DocRegStatus/-/form/list/?schtml=desktop',_('Definition of document status'),None,"""ART_INFORMATION"""),
     ('table/Account/0/form/tree/?schtml=desktop',_('Accounts'),None,"""client://apps/system-file-manager.png"""),
     ('table/AccountState/-/form/list/?schtml=desktop',_('States of accounts'),None,"""client://mimetypes/package-x-generic.png"""),

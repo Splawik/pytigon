@@ -12,22 +12,19 @@
                                                         {% if node.is_root_node or node.parent == node.get_root %}
                                                                 {% if node.is_root_node %}
                                                                         <span class="root">
-                                                                                <i class="fa fa-minus">
-                                                                                        {{node.name}}
-                                                                                </i>
+                                                                                {% icon "fa-minus fa-lg" %}
+                                                                                {{node.name}}
                                                                         </span>
                                                                   {% else %}
                                                                         <span class="root">
-                                                                                <i class="fa fa-plus">
-                                                                                        {{node.name}}
-                                                                                </i>
+                                                                                {% icon "fa-plus fa-lg" %}
+                                                                                {{node.name}}
                                                                         </span>
                                                                 {% endif %}
                                                           {% else %}
                                                                 <span>
-                                                                        <i class="fa fa-plus">
-                                                                                {{node.name}}
-                                                                        </i>
+                                                                        {% icon "fa-plus fa-lg" %}
+                                                                        {{node.name}}
                                                                 </span>
                                                         {% endif %}
                                                         <ul class="children">

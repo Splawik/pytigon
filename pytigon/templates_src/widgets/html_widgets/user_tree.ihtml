@@ -8,8 +8,8 @@
         ul class=root
             li class=show_node,,,style=left:-35px;
                 span class=root,,,style=height: 34px
-                    i class=fa fa-plus
-                        {{title}}
+                    {% icon "fa-plus fa-lg" %}
+                    {{title}}
 
                 ul class=children
                     {{data}}

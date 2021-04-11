@@ -144,3 +144,6 @@ body {
   top: 0px;
   left: 0px;
   width: 40px; }
+
+img.tablet_menu_icon, a.menu-href svg {
+  vertical-align: middle; }

@@ -345,7 +345,7 @@
                                                                                                                         {% block form_content_button %}
                                                                                                                                 {% if table_type != 'datatable' %}
                                                                                                                                         <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="refresh_frame">
-                                                                                                                                                <span class="fa fa-refresh"></span>
+                                                                                                                                                {% icon "fa-refresh fa-lg" %}
                                                                                                                                         </button>
                                                                                                                                 {% endif %}
                                                                                                                         {% endblock %}
@@ -355,7 +355,7 @@
                                                                                         </form>
                                                                                         {% if table_type == 'datatable' %}
                                                                                                 <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);">
-                                                                                                        <span class="fa fa-refresh"></span>
+                                                                                                        {% icon "fa-refresh fa-lg" %}
                                                                                                 </button>
                                                                                         {% endif %}
                                                                                 {% endblock %}
@@ -373,7 +373,7 @@
                                                                                         {% if table_type == 'datatable' %}
                                                                                                 <div class="dropdown">
                                                                                                         <button type="button" class="btn btn-secondary {{btn_size}} dropdown-toggle" data-toggle="dropdown">
-                                                                                                                <span class="fa fa-bars"></span>
+                                                                                                                {% icon "fa-bars fa-lg" %}
                                                                                                         </button>
                                                                                                         <div class="dropdown-menu">
                                                                                                                 <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
@@ -397,7 +397,7 @@
                                         <div class="new_row"></div>
                                         {% if table_type == 'datatable' and not get %}
                                                 <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-toggle="button">
-                                                        <i class="fa fa-times"></i>
+                                                        {% icon "fa-times fa-lg" %}
                                                 </button>
                                         {% endif %}
                                 {% endif %}
