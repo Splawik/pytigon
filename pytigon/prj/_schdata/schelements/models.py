@@ -227,6 +227,34 @@ class Element(TreeModel):
             parent = parent.parent
         return p
     
+    def get_children(self, child_type):
+        ret = []
+        object_list = Element.objects.filter(parent=self)
+        for child in object_list:
+            if child.type == child_type:
+                ret.append(child)
+            else:
+                x = child.get_children(child_type)
+                if x:
+                    ret.extend(list(x))
+        return ret
+    
+    
+    @staticmethod
+    def get_children_for_element(parent_code, child_type):
+        object_list = Element.objects.filter(code=parent_code)
+        if len(object_list)>0:
+            return object_list[0].get_children(child_type)
+        return []
+    
+    @staticmethod
+    def limit_choices(parent_code, child_type):
+        ids = []
+        objects = Element.get_children_for_element(parent_code, child_type)
+        for obj in objects:
+            ids.append(obj.id)
+        return Q(id__in=ids)
+    
     def path(self):
         p = self.parents()
         n=""
@@ -1007,6 +1035,7 @@ class Account(TreeModel):
     type2 = models.CharField('Type 2', null=True, blank=True, editable=True, choices=account_type_choice_2,max_length=1)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=32)
     description = models.CharField('Description', null=False, blank=False, editable=True, max_length=256)
+    correctness_rule = models.CharField('Correctness rule', null=True, blank=True, editable=True, max_length=256)
     root_classifier1 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 1', related_name='baseaccount_rc1_set')
     root_classifier2 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 2', related_name='baseaccount_rc2_set')
     root_classifier3 = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Root classifier 3', related_name='baseaccount_rc3_set')
@@ -1075,6 +1104,7 @@ class AccountState( models.Model):
             s+=self.subcode
         s+="("+self.element.name+")"
         return s
+    
     
     @staticmethod    
     def get_account_state(target=None, account=None, element=None, classifier1value=None, classifier2value=None, classifier3value=None, subcode=None, period=None, q=None):
@@ -1173,6 +1203,24 @@ class AccountState( models.Model):
         return result
     
     
+    def save(self, *args, **kwargs):
+        if self.parent.correctness_rule:
+            x = self.parent.correctness_rule.split(":")
+            if len(x)>1:
+                expression = x[0]
+                error_txt = x[1]
+            else:
+                expression = x[0]
+                error_txt = "The validation rule is not ensured: " + self.parent.correctness_rule
+                
+            s = expression.replace("DEBIT", str(self.debit)).replace("CREDIT", str(self.credit))
+            if self.period:
+                s = s.replace("PERIOD", self.period)
+            ret = eval(s)
+            if not ret:
+                raise ValueError(error_txt)
+        super().save(*args, **kwargs)
+    
 admin.site.register(AccountState)
 
 
@@ -1260,15 +1308,7 @@ class AccountOperation( models.Model):
         classifier3values = ( state.classifier3value, None) if state.classifier3value else (None,)
         periods = (state.period, None) if state.period else (None, )
         subcodes = (state.subcode, None) if state.subcode and with_subcode else (None, )
-        
-        print("B1", targets)
-        print("B2", classifier1values)
-        print("B3", classifier2values)
-        print("B4", classifier3values)
-        print("B5", periods)
-        print("B6", subcodes)
-        print("B7", debit, credit)
-        
+            
         for target in targets:
             for classifier1value in classifier1values:
                 for classifier2value in classifier2values:
@@ -1282,46 +1322,50 @@ class AccountOperation( models.Model):
     
     
     def update_accounts_state(self, debit, credit):
-        print("A1")
         state = self.account_state
         account = state.parent
-        print("A2")
         self._update_account_state(account, state, debit, credit, True)
         account = account.parent
-        print("A3")
         while account:
-            print("A4")
             self._update_account_state(account, state, debit, credit, False)
             account = account.parent
-        print("A5")
     
     def confirm(self):
         ret = False
-        with transaction.atomic():                
-            self.refresh_from_db()
-            if not self.enabled:
-                self.enabled = True
-                if self.sign > 0:
-                    self.update_accounts_state(0, self.amount)
-                else:
-                    self.update_accounts_state(self.amount, 0)
-                self.save()
-                ret = True
+        self.refresh_from_db()
+        if not self.enabled:
+            self.enabled = True
+            if self.sign > 0:
+                self.update_accounts_state(0, self.amount)
+            else:
+                self.update_accounts_state(self.amount, 0)
+            self.save()
+            ret = True
         return ret
     
+    def atomic_confirm(self):
+        ret = False
+        with transaction.atomic():                
+            ret = self.confirm()
+        return ret
     
     def cancel_confirmation(self):
         ret = False
+        self.refresh_from_db()
+        if self.enabled:
+            self.enabled = False
+            if self.sign > 0:
+                self.update_accounts_state(0, -1 * self.amount)
+            else:
+                self.update_accounts_state(-1 * self.amount, 0)
+            self.save()
+            ret = True
+        return ret
+    
+    def atomic_cancel_confirmation(self):
+        ret = False
         with transaction.atomic():                
-            self.refresh_from_db()
-            if self.enabled:
-                self.enabled = False
-                if self.sign > 0:
-                    self.update_accounts_state(0, -1 * self.amount)
-                else:
-                    self.update_accounts_state(-1 * self.amount, 0)
-                self.save()
-                ret = True
+            ret = self.cancel_confirmation()
         return ret
     
 admin.site.register(AccountOperation)

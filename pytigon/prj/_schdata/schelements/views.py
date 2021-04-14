@@ -25,6 +25,7 @@ import datetime
 
 from django.urls import resolve
 from django.conf import settings
+from django.db import transaction
 
 from pytigon_lib.schtools.tools import content_to_function
 from pytigon_lib.schdjangoext.fastform import form_from_str
@@ -79,7 +80,12 @@ def change_status(request, pk, action='accept'):
                 doc_status = models.DocHeadStatus()
                 doc_status.parent = doc_head
 
-                errors = fun(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form)
+                try:
+                    with transaction.atomic(): 
+                        errors = fun(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form)
+                except ValueError as err:
+                    errors = err.args
+
                 if not errors:
                     if action_name and action_name != doc_head.status:
                         doc_head.status = action_name
@@ -94,7 +100,7 @@ def change_status(request, pk, action='accept'):
 
                     return actions.update_row_ok(request, int(doc_head.id), str(doc_head))
                 else:
-                    return { 'error': errors, 'form': form, 'doc_head': doc_head, 'doc_type': doc_type, 'doc_reg': doc_reg, 'reg_status': reg_status, 'action_name': action_name, }
+                    return { 'errors': errors, 'form': form, 'doc_head': doc_head, 'doc_type': doc_type, 'doc_reg': doc_reg, 'reg_status': reg_status, 'action_name': action_name, }
         if not form:
             if form_class:
                 form = form_class()

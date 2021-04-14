@@ -7,20 +7,24 @@
 
 %% all
     %with show_form=True form_edit=True
+        % if errors:
+            meta name=RETURN,,,content=$$RETURN_HTML_ERROR
         {{ block.super }}
 
 %% form_action
     {{request.path}}?x1={{ action_name }}
 
 %% row_edit_form    
-    % if error:
-        {{ error|safe }}
+    % if errors:
+        % for error in errors:
+            div class=alert alert-secondary,,,role=alert
+                {{ error|safe }}
     % else:
         % if description:
             {{ description|safe }}
         % else:
             h3..._(Are you sure you want to accept the document)? <br>
             h4..._(You accept the status): {{ action_name }}
-    br    
     % if form:
+        br    
         % form:

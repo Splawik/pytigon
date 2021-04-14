@@ -243,6 +243,22 @@ def table_loadeddata(event):
             )
         elif dt == "$$RETURN_ERROR":
             refresh_ajax_frame(event.srcElement if event.srcElement else event.data_source , "error", event.data)
+        elif dt == "$$RETURN_HTML_ERROR":
+            if isinstance(event.data, str):
+                txt = event.data
+            else:
+                txt = event.data.innerHTML
+            options = {
+                "title": "Error!",
+                "html": txt,
+                'icon': 'error',
+                'buttonsStyling': False,
+                'showCancelButton': False,
+                'customClass': {
+                    'confirmButton': 'btn btn-primary btn-lg',
+                },
+            }
+            Swal.fire(options)
         elif dt in ("$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"):
             try:
                 if isinstance(event.data, str):

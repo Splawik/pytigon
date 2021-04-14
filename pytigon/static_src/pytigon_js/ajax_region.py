@@ -400,6 +400,22 @@ def refresh_ajax_frame(
                     window.open().document.write(data.innerHTML)
             elif dt == "$$RETURN_REFRESH_AUTO_FRAME":
                 auto_frame_init(frame)
+            elif dt == "$$RETURN_HTML_ERROR":
+                if isinstance(data, str):
+                    txt = data
+                else:
+                    txt = data.innerHTML
+                options = {
+                    "title": "Error!",
+                    "html": txt,
+                    'icon': 'error',
+                    'buttonsStyling': False,
+                    'showCancelButton': False,
+                    'customClass': {
+                        'confirmButton': 'btn btn-primary btn-lg',
+                    },
+                }
+                Swal.fire(options)
             else:
                 mount_html(frame, data, link)
 

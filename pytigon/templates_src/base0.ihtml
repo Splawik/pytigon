@@ -16,7 +16,7 @@
             meta http-equiv=X-UA-Compatible,,,content=IE=edge
             
             %if form:
-                %if form.errors
+                %if form.errors or errors
                     meta name=target,,,content=_self
 
             title

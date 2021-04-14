@@ -4,6 +4,9 @@
 {% load exsyntax %}
 {% block all %}
         {% with show_form=True form_edit=True %}
+                {% if errors %}
+                        <meta name="RETURN" content="$$RETURN_HTML_ERROR" />
+                {% endif %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -11,8 +14,12 @@
         {{request.path}}?x1={{ action_name }}
 {% endblock %}
 {% block row_edit_form %}
-        {% if error %}
-                {{ error|safe }}
+        {% if errors %}
+                {% for error in errors %}
+                        <div class="alert alert-secondary" role="alert">
+                                {{ error|safe }}
+                        </div>
+                {% endfor %}
           {% else %}
                 {% if description %}
                         {{ description|safe }}
@@ -21,8 +28,8 @@
                         <h4>You discard the status: {{ action_name }}</h4>
                 {% endif %}
         {% endif %}
-        <br />
         {% if form %}
+                <br />
                 {% form %}
                 {% endform %}
         {% endif %}

@@ -1470,7 +1470,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     link = get_ajax_link(element, region_name);
     loading = new Loading(element);
     _callback = (function flx__callback (data) {
-        var dt, elem;
+        var dt, elem, options, txt;
         loading.stop();
         loading.remove();
         dt = data_type(data);
@@ -1502,6 +1502,14 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             }
         } else if (_pyfunc_op_equals(dt, "$$RETURN_REFRESH_AUTO_FRAME")) {
             auto_frame_init(frame);
+        } else if (_pyfunc_op_equals(dt, "$$RETURN_HTML_ERROR")) {
+            if ((Object.prototype.toString.call(data).slice(8,-1).toLowerCase() === 'string')) {
+                txt = data;
+            } else {
+                txt = data.innerHTML;
+            }
+            options = ({title: "Error!", html: txt, icon: "error", buttonsStyling: false, showCancelButton: false, customClass: ({confirmButton: "btn btn-primary btn-lg"})});
+            Swal.fire(options);
         } else {
             mount_html(frame, data, link);
         }
@@ -2879,13 +2887,21 @@ init_table = function flx_init_table (table, table_type) {
 };
 
 table_loadeddata = function flx_table_loadeddata (event) {
-    var _data, _update, datatable, dt, link, pk, post, table, url;
+    var _data, _update, datatable, dt, link, options, pk, post, table, txt, url;
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {
         dt = data_type(event.data);
         if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
             ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
         } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
             refresh_ajax_frame((_pyfunc_truthy(event.srcElement))? (event.srcElement) : (event.data_source), "error", event.data);
+        } else if (_pyfunc_op_equals(dt, "$$RETURN_HTML_ERROR")) {
+            if ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string')) {
+                txt = event.data;
+            } else {
+                txt = event.data.innerHTML;
+            }
+            options = ({title: "Error!", html: txt, icon: "error", buttonsStyling: false, showCancelButton: false, customClass: ({confirmButton: "btn btn-primary btn-lg"})});
+            Swal.fire(options);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"])) {
             try {
                 if ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string')) {
