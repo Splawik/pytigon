@@ -21,6 +21,7 @@ from schtools.models import *
 
 
 
+import copy
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from django.template.loader import select_template
 import datetime
@@ -127,12 +128,13 @@ class Element(TreeModel):
 
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     type = models.CharField('Element type', null=False, blank=False, editable=True, choices=element_type_choice,max_length=8)
+    code = models.CharField('Code', null=True, blank=True, editable=True, unique=True,max_length=16)
+    path = models.CharField('Path', null=True, blank=True, editable=True, max_length=256)
+    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1', limit_choices_to=limit_element1)
     grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2', limit_choices_to=limit_element2)
     grand_parent3 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 3', related_name='grandparent3', limit_choices_to=limit_element3)
     grand_parent4 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 4', related_name='grandparent4', limit_choices_to=limit_element4)
-    code = models.CharField('Code', null=True, blank=True, editable=True, max_length=16)
-    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     key =  models.ForeignKey('auth.Group', on_delete=models.CASCADE, null=True, blank=True,)
     key_path = models.CharField('Key path', null=True, blank=True, editable=False, max_length=256)
     description = models.CharField('Description', null=True, blank=True, editable=True, max_length=64)
@@ -144,18 +146,34 @@ class Element(TreeModel):
     
     
     def save(self, *argi, **argv):
+        if not self.code:
+            object_list = Element.objects.filter(type=self.type, code__startswith=self.type).order_by('-id')
+            if len(object_list)>0:
+                x = object_list[0].code.split('-')[-1]
+                try:
+                    i = int(x) + 1
+                except:
+                    i = 1
+                self.code = self.type+"-"+str(i)
+            else:
+                self.code = self.type+"-1"
+    
+        path = self.code
         if self.key:
             key_path = self.key.name
         else:
             key_path = ""
+    
         tab = self.parents()
         for pos in tab:
+            path = pos.code + "/" + path
             if pos.key:
                 if key_path:
                     key_path = pos.key.name + '/' + key_path
                 else:
                     key_path = pos.key.name
-        
+    
+        self.path = path
         self.key_path = key_path
         
         super().save(*argi, **argv)
@@ -227,7 +245,7 @@ class Element(TreeModel):
             parent = parent.parent
         return p
     
-    def get_children(self, child_type):
+    def del_get_children(self, child_type):
         ret = []
         object_list = Element.objects.filter(parent=self)
         for child in object_list:
@@ -238,6 +256,22 @@ class Element(TreeModel):
                 if x:
                     ret.extend(list(x))
         return ret
+    
+    
+    def q_for_children(self, child_type):
+        ret = []
+        ret.append(Q(parent=self))
+        object_list = list(Element.objects.filter(parent=self).exclude(type=child_type))
+        if len(object_list)>0:
+            for child in object_list:
+                    x = child.get_children(child_type)
+                    if x:
+                        ret.extend(list(x))
+        return ret
+    
+    def get_children(self, child_type):
+        qq = self.q_for_children(child_type)
+        return Element.objects.filter(*qq)
     
     
     @staticmethod
@@ -764,6 +798,7 @@ class DocItem(JSONModel):
 
     parent = ext_models.PtigHiddenForeignKey(DocHead, on_delete=models.CASCADE, null=False, blank=False, editable=False, verbose_name='Parent', )
     parent_item = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=False, verbose_name='Parent item', )
+    owner = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Owner', related_name="owners")
     order = models.IntegerField('Order', null=False, blank=False, editable=False, default=1,)
     item = ext_models.PtigForeignKey(Element, on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Item', )
     amount = models.DecimalField('Amount', null=True, blank=True, editable=True, max_digits=16, decimal_places=2)
@@ -885,53 +920,74 @@ class DocItem(JSONModel):
             else:
                 t = self.parent.doc_type_parent.parent.name
                 name = t.lower()+"docitem"
-                if hasattr(self, name):
-                    print("OK")
-                    return getattr(self, name)
-                print("NOT OK")
+                obj2 = copy.copy(self)
+                obj2.__class__ =  ContentType.objects.get(model=name).model_class()
+                return obj2
         return self
     
     def get_period(self):
         return "%04d-%02d" % (self.parent.date.year, self.parent.date.month)
     
     def new_account_operation(self, target, account_name, description, sign, amount, element, classifier1value=None, classifier2value=None, classifier3value=None, subcode=None, payment=None, save=True):
-        account = Account.objects.get(name=account_name)
-        period = self.get_period()
-        object_list = AccountState.objects.filter(
-            parent=account, 
-            element=element, 
-            target=target, 
-            classifier1value = classifier1value, 
-            classifier2value = classifier2value, 
-            classifier3value = classifier3value,
-            period = period
-        )
-        if object_list.count() > 0:
-            object = object_list[0]
+        if subcode == '*':
+            account = Account.objects.get(name=account_name)
+            object_list = AccountState.get_account_state(target, account, element, classifier1valu, classifier2value, classifier3value, "*", None)
+            subcode_sum = object_list.values('subcode').annotate(csum=Sum('credit'), dsum=sum('debit')).order_by('subcode')
+            a = amount
+            ret = []
+            for s in subcode_sum:
+                subcode2 = s['subcode']
+                c = s['credit']
+                d = s['debit']
+                b = d - s
+                if b>a:
+                    a2 = a
+                    a = 0
+                else:
+                    a2 = b
+                    a -= b
+                x = self.new_account_operation(target, account_name, description, sign, a2, element, classifier1value, classifier2value, classifier3value, subcode2, payment, save)
+                ret.append(x)
+                if a == 0:
+                    return ret
         else:
-            object = AccountState()
-            object.parent = account
-            object.element = element
-            object.target = target
-            object.classifier1value = classifier1value
-            object.classifier2value = classifier2value
-            object.classifier3value = classifier3value
-            object.period = period
-            object.debit = 0
-            object.credit = 0
-            object.agregate = False
-            object.save()
-        account_operation = AccountOperation()
-        account_operation.parent = self
-        account_operation.description = description
-        account_operation.payment = payment
-        account_operation.account_state = object
-        account_operation.sign = sign
-        account_operation.amount = amount
-        account_operation.enabled = False
-        if save:
-            account_operation.save()
-        return account_operation
+            account = Account.objects.get(name=account_name)
+            period = self.get_period()
+            object_list = AccountState.objects.filter(
+                parent=account, 
+                element=element, 
+                target=target, 
+                classifier1value = classifier1value, 
+                classifier2value = classifier2value, 
+                classifier3value = classifier3value,
+                period = period
+            )
+            if object_list.count() > 0:
+                object = object_list[0]
+            else:
+                object = AccountState()
+                object.parent = account
+                object.element = element
+                object.target = target
+                object.classifier1value = classifier1value
+                object.classifier2value = classifier2value
+                object.classifier3value = classifier3value
+                object.period = period
+                object.debit = 0
+                object.credit = 0
+                object.agregate = False
+                object.save()
+            account_operation = AccountOperation()
+            account_operation.parent = self
+            account_operation.description = description
+            account_operation.payment = payment
+            account_operation.account_state = object
+            account_operation.sign = sign
+            account_operation.amount = amount
+            account_operation.enabled = False
+            if save:
+                account_operation.save()
+            return [account_operation,]
     
     
 admin.site.register(DocItem)
@@ -1088,6 +1144,7 @@ class AccountState( models.Model):
     element = models.ForeignKey(Element, on_delete=models.CASCADE, null=False, blank=False, editable=True, verbose_name='Element', )
     debit = models.DecimalField('Debit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
     credit = models.DecimalField('Credit', null=False, blank=False, editable=True, max_digits=16, decimal_places=2)
+    zero_balance = models.BooleanField('None', null=True, blank=True, editable=True, default=True,)
     aggregate = models.NullBooleanField('Aggregate', null=False, blank=False, editable=True, default=False,)
     date_c = models.DateTimeField('Creation date', null=False, blank=False, editable=True, default=datetime.datetime.now,)
     
@@ -1219,6 +1276,10 @@ class AccountState( models.Model):
             ret = eval(s)
             if not ret:
                 raise ValueError(error_txt)
+        if self.debit == self.credit:
+            self.zero_balance = True
+        else:
+            self.zero_balance = False
         super().save(*args, **kwargs)
     
 admin.site.register(AccountState)

@@ -51,7 +51,7 @@
         {{ block.super }}
 {% endblock %}
 {% block list_row_actions %}
-        {% if object.status == "" or object.status == 'edit' %}
+        {% if object.status == "" or object.status == 'draft' %}
                 {% row_actions %}
                         edit-inline
                         delete
