@@ -28,7 +28,7 @@
                 {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
                 {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
                 {% block bootstrap_js %}
-                        {% jscript_link 'bootstrap/js/bootstrap.js' %}
+                        {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
                 {% endblock %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
@@ -110,8 +110,6 @@
                         {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
                 {% endblock %}
                 {% block theme_css_links %}
-                        {% comment %}
-                        {% endcomment %}
                         {% css_link 'themes/select2-material.css' %}
                 {% endblock %}
                 {% block theme_css_links_spec %}
@@ -346,7 +344,7 @@
         {% if table_type == 'datatable' %}
                 class="tabsort {%if not not_multiple_select %}{% else %}multiple-select {% endif %}flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
                 data-method="get"
-                data-url="{{table_path_and_filter}}json/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
+                data-url="{{table_path_and_filter}}{{target|replace:'form|json'}}/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
                 data-side-pagination="server"
                 data-pagination="true"
                 data-page-size="64"

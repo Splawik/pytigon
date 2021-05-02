@@ -199,7 +199,10 @@ window.ajax_post = ajax_post
 
 def ajax_json(url, data, complete, process_req=None):
     def _complete(data_in):
-        _data = JSON.parse(data_in)
+        try:
+            _data = JSON.parse(data_in)
+        except:
+            _data = data_in
         complete(_data)
 
     data2 = JSON.stringify(data)

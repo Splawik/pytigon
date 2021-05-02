@@ -254,7 +254,13 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
     process_req = (process_req === undefined) ? null: process_req;
     _complete = (function flx__complete (data_in) {
         var _data;
-        _data = JSON.parse(data_in);
+        try {
+            _data = JSON.parse(data_in);
+        } catch(err_3) {
+            {
+                _data = data_in;
+            }
+        }
         complete(_data);
         return null;
     }).bind(this);
@@ -1269,10 +1275,14 @@ label_floating_init = function flx_label_floating_init (dest_elem) {
     var _on_blur;
     _on_blur = function (e) {
         var test;
-        if ((_pyfunc_op_equals(e["type"], "focus") || (this.value.length > 0))) {
-            test = true;
+        if ((_pyfunc_op_equals(_pymeth_lower.call(this.tagName), "input"))) {
+            if ((_pyfunc_op_equals(e["type"], "focus") || (this.value.length > 0))) {
+                test = true;
+            } else {
+                test = false;
+            }
         } else {
-            test = false;
+            test = true;
         }
         (((jQuery(this).parents)(".form-group")).toggleClass)("focused", test);
         return null;

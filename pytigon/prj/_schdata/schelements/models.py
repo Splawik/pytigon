@@ -29,6 +29,7 @@ from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from pytigon_lib.schtools.tools import content_to_function
 from django.db.models import Q, Sum
+from django.apps import apps
 
 def limit_element1():
     return {}
@@ -372,14 +373,21 @@ class Element(TreeModel):
                     if t=='-':
                         return self
                     if t in s:
-                        return ContentType.objects.get(app_label=s[t]['app'], model=s[t]['table']).model_class()()
+                        model = apps.get_model(s[t]['app'], s[t]['table'])
+                        obj2 = copy.copy(self)
+                        obj2.__class__ = model
+                        return obj2
+                        #return ContentType.objects.get(app_label=s[t]['app'], model=s[t]['table']).model_class()()
                 else:
                     t = self.type
                     if t in s:
                         if hasattr(self, s[t]['table'].lower()):
-                            print("OK")
                             return getattr(self, s[t]['table'].lower())
-                        print("NOT OK")
+                        else:
+                            model = apps.get_model(s[t]['app'], s[t]['table'])
+                            obj2 = copy.copy(self)
+                            obj2.__class__ = model
+                            return obj2
         return self
     
     
@@ -920,9 +928,12 @@ class DocItem(JSONModel):
             else:
                 t = self.parent.doc_type_parent.parent.name
                 name = t.lower()+"docitem"
-                obj2 = copy.copy(self)
-                obj2.__class__ =  ContentType.objects.get(model=name).model_class()
-                return obj2
+                if hasattr(self, name):
+                    return getattr(self, name)
+                else:
+                    obj2 = copy.copy(self)
+                    obj2.__class__ =  ContentType.objects.get(model=name).model_class()
+                    return obj2
         return self
     
     def get_period(self):

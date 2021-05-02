@@ -266,4 +266,34 @@ def view_elements(request, code):
 
 
 
+
+
+
+
+
+def view_elements_as_tree(request, code,template):
+    
+    #if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
+    #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
+    #else:
+    #    url_base = '/'
+    
+    id = 0
+    
+    if code:
+        objs = models.Element.objects.filter(code=code)
+        if len(objs)>0:
+            id = objs[0].pk
+    
+    if template:
+        target = 'form__'+template
+    else:
+        target = 'form'
+            
+    href2 = make_href('/schelements/table/Element/%d/%d/%s/tree/?only_content' % (id,id,target), request.get_full_path())
+    return HttpResponseRedirect(href2)
+    
+
+
+
  

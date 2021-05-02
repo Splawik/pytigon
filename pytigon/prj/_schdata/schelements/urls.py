@@ -15,6 +15,7 @@ urlpatterns = [
     gen_row_action('DocHead', 'approve', views.approve),
     gen_row_action('DocHead', 'discard', views.discard),
     path('view_elements/<slug:code>/', views.view_elements, {}),
+    path('view_elements_as_tree/<slug:code>/<slug:template>/', views.view_elements_as_tree, {}),
     
     
     

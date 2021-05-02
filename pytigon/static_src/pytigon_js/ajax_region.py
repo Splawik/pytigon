@@ -169,10 +169,13 @@ register_mount_fun(moveelement_init)
 
 def label_floating_init(dest_elem):
     def _on_blur(self, e):
-        if e["type"] == "focus" or self.value.length > 0:
-            test = True
+        if self.tagName.lower() == 'input':
+            if e["type"] == "focus" or self.value.length > 0:
+                test = True
+            else:
+                test = False
         else:
-            test = False
+            test = True
         jQuery(self).parents(".form-group").toggleClass("focused", test)
 
     jQuery(dest_elem).find(".label-floating .form-control").on(

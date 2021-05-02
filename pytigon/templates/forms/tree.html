@@ -26,26 +26,26 @@
                                 <span class="tree-home">
                                         {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
                                                 {% if base_filter %}
-                                                        {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:base_filter|append_str:'/form/{{gtree}}/' %}
+                                                        {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:base_filter|append_str:'/{{target}}/{{gtree}}/' %}
                                                   {% else %}
-                                                        {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:'0/form/{{gtree}}/' %}
+                                                        {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:'0/{{target}}/{{gtree}}/' %}
                                                 {% endif %}
                                           {% else %}
-                                                {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:'0/form/tree/' tag_class="+disabled" %}
+                                                {% action "home-refresh_page" "/" url=table_path_and_base_filter|append_str:'0/{{target}}/tree/' tag_class="+disabled" %}
                                         {% endif %}
                                 </span>
                           {% else %}
                                 {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
-                                        <CTRL-BUTTON name="back" href="{{table_path_and_base_filter}}-{{parent_pk}}/form/{{ro}}{{gtree}}/" target="refresh_page" src="wx.ART_GO_BACK" label="Back"></CTRL-BUTTON>
+                                        <CTRL-BUTTON name="back" href="{{table_path_and_base_filter}}-{{parent_pk}}/{{target}}/{{ro}}{{gtree}}/" target="refresh_page" src="wx.ART_GO_BACK" label="Back"></CTRL-BUTTON>
                                   {% else %}
                                         <CTRL-BUTTON name="back" href="_disable" target="_self" src="wx.ART_GO_BACK" label="Back"></CTRL-BUTTON>
                                 {% endif %}
-                                <a href="{{table_path_and_base_filter}}0/form/{{gtree}}/" class="button btn btn-secondary">/</a>
+                                <a href="{{table_path_and_base_filter}}0/{{target|replace:"json|form"}}/{{gtree}}/" class="button btn btn-secondary">/</a>
                         {% endif %}
                         <span class="tree-toolbar">
                                 {% for pos in parent_obj|get_all_model_parents reversed %}
                                         {% if not forloop.last %}
-                                                {% action "back-refresh_page" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/form/{{gtree}}/' %}
+                                                {% action "back-refresh_page" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{target}}/{{gtree}}/' %}
                                         {% endif %}
                                 {% endfor %}
                         </span>
@@ -68,9 +68,9 @@
                                 {% with gtree=get|get_or_tree %}
                                         {% if vtype == 'tree' or vtype == 'gettree' %}
                                                 {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
-                                                        {% action "back-refresh_page" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/' %}
+                                                        {% action "back-refresh_page" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{target}}/{{ro}}{{gtree}}/' %}
                                                   {% else %}
-                                                        {% action "back-refresh_page" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/form/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'" %}
+                                                        {% action "back-refresh_page" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{target}}/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'" %}
                                                 {% endif %}
                                         {% endif %}
                                 {% endwith %}
@@ -83,7 +83,7 @@
         {% if vtype == 'tree' or vtype == 'gettree' %}
                 {% with gtree=get|get_or_tree %}
                         {% if object|model_has_children %}
-                                <a href="{{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/" target="refresh_page" class="button btn btn-outline-primary" name="+">
+                                <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="refresh_page" class="button btn btn-outline-primary" name="+">
                                         {% icon "fa-plus fa-lg" %}
                                 </a>
                           {% else %}
@@ -92,7 +92,7 @@
                                                 {% icon "fa-ban fa-lg" %}
                                         </span>
                                   {% else %}
-                                        <a href="{{table_path_and_base_filter}}{{object.id}}/form/{{ro}}{{gtree}}/" target="refresh_page" class="button btn" name="+">
+                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="refresh_page" class="button btn" name="+">
                                                 {% icon "fa-plus-square-o fa-lg" %}
                                         </a>
                                 {% endif %}
