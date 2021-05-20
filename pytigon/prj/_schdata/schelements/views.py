@@ -14,6 +14,7 @@ from pytigon_lib.schviews.form_fun import form_with_perms
 from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
+from pytigon_lib.schdjangoext import formfields as ext_form_fields
 from pytigon_lib.schviews import actions
 
 from django.utils.translation import ugettext_lazy as _
@@ -26,10 +27,12 @@ import datetime
 from django.urls import resolve
 from django.conf import settings
 from django.db import transaction
+from django_select2.forms import HeavySelect2Widget, ModelSelect2Widget
+from django.core.validators import int_list_validator
 
 from pytigon_lib.schtools.tools import content_to_function
 from pytigon_lib.schdjangoext.fastform import form_from_str
-
+from django.db.models import Q, F
 
 def year_ago():
     dt = datetime.date.today()    
@@ -146,6 +149,62 @@ class _FilterFormDocHead(forms.Form):
 
 def view__filterformdochead(request, *argi, **argv):
     return PFORM(request, _FilterFormDocHead, 'schelements/form_filterformdochead.html', {})
+
+
+class _FilterFormAccountState(forms.Form):
+    account_target = ext_form_fields.ModelSelect2Field(label=_('Target'), required=False, queryset=models.Element.objects.filter(type='O-DIV'), search_fields=['name__istartswith'], attrs={'data-minimum-input-length': 0})
+    account = ext_form_fields.ModelSelect2Field(label=_('Account'), required=False, queryset=models.Account.objects.all(), search_fields=['name__istartswith'], attrs={'data-minimum-input-length': 0})
+    classifier1 = forms.CharField(label=_('Classifier 1'), required=False, max_length=None, min_length=None)
+    classifier2 = forms.CharField(label=_('Classifier 2'), required=False, max_length=None, min_length=None)
+    classifier3 = forms.CharField(label=_('classifier3'), required=False, max_length=None, min_length=None)
+    subcode = forms.CharField(label=_('Subcode'), required=False, max_length=None, min_length=None)
+    period = forms.CharField(label=_('Period'), required=False, max_length=None, min_length=None)
+    not_null = forms.BooleanField(label=_('Not null'), required=False, )
+    not_empty = forms.BooleanField(label=_('Not empty'), required=False, )
+    analytical = forms.BooleanField(label=_('Analytical'), required=False, )
+    
+    def process(self, request, queryset=None):
+    
+        return self.process_empty_or_invalid(request, queryset)
+    
+    def process_empty_or_invalid(self, request, queryset):
+        if not self.is_bound:
+            return queryset
+            
+        if self.data['account_target']:
+            queryset = queryset.filter(target__id = int(self.data['account_target'][0]))
+        if self.cleaned_data['account']:
+            pass
+        if self.cleaned_data['classifier1']:
+            pass
+        if self.cleaned_data['classifier2']:
+            pass
+        if self.cleaned_data['classifier3']:
+            pass
+        if self.cleaned_data['subcode']:
+            pass
+    
+        if self.cleaned_data['period']:
+            if self.cleaned_data['period'] == '*':
+                pass
+            else:
+                queryset = queryset.filter(period=self.cleaned_data['period'])
+        else:
+            queryset = queryset.filter(Q(period__isnull=True)|Q(period=""))
+    
+        if self.cleaned_data['not_null']:
+            queryset = queryset.exclude(debit=F('credit'))
+    
+        if self.cleaned_data['not_empty']:
+            queryset = queryset.exclude(debit=0,credit=0)
+    
+        if self.cleaned_data['analytical']:
+            queryset = queryset.filter(aggregate=False)
+    
+        return queryset
+
+def view__filterformaccountstate(request, *argi, **argv):
+    return PFORM(request, _FilterFormAccountState, 'schelements/form_filterformaccountstate.html', {})
 
 
 
@@ -271,7 +330,7 @@ def view_elements(request, code):
 
 
 
-def view_elements_as_tree(request, code,template):
+def view_elements_as_tree(request, code,filter,template):
     
     #if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
     #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
@@ -280,7 +339,7 @@ def view_elements_as_tree(request, code,template):
     
     id = 0
     
-    if code:
+    if code and code != '-':
         objs = models.Element.objects.filter(code=code)
         if len(objs)>0:
             id = objs[0].pk
@@ -290,7 +349,7 @@ def view_elements_as_tree(request, code,template):
     else:
         target = 'form'
             
-    href2 = make_href('/schelements/table/Element/%d/%d/%s/tree/?only_content' % (id,id,target), request.get_full_path())
+    href2 = make_href('/schelements/table/Element/%d/%s/%s/tree/?only_content' % (id,filter,target), request.get_full_path())
     return HttpResponseRedirect(href2)
     
 

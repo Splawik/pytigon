@@ -38,6 +38,9 @@ import pytigon
 from django.conf import settings
 import django.db.models.fields as fields
 import django.db.models.fields.related as related
+from django.forms import fields as form_fields
+from django.forms import models as form_model_fields
+from pytigon_lib.schdjangoext import formfields as ext_form_fields
 
 field_default = {'null':False,'blank':False,'editable':True,}
 field_defaults = {
@@ -110,7 +113,14 @@ widgets = [
     "css_link '[[href]]'",
     ]
     
-    
+
+FormField_CHOICES = list([ (f,f) for f in dir(form_fields) if f.endswith('Field') and f not in ['BaseTemporalField', 'Field', 'BoundField' ] ])
+for f in dir(form_model_fields) + dir(ext_form_fields):
+    if f.endswith('Field') and f != 'Field':
+        if not (f,f) in FormField_CHOICES:
+            FormField_CHOICES.append((f,f))
+FormField_CHOICES.append(("UserField","UserField"))
+
 def apppack():
     ret = []
     for ff in os.listdir(settings.PRJ_PATH):
@@ -173,7 +183,7 @@ Url_CHOICES = [
     
     ]
 
-FormField_CHOICES = [
+__FormField_CHOICES = [
     ("BooleanField","BooleanField"),
     ("CharField","CharField"),
     ("ChoiceField","ChoiceField"),
@@ -1161,10 +1171,10 @@ class SChFormField( models.Model):
     required = models.NullBooleanField('Required', null=True, blank=True, editable=True, )
     label = models.CharField('Label', null=False, blank=False, editable=True, max_length=64)
     initial = models.CharField('Initial', null=True, blank=True, editable=True, max_length=256)
-    widget = models.CharField('Widget', null=True, blank=True, editable=True, max_length=64)
+    widget = models.CharField('Widget', null=True, blank=True, editable=True, max_length=256)
     help_text = models.CharField('Help text', null=True, blank=True, editable=True, max_length=256)
     error_messages = models.CharField('Error messages', null=True, blank=True, editable=True, max_length=64)
-    param = models.CharField('Param', null=True, blank=True, editable=True, max_length=64)
+    param = models.CharField('Param', null=True, blank=True, editable=True, max_length=1024)
     
 
     def init_new(self, request, view, param=None):
@@ -1180,11 +1190,15 @@ class SChFormField( models.Model):
         else:
             return None
     
-    def as_declaration(self):
+    def as_declaration(self):    
         if self.type == 'UserField':
-            return self.param        
-        ret = "%s = forms.%s(label=_('%s'), required=%s, " % \
-                (self.name, self.type, self.label, self.required)
+            return self.param
+        if hasattr(ext_form_fields, self.type):
+            ret = "%s = ext_form_fields.%s(label=_('%s'), required=%s, " % \
+                    (self.name, self.type, self.label, self.required)        
+        else:
+            ret = "%s = forms.%s(label=_('%s'), required=%s, " % \
+                    (self.name, self.type, self.label, self.required)
         if self.initial:
             ret+= "initial=%s," % self.initial
         if self.widget and len(self.widget)>0:

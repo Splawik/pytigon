@@ -1,3 +1,4 @@
+pytigon-lib
 Twisted[tls,http2]
 asgiref
 channels
@@ -28,13 +29,11 @@ django-filter
 html5lib
 hypercorn
 ldap3
-libsass
 markdown
 netifaces
 polib
 pyexcel_odsr
 pyquery
-pytigon-lib
 requests
 unidecode
 wasmer

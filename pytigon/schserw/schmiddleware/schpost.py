@@ -22,6 +22,22 @@ class ViewRequests(object):
         print(request.method, request.path)
 
 
+
+def view_post(get_response):
+    def middleware(request):
+        try:
+            if request.method == 'POST':
+                print('=================== POST ======================')
+                print(request.path)
+                print(request.POST)
+                print('===============================================')
+        except:
+            pass
+        response = get_response(request)
+        return response
+    return middleware
+
+
 class ViewPost(object):
     def process_request(self, request):
         try:

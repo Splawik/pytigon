@@ -316,7 +316,15 @@ div.dialog-form div.container-fluid {
 .form-inline .form-group {
   margin-top: 1rem; }
   .form-inline .form-group .form-control {
-    max-height: 30px; }
+    max-height: 42px; }
+  .form-inline .form-group .select2field {
+    width: 20rem; }
+  .form-inline .form-group .choicefield {
+    width: 20rem; }
+  .form-inline .form-group .modelselect2field {
+    width: 20rem; }
+  .form-inline .form-group .abc-checkbox {
+    padding-left: 17px; }
 
 .form-inline .form-group .datefield input {
   width: 120px; }
@@ -607,8 +615,7 @@ div.daterangepicker .drp-buttons {
 
 button.select2-selection__clear {
   position: absolute;
-  right: -70px;
-  bottom: 13px; }
+  right: -13px; }
 
 form div.get_row span.select2-container {
   margin-left: 5px; }

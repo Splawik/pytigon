@@ -159,6 +159,7 @@ if "EMBEDED_DJANGO_SERVER" in environ:
         "django.middleware.locale.LocaleMiddleware",
         "pytigon.schserw.schmiddleware.csrf.DisableCSRF",
         "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
+        #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 else:
     MIDDLEWARE = [
@@ -171,6 +172,7 @@ else:
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
         "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
+        #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 
 # if DEBUG:
@@ -203,7 +205,6 @@ INSTALLED_APPS = [
     "graphene_django",
     "django_filters",
     "compressor",
-    "django_q",
     "log_viewer",
 ]
 
@@ -222,6 +223,12 @@ if (
     and platform_name() != "Emscripten"
 ):
     INSTALLED_APPS.append("channels")
+
+try:
+    from multiprocessing import synchronize
+    INSTALLED_APPS.append("django_q")
+except:
+    pass
 
 DEFAULT_AUTO_FIELD  = 'django.db.models.AutoField'
 
@@ -430,7 +437,7 @@ else:
         'default': {
             'BACKEND': 'diskcache.DjangoCache',
             'LOCATION': TEMP_PATH,
-            'TIMEOUT': 300,
+            'TIMEOUT': 3000,
             'OPTIONS': {
                 'size_limit': 2 ** 30   # 1 gigabyte
             },
