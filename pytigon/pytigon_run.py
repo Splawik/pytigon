@@ -191,8 +191,8 @@ def run(param=None):
             os.chdir(path3)
             options = []
             if not "-b" in argv[2:]:
-                address = "0.0.0.0:8000"
-                options = ["-b", "0.0.0.0:8000"]
+                address = "0.0.0.0"
+                options = ["-b", "0.0.0.0"]
             else:
                 id = argv[2:].index("-b")
                 if id >= 0:
@@ -203,10 +203,15 @@ def run(param=None):
 
             if platform_name() == "Android":
                 from daphne.cli import CommandLineInterface
-
                 CommandLineInterface.entrypoint()
             else:
-                from hypercorn.__main__ import main
+                try:
+                    from hypercorn.__main__ import main
+                except:
+                    from daphne.cli import CommandLineInterface
+                    CommandLineInterface.entrypoint()
+                    return
+
                 if "--with-gui" in argv:
                     sys.argv.remove("--with-gui")
 
