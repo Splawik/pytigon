@@ -34,7 +34,6 @@ netifaces
 polib
 pyexcel_odsr
 pyquery
-requests
 unidecode
 wasmer
 whitenoise
