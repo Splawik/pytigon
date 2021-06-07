@@ -18,7 +18,7 @@ from pytigon_lib.schhtml.parser import Parser
 import re
 from pytigon_lib.schtools.schjson import json_dumps
 import urllib.parse
-import requests
+import httpx
  
 
 
@@ -28,7 +28,7 @@ def download_task(cproxy=None, **kwargs):
     path = urllib.parse.urljoin(base_address, url)
     if cproxy:
         cproxy.log(url)
-    r = requests.get(path)
+    r = httpx.get(path)
     file_name = url.split('?')[0].split('/')[-1]
     with open("/tmp/"+file_name, "wb") as f:
         f.write(r.content)
@@ -98,7 +98,7 @@ def scan_html(cproxy=None, **kwargs):
             pass
     
         path = urllib.parse.urljoin(base_address, href)
-        r = requests.get(path)    
+        r = httpx.get(path)    
         p = r.text
         parser = _DownloadHTMLParser(href_list, download_list, history_list)
         msg("SCAN: " + path)

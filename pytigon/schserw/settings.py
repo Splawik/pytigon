@@ -33,6 +33,7 @@ if not prj_name:
     prj_name = "_schall"
 
 GEN_TIME = "0000.00.00 00:00:00"
+DEBUG_TOOLBAR = False
 
 if (
     sys.argv
@@ -144,6 +145,7 @@ TEMPLATES = [
             ],
             "builtins": ["pytigon.schserw.schsys.templatetags.defexfiltry"],
             "debug": DEBUG,
+            #"string_if_invalid": "Invalid varialbe: %s!",
         },
     }
 ]
@@ -174,10 +176,6 @@ else:
         "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
         #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
-
-# if DEBUG:
-#    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
-
 
 AUTHENTICATION_BACKENDS = (
     "graphql_jwt.backends.JSONWebTokenBackend",
@@ -214,8 +212,10 @@ if PLATFORM_TYPE != "webserver":
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
 
-# if DEBUG:
-#    INSTALLED_APPS.append("debug_toolbar")
+
+if DEBUG_TOOLBAR:
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    INSTALLED_APPS.append("debug_toolbar")
 
 if (
     not "PYTIGON_WITHOUT_CHANNELS" in os.environ

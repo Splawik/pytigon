@@ -1,3 +1,4 @@
+{% load exsyntax %}
 {% if is_initial %}
         {{ initial_text }}:
         <a href="{{ widget.value.url }}">{{ widget.value }}</a>
@@ -14,6 +15,6 @@
         {% if widget.value %}
                 <img class="img" src="data:image/jpeg;base64,{{widget.value}}"></img>
         {% endif %}
-        <i class="fa fa-upload"></i>
+        {% icon "fa-upload fa-lg" %}
 </label>
 

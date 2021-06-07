@@ -39,7 +39,7 @@
             % else:
                 {% icon "fa-link fa-lg" %}
             <span>{{item_info.app_title}}</span>
-            {% icon "fa-angle-left fa-lg pull-rigth" %}
+            {% icon "fa-angle-left fa-lg pull-right" %}
 
         </a>
 

@@ -774,9 +774,9 @@ def icon(class_str, width=None, height=None):
         x2 = x.split(' ',1)
         src = mhref("/static/icons/22x22/%s" % x2[0])
         if len(x2)>1:
-            return mark_safe("<img src='%s'></img>" % src)
-        else:
             return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+        else:
+            return mark_safe("<img src='%s'></img>" % src)
     elif class_str.startswith('client://'):
         x = class_str[9:]
         x2 = x.split(' ', 1)

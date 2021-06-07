@@ -44,7 +44,6 @@
 %% body_desktop
     % with ONLY_CONTENT=True:
         {{ block.super }}
-
 %% html_widgets_init
 
 %% body_footer

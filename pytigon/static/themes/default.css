@@ -1,4 +1,10 @@
 /* main settings */
+.body-body {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative; }
+
 .app_chose_title {
   color: gold !important;
   text-align: center;
@@ -37,6 +43,9 @@
 
 .dashboard #content {
   padding: 0px 10px; }
+
+.pull-right {
+  float: right; }
 
 /* Tab - close button on tab */
 #tabs2 {
@@ -132,6 +141,7 @@
   .tabsort_panel th.tree-id a, .table_panel th.tree-id a, .subform_content th.tree-id a {
     padding-left: 10px;
     padding-right: 10px;
+    margin-left: 0.4rem;
     margin-right: 8px; }
 
 div.bootstrap-table div.columns.float-right {

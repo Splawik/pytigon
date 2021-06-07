@@ -21,7 +21,7 @@ div.content {
 /* application structure */
 #menu {
   position: fixed;
-  width: 256px;
+  width: 296px;
   z-index: 999;
   background-color: #1e282c;
   height: 100vh;
@@ -35,7 +35,7 @@ img.tablet_menu_icon, a.menu-href svg {
   vertical-align: middle; }
 
 #panel {
-  margin-left: 256px; }
+  margin-left: 296px; }
 
 #menu:not(.show) + #panel {
   margin-left: 0px; }

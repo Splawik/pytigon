@@ -295,7 +295,6 @@
         div id=body_desktop,,,class=container-fluid tab-pane ajax-region ajax-frame win-content page,,,data-region=page
             {{block.super}}
 
-
 %% body_end
     % if standard_web_browser:
         {{ form.media.js }}
