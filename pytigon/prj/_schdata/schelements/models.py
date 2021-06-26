@@ -605,10 +605,10 @@ class DocHead(JSONModel):
                     names.append((x.app+"/"+x.name.replace('/','_')+"_dochead_list.html").lower())
                     x = x.get_parent()
                 
-                if 'target' in view.kwargs and view.kwargs['target'] == 'calendar':
+                if 'target' in view.kwargs and 'calendar' in view.kwargs['target']:
                     names2 = []
                     for name in names:
-                        names2.append(name.replace(".html", "_calendar.html"))
+                        names2.append(name.replace(".html", "_"+view.kwargs['target']+".html"))
                     names = names2
                 template = select_template(names)
                 names.append(view.template_name)

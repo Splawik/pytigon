@@ -25,6 +25,7 @@ graphene-django
 django-graphql-jwt
 django-q-email
 django-q
+croniter
 django-filter
 html5lib
 hypercorn

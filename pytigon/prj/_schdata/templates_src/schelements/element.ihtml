@@ -47,18 +47,18 @@
 
 
 %% all
-    % with table_type='datatable' title="Elements":
+    %with table_type='datatable' title="Elements":
         {{ block.super }}
 
 %% list_content_actions_new_row
     % if not readonly:
         % if parent_pk > 0:
-            % with buttons=parent.get_new_buttons:
+            % with buttons=parent_obj.get_new_buttons:
                 % if buttons:
                     % for button in buttons:
-                        % new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/%d/this/'|format:parent.id|append_str:button.type|append_str:"/add/"
+                        % new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/%d/this/'|format:parent_obj.id|append_str:button.type|append_str:"/add/"
                 % else:
-                    % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent.id
+                    % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent_obj.id
         % else
             % with buttons=model.get_root_new_buttons:
                 % if buttons:

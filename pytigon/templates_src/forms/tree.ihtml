@@ -36,9 +36,10 @@
                 a href={{table_path_and_base_filter}}0/{{target|replace:"json|form"}}/{{gtree}}/,,,class=button btn btn-secondary.../
 
             span class=tree-toolbar
-                %for pos in parent|get_all_model_parents reversed:
-                    % if not forloop.last:
-                        % action "back-refresh_page" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{target}}/{{gtree}}/'
+                % if not base_parent_pk:
+                    % for pos in parent|get_all_model_parents reversed:
+                        % if not forloop.last:
+                            % action "back-refresh_page" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{target}}/{{gtree}}/'
 
 
         %% list_content_actions_new_row

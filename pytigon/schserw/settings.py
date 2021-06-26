@@ -105,7 +105,8 @@ UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
-SECRET_KEY = "anawa"
+if DEBUG:
+    SECRET_KEY = "anawa"
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
@@ -313,6 +314,28 @@ if PRODUCTION_VERSION:
                                                                                                         '-task.log')
         LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace(
             '.log', '_task.log')
+
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'ERROR',
+                'propagate': False,
+            },
+        },
+    }
 
 LOG_VIEWER_FILES = ['pytigon.log', 'pytigon-err.log','pytigon-task.log','pytigon-err-task.log',]
 LOG_VIEWER_FILES_DIR = LOG_PATH
