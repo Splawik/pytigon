@@ -107,6 +107,9 @@ ADMIN_MEDIA_PREFIX = "/media/"
 
 if DEBUG:
     SECRET_KEY = "anawa"
+else:
+    if 'SECRET_KEY' in environ:
+        SECRET_KEY = environ['SECRET_KEY']
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
@@ -219,7 +222,7 @@ if DEBUG_TOOLBAR:
     INSTALLED_APPS.append("debug_toolbar")
 
 if (
-    not "PYTIGON_WITHOUT_CHANNELS" in os.environ
+    not "PYTIGON_WITHOUT_CHANNELS" in environ
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
@@ -450,7 +453,7 @@ CORS_ORIGIN_WHITELIST = ("null",)
 if platform_name() == "Android":
     CORS_ORIGIN_ALLOW_ALL = True
 
-CACHE_URL = os.environ.setdefault("CACHE_URL", "")
+CACHE_URL = environ.setdefault("CACHE_URL", "")
 if CACHE_URL:
     CACHES = {"default": django_cache_url.config()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
