@@ -53,12 +53,13 @@
 %% list_content_actions_new_row
     % if not readonly:
         % if parent_pk > 0:
-            % with buttons=parent_obj.get_new_buttons:
+            % with buttons=parent.get_new_buttons:
                 % if buttons:
                     % for button in buttons:
-                        % new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/%d/this/'|format:parent_obj.id|append_str:button.type|append_str:"/add/"
+                        % new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/%d/this/'|format:parent_pk|append_str:button.type|append_str:"/add/"
                 % else:
-                    % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent_obj.id
+                    % if parent_pk:
+                        % new_row "_(New element)" url=table_path|append_str:'%d/this/-/add/'|format:parent_pk
         % else
             % with buttons=model.get_root_new_buttons:
                 % if buttons:

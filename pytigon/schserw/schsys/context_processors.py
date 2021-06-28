@@ -628,7 +628,7 @@ def sch_standard(request):
         'offline_support': settings.OFFLINE_SUPPORT,
         'gen_time': gmt_str,
         'btn_size': settings.BOOTSTRAP_BUTTON_SIZE_CLASS,
-
+        'SHOW_LOGIN_WIN': False,
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

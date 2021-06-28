@@ -274,7 +274,7 @@
         {% if standard_web_browser and standard_web_browser < 5 %}
                 <div class="page-content content">
         {% endif %}
-        {% if debug_on %}
+        {% if settings.DEBUG_TOOLBAR %}
                 <div id="debug">
                         <h2>Queries</h2>
                         <p>

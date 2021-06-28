@@ -19,7 +19,8 @@
 
 import os
 import sys
-import datetime
+import random
+import string
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
 from fs.osfs import OSFS
@@ -34,7 +35,6 @@ if not prj_name:
 
 GEN_TIME = "0000.00.00 00:00:00"
 DEBUG_TOOLBAR = False
-
 if (
     sys.argv
     and (
@@ -105,12 +105,13 @@ UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
-if DEBUG:
-    SECRET_KEY = "anawa"
+if 'SECRET_KEY' in environ:
+    SECRET_KEY = environ['SECRET_KEY']
 else:
-    if 'SECRET_KEY' in environ:
-        SECRET_KEY = environ['SECRET_KEY']
-
+    if (not PRODUCTION_VERSION) or DEBUG or "EMBEDED_DJANGO_SERVER" in environ:
+        SECRET_KEY = "anawa"
+    else:
+        SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
 ROOT_URLCONF = "pytigon.schserw.urls"
 
 STATICFILES_FINDERS = (
@@ -329,7 +330,7 @@ else:
         },
         'root': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
         },
         'loggers': {
             'django': {

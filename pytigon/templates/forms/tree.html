@@ -7,7 +7,7 @@
                         {{title|wiki_href|safe}}
                         {% if parent %}
                                 <span>
-                                        {% if parent.title %}
+                                        {% if parent and parent.title %}
                                                 - {{parent.title}}
                                           {% else %}
                                                 - {{parent}}
@@ -54,7 +54,7 @@
                 {% endif %}
                 {% block list_content_actions_new_row %}
                         {% if not readonly %}
-                                {% if parent_pk > 0 %}
+                                {% if parent_pk and parent_pk > 0 %}
                                                 {% new_row "New element" url=table_path|append_str:'%d/this/-/add/'|format:parent.id %}
                                   {% else %}
                                                 {% new_row "New element" url=table_path|append_str:'0/this/-/add/' %}
