@@ -23,3 +23,5 @@
     tr
         td... {{object}}
 
+
+{% block filter_form_enctype %}multipart/form-data{% endblock %}

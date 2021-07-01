@@ -330,12 +330,12 @@ else:
         },
         'root': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
         },
         'loggers': {
             'django': {
                 'handlers': ['console'],
-                'level': 'ERROR',
+                'level': 'DEBUG',
                 'propagate': False,
             },
         },

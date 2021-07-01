@@ -283,11 +283,11 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         process_req(req);
     }
     if (((_pymeth_find.call(form, "[type='file']").length) > 0)) {
-        data = new FormData(form[0]);
+        _form.setAttribute("enctype", "multipart/form-data");
+        data = new FormData(_form);
         if (_pyfunc_truthy(data_filter)) {
             data = data_filter(data);
         }
-        content_type = "multipart/form-data; boundary=...";
         if ((!(_pyfunc_op_equals((_pymeth_find.call(form, "#progress").length), 1)))) {
             _pymeth_append.call(_pymeth_find.call(form, "div.inline-form-body"), "<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
         } else {

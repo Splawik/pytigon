@@ -129,7 +129,7 @@ function init_python() {
   });
 }
 
-
+/*
 (function () {
   var oldXMLHttpRequest = XMLHttpRequest;
   modXMLHttpRequest = function () {
@@ -275,7 +275,7 @@ function init_python() {
   };
   window.XMLHttpRequest = modXMLHttpRequest;
 })();
-
+*/
 
 function import_module(html_txt) {
   var encodedJs = encodeURIComponent(html_txt);

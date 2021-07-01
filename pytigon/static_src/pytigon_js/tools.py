@@ -223,12 +223,12 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
         process_req(req)
 
     if form.find("[type='file']").length > 0:
-        # form.attr( "enctype", "multipart/form-data" ).attr( "encoding", "multipart/form-data" )
-        data = FormData(form[0])
+        _form.setAttribute( "enctype", "multipart/form-data" )
+        data = FormData(_form)
         if data_filter:
             data = data_filter(data)
 
-        content_type = "multipart/form-data; boundary=..."
+        #content_type = "multipart/form-data; boundary=..."
 
         if not form.find("#progress").length == 1:
             form.find("div.inline-form-body").append(
