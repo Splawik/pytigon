@@ -175,8 +175,8 @@ def _req_post(req, url, data, complete, content_type=None):
 
     req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
     if content_type:
-        req.setRequestHeader('Content-Type', content_type)
-        #pass
+        if content_type != 'pass':
+            req.setRequestHeader('Content-Type', content_type)
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
     # if data.length:
@@ -229,6 +229,7 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
             data = data_filter(data)
 
         #content_type = "multipart/form-data; boundary=..."
+        content_type = "pass"
 
         if not form.find("#progress").length == 1:
             form.find("div.inline-form-body").append(
@@ -242,6 +243,10 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
                 jQuery("#progress").width("" + parseInt(100 * e.loaded / e.total) + "%")
 
         req.upload.addEventListener("progress", _progressHandlingFunction, False)
+
+        for pair in data.entries():
+            print(pair[0] + ': ' + pair[1])
+
     else:
         data = form.serialize()
         if data_filter:

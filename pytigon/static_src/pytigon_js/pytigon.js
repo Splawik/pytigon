@@ -228,7 +228,9 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     req.open("POST", url, true);
     req.setRequestHeader("X-CSRFToken", _pymeth_get.call(Cookies, "csrftoken"));
     if (_pyfunc_truthy(content_type)) {
-        req.setRequestHeader("Content-Type", content_type);
+        if ((!_pyfunc_op_equals(content_type, "pass"))) {
+            req.setRequestHeader("Content-Type", content_type);
+        }
     } else {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     }
@@ -272,7 +274,7 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
 
 window.ajax_json = ajax_json;
 ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req, url) {
-    var _progressHandlingFunction, content_type, data, form, req;
+    var _progressHandlingFunction, content_type, data, form, pair, req, stub3_seq, stub4_itr;
     data_filter = (data_filter === undefined) ? null: data_filter;
     process_req = (process_req === undefined) ? null: process_req;
     url = (url === undefined) ? null: url;
@@ -288,6 +290,7 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         if (_pyfunc_truthy(data_filter)) {
             data = data_filter(data);
         }
+        content_type = "pass";
         if ((!(_pyfunc_op_equals((_pymeth_find.call(form, "#progress").length), 1)))) {
             _pymeth_append.call(_pymeth_find.call(form, "div.inline-form-body"), "<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>");
         } else {
@@ -301,6 +304,12 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         };
 
         req.upload.addEventListener("progress", _progressHandlingFunction, false);
+        stub3_seq = data.entries();
+        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+            pair = stub3_seq[stub4_itr];
+            console.log(((pair[0] + ": ") + pair[1]));
+        }
     } else {
         data = form.serialize();
         if (_pyfunc_truthy(data_filter)) {
@@ -340,14 +349,14 @@ load_css = function flx_load_css (path, on_load) {
 
 window.load_css = load_css;
 on_load_js = function flx_on_load_js (path) {
-    var fun, functions, stub3_seq, stub4_itr;
+    var fun, functions, stub5_seq, stub6_itr;
     if ((_pyfunc_truthy(LOADED_FILES) && _pyfunc_op_contains(path, LOADED_FILES))) {
         functions = LOADED_FILES[path];
         if (_pyfunc_truthy(functions)) {
-            stub3_seq = functions;
-            if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
-            for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
-                fun = stub3_seq[stub4_itr];
+            stub5_seq = functions;
+            if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
+            for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+                fun = stub5_seq[stub6_itr];
                 fun();
             }
         }
@@ -394,7 +403,7 @@ load_js = function flx_load_js (path, fun) {
 
 window.load_js = load_js;
 load_many_js = function flx_load_many_js (paths, fun) {
-    var _fun, counter, next_step, path, stub5_seq, stub6_itr;
+    var _fun, counter, next_step, path, stub7_seq, stub8_itr;
     counter = 1;
     next_step = null;
     _fun = (function flx__fun () {
@@ -409,10 +418,10 @@ load_many_js = function flx_load_many_js (paths, fun) {
         return null;
     }).bind(this);
 
-    stub5_seq = paths;
-    if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
-    for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
-        path = stub5_seq[stub6_itr];
+    stub7_seq = paths;
+    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+        path = stub7_seq[stub8_itr];
         if ((path.length > 0)) {
             if ((!_pyfunc_op_equals(next_step, null))) {
                 _pymeth_append.call(next_step, path);
@@ -514,13 +523,13 @@ get_template = function flx_get_template (template_name, param) {
 };
 
 super_query_selector = function flx_super_query_selector (element, selector) {
-    var e, pos, stub7_seq, stub8_itr, x;
+    var e, pos, stub10_itr, stub9_seq, x;
     x = _pymeth_split.call(selector, "/");
     e = element;
-    stub7_seq = x;
-    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-        pos = stub7_seq[stub8_itr];
+    stub9_seq = x;
+    if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
+    for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
+        pos = stub9_seq[stub10_itr];
         if (_pyfunc_op_equals(pos, "..")) {
             e = e.parentElement;
         } else if (_pyfunc_op_equals(pos, ".")) {
@@ -538,7 +547,7 @@ super_query_selector = function flx_super_query_selector (element, selector) {
 
 window.super_query_selector = super_query_selector;
 super_insert = function flx_super_insert (base_element, insert_selector, inserted_element) {
-    var c, element, selector2, stub10_itr, stub9_seq, x;
+    var c, element, selector2, stub11_seq, stub12_itr, x;
     if ((_pyfunc_truthy(insert_selector) && _pyfunc_op_contains(":", insert_selector))) {
         x = _pymeth_split.call(insert_selector, ":");
         if (_pyfunc_truthy(x[0])) {
@@ -570,10 +579,10 @@ super_insert = function flx_super_insert (base_element, insert_selector, inserte
     } else if (_pyfunc_op_contains(selector2, ["before", "("])) {
         element.parentElement.insertBefore(inserted_element, element);
     } else if (_pyfunc_op_equals(selector2, "class")) {
-        stub9_seq = Array.prototype.slice.call(inserted_element.classList);
-        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
-        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
-            c = stub9_seq[stub10_itr];
+        stub11_seq = Array.prototype.slice.call(inserted_element.classList);
+        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
+        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+            c = stub11_seq[stub12_itr];
             element.classList.add(c);
         }
     } else if (_pyfunc_hasattr(element, selector2)) {
@@ -587,11 +596,11 @@ super_insert = function flx_super_insert (base_element, insert_selector, inserte
 window.super_insert = super_insert;
 _OPERATOR = [">>", "<<", ">", "(", ")"];
 send_to_dom = function flx_send_to_dom (html_text, base_elem) {
-    var html, insert_selector, inserted_element, operator, stub11_seq, stub12_itr, x;
-    stub11_seq = _OPERATOR;
-    if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
-    for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
-        operator = stub11_seq[stub12_itr];
+    var html, insert_selector, inserted_element, operator, stub13_seq, stub14_itr, x;
+    stub13_seq = _OPERATOR;
+    if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
+    for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
+        operator = stub13_seq[stub14_itr];
         if ((_pyfunc_op_contains(("===" + operator), html_text))) {
             x = _pymeth_split.call(html_text, ("===" + operator));
             html = x[0];
@@ -605,7 +614,7 @@ send_to_dom = function flx_send_to_dom (html_text, base_elem) {
 
 window.send_to_dom = send_to_dom;
 remove_element = function flx_remove_element (element) {
-    var _on_remove, _on_remove_aside, element2, elements, stub13_seq, stub14_itr;
+    var _on_remove, _on_remove_aside, element2, elements, stub15_seq, stub16_itr;
     if (_pyfunc_truthy(element)) {
         _on_remove = (function flx__on_remove (index, value) {
             value.on_remove();
@@ -617,10 +626,10 @@ remove_element = function flx_remove_element (element) {
         } else {
             elements = [element];
         }
-        stub13_seq = elements;
-        if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
-        for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
-            element2 = stub13_seq[stub14_itr];
+        stub15_seq = elements;
+        if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
+        for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
+            element2 = stub15_seq[stub16_itr];
             jQuery.each(_pymeth_find.call(jQuery(element2), ".call_on_remove"), _on_remove);
             _on_remove_aside = (function flx__on_remove_aside (index, value) {
                 var dialog;
@@ -642,7 +651,7 @@ remove_element = function flx_remove_element (element) {
 
 window.remove_element = remove_element;
 process_resize = function flx_process_resize (target_element) {
-    var body_rect, elem, elem_rect, elements, elements1, elements2, elements3, h, param, parent_rect, size_desc, size_style, stub15_seq, stub16_itr, stub17_seq, stub18_itr;
+    var body_rect, elem, elem_rect, elements, elements1, elements2, elements3, h, param, parent_rect, size_desc, size_style, stub17_seq, stub18_itr, stub19_seq, stub20_itr;
     param = ({});
     param["w"] = window.innerWidth;
     param["h"] = window.innerHeight;
@@ -653,14 +662,14 @@ process_resize = function flx_process_resize (target_element) {
     if (_pyfunc_truthy((_pyfunc_truthy(target_element.classList.contains("flexible_size"))) || target_element.classList.contains("flexible_size_round2"))) {
         _pymeth_append.call(elements3, target_element);
     }
-    stub17_seq = [elements1, elements2, elements3];
-    if ((typeof stub17_seq === "object") && (!Array.isArray(stub17_seq))) { stub17_seq = Object.keys(stub17_seq);}
-    for (stub18_itr = 0; stub18_itr < stub17_seq.length; stub18_itr += 1) {
-        elements = stub17_seq[stub18_itr];
-        stub15_seq = elements;
-        if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
-        for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
-            elem = stub15_seq[stub16_itr];
+    stub19_seq = [elements1, elements2, elements3];
+    if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
+    for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
+        elements = stub19_seq[stub20_itr];
+        stub17_seq = elements;
+        if ((typeof stub17_seq === "object") && (!Array.isArray(stub17_seq))) { stub17_seq = Object.keys(stub17_seq);}
+        for (stub18_itr = 0; stub18_itr < stub17_seq.length; stub18_itr += 1) {
+            elem = stub17_seq[stub18_itr];
             elem_rect = elem.getBoundingClientRect();
             if (_pyfunc_truthy(elem.parentElement)) {
                 parent_rect = elem.getBoundingClientRect();
@@ -725,17 +734,17 @@ can_popup = function flx_can_popup () {
 };
 
 correct_href = function flx_correct_href (href, elements) {
-    var element, only_content, only_table, stub19_seq, stub20_itr, stub21_seq, stub22_itr, stub23_seq, stub24_itr;
+    var element, only_content, only_table, stub21_seq, stub22_itr, stub23_seq, stub24_itr, stub25_seq, stub26_itr;
     elements = (elements === undefined) ? null: elements;
     if ((!_pyfunc_truthy(href))) {
         return href;
     }
     only_table = false;
     if ((!_pyfunc_op_equals(elements, null))) {
-        stub19_seq = elements;
-        if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
-        for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
-            element = stub19_seq[stub20_itr];
+        stub21_seq = elements;
+        if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
+        for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
+            element = stub21_seq[stub22_itr];
             if ((((!_pyfunc_op_equals(element, null))) && (_pyfunc_truthy(element.hasAttribute("data-region"))) && ((_pyfunc_op_equals((_pymeth_lower.call(element.getAttribute("data-region"))), "table"))))) {
                 only_table = true;
             }
@@ -752,10 +761,10 @@ correct_href = function flx_correct_href (href, elements) {
     } else {
         only_content = true;
         if ((!_pyfunc_op_equals(elements, null))) {
-            stub21_seq = elements;
-            if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
-            for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
-                element = stub21_seq[stub22_itr];
+            stub23_seq = elements;
+            if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
+            for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
+                element = stub23_seq[stub24_itr];
                 if ((((!_pyfunc_op_equals(element, null))) && (_pyfunc_truthy(element.hasAttribute("target"))) && ((_pyfunc_op_contains((_pymeth_lower.call(element.getAttribute("target"))), ["_top", "_blank"]))))) {
                     only_content = false;
                 }
@@ -772,10 +781,10 @@ correct_href = function flx_correct_href (href, elements) {
         }
     }
     if ((!_pyfunc_op_equals(elements, null))) {
-        stub23_seq = elements;
-        if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
-        for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
-            element = stub23_seq[stub24_itr];
+        stub25_seq = elements;
+        if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
+        for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
+            element = stub25_seq[stub26_itr];
             if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("get-param"))) && (_pyfunc_truthy(element.getAttribute("get-param"))))) {
                 if ((!(_pyfunc_op_contains(element.getAttribute("get-param"), href)))) {
                     if (_pyfunc_op_contains("?", href)) {
@@ -791,16 +800,16 @@ correct_href = function flx_correct_href (href, elements) {
 };
 
 remove_page_from_href = function flx_remove_page_from_href (href) {
-    var pos, stub25_seq, stub26_itr, x, x2, x3;
+    var pos, stub27_seq, stub28_itr, x, x2, x3;
     x = _pymeth_split.call(href, "?");
     if ((x.length > 1)) {
         x2 = _pymeth_split.call(x[1], "&");
         if ((x2.length > 1)) {
             x3 = [];
-            stub25_seq = x2;
-            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
-            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
-                pos = stub25_seq[stub26_itr];
+            stub27_seq = x2;
+            if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
+            for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
+                pos = stub27_seq[stub28_itr];
                 if ((!_pyfunc_op_contains("page=", pos))) {
                     _pymeth_append.call(x3, pos);
                 }
