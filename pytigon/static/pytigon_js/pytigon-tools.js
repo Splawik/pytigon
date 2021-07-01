@@ -129,7 +129,6 @@ function init_python() {
   });
 }
 
-/*
 (function () {
   var oldXMLHttpRequest = XMLHttpRequest;
   modXMLHttpRequest = function () {
@@ -189,7 +188,6 @@ function init_python() {
         } else {
           py_function(["get", self.url, null]);
         }
-
       } else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
         self.readyState = 4;
         self.responseText = request();
@@ -275,7 +273,6 @@ function init_python() {
   };
   window.XMLHttpRequest = modXMLHttpRequest;
 })();
-*/
 
 function import_module(html_txt) {
   var encodedJs = encodeURIComponent(html_txt);
