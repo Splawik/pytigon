@@ -451,7 +451,7 @@ def refresh_ajax_frame(
 
         if post:
             if link.tagName.lower() == "form":
-                ajax_submit(jQuery(link), _callback, None, None, url)
+                ajax_submit(link, _callback, None, None, url)
             else:
                 data = jQuery(link).serialize()
                 ajax_post(url, data, _callback)

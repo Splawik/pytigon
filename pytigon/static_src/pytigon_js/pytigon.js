@@ -1555,7 +1555,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         loading.start();
         if (_pyfunc_truthy(post)) {
             if ((_pyfunc_op_equals(_pymeth_lower.call(link.tagName), "form"))) {
-                ajax_submit(jQuery(link), _callback, null, null, url);
+                ajax_submit(link, _callback, null, null, url);
             } else {
                 data = (jQuery(link).serialize)();
                 ajax_post(url, data, _callback);
