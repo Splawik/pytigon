@@ -243,7 +243,21 @@ HIDE_APPS = []
 
 PRJS = []
 
+if '-v' in sys.argv:
+    i = sys.argv.index('-v')
+    V = int(sys.argv[i+1])
+else:
+    V = 1
+
 if PRODUCTION_VERSION:
+    if V==3:
+        level = 'INFO'
+    elif V==2:
+        level = 'WARNING'
+    elif V==1:
+        level = 'ERROR'
+    else:
+        level = 'CRITICAL'
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": True,
@@ -255,7 +269,7 @@ if PRODUCTION_VERSION:
         },
         "handlers": {
             "logfile": {
-                "level": "INFO",
+                "level": level,
                 "class": "logging.FileHandler",
                 "filename": LOG_PATH + "/pytigon.log",
                 #"maxBytes": 50000,
@@ -263,7 +277,7 @@ if PRODUCTION_VERSION:
                 "formatter": "standard",
             },
             "errorlogfile": {
-                "level": "WARNING",
+                "level": level,
                 "class": "logging.FileHandler",
                 "filename": LOG_PATH + "/pytigon-err.log",
                 #"maxBytes": 50000,
@@ -274,27 +288,27 @@ if PRODUCTION_VERSION:
         "loggers": {
             "django": {
                 "handlers": ["logfile", "errorlogfile"],
-                "level": "INFO",
+                "level": level,
                 "propagate": True,
             },
             "daphne": {
                 "handlers": ["logfile", "errorlogfile"],
-                "level": "INFO",
+                "level": level,
                 "propagate": True,
             },
             "httpclient": {
                 "handlers": ["logfile", "errorlogfile"],
-                "level": "INFO",
+                "level": level,
                 "propagate": True,
             },
             "pytigon": {
                 "handlers": ["logfile", "errorlogfile"],
-                "level": "INFO",
+                "level": level,
                 "propagate": True,
             },
             "pytigon_task": {
                 "handlers": ["logfile", "errorlogfile"],
-                "level": "INFO",
+                "level": level,
                 "propagate": True,
             },
         },
@@ -303,12 +317,12 @@ if PRODUCTION_VERSION:
     if 'LOGS_TO_DOCKER' in environ and environ['LOGS_TO_DOCKER']:
         LOGGING["handlers"] = {
             "logfile": {
-                "level": "INFO",
+                "level": level,
                 "class": "logging.StreamHandler",
                 "formatter": "standard",
             },
             "errorlogfile": {
-                "level": "WARNING",
+                "level": level,
                 "class": "logging.StreamHandler",
                 "formatter": "standard",
             },
@@ -320,6 +334,15 @@ if PRODUCTION_VERSION:
             '.log', '_task.log')
 
 else:
+    if V==3:
+        level = 'DEBUG'
+    elif V==2:
+        level = 'INFO'
+    elif V==1:
+        level = 'WARNING'
+    else:
+        level = 'ERROR'
+
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
@@ -330,12 +353,12 @@ else:
         },
         'root': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': level,
         },
         'loggers': {
             'django': {
                 'handlers': ['console'],
-                'level': 'ERROR',
+                'level': level,
                 'propagate': False,
             },
         },

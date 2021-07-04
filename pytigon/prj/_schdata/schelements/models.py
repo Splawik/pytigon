@@ -42,12 +42,24 @@ def limit_element3():
     
 def limit_element4():
     return {}
-    
-    
+        
 LIMIT_ELEMENT1 = OverwritableCallable(limit_element1)
 LIMIT_ELEMENT2 = OverwritableCallable(limit_element2)
 LIMIT_ELEMENT3 = OverwritableCallable(limit_element3)
 LIMIT_ELEMENT4 = OverwritableCallable(limit_element4)
+
+def get_element_queryset():
+    return None
+
+GET_ELEMENT_QUERYSET =  OverwritableCallable(get_element_queryset)
+
+class ElementManager(models.Manager):
+    def get_queryset(self):
+        q = GET_ELEMENT_QUERYSET()
+        if q:
+            return super().get_queryset().filter(q)
+        else:
+            return super().get_queryset()
 
 
 
@@ -128,6 +140,7 @@ class Element(TreeModel):
     
 
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
+    first_ancestor = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='First ancestor', related_name='first_ancestors')
     type = models.CharField('Element type', null=False, blank=False, editable=True, choices=element_type_choice,max_length=8)
     code = models.CharField('Code', null=True, blank=True, editable=True, unique=True,max_length=16)
     path = models.CharField('Path', null=True, blank=True, editable=True, max_length=256)
@@ -176,6 +189,11 @@ class Element(TreeModel):
     
         self.path = path
         self.key_path = key_path
+        
+        if len(tab)>0:
+            self.first_ancest = tab[-1]
+        else:
+            self.first_ancestor = self
         
         super().save(*argi, **argv)
     
@@ -456,6 +474,9 @@ class Element(TreeModel):
             
         else:
             return self._get_new_buttons(self.type)
+    
+    objects = ElementManager()
+        
     
 admin.site.register(Element)
 
