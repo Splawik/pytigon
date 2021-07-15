@@ -73,4 +73,6 @@ class FSStorage(Storage):
     def get_modified_time(self, name):
         info = self.fs.getinfo(name, namespaces=['details'])
         return info.modified 
-        
+
+    def generate_filename(self, filename):
+        return "/media/" + filename

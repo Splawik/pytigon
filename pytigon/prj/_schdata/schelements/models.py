@@ -89,10 +89,12 @@ element_type_choice = [
     ("O-EMP","Owner/Employee"),
     ("O-LOC","Owner/Location"),
     ("O-PER","Owner/Person"),
+    ("O-CUS","Owner/Customer"),
+    ("O-SUP","Owner/Supplier"),
     ("O-DEV","Owner/Device"),
     ("O-OTH","Owner/Other"),
-    ("I-GRP","Item/Group"),
     ("O-ALI","Owner/Alias"),
+    ("I-GRP","Item/Group"),
     ("I-SRV","Item/Service"),
     ("I-INT","Item/Intellectual value"),
     ("I-CUR","Item/Currency"),
@@ -142,8 +144,8 @@ class Element(TreeModel):
     parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
     first_ancestor = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='First ancestor', related_name='first_ancestors')
     type = models.CharField('Element type', null=False, blank=False, editable=True, choices=element_type_choice,max_length=8)
-    code = models.CharField('Code', null=True, blank=True, editable=True, unique=True,max_length=16)
-    path = models.CharField('Path', null=True, blank=True, editable=True, max_length=256)
+    code = models.CharField('Code', null=True, blank=True, editable=True, max_length=16)
+    path = models.CharField('Path', null=True, blank=True, editable=True, max_length=1024)
     name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
     grand_parent1 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 1', related_name='grandparent1', limit_choices_to=LIMIT_ELEMENT1)
     grand_parent2 = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Grand parent 2', related_name='grandparent2', limit_choices_to=LIMIT_ELEMENT2)
@@ -191,11 +193,15 @@ class Element(TreeModel):
         self.key_path = key_path
         
         if len(tab)>0:
-            self.first_ancest = tab[-1]
+            print("U1", tab)
+            self.first_ancestor = tab[-1]
+            super().save(*argi, **argv)
         else:
+            super().save(*argi, **argv)
+            print("U2", self)
             self.first_ancestor = self
+            super().save(*argi, **argv)
         
-        super().save(*argi, **argv)
     
     def get_name(self):
         return self.name
@@ -464,6 +470,26 @@ class Element(TreeModel):
             else:
                 buttons = self._get_new_buttons("ROOT")
             if self.description and '(' in self.description and ')' in self.description:
+                item = self.description.split('(')[1].split(')')[0]
+                if not ',' in item and not ';' in item:
+                    s = Element.get_structure()
+                    if item in s:
+                        button = {}
+                        button['type'] = item
+                        if 'title' in s[item]:
+                            button['title'] = s[item]['title']
+                        else:
+                            button['title'] = item
+                        if 'app' in s[item]:
+                            button['app'] = s[item]['app']
+                        else:
+                            button['app'] = ""
+                        if 'table' in s[item]:
+                            button['table'] = s[item]['table']
+                        else:
+                            button['table'] = ""
+                        if not button in buttons:
+                            buttons.append(button)
                 ret = []
                 for button in buttons:
                     if button['type'] in self.description:

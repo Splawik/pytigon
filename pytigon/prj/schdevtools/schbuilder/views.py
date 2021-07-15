@@ -561,7 +561,10 @@ def gen(request, pk):
         template_to_file(base_path, "consumers", app.name+"/consumers.py",  {'consumers': consumers, 'app': app})
     
         for template in templates:
-            str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")
+            if '.' in template.name and not '.ihtml' in template.name:
+                str_to_file(base_path, template.template_code, "templates/"+app.name+"/"+template.name)
+            else:
+                str_to_file(base_path, template.template_code, "templates_src/"+app.name+"/"+template.name.lower().replace(' ','_')+".ihtml")
     
         appmenus = list(app.schappmenu_set.all())
         

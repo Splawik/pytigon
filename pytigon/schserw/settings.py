@@ -198,6 +198,7 @@ INSTALLED_APPS = [
     "django.forms",
     "django.contrib.staticfiles",
     "django_select2",
+    'mailer',
     "mptt",
     "bootstrap4",
     "corsheaders",
@@ -520,6 +521,7 @@ GRAPHQL_JWT = {
 
 GRAPHENE_PUBLIC = False
 
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 try:
     import dj_email_url
 
