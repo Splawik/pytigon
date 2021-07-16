@@ -148,7 +148,8 @@ class TabMenu:
                 href2 = correct_href(href)
 
                 jQuery("#body_desktop").hide()
-                self.new_page(title, data_or_html.innerHTML, href2, title_alt)
+                #self.new_page(title, data_or_html.innerHTML, href2, title_alt)
+                self.new_page(title, data_or_html, href2, title_alt)
 
             jQuery(".auto-hide").trigger("click")
             return False

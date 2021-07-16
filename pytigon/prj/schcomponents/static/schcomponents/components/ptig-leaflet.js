@@ -64,6 +64,7 @@ try {
                 }
             }
             component.mapobj = mapobj;
+            window.dispatchEvent(new Event("resize"));
             return null;
         }).bind(this);
 

@@ -1,4 +1,4 @@
-var comp, init, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err;
+var comp, init, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err;
 import { animate_combo, get_table_type, init_table } from '../../pytigon_js/pytigon.js';
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
@@ -80,3 +80,25 @@ try {
 } catch(err_0)  { stub6_err=err_0; }
 if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
 } else { stub5_context.__exit__(null, null, null); }
+stub7_context = (new DefineWebComponent("move-attr", false));
+comp = stub7_context.__enter__();
+try {
+    init = function flx_init (component) {
+        var element, i, l, tag;
+        if (_pyfunc_truthy(component.hasAttribute("target-tag"))) {
+            tag = component.getAttribute("target-tag");
+        } else {
+            tag = "tr";
+        }
+        element = component.closest(tag);
+        l = component.attributes.length;
+        for (i = 0; i < l; i += 1) {
+            element.setAttribute(component.attributes[i].name, component.attributes[i].value);
+        }
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub8_err=err_0; }
+if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
+} else { stub7_context.__exit__(null, null, null); }

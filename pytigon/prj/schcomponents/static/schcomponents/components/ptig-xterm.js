@@ -1,4 +1,4 @@
-var BASE_PATH, TAG, TEMPLATE, comp, disconnectedCallback, init, stub1_context, stub2_err;
+var BASE_PATH, TAG, TEMPLATE, comp, disconnectedCallback, init, init2, stub1_context, stub2_err;
 TAG = "ptig-xterm";
 TEMPLATE = '        <div name=\"xterm\" data-bind=\"style-width:width;style-height:height\"></div>\n' +
     '\n' +
@@ -9,7 +9,7 @@ comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null});
     comp.options["template"] = TEMPLATE;
-    init = function flx_init (component) {
+    init2 = function flx_init2 (component) {
         var _on_websocket_open, address, div, on_timer, term, timer, websocket;
         div = component.root.querySelector("div");
         Terminal.applyAddon(fit);
@@ -45,7 +45,12 @@ try {
             var _fit_to_screen, _on_key, _on_message, _process_resize;
             _fit_to_screen = (function flx__fit_to_screen () {
                 var s;
-                term.fit();
+                try {
+                    term.fit();
+                } catch(err_5) {
+                    {
+                    }
+                }
                 s = JSON.stringify(({resize: ({cols: term.cols, rows: term.rows})}));
                 websocket.send(s);
                 return null;
@@ -80,6 +85,11 @@ try {
         }).bind(this);
 
         websocket.onopen = _on_websocket_open;
+        return null;
+    };
+
+    init = function flx_init (component) {
+        setTimeout(init2, 1, component);
         return null;
     };
 

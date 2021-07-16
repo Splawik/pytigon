@@ -1182,6 +1182,14 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
         if ((Object.prototype.toString.call(data_or_html).slice(8,-1).toLowerCase() === 'string')) {
             dest_elem.innerHTML = data_or_html;
+            if (_pyfunc_truthy(MOUNT_INIT_FUN)) {
+                stub3_seq = MOUNT_INIT_FUN;
+                if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+                for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+                    fun = stub3_seq[stub4_itr];
+                    fun(dest_elem);
+                }
+            }
         } else if ((dest_elem.childNodes.length > 0)) {
             dest_elem.replaceChild(data_or_html, dest_elem.childNodes[0]);
             while (dest_elem.childNodes.length > 1) {
@@ -1189,14 +1197,6 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
             }
         } else {
             dest_elem.appendChild(data_or_html);
-        }
-    }
-    if (_pyfunc_truthy(MOUNT_INIT_FUN)) {
-        stub3_seq = MOUNT_INIT_FUN;
-        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
-        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
-            fun = stub3_seq[stub4_itr];
-            fun(dest_elem);
         }
     }
     return null;
@@ -2646,7 +2646,7 @@ TabMenu.prototype.on_menu_href = function (elem, data_or_html, title, title_alt,
             }
             href2 = correct_href(href);
             (jQuery("#body_desktop").hide)();
-            this.new_page(title, data_or_html.innerHTML, href2, title_alt);
+            this.new_page(title, data_or_html, href2, title_alt);
         }
         (jQuery(".auto-hide").trigger)("click");
         return false;
