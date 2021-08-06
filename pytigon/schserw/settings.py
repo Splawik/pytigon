@@ -25,11 +25,13 @@ from fs.mountfs import MountFS
 from fs.multifs import MultiFS
 from fs.osfs import OSFS
 from django.conf import settings
-from os import environ
 from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
-import django_cache_url
+from pytigon_lib.schtools.env import get_environ
+import os
 
+env = get_environ()
 prj_name = get_prj_name()
+
 if not prj_name:
     prj_name = "_schall"
 
@@ -41,7 +43,7 @@ if (
         (sys.argv[0].endswith("manage.py") and "runserver" in sys.argv)
         or "--debug" in sys.argv
     )
-) or "PYTIGON_DEBUG" in environ:
+) or env("PYTIGON_DEBUG"):
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
@@ -105,10 +107,9 @@ UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
-if 'SECRET_KEY' in environ:
-    SECRET_KEY = environ['SECRET_KEY']
-else:
-    if (not PRODUCTION_VERSION) or DEBUG or "EMBEDED_DJANGO_SERVER" in environ:
+SECRET_KEY = env('SECRET_KEY')
+if not SECRET_KEY:
+    if (not PRODUCTION_VERSION) or DEBUG or env("EMBEDED_DJANGO_SERVER"):
         SECRET_KEY = "anawa"
     else:
         SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
@@ -157,7 +158,7 @@ TEMPLATES = [
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-if "EMBEDED_DJANGO_SERVER" in environ:
+if env("EMBEDED_DJANGO_SERVER"):
     MIDDLEWARE = [
         "django.middleware.common.CommonMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -212,6 +213,20 @@ INSTALLED_APPS = [
     "log_viewer",
 ]
 
+if env('PWA'):
+    INSTALLED_APPS.append('pwa')
+    INSTALLED_APPS.append('webpush')
+
+    if DEBUG:
+        WEBPUSH_SETTINGS = {
+           "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
+           "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
+           "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud"
+        }
+    PWA = True
+else:
+    PWA = False
+
 if PLATFORM_TYPE != "webserver":
     MIDDLEWARE.insert(
         0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
@@ -224,7 +239,7 @@ if DEBUG_TOOLBAR:
     INSTALLED_APPS.append("debug_toolbar")
 
 if (
-    not "PYTIGON_WITHOUT_CHANNELS" in environ
+    not env("PYTIGON_WITHOUT_CHANNELS")
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
@@ -315,7 +330,7 @@ if PRODUCTION_VERSION:
         },
     }
 
-    if 'LOGS_TO_DOCKER' in environ and environ['LOGS_TO_DOCKER']:
+    if env('LOGS_TO_DOCKER'):
         LOGGING["handlers"] = {
             "logfile": {
                 "level": level,
@@ -328,7 +343,7 @@ if PRODUCTION_VERSION:
                 "formatter": "standard",
             },
         }
-    elif 'PYTIGON_TASK' in environ:
+    elif env('PYTIGON_TASK'):
         LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log',
                                                                                                         '-task.log')
         LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace(
@@ -395,9 +410,9 @@ AUTO_RENDER_SELECT2_STATICS = False
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
-    if "CHANNELS_REDIS" in environ:
+    if env("CHANNELS_REDIS"):
         CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
-            environ["CHANNELS_REDIS"].split(":") + ["6379"]
+            env("CHANNELS_REDIS").split(":") + ["6379"]
         )[:2]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
@@ -478,7 +493,7 @@ CORS_ORIGIN_WHITELIST = ("null",)
 if platform_name() == "Android":
     CORS_ORIGIN_ALLOW_ALL = True
 
-CACHE_URL = environ.setdefault("CACHE_URL", "")
+CACHE_URL = os.environ.setdefault("CACHE_URL", "")
 if CACHE_URL:
     CACHES = {"default": django_cache_url.config()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
@@ -530,7 +545,7 @@ try:
 except:
     pass
 
-if "EMBEDED_DJANGO_SERVER" in environ:
+if env("EMBEDED_DJANGO_SERVER"):
     Q_CLUSTER = {
         'name': 'DjangORM',
         'workers': 1,

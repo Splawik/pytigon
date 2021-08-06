@@ -9,53 +9,54 @@
 
 
 %% login
-    % if not user.is_authenticated
-        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN
+    % if not user.is_authenticated or FORCE_LOGIN_WIN:
+        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
             div class=login_background
             div class=container login-container
                 div class=row align-items-center
                     div class=col
                     div class=col-lg-6 col-xl-5
                         div class=card card-inverse login-card
-                            div class=card-header
-                                {{prj_title|upper}}
-                            div class=card-block
-                                br
-                                p id=login_txt1..._(Sign in):
-                                p id=login_txt2,,,class=d-none..._(Wrong login or password, try again):
-                                br
-                                form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %},,,method=post,,,name=signin,,,target=_top
-                                    div class=form-group
-                                        label class=control-label,,,for=username_ ..._(User name)
-                                        div class=input-group
-                                            div class=input-group-addon fa fa-user
-                                            input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,autocomplete=username
-                                    div class=form-group
-                                        label class=control-label,,,for=password_..._(Password)
-                                        div class=input-group
-                                            div class=input-group-addon fa fa-key
-                                            input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=,,,autocomplete=current-password"
-                                    div class=row
-                                        div class=col
-                                        div class=col div_content_center
-                                            button type=submit,,,class=btn btn-primary btn-lg ...OK
-                                        div class=col
-                            % if app_manager.login_providers:
+                            %% login_card
+                                div class=card-header
+                                    {{prj_title|upper}}
                                 div class=card-block
                                     br
-                                    ._(or sign in with):
+                                    p id=login_txt1..._(Sign in):
+                                    p id=login_txt2,,,class=d-none..._(Wrong login or password, try again):
                                     br
-                                    % for pos in app_manager.login_providers:
-                                        a href={% provider_login_url pos.0 %},,,class=btn btn-secondary my-1
-                                            {{pos.1}}
-                            % if settings.ACCOUNT_EMAIL_REQUIRED:
-                                div class=card-block
-                                    br
-                                    a href={{base_path}}accounts/password/reset/
-                                        ._(I forgot my password)
-                                    |
-                                    a href={{base_path}}accounts/signup/
-                                        ._(Register)
+                                    form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %},,,method=post,,,name=signin,,,target=_top
+                                        div class=form-group
+                                            label class=control-label,,,for=username_ ..._(User name)
+                                            div class=input-group
+                                                div class=input-group-addon fa fa-user
+                                                input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,autocomplete=username
+                                        div class=form-group
+                                            label class=control-label,,,for=password_..._(Password)
+                                            div class=input-group
+                                                div class=input-group-addon fa fa-key
+                                                input class=form-control,,,type=password,,,size=25,,,maxlength=30,,,id=password_,,,name=password,,,value=,,,autocomplete=current-password"
+                                        div class=row
+                                            div class=col
+                                            div class=col div_content_center
+                                                button type=submit,,,class=btn btn-primary btn-lg ...OK
+                                            div class=col
+                                % if app_manager.login_providers:
+                                    div class=card-block
+                                        br
+                                        ._(or sign in with):
+                                        br
+                                        % for pos in app_manager.login_providers:
+                                            a href={% provider_login_url pos.0 %},,,class=btn btn-secondary my-1
+                                                {{pos.1}}
+                                % if settings.ACCOUNT_EMAIL_REQUIRED:
+                                    div class=card-block
+                                        br
+                                        a href={{base_path}}accounts/password/reset/
+                                            ._(I forgot my password)
+                                        |
+                                        a href={{base_path}}accounts/signup/
+                                            ._(Register)
                     div class=col
 
 

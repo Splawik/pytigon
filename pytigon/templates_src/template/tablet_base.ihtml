@@ -2,6 +2,11 @@
 
 %extends 'template/desktop.html'
 
+%load webpush_notifications
+
+% if env.PWA:
+% include 'schsys/webpush_notifications.html'
+
 % load exfiltry
 % load exsyntax
 % load static
@@ -169,8 +174,8 @@
                                             % if user.is_superuser:
                                                 li class=nav-item
                                                     a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
-
-
+                                            % if env.PWA:
+                                                % webpush_button with_class="btn btn-outline-info"
 
 
                         %if not autologin:

@@ -1,5 +1,10 @@
 % extends default_template
 
+%% extrahead
+    %if env.PWA:
+        % include "schsys/webpush_notifications.html"
+        % include "schsys/pwa.html"
+
 %% heading
 
 %% content

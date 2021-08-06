@@ -1,28 +1,28 @@
-{% extends "base.html" %}
+{% extends default_template %}
 {% load exfiltry %}
 {% load bootstrap4 %}
-{% block login_header %}{% endblock %}
-{% block login %}
-        <div class="row">
-                <div class="col-2"></div>
-                <div class="col-8">
-                        {% block content %}{% endblock %}
-                </div>
-                <div class="col-2"></div>
-        </div>
-{% endblock %}
-{% block body_desktop %}
-        {% with form|to_bootstrap as form %}
-                <title>
-                        Authentication
-                </title>
-                <div class="to_bootstrap">
-                        {{block.super}}
-                </div>
-                <script>
-((_pymeth_find.call(jQuery(".to_bootstrap"), "button")).addClass)("btn btn-primary");
-((_pymeth_find.call(jQuery(".to_bootstrap"), "form")).attr)("target", "_self");</script>
+{% load i18n %}
+{% load account %}
+{% load exsyntax %}
+{% block all %}
+        {% with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False %}
+                {{ block.super }}
         {% endwith %}
 {% endblock %}
-{% block login_footer %}{% endblock %}
+{% block body %}
+        <div class="login_background"></div>
+        <div class="container login-container">
+                <div class="row align-items-center">
+                        <div class="col"></div>
+                        <div class="col-lg-6 col-xl-5">
+                                <div class="card card-inverse login-card">
+                                        {% block content %}{% endblock %}
+                                </div>
+                        </div>
+                        <div class="col"></div>
+                </div>
+        </div>
+        {% block body_desktop_cd %}{% endblock %}
+{% endblock %}
+{% block nav %}{% endblock %}
 

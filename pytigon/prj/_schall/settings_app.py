@@ -18,7 +18,7 @@ if not _lp in sys.path: sys.path.insert(0,_lp)
 if not _rp in sys.path: sys.path.insert(0,_rp)
 
 from pytigon_lib import init_paths
-init_paths(PRJ_NAME)
+init_paths(PRJ_NAME, _lp)
 
 from pytigon_lib.schdjangoext.django_init import get_app_config
 from pytigon_lib.schtools.platform_info import platform_name
@@ -187,7 +187,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2020.12.20 18:26:38'
+GEN_TIME = '2021.08.03 18:14:27'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

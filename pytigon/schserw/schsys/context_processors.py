@@ -35,6 +35,7 @@ except:
     pass
 
 from pytigon_lib.schdjangoext.django_init import get_app_name
+from pytigon_lib.schtools.env import get_environ
 
 from allauth.socialaccount.providers import registry
 
@@ -394,6 +395,13 @@ class AppManager:
 
         return ret
 
+class Env():
+    def __init__(self, env):
+        self.env = env
+
+    def __getitem__(self,name):
+        return self.env(name)
+
 def sch_standard(request):
     """Content processor function
 
@@ -629,6 +637,7 @@ def sch_standard(request):
         'gen_time': gmt_str,
         'btn_size': settings.BOOTSTRAP_BUTTON_SIZE_CLASS,
         'SHOW_LOGIN_WIN': False,
+        'env': Env(get_environ()),
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

@@ -5,7 +5,7 @@
 {% load bootstrap4 %}
 {% load socialaccount %}
 {% block login %}
-        {% if not user.is_authenticated %}
+        {% if not user.is_authenticated or FORCE_LOGIN_WIN %}
                 {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
                         <div class="login_background"></div>
                         <div class="container login-container">
@@ -13,62 +13,64 @@
                                         <div class="col"></div>
                                         <div class="col-lg-6 col-xl-5">
                                                 <div class="card card-inverse login-card">
-                                                        <div class="card-header">
-                                                                {{prj_title|upper}}
-                                                        </div>
-                                                        <div class="card-block">
-                                                                <br />
-                                                                <p id="login_txt1">Sign in:</p>
-                                                                <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
-                                                                <br />
-                                                                <form class="login-form" action="{{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %}" method="post" name="signin" target="_top">
-                                                                        <div class="form-group">
-                                                                                <label class="control-label" for="username_ ">User name</label>
-                                                                                <div class="input-group">
-                                                                                        <div class="input-group-addon fa fa-user"></div>
-                                                                                        <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" autocomplete="username" />
-                                                                                </div>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                                <label class="control-label" for="password_">Password</label>
-                                                                                <div class="input-group">
-                                                                                        <div class="input-group-addon fa fa-key"></div>
-                                                                                        <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" autocomplete="current-password"" />
-                                                                                </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                                <div class="col"></div>
-                                                                                <div class="col div_content_center">
-                                                                                        <button type="submit" class="btn btn-primary btn-lg ">OK</button>
-                                                                                </div>
-                                                                                <div class="col"></div>
-                                                                        </div>
-                                                                </form>
-                                                        </div>
-                                                        {% if app_manager.login_providers %}
+                                                        {% block login_card %}
+                                                                <div class="card-header">
+                                                                        {{prj_title|upper}}
+                                                                </div>
                                                                 <div class="card-block">
                                                                         <br />
-                                                                        or sign in with:
+                                                                        <p id="login_txt1">Sign in:</p>
+                                                                        <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
                                                                         <br />
-                                                                        {% for pos in app_manager.login_providers %}
-                                                                                <a href="{% provider_login_url pos.0 %}" class="btn btn-secondary my-1">
-                                                                                        {{pos.1}}
+                                                                        <form class="login-form" action="{{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{ request_path }}?no_scripts=1&next_after_error={{request.path}}{% else %}{{request.path}}?no_scripts=1{% endif %}" method="post" name="signin" target="_top">
+                                                                                <div class="form-group">
+                                                                                        <label class="control-label" for="username_ ">User name</label>
+                                                                                        <div class="input-group">
+                                                                                                <div class="input-group-addon fa fa-user"></div>
+                                                                                                <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" autocomplete="username" />
+                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label class="control-label" for="password_">Password</label>
+                                                                                        <div class="input-group">
+                                                                                                <div class="input-group-addon fa fa-key"></div>
+                                                                                                <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" autocomplete="current-password"" />
+                                                                                        </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                        <div class="col"></div>
+                                                                                        <div class="col div_content_center">
+                                                                                                <button type="submit" class="btn btn-primary btn-lg ">OK</button>
+                                                                                        </div>
+                                                                                        <div class="col"></div>
+                                                                                </div>
+                                                                        </form>
+                                                                </div>
+                                                                {% if app_manager.login_providers %}
+                                                                        <div class="card-block">
+                                                                                <br />
+                                                                                or sign in with:
+                                                                                <br />
+                                                                                {% for pos in app_manager.login_providers %}
+                                                                                        <a href="{% provider_login_url pos.0 %}" class="btn btn-secondary my-1">
+                                                                                                {{pos.1}}
+                                                                                        </a>
+                                                                                {% endfor %}
+                                                                        </div>
+                                                                {% endif %}
+                                                                {% if settings.ACCOUNT_EMAIL_REQUIRED %}
+                                                                        <div class="card-block">
+                                                                                <br />
+                                                                                <a href="{{base_path}}accounts/password/reset/">
+                                                                                        I forgot my password
                                                                                 </a>
-                                                                        {% endfor %}
-                                                                </div>
-                                                        {% endif %}
-                                                        {% if settings.ACCOUNT_EMAIL_REQUIRED %}
-                                                                <div class="card-block">
-                                                                        <br />
-                                                                        <a href="{{base_path}}accounts/password/reset/">
-                                                                                I forgot my password
-                                                                        </a>
-                                                                        |
-                                                                        <a href="{{base_path}}accounts/signup/">
-                                                                                Register
-                                                                        </a>
-                                                                </div>
-                                                        {% endif %}
+                                                                                |
+                                                                                <a href="{{base_path}}accounts/signup/">
+                                                                                        Register
+                                                                                </a>
+                                                                        </div>
+                                                                {% endif %}
+                                                        {% endblock %}
                                                 </div>
                                         </div>
                                         <div class="col"></div>

@@ -84,6 +84,14 @@ _urlpatterns.extend(
     ]
 )
 
+if settings.PWA:
+    _urlpatterns.extend(
+        [
+            path('', include('pwa.urls')),
+            path('webpush/', include('webpush.urls')),
+        ]
+    )
+
 if settings.DEBUG:
     _urlpatterns.append(
         re_path(
@@ -211,8 +219,9 @@ else:
     test = True
     for item in _urlpatterns:
         if item.pattern and hasattr(item.pattern, "_route") and item.pattern._route == "":
-            test = False
-            break
+            if len(item.url_patterns)<2:
+                test = False
+                break
     if test:
         u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start")
         _urlpatterns.append(u)

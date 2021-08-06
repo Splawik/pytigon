@@ -1,25 +1,24 @@
-% extends "base.html"
+% extends default_template
 
 % load exfiltry
 % load bootstrap4
+% load i18n
+% load account
+% load exsyntax
 
-%% login_header
+%% all
+    % with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False:
+        {{ block.super }}
 
-%% login
-    div class=row
-        div class=col-2
-        div class=col-8
-            %% content 
-        div class=col-2
+%% body
+    div class=login_background
+    div class=container login-container
+        div class=row align-items-center
+            div class=col
+            div class=col-lg-6 col-xl-5
+                div class=card card-inverse login-card
+                    %% content
+            div class=col
+    %% body_desktop_cd
 
-%% body_desktop
-    % with form|to_bootstrap as form:
-        title
-            ._(Authentication)
-        div class=to_bootstrap
-            {{block.super}}
-        script
-            jQuery(".to_bootstrap").find('button').addClass('btn btn-primary');
-            jQuery(".to_bootstrap").find('form').attr('target', '_self');
-
-%% login_footer
+%% nav

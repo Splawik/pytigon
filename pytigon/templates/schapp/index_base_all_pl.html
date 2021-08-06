@@ -1,5 +1,5 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "schapp/index.html" %}
+{% load exsyntax %}
 {% block body_start %}
         {% if settings.START_PAGE != 'None' %}
                 {{ block.super }}
@@ -25,7 +25,7 @@
                                                                 <h4 class="card-title">{{apppack.0}}</h4>
                                                                 <h6 class="card-subtitle">{{apppack.1}}</h6>
                                                                 <a class="card-link btn btn-success btn-lg" href="{{base_path}}{{apppack.0}}/" role="button">
-                                                                        <i class="fa fa-play"></i>
+                                                                        {% icon "fa-play fa-lg" %}
                                                                         run
                                                                 </a>
                                                         </div>

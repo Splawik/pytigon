@@ -45,3 +45,6 @@ diskcache
 django-sql-explorer
 django-polymorphic
 pscript
+django-environ-2
+django-pwa
+django-webpush
