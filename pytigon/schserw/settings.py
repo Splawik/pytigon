@@ -214,8 +214,8 @@ INSTALLED_APPS = [
 ]
 
 if env('PWA'):
-    INSTALLED_APPS.append('pwa')
-    INSTALLED_APPS.append('webpush')
+    INSTALLED_APPS.append("pwa")
+    INSTALLED_APPS.append("webpush")
 
     if DEBUG:
         WEBPUSH_SETTINGS = {

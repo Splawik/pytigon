@@ -1,9 +1,5 @@
 {# -*- coding: utf-8 -*- #}
 {% extends 'template/desktop.html' %}
-{% load webpush_notifications %}
-{% if env.PWA %}
-{% endif %}
-{% include 'schsys/webpush_notifications.html' %}
 {% load exfiltry %}
 {% load exsyntax %}
 {% load static %}
@@ -194,9 +190,7 @@
                                                                                                         <a class="nav-link" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>
                                                                                                 </li>
                                                                                         {% endif %}
-                                                                                        {% if env.PWA %}
-                                                                                                {% webpush_button with_class="btn btn-outline-info" %}
-                                                                                        {% endif %}
+                                                                                        {% block system_menu %}{% endblock %}
                                                                                 </ul>
                                                                         </div>
                                                                 </nav>

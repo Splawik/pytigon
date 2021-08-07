@@ -1,10 +1,4 @@
 {% extends default_template %}
-{% block extrahead %}
-        {% if env.PWA %}
-                {% include "schsys/webpush_notifications.html" %}
-                {% include "schsys/pwa.html" %}
-        {% endif %}
-{% endblock %}
 {% block heading %}{% endblock %}
 {% block content %}{% endblock %}
 
