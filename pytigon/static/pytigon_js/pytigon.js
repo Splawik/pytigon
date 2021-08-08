@@ -1180,9 +1180,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         }).bind(this);
 
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
-        if ((Object.prototype.toString.call(data_or_html).slice(8,-1).toLowerCase() === 'string')) {
-            morphdom(dest_elem, data_or_html);
-        } else if ((dest_elem.childNodes.length > 0)) {
+        if ((dest_elem.childNodes.length > 0)) {
             morphdom(dest_elem.childNodes[0], data_or_html);
             while (dest_elem.childNodes.length > 1) {
                 dest_elem.removeChild(dest_elem.childNodes[1]);
