@@ -28,39 +28,39 @@
 %% body_footer_scripts
     {{block.super}}
     
-    {% component 'schcomponents/components/ptig-svg.js' %}
-    {% component 'schcomponents/components/ptig-time.js' %}
-    {% component 'schcomponents/components/ptig-mask.js' %}
-    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-    {% component 'schcomponents/components/ptig-markdeep.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
-    {% component 'schportal/components/teleconference.js' %}
-    {% component 'schcomponents/components/ptig-margin-left.js' %}
-    {% component 'schcomponents/components/ptig-task.js' %}
-    {% component 'schcomponents/components/ptig-form.js' %}
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
-    {% component 'schcomponents/components/sys-components.js' %}
     {% component 'schcomponents/components/ptig-leaflet.js' %}
-    {% component 'schcomponents/components/ptig-select2.js' %}
+    {% component 'schcomponents/components/ptig-mask.js' %}
+    {% component 'schcomponents/components/ptig-time.js' %}
     {% component 'schcomponents/components/ptig-video.js' %}
-    {% component 'schcomponents/components/ptig-plotly.js' %}
-    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-    {% component 'schcomponents/components/ptig-pivottable.js' %}
-    {% component 'schcomponents/components/ptig-script.js' %}
-    {% component 'schcomponents/components/ptig-frame.js' %}
-    {% component 'schcomponents/components/ptig-xterm.js' %}
-    {% component 'schportal/components/timer_init.js' %}
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
+    {% component 'schcomponents/components/sys-components.js' %}
+    {% component 'schcomponents/components/ptig-margin-left.js' %}
     {% component '_schwiki/components/insert_object.js' %}
-    {% component 'schcomponents/components/ptig-scroll-action.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
     {% component 'schcomponents/components/ptig-calendar.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-script.js' %}
+    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+    {% component 'schcomponents/components/ptig-task.js' %}
+    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+    {% component 'schcomponents/components/ptig-frame.js' %}
+    {% component 'schportal/components/teleconference.js' %}
+    {% component 'schcomponents/components/ptig-markdeep.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-select2.js' %}
+    {% component 'schcomponents/components/ptig-pivottable.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-plotly.js' %}
+    {% component 'schcomponents/components/ptig-scroll-action.js' %}
+    {% component 'schcomponents/components/ptig-svg.js' %}
+    {% component 'schportal/components/timer_init.js' %}
+    {% component 'schcomponents/components/ptig-form.js' %}
     
     
 
 %% component_init
         .var initial_state = { username: "",theme: "",time_str: "" };
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "ptig-svg.js", "ptig-time.js", "ptig-mask.js", "ptig-spreadsheet.js", "ptig-markdeep.js", "ptig-d3.js", "teleconference.js", "ptig-margin-left.js", "ptig-task.js", "ptig-form.js", "ptig-codeeditor.js", "sys-components.js", "ptig-leaflet.js", "ptig-select2.js", "ptig-video.js", "ptig-plotly.js", "ptig-wysiwygedit.js", "ptig-pivottable.js", "ptig-script.js", "ptig-frame.js", "ptig-xterm.js", "timer_init.js", "ptig-webrtc.js", "insert_object.js", "ptig-scroll-action.js", "ptig-calendar.js",  ];  
+        .var component_init = [ "ptig-leaflet.js", "ptig-mask.js", "ptig-time.js", "ptig-video.js", "sys-components.js", "ptig-margin-left.js", "insert_object.js", "ptig-webrtc.js", "ptig-calendar.js", "ptig-d3.js", "ptig-script.js", "ptig-wysiwygedit.js", "ptig-task.js", "ptig-spreadsheet.js", "ptig-frame.js", "teleconference.js", "ptig-markdeep.js", "ptig-xterm.js", "ptig-select2.js", "ptig-pivottable.js", "ptig-codeeditor.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-svg.js", "timer_init.js", "ptig-form.js",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

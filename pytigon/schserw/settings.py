@@ -493,12 +493,10 @@ CORS_ORIGIN_WHITELIST = ("null",)
 if platform_name() == "Android":
     CORS_ORIGIN_ALLOW_ALL = True
 
-CACHE_URL = os.environ.setdefault("CACHE_URL", "")
-if CACHE_URL:
-    CACHES = {"default": django_cache_url.config()}
+try:
+    CACHES = {"default": env.cache() }
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-else:
-    #CACHES = { "default": { 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache' } }
+except:
     CACHES = {
         'default': {
             'BACKEND': 'diskcache.DjangoCache',
@@ -509,7 +507,6 @@ else:
             },
         },
     }
-
 
 SOCIALACCOUNT_ADAPTER = "pytigon_lib.schdjangoext.allauth.SocialAccountAdapter"
 if DEBUG:

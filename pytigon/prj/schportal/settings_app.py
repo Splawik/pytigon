@@ -103,24 +103,8 @@ else:
     if "DATABASE_URL" in os.environ:
         db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES['default']
-        url = urlparse(db_url)
-        scheme = url.scheme
-        if scheme=='postgres':
-            scheme='postgresql'
-        database=url.path[1:]
-        user=url.username
-        password=url.password
-        host=url.hostname
-        port=url.port
         DATABASES = {
-            'default':  {
-                'ENGINE': 'django.db.backends.'+scheme,
-                'NAME': database,
-                'USER': user,
-                'PASSWORD': password,
-                'HOST': host,
-                'PORT': port,
-            },
+            'default': env.db(),
         }
         DATABASES['local'] = db_local
 
@@ -135,7 +119,7 @@ try:
 except:
     pass
 
-GEN_TIME = '2021.08.03 18:14:49'
+GEN_TIME = '2021.08.07 21:42:20'
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
