@@ -1,3 +1,3 @@
 % load pwa
-
-% progressive_web_app_meta
+% with base_path as PWA_BASE_PATH:
+    % progressive_web_app_meta

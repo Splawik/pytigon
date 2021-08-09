@@ -32,6 +32,13 @@ environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
 def schserw_init_prj_path(app, param=None):
     if app:
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths(app)
+        prj_path = paths['PRJ_PATH']
+        from pytigon_lib import init_paths
+        init_paths(app, os.path.join(prj_path, app))
+
         import pytigon.schserw.settings
 
         if app == ".":
@@ -90,6 +97,7 @@ def run(param=None):
     if not ext_lib_path in sys.path:
         sys.path.append(ext_lib_path)
     os.environ["PYTIGON_ROOT_PATH"] = base_path
+
     if len(argv) > 1 and argv[1].startswith("manage"):
         if "_" in argv[1]:
             x = argv[1].split("_", 1)
@@ -250,7 +258,6 @@ def run(param=None):
         if len(argv) > 1 and argv[1] == "--help":
             help = True
         try:
-            print(sys.argv)
             if help:
                 print("First form:")
                 print("===========")
@@ -259,11 +266,9 @@ def run(param=None):
                 if not pos.startswith("-"):
                     app = pos
                     break
-            print("X1:", app)
             ret = schserw_init_prj_path(app, param)
 
             from pytigon.schserw import settings as schserw_settings
-            print(ret)
             if ret:
                 argv[1] = ret[0]
                 schserw_settings.PRJ_PATH = ret[1]
