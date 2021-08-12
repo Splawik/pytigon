@@ -1,4 +1,4 @@
-link rel=manifest,,,href={{PWA_BASE_PATH}}/manifest.json
+link rel=manifest,,,href={{PWA_APP_ROOT_URL}}manifest.json
 
 meta name=mobile-web-app-capable,,,content=yes
 meta name=application-name,,,content=PWA_APP_NAME
