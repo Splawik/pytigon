@@ -1,13 +1,9 @@
-{# -*- coding: utf-8 -*- #}
+{% load exsyntax %}
 {% block widget_content %}
         {% if standard_web_browser %}
-                <a href="{{url}}" class="popup btn btn-secondary " name="{{name}}" title="{{title}}" target="{{target}}" data-role="button" data-inline="true" {% block data_icon %}data-icon="plus{% endblock %}">
+                <a href="{{url}}" class="popup btn btn-secondary" name="{{name}}" title="{{title}}" target="{{target}}" data-role="button" data-inline="true" {% block data_icon %}data-icon="plus{% endblock %}">
                         {% block description %}
-                                {% if description %}
-                                        <span class="fa fa-plus"></span> {{description}}
-                                  {% else %}
-                                        <span class="fa fa-plus"></span>
-                                {% endif %}
+                                {% icon "fa-plus fa-lg" %}{%% if description %}{{description}}{% endif %}
                         {% endblock %}
                 </a>
           {% else %}
