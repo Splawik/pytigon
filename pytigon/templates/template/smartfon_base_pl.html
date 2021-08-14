@@ -33,6 +33,7 @@
 {% block menu_end %}
         {% if user.is_authenticated %}
                 </ul>
+                {% block drop_down_blocks %}{% endblock %}
                 <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="# id=system_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,6 +48,7 @@
                                         {% if user.is_superuser %}
                                                 <a class="dropdown-item system_menu" href="{{base_path}}schsetup/?schtml=1" title="Setup" target="_top">Setup</a>
                                         {% endif %}
+                                        {% block system_menu %}{% endblock %}
                                 </div>
                         </li>
                 </ul>
