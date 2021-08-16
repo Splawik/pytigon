@@ -1,5 +1,5 @@
 pytigon-lib
-Twisted[tls,http2]
+Twisted
 asgiref
 channels
 cython
@@ -28,7 +28,6 @@ django-q
 croniter
 django-filter
 html5lib
-hypercorn
 ldap3
 markdown
 netifaces
@@ -36,7 +35,6 @@ polib
 pyexcel_odsr
 pyquery
 unidecode
-wasmer
 whitenoise
 xonsh
 plotly
