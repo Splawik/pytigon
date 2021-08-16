@@ -1,9 +1,7 @@
 pytigon-lib
 Twisted
 asgiref
-channels
 cython
-daphne
 dj-database-url
 dj-email-url
 django-allauth
@@ -44,6 +42,3 @@ django-sql-explorer
 django-polymorphic
 pscript
 django-environ-2
-django-pwa
-django-webpush
-django-widget-tweaks
