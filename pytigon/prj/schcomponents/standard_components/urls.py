@@ -7,12 +7,6 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = [
-    
-    
-]
+urlpatterns = []
 
-gen = generic_table_start(urlpatterns, 'standard_components', views)
-
-
-
+gen = generic_table_start(urlpatterns, "standard_components", views)

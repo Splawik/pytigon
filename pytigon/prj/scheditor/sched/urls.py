@@ -8,13 +8,7 @@ from . import views
 
 
 urlpatterns = [
-    path('save/$', views.save, {}),
-    
-    
-    
+    path("save/$", views.save, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'sched', views)
-
-
-
+gen = generic_table_start(urlpatterns, "sched", views)

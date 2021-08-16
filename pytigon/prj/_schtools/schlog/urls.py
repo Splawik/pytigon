@@ -7,14 +7,9 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = [
-    
-    
-    
-]
+urlpatterns = []
 
-gen = generic_table_start(urlpatterns, 'schlog', views)
+gen = generic_table_start(urlpatterns, "schlog", views)
 
 
-gen.standard('Log', _('Log'), _('Logi'))
-
+gen.standard("Log", _("Log"), _("Logi"))

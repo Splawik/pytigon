@@ -8,19 +8,18 @@ from . import views
 
 
 urlpatterns = [
-    re_path('search/(?P<type>.+)/', views.autocomplete_search, {}),
-    path('set_user_param/', views.set_user_param, {}),
-    path('get_user_param/', views.get_user_param, {}),
-    re_path('(?P<app>[\w=_,;-]*)/(?P<table>[\w=_,;-]*)/import_table/$', views.import_table, {}),
-    
-    
-    
-    
-    path('form/ImportTableForm/', views.view_importtableform, {}),
+    re_path("search/(?P<type>.+)/", views.autocomplete_search, {}),
+    path("set_user_param/", views.set_user_param, {}),
+    path("get_user_param/", views.get_user_param, {}),
+    re_path(
+        "(?P<app>[\w=_,;-]*)/(?P<table>[\w=_,;-]*)/import_table/$",
+        views.import_table,
+        {},
+    ),
+    path("form/ImportTableForm/", views.view_importtableform, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schtools', views)
+gen = generic_table_start(urlpatterns, "schtools", views)
 
 
-gen.standard('Parameter', _('Parameter'), _('Parameter'))
-
+gen.standard("Parameter", _("Parameter"), _("Parameter"))

@@ -8,44 +8,23 @@ from . import views
 
 
 urlpatterns = [
-    re_path('^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$', views.view_page),
-    re_path('^(?P<app_or_subject>\w*)/(?P<page_name>\w*)/edit/$', views.edit_page),
-    gen_row_action('PageObjectsConf', 'insert_object_to_editor', views.insert_object_to_editor),
-    gen_tab_action('PageObjectsConf', 'edit_page_object', views.edit_page_object),
-    gen_row_action('WikiConf', 'publish', views.publish),
-    re_path('(?P<q>.*)/search/$', views.search, {}),
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    re_path("^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$", views.view_page),
+    re_path("^(?P<app_or_subject>\w*)/(?P<page_name>\w*)/edit/$", views.edit_page),
+    gen_row_action(
+        "PageObjectsConf", "insert_object_to_editor", views.insert_object_to_editor
+    ),
+    gen_tab_action("PageObjectsConf", "edit_page_object", views.edit_page_object),
+    gen_row_action("WikiConf", "publish", views.publish),
+    re_path("(?P<q>.*)/search/$", views.search, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schwiki', views)
+gen = generic_table_start(urlpatterns, "schwiki", views)
 
 
-gen.standard('PageObjectsConf', _('Page objects configurations'), _('Page objects configurations'))
-gen.standard('Page', _('Page'), _('Page'))
-gen.standard('WikiConf', _('Wiki config'), _('Wiki config'))
-
+gen.standard(
+    "PageObjectsConf",
+    _("Page objects configurations"),
+    _("Page objects configurations"),
+)
+gen.standard("Page", _("Page"), _("Page"))
+gen.standard("WikiConf", _("Wiki config"), _("Wiki config"))

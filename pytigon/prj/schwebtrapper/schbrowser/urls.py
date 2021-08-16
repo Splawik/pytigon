@@ -8,19 +8,12 @@ from . import views
 
 
 urlpatterns = [
-    path('search/', views.search),
-    
-    
-    
-    
-    
-    path('form/MultiDownload/', views.view_multidownload, {}),
+    path("search/", views.search),
+    path("form/MultiDownload/", views.view_multidownload, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schbrowser', views)
+gen = generic_table_start(urlpatterns, "schbrowser", views)
 
 
-gen.standard('bookmarks', _('Bookmarks'), _('Bookmarks'))
-gen.standard('history', _('History'), _('History'))
-
-
+gen.standard("bookmarks", _("Bookmarks"), _("Bookmarks"))
+gen.standard("history", _("History"), _("History"))

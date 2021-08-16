@@ -11,7 +11,13 @@ from django.conf import settings
 from django.views.generic import TemplateView
 
 from pytigon_lib.schviews.form_fun import form_with_perms
-from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
+from pytigon_lib.schviews.viewtools import (
+    dict_to_template,
+    dict_to_odf,
+    dict_to_pdf,
+    dict_to_json,
+    dict_to_xml,
+)
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext import formfields as ext_form_fields
@@ -24,29 +30,14 @@ import os
 import sys
 import datetime
 
-import json 
-
-
-
-
-
-
-
+import json
 
 
 @dict_to_json
-
 def form(request, **argv):
-    
+
     json_data = json.loads(request.body)
     print("-------------------------------------------------------")
     print(json_data)
     print("-------------------------------------------------------")
-    return {
-        '.result': "Hello world!<br/>" + str(json_data)
-    }
-    
-
-
-
- 
+    return {".result": "Hello world!<br/>" + str(json_data)}

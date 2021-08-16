@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import django
@@ -36,13 +35,5 @@ from schcommander.models import *
 from schtasks.models import *
 
 
-
 def get_projects():
     pass
-
-
-
-
-
-
-

@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import django
@@ -26,14 +25,3 @@ from schwiki.models import *
 from schcommander.models import *
 
 from schtasks.models import *
-
-
-
-
-
-
-
-
-
-
-

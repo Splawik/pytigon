@@ -1,13 +1,16 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
-ModuleTitle = _('main tools')
-Title = _('Simple scripts')
+ModuleTitle = _("main tools")
+Title = _("Simple scripts")
 Perms = True
-Index = 'None'
-Urls  = (
-    ('table/Scripts/-/form/list/?schtml=desktop',_('Scripts'),'simplescript.change_scripts',"""client://apps/utilities-terminal.png"""),
+Index = "None"
+Urls = (
+    (
+        "table/Scripts/-/form/list/?schtml=desktop",
+        _("Scripts"),
+        "simplescript.change_scripts",
+        """client://apps/utilities-terminal.png""",
+    ),
 )
 UserParam = {}
 

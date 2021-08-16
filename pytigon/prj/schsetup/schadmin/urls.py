@@ -8,23 +8,28 @@ from . import views
 
 
 urlpatterns = [
-     path('terminal', TemplateView.as_view(template_name='schadmin/terminal.html'), {}), 
-     path('administration', TemplateView.as_view(template_name='schadmin/administration.html'), {}), 
-     path('filemanager', TemplateView.as_view(template_name='schadmin/filemanager.html'), {}), 
-     path('sqlexplore', TemplateView.as_view(template_name='schadmin/sqlexplore.html'), {}), 
-     path('graphql', TemplateView.as_view(template_name='schadmin/graphql.html'), {}), 
-    
-    
+    path("terminal", TemplateView.as_view(template_name="schadmin/terminal.html"), {}),
+    path(
+        "administration",
+        TemplateView.as_view(template_name="schadmin/administration.html"),
+        {},
+    ),
+    path(
+        "filemanager",
+        TemplateView.as_view(template_name="schadmin/filemanager.html"),
+        {},
+    ),
+    path(
+        "sqlexplore", TemplateView.as_view(template_name="schadmin/sqlexplore.html"), {}
+    ),
+    path("graphql", TemplateView.as_view(template_name="schadmin/graphql.html"), {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schadmin', views)
+gen = generic_table_start(urlpatterns, "schadmin", views)
 from django.contrib import admin
 from pytigon_lib.schtools.platform_info import platform_name
 
-urlpatterns.append(path('explorer/', include('explorer.urls')))
+urlpatterns.append(path("explorer/", include("explorer.urls")))
 
-if platform_name()!='Android':
-    urlpatterns.append(path('filer/', include('filer.urls')))
-
-
-
+if platform_name() != "Android":
+    urlpatterns.append(path("filer/", include("filer.urls")))

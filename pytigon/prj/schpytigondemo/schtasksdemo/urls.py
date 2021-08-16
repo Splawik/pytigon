@@ -8,13 +8,7 @@ from . import views
 
 
 urlpatterns = [
-    path('task2/', views.task2, {}),
-    
-    
-    
+    path("task2/", views.task2, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schtasksdemo', views)
-
-
-
+gen = generic_table_start(urlpatterns, "schtasksdemo", views)

@@ -1,6 +1,6 @@
-
 from . import models
 from pytigon_lib.schdjangoext.graphql import add_graphql_to_class
+
 
 def extend_query(query_class):
     for model_name in dir(models):
@@ -9,6 +9,6 @@ def extend_query(query_class):
             add_graphql_to_class(model, getattr(model, "filter_fields"), query_class)
     return query_class
 
+
 def extend_mutation(mutation_class):
     return mutation_class
-    

@@ -1,4 +1,6 @@
-APPS=['standard_components',]
-APPS_EXT=[]
+APPS = [
+    "standard_components",
+]
+APPS_EXT = []
 PUBLIC = False
 MAIN_PRJ = False

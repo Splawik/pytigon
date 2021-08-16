@@ -8,14 +8,10 @@ from . import views
 
 
 urlpatterns = [
-    re_path('auth/(?P<key>[\w-]+)/(?P<path>.*)$', views.auth, {}),
-    
-    
-    
+    re_path("auth/(?P<key>[\w-]+)/(?P<path>.*)$", views.auth, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schauth', views)
+gen = generic_table_start(urlpatterns, "schauth", views)
 
 
-gen.standard('UrlWithAuth', _('Url with authorization'), _('Urls with authorization'))
-
+gen.standard("UrlWithAuth", _("Url with authorization"), _("Urls with authorization"))

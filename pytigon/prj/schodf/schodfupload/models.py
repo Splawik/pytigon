@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import django
@@ -17,34 +16,18 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-
-
-
-
-
-
-
-class Rights( models.Model):
-    
+class Rights(models.Model):
     class Meta:
         verbose_name = _("Rights")
         verbose_name_plural = _("Rights")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        app_label = 'schodfupload'
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schodfupload"
+
+        ordering = ["id"]
+
+    title = models.CharField(
+        "Title", null=True, blank=True, editable=True, max_length=64
+    )
 
 
-        ordering = ['id']
-        
-        
-    
-
-    title = models.CharField('Title', null=True, blank=True, editable=True, max_length=64)
-    
-
-    
 admin.site.register(Rights)
-
-
-
-
-

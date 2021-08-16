@@ -8,14 +8,10 @@ from . import views
 
 
 urlpatterns = [
-    gen_row_action('Attachements', 'download', views.download),
-    
-    
-    
+    gen_row_action("Attachements", "download", views.download),
 ]
 
-gen = generic_table_start(urlpatterns, 'schattachements', views)
+gen = generic_table_start(urlpatterns, "schattachements", views)
 
 
-gen.standard('Attachements', _('Attachements'), _('Attachements'))
-
+gen.standard("Attachements", _("Attachements"), _("Attachements"))

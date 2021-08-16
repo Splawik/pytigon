@@ -8,19 +8,32 @@ from . import views
 
 
 urlpatterns = [
-    re_path('sum/(?P<x>\d+)/(?P<y>\d+)/$', views.json_test, {}),
-     path('standardcontrols', TemplateView.as_view(template_name='schsimplecontrolsdemo/standard_controls.html'), {"title": "Standard controls"}), 
-     path('htmlcontrols', TemplateView.as_view(template_name='schsimplecontrolsdemo/html_controls.html'), {}), 
-     path('extendedcontrols', TemplateView.as_view(template_name='schsimplecontrolsdemo/extended_controls.html'), {}), 
-    
-     path('markdeep', TemplateView.as_view(template_name='schsimplecontrolsdemo/markdeep.html'), {}), 
-    
-    
-    
-    path('form/TestForm/', views.view_testform, {}),
+    re_path("sum/(?P<x>\d+)/(?P<y>\d+)/$", views.json_test, {}),
+    path(
+        "standardcontrols",
+        TemplateView.as_view(
+            template_name="schsimplecontrolsdemo/standard_controls.html"
+        ),
+        {"title": "Standard controls"},
+    ),
+    path(
+        "htmlcontrols",
+        TemplateView.as_view(template_name="schsimplecontrolsdemo/html_controls.html"),
+        {},
+    ),
+    path(
+        "extendedcontrols",
+        TemplateView.as_view(
+            template_name="schsimplecontrolsdemo/extended_controls.html"
+        ),
+        {},
+    ),
+    path(
+        "markdeep",
+        TemplateView.as_view(template_name="schsimplecontrolsdemo/markdeep.html"),
+        {},
+    ),
+    path("form/TestForm/", views.view_testform, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schsimplecontrolsdemo', views)
-
-
-
+gen = generic_table_start(urlpatterns, "schsimplecontrolsdemo", views)

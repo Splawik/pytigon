@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import django
@@ -30,14 +29,3 @@ from schreports.models import *
 from schelements.models import *
 
 from standard_components.models import *
-
-
-
-
-
-
-
-
-
-
-

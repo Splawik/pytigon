@@ -8,30 +8,18 @@ from . import views
 
 
 urlpatterns = [
-    re_path('grid/(?P<folder>.*)/(?P<value>[\w=]*)/$', views.grid, {}),
-    re_path('open/(?P<file_name>.*)/$', views.open, {}),
-    re_path('save/(?P<file_name>.*)/$', views.save, {}),
-    re_path('open_page/(?P<file_name>.*)/(?P<page>\d+)/$', views.open_page, {}),
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    path('form/FileManager/', views.view_filemanager, {}),
-    path('form/Move/', views.view_move, {}),
-    path('form/Copy/', views.view_copy, {}),
-    path('form/MkDir/', views.view_mkdir, {}),
-    path('form/Rename/', views.view_rename, {}),
-    path('form/NewFile/', views.view_newfile, {}),
-    path('form/Delete/', views.view_delete, {}),
-    path('form/Setup/', views.view_setup, {}),
+    re_path("grid/(?P<folder>.*)/(?P<value>[\w=]*)/$", views.grid, {}),
+    re_path("open/(?P<file_name>.*)/$", views.open, {}),
+    re_path("save/(?P<file_name>.*)/$", views.save, {}),
+    re_path("open_page/(?P<file_name>.*)/(?P<page>\d+)/$", views.open_page, {}),
+    path("form/FileManager/", views.view_filemanager, {}),
+    path("form/Move/", views.view_move, {}),
+    path("form/Copy/", views.view_copy, {}),
+    path("form/MkDir/", views.view_mkdir, {}),
+    path("form/Rename/", views.view_rename, {}),
+    path("form/NewFile/", views.view_newfile, {}),
+    path("form/Delete/", views.view_delete, {}),
+    path("form/Setup/", views.view_setup, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schcommander', views)
-
-
-
+gen = generic_table_start(urlpatterns, "schcommander", views)

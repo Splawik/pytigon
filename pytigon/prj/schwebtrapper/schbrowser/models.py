@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 import django
@@ -22,57 +21,47 @@ from schwiki.models import *
 from schtasks.models import *
 
 
-
-
-
-
-
-
-class bookmarks( models.Model):
-    
+class bookmarks(models.Model):
     class Meta:
         verbose_name = _("Bookmarks")
         verbose_name_plural = _("Bookmarks")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        app_label = 'schbrowser'
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schbrowser"
+
+        ordering = ["id"]
+
+    parent = ext_models.PtigHiddenForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="Parent",
+    )
+    name = models.CharField(
+        "Name", null=False, blank=False, editable=True, max_length=64
+    )
+    url = models.CharField("url", null=True, blank=True, editable=True, max_length=256)
 
 
-        ordering = ['id']
-        
-        
-    
-
-    parent = ext_models.PtigHiddenForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, editable=True, verbose_name='Parent', )
-    name = models.CharField('Name', null=False, blank=False, editable=True, max_length=64)
-    url = models.CharField('url', null=True, blank=True, editable=True, max_length=256)
-    
-
-    
 admin.site.register(bookmarks)
 
 
-class history( models.Model):
-    
+class history(models.Model):
     class Meta:
         verbose_name = _("History")
         verbose_name_plural = _("History")
-        default_permissions = ('add', 'change', 'delete', 'list')
-        app_label = 'schbrowser'
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schbrowser"
+
+        ordering = ["id"]
+
+    date = models.DateTimeField(
+        "Date", null=True, blank=True, editable=True, auto_now=True
+    )
+    url = models.CharField(
+        "url", null=False, blank=False, editable=True, max_length=256
+    )
 
 
-        ordering = ['id']
-        
-        
-    
-
-    date = models.DateTimeField('Date', null=True, blank=True, editable=True, auto_now=True)
-    url = models.CharField('url', null=False, blank=False, editable=True, max_length=256)
-    
-
-    
 admin.site.register(history)
-
-
-
-
-

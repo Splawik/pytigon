@@ -8,16 +8,8 @@ from . import views
 
 
 urlpatterns = [
-    path('odf_upload/$', views.odf_upload, {}),
-    
-    
-    
-    
-    
-    path('form/OdfUploadForm/', views.view_odfuploadform, {}),
+    path("odf_upload/$", views.odf_upload, {}),
+    path("form/OdfUploadForm/", views.view_odfuploadform, {}),
 ]
 
-gen = generic_table_start(urlpatterns, 'schodfupload', views)
-
-
-
+gen = generic_table_start(urlpatterns, "schodfupload", views)

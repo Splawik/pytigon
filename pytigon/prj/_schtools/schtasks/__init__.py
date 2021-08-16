@@ -1,11 +1,8 @@
-
-
 from django.utils.translation import ugettext_lazy as _
 
-ModuleTitle = _('Tasks')
-Title = _('Tasks')
+ModuleTitle = _("Tasks")
+Title = _("Tasks")
 Perms = False
-Index = 'None'
-Urls  = (
-)
+Index = "None"
+Urls = ()
 UserParam = {}

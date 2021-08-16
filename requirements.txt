@@ -48,3 +48,4 @@ pscript
 django-environ-2
 django-pwa
 django-webpush
+django-widget-tweaks
