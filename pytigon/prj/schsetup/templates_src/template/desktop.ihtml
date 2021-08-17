@@ -48,3 +48,8 @@
     {{block.super}}
     {% css_link 'explorer/explorer.css' %}
 
+
+%% extrahead
+    {{block.super}}
+    {% css_link 'explorer/explorer.css' %}
+
