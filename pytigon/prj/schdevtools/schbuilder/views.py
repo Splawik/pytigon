@@ -1085,8 +1085,8 @@ def gen(request, pk):
 
     template_to_file(
         base_path,
-        "desktop",
-        "templates_src/template/desktop.ihtml",
+        "base",
+        "templates_src/template/base.ihtml",
         {
             "prj": prj,
             "js_static_files": set(js_static_files),

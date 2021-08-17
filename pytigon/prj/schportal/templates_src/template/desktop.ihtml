@@ -69,3 +69,11 @@
         {% css_link 'themes/wiki.css' %}
         {% css_link 'vanillajs_plugins/pygments/manni.css' %}
     {{ block.super }}
+%% botstrap_css
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+
+%% extrahead
+    %if standard_web_browser:
+        {% css_link 'themes/wiki.css' %}
+        {% css_link 'vanillajs_plugins/pygments/manni.css' %}
+    {{ block.super }}

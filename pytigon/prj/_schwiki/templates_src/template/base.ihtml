@@ -1,0 +1,36 @@
+
+
+%extends 'template/base_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+%% ext_js_scripts
+    {{block.super}}
+    {% jscript_link 'system/require.js' %}
+    
+    
+%% js_extrascipts
+    {{block.super}}
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    {% css_link '_schwiki/css/wiki_editor.css' %}
+    
+    
+
+%% body_footer_scripts
+    {{block.super}}
+    
+    {% component '_schwiki/components/insert_object.js' %}
+    
+    
+
+%% component_init
+        .var initial_state={};
+        .GLOBAL_BUS.set_state(initial_state);
+        .var component_init = [ "insert_object.js",  ];  

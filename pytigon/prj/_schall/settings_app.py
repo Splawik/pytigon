@@ -47,6 +47,9 @@ if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER = "_schall"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = "/" + URL_ROOT_FOLDER + "/static/"
+    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
+    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
+
 from pytigon_lib.schtools.main_paths import get_main_paths
 paths = get_main_paths()
 app_pack_folders = []
@@ -102,9 +105,6 @@ FILER_DEBUG = True
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
 
-
-    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
-    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
 
 from pytigon_lib.schtools.install_init import init
 
@@ -182,7 +182,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.08.16 11:53:19"
+GEN_TIME = "2021.08.17 12:28:29"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

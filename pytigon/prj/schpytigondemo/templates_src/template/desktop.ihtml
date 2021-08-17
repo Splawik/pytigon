@@ -84,3 +84,27 @@
     
 
 
+
+
+%% js_app_init 
+    % comment:
+        function bootstrap_init(elem) {
+            var checkbox;
+            let checkboxes = elem.find(".form-check");
+            checkboxes.addClass("checkbox");
+            for(checkbox of checkboxes) {
+                let label = checkbox.querySelector("label.form-check-label");
+                if(label) {
+                    let input = checkbox.querySelector("input");
+                    label.appendChild(input);
+                    label.classList.remove('form-check-label');
+                }
+            }
+            elem.bootstrapMaterialDesign();
+        };
+        register_fragment_init_fun(bootstrap_init);
+    
+    {{ block.super }}
+    
+
+

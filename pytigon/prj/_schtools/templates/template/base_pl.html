@@ -1,0 +1,20 @@
+{% extends 'template/base_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load bootstrap4 %}
+{% block ext_js_scripts %}
+        {{block.super}}
+{% endblock %}
+{% block js_extrascipts %}
+        {{block.super}}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+{% endblock %}
+{% block body_footer_scripts %}
+        {{block.super}}
+{% endblock %}
+{% block component_init %}
+          var component_init = [];
+{% endblock %}
+
