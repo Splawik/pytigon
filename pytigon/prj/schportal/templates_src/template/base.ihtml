@@ -61,3 +61,11 @@
         .var initial_state = { username: "",theme: "",time_str: "" };
         .GLOBAL_BUS.set_state(initial_state);
         .var component_init = [ "ptig-margin-left.js", "ptig-script.js", "ptig-form.js", "insert_object.js", "ptig-calendar.js", "ptig-webrtc.js", "ptig-frame.js", "sys-components.js", "ptig-pivottable.js", "ptig-codeeditor.js", "ptig-scroll-action.js", "timer_init.js", "ptig-wysiwygedit.js", "ptig-markdeep.js", "ptig-spreadsheet.js", "ptig-select2.js", "ptig-xterm.js", "ptig-svg.js", "ptig-video.js", "ptig-leaflet.js", "teleconference.js", "ptig-mask.js", "ptig-time.js", "ptig-plotly.js", "ptig-d3.js", "ptig-task.js",  ];  
+%% botstrap_css
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+
+%% extrahead
+    %if standard_web_browser:
+        {% css_link 'themes/wiki.css' %}
+        {% css_link 'vanillajs_plugins/pygments/manni.css' %}
+    {{ block.super }}

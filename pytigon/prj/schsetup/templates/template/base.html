@@ -26,4 +26,8 @@
                 GLOBAL_BUS.set_state(initial_state);
                 var component_init = [ "insert_object.js", "ptig-xterm.js", "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
 {% endblock %}
+{% block extrahead %}
+        {{block.super}}
+        {% css_link 'explorer/explorer.css' %}
+{% endblock %}
 
