@@ -30,48 +30,22 @@ from os import environ
 environ["START_PATH"] = os.path.abspath(os.getcwd())
 environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
-def schserw_init_prj_path(app, param=None):
+def schserw_init_prj_path(paths, app, param=None):
     if app:
-        from pytigon_lib.schtools.main_paths import get_main_paths
-
-        paths = get_main_paths(app)
         prj_path = paths['PRJ_PATH']
         from pytigon_lib import init_paths
         init_paths(app, os.path.join(prj_path, app))
-
-        import pytigon.schserw.settings
 
         if app == ".":
             p1 = environ["START_PATH"]
             parts = p1.replace("\\", "/").rsplit("/", 1)
             mod_app = parts[-1]
+            environ['PRJ_NAME'] = mod_app
             path2 = p1[0 : len(parts[0])]
             sys.path.append(path2)
             return (mod_app, path2)
         else:
-            p1 = os.path.join(pytigon.schserw.settings.PRJ_PATH, app)
-            sys.path.append(pytigon.schserw.settings.PRJ_PATH)
-            if not os.path.exists(p1):
-                p2 = os.path.join(pytigon.schserw.settings.PRJ_PATH_ALT, app)
-                if os.path.exists(p2):
-                    pytigon.schserw.settings._PRJ_PATH = (
-                        pytigon.schserw.settings.PRJ_PATH
-                    )
-                    pytigon.schserw.settings.PRJ_PATH = (
-                        pytigon.schserw.settings.PRJ_PATH_ALT
-                    )
-
-            if not pytigon.schserw.settings.PRJ_PATH in sys.path:
-                sys.path.append(pytigon.schserw.settings.PRJ_PATH)
-
-            if not pytigon.schserw.settings.PRJ_PATH_ALT in sys.path:
-                sys.path.append(pytigon.schserw.settings.PRJ_PATH_ALT)
-
-            if platform_name() != "Windows":
-                os.environ["LD_LIBRARY_PATH"] = os.path.abspath(
-                    os.path.join(pytigon.schserw.settings.DATA_PATH, "ext_prg", "tcc")
-                )
-        return None
+            environ['PRJ_NAME'] = app
     return None
 
 
@@ -102,17 +76,11 @@ def run(param=None):
         if "_" in argv[1]:
             x = argv[1].split("_", 1)
             app = x[1]
-            ret = schserw_init_prj_path(app, param)
-
-            from pytigon.schserw.settings import (
-                ROOT_PATH,
-                DATA_PATH,
-                PRJ_PATH,
-                STATIC_ROOT,
-                MEDIA_ROOT,
-                UPLOAD_PATH,
-            )
-
+            from pytigon_lib.schtools.main_paths import get_main_paths
+            paths = get_main_paths(app)
+            PRJ_PATH = paths['PRJ_PATH']
+            DATA_PATH = paths['DATA_PATH']
+            ret = schserw_init_prj_path(paths, app, param)
             if ret:
                 app = ret[0]
                 PRJ_PATH = ret[1]
@@ -122,11 +90,11 @@ def run(param=None):
 
                 init(
                     app,
-                    ROOT_PATH,
+                    paths['ROOT_PATH'],
                     DATA_PATH,
                     PRJ_PATH,
-                    STATIC_ROOT,
-                    [MEDIA_ROOT, UPLOAD_PATH],
+                    paths['STATIC_PATH'],
+                    [paths['MEDIA_PATH'], paths['UPLOAD_PATH']],
                 )
 
             path3 = os.path.join(PRJ_PATH, app)
@@ -145,16 +113,12 @@ def run(param=None):
             app = x[1]
             script = "run.py"
 
-        ret = schserw_init_prj_path(app, param)
+        from pytigon_lib.schtools.main_paths import get_main_paths
+        paths = get_main_paths(app)
 
-        from pytigon.schserw.settings import (
-            ROOT_PATH,
-            DATA_PATH,
-            PRJ_PATH,
-            STATIC_ROOT,
-            MEDIA_ROOT,
-            UPLOAD_PATH,
-        )
+        PRJ_PATH = paths['PRJ_PATH']
+
+        ret = schserw_init_prj_path(paths, app, param)
 
         if ret:
             app = ret[0]
@@ -168,16 +132,12 @@ def run(param=None):
             x = argv[1].split("_", 1)
             app = x[1]
 
-            ret = schserw_init_prj_path(app, param)
+            from pytigon_lib.schtools.main_paths import get_main_paths
+            paths = get_main_paths(app)
+            PRJ_PATH = paths['PRJ_PATH']
+            DATA_PATH = paths['DATA_PATH']
 
-            from pytigon.schserw.settings import (
-                ROOT_PATH,
-                DATA_PATH,
-                PRJ_PATH,
-                STATIC_ROOT,
-                MEDIA_ROOT,
-                UPLOAD_PATH,
-            )
+            ret = schserw_init_prj_path(paths, app, param)
 
             if ret:
                 app = ret[0]
@@ -188,11 +148,11 @@ def run(param=None):
 
                 init(
                     app,
-                    ROOT_PATH,
+                    paths['ROOT_PATH'],
                     DATA_PATH,
                     PRJ_PATH,
-                    STATIC_ROOT,
-                    [MEDIA_ROOT, UPLOAD_PATH],
+                    paths['STATIC_PATH'],
+                    [paths['MEDIA_PATH'], paths['UPLOAD_PATH'] ],
                 )
 
             path3 = os.path.join(PRJ_PATH, app)
@@ -223,16 +183,16 @@ def run(param=None):
                 if "--with-gui" in argv:
                     sys.argv.remove("--with-gui")
 
-                    from pytigon.schserw import settings as schserw_settings
-                    if ret:
-                        argv[1] = ret[0]
-                        schserw_settings.PRJ_PATH = ret[1]
+                    #from pytigon.schserw import settings as schserw_settings
+                    #if ret:
+                    #    argv[1] = ret[0]
+                    #    schserw_settings.PRJ_PATH = ret[1]
 
                     p = Process(target=main, args=(sys.argv[1:],))
                     p.start()
 
                     from pytigon_lib.schbrowser.schcef import run
-                    conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
+                    conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
                     if conf:
                         title = conf['DEFAULT']['PRJ_TITLE']
                         run("http://"+address.replace('0.0.0.0', '127.0.0.1')+"/"+app+"/", app, title)
@@ -248,7 +208,9 @@ def run(param=None):
     elif len(argv) > 1 and (argv[1].endswith(".py") or argv[1][-4:-1] == ".py" or argv[1]=='-m'):
         app = argv[1]
 
-        ret = schserw_init_prj_path(app, param)
+        from pytigon_lib.schtools.main_paths import get_main_paths
+        paths = get_main_paths(app)
+        ret = schserw_init_prj_path(paths, app, param)
         if ret:
             argv[1] = ret[0]
 
@@ -266,16 +228,20 @@ def run(param=None):
                 if not pos.startswith("-"):
                     app = pos
                     break
-            ret = schserw_init_prj_path(app, param)
 
-            from pytigon.schserw import settings as schserw_settings
-            if ret:
-                argv[1] = ret[0]
-                schserw_settings.PRJ_PATH = ret[1]
+            from pytigon_lib.schtools.main_paths import get_main_paths
+            paths = get_main_paths(app)
+
+            ret = schserw_init_prj_path(paths, app, param)
+
+            #from pytigon.schserw import settings as schserw_settings
+            #if ret:
+            #    argv[1] = ret[0]
+            #    schserw_settings.PRJ_PATH = ret[1]
 
             if '-b' in sys.argv or '--embeded-browser' in sys.argv:
                 from pytigon_lib.schbrowser.schcef import run
-                conf = get_app_conf(os.path.join(schserw_settings.PRJ_PATH, argv[1]))
+                conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
                 if conf:
                     try:
                         title = conf['DEFAULT']['PRJ_TITLE']
