@@ -520,6 +520,7 @@ else:
     ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
     ACCOUNT_USERNAME_REQUIRED = True
 
+
 GRAPHENE = {
     "SCHEMA": "pytigon.schserw.schsys.schema.schema",
     "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],

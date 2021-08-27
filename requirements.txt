@@ -7,7 +7,7 @@ croniter
 html5lib
 ldap3
 markdown
-netifaces
+#netifaces
 polib
 pyexcel_odsr
 pyquery
