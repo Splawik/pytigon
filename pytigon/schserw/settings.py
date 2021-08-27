@@ -181,11 +181,10 @@ else:
         #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
+]
 
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -202,13 +201,19 @@ INSTALLED_APPS = [
     "bootstrap4",
     "corsheaders",
     "pytigon.schserw.schsys",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
     "graphene_django",
     "django_filters",
     "log_viewer",
 ]
+
+try:
+    import allauth
+    INSTALLED_APPS.append("allauth")
+    INSTALLED_APPS.append("allauth.account")
+    INSTALLED_APPS.append("allauth.socialaccount")
+    AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
+except:
+    pass
 
 try:
     import compressor

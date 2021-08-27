@@ -14,7 +14,6 @@ diskcache
 pscript
 dj-database-url
 dj-email-url
-django-allauth
 django-bootstrap4
 django-bulk_update
 django-cache-url
