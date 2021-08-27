@@ -37,7 +37,7 @@ django-widget-tweaks
 graphene-django
 django-graphql-jwt
 django-q
-django-q-email
+#django-q-email
 django-sql-explorer
 django-polymorphic
 django-filter
