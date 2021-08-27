@@ -1,19 +1,15 @@
 pytigon-lib
-Twisted
 asgiref
-cython
 easy_thumbnails
 croniter
 html5lib
 ldap3
 markdown
-#netifaces
 polib
 pyexcel_odsr
 pyquery
 unidecode
 whitenoise
-plotly
 diskcache
 pscript
 dj-database-url
@@ -37,7 +33,6 @@ django-widget-tweaks
 graphene-django
 django-graphql-jwt
 django-q
-#django-q-email
 django-sql-explorer
 django-polymorphic
 django-filter

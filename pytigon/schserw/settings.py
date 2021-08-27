@@ -243,8 +243,12 @@ if (
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
-    INSTALLED_APPS.append("channels")
-
+    try:
+        import channels
+        import twisted
+        INSTALLED_APPS.append("channels")
+    except:
+        pass
 try:
     from multiprocessing import synchronize
     INSTALLED_APPS.append("django_q")
