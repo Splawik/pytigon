@@ -27,7 +27,6 @@ django_polymorphic
 django_python3_ldap
 django_redis
 django_select2
-django_compressor
 django-environ-2
 django-widget-tweaks
 graphene-django

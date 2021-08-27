@@ -119,8 +119,6 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
-    # other finders..
-    "compressor.finders.CompressorFinder",
 )
 
 TEMPLATES = [
@@ -209,9 +207,15 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "graphene_django",
     "django_filters",
-    "compressor",
     "log_viewer",
 ]
+
+try:
+    import compressor
+    INSTALLED_APPS.append("compressor")
+    STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
+except:
+    pass
 
 if env('PWA'):
     INSTALLED_APPS.append("pwa")
