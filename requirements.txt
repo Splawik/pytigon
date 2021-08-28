@@ -18,7 +18,6 @@ django-bootstrap4
 django-bulk_update
 django-cache-url
 django-cors-headers
-django-filer
 django-graphql-jwt
 django-mailer
 #django-mptt
