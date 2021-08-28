@@ -1,4 +1,4 @@
-#pytigon-lib
+pytigon-lib
 asgiref
 easy_thumbnails
 croniter
@@ -18,10 +18,8 @@ django-bootstrap4
 django-bulk_update
 django-cache-url
 django-cors-headers
-#django-filer
 django-graphql-jwt
 django-mailer
-#django-mptt
 django_python3_ldap
 django_redis
 django_select2
@@ -31,6 +29,3 @@ graphene-django
 django-graphql-jwt
 django-q
 django-sql-explorer
-#django-polymorphic
-#django-filter
-#django-log-viewer

@@ -220,7 +220,7 @@ try:
     INSTALLED_APPS.append("compressor")
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
 except:
-    pass
+    INSTALLED_APPS.append("_schserverless.schnocompress")
 
 if env('PWA'):
     INSTALLED_APPS.append("pwa")
