@@ -8,7 +8,6 @@ markdown
 polib
 pyexcel_odsr
 pyquery
-unidecode
 whitenoise
 diskcache
 pscript
