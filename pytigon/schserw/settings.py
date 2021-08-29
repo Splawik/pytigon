@@ -225,7 +225,7 @@ try:
     INSTALLED_APPS.append("allauth.socialaccount")
     AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
 except:
-    ALLAUTH = True
+    ALLAUTH = False
 
 try:
     import compressor
