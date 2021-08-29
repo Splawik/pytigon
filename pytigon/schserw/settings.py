@@ -201,13 +201,13 @@ INSTALLED_APPS = [
     "corsheaders",
     "pytigon.schserw.schsys",
     "graphene_django",
-    "django_filters",
-    "log_viewer",
 ]
 
 try:
     import mptt
     INSTALLED_APPS.append("mptt")
+    INSTALLED_APPS.append("django_filters")
+    INSTALLED_APPS.append("log_viewer")
 except:
     pass
 
