@@ -19,24 +19,20 @@
 
 import os
 import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
-
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
 from pytigon_lib.schtools.main_paths import get_main_paths
-
 from pytigon_lib.schhttptools import httpclient
 
 HTTP = None
-
 
 def init(prj, username, password):
     global HTTP
 
     paths = get_main_paths(prj)
-    cwd_path = os.path.join(paths["PRJ_PATH"], prj)
-    sys.path.insert(0, cwd_path)
-
-    os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
+    prj_path = os.path.join(paths['PRJ_PATH'], prj)
+    if not prj_path in sys.path:
+        sys.path.append(prj_path)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
     httpclient.init_embeded_django()
     HTTP = httpclient.HttpClient("http://127.0.0.2")
 
@@ -45,7 +41,6 @@ def init(prj, username, password):
         response = HTTP.post(
             None, "/schsys/do_login/", parm, credentials=(username, password)
         )
-
 
 def request(url, params=None):
     if params:
