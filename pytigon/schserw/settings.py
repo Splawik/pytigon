@@ -113,6 +113,12 @@ if not SECRET_KEY:
         SECRET_KEY = "anawa"
     else:
         SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
+
+if env("GRAPHQL"):
+    GRAPHQL = True
+else:
+    GRAPHQL = False
+
 ROOT_URLCONF = "pytigon.schserw.urls"
 
 STATICFILES_FINDERS = (
@@ -164,7 +170,6 @@ if env("EMBEDED_DJANGO_SERVER"):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "pytigon.schserw.schmiddleware.csrf.DisableCSRF",
-        "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
         #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 else:
@@ -177,14 +182,13 @@ else:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
-        "pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware",
         #"pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
 
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -200,8 +204,12 @@ INSTALLED_APPS = [
     "bootstrap4",
     "corsheaders",
     "pytigon.schserw.schsys",
-    "graphene_django",
 ]
+
+if GRAPHQL:
+    AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
+    INSTALLED_APPS.append("graphene_django")
+    MIDDLEWARE.append("pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware")
 
 try:
     import mptt

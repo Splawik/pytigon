@@ -1,9 +1,5 @@
 pytigon-lib
 asgiref
-easy_thumbnails
-croniter
-html5lib
-ldap3
 markdown
 polib
 pyexcel_odsr
@@ -15,16 +11,8 @@ dj-database-url
 dj-email-url
 django-bootstrap4
 django-bulk_update
-django-cache-url
 django-cors-headers
-django-graphql-jwt
 django-mailer
-django_python3_ldap
-django_redis
 django_select2
-django-environ-2
 django-widget-tweaks
-graphene-django
-django-graphql-jwt
 django-q
-django-sql-explorer
