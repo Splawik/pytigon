@@ -35,10 +35,8 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
 
     def __call__(self, request):
         response = None
-
         if '/static' in request.path:
             response = self.process_request(request)
-
         if response is None:
             if not request.path.endswith('.map'):
                 response = self.get_response(request)

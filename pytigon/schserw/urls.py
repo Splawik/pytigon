@@ -54,7 +54,6 @@ if settings.GRAPHQL:
     class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
         pass
 
-
 admin.site.enable_nav_sidebar = False
 
 _urlpatterns = []
@@ -79,10 +78,14 @@ _urlpatterns.extend(
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
         path("admin/", admin.site.urls),
-        path('accounts/', include('allauth.urls')),
-        path("admin/log_viewer/", include("log_viewer.urls")),
     ]
 )
+
+if settings.LOGVIEWER:
+    _urlpatterns.append(path("admin/log_viewer/", include("log_viewer.urls")))
+
+if settings.ALLAUTH:
+    _urlpatterns.append(path('accounts/', include('allauth.urls')))
 
 if settings.GRAPHQL:
     _urlpatterns.extend(

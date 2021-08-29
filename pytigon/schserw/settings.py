@@ -94,10 +94,6 @@ MEDIA_URL_PROTECTED = "/protected_site_media/"
 
 APPEND_SLASH = False
 
-STATICFILES_DIRS = []
-if STATICFILES_DIR != STATIC_ROOT:
-    STATICFILES_DIRS.append(STATICFILES_DIR)
-
 from pytigon_lib.schtools.platform_info import platform_name
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, prj_name), "media")
@@ -121,11 +117,11 @@ else:
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
-STATICFILES_FINDERS = (
+STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
-)
+]
 
 TEMPLATES = [
     {
@@ -198,7 +194,6 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sites",
     "django.forms",
-    "django.contrib.staticfiles",
     "django_select2",
     'mailer',
     "bootstrap4",
@@ -213,20 +208,24 @@ if GRAPHQL:
 
 try:
     import mptt
+    MPTT = True
+    LOGVIEWER = True
     INSTALLED_APPS.append("mptt")
     INSTALLED_APPS.append("django_filters")
     INSTALLED_APPS.append("log_viewer")
 except:
-    pass
+    MPTT = False
+    LOGVIEWER = False
 
 try:
     import allauth
+    ALLAUTH = True
     INSTALLED_APPS.append("allauth")
     INSTALLED_APPS.append("allauth.account")
     INSTALLED_APPS.append("allauth.socialaccount")
     AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
 except:
-    pass
+    ALLAUTH = True
 
 try:
     import compressor
@@ -254,7 +253,6 @@ if PLATFORM_TYPE != "webserver":
         0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
-
 
 if DEBUG_TOOLBAR:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
