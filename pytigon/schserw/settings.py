@@ -197,7 +197,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_select2",
     'mailer',
-    "mptt",
     "bootstrap4",
     "corsheaders",
     "pytigon.schserw.schsys",
@@ -205,6 +204,12 @@ INSTALLED_APPS = [
     "django_filters",
     "log_viewer",
 ]
+
+try:
+    import mptt
+    INSTALLED_APPS.append("mptt")
+except:
+    pass
 
 try:
     import allauth
