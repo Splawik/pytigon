@@ -37,8 +37,10 @@ except:
 from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
 
-from allauth.socialaccount.providers import registry
-
+try:
+    from allauth.socialaccount.providers import registry
+except:
+    registry = None
 
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
 # python client 3 - python client -> web client
@@ -390,8 +392,9 @@ class AppManager:
     def login_providers(self):
         ret = []
 
-        for key, value in registry.provider_map.items():
-            ret.append((key, value.name, value))
+        if registry:
+            for key, value in registry.provider_map.items():
+                ret.append((key, value.name, value))
 
         return ret
 
