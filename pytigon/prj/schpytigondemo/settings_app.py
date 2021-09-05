@@ -153,3 +153,7 @@ for key, value in os.environ.items():
             globals()[key2] = value
 
 XMLRPC_PORT = 7080
+
+print(STATIC_ROOT)
+print(STATIC_URL)
+print(STATICFILES_DIR)
