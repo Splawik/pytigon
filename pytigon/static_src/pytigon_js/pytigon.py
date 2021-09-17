@@ -112,6 +112,8 @@ def app_init(
     if desktop:
         mount_html(desktop, None, None)
 
+window.app_init = app_init
+
 
 def activate_menu():
     pathname = window.location.pathname

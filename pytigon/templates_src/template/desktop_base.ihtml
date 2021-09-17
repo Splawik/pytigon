@@ -54,6 +54,8 @@
         {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
 
+        % if pyodide:
+             <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
 
         %% theme_js_scripts
         %% ext_js_scripts

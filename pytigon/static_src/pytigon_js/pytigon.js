@@ -142,7 +142,9 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
     }
     _onload = (function flx__onload () {
         var _on_reader_load, disp, reader;
-        if (_pyfunc_truthy(process_blob)) {
+        if ((!_pyfunc_truthy(req.response))) {
+            complete(req.responseText);
+        } else if (_pyfunc_truthy(process_blob)) {
             disp = req.getResponseHeader("Content-Disposition");
             if ((_pyfunc_truthy(disp) && _pyfunc_op_contains("attachment", disp))) {
                 download_binary_file(req.response, disp);
@@ -193,7 +195,9 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     }
     _onload = (function flx__onload (event) {
         var _on_reader_load, disp, reader;
-        if (_pyfunc_truthy(process_blob)) {
+        if ((!_pyfunc_truthy(req.response))) {
+            complete(req.responseText);
+        } else if (_pyfunc_truthy(process_blob)) {
             disp = req.getResponseHeader("Content-Disposition");
             if ((_pyfunc_truthy(disp) && _pyfunc_op_contains("attachment", disp))) {
                 download_binary_file(req.response, disp);
@@ -3256,6 +3260,7 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     return null;
 };
 
+window.app_init = app_init;
 activate_menu = function flx_activate_menu () {
     var a, a_tab, div, event, href, id_elem, li, menu, pathname, pathname2, stub1_seq, stub2_itr, x;
     pathname = window.location.pathname;

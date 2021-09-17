@@ -1,77 +1,106 @@
-PYTHON_URL = "http://127.0.0.1:8000/";
+var PSEUDO_IP = "127.0.0.2";
+var PYODIDE = null;
 
-PSEUDO_IP = "127.0.0.2";
-PYTHON_IP = "127.0.0.4";
+var PYODIDE_ROUTER = [
+]
 
-PYTHON_PACKAGES = [
-  "channels",
-  "daphne",
-  "pytigon-lib",
+function set_pyodide_paths(paths) {
+  PYODIDE_ROUTER = paths;
+}
+
+function pyodide_url(url) {
+  let url2 = url.split('?')[0]
+  for (path of PYODIDE_ROUTER) {
+    if (path.endsWith('*')) {
+      if (url2.startsWith(path.slice(0, -1))) {
+        return true;
+      }
+    } else {
+      if (path === url2) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+var PYTHON_PACKAGES = [
   "pytigon",
-  "micropip",
-  "requests",
-  "urllib3",
-  "fs",
-  "django-select2",
-  "bootstrap4",
-  "django-allauth",
-  "Django",
-  "Twisted",
-  "django-appconf",
-  "fpdf",
-  "Transcrypt",
-  "django-bootstrap4",
-  "django-bootstrap4-form",
-  "typed_ast",
-  "mypy",
-  "python_version",
-  "django-js-asset",
-  "django-cache-url",
-  "whitenoise",
-  "certifi",
-  "idna",
-  "setuptools",
-  "sqlparse",
-  "asgiref",
-  "chardet",
-  "django-cors-headers",
-  "incremental",
-  "python-dateutil",
-  "markdown2",
-  "polib",
-  "pytz",
 ];
 
-var PYTHON_INIT = [
-  "import sys",
-  "import django",
-  "import micropip",
-  "import os",
-  "import django",
-  "import pytigon",
-  "import platform",
-  "import sys",
-  "import django.contrib.staticfiles.views",
-  "import pytigon_lib.schtools.main_paths",
-  "paths = pytigon_lib.schtools.main_paths.get_main_paths()",
-  "sys.path.append(paths['ROOT_PATH'])",
-  "os.mkdir(paths['DATA_PATH'])",
-  "import pytigon.pytigon_request",
-  "pytigon.pytigon_request.init('schdevtools', 'auto', 'anawa')",
-  "ret = pytigon.pytigon_request.request('/schdevtools/')",
-  "REQUEST = '' ",
-].join("\n");
+var PYTHON_INIT = `
+import micropip
+import os
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+await micropip.install("pytigon")
 
-var PYTHON_REQUEST = [
-  "import pytigon.pytigon_request",
-  "RET = pytigon.pytigon_request.request('/schdevtools/').str()",
-].join("\n");
+from pytigon.pytigon_request import init, request
+import js
 
-function request() {
-  pyodide.globals.REQUEST = "hello world";
-  pyodide.runPython(PYTHON_REQUEST);
-  ret = pyodide.globals.RET;
-  return ret;
+from asgiref.sync import sync_to_async
+
+def _init():
+    init("$PRJ_NAME", "$USER", "$PASSWORD")
+
+ret = await sync_to_async(_init)()
+
+def _request(url):
+    ret = request(url)
+    return ret
+
+async def http_get(url):
+    ret = await sync_to_async(_request)(url)
+    return ret.str()
+`
+
+function pyodide_app_init(prj_name, base_url, url, application_template, language, user, password, callback) {
+  let pyodide = null;
+  async function main() {
+    pyodide = await loadPyodide({
+      //indexURL: base_url + "/pyodide/",
+      indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+    });
+    //await pyodide.loadPackage(base_url + "/pyodide/packaging.js");
+    //await pyodide.loadPackage(base_url + "/pyodide/pyparsing.js");
+    //await pyodide.loadPackage(base_url + "/pyodide/micropip.js");
+
+    await pyodide.loadPackage("packaging");
+    await pyodide.loadPackage("pyparsing");
+    await pyodide.loadPackage("micropip");
+
+    await pyodide.runPythonAsync(PYTHON_INIT.replaceAll('$PRJ_NAME', prj_name).replaceAll("$BASE_URL", base_url).replaceAll('$USER', user).replaceAll('$PASSWORD', password));
+
+    PYODIDE = pyodide
+
+    response = await fetch(url);
+    await callback(response);
+  }
+  main();
+}
+
+window.pyodide_app_init = pyodide_app_init
+
+async function get_response(url) {
+  return await PYODIDE.globals.get("http_get")(url);
+}
+
+const constantMock = window.fetch;
+
+window.fetch = async function() {
+  console.log("FETCH: " + arguments[0])
+  console.log(arguments)
+  if (pyodide_url(arguments[0])) {
+    ret = new Response(
+      await get_response(arguments[0]), {
+        headers: {
+          "Content-Type": "text/html"
+        },
+      }
+    )
+  } else {
+    ret = constantMock.apply(this, arguments)
+  }
+  return ret
 }
 
 var ACTIONS = {};
@@ -109,29 +138,9 @@ function str2ab(str) {
   return buf;
 }
 
-function init_python() {
-  return new Promise((resolve, reject) => {
-    window.languagePluginUrl = PYTHON_URL;
-    languagePluginLoader.then(function () {
-      var packages = [];
-      var p;
-      pyodide._module.packages.dependencies["Pillow"] = [];
-      pyodide._module.packages.dependencies["channels"] = [];
-      for (p of PYTHON_PACKAGES) {
-        packages.push(PYTHON_URL + p + ".js");
-      }
-      console.log(packages);
-      pyodide.loadPackage(packages).then(() => {
-        pyodide.runPython(PYTHON_INIT);
-        resolve("");
-      });
-    });
-  });
-}
-
-(function () {
+(function() {
   var oldXMLHttpRequest = XMLHttpRequest;
-  modXMLHttpRequest = function () {
+  modXMLHttpRequest = function() {
     var actual = new oldXMLHttpRequest();
     var self = this;
 
@@ -143,30 +152,31 @@ function init_python() {
     this.sch_local_request = false;
     this.url = null;
 
-    actual.onreadystatechange = function () {
+    actual.onreadystatechange = function() {
       if (self.onreadystatechange != null) return self.onreadystatechange();
     };
 
-    actual.onload = function () {
+    actual.onload = function() {
       if (self.onload != null) return self.onload();
     };
 
-    this.open = function (
+    this.open = function(
       sMethod,
       sUrl,
       bAsync = true,
       sUser = null,
       sPassword = null
     ) {
+      console.log("XMLREQUEST: " + sUrl);
       self.url = sUrl;
-      if (self.url.includes(PYTHON_IP) || self.url.includes(PSEUDO_IP)) {
+      if (self.url.includes(PSEUDO_IP) || pyodide_url(self.url)) {
         self.sch_local_request = true;
         return true;
       }
       return actual.open(sMethod, sUrl, bAsync, sUser, sPassword);
     };
 
-    this.send = function (vData) {
+    this.send = async function(vData) {
       if (this.sch_local_request && self.url.includes(PSEUDO_IP)) {
         var data = {};
 
@@ -188,9 +198,9 @@ function init_python() {
         } else {
           py_function(["get", self.url, null]);
         }
-      } else if (this.sch_local_request && self.url.includes(PYTHON_IP)) {
+      } else if (this.sch_local_request && pyodide_url(self.url)) {
         self.readyState = 4;
-        self.responseText = request();
+        self.responseText = await get_response(self.url);
         self.response = self.responseText;
         console.log(self.responseText);
         self.status = 200;
@@ -202,32 +212,32 @@ function init_python() {
       }
     };
 
-    this.setRequestHeader = function (key, value) {
-      //if(this.sch_local_request) return;
-      if (self.url.includes(PYTHON_IP) || self.url.includes(PSEUDO_IP)) return;
+    this.setRequestHeader = function(key, value) {
+      if(this.sch_local_request) return;
+      //if (pyodide_url(self.url) || self.url.includes(PSEUDO_IP)) return;
       return actual.setRequestHeader(key, value);
     };
 
     ["statusText", "responseType", "response", "responseXML", "upload"].forEach(
-      function (item) {
+      function(item) {
         Object.defineProperty(self, item, {
-          get: function () {
+          get: function() {
             return actual[item];
           },
-          set: function (val) {
+          set: function(val) {
             actual[item] = val;
           },
         });
       }
     );
 
-    ["readyState", "responseText", "status"].forEach(function (item) {
+    ["readyState", "responseText", "status"].forEach(function(item) {
       Object.defineProperty(self, item, {
-        get: function () {
+        get: function() {
           if (self["_" + item]) return self["_" + item];
           else return actual[item];
         },
-        set: function (val) {
+        set: function(val) {
           self["_" + item] = val;
         },
       });
@@ -246,12 +256,12 @@ function init_python() {
       "withCredentials",
       "onerror",
       "onprogress",
-    ].forEach(function (item) {
+    ].forEach(function(item) {
       Object.defineProperty(self, item, {
-        get: function () {
+        get: function() {
           return actual[item];
         },
-        set: function (val) {
+        set: function(val) {
           actual[item] = val;
         },
       });
@@ -263,9 +273,9 @@ function init_python() {
       "getAllResponseHeaders",
       "getResponseHeader",
       "overrideMimeType",
-    ].forEach(function (item) {
+    ].forEach(function(item) {
       Object.defineProperty(self, item, {
-        value: function () {
+        value: function() {
           return actual[item].apply(actual, arguments);
         },
       });
@@ -311,7 +321,9 @@ function define_custom_element(tag, shadow, options) {
       } else this.global_state_actions = {};
       if ("constructor" in options) options["constructor"](this);
       if (shadow) {
-        const shadowRoot = this.attachShadow({ mode: "open" });
+        const shadowRoot = this.attachShadow({
+          mode: "open"
+        });
         if ("template" in options) {
           shadowRoot.innerHTML = options["template"];
           this.root = shadowRoot;
@@ -332,7 +344,7 @@ function define_custom_element(tag, shadow, options) {
     attributes_init() {
       if (this.attribute_actions_queue) {
         let component = this;
-        this.attribute_actions_queue.forEach(function (item, index) {
+        this.attribute_actions_queue.forEach(function(item, index) {
           component.attributeChangedCallback(item[0], item[1], item[2]);
         });
         this.attribute_actions_queue = [];
@@ -348,7 +360,7 @@ function define_custom_element(tag, shadow, options) {
     set_external_state(state) {
       if (this.global_state_actions) {
         let component = this;
-        Object.keys(state).forEach(function (key) {
+        Object.keys(state).forEach(function(key) {
           if (key in component.global_state_actions) {
             component.global_state_actions[key](component, state[key]);
           }
@@ -393,7 +405,9 @@ function define_custom_element(tag, shadow, options) {
         if ("attributes" in options) {
           if (options["attributes"][name])
             options["attributes"][name](this, oldVal, newVal);
-          else this.set_state({ [name]: newVal });
+          else this.set_state({
+            [name]: newVal
+          });
         }
       }
     }

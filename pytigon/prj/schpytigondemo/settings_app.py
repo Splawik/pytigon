@@ -142,7 +142,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.08.17 20:57:00"
+GEN_TIME = "2021.09.17 10:07:22"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -153,7 +153,4 @@ for key, value in os.environ.items():
             globals()[key2] = value
 
 XMLRPC_PORT = 7080
-
-print(STATIC_ROOT)
-print(STATIC_URL)
-print(STATICFILES_DIR)
+PYODIDE = True

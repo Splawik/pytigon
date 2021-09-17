@@ -511,7 +511,7 @@ def DEFAULT_FILE_STORAGE_FS():
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 OFFLINE_SUPPORT = False
-
+PYODIDE = False
 CORS_ORIGIN_WHITELIST = ("null",)
 
 if platform_name() == "Android":

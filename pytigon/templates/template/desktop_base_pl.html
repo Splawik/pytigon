@@ -43,6 +43,9 @@
                 {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
+                {% if pyodide %}
+                          <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+                {% endif %}
                 {% block theme_js_scripts %}{% endblock %}
                 {% block ext_js_scripts %}{% endblock %}
         {% endcompress %}

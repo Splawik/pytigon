@@ -98,7 +98,9 @@ def ajax_get(url, complete, process_req=None):
 
     def _onload():
         nonlocal process_blob
-        if process_blob:
+        if not req.response:
+            complete(req.responseText)
+        elif process_blob:
             disp = req.getResponseHeader("Content-Disposition")
             if disp and "attachment" in disp:
                 download_binary_file(req.response, disp)
@@ -144,7 +146,9 @@ def _req_post(req, url, data, complete, content_type=None):
 
     def _onload(event):
         nonlocal req, process_blob, complete, url
-        if process_blob:
+        if not req.response:
+            complete(req.responseText)
+        elif process_blob:
             disp = req.getResponseHeader("Content-Disposition")
             if disp and "attachment" in disp:
                 download_binary_file(req.response, disp)

@@ -641,6 +641,7 @@ def sch_standard(request):
         'btn_size': settings.BOOTSTRAP_BUTTON_SIZE_CLASS,
         'SHOW_LOGIN_WIN': False,
         'env': Env(get_environ()),
+        'pyodide': settings.PYODIDE,
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])
