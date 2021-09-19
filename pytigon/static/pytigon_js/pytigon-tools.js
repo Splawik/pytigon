@@ -1,8 +1,7 @@
 var PSEUDO_IP = "127.0.0.2";
 var PYODIDE = null;
 
-var PYODIDE_ROUTER = [
-]
+var PYODIDE_ROUTER = []
 
 function set_pyodide_paths(paths) {
   PYODIDE_ROUTER = paths;
@@ -32,11 +31,14 @@ var PYTHON_INIT = `
 import micropip
 import os
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-await micropip.install("pytigon")
+await micropip.install("pyquery")
+try:
+    import pytigon_lib
+except:
+    await micropip.install("pytigon")
 
 from pytigon.pytigon_request import init, request
 import js
-
 from asgiref.sync import sync_to_async
 
 def _init():
@@ -57,23 +59,36 @@ function pyodide_app_init(prj_name, base_url, url, application_template, languag
   let pyodide = null;
   async function main() {
     pyodide = await loadPyodide({
-      //indexURL: base_url + "/pyodide/",
-      indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
     });
-    //await pyodide.loadPackage(base_url + "/pyodide/packaging.js");
-    //await pyodide.loadPackage(base_url + "/pyodide/pyparsing.js");
-    //await pyodide.loadPackage(base_url + "/pyodide/micropip.js");
+    pyodide.FS.rename("/lib/python3.9/site-packages/pyodide", "/lib/python3.9/pyodide")
+    pyodide.FS.rename("/lib/python3.9/site-packages/_pyodide", "/lib/python3.9/_pyodide")
+    pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, '/home/web_user');
+    pyodide.FS.mkdir('/lib/python3.9/site-packages/micropip')
+    pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, '/lib/python3.9/site-packages');
+    pyodide.FS.syncfs(true, async function(err) {
+      let save = false;
+      let example_dir = pyodide.FS.analyzePath("/lib/python3.9/site-packages/micropip", true)
+      if(!example_dir.exists) {
+          save = true;
+      }
+      await pyodide.loadPackage("packaging");
+      await pyodide.loadPackage("pyparsing");
+      await pyodide.loadPackage("pytz");
+      await pyodide.loadPackage("setuptools");
+      await pyodide.loadPackage("six");
+      await pyodide.loadPackage("micropip");
 
-    await pyodide.loadPackage("packaging");
-    await pyodide.loadPackage("pyparsing");
-    await pyodide.loadPackage("micropip");
-
-    await pyodide.runPythonAsync(PYTHON_INIT.replaceAll('$PRJ_NAME', prj_name).replaceAll("$BASE_URL", base_url).replaceAll('$USER', user).replaceAll('$PASSWORD', password));
-
-    PYODIDE = pyodide
-
-    response = await fetch(url);
-    await callback(response);
+      await pyodide.runPythonAsync(PYTHON_INIT.replaceAll('$PRJ_NAME', prj_name).replaceAll("$BASE_URL", base_url).replaceAll('$USER', user).replaceAll('$PASSWORD', password));
+      PYODIDE = pyodide
+      response = await fetch(url);
+      if(save) {
+          PYODIDE.FS.syncfs(false, function(err) {
+            console.log("File system saved")
+          });
+      }
+      await callback(response);
+    });
   }
   main();
 }
@@ -213,7 +228,7 @@ function str2ab(str) {
     };
 
     this.setRequestHeader = function(key, value) {
-      if(this.sch_local_request) return;
+      if (this.sch_local_request) return;
       //if (pyodide_url(self.url) || self.url.includes(PSEUDO_IP)) return;
       return actual.setRequestHeader(key, value);
     };
@@ -416,3 +431,23 @@ function define_custom_element(tag, shadow, options) {
 }
 
 window.define_custom_element = define_custom_element;
+
+function syncfs() {
+  return new Promise(resolve => {
+    PYODIDE.FS.syncfs(false, function(err) {
+      resolve(err)
+    });
+  });
+}
+
+async function sync_on_unload() {
+  await syncfs();
+}
+
+function onbeforeunload_sync() {
+  if(PYODIDE) {
+    sync_on_unload()
+   }
+}
+
+window.onbeforeunload = onbeforeunload_sync;

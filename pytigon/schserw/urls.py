@@ -190,7 +190,6 @@ for item in _urlpatterns:
     if hasattr(item, "url_patterns"):
         for item2 in item.url_patterns:
             if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith('../'):
-                print("A1")
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
 
