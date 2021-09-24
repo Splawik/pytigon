@@ -374,16 +374,17 @@ def sw(request):
         _static_root = settings.STATIC_ROOT
     else:
         _static_root = settings.STATICFILES_DIRS[0]
-    static_root = os.path.join(os.path.join(_static_root, "app"), settings.PRJ_NAME)
+    static_root1 = os.path.join(_static_root, settings.PRJ_NAME)
+    static_root2 = os.path.join(settings.PRJ_PATH, settings.PRJ_NAME, "static", settings.PRJ_NAME)
 
-    sw_path = os.path.join(static_root, "sw.js")
-    buf = ""
-
-    if os.path.exists(sw_path):
-        with open(sw_path, "rt") as sw:
-            buf = sw.read()
-    standard_sw_path = os.path.join(_static_root, "sch/sw.js")
-
+    for static_root in (static_root1, static_root2):
+        sw_path = os.path.join(static_root, "sw.js")
+        buf = ""
+        if os.path.exists(sw_path):
+            with open(sw_path, "rt") as sw:
+                buf = sw.read()
+            break
+    standard_sw_path = os.path.join(_static_root, "pytigon_js", "sw.js")
     buf2 = ""
     if os.path.exists(standard_sw_path):
         with open(standard_sw_path, "rt") as sw:
@@ -414,7 +415,6 @@ def app_time_stamp(request, **argv):
 def search(request, **argv):
     q = request.POST.get("q", "")
     q2 = b32encode(q.encode("utf-8")).decode("utf-8")
-    print("Q:", q2)
     if hasattr(settings, "SEARCH_PATH"):
         return HttpResponseRedirect(
             make_href((settings.SEARCH_PATH % q2) + "?only_content=1")

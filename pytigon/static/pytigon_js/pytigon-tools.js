@@ -9,6 +9,9 @@ function set_pyodide_paths(paths) {
 
 function pyodide_url(url) {
   let url2 = url.split('?')[0]
+  if((url2.endsWith('.db') || url2.endsWith('sw.js')) && url2.includes("/static/")) {
+    return false;
+  }
   for (path of PYODIDE_ROUTER) {
     if (path.endsWith('*')) {
       if (url2.startsWith(path.slice(0, -1))) {
@@ -28,31 +31,43 @@ var PYTHON_PACKAGES = [
 ];
 
 var PYTHON_INIT = `
+print("=========================================== 1:")
 import micropip
 import os
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+print("=========================================== 2:")
 await micropip.install("pyquery")
+print("=========================================== 3:")
 try:
     import pytigon_lib
 except:
     await micropip.install("pytigon")
-
+print("=========================================== 4:")
 from pytigon.pytigon_request import init, request
+print("=========================================== 5:")
 import js
+print("=========================================== 6:")
 from asgiref.sync import sync_to_async
+print("=========================================== 7:")
 
 def _init():
     init("$PRJ_NAME", "$USER", "$PASSWORD")
 
 ret = await sync_to_async(_init)()
+print("=========================================== 8:")
 
-def _request(url):
-    ret = request(url)
+def _request(url, params=None):
+    if params:
+        params2 = params.to_py()
+    else:
+        params2 = None
+    ret = request(url, params2)
     return ret
 
-async def http_get(url):
-    ret = await sync_to_async(_request)(url)
+async def http_get(url, params=None):
+    ret = await sync_to_async(_request)(url, params)
     return ret.str()
+
 `
 
 function pyodide_app_init(prj_name, base_url, url, application_template, language, user, password, callback) {
@@ -63,40 +78,103 @@ function pyodide_app_init(prj_name, base_url, url, application_template, languag
     });
     pyodide.FS.rename("/lib/python3.9/site-packages/pyodide", "/lib/python3.9/pyodide")
     pyodide.FS.rename("/lib/python3.9/site-packages/_pyodide", "/lib/python3.9/_pyodide")
-    pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, '/home/web_user');
+    //pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, '/home/web_user');
     pyodide.FS.mkdir('/lib/python3.9/site-packages/micropip')
     pyodide.FS.mount(pyodide.FS.filesystems.IDBFS, {}, '/lib/python3.9/site-packages');
-    pyodide.FS.syncfs(true, async function(err) {
-      let save = false;
-      let example_dir = pyodide.FS.analyzePath("/lib/python3.9/site-packages/micropip", true)
-      if(!example_dir.exists) {
-          save = true;
-      }
-      await pyodide.loadPackage("packaging");
-      await pyodide.loadPackage("pyparsing");
-      await pyodide.loadPackage("pytz");
-      await pyodide.loadPackage("setuptools");
-      await pyodide.loadPackage("six");
-      await pyodide.loadPackage("micropip");
 
-      await pyodide.runPythonAsync(PYTHON_INIT.replaceAll('$PRJ_NAME', prj_name).replaceAll("$BASE_URL", base_url).replaceAll('$USER', user).replaceAll('$PASSWORD', password));
-      PYODIDE = pyodide
-      response = await fetch(url);
-      if(save) {
-          PYODIDE.FS.syncfs(false, function(err) {
-            console.log("File system saved")
-          });
-      }
-      await callback(response);
-    });
+    function sync_fs() {
+        pyodide.FS.syncfs(true, async function(err) {
+          async function init2() {
+              let save = false;
+              let example_dir = pyodide.FS.analyzePath("/lib/python3.9/site-packages/micropip", true)
+              if(!example_dir.exists) {
+                  save = true;
+              }
+              await pyodide.loadPackage("packaging");
+              await pyodide.loadPackage("pyparsing");
+              await pyodide.loadPackage("pytz");
+              await pyodide.loadPackage("setuptools");
+              await pyodide.loadPackage("six");
+              await pyodide.loadPackage("micropip");
+
+              await pyodide.runPythonAsync(PYTHON_INIT.replaceAll('$PRJ_NAME', prj_name).replaceAll("$BASE_URL", base_url).replaceAll('$USER', user).replaceAll('$PASSWORD', password));
+              PYODIDE = pyodide
+              response = await fetch(url);
+              if(save) {
+                  PYODIDE.FS.syncfs(false, function(err) {
+                    console.log("File system saved")
+                  });
+              }
+              await callback(response);
+          }
+          let db_dir = pyodide.FS.analyzePath("/home/web_user/.pytigon/"+prj_name+"/"+prj_name+".db", true);
+          async function init3(data) {
+            //pyodide.FS.mkdir("/home/web_user/.pytigon");
+            //pyodide.FS.mkdir("/home/web_user/.pytigon/"+prj_name);
+            //pyodide.FS.writeFile("/home/web_user/.pytigon/"+prj_name+"/"+prj_name+".db", data);
+            let db_file = pyodide.FS.open("/home/web_user/.pytigon/"+prj_name+"/"+prj_name+".db", "w");
+            pyodide.FS.write(db_file, data, 0, data.length, 0);
+            pyodide.FS.close(db_file);
+            await init2();
+          }
+          if(!db_dir.exists) {
+            fetch("/static/"+prj_name+"/install/"+prj_name+".db")
+                .then(function(response) {
+                    //return response.text();
+                    return response.arrayBuffer();
+                    //init3(response.)
+                })
+                .then(function(buffer) {
+                    //let enc = new TextEncoder();
+                    //init3(enc.encode(buffer))
+                    let buffer2 = new Uint8Array(buffer);
+                    init3(buffer2)
+                });
+            //ajax_get("/static/"+prj_name+"/install/"+prj_name+".db", init3)
+          }
+          else {
+            await init2()
+          }
+        });
+    }
+
+    navigator.serviceWorker.onmessage = (event) => {
+        if (event.data && event.data.type === 'get_state') {
+            pyodide.FS.mkdir("/home/web_user/.pytigon");
+            pyodide.FS.mkdir("/home/web_user/.pytigon/"+prj_name);
+            if (event.data.data) {
+                let db_file = pyodide.FS.open("/home/web_user/.pytigon/"+prj_name+"/"+prj_name+".db", "w");
+                pyodide.FS.write(db_file, event.data.data.data, 0, event.data.data.data.length, 0);
+                pyodide.FS.close(db_file);
+            }
+            sync_fs();
+         }
+    }
+
+    navigator.serviceWorker.controller.postMessage({type: 'get_state', name: 'pytigon_db'});
+
+    function onbeforeunload_sync() {
+      if(PYODIDE) {
+          let data = PYODIDE.FS.readFile("/home/web_user/.pytigon/"+prj_name+"/"+prj_name+".db", {})
+          navigator.serviceWorker.controller.postMessage({type: 'set_state', name: 'pytigon_db', data: data});
+       }
+    }
+
+    window.onbeforeunload = onbeforeunload_sync;
   }
+
   main();
 }
 
 window.pyodide_app_init = pyodide_app_init
 
-async function get_response(url) {
-  return await PYODIDE.globals.get("http_get")(url);
+async function get_response(url, params) {
+  if(params!=null && params!="") {
+    return await PYODIDE.globals.get("http_get")(url, params);
+  }
+  else {
+    return await PYODIDE.globals.get("http_get")(url);
+  }
 }
 
 const constantMock = window.fetch;
@@ -215,9 +293,16 @@ function str2ab(str) {
         }
       } else if (this.sch_local_request && pyodide_url(self.url)) {
         self.readyState = 4;
-        self.responseText = await get_response(self.url);
+
+        if (vData) {
+            const urlSearchParams = new URLSearchParams(vData);
+            const params = Object.fromEntries(urlSearchParams.entries());
+            self.responseText = await get_response(self.url, params);
+        }
+        else {
+            self.responseText = await get_response(self.url);
+        }
         self.response = self.responseText;
-        console.log(self.responseText);
         self.status = 200;
         if (self.onreadystatechange != null) self.onreadystatechange();
         if (self.onload != null) self.onload();
@@ -444,10 +529,3 @@ async function sync_on_unload() {
   await syncfs();
 }
 
-function onbeforeunload_sync() {
-  if(PYODIDE) {
-    sync_on_unload()
-   }
-}
-
-window.onbeforeunload = onbeforeunload_sync;
