@@ -1,0 +1,18 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}{% endblock %}
+{% block list_page_header %}
+        <h3>Demo - standard controls</h3>
+{% endblock %}
+{% block list_page %}
+        ABC
+        <ptig-markdeep>
+                
+@@@
+
+                <<<
+        </ptig-markdeep>
+{% endblock %}
+

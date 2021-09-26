@@ -1,0 +1,28 @@
+%extends 'template/desktop_base.html'
+
+%% js_app_init
+    ===>
+        function base_fragment_init() {
+            let paths = [
+                '/',
+                '/schcomponents/*',
+                '/schelements/*',
+                '/static/*',
+            ]
+            
+            set_pyodide_paths(paths)
+
+            async function home_callback(response) {
+                let txt = await response.text();
+                let data_element = window.get_elem_from_string(txt)
+                mount_html(
+                    document.querySelector("body"),
+                    data_element,
+                    null
+                )
+            }
+            async function home() {
+                await pyodide_app_init("schpytigondemo", "{{base_path}}", "/", "{{application_type}}", "{{ lang }}", "auto", "anawa", home_callback)
+            }
+            home();            
+        };
