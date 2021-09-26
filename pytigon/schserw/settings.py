@@ -253,6 +253,7 @@ if PLATFORM_TYPE != "webserver":
         0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
+INSTALLED_APPS.append("django.contrib.staticfiles")
 
 if DEBUG_TOOLBAR:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
