@@ -118,7 +118,7 @@ function pyodide_app_init(prj_name, base_url, url, application_template, languag
             await init2();
           }
           if(!db_dir.exists) {
-            fetch("/static/"+prj_name+"/install/"+prj_name+".db")
+            fetch(base_url + "static/"+prj_name+"/install/"+prj_name+".db")
                 .then(function(response) {
                     //return response.text();
                     return response.arrayBuffer();
