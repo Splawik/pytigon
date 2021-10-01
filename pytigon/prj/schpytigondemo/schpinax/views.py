@@ -15,7 +15,7 @@ from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_t
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from . import models
 import os

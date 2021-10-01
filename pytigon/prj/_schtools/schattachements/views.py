@@ -23,7 +23,7 @@ from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext import formfields as ext_form_fields
 from pytigon_lib.schviews import actions
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from . import models
 import os

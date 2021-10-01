@@ -8,7 +8,7 @@ from pytigon_lib.schdjangoext.models import *
 import pytigon_lib.schdjangoext.fields as ext_models
 from pytigon_lib.schtools import schjson
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 import os, os.path
@@ -180,7 +180,7 @@ class CommonGroupDef(BaseObject):
         blank=True,
         editable=False,
     )
-    main_group = models.NullBooleanField(
+    main_group = models.BooleanField(
         "Main group",
         null=True,
         blank=True,

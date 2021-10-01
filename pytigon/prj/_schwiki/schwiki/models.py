@@ -8,7 +8,7 @@ from pytigon_lib.schdjangoext.models import *
 import pytigon_lib.schdjangoext.fields as ext_models
 from pytigon_lib.schtools import schjson
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 import os, os.path
@@ -236,16 +236,16 @@ class PageObjectsConf(models.Model):
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=128
     )
-    inline_editing = models.NullBooleanField(
+    inline_editing = models.BooleanField(
         "Inline editing",
-        null=False,
+        null=True,
         blank=False,
         editable=True,
         default=False,
     )
-    inline_wiki = models.NullBooleanField(
+    inline_wiki = models.BooleanField(
         "Inline wiki",
-        null=False,
+        null=True,
         blank=False,
         editable=True,
         default=False,
@@ -340,16 +340,16 @@ class Page(JSONModel):
         editable=False,
         default=datetime.now,
     )
-    published = models.NullBooleanField(
+    published = models.BooleanField(
         "Published",
-        null=False,
+        null=True,
         blank=False,
         editable=False,
         default=False,
     )
-    latest = models.NullBooleanField(
+    latest = models.BooleanField(
         "Latest",
-        null=False,
+        null=True,
         blank=False,
         editable=False,
         default=True,

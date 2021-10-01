@@ -130,7 +130,7 @@
                 <div class="alert alert-danger" role="alert">
                         <a href="#" class="close" data-dismiss="alert"> &times;</a>
                         {% for message in messages %}
-                                {% ifequal message|slice:"-1:" '!' %}
+                                {% if message|slice:"-1:" == '!' %}
                                                 <ul class="errorlist">
                                                         <li>{{message}}</li>
                                                 </ul>
@@ -138,7 +138,7 @@
                                                 <ul class="messagelist">
                                                         <li>{{message}}</li>
                                                 </ul>
-                                {% endifequal %}
+                                {% endif %}
                         {% endfor %}
                 </div>
         {% endif %}
@@ -281,9 +281,9 @@
                         <h2>Queries</h2>
                         <p>
                                 {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-                                {% ifnotequal sql_queries|length 0 %}
+                                {% if sql_queries|length != 0 %}
                                         (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
-                                {% endifnotequal %}
+                                {% endif %}
                         </p>
                         <table id="debugQueryTable" style="display: none;">
                                 <tr>

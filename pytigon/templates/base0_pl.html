@@ -82,7 +82,7 @@
                         {% block messages %}
                                 {% if messages %}
                                         {% for message in messages %}
-                                                {% ifequal message|slice:"-1:" '!' %}
+                                                {% if message|slice:"-1:" == '!' %}
                                                                 <ul class="errorlist">
                                                                         <li>{{message}}</li>
                                                                 </ul>
@@ -90,7 +90,7 @@
                                                                 <ul class="messagelist">
                                                                         <li>{{message}}</li>
                                                                 </ul>
-                                                {% endifequal %}
+                                                {% endif %}
                                         {% endfor %}
                                 {% endif %}
                         {% endblock %}

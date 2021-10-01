@@ -8,7 +8,7 @@ from pytigon_lib.schdjangoext.models import *
 import pytigon_lib.schdjangoext.fields as ext_models
 from pytigon_lib.schtools import schjson
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 import os, os.path
@@ -660,7 +660,7 @@ class DocType(models.Model):
     description = models.CharField(
         "Description", null=False, blank=False, editable=True, max_length=64
     )
-    correction = models.NullBooleanField(
+    correction = models.BooleanField(
         "Correction",
         null=True,
         blank=True,
@@ -1583,9 +1583,9 @@ class Account(TreeModel):
         verbose_name="Root classifier 3",
         related_name="baseaccount_rc3_set",
     )
-    enabled = models.NullBooleanField(
+    enabled = models.BooleanField(
         "Enabled",
-        null=False,
+        null=True,
         blank=False,
         editable=True,
         default=True,
@@ -1698,9 +1698,9 @@ class AccountState(models.Model):
         editable=True,
         default=True,
     )
-    aggregate = models.NullBooleanField(
+    aggregate = models.BooleanField(
         "Aggregate",
-        null=False,
+        null=True,
         blank=False,
         editable=True,
         default=False,
@@ -1955,7 +1955,7 @@ class AccountOperation(models.Model):
         max_digits=16,
         decimal_places=2,
     )
-    enabled = models.NullBooleanField(
+    enabled = models.BooleanField(
         "Enabled",
         null=True,
         blank=True,

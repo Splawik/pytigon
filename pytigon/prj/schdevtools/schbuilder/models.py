@@ -8,7 +8,7 @@ from pytigon_lib.schdjangoext.models import *
 import pytigon_lib.schdjangoext.fields as ext_models
 from pytigon_lib.schtools import schjson
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 import os, os.path
@@ -342,21 +342,21 @@ class SChAppSet(models.Model):
     gui_elements = models.CharField(
         "Gui elements", null=True, blank=True, editable=True, max_length=1024
     )
-    login_required = models.NullBooleanField(
+    login_required = models.BooleanField(
         "Login required",
         null=True,
         blank=True,
         editable=True,
         default=False,
     )
-    public = models.NullBooleanField(
+    public = models.BooleanField(
         "Public",
         null=True,
         blank=True,
         editable=True,
         default=False,
     )
-    main = models.NullBooleanField(
+    main = models.BooleanField(
         "Main project",
         null=True,
         blank=True,
@@ -1051,6 +1051,10 @@ class SChField(models.Model):
         #    if not self.parent.base_table in ("", "models.Model"):
         #        return ""
 
+        if self.type == "NullBooleanField":
+            self.type = "BooleanField"
+            self.null = True
+
         if self.type == "UserField":
             return self.param
         type_desc = dict(Field_CHOICES)[self.type]
@@ -1199,7 +1203,7 @@ class SChView(models.Model):
         choices=ViewRetType_CHOICES,
         max_length=1,
     )
-    asynchronous = models.NullBooleanField(
+    asynchronous = models.BooleanField(
         "Async",
         null=True,
         blank=True,
@@ -1400,7 +1404,7 @@ class SChTemplate(models.Model):
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=255
     )
-    direct_to_template = models.NullBooleanField(
+    direct_to_template = models.BooleanField(
         "Direct to template",
         null=True,
         blank=True,
@@ -1430,7 +1434,7 @@ class SChTemplate(models.Model):
     tags_mount = models.CharField(
         "Mount component tags", null=True, blank=True, editable=True, max_length=256
     )
-    asynchronous = models.NullBooleanField(
+    asynchronous = models.BooleanField(
         "Async",
         null=True,
         blank=True,
@@ -1684,7 +1688,7 @@ class SChForm(models.Model):
         blank=True,
         editable=True,
     )
-    asynchronous = models.NullBooleanField(
+    asynchronous = models.BooleanField(
         "Async",
         null=True,
         blank=True,
@@ -1730,7 +1734,7 @@ class SChFormField(models.Model):
         choices=FormField_CHOICES,
         max_length=64,
     )
-    required = models.NullBooleanField(
+    required = models.BooleanField(
         "Required",
         null=True,
         blank=True,
@@ -1844,7 +1848,7 @@ class SChTask(models.Model):
     perms = models.CharField(
         "Perms", null=True, blank=True, editable=True, max_length=255
     )
-    publish = models.NullBooleanField(
+    publish = models.BooleanField(
         "Publish",
         null=True,
         blank=True,
