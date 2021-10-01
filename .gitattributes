@@ -1,3 +1,4 @@
+.js linguist-detectable=false
 pytigon/static/* linguist-vendored
 pytigon/ext_lib/* linguist-vendored
 pytigon/ext_prg/* linguist-vendored
