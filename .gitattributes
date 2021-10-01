@@ -1,4 +1,8 @@
-.js linguist-detectable=false
+*.js linguist-detectable=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+*.ihtml linguist-detectable=false
+*.py linguist-detectable=true
 pytigon/static/* linguist-vendored
 pytigon/ext_lib/* linguist-vendored
 pytigon/ext_prg/* linguist-vendored
