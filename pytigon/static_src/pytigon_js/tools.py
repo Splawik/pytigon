@@ -676,7 +676,7 @@ def get_table_type(elem):
         if ret:
             return ret
     return ""
-
+window.get_table_type = get_table_type
 
 def can_popup():
     if jQuery(".modal-open").length > 0:

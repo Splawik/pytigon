@@ -25,7 +25,7 @@ from pytigon_lib.schhttptools import httpclient
 
 HTTP = None
 
-def init(prj, username, password):
+def init(prj, username, password, user_agent='pytigon'):
     global HTTP
 
     paths = get_main_paths(prj)
@@ -39,13 +39,13 @@ def init(prj, username, password):
     if username:
         parm = {"username": username, "password": password, "next": "/schsys/ok/"}
         response = HTTP.post(
-            None, "/schsys/do_login/", parm, credentials=(username, password)
+            None, "/schsys/do_login/", parm, credentials=(username, password), user_agent=user_agent
         )
 
-def request(url, params=None):
+def request(url, params=None, user_agent='pytigon'):
     if params:
-        response = HTTP.post(None, url, params, user_agent="embeded")
+        response = HTTP.post(None, url, params, user_agent=user_agent)
     else:
-        response = HTTP.get(None, url, user_agent="embeded")
+        response = HTTP.get(None, url, user_agent=user_agent)
     return response
 

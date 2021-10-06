@@ -728,6 +728,7 @@ get_table_type = function flx_get_table_type (elem) {
     return "";
 };
 
+window.get_table_type = get_table_type;
 can_popup = function flx_can_popup () {
     if (((jQuery(".modal-open").length) > 0)) {
         return false;
@@ -2907,6 +2908,7 @@ init_table = function flx_init_table (table, table_type) {
     return null;
 };
 
+window.init_table = init_table;
 table_loadeddata = function flx_table_loadeddata (event) {
     var _data, _update, datatable, dt, link, options, pk, post, table, txt, url;
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {

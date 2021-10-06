@@ -490,19 +490,57 @@ def require(context, href):
 
 @inclusion_tag('widgets/module_link.html')
 def module_link(context, href):
-    return {'href': mark_safe(href)}
+    if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
+        content_path = os.path.join(settings.STATIC_ROOT, href)
+        content = ""
+        try:
+            with open(content_path, "rt") as f:
+                content = f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
+        except:
+            print("file: ", href, "does'nt exists")
+        return {'href': mark_safe(href), 'content': mark_safe(content) }
+    else:
+        return {'href': mark_safe(href), 'content': None }
 
 @inclusion_tag('widgets/jscript_link.html')
 def jscript_link(context, href):
-    return {'href': mark_safe(href)}
+    if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
+        content_path = os.path.join(settings.STATIC_ROOT, href)
+        content = ""
+        try:
+            with open(content_path, "rt") as f:
+                content = f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
+        except:
+            print("file: ", href, "does'nt exists")
+        return {'href': mark_safe(href), 'content': mark_safe(content)}
+    else:
+        return {'href': mark_safe(href), 'content': None }
 
 @inclusion_tag('widgets/css_link.html')
 def css_link(context, href):
-    return standard_dict(context, {'href': href})
+    if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
+        content_path = os.path.join(settings.STATIC_ROOT, href)
+        content = ""
+        try:
+            with open(content_path, "rt") as f:
+                content = f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
+        except:
+            print("file: ", href, "does'nt exists")
+        return standard_dict(context, {'href': href, 'content': mark_safe(content) })
+    else:
+        return standard_dict(context, {'href': href, 'content': None })
 
 @inclusion_tag('widgets/link.html')
 def link(context, href, rel, typ):
-    return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ})
+    return standard_dict(context, {'href': settings.STATIC_URL + href, 'rel': rel, 'typ': typ, 'content': None })
+
+@inclusion_tag('widgets/jscript.html')
+def jscript(context, href):
+    content_path = os.path.join(settings.STATIC_ROOT, href)
+    content = ""
+    with open(content_path, "rt") as f:
+        content = f.read()
+    return {'content': mark_safe(content)}
 
 @inclusion_tag('widgets/component.html')
 def component(context, href):
@@ -723,8 +761,8 @@ def _read_user_icon_file(path):
         tmp = f.read()
     return tmp
 
-@register.simple_tag(takes_context=False)
-def icon(class_str, width=None, height=None):
+@register.simple_tag(takes_context=True)
+def icon(context, class_str, width=None, height=None):
     global ICON_CACHE
 
     if class_str.startswith('fa://'):
@@ -773,18 +811,51 @@ def icon(class_str, width=None, height=None):
         x = class_str[6:]
         x2 = x.split(' ',1)
         src = mhref("/static/icons/22x22/%s" % x2[0])
-        if len(x2)>1:
-            return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+        if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
+            content_path = os.path.join(settings.STATIC_ROOT, src[8:])
+            bcontent = ""
+            try:
+                with open(content_path, "rb") as f:
+                    content = f.read()
+                    bcontent = b64encode(content).decode('utf-8')
+            except:
+                print("file: ", src[8:], "does'nt exists")
+
+            if len(x2)>1:
+                return mark_safe("<img src='data:image/png;base64, %s' class='%s'></img>" % (bcontent, x2[1]))
+            else:
+                return mark_safe("<img src='data:image/png;base64, %s'></img>" % bcontent)
         else:
-            return mark_safe("<img src='%s'></img>" % src)
+            if len(x2)>1:
+                return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+            else:
+                return mark_safe("<img src='%s'></img>" % src)
     elif class_str.startswith('client://'):
         x = class_str[9:]
+        print(class_str)
         x2 = x.split(' ', 1)
         src = mhref("/static/icons/22x22/%s" % x2[0])
-        if len(x2)>1:
-            return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+        if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
+            content_path = os.path.join(settings.STATIC_ROOT, src[8:])
+            ext = content_path.split('.')[-1]
+            bcontent = ""
+            try:
+                with open(content_path, "rb") as f:
+                    content = f.read()
+                    bcontent = b64encode(content).decode('utf-8')
+            except:
+                print("file: ", src[8:], "does'nt exists")
+
+            if len(x2)>1:
+                return mark_safe("<img src='data:image/%s;base64, %s' class='%s'></img>" % (ext, bcontent, x2[1]))
+            else:
+                return mark_safe("<img src='data:image/%s;base64, %s'></img>" % (ext, bcontent))
         else:
-            return mark_safe("<img src='%s'></img>" % src)
+            if len(x2)>1:
+                return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+            else:
+                return mark_safe("<img src='%s'></img>" % src)
+
     elif class_str.startswith('data:image/svg+xml'):
         x = class_str.split(',',1)
         svg_code = x[1]
@@ -793,3 +864,16 @@ def icon(class_str, width=None, height=None):
         return mark_safe("<i class='fa %s'></i>" % class_str)
     else:
         return mark_safe("<i class='fa fa-circle-o fa-lg'></i>")
+
+
+@register.simple_tag(takes_context=False)
+def to_b64(href):
+    content_path = os.path.join(settings.STATIC_ROOT, href)
+    bcontent = ""
+    try:
+        with open(content_path, "rb") as f:
+            content = f.read()
+            bcontent = b64encode(content).decode('utf-8')
+    except:
+        print("file: ", content_path, "does'nt exists")
+    return bcontent

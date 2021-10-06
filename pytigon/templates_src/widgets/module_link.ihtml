@@ -1,2 +1,7 @@
 % load static
-script type=module,,,src={% static href %}
+
+% if content:
+    script type=module
+        {{ content|safe }}
+% else:
+    script type=module,,,src={% static href %}

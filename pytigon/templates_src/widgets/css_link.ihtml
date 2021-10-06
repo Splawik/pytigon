@@ -1,2 +1,6 @@
 % load static
-link rel=stylesheet,,,type=text/css,,,href={% get_static_prefix %}{{href}}
+% if content:
+    style type=text/css
+        {{ content|safe }}
+% else:
+    link rel=stylesheet,,,type=text/css,,,href={% get_static_prefix %}{{href}}

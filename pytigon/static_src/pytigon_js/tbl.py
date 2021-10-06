@@ -232,7 +232,7 @@ def init_table(table, table_type):
             datetable_set_height(table[0])
 
         table[0].process_resize = _process_resize
-
+window.init_table = init_table
 
 def table_loadeddata(event):
     if getattr(event, "data"):

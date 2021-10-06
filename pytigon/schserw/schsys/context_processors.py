@@ -73,19 +73,13 @@ def test_tablet(request):
             return True
     return False
 
-def test_ie(request):
-    if 'HTTP_USER_AGENT' in request.META:
-        if 'edge' in request.META['HTTP_USER_AGENT'].lower() or 'trident' in request.META['HTTP_USER_AGENT'].lower():
-            return True
-    return False
-
 
 def standard_web_browser(request):
     if 'browser_type' in request.GET:
         return int(request.GET['browser_type'])
     if not 'HTTP_USER_AGENT' in request.META:
         return 0
-    if request and request.META['HTTP_USER_AGENT'].lower().startswith('py'):
+    if request and 'HTTP_USER_AGENT' in request.META and request.META['HTTP_USER_AGENT'] and request.META['HTTP_USER_AGENT'].lower().startswith('py'):
         if 'WebKit' in request.META['HTTP_USER_AGENT']:
             return 3
         else:
@@ -474,7 +468,6 @@ def sch_standard(request):
     #    return parameters
 
     standard = standard_web_browser(request)
-    ie = test_ie(request)
 
     r = urlparse(request.path)
     rr = r.path.split('/')
@@ -603,6 +596,11 @@ def sch_standard(request):
         gmt = time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (gmt[0], gmt[1], gmt[2], gmt[3], gmt[4], gmt[5])
 
+    if "HTTP_USER_AGENT" in request.META:
+        user_agent = request.META['HTTP_USER_AGENT']
+    else:
+        user_agent = ""
+
     ret = {
         'standard_web_browser': standard,
 #        'app_manager': AppManager(request),
@@ -623,7 +621,6 @@ def sch_standard(request):
         'show_form': show_form,
         'browser_type': b_type,
         'client_type': c_type,
-        'ie': ie,
         'application_type': b_type2,
         'default_template': d_template,
         'default_template2': d_template2,
@@ -642,6 +639,7 @@ def sch_standard(request):
         'SHOW_LOGIN_WIN': False,
         'env': Env(get_environ()),
         'pyodide': settings.PYODIDE,
+        'user_agent': user_agent,
         }
     if 'client_param' in request.session:
         ret.update(request.session['client_param'])

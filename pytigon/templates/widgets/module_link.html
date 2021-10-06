@@ -1,3 +1,9 @@
 {% load static %}
-<script type="module" src="{% static href %}"></script>
+{% if content %}
+        <script type="module">
+                {{ content|safe }}
+        </script>
+  {% else %}
+        <script type="module" src="{% static href %}"></script>
+{% endif %}
 

@@ -4,12 +4,14 @@
 {% load exsyntax %}
 {% load static %}
 {% load compress %}
-{% block js_scripts_base %}
+{% block head_start %}
         <script language="javascript">
                 window.BASE_PATH = '{{base_path}}';
         </script>
+        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
+{% endblock %}
+{% block js_scripts_base %}
         {% compress js %}
-                {% jscript_link 'pytigon_js/pytigon-tools.js' %}
                 {% jscript_link 'pytigon_js/py_runtime.js' %}
                 {% jscript_link 'system/morphdom-umd.min.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
@@ -52,14 +54,13 @@
         {% module_link 'pytigon_js/pytigon.js' %}
 {% endblock %}
 {% block jquery_init %}
-        import {app_init,jquery_ready,init_db,init_sync} from  "{% get_static_prefix %}pytigon_js/pytigon.js";
-        {% block js_app_init %}
+      {% block js_app_init %}
                 function base_fragment_init() {}
-        {% endblock %}
         {% block component_init %}
                 var component_init = null
         {% endblock %}
         app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
+      {% endblock %}
 {% endblock %}
 {% block jquery_ready_start %}
         jQuery(document).ready(function() {
@@ -98,6 +99,16 @@
                 {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap4-editable/css/bootstrap-editable.css' %}
                 {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
+                {% if user_agent == 'webviewembeded' %}
+                        <style>
+                @font-face {
+                    font-family: 'ForkAwesome';
+                    src: url(data:font/truetype;charset=utf-8;base64, {% to_b64 'fonts/fork-awesome/fonts/forkawesome-webfont.ttf' %}) format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+</style>
+                {% endif %}
                 {% css_link 'jquery_plugins/daterangepicker/daterangepicker.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
@@ -111,7 +122,7 @@
                 {{ form.media.css }}
                 {% block botstrap_css %}
                         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
-                        {% css_link 'bootstrap_plugins/awesome-bootstrap-checkbox.css' %}
+                        {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
                 {% endblock %}
                 {% block theme_css_links %}
                         {% css_link 'themes/select2-material.css' %}

@@ -1,5 +1,4 @@
 var comp, init, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err;
-import { animate_combo, get_table_type, init_table } from '../../pytigon_js/pytigon.js';
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {

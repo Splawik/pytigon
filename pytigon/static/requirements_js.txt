@@ -15,6 +15,8 @@ vanillajs_plugins/popper: https://popper.js.org/
 vanillajs_plugins/cookie: https://github.com/js-cookie/js-cookie
 vanillajs_plugins/lz-string: https://github.com/pieroxy/lz-string
 vanillajs_plugins/input-masking: https://github.com/estelle/input-masking
+vanillajs_plugins/icheck-material-1.0.1: https://github.com/bantikyan/icheck-material
+
 
 jquery: https://github.com/jquery/jquery
 

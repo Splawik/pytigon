@@ -30,22 +30,24 @@ from os import environ
 environ["START_PATH"] = os.path.abspath(os.getcwd())
 environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
+
 def schserw_init_prj_path(paths, app, param=None):
     if app:
-        prj_path = paths['PRJ_PATH']
+        prj_path = paths["PRJ_PATH"]
         from pytigon_lib import init_paths
+
         init_paths(app, os.path.join(prj_path, app))
 
         if app == ".":
             p1 = environ["START_PATH"]
             parts = p1.replace("\\", "/").rsplit("/", 1)
             mod_app = parts[-1]
-            environ['PRJ_NAME'] = mod_app
+            environ["PRJ_NAME"] = mod_app
             path2 = p1[0 : len(parts[0])]
             sys.path.append(path2)
             return (mod_app, path2)
         else:
-            environ['PRJ_NAME'] = app
+            environ["PRJ_NAME"] = app
     return None
 
 
@@ -57,6 +59,7 @@ def get_app_conf(path):
         return config
     else:
         return None
+
 
 def run(param=None):
     if param:
@@ -77,9 +80,10 @@ def run(param=None):
             x = argv[1].split("_", 1)
             app = x[1]
             from pytigon_lib.schtools.main_paths import get_main_paths
+
             paths = get_main_paths(app)
-            PRJ_PATH = paths['PRJ_PATH']
-            DATA_PATH = paths['DATA_PATH']
+            PRJ_PATH = paths["PRJ_PATH"]
+            DATA_PATH = paths["DATA_PATH"]
             ret = schserw_init_prj_path(paths, app, param)
             if ret:
                 app = ret[0]
@@ -90,11 +94,11 @@ def run(param=None):
 
                 init(
                     app,
-                    paths['ROOT_PATH'],
+                    paths["ROOT_PATH"],
                     DATA_PATH,
                     PRJ_PATH,
-                    paths['STATIC_PATH'],
-                    [paths['MEDIA_PATH'], paths['UPLOAD_PATH']],
+                    paths["STATIC_PATH"],
+                    [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
                 )
 
             path3 = os.path.join(PRJ_PATH, app)
@@ -114,9 +118,10 @@ def run(param=None):
             script = "run.py"
 
         from pytigon_lib.schtools.main_paths import get_main_paths
+
         paths = get_main_paths(app)
 
-        PRJ_PATH = paths['PRJ_PATH']
+        PRJ_PATH = paths["PRJ_PATH"]
 
         ret = schserw_init_prj_path(paths, app, param)
 
@@ -133,9 +138,10 @@ def run(param=None):
             app = x[1]
 
             from pytigon_lib.schtools.main_paths import get_main_paths
+
             paths = get_main_paths(app)
-            PRJ_PATH = paths['PRJ_PATH']
-            DATA_PATH = paths['DATA_PATH']
+            PRJ_PATH = paths["PRJ_PATH"]
+            DATA_PATH = paths["DATA_PATH"]
 
             ret = schserw_init_prj_path(paths, app, param)
 
@@ -148,11 +154,11 @@ def run(param=None):
 
                 init(
                     app,
-                    paths['ROOT_PATH'],
+                    paths["ROOT_PATH"],
                     DATA_PATH,
                     PRJ_PATH,
-                    paths['STATIC_PATH'],
-                    [paths['MEDIA_PATH'], paths['UPLOAD_PATH'] ],
+                    paths["STATIC_PATH"],
+                    [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
                 )
 
             path3 = os.path.join(PRJ_PATH, app)
@@ -164,27 +170,29 @@ def run(param=None):
             else:
                 id = argv[2:].index("-b")
                 if id >= 0:
-                    address = argv[2:][id+1]
+                    address = argv[2:][id + 1]
             options.append("asgi:application")
             tmp = sys.argv
             sys.argv = [""] + argv[2:] + options
 
             if platform_name() == "Android":
                 from daphne.cli import CommandLineInterface
+
                 CommandLineInterface.entrypoint()
             else:
                 try:
                     from hypercorn.__main__ import main
                 except:
                     from daphne.cli import CommandLineInterface
+
                     CommandLineInterface.entrypoint()
                     return
 
                 if "--with-gui" in argv:
                     sys.argv.remove("--with-gui")
 
-                    #from pytigon.schserw import settings as schserw_settings
-                    #if ret:
+                    # from pytigon.schserw import settings as schserw_settings
+                    # if ret:
                     #    argv[1] = ret[0]
                     #    schserw_settings.PRJ_PATH = ret[1]
 
@@ -192,12 +200,29 @@ def run(param=None):
                     p.start()
 
                     from pytigon_lib.schbrowser.schcef import run
+
                     conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
                     if conf:
-                        title = conf['DEFAULT']['PRJ_TITLE']
-                        run("http://"+address.replace('0.0.0.0', '127.0.0.1')+"/"+app+"/", app, title)
+                        title = conf["DEFAULT"]["PRJ_TITLE"]
+                        run(
+                            "http://"
+                            + address.replace("0.0.0.0", "127.0.0.1")
+                            + "/"
+                            + app
+                            + "/",
+                            app,
+                            title,
+                        )
                     else:
-                        run("http://"+address.replace('0.0.0.0', '127.0.0.1')+"/"+app+"/", app, "Pytigon application")
+                        run(
+                            "http://"
+                            + address.replace("0.0.0.0", "127.0.0.1")
+                            + "/"
+                            + app
+                            + "/",
+                            app,
+                            "Pytigon application",
+                        )
 
                     p.kill()
                 else:
@@ -205,10 +230,13 @@ def run(param=None):
             sys.argv = tmp
             os.chdir(base_path)
 
-    elif len(argv) > 1 and (argv[1].endswith(".py") or argv[1][-4:-1] == ".py" or argv[1]=='-m'):
+    elif len(argv) > 1 and (
+        argv[1].endswith(".py") or argv[1][-4:-1] == ".py" or argv[1] == "-m"
+    ):
         app = argv[1]
 
         from pytigon_lib.schtools.main_paths import get_main_paths
+
         paths = get_main_paths(app)
         ret = schserw_init_prj_path(paths, app, param)
         if ret:
@@ -230,26 +258,73 @@ def run(param=None):
                     break
 
             from pytigon_lib.schtools.main_paths import get_main_paths
+
             paths = get_main_paths(app)
 
             ret = schserw_init_prj_path(paths, app, param)
 
-            #from pytigon.schserw import settings as schserw_settings
-            #if ret:
+            # from pytigon.schserw import settings as schserw_settings
+            # if ret:
             #    argv[1] = ret[0]
             #    schserw_settings.PRJ_PATH = ret[1]
 
-            if '-b' in sys.argv or '--embeded-browser' in sys.argv:
-                from pytigon_lib.schbrowser.schcef import run
-                conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
+            if "-b" in sys.argv or "--embeded-browser" in sys.argv:
+                # from pytigon_lib.schbrowser.schcef import run
+                conf = get_app_conf(os.path.join(paths["PRJ_PATH"], argv[1]))
+                # if conf:
+                #    try:
+                #        title = conf['DEFAULT']['PRJ_TITLE']
+                #    except:
+                #        title = "Pytigon"
+                #    run("http://127.0.0.2", app, title)
+                # else:
+                #    run("http://127.0.0.2", app, "Pytigon application")
+                import webview
+                from pytigon.pytigon_request import init, request
+
+                def _init():
+                    init(app, "auto", "anawa", user_agent="webviewembeded")
+
+                def _request(url, params=None):
+                    if params:
+                        params2 = params
+                    else:
+                        params2 = None
+                    ret = request(url, params2, user_agent="webviewembeded")
+                    return ret
+
+                class Api:
+                    def get(self, url, params=None):
+                        ret = _request(url, params)
+                        return ret.str()
+
+                api = Api()
                 if conf:
-                    try:
-                        title = conf['DEFAULT']['PRJ_TITLE']
-                    except:
-                        title = "Pytigon"
-                    run("http://127.0.0.2", app, title)
+                    window = webview.create_window(
+                        conf["DEFAULT"]["PRJ_TITLE"],
+                        url = "http://127.0.0.5/",
+                        html = " ",
+                        js_api=api,
+                        min_size=(600, 450),
+                    )
                 else:
-                    run("http://127.0.0.2", app, "Pytigon application")
+                    window = webview.create_window(
+                       "Pytigon application",
+                       url = "http://127.0.0.5/",
+                       html = " ",
+                       js_api=api,
+                       min_size=(600, 450),
+                    )
+
+                def on_loaded():
+                    webview.windows[0].loaded -= on_loaded
+                    ret = _init()
+                    start_request = _request("/")
+                    start_content = start_request.str()
+                    webview.windows[0].load_html(start_content, "http://127.0.0.5/")
+
+                window.loaded += on_loaded
+                webview.start(debug=True)
             else:
                 from pytigon_gui.pytigon import main
                 main()
@@ -288,4 +363,3 @@ def run(param=None):
 
 if __name__ == "__main__":
     run(sys.argv)
-
