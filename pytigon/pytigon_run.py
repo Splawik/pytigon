@@ -269,21 +269,16 @@ def run(param=None):
             #    schserw_settings.PRJ_PATH = ret[1]
 
             if "-b" in sys.argv or "--embeded-browser" in sys.argv:
-                # from pytigon_lib.schbrowser.schcef import run
-                conf = get_app_conf(os.path.join(paths["PRJ_PATH"], argv[1]))
-                # if conf:
-                #    try:
-                #        title = conf['DEFAULT']['PRJ_TITLE']
-                #    except:
-                #        title = "Pytigon"
-                #    run("http://127.0.0.2", app, title)
-                # else:
-                #    run("http://127.0.0.2", app, "Pytigon application")
                 import webview
                 from pytigon.pytigon_request import init, request
 
-                def _init():
-                    init(app, "auto", "anawa", user_agent="webviewembeded")
+                conf = get_app_conf(os.path.join(paths["PRJ_PATH"], argv[1]))
+                index_path = os.path.join(paths["STATIC_PATH"], "pywebview", "index.html")
+                try:
+                    with open(index_path, "rt") as f:
+                        index_str = f.read()
+                except:
+                    index_str = " "
 
                 def _request(url, params=None):
                     if params:
@@ -302,22 +297,39 @@ def run(param=None):
                 if conf:
                     window = webview.create_window(
                         conf["DEFAULT"]["PRJ_TITLE"],
-                        url = "http://127.0.0.5/",
-                        html = " ",
+                        #url = "http://127.0.0.5/",
+                        html = index_str,
                         js_api=api,
-                        min_size=(600, 450),
+                        min_size=(1024, 768),
+                        #background_color='#0FF',
                     )
                 else:
                     window = webview.create_window(
                        "Pytigon application",
-                       url = "http://127.0.0.5/",
-                       html = " ",
+                       #url = "http://127.0.0.5/",
+                       html = index_str,
                        js_api=api,
-                       min_size=(600, 450),
+                       min_size=(1024, 768),
+                       #background_color = '#0FF',
                     )
 
                 def on_loaded():
                     webview.windows[0].loaded -= on_loaded
+
+                    # from pytigon_lib.schbrowser.schcef import run
+                    # if conf:
+                    #    try:
+                    #        title = conf['DEFAULT']['PRJ_TITLE']
+                    #    except:
+                    #        title = "Pytigon"
+                    #    run("http://127.0.0.2", app, title)
+                    # else:
+                    #    run("http://127.0.0.2", app, "Pytigon application")
+
+
+                    def _init():
+                        init(app, "auto", "anawa", user_agent="webviewembeded")
+
                     ret = _init()
                     start_request = _request("/")
                     start_content = start_request.str()

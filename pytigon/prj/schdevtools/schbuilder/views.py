@@ -584,10 +584,10 @@ def gen(request, pk):
     prj = models.SChAppSet.objects.get(id=pk)
     root_path = settings.ROOT_PATH
 
-    if hasattr(pytigon.schserw.settings, "_PRJ_PATH"):
-        base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH, prj.name)
+    if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+        base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
     else:
-        base_path = os.path.join(settings.PRJ_PATH, prj.name)
+        base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
     src_path = os.path.join(settings.PRJ_PATH, "schdevtools")
     object_list = []
     gmt = time.gmtime()
@@ -1735,3 +1735,37 @@ def download_installer(request, name):
             )
             return response
     return HttpResponse(_("No installer file to download"))
+
+
+@dict_to_json
+def autocomplete(request, id, key):
+
+    # id, key
+
+    if key == "default":
+        pass
+    elif key == "object_fields":
+        template = models.SChTemplate.objects.get(pk=int(id))
+        tables = models.SChTable.objects.filter(name=template.name)
+        ret = []
+        if len(tables) > 0:
+            for field in tables[0].schfield_set.all():
+                ret.append(field.name)
+        return ret
+    elif key == "object methods":
+        pass
+    elif key.endswith("icons"):
+        # "wx_icons",
+        # "embeded_icons",
+        # "fa_icons",
+        pass
+    elif key == "template blocks":
+        pass
+    elif key.endswith("filters"):
+        pass
+    elif key.endswith("tags"):
+        pass
+    elif "((" in key and "))" in key:
+        pass
+    else:
+        return key

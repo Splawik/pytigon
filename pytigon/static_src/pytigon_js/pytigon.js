@@ -3339,6 +3339,7 @@ jquery_ready = function flx_jquery_ready () {
     return null;
 };
 
+window.jquery_ready = jquery_ready;
 _on_popstate = function (e) {
     var menu, x;
     if (_pyfunc_truthy(e.state)) {

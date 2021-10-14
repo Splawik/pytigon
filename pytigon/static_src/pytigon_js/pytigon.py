@@ -193,6 +193,7 @@ def _on_error(request, settings):
 def jquery_ready():
     pass
 
+window.jquery_ready = jquery_ready
 
 def _on_popstate(self, e):
     if e.state:

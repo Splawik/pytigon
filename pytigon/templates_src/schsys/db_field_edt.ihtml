@@ -84,15 +84,15 @@
 
 
 
-        def on_auto_comp_cmd(self, edt_ctrl, pos):
-            kw = []
-            kw.append("zzzzzz?2")
-            kw.append("aaaaa?2")
-            kw.append("this_is_a_longer_value")
-            kw.sort()  # Python sorts are case sensitive
+        #def on_auto_comp_cmd(self, edt_ctrl, pos):
+        #    kw = []
+        #    kw.append("zzzzzz?2")
+        #    kw.append("aaaaa?2")
+        #    kw.append("this_is_a_longer_value")
+        #    kw.sort()  # Python sorts are case sensitive
 
-            edt_ctrl.AutoCompSetIgnoreCase(False)  # so this needs to match
-            edt_ctrl.AutoCompShow(0, (" ").join(kw))
+        #    edt_ctrl.AutoCompSetIgnoreCase(False)  # so this needs to match
+        #    edt_ctrl.AutoCompShow(0, (" ").join(kw))
 
 
         def can_close(self):

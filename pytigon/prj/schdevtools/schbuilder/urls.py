@@ -108,6 +108,7 @@ urlpatterns = [
             "field": "parent",
         },
     ),
+    re_path("autocomplete/(?P<id>\d+)/(?P<key>\w+)/$", views.autocomplete, {}),
     path(
         "devtools", TemplateView.as_view(template_name="schbuilder/devtools.html"), {}
     ),

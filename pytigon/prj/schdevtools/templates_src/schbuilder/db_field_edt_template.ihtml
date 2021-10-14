@@ -26,12 +26,68 @@
             self.EDITOR.SetCurrentPos(0)
             self.EDITOR.SetSelection(0,0)
             self.EDITOR.SetFocus()
-            
-            #aTable = [
-             #   (wx.ACCEL_ALT, ord('I'), self.on_panel_focus),
-             #   (wx.ACCEL_ALT, ord(';'), self.on_),
-             #   ]
-            #self.set_acc_key_tab(aTable)
+
+
+            class ChoiceDialog(wx.Dialog):
+                def __init__(self, parent, title, choices):
+                    wx.Dialog.__init__(self)
+                    self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+                    self.Create(parent, -1, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, name='dialog')
+                    self.choices = []
+                    p = wx.Panel(self, -1, style = wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
+                    
+                    self.sizer1 = wx.GridBagSizer(vgap=5, hgap=5)
+                    
+                    row = 0;
+                    for obj in choices:
+                        self.sizer1.Add( wx.StaticText(p, -1, obj['title']), (row, 0), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
+                        choice = wx.adv.BitmapComboBox(p, -1, size=(600, -1))
+
+                        for c in obj['values']:
+                            if type(c) == str:
+                                choice.Append(c)
+                            elif type(c) == bytes:
+                                choice.Append(c.decode('utf-8'))
+                            else:
+                                choice.Append(c[0], c[1])
+
+                        #wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
+                        self.choices.append(choice)
+                        self.sizer1.Add(choice, (row, 1), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
+                        row+=1;
+
+                    self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+                    cancel = wx.Button(p, wx.ID_CANCEL, "Cancel")
+                    ok = wx.Button(p, wx.ID_OK, "OK")
+                    self.sizer2.Add( cancel, 1, wx.EXPAND|wx.ALL, 5)
+                    self.sizer2.Add( ok, 1, wx.EXPAND|wx.ALL, 5)
+                    ok.SetDefault()
+                    #self.Bind(wx.EVT_BUTTON, self.on_ok, ok)
+
+                    box = wx.BoxSizer(wx.VERTICAL)
+                    box.Add(self.sizer1, 0, wx.EXPAND)
+                    box.Add(self.sizer2, 0, wx.EXPAND | wx.ALL, 5)
+
+                    p.SetSizerAndFit(box)
+                    self.SetClientSize(p.GetSize())
+
+                def on_ok(self, event):
+                    print(event)
+
+            self.dialog = ChoiceDialog
+
+            from schbuilder.autocomplete import ACTIONS
+            self.actions = ACTIONS
+            from django.template import Template, Context
+            self.template_class = Template
+            self.context_class = Context
+            #from pytigon_lib.schhttptools.httpclient import HttpClient
+            #self.http_client_class = HttpClient
+            # aTable = [
+            #   (wx.ACCEL_ALT, ord('I'), self.on_panel_focus),
+            #   (wx.ACCEL_ALT, ord(';'), self.on_),
+            #   ]
+            # self.set_acc_key_tab(aTable)
 
             
 
@@ -47,11 +103,80 @@
         def on_insert_image_click(self, event):
             self.insert_txt(self._icon.GetValue())
 
+        def on_dialog(self, key):
+            dialog_title = "Chose items"
+            parameters = []
+            template_str = ""
+            return_str = ""
+
+            if key == 'default':
+                pass
+
+            if key in self.actions:
+                obj = self.actions[key]
+                if 'title' in obj:
+                    dialog_title = obj['title']
+                if 'choices' in obj:
+                    parameters = obj['choices']
+                if 'template' in obj:
+                    template_str = obj['template']
+            elif key == 'object fields':
+                client = wx.GetApp().get_http(self)
+                response = client.get(self,"/schbuilder/autocomplete/{{object.id}}/object_fields/")
+                ret = response.json()
+                title = "Chose object field"
+                parameters = [ { 'title': 'Field', 'values': ret, }, ]
+                template_str = "[[choice.0]]"
+            elif key == 'object methods':
+                pass
+            elif key.endswith("icons"):
+                #"wx_icons",
+                #"embeded_icons",
+                #"fa_icons",
+                pass
+            elif key == 'template blocks':
+                pass
+            elif key.endswith("filters"):
+                pass
+            elif key.endswith("tags"):
+                pass
+            elif '((' in key and '))' in key:
+                pass
+            else:
+                return key
+
+            if parameters and template_str:
+                dlg = self.dialog(self, dialog_title, parameters)
+                dlg.CenterOnScreen()
+                val = dlg.ShowModal()
+                if val == wx.ID_OK:
+                    choice = []
+                    for ctrl in dlg.choices:
+                        choice.append(ctrl.GetStringSelection())
+                    print("1: ", choice)
+                    print("2: ", template_str)
+                    t = self.template_class(template_str)
+                    c = self.context_class({"choice": choice})
+                    ret = t.render(c)
+                    print("3: ", ret)
+                    return ret
+                else:
+                    return None
+
+            return return_str
+
         def on_insert_click(self, event):
             item = self._panel.GetSelection()
             if item.IsOk():
-                txt = self._panel.GetItemText(item)
-                self.insert_txt(txt)
+                key = self._panel.GetItemText(item)
+                ret_str = on_dialog(self, key)
+                if ret_str:
+                    self.insert_txt(ret_str)
+
+        def on_auto_comp_cmd(self, edt_ctrl, pos):
+            ret_str = on_dialog(self, "default")
+            if ret_str:
+                self.insert_txt(ret_str)
 
         def insert_txt(self, txt):
             pos = self.EDITOR.GetCurrentPos()
@@ -95,7 +220,7 @@
                     ctrl-tree name=_panel,,,width=200,,,height=calc(100% - top - 20)
                         li...{{object}}
                             ul
-                                li...object.fields
+                                li...object fields
                                     ul
                                         %for pos in object.get_table_fields
                                             li...{{pos}}

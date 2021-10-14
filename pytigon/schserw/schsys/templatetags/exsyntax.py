@@ -57,7 +57,6 @@ def inclusion_tag(file_name):
         return register.simple_tag(takes_context=True, name=getattr(func, '_decorated_function', func).__name__)(func2)
     return dec
 
-
 # row actions
 
 class RowActionNode(Node):
@@ -461,7 +460,6 @@ def get_table_row(context, field_or_name, app_name=None, table_name=None, search
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            print("X1:", href1, href2)
             self.fields[_name] = forms.ChoiceField(
                 label = _label,
                 widget=ModelSelect2WidgetExt(href1, href2, is_new_button, is_get_button, _label,
@@ -761,6 +759,21 @@ def _read_user_icon_file(path):
         tmp = f.read()
     return tmp
 
+def _to_b64(href):
+    content_path = os.path.join(settings.STATIC_ROOT, href)
+    bcontent = ""
+    try:
+        with open(content_path, "rb") as f:
+            content = f.read()
+            bcontent = b64encode(content).decode('utf-8')
+    except:
+        print("file: ", content_path, "does'nt exists")
+    return bcontent
+
+@register.simple_tag(takes_context=False)
+def to_b64(href):
+    return _to_b64(href)
+
 @register.simple_tag(takes_context=True)
 def icon(context, class_str, width=None, height=None):
     global ICON_CACHE
@@ -812,15 +825,7 @@ def icon(context, class_str, width=None, height=None):
         x2 = x.split(' ',1)
         src = mhref("/static/icons/22x22/%s" % x2[0])
         if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
-            content_path = os.path.join(settings.STATIC_ROOT, src[8:])
-            bcontent = ""
-            try:
-                with open(content_path, "rb") as f:
-                    content = f.read()
-                    bcontent = b64encode(content).decode('utf-8')
-            except:
-                print("file: ", src[8:], "does'nt exists")
-
+            bcontent = _to_b64(src[8:])
             if len(x2)>1:
                 return mark_safe("<img src='data:image/png;base64, %s' class='%s'></img>" % (bcontent, x2[1]))
             else:
@@ -832,20 +837,11 @@ def icon(context, class_str, width=None, height=None):
                 return mark_safe("<img src='%s'></img>" % src)
     elif class_str.startswith('client://'):
         x = class_str[9:]
-        print(class_str)
         x2 = x.split(' ', 1)
         src = mhref("/static/icons/22x22/%s" % x2[0])
         if 'user_agent' in context and context['user_agent'] == 'webviewembeded':
-            content_path = os.path.join(settings.STATIC_ROOT, src[8:])
-            ext = content_path.split('.')[-1]
-            bcontent = ""
-            try:
-                with open(content_path, "rb") as f:
-                    content = f.read()
-                    bcontent = b64encode(content).decode('utf-8')
-            except:
-                print("file: ", src[8:], "does'nt exists")
-
+            ext = src[8:].split('.')[-1]
+            bcontent = _to_b64(src[8:])
             if len(x2)>1:
                 return mark_safe("<img src='data:image/%s;base64, %s' class='%s'></img>" % (ext, bcontent, x2[1]))
             else:
@@ -864,16 +860,3 @@ def icon(context, class_str, width=None, height=None):
         return mark_safe("<i class='fa %s'></i>" % class_str)
     else:
         return mark_safe("<i class='fa fa-circle-o fa-lg'></i>")
-
-
-@register.simple_tag(takes_context=False)
-def to_b64(href):
-    content_path = os.path.join(settings.STATIC_ROOT, href)
-    bcontent = ""
-    try:
-        with open(content_path, "rb") as f:
-            content = f.read()
-            bcontent = b64encode(content).decode('utf-8')
-    except:
-        print("file: ", content_path, "does'nt exists")
-    return bcontent
