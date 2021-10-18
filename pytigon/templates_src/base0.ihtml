@@ -90,7 +90,7 @@
                     %% navglobal
                     %% sidebar
                     %% content_start
-                    %% no_content
+                    %% all_content
                         %% content
                     %% content_end
             %% tabs

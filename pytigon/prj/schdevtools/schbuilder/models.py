@@ -1442,6 +1442,24 @@ class SChTemplate(models.Model):
         default=False,
     )
 
+    TAG_LIBS = [
+        "cache",
+        "i18n",
+        "l10n",
+        "static",
+        "tz",
+        "log",
+        "catch",
+        "collapse",
+        "defexfiltry",
+        "exfiltry",
+        "expr",
+        "exsyntax",
+        "htmlwidget",
+        "mptt_tags",
+        "compress",
+    ]
+
     def get_url_name(self):
         if self.url and self.url != "":
             return self.url
@@ -1516,6 +1534,22 @@ class SChTemplate(models.Model):
         for pos in django_engine.template_builtins:
             for f in pos.tags:
                 ret.append(f)
+        return ret
+
+    def get_pytigon_filters(self):
+        ret = []
+        for name, lib in engines["django"].engine.template_libraries.items():
+            if name in self.TAG_LIBS:
+                for name in lib.filters:
+                    ret.append(name)
+        return ret
+
+    def get_pytigon_tags(self):
+        ret = []
+        for name, lib in engines["django"].engine.template_libraries.items():
+            if name in self.TAG_LIBS:
+                for name in lib.tags:
+                    ret.append(name)
         return ret
 
     def get_blocks(self):

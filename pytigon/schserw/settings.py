@@ -426,7 +426,6 @@ BOOTSTRAP4 = {"use_custom_controls": False}
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""
-BOOTSTRAP_BUTTON_SIZE_CLASS = ""
 
 # SEARCH_PATH = "/schwiki/%s/search/"
 

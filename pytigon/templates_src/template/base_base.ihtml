@@ -230,7 +230,6 @@
 
         %% list_page
             %% list_content_start
-                % if standard_web_browser:
             %% list_content_header
                 div
                     div class=table container col-12
@@ -240,9 +239,9 @@
                                     div class=td col-sm-12 hidden-sm-down text-center
                                         %% list_content_title
                                             h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
-                        %%list_content_header_two_row
+                        %%list_content_header_second_row
                             % if form:
-                                div class=tr row list_content_header list_content_header_two_row
+                                div class=tr row list_content_header list_content_header_second_row
                                     div class=td col-md-12 col-sm-12,,,colspan=3
                                         %% list_filter_form
                                             form method=post,,,action={{request.path}},,,role=form,,,class=table_filter ajax-link form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_frame,,,data-region={% if table_type == 'datatable'%}table{% else %}table{% endif %}
@@ -394,7 +393,6 @@
             %% list_content_footer
 
             %% list_content_end
-                % if standard_web_browser:
 
         %% list_page_footer
 

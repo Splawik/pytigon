@@ -153,7 +153,10 @@ class CodeEditor(stc.StyledTextCtrl):
                 if hasattr(self.GetParent(), 'on_auto_comp_cmd'):
                     self.GetParent().on_auto_comp_cmd(self, pos)
         elif key == wx.WXK_NUMPAD_ENTER or key == wx.WXK_RETURN:
-            self._enter_key()
+            if self.AutoCompActive():
+                event.Skip()
+            else:
+                self._enter_key()
         elif key == wx.WXK_ESCAPE:
             wx.GetApp().GetTopWindow().OnCloseTab(event)
         elif key == wx.WXK_F3:
@@ -296,6 +299,10 @@ class CodeEditor(stc.StyledTextCtrl):
         ret =  stc.StyledTextCtrl.SearchNext(self, flags, text)
         self.EnsureCaretVisible()
         return ret
+
+
+    def AutoCompGetMaxHeight(self):
+        return 16
 
 class PYTHON_EditorObject(object):
     def set_up_editor(self, editor):

@@ -41,15 +41,18 @@
                     row = 0;
                     for obj in choices:
                         self.sizer1.Add( wx.StaticText(p, -1, obj['title']), (row, 0), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
-                        choice = wx.adv.BitmapComboBox(p, -1, size=(600, -1))
+                        if len(obj['values'])>0 and type(obj['values'][0]) in (str, bytes):
+                            choice = wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
+                        else:
+                            choice = wx.adv.BitmapComboBox(p, -1, size=(600, -1))
+                            for c in obj['values']:
+                                if type(c) == str:
+                                    choice.Append(c)
+                                elif type(c) == bytes:
+                                    choice.Append(c.decode('utf-8'))
+                                else:
+                                    choice.Append(c[0], c[1])
 
-                        for c in obj['values']:
-                            if type(c) == str:
-                                choice.Append(c)
-                            elif type(c) == bytes:
-                                choice.Append(c.decode('utf-8'))
-                            else:
-                                choice.Append(c[0], c[1])
 
                         #wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
                         self.choices.append(choice)
@@ -88,18 +91,21 @@
             #   (wx.ACCEL_ALT, ord(';'), self.on_),
             #   ]
             # self.set_acc_key_tab(aTable)
-
+            self.EDITOR.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
             
-
-        #def on_editor_key_down(self, event):
-        #    if event.KeyCode == wx.WXK_INSERT or (event.AltDown() and event.KeyCode==ord('I')):
-        #        self._panel.SetFocus()
-        #    else:
-        #        event.Skip()
+        def on_key_pressed(self, event):
+            if not event.AltDown() and not event.ControlDown() and ((event.KeyCode in ( ord('.'), ord(' ') ) and not event.ShiftDown()) or ((event.KeyCode in ( ord('\\'),)) and  event.ShiftDown())):
+                def _fun():
+                    ret_str = self.on_dialog("default")
+                    if ret_str:
+                        self.insert_txt(ret_str)
+                wx.CallAfter(_fun)
+                event.Skip()
+            event.Skip()
 
         def on_panel_focus(self, event):
             self._panel.SetFocus()
-            
+
         def on_insert_image_click(self, event):
             self.insert_txt(self._icon.GetValue())
 
@@ -110,58 +116,71 @@
             return_str = ""
 
             if key == 'default':
-                pass
+                line, pos = self.EDITOR.GetCurLine()
+                s = line[:pos].strip()
+                if s.endswith('%%'):
+                    key = "blocks"
+                elif s.endswith('%'):
+                    key = "tags"
+                elif s.endswith('|'):
+                    key = 'filters'
+                elif s.endswith('{{'):
+                    key = 'vars'
+                elif s.endswith('object.'):
+                    key = "object fields and methods"
+                elif s.endswith('form.'):
+                    key = "object fields and methods"
+                elif s.endswith('object_list.'):
+                    key = "object fields and methods"
+                else:
+                    return
 
-            if key in self.actions:
-                obj = self.actions[key]
+            if key in self.actions or ( '((' in key and '))' in key ):
+                if key in self.actions:
+                    key2 = key
+                else:
+                    key2 = key.split('((')[1].split('))')[0]
+                obj = self.actions[key2]
                 if 'title' in obj:
                     dialog_title = obj['title']
                 if 'choices' in obj:
                     parameters = obj['choices']
                 if 'template' in obj:
                     template_str = obj['template']
-            elif key == 'object fields':
+            elif key in ('object fields', 'object methods', 'object fields and methods', 'blocks', 'vars',) or key.endswith('filters') or key.endswith('tags'):
                 client = wx.GetApp().get_http(self)
-                response = client.get(self,"/schbuilder/autocomplete/{{object.id}}/object_fields/")
-                ret = response.json()
-                title = "Chose object field"
-                parameters = [ { 'title': 'Field', 'values': ret, }, ]
-                template_str = "[[choice.0]]"
-            elif key == 'object methods':
-                pass
-            elif key.endswith("icons"):
-                #"wx_icons",
-                #"embeded_icons",
-                #"fa_icons",
-                pass
-            elif key == 'template blocks':
-                pass
-            elif key.endswith("filters"):
-                pass
-            elif key.endswith("tags"):
-                pass
-            elif '((' in key and '))' in key:
-                pass
+                response = client.get(self,"{{base_path}}schbuilder/autocomplete/{{object.id}}/%s/" % key.replace(' ', '_'))
+                obj = response.json()
+                if 'title' in obj:
+                    dialog_title = obj['title']
+                if 'choices' in obj:
+                    parameters = obj['choices']
+                if 'template' in obj:
+                    template_str = obj['template']
             else:
                 return key
 
             if parameters and template_str:
-                dlg = self.dialog(self, dialog_title, parameters)
-                dlg.CenterOnScreen()
-                val = dlg.ShowModal()
-                if val == wx.ID_OK:
-                    choice = []
-                    for ctrl in dlg.choices:
-                        choice.append(ctrl.GetStringSelection())
-                    print("1: ", choice)
-                    print("2: ", template_str)
-                    t = self.template_class(template_str)
-                    c = self.context_class({"choice": choice})
-                    ret = t.render(c)
-                    print("3: ", ret)
-                    return ret
+                if dialog_title or len(parameters)>1:
+                    dlg = self.dialog(self, dialog_title, parameters)
+                    dlg.CenterOnScreen()
+                    val = dlg.ShowModal()
+                    if val == wx.ID_OK:
+                        choice = []
+                        for ctrl in dlg.choices:
+                            choice.append(ctrl.GetStringSelection())
+                        t = self.template_class(template_str)
+                        c = self.context_class({"choice": choice})
+                        ret = t.render(c)
+                        return ret
+                    else:
+                        return None
                 else:
-                    return None
+                    kw = parameters[0]['values']
+                    kw.sort()
+                    self.EDITOR.SetFocus()
+                    self.EDITOR.AutoCompSetIgnoreCase(True)
+                    self.EDITOR.AutoCompShow(0, (" ").join(kw))
 
             return return_str
 
@@ -169,12 +188,12 @@
             item = self._panel.GetSelection()
             if item.IsOk():
                 key = self._panel.GetItemText(item)
-                ret_str = on_dialog(self, key)
+                ret_str = self.on_dialog(key)
                 if ret_str:
                     self.insert_txt(ret_str)
 
         def on_auto_comp_cmd(self, edt_ctrl, pos):
-            ret_str = on_dialog(self, "default")
+            ret_str = self.on_dialog("default")
             if ret_str:
                 self.insert_txt(ret_str)
 
@@ -235,27 +254,237 @@
                                                 ul
                                                     li...{{pos}}
                                                     li...object.{{pos}}
-                        li...django
+                        li...filters
                             ul
-                                li...filters
+                                li...django filters
+                                li...pytigon filters
+                        li...tags
+                            ul
+                                li...django tags
+                                li...pytigon tags
+                        li...widgets
+                            ul
+                                li...((django)) test widget
+                                li...To ((test))
+                        li...targets
+                        li...template blocks
+                            ul
+                                li...%% all
                                     ul
-                                        %for pos in object.get_django_filters
-                                            li...{{pos}}
-                                li...tags
+                                        li...%% page_start
+                                        li...%% page_head
+                                            ul
+                                                li...%% cache
+                                                li...%% head_start
+                                                li...%% title
+                                                li...%% css_links
+                                                li...%% css_start
+                                                li...%% css
+                                                li...%% css_end
+                                                li...%% js_scripts
+                                                    ul
+                                                        li...%% js_scripts_base
+                                                li...%% js_extrascripts
+                                                li...%% python_code
+                                                li...%% icss
+                                                li...%% extra_style
+                                                li...%% extra_head
+                                        li...%% body_start
+                                        li...%% body_header
+                                        li...%% body
+                                            ul
+                                                li...%% dialog_start
+                                                li...%% form_info
+                                                li...%% form_ok_cancel_info
+                                                li...%% form_delete
+                                                    ul
+                                                        li...%% form_delete_content
+                                                        li...%% form_delete_object
+                                                li...%% form_ok_cancel_del
+                                                li...%% row_edit_start
+                                                li...%% row_edit_header
+                                                li...%% row_edit_all
+                                                    ul
+                                                        li...%% row_edit_form
+                                                        li...%% row_edit_footer
+                                                        li...%% form_ok_cancel
+                                                li...%% row_edit_end
+                                                li...%% dialog_end
+                                                li...%% login_header
+                                                li...%% login
+                                                li...%% login_footer
+                                                li...%% nav
+                                                    ul
+                                                        li...%% change_password
+                                                        li...%% menu_start
+                                                        li...%% menu
+                                                            ul
+                                                                li...%% topmenu_start
+                                                                li...%% topmenu
+                                                                li...%% topmenu_end
+                                                                li...%% submenu_start
+                                                                li...%% submenu
+                                                                li...%% submenu_end
+                                                        li...%% menu_end
+                                                        li...%% menu2
+                                                li...%% body_init
+                                                li...%% messages
+                                                li...%% body_desktop
+                                                    ul
+                                                        li...%% panel
+                                                        li...%% navglobal
+                                                        li...%% sidebar
+                                                        li...%% content_start
+                                                        li...%% all_content
+                                                            ul
+                                                                li...%% content
+                                                                    ul
+                                                                        li...%% list_page_start
+                                                                        li...%% list_page_header
+                                                                        li...%% list_page
+                                                                            ul
+                                                                                li...%% list_content_start
+                                                                                li...%% list_content_header
+                                                                                    ul
+                                                                                        li...%% list_content_header_first_row
+                                                                                            ul
+                                                                                                li...%% list_content_title
+                                                                                        li...%% list_content_header_second_row
+                                                                                            ul
+                                                                                                li...%% list_filter_form
+                                                                                                    ul
+                                                                                                        li...%% form_filter
+                                                                                                            ul
+                                                                                                                li...%% form_content
+                                                                                                                    ul
+                                                                                                                        li...%% form_table_filter
+                                                                                                                        li...%% form_content_button
+                                                                                        li...%% list_content_header_third_row
+                                                                                            ul
+                                                                                                li...%% list_content_actions
+                                                                                li...%% list_content_body
+                                                                                    ul
+                                                                                        li...%% list_content_paginator
+                                                                                        li...%% list_full_row_header
+                                                                                            ul
+                                                                                                li...%% list_row_header_start
+                                                                                                li...%% list_row_header
+                                                                                                li...%% list_row_header_end
+                                                                                        li...%% list_table
+                                                                                            ul
+                                                                                                li...%% list_full_row
+                                                                                                    ul
+                                                                                                        li...%% list_row_start
+                                                                                                            ul
+                                                                                                                li...%% id_extra
+                                                                                                        li...%% list_row
+                                                                                                        li...%% list_row_end
+                                                                                                            ul
+                                                                                                                li...%% list_row_actions
+                                                                                                li...%% list_row2
+                                                                                        li...%% list_table_footer
+                                                                                li...%% list_content_footer
+                                                                                li...%% list_content_end
+                                                                        li...%% list_page_footer
+                                                                        li...%% list_page_end
+                                                        li...%% content_end
+                                                li...%% tabs
+                                                li...%% html_widgets_init
+                                                li...%% body_footer
+                                        li...%% body_footer_scripts
+                                        li...%% page_footer
+                                            ul
+                                                li...%% js_extrascipts_init
+                                                    ul
+                                                        li...%% jquery_init
+                                                        li...%% jquery_init_once
+                                                        li...%% jquery_ready_all
+                                                            ul
+                                                                li...%% jquery_ready_start
+                                                                li...%% jquery_ready
+                                                                li...%% jquery_ready_end
+                                                        li...%% js_script_body
+                                                li...%% page_finish
+                                        li...%% body_end
+                                        li...%% page_end
+                                li...{% spec '{' %} block.super {% spec '}' %}
+                        li...vars
+                            ul
+                                li...request
+                                li...user
+                                li...perms
+                                li...paths
                                     ul
-                                        %for pos in object.get_django_tags
-                                            li...{{pos}}
+                                        li...base_path
+                                        li...app_path
+                                        li...URL_ROOT_FOLDER
+                                li...project
+                                    ul
+                                        li...prj_name
+                                        li...prj_title
+                                li...form info
+                                    ul
+                                        li...form_add
+                                        li...form_delete
+                                        li...form_edit
+                                        li...form_ext
+                                        li...form_grid
+                                        li...form_info
+                                        li...form_list
+                                        li...show_form
+                                        li...show_title_bar
+                                li...colors
+                                    ul
+                                        li...color_background
+                                        li...color_background_0_5
+                                        li...color_background_0_8
+                                        li...color_background_0_9
+                                        li...color_background_1_1
+                                        li...color_background_1_2
+                                        li...color_background_1_5
+                                        li...color_body
+                                        li...color_body_0_2
+                                        li...color_body_0_5
+                                        li...color_body_0_7
+                                        li...color_body_0_9
+                                        li...color_body_1_1
+                                        li...color_body_1_3
+                                        li...color_body_1_5
+                                        li...color_body_1_8
+                                        li...color_higlight
+                                        li...color_info
+                                        li...color_shadow
+                                li...system
+                                    ul
+                                        li...csrf_token
+                                        li...user_agent
+                                        li...uuid
+                                        li...app_manager
+                                        li...gen_time
+                                        li...settings
+                                        li...env
+                                li...lang
+                                    ul
+                                        li...LANGUAGE_CODE
+                                        li...lang
+                                        li...LANGUAGES
+                                        li...LANGUAGE_BIDI
+                                        li...TIME_ZONE
+                                li...info
+                                    ul
+                                        li...debug
+                                        li...standard_web_browser
+                                        li...browser_type
+                                        li...client_type
+                                        li...application_type
+                                        li...autologin
+                                        li...offline_support
+                                        li...pyodide
+                                        li...default_template
+                                        li...default_template2
+                                        li...readonly
+                                        li...get
 
-                        li ...widgets
-                            ul
-                                %for pos in object.get_template_widgets
-                                    li...{{pos|safe}}
-
-
-                        li ...blocks
-                            ul
-                                %for pos in object.get_blocks
-                                    li...{{pos|safe}}
                 td
                     CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                         DATA...{{txt|bencode}}

@@ -47,15 +47,27 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         )
     else:
         try:
+            print("A1")
             from .cef import init_plugin_cef
+
+            print("A11")
             return init_plugin_cef(
                 app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
             )
         except:
+            print("A2")
             try:
                 from .wxwebview import init_plugin_web_view
+
                 return init_plugin_web_view(
-                    app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
+                    app,
+                    mainframe,
+                    desktop,
+                    mgr,
+                    menubar,
+                    toolbar,
+                    accel,
+                    BaseWebBrowser,
                 )
             except:
                 pass

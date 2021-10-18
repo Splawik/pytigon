@@ -2878,7 +2878,7 @@ init_table = function flx_init_table (table, table_type) {
             _handle_toolbar_expand = function (elem) {
                 var panel, panel2;
                 panel = _pymeth_find.call(table_panel, ".fixed-table-toolbar");
-                panel2 = jQuery(".list_content_header_two_row");
+                panel2 = jQuery(".list_content_header_second_row");
                 if (_pyfunc_truthy((jQuery(this).hasClass)("active"))) {
                     panel.show();
                     panel2.show();
@@ -2893,7 +2893,7 @@ init_table = function flx_init_table (table, table_type) {
             table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand);
             if (_pyfunc_truthy(btn.hasClass("active"))) {
                 panel = _pymeth_find.call(table_panel, ".fixed-table-toolbar");
-                panel2 = jQuery(".list_content_header_two_row");
+                panel2 = jQuery(".list_content_header_second_row");
                 panel.hide();
                 panel2.hide();
             }

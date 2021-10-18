@@ -16,7 +16,7 @@
     %% body
         .<body>
         %% content0
-        %% no_content
+        %% all_content
             %% content...content
 
         %% footer

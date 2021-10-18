@@ -63,6 +63,8 @@ from pytigon_lib.schtools.cc import import_plugin, make
 
 from pytigon.ext_lib.pygettext import main as gtext
 
+from pytigon.schserw.schsys.context_processors import sch_standard
+
 try:
     import sass
 except:
@@ -1740,32 +1742,70 @@ def download_installer(request, name):
 @dict_to_json
 def autocomplete(request, id, key):
 
-    # id, key
-
-    if key == "default":
-        pass
-    elif key == "object_fields":
+    if key in ("object_fields", "object_methods", "object_fields_and_methods"):
         template = models.SChTemplate.objects.get(pk=int(id))
-        tables = models.SChTable.objects.filter(name=template.name)
         ret = []
-        if len(tables) > 0:
-            for field in tables[0].schfield_set.all():
-                ret.append(field.name)
-        return ret
-    elif key == "object methods":
-        pass
-    elif key.endswith("icons"):
-        # "wx_icons",
-        # "embeded_icons",
-        # "fa_icons",
-        pass
-    elif key == "template blocks":
-        pass
+        if key in ("object_fields", "object_fields_and_methods"):
+            ret += template.get_table_fields()
+        if key in ("object_methods", "object_fields_and_methods"):
+            ret += template.get_table_methods()
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
     elif key.endswith("filters"):
-        pass
+        template = models.SChTemplate.objects.get(pk=int(id))
+        ret = []
+        if key in ("filters", "django_filters"):
+            ret += template.get_django_filters()
+        if key in ("filters", "pytigon_filters"):
+            ret += template.get_pytigon_filters()
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
     elif key.endswith("tags"):
-        pass
-    elif "((" in key and "))" in key:
-        pass
+        template = models.SChTemplate.objects.get(pk=int(id))
+        ret = []
+        if key in ("tags", "django_tags"):
+            ret += template.get_django_tags()
+        if key in ("tags", "pytigon_tags"):
+            ret += template.get_pytigon_tags()
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
+    elif key.endswith("vars"):
+        print("X0")
+        x = sch_standard(request)
+        print("X:", list(x.keys()))
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": list(x.keys()),
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
     else:
         return key
