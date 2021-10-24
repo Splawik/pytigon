@@ -1488,32 +1488,46 @@ class SChTemplate(models.Model):
         else:
             return None
 
-    def _get_table_fields(self, tables):
+    def _get_table_fields(self, table):
         ret = []
-        if len(tables) == 1:
-            table = tables[0]
+        if table:
             for pos in table.schfield_set.all():
-                ret.append(pos.name)
+                ret.append(pos)
             if table.base_table and table.base_table != None:
-                ret2 = self._get_table_fields(
-                    SChTable.objects.filter(name=table.base_table)
-                )
-                for pos in ret2:
-                    ret.append(pos)
+                tables = SChTable.objects.filter(name=table.base_table)
+                if len(tables) > 0:
+                    ret2 = self._get_table_fields(
+                        SChTable.objects.filter(name=tables[0].base_table)
+                    )
+                    for pos in ret2:
+                        ret.append(pos)
         return ret
 
     def get_table_fields(self):
-        return self._get_table_fields(
-            self.parent.schtable_set.filter(parent=self.parent).filter(name=self.name)
-        )
+        return self._get_table_fields(self.get_rel_table())
 
-    def get_table_methods(self):
-        ret = []
+    def get_all_table_fields(self):
+        return [pos.name for pos in self._get_table_fields(self.get_rel_table())]
+
+    def get_rel_table_fields(self):
+        return [pos.name for pos in self._get_table_fields(self.get_rel_table())]
+
+    def get_edit_table_fields(self):
+        return [pos.name for pos in self._get_table_fields(self.get_rel_table())]
+
+    def get_rel_table(self):
         tables = self.parent.schtable_set.filter(parent=self.parent).filter(
             name=self.name
         )
-        if len(tables) == 1:
-            table = tables[0]
+        if len(tables) > 0:
+            return tables[0]
+        else:
+            return None
+
+    def get_table_methods(self):
+        ret = []
+        table = self.get_rel_table()
+        if table:
             if table.table_code:
                 for line in table.table_code.split("\n"):
                     if line.startswith("def"):

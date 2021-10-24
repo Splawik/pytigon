@@ -25,8 +25,7 @@
             self._insert_icon.Bind(wx.EVT_BUTTON, self.on_insert_image_click)
             self.EDITOR.SetCurrentPos(0)
             self.EDITOR.SetSelection(0,0)
-            self.EDITOR.SetFocus()
-
+            wx.CallAfter(self.EDITOR.SetFocus)
 
             class ChoiceDialog(wx.Dialog):
                 def __init__(self, parent, title, choices):
@@ -43,7 +42,7 @@
                         self.sizer1.Add( wx.StaticText(p, -1, obj['title']), (row, 0), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
                         if len(obj['values'])>0 and type(obj['values'][0]) in (str, bytes):
                             choice = wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
-                        else:
+                        elif len(obj['values'])>0:
                             choice = wx.adv.BitmapComboBox(p, -1, size=(600, -1))
                             for c in obj['values']:
                                 if type(c) == str:
@@ -52,7 +51,8 @@
                                     choice.Append(c.decode('utf-8'))
                                 else:
                                     choice.Append(c[0], c[1])
-
+                        else:
+                            choice = wx.TextCtrl(p, -1, size=(600, -1))
 
                         #wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
                         self.choices.append(choice)
@@ -139,12 +139,19 @@
                 if key in self.actions:
                     key2 = key
                 else:
-                    key2 = key.split('((')[1].split('))')[0]
+                    key2 = key.split('((')[1].split('))')[0].replace(' ', '_')
                 obj = self.actions[key2]
                 if 'title' in obj:
                     dialog_title = obj['title']
                 if 'choices' in obj:
                     parameters = obj['choices']
+                    for obj2 in parameters:
+                        if "source_of_values" in obj2:
+                            client = wx.GetApp().get_http(self)
+                            response = client.get(self,"{{base_path}}schbuilder/autocomplete/{{object.id}}/%s/" % obj2['source_of_values'])
+                            obj3 = response.json()
+                            if len(obj3['choices'])>0:
+                                obj2['values'] = obj3['choices'][0]['values']
                 if 'template' in obj:
                     template_str = obj['template']
             elif key in ('object fields', 'object methods', 'object fields and methods', 'blocks', 'vars',) or key.endswith('filters') or key.endswith('tags'):
@@ -168,7 +175,10 @@
                     if val == wx.ID_OK:
                         choice = []
                         for ctrl in dlg.choices:
-                            choice.append(ctrl.GetStringSelection())
+                            if type(ctrl) == wx.TextCtrl:
+                                choice.append(ctrl.GetValue())
+                            else:
+                                choice.append(ctrl.GetStringSelection())
                         t = self.template_class(template_str)
                         c = self.context_class({"choice": choice})
                         ret = t.render(c)
@@ -181,7 +191,12 @@
                     self.EDITOR.SetFocus()
                     self.EDITOR.AutoCompSetIgnoreCase(True)
                     self.EDITOR.AutoCompShow(0, (" ").join(kw))
-
+            elif template_str:
+                t = self.template_class(template_str)
+                c = self.context_class({})
+                ret = t.render(c)
+                return ret
+                
             return return_str
 
         def on_insert_click(self, event):
@@ -235,13 +250,13 @@
         hr
         table width=100%
             tr
-                td width=200
-                    ctrl-tree name=_panel,,,width=200,,,height=calc(100% - top - 20)
+                td width=350
+                    ctrl-tree name=_panel,,,width=350,,,height=calc(100% - top - 20)
                         li...{{object}}
                             ul
                                 li...object fields
                                     ul
-                                        %for pos in object.get_table_fields
+                                        % for pos in object.get_all_table_fields
                                             li...{{pos}}
                                                 ul
                                                     li...{{pos}}
@@ -262,10 +277,6 @@
                             ul
                                 li...django tags
                                 li...pytigon tags
-                        li...widgets
-                            ul
-                                li...((django)) test widget
-                                li...To ((test))
                         li...targets
                         li...template blocks
                             ul
@@ -484,7 +495,50 @@
                                         li...default_template2
                                         li...readonly
                                         li...get
-
+                        li...wizards
+                            ul
+                                li...form
+                                    ul
+                                        li...simple ((form))
+                                        li...((two columns form))
+                                        li...((three columns form))
+                                        li...((advanced form))
+                                        li...((field))
+                                        li...((form field))
+                                        li...((hidden field))
+                                li...row actions
+                                    ul
+                                        li...% row_actions
+                                            ul
+                                                li...edit
+                                                li...delete
+                                                li...pdf
+                                                li...show related table based on field ((field_list))
+                                                li...show editor for field ((field_edit))
+                                                li...other ((action))
+                                        li...((row_related_list))
+                                        li...((view_row))
+                                li...table actions
+                                    ul
+                                        li...((new_row))
+                                        li...((list_action))
+                                li...permisions
+                                    ul
+                                        li...check ((permision))
+                                        li...is user in group ((user_in_group))
+                                        li...user.is_authenticated
+                                li...code blocks
+                                    ul
+                                        li...% extends "form.html"
+                                        li...% extends "forms/tree.html"
+                                        li...% load exfiltry
+                                        li...% load exsyntax
+                                        li...block ((all))
+                                        li...block ((id_extra))
+                                        li...block ((list_row_attr))
+                                        li...block ((dialog_type))
+                                        li...block ((scroll))
+                                        li...snippet ((move rows))
                 td
                     CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                         DATA...{{txt|bencode}}

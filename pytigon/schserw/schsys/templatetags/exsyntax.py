@@ -148,15 +148,19 @@ def new_row_inline(context, title="", icon_name="", target='', attrs='', tag_cla
     return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
 
 
-@inclusion_tag('widgets/list_sublist.html')
-def list_sublist(context, app="", table_name="", filter="", title="", icon_name="fa fa-lg fa-caret-down", target="", attrs="", tag_class="", url="", action="field_list"):
+@inclusion_tag('widgets/row_related_list.html')
+def row_related_list(context, table_name, title="", filter="", icon_name="fa fa-lg fa-caret-down", target="", attrs="", tag_class="", url="", action="field_list", app=None):
+    if app:
+        table = table_name
+    else:
+        app, table = table_name.split('/')
     if url:
         url2 = url
     else:
         if filter:
-            url2 = "{bp}" + f"{app}/table/{table_name}//{filter}/form/sublist/"
+            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form/sublist/"
         else:
-            url2 = "{bp}" + f"{app}/table/{table_name}/{context['object'].id}/-/form/sublist/"
+            url2 = "{bp}" + f"{app}/table/{table}/{context['object'].id}/-/form/sublist/"
 
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     return ret

@@ -536,6 +536,31 @@ def prj_import_from_str(s):
     return {"object_list": reversed(object_list)}
 
 
+def get_tables_for_template(template_id):
+    template = models.SChTemplate.objects.get(pk=int(template_id))
+    app = template.parent
+    app_set = app.parent
+    buf = []
+    object_list = app_set.schapp_set.all()
+    for pos in object_list:
+        buf.append(pos)
+    ext_apps = app_set.ext_apps
+    app_list = ext_apps.replace(";", ",").split(",")
+    for pos in app_list:
+        if "." in pos:
+            app_set_str, app_str = pos.split(".")
+            object_list = models.SChApp.objects.filter(
+                parent__name=app_set_str, name=app_str
+            )
+            if len(object_list) > 0:
+                buf.append(object_list[0])
+    ret = []
+    for pos in buf:
+        for table in pos.schtable_set.all():
+            ret.append(pos.name + "/" + table.name)
+    return ret
+
+
 PFORM = form_with_perms("schbuilder")
 
 
@@ -1746,7 +1771,7 @@ def autocomplete(request, id, key):
         template = models.SChTemplate.objects.get(pk=int(id))
         ret = []
         if key in ("object_fields", "object_fields_and_methods"):
-            ret += template.get_table_fields()
+            ret += template.get_all_table_fields()
         if key in ("object_methods", "object_fields_and_methods"):
             ret += template.get_table_methods()
         return {
@@ -1803,6 +1828,55 @@ def autocomplete(request, id, key):
                 {
                     "title": "Field",
                     "values": list(x.keys()),
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
+    elif key == "relfields":
+        template = models.SChTemplate.objects.get(pk=int(id))
+        ret = template.get_rel_table_fields()
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
+    elif key == "txtfields":
+        template = models.SChTemplate.objects.get(pk=int(id))
+        ret = template.get_rel_table_fields()
+    elif key == "tables":
+        ret = get_tables_for_template(int(id))
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
+    elif key == "permissions":
+        tables = get_tables_for_template(int(id))
+        ret = []
+        for table in tables:
+            app_perm = table.lower().split("/")[0]
+            if not app_perm in ret:
+                ret.append(app_perm)
+            ret.append(table.lower().replace("/", ".add_"))
+            ret.append(table.lower().replace("/", ".change_"))
+            ret.append(table.lower().replace("/", ".delete_"))
+            ret.append(table.lower().replace("/", ".view_"))
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
                 },
             ],
             "template": "{{choice.0}}",
