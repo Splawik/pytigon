@@ -258,6 +258,20 @@
                                                                         </ul>
                                                                 </li>
                                                                 <li>
+                                                                object related fields
+                                                                        <ul>
+                                                                                {% for pos in object.get_table_rel_fields %}
+                                                                                        <li>
+                                                                                        {{pos}}
+                                                                                                <ul>
+                                                                                                        <li>{{pos}}</li>
+                                                                                                        <li>object.{{pos}}</li>
+                                                                                                </ul>
+                                                                                        </li>
+                                                                                {% endfor %}
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
                                                                 object methods
                                                                         <ul>
                                                                                 {% for pos in object.get_table_methods %}
@@ -676,6 +690,7 @@
                                                                                 <li>block ((list_row_attr))</li>
                                                                                 <li>block ((dialog_type))</li>
                                                                                 <li>block ((scroll))</li>
+                                                                                <li>block ((pythoncode))</li>
                                                                                 <li>snippet ((move rows))</li>
                                                                         </ul>
                                                                 </li>

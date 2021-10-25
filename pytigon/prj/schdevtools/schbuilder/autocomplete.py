@@ -1,7 +1,7 @@
-FIELD_LIST_TEMPLATE = """.field_list/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif % }"""
-FIELD_EDIT_TEMPLATE = """.field_edit/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif % }"""
+FIELD_LIST_TEMPLATE = """.field_list/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
+FIELD_EDIT_TEMPLATE = """.field_edit/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
 VIEW_ROW_TEMPLATE = """%view_row object{% if choice.1%},icon_name={{choice.1}}{% endif %}{% if choice.2 %}/{{choice.2}}{% endif % }"""
-NEW_ROW_TEMPLATE = """%{% if choice.1 == 'NO'%}new_row{% else %}new_row_inline{% endif %} {% choice.0 %}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif % }"""
+NEW_ROW_TEMPLATE = """%{% if choice.1 == 'NO'%}new_row{% else %}new_row_inline{% endif %} {% choice.0 %}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
 ACTION_TEMPLATE = """action {{choice.0}}{% if choice.1 %},title={{ choice.1 }}{%endif%}{% if choice.2 %},icon_name={{ choice.2 }}{%endif%}{% if choice.3 %},target={{ choice.3 }}{%endif%}{% if choice.4 %},attrs={{ choice.4 }}{%endif%}{% if choice.5 %},tag_class={{ choice.5 }}{%endif%}{% if choice.6 %},url={{ choice.6 }}{%endif%}"""
 
 ALL_TEMPLATE ="""
@@ -28,6 +28,20 @@ DIALOG_TYPE_TEMPLATE = """
 
 SCROLL_TEMPLATE = """
 %% scroll
+"""
+
+PYTHONCODE_TEMPLATE = """
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "<<name1>>": "<<image_path1>>",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
 """
 
 MOVE_ROWS_TEMPLATE = """
@@ -184,6 +198,9 @@ ACTIONS =  {
     },
     'scroll': {
         'template': SCROLL_TEMPLATE,
+    },
+    'pythoncode': {
+        'template': PYTHONCODE_TEMPLATE,
     },
     'move_rows': {
         'template': MOVE_ROWS_TEMPLATE,

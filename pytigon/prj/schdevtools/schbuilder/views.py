@@ -536,31 +536,6 @@ def prj_import_from_str(s):
     return {"object_list": reversed(object_list)}
 
 
-def get_tables_for_template(template_id):
-    template = models.SChTemplate.objects.get(pk=int(template_id))
-    app = template.parent
-    app_set = app.parent
-    buf = []
-    object_list = app_set.schapp_set.all()
-    for pos in object_list:
-        buf.append(pos)
-    ext_apps = app_set.ext_apps
-    app_list = ext_apps.replace(";", ",").split(",")
-    for pos in app_list:
-        if "." in pos:
-            app_set_str, app_str = pos.split(".")
-            object_list = models.SChApp.objects.filter(
-                parent__name=app_set_str, name=app_str
-            )
-            if len(object_list) > 0:
-                buf.append(object_list[0])
-    ret = []
-    for pos in buf:
-        for table in pos.schtable_set.all():
-            ret.append(pos.name + "/" + table.name)
-    return ret
-
-
 PFORM = form_with_perms("schbuilder")
 
 
@@ -1461,9 +1436,19 @@ def template_edit(request, pk):
         )
 
         f = open(file_name, "rt")
-        template.template_code = f.read()
+        s = f.read()
         f.close()
+
         template.save()
+
+        t = Template(s)
+        try:
+            txt = t.render(Context({"template": template}))
+        except:
+            txt = s
+        template.template_code = txt
+        template.save()
+
         id = template.id
     else:
         id = templates[0].id
@@ -1819,9 +1804,7 @@ def autocomplete(request, id, key):
             "template": "{{choice.0}}",
         }
     elif key.endswith("vars"):
-        print("X0")
         x = sch_standard(request)
-        print("X:", list(x.keys()))
         return {
             "title": None,
             "choices": [
@@ -1834,7 +1817,20 @@ def autocomplete(request, id, key):
         }
     elif key == "relfields":
         template = models.SChTemplate.objects.get(pk=int(id))
-        ret = template.get_rel_table_fields()
+        ret = get_table_rel_fields()
+        # table = template.get_rel_table()
+        # ret = []
+        # if table:
+        #    tables = get_tables_for_template(int(id))
+        #    for table2 in tables:
+        #        field_list = table2.schfield_set.all()
+        #        for field in field_list:
+        #            if field.rel_to == table.name:
+        #                if field.param and 'related_name' in field.param:
+        #                    x = field.param.replace(' ','').split('related_name=')[1].replace('"', "'").split("'")[1]
+        #                    ret.append(x)
+        #                else:
+        #                    ret.append(table2.name.lower()+"_set")
         return {
             "title": None,
             "choices": [
@@ -1849,7 +1845,11 @@ def autocomplete(request, id, key):
         template = models.SChTemplate.objects.get(pk=int(id))
         ret = template.get_rel_table_fields()
     elif key == "tables":
-        ret = get_tables_for_template(int(id))
+        template = models.SChTemplate.objects.get(pk=int(id))
+        ret = [
+            table.parent.name + "/" + table.name
+            for table in template.get_tables_for_template()
+        ]
         return {
             "title": None,
             "choices": [
@@ -1861,16 +1861,18 @@ def autocomplete(request, id, key):
             "template": "{{choice.0}}",
         }
     elif key == "permissions":
-        tables = get_tables_for_template(int(id))
+        template = models.SChTemplate.objects.get(pk=int(id))
+        tables = template.get_tables_for_template()
         ret = []
         for table in tables:
-            app_perm = table.lower().split("/")[0]
+            app_perm = table.parent.name.lower()
             if not app_perm in ret:
                 ret.append(app_perm)
-            ret.append(table.lower().replace("/", ".add_"))
-            ret.append(table.lower().replace("/", ".change_"))
-            ret.append(table.lower().replace("/", ".delete_"))
-            ret.append(table.lower().replace("/", ".view_"))
+            ret.append(table.parent.name.lower() + ".add_" + table.name.lower())
+            ret.append(table.parent.name.lower() + ".change_" + table.name.lower())
+            ret.append(table.parent.name.lower() + ".delete_" + table.name.lower())
+            ret.append(table.parent.name.lower() + ".view_" + table.name.lower())
+
         return {
             "title": None,
             "choices": [

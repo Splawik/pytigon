@@ -1531,7 +1531,53 @@ class SChTemplate(models.Model):
             if table.table_code:
                 for line in table.table_code.split("\n"):
                     if line.startswith("def"):
-                        ret.append(line[4:])
+                        buf = line[4:].replace(" ", "")
+                        if "(self)" in buf and not buf.startswith("_"):
+                            ret.append(buf.split("(")[0])
+        return ret
+
+    def get_tables_for_template(self):
+        app = self.parent
+        app_set = app.parent
+        buf = []
+        object_list = app_set.schapp_set.all()
+        for pos in object_list:
+            buf.append(pos)
+        ext_apps = app_set.ext_apps
+        app_list = ext_apps.replace(";", ",").split(",")
+        for pos in app_list:
+            if "." in pos:
+                app_set_str, app_str = pos.split(".")
+                object_list = SChApp.objects.filter(
+                    parent__name=app_set_str, name=app_str
+                )
+                if len(object_list) > 0:
+                    buf.append(object_list[0])
+        ret = []
+        for pos in buf:
+            for table in pos.schtable_set.all():
+                ret.append(table)
+        return ret
+
+    def get_table_rel_fields(self):
+        table = self.get_rel_table()
+        ret = []
+        if table:
+            tables = self.get_tables_for_template()
+            for table2 in tables:
+                field_list = table2.schfield_set.all()
+                for field in field_list:
+                    if field.rel_to == table.name:
+                        if field.param and "related_name" in field.param:
+                            x = (
+                                field.param.replace(" ", "")
+                                .split("related_name=")[1]
+                                .replace('"', "'")
+                                .split("'")[1]
+                            )
+                            ret.append(x)
+                        else:
+                            ret.append(table2.name.lower() + "_set")
         return ret
 
     def get_django_filters(self):

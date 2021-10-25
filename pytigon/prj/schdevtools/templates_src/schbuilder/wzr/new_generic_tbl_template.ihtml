@@ -1,57 +1,34 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
-
-%% pythoncode
-    script language=python
-        def signal_from_child(self, child, signal):
-            if signal=='set_bitmap_list':
-                bitmaps = {
-                    #"<<name1>>": "<<image_path1>>",
-                }
-                child.set_bitmaps(bitmaps)
-
-        def filter_url(self, target, href):
-            return href
+% load exfiltry
+% load exsyntax
 
 %% all
-    %with table_type='datatable':
-        {{ block.super }}
+    % with table_type='datatable':
+        {% templatetag openblock %} block.super {% templatetag closeblock %}
 
 %% scroll
 
 %% list_content_actions
     % new_row "<<new_row_title>>"
-    % action_table "<<action>>" "<<action_title>>"
+    % list_action "<<action>>" "<<action_description>>"
 
 %% list_row_header
-    th...<<col_name>>
+    {% for field in template.get_table_fields %}th..._({{field.description}})
+    {% endfor %}
 
 %% list_row
-    td...{{object.<<object_name>>}}
-
+    {% for field in template.get_table_fields %}td...{% templatetag openblock %} object.{{field.name}} {% templatetag closeblock %}
+    {% endfor %}
 
 %% list_row_actions
-    {% if not forloop.first %}
-        % row_actions:... field_up,Move up
-    {% endif %}
-    {% if not forloop.last %}
-        % row_actions:...field_down,Move down
-    {% endif %}
-
     % row_actions:
         .edit
-        .field_edit/<<field_name>>,<<name>>,<<field_id>>
-        .field_list/<<child_name>>_set,<<field_title>>,<<field_id>>
-        .<<action_name>>,<<action_title>>
         .delete
-
+        {% for field_name in template.get_table_rel_fields %}.field_list/{{field_name}},<<description>
+        {% endfor %}{% for field_name in template.get_edit_table_fields %}.field_edit/{{field_name}},<description>
+        {% endfor %}.<<action_name>>,<<description>>
 
 %% row_edit
     % form:
-
-    % form:
-            "<<field_1>>", "<<field_2>>"
-
+        {% for field in template.get_table_fields %}"{{field.name}}"{% if not forloop.last %},{% endif %}{% endfor %}

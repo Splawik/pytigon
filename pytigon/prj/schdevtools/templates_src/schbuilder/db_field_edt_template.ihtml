@@ -262,6 +262,13 @@
                                                     li...{{pos}}
                                                     li...object.{{pos}}
                                                     li...form.fields_as_table.{{pos}}
+                                li...object related fields
+                                    ul
+                                        % for pos in object.get_table_rel_fields
+                                            li...{{pos}}
+                                                ul
+                                                    li...{{pos}}
+                                                    li...object.{{pos}}
                                 li...object methods
                                     ul
                                         %for pos in object.get_table_methods
@@ -538,6 +545,7 @@
                                         li...block ((list_row_attr))
                                         li...block ((dialog_type))
                                         li...block ((scroll))
+                                        li...block ((pythoncode))
                                         li...snippet ((move rows))
                 td
                     CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
