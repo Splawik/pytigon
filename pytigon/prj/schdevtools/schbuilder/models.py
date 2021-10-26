@@ -1513,7 +1513,13 @@ class SChTemplate(models.Model):
         return [pos.name for pos in self._get_table_fields(self.get_rel_table())]
 
     def get_edit_table_fields(self):
-        return [pos.name for pos in self._get_table_fields(self.get_rel_table())]
+        return list(
+            [
+                pos.name
+                for pos in self._get_table_fields(self.get_rel_table())
+                if pos.type == "TextField"
+            ]
+        )
 
     def get_rel_table(self):
         tables = self.parent.schtable_set.filter(parent=self.parent).filter(

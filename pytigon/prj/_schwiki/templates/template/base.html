@@ -2,12 +2,9 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load bootstrap4 %}
-{% block ext_js_scripts %}
-        {{block.super}}
-        {% jscript_link 'system/require.js' %}
-{% endblock %}
 {% block js_extrascipts %}
         {{block.super}}
+        {% jscript_link 'system/require.js' %}
 {% endblock %}
 {% block extrastyle %}
         {{block.super}}

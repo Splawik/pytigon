@@ -1817,20 +1817,7 @@ def autocomplete(request, id, key):
         }
     elif key == "relfields":
         template = models.SChTemplate.objects.get(pk=int(id))
-        ret = get_table_rel_fields()
-        # table = template.get_rel_table()
-        # ret = []
-        # if table:
-        #    tables = get_tables_for_template(int(id))
-        #    for table2 in tables:
-        #        field_list = table2.schfield_set.all()
-        #        for field in field_list:
-        #            if field.rel_to == table.name:
-        #                if field.param and 'related_name' in field.param:
-        #                    x = field.param.replace(' ','').split('related_name=')[1].replace('"', "'").split("'")[1]
-        #                    ret.append(x)
-        #                else:
-        #                    ret.append(table2.name.lower()+"_set")
+        ret = template.get_table_rel_fields()
         return {
             "title": None,
             "choices": [
@@ -1843,7 +1830,17 @@ def autocomplete(request, id, key):
         }
     elif key == "txtfields":
         template = models.SChTemplate.objects.get(pk=int(id))
-        ret = template.get_rel_table_fields()
+        ret = template.get_edit_table_fields()
+        return {
+            "title": None,
+            "choices": [
+                {
+                    "title": "Field",
+                    "values": ret,
+                },
+            ],
+            "template": "{{choice.0}}",
+        }
     elif key == "tables":
         template = models.SChTemplate.objects.get(pk=int(id))
         ret = [
