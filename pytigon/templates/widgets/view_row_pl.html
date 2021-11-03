@@ -5,12 +5,12 @@
                 {% if standard_web_browser %}
                         <a href="{{action.url|safe}}" class="{% block action_class %}popup_info btn {{btn_size}} btn-outline-info{% endblock %}{{action.tag_class}}" title="{{title2}}" target="{{action.target}}" name="{{action.name}}" {{action.attrs|safe}}>
                                 {% if browser_type == 'mobile' %}
-                                        {% if not action.icon %}
+                                        {% if not action.icon_name %}
                                                 {{action.title}}
                                         {% endif %}
                                   {% else %}
-                                        {% if action.icon %}
-                                                <span class="{{action.icon}}"></span>
+                                        {% if action.icon_name %}
+                                                <span class="{{action.icon_name}}"></span>
                                                 {% if action.icon2 %}
                                                         <span class="{{action.icon2}}"></span>
                                                 {% endif %}
@@ -22,8 +22,8 @@
                   {% else %}
                         <CTRL-BUTTON name="{{action.name}}" label="{{action.title}}" title="{{action.title}}" href="{{action.url}}"></CTRL-BUTTON>
                         {% comment %}
-                                {% if action.icon %}
-                                        <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}} src="{{action.icon}}"></a>
+                                {% if action.icon_name %}
+                                        <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}} src="{{action.icon_name}}"></a>
                                   {% else %}
                                         <a href="{{path}}{{action.url|safe}}" class="{{action.tag_class}}" id="{{action.name}}" name="{{action.name}}" title="{{action.title}}" target="{{action.target}}" {{action.attrs|safe}}>
                                                 {{action.title}}

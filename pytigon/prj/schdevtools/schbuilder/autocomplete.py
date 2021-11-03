@@ -1,7 +1,7 @@
-FIELD_LIST_TEMPLATE = """.field_list/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
-FIELD_EDIT_TEMPLATE = """.field_edit/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
+FIELD_LIST_TEMPLATE = """field_list/{{choice.0}},{{choice.1}}{% if choice.2 or choice.3 %},icon_name={{choice.2}}{% if choice.3 %}/{{choice.3}}{% endif %}{% endif %}{% if choice.4 %},target='{{choice.4}}'{% endif %}"""
+FIELD_EDIT_TEMPLATE = """field_edit/{{choice.0}},{{choice.1}}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}{% if choice.4 %},target='{{choice.4}}'{% endif %}"""
 VIEW_ROW_TEMPLATE = """%view_row object{% if choice.1%},icon_name={{choice.1}}{% endif %}{% if choice.2 %}/{{choice.2}}{% endif % }"""
-NEW_ROW_TEMPLATE = """%{% if choice.1 == 'NO'%}new_row{% else %}new_row_inline{% endif %} {% choice.0 %}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
+NEW_ROW_TEMPLATE = """% {% if choice.1 == 'NO'%}new_row{% else %}new_row_inline{% endif %} {% choice.0 %}{% if choice.2%},icon_name={{choice.2}}{% endif %}{% if choice.3 %}/{{choice.3}}{% endif %}"""
 ACTION_TEMPLATE = """action {{choice.0}}{% if choice.1 %},title={{ choice.1 }}{%endif%}{% if choice.2 %},icon_name={{ choice.2 }}{%endif%}{% if choice.3 %},target={{ choice.3 }}{%endif%}{% if choice.4 %},attrs={{ choice.4 }}{%endif%}{% if choice.5 %},tag_class={{ choice.5 }}{%endif%}{% if choice.6 %},url={{ choice.6 }}{%endif%}"""
 ROW_RELATED_LIST_TEMPLATE = """% row_related_list "{{choice.0}}" title="{{choice.1}}" filter="{{choice.2}}"{% if choice.3 %} icon_name="{{ choice.3 }}"{% endif %}"""
 
@@ -94,6 +94,7 @@ ACTIONS =  {
             {'title': 'title', 'values': []},
             {'title': 'button icon name', 'values': []},
             {'title': 'list icon name', 'values': []},
+            {'title': 'target', 'values': ['_inline', '_parent', 'popup',] },
         ],
         'template': FIELD_LIST_TEMPLATE,
     },
@@ -104,6 +105,7 @@ ACTIONS =  {
             {'title': 'title', 'values': []},
             {'title': 'button icon name', 'values': []},
             {'title': 'list icon name', 'values': []},
+            {'title': 'target', 'values': ['_parent', '_inline', 'popup',] },
         ],
         'template': FIELD_EDIT_TEMPLATE,
     },

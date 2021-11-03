@@ -1,5 +1,5 @@
 var TAG, TEMPLATE, comp, init, stub1_context, stub2_err;
-TAG = "room";
+TAG = "tele-room";
 TEMPLATE = '<div class=\"container\">\n' +
     '        <div class=\"row\">\n' +
     '                <div class=\"col-md-12 my-3\">\n' +

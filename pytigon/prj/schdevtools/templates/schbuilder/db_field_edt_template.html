@@ -239,54 +239,56 @@
                         <tr>
                                 <td width="350">
                                         <ctrl-tree name="_panel" width="350" height="calc(100% - top - 20)">
-                                                <li>
-                                                {{object}}
-                                                        <ul>
-                                                                <li>
-                                                                object fields
-                                                                        <ul>
-                                                                                {% for pos in object.get_all_table_fields %}
-                                                                                        <li>
-                                                                                        {{pos}}
-                                                                                                <ul>
-                                                                                                        <li>{{pos}}</li>
-                                                                                                        <li>object.{{pos}}</li>
-                                                                                                        <li>form.fields_as_table.{{pos}}</li>
-                                                                                                </ul>
-                                                                                        </li>
-                                                                                {% endfor %}
-                                                                        </ul>
-                                                                </li>
-                                                                <li>
-                                                                object related fields
-                                                                        <ul>
-                                                                                {% for pos in object.get_table_rel_fields %}
-                                                                                        <li>
-                                                                                        {{pos}}
-                                                                                                <ul>
-                                                                                                        <li>{{pos}}</li>
-                                                                                                        <li>object.{{pos}}</li>
-                                                                                                </ul>
-                                                                                        </li>
-                                                                                {% endfor %}
-                                                                        </ul>
-                                                                </li>
-                                                                <li>
-                                                                object methods
-                                                                        <ul>
-                                                                                {% for pos in object.get_table_methods %}
-                                                                                        <li>
-                                                                                        {{pos}}
-                                                                                                <ul>
-                                                                                                        <li>{{pos}}</li>
-                                                                                                        <li>object.{{pos}}</li>
-                                                                                                </ul>
-                                                                                        </li>
-                                                                                {% endfor %}
-                                                                        </ul>
-                                                                </li>
-                                                        </ul>
-                                                </li>
+                                                {% if object.get_rel_table %}
+                                                        <li>
+                                                        {{object}}
+                                                                <ul>
+                                                                        <li>
+                                                                        object fields
+                                                                                <ul>
+                                                                                        {% for pos in object.get_all_table_fields %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                                <li>form.fields_as_table.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        object related fields
+                                                                                <ul>
+                                                                                        {% for pos in object.get_table_rel_fields %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        object methods
+                                                                                <ul>
+                                                                                        {% for pos in object.get_table_methods %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                </ul>
+                                                        </li>
+                                                {% endif %}
                                                 <li>
                                                 filters
                                                         <ul>
@@ -301,7 +303,39 @@
                                                                 <li>pytigon tags</li>
                                                         </ul>
                                                 </li>
-                                                <li>targets</li>
+                                                <li>
+                                                special template statements
+                                                        <ul>
+                                                                <li>{{ "^"|add:"^^"}}</li>
+                                                                <li>{{ "="|add:"==>"}}</li>
+                                                                <li>{{ ">"|add:">>"}}</li>
+                                                                <li>{{ "<"|add:"<<"}}</li>
+                                                                <li>{{ "{"|add:":}"}}</li>
+                                                                <li>script language=python                                ...
+</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                targets
+                                                        <ul>
+                                                                <li>_blank</li>
+                                                                <li>_parent</li>
+                                                                <li>_top</li>
+                                                                <li>_self</li>
+                                                                <li>popup</li>
+                                                                <li>popup_edit</li>
+                                                                <li>popup_info</li>
+                                                                <li>popup_delete</li>
+                                                                <li>inline_edit</li>
+                                                                <li>inline_info</li>
+                                                                <li>inline_delete</li>
+                                                                <li>inline</li>
+                                                                <li>none</li>
+                                                                <li>refresh_obj</li>
+                                                                <li>refresh_page</li>
+                                                                <li>refresh_app</li>
+                                                        </ul>
+                                                </li>
                                                 <li>
                                                 template blocks
                                                         <ul>
@@ -645,31 +679,33 @@
                                                                                 <li>((hidden field))</li>
                                                                         </ul>
                                                                 </li>
-                                                                <li>
-                                                                row actions
-                                                                        <ul>
-                                                                                <li>
-                                                                                % row_actions
-                                                                                        <ul>
-                                                                                                <li>edit</li>
-                                                                                                <li>delete</li>
-                                                                                                <li>pdf</li>
-                                                                                                <li>show related table based on field ((field_list))</li>
-                                                                                                <li>show editor for field ((field_edit))</li>
-                                                                                                <li>other ((action))</li>
-                                                                                        </ul>
-                                                                                </li>
-                                                                                <li>((row_related_list))</li>
-                                                                                <li>((view_row))</li>
-                                                                        </ul>
-                                                                </li>
-                                                                <li>
-                                                                table actions
-                                                                        <ul>
-                                                                                <li>((new_row))</li>
-                                                                                <li>((list_action))</li>
-                                                                        </ul>
-                                                                </li>
+                                                                {% if object.get_rel_table %}
+                                                                        <li>
+                                                                        row actions
+                                                                                <ul>
+                                                                                        <li>
+                                                                                        % row_actions
+                                                                                                <ul>
+                                                                                                        <li>edit</li>
+                                                                                                        <li>delete</li>
+                                                                                                        <li>pdf</li>
+                                                                                                        <li>show related table based on field ((field_list))</li>
+                                                                                                        <li>show editor for field ((field_edit))</li>
+                                                                                                        <li>other ((action))</li>
+                                                                                                </ul>
+                                                                                        </li>
+                                                                                        <li>((row_related_list))</li>
+                                                                                        <li>((view_row))</li>
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        table actions
+                                                                                <ul>
+                                                                                        <li>((new_row))</li>
+                                                                                        <li>((list_action))</li>
+                                                                                </ul>
+                                                                        </li>
+                                                                {% endif %}
                                                                 <li>
                                                                 permisions
                                                                         <ul>

@@ -252,30 +252,31 @@
             tr
                 td width=350
                     ctrl-tree name=_panel,,,width=350,,,height=calc(100% - top - 20)
-                        li...{{object}}
-                            ul
-                                li...object fields
-                                    ul
-                                        % for pos in object.get_all_table_fields
-                                            li...{{pos}}
-                                                ul
-                                                    li...{{pos}}
-                                                    li...object.{{pos}}
-                                                    li...form.fields_as_table.{{pos}}
-                                li...object related fields
-                                    ul
-                                        % for pos in object.get_table_rel_fields
-                                            li...{{pos}}
-                                                ul
-                                                    li...{{pos}}
-                                                    li...object.{{pos}}
-                                li...object methods
-                                    ul
-                                        %for pos in object.get_table_methods
-                                            li...{{pos}}
-                                                ul
-                                                    li...{{pos}}
-                                                    li...object.{{pos}}
+                        % if object.get_rel_table:
+                            li...{{object}}
+                                ul
+                                    li...object fields
+                                        ul
+                                            % for pos in object.get_all_table_fields
+                                                li...{{pos}}
+                                                    ul
+                                                        li...{{pos}}
+                                                        li...object.{{pos}}
+                                                        li...form.fields_as_table.{{pos}}
+                                    li...object related fields
+                                        ul
+                                            % for pos in object.get_table_rel_fields
+                                                li...{{pos}}
+                                                    ul
+                                                        li...{{pos}}
+                                                        li...object.{{pos}}
+                                    li...object methods
+                                        ul
+                                            %for pos in object.get_table_methods
+                                                li...{{pos}}
+                                                    ul
+                                                        li...{{pos}}
+                                                        li...object.{{pos}}
                         li...filters
                             ul
                                 li...django filters
@@ -284,7 +285,32 @@
                             ul
                                 li...django tags
                                 li...pytigon tags
+                        li...special template statements
+                            ul
+                                li...{{ "^"|add:"^^"}}
+                                li...{{ "="|add:"==>"}}
+                                li...{{ ">"|add:">>"}}
+                                li...{{ "<"|add:"<<"}}
+                                li...{{ "{"|add:":}"}}
+                                li...script language=python                                
                         li...targets
+                            ul
+                                li..._blank
+                                li..._parent
+                                li..._top
+                                li..._self
+                                li...popup
+                                li...popup_edit
+                                li...popup_info
+                                li...popup_delete
+                                li...inline_edit
+                                li...inline_info
+                                li...inline_delete
+                                li...inline
+                                li...none
+                                li...refresh_obj
+                                li...refresh_page
+                                li...refresh_app                                
                         li...template blocks
                             ul
                                 li...%% all
@@ -513,22 +539,23 @@
                                         li...((field))
                                         li...((form field))
                                         li...((hidden field))
-                                li...row actions
-                                    ul
-                                        li...% row_actions
-                                            ul
-                                                li...edit
-                                                li...delete
-                                                li...pdf
-                                                li...show related table based on field ((field_list))
-                                                li...show editor for field ((field_edit))
-                                                li...other ((action))
-                                        li...((row_related_list))
-                                        li...((view_row))
-                                li...table actions
-                                    ul
-                                        li...((new_row))
-                                        li...((list_action))
+                                % if object.get_rel_table:
+                                    li...row actions
+                                        ul
+                                            li...% row_actions
+                                                ul
+                                                    li...edit
+                                                    li...delete
+                                                    li...pdf
+                                                    li...show related table based on field ((field_list))
+                                                    li...show editor for field ((field_edit))
+                                                    li...other ((action))
+                                            li...((row_related_list))
+                                            li...((view_row))
+                                    li...table actions
+                                        ul
+                                            li...((new_row))
+                                            li...((list_action))
                                 li...permisions
                                     ul
                                         li...check ((permision))

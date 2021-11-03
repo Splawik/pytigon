@@ -37,6 +37,7 @@ from pytigon_lib.schviews import make_path
 from pytigon_lib.schtools.schjson import json_loads, json_dumps
 from base64 import b32decode, b32encode
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -65,8 +66,21 @@ template_simple = """
 """
 
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
+
+
 def view_page(request, app_or_subject, page_path):
+
+    transfer_to_cache = False
+    key = ""
+
+    if not request.user.has_perm("wiki.add_page"):
+        key = "wiki_view_page_%s_%s" % (app_or_subject, page_path)
+        data = cache.get(key)
+        if data:
+            return data
+        else:
+            transfer_to_cache = True
 
     desc = request.GET.get("desc", "")
     path, sep, page_name = page_path.rpartition("+")
@@ -158,7 +172,12 @@ def view_page(request, app_or_subject, page_path):
 
     c["content"] = content
 
-    return render(request, base_template, context=c)
+    ret = render(request, base_template, context=c)
+
+    if transfer_to_cache:
+        cache.set(key, ret, 60 * 60)
+
+    return ret
 
 
 def edit_page(request, app_or_subject, page_name):
@@ -183,14 +202,14 @@ def insert_object_to_editor(request, pk):
     if pk:
         object = models.PageObjectsConf.objects.get(pk=pk)
         if object.edit_form:
-            edit_form = "True"
+            edit_form = True
         else:
-            edit_form = "False"
+            edit_form = False
         object_name = object.name
         object_inline_editing = object.inline_editing
     else:
         object = None
-        edit_form = "True"
+        edit_form = True
         object_name = None
         object_inline_editing = None
 

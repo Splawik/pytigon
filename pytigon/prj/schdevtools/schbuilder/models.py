@@ -1550,15 +1550,16 @@ class SChTemplate(models.Model):
         for pos in object_list:
             buf.append(pos)
         ext_apps = app_set.ext_apps
-        app_list = ext_apps.replace(";", ",").split(",")
-        for pos in app_list:
-            if "." in pos:
-                app_set_str, app_str = pos.split(".")
-                object_list = SChApp.objects.filter(
-                    parent__name=app_set_str, name=app_str
-                )
-                if len(object_list) > 0:
-                    buf.append(object_list[0])
+        if ext_apps:
+            app_list = ext_apps.replace(";", ",").split(",")
+            for pos in app_list:
+                if "." in pos:
+                    app_set_str, app_str = pos.split(".")
+                    object_list = SChApp.objects.filter(
+                        parent__name=app_set_str, name=app_str
+                    )
+                    if len(object_list) > 0:
+                        buf.append(object_list[0])
         ret = []
         for pos in buf:
             for table in pos.schtable_set.all():

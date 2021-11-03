@@ -47,13 +47,13 @@ if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER = "scheditor"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = "/" + URL_ROOT_FOLDER + "/static/"
+    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
+    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
+
 
 from fs.osfs import OSFS
 from django.core.files.storage import default_storage
 default_storage.fs.mount('os', OSFS("/"))
-
-    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
-    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
 
 from pytigon_lib.schtools.install_init import init
 
@@ -143,7 +143,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.09.29 20:16:46"
+GEN_TIME = "2021.10.29 20:04:55"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

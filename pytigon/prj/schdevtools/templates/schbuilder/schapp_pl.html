@@ -3,11 +3,12 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block pythoncode %}
-        {% if not form_list %}
+        {% if form_add or form_edit %}
                 <script language="python">
             def init_form(self):
                 import os
                 paths = wx.StandardPaths.Get()
+                print(dir(self))
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 </script>
         {% endif %}
@@ -80,23 +81,30 @@
     <h2>Spis aplikacji</h2>
 {% endblock %}
 {% block row_edit %}
+        A1
         {% form %}
                 'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
         {% endform %}
+        A2
         {% if standard_web_browser %}
+                A3
                 {% form "^/6" %}
                         icon,icon_size
                 {% endform %}
+                A4
           {% else %}
+                A5
                 <tr>
                         <td>Icon</td>
                         <td>
                                 <CTRL-BITMAPCOMBOBOX class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></CTRL-BITMAPCOMBOBOX>
                         </td>
                 </tr>
+                A6
                 {% form "^/12" %}
                         icon_size
                 {% endform %}
+                A6
         {% endif %}
 {% endblock %}
 

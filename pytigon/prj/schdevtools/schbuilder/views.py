@@ -1171,8 +1171,27 @@ def gen(request, pk):
             f = open(os.path.join(base_path, file_name), "rb")
             txt = f.read().decode("utf-8").split("\n")
             f.close()
-            if file_append < len(txt):
-                txt = txt[:file_append] + file_content + txt[file_append:]
+            try:
+                file_append_pos = int(file_append)
+            except:
+                if file_append.startswith("|"):
+                    f = file_append[1:]
+                    delta = 0
+                elif file_append.endswith("|"):
+                    f = file_append[:-1]
+                    delta = 1
+                else:
+                    f = file_append
+                    delta = 1
+
+                file_append_pos = delta
+                for buf in txt:
+                    if f in buf:
+                        break
+                    file_append_pos += 1
+
+            if file_append_pos < len(txt):
+                txt = txt[:file_append_pos] + file_content + txt[file_append_pos:]
             else:
                 txt = txt + file_content
             f = open(os.path.join(base_path, file_name), "wb")
@@ -1194,7 +1213,7 @@ def gen(request, pk):
                 elif file_name.startswith("<") and ">" in file_name:
                     f = file_name[1:].split(">")
                     file_name = f[1].strip()
-                    file_append = int(f[0])
+                    file_append = f[0]
                 else:
                     file_name = file_name.strip()
                     file_append = -1
