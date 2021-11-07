@@ -143,9 +143,9 @@ def on_click_default_action(event, target_element):
 
     target = target_element.getAttribute("target")
 
-    if window.APPLICATION_TEMPLATE == "traditional":
-        if not target or (target and target in ("_self", "_parent", "_top")):
-            return False
+    #if window.APPLICATION_TEMPLATE == "traditional":
+    #    if not target or (target and target in ("_self", "_parent", "_top")):
+    #        return False
 
     src_obj = jQuery(target_element)
 
@@ -248,20 +248,20 @@ def on_click_default_action(event, target_element):
 
 
 def _on_menu_click(event, target_element):
-    if window.APPLICATION_TEMPLATE != "traditional":
-        event.preventDefault()
-        toggler = document.querySelector("#topmenu .navbar-toggler")
-        if toggler and is_visible(toggler):
+    #if window.APPLICATION_TEMPLATE != "traditional":
+    event.preventDefault()
+    toggler = document.querySelector("#topmenu .navbar-toggler")
+    if toggler and is_visible(toggler):
 
-            def _on_collapse(self):
-                nonlocal target_element
-                on_click_default_action(event, target_element)
-                jQuery("#navbar-ex1-collapse").off("hidden.bs.collapse", _on_collapse)
-
-            jQuery("#navbar-ex1-collapse").on("hidden.bs.collapse", _on_collapse)
-            jQuery("#navbar-ex1-collapse").collapse("hide")
-        else:
+        def _on_collapse(self):
+            nonlocal target_element
             on_click_default_action(event, target_element)
+            jQuery("#navbar-ex1-collapse").off("hidden.bs.collapse", _on_collapse)
+
+        jQuery("#navbar-ex1-collapse").on("hidden.bs.collapse", _on_collapse)
+        jQuery("#navbar-ex1-collapse").collapse("hide")
+    else:
+        on_click_default_action(event, target_element)
 
 
 register_global_event("click", _on_menu_click, "a.menu-href")

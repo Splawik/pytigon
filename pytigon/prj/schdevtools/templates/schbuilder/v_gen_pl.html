@@ -11,12 +11,14 @@
         <th>time</th>
         <th>cmd</th>
         <th>description</th>
+        <th>action</th>
 {% endblock %}
 {% block user_row %}
         <tr>
-                <td>{{object.0}}</td>
+                <td>{{object.0|isoformat}}</td>
                 <td>{{object.1}}</td>
                 <td>{{object.2}}</td>
+                <td></td>
         </tr>
 {% endblock %}
 

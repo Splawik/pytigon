@@ -39,41 +39,45 @@
 
 %% list_row_header
     th...Name
+    th...Title
+    th...Version
 
 %% list_row
     % td_editable 'name' 'text'
+    td...{{object.title}}
+    td...{{object.version}}
 
 %% list_row_actions
     % row_actions: ===>
         UP,Open in toolbar,[|wx.ART_GO_TO_PARENT],_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,{{app_path}}table/SChAppSet_up/{id}/schapp_set/-/form/list/?childwin=1
         edit
         gen,Build,[|client://categories/applications-multimedia.png]
+        gen_milestone,Build milestone version,[|png://actions/media-record.png]
         |
+        delete
         field_list/schapp_set,Applications,icon_name=client://apps/preferences-system-windows.png, target='_parent'
         field_edit/user_app_template,Application template,client://mimetypes/text-x-script.png,_parent
-        field_edit/app_main,Application main entrypoint,[|client://mimetypes/application-x-executable.png],_parent
-        field_edit/doc,Doc,[|client://apps/help-browser.png],_top2
         field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_parent
-        field_list/schlocale_set,Locale,[|client://apps/preferences-system-network-proxy.png]
-        manage,Manage,[|client://categories/preferences-system.png]
-        delete
+        duplicate,Duplicate,[|png://actions/go-bottom.png]
         run,Run,[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
-        field_edit/readme_file,readme.txt(Distribute),[|fa://navicon.png],_parent
-        field_edit/license_file,license.txt(Distribute),license_txt,_parent
+        field_edit/readme_file,README.md(Distribute),[|fa://navicon.png],_parent
+        field_edit/license_file,LICENSE(Distribute),license_txt,_parent
         field_edit/install_file,install.ini(Distribute),install_ini,_parent
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_parent
-        field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_parent
-
+        manage,Manage(Other options),[|client://categories/preferences-system.png]
+        field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
+        field_edit/app_main,Application main entrypoint(Other options),[|client://mimetypes/application-x-executable.png],_parent
+        field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
+        field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
 
 %% dialog_type
     .modal-lg
 
 %% row_edit
-
     %form "^/6":
-        .name,title
+        .name,title,version,main_view
     %form "^/12":
         .ext_apps,plugins
     %form "^/6":
@@ -100,3 +104,5 @@
                 CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
         % form "^/12":
             .icon_size
+    %form "^/12":
+        .git_repository

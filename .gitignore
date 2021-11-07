@@ -2,8 +2,6 @@
 __pycache__/
 *.py[cod]
 
-# Distribution / packaging
-*templates/*
 
 # Installer logs
 pip-log.txt
@@ -25,7 +23,7 @@ migrations/
 */.gradle/
 
 global_db_settings.py
-
+settings_app_local.py
 # pytigon installation files
 *.ptig
 
@@ -34,16 +32,13 @@ global_db_settings.py
 
 prj/schbhp/
 prj/schdocs/
-prj/scheditor/
 prj/schhomemonitoring/
 prj/schintranet/
 prj/schit/
 prj/schmicroerp/
 prj/schodf/
 prj/schpolb/
-prj/schpytigondemo/
 prj/schpytigondoc/
-prj/schwebtrapper/
 prj/standard_components/
 
 ext_lib_cli_lin/

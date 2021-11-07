@@ -2008,11 +2008,6 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
 on_click_default_action = function flx_on_click_default_action (event, target_element) {
     var _callback2, _get_or_post, callback, href, param, src_obj, stub8_, target, url;
     target = target_element.getAttribute("target");
-    if (_pyfunc_op_equals(window.APPLICATION_TEMPLATE, "traditional")) {
-        if (_pyfunc_truthy(((!_pyfunc_truthy(target))) || (_pyfunc_truthy(target) && _pyfunc_op_contains(target, ["_self", "_parent", "_top"])))) {
-            return false;
-        }
-    }
     src_obj = jQuery(target_element);
     href = target_element.getAttribute("xlink:href");
     if ((!_pyfunc_truthy(href))) {
@@ -2125,21 +2120,19 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
 
 _on_menu_click = function flx__on_menu_click (event, target_element) {
     var _on_collapse, toggler;
-    if ((!_pyfunc_op_equals(window.APPLICATION_TEMPLATE, "traditional"))) {
-        event.preventDefault();
-        toggler = document.querySelector("#topmenu .navbar-toggler");
-        if ((_pyfunc_truthy(toggler) && (_pyfunc_truthy(is_visible(toggler))))) {
-            _on_collapse = function () {
-                on_click_default_action(event, target_element);
-                (jQuery("#navbar-ex1-collapse").off)("hidden.bs.collapse", _on_collapse);
-                return null;
-            };
-
-            (jQuery("#navbar-ex1-collapse").on)("hidden.bs.collapse", _on_collapse);
-            (jQuery("#navbar-ex1-collapse").collapse)("hide");
-        } else {
+    event.preventDefault();
+    toggler = document.querySelector("#topmenu .navbar-toggler");
+    if ((_pyfunc_truthy(toggler) && (_pyfunc_truthy(is_visible(toggler))))) {
+        _on_collapse = function () {
             on_click_default_action(event, target_element);
-        }
+            (jQuery("#navbar-ex1-collapse").off)("hidden.bs.collapse", _on_collapse);
+            return null;
+        };
+
+        (jQuery("#navbar-ex1-collapse").on)("hidden.bs.collapse", _on_collapse);
+        (jQuery("#navbar-ex1-collapse").collapse)("hide");
+    } else {
+        on_click_default_action(event, target_element);
     }
     return null;
 };
@@ -3218,9 +3211,6 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     window.COMPONENT_INIT = component_init;
     window.LANG = lang;
     window.GEN_TIME = gen_time;
-    if (_pyfunc_op_equals(APPLICATION_TEMPLATE, "traditional")) {
-        document.addEventListener("DOMContentLoaded", dom_content_loaded);
-    }
     if (_pyfunc_truthy(offline_support)) {
         if ((_pyfunc_truthy(navigator.onLine) && (_pyfunc_truthy(service_worker_and_indexedDB_test())))) {
             install_service_worker();

@@ -309,8 +309,11 @@ def amount(text):
 @register.filter(name='isoformat')
 def isoformat(value):
     if value:
-        iso = value.isoformat()[:19].replace('T', ' ')
-        return iso
+        try:
+            iso = value.isoformat()[:19].replace('T', ' ')
+            return iso
+        except:
+            return value
     else:
         return ""
 

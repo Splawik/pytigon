@@ -6,38 +6,30 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
-
-%% ext_js_scripts
-    {{block.super}}
-    {% jscript_link 'system/require.js' %}
-    
     
 %% js_extrascipts
     {{block.super}}
     
-    {% module_link '_schdata/js/subreport.js' %}
+    
+    {% jscript_link 'system/require.js' %}
     
 
 %% extrastyle
     {{block.super}}
     
-    {% css_link '_schwiki/css/wiki_editor.css' %}
     
 
 %% body_footer_scripts
     {{block.super}}
     
-    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-xterm.js' %}
-    {% component '_schwiki/components/insert_object.js' %}
     
     
 
 %% component_init
         .var initial_state={};
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "ptig-wysiwygedit.js", "ptig-codeeditor.js", "ptig-xterm.js", "insert_object.js",  ];  
+        .var component_init = [ "ptig-xterm.js",  ];  
 
 %% extrahead
     {{block.super}}

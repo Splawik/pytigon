@@ -12,6 +12,7 @@
 {% endblock %}
 {% block js_scripts_base %}
         {% compress js %}
+                {{ block.super }}
                 {% jscript_link 'pytigon_js/py_runtime.js' %}
                 {% jscript_link 'system/morphdom-umd.min.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}

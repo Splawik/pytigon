@@ -6,10 +6,16 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/SChAppSet/-/form/list/?schtml=desktop",
+        "table/SChAppSet/main_view/form/list/?schtml=desktop",
         _("Projects"),
         "schbuilder.change_schappset",
         """client://status/folder-open.png""",
+    ),
+    (
+        "table/SChAppSet/not_main_view/form/list/?schtml=desktop",
+        _("Archived projects"),
+        "schbuilder.change_schappset",
+        """png://actions/edit-delete.png""",
     ),
     (
         "form/Installer/",

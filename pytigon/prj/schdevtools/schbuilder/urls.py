@@ -109,6 +109,7 @@ urlpatterns = [
         },
     ),
     re_path("autocomplete/(?P<id>\d+)/(?P<key>\w+)/$", views.autocomplete, {}),
+    gen_row_action("SChAppSet", "gen_milestone", views.gen_milestone),
     path(
         "devtools", TemplateView.as_view(template_name="schbuilder/devtools.html"), {}
     ),

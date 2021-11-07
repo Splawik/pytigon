@@ -260,13 +260,10 @@ HtmlGui_CHOICES = [
     ("auto", "auto"),
     ("desktop_standard", "desktop_standard"),
     ("desktop_modern", "desktop_modern"),
-    ("desktop_traditional", "desktop_traditional"),
     ("tablet_standard", "tablet_standard"),
     ("tablet_modern", "tablet_modern"),
-    ("tablet_traditional", "tablet_traditional"),
     ("smartfon_standard", "smartfon_standard"),
     ("smartfon_modern", "smartfon_modern"),
-    ("smartfon_traditional", "smartfon_traditional"),
 ]
 
 ContentType_CHOICES = [
@@ -310,7 +307,7 @@ Consumer_CHOICES = [
 ]
 
 
-class SChAppSet(models.Model):
+class SChAppSet(JSONModel):
     class Meta:
         verbose_name = _("Application package")
         verbose_name_plural = _("Application packages")
@@ -324,6 +321,16 @@ class SChAppSet(models.Model):
     )
     title = models.CharField(
         "Title", null=False, blank=False, editable=True, max_length=255
+    )
+    version = models.CharField(
+        "Version", null=True, blank=True, editable=True, default="latest", max_length=16
+    )
+    main_view = models.BooleanField(
+        "Show in main view",
+        null=True,
+        blank=True,
+        editable=True,
+        default=True,
     )
     ext_apps = models.CharField(
         "Extern applications", null=True, blank=True, editable=True, max_length=4096
@@ -424,13 +431,13 @@ class SChAppSet(models.Model):
         editable=True,
     )
     readme_file = models.TextField(
-        "readme.txt",
+        "README.md",
         null=True,
         blank=True,
         editable=False,
     )
     license_file = models.TextField(
-        "license.txt",
+        "LICENSE",
         null=True,
         blank=True,
         editable=False,
@@ -464,6 +471,9 @@ class SChAppSet(models.Model):
         null=True,
         blank=True,
         editable=False,
+    )
+    git_repository = models.CharField(
+        "Git repository", null=True, blank=True, editable=True, max_length=255
     )
 
     filter_fields = {
@@ -554,11 +564,20 @@ class SChAppSet(models.Model):
     def table_action(cls, list_view, request, data):
         return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
 
+    @staticmethod
+    def filter(f):
+        if f == "main_view":
+            return SChAppSet.objects.filter(main_view=True)
+        elif f == "not_main_view":
+            return SChAppSet.objects.filter(main_view=False)
+        else:
+            return SChAppSet.objects.all()
+
 
 admin.site.register(SChAppSet)
 
 
-class SChApp(models.Model):
+class SChApp(JSONModel):
     class Meta:
         verbose_name = _("SChApp")
         verbose_name_plural = _("SChApp")

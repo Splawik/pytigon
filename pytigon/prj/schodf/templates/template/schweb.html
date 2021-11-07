@@ -1,7 +1,7 @@
 {% extends 'template/schweb_base.html'|translate:lang %}
 {% load exfiltry %}
 {% load exsyntax %}
-{% load staticfiles %}
+{% load static %}
 {% block indexhead %}
         <table style="width: 100%;" border="1">
                 {% if user.is_authenticated %}
@@ -15,8 +15,8 @@
                 <tr><td> gui_style </td><td> modern(toolbar(file(exit),clipboard) </td></tr>
                 <tr><td> hybrid </td><td> 0 </td></tr>
                 <tr><td> title  </td><td> Odf </td></tr>
-                <tr><td> start_page </td><td> odf </td></tr>
-                <tr><td> plugins </td><td>  </td></tr>
+                <tr><td> start_page </td><td> schodfupload/odf_upload/ </td></tr>
+                <tr><td> plugins </td><td> None </td></tr>
         </table>
 {% endblock %}
 

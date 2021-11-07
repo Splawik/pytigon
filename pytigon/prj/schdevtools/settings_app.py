@@ -3,7 +3,7 @@ import os
 import sys
 from urllib.parse import urlparse
 
-PRJ_TITLE = "Developer tools"
+PRJ_TITLE = "Developer tools 1"
 PRJ_NAME = "schdevtools"
 THEMES = ["tablet_modern", "tablet_standard", "smartfon_standard"]
 
@@ -128,6 +128,22 @@ CHANNELS_URL_TAB += [
         "schcommander.consumers.ShellConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
@@ -139,7 +155,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.10.30 09:15:11"
+GEN_TIME = "2021.11.07 22:07:45"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

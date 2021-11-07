@@ -49,7 +49,7 @@ txt = models.TextFields()
 
 > module: pytigon_lib.schdjangoext.fields.PtigForeignKey
 
-extended version of ForeignKey - additional fields: search_fields, query, is_new_button
+extended version of ForeignKey - additional fields: search_fields, query, is_new_button. If search_fields is not empty, select2 widget is used.
 
 ## PtigHiddenForeignKey GHiddenForeignKey
 

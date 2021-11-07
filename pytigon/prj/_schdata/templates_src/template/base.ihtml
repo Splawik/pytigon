@@ -6,16 +6,13 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
-
-%% ext_js_scripts
-    {{block.super}}
-    {% jscript_link 'system/require.js' %}
-    
     
 %% js_extrascipts
     {{block.super}}
     {% module_link '_schdata/js/subreport.js' %}
     
+    
+    {% jscript_link 'system/require.js' %}
     
 
 %% extrastyle

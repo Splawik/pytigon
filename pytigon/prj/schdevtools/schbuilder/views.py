@@ -60,10 +60,15 @@ from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon_lib.schtools.cc import import_plugin, make
+from pytigon_lib.schdjangoext.python_style_template_loader import compile_template
 
 from pytigon.ext_lib.pygettext import main as gtext
 
 from pytigon.schserw.schsys.context_processors import sch_standard
+
+from dulwich import porcelain
+from dulwich.repo import Repo
+from dulwich import index
 
 try:
     import sass
@@ -531,58 +536,106 @@ def prj_import_from_str(s):
             s.parent = prj_instence
             s.save()
 
-    object_list.append((datetime.datetime.now().time().isoformat(), "SUCCESS:", ""))
+    object_list.append((datetime.datetime.now(), "SUCCESS:", ""))
 
-    return {"object_list": reversed(object_list)}
-
-
-PFORM = form_with_perms("schbuilder")
+    return {"object_list": object_list, "prj_instance": prj_instence}
 
 
-class Installer(forms.Form):
-    name = forms.ChoiceField(
-        label=_("Application package name"), required=True, choices=models.apppack
-    )
+def prj_export_to_str(pk):
+    prj_tab = []
+    prj = models.SChAppSet.objects.get(id=pk)
+    prj_tab.append(obj_to_array(prj, prj_attr))
+    apps = prj.schapp_set.all()
+    apps_array = []
+    for app in apps:
+        tables = app.schtable_set.all()
+        tables_array = []
+        for table in tables:
+            tmp = obj_to_array(table, table_attr)
+            fields = table.schfield_set.all()
+            fields_array = []
+            for field in fields:
+                fields_array.append(obj_to_array(field, field_attr))
+            tables_array.append([tmp, fields_array])
 
-    def process(self, request, queryset=None):
+        choices = app.schchoice_set.all()
+        choices_array = []
+        for choice in choices:
+            tmp = obj_to_array(choice, choice_attr)
+            choice_items = choice.schchoiceitem_set.all()
+            choice_items_array = []
+            for item in choice_items:
+                choice_items_array.append(obj_to_array(item, choice_item_attr))
+            choices_array.append([tmp, choice_items_array])
 
-        name = self.cleaned_data["name"]
-        return installer(request, name)
+        views = app.schview_set.all()
+        views_array = []
+        for view in views:
+            views_array.append(obj_to_array(view, view_attr))
 
+        templates = app.schtemplate_set.all()
+        templates_array = []
+        for template in templates:
+            templates_array.append(obj_to_array(template, template_attr))
 
-def view_installer(request, *argi, **argv):
-    return PFORM(request, Installer, "schbuilder/forminstaller.html", {})
+        appmenus = app.schappmenu_set.all()
+        appmenus_array = []
+        for appmenu in appmenus:
+            appmenus_array.append(obj_to_array(appmenu, appmenu_attr))
 
+        forms = app.schform_set.all()
+        forms_array = []
+        for form in forms:
+            tmp = obj_to_array(form, form_attr)
+            fields = form.schformfield_set.all()
+            fields_array = []
+            for field in fields:
+                fields_array.append(obj_to_array(field, formfield_attr))
+            forms_array.append([tmp, fields_array])
 
-class Install(forms.Form):
-    install_file = forms.FileField(
-        label=_("Install file (*.ptig)"),
-        required=True,
-    )
+        tasks = app.schtask_set.all()
+        tasks_array = []
+        for task in tasks:
+            tasks_array.append(obj_to_array(task, task_attr))
 
-    def process(self, request, queryset=None):
+        consumers = app.schchannelconsumer_set.all()
+        consumers_array = []
+        for consumer in consumers:
+            consumers_array.append(obj_to_array(consumer, consumer_attr))
 
-        install_file = request.FILES["install_file"]
-        name = install_file.name.split(".")[0]
-        zip_file = zipfile.ZipFile(install_file.file)
-        ret = extract_ptig(zip_file, name)
+        files = app.schfiles_set.all()
+        files_array = []
+        for file in files:
+            files_array.append(obj_to_array(file, files_attr))
 
-        extract_to = os.path.join(settings.PRJ_PATH, name)
-        (ret_code, output, err) = py_run(
-            [os.path.join(extract_to, "manage.py"), "post_installation"]
+        tmp = obj_to_array(app, app_attr)
+        apps_array.append(
+            [
+                tmp,
+                tables_array,
+                choices_array,
+                views_array,
+                templates_array,
+                appmenus_array,
+                forms_array,
+                tasks_array,
+                consumers_array,
+                files_array,
+            ]
         )
+    prj_tab.append(apps_array)
 
-        return {"object_list": ret}
+    statics = prj.schstatic_set.all()
+    statics_array = []
+    for static in statics:
+        statics_array.append(obj_to_array(static, static_attr))
+
+    prj_tab.append(statics_array)
+
+    return json.dumps(prj_tab, indent=4)
 
 
-def view_install(request, *argi, **argv):
-    return PFORM(request, Install, "schbuilder/forminstall.html", {})
-
-
-# Hello
-@dict_to_template("schbuilder/v_gen.html")
-def gen(request, pk):
-
+def build_prj(pk):
     prj = models.SChAppSet.objects.get(id=pk)
     root_path = settings.ROOT_PATH
 
@@ -602,25 +655,21 @@ def gen(request, pk):
         gmt[5],
     )
 
-    if not os.path.exists(base_path):
-        object_list.append(
-            (datetime.datetime.now().time().isoformat(), "mkdir:", base_path)
-        )
-        os.makedirs(base_path, exist_ok=True)
-        os.makedirs(base_path + "/templates", exist_ok=True)
-        os.makedirs(base_path + "/templates/template", exist_ok=True)
-        os.makedirs(base_path + "/templates_src", exist_ok=True)
-        os.makedirs(base_path + "/templates_src/template", exist_ok=True)
-        os.makedirs(base_path + "/apache", exist_ok=True)
+    # os.makedirs(base_path, exist_ok=True)
+    # os.makedirs(base_path+"/templates", exist_ok=True)
+    os.makedirs(base_path + "/templates/template", exist_ok=True)
+    # os.makedirs(base_path+"/templates_src", exist_ok=True)
+    os.makedirs(base_path + "/templates_src/template", exist_ok=True)
+    # os.makedirs(base_path+"/apache", exist_ok=True)
 
     apps = prj.schapp_set.all()
 
     # template_to_file(base_path, "license", "LICENSE.txt", {'prj': prj})
     # template_to_file(base_path, "readme", "README.txt",  {'prj': prj})
-    with open(os.path.join(base_path, "README.txt"), "wt") as f:
+    with open(os.path.join(base_path, "README.md"), "wt") as f:
         if prj.readme_file:
             f.write(prj.readme_file)
-    with open(os.path.join(base_path, "LICENSE.txt"), "wt") as f:
+    with open(os.path.join(base_path, "LICENSE"), "wt") as f:
         if prj.license_file:
             f.write(prj.license_file)
     with open(os.path.join(base_path, "install.ini"), "wt") as f:
@@ -650,15 +699,10 @@ def gen(request, pk):
 
     app_names = []
     for app in apps:
-        object_list.append(
-            (datetime.datetime.now().time().isoformat(), "create app:", app.name)
-        )
-        if not os.path.exists(base_path + "/" + app.name):
-            os.makedirs(base_path + "/" + app.name, exist_ok=True)
-        if not os.path.exists(base_path + "/templates_src/" + app.name):
-            os.makedirs(base_path + "/templates_src/" + app.name, exist_ok=True)
-        if not os.path.exists(base_path + "/templates/" + app.name):
-            os.makedirs(base_path + "/templates/" + app.name, exist_ok=True)
+        object_list.append((datetime.datetime.now(), "create app:", app.name))
+        os.makedirs(base_path + "/" + app.name, exist_ok=True)
+        os.makedirs(base_path + "/templates_src/" + app.name, exist_ok=True)
+        os.makedirs(base_path + "/templates/" + app.name, exist_ok=True)
 
         app_names.append(app.name)
 
@@ -669,9 +713,7 @@ def gen(request, pk):
         is_tree_table = False
         gfields = []
         for table in tables:
-            object_list.append(
-                (datetime.datetime.now().time().isoformat(), "create tab:", table.name)
-            )
+            object_list.append((datetime.datetime.now(), "create tab:", table.name))
             table.tree_table = 0
             for field in table.schfield_set.filter(
                 type__in=[
@@ -1254,141 +1296,85 @@ def gen(request, pk):
             if output_tab:
                 for pos in output_tab:
                     if pos:
-                        object_list.append(
-                            (
-                                datetime.datetime.now().time().isoformat(),
-                                "pip info",
-                                pos,
-                            )
-                        )
+                        object_list.append((datetime.datetime.now(), "pip info", pos))
             if err_tab:
                 for pos in err_tab:
                     if pos:
-                        object_list.append(
-                            (
-                                datetime.datetime.now().time().isoformat(),
-                                "pip error",
-                                pos,
-                            )
-                        )
+                        object_list.append((datetime.datetime.now(), "pip error", pos))
                         success = False
     if success:
-        object_list.append((datetime.datetime.now().time().isoformat(), "SUCCESS:", ""))
+        object_list.append((datetime.datetime.now(), "SUCCESS:", ""))
     else:
-        object_list.append((datetime.datetime.now().time().isoformat(), "ERRORS:", ""))
+        object_list.append((datetime.datetime.now(), "ERRORS:", ""))
 
     (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path)
     if output_tab:
         for pos in output_tab:
             if pos:
-                object_list.append(
-                    (datetime.datetime.now().time().isoformat(), "compile info", pos)
-                )
+                object_list.append((datetime.datetime.now(), "compile info", pos))
     if err_tab:
         for pos in err_tab:
             if pos:
-                object_list.append(
-                    (datetime.datetime.now().time().isoformat(), "compile error", pos)
-                )
+                object_list.append((datetime.datetime.now(), "compile error", pos))
                 success = False
 
-    return {"object_list": reversed(object_list)}
+    return object_list
+
+
+PFORM = form_with_perms("schbuilder")
+
+
+class Installer(forms.Form):
+    name = forms.ChoiceField(
+        label=_("Application package name"), required=True, choices=models.apppack
+    )
+
+    def process(self, request, queryset=None):
+
+        name = self.cleaned_data["name"]
+        return installer(request, name)
+
+
+def view_installer(request, *argi, **argv):
+    return PFORM(request, Installer, "schbuilder/forminstaller.html", {})
+
+
+class Install(forms.Form):
+    install_file = forms.FileField(
+        label=_("Install file (*.ptig)"),
+        required=True,
+    )
+
+    def process(self, request, queryset=None):
+
+        install_file = request.FILES["install_file"]
+        name = install_file.name.split(".")[0]
+        zip_file = zipfile.ZipFile(install_file.file)
+        ret = extract_ptig(zip_file, name)
+
+        extract_to = os.path.join(settings.PRJ_PATH, name)
+        (ret_code, output, err) = py_run(
+            [os.path.join(extract_to, "manage.py"), "post_installation"]
+        )
+
+        return {"object_list": ret}
+
+
+def view_install(request, *argi, **argv):
+    return PFORM(request, Install, "schbuilder/forminstall.html", {})
+
+
+# Hello
+@dict_to_template("schbuilder/v_gen.html")
+def gen(request, pk):
+
+    return {"object_list": reversed(build_prj(pk))}
 
 
 def prj_export(request, pk):
 
-    prj_tab = []
-    prj = models.SChAppSet.objects.get(id=pk)
-    prj_tab.append(obj_to_array(prj, prj_attr))
-    apps = prj.schapp_set.all()
-    apps_array = []
-    for app in apps:
-        tables = app.schtable_set.all()
-        tables_array = []
-        for table in tables:
-            tmp = obj_to_array(table, table_attr)
-            fields = table.schfield_set.all()
-            fields_array = []
-            for field in fields:
-                fields_array.append(obj_to_array(field, field_attr))
-            tables_array.append([tmp, fields_array])
-
-        choices = app.schchoice_set.all()
-        choices_array = []
-        for choice in choices:
-            tmp = obj_to_array(choice, choice_attr)
-            choice_items = choice.schchoiceitem_set.all()
-            choice_items_array = []
-            for item in choice_items:
-                choice_items_array.append(obj_to_array(item, choice_item_attr))
-            choices_array.append([tmp, choice_items_array])
-
-        views = app.schview_set.all()
-        views_array = []
-        for view in views:
-            views_array.append(obj_to_array(view, view_attr))
-
-        templates = app.schtemplate_set.all()
-        templates_array = []
-        for template in templates:
-            templates_array.append(obj_to_array(template, template_attr))
-
-        appmenus = app.schappmenu_set.all()
-        appmenus_array = []
-        for appmenu in appmenus:
-            appmenus_array.append(obj_to_array(appmenu, appmenu_attr))
-
-        forms = app.schform_set.all()
-        forms_array = []
-        for form in forms:
-            tmp = obj_to_array(form, form_attr)
-            fields = form.schformfield_set.all()
-            fields_array = []
-            for field in fields:
-                fields_array.append(obj_to_array(field, formfield_attr))
-            forms_array.append([tmp, fields_array])
-
-        tasks = app.schtask_set.all()
-        tasks_array = []
-        for task in tasks:
-            tasks_array.append(obj_to_array(task, task_attr))
-
-        consumers = app.schchannelconsumer_set.all()
-        consumers_array = []
-        for consumer in consumers:
-            consumers_array.append(obj_to_array(consumer, consumer_attr))
-
-        files = app.schfiles_set.all()
-        files_array = []
-        for file in files:
-            files_array.append(obj_to_array(file, files_attr))
-
-        tmp = obj_to_array(app, app_attr)
-        apps_array.append(
-            [
-                tmp,
-                tables_array,
-                choices_array,
-                views_array,
-                templates_array,
-                appmenus_array,
-                forms_array,
-                tasks_array,
-                consumers_array,
-                files_array,
-            ]
-        )
-    prj_tab.append(apps_array)
-
-    statics = prj.schstatic_set.all()
-    statics_array = []
-    for static in statics:
-        statics_array.append(obj_to_array(static, static_attr))
-
-    prj_tab.append(statics_array)
-
-    ex_str = json.dumps(prj_tab, indent=4)
-    return HttpResponse(ex_str, content_type="text/plain")
+    content = prj_export_to_str(pk)
+    return HttpResponse(content, content_type="text/plain")
 
 
 @dict_to_template("schbuilder/v_prj_import.html")
@@ -1576,54 +1562,17 @@ def installer(request, pk):
     return {"object_list": buf, "name": name, "url": url, "tp": "SChAppSet"}
 
 
+@dict_to_template("schbuilder/v_restart_server.html")
 def restart_server(request):
 
-    module = import_plugin("schbuilderlib.test1", "schdevtools")
-    print(module.sum(2, 2))
-
-    import ctypes
-
-    restarted = False
+    lck = os.path.join(settings.DATA_PATH, "restart_needed.lck")
+    success = True
     try:
-        if platform.system() == "Linux":
-            if platform.system() == "Linux":
-                if type(request).__name__ == "AsgiRequest":
-                    os.kill(os.getpid(), signal.SIGINT)
-                    restarted = True
-                elif "mod_wsgi.process_group" in request.environ:
-                    if request.environ["mod_wsgi.process_group"] != "":
-                        os.kill(os.getpid(), signal.SIGINT)
-                        restarted = True
-                else:
-                    try:
-                        import uwsgi
-
-                        uwsgi.reload()
-                        restarted = True
-                    except:
-                        pass
-            else:
-                try:
-                    import uwsgi
-
-                    uwsgi.reload()
-                    restarted = True
-                except:
-                    pass
-        else:
-            ctypes.windll.libhttpd.ap_signal_parent(1)
-            restarted = True
+        with open(lck, "wt") as f:
+            f.write("A restart of the Pytigon program needed\n")
     except:
-        pass
-
-    script = "<script>jQuery('#ModalLabel').html('Restart');</script>"
-
-    if restarted:
-        return HttpResponse("<html>%s<body>Restarted</body></html>" % script)
-    else:
-        return HttpResponse(
-            "<html>%s<body>I can't restart server</body></html>" % script
-        )
+        success = False
+    return {"success": success}
 
 
 def template_edit3(request, pk):
@@ -1652,13 +1601,67 @@ def template_edit3(request, pk):
     return HttpResponseRedirect(new_url)
 
 
+@dict_to_template("schbuilder/v_update.html")
 def update(request):
 
-    # g = git.cmd.Git(settings.ROOT_PATH)
-    # g.reset('--hard')
-    # g.pull()
+    prj_names = (
+        "schdevtools",
+        "schsetup",
+        "schcomponents",
+        "_schwiki",
+        "_schdata",
+        "_schtools",
+        "_schall",
+        "_schremote",
+        "_schserverless",
+        "scheditor",
+        "schodf",
+        "schportal",
+        "schwebtrapper",
+        "schpytigondemo",
+    )
 
-    return HttpResponse("GIT PULL", content_type="text/plain")
+    base_url = "https://splawik:GanawaanawaT1@git.pytigon.cloud/pytigon/"
+
+    object_list = []
+
+    if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+        base_path = pytigon.schserw.settings._PRJ_PATH_ALT
+    else:
+        base_path = settings.PRJ_PATH_ALT
+
+    for prj_name in prj_names:
+        git_repository = base_url + prj_name + ".git"
+        prj_path = os.path.join(base_path, prj_name)
+        git_path = os.path.join(prj_path, ".git")
+
+        if os.path.exists(git_path):
+            repo = Repo(prj_path)
+            try:
+                remote_refs = porcelain.fetch(repo, git_repository)
+                repo[b"HEAD"] = remote_refs.refs[b"refs/heads/master"]
+
+                index_file = repo.index_path()
+                tree = repo[b"HEAD"].tree
+                index.build_index_from_tree(
+                    repo.path, index_file, repo.object_store, tree
+                )
+
+                object_list.append(
+                    (datetime.datetime.now(), "git fetch success", git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git fetch error", str(e)))
+        else:
+            try:
+                porcelain.clone(git_repository, prj_path)
+                object_list.append(
+                    (datetime.datetime.now(), "git clone success", git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git clone error", str(e)))
+
+    return {"object_list": object_list}
 
 
 @dict_to_template("schbuilder/v_translate_sync.html")
@@ -1901,3 +1904,124 @@ def autocomplete(request, id, key):
         }
     else:
         return key
+
+
+@dict_to_template("schbuilder/v_gen_milestone.html")
+def gen_milestone(request, pk):
+
+    object_list = []
+
+    prj = models.SChAppSet.objects.get(id=pk)
+    root_path = settings.ROOT_PATH
+
+    if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+        base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
+    else:
+        base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
+
+    git_path = os.path.join(base_path, ".git")
+
+    if prj.git_repository:
+        if hasattr(settings, "SYS_GIT_USER") and "//" in prj.git_repository:
+            x = prj.git_repository.split("//", 1)
+            git_repository = x[0] + "//" + settings.SYS_GIT_USER + "@" + x[1]
+        else:
+            git_repository = prj.git_repository
+
+        if os.path.exists(git_path):
+            repo = Repo(base_path)
+            try:
+                remote_refs = porcelain.fetch(repo, git_repository)
+                repo[b"HEAD"] = remote_refs.refs[b"refs/heads/master"]
+
+                index_file = repo.index_path()
+                tree = repo[b"HEAD"].tree
+                index.build_index_from_tree(
+                    repo.path, index_file, repo.object_store, tree
+                )
+
+                object_list.append(
+                    (datetime.datetime.now(), "git fetch success", prj.git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git fetch error", str(e)))
+        else:
+            try:
+                porcelain.clone(git_repository, base_path)
+                object_list.append(
+                    (datetime.datetime.now(), "git clone success", prj.git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git clone error", str(e)))
+
+    object_list.extend(build_prj(pk))
+
+    content = prj_export_to_str(prj.pk)
+
+    prj_path = os.path.join(base_path, f"{prj.name}.prj")
+    with open(prj_path, "wt") as f:
+        f.write(content)
+
+    object_list.append((datetime.datetime.now(), "prj exported", prj_path))
+
+    x = prj_import_from_str(content)
+    prj2 = x["prj_instance"]
+
+    if prj.version == "latest":
+        prj2.version = "v" + datetime.date.today().isoformat()
+    else:
+        prj2.version = prj.version
+        prj.version = "latest"
+        prj.save()
+
+    prj2.main_view = False
+    prj2.save()
+
+    object_list.append((datetime.datetime.now(), "prj copied to version:", prj.version))
+
+    itemplate_path = os.path.join(base_path, "templates_src")
+    l = len(base_path)
+    compiled = []
+    for root, dirs, files in os.walk(itemplate_path):
+        for f in files:
+            if f.endswith(".ihtml"):
+                p = os.path.join(root, f)
+                x = p[l + 15 :]
+                compile_template(
+                    x,
+                    template_dirs=[
+                        itemplate_path.replace("templates_src", "templates"),
+                    ],
+                    compiled=compiled,
+                    force=True,
+                )
+
+    object_list.append(
+        (
+            datetime.datetime.now(),
+            "compile templates",
+            ", ".join([pos.split("/")[-1] for pos in set(compiled)]),
+        )
+    )
+
+    if prj.git_repository:
+        repo = Repo(base_path)
+        for root, dirs, files in os.walk(base_path):
+            if not ".git" in root.replace("\\", "/").split("/"):
+                for file in files:
+                    if not file in (
+                        "global_db_settings.py",
+                        "settings_app_local.py",
+                    ) and not file.split(".")[-1] in ("pyc", "pyo", "so", "exe", "com"):
+                        p = os.path.join(root, file)
+                        porcelain.add(repo, p)
+        try:
+            porcelain.commit(repo, "New milestone version: " + prj2.version)
+            porcelain.push(repo, git_repository)
+            object_list.append(
+                (datetime.datetime.now(), "git commit and push", prj.git_repository)
+            )
+        except Exception as e:
+            object_list.append((datetime.datetime.now(), "git pull error", str(e)))
+
+    return {"object_list": reversed(object_list)}

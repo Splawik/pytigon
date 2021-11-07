@@ -6,13 +6,10 @@
         <body bgcolor="#{{color_info}}" style="background:#{{color_info}}">
 {% endblock %}
 {% block jquery_ovr  %}
-    var options = {
+    var options =
         success: refresh_win2
-    }
-    function refresh_win2(responseText, statusText){
+    function refresh_win2(responseText, statusText):
         location.href = "/schwiki/{{page_name}}/view/"
-    }
-
 {% endblock %}
 {% block pythoncode %}
         <script language="python">

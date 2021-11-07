@@ -6,13 +6,10 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
-
-%% ext_js_scripts
-    {{block.super}}
-    
     
 %% js_extrascipts
     {{block.super}}
+    
     
     
 

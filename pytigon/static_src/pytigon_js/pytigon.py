@@ -66,8 +66,8 @@ def app_init(
     window.LANG = lang
     window.GEN_TIME = gen_time
 
-    if APPLICATION_TEMPLATE == "traditional":
-        document.addEventListener("DOMContentLoaded", dom_content_loaded)
+    #if APPLICATION_TEMPLATE == "traditional":
+    #    document.addEventListener("DOMContentLoaded", dom_content_loaded)
 
     if offline_support:
         if navigator.onLine and service_worker_and_indexedDB_test():

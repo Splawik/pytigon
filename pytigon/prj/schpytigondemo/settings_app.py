@@ -131,6 +131,14 @@ CHANNELS_URL_TAB += [
         "schtasks.consumers.TaskEventsConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
@@ -142,7 +150,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.09.29 20:16:06"
+GEN_TIME = "2021.11.07 20:07:08"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

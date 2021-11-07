@@ -249,9 +249,10 @@ def field(context, form_field, fieldformat=None):
         if x[1]:
             y = x[1].split(':')
             if len(y)==3:
-                form_group_class += " col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
+                form_group_size_class = "col-sm-%s col-md-%s col-lg-%s" % (y[0], y[1], y[2])
             else:
-                form_group_class += " col-sm-12 col-md-%s" % y[0]
+                form_group_size_class = " col-sm-12 col-md-%s" % y[0]
+            form_group_class += " " + form_group_size_class
 
         if len(x)>2:
             addon = x[2]
@@ -281,6 +282,7 @@ def field(context, form_field, fieldformat=None):
     ret['hidden'] = hidden
     ret['label_class'] = label_class
     ret['form_group_class'] = form_group_class
+    ret['form_group_size_class'] = form_group_size_class
     ret['field_class'] = field_class
     ret['placeholder'] = placeholder
     ret['addon_after'] = addon_after

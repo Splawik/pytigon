@@ -318,6 +318,11 @@ div.dialog-form div.container-fluid {
   padding-left: 0;
   padding-right: 0; }
 
+a.foreignkey_button {
+  position: absolute;
+  right: -30px;
+  top: -10px; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
