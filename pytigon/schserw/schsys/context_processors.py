@@ -603,7 +603,7 @@ def sch_standard(request):
 
     ret = {
         'standard_web_browser': standard,
-#        'app_manager': AppManager(request),
+        #'app_manager': AppManager(request),
         'form_edit': form_edit,
         'form_add': form_add,
         'form_delete': form_delete,

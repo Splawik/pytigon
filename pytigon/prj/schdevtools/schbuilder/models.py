@@ -1263,6 +1263,8 @@ class SChView(models.Model):
     def get_name(self):
         if "/" in self.name:
             return self.name.split("/")[-1]
+        elif "#" in self.name:
+            return self.name.split("#")[0]
         else:
             return self.name
 

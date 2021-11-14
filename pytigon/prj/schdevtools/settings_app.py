@@ -3,7 +3,7 @@ import os
 import sys
 from urllib.parse import urlparse
 
-PRJ_TITLE = "Developer tools 1"
+PRJ_TITLE = "Developer tools"
 PRJ_NAME = "schdevtools"
 THEMES = ["tablet_modern", "tablet_standard", "smartfon_standard"]
 
@@ -124,6 +124,18 @@ else:
 CHANNELS_URL_TAB += [
     (URL_ROOT_PREFIX + "schbuilder/clock/channel/", "schbuilder.consumers.Clock"),
     (
+        URL_ROOT_PREFIX + "schbuilder/webserver/channel/",
+        "schbuilder.consumers.WebServer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schbuilder/django_manage/channel/",
+        "schbuilder.consumers.DjangoManage",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
@@ -134,6 +146,10 @@ CHANNELS_URL_TAB += [
     (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
     ),
     (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
@@ -155,7 +171,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.11.07 22:07:45"
+GEN_TIME = "2021.11.14 17:14:53"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

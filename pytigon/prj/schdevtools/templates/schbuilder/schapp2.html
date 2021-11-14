@@ -89,18 +89,20 @@
                                 <CTRL-NOBG_BUTTON_TXT NAME="tasks" label="Tasks" SRC="client://apps/utilities-terminal.png" href="{{app_path}}table/SChApp/{id}/schtask_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td cellpadding="0">
-                                <CTRL-NOBG_BUTTON_TXT NAME="consumers" label="Consumers" SRC="client://places/network-workgroup.png" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                                <CTRL-NOBG_BUTTON_TXT NAME="consumers" label="Channel consumers" SRC="client://places/network-workgroup.png" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0">
+                                <CTRL-NOBG_BUTTON_TXT NAME="templates" label="Templates" SRC="png://mimetypes/x-office-presentation.png" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td width="20"></td>
                         <td cellpadding="0">
-                                {% widget class='menu' id='user_action' title='User action' style='toolbar' %}
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/">Templates</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/">Custom files</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/model_code/form/editor/">User Models</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">User View</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">User Url</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">User Tasks</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">User Consumers</a></li>
+                                {% widget class='menu' id='user_action' title='Other options' style='toolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/">Other files</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/model_code/form/editor/">Model extensions</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">View extensions</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">Url extensions</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">Task extensions</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">Channel consumer extensions</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/doc/form/editor/">Doc</a></li>
                                 {% endwidget %}
                         </td>

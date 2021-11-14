@@ -11,18 +11,20 @@
         <table width="100%">
                 <tr>
                         <td>
-                                {% list_action "downloadi" "Download installer" target="_parent" url=url %}
+                                {% list_action "download" "Download installer" target="_parent" url=url %}
                         </td>
                 </tr>
         </table>
 {% endblock %}
 {% block user_header %}
         <th>Description</th>
+        <th>action</th>
 {% endblock %}
 {% block user_row %}
         {% if object %}
                 <tr>
                         <td>{{object}}</td>
+                        <td></td>
                 </tr>
         {% endif %}
 {% endblock %}

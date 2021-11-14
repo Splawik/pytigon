@@ -6,7 +6,7 @@
 %load exsyntax
 
 %%form_title
-    .Edition: {{object.get_name}} [{{title}}]
+    .Edition: {{ object.url }} [{{title}}/{{object.get_name}}]
 
 %% title
     .V:{{object.get_name}}
@@ -15,10 +15,11 @@
     table width=100%
         tr
             td
-                .def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
+                big:::strong:::i
+                    .def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
         tr
             td
-                CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,height=calc(100% - top - 50),,,MINHEIGHT=300,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                     DATA...{{txt|bencode}}
 
 

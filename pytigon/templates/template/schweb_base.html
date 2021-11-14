@@ -260,29 +260,30 @@
                                 {% block form_filter %}
                                         {% if form %}
                                                 {% block form_content %}
-                                                        <table class="filter_form_frame" width="100%" bgcolor="#fff"><tr><td>
-                                                                {% for field in form %}
-                                                                        <table class="filter_form" border="0">
-                                                                                <tr>
-                                                                                        <td>
-                                                                                                {% bootstrap_field field layout='horizontal' %}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                                {{ field.errors }}
-                                                                                        </td>
-                                                                                </tr>
-                                                                        </table>
-                                                                {% endfor %}
-                                                                <table class="filter_form">
-                                                                        <tr>
-                                                                                <td>
-                                                                                        {% block form_content_schbutton %}
-                                                                                                <input type="submit" value="Refresh" class="btn btn-info" target="_self" height="44" />
-                                                                                        {% endblock %}
-                                                                                </td>
-                                                                        </tr>
-                                                                </table>
-                                                            </td></tr></table>
+                                                        <table class="filter_form_frame" width="100%" bgcolor="#fff"><tr>
+                                                                <td>
+                                                                        {% for field in form %}
+                                                                                <table class="filter_form" border="0">
+                                                                                        <tr>
+                                                                                                <td cellpadding="8">
+                                                                                                                {{ field.label}}:
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                        {{ field }}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                        {{ field.errors }}
+                                                                                                </td>
+                                                                                        </tr>
+                                                                                </table>
+                                                                        {% endfor %}
+                                                                </td>
+                                                                <td align="right" cellpadding="3">
+                                                                        {% block form_content_schbutton %}
+                                                                                <input type="submit" value="Refresh" class="btn btn-info" target="_self" height="44" />
+                                                                        {% endblock %}
+                                                                </td>
+                                                          </tr></table>
                                                 {% endblock %}
                                         {% endif %}
                                 {% endblock %}

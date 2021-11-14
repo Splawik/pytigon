@@ -8,6 +8,9 @@ body
 small
     font-size:90%
 
+big
+    font-size:150%
+
 table
     border:0
     vertical-align:top

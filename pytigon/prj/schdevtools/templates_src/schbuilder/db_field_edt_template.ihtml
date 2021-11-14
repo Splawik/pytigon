@@ -251,7 +251,7 @@
         table width=100%
             tr
                 td width=350
-                    ctrl-tree name=_panel,,,width=350,,,height=calc(100% - top - 20)
+                    ctrl-tree name=_panel,,,width=350,,,height=calc(100% - top - 30)
                         % if object.get_rel_table:
                             li...{{object}}
                                 ul
@@ -572,10 +572,10 @@
                                         li...block ((list_row_attr))
                                         li...block ((dialog_type))
                                         li...block ((scroll))
-                                        li...block ((pythoncode))
+                                        li...block ((pythoncode)/)
                                         li...snippet ((move rows))
                 td
-                    CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-200,,,HEIGHT=calc(100% - top - 20),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                    CTRL-STYLEDTEXT NAME=EDITOR,,,width=100%-345,,,HEIGHT=calc(100% - top - 30),,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
                         DATA...{{txt|bencode}}
 
 %% content

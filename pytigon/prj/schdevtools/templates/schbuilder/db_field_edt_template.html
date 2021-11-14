@@ -238,7 +238,7 @@
                 <table width="100%">
                         <tr>
                                 <td width="350">
-                                        <ctrl-tree name="_panel" width="350" height="calc(100% - top - 20)">
+                                        <ctrl-tree name="_panel" width="350" height="calc(100% - top - 30)">
                                                 {% if object.get_rel_table %}
                                                         <li>
                                                         {{object}}
@@ -726,7 +726,7 @@
                                                                                 <li>block ((list_row_attr))</li>
                                                                                 <li>block ((dialog_type))</li>
                                                                                 <li>block ((scroll))</li>
-                                                                                <li>block ((pythoncode))</li>
+                                                                                <li>block ((pythoncode)/)</li>
                                                                                 <li>snippet ((move rows))</li>
                                                                         </ul>
                                                                 </li>
@@ -735,7 +735,7 @@
                                         </ctrl-tree>
                                 </td>
                                 <td>
-                                        <CTRL-STYLEDTEXT NAME="EDITOR" width="100%-200" HEIGHT="calc(100% - top - 20)" MINHEIGHT="400" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                                        <CTRL-STYLEDTEXT NAME="EDITOR" width="100%-345" HEIGHT="calc(100% - top - 30)" MINHEIGHT="400" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
                                                 <DATA>{{txt|bencode}}</DATA>
                                         </CTRL-STYLEDTEXT>
                                 </td>

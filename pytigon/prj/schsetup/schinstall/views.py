@@ -33,7 +33,9 @@ import datetime
 import configparser
 import zipfile
 from pytigon_lib.schfs.vfstools import get_temp_filename
-from pytigon_lib.schtools.install import extract_ptig
+from pytigon_lib.schtools.install import Ptig
+import pytigon.schserw.settings
+from pytigon_lib.schtools.process import py_run
 
 
 PFORM = form_with_perms("schinstall")
@@ -61,59 +63,50 @@ class upload_ptig(forms.Form):
             if status == "1":
                 if "INSTALL_FILE_NAME" in request.session:
                     file_name = request.session["INSTALL_FILE_NAME"]
-                    archive = zipfile.ZipFile(file_name, "r")
-                    accept_license = self.cleaned_data["accept_license"]
-                    if accept_license:
-                        initdata = archive.read("install.ini")
-                        config = configparser.ConfigParser()
-                        config.read_string(initdata.decode("utf-8"))
-
-                        if "PRJ_NAME" in config["DEFAULT"]:
-                            appset_name = config["DEFAULT"]["PRJ_NAME"]
-                            if appset_name:
-                                ret = extract_ptig(archive, appset_name)
-                                return {"object_list": ret, "status": 2}
-                        return {
-                            "object_list": [
-                                ["Invalid install file"],
-                            ],
-                            "status": 2,
-                        }
-                    else:
-                        readmedata = archive.read("README.txt")
-                        licensedata = archive.read("LICENSE.txt")
-                        return {
-                            "object_list": None,
-                            "status": 1,
-                            "readmedata": readmedata.decode("utf-8"),
-                            "licensedata": licensedata.decode("utf-8"),
-                            "first": False,
-                        }
-                return {"object_list": None, "status": None}
+                    with Ptig(file_name) as ptig:
+                        if ptig.is_ok():
+                            accept_license = self.cleaned_data["accept_license"]
+                            if accept_license:
+                                object_list = ptig.extract_ptig()
+                                ret = {"object_list": object_list, "status": 2}
+                            else:
+                                readmedata = archive.read(prj_name + "/README.md")
+                                licensedata = archive.read(prj_name + "/LICENSE")
+                                ret = {
+                                    "object_list": None,
+                                    "status": 1,
+                                    "readmedata": ptig.get_readme(),
+                                    "licensedata": ptig.get_license(),
+                                    "first": False,
+                                }
+                        else:
+                            ret = {"object_list": None, "status": None}
+                    return ret
         else:
             if "ptig" in request.FILES:
-                ptig = request.FILES["ptig"]
+                ptig_file = request.FILES["ptig"]
                 file_name = get_temp_filename("temp.ptig")
                 request.session["INSTALL_FILE_NAME"] = file_name
-                plik = open(file_name, "wb")
-                plik.write(ptig.read())
-                plik.close()
-                archive = zipfile.ZipFile(file_name, "r")
-                readmedata = archive.read("README.txt")
-                licensedata = archive.read("LICENSE.txt")
-                archive.close()
-                self.initial = {
-                    "accept_license": False,
-                }
-                return {
-                    "object_list": None,
-                    "status": 1,
-                    "readmedata": readmedata.decode("utf-8"),
-                    "licensedata": licensedata.decode("utf-8"),
-                    "first": True,
-                }
-            else:
-                return {"object_list": None, "status": None}
+                with open(file_name, "wb") as f:
+                    f.write(ptig_file.read())
+
+                ret = {"object_list": None, "status": None}
+
+                with Ptig(file_name) as ptig:
+                    if ptig.is_ok():
+                        self.initial = {
+                            "accept_license": False,
+                        }
+                        ret = {
+                            "object_list": None,
+                            "status": 1,
+                            "readmedata": ptig.get_readme(),
+                            "licensedata": ptig.get_license(),
+                            "first": True,
+                        }
+                return ret
+
+        return {"object_list": None, "status": None}
 
     def clean(self):
         status = self.cleaned_data["status"]

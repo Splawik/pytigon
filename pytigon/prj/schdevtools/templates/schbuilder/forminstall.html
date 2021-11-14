@@ -13,14 +13,16 @@
         </button>
 {% endblock %}
 {% block form_content_schbutton %}
-        <input type="submit" value="Install" class="btn btn-info" target="_self" height="44" />
+        <input type="submit" value="Install" class="btn btn-info" target="_self" widt="200" height="44" />
 {% endblock %}
 {% block user_header %}
         <th>Message</th>
+        <th>action</th>
 {% endblock %}
 {% block user_row %}
         <tr>
                 <td> {{object}}</td>
+                <th></th>
         </tr>
 {% endblock %}
 

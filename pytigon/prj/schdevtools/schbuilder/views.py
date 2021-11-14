@@ -43,6 +43,7 @@ import os
 import io
 import time
 import configparser
+import hashlib
 
 from django.db import transaction
 from django.urls import reverse
@@ -55,7 +56,7 @@ from pytigon_lib.schindent.indent_tools import convert_js
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 
 from pytigon_lib.schfs.vfstools import ZipWriter, open_and_create_dir
-from pytigon_lib.schtools.install import extract_ptig
+from pytigon_lib.schtools.install import Ptig
 from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
 
@@ -440,11 +441,12 @@ def locale_gen_internal(pk):
     }
 
 
-def prj_import_from_str(s):
+def prj_import_from_str(s, backup_old=False, backup_this=False):
     object_list = []
     prj = json.loads(s)
     with transaction.atomic():
         prj_instence = models.SChAppSet(**array_dict(prj[0], prj_attr))
+        prj_instence.main_view = True
         prj_instence.save()
 
         apps_array = prj[1]
@@ -536,8 +538,37 @@ def prj_import_from_str(s):
             s.parent = prj_instence
             s.save()
 
-    object_list.append((datetime.datetime.now(), "SUCCESS:", ""))
+    if backup_old:
+        projects = models.SChAppSet.objects.filter(
+            name=prj_instence.name, main_view=True
+        )
+        if len(projects) > 0:
+            for prj in projects:
+                if prj.id != prj_instence.id:
+                    if prj.version == "latest":
+                        prj.version = version = "v" + datetime.date.today().isoformat()
+                    prj.main_view = False
+                    prj.save()
+                    object_list.append(
+                        (
+                            datetime.datetime.now(),
+                            "prj has been archived:",
+                            prj.name + ":" + prj.version,
+                        )
+                    )
+    elif backup_this:
+        prj_instence.main_view = False
+        if prj_instence.version == "latest":
+            prj_instence.version = "v" + datetime.date.today().isoformat()
+        prj_instence.save()
 
+    object_list.append(
+        (
+            datetime.datetime.now(),
+            "prj imported from file",
+            prj_instence.name + ":" + prj_instence.version,
+        )
+    )
     return {"object_list": object_list, "prj_instance": prj_instence}
 
 
@@ -678,9 +709,9 @@ def build_prj(pk):
         f.write("GEN_TIME='%s'\n" % gmt_str)
         if prj.install_file:
             f.write(prj.install_file)
-    if prj.app_main:
-        with open(os.path.join(base_path, "prj_main.py"), "wt") as f:
-            f.write(prj.app_main)
+    # if prj.app_main:
+    #    with open(os.path.join(base_path, "prj_main.py"), "wt") as f:
+    #        f.write(prj.app_main)
 
     template_to_file(base_path, "manage", "manage.py", {"prj": prj})
     template_to_file(base_path, "init", "__init__.py", {"prj": prj})
@@ -904,13 +935,11 @@ def build_prj(pk):
                 f.close()
                 file_name = None
             elif file_obj.file_type in ("l", "x", "C"):
-                f = open_and_create_dir(base_path + "/applib/__init__.py", "wb")
-                f.close()
                 f = open_and_create_dir(
-                    base_path + "/applib/" + app.name + "lib/__init__.py", "wb"
+                    os.path.join(base_path, app.name, "applib", "__init__.py"), "wb"
                 )
                 f.close()
-                file_name = base_path + "/applib/" + app.name + "lib/" + file_obj.name
+                file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
                 if file_obj.file_type == "l":
                     file_name += ".py"
                 elif file_obj.file_type == "x":
@@ -1279,16 +1308,16 @@ def build_prj(pk):
         config.read_string(init_str)
         pip_str = config["DEFAULT"]["pip"]
         if pip_str:
-            applib_path = os.path.join(base_path, "applib")
-            if not os.path.exists(applib_path):
-                os.mkdir(applib_path)
+            prjlib_path = os.path.join(base_path, "prjlib")
+            if not os.path.exists(prjlib_path):
+                os.mkdir(prjlib_path)
             packages = [x.strip() for x in pip_str.split(" ") if x]
             exit_code, output_tab, err_tab = py_run(
                 [
                     "-m",
                     "pip",
                     "install",
-                    f"--target={applib_path}",
+                    f"--target={prjlib_path}",
                     "--upgrade",
                 ]
                 + packages
@@ -1342,26 +1371,94 @@ def view_installer(request, *argi, **argv):
 class Install(forms.Form):
     install_file = forms.FileField(
         label=_("Install file (*.ptig)"),
-        required=True,
+        required=False,
     )
 
     def process(self, request, queryset=None):
 
         install_file = request.FILES["install_file"]
-        name = install_file.name.split(".")[0]
-        zip_file = zipfile.ZipFile(install_file.file)
-        ret = extract_ptig(zip_file, name)
+        name = install_file.name.split(".")[0].split("-")[0]
 
-        extract_to = os.path.join(settings.PRJ_PATH, name)
-        (ret_code, output, err) = py_run(
-            [os.path.join(extract_to, "manage.py"), "post_installation"]
-        )
+        ptig = Ptig(install_file.file)
+        # zip_file = zipfile.ZipFile(install_file.file)
+        object_list = ptig.extract_ptig()
 
-        return {"object_list": ret}
+        # extract_to = os.path.join(settings.PRJ_PATH, name)
+        # (ret_code, output, err) = py_run(
+        #    [os.path.join(extract_to, "manage.py"), "post_installation"]
+        # )
+
+        # if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+        #    base_path = pytigon.schserw.settings._PRJ_PATH_ALT
+        # else:
+        #    base_path = settings.PRJ_PATH_ALT
+
+        prj_file_path = os.path.join(ptig.extract_to, name, name + ".prj")
+
+        if os.path.exists(prj_file_path):
+            with open(prj_file_path, "rt") as f:
+                content = f.read()
+                x = prj_import_from_str(content, backup_old=True)
+                object_list.extend(x["object_list"])
+
+        return {"object_list": object_list}
 
 
 def view_install(request, *argi, **argv):
     return PFORM(request, Install, "schbuilder/forminstall.html", {})
+
+
+class ImportFromGit(forms.Form):
+    path = forms.CharField(
+        label=_("Path to git repository"),
+        required=True,
+        max_length=None,
+        min_length=None,
+    )
+
+    def process(self, request, queryset=None):
+
+        object_list = []
+        git_repository = self.cleaned_data["path"]
+        prj_name = git_repository.split("/")[-1].split(".")[0]
+        base_path = os.path.join(settings.DATA_PATH, "prj", prj_name)
+        git_path = os.path.join(base_path, ".git")
+        if os.path.exists(git_path):
+            repo = Repo(base_path)
+            try:
+                remote_refs = porcelain.fetch(repo, git_repository)
+                repo[b"HEAD"] = remote_refs.refs[b"refs/heads/master"]
+                index_file = repo.index_path()
+                tree = repo[b"HEAD"].tree
+                index.build_index_from_tree(
+                    repo.path, index_file, repo.object_store, tree
+                )
+                object_list.append(
+                    (datetime.datetime.now(), "git fetch success", git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git fetch error", str(e)))
+        else:
+            try:
+                porcelain.clone(git_repository, base_path)
+                object_list.append(
+                    (datetime.datetime.now(), "git clone success", git_repository)
+                )
+            except Exception as e:
+                object_list.append((datetime.datetime.now(), "git clone error", str(e)))
+
+        prj_path = os.path.join(base_path, f"{prj_name}.prj")
+        if os.path.exists(prj_path):
+            with open(prj_path, "rt") as f:
+                content = f.read()
+                x = prj_import_from_str(content, backup_old=True)
+                object_list.extend(x["object_list"])
+
+        return {"object_list": reversed(object_list)}
+
+
+def view_importfromgit(request, *argi, **argv):
+    return PFORM(request, ImportFromGit, "schbuilder/formimportfromgit.html", {})
 
 
 # Hello
@@ -1381,14 +1478,17 @@ def prj_export(request, pk):
 def prj_import(request):
 
     ex_str = request.POST["EDITOR"]
-    return prj_import_from_str(ex_str)
+    return prj_import_from_str(ex_str, backup_old=True)
 
 
+@dict_to_template("schbuilder/v_manage.html")
 def manage(request, pk):
 
     prj = models.SChAppSet.objects.get(id=pk)
-    base_path = os.path.join(settings.PRJ_PATH, prj.name)
-    src_path = os.path.join(settings.PRJ_PATH, "schdevtools")
+    return {"project": prj}
+
+    # base_path = os.path.join(settings.PRJ_PATH, prj.name)
+    # src_path = os.path.join(settings.PRJ_PATH, "schdevtools")
 
     # id = "spec"
     # task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id=id)
@@ -1396,23 +1496,21 @@ def manage(request, pk):
 
     # task_id = async_task("schbuilder.views.test")
     # print("TASK_ID: ", task_id)
-    task_id = async_task("schbuilder.tasks.test")
-    new_url = "../../../tasks/form/TaskListForm/%s/edit2__task" % task_id
-    return HttpResponseRedirect(new_url)
+    # task_id = async_task("schbuilder.tasks.test")
+    # new_url = "../../../tasks/form/TaskListForm/%s/edit2__task" % task_id
+    # return HttpResponseRedirect(new_url)
 
-    command = "import sys; sys.path.append('%s'); from manage import *" % base_path
-    pconsole = settings.PYTHON_CONSOLE.split(" ")
-    pconsole[0] = ">>>" + pconsole[0]
-    pconsole.append("-i")
-    pconsole.append("-c")
-    pconsole.append(command)
-    param = [
-        "python-shell",
-    ] + pconsole
-    id = get_process_manager().put(request, *param)
-    new_url = "../../../tasks/form/TaskListForm/%d/edit2__task" % id
+    # command = "import sys; sys.path.append('%s'); from manage import *" % base_path
+    # pconsole = settings.PYTHON_CONSOLE.split(' ')
+    # pconsole[0]=">>>" + pconsole[0]
+    # pconsole.append('-i')
+    # pconsole.append('-c')
+    # pconsole.append(command)
+    # param = ["python-shell",] + pconsole
+    # id = get_process_manager().put(request, *param)
+    # new_url = "../../../tasks/form/TaskListForm/%d/edit2__task" % id
     # new_url = "../../schsys/thread/%d/edit/" % id
-    return HttpResponseRedirect(new_url)
+    # return HttpResponseRedirect(new_url)
 
 
 def template_edit(request, pk):
@@ -1529,8 +1627,32 @@ def installer(request, pk):
             buf.append(pos)
 
     exclude = [".*\.pyc", ".*__pycache__.*"]
-    zip = ZipWriter(os.path.join(zip_path, name + ".ptig"), base_path, exclude=exclude)
-    zip.toZip(base_path)
+    zip = ZipWriter(
+        os.path.join(zip_path, name + ".ptig"), base_path, exclude=exclude, sha256=True
+    )
+    zip.to_zip(base_path, name + "/")
+    path_to_meta = name + "-" + prj.version + ".dist-info/"
+    zip.writestr(path_to_meta + "top_level.txt", (name + "\n").encode("utf-8"))
+    zip.writestr(
+        path_to_meta + "WHEEL",
+        b"Wheel-Version: 1.0\nGenerator: pytigon\nRoot-Is-Purelib: true\nTag: py3-none-any",
+    )
+    txt = render_to_string(
+        "schbuilder/wzr/METADATA.html", {"name": name, "version": prj.version}
+    )
+    zip.writestr(path_to_meta + "METADATA", txt.encode("utf-8"))
+    with open(os.path.join(base_path, "LICENSE"), "rb") as f:
+        btxt = f.read()
+        zip.writestr(path_to_meta + "LICENSE", btxt)
+    txt = ""
+    with open(os.path.join(base_path, "install.ini"), "rt") as f:
+        for line in f.readlines():
+            if line.startswith("PIP ") or line.startswith("PIP="):
+                x = line.split("=", 1)
+                for item in x[1].replace(",", ";").split(";"):
+                    txt += item + "\n"
+                break
+    zip.writestr("requirements.txt", txt.encode("utf-8"))
 
     buf.append("PACK PROGRAM FILES TO: " + zip_path + name + ".ptig")
 
@@ -1552,14 +1674,25 @@ def installer(request, pk):
         for pos in err:
             buf.append(pos)
 
-    zip.write(db_name, name_in_zip=name + ".db")
+    zip.write(db_name, name_in_zip=path_to_meta + name + ".db")
+
+    record_str = ""
+    for item in zip.sha256_tab:
+        record_str += "%s,sha256=%s,%d\n" % item
+    zip.writestr(path_to_meta + "RECORD", record_str.encode("utf-8"))
+
     zip.close()
 
-    buf.append("END")
+    buf.append("Instaler file saved to: " + os.path.join(zip_path, name + ".ptig"))
 
     url = reverse("start") + "schbuilder/download_installer/" + name + "/"
 
-    return {"object_list": buf, "name": name, "url": url, "tp": "SChAppSet"}
+    return {
+        "object_list": list(reversed(buf)),
+        "name": name,
+        "url": url,
+        "tp": "SChAppSet",
+    }
 
 
 @dict_to_template("schbuilder/v_restart_server.html")
@@ -1634,6 +1767,14 @@ def update(request):
         git_repository = base_url + prj_name + ".git"
         prj_path = os.path.join(base_path, prj_name)
         git_path = os.path.join(prj_path, ".git")
+        success = True
+
+        hash1 = ""
+        prj_file_path = os.path.join(prj_path, prj_name + ".prj")
+        if os.path.exists(prj_file_path):
+            with open(prj_file_path, "rt") as f:
+                content = f.read()
+                hash1 = hashlib.sha1(content.encode("utf-8")).hexdigest()
 
         if os.path.exists(git_path):
             repo = Repo(prj_path)
@@ -1651,6 +1792,7 @@ def update(request):
                     (datetime.datetime.now(), "git fetch success", git_repository)
                 )
             except Exception as e:
+                success = False
                 object_list.append((datetime.datetime.now(), "git fetch error", str(e)))
         else:
             try:
@@ -1659,7 +1801,17 @@ def update(request):
                     (datetime.datetime.now(), "git clone success", git_repository)
                 )
             except Exception as e:
+                success = False
                 object_list.append((datetime.datetime.now(), "git clone error", str(e)))
+        if success:
+            prj_file_path = os.path.join(prj_path, prj_name + ".prj")
+            if os.path.exists(prj_file_path):
+                with open(prj_file_path, "rt") as f:
+                    content = f.read()
+                    hash2 = hashlib.sha1(content.encode("utf-8")).hexdigest()
+                    if hash1 != hash2:
+                        x = prj_import_from_str(content, backup_old=True)
+                        object_list.extend(x["object_list"])
 
     return {"object_list": object_list}
 
@@ -1964,18 +2116,9 @@ def gen_milestone(request, pk):
 
     object_list.append((datetime.datetime.now(), "prj exported", prj_path))
 
-    x = prj_import_from_str(content)
+    x = prj_import_from_str(content, backup_this=True)
+    object_list.extend(x["object_list"])
     prj2 = x["prj_instance"]
-
-    if prj.version == "latest":
-        prj2.version = "v" + datetime.date.today().isoformat()
-    else:
-        prj2.version = prj.version
-        prj.version = "latest"
-        prj.save()
-
-    prj2.main_view = False
-    prj2.save()
 
     object_list.append((datetime.datetime.now(), "prj copied to version:", prj.version))
 
@@ -2025,3 +2168,15 @@ def gen_milestone(request, pk):
             object_list.append((datetime.datetime.now(), "git pull error", str(e)))
 
     return {"object_list": reversed(object_list)}
+
+
+def prj_import2(request):
+
+    return view_importfromgit(request)
+
+
+@dict_to_template("schbuilder/v_run.html")
+def run(request, pk):
+
+    prj = models.SChAppSet.objects.get(pk=pk)
+    return {"project": prj}

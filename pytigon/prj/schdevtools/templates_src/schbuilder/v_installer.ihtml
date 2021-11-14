@@ -13,15 +13,17 @@
     table width=100%
         tr
             td
-                % list_action "downloadi" _("Download installer") target="_parent" url=url
+                % list_action "download" _("Download installer") target="_parent" url=url
 
 
 %% user_header
     th...Description
+    th...action
 
 
 %% user_row
     %if object:
         tr
             td...{{object}}
+            td
         

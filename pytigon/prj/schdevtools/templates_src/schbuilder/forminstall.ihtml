@@ -14,12 +14,14 @@
         span class=fa fa-refresh
 
 %% form_content_schbutton
-    input type=submit,,,value=_(Install),,,class=btn btn-info,,,target=_self,,,height=44
-
+    input type=submit,,,value=_(Install),,,class=btn btn-info,,,target=_self,,,widt=200,,,height=44
+    
 %% user_header
     th...Message
+    th...action
 
 %% user_row
     tr
         td... {{object}}
+        th
 

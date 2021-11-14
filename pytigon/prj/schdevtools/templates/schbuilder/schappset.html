@@ -10,22 +10,6 @@
                 paths = wx.StandardPaths.Get()
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 </script>
-          {% else %}
-                <script language="python">
-            def filter_url(self, target, href):
-                if '/run' in href:
-                    import subprocess
-                    import threading
-                    import sys
-                    def app_process():
-                        cmd = wx.GetApp().scr_path+"/pytigon.py"
-                        appset = href.split('_')[-1].split('?')[0]
-                        arg = " "+appset
-                        subprocess.call([sys.executable, cmd, arg], shell=False)
-                    threading.Thread(target = app_process).start()
-                    return True
-                return href
-</script>
         {% endif %}
 {% endblock %}
 {% block all %}
@@ -36,8 +20,9 @@
 {% block list_content_actions %}
         {% new_row "New project" %}
         {% list_action "prj_import/edit" "Import" %}
+        {% list_action "prj_import2" "Import from git" %}
         {% list_action "restart_server" "Restart server" target="_parent" active=False %}
-        {% list_action "update" "Update server from git" %}
+        {% list_action "update" "Update system projects from git" %}
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
@@ -61,7 +46,6 @@
         field_list/schapp_set,Applications,icon_name=client://apps/preferences-system-windows.png, target='_parent'
         field_edit/user_app_template,Application template,client://mimetypes/text-x-script.png,_parent
         field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_parent
-        duplicate,Duplicate,[|png://actions/go-bottom.png]
         run,Run,[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
@@ -71,7 +55,6 @@
         field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_parent
         manage,Manage(Other options),[|client://categories/preferences-system.png]
         field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
-        field_edit/app_main,Application main entrypoint(Other options),[|client://mimetypes/application-x-executable.png],_parent
         field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
         field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
 

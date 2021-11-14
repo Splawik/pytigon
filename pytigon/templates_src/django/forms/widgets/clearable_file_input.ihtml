@@ -9,7 +9,6 @@
     <br />
     {{ input_text }}:
 label class=btn btn-primary btn-file nocolon upload
-    p class=upload...Upload
     input style=display:none,,,onchange=img_field(this);,,,type={{ widget.type }},,,name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}
     % if widget.value:
         img class=img,,,src=data:image/jpeg;base64,{{widget.value}}

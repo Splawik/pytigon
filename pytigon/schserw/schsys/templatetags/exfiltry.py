@@ -608,7 +608,10 @@ def wiki_href(value, section="help"):
 
 @register.filter(name='markdown', is_safe=True)
 def _markdown(value):
-    return markdown.markdown(value, extensions=['abbr', 'attr_list', 'def_list', 'fenced_code', 'footnotes', 'md_in_html', 'tables', 'admonition', 'codehilite',])
+    if value:
+        return markdown.markdown(value, extensions=['abbr', 'attr_list', 'def_list', 'fenced_code', 'footnotes', 'md_in_html', 'tables', 'admonition', 'codehilite',])
+    else:
+        return ""
 
 #forms
 

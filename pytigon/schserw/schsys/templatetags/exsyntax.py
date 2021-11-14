@@ -199,6 +199,7 @@ def field(context, form_field, fieldformat=None):
     label_class = "control-label float-left"
     offset = ""
     form_group_class = "form-group group_%s" % type(field.field).__name__.lower()
+    form_group_size_class = " col-sm-12 col-md-12"
     field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = False
     show_label = True

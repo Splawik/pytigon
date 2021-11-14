@@ -224,19 +224,20 @@
                 %% form_filter
                     %if form
                         %% form_content
-                            table class=filter_form_frame,,,width=100%,,,bgcolor=#fff:::tr:::td
-                                % for field in form
-                                    table class=filter_form,,,border=0
-                                        tr
-                                            td
-                                                {% bootstrap_field field layout='horizontal' %}
-                                            td
-                                                {{ field.errors }}
-                                table class=filter_form
-                                    tr
-                                        td
-                                            %% form_content_schbutton
-                                                input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44
+                            table class=filter_form_frame,,,width=100%,,,bgcolor=#fff:::tr
+                                td
+                                    % for field in form
+                                        table class=filter_form,,,border=0
+                                            tr
+                                                td cellpadding=8
+                                                        {{ field.label}}:
+                                                td
+                                                    {{ field }}
+                                                td
+                                                    {{ field.errors }}
+                                td align=right,,,cellpadding=3
+                                    %% form_content_schbutton
+                                        input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44
 
 
 %% tabsort_parameters...class=tabsort

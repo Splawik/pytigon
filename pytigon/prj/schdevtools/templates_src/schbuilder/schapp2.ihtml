@@ -77,15 +77,17 @@
             td cellpadding=0
                 CTRL-NOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=client://apps/utilities-terminal.png,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/
             td cellpadding=0
-                CTRL-NOBG_BUTTON_TXT NAME=consumers,,,label=_(Consumers),,,SRC=client://places/network-workgroup.png,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/
+                CTRL-NOBG_BUTTON_TXT NAME=consumers,,,label=_(Channel consumers),,,SRC=client://places/network-workgroup.png,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=templates,,,label=_(Templates),,,SRC=png://mimetypes/x-office-presentation.png,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/
+
             td width=20
             td cellpadding=0
-                % widget class='menu' id='user_action' title='User action' style='toolbar': 
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/..._(Templates)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/..._(Custom files)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(User Models)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(User View)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(User Url)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(User Tasks)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(User Consumers)
+                % widget class='menu' id='user_action' title='Other options' style='toolbar': 
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/..._(Other files)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(Model extensions)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(View extensions)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(Url extensions)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(Task extensions)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(Channel consumer extensions)
                     li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/..._(Doc)

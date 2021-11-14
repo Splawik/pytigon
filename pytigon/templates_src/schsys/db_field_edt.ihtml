@@ -151,7 +151,7 @@
                         %%form_title
                             .Edycja: {{title}}
         hr
-        %% edit_area_sc
+        %% edit_area_sch
             table width=800
                 tr
                     td
