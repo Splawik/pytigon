@@ -1,0 +1,90 @@
+<html>
+    <head>
+        <style>
+            body {
+                position: relative;
+                width: 100%;
+                height: 100vh;
+                background-color:white;
+            }
+
+            .wrap {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .text {
+                color: darkorange;
+                display: inline-block;
+                margin-left: 5px;
+                padding-left: 40px;
+                font-size: 32px;
+                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+                font-weight: bold;
+            }
+
+            .bounceball {
+                position: relative;
+                display: inline-block;
+                height: 54px;
+                width: 30x;
+                padding-top: 18px;
+            }
+            .bounceball:before {
+                position: absolute;
+                content: "";
+                display: block;
+                top: 0;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background-color:royalblue;
+                transform-origin: 50%;
+                -webkit-animation: bounce 500ms alternate infinite ease;
+                        animation: bounce 500ms alternate infinite ease;
+            }
+            @-webkit-keyframes bounce {
+                0% {
+                    top: 60px;
+                    height: 5px;
+                    border-radius: 120px 120px 120px 120px;
+                    transform: scaleX(2);
+                }
+                35% {
+                    height: 30px;
+                    border-radius: 50%;
+                    transform: scaleX(1);
+                }
+                100% {
+                    top: 0;
+                }
+            }
+            @keyframes bounce {
+                0% {
+                    top: 60px;
+                    height: 10px;
+                    border-radius: 120px 120px 40px 40px;
+                    transform: scaleX(2);
+                }
+                35% {
+                    height: 30px;
+                    border-radius: 50%;
+                    transform: scaleX(1);
+                }
+                100% {
+                    top: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="loading">
+              <div class="bounceball"></div>
+              <div class="text">Pytigon app loading</div>
+            </div>
+          </div>
+    </body>
+</html>

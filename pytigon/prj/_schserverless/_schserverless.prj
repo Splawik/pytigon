@@ -1,0 +1,76 @@
+[
+    [
+        null,
+        "",
+        "auto",
+        null,
+        null,
+        null,
+        "https://git.pytigon.cloud/pytigon/_schserverless.git",
+        null,
+        "modern",
+        "None",
+        null,
+        "1",
+        null,
+        null,
+        null,
+        false,
+        false,
+        true,
+        "_schserverless",
+        null,
+        false,
+        null,
+        "auto",
+        null,
+        "auto",
+        "Additional tools for serverless mode",
+        null,
+        "",
+        "latest"
+    ],
+    [
+        [
+            [
+                "",
+                null,
+                "None",
+                null,
+                "1",
+                null,
+                null,
+                null,
+                "schnocompress",
+                "schnocompress",
+                false,
+                "",
+                "No compress",
+                null,
+                "",
+                null
+            ],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                [
+                    "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass TransparentNode(Node):\n    def __init__(self, nodelist):\n        self.nodelist = nodelist\n\n    def render(self, context):\n        return self.nodelist.render(context).strip()\n\n@register.tag\ndef compress(parser, token):\n    nodelist = parser.parse(('endcompress',))\n    parser.delete_first_token()\n    return TransparentNode(nodelist)\n",
+                    "t",
+                    "compress"
+                ],
+                [
+                    "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass NoneNode(Node):\n    def __init__(self):\n        pass\n\n    def render(self, context):\n        return \"\"\n\n@register.tag\ndef provider_login_url(parser, token):\n    return NoneNode()\n",
+                    "t",
+                    "socialaccount"
+                ]
+            ]
+        ]
+    ],
+    []
+]
