@@ -57,7 +57,9 @@ def run(request, pk):
                 form = form_class(request.POST)
                 if form.is_valid():
                     argv = form.cleaned_data
+
                     exec(script._view)
+
                     v = locals().get("scripts_" + script.name, None)
                     if v:
                         parms = v(request, form.cleaned_data)

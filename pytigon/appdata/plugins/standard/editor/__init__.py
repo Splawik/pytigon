@@ -18,12 +18,12 @@
 #version: "0.1a"
 
 
-from base64 import b32encode, b32decode
 import os.path
 
 import wx
 
 from pytigon_gui.guilib.events import *
+from pytigon_lib.schtools.tools import bencode, bdecode, is_null
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
@@ -88,12 +88,12 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
                             encoded_file_path = x[-2]
                     except:
                         encoded_file_path = self.href
-                    file_path = b32decode(encoded_file_path.encode('utf-8')).decode('utf-8')
+                    file_path = bdecode(encoded_file_path)
 
                     xx = file_path.replace('\\','/').rsplit('/',1)
 
                     new_file_path = os.path.join(file_path[:len(xx[0])+1], dlg.GetValue())
-                    encoded_new_file_path = b32encode(new_file_path.encode('utf-8')).decode('utf-8')
+                    encoded_new_file_path = bencode(new_file_path)
 
                     self.href = self.href_save.replace('{{file}}', encoded_new_file_path)
 

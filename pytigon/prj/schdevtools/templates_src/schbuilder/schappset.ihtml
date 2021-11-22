@@ -89,4 +89,4 @@
         % form "^/12":
             .icon_size
     %form "^/12":
-        .git_repository
+        .git_repository,autor_name,autor_email,autor_www

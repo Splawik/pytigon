@@ -1,5 +1,3 @@
-{# -*- coding: utf-8self.CMD -*- #}
-
 % extends "form.html"
 
 % load exfiltry
@@ -7,39 +5,22 @@
 
 %% pythoncode
     script language=python
-        from base64 import b32encode, b32decode
         from pytigon_lib.schtools.schhtmlgen import Html as Hgen
         from PIL import Image
         from pytigon_lib.schtools.tools import extend_fun_to, bencode, bdecode
         from pytigon_gui.guilib.image import bitmap_from_href
         from wx.lib import platebtn
+        from pytigon_lib.schtools import schjson
 
         def init_form(self):
             self.panels_dir=[]
             self.panels_state=[]
             self.tab  = 0
             self.tab2 = 1
-            for pos in range(0,4):
+            for pos in range(0,2):
                 self.panels_dir.append([pos+1, 0, "/", False])
                 self.panels_state.append(None)
 
-            #x = [ None, None, None, None ]
-            #for base_key in [ 'commander/{{request.user.username}}/path', 'commander/all/path']:
-            #    print(base_key)
-            #    test  = True
-            #    for i in range(4):
-            #        if not x[i]:
-            #            objs = Parameter.objects.filter(key=base_key+str(i))
-            #            if len(objs)>0:
-            #                x[i] = objs[0].value
-            #            else:
-            #                test = False
-            #    if test:
-            #        break
-            #for i in range(0,4):
-            #    if x[i]:
-            #        self.panels_dir[i][2] = x[i]
-                    
             self.panels_to_refresh=[]
             
             self.aTable = [
@@ -61,10 +42,23 @@
                      ]
             self.set_acc_key_tab(self, self.aTable)
 
+            self.map_commands = {
+                "HELP": self.on_help,
+                "RENAME": self.on_rename,
+                "VIEW": self.on_view,
+                "EDIT": self.on_edit,
+                "COPY": self.on_copy,
+                "MOVE": self.on_move,
+                "MKDIR": self.on_mkdir,
+                "DELETE": self.on_delete,
+                "SETUP": self.on_setup,
+                "NEWFILE": self.on_newfile,
+            }
+
             self.CMD.GetTable().can_append=False
             self.CMD.Bind(wx.EVT_CHAR, self.on_char)
             self.CMD.DisableCellEditControl()
-            self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[0][2].encode('utf-8') ).decode('utf-8')+"/_/")
+            self.CMD.GetTable().proxy.set_address("../../"+bencode(self.panels_dir[0][2])+"/_/")
             self.CMD.GetTable().refresh(0)
 
             self.PANELS.body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
@@ -81,9 +75,73 @@
 
             self.GetParent().register_signal(self, "child_closed_with_ok")
             self.GetParent().register_signal(self, "child_canceled")
+            self.tasks = []
+            self.msg.append_html("Hello <strong>world!</strong>")
+            self.msg.append_html("Hello2 <strong>world2!</strong>")
+            self.msg.SetItemCount(len(self.msg.choices))
+
+        def filter_child_url(self, child, url):
+            try:
+                cmd = url.split('/form/')[-1].split("/")[0].upper()
+            except:
+                pass
+            if cmd in ('COPY', 'MOVE', 'MKDIR', 'RENAME', 'NEWFILE'):
+                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]), bencode(child.dest.GetValue())), 1)
+            elif cmd in ('DELETE',):
+                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]),), 1)
+            else:
+                return
+
+            def _exit():
+                self.any_parent_command('on_child_form_cancel')
+                self.child_win = None
+
+            wx.CallAfter(_exit)
+
+            if ret and 'process_id' in ret:
+                commander_form = self
+                def _refresh_panels():
+                    nonlocal commander_form, cmd
+                    if cmd in ("MOVE", "DELETE"):
+                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
+                    if cmd in ("MOVE", "COPY"):
+                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab2][2])
+                    commander_form._refresh_panels()
+                self.connect_to_task(ret['process_id'], refresh_callback=_refresh_panels)
+            else:
+                self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+                wx.CallAfter(self._refresh_panels)
+
+            return ret
+
+        def connect_to_task(self, process_id, refresh_callback=None):
+            form = self
+            app = wx.GetApp()
+            self.pbutton.Enable()
+            class callback:
+                def on_websocket_message(msg):
+                    nonlocal form
+                    msg2 = schjson.loads(msg)
+                    print(msg2)
+                    if msg2['status'] == 'event':
+                        form.msg.append_html(msg2['data'])
+                        form.msg.SetItemCount(len(self.msg.choices))
+                        form.msg.scroll_to_line(1000000)
+                    elif msg2['status'] == 'stop':
+                        self.CMD.GetTable().clear_state()
+                        if refresh_callback:
+                            refresh_callback()
+                        form.pbutton.Disable()
+                        form.msg.append_html("stop")
+                        form.msg.SetItemCount(len(self.msg.choices))
+                        form.msg.scroll_to_line(1000000)
+            url = '{{base_path}}schtasks/show_task_events/channel/'
+            self.create_websocket(url, callback)
+            self.websocket_send(url, {'id': process_id, })
 
         def child_closed_with_ok(self):
             self._refresh_panels()
+            self.child_win = None
 
         def child_canceled(self):
             self.child_win = None
@@ -106,31 +164,8 @@
             self.pbutton.Bind(wx.EVT_BUTTON, self.on_pbutton)
 
         def on_pbutton(self, event):
-            wx.GetApp().GetTopWindow().new_main_page("/tasks/form/TaskListForm/?schtml=1", "Task list")
+            wx.GetApp().GetTopWindow().new_main_page("{{base_path}}tasks/form/TaskListForm/?schtml=1", "Task list")
 
-        def handle_process_info(self, info_tab, **argv):
-            for pos2 in self.waiting_proc:
-                id = pos2[0]
-                panels_to_refresh = pos2[1]
-                test = True
-                for pos in info_tab:
-                    if id == pos.id:
-                        if pos.status in (0,1):
-                            test = False
-                        break
-                if test:
-                    self.CMD.GetTable().clear_state()
-                    if panels_to_refresh in (1,3):
-                        self.panels_to_refresh.append(self.panels_dir[self.tab][2])
-                    if panels_to_refresh in (1,3):
-                        self.panels_to_refresh.append(self.panels_dir[self.tab2][2])
-                    self._refresh_panels()
-                    self.waiting_proc.remove(pos2)
-
-            if len(self.waiting_proc)==0:
-                self.unreg_application_signal_handler('PROCESS_INFO')
-                self.pbutton.Disable()
-            
         def _transform_item(self, item):
             from pytigon_lib.schfs.vfstools import norm_path
             item2 = norm_path(item)
@@ -183,19 +218,23 @@
             self.PANELS.set_page(html.dump())
 
         def filter_url(self, target, href):
-            id = int(href)
-            if id != self.tab:
-                self.tab2 = self.tab
-                self.tab = id
-                self.change_panel()
-            return True
+            if href in self.map_commands:
+                self.map_commands[href](None)
+                return True
+            else:
+                id = int(href)
+                if id != self.tab:
+                    self.tab2 = self.tab
+                    self.tab = id
+                    self.change_panel()
+                return True
 
         def change_panel(self):
             self.panels_state[self.tab2]=self.CMD.get_table_and_state()
 
             if self.panels_state[self.tab]==None:
                 self.CMD.duplicate_table_and_state()
-                self.CMD.GetTable().proxy.set_address("../../"+b32encode(self.panels_dir[self.tab][2].encode('utf-8') ).decode('utf-8')+"/_/")
+                self.CMD.GetTable().proxy.set_address("../../"+bencode(self.panels_dir[self.tab][2])+"/_/")
                 self.panels_state[self.tab]=self.CMD.get_table_and_state()
                 self.CMD.GetTable().refresh(0)
             else:
@@ -209,7 +248,7 @@
 
 
         def on_char(self, evt):
-            if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('4'):
+            if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('2'):
                 i = evt.KeyCode - ord('1')
                 if evt.ControlDown():
                     if i != self.tab2:
@@ -220,7 +259,7 @@
                         self.tab2 = self.tab
                         self.tab = i
                         self.change_panel()
-            elif chr(evt.KeyCode).isalpha() or chr(evt.KeyCode).isdigit():
+            elif chr(evt.KeyCode).isascii() or chr(evt.KeyCode).isdigit():
                 if not self.child_win:
                     okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
                     self.child_win = okno.body
@@ -247,7 +286,7 @@
             self.CMD.GetTable().filter(key)
 
         def table_url(self, url):
-            self.panels_dir[self.tab][2] = b32decode(url.split('/')[-3]).decode('utf-8')
+            self.panels_dir[self.tab][2] = bdecode(url.split('/')[-3])
             self.CMD.GetTable().clear_state()
             self.CMD.GetTable().filter("")
             self.CMD.SetGridCursor(0, 0)
@@ -271,9 +310,9 @@
             href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+file_name+"/"
             href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+file_name+"/"
             try:
-                name = b32decode(file_name).decode('utf-8').split('/')[-1]
+                name = bdecode(file_name).split('/')[-1]
             except:
-                name = b32decode(rec[0]).decode('utf-8').split('/')[-1]
+                name = bdecode(rec[0]).split('/')[-1]
             ext = name.split(".")
             if len(ext)>1:
                 return (file_name, name, ext[-1])
@@ -296,9 +335,7 @@
                     okno = self.edit_img_win
                     okno.change_notebook_page_title(name)
                 else:
-                    print("X1")
                     okno = self.new_main_page("^standard/image_viewer/viewer.html", name, None)
-                    print("X2", okno)
                     self.edit_img_win=okno
             else:
                 if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'ihtml', 'html'):
@@ -321,105 +358,31 @@
             row = self.CMD.GetGridCursorRow()
             return self.exec_editor(row)
 
+        def _on_base(self, event, command):
+            self.child_win = self.new_child_page("{{base_path}}schcommander/form/%s/" % command, parameters={'dir': self.panels_dir[self.tab2][2], })
 
         def on_rename(self, event):
-            win = self.new_child_page("/schcommander/form/Rename/")
+            self._on_base(event, "Rename")
 
-            commander_form = self
+        def on_copy(self, event):
+            self._on_base(event, "Copy")
 
-            @extend_fun_to(win.body)
-            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                ret = commander_form.CMD.GetTable().run_cmd('RENAME', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
-                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
-                commander_form._refresh_panels()
-                def _exit():
-                    self.any_parent_command('on_child_form_cancel')
-                wx.CallAfter(_exit)
+        def on_move(self, event):
+            self._on_base(event, "Move")
 
+        def on_newfile(self, event):
+            self._on_base(event, "NewFile")
 
-        def on_copy(self, evt):
-            d=self.panels_dir[self.tab2][2]
-            for i in range(4):
-                if not i in (self.tab, self.tab2):
-                    d += ";" + self.panels_dir[i][2]
+        def on_mkdir(self, event):
+            self._on_base(event, "MkDir")
 
-            win = self.new_child_page("/schcommander/form/Copy/", param={'dir': d, })
-            
-            commander_form = self
+        def on_delete(self, event):
+            self._on_base(event, "Delete")
 
-            @extend_fun_to(win.body)
-            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                ret = commander_form.CMD.GetTable().run_cmd('COPY', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
-                if 'process' in ret:
-                    commander_form.waiting_proc.append((ret['process'], 2))
-                    commander_form.pbutton.Enable()
-                    commander_form.reg_application_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
-                def _exit():
-                    self.any_parent_command('on_child_form_cancel')
-                wx.CallAfter(_exit)
-
-        def on_move(self, evt):
-            d=self.panels_dir[self.tab2][2]
-            for i in range(4):
-                if not i in (self.tab, self.tab2):
-                    d += ";" + self.panels_dir[i][2]
-
-            win = self.new_child_page("/schcommander/form/Move/", param={'dir': d, })
-            
-            commander_form = self
-            
-            @extend_fun_to(win.body)
-            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                ret = commander_form.CMD.GetTable().run_cmd('MOVE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.dest.GetValue())), 1)
-                if 'process' in ret:
-                    commander_form.waiting_proc.append((ret['process'], 3))
-                    commander_form.pbutton.Enable()
-                    commander_form.reg_application_signal_handler(commander_form.handle_process_info, 'PROCESS_INFO')
-                def _exit():
-                    self.any_parent_command('on_child_form_cancel')
-                wx.CallAfter(_exit)
-
-
-        def on_newfile(self, evt):
-            win = self.new_child_page("/schcommander/form/NewFile/")
-
-            commander_form = self
-
-            @extend_fun_to(win.body)
-            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                ret = commander_form.CMD.GetTable().run_cmd('NEWFILE', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
-                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
-                commander_form._refresh_panels()
-                def _exit():
-                    self.any_parent_command('on_child_form_cancel')
-                wx.CallAfter(_exit)
+        def on_setup(self, event):
+            win = self.new_child_page("{{base_path}}schcommander/form/Setup/", parameters={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })
     
-
-        def on_mkdir(self, evt):
-            win = self.new_child_page("/schcommander/form/MkDir/")
-
-            commander_form = self
-
-            @extend_fun_to(win.body)
-            def href_clicked(self, ctrl, attr_dict, upload=False, fields=False, params=None):
-                ret = commander_form.CMD.GetTable().run_cmd('MKDIR', ( bencode(commander_form.panels_dir[commander_form.tab][2]), bencode(self.name.GetValue())), 1)
-                commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
-                commander_form._refresh_panels()
-                def _exit():
-                    self.any_parent_command('on_child_form_cancel')
-                wx.CallAfter(_exit)
-   
-        def on_delete(self, evt):
-            ret = self.CMD.GetTable().run_cmd('DELETE', (b32encode(self.panels_dir[self.tab][2].encode('utf-8')), b32encode(b'TRASH')), 1)
-            if 'process' in ret:
-                self.waiting_proc.append((ret['process'], 1))
-                self.pbutton.Enable()
-                self.reg_application_signal_handler(self.handle_process_info, 'PROCESS_INFO')
-
-        def on_setup(self, evt):
-            win = self.new_child_page("/schcommander/form/Setup/", param={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })
-    
-        def on_user_menu(self, evt):
+        def on_user_menu(self, event):
             pass
 
         def on_tab(self, evt):
@@ -435,7 +398,7 @@
             evt.Skip()
 
 
-%%form_title
+%% form_title
     .Commander
 
 %% content
@@ -445,12 +408,25 @@
                 CTRL-HTML name=PANELS,,,width=100%,,,height=42
         tr
             td
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=paste,,,label=paste,,,src=client://actions/list-add.png
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=paste,,,label=paste,,,src=client://actions/list-add.png
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=paste,,,label=paste,,,src=client://actions/list-add.png
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=paste,,,label=paste,,,src=client://actions/list-add.png
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=paste,,,label=paste,,,src=client://actions/list-add.png
+                % widget id='commander_new' class='menu' title='New' style='xtoolbar':
+                    li:::a class=btn btn-primary btn-sm,,,href=NEWFILE..._(New file)
+                    li:::a class=btn btn-primary btn-sm,,,href=MKDIR..._(New directory)
+
+                % widget id='commander_operations' class='menu' title='Operations' style='xtoolbar':
+                    li:::a class=btn btn-primary btn-sm,,,href=VIEW..._(View)
+                    li:::a class=btn btn-primary btn-sm,,,href=EDIT..._(Edit)
+                    li:::a class=btn btn-primary btn-sm,,,href=RENAME..._(Rename)
+                    li:::a class=btn btn-primary btn-sm,,,href=COPY..._(Copy)
+                    li:::a class=btn btn-primary btn-sm,,,href=MOVE..._(Move)
+                    li:::a class=btn btn-primary btn-sm,,,href=DELETE..._(Delete)
+
+                % widget id='commander_other' class='menu' title='Other' style='xtoolbar':
+                    li:::a class=btn btn-primary btn-sm,,,href=SETUP..._(Setup)
+                    li:::a class=btn btn-primary btn-sm,,,href=HELP..._(Help)
         tr
             td
-                CTRL-GRID name=CMD,,,width=100%,,,height=100%,,,READONLY=1,,,src={{base_path}}schcommander/grid/_/_/,,,keymap=standard
+                CTRL-GRID name=CMD,,,width=100%,,,height=100%-130,,,READONLY=1,,,src={{base_path}}schcommander/grid/_/_/,,,keymap=standard
 
+        tr
+            td
+                ctrl-htmllistbox name=msg,,,width=100%-20,,,height=45

@@ -19,7 +19,6 @@
 
 """Module contains base views for pytigon applications"""
 
-from base64 import b32decode, b32encode
 import os
 
 from django.conf import settings
@@ -40,6 +39,9 @@ from pytigon_lib.schviews import actions
 from pytigon_lib.schdjangoext.tools import make_href
 
 from pytigon_lib.schviews.viewtools import dict_to_json
+
+from pytigon_lib.schtools.tools import bencode, bdecode, is_null
+
 
 APP = None
 
@@ -167,7 +169,7 @@ def tbl(request, app, tab, value=None, template_name=None):
     else:
         d = {}
     if value and value != "":
-        d["value"] = b32decode(value.encode("ascii"))
+        d["value"] = bdecode(value.encode("ascii"))
     dbtab = DbTable(app, tab)
     retstr = dbtab.command(d)
     return HttpResponse(retstr)
@@ -184,7 +186,7 @@ def datedialog(request, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p["value"].encode("ascii"))
+        value = bdecode(p["value"].encode("ascii"))
     else:
         value = ""
     if action == "size":
@@ -224,7 +226,7 @@ def listdialog(request, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p["value"].encode("ascii")).decode("utf-8")
+        value = bdecode(p["value"])
         if value == None:
             value = ""
     else:
@@ -255,7 +257,7 @@ def treedialog(request, app, tab, id, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p["value"].encode("ascii"))
+        value = bdecode(p["value"].encode("ascii"))
         if value == None:
             value = ""
     else:
@@ -304,7 +306,7 @@ def tabdialog(request, app, tab, id, action):
             p = request.POST.copy()
         else:
             p = request.GET.copy()
-        value = b32decode(p["value"].encode("ascii"))
+        value = bdecode(p["value"].encode("ascii"))
         if value == None:
             value = ""
     else:
@@ -414,7 +416,7 @@ def app_time_stamp(request, **argv):
 
 def search(request, **argv):
     q = request.POST.get("q", "")
-    q2 = b32encode(q.encode("utf-8")).decode("utf-8")
+    q2 = bencode(q)
     if hasattr(settings, "SEARCH_PATH"):
         return HttpResponseRedirect(
             make_href((settings.SEARCH_PATH % q2) + "?only_content=1")

@@ -56,7 +56,7 @@ class Log(models.Model):
         default=datetime.now,
     )
     description = models.CharField(
-        "Description", null=True, blank=True, editable=False, max_length=64
+        "Description", null=True, blank=True, editable=False, max_length=256
     )
     operator = models.CharField(
         "Operator", null=True, blank=True, editable=True, max_length=64

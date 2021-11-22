@@ -19,8 +19,8 @@
 
 import wx
 import types
-from base64 import b32encode, b32decode
 from schcli.guilib.image import bitmap_from_href
+from pytigon_lib.schtools.tools import bencode, bdecode
 
 def init_plugin(
     app,
@@ -38,7 +38,7 @@ def init_plugin(
         x = path.replace('\\','/').split('/')
         name = x[-1]
         okno=self.GetTopWindow().new_main_page("^standard/editor/editor.html", name)
-        p = "/schcommander/table/FileManager/open/%s/" % b32encode(path.encode('utf-8')).decode('utf-8')
+        p = "/schcommander/table/FileManager/open/%s/" % bencode(path)
         p_save = p.replace('/open/','/save/')
         p_save_as = "schcommander/table/FileManager/save/{{file}}/"
         this = self

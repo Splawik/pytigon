@@ -35,7 +35,9 @@ from pytigon_lib.schdjangoext.fastform import form_from_str
 from django.template.loader import select_template
 from pytigon_lib.schviews import make_path
 from pytigon_lib.schtools.schjson import json_loads, json_dumps
-from base64 import b32decode, b32encode
+
+from pytigon_lib.schtools.tools import bencode, bdecode, is_null
+
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
@@ -336,7 +338,7 @@ def publish(request, pk):
 @dict_to_template("schwiki/v_search.html")
 def search(request, q):
 
-    search_txt = b32decode(q).decode("utf-8")
+    search_txt = bdecode(q).decode("utf-8")
     object_list = Page.objects.filter(content__iregex=search_txt)
 
     return {"object_list": object_list, "q": search_txt}

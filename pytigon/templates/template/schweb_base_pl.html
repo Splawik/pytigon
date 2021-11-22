@@ -264,17 +264,31 @@
                                                                 <td>
                                                                         {% for field in form %}
                                                                                 <table class="filter_form" border="0">
-                                                                                        <tr>
-                                                                                                <td cellpadding="8">
+                                                                                        {% if vform %}
+                                                                                                <tr>
+                                                                                                        <td cellpadding="8">
+                                                                                                                {{ field.errors }}
                                                                                                                 {{ field.label}}:
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                        {{ field }}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                        {{ field.errors }}
-                                                                                                </td>
-                                                                                        </tr>
+                                                                                                        </td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                        <td>
+                                                                                                                {{ field }}
+                                                                                                        </td>
+                                                                                                </tr>
+                                                                                          {% else %}
+                                                                                                <tr>
+                                                                                                        <td cellpadding="8">
+                                                                                                                        {{ field.label}}:
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                {{ field }}
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                                {{ field.errors }}
+                                                                                                        </td>
+                                                                                                </tr>
+                                                                                        {% endif %}
                                                                                 </table>
                                                                         {% endfor %}
                                                                 </td>

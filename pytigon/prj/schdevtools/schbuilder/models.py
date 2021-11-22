@@ -26,6 +26,8 @@ from schtools.models import *
 
 from schtasks.models import *
 
+from schsimplescripts.models import *
+
 
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip
@@ -474,6 +476,15 @@ class SChAppSet(JSONModel):
     )
     git_repository = models.CharField(
         "Git repository", null=True, blank=True, editable=True, max_length=255
+    )
+    autor_name = models.CharField(
+        "Autor name", null=True, blank=True, editable=True, max_length=255
+    )
+    autor_email = models.CharField(
+        "Autor email", null=True, blank=True, editable=True, max_length=256
+    )
+    autor_www = models.CharField(
+        "Autor www page", null=True, blank=True, editable=True, max_length=256
     )
 
     filter_fields = {

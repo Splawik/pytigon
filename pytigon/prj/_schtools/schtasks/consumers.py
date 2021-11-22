@@ -43,7 +43,7 @@ class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
                     for command in self.commands:
                         await self.send_json(command)
                 await asyncio.sleep(1)
-            self.close()
+            await self.close()
 
     async def disconnect(self, close_code):
         print("Disconnect.......")

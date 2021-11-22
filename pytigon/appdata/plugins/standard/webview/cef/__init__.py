@@ -82,7 +82,6 @@ def init_plugin_cef(
 
             self.afetr_init()
 
-
         def html_from_str(self, str_body):
             color = get_colour(wx.SYS_COLOUR_3DFACE)
             return ("<!DOCTYPE html><html><head><base href=\"%s\" target=\"_blank\"></head><body bgcolor='%s'>" % ( self._static_prefix(), color) ) + str_body+"</body></html>"

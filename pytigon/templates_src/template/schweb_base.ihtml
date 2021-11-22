@@ -228,13 +228,22 @@
                                 td
                                     % for field in form
                                         table class=filter_form,,,border=0
-                                            tr
-                                                td cellpadding=8
+                                            % if vform:
+                                                tr
+                                                    td cellpadding=8
+                                                        {{ field.errors }}
                                                         {{ field.label}}:
-                                                td
-                                                    {{ field }}
-                                                td
-                                                    {{ field.errors }}
+                                                tr
+                                                    td
+                                                        {{ field }}
+                                            % else:
+                                                tr
+                                                    td cellpadding=8
+                                                            {{ field.label}}:
+                                                    td
+                                                        {{ field }}
+                                                    td
+                                                        {{ field.errors }}
                                 td align=right,,,cellpadding=3
                                     %% form_content_schbutton
                                         input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44

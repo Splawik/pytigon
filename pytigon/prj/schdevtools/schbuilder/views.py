@@ -1316,6 +1316,7 @@ def build_prj(pk):
                 [
                     "-m",
                     "pip",
+                    "--disable-pip-version-check",
                     "install",
                     f"--target={prjlib_path}",
                     "--upgrade",

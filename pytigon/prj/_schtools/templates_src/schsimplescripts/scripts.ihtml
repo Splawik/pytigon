@@ -45,7 +45,7 @@
         .field_edit/doc,Doc,doc
         .delete        
     % row_actions:        
-        .run,Run script,fa fa-play,_top
+        .run,Run script,fa fa-play,_parent
 
 
 %% row_edit

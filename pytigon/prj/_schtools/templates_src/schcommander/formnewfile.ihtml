@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/user_tab.html"
 
 % load exfiltry
@@ -9,10 +8,9 @@
         meta name=target,,,content=_parent_refr
 
 %% form_content_schbutton
-    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=44
-
+    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64
 
 %% all
-    %with show_title_bar=1 title='New file' vform=True
+    % with show_title_bar=1 title='New file' vform=True
         {{ block.super }}
 
