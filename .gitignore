@@ -1,17 +1,11 @@
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 
-
-# Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
 .cache
 
-# Translations
-*.mo
 
 /prj/schdevtools/schbuilder/migrations
 migrations/
@@ -22,24 +16,38 @@ migrations/
 
 */.gradle/
 
-global_db_settings.py
+*global_db_settings.py
 settings_app_local.py
 # pytigon installation files
-*.ptig
-
-# font cache
+*.mo
 *.pkl
+*.pid
+*.log
+*.whl
+*.tar.gz
+*.egg*
+*.so
 
-prj/schbhp/
-prj/schdocs/
-prj/schhomemonitoring/
-prj/schintranet/
-prj/schit/
-prj/schmicroerp/
-prj/schodf/
-prj/schpolb/
-prj/schpytigondoc/
-prj/standard_components/
+pytigon/prj/*
+!*pytigon/prj/_schall/*
+!*pytigon/prj/_schdata/*
+!*pytigon/prj/_schremote/*
+!*pytigon/prj/_schserverless/*
+!*pytigon/prj/_schtools/*
+!*pytigon/prj/_schwebtrapper/*
+!*pytigon/prj/_schwiki/*
+!*pytigon/prj/schdevtools/*
+!*pytigon/prj/schcomponents/*
+!*pytigon/prj/scheditor/*
+!*pytigon/prj/schodf/*
+!*pytigon/prj/schportal/*
+!*pytigon/prj/schpytigondemo/*
+!*pytigon/prj/schsetup/*
+
+pytigon/static/CACHE/*
+doc
+pytigon_lib
+pytigon_gui
 
 ext_lib_cli_lin/
 ext_prg/
@@ -49,4 +57,3 @@ static_src/sch/__javascript__/
 tools/pytigon.xml
 
 
-/pytigon/prj/schemail/
