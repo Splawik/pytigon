@@ -23,7 +23,6 @@ from pytigon_lib.schtasks.publish import CommunicationByCacheReceiver
 
 class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        print("Connecting.......")
         self.exit = False
         await self.accept()
         self.receiver = None
@@ -46,7 +45,7 @@ class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
             await self.close()
 
     async def disconnect(self, close_code):
-        print("Disconnect.......")
+        pass
 
     def handle_start(self):
         self.commands.append({"status": "start"})

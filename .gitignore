@@ -3,22 +3,16 @@ __pycache__/
 
 pip-log.txt
 pip-delete-this-directory.txt
-
-.cache
-
-
-/prj/schdevtools/schbuilder/migrations
-migrations/
-
-.idea/
-
-.gitignore
-
-*/.gradle/
-
+launch.json
+extensions.json
 *global_db_settings.py
 settings_app_local.py
-# pytigon installation files
+
+.cache
+.idea/
+*/.gradle/
+migrations/
+
 *.mo
 *.pkl
 *.pid
@@ -48,12 +42,9 @@ pytigon/static/CACHE/*
 doc
 pytigon_lib
 pytigon_gui
-
 ext_lib_cli_lin/
 ext_prg/
 last_error.html
 python/
 static_src/sch/__javascript__/
 tools/pytigon.xml
-
-

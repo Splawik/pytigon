@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -34,16 +34,37 @@ from django.http import Http404
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schdjangoext.fastform import form_from_str
 from schsimplescripts.script_tools import decode_script
+from django.core.exceptions import PermissionDenied
 
 SCRIPT_TEMPLATE = """
 {%% extends 'schsimplescripts/script_form.html' %%}
 
 {%% load exfiltry %%}
 {%% load exsyntax %%}
-
-%s
+{%% load bootstrap4 %%}
 
 """
+
+SCRIPT_TEMPLATE1 = (
+    SCRIPT_TEMPLATE
+    + """
+%s
+"""
+)
+
+SCRIPT_TEMPLATE2 = (
+    SCRIPT_TEMPLATE
+    + """
+{%% block content %%}
+<div class="ajax-frame"></div>
+<div class="ajax-region">
+%s
+<div class="ajax-frame"></div> 
+</div>
+
+{%% endblock %%}
+"""
+)
 
 
 def run(request, pk):
@@ -51,29 +72,70 @@ def run(request, pk):
     script = models.Scripts.objects.get(pk=pk)
     form = None
     if script:
-        form_class = form_from_str(script._form)
-        if form_class:
-            if request.method == "POST":
-                form = form_class(request.POST)
-                if form.is_valid():
-                    argv = form.cleaned_data
+        if script.rights_group:
+            test = False
+            if request.user:
+                if request.user.is_superuser:
+                    test = True
+                else:
+                    if "." in script.rights_group:
+                        if request.user.has_perm(script.rights_group):
+                            test = True
+                    else:
+                        if user.groups.filter(name=script.rights_group).exists():
+                            test = True
+            if not test:
+                raise PermissionDenied()
 
-                    exec(script._view)
-
-                    v = locals().get("scripts_" + script.name, None)
-                    if v:
-                        parms = v(request, form.cleaned_data)
-                        parms["form"] = form
-                        template_script = SCRIPT_TEMPLATE % script._template
-                        template = Template(template_script)
-                        context = RequestContext(request, parms)
-                        ret_str = template.render(context)
-                        return HttpResponse(ret_str)
+        exec(script._view)
+        v = locals().get("view", None)
+        form = None
+        ret = {}
+        show_result = False
+        if script._form:
+            form_class = form_from_str(script._form)
+            if form_class:
+                if request.method == "POST":
+                    form = form_class(request.POST)
+                    if form.is_valid():
+                        ret = v(request, form.cleaned_data)
+                        show_result = True
+                    else:
+                        ret = v(request, None)
+                        show_result = False
+                else:
+                    form = form_class()
+                    ret = v(request, None)
+                    show_result = False
             else:
-                form = form_class()
-        return render_to_response(
-            "schsimplescripts/script_form.html", {"form": form}, request=request
-        )
+                ret = v(request, None)
+                show_result = True
+        else:
+            ret = v(request, None)
+            show_result = True
+
+        if type(ret) == dict and script._template:
+            ret["form"] = form
+            ret["SHOW_RESULT"] = show_result
+            x = script._template.strip()
+            if x.startswith("{% block") or x.startswith("%%"):
+                template_script = SCRIPT_TEMPLATE1 % script._template
+            else:
+                template_script = SCRIPT_TEMPLATE2 % script._template
+            template = Template(template_script)
+            context = RequestContext(request, ret)
+            ret_str = template.render(context)
+            return HttpResponse(ret_str)
+        elif type(ret) == dict:
+            ret["form"] = form
+            return render_to_response(
+                "schsimplescripts/script_form.html", ret, request=request
+            )
+        elif type(ret) == str:
+            return run_script_by_name(request, ret)
+        else:
+            return ret
+
     raise Http404("Script does not exist")
 
 
@@ -81,50 +143,10 @@ def run_script_by_name(request, script_name):
 
     script = models.Scripts.objects.get(name=script_name)
     if script:
+        p = reverse("row_action_scripts_run", kwargs={"pk": int(script.id)})
         if "only_content" in request.GET:
-            return HttpResponseRedirect(
-                "/schsimplescripts/table/Scripts/%d/action/run/?childwin=1&only_content=1"
-                % script.id
-            )
+            return HttpResponseRedirect(p + "?childwin=1&only_content=1")
         else:
-            return HttpResponseRedirect(
-                "/schsimplescripts/table/Scripts/%d/action/run/?childwin=1" % script.id
-            )
+            return HttpResponseRedirect(p + "?childwin=1")
     else:
         raise Http404("Script does not exist")
-
-
-def run_script(request, **argv):
-
-    if "script" in request.POST:
-        code = request.POST["script"]
-        request.session["script_code"] = code
-        x = decode_script("code", code)
-        if x:
-            form_class = form_from_str(x[0])
-            return render(
-                request, "schsimplescripts/script_form.html", {"form": form_class()}
-            )
-    else:
-        if request.method == "POST":
-            if "script_code" in request.session:
-                code = request.session["script_code"]
-                x = decode_script("code", code)
-                if x:
-                    form_class = form_from_str(x[0])
-                    form = form_class(request.POST)
-
-                    if form.is_valid():
-                        argv = form.cleaned_data
-                        exec(x[1])
-                        v = locals().get("scripts_code", None)
-                        if v:
-                            parms = v(request, form.cleaned_data)
-                            parms["form"] = form
-                            script = SCRIPT_TEMPLATE % x[2]
-                            template = Template(script)
-                            context = RequestContext(request, parms)
-                            ret_str = template.render(context)
-                            return HttpResponse(ret_str)
-
-    return HttpResponse("Error")

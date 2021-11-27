@@ -1284,22 +1284,32 @@ class SChView(models.Model):
         if self.view_type == "u":
             if "(?P" in self.url:
                 if self.url_params and self.url_params != "":
-                    return "re_path('%s', views.%s, %s)" % (
+                    return "re_path('%s', views.%s, %s, name='%s')" % (
                         self.url,
                         name,
                         self.url_params,
+                        self.parent.name + "_" + name,
                     )
                 else:
-                    return "re_path('%s', views.%s)" % (self.url, name)
+                    return "re_path('%s', views.%s, name='%s')" % (
+                        self.url,
+                        name,
+                        self.parent.name + "_" + name,
+                    )
             else:
                 if self.url_params and self.url_params != "":
-                    return "path('%s', views.%s, %s)" % (
+                    return "path('%s', views.%s, %s, name='%s')" % (
                         self.url,
                         name,
                         self.url_params,
+                        self.parent.name + "_" + name,
                     )
                 else:
-                    return "path('%s', views.%s)" % (self.url, name)
+                    return "path('%s', views.%s, name='%s')" % (
+                        self.url,
+                        name,
+                        self.parent.name + "_" + name,
+                    )
         else:
             if self.view_type == "r":
                 bname = "gen_row_action"

@@ -1,25 +1,25 @@
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 
-def _transform_view(name, txt1, txt2):
-    fun = ""
-    for row in txt2.split('\n'):
-        fun = fun + "    "+row+"\n"
-
-    x2 = """def scripts_%s(request, argv):
-%s
-""" % (name, fun)
-
-    return txt1+"\n"+x2
-
 def _transform_template(txt):
     return ihtml_to_html(None, txt)
-
-
+    
 def decode_script(name, code):    
     elements = code.split('===')
-    if len(elements)>=4:
-        _form = elements[1]
-        _view = _transform_view(name, elements[0], elements[2])
-        _template = _transform_template(elements[3])
-        return [ _form, _view, _template ]
-    return None        
+    if len(elements)>=3:
+        _form = elements[0]
+        _view = elements[1]
+        _template = _transform_template(elements[2])
+    elif len(elements)>=2:
+        if elements[0].strip().startswith('def '):
+            _form = None
+            _view = elements[0]
+            _template = elements[1]
+        else:
+            _form = elements[0]
+            _view = elements[1]
+            _template = None
+    else:
+        _form = None
+        _view = code
+        _template = None
+    return [ _form, _view, _template ]

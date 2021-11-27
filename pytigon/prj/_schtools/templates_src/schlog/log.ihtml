@@ -1,30 +1,41 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
-
-%% pythoncode
-    script language=python
-        def filter_url(self, target, href):
-            return href
+% load exfiltry
+% load exsyntax
 
 %% all
-    %with form_width=800 form_height=600:
-        {{ block.super }}
+    % with table_type='datatable':
+        {% block.super %}
 
 %% scroll
 
 %% list_row_header
-    th...Data
-    th...Opis
-    th...Operator
-
-%% list_row_header_end
+    th..._(Application)
+    th..._(Table)
+    th..._(Group)
+    th..._(Parent id)
+    th..._(Date)
+    th..._(Description)
+    th..._(Operator)
+    th..._(Operator id)
+    
 
 %% list_row
-    td...{{object.date|isoformat}}
-    td...{{object.description}}
-    td...{{object.operator}}
+    td...{% object.application %}
+    td...{% object.table %}
+    td...{% object.group %}
+    td...{% object.parent_id %}
+    td...{% object.date %}
+    td...{% object.description %}
+    td...{% object.operator %}
+    td...{% object.operator_id %}
+    
 
-%% list_row_end
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        "application","table","group","parent_id","date","description","operator","operator_id"

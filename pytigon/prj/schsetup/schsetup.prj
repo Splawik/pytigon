@@ -1,5 +1,8 @@
 [
     [
+        "test abc",
+        null,
+        null,
         null,
         "schcomponents/components/ptig-xterm.js",
         "tablet_modern",
@@ -48,7 +51,7 @@
                 "Pytigon setup",
                 null,
                 "",
-                "import configparser\nimport zipfile\nfrom pytigon_lib.schfs.vfstools import get_temp_filename\nfrom pytigon_lib.schtools.install import extract_ptig\n"
+                "import configparser\nimport zipfile\nfrom pytigon_lib.schfs.vfstools import get_temp_filename\nfrom pytigon_lib.schtools.install import Ptig\nimport pytigon.schserw.settings\nfrom pytigon_lib.schtools.process import py_run\n"
             ],
             [],
             [],
@@ -84,7 +87,7 @@
                         "",
                         null,
                         "upload_ptig",
-                        "status = self.cleaned_data['status']\nif status:\n    if status == '1':\n        if 'INSTALL_FILE_NAME' in request.session:\n            file_name = request.session['INSTALL_FILE_NAME']\n            archive = zipfile.ZipFile(file_name, 'r')\n            accept_license = self.cleaned_data['accept_license']\n            if accept_license:\n                initdata = archive.read('install.ini')\n                config = configparser.ConfigParser()\n                config.read_string(initdata.decode('utf-8'))\n                \n                if 'PRJ_NAME' in config['DEFAULT']:\n                    appset_name = config['DEFAULT']['PRJ_NAME']\n                    if appset_name:                \n                        ret = extract_ptig(archive, appset_name)\n                        return { 'object_list': ret, 'status': 2 }\n                return { 'object_list': [['Invalid install file'],], 'status': 2 }\n            else:\n                readmedata = archive.read('README.txt')\n                licensedata = archive.read('LICENSE.txt')\n                return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': False }\n        return { 'object_list': None, 'status': None }\nelse:\n    if 'ptig' in request.FILES:\n        ptig = request.FILES['ptig']         \n        file_name = get_temp_filename(\"temp.ptig\")\n        request.session['INSTALL_FILE_NAME'] = file_name\n        plik = open(file_name, 'wb')\n        plik.write(ptig.read())\n        plik.close()\n        archive = zipfile.ZipFile(file_name, 'r')\n        readmedata = archive.read('README.txt')\n        licensedata = archive.read('LICENSE.txt')\n        archive.close()\n        self.initial = { 'accept_license': False, }\n        return { 'object_list': None, 'status': 1, 'readmedata': readmedata.decode('utf-8'), 'licensedata': licensedata.decode('utf-8'), 'first': True }\n    else:\n        return { 'object_list': None, 'status': None }\n"
+                        "status = self.cleaned_data['status']\nif status:\n    if status == '1':\n        if 'INSTALL_FILE_NAME' in request.session:\n            file_name = request.session['INSTALL_FILE_NAME']\n            with Ptig(file_name) as ptig:\n                if ptig.is_ok():\n                    accept_license = self.cleaned_data['accept_license']\n                    if accept_license:                        \n                        object_list = ptig.extract_ptig()                                \n                        ret = { 'object_list': object_list, 'status': 2 }\n                    else:\n                        readmedata = archive.read(prj_name+'/README.md')\n                        licensedata = archive.read(prj_name+'/LICENSE')\n                        ret = { 'object_list': None, 'status': 1, 'readmedata': ptig.get_readme(), 'licensedata': ptig.get_license(), 'first': False }\n                else:\n                    ret = { 'object_list': None, 'status': None }\n            return ret\nelse:\n    if 'ptig' in request.FILES:\n        ptig_file = request.FILES['ptig']         \n        file_name = get_temp_filename(\"temp.ptig\")\n        request.session['INSTALL_FILE_NAME'] = file_name\n        with open(file_name, 'wb') as f:\n            f.write(ptig_file.read())                \n        \n        ret = { 'object_list': None, 'status': None }\n        \n        with Ptig(file_name) as ptig:\n            if ptig.is_ok():\n                self.initial = { 'accept_license': False, }\n                ret = { 'object_list': None, 'status': 1, 'readmedata': ptig.get_readme(), 'licensedata': ptig.get_license(), 'first': True }\n        return ret\n\nreturn { 'object_list': None, 'status': None }\n"
                     ],
                     [
                         [
@@ -173,7 +176,7 @@
             [],
             [
                 [
-                    "# -*- coding: utf-8 -*-\nfrom django.core.management.base import BaseCommand, CommandError\n\nimport sys\nimport io\nimport os\nimport getopt\n\nfrom zipfile import ZipFile\n\nfrom pytigon_lib.schtools.install import extract_ptig\n\nclass Command(BaseCommand):\n    help =\"Install .ptig file\"\n\n    def add_arguments(self, parser):\n        parser.add_argument(\n            'filename', \n            help='Pytigon instalation file (*.ptig)',\n        )\n\n    def handle(self, *args, **options):\n        filename = options['filename']\n        if os.path.exists(filename):\n            name=filename.replace('\\\\', '/').split('/')[-1].split('.')[0]\n            with ZipFile(filename) as zip_file:\n                extract_ptig(zip_file, name)\n",
+                    "# -*- coding: utf-8 -*-\nfrom django.core.management.base import BaseCommand, CommandError\n\nimport sys\nimport io\nimport os\nimport getopt\n\nfrom zipfile import ZipFile\n\nfrom pytigon_lib.schtools.install import Ptig\n\nclass Command(BaseCommand):\n    help =\"Install .ptig file\"\n\n    def add_arguments(self, parser):\n        parser.add_argument(\n            'filename', \n            help='Pytigon instalation file (*.ptig)',\n        )\n\n    def handle(self, *args, **options):\n        filename = options['filename']\n        ptig = Ptig(filename)\n        ptig.extract_ptig()\n",
                     "m",
                     "ptig_install.py"
                 ]

@@ -45,35 +45,35 @@ from pytigon_lib.schtools.tools import bencode, bdecode, is_null
 
 APP = None
 
-#_RET_OK = """
-#<head>
+# _RET_OK = """
+# <head>
 #    <meta name="TARGET" content="_parent_refr" />
 #    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
-#</head>
-#<body>OK</body>
-#"""
+# </head>
+# <body>OK</body>
+# """
 
-#_RET_OK_HTML = """
-#<head>
+# _RET_OK_HTML = """
+# <head>
 #    <meta name="RETURN" content="$$RETURN_REFRESH_PARENT" />
 #    <script>ret_ok(%s,"%s");</script>
-#</head>
-#<body></body>
-#"""
+# </head>
+# <body></body>
+# """
 
-#_RET_OK_SHTML = """
-#<head>
+# _RET_OK_SHTML = """
+# <head>
 #    <meta name="RETURN" content="$$RETURN_OK" />
 #    <meta name="target" content="code" />
-#</head>
-#<body>
+# </head>
+# <body>
 #    <script language=python>
-#page = self.get_parent_page().get_parent_page()
-#if page:
+# page = self.get_parent_page().get_parent_page()
+# if page:
 #    page.signal('return_row', id=%s, title="%s")
 #    </script>
-#</body>
-#"""
+# </body>
+# """
 
 MESSAGE_LIST = {"null": "", "error": "Program error", "warning": "Program warning"}
 
@@ -124,6 +124,7 @@ def ret_ok(request, id, title):
         title
     """
     return actions.new_row_ok(request, id, title)
+
 
 #    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
 #        return HttpResponse(_RET_OK_SHTML % (id, title))
@@ -377,7 +378,9 @@ def sw(request):
     else:
         _static_root = settings.STATICFILES_DIRS[0]
     static_root1 = os.path.join(_static_root, settings.PRJ_NAME)
-    static_root2 = os.path.join(settings.PRJ_PATH, settings.PRJ_NAME, "static", settings.PRJ_NAME)
+    static_root2 = os.path.join(
+        settings.PRJ_PATH, settings.PRJ_NAME, "static", settings.PRJ_NAME
+    )
 
     for static_root in (static_root1, static_root2):
         sw_path = os.path.join(static_root, "sw.js")

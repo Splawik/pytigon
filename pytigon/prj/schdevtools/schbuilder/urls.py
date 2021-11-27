@@ -85,7 +85,12 @@ urlpatterns = [
     gen_tab_action("SChAppSet", "update", views.update),
     gen_row_action("SChLocale", "translate_sync", views.translate_sync),
     gen_row_action("SChAppSet", "locale_gen", views.locale_gen),
-    re_path("download_installer/(?P<name>\w+)/$", views.download_installer, {}),
+    re_path(
+        "download_installer/(?P<name>\w+)/$",
+        views.download_installer,
+        {},
+        name="schbuilder_download_installer",
+    ),
     gen_row_action(
         "SChChoiceItem",
         "field_up",
@@ -108,7 +113,12 @@ urlpatterns = [
             "field": "parent",
         },
     ),
-    re_path("autocomplete/(?P<id>\d+)/(?P<key>\w+)/$", views.autocomplete, {}),
+    re_path(
+        "autocomplete/(?P<id>\d+)/(?P<key>\w+)/$",
+        views.autocomplete,
+        {},
+        name="schbuilder_autocomplete",
+    ),
     gen_row_action("SChAppSet", "gen_milestone", views.gen_milestone),
     gen_tab_action("SChAppSet", "prj_import2", views.prj_import2),
     gen_row_action("SChAppSet", "run", views.run),
