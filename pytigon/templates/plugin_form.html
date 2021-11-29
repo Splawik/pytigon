@@ -17,10 +17,11 @@
         {% with NO_CHECK_AUTH=True %}
                 {{ block.super }}
         {% endwith %}
+        {% block table_list %}
+                {% block form_start %}{% endblock %}
+        {% endblock %}
 {% endblock %}
 {% block content %}
-        {% block table_list %}
-            {% block form_start %}
                     {% if standard_web_browser %}
                             <div id="FormErrorMsgFrame">
                                 <div id="FormErrorMsgWindow">
@@ -38,7 +39,6 @@
                             <br />
                         <p></p>
                     {% endif %}
-            {% endblock %}
             {% block form %}
                     {% block form_header0 %}
                         {% if standard_web_browser %}
@@ -77,6 +77,5 @@
                         </table><p></p>
                     {% endblock %}
             {% endblock %}
-        {% endblock %}
 {% endblock %}
 

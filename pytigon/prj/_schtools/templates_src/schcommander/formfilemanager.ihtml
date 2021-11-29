@@ -69,6 +69,11 @@
             wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)
             self.PANELS.body.filter_url = self.filter_url
             self.child_win = None
+            
+            self.search_win = None
+            self.search_win_starting = False
+            self.search_buffor = []
+            
             self.waiting_proc = []
 
             self._make_process_info_button()
@@ -76,8 +81,6 @@
             self.GetParent().register_signal(self, "child_closed_with_ok")
             self.GetParent().register_signal(self, "child_canceled")
             self.tasks = []
-            self.msg.append_html("Hello <strong>world!</strong>")
-            self.msg.append_html("Hello2 <strong>world2!</strong>")
             self.msg.SetItemCount(len(self.msg.choices))
 
         def filter_child_url(self, child, url):
@@ -139,12 +142,16 @@
             self.create_websocket(url, callback)
             self.websocket_send(url, {'id': process_id, })
 
-        def child_closed_with_ok(self):
+        def child_closed_with_ok(self, win):
             self._refresh_panels()
             self.child_win = None
 
-        def child_canceled(self):
+        def child_canceled(self, win):
             self.child_win = None
+            self.search_win = None
+            self.search_win_starting = None
+            self.search_buffor = []
+            print("child_canceled", win, type(win))
 
         def _make_process_info_button(self):
             page = self.page.GetParent()
@@ -231,7 +238,6 @@
 
         def change_panel(self):
             self.panels_state[self.tab2]=self.CMD.get_table_and_state()
-
             if self.panels_state[self.tab]==None:
                 self.CMD.duplicate_table_and_state()
                 self.CMD.GetTable().proxy.set_address("../../"+bencode(self.panels_dir[self.tab][2])+"/_/")
@@ -239,13 +245,30 @@
                 self.CMD.GetTable().refresh(0)
             else:
                 self.CMD.set_table_and_state(self.panels_state[self.tab])
-
                 if self.panels_dir[self.tab][3]:
                     self.panels_dir[self.tab][3]=False
                     self.CMD.GetTable().refresh(0)
-
             self.refresh_html()
 
+        def on_search(self, key):
+            if (not self.search_win) or self.search_win_starting:
+                self.search_buffor.append(key)
+                if not self.search_win_starting:
+                    self.search_win_starting = True
+                    def _callback(win):
+                        nonlocal self
+                        self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.aTable[:-4])
+                        if hasattr(self.CMD, 'grid_aTable'):
+                            self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.CMD.grid_aTable)
+                        for pos in self.search_buffor:
+                            win.start_key(pos)
+                        self.search_buffor = []
+                    
+                    win = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter", callback = _callback)
+                    self.search_win = win.body
+                    self.search_win_starting = False
+            else:
+                self.search_win.start_key(key)
 
         def on_char(self, evt):
             if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('2'):
@@ -260,15 +283,7 @@
                         self.tab = i
                         self.change_panel()
             elif chr(evt.KeyCode).isascii() or chr(evt.KeyCode).isdigit():
-                if not self.child_win:
-                    okno = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter")
-                    self.child_win = okno.body
-                    self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.aTable[:-4])
-                    if hasattr(self.CMD, 'grid_aTable'):
-                        self.child_win.set_acc_key_tab(self.child_win.SEARCH, self.CMD.grid_aTable)
-                    self.child_win.refr()
-                    self.child_win.Show()
-                wx.CallAfter(self.child_win.start_key, evt.KeyCode)
+                wx.CallAfter(self.on_search, evt.KeyCode)
             else:
                 evt.Skip()
 
@@ -282,8 +297,17 @@
             self.panels_to_refresh=[]
 
         def on_back(self, url):
-            key = ""
-            self.CMD.GetTable().filter(key)
+            if self.CMD.GetTable().key:
+                self.CMD.GetTable().filter("")
+            else:
+                try:
+                    row = self.CMD.GetTable().get_rec(0)
+                    print("ROW: ", row)
+                    if row[1][0]=='..':
+                        self.CMD.goto_first_row()
+                        self.CMD.action("edit")
+                except:
+                    pass
 
         def table_url(self, url):
             self.panels_dir[self.tab][2] = bdecode(url.split('/')[-3])

@@ -22,7 +22,7 @@
 
 %% content
     %% table_list
-      %%form_start
+        %% form_start
           %if standard_web_browser
               div id=FormErrorMsgFrame
                 div id=FormErrorMsgWindow
@@ -34,28 +34,28 @@
               div class=jqmWindow,,,id=FormFrame
               br
             p
-      %%form
-          %% form_header0
-            %if standard_web_browser
-                h1...
-                  %%form_title
-                    {{title}}
-            %% form_header
-          form method=post,,,action=.,,,class=table_filter
-            %%form_filter
-                %if form
-                    ul class=form
-                        {{ form.as_ul }}
-                        li:::input type=submit,,,value=_(Refresh)
-                    br
-          %% table_start
-            <table id="tabsort" class="tabsort">
-          %% table
-            %% table_header
-            %if object_list
-                %for object in object_list
-                    %% table_content
-            %% table_footer
-          %% table_stop
-            </table><p></p>
+        %%form
+            %% form_header0
+              %if standard_web_browser
+                  h1...
+                    %%form_title
+                      {{title}}
+              %% form_header
+            form method=post,,,action=.,,,class=table_filter
+              %%form_filter
+                  %if form
+                      ul class=form
+                          {{ form.as_ul }}
+                          li:::input type=submit,,,value=_(Refresh)
+                      br
+            %% table_start
+              <table id="tabsort" class="tabsort">
+            %% table
+              %% table_header
+              %if object_list
+                  %for object in object_list
+                      %% table_content
+              %% table_footer
+            %% table_stop
+              </table><p></p>
 
