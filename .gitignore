@@ -11,6 +11,7 @@ settings_app_local.py
 .cache
 .idea/
 */.gradle/
+*/prjlib/
 migrations/
 
 *.mo
