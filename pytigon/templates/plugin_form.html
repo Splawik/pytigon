@@ -17,11 +17,10 @@
         {% with NO_CHECK_AUTH=True %}
                 {{ block.super }}
         {% endwith %}
-        {% block table_list %}
-                {% block form_start %}{% endblock %}
-        {% endblock %}
 {% endblock %}
 {% block content %}
+        {% block table_list %}
+                {% block form_start %}
                     {% if standard_web_browser %}
                             <div id="FormErrorMsgFrame">
                                 <div id="FormErrorMsgWindow">
@@ -39,43 +38,45 @@
                             <br />
                         <p></p>
                     {% endif %}
-            {% block form %}
-                    {% block form_header0 %}
-                        {% if standard_web_browser %}
-                                <h1>
-                                    {% block form_title %}
-                                        {{title}}
-                                    {% endblock %}
-                                </h1>
-                        {% endif %}
-                        {% block form_header %}{% endblock %}
-                    {% endblock %}
-                    <form method="post" action="." class="table_filter">
-                        {% block form_filter %}
-                                {% if form %}
-                                        <ul class="form">
-                                                {{ form.as_ul }}
-                                                <li><input type="submit" value="Refresh" /></li>
-                                        </ul>
-                                        <br />
-                                {% endif %}
+                {% endblock %}
+                {% block form %}
+                        {% block form_header0 %}
+                            {% if standard_web_browser %}
+                                    <h1>
+                                        {% block form_title %}
+                                            {{title}}
+                                        {% endblock %}
+                                    </h1>
+                            {% endif %}
+                            {% block form_header %}{% endblock %}
                         {% endblock %}
-                    </form>
-                    {% block table_start %}
-                        <table id="tabsort" class="tabsort">
-                    {% endblock %}
-                    {% block table %}
-                        {% block table_header %}{% endblock %}
-                        {% if object_list %}
-                                {% for object in object_list %}
-                                        {% block table_content %}{% endblock %}
-                                {% endfor %}
-                        {% endif %}
-                        {% block table_footer %}{% endblock %}
-                    {% endblock %}
-                    {% block table_stop %}
-                        </table><p></p>
-                    {% endblock %}
-            {% endblock %}
+                        <form method="post" action="." class="table_filter">
+                            {% block form_filter %}
+                                    {% if form %}
+                                            <ul class="form">
+                                                    {{ form.as_ul }}
+                                                    <li><input type="submit" value="Refresh" /></li>
+                                            </ul>
+                                            <br />
+                                    {% endif %}
+                            {% endblock %}
+                        </form>
+                        {% block table_start %}
+                            <table id="tabsort" class="tabsort">
+                        {% endblock %}
+                        {% block table %}
+                            {% block table_header %}{% endblock %}
+                            {% if object_list %}
+                                    {% for object in object_list %}
+                                            {% block table_content %}{% endblock %}
+                                    {% endfor %}
+                            {% endif %}
+                            {% block table_footer %}{% endblock %}
+                        {% endblock %}
+                        {% block table_stop %}
+                            </table><p></p>
+                        {% endblock %}
+                {% endblock %}
+        {% endblock %}
 {% endblock %}
 
