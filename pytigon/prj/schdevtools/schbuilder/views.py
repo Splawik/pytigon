@@ -283,20 +283,15 @@ def str_to_file(base_path, buf, file_name):
     f.close()
 
 
-def obj_to_array(obj, attrs):
-    ret = []
+def obj_to_dict(obj, attrs):
+    ret = {}
     for attr in attrs:
-        ret.append(getattr(obj, attr.strip()))
+        ret[attr.strip()] = getattr(obj, attr.strip())
     return ret
 
 
 def array_dict(array, attrs):
-    ret = {}
-    i = 0
-    for attr in attrs:
-        ret[attr.strip()] = array[i]
-        i += 1
-    return ret
+    return array
 
 
 def copy_files_and_dirs(src, dst):
@@ -445,96 +440,92 @@ def prj_import_from_str(s, backup_old=False, backup_this=False):
     object_list = []
     prj = json.loads(s)
     with transaction.atomic():
-        prj_instence = models.SChAppSet(**array_dict(prj[0], prj_attr))
+        prj_instence = models.SChAppSet(**prj[0])
         prj_instence.main_view = True
         prj_instence.save()
 
         apps_array = prj[1]
         for app_pos in apps_array:
-            app = models.SChApp(**array_dict(app_pos[0], app_attr))
+            app = models.SChApp(**app_pos[0])
             app.parent = prj_instence
             app.save()
 
             tables_array = app_pos[1]
             for table_pos in tables_array:
-                table = models.SChTable(**array_dict(table_pos[0], table_attr))
+                table = models.SChTable(**table_pos[0])
                 table.parent = app
                 table.save()
 
                 fields_array = table_pos[1]
                 for field_pos in fields_array:
-                    field = models.SChField(**array_dict(field_pos, field_attr))
+                    field = models.SChField(**field_pos)
                     field.parent = table
                     field.save()
 
             choices_array = app_pos[2]
             for choice_pos in choices_array:
-                choice = models.SChChoice(**array_dict(choice_pos[0], choice_attr))
+                choice = models.SChChoice(**choice_pos[0])
                 choice.parent = app
                 choice.save()
 
                 choice_item_array = choice_pos[1]
                 for item_pos in choice_item_array:
-                    choice_item = models.SChChoiceItem(
-                        **array_dict(item_pos, choice_item_attr)
-                    )
+                    choice_item = models.SChChoiceItem(**item_pos)
                     choice_item.parent = choice
                     choice_item.save()
 
             views_array = app_pos[3]
             for view_pos in views_array:
-                view = models.SChView(**array_dict(view_pos, view_attr))
+                view = models.SChView(**view_pos)
                 view.parent = app
                 view.save()
 
             templates_array = app_pos[4]
             for template_pos in templates_array:
-                template = models.SChTemplate(**array_dict(template_pos, template_attr))
+                template = models.SChTemplate(**template_pos)
                 template.parent = app
                 template.save()
 
             appmenus = app.schappmenu_set.all()
             appmenus_array = app_pos[5]
             for appmenu_pos in appmenus_array:
-                appmenu = models.SChAppMenu(**array_dict(appmenu_pos, appmenu_attr))
+                appmenu = models.SChAppMenu(**appmenu_pos)
                 appmenu.parent = app
                 appmenu.save()
 
             forms_array = app_pos[6]
             for form_pos in forms_array:
-                form = models.SChForm(**array_dict(form_pos[0], form_attr))
+                form = models.SChForm(**form_pos[0])
                 form.parent = app
                 form.save()
 
                 formfields_array = form_pos[1]
                 for field_pos in formfields_array:
-                    field = models.SChFormField(**array_dict(field_pos, formfield_attr))
+                    field = models.SChFormField(**field_pos)
                     field.parent = form
                     field.save()
 
             tasks_array = app_pos[7]
             for task_pos in tasks_array:
-                task = models.SChTask(**array_dict(task_pos, task_attr))
+                task = models.SChTask(**task_pos)
                 task.parent = app
                 task.save()
 
             consumers_array = app_pos[8]
             for consumer_pos in consumers_array:
-                consumer = models.SChChannelConsumer(
-                    **array_dict(consumer_pos, consumer_attr)
-                )
+                consumer = models.SChChannelConsumer(**consumer_pos)
                 consumer.parent = app
                 consumer.save()
 
             files_array = app_pos[9]
             for file_pos in files_array:
-                f = models.SChFiles(**array_dict(file_pos, files_attr))
+                f = models.SChFiles(**file_pos)
                 f.parent = app
                 f.save()
 
         statics_array = prj[2]
         for static in statics_array:
-            s = models.SChStatic(**array_dict(static, static_attr))
+            s = models.SChStatic(**static)
             s.parent = prj_instence
             s.save()
 
@@ -575,71 +566,71 @@ def prj_import_from_str(s, backup_old=False, backup_this=False):
 def prj_export_to_str(pk):
     prj_tab = []
     prj = models.SChAppSet.objects.get(id=pk)
-    prj_tab.append(obj_to_array(prj, prj_attr))
+    prj_tab.append(obj_to_dict(prj, prj_attr))
     apps = prj.schapp_set.all()
     apps_array = []
     for app in apps:
         tables = app.schtable_set.all()
         tables_array = []
         for table in tables:
-            tmp = obj_to_array(table, table_attr)
+            tmp = obj_to_dict(table, table_attr)
             fields = table.schfield_set.all()
             fields_array = []
             for field in fields:
-                fields_array.append(obj_to_array(field, field_attr))
+                fields_array.append(obj_to_dict(field, field_attr))
             tables_array.append([tmp, fields_array])
 
         choices = app.schchoice_set.all()
         choices_array = []
         for choice in choices:
-            tmp = obj_to_array(choice, choice_attr)
+            tmp = obj_to_dict(choice, choice_attr)
             choice_items = choice.schchoiceitem_set.all()
             choice_items_array = []
             for item in choice_items:
-                choice_items_array.append(obj_to_array(item, choice_item_attr))
+                choice_items_array.append(obj_to_dict(item, choice_item_attr))
             choices_array.append([tmp, choice_items_array])
 
         views = app.schview_set.all()
         views_array = []
         for view in views:
-            views_array.append(obj_to_array(view, view_attr))
+            views_array.append(obj_to_dict(view, view_attr))
 
         templates = app.schtemplate_set.all()
         templates_array = []
         for template in templates:
-            templates_array.append(obj_to_array(template, template_attr))
+            templates_array.append(obj_to_dict(template, template_attr))
 
         appmenus = app.schappmenu_set.all()
         appmenus_array = []
         for appmenu in appmenus:
-            appmenus_array.append(obj_to_array(appmenu, appmenu_attr))
+            appmenus_array.append(obj_to_dict(appmenu, appmenu_attr))
 
         forms = app.schform_set.all()
         forms_array = []
         for form in forms:
-            tmp = obj_to_array(form, form_attr)
+            tmp = obj_to_dict(form, form_attr)
             fields = form.schformfield_set.all()
             fields_array = []
             for field in fields:
-                fields_array.append(obj_to_array(field, formfield_attr))
+                fields_array.append(obj_to_dict(field, formfield_attr))
             forms_array.append([tmp, fields_array])
 
         tasks = app.schtask_set.all()
         tasks_array = []
         for task in tasks:
-            tasks_array.append(obj_to_array(task, task_attr))
+            tasks_array.append(obj_to_dict(task, task_attr))
 
         consumers = app.schchannelconsumer_set.all()
         consumers_array = []
         for consumer in consumers:
-            consumers_array.append(obj_to_array(consumer, consumer_attr))
+            consumers_array.append(obj_to_dict(consumer, consumer_attr))
 
         files = app.schfiles_set.all()
         files_array = []
         for file in files:
-            files_array.append(obj_to_array(file, files_attr))
+            files_array.append(obj_to_dict(file, files_attr))
 
-        tmp = obj_to_array(app, app_attr)
+        tmp = obj_to_dict(app, app_attr)
         apps_array.append(
             [
                 tmp,
@@ -659,7 +650,7 @@ def prj_export_to_str(pk):
     statics = prj.schstatic_set.all()
     statics_array = []
     for static in statics:
-        statics_array.append(obj_to_array(static, static_attr))
+        statics_array.append(obj_to_dict(static, static_attr))
 
     prj_tab.append(statics_array)
 
