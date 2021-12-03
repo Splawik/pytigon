@@ -4,5 +4,5 @@ ModuleTitle = _("spreadsheet")
 Title = _("spreadsheet")
 Perms = False
 Index = "None"
-Urls = ()
+Urls = (("task2/?schtml=desktop", _("Task2"), None, """ART_EDIT"""),)
 UserParam = {}

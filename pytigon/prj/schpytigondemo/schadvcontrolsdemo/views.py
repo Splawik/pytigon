@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -29,3 +29,13 @@ from . import models
 import os
 import sys
 import datetime
+
+
+@dict_to_json
+def form(request, **argv):
+
+    json_data = json.loads(request.body)
+    print("-------------------------------------------------------")
+    print(json_data)
+    print("-------------------------------------------------------")
+    return {".result": "Hello world!<br/>" + str(json_data)}

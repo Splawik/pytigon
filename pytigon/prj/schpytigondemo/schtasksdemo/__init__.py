@@ -4,5 +4,13 @@ ModuleTitle = _("tasks_demo")
 Title = _("Tasks")
 Perms = False
 Index = "None"
-Urls = (("task2/?schtml=desktop", _("Task2"), None, """ART_EDIT"""),)
+Urls = (
+    (
+        "action_ctrl?schtml=shtml",
+        _("Action control"),
+        None,
+        """client://actions/media-playback-start.png""",
+    ),
+    ("plots?schtml=desktop", _("Plots"), None, """fa://rocket.png"""),
+)
 UserParam = {}

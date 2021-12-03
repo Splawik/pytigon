@@ -29,3 +29,33 @@ from schreports.models import *
 from schelements.models import *
 
 from standard_components.models import *
+
+
+class demo_tbl(models.Model):
+    class Meta:
+        verbose_name = _("Grid table")
+        verbose_name_plural = _("Grid table")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schhtmllib"
+
+        ordering = ["id"]
+
+    boolean_field = models.BooleanField(
+        "Boolean field",
+        null=False,
+        blank=False,
+        editable=True,
+        default=False,
+    )
+    char_field = models.CharField(
+        "Char field", null=True, blank=True, editable=True, max_length=64
+    )
+    date_field = models.DateField(
+        "Data field",
+        null=True,
+        blank=True,
+        editable=True,
+    )
+
+
+admin.site.register(demo_tbl)

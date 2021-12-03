@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -29,3 +29,11 @@ from . import models
 import os
 import sys
 import datetime
+
+
+@dict_to_template("schspreadsheetdemo/v_task2.html")
+def task2(request, **argv):
+
+    id = "spec"
+    task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id=id)
+    return {"task_id": task_id, "id": "demo__" + id}

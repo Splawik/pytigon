@@ -1,6 +1,6 @@
 ## -- coding: utf-8 --
 
-from django.urls import path, re_path, include
+from django.urls import path, re_path, include, reverse
 from django.utils.translation import gettext_lazy as _
 from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
@@ -8,7 +8,12 @@ from . import views
 
 
 urlpatterns = [
-    path("task2/", views.task2, {}),
+    path(
+        "action_ctrl",
+        TemplateView.as_view(template_name="schtasksdemo/action_ctrl.html"),
+        {},
+    ),
+    path("plots", TemplateView.as_view(template_name="schtasksdemo/plots.html"), {}),
 ]
 
 gen = generic_table_start(urlpatterns, "schtasksdemo", views)

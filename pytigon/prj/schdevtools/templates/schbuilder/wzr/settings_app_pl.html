@@ -77,6 +77,7 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
     
+TEMPLATES[0]['DIRS'].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"))
 LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))

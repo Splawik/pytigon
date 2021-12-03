@@ -11,6 +11,18 @@
                 print(dir(self))
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 </script>
+          {% else %}
+                <script language="python">
+            def init_form(self):
+                pass
+            def filter_http_result(self, target, href, mp):
+                if 'app_down' in href or 'app_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        if 'app_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+</script>
         {% endif %}
 {% endblock %}
 {% block all %}
@@ -76,6 +88,16 @@
         delete
 
         {% endrow_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                app_up,Move up,[|client://actions/go-up.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                app_down,Move down,[|client://actions/go-down.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
 {% endblock %}
 {% block table_header_edit %}
     <h2>Spis aplikacji</h2>

@@ -1609,7 +1609,11 @@ def installer(request, pk):
     except:
         name = pk
 
-    base_path = os.path.join(settings.PRJ_PATH, name)
+    if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+        base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
+    else:
+        base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
+
     zip_path = os.path.join(settings.DATA_PATH, "temp")
 
     buf.append("COMPILE TEMPLETE FILES:")

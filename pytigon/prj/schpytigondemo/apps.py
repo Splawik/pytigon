@@ -1,5 +1,6 @@
 APPS = [
     "schsimplecontrolsdemo",
+    "schcomponents",
     "schhtmllib",
     "schtabledemo",
     "schfilemanagerdemo",
@@ -7,7 +8,6 @@ APPS = [
     "schspreadsheetdemo",
     "schtasksdemo",
     "schadvcontrolsdemo",
-    "schcomponents",
     "_schwiki.schwiki",
     "_schtools.schtasks",
     "_schtools.schcommander",

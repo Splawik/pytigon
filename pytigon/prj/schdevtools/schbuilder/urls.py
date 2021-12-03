@@ -122,6 +122,18 @@ urlpatterns = [
     gen_row_action("SChAppSet", "gen_milestone", views.gen_milestone),
     gen_tab_action("SChAppSet", "prj_import2", views.prj_import2),
     gen_row_action("SChAppSet", "run", views.run),
+    gen_row_action(
+        "SChApp",
+        "app_up",
+        views.change_pos,
+        {"app": "schbuilder", "tab": "SChApp", "forward": False, "field": "parent"},
+    ),
+    gen_row_action(
+        "SChApp",
+        "app_down",
+        views.change_pos,
+        {"app": "schbuilder", "tab": "SChApp", "forward": True, "field": "parent"},
+    ),
     path(
         "devtools", TemplateView.as_view(template_name="schbuilder/devtools.html"), {}
     ),
