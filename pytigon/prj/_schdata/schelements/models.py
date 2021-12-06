@@ -30,28 +30,6 @@ from django.db.models import Q, Sum
 from django.apps import apps
 
 
-def limit_element1():
-    return {}
-
-
-def limit_element2():
-    return {}
-
-
-def limit_element3():
-    return {}
-
-
-def limit_element4():
-    return {}
-
-
-LIMIT_ELEMENT1 = OverwritableCallable(limit_element1)
-LIMIT_ELEMENT2 = OverwritableCallable(limit_element2)
-LIMIT_ELEMENT3 = OverwritableCallable(limit_element3)
-LIMIT_ELEMENT4 = OverwritableCallable(limit_element4)
-
-
 def get_element_queryset():
     return None
 
@@ -172,7 +150,6 @@ class Element(TreeModel):
         editable=True,
         verbose_name="Grand parent 1",
         related_name="grandparent1",
-        limit_choices_to=LIMIT_ELEMENT1,
     )
     grand_parent2 = models.ForeignKey(
         "self",
@@ -182,7 +159,6 @@ class Element(TreeModel):
         editable=True,
         verbose_name="Grand parent 2",
         related_name="grandparent2",
-        limit_choices_to=LIMIT_ELEMENT2,
     )
     grand_parent3 = models.ForeignKey(
         "self",
@@ -192,7 +168,6 @@ class Element(TreeModel):
         editable=True,
         verbose_name="Grand parent 3",
         related_name="grandparent3",
-        limit_choices_to=LIMIT_ELEMENT3,
     )
     grand_parent4 = models.ForeignKey(
         "self",
@@ -202,7 +177,6 @@ class Element(TreeModel):
         editable=True,
         verbose_name="Grand parent 4",
         related_name="grandparent4",
-        limit_choices_to=LIMIT_ELEMENT4,
     )
     key = models.ForeignKey(
         "auth.Group",

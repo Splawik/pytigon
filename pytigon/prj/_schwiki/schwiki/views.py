@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -253,15 +253,17 @@ def edit_page_object(request):
                         if form.is_valid():
                             if obj.save_fun:
                                 try:
-                                    context["old_data"] = page.get_json_data()[name]
+                                    # context['old_data'] = page.get_json_data()[name]
+                                    context["old_data"] = page.jsondata[name]
                                 except:
                                     pass
                                 exec(obj.save_fun)
                                 data = locals()["save"](form, context)
                             else:
                                 data = form.cleaned_data
-                            page._data = {name: data}
-                            page._data["json_update"] = True
+                            # page._data = { name: data }
+                            # page._data['json_update'] = True
+                            page.jsondata = {name: data}
                             page.operator = request.user.username
                             page.update_time = datetime.datetime.now()
                             page.save()
@@ -279,7 +281,7 @@ def edit_page_object(request):
                         exec(obj.load_fun)
                         data_form = locals()["load"](data, context)
                     else:
-                        if name in data:
+                        if data and name in data:
                             data_form = data[name]
                         else:
                             data_form = {}

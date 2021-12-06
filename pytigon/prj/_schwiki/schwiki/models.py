@@ -40,7 +40,7 @@ def _get_wiki_object(page, buf, name, paragraf):
     if len(x) > 0:
         conf = x[0]
         d = page.get_json_data()
-        if name in d:
+        if d and name in d:
             c = d[name]
         else:
             c = {}

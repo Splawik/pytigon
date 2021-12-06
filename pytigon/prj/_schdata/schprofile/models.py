@@ -94,14 +94,12 @@ class Profile(models.Model):
     user_type = models.CharField(
         "User type", null=True, blank=True, editable=True, max_length=32
     )
-    variant = models.CharField(
-        "Profile variant", null=True, blank=True, editable=True, max_length=64
-    )
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
     def set_active_variant(self, value):
         request = get_request()
+        session["active_variant"] = value
         if request and request.user:
             return SET_ACTIVE_VARIANT(request.user, value)
         else:
@@ -109,10 +107,14 @@ class Profile(models.Model):
 
     def get_active_variant(self):
         request = get_request()
-        if request and request.user:
-            return GET_ACTIVE_VARIANT(request.user)
+        ret = session.get("active_variant", None)
+        if ret != None:
+            return ret
         else:
-            return None
+            if request and request.user:
+                return GET_ACTIVE_VARIANT(request.user)
+            else:
+                return None
 
     def get_active_variant_description(self):
         request = get_request()

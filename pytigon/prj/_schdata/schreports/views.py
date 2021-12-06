@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -169,8 +169,7 @@ def edit__rep(request, rep_id):
                     data = locals()["save"](form, rep)
                 else:
                     data = form.cleaned_data
-                rep._data = data
-                rep._data["json_update"] = True
+                rep.jsondata = data
                 rep.save()
                 url = make_path("ok")
                 return HttpResponseRedirect(url)
@@ -388,8 +387,9 @@ def edit__group(request, group_id):
                 if "title" in data:
                     group.title = data["title"]
                     del data["title"]
-                group._data = data
-                group._data["json_update"] = True
+                group.jsondata = data
+                # group._data = data
+                # group._data['json_update'] = True
                 group.save()
                 url = make_path("ok")
                 return HttpResponseRedirect(url)

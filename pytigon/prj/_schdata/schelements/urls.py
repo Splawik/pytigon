@@ -1,6 +1,6 @@
 ## -- coding: utf-8 --
 
-from django.urls import path, re_path, include
+from django.urls import path, re_path, include, reverse
 from django.utils.translation import gettext_lazy as _
 from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
 from django.views.generic import TemplateView
@@ -12,17 +12,39 @@ urlpatterns = [
         "table/DocHead/(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>)docheadlist/",
         views.view_doc_heads,
         {},
+        name="schelements_view_doc_heads",
     ),
-    re_path("table/DocItem/(?P<parent_id>\d+)/docitemlist/", views.view_doc_items, {}),
-    re_path("table/DocHead/(?P<id>\d+)/edit_head/", views.edit_head, {}),
-    re_path("table/DocItem/(?P<id>\d+)/edit_item/", views.edit_item, {}),
+    re_path(
+        "table/DocItem/(?P<parent_id>\d+)/docitemlist/",
+        views.view_doc_items,
+        {},
+        name="schelements_view_doc_items",
+    ),
+    re_path(
+        "table/DocHead/(?P<id>\d+)/edit_head/",
+        views.edit_head,
+        {},
+        name="schelements_edit_head",
+    ),
+    re_path(
+        "table/DocItem/(?P<id>\d+)/edit_item/",
+        views.edit_item,
+        {},
+        name="schelements_edit_item",
+    ),
     gen_row_action("DocHead", "approve", views.approve),
     gen_row_action("DocHead", "discard", views.discard),
-    path("view_elements/<slug:code>/", views.view_elements, {}),
+    path(
+        "view_elements/<slug:code>/",
+        views.view_elements,
+        {},
+        name="schelements_view_elements",
+    ),
     path(
         "view_elements_as_tree/<slug:code>/<slug:filter>/<slug:template>/",
         views.view_elements_as_tree,
         {},
+        name="schelements_view_elements_as_tree",
     ),
 ]
 
