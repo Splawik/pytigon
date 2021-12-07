@@ -38,11 +38,17 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
+        <th>Base table</th>
+        <th>Proxy</th>
         <th>Generic</th>
+        <th>Verbose name</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
-        <td>{{object.generic}}</td>
+        <td>{{object.base_table}}</td>
+        <td>{% if 'proxy' in object.metaclass_code %}X{% endif %}</td>
+        <td>{% if object.generic %}X{% endif %}</td>
+        <td>{{object.verbose_name}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% if not forloop.first %}

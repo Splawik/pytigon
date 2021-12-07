@@ -26,7 +26,7 @@ Urls = (
 )
 UserParam = {}
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 def AdditionalUrls(app_pack, lang):
     #app_set/Module title/App title

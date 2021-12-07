@@ -41,13 +41,18 @@
 
 %% list_row_header
     th...Name
+    th...Base table
+    th...Proxy
     th...Generic
+    th...Verbose name
 
 
 %% list_row
     td...{{object.name}}
-    td...{{object.generic}}
-
+    td...{{object.base_table}}
+    td...{% if 'proxy' in object.metaclass_code %}X{% endif %}
+    td...{% if object.generic %}X{% endif %}
+    td...{{object.verbose_name}}
 
 %% list_row_actions
     {% if not forloop.first %}
