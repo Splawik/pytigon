@@ -14,11 +14,15 @@
 
 
 %% list_row_header
-    th...Name
+    th..._(Name)
+    th..._(Module)
+    th..._(Asynchronous)
 
 
 %% list_row
     td...{{object.name}}
+    td...{{object.module|default_if_none:""}}
+    td align=center...{% if object.asynchronous %}X{% endif %}
 
 %% list_row_actions
     {{block.super}}

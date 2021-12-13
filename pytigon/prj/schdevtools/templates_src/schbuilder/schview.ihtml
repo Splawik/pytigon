@@ -27,11 +27,19 @@
                             a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
         
 %% list_row_header
-    th...Name
+    th..._(Name)
+    th..._(View type)
+    th..._(Url)
+    th..._(Parameters)
+    th..._(Asynchronous)
 
 %% list_row
     td...{{object.name}}
-
+    td...{{object.get_view_type_display}}
+    td...{{object.url|default_if_none:""}}
+    td...{{object.param|default_if_none:""}}
+    td align=center...{% if object.asynchronous %}X{% endif %}
+    
 %% list_row_actions
     {{ block.super }}
     % if object.ret_type == 'T':

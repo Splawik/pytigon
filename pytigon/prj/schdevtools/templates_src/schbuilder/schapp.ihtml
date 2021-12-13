@@ -54,12 +54,16 @@
 
 
 %% list_row_header
-    th...Name
-
+    th..._(Name)
+    th..._(Module title)
+    th..._(Title)
+    th..._(Permissions)
 
 %% list_row
     td...{{object.name}}
-
+    td...{{object.module_title|default_if_none:""}}
+    td...{{object.title|default_if_none:""}}
+    td align=center...{% if object.perms %}X{% endif %}
 
 %% list_row_actions
     % row_actions: ===>
@@ -90,27 +94,20 @@
 
 
 %% table_header_edit
-  h2...Spis aplikacji
+  h2..._(Applications list)
 
 
 %% row_edit
-    .A1
     % form:
         'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
-    .A2
     % if standard_web_browser:
-        .A3
         %form "^/6":
             .icon,icon_size
-        .A4
     % else:
-        .A5
         tr 
             td..._(Icon)
             td
                 CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
-        .A6
         % form "^/12":
             .icon_size
-        .A6
         

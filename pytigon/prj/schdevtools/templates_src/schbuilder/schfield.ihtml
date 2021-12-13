@@ -63,14 +63,25 @@
                                 {{item.0}}
 
 %% list_row_header
-    th...Name
-    th...Opis
-    th...Typ
+    th..._(Name)
+    th..._(Description)
+    th..._(Type)
+    th..._(Connected to)
+    th..._(Null)
+    th..._(Blank)
+    th..._(Editable)
+    th..._(Unique)
+    
 
 %% list_row
     td...{{object.name}}
-    td...{{object.description}}
-    td...{{object.type}}
+    td...{{object.description|default_if_none:""}}
+    td...{{object.get_type_display}}
+    td...{% if object.rel_to %}{{object.rel_to}}{% endif %}{% if object.choices %}{{object.choices}}{% endif %}
+    td align=center...{% if object.null %}X{% endif %}
+    td align=center...{% if object.blank %}X{% endif %}
+    td align=center...{% if object.editable %}X{% endif %}
+    td align=center...{% if object.unique %}X{% endif %}
 
 %% list_row_actions
     {{block.super}}

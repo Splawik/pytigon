@@ -27,14 +27,14 @@
                             a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
         
 %% list_row_header
-    th...Name
-    th...Type
-    th...Url
+    th..._(Name)
+    th..._(Type)
+    th..._(Url)
 
 %% list_row
     td...{{object.name}}
-    td...{{object.consumer_type}}
-    td...{{object.url}}
+    td...{{object.get_consumer_type_display}}
+    td...{{object.url|default_if_none:""}}
     
 %% list_row_actions
     {{ block.super }}

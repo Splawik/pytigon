@@ -23,9 +23,13 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
+        <th>Url</th>
+        <th>Permission</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
+        <td>{{object.url|default_if_none:""}}</td>
+        <td>{{object.perms|default_if_none:""}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}

@@ -20,10 +20,16 @@
     % new_row _("New task")
         
 %% list_row_header
-    th...Name
+    th..._(Name)
+    th..._(Permission)
+    th..._(Publish)
+    th..._(Published group)
 
 %% list_row
     td...{{object.name}}
+    td...{{object.perms|default_if_none:""}}
+    td align=center...{% if object.publish %}X{% endif %}
+    td...{{object.publish_group|default_if_none:""}}
 
 %% list_row_actions
     {{ block.super }}

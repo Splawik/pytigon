@@ -12,7 +12,7 @@
     % new_row _("New locale")
 
 %% list_row_header
-    th...Name
+    th..._(Name)
 
 
 %% list_row

@@ -77,13 +77,23 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
-        <th>Opis</th>
-        <th>Typ</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Connected to</th>
+        <th>Null</th>
+        <th>Blank</th>
+        <th>Editable</th>
+        <th>Unique</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
-        <td>{{object.description}}</td>
-        <td>{{object.type}}</td>
+        <td>{{object.description|default_if_none:""}}</td>
+        <td>{{object.get_type_display}}</td>
+        <td>{% if object.rel_to %}{{object.rel_to}}{% endif %}{% if object.choices %}{{object.choices}}{% endif %}</td>
+        <td align="center">{% if object.null %}X{% endif %}</td>
+        <td align="center">{% if object.blank %}X{% endif %}</td>
+        <td align="center">{% if object.editable %}X{% endif %}</td>
+        <td align="center">{% if object.unique %}X{% endif %}</td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}

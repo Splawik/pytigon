@@ -2151,7 +2151,7 @@ def gen_milestone(request, pk):
                     if not file in (
                         "global_db_settings.py",
                         "settings_app_local.py",
-                    ) and not file.split(".")[-1] in (
+                    ) and not file.split(".")[-1].lower() in (
                         "pyc",
                         "pyo",
                         "so",

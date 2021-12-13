@@ -22,7 +22,7 @@
         <th>Name</th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.file_type}}</td>
+        <td>{{object.get_file_type_display}}</td>
         <td>{{object.name}}</td>
 {% endblock %}
 {% block list_row_actions %}

@@ -20,9 +20,9 @@
     
 
 %% list_row_header
-    th...Description
-    th...Translation
-    th...Status
+    th..._(Description)
+    th..._(Translation)
+    th..._(Status)
 
 %% list_row
     td...{{object.description}}

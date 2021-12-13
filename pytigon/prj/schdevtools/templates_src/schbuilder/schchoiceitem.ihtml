@@ -30,8 +30,8 @@
 
 
 %% list_row_header
-    th...Name
-    th...Description
+    th..._(Name)
+    th..._(Value)
 
 
 %% list_row

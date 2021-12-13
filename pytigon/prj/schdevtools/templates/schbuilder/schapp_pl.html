@@ -62,9 +62,15 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
+        <th>Module title</th>
+        <th>Title</th>
+        <th>Permissions</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
+        <td>{{object.module_title}}</td>
+        <td>{{object.title}}</td>
+        <td>{{object.perms}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
@@ -100,33 +106,26 @@
         {% endif %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Spis aplikacji</h2>
+    <h2>Applications list</h2>
 {% endblock %}
 {% block row_edit %}
-        A1
         {% form %}
                 'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
         {% endform %}
-        A2
         {% if standard_web_browser %}
-                A3
                 {% form "^/6" %}
                         icon,icon_size
                 {% endform %}
-                A4
           {% else %}
-                A5
                 <tr>
                         <td>Icon</td>
                         <td>
                                 <CTRL-BITMAPCOMBOBOX class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></CTRL-BITMAPCOMBOBOX>
                         </td>
                 </tr>
-                A6
                 {% form "^/12" %}
                         icon_size
                 {% endform %}
-                A6
         {% endif %}
 {% endblock %}
 

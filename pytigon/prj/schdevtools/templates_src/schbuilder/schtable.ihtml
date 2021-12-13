@@ -40,19 +40,19 @@
 
 
 %% list_row_header
-    th...Name
-    th...Base table
-    th...Proxy
-    th...Generic
-    th...Verbose name
+    th..._(Name)
+    th..._(Base table)
+    th..._(Proxy)
+    th..._(Generic)
+    th..._(Verbose name)
 
 
 %% list_row
     td...{{object.name}}
-    td...{{object.base_table}}
-    td...{% if 'proxy' in object.metaclass_code %}X{% endif %}
-    td...{% if object.generic %}X{% endif %}
-    td...{{object.verbose_name}}
+    td...{{object.base_table|default_if_none:""}}
+    td align=center...{% if 'proxy' in object.metaclass_code %}X{% endif %}
+    td align=center...{% if object.generic %}X{% endif %}
+    td...{{object.verbose_name|default_if_none:""}}
 
 %% list_row_actions
     {% if not forloop.first %}

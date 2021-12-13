@@ -19,11 +19,11 @@
     % new_row "New file"
 
 %% list_row_header
-    th...File type
-    th...Name
+    th..._(File type)
+    th..._(Name)
 
 %% list_row
-    td...{{object.file_type}}
+    td...{{object.get_file_type_display}}
     td...{{object.name}}
 
 %% list_row_actions

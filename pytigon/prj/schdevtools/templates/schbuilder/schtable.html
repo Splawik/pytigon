@@ -45,10 +45,10 @@
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
-        <td>{{object.base_table}}</td>
-        <td>{% if 'proxy' in object.metaclass_code %}X{% endif %}</td>
-        <td>{% if object.generic %}X{% endif %}</td>
-        <td>{{object.verbose_name}}</td>
+        <td>{{object.base_table|default_if_none:""}}</td>
+        <td align="center">{% if 'proxy' in object.metaclass_code %}X{% endif %}</td>
+        <td align="center">{% if object.generic %}X{% endif %}</td>
+        <td>{{object.verbose_name|default_if_none:""}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% if not forloop.first %}

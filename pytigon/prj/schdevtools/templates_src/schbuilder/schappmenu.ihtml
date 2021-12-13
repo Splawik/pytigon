@@ -24,11 +24,14 @@
 
 %% list_row_header
     th..._(Name)
+    th..._(Url)
+    th..._(Permission)
 
 
 %% list_row
     td...{{object.name}}
-
+    td...{{object.url|default_if_none:""}}
+    td...{{object.perms|default_if_none:""}}
 
 %% list_row_actions
     {{block.super}}

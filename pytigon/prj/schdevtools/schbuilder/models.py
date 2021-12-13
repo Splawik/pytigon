@@ -180,13 +180,13 @@ def apppack():
 
 
 Field_CHOICES = [
-    ("PtigForeignKey", "GenericForeignKey!"),
-    ("PtigManyToManyField", "GenericManyToManyField!"),
-    ("PtigHiddenForeignKey", "GenericHiddenForeignKey!"),
+    ("PtigForeignKey", "PtigForeignKey!"),
+    ("PtigManyToManyField", "PtigManyToManyField!"),
+    ("PtigHiddenForeignKey", "PtigHiddenForeignKey!"),
+    ("PtigForeignKeyWithIcon", "PtigForeignKeyWithIcon!"),
+    ("PtigManyToManyFieldWithIcon", "PtigManyToManyFieldWithIcon!"),
+    ("PtigTreeForeignKey", "PtigTreeForeignKey!"),
     ("UserField", "UserField"),
-    ("PtigForeignKeyWithIcon", "ForeignKeyWithIcon!"),
-    ("PtigManyToManyFieldWithIcon", "ManyToManyFieldWithIcon!"),
-    ("PtigTreeForeignKey", "TreeForeignKey!"),
 ]
 
 Gui_CHOICES = [
@@ -222,31 +222,6 @@ Url_CHOICES = [
     ("browser_panel", "prowser_panel"),
     ("browser_header", "browser_header"),
     ("browser_footer", "browser_footer"),
-]
-
-__FormField_CHOICES = [
-    ("BooleanField", "BooleanField"),
-    ("CharField", "CharField"),
-    ("ChoiceField", "ChoiceField"),
-    ("TypedChoiceField", "TypedChoiceField"),
-    ("DateField", "DateField"),
-    ("DateTimeField", "DateTimeField"),
-    ("DecimalField", "DecimalField"),
-    ("EmailField", "EmailField"),
-    ("FileField", "FileField"),
-    ("FilePathField", "FilePathField"),
-    ("FloatField", "FloatField"),
-    ("ImageField", "ImageField"),
-    ("IntegerField", "IntegerField"),
-    ("IPAddressField", "IPAddressField"),
-    ("GenericIPAddressField", "GenericIPAddressField"),
-    ("MultipleChoiceField", "MultipleChoiceField"),
-    ("TypedMultipleChoiceField", "TypedMultipleChoiceField"),
-    ("NullBooleanField", "NullBooleanField"),
-    ("RegexField", "RegexField"),
-    ("TimeField", "TimeField"),
-    ("URLField", "URLField"),
-    ("UserField", "UserField"),
 ]
 
 ViewRetType_CHOICES = [

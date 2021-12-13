@@ -21,10 +21,16 @@
 
 %% list_row_header
     th..._(Name)
+    th..._(Url)
+    th..._(Url paramaters)
+    th..._(Direct to template)
 
 
 %% list_row
     td...{{object.name}}
+    td...{{object.url|default_if_none:""}}
+    td...{{object.url_parm|default_if_none:""}}
+    td align=center...{% if object.direct_to_template %}X{% endif %}
 
 
 %% list_row_actions

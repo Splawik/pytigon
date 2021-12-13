@@ -20,9 +20,15 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
+        <th>Permission</th>
+        <th>Publish</th>
+        <th>Published group</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
+        <td>{{object.perms|default_if_none:""}}</td>
+        <td align="center">{% if object.publish %}X{% endif %}</td>
+        <td>{{object.publish_group|default_if_none:""}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {{ block.super }}

@@ -74,14 +74,22 @@
 
 
 %% list_row_header
-    th...Name
-    th...Label
-    th...Type
+    th..._(Name)
+    th..._(Label)
+    th..._(Type)
+    th..._(Parameters)
+    th..._(Initial)
+    th..._(Widget)
+    th..._(Required)
 
 %% list_row
     td...{{object.name}}
     td...{{object.label}}
     td...{{object.type}}
+    td...{{object.param|default_if_none:""}}
+    td...{{object.initial|default_if_none:""}}
+    td...{{object.widget|default_if_none:""}}
+    td align=center...{% if object.required %}X{% endif %}
 
 %% list_row_actions
     {{block.super}}

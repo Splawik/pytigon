@@ -19,8 +19,8 @@
     % new_row "New static file"
 
 %% list_row_header
-    th...Type
-    th...Name
+    th..._(Type)
+    th..._(Name)
 
 %% list_row
     td...{{object.get_type_display}}

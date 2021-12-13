@@ -24,14 +24,14 @@
     % list_action "update" _("Update system projects from git")
 
 %% list_row_header
-    th...Name
-    th...Title
-    th...Version
+    th..._(Name)
+    th..._(Title)
+    th..._(Version)
 
 %% list_row
     % td_editable 'name' 'text'
     td...{{object.title}}
-    td...{{object.version}}
+    td...{{object.version|default_if_none:""}}
 
 %% list_row_actions
     % row_actions: ===>

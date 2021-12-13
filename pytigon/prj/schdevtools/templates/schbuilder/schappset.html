@@ -32,7 +32,7 @@
 {% block list_row %}
         {% td_editable 'name' 'text' %}
         <td>{{object.title}}</td>
-        <td>{{object.version}}</td>
+        <td>{{object.version|default_if_none:""}}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
