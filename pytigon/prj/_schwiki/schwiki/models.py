@@ -420,8 +420,10 @@ class Page(JSONModel):
 
         super(Page, self).save(*args, **kwargs)
 
-    def transform_template_name(self, request, template_name):
-        return "schwiki/edit_wiki_content.html"
+    def template_for_object(self, view, context, doc_type):
+        if doc_type == "py":
+            return "schwiki/edit_wiki_content.html"
+        return None
 
     def get_page_for_wiki(self, wiki_str, user=None):
         wiki_word = wiki_from_str(wiki_str)

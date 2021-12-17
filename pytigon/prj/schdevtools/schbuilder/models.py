@@ -1324,11 +1324,10 @@ class SChView(models.Model):
     def __str__(self):
         return self.name
 
-    def transform_template_name(self, request, template_name):
-        if "/view_code/py/editor" in request.path:
-            if template_name == "schsys/db_field_edt.html":
-                return "schbuilder/db_field_edt_mod.html"
-        return template_name
+    def template_for_object(self, view, context, doc_type):
+        if doc_type == "py":
+            return "schbuilder/db_field_edt_mod.html"
+        return None
 
     def get_models(self):
         return self.parent.get_models()
@@ -1653,11 +1652,10 @@ class SChTemplate(models.Model):
     def get_template_widgets(self):
         return widgets
 
-    def transform_template_name(self, request, template_name):
-        if "template_code/py/editor" in request.path:
-            if template_name == "schsys/db_field_edt.html":
-                return "schbuilder/db_field_edt_template.html"
-        return template_name
+    def template_for_object(self, view, context, doc_type):
+        if doc_type == "py":
+            return "schbuilder/db_field_edt_template.html"
+        return None
 
     def __str__(self):
         return self.name
@@ -1976,11 +1974,10 @@ class SChTask(models.Model):
         "Publish group", null=True, blank=True, editable=True, max_length=64
     )
 
-    def transform_template_name(self, request, template_name):
-        if "/code/py/editor" in request.path:
-            if template_name == "schsys/db_field_edt.html":
-                return "schbuilder/db_field_edt_task.html"
-        return template_name
+    def template_for_object(self, view, context, doc_type):
+        if doc_type == "py":
+            return "schbuilder/db_field_edt_task.html"
+        return None
 
 
 admin.site.register(SChTask)

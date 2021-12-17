@@ -384,6 +384,10 @@ def edit__group(request, group_id):
                     data = locals()["save"](form, group)
                 else:
                     data = form.cleaned_data
+
+                if not data:
+                    data = {}
+
                 if "title" in data:
                     group.title = data["title"]
                     del data["title"]
@@ -402,6 +406,10 @@ def edit__group(request, group_id):
             data_form = locals()["load"](data)
         else:
             data_form = data
+
+        if not data:
+            data = {}
+
         data_form["title"] = group.title
         form = form_class(initial=data_form)
 

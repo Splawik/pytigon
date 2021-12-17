@@ -4,6 +4,3 @@
 %load exsyntax
     
 % subform href
-
-%% dialog_type
-    .modal-max

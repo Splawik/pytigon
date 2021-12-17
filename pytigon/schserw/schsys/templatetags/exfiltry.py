@@ -197,7 +197,7 @@ def bencode(value):
     if value:
         return b64encode(value.encode('utf-8')).decode('utf-8')
     else:
-        return ''
+        return b64encode(b"").decode('utf-8')
 
 @register.filter(name='bdecode')
 def bdecode(value):
