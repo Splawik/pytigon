@@ -1,11 +1,9 @@
-{# -*- coding: utf-8 -*- #}
+% extends "schsys/db_field_edt.html"
 
-%extends "schsys/db_field_edt.html"
+% load exfiltry
+% load exsyntax
 
-%load exfiltry
-%load exsyntax
-
-%%form_title
+%% form_title
     .Edition: {{object.name}} [{{title}}]
 
 %% title
@@ -17,13 +15,3 @@
             td
     CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
         DATA...{{txt|bencode}}
-
-    % comment:
-        table width=100%
-            tr
-                td
-                    .def {{object.name}}(id, input_queue, output_queue, *args, **kwargs):
-            tr
-                td
-                    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
-                        DATA...{{txt|bencode}}

@@ -224,7 +224,7 @@
         {{ block.super }}
 
 %% title
-    .T:{{object.name}}
+    .TEM:{{object.name}}
 
 %% body
     % if standard_web_browser:

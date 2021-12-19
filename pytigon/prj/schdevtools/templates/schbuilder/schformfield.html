@@ -80,11 +80,19 @@
         <th>Name</th>
         <th>Label</th>
         <th>Type</th>
+        <th>Parameters</th>
+        <th>Initial</th>
+        <th>Widget</th>
+        <th>Required</th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.label}}</td>
         <td>{{object.type}}</td>
+        <td>{{object.param|default_if_none:""}}</td>
+        <td>{{object.initial|default_if_none:""}}</td>
+        <td>{{object.widget|default_if_none:""}}</td>
+        <td align="center">{% if object.required %}X{% endif %}</td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}

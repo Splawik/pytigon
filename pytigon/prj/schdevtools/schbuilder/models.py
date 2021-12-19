@@ -917,6 +917,11 @@ class SChTable(models.Model):
     def fields_have_parent(self):
         return self.schfield_set.filter(name="parent").count() > 0
 
+    def template_for_object(self, view, context, doc_type):
+        if "field_name" in context and context["field_name"] in ("table_code",):
+            return "schbuilder/db_field_edt_table.html"
+        return None
+
     def __str__(self):
         return self.name
 
@@ -1325,7 +1330,7 @@ class SChView(models.Model):
         return self.name
 
     def template_for_object(self, view, context, doc_type):
-        if doc_type == "py":
+        if "field_name" in context and context["field_name"] in ("view_code",):
             return "schbuilder/db_field_edt_mod.html"
         return None
 
@@ -1817,6 +1822,15 @@ class SChForm(models.Model):
         blank=True,
         editable=True,
     )
+
+    def template_for_object(self, view, context, doc_type):
+        if "field_name" in context and context["field_name"] in (
+            "process_code",
+            "end_class_code",
+            "end_code",
+        ):
+            return "schbuilder/db_field_edt_form.html"
+        return None
 
 
 admin.site.register(SChForm)

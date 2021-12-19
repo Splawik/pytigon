@@ -134,7 +134,8 @@
                 self.set_modified(modified)
 
 %% form_bar
-
+end_class_code
+end_code
 %% body
     % if standard_web_browser:
         {{ block.super }}

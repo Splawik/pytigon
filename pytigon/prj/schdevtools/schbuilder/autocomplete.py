@@ -209,3 +209,173 @@ ACTIONS =  {
         'template': MOVE_ROWS_TEMPLATE,
     },
 }
+
+
+TABLE_SNIPPETS = {
+    "get_form_source":
+        """def get_form_source(self)
+""",
+    "set_field_value":
+        """def set_field_value(self, field_name, attr_name, value):
+""",
+    "init_new":
+        """def init_new(self, request, view, value=None):
+    if value:
+        app, tbl, id, grp = value.split('__')
+        return { 'application': app, 'table': tbl, 'parent_id': id, 'group': grp }
+    else:
+        return { 'application': 'default', 'table': 'default', 'parent_id': 0, 'group': 'default' }
+""",
+    "template_for_object":
+        """def template_for_object(self, view, context, doc_type):
+    if doc_type == "pdf":
+        x = ReportDef.objects.filter(name=self.report_def_name)
+        if x.count() > 0:
+            return "%s/report_%s_pdf.html" % (x[0].app, self.report_def_name)
+    return None
+""",
+    "template_for_list":
+        """@staticmethod
+def template_for_list(view, model, context, doc_type):
+    if doc_type in ("html", "json") and "filter" in context:
+        tmp = DocReg.objects.filter(name=context["filter"].replace("_", "/"))
+        if len(tmp) == 1:
+            names = []
+            x = tmp[0]
+            while x:
+                names.append(
+                    (
+                        x.app
+                        + "/"
+                        + x.name.replace("/", "_")
+                        + "_dochead_list.html"
+                    ).lower()
+                )
+                x = x.get_parent()
+
+            if "target" in view.kwargs and "calendar" in view.kwargs["target"]:
+                names2 = []
+                for name in names:
+                    names2.append(
+                        name.replace(".html", "_" + view.kwargs["target"] + ".html")
+                    )
+                names = names2
+            template = select_template(names)
+            names.append(view.template_name)
+            if template:
+                return template
+
+    return None
+""",
+    "table_action":
+        """    @classmethod
+def table_action(cls, list_view, request, data):
+    if "action" in data:
+        if data["action"] == "insert_rows":
+            table = data["table"]
+            ...
+            return actions.refresh(request)    
+    return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
+""",
+    "row_action":
+        """def row_action(model, request, args, kwargs):
+""",
+    "filter_by_permissions":
+        """def filter_by_permissions(queryset_or_obj, request):
+""",
+    "get_form_class":
+        """    def get_form_class(self, view, request, create):
+    base_form = view.get_form_class()
+
+    object_list = schelements_models.Element.get_children_for_element("C", "O-DIV")
+    choices = [(object.pk, object.name) for object in object_list]
+
+    if self.parent_element:
+        pk = self.parent_element.id
+    else:
+        pk = None
+
+    class _Form(base_form):
+        parent_element_id = forms.ChoiceField(
+            label="Class",
+            choices=choices,
+            initial=pk,
+            widget=forms.Select(),
+            required=True,
+        )
+    return _Form
+""",
+    "is_form_valid":
+        """@staticmethod
+def is_form_valid(form):
+    if form.is_valid():
+        x = form.cleaned_data['field1']
+        if not x:
+            form.add_error(None, 'description') 
+            return False
+        else:
+            return True
+    else:
+        return False
+""",
+    "post_form":
+        """    def post_form(self, view, form, request):
+    pk = form.cleaned_data["parent_element_id"]
+    if pk:
+        self.parent_element = schelements_models.Element.objects.get(pk=pk)
+    return True
+""",
+    "save_from_request":
+        """save_from_request(self, request, view_type, param):
+""",
+    "get_derived_object":
+        """def get_derived_object(self, param=None):
+    t = None
+    if type(self) == DocHead:
+        if param and "view" in param and "add_param" in param["view"].kwargs:
+            t = param["view"].kwargs["add_param"]
+            if t == "-":
+                return self
+            object_list = DocType.objects.filter(name=t)
+            if len(object_list):
+                t = object_list[0].parent.name
+            return ContentType.objects.get(
+                model=t.lower() + "dochead"
+            ).model_class()()
+
+        else:
+            t = self.doc_type_parent.parent.name
+            name = t.lower() + "dochead"
+            if hasattr(self, name):
+                return getattr(self, name)
+    return self
+""",
+    "filter":
+        """@classmethod
+def filter(cls, value):
+    if value:
+        app, tbl, id, grp = value.split('__')
+        return cls.objects.filter(application=app, table=tbl, parent_id=id, group=grp)
+    else:
+        return cls.objects.all()
+""",
+    "sort":
+        """def sort(queryset, sort, order):
+""",
+    "redirect_href":
+        """def redirect_href(self, view, request):
+    t = None
+    if type(self)==Element:
+        if 'add_param' in view.kwargs:
+            t = view.kwargs['add_param']
+        else:
+            t = self.type
+        if t:
+            if hasattr(self, "get_structure"):
+                s = self.get_structure()
+                if t in s:
+                    redirect = s[t]['app'] + "/table/" + s[t]['table']
+                    return request.path.replace('schelements/table/Element',redirect)
+    return None
+""",
+}
