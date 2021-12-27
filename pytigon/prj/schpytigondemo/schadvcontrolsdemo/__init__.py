@@ -18,7 +18,12 @@ Urls = (
         None,
         """png://apps/accessories-calculator.png""",
     ),
-    ("pivottable?schtml=desktop", _("Pivot table"), None, """ART_LIST_VIEW"""),
+    (
+        "pivottable?schtml=desktop",
+        _("Pivot table"),
+        None,
+        """png://mimetypes/x-office-spreadsheet.png""",
+    ),
     (
         "leaflet?schtml=desktop",
         _("Leaflet"),
@@ -68,8 +73,18 @@ Urls = (
         None,
         """png://actions/appointment-new.png""",
     ),
-    ("scrollaction?schtml=desktop", _("Scroll actions"), None, """ART_GO_DOWN"""),
-    ("plotly?schtml=desktop", _("Plotly"), None, """ART_FRAME_ICON"""),
+    (
+        "scrollaction?schtml=desktop",
+        _("Scroll actions"),
+        None,
+        """png://actions/go-down.png""",
+    ),
+    (
+        "plotly?schtml=desktop",
+        _("Plotly"),
+        None,
+        """png://mimetypes/x-office-drawing-template.png""",
+    ),
     (
         "test?schtml=desktop",
         _("Test"),

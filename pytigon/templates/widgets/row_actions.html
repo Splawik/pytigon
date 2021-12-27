@@ -34,9 +34,24 @@
                 </div>
         {% endif %}
   {% else %}
+        {% if False %}
+                {% for pos in actions|add:actions2 %}
+                        {% if pos.icon_name %}
+                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
+                          {% else %}
+                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}></a>
+                        {% endif %}
+                {% endfor %}
+        {% endif %}
         {% for pos in actions|add:actions2 %}
                 {% if pos.icon_name %}
-                        <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
+                        {% if 'fa-caret-down' in pos.icon_name %}
+                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
+                                        +
+                                </a>
+                          {% else %}
+                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
+                        {% endif %}
                   {% else %}
                         <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}></a>
                 {% endif %}

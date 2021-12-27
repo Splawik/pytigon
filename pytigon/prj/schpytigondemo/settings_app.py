@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 PRJ_TITLE = "Pytigon demo"
 PRJ_NAME = "schpytigondemo"
-THEMES = ["desktop_modern", "auto", "auto"]
+THEMES = ["tablet_modern", "auto", "auto"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
 
@@ -85,6 +85,7 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
+TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -163,6 +164,14 @@ CHANNELS_URL_TAB += [
         "schtasks.consumers.TaskEventsConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
@@ -206,7 +215,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.12.02 19:40:45"
+GEN_TIME = "2021.12.26 22:13:00"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -219,3 +228,4 @@ for key, value in os.environ.items():
 
 XMLRPC_PORT = 7080
 PYODIDE = True
+PYODIDE = False

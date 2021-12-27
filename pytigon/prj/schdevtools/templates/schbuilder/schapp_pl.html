@@ -68,9 +68,9 @@
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
-        <td>{{object.module_title}}</td>
-        <td>{{object.title}}</td>
-        <td>{{object.perms}}</td>
+        <td>{{object.module_title|default_if_none:""}}</td>
+        <td>{{object.title|default_if_none:""}}</td>
+        <td align="center">{% if object.perms %}X{% endif %}</td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

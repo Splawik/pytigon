@@ -2,8 +2,8 @@ from django.utils.translation import gettext_lazy as _
 
 ModuleTitle = _("main tools")
 Title = _("Elements")
-Perms = False
-Index = ""
+Perms = True
+Index = "None"
 Urls = (
     ("table/Element/0/form/tree/?schtml=desktop", _("Elements"), None, """bi-stack"""),
     (

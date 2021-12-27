@@ -822,10 +822,10 @@ class SChChoiceItem(models.Model):
         verbose_name="Parent",
     )
     name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=255
+        "Key name", null=False, blank=False, editable=True, max_length=255
     )
     value = models.CharField(
-        "Value", null=False, blank=False, editable=True, max_length=255
+        "Verbose name", null=False, blank=False, editable=True, max_length=255
     )
 
     def __str__(self):

@@ -1,6 +1,6 @@
 %extends 'template/desktop_base.html'
 
-%% js_app_init
+%% js_app_init__out
     ===>
         function base_fragment_init() {
             let paths = [

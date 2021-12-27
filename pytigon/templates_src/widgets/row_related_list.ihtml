@@ -1,3 +1,13 @@
 {# -*- coding: utf-8 -*- #}
 
 % extends "widgets/action.html"
+
+%% action_widget_content
+    % if standard_web_browser:
+        {{ block.super }}
+    % else:
+        % if action.icon_name:
+            a href={{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}},,,src={{action.icon_name}}
+        % else:
+            a href={{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}}
+                {{action.title}}

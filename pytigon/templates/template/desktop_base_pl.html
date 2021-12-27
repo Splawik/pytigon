@@ -361,7 +361,7 @@
         {% if table_type == 'datatable' %}
                 class="tabsort {%if not not_multiple_select %}{% else %}multiple-select {% endif %}flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
                 data-method="get"
-                data-url="{{table_path_and_filter}}{{target|replace:'form|json'}}/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
+                data-url="{{table_path_and_filter}}{% if 'form' in target %}{{target|replace:'form|json'}}{% else %}json{% endif %}/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
                 data-side-pagination="server"
                 data-pagination="true"
                 data-page-size="64"
