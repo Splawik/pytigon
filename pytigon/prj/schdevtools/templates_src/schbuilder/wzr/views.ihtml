@@ -43,11 +43,11 @@ def view_{{form.name|lower}}(request, *argi, **argv):
 
 {% endfor %}
 {% for view in views %}{% if view.view_code and view.view_code != '' %}
-{{view.view_code_start}}
-{% if view.ret_type == 'T' %}@dict_to_template('{{view.parent.name}}/v_{{view.name|lower}}.html'){% endif %}
-{% if view.ret_type == 'O' %}@dict_to_odf('{{view.parent.name}}/v_{{view.name|lower}}.ods'){% endif %}
-{% if view.ret_type == 'P' %}@dict_to_pdf('{{view.parent.name}}/v_{{view.name|lower}}_pdf.html'){% endif %}
-{% if view.ret_type == 'J' %}@dict_to_json{% endif %}
+{{view.view_code_start|safe}}
+{% if view.ret_type == 'T' %}@dict_to_template('{{view.parent.name}}/v_{{view.name|lower}}.html'){% endif %}\
+{% if view.ret_type == 'O' %}@dict_to_odf('{{view.parent.name}}/v_{{view.name|lower}}.ods'){% endif %}\
+{% if view.ret_type == 'P' %}@dict_to_pdf('{{view.parent.name}}/v_{{view.name|lower}}_pdf.html'){% endif %}\
+{% if view.ret_type == 'J' %}@dict_to_json{% endif %}\
 {% if view.ret_type == 'X' %}@dict_to_xml{% endif %}
 {% if view.asynchronous %}async {% endif %}def {{view.get_name}}(request{% if view.param %}, {{view.param}}{% endif %}):
     {% if view.doc %}"""{% for line in view.doc.splitlines %}

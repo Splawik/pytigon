@@ -164,6 +164,13 @@ def new_row_base(
             url2 = "{tp}%s/this/{x1}/add/" % context["parent_pk"]
         else:
             url2 = "{tp}{x1}/add/"
+
+        if action == "new_row/-":
+            if  'base_filter' in context and context['base_filter'] and context['base_filter'] != '-':
+                action = "new_row/" + context['base_filter']
+            elif 'filter' in context and context['filter'] and context['filter'] != '-':
+                action = "new_row/" + context['filter']
+    
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     if title and title[0] == "+":
         description = title[1:]

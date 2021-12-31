@@ -3,7 +3,7 @@
 {% load exsyntax %}
 {% block all %}
         {% with table_type='datatable' %}
-                {% templatetag openblock %} block.super {% templatetag closeblock %}
+                {% templatetag openvariable %} block.super {% templatetag closevariable %}
         {% endwith %}
 {% endblock %}
 {% block scroll %}{% endblock %}
@@ -16,7 +16,7 @@
         {% endfor %}
 {% endblock %}
 {% block list_row %}
-        {% for field in template.get_table_fields %}td...{% templatetag openblock %} object.{{field.name}} {% templatetag closeblock %}
+        {% for field in template.get_table_fields %}td...{% templatetag openvariable %} object.{{field.name}} {% templatetag closevariable %}
         {% endfor %}
 {% endblock %}
 {% block list_row_actions %}
@@ -30,7 +30,7 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                {% for field in template.get_table_fields %}"{{field.name}}"{% if not forloop.last %},{% endif %}{% endfor %}
+                {% for field in template.get_table_fields %}{{field.name}}{% if not forloop.last %},{% endif %}{% endfor %}
         {% endform %}
 {% endblock %}
 

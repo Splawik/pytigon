@@ -96,7 +96,7 @@
 
 
 %% table_header_edit
-  h2...Lista pól tabeli
+  h2..._(Table field list)
 
 %% row_edit
     %if object.is_rel or object.has_choices

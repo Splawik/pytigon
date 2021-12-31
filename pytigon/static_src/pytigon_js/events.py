@@ -124,15 +124,15 @@ def _get_click_event_from_tab(target_element, target, href):
             if pos[1] == "*" or target_element.classList.contains(pos[1]):
                 url = correct_href(href, (target_element,))
 
-                #if (
+                # if (
                 #        target_element.hasAttribute("data-region")
                 #        and target_element.getAttribute("data-region") == "table"
-                #):
-                #if pos[3]:
+                # ):
+                # if pos[3]:
                 #    url = corect_href(href, True)
-                #elif pos[2]:
+                # elif pos[2]:
                 #    url = corect_href(href, False)
-                #else:
+                # else:
                 #    url = href
                 return url, pos[4]
     return None, None
@@ -143,7 +143,7 @@ def on_click_default_action(event, target_element):
 
     target = target_element.getAttribute("target")
 
-    #if window.APPLICATION_TEMPLATE == "traditional":
+    # if window.APPLICATION_TEMPLATE == "traditional":
     #    if not target or (target and target in ("_self", "_parent", "_top")):
     #        return False
 
@@ -248,7 +248,7 @@ def on_click_default_action(event, target_element):
 
 
 def _on_menu_click(event, target_element):
-    #if window.APPLICATION_TEMPLATE != "traditional":
+    # if window.APPLICATION_TEMPLATE != "traditional":
     event.preventDefault()
     toggler = document.querySelector("#topmenu .navbar-toggler")
     if toggler and is_visible(toggler):
@@ -279,6 +279,7 @@ def _get_scrolled_parent(node):
     else:
         return _get_scrolled_parent(node.parentNode)
 
+
 def _on_inline(target_element, data_element, url, param, event, template_name):
     inline_position = target_element.getAttribute("data-inline-position")
 
@@ -297,7 +298,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
     dialog_slot2.innerHTML = get_template(
         template_name.replace("MODAL", "INLINE"),
-        {"title": _get_title(target_element, data_element, url)[0], 'href': url},
+        {"title": _get_title(target_element, data_element, url)[0], "href": url},
     )
 
     target_element.setAttribute("data-style", "zoom-out")
@@ -323,7 +324,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     if dialog != None:
         jQuery(dialog).on("click", "button.btn-close", on_hidden)
 
-    plug = dialog.closest('aside.plug')
+    plug = dialog.closest("aside.plug")
     if plug != None:
         viewportOffset = dialog.getBoundingClientRect()
         top = viewportOffset.top
@@ -331,7 +332,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         height = window.innerHeight
         if bottom > height:
             if height > viewportOffset.height:
-                top2 = (height - viewportOffset.height)/2
+                top2 = (height - viewportOffset.height) / 2
             else:
                 top2 = 0
             dy = top - top2
@@ -340,7 +341,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
             sy = scroll_frame.scrollTop
             scroll_frame.scrollTop = dy + sy
     else:
-        plug = dialog.closest('.plug')
+        plug = dialog.closest(".plug")
         if plug != None:
             scroll_frame = _get_scrolled_parent(plug)
             if scroll_frame != None:
@@ -350,15 +351,20 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
                 if rect1.top > rect2.top:
                     if rect1.height < rect2.height:
-                        if rect1.top+rect1.height > rect2.top+rect2.height:
-                            scroll_frame.scrollTop = (int(sy) + (rect1.top+rect1.height - (rect2.top+rect2.height)))
+                        if rect1.top + rect1.height > rect2.top + rect2.height:
+                            scroll_frame.scrollTop = int(sy) + (
+                                rect1.top + rect1.height - (rect2.top + rect2.height)
+                            )
                     else:
-                        scroll_frame.scrollTop = (int(sy) + (rect1.top - rect2.top))
+                        scroll_frame.scrollTop = int(sy) + (rect1.top - rect2.top)
                 else:
-                    scroll_frame.scrollTop =  (int(sy) + (y1 -y2))
+                    scroll_frame.scrollTop = int(sy) + (y1 - y2)
+
 
 def on_inline(target_element, data_element, new_url, param, event):
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
+
+
 window.on_inline = on_inline
 
 
@@ -366,25 +372,37 @@ def on_inline_edit_new(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_EDIT"
     )
+
+
 window.on_inline_edit_new = on_inline_edit_new
+
 
 def on_inline_info(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_INFO"
     )
+
+
 window.on_inline_inf = on_inline_info
+
 
 def on_inline_delete(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_DELETE"
     )
+
+
 window.on_inline_delete = on_inline_delete
+
 
 def on_inline_error(target_element, data_element, new_url, param, event):
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_ERROR"
     )
+
+
 window.on_inline_error = on_inline_error
+
 
 def _on_popup(target_element, data_element, url, param, event, template_name):
     if not can_popup():
@@ -395,7 +413,8 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     dialog_slot.setAttribute("class", "plug")
 
     dialog_slot.innerHTML = get_template(
-        template_name, {"title": _get_title(target_element, data_element, url)[0], 'href': url }
+        template_name,
+        {"title": _get_title(target_element, data_element, url)[0], "href": url},
     )
 
     region = get_ajax_region(target_element, target_element.getAttribute("data-region"))
@@ -421,29 +440,50 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     if dialog:
         dialog.on("hidden.bs.modal", on_hidden)
         dialog.drags({"handle": ".modal-header"})
-        dialog.modal({"show": True, "backdrop": False,})
+        dialog.modal(
+            {
+                "show": True,
+                "backdrop": False,
+            }
+        )
+
 
 def on_popup(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL")
+
+
 window.on_popup = on_popup
+
 
 def on_popup_edit_new(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_EDIT")
+
+
 window.on_popup_edit_new = on_popup_edit_new
+
 
 def on_popup_info(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_INFO")
+
+
 window.on_popup_info = on_popup_info
+
 
 def on_popup_delete(target_element, data_element, new_url, param, event):
     return _on_popup(
         target_element, data_element, new_url, param, event, "MODAL_DELETE"
     )
+
+
 window.on_popup_delete = on_popup_delete
+
 
 def on_popup_error(target_element, data_element, new_url, param, event):
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR")
+
+
 window.on_popup_error = on_popup_error
+
 
 def on_new_tab(target_element, data_element, new_url, param, event):
     title, title_alt = _get_title(target_element, data_element, new_url)
@@ -453,6 +493,7 @@ def on_new_tab(target_element, data_element, new_url, param, event):
     return get_menu().on_menu_href(
         target_element, data_element2, title, title_alt, new_url
     )
+
 
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:
@@ -467,7 +508,10 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         False,
     )
 
-def refresh_frame(target_element, data_element, new_url, param, event, data_region=None):
+
+def refresh_frame(
+    target_element, data_element, new_url, param, event, data_region=None
+):
     f = target_element.getAttribute("data-remote-elem")
     if f:
         data_element2 = data_element.querySelector(f)
@@ -478,7 +522,7 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
     if not data_region2:
         data_region2 = data_region
     region = get_ajax_region(target_element, data_region2)
-    if data_region2 != 'error' and region.getAttribute("data-region") == "error":
+    if data_region2 != "error" and region.getAttribute("data-region") == "error":
         region = get_ajax_region(region.parentElement, data_region2)
 
     dialog = None
@@ -512,7 +556,8 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
 def refresh_page(target_element, data_element, new_url, param, event):
     return refresh_frame(target_element, data_element, new_url, param, event, "page")
 
-#def refresh_page2(target_element, data_element, new_url, param, event):
+
+# def refresh_page2(target_element, data_element, new_url, param, event):
 #    frame = target_element.closest("div.content")
 #    if frame and frame.firstElementChild:
 #        if isinstance(data_element, str):
@@ -550,8 +595,8 @@ def only_get(target_element, data_element, url, param, event):
 ## inline: new inline window
 ## none, get request (no gui)
 ## refresh_obj: replace current object
-## refresh_page: replace current page (like _self)
-## refresh_app: replace current app (like _top)
+## refresh_page: reload current page (like _self)
+## refresh_app: reload current app (like _top)
 
 EVENT_CLICK_TAB = [
     # target, class, get only content, get only tab, function
@@ -584,4 +629,3 @@ def on_resize(self, event):
 
 
 window.addEventListener("resize", on_resize)
-
