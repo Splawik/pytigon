@@ -303,7 +303,7 @@
         {{block.super}}
 
 %% body_desktop
-    % if ONLY_CONTENT:
+    % if ONLY_CONTENT and not form.errors:
         {{block.super}}
     % else:
         div id=body_desktop,,,class=container-fluid tab-pane ajax-region ajax-frame win-content page,,,data-region=page

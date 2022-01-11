@@ -45,15 +45,18 @@ label.upload
         max-width: 170px
 
     img, .img
-        max-height: 48px
-        max-width: 150px
-
+        max-height: 100%
+        max-width: 100%
         position: absolute;
-        left: 6px
-        top: 27px
-        padding: 0px
-        font-size: 15px
+        right: 0px
+        bottom: 0px
+        margin: auto
+        padding: 2px
+        font-size: 12px
         text-transform: uppercase
+
+        span
+            padding-left: 0.4rem
 
     p.img
         width: 150px
@@ -191,10 +194,6 @@ $duration: 30s
       padding: 0 2rem
       font-size: 2rem
       color: white
-
-.select2-selection--multiple
-    height: 12rem !important
-    overflow: auto
 
 button.select2-selection__clear
     position: absolute

@@ -2,6 +2,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load bootstrap4 %}
+{% load widget_tweaks %}
 {% block login %}{% endblock %}
 {% block topmenu %}{% endblock %}
 {% block messages %}{% endblock %}
@@ -263,33 +264,37 @@
                                                         <table class="filter_form_frame" width="100%" bgcolor="#fff"><tr>
                                                                 <td>
                                                                         {% for field in form %}
-                                                                                <table class="filter_form" border="0">
-                                                                                        {% if vform %}
-                                                                                                <tr>
-                                                                                                        <td cellpadding="8">
-                                                                                                                {{ field.errors }}
-                                                                                                                {{ field.label}}:
-                                                                                                        </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                        <td>
-                                                                                                                {{ field }}
-                                                                                                        </td>
-                                                                                                </tr>
-                                                                                          {% else %}
-                                                                                                <tr>
-                                                                                                        <td cellpadding="8">
-                                                                                                                        {{ field.label}}:
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                                {{ field }}
-                                                                                                        </td>
-                                                                                                        <td>
-                                                                                                                {{ field.errors }}
-                                                                                                        </td>
-                                                                                                </tr>
-                                                                                        {% endif %}
-                                                                                </table>
+                                                                                {% with field_class=field.field|class_name %}
+                                                                                        {% with schattr="schtype:"|append_str:field_class %}
+                                                                                                <table>
+                                                                                                        {% if vform %}
+                                                                                                                <tr>
+                                                                                                                        <td cellpadding="8">
+                                                                                                                                {{ field.errors }}
+                                                                                                                                {{ field.label}}:
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                        <td>
+                                                                                                                                {{ field|attr:schattr }}
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                          {% else %}
+                                                                                                                <tr>
+                                                                                                                        <td cellpadding="8">
+                                                                                                                                {{ field.label}}:
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                                {{ field|attr:schattr }}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                                {{ field.errors }}
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                        {% endif %}
+                                                                                                </table>
+                                                                                        {% endwith %}
+                                                                                {% endwith %}
                                                                         {% endfor %}
                                                                 </td>
                                                                 <td align="right" cellpadding="3">

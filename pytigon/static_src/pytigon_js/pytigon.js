@@ -1128,6 +1128,8 @@ data_type = function flx_data_type (data_or_html) {
                 return "$$RETURN_UPDATE_ROW_OK";
             } else if (_pyfunc_op_contains("$$RETURN_REFRESH_PARENT", data_or_html)) {
                 return "$$RETURN_REFRESH_PARENT";
+            } else if (_pyfunc_op_contains("$$RETURN_RELOAD_PAGE", data_or_html)) {
+                return "$$RETURN_RELOAD_PAGE";
             } else if (_pyfunc_op_contains("$$RETURN_REFRESH", data_or_html)) {
                 return "$$RETURN_REFRESH";
             } else if (_pyfunc_op_contains("$$RETURN_CANCEL", data_or_html)) {
@@ -1284,7 +1286,7 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 
 register_mount_fun(moveelement_init);
 label_floating_init = function flx_label_floating_init (dest_elem) {
-    var _on_blur;
+    var _on_blur, _on_blur2;
     _on_blur = function (e) {
         var test;
         if ((_pyfunc_op_equals(_pymeth_lower.call(this.tagName), "input"))) {
@@ -1301,6 +1303,12 @@ label_floating_init = function flx_label_floating_init (dest_elem) {
     };
 
     ((((_pymeth_find.call(jQuery(dest_elem), ".label-floating .form-control")).on)("focus blur", _on_blur)).trigger)("blur");
+    _on_blur2 = function (e) {
+        (((jQuery(this).parents)(".form-group")).toggleClass)("focused", true);
+        return null;
+    };
+
+    ((((_pymeth_find.call(jQuery(dest_elem), ".label-floating .form-control-file")).on)("focus blur", _on_blur2)).trigger)("blur");
     return null;
 };
 
@@ -1329,7 +1337,9 @@ select2_init = function flx_select2_init (dest_elem) {
                     if (_pyfunc_truthy(src_elem)) {
                         id = src_elem.getAttribute("data-id");
                         text = src_elem.getAttribute("data-text");
-                        set_select2_value(jQuery(control), id, text);
+                        if ((_pyfunc_truthy(id) && _pyfunc_truthy(text))) {
+                            set_select2_value(jQuery(control), id, text);
+                        }
                     }
                 }
                 return null;
@@ -1505,6 +1515,8 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             return refresh_ajax_frame(region, region_name, null, callback, callback_on_error);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT"])) {
             return refresh_ajax_frame(region.parentElement, region_name, null, callback, callback_on_error);
+        } else if (_pyfunc_op_contains(dt, ["$$RETURN_RELOAD_PAGE"])) {
+            return _refresh_page(region, data);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
             elem = region.closest(".plug").parentElement;
             callback();
@@ -2347,9 +2359,10 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     } else {
         data_element2 = data_element;
     }
-    data_region2 = target_element.getAttribute("data-region");
-    if ((!_pyfunc_truthy(data_region2))) {
+    if (_pyfunc_truthy(data_region)) {
         data_region2 = data_region;
+    } else {
+        data_region2 = target_element.getAttribute("data-region");
     }
     region = get_ajax_region(target_element, data_region2);
     if ((((!_pyfunc_op_equals(data_region2, "error"))) && ((_pyfunc_op_equals(region.getAttribute("data-region"), "error"))))) {
@@ -3146,7 +3159,7 @@ img_field = function flx_img_field (elem) {
             }
             stub3_ = humanFileSize(elem.files[0].size, true);
             size = stub3_[0];level = stub3_[1];
-            ext = (((((elem.files[0].type) + "<br><span class='size_level_") + level) + "'>") + size) + "</span>";
+            ext = (((((((elem.files[0].name) + "<br/>") + (elem.files[0].type)) + "<br /><span class='size_level_") + level) + "'>") + size) + "</span>";
             img = jQuery("<p class='img' />");
             img.insertAfter(_pymeth_find.call((((jQuery(elem).closest)("label"))), "input"));
             img.html(ext);

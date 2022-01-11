@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends default_template2 %}
 {% block page_start %}{% endblock %}
 {% block page_head %}{% endblock %}
@@ -16,20 +15,27 @@
                 <title>
                         {{title}}
                 </title>
+                {% if form %}
+                        {% if form.errors or errors %}
+                                <meta name="target" content="_self" />
+                                <meta name="RETURN" content="$$RETURN_RELOAD_PAGE" />
+                        {% endif %}
+                {% endif %}
         </head>
         {% with NO_TABS=True %}
                 {{block.super}}
         {% endwith %}
 {% endblock %}
-{% block content_start2 %}
-        {{block.super}}
-        <div class="content ajax-region" data-region="page" href="{{request.path}}">
+{% block content_start %}
+        {% if form.errors or errors %}
+                {{block.super}}
+        {% endif %}
 {% endblock %}
-{% block content_end2 %}
-        </div>
+{% block content_end %}
+        {% if form.errors or errors %}
+                {{block.super}}
+        {% endif %}
 {% endblock %}
-{% block content_start %}{% endblock %}
-{% block content_end %}{% endblock %}
 {% block body_desktop %}
         {% with ONLY_CONTENT=True %}
                 {{ block.super }}

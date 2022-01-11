@@ -51,8 +51,10 @@ def img_field(elem):
 
             size, level = humanFileSize(elem.files[0].size, True)
             ext = (
-                elem.files[0].type
-                + "<br><span class='size_level_"
+                elem.files[0].name
+                + "<br/>"
+                + elem.files[0].type
+                + "<br /><span class='size_level_"
                 + level
                 + "'>"
                 + size

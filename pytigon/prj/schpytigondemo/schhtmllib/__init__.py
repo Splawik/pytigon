@@ -6,16 +6,10 @@ Perms = False
 Index = "None"
 Urls = (
     (
-        "tbl_grid?schtml=desktop",
-        _("table_grid"),
+        "../schwiki/htmllib/html-table/view/?schtml=desktop",
+        _("table"),
         None,
         """client://mimetypes/x-office-spreadsheet.png""",
-    ),
-    (
-        "table/demo_tbl/-/form/list?schtml=desktop",
-        _("demo_tbl"),
-        None,
-        """client://actions/document-properties.png""",
     ),
 )
 UserParam = {}

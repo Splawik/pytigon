@@ -18,11 +18,16 @@ Urls = (
         """png://actions/edit-delete.png""",
     ),
     (
-        "form/Installer/",
+        "form/Installer/?schtml=browser",
         _("Make installer"),
         None,
         """client://categories/applications-internet.png""",
     ),
-    ("form/Install/", _("Install app"), None, """client://devices/drive-optical.png"""),
+    (
+        "form/Install/?schtml=browser",
+        _("Install app"),
+        None,
+        """client://devices/drive-optical.png""",
+    ),
 )
 UserParam = {}

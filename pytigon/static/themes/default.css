@@ -323,6 +323,9 @@ a.foreignkey_button {
   right: -30px;
   top: -10px; }
 
+div.is-invalid .invalid-feedback {
+  display: block; }
+
 /* Inline form */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
@@ -333,11 +336,13 @@ a.foreignkey_button {
   .form-inline .form-group .form-control {
     max-height: 42px; }
   .form-inline .form-group .select2field {
-    width: 20rem; }
+    width: 10rem; }
+  .form-inline .form-group .select2 {
+    min-width: 10rem; }
   .form-inline .form-group .choicefield {
-    width: 20rem; }
+    width: 10rem; }
   .form-inline .form-group .modelselect2field {
-    width: 20rem; }
+    width: 10rem; }
   .form-inline .form-group .abc-checkbox {
     padding-left: 17px; }
 
@@ -500,14 +505,17 @@ label.upload {
   label.upload p.upload {
     max-width: 170px; }
   label.upload img, label.upload .img {
-    max-height: 48px;
-    max-width: 150px;
+    max-height: 100%;
+    max-width: 100%;
     position: absolute;
-    left: 6px;
-    top: 27px;
-    padding: 0px;
-    font-size: 15px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    padding: 2px;
+    font-size: 12px;
     text-transform: uppercase; }
+    label.upload img span, label.upload .img span {
+      padding-left: 0.4rem; }
   label.upload p.img {
     width: 150px; }
   label.upload i {
@@ -623,10 +631,6 @@ div.daterangepicker .drp-buttons {
       padding: 0 2rem;
       font-size: 2rem;
       color: white; }
-
-.select2-selection--multiple {
-  height: 12rem !important;
-  overflow: auto; }
 
 button.select2-selection__clear {
   position: absolute;

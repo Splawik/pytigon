@@ -1,6 +1,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load bootstrap4 %}
+{% load widget_tweaks %}
 {% if standard_web_browser %}
         {% if hidden %}
                 {% if field.value %}
@@ -12,8 +13,8 @@
                 {% if field.field.widget.input_type == 'select2' %}
                         <div class="ajax-region get_row row {{form_group_size_class}}" data-region='get_row'>
                 {% endif %}
-                {% if field.field.widget.input_type == 'checkbox' %}
-                        {% bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class='form-check' placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
+                {% if field.field.widget.input_type == 'todo-remove-checkbox' %}
+                        {% bootstrap_field field layout='' form_group_class=form_group_class field_class=field_class placeholder=placeholder show_label=False addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
                   {% else %}
                         {% bootstrap_field field layout='' form_group_class=form_group_class label_class=label_class field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}
                 {% endif %}
@@ -38,7 +39,11 @@
                                         <input type="hidden" name="{{field.name}}" />
                                 {% endif %}
                           {% else %}
-                                {{ field }}
+                                {% with field_class=field.field|class_name %}
+                                        {% with schattr="schtype:"|append_str:field_class %}
+                                                {{ field|attr:schattr }}
+                                        {% endwith %}
+                                {% endwith %}
                         {% endif %}
                 </td>
         </tr>

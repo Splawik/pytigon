@@ -97,18 +97,22 @@ APPEND_SLASH = False
 from pytigon_lib.schtools.platform_info import platform_name
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, prj_name), "media")
-MEDIA_ROOT_PROTECTED = os.path.join(os.path.join(DATA_PATH, prj_name), "protected_media")
+MEDIA_ROOT_PROTECTED = os.path.join(
+    os.path.join(DATA_PATH, prj_name), "protected_media"
+)
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env("SECRET_KEY")
 if not SECRET_KEY:
     if (not PRODUCTION_VERSION) or DEBUG or env("EMBEDED_DJANGO_SERVER"):
         SECRET_KEY = "anawa"
     else:
-        SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
+        SECRET_KEY = "".join(
+            random.choice(string.ascii_uppercase + string.digits) for _ in range(32)
+        )
 
 if env("GRAPHQL"):
     GRAPHQL = True
@@ -151,7 +155,7 @@ TEMPLATES = [
             ],
             "builtins": ["pytigon.schserw.schsys.templatetags.defexfiltry"],
             "debug": DEBUG,
-            #"string_if_invalid": "Invalid varialbe: %s!",
+            # "string_if_invalid": "Invalid varialbe: %s!",
         },
     }
 ]
@@ -166,7 +170,7 @@ if env("EMBEDED_DJANGO_SERVER"):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "pytigon.schserw.schmiddleware.csrf.DisableCSRF",
-        #"pytigon.schserw.schmiddleware.schpost.view_post",
+        # "pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 else:
     MIDDLEWARE = [
@@ -178,7 +182,7 @@ else:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
-        #"pytigon.schserw.schmiddleware.schpost.view_post",
+        # "pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 
 AUTHENTICATION_BACKENDS = [
@@ -195,9 +199,10 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.forms",
     "django_select2",
-    'mailer',
+    "mailer",
     "bootstrap4",
     "corsheaders",
+    "widget_tweaks",
     "pytigon.schserw.schsys",
 ]
 
@@ -208,6 +213,7 @@ if GRAPHQL:
 
 try:
     import mptt
+
     MPTT = True
     LOGVIEWER = True
     INSTALLED_APPS.append("mptt")
@@ -219,30 +225,34 @@ except:
 
 try:
     import allauth
+
     ALLAUTH = True
     INSTALLED_APPS.append("allauth")
     INSTALLED_APPS.append("allauth.account")
     INSTALLED_APPS.append("allauth.socialaccount")
-    AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
+    AUTHENTICATION_BACKENDS.append(
+        "allauth.account.auth_backends.AuthenticationBackend"
+    )
 except:
     ALLAUTH = False
 
 try:
     import compressor
+
     INSTALLED_APPS.append("compressor")
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
 except:
     INSTALLED_APPS.append("_schserverless.schnocompress")
 
-if env('PWA'):
+if env("PWA"):
     INSTALLED_APPS.append("pwa")
     INSTALLED_APPS.append("webpush")
 
     if DEBUG:
         WEBPUSH_SETTINGS = {
-           "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
-           "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
-           "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud"
+            "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
+            "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
+            "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud",
         }
     PWA = True
 else:
@@ -256,7 +266,7 @@ if PLATFORM_TYPE != "webserver":
 INSTALLED_APPS.append("django.contrib.staticfiles")
 
 if DEBUG_TOOLBAR:
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
     INSTALLED_APPS.append("debug_toolbar")
 
 if (
@@ -267,16 +277,18 @@ if (
     try:
         import channels
         import twisted
+
         INSTALLED_APPS.append("channels")
     except:
         pass
 try:
     from multiprocessing import synchronize
+
     INSTALLED_APPS.append("django_q")
 except:
     pass
 
-DEFAULT_AUTO_FIELD  = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CHANNELS_URL_TAB = []
 
@@ -284,21 +296,21 @@ HIDE_APPS = []
 
 PRJS = []
 
-if '-v' in sys.argv:
-    i = sys.argv.index('-v')
-    V = int(sys.argv[i+1])
+if "-v" in sys.argv:
+    i = sys.argv.index("-v")
+    V = int(sys.argv[i + 1])
 else:
     V = 1
 
 if PRODUCTION_VERSION:
-    if V==3:
-        level = 'INFO'
-    elif V==2:
-        level = 'WARNING'
-    elif V==1:
-        level = 'ERROR'
+    if V == 3:
+        level = "INFO"
+    elif V == 2:
+        level = "WARNING"
+    elif V == 1:
+        level = "ERROR"
     else:
-        level = 'CRITICAL'
+        level = "CRITICAL"
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": True,
@@ -313,16 +325,16 @@ if PRODUCTION_VERSION:
                 "level": level,
                 "class": "logging.FileHandler",
                 "filename": LOG_PATH + "/pytigon.log",
-                #"maxBytes": 50000,
-                #"backupCount": 2,
+                # "maxBytes": 50000,
+                # "backupCount": 2,
                 "formatter": "standard",
             },
             "errorlogfile": {
                 "level": level,
                 "class": "logging.FileHandler",
                 "filename": LOG_PATH + "/pytigon-err.log",
-                #"maxBytes": 50000,
-                #"backupCount": 2,
+                # "maxBytes": 50000,
+                # "backupCount": 2,
                 "formatter": "standard",
             },
         },
@@ -355,7 +367,7 @@ if PRODUCTION_VERSION:
         },
     }
 
-    if env('LOGS_TO_DOCKER'):
+    if env("LOGS_TO_DOCKER"):
         LOGGING["handlers"] = {
             "logfile": {
                 "level": level,
@@ -368,46 +380,55 @@ if PRODUCTION_VERSION:
                 "formatter": "standard",
             },
         }
-    elif env('PYTIGON_TASK'):
-        LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"]["filename"].replace('.log',
-                                                                                                        '-task.log')
-        LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"]["filename"].replace(
-            '.log', '_task.log')
+    elif env("PYTIGON_TASK"):
+        LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"][
+            "filename"
+        ].replace(".log", "-task.log")
+        LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"][
+            "errorlogfile"
+        ]["filename"].replace(".log", "_task.log")
 
 else:
-    if V==3:
-        level = 'DEBUG'
-    elif V==2:
-        level = 'INFO'
-    elif V==1:
-        level = 'WARNING'
+    if V == 3:
+        level = "DEBUG"
+    elif V == 2:
+        level = "INFO"
+    elif V == 1:
+        level = "WARNING"
     else:
-        level = 'ERROR'
+        level = "ERROR"
 
     LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
             },
         },
-        'root': {
-            'handlers': ['console'],
-            'level': level,
+        "root": {
+            "handlers": ["console"],
+            "level": level,
         },
-        'loggers': {
-            'django': {
-                'handlers': ['console'],
-                'level': level,
-                'propagate': False,
+        "loggers": {
+            "django": {
+                "handlers": ["console"],
+                "level": level,
+                "propagate": False,
             },
         },
     }
 
-LOG_VIEWER_FILES = ['pytigon.log', 'pytigon-err.log','pytigon-task.log','pytigon-err-task.log',]
+LOG_VIEWER_FILES = [
+    "pytigon.log",
+    "pytigon-err.log",
+    "pytigon-task.log",
+    "pytigon-err-task.log",
+]
 LOG_VIEWER_FILES_DIR = LOG_PATH
-LOG_VIEWER_PATTERNS = ['[',]
+LOG_VIEWER_PATTERNS = [
+    "[",
+]
 
 LOCALE_PATHS = [SERW_PATH + "/locale"]
 
@@ -446,9 +467,7 @@ if PLATFORM_TYPE == "webserver":
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             # "ROUTING": "schserw.routing.channel_routing",
-            "CONFIG": {
-                "hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]
-            },
+            "CONFIG": {"hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]},
         }
     }
 else:
@@ -456,13 +475,14 @@ else:
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 
-if PLATFORM_TYPE == 'webserver':
+if PLATFORM_TYPE == "webserver":
     COMPRESS_ENABLED = True
 else:
     COMPRESS_ENABLED = False
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
+
 
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS
@@ -518,17 +538,15 @@ if platform_name() == "Android":
     CORS_ORIGIN_ALLOW_ALL = True
 
 try:
-    CACHES = {"default": env.cache() }
+    CACHES = {"default": env.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except:
     CACHES = {
-        'default': {
-            'BACKEND': 'diskcache.DjangoCache',
-            'LOCATION': TEMP_PATH,
-            'TIMEOUT': 3000,
-            'OPTIONS': {
-                'size_limit': 2 ** 30   # 1 gigabyte
-            },
+        "default": {
+            "BACKEND": "diskcache.DjangoCache",
+            "LOCATION": TEMP_PATH,
+            "TIMEOUT": 3000,
+            "OPTIONS": {"size_limit": 2 ** 30},  # 1 gigabyte
         },
     }
 
@@ -552,8 +570,8 @@ GRAPHENE = {
 
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": False,
-    #"JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
-    #"JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
+    # "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
+    # "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
 
 GRAPHENE_PUBLIC = False
@@ -569,23 +587,23 @@ except:
 
 if env("EMBEDED_DJANGO_SERVER"):
     Q_CLUSTER = {
-        'name': 'DjangORM',
-        'workers': 1,
-        'timeout': 360,
-        'retry': 480,
-        'queue_limit': 10,
-        'bulk': 10,
-        'orm': 'default'
+        "name": "DjangORM",
+        "workers": 1,
+        "timeout": 360,
+        "retry": 480,
+        "queue_limit": 10,
+        "bulk": 10,
+        "orm": "default",
     }
 else:
     Q_CLUSTER = {
-        'name': 'DjangORM',
-        'workers': 2,
-        'timeout': 360,
-        'retry': 480,
-        'queue_limit': 50,
-        'bulk': 10,
-        'orm': 'default'
+        "name": "DjangORM",
+        "workers": 2,
+        "timeout": 360,
+        "retry": 480,
+        "queue_limit": 50,
+        "bulk": 10,
+        "orm": "default",
     }
 
 try:

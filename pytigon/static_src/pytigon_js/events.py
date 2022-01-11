@@ -518,9 +518,12 @@ def refresh_frame(
     else:
         data_element2 = data_element
 
-    data_region2 = target_element.getAttribute("data-region")
-    if not data_region2:
+    if data_region:
         data_region2 = data_region
+    else:
+        data_region2 = target_element.getAttribute("data-region")
+    #if not data_region2:
+    #    data_region2 = data_region
     region = get_ajax_region(target_element, data_region2)
     if data_region2 != "error" and region.getAttribute("data-region") == "error":
         region = get_ajax_region(region.parentElement, data_region2)

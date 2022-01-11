@@ -11,6 +11,9 @@
 %% list_row_actions
 
 
+%% list_content_header_third_row
+
+
 %% list_content_body
     % if object_list:
         {{ block.super }}

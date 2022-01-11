@@ -8,12 +8,7 @@ from . import views
 
 
 urlpatterns = [
-    path(
-        "action_ctrl",
-        TemplateView.as_view(template_name="schtasksdemo/action_ctrl.html"),
-        {},
-    ),
-    path("plots", TemplateView.as_view(template_name="schtasksdemo/plots.html"), {}),
+    path("task2/", views.task2, {}, name="schtasksdemo_task2"),
 ]
 
 gen = generic_table_start(urlpatterns, "schtasksdemo", views)

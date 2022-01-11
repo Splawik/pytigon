@@ -6,7 +6,6 @@
     % if not widget.required:
         input type=checkbox,,,name={{ checkbox_name }},,,id={{ checkbox_id }}
         label for={{ checkbox_id }}...{{ clear_checkbox_label }}
-    <br />
     {{ input_text }}:
 label class=btn btn-primary btn-file nocolon upload
     input style=display:none,,,onchange=img_field(this);,,,type={{ widget.type }},,,name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}

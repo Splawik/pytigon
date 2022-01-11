@@ -84,3 +84,18 @@ def init_schedule(scheduler, cmd, http):
         "M(day=31, at='22:07')", hello1, name="monthly", scheduler=scheduler
     )
     scheduler.add_task("M", hello1, name="monthly", scheduler=scheduler)
+
+
+@publish("demo")
+def fun2(cproxy=None, **kwargs):
+
+    with RemoteScreen(cproxy, direction="up") as out:
+        out.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1")
+        for i in range(0, 30):
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
+            out.log("item %d" % i)
+            time.sleep(1)
+        out.info("Info info info")
+        out.warning("Warning warning warning")
+        out.error("Error error error")
+    return "Hello world"

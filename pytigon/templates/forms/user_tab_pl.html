@@ -6,6 +6,7 @@
         class="tabsort table" {% if not standard_web_browser %}param="no_actions"{% endif %}
 {% endblock %}
 {% block list_row_actions %}{% endblock %}
+{% block list_content_header_third_row %}{% endblock %}
 {% block list_content_body %}
         {% if object_list %}
                 {{ block.super }}

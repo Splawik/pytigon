@@ -264,11 +264,11 @@
                 {% endif %}
         </section>
 {% endblock %}
-{% block content_start %}
+{% block content_start2 %}
         <div class="content ajax-region ajax-frame" data-region="page" href="{{request.path}}">
         {{ block.super }}
 {% endblock %}
-{% block content_end %}
+{% block content_end2 %}
         {{ block.super }}
         </div>
 {% endblock %}
@@ -331,7 +331,7 @@
                                                                 <div class="tr row list_content_header list_content_header_second_row">
                                                                         <div class="td col-md-12 col-sm-12" colspan="3">
                                                                                 {% block list_filter_form %}
-                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" data-region="{% if table_type == 'datatable'%}table{% else %}table{% endif %}">
+                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
                                                                                                 {% csrf_token %}
                                                                                                 {% block form_filter %}
                                                                                                         {% if form %}
@@ -343,7 +343,7 @@
                                                                                                                         {% endblock %}
                                                                                                                         {% block form_content_button %}
                                                                                                                                 {% if table_type != 'datatable' %}
-                                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="refresh_frame">
+                                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
                                                                                                                                                 {% icon "fa-refresh fa-lg" %}
                                                                                                                                         </button>
                                                                                                                                 {% endif %}
@@ -353,7 +353,7 @@
                                                                                                 {% endblock %}
                                                                                         </form>
                                                                                         {% if table_type == 'datatable' %}
-                                                                                                <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);">
+                                                                                                <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
                                                                                                         {% icon "fa-refresh fa-lg" %}
                                                                                                 </button>
                                                                                         {% endif %}
@@ -377,7 +377,7 @@
                                                                                                         <div class="dropdown-menu">
                                                                                                                 <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
                                                                                                                 <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
-                                                                                                                <a href="{{base_url}}tools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
+                                                                                                                <a href="{{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
                                                                                                         </div>
                                                                                                 </div>
                                                                                         {% endif %}
@@ -407,6 +407,10 @@
                                   {% else %}
                                         <div class="tableframe ajax-frame" data-region="table">
                                 {% endif %}
+                          {% else %}
+                                {% if form.errors or errors %}
+                                        <div class="tableframe ajax-frame" data-region="table">
+                                {% endif %}
                         {% endif %}
                         {% block list_content_body %}
                                 {% block list_content_paginator %}
@@ -415,7 +419,7 @@
                                                         <ul class="pagination simple_pagination">
                                                                 {% if page_obj.has_previous %}
                                                                         <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
+                                                                                <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
                                                                         </li>
                                                                   {% else %}
                                                                         <li class="disabled page-item">
@@ -438,7 +442,7 @@
                                                                                 </li>
                                                                           {% else %}
                                                                                 <li class="page-item">
-                                                                                        <a class="page-link" target="refresh_frame" href="?page={{ i }}&only_table=1">
+                                                                                        <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ i }}&only_table=1">
                                                                                                 {{ i }}
                                                                                         </a>
                                                                                 </li>
@@ -446,7 +450,7 @@
                                                                 {% endfor %}
                                                                 {% if page_obj.has_next %}
                                                                         <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
+                                                                                <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
                                                                         </li>
                                                                   {% else %}
                                                                         <li class="disabled page-item">
@@ -554,6 +558,10 @@
                         {% endblock %}
                         {% if standard_web_browser and standard_web_browser != 6 %}
                                 </div>
+                          {% else %}
+                                {% if form.errors or errors %}
+                                        </div>
+                                {% endif %}
                         {% endif %}
                         {% block list_content_footer %}{% endblock %}
                         {% block list_content_end %}{% endblock %}

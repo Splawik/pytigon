@@ -4,12 +4,5 @@ ModuleTitle = _("spreadsheet")
 Title = _("spreadsheet")
 Perms = False
 Index = "None"
-Urls = (
-    (
-        "task2/?schtml=desktop",
-        _("Task2"),
-        None,
-        """png://actions/edit-find-replace.png""",
-    ),
-)
+Urls = ()
 UserParam = {}

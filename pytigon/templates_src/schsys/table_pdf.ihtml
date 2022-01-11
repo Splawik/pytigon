@@ -140,7 +140,7 @@
                     th...{{pos}}
             % for row in object_list:
                 tr
-                    % for field in row|get_model_fields:
+                    % for field in row|get_model_ooxml_row:
                         td align=left...{{field}}
 
 

@@ -17,6 +17,8 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
+    dict_to_xlsx,
+    dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
@@ -31,3 +33,13 @@ import sys
 import datetime
 
 import json
+
+
+@dict_to_json
+def form(request, **argv):
+
+    json_data = json.loads(request.body)
+    print("-------------------------------------------------------")
+    print(json_data)
+    print("-------------------------------------------------------")
+    return {".result": "Hello world!<br/>" + str(json_data)}

@@ -7,6 +7,13 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = []
+urlpatterns = [
+    path(
+        "tbl_grid", TemplateView.as_view(template_name="schtabledemo/tbl_grid.html"), {}
+    ),
+]
 
 gen = generic_table_start(urlpatterns, "schtabledemo", views)
+
+
+gen.standard("demo_tbl", _("Grid table"), _("Grid table"))

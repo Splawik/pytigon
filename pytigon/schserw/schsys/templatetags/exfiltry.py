@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 """Standard python template filters
 
@@ -43,27 +43,31 @@ register = template.Library()
 
 # tools
 
-@register.filter(name='class_name')
+
+@register.filter(name="class_name")
 def class_name(value):
     """Returns class name of value"""
-    ret = ''
+    ret = ""
     try:
         ret = value.__class__.__name__
     except:
         pass
     return ret
 
-@register.filter(name='is_private')
+
+@register.filter(name="is_private")
 def is_private(value):
     """Check if function is private"""
-    return value.startswith('_')
+    return value.startswith("_")
 
-@register.filter(name='get_value')
+
+@register.filter(name="get_value")
 def getvalue(value, argv):
     """Returns value[argv]"""
     return value[argv]
 
-@register.filter(name='get_attr')
+
+@register.filter(name="get_attr")
 def get_attr(value, attr):
     """Returns getattr(value, attr)"""
     try:
@@ -73,31 +77,36 @@ def get_attr(value, attr):
     return obj
 
 
-@register.filter(name='range')
+@register.filter(name="range")
 def _range(value):
     """Returns list(range(int(value)))"""
     return list(range(int(value)))
 
-@register.filter(name='dir')
+
+@register.filter(name="dir")
 def f_dir(value):
     """Returns dir(value)"""
     return dir(value)
 
-@register.filter(name='split')
-def filter_split(obj, sep=';'):
+
+@register.filter(name="split")
+def filter_split(obj, sep=";"):
     "split obj and return result"
     return obj.split(sep)
 
-@register.filter(name='feval')
+
+@register.filter(name="feval")
 def _eval(value):
     """Returns eval(value)"""
     return eval(value)
 
-@register.filter(name='left')
-def left(value, arg):
-    return str(value)[:int(arg)]
 
-@register.filter(name='truncate')
+@register.filter(name="left")
+def left(value, arg):
+    return str(value)[: int(arg)]
+
+
+@register.filter(name="truncate")
 def truncate(value, arg):
     """truncate result"""
     try:
@@ -106,70 +115,78 @@ def truncate(value, arg):
         retstr = unicode(value)
 
     if len(retstr) > int(arg):
-        return retstr[:int(arg) - 3] + '...'
+        return retstr[: int(arg) - 3] + "..."
     else:
         return retstr
 
-@register.filter(name='last_elem')
-def last_elem(value, sep='/'):
+
+@register.filter(name="last_elem")
+def last_elem(value, sep="/"):
     """split value and return last element"""
     return value.split(sep)[-1]
 
-@register.filter(name='first_section')
+
+@register.filter(name="first_section")
 def first_section(html):
     """part of string before $$$"""
     if html:
-        return html.split('$$$')[0]
+        return html.split("$$$")[0]
     else:
         return ""
 
-@register.filter(name='second_section')
+
+@register.filter(name="second_section")
 def second_section(html):
     """part of string after $$$"""
     if html:
-        x = html.split('$$$')
-        if len(x)>1:
+        x = html.split("$$$")
+        if len(x) > 1:
             return x[1]
         else:
             return ""
     else:
         return ""
 
-@register.filter(name='replace')
+
+@register.filter(name="replace")
 def replace(value, replace_str):
-    """replace_str: 'old_value|new_value' """
-    l = replace_str.split('|')
+    """replace_str: 'old_value|new_value'"""
+    l = replace_str.split("|")
     if len(l) == 2:
         value2 = value.replace(l[0], l[1])
         return value2
     else:
         return value
 
-@register.filter(name='nbsp')
-def nbsp(value):
-    """replace_str: 'old_value|new_value' """
-    return value.replace(' ', '&nbsp;')
 
-@register.filter(name='hasattr')
+@register.filter(name="nbsp")
+def nbsp(value):
+    """replace_str: 'old_value|new_value'"""
+    return value.replace(" ", "&nbsp;")
+
+
+@register.filter(name="hasattr")
 def filter_hasattr(obj, attr_name):
     return hasattr(obj, attr_name)
 
-@register.filter(name='has_ext')
+
+@register.filter(name="has_ext")
 def has_ext(value, arg):
     if value.lower().endswith(arg.lower()):
         return True
     else:
         return False
 
-@register.filter(name='append_get_param')
+
+@register.filter(name="append_get_param")
 def append_get_param(href, parm):
-    if '?' in href:
-        return href+"&"+str(parm)
+    if "?" in href:
+        return href + "&" + str(parm)
     else:
-        return href+"?"+str(parm)
+        return href + "?" + str(parm)
 
 
-@register.filter(name='call')
+@register.filter(name="call")
 def _call(obj, methodName):
     if hasattr(obj, methodName):
         method = getattr(obj, methodName)
@@ -181,7 +198,8 @@ def _call(obj, methodName):
         return method()
     return ""
 
-@register.filter(name='args')
+
+@register.filter(name="args")
 def args(obj, arg):
     if not hasattr(obj, "__callArg"):
         obj.__callArg = []
@@ -190,22 +208,24 @@ def args(obj, arg):
 
 
 # conversion functions
-@register.filter(name='bencode')
+@register.filter(name="bencode")
 def bencode(value):
     """Returns b64encode(value)"""
 
     if value:
-        return b64encode(value.encode('utf-8')).decode('utf-8')
+        return b64encode(value.encode("utf-8")).decode("utf-8")
     else:
-        return b64encode(b"").decode('utf-8')
+        return b64encode(b"").decode("utf-8")
 
-@register.filter(name='bdecode')
+
+@register.filter(name="bdecode")
 def bdecode(value):
     """Returns b64decode(value)"""
 
-    return b64decode(value.encode('utf-8')).decode('utf-8')
+    return b64decode(value.encode("utf-8")).decode("utf-8")
 
-@register.filter(name='to_str')
+
+@register.filter(name="to_str")
 def to_str(value):
     """Converts value to str"""
     try:
@@ -214,9 +234,10 @@ def to_str(value):
         ret = ""
     return ret
 
-@register.filter(name='none_to_empty')
+
+@register.filter(name="none_to_empty")
 def none_to_empty(value):
-    """Converts value to str, None to '' """
+    """Converts value to str, None to ''"""
     if value:
         try:
             ret = str(value)
@@ -226,7 +247,8 @@ def none_to_empty(value):
         ret = ""
     return ret
 
-@register.filter(name='to_int')
+
+@register.filter(name="to_int")
 def to_int(value):
     try:
         ret = int(value)
@@ -234,7 +256,8 @@ def to_int(value):
         ret = 0
     return ret
 
-@register.filter(name='to_float')
+
+@register.filter(name="to_float")
 def to_int(value):
     try:
         ret = float(value)
@@ -242,29 +265,32 @@ def to_int(value):
         ret = 0.0
     return ret
 
-@register.filter(name='format')
+
+@register.filter(name="format")
 def format(value, id):
     return value % id
 
-@register.filter(name='genericfloatformat')
+
+@register.filter(name="genericfloatformat")
 def genericfloatformat(text, arg="{: .2f}"):
     space_convert = False
     try:
         f = float(text)
-        if ': ' in arg:
+        if ": " in arg:
             space_convert = True
-            arg2 = arg.replace(': ', ':,')
+            arg2 = arg.replace(": ", ":,")
         else:
             arg2 = arg
         x = arg2.format(f)
         if space_convert:
-            return x.replace(',', ' ')
+            return x.replace(",", " ")
         else:
             return ""
     except ValueError:
-        return ''
+        return ""
 
-@register.filter(name='genericfloatnullformat')
+
+@register.filter(name="genericfloatnullformat")
 def genericfloatnullformat(text, arg="{: .2f}"):
     try:
         f = float(text)
@@ -275,57 +301,66 @@ def genericfloatnullformat(text, arg="{: .2f}"):
     except:
         return "-"
 
-@register.filter(name='floatformat2')
+
+@register.filter(name="floatformat2")
 def floatformat2(text):
     return genericfloatformat(text, "{: .2f}")
 
-@register.filter(name='floatformat3')
+
+@register.filter(name="floatformat3")
 def floatformat3(text):
     return genericfloatformat(text, "{: .3f}")
 
-@register.filter(name='floatnullformat')
+
+@register.filter(name="floatnullformat")
 def floatnullformat(text):
     return genericfloatnullformat(text, "{: .2f}")
 
-@register.filter(name='floatnullformat3')
+
+@register.filter(name="floatnullformat3")
 def floatnullformat3(text):
     return genericfloatnullformat(text, "{: .3f}")
 
-@register.filter(name='amount')
+
+@register.filter(name="amount")
 def amount(text):
     try:
         f = float(text)
     except ValueError:
-        return ''
-    if f==0.0:
-        return '-  '
+        return ""
+    if f == 0.0:
+        return "-  "
+
     def split_len(seq, length):
-        return [seq[i:i+length] for i in range(0, len(seq), length)]
+        return [seq[i : i + length] for i in range(0, len(seq), length)]
 
     s = "%.02f" % f
-    t = s.split('.')
-    return ' '.join(split_len(t[0][::-1], 3))[::-1] + "." + t[1]
+    t = s.split(".")
+    return " ".join(split_len(t[0][::-1], 3))[::-1] + "." + t[1]
 
-@register.filter(name='isoformat')
+
+@register.filter(name="isoformat")
 def isoformat(value):
     if value:
         try:
-            iso = value.isoformat()[:19].replace('T', ' ')
+            iso = value.isoformat()[:19].replace("T", " ")
             return iso
         except:
             return value
     else:
         return ""
 
-@register.filter(name='isoformat_short')
+
+@register.filter(name="isoformat_short")
 def isoformat_short(value):
     if value:
-        iso = value.isoformat()[:16].replace('T', ' ')
+        iso = value.isoformat()[:16].replace("T", " ")
         return iso
     else:
         return ""
 
-@register.filter(name='d_isoformat')
+
+@register.filter(name="d_isoformat")
 def d_isoformat(value):
     if value:
         iso = value.isoformat()[:10]
@@ -333,44 +368,58 @@ def d_isoformat(value):
     else:
         return ""
 
-@register.filter(name='one_line_block')
+
+@register.filter(name="one_line_block")
 def one_line_block(value):
-    """Clean value by removing unnecessary spaces and characters: '\n', '\t' """
-    return value.replace('        ', ' ').replace('    ', ' ').replace('  ', ' ').replace('\n', '').replace('\t', '')
+    """Clean value by removing unnecessary spaces and characters: '\n', '\t'"""
+    return (
+        value.replace("        ", " ")
+        .replace("    ", " ")
+        .replace("  ", " ")
+        .replace("\n", "")
+        .replace("\t", "")
+    )
 
-@register.filter(name='one_line_code')
+
+@register.filter(name="one_line_code")
 def one_line_code(value):
-    """Clean value by removing unnecessary spaces and characters: '\n', '\t' """
-    return value.replace('\n', '').replace('\r', '').replace('\t', '')
+    """Clean value by removing unnecessary spaces and characters: '\n', '\t'"""
+    return value.replace("\n", "").replace("\r", "").replace("\t", "")
 
-@register.filter(name='clean')
+
+@register.filter(name="clean")
 def clean(value):
-    return ' '.join(value.replace('\n', '').replace('\t', '').split())
+    return " ".join(value.replace("\n", "").replace("\t", "").split())
 
 
 # + - / *
 
-@register.filter(name='fadd')
+
+@register.filter(name="fadd")
 def fadd(value, arg):
     """Returns int(value) - int(arg)"""
     return float(value) + float(arg)
 
-@register.filter(name='subtract')
+
+@register.filter(name="subtract")
 def subtract(value, arg):
     """Returns int(value) - int(arg)"""
     return int(value) - int(arg)
 
-@register.filter(name='fsubtract')
+
+@register.filter(name="fsubtract")
 def fsubtract(value, arg):
     """Returns int(value) - int(arg)"""
     return float(value) - float(arg)
 
-@register.filter(name='multiply')
+
+@register.filter(name="multiply")
 def multiply(value, arg):
     """Returns int(value) * int(arg)"""
     return int(value) * int(arg)
 
-@register.filter(name='fmultiply')
+
+@register.filter(name="fmultiply")
 def fmultiply(value, arg):
     """return fvalue * float"""
     try:
@@ -379,12 +428,14 @@ def fmultiply(value, arg):
         ret = ""
     return ret
 
-@register.filter(name='divide')
+
+@register.filter(name="divide")
 def divide(value, arg):
     """Return int(value) / int(arg)"""
     return int(value) / int(arg)
 
-@register.filter(name='fdivide')
+
+@register.filter(name="fdivide")
 def fdivide(value, arg):
     """Returns float(value) / float(arg)"""
     if float(arg) != 0:
@@ -392,67 +443,85 @@ def fdivide(value, arg):
     else:
         return ""
 
-@register.filter(name='append_str')
+
+@register.filter(name="append_str")
 def append_str(value, s):
-    if s==None or s=="":
+    if s == None or s == "":
         return value
     else:
         return value + str(s)
 
-@register.filter(name='date_inc')
+
+@register.filter(name="date_inc")
 def date_inc(value, arg):
     """Increment date value by timedelta(int(arg))"""
     try:
         (date, time) = value.split()
-        (y, m, d) = date.split('-')
-        return datetime.datetime(int(y), int(m), int(d))\
-             + datetime.timedelta(int(arg))
+        (y, m, d) = date.split("-")
+        return datetime.datetime(int(y), int(m), int(d)) + datetime.timedelta(int(arg))
     except ValueError:
         return None
 
 
-@register.filter(name='date_dec')
+@register.filter(name="date_dec")
 def date_dec(value, arg):
     """Decrement date value by timedelta(int(arg))"""
     try:
-        (y, m, d) = value.split('-')
-        return (datetime.datetime(int(y), int(m), int(d))
-                 - datetime.timedelta(int(arg))).date()
+        (y, m, d) = value.split("-")
+        return (
+            datetime.datetime(int(y), int(m), int(d)) - datetime.timedelta(int(arg))
+        ).date()
     except ValueError:
         return None
 
+
 # models and fields
 
-#TODO do poprawy nazwa, albo wykasowanie jednej z funkcji
 
-@register.filter(name='get_model_fields')
+@register.filter(name="get_model_fields")
 def get_model_fields(value):
     """Returns fields for model (value) without many_to_many fields"""
     ret = []
-    if value and hasattr(value, '_meta'):
+    if value and hasattr(value, "_meta"):
         for f in value._meta.fields:
-            ret.append(f)
+            if f.name == "id":
+                ret.insert(0, f)
+            else:
+                ret.append(f)
     return ret
 
 
-#@register.filter(name='get_model_fields')
-#def get_model_fields(obj):
-#    if hasattr(obj, "_meta"):
-#        ret = []
-#        for field in obj._meta.get_fields():
-#            if hasattr(obj, field.name):
-#                if field.name == 'id':
-#                    ret.insert(0, getattr(obj, field.name))
-#                else:
-#                    ret.append(getattr(obj, field.name))
-#        return ret
-#    else:
-#        return []
+@register.filter(name="get_model_row")
+def get_model_row(obj):
+    if hasattr(obj, "_meta"):
+        ret = []
+        for field in obj._meta.get_fields():
+            if hasattr(obj, field.name):
+                if field.name == "id":
+                    ret.insert(0, getattr(obj, field.name))
+                else:
+                    ret.append(getattr(obj, field.name))
+        return ret
+    else:
+        return []
 
 
-#TODO do poprawy nazwa
+@register.filter(name="get_model_ooxml_row")
+def get_model_ooxml_row(obj):
+    if hasattr(obj, "_meta"):
+        ret = []
+        for field in obj._meta.get_fields():
+            if hasattr(obj, field.name):
+                if field.name == "id":
+                    ret.insert(0, ooxml(getattr(obj, field.name)))
+                else:
+                    ret.append(ooxml(getattr(obj, field.name)))
+        return ret
+    else:
+        return []
 
-@register.filter(name='get_all_model_fields')
+
+@register.filter(name="get_all_model_fields")
 def get_all_model_fields(value):
     """Returns all fields for model (value)"""
     ret = []
@@ -460,36 +529,38 @@ def get_all_model_fields(value):
         ret.append(f)
     return ret
 
-@register.filter(name='get_all_model_parents')
+
+@register.filter(name="get_all_model_parents")
 def get_all_model_parents(parent):
     """Returns fields for model (value) without many_to_many fields"""
     ret = []
     while parent:
         ret.append(parent)
-        parent=parent.parent
+        parent = parent.parent
     return ret
 
 
-@register.filter(name='get_model_fields_names')
+@register.filter(name="get_model_fields_names")
 def get_model_fields_names(obj):
     ret = []
     for field in obj._meta.get_fields():
         if hasattr(obj, field.name):
-            if field.name == 'id':
-                ret.insert(0,field.name)
+            if field.name == "id":
+                ret.insert(0, field.name)
             else:
                 ret.append(field.name)
     return ret
 
-@register.filter(name='get_model_fields_verbose_names')
+
+@register.filter(name="get_model_fields_verbose_names")
 def get_model_fields_verbose_names(obj):
     ret = []
     if hasattr(obj, "_meta"):
         for field in obj._meta.get_fields():
             if hasattr(obj, field.name):
                 if hasattr(field, "verbose_name"):
-                    if field.name == 'id':
-                        ret.insert(0,field.verbose_name)
+                    if field.name == "id":
+                        ret.insert(0, field.verbose_name)
                     else:
                         ret.append(field.verbose_name)
                 else:
@@ -499,55 +570,63 @@ def get_model_fields_verbose_names(obj):
             ret.append("x%d" % i)
     return ret
 
-@register.filter(name='user_in_group')
+
+@register.filter(name="user_in_group")
 def user_in_group(user, group_name):
     return user.groups.filter(name=group_name).exists()
 
-@register.filter(name='field_as_widget')
+
+@register.filter(name="field_as_widget")
 def field_as_widget(value, arg):
     d = {}
-    l = arg.split(',')
+    l = arg.split(",")
     for x in l:
-        x2 = x.split(':')
+        x2 = x.split(":")
         d[x2[0]] = x2[1]
     return value.as_widget(attrs=d)
 
 
 # TODO - zmiana nazwy
 
-@register.filter(name='model_has_children')
+
+@register.filter(name="model_has_children")
 def model_has_children(value):
     set_name = value._meta.model_name
-    if hasattr(value, set_name + '_set'):
-        o = getattr(value, set_name + '_set')
+    if hasattr(value, set_name + "_set"):
+        o = getattr(value, set_name + "_set")
     else:
-        o = getattr(value, 'children')
+        o = getattr(value, "children")
     l = o.all()
     if len(l) > 0:
         return True
     else:
         return False
 
-@register.filter(name='choices_from_field')
+
+@register.filter(name="choices_from_field")
 def choices_from_field(obj, field):
     return obj._meta.get_field(field).choices
 
-#html
 
-@register.filter(name='reverse')
+# html
+
+
+@register.filter(name="reverse")
 def _reverse(value):
     return reverse(value)
 
-@register.filter(name='errormessage')
+
+@register.filter(name="errormessage")
 def errormessage(value):
     """Returns True if value.endswith('!')"""
-    if value.endswith('!'):
+    if value.endswith("!"):
         return True
     else:
         return False
 
-#@register.filter(name='to_html_icon')
-#def to_html_icon(icon_str, additional_class=""):
+
+# @register.filter(name='to_html_icon')
+# def to_html_icon(icon_str, additional_class=""):
 #    if icon_str.startswith('fa://'):
 #        return "<i class='fa fa-%s %s'></i>" % (icon_str[5:].replace('.png',''), additional_class)
 #    elif icon_str.startswith('png://'):
@@ -563,147 +642,188 @@ def errormessage(value):
 #     else:
 #         return "<i class='fa fa-circle-o fa-lg'></i>"
 
-@register.filter(name='aggregate')
+
+@register.filter(name="aggregate")
 def aggregate(objects, field_name):
-    if field_name.startswith('max_'):
+    if field_name.startswith("max_"):
         field = field_name[4:]
         x = objects.aggregate(Max(field))
-        return x[field+'__max']
-    elif field_name.startswith('min_'):
+        return x[field + "__max"]
+    elif field_name.startswith("min_"):
         field = field_name[4:]
         x = objects.aggregate(Min(field))
-        return x[field+'__min']
-    elif field_name.startswith('sum_'):
+        return x[field + "__min"]
+    elif field_name.startswith("sum_"):
         field = field_name[4:]
         x = objects.aggregate(Sum(field))
-        return x[field+'__sum']
-    elif field_name.startswith('avg_'):
+        return x[field + "__sum"]
+    elif field_name.startswith("avg_"):
         field = field_name[4:]
         x = objects.aggregate(Avg(field))
-        return x[field+'__avg']
-    elif field_name.startswith('count_'):
+        return x[field + "__avg"]
+    elif field_name.startswith("count_"):
         field = field_name[6:]
         x = objects.aggregate(Count(field))
-        return x[field+'__count']
+        return x[field + "__count"]
     return 0
 
-#wiki, markdown
 
-@register.filter(name='wikify')
+# wiki, markdown
+
+
+@register.filter(name="wikify")
 def _wikify(value, path=None):
     return wikify(value, path)
 
-@register.filter(name='wiki')
+
+@register.filter(name="wiki")
 def wiki(value):
     return wiki_from_str(value)
 
-@register.filter(name='wiki_href')
+
+@register.filter(name="wiki_href")
 def wiki_href(value, section="help"):
-    if section.startswith('+'):
+    if section.startswith("+"):
         path = section
-        section = 'help'
+        section = "help"
     else:
-        path=None
+        path = None
     return make_href(value, section=section, path=path)
 
-@register.filter(name='markdown', is_safe=True)
+
+@register.filter(name="markdown", is_safe=True)
 def _markdown(value):
     if value:
-        return markdown.markdown(value, extensions=['abbr', 'attr_list', 'def_list', 'fenced_code', 'footnotes', 'md_in_html', 'tables', 'admonition', 'codehilite',])
+        return markdown.markdown(
+            value,
+            extensions=[
+                "abbr",
+                "attr_list",
+                "def_list",
+                "fenced_code",
+                "footnotes",
+                "md_in_html",
+                "tables",
+                "admonition",
+                "codehilite",
+            ],
+        )
     else:
         return ""
 
-#forms
 
-@register.filter(name='preferred_enctype')
+# forms
+
+
+@register.filter(name="preferred_enctype")
 def _preferred_enctype(form):
-    if hasattr(form, 'visible_fields'):
+    if hasattr(form, "visible_fields"):
         for field in form.visible_fields():
-            if type(field.field).__name__ in ('FileField', 'ImageField'):
+            if type(field.field).__name__ in ("FileField", "ImageField"):
                 return "multipart/form-data"
     return "application/x-www-form-urlencoded"
 
-class BootstrapForm():
+
+class BootstrapForm:
     def __init__(self, form):
         self.form = form
 
     def as_p(self):
         return render_form(self.form)
 
-@register.filter(name='to_bootstrap')
+
+@register.filter(name="to_bootstrap")
 def to_bootstrap(form):
     return BootstrapForm(form)
 
-@register.filter(name='textfiel_row_col')
+
+@register.filter(name="textfiel_row_col")
 def textfiel_row_col(field, arg):
-    row, col = arg.split('x')
-    field.field.widget.attrs['rows']=int(row)
-    field.field.widget.attrs['cols']=int(col)
+    row, col = arg.split("x")
+    field.field.widget.attrs["rows"] = int(row)
+    field.field.widget.attrs["cols"] = int(col)
     return field
 
-#other
 
-@register.filter(name='ooxml')
+# other
+
+
 def ooxml(value):
     if type(value) in (datetime.datetime, datetime.date):
         if value:
             return value.isoformat()
         else:
-            return '0'
+            return "0"
     elif type(value) in (float, int):
         if value:
             return str(value)
         else:
-            return '0'
-    else :
+            return "0"
+    else:
         if value:
             return str(value)
         else:
             return ""
 
-@register.filter(name='ihtml2html')
+
+@register.filter(name="ooxml")
+def _ooxml(value):
+    return ooxml(value)
+
+
+@register.filter(name="ihtml2html")
 def ihtml2html(html):
     return ihtml_to_html(None, input_str=html)
 
-@register.filter(name='get_or_tree')
+
+@register.filter(name="get_or_tree")
 def get_or_tree(getattr):
     if getattr:
-        return 'gettree'
+        return "gettree"
     else:
-        return 'tree'
+        return "tree"
 
-@register.filter(name='append_class_to_attrs')
+
+@register.filter(name="append_class_to_attrs")
 def append_class_to_attrs(obj, arg):
     if obj:
         ret = ""
         test = False
-        for pos in [ x.split('=') for x in obj.split(' ') ]:
-            if pos[0]=='class':
+        for pos in [x.split("=") for x in obj.split(" ")]:
+            if pos[0] == "class":
                 test = True
-                ret += "%s='%s' " % ('class', pos[1].replace('"',"").replace("'","") +" "+arg+" ")
+                ret += "%s='%s' " % (
+                    "class",
+                    pos[1].replace('"', "").replace("'", "") + " " + arg + " ",
+                )
             else:
-                if len(pos)==2:
+                if len(pos) == 2:
                     ret += "%s=%s " % (pos[0], pos[1])
                 else:
-                    ret += pos[0] + ' '
+                    ret += pos[0] + " "
         if not test:
-            ret += "%s='%s' " % ('class', arg + " ")
+            ret += "%s='%s' " % ("class", arg + " ")
         return ret[:-1]
     else:
         return "class='%s'" % arg
 
-@register.filter(name='is_menu_checked')
+
+@register.filter(name="is_menu_checked")
 def is_menu_checked(url, full_path):
     if url and full_path:
-        p = full_path.split('?')[0]
-        if len(p)>0 and p[0]=='/': p=p[1:]
-        if len(p)>0 and p[-1]=='/': p=p[:-1]
+        p = full_path.split("?")[0]
+        if len(p) > 0 and p[0] == "/":
+            p = p[1:]
+        if len(p) > 0 and p[-1] == "/":
+            p = p[:-1]
 
-        u = url.split('?')[0]
-        if len(u)>0 and u[0]=='/': u=u[1:]
-        if len(u)>0 and u[-1]=='/': u=u[:-1]
+        u = url.split("?")[0]
+        if len(u) > 0 and u[0] == "/":
+            u = u[1:]
+        if len(u) > 0 and u[-1] == "/":
+            u = u[:-1]
 
-        if (p in u and 'wiki' in p) or u in p:
+        if (p in u and "wiki" in p) or u in p:
             return True
         else:
             return False
@@ -711,9 +831,9 @@ def is_menu_checked(url, full_path):
         return False
 
 
-@register.filter(name='import_var')
+@register.filter(name="import_var")
 def _import_var(obj):
     path = str(obj)
-    base_path, item = path.split(':')
+    base_path, item = path.split(":")
     m = importlib.import_module(base_path)
     return getattr(m, item)

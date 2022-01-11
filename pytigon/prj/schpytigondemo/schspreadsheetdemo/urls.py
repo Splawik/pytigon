@@ -7,8 +7,6 @@ from django.views.generic import TemplateView
 from . import views
 
 
-urlpatterns = [
-    path("task2/", views.task2, {}, name="schspreadsheetdemo_task2"),
-]
+urlpatterns = []
 
 gen = generic_table_start(urlpatterns, "schspreadsheetdemo", views)

@@ -3,6 +3,7 @@
 % load exfiltry
 % load exsyntax
 % load bootstrap4
+% load widget_tweaks
 
 %% login
 
@@ -226,24 +227,26 @@
                         %% form_content
                             table class=filter_form_frame,,,width=100%,,,bgcolor=#fff:::tr
                                 td
-                                    % for field in form
-                                        table class=filter_form,,,border=0
-                                            % if vform:
-                                                tr
-                                                    td cellpadding=8
-                                                        {{ field.errors }}
-                                                        {{ field.label}}:
-                                                tr
-                                                    td
-                                                        {{ field }}
-                                            % else:
-                                                tr
-                                                    td cellpadding=8
-                                                            {{ field.label}}:
-                                                    td
-                                                        {{ field }}
-                                                    td
-                                                        {{ field.errors }}
+                                    % for field in form:
+                                        % with field_class=field.field|class_name:
+                                            % with schattr="schtype:"|append_str:field_class
+                                                table
+                                                    % if vform:
+                                                        tr
+                                                            td cellpadding=8
+                                                                {{ field.errors }}
+                                                                {{ field.label}}:
+                                                        tr
+                                                            td
+                                                                {{ field|attr:schattr }}
+                                                    % else: 
+                                                        tr
+                                                            td cellpadding=8
+                                                                {{ field.label}}:
+                                                            td
+                                                                {{ field|attr:schattr }}
+                                                            td
+                                                                {{ field.errors }}
                                 td align=right,,,cellpadding=3
                                     %% form_content_schbutton
                                         input type=submit,,,value=_(Refresh),,,class=btn btn-info,,,target=_self,,,height=44

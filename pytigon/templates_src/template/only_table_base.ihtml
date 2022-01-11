@@ -1,21 +1,37 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends 'template/only_content.html'
 
 %% content_start
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% content_end
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_page_start
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_page_header
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_content_header
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_content_footer
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_content_end
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_page_footer
+    % if form.errors or errors:
+        {{ block.super }}
 
 %% list_page_end
+    % if form.errors or errors:
+        {{ block.super }}

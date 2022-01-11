@@ -4,5 +4,12 @@ ModuleTitle = _("tools")
 Title = _("Command shell")
 Perms = False
 Index = "None"
-Urls = ()
+Urls = (
+    (
+        "task2/?schtml=desktop",
+        _("Task2"),
+        None,
+        """png://actions/edit-find-replace.png""",
+    ),
+)
 UserParam = {}

@@ -166,11 +166,15 @@ def new_row_base(
             url2 = "{tp}{x1}/add/"
 
         if action == "new_row/-":
-            if  'base_filter' in context and context['base_filter'] and context['base_filter'] != '-':
-                action = "new_row/" + context['base_filter']
-            elif 'filter' in context and context['filter'] and context['filter'] != '-':
-                action = "new_row/" + context['filter']
-    
+            if (
+                "base_filter" in context
+                and context["base_filter"]
+                and context["base_filter"] != "-"
+            ):
+                action = "new_row/" + context["base_filter"]
+            elif "filter" in context and context["filter"] and context["filter"] != "-":
+                action = "new_row/" + context["filter"]
+
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     if title and title[0] == "+":
         description = title[1:]
@@ -328,6 +332,7 @@ def wiki_link(context, subject, wiki_description, attrs="", target="_self", url=
 
 @inclusion_tag("widgets/field.html")
 def field(context, form_field, fieldformat=None):
+    print("FIELD:", form_field)
     if type(form_field) in (
         SafeText,
         str,
@@ -735,6 +740,7 @@ def module_link(context, href):
 
 @inclusion_tag("widgets/jscript_link.html")
 def jscript_link(context, href):
+    print("USER_AGENT:", context["user_agent"])
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
@@ -896,7 +902,7 @@ def svg_standard_style(
 
 
 @register.simple_tag(takes_context=True)
-def id_num(context, name):
+def id_num(context, name, sorting=False):
     if not context["standard_web_browser"] or (
         "doc_type" in context and context["doc_type"] == "json"
     ):
@@ -908,7 +914,10 @@ def id_num(context, name):
                 + "/"
                 + str(context["paginator"].count)
             )
-    return name
+    if sorting or ("sort" in context and context["sort"]):
+        return sorted_column(context, "id", name)
+    else:
+        return name
 
 
 @inclusion_tag("widgets/ok_cancel.html")
@@ -919,6 +928,14 @@ def ok_cancel(context):
 @inclusion_tag("widgets/paginator.html")
 def paginator(context):
     return context.flatten()
+
+
+@inclusion_tag("widgets/sorted_column.html")
+def sorted_column(context, name, description):
+    ret = standard_dict(context, {})
+    ret["column_name"] = name
+    ret["column_description"] = description
+    return ret
 
 
 # @inclusion_tag('widgets/paginator.html')

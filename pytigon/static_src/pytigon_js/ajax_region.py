@@ -13,6 +13,8 @@ def data_type(data_or_html):
                 return "$$RETURN_UPDATE_ROW_OK"
             elif "$$RETURN_REFRESH_PARENT" in data_or_html:
                 return "$$RETURN_REFRESH_PARENT"
+            elif "$$RETURN_RELOAD_PAGE" in data_or_html:
+                return "$$RETURN_RELOAD_PAGE"
             elif "$$RETURN_REFRESH" in data_or_html:
                 return "$$RETURN_REFRESH"
             elif "$$RETURN_CANCEL" in data_or_html:
@@ -66,11 +68,11 @@ def mount_html(dest_elem, data_or_html, link=None):
 
         jQuery.each(jQuery(dest_elem).find(".call_on_remove"), _on_remove)
 
-        #if isinstance(data_or_html, str):
+        # if isinstance(data_or_html, str):
         #    #dest_elem.innerHTML = data_or_html
         #    if dest_elem.childNodes.length > 0:
         #        morphdom(dest_elem, data_or_html)
-        #else:
+        # else:
         #    if dest_elem.childNodes.length>0:
         #        #dest_elem.replaceChild(data_or_html, dest_elem.childNodes[0])
         #        morphdom(dest_elem.childNodes[0], data_or_html)
@@ -79,9 +81,9 @@ def mount_html(dest_elem, data_or_html, link=None):
         #    else:
         #        dest_elem.appendChild(data_or_html)
 
-        if dest_elem.childNodes.length>0:
+        if dest_elem.childNodes.length > 0:
             morphdom(dest_elem.childNodes[0], data_or_html)
-            while dest_elem.childNodes.length>1:
+            while dest_elem.childNodes.length > 1:
                 dest_elem.removeChild(dest_elem.childNodes[1])
         else:
             dest_elem.appendChild(data_or_html)
@@ -133,11 +135,10 @@ register_mount_fun(selectpicker_init)
 
 
 def auto_frame_init(dest_elem):
-    frame_list = Array.prototype.slice.call(
-        dest_elem.querySelectorAll(".auto-frame")
-    )
+    frame_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".auto-frame"))
     for elem in frame_list:
         refresh_ajax_frame(elem)
+
 
 register_mount_fun(auto_frame_init)
 
@@ -177,7 +178,7 @@ register_mount_fun(moveelement_init)
 
 def label_floating_init(dest_elem):
     def _on_blur(self, e):
-        if self.tagName.lower() == 'input':
+        if self.tagName.lower() == "input":
             if e["type"] == "focus" or self.value.length > 0:
                 test = True
             else:
@@ -188,6 +189,13 @@ def label_floating_init(dest_elem):
 
     jQuery(dest_elem).find(".label-floating .form-control").on(
         "focus blur", _on_blur
+    ).trigger("blur")
+
+    def _on_blur2(self, e):
+        jQuery(self).parents(".form-group").toggleClass("focused", True)
+
+    jQuery(dest_elem).find(".label-floating .form-control-file").on(
+        "focus blur", _on_blur2
     ).trigger("blur")
 
 
@@ -218,7 +226,8 @@ def select2_init(dest_elem):
                     if src_elem:
                         id = src_elem.getAttribute("data-id")
                         text = src_elem.getAttribute("data-text")
-                        set_select2_value(jQuery(control), id, text)
+                        if id and text:
+                            set_select2_value(jQuery(control), id, text)
 
             control.onloadeddata = _onloadeddata
             control.classList.add("ajax-frame")
@@ -349,7 +358,12 @@ def _refresh_page(target_element, data_element):
 
 
 def refresh_ajax_frame(
-    element, region_name=None, data_element=None, callback=None, callback_on_error=None, data_if_none=None
+    element,
+    region_name=None,
+    data_element=None,
+    callback=None,
+    callback_on_error=None,
+    data_if_none=None,
 ):
     region = get_ajax_region(element, region_name)
     frame = get_ajax_frame(element, region_name)
@@ -367,8 +381,8 @@ def refresh_ajax_frame(
 
         dt = data_type(data)
 
-        if dt != "$$RETURN_ERROR" and element and element.hasAttribute('rettype'):
-            dt = '$$'+element.getAttribute('rettype')
+        if dt != "$$RETURN_ERROR" and element and element.hasAttribute("rettype"):
+            dt = "$$" + element.getAttribute("rettype")
 
         if (
             dt != "$$RETURN_ERROR"
@@ -385,12 +399,14 @@ def refresh_ajax_frame(
                 return refresh_ajax_frame(
                     region.parentElement, region_name, None, callback, callback_on_error
                 )
+            elif dt in ("$$RETURN_RELOAD_PAGE",):
+                return _refresh_page(region, data)
             elif dt in (
                 "$$RETURN_OK",
                 "$$RETURN_NEW_ROW_OK",
                 "$$RETURN_UPDATE_ROW_OK",
             ):
-                elem = region.closest('.plug').parentElement
+                elem = region.closest(".plug").parentElement
                 callback()
                 return refresh_ajax_frame(
                     elem, region_name, None, None, callback_on_error, data
@@ -419,11 +435,11 @@ def refresh_ajax_frame(
                 options = {
                     "title": "Error!",
                     "html": txt,
-                    'icon': 'error',
-                    'buttonsStyling': False,
-                    'showCancelButton': False,
-                    'customClass': {
-                        'confirmButton': 'btn btn-primary btn-lg',
+                    "icon": "error",
+                    "buttonsStyling": False,
+                    "showCancelButton": False,
+                    "customClass": {
+                        "confirmButton": "btn btn-primary btn-lg",
                     },
                 }
                 Swal.fire(options)
@@ -468,7 +484,9 @@ def refresh_ajax_frame(
     else:
         _callback(data_if_none)
 
+
 window.refresh_ajax_frame = refresh_ajax_frame
+
 
 def ajax_load(element, url, complete):
     def _onload(responseText):
@@ -479,4 +497,3 @@ def ajax_load(element, url, complete):
 
 
 window.ajax_load = ajax_load
-

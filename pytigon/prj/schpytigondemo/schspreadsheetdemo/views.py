@@ -17,6 +17,8 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
+    dict_to_xlsx,
+    dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
@@ -29,11 +31,3 @@ from . import models
 import os
 import sys
 import datetime
-
-
-@dict_to_template("schspreadsheetdemo/v_task2.html")
-def task2(request, **argv):
-
-    id = "spec"
-    task_id = async_task("schtasksdemo.tasks.fun2", task_publish_id=id)
-    return {"task_id": task_id, "id": "demo__" + id}
