@@ -138,7 +138,9 @@ _("Run")
 _("Translation")
 _("Status")
 _("Success")
-_("A restart signal has been sent, depending on the configuration, the restart may take from a few seconds to several hours")
+_(
+    "A restart signal has been sent, depending on the configuration, the restart may take from a few seconds to several hours"
+)
 _("Warning")
 _("It is not possible to send a signal for restart")
 _("New url")

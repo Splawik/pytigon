@@ -22,7 +22,7 @@ try {
         } else {
             address = "wss://" + address;
         }
-        component.websocket = __new__(new WebSocket(address));
+        component.websocket = new WebSocket(address);
         on_timer = (function flx_on_timer () {
             if (_pyfunc_truthy(component.websocket)) {
                 component.websocket.send(JSON.stringify(({ping: 1})));

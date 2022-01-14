@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
 from django.template.loader import render_to_string
 from django.template import Context, Template
@@ -17,6 +17,8 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
+    dict_to_xlsx,
+    dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href

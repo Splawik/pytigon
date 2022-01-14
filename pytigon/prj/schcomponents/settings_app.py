@@ -85,6 +85,7 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
+TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -126,7 +127,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.11.07 20:08:07"
+GEN_TIME = "2022.01.12 16:50:20"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
