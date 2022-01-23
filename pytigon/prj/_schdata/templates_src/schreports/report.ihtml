@@ -1,8 +1,7 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncode
     script language=python
@@ -16,35 +15,33 @@
             return href
 
 %% all
-    %with table_type='simple':
+    % with table_type='simple':
         {{ block.super }}
 
 %% scroll
 
 %% list_content_actions    
     div class=tr d-inline
-        .New: 
+        _(New): 
         % for pos in object_list.model.get_rep_types:        
-            % new_row_inline pos "" "" "" "" "../../../../../new_rep/"|append_str:pos|append_str:"/0/" 
-
+            % new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/" 
 
 %% list_row_header
-    th...Report type
-    th...Date
+    th..._(Report type)
+    th..._(Date)
 
 %% list_row
     td...{{object.report_def_name}}
     td...{{object.date|isoformat}}
 
-
 %% list_row_actions
     % row_actions:
-        .edit-inline,_(Update),,,,,../../../../../../schreports/table/Report/{id}/edit__rep/        
+        .edit-inline,_(Update),,,,,{{base_path}}schreports/table/Report/{id}/edit__rep/        
         .pdf
         .odf        
         .field_edit/data,Data,data        
         .delete
-
+        
 %% row_edit
     % form:
         "parent", "parent_field_name", "order", "report_def_name", "date"

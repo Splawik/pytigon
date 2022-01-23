@@ -135,7 +135,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.01.02 20:08:59"
+GEN_TIME = "2022.01.23 22:01:57"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -155,6 +155,7 @@ INSTALLED_APPS.append('allauth.socialaccount.providers.google')
 INSTALLED_APPS.append('allauth.socialaccount.providers.facebook')
 INSTALLED_APPS.append('allauth.socialaccount.providers.github')
 INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
+INSTALLED_APPS.append('allauth.socialaccount.providers.okta')
 
 
 #EMAIL_HOST = 'smtp.gmail.com'

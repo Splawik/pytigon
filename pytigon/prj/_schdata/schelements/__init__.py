@@ -5,60 +5,53 @@ Title = _("Elements")
 Perms = True
 Index = "None"
 Urls = (
-    ("table/Element/0/form/tree/?schtml=desktop", _("Elements"), None, """bi-stack"""),
+    (
+        "table/Element/0/form/tree/?schtml=desktop",
+        _("Elements"),
+        "schelements.view_elements",
+        """bi-stack""",
+    ),
     (
         "table/DocReg/-/form/list/?schtml=desktop",
         _("Documents register"),
-        None,
+        "schelements.view_docreg",
         """client://actions/folder-new.png""",
     ),
     (
         "table/DocType/-/form/list/?schtml=desktop",
         _("Types of documents"),
-        None,
+        "schelements.view_doctype",
         """""",
     ),
     (
         "table/DocRegStatus/-/form/list/?schtml=desktop",
         _("Definition of document status"),
-        None,
+        "schelements.view_docregstatus",
         """ART_INFORMATION""",
     ),
     (
         "table/Account/0/form/tree/?schtml=desktop",
         _("Accounts"),
-        None,
+        "schelements.view_account",
         """client://apps/system-file-manager.png""",
     ),
     (
         "table/AccountState/-/form/list/?schtml=desktop",
         _("States of accounts"),
-        None,
+        "schelements.view_accountstate",
         """client://mimetypes/package-x-generic.png""",
     ),
     (
         "table/AccountOperation/-/form/list/?schtml=desktop",
         _("Account operations"),
-        None,
+        "schelements.view_accountoperation",
         """client://actions/edit-find-replace.png""",
     ),
     (
         "table/DocHead/-/form/list/?schtml=desktop",
         _("Documents"),
-        None,
+        "schelements.view_dochead",
         """client://actions/format-justify-fill.png""",
-    ),
-    (
-        "table/DocHead/rep_safety/form/docheadlist/?schtml=desktop",
-        _("Documents [safety]"),
-        None,
-        """client://categories/applications-development.png""",
-    ),
-    (
-        "table/DocHead/admin_delegation/form/docheadlist/?schtml=desktop",
-        _("DEL"),
-        None,
-        """client://actions/mail-send-receive.png""",
     ),
 )
 UserParam = {}

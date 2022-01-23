@@ -8,7 +8,9 @@
                 '/schelements/*',
                 '/static/*',
             ]
+
             set_pyodide_paths(paths)
+
             async function home_callback(response) {
                 let txt = await response.text();
                 let data_element = window.get_elem_from_string(txt)

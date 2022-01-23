@@ -1,8 +1,7 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncode
     script language=python
@@ -16,7 +15,7 @@
             return href
 
 %% all
-    %with table_type='datatable':
+    % with table_type='datatable':
         {{ block.super }}
 
 %% scroll
@@ -25,8 +24,8 @@
     % new_row "New report definition"
 
 %% list_row_header
-    th...name
-    th...description
+    th..._(name)
+    th..._(description)
 
 %% list_row
     td...{{object.name}}
@@ -44,5 +43,4 @@
 
 %% row_edit
     % form:
-        .app,name,description
-
+        .app,name,description,doc_type

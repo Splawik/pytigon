@@ -740,7 +740,6 @@ def module_link(context, href):
 
 @inclusion_tag("widgets/jscript_link.html")
 def jscript_link(context, href):
-    print("USER_AGENT:", context["user_agent"])
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""

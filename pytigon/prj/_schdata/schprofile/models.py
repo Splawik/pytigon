@@ -94,6 +94,22 @@ class Profile(models.Model):
     user_type = models.CharField(
         "User type", null=True, blank=True, editable=True, max_length=32
     )
+    doc_regs = models.CharField(
+        "Allowed document registers",
+        null=True,
+        blank=True,
+        editable=True,
+        max_length=256,
+    )
+    doc_types = models.CharField(
+        "Allowed document types", null=True, blank=True, editable=True, max_length=256
+    )
+    accounts = models.CharField(
+        "Allowed accounts", null=True, blank=True, editable=True, max_length=256
+    )
+    aliases = models.CharField(
+        "Aliases", null=True, blank=True, editable=True, max_length=256
+    )
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 

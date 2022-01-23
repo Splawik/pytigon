@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -9,8 +8,10 @@
                 bitmaps = {
                 }
                 child.set_bitmaps(bitmaps)
+
         def filter_url(self, target, href):
             return href
+
 </script>
 {% endblock %}
 {% block all %}
@@ -43,7 +44,7 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                app,name,description
+                app,name,description,doc_type
         {% endform %}
 {% endblock %}
 

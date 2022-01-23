@@ -56,8 +56,23 @@ class ReportDef(BaseObject):
 
         ordering = ["id"]
 
+    doc_type = models.CharField(
+        "Associated document type", null=True, blank=True, editable=True, max_length=16
+    )
+
+    def __str__(self):
+        return self.name
+
     def getsubrep(self, name):
         return ReportDef.objects.get(name=self.name + "/" + name)
+
+    @staticmethod
+    def get_rep_defs():
+        repdef_list = ReportDef.objects.exclude(name__contains="/")
+        return repdef_list
+
+    def can_user_add(self, user):
+        return DocHead.can_add(self.doc_type, user)
 
 
 admin.site.register(ReportDef)
@@ -97,6 +112,9 @@ class Report(JSONModel):
         blank=True,
         editable=True,
     )
+
+    def __str__(self):
+        return self.report_def_name
 
     def template_for_object(self, view, context, doc_type):
         if doc_type == "pdf":
@@ -186,6 +204,9 @@ class CommonGroupDef(BaseObject):
         blank=True,
         editable=True,
     )
+
+    def __str__(self):
+        return self.name
 
 
 admin.site.register(CommonGroupDef)
@@ -328,6 +349,9 @@ class Plot(models.Model):
     permission = models.CharField(
         "Permission", null=True, blank=True, editable=True, max_length=64
     )
+
+    def __str__(self):
+        return self.name
 
 
 admin.site.register(Plot)

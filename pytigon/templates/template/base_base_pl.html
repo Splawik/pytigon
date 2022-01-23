@@ -302,6 +302,7 @@
                 </div>
         {% endif %}
         {% if not form_delete %}
+        {% endif %}
                 {% block list_page_start %}
                         <div class="ajax-region" data-region="table">
                 {% endblock %}
@@ -570,7 +571,6 @@
                 {% block list_page_end %}
                         </div>
                 {% endblock %}
-        {% endif %}
         {% if standard_web_browser and standard_web_browser < 5 %}
                 </div>
         {% endif %}

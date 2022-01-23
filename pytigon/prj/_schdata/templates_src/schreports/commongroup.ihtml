@@ -38,7 +38,7 @@
         {% subtemplate object.get_def.get_action_template %}
     % else:
         % row_actions:
-            .edit-inline,_(Update),,,,,../../../../../../schreports/table/CommonGroup/{id}/edit__group/
+            .edit-inline,_(Update),,,,,{{base_path}}schreports/table/CommonGroup/{id}/edit__group/
             .pdf
             .odf        
             .field_edit/data,Data,data        

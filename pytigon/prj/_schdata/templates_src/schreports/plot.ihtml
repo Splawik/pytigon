@@ -1,8 +1,7 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncode
     script language=python
@@ -25,9 +24,9 @@
     % new_row "New plot"
 
 %% list_row_header
-    th...name
-    th...group
-    th...permission
+    th..._(name)
+    th..._(group)
+    th..._(permission)
 
 %% list_row
     td...{{object.name}}

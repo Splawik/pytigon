@@ -589,6 +589,15 @@ class DocReg(models.Model):
         blank=True,
         editable=False,
     )
+    access_fun = models.TextField(
+        "Access function",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+
+    def __str__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -673,6 +682,9 @@ class DocType(models.Model):
         max_length=1,
     )
 
+    def __str__(self):
+        return self.name
+
 
 admin.site.register(DocType)
 
@@ -747,6 +759,9 @@ class DocHead(JSONModel):
     param3 = models.CharField(
         "Parameter 3", null=True, blank=True, editable=True, max_length=16
     )
+
+    def __str__(self):
+        return self.doc_type_parent + ":" + self.numer
 
     @classmethod
     def get_documents_for_reg(cls, value):
@@ -1006,6 +1021,86 @@ class DocHead(JSONModel):
         return standard_table_action(
             cls, list_view, request, data, ["copy", "paste", "delete"]
         )
+
+    @staticmethod
+    def filter_by_permissions(view, queryset_or_obj, request):
+        q = None
+        doc_regs = None
+        if hasattr(request, "user") and hasattr(request.user, "profile"):
+            profile = request.user.profile
+            if profile.doc_regs:
+                doc_regs = list(
+                    [
+                        item.strip()
+                        for item in profile.doc_regs.replace(",", ";").split(";")
+                        if item.strip()
+                    ]
+                )
+        else:
+            profile = None
+
+        def append_reg_filter(reg):
+            nonlocal q, profile
+            q2 = Q(doc_type_parent__parent__name=reg.name)
+            if reg.access_fun:
+                exec(reg.access_fun)
+                if "q_for_list" in locals():
+                    q2 = locals()["q_for_list"](request, request.user, profile)
+            if q:
+                q = q | q2
+            else:
+                q = q2
+
+        if queryset_or_obj != None:
+            if "filter" in view.kwargs:
+                reg_name = view.kwargs["filter"].replace("_", "/")
+                if doc_regs:
+                    if not reg_name in doc_regs:
+                        return queryset_or_obj.filter(pk=0)
+                reg = DocReg.objects.get(name=reg_name)
+                append_reg_filter(reg)
+            else:
+                regs = DocReg.objects.all()
+                for reg in regs:
+                    if not doc_regs or (doc_regs and reg in doc_regs):
+                        append_reg_filter(reg)
+            if q:
+                return queryset_or_obj.filter(q)
+            else:
+                return queryset_or_obj
+        else:
+            return queryset_or_obj
+
+    def _check_perm(self, user, perm):
+        # perm: add, change, delete, view
+        reg = self.doc_type_parent.parent
+        if reg.access_fun:
+            exec(reg.access_fun)
+            if "check_user_perm" in locals():
+                check = locals()["check_user_perm"](self, user, perm)
+            else:
+                return True
+
+    def can_change(self):
+        return self._check_perm(user, "change")
+
+    def can_delete(self):
+        return self._check_perm(user, "delete")
+
+    def can_view(self):
+        return self._check_perm(user, "view")
+
+    @staticmethod
+    def can_add(doc_type_name, user):
+        doc_type = DocType.objects.get(name=doc_type_name)
+        reg = doc_type.parent
+        if reg.access_fun:
+            exec(reg.access_fun)
+            if "check_user_perm" in locals():
+                check = locals()["check_user_perm"](None, user, "add", doc_type_name)
+                return check
+            else:
+                return True
 
 
 admin.site.register(DocHead)
@@ -1423,6 +1518,9 @@ class DocRegStatus(models.Model):
         editable=False,
     )
 
+    def __str__(self):
+        return self.name
+
     def get_editor_header(self, field_name):
         if field_name == "can_set_proc":
             return "def can_set_proc(request, doc_head):"
@@ -1483,6 +1581,9 @@ class DocHeadStatus(JSONModel):
     operator = models.CharField(
         "Operator", null=True, blank=True, editable=True, max_length=32
     )
+
+    def __str__(self):
+        return self.name
 
 
 admin.site.register(DocHeadStatus)
@@ -1936,6 +2037,9 @@ class AccountOperation(models.Model):
         editable=False,
         default=False,
     )
+
+    def __str__(self):
+        return self.description
 
     def get_or_create_account_state(
         self,

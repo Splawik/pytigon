@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -9,8 +8,10 @@
                 bitmaps = {
                 }
                 child.set_bitmaps(bitmaps)
+
         def filter_url(self, target, href):
             return href
+
 </script>
 {% endblock %}
 {% block all %}
@@ -23,7 +24,7 @@
         <div class="tr d-inline">
                 New:
                 {% for pos in object_list.model.get_rep_types %}
-                        {% new_row_inline pos "" "" "" "" "../../../../../new_rep/"|append_str:pos|append_str:"/0/" %}
+                        {% new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/" %}
                 {% endfor %}
         </div>
 {% endblock %}
@@ -37,7 +38,7 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit-inline,Update,,,,,../../../../../../schreports/table/Report/{id}/edit__rep/
+                edit-inline,Update,,,,,{{base_path}}schreports/table/Report/{id}/edit__rep/
                 pdf
                 odf
                 field_edit/data,Data,data
