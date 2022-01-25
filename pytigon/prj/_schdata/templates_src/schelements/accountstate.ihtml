@@ -25,17 +25,17 @@
     % new_row _("Account state")
 
 %% list_row_header
-    th...Account
-    th...Subcode
-    th...Account name
-    th...Target
-    th...Period
-    th...debit
-    th...credit
-    th...element
-    th...classifier1value
-    th...classifier2value
-    th...classifier3value
+    th..._(Account)
+    th..._(Subcode)
+    th..._(Account name)
+    th..._(Target)
+    th..._(Period)
+    th..._(debit)
+    th..._(credit)
+    th..._(element)
+    th..._(classifier1value)
+    th..._(classifier2value)
+    th..._(classifier3value)
 
 %% list_row
     td...{{object.parent.name}}

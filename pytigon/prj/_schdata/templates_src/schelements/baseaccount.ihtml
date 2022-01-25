@@ -9,8 +9,6 @@
         def signal_from_child(self, child, signal):
             if signal=='set_bitmap_list':
                 bitmaps = {
-                    "<<name1>>": "<<image_path1>>",
-                    "<<name2>>": "<<image_path2>>",
                 }
                 child.set_bitmaps(bitmaps)
 

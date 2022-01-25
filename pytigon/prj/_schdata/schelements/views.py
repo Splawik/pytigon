@@ -198,7 +198,7 @@ class _FilterFormDocHead(forms.Form):
         if date_to:
             queryset = queryset.filter(date__lt=date_to + datetime.timedelta(days=1))
         if target:
-            queryset = queryset.filter(org_chart_parent__name__icontains=target)
+            queryset = queryset.filter(parent_element__name__icontains=target)
         if number:
             queryset = queryset.filter(number__icontains=number)
 

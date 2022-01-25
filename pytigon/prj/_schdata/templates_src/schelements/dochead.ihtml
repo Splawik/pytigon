@@ -24,7 +24,7 @@
 %% list_content_actions
     % with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes:
         % for item in doctypes:
-            % new_row "New document: "|append_str:item.name action="new_row/"|append_str:item.name
+            % new_row "_(New document:) "|append_str:item.name action="new_row/"|append_str:item.name
 
 %% list_row_header
     th..._(Register)

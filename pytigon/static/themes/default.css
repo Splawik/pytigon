@@ -639,6 +639,12 @@ button.select2-selection__clear {
 form div.get_row span.select2-container {
   margin-left: 5px; }
 
+div.subform_content tr:hover {
+  color: white; }
+
+.leftaligncheckbox .booleanfield {
+  margin-left: 0 !important; }
+
 .txt3d {
   font-weight: 900;
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6), 4px 4px 5px rgba(0, 0, 0, 0.8); }

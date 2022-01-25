@@ -35,5 +35,5 @@ div class=form-group
         
     %% footer_new_button
         div class=row
-            div class=tr d-inline
+            div class=tr d-inline new-subreport
                 % new_row "+ "|append_str:rep_def.description "" "" "" "-" "{{base_path}}schreports/new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            

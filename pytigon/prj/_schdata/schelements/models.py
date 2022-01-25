@@ -460,9 +460,10 @@ class Element(TreeModel):
                     names = [
                         s[t]["app"].lower() + "/" + s[t]["table"].lower() + ".html",
                     ]
-                    template = select_template(names)
-                    if template:
-                        return template
+                    return names
+                    # template = select_template(names)
+                    # if template:
+                    #    return template
         return None
 
     @staticmethod
@@ -761,7 +762,7 @@ class DocHead(JSONModel):
     )
 
     def __str__(self):
-        return self.doc_type_parent + ":" + self.numer
+        return self.doc_type_parent.name + ":" + self.number
 
     @classmethod
     def get_documents_for_reg(cls, value):
@@ -775,7 +776,14 @@ class DocHead(JSONModel):
 
     @classmethod
     def filter(cls, value):
-        if value:
+        if value and value.startswith("_code_"):
+            code = value.replace("_code_", "")
+            return cls.objects.filter(parent_element__code=code)
+        elif value and value.startswith("_pk_"):
+            i = value.replace("_pk_", "")
+            x = cls.objects.filter(parent_element__pk=int(i))
+            return x
+        elif value:
             rej = value.replace("_", "/")
             return cls.objects.filter(doc_type_parent__parent__name=rej)
         else:
@@ -817,10 +825,12 @@ class DocHead(JSONModel):
                             name.replace(".html", "_" + view.kwargs["target"] + ".html")
                         )
                     names = names2
-                template = select_template(names)
+
+                # template = select_template(names)
                 names.append(view.template_name)
-                if template:
-                    return template
+                return names
+                # if template:
+                #    return template
 
         return None
 
@@ -872,9 +882,10 @@ class DocHead(JSONModel):
                     )
                     x = x.get_parent()
                 names.append(context["view"].template_name)
-                template = select_template(names)
-                if template:
-                    return template
+                return names
+                # template = select_template(names)
+                # if template:
+                #    return template
             except:
                 return None
         return None
@@ -1026,6 +1037,10 @@ class DocHead(JSONModel):
     def filter_by_permissions(view, queryset_or_obj, request):
         q = None
         doc_regs = None
+
+        if hasattr(request, "user") and request.user.is_superuser:
+            return queryset_or_obj
+
         if hasattr(request, "user") and hasattr(request.user, "profile"):
             profile = request.user.profile
             if profile.doc_regs:
@@ -1041,18 +1056,21 @@ class DocHead(JSONModel):
 
         def append_reg_filter(reg):
             nonlocal q, profile
+            print(reg)
             q2 = Q(doc_type_parent__parent__name=reg.name)
             if reg.access_fun:
                 exec(reg.access_fun)
                 if "q_for_list" in locals():
                     q2 = locals()["q_for_list"](request, request.user, profile)
-            if q:
-                q = q | q2
-            else:
-                q = q2
+            if q2:
+                if q:
+                    print("Q2 ", q, q2)
+                    q = q | q2
+                else:
+                    q = q2
 
         if queryset_or_obj != None:
-            if "filter" in view.kwargs:
+            if "filter" in view.kwargs and not view.kwargs["filter"].startswith("_"):
                 reg_name = view.kwargs["filter"].replace("_", "/")
                 if doc_regs:
                     if not reg_name in doc_regs:
@@ -1223,10 +1241,11 @@ class DocItem(JSONModel):
                     )
                     x = x.get_parent()
                 names.append(view.template_name)
-                print(names)
-                template = select_template(names)
-                if template:
-                    return template
+                return names
+                # print(names)
+                # template = select_template(names)
+                # if template:
+                #    return template
 
         return None
 
@@ -1263,10 +1282,11 @@ class DocItem(JSONModel):
             names.append(
                 context["view"].template_name.replace(reg.app + "/", "schelements/")
             )
-            print(names)
-            template = select_template(names)
-            if template:
-                return template
+            return names
+            # print(names)
+            # template = select_template(names)
+            # if template:
+            #    return template
         return None
 
     def get_form_source(self):

@@ -1,8 +1,7 @@
-{# -*- coding: utf-8 -*- #}
-%extends "schelements/docitem.html"
+% extends "schelements/docitem.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %%list_content_header_first_row
 

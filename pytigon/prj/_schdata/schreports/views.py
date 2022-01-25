@@ -142,7 +142,8 @@ def new_rep(request, rep_type, doc_type_name):
 
         rep = models.Report()
         rep.parent = None
-        rep.order = doc.id
+        rep.order = 0
+        rep.parent_doc = doc
         rep.report_def_name = rep_type
         rep.date = datetime.datetime.now()
         rep.save()
@@ -239,7 +240,7 @@ def move_down(request, pk):
 
 def edit__rep2(request, dochead_id):
 
-    reps = models.Report.objects.filter(order=dochead_id)
+    reps = models.Report.objects.filter(parent_doc__id=dochead_id)
     if reps.count() > 0:
         new_url = make_href("/schreports/table/Report/%d/edit__rep/" % reps[0].id)
         return HttpResponseRedirect(new_url)
@@ -250,7 +251,7 @@ def edit__rep2(request, dochead_id):
 def repaction(request, dochead_id, rep_action):
 
     doc = DocHead.objects.get(pk=dochead_id)
-    reps = models.Report.objects.filter(order=doc.id, parent=None)
+    reps = models.Report.objects.filter(parent_doc=doc)
     if reps.count() > 0:
         url = make_href(
             "/schreports/table/Report/%d/%s/"

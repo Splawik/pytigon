@@ -22,15 +22,15 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "New account operation"
+    % new_row "_(New account operation)"
 
 %% list_row_header
-    th...Date
-    th...Description
-    th...Payment
-    th...Account state
-    th...Sign
-    th...Amount
+    th..._(Date)
+    th..._(Description)
+    th..._(Payment)
+    th..._(Account state)
+    th..._(Sign)
+    th..._(Amount)
 
 %% list_row
     td...{{object.date}}

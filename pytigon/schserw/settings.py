@@ -430,7 +430,10 @@ LOG_VIEWER_PATTERNS = [
     "[",
 ]
 
-LOCALE_PATHS = [SERW_PATH + "/locale"]
+LOCALE_PATHS = [
+    os.path.join(SERW_PATH, "locale"),
+    os.path.join(PRJ_PATH, get_prj_name(), "locale"),
+]
 
 # CSRF_USE_SESSIONS = True
 

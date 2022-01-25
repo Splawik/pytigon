@@ -22,12 +22,12 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "Document type"
+    % new_row "_(Document type)"
 
 %% list_row_header
-    th...Name
-    th...Description
-    th...Correction
+    th..._(Name)
+    th..._(Description)
+    th..._(Correction)
 
 %% list_row
     td...{{object.name}}

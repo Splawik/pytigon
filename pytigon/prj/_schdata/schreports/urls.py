@@ -88,3 +88,6 @@ gen.standard(
 )
 gen.standard("CommonGroup", _("Common group"), _("Common groups"))
 gen.standard("Plot", _("Plot"), _("Polts"))
+
+
+gen.for_field("schelements.DocHead", "report_set", _("Report"), _("Reports"))

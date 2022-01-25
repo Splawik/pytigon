@@ -93,7 +93,6 @@ def row_actions(parser, token):
 def action(
     context, action, title="", icon_name="", target="", attrs="", tag_class="", url=""
 ):
-    print("====>>", action, target)
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url)
     return ret
 
@@ -332,7 +331,6 @@ def wiki_link(context, subject, wiki_description, attrs="", target="_self", url=
 
 @inclusion_tag("widgets/field.html")
 def field(context, form_field, fieldformat=None):
-    print("FIELD:", form_field)
     if type(form_field) in (
         SafeText,
         str,

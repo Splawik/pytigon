@@ -22,13 +22,13 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "New document item"
+    % new_row "_(New document item)"
 
 %% list_row_header
-    th...order
-    th...description
-    th...amount
-    th...level
+    th..._(order)
+    th..._(description)
+    th..._(amount)
+    th..._(level)
 
 %% list_row
     td...{{object.order}}

@@ -97,6 +97,14 @@ class Report(JSONModel):
         editable=False,
         verbose_name="Parent",
     )
+    parent_doc = ext_models.PtigForeignKey(
+        DocHead,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=False,
+        verbose_name="Parent document",
+    )
     order = models.IntegerField(
         "Order number",
         null=True,
@@ -130,7 +138,7 @@ class Report(JSONModel):
 
     @staticmethod
     def get_rep_by_nagid(nagid):
-        r = Report.objects.filter(order=nagid)
+        r = Report.objects.filter(parent_doc__id=nagid)
         if r.count() > 0:
             return r[0]
         else:

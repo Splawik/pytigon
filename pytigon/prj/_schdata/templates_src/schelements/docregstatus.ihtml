@@ -22,7 +22,7 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "New status"
+    % new_row "_(New status)"
 
 %% list_row_header
     th..._(Order)

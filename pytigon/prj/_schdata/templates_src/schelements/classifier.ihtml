@@ -21,8 +21,8 @@
         {{ block.super }}
 
 %% list_row_header
-    th...Name
-    th...Description
+    th..._(Name)
+    th..._(Description)
 
 %% list_row
     td...{{object.name}}

@@ -52,13 +52,13 @@
 
 
 %% list_row_header
-    th...Type 1
-    th...Type 2
-    th...Name
-    th...Description
-    th...Classifier 1
-    th...Classifier 2
-    th...Classifier 3
+    th..._(Type 1)
+    th..._(Type 2)
+    th..._(Name)
+    th..._(Description)
+    th..._(Classifier 1)
+    th..._(Classifier 2)
+    th..._(Classifier 3)
 
 %% list_row
     td...{{object.type1}}
