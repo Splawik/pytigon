@@ -8,7 +8,17 @@ from pytigon_lib.schdjangoext.python_style_template_loader import compile_templa
 class Command(BaseCommand):
     help = "Compile ihtml templates to standard django html files"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--file",
+            help="compile only file",
+        )
+
     def handle(self, *args, **options):
+        if "file" in options:
+            file_name = options["file"]
+        else:
+            file_name = None
         compiled = []
         if settings.PRJ_NAME == "_schall":
             base_path = settings.ROOT_PATH
@@ -23,5 +33,6 @@ class Command(BaseCommand):
                 if f.endswith(".ihtml"):
                     p = os.path.join(root, f)
                     x = p[l + 15 :]
-                    compile_template(x, compiled=compiled, force=True)
-        print(compiled)
+                    if not file_name or file_name in x:
+                        compile_template(x, compiled=compiled, force=True)
+        # print(compiled)

@@ -1,6 +1,4 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'base0.html'
+% extends 'base0.html'
 
 % load exfiltry
 % load exsyntax
@@ -126,7 +124,10 @@
                         %% form_ok_cancel_info
                     % if standard_web_browser:
                         % if title:
-                            set-field element=#ModalLabelInfo,,,title={{title}}
+                            % if settings.DEBUG:
+                                set-field element=#ModalLabelInfo,,,title={{title}}:[xxx{{object_list.model|class_name}}]
+                            % else:
+                                set-field element=#ModalLabelInfo,,,title={{title}}
                 % else:
                     %% form_delete
                         form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,class=ajax-link,,,id=DialogFormDelete,,,name=DialogFormDelete
@@ -201,23 +202,6 @@
 %% content
     % if standard_web_browser and standard_web_browser < 5:
         <div class="page-content content">
-    % if settings.DEBUG_TOOLBAR:
-        div id=debug
-            h2...Queries
-            p
-                {{ sql_queries|length }} Quer{{ sql_queries|pluralize:"y,ies" }}
-                % if sql_queries|length != 0:
-                    (<span style="cursor: pointer;" onclick="var s=document.getElementById('debugQueryTable').style;s.display=s.display=='none'?'':'none';this.innerHTML=this.innerHTML=='Show'?'Hide':'Show';">Show</span>)
-            table id=debugQueryTable,,,style=display: none;
-                tr
-                  th scope=col...#
-                  th scope=col...SQL
-                  th scope=col...Time
-                % for query in sql_queries:
-                    tr class={% cycle 'odd' 'even' %}
-                        td...{{ forloop.counter }}
-                        td...{{ query.sql|escape }}
-                        td...{{ query.time }}
 
     % if not form_delete:
 
@@ -238,7 +222,13 @@
                                 div class=tr row list_content_header list_content_header_first_row
                                     div class=td col-sm-12 hidden-sm-down text-center
                                         %% list_content_title
-                                            h4 style=white-space:nowrap;,,,class=txt3d wiki-title...{{title|wiki_href|safe}}
+                                            h4 style=white-space:nowrap;,,,class=txt3d wiki-title
+                                                {{title|wiki_href|safe}}
+                                                % if settings.DEBUG:
+                                                    a data-toggle=collapse,,,href=#collapse_{{uuid}},,,role=button...>>
+                                            % if settings.DEBUG:
+                                                div class=collapse,,,id=collapse_{{uuid}}
+                                                    .model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
                         %%list_content_header_second_row
                             % if form:
                                 div class=tr row list_content_header list_content_header_second_row

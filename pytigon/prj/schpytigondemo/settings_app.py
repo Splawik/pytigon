@@ -216,7 +216,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.01.25 18:43:22"
+GEN_TIME = "2022.01.31 21:57:28"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -228,5 +228,5 @@ for key, value in os.environ.items():
             globals()[key2] = value
 
 XMLRPC_PORT = 7080
-PYODIDE = True
-PYODIDE = False
+#PYODIDE = True
+#PYODIDE = False

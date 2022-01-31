@@ -1,12 +1,14 @@
-{# -*- coding: utf-8 -*- #}
 {% extends 'template/desktop.html' %}
 {% load exfiltry %}
 {% load exsyntax %}
 {% block menu_start %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary win-header" id="topmenu">
-                <a class="navbar-brand txt3d" href="#">{{prj_title}}</a>
+                <a class="navbar-brand txt3d" href="#">
+                {{prj_title}}
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-ex1-collapse" aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon">
+                        </span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
                         <ul class="navbar-nav mr-auto">
@@ -25,7 +27,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         {% endifchanged %}
-        <a class="menu-href dropdown-item" href="{{base_path}}{{item_info.url}}" target="_parent">{{item_info.description}}</a>
+        <a class="menu-href dropdown-item" href="{{base_path}}{{item_info.url}}" target="_parent">
+        {{item_info.description}}
+        </a>
     {% if forloop.last %}
                 </div></li>
     {% endif %}

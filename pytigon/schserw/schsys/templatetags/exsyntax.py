@@ -1197,3 +1197,15 @@ def icon(context, class_str, width=None, height=None):
         return mark_safe("<i class='fa %s'></i>" % class_str)
     else:
         return mark_safe("<i class='fa fa-circle-o fa-lg'></i>")
+
+
+class TemplateNameNode(Node):
+    def __init__(self, template_name):
+        self.name = template_name
+
+    def render(self, context):
+        return self.name
+
+@register.tag
+def show_template_name(parser, token):
+     return TemplateNameNode(parser.template_name)

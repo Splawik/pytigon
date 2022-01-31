@@ -27,7 +27,7 @@ Urls = (
         "table/DocRegStatus/-/form/list/?schtml=desktop",
         _("Definition of document status"),
         "schelements.view_docregstatus",
-        """ART_INFORMATION""",
+        """""",
     ),
     (
         "table/Account/0/form/tree/?schtml=desktop",

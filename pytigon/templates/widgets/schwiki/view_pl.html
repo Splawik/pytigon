@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -19,8 +18,10 @@
         def Signal(self, signal):
             if signal=='RefreshControls':
                 self.GetParent()._RefreshHtml()
+
         def init_form(self):
             self.GetParent().Signal=self.Signal
+
 </script>
 {% endblock %}
 {% block table_title %}{% endblock %}
@@ -60,7 +61,8 @@
                                                         <CTRLBUTTON HREF="/schwiki/{{page_name}}/edit/" LABEL="edytuj stronę"></CTRLBUTTON>
                                                 </td>
                                                 <td right="left" valign="top">
-                                                        <CTRLCLOSEBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLCLOSEBUTTON>
+                                                        <CTRLCLOSEBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK">
+                                                        </CTRLCLOSEBUTTON>
                                                 </td>
                                         </tr>
                         </table>

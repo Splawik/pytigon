@@ -1,5 +1,4 @@
-{# -*- coding: utf-8 -*- #}
-%extends "widgets/action.html"
+% extends "widgets/action.html"
 
 %% action_widget_content
     % with standard_web_browser=True:

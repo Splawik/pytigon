@@ -1,4 +1,2 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/tablet_base.html'
+% extends 'template/tablet_base.html'
 

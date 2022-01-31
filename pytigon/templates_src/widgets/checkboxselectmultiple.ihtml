@@ -1,6 +1,4 @@
-{# -*- coding: utf-8 -*- #}
-
-%load exfiltry
+% load exfiltry
 
 % if not only_field
     <tr><th>{{field.label_tag}}</th><td>

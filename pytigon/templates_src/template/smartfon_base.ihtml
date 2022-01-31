@@ -1,6 +1,4 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/desktop.html'
+% extends 'template/desktop.html'
 
 % load exfiltry
 % load exsyntax

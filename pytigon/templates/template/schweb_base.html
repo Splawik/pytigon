@@ -25,7 +25,8 @@
                                         <meta name="NO_HSCROLLBAR" content="True" />
                                 {% endif %}
                           {% else %}
-                                <meta name="NO_HSCROLLBAR" content="True" />
+                                <meta name="NO_HSCROLLBAR" content="True">
+                                </meta>
                         {% endif %}
                 {% endblock %}
         {% endblock %}
@@ -46,7 +47,9 @@
                                 </tr>
                                 <tr>
                                         <td>csrf_token</td>
-                                        <td>{{csrf_token}}</td>
+                                        <td>
+                                        {{csrf_token}}
+                                        </td>
                                 </tr>
                         </table>
                 {% endblock %}
@@ -65,14 +68,17 @@
                         <h1>Aplikacja:</h1>
                         <h2>SCHWeb</h2>
                         <h3>
-                                <span style="font-weight: bold;">Zawartość pola komenda - zawartość pola dane</span>
+                                <span style="font-weight: bold;">
+                                Zawartość pola komenda - zawartość pola dane
+                                </span>
                         </h3>
                         html - adres strony<br />
                         txt - nazwa pliku<br />
                         grid - adres tabeli<br />
                         python - kod w pythonie<br />
                         sys - nazwa przedefiniowanego zdarzenia<br />
-                        <br />
+                        <br>
+                        </br>
                         <h1>Menu bar or toolbar:</h1>
                         <table style="width: 100%;" border="1">
                         <tr>
@@ -82,7 +88,9 @@
                                 <th>Typ</th>
                                 <th>Ikona</th>
                                 <th>Command</th>
-                                <th>Dana</th>
+                                <th>
+                                Dana
+                                </th>
                         </tr>
                 {% endif %}
                 {% ifchanged item_info.module_title %}
@@ -93,7 +101,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td>
+                                </td>
                         </tr>
                 {% endifchanged %}
                 {% ifchanged item_info.app_name %}
@@ -104,7 +113,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td>
+                                </td>
                         </tr>
                 {% endifchanged %}
                 {% if forloop.first %}
@@ -117,7 +127,9 @@
                         <td>1</td>
                         <td>{{item_info.icon}}</td>
                         <td>html</td>
-                        <td>{{item_info.description}},{{base_path}}{{item_info.url}}</td>
+                        <td>
+                        {{item_info.description}},{{base_path}}{{item_info.url}}
+                        </td>
                 </tr>
                 {% if forloop.last %}
                         {% block toolbars_end %}
@@ -173,7 +185,8 @@
                                 <th>data</th>
                         </tr>
                 </table>
-                <br />
+                <br>
+                </br>
         {% endif %}
 {% endblock %}
 {% block body_start %}
@@ -202,7 +215,8 @@
                                                 </td>
                                         </tr>
                                 </table>
-                                <hr></hr>
+                                <hr>
+                                </hr>
                                 <CTRL-COLLAPSIBLE_PANEL label="errors" width="100%" collapse_height="70">
                                         {% if form.non_field_errors %}
                                                 <data>
@@ -299,7 +313,8 @@
                                                                 </td>
                                                                 <td align="right" cellpadding="3">
                                                                         {% block form_content_schbutton %}
-                                                                                <input type="submit" value="Refresh" class="btn btn-info" target="_self" height="44" />
+                                                                                <input type="submit" value="Refresh" class="btn btn-info" target="_self" height="44">
+                                                                                </input>
                                                                         {% endblock %}
                                                                 </td>
                                                           </tr></table>

@@ -490,6 +490,23 @@ def get_model_fields(value):
                 ret.append(f)
     return ret
 
+@register.filter(name="get_model_meta")
+def get_model_meta(value):
+    """Returns model _meta"""
+    ret = []
+    if value and hasattr(value, "_meta"):
+        return value._meta
+    return None
+
+
+@register.filter(name="get_model_app")
+def get_model_app(value):
+    """Returns model app"""
+    ret = []
+    if value and hasattr(value, "_meta"):
+        return value._meta.app_label
+    return "x"
+
 
 @register.filter(name="get_model_row")
 def get_model_row(obj):

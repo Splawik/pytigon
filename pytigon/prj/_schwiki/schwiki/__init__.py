@@ -5,12 +5,7 @@ Title = _("Wiki")
 Perms = True
 Index = "None"
 Urls = (
-    (
-        "table/Page/-/form/list/?schtml=desktop",
-        _("Wiki"),
-        "wiki.change_page",
-        """wx.ART_HELP_SIDE_PANEL""",
-    ),
+    ("table/Page/-/form/list/?schtml=desktop", _("Wiki"), "wiki.change_page", """"""),
     (
         "table/PageObjectsConf/-/form/list/?schtml=desktop",
         _("Page objects conf."),

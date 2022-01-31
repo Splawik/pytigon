@@ -1,9 +1,7 @@
-{# -*- coding: utf-8 -*- #}
+% extends "form.html"
 
-%extends "form.html"
-
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% all
     % if form_width or form_height

@@ -1,4 +1,4 @@
-%extends 'template/desktop_base.html'
+% extends 'template/desktop_base.html'
 
 %% js_app_init__out
     ===>

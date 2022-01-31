@@ -36,7 +36,7 @@ if not prj_name:
     prj_name = "_schall"
 
 GEN_TIME = "0000.00.00 00:00:00"
-DEBUG_TOOLBAR = False
+
 if (
     sys.argv
     and (
@@ -150,7 +150,8 @@ TEMPLATES = [
             ],
             "loaders": [
                 "pytigon_lib.schdjangoext.python_style_template_loader.Loader",
-                "pytigon_lib.schdjangoext.python_style_template_loader.FSLoader",
+                # "pytigon_lib.schdjangoext.python_style_template_loader.FSLoader",
+                "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader",
             ],
             "builtins": ["pytigon.schserw.schsys.templatetags.defexfiltry"],
@@ -264,10 +265,6 @@ if PLATFORM_TYPE != "webserver":
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
 INSTALLED_APPS.append("django.contrib.staticfiles")
-
-if DEBUG_TOOLBAR:
-    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
-    INSTALLED_APPS.append("debug_toolbar")
 
 if (
     not env("PYTIGON_WITHOUT_CHANNELS")

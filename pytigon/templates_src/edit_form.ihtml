@@ -1,5 +1,3 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "template/only_content.html"
 
 %% body

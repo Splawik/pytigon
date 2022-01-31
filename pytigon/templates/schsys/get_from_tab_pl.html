@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% block pythoncode %}
         <script language="python">
@@ -24,6 +23,7 @@
                         grid.SetGridCursor(i, 0)
                         grid.MakeCellVisible(i, 0)
                         return
+
         def filter_url(self, target, href):
             if '/edit/' in href:
                 from pytigon_lib.schmodels import import_model
@@ -34,10 +34,12 @@
                 return True
             else:
                 return None
+
 </script>
 {% endblock %}
 {% block form_bar %}{% endblock %}
 {% block content %}
-        <CTRL-HTML name="tabwin" src="/{{app}}/table/{{tab}}/_list?schtml=1" width="100%" height="100%"></CTRL-HTML>
+        <CTRL-HTML name="tabwin" src="/{{app}}/table/{{tab}}/_list?schtml=1" width="100%" height="100%">
+        </CTRL-HTML>
 {% endblock %}
 

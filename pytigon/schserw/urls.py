@@ -130,12 +130,6 @@ else:
         re_path("site_media_protected/(.*)$", views.site_media_protected)
     )
 
-if hasattr(settings, "DEBUG_TOOLBAR") and settings.DEBUG_TOOLBAR:
-    import debug_toolbar
-    _urlpatterns.append(
-        path('__debug__/', include(debug_toolbar.urls))
-    )
-
 def app_description(prj):
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
     try:

@@ -8,7 +8,6 @@
                 from pytigon_lib.schtools.schjson import loads
                 app = wx.GetApp()
                 form = self
-
                 class callback:
                     def on_websocket_message(msg):
                         nonlocal form
@@ -17,14 +16,12 @@
                         form.msg.DocumentEnd()
                 self.callback = callback
                 app.create_websocket('{{app_path}}webserver/channel/', callback)
-
                 async def start_webserver():
                     nonlocal app
                     await app.websocket_send(
                         "{{app_path}}webserver/channel/", {'id': '{{project.name}}', 'command': 'start', }
                     )
                 app.StartCoroutine(start_webserver, app.GetTopWindow())
-
             def on_close(self):
                 app = wx.GetApp()
                 async def stop_webserver():
@@ -32,10 +29,8 @@
                     await app.websocket_send(
                         "{{app_path}}webserver/channel/", {'id': '{{project.name}}', 'command': 'stop', }
                     )
-
                 app.StartCoroutine(stop_webserver, app.GetTopWindow())
                 app.remove_websoket_callback("{{app_path}}webserver/channel/", self.callback)
-
 </script>
         {% endif %}
 {% endblock %}

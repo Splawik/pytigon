@@ -39,7 +39,8 @@
                         {% if pos.icon_name %}
                                 <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
                           {% else %}
-                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}></a>
+                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
+                                </a>
                         {% endif %}
                 {% endfor %}
         {% endif %}

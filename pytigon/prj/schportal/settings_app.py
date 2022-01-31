@@ -85,7 +85,6 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
-TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -135,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.01.23 22:01:57"
+GEN_TIME = "2021.11.07 20:09:18"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -155,7 +154,6 @@ INSTALLED_APPS.append('allauth.socialaccount.providers.google')
 INSTALLED_APPS.append('allauth.socialaccount.providers.facebook')
 INSTALLED_APPS.append('allauth.socialaccount.providers.github')
 INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
-INSTALLED_APPS.append('allauth.socialaccount.providers.okta')
 
 
 #EMAIL_HOST = 'smtp.gmail.com'

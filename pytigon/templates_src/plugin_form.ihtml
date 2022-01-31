@@ -1,22 +1,20 @@
-{# -*- coding: utf-8 -*- #}
+% extends 'base0.html'
+% load exfiltry
+% load exsyntax
 
-%extends 'base0.html'
-%load exfiltry
-%load exsyntax
+%% init
 
-%%init
-
-%%js_scripts
+%% js_scripts
     %%header_base
     %%extrahead
         %%scroll
             meta name=NO_VSCROLLBAR,,,content=True
 
-%%jquery_ready
+%% jquery_ready
 
-%%extrastyle
+%% extrastyle
 
-%%body
+%% body
     % with NO_CHECK_AUTH=True:
         {{ block.super }}
 

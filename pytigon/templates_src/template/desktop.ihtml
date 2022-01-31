@@ -1,4 +1,2 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/desktop_base.html'|translate:lang
+% extends 'template/desktop_base.html'|translate:lang
 

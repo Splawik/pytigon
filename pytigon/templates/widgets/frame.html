@@ -6,7 +6,8 @@
                 {% if standard_web_browser %}
                         <div class="inline_frame ajax-region ajax-frame auto-frame ajax-link" href="{{href}}" width="100%" height="{{height}}"></div>
                   {% else %}
-                        <CTRL-HTML name="{{id}}" src="{{path}}{{href}}" width="100%" height="{{height}}"></CTRL-HTML>
+                        <CTRL-HTML name="{{id}}" src="{{path}}{{href}}" width="100%" height="{{height}}">
+                        </CTRL-HTML>
                 {% endif %}
         {% endblock %}
         {% block js %}{% endblock %}

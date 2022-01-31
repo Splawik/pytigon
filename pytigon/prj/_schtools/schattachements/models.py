@@ -23,9 +23,9 @@ from os.path import join
 
 
 def upload_path_fun(obj, filename):
-    return (
-        "attachements/"
-        + obj.application
+    return join(
+        "attachements",
+        obj.application
         + "_"
         + obj.table
         + "_"
@@ -33,7 +33,7 @@ def upload_path_fun(obj, filename):
         + "_"
         + obj.group
         + "_"
-        + filename
+        + filename,
     )
 
 

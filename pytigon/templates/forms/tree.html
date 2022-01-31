@@ -16,7 +16,17 @@
                         {% endif %}
                 </h4>
           {% else %}
-                <h4 style="white-space:nowrap;" class="txt3d wiki-title">{{title|wiki_href|safe}}</h4>
+                <h4 style="white-space:nowrap;" class="txt3d wiki-title">
+                        {{title|wiki_href|safe}}
+                        {% if settings.DEBUG %}
+                                <a data-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
+                        {% endif %}
+                </h4>
+                {% if settings.DEBUG %}
+                        <div class="collapse" id="collapse_{{uuid}}">
+                                model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
+                        </div>
+                {% endif %}
         {% endif %}
 {% endblock %}
 {% block list_content_actions %}
@@ -40,7 +50,8 @@
                                   {% else %}
                                         <CTRL-BUTTON name="back" href="_disable" target="_self" src="wx.ART_GO_BACK" label="Back"></CTRL-BUTTON>
                                 {% endif %}
-                                <CTRL-BUTTON href="{{table_path_and_base_filter}}0/{{target|replace:"json|form"}}/{{gtree}}/" class="button btn btn-secondary" label="/" target="_self"></CTRL-BUTTON>
+                                <CTRL-BUTTON href="{{table_path_and_base_filter}}0/{{target|replace:"json|form"}}/{{gtree}}/" class="button btn btn-secondary" label="/" target="_self">
+                                </CTRL-BUTTON>
                         {% endif %}
                         {% if parent|get_all_model_parents|length > 1 %}
                                 <span class="tree-toolbar">

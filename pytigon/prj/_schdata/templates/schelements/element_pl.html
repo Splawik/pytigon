@@ -1,3 +1,4 @@
+{# -*- coding: utf-8 -*- #}
 {% extends "forms/tree.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -10,10 +11,8 @@
                     "name2": "image_path2",
                 }
                 child.set_bitmaps(bitmaps)
-
         def filter_url(self, target, href):
             return href
-
 </script>
 {% endblock %}
 {% block on_dialog_load  %}

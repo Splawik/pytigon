@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends 'template/base.html'|translate:lang %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -108,6 +107,7 @@
                     font-weight: normal;
                     font-style: normal;
                 }
+
 </style>
                 {% endif %}
                 {% css_link 'jquery_plugins/daterangepicker/daterangepicker.css' %}
@@ -221,7 +221,9 @@
                                                         </tr>
                                                         <tr>
                                                                 <th>date joined:</th>
-                                                                <td>{{user.date_joined|isoformat}}</td>
+                                                                <td>
+                                                                {{user.date_joined|isoformat}}
+                                                                </td>
                                                         </tr>
                                                 </table>
                                         </div>
@@ -349,7 +351,8 @@
                         {% if ie %}
                                 <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
                           {% else %}
-                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-warning" id="loading-indicator" style="display:none"></i>
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-warning" id="loading-indicator" style="display:none">
+                                </i>
                         {% endif %}
         {% endblock %}
 {% endblock %}

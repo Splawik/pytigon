@@ -1,15 +1,16 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% block pythoncode3 %}
         <script language="python">
         def init_form(self):
             self.treewin.Body.filter_url = self.filter_url
+
         def filter_url(self, target, href):
             if '/edit/' in href:
                 #print "XXX", target, href
                 return True
             else:
                 return False
+
 </script>
 {% endblock %}
 {% block pythoncode %}
@@ -39,6 +40,7 @@
                                 grid.SetGridCursor(i, 0)
                                 grid.MakeCellVisible(i, 0)
                                 return
+
         def filter_url(self, target, href):
             if '/edit/' in href:
                 from pytigon_lib.schmodels import import_model
@@ -49,6 +51,8 @@
                 return True
             else:
                 return None
+
+
 </script>
 {% endblock %}
 {% block content %}

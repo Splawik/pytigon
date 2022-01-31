@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends 'template/desktop.html' %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -12,7 +11,8 @@
         {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
 {% endblock %}
 {% block menu_start %}
-        <div class="control-sidebar-bg"></div>
+        <div class="control-sidebar-bg">
+        </div>
 {% endblock %}
 {% block topmenu_start %}{% endblock %}
 {% block topmenu %}{% endblock %}
@@ -108,10 +108,12 @@
                         {% if ie %}
                                 <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
                           {% else %}
-                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-secondary" id="loading-indicator" style="display:none"></i>
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-secondary" id="loading-indicator" style="display:none">
+                                </i>
                         {% endif %}
                         {% comment %}
-                                <img src="{% get_static_prefix %}images/reload/reload.svg" id="loading-indicator"></img>
+                                <img src="{% get_static_prefix %}images/reload/reload.svg" id="loading-indicator">
+                                </img>
                         {% endcomment %}
                         {% comment %}
                                 <a href="#" class="sidebar-toggle" role="button" title="Toggle navigation">
@@ -120,7 +122,8 @@
                         {% endcomment %}
                         {% if not NO_TABS and application_type == 'modern' %}
                                 <div class="navbar-nav tabbable" id="tab_tabs2">
-                                        <ul class="nav nav-tabs" role="tablist" id="tabs2"></ul>
+                                        <ul class="nav nav-tabs" role="tablist" id="tabs2">
+                                        </ul>
                                 </div>
                         {% endif %}
                         <div class="navbar-collapse align-self-end">
@@ -172,7 +175,9 @@
                                                                                 </tr>
                                                                                 <tr>
                                                                                         <th>date joined:</th>
-                                                                                        <td>{{user.date_joined|isoformat}}</td>
+                                                                                        <td>
+                                                                                        {{user.date_joined|isoformat}}
+                                                                                        </td>
                                                                                 </tr>
                                                                         </table>
                                                                 </div>

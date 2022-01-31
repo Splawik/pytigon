@@ -1,13 +1,15 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% if not standard_web_browser %}
-        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}" />
+        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}">
+        </input>
 {% endif %}
 {% block all %}
         {% block js_standard %}{% endblock %}
         {% block widget_content %}
                 {% if standard_web_browser %}
-                        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}" />
+                        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}">
+                        </input>
                 {% endif %}
                 <div id="{{id}}_div">
                         {{data}}

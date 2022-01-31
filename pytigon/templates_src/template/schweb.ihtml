@@ -1,4 +1,2 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/schweb_base.html'
+% extends 'template/schweb_base.html'
 

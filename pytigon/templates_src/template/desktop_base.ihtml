@@ -1,6 +1,4 @@
-{# -*- coding: utf-8 -*- #}
-
-%extends 'template/base.html'|translate:lang
+% extends 'template/base.html'|translate:lang
 
 % load exfiltry
 % load exsyntax
@@ -162,7 +160,6 @@
     <div class="desktop_content">
 
 %% topmenu_start
-
     % comment:
         ul class=nav nav-tabs desktop-logo,,,role=tablist
             % if request.get_host != '127.0.0.2':

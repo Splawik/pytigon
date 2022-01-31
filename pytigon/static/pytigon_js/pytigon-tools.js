@@ -200,6 +200,7 @@ async function pyodide_get_response(url, params) {
   }
 }
 
+/*
 const constantMock = window.fetch;
 
 window.fetch = async function() {
@@ -226,7 +227,7 @@ window.fetch = async function() {
   }
   return ret
 }
-
+*/
 var ACTIONS = {};
 var ACTION_ID = 0;
 
