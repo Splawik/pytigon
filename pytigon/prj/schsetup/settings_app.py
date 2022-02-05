@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 from urllib.parse import urlparse
@@ -82,6 +81,7 @@ for app in APPS:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
+for app in APPS_EXT:
 
 INSTALLED_APPS.append('explorer')
 
@@ -101,9 +101,9 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
-for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
+TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -166,6 +166,38 @@ CHANNELS_URL_TAB += [
         "schcommander.consumers.ShellConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
@@ -197,7 +229,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.11.27 10:51:26"
+GEN_TIME = "2022.02.05 09:41:58"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

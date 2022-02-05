@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 from urllib.parse import urlparse
@@ -85,6 +84,7 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
+TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -134,6 +134,34 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
 ]
 
 
@@ -142,7 +170,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.11.08 09:34:09"
+GEN_TIME = "2022.02.05 09:43:11"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

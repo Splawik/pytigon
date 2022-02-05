@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django
 from django.db import models
 
@@ -23,9 +21,9 @@ from os.path import join
 
 
 def upload_path_fun(obj, filename):
-    return join(
-        "attachements",
-        obj.application
+    return (
+        "attachements/"
+        + obj.application
         + "_"
         + obj.table
         + "_"
@@ -33,7 +31,7 @@ def upload_path_fun(obj, filename):
         + "_"
         + obj.group
         + "_"
-        + filename,
+        + filename
     )
 
 

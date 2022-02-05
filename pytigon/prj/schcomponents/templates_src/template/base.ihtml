@@ -1,6 +1,4 @@
-
-
-%extends 'template/base_base.html'|translate:lang
+% extends 'template/base_base.html'|translate:lang
 
 
 % load exfiltry
@@ -22,32 +20,32 @@
 %% body_footer_scripts
     {{block.super}}
     
-    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
-    {% component 'schcomponents/components/ptig-task.js' %}
-    {% component 'schcomponents/components/ptig-svg.js' %}
     {% component 'schcomponents/components/sys-components.js' %}
-    {% component 'schcomponents/components/ptig-scroll-action.js' %}
-    {% component 'schcomponents/components/ptig-mask.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
-    {% component 'schcomponents/components/ptig-xterm.js' %}
-    {% component 'schcomponents/components/ptig-time.js' %}
-    {% component 'schcomponents/components/ptig-leaflet.js' %}
-    {% component 'schcomponents/components/ptig-script.js' %}
-    {% component 'schcomponents/components/ptig-plotly.js' %}
     {% component 'schcomponents/components/ptig-frame.js' %}
-    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-    {% component 'schcomponents/components/ptig-video.js' %}
-    {% component 'schcomponents/components/ptig-form.js' %}
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
-    {% component 'schcomponents/components/ptig-calendar.js' %}
+    {% component 'schcomponents/components/ptig-mask.js' %}
     {% component 'schcomponents/components/ptig-pivottable.js' %}
-    {% component 'schcomponents/components/ptig-margin-left.js' %}
+    {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+    {% component 'schcomponents/components/ptig-spreadsheet.js' %}
     {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-scroll-action.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-task.js' %}
+    {% component 'schcomponents/components/ptig-margin-left.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
     {% component 'schcomponents/components/ptig-select2.js' %}
+    {% component 'schcomponents/components/ptig-time.js' %}
+    {% component 'schcomponents/components/ptig-form.js' %}
+    {% component 'schcomponents/components/ptig-leaflet.js' %}
+    {% component 'schcomponents/components/ptig-calendar.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-svg.js' %}
+    {% component 'schcomponents/components/ptig-video.js' %}
+    {% component 'schcomponents/components/ptig-plotly.js' %}
+    {% component 'schcomponents/components/ptig-script.js' %}
     
     
 
 %% component_init
         .var initial_state={};
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "ptig-wysiwygedit.js", "ptig-task.js", "ptig-svg.js", "sys-components.js", "ptig-scroll-action.js", "ptig-mask.js", "ptig-d3.js", "ptig-xterm.js", "ptig-time.js", "ptig-leaflet.js", "ptig-script.js", "ptig-plotly.js", "ptig-frame.js", "ptig-spreadsheet.js", "ptig-video.js", "ptig-form.js", "ptig-webrtc.js", "ptig-calendar.js", "ptig-pivottable.js", "ptig-margin-left.js", "ptig-codeeditor.js", "ptig-select2.js",  ];  
+        .var component_init = [ "sys-components.js", "ptig-frame.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-wysiwygedit.js", "ptig-spreadsheet.js", "ptig-codeeditor.js", "ptig-scroll-action.js", "ptig-xterm.js", "ptig-task.js", "ptig-margin-left.js", "ptig-webrtc.js", "ptig-select2.js", "ptig-time.js", "ptig-form.js", "ptig-leaflet.js", "ptig-calendar.js", "ptig-d3.js", "ptig-svg.js", "ptig-video.js", "ptig-plotly.js", "ptig-script.js",  ];  

@@ -16,12 +16,15 @@
             atab=self.get_acc_tab()
             atab.append((0, wx.WXK_INSERT, self.on_panel_focus))
             atab.append((wx.ACCEL_ALT, ord('I'), self.on_panel_focus))
+
             self.set_acc_key_tab(self,atab)
+
             self._panel.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.on_insert_click)
             self._insert_icon.Bind(wx.EVT_BUTTON, self.on_insert_image_click)
             self.EDITOR.SetCurrentPos(0)
             self.EDITOR.SetSelection(0,0)
             wx.CallAfter(self.EDITOR.SetFocus)
+
             class ChoiceDialog(wx.Dialog):
                 def __init__(self, parent, title, choices):
                     wx.Dialog.__init__(self)
@@ -29,7 +32,9 @@
                     self.Create(parent, -1, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, name='dialog')
                     self.choices = []
                     p = wx.Panel(self, -1, style = wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
+
                     self.sizer1 = wx.GridBagSizer(vgap=5, hgap=5)
+
                     row = 0;
                     for obj in choices:
                         self.sizer1.Add( wx.StaticText(p, -1, obj['title']), (row, 0), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
@@ -46,10 +51,12 @@
                                     choice.Append(c[0], c[1])
                         else:
                             choice = wx.TextCtrl(p, -1, size=(600, -1))
+
                         #wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
                         self.choices.append(choice)
                         self.sizer1.Add(choice, (row, 1), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
                         row+=1;
+
                     self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
                     cancel = wx.Button(p, wx.ID_CANCEL, "Cancel")
                     ok = wx.Button(p, wx.ID_OK, "OK")
@@ -57,14 +64,19 @@
                     self.sizer2.Add( ok, 1, wx.EXPAND|wx.ALL, 5)
                     ok.SetDefault()
                     #self.Bind(wx.EVT_BUTTON, self.on_ok, ok)
+
                     box = wx.BoxSizer(wx.VERTICAL)
                     box.Add(self.sizer1, 0, wx.EXPAND)
                     box.Add(self.sizer2, 0, wx.EXPAND | wx.ALL, 5)
+
                     p.SetSizerAndFit(box)
                     self.SetClientSize(p.GetSize())
+
                 def on_ok(self, event):
                     print(event)
+
             self.dialog = ChoiceDialog
+
             from schbuilder.autocomplete import ACTIONS
             self.actions = ACTIONS
             from django.template import Template, Context
@@ -78,6 +90,7 @@
             #   ]
             # self.set_acc_key_tab(aTable)
             self.EDITOR.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
+
         def on_key_pressed(self, event):
             if not event.AltDown() and not event.ControlDown() and ((event.KeyCode in ( ord('.'), ord(' ') ) and not event.ShiftDown()) or ((event.KeyCode in ( ord('\\'),)) and  event.ShiftDown())):
                 def _fun():
@@ -87,15 +100,19 @@
                 wx.CallAfter(_fun)
                 event.Skip()
             event.Skip()
+
         def on_panel_focus(self, event):
             self._panel.SetFocus()
+
         def on_insert_image_click(self, event):
             self.insert_txt(self._icon.GetValue())
+
         def on_dialog(self, key):
             dialog_title = "Chose items"
             parameters = []
             template_str = ""
             return_str = ""
+
             if key == 'default':
                 line, pos = self.EDITOR.GetCurLine()
                 s = line[:pos].strip()
@@ -115,6 +132,7 @@
                     key = "object fields and methods"
                 else:
                     return
+
             if key in self.actions or ( '((' in key and '))' in key ):
                 if key in self.actions:
                     key2 = key
@@ -146,6 +164,7 @@
                     template_str = obj['template']
             else:
                 return key
+
             if parameters and template_str:
                 if dialog_title or len(parameters)>1:
                     dlg = self.dialog(self, dialog_title, parameters)
@@ -175,7 +194,9 @@
                 c = self.context_class({})
                 ret = t.render(c)
                 return ret
+
             return return_str
+
         def on_insert_click(self, event):
             item = self._panel.GetSelection()
             if item.IsOk():
@@ -183,16 +204,19 @@
                 ret_str = self.on_dialog(key)
                 if ret_str:
                     self.insert_txt(ret_str)
+
         def on_auto_comp_cmd(self, edt_ctrl, pos):
             ret_str = self.on_dialog("default")
             if ret_str:
                 self.insert_txt(ret_str)
+
         def insert_txt(self, txt):
             pos = self.EDITOR.GetCurrentPos()
             self.EDITOR.InsertText(pos, txt)
             pos+=len(txt)
             self.EDITOR.SetCurrentPos(pos)
             self.EDITOR.SetFocus()
+
 
 {% endblock %}
 {% block all %}
@@ -736,7 +760,9 @@
                                 </td>
                                 <td>
                                         <CTRL-STYLEDTEXT NAME="EDITOR" width="100%-345" HEIGHT="calc(100% - top - 30)" MINHEIGHT="400" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
-                                                <DATA>{{txt|bencode}}</DATA>
+                                                <DATA>
+                                                {{txt|bencode}}
+                                                </DATA>
                                         </CTRL-STYLEDTEXT>
                                 </td>
                         </tr>

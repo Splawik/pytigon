@@ -1,6 +1,4 @@
-
-
-%extends 'template/schweb_base.html'|translate:lang
+% extends 'template/schweb_base.html'|translate:lang
 
 
 % load exfiltry

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 from urllib.parse import urlparse
@@ -50,6 +49,7 @@ if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
 
+from pytigon_lib.schtools.install_init import init
 from pytigon_lib.schtools.main_paths import get_main_paths
 paths = get_main_paths()
 app_pack_folders = []
@@ -106,7 +106,6 @@ EXPLORER_CONNECTIONS = { 'Default': 'default' }
 EXPLORER_DEFAULT_CONNECTION = 'default'
 
 
-from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
@@ -141,6 +140,7 @@ for app in APPS:
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
+TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
     0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 )
@@ -182,7 +182,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.11.07 20:08:16"
+GEN_TIME = "2022.02.05 09:42:33"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 from urllib.parse import urlparse
@@ -139,7 +138,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2021.12.07 21:04:40"
+GEN_TIME = "2022.02.05 09:42:27"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
