@@ -21,16 +21,16 @@ import os
 import sys
 import getopt
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),"..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from pytigon_lib.schtools.main_paths import get_main_paths
 
     paths = get_main_paths()
 
-    sys.path.append(paths['PRJ_PATH'])
-    sys.path.append(paths['PRJ_PATH_ALT'])
+    sys.path.append(paths["PRJ_PATH"])
+    sys.path.append(paths["PRJ_PATH_ALT"])
 
     from pytigon_lib.schtasks import schschedule
     from pytigon_lib.schhttptools import httpclient
@@ -39,12 +39,10 @@ if __name__ == '__main__':
 
     LOGGER = logging.getLogger("pytigon_task")
 
-
     def usage():
         print(
             "pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset"
         )
-
 
     try:
         opts, args = getopt.getopt(

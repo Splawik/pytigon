@@ -54,14 +54,13 @@ if settings.GRAPHQL:
     class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
         pass
 
+
 admin.site.enable_nav_sidebar = False
 
 _urlpatterns = []
 
 if settings.URL_ROOT_FOLDER:
-    urlpatterns = [
-        path(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns))
-    ]
+    urlpatterns = [path(settings.URL_ROOT_FOLDER + "/", include(_urlpatterns))]
 else:
     urlpatterns = _urlpatterns
 
@@ -85,21 +84,28 @@ if settings.LOGVIEWER:
     _urlpatterns.append(path("admin/log_viewer/", include("log_viewer.urls")))
 
 if settings.ALLAUTH:
-    _urlpatterns.append(path('accounts/', include('allauth.urls')))
+    _urlpatterns.append(path("accounts/", include("allauth.urls")))
 
 if settings.GRAPHQL:
     _urlpatterns.extend(
         [
             path("graphql/", csrf_exempt(PytigonGraphQLView.as_view(graphiql=True))),
-            path("graphql_public/", csrf_exempt(PytigonGraphQLViewPublic.as_view(graphiql=True, schema=public_schema))),
+            path(
+                "graphql_public/",
+                csrf_exempt(
+                    PytigonGraphQLViewPublic.as_view(
+                        graphiql=True, schema=public_schema
+                    )
+                ),
+            ),
         ]
     )
 
 if settings.PWA:
     _urlpatterns.extend(
         [
-            path('', include('pwa.urls')),
-            path('webpush/', include('webpush.urls')),
+            path("", include("pwa.urls")),
+            path("webpush/", include("webpush.urls")),
         ]
     )
 
@@ -129,6 +135,7 @@ else:
     _urlpatterns.append(
         re_path("site_media_protected/(.*)$", views.site_media_protected)
     )
+
 
 def app_description(prj):
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
@@ -183,12 +190,14 @@ tmp = []
 for item in _urlpatterns:
     if hasattr(item, "url_patterns"):
         for item2 in item.url_patterns:
-            if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith('../'):
+            if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith(
+                "../"
+            ):
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
 
 for item in tmp:
-    item.pattern._route = item.pattern._route.replace('../','')
+    item.pattern._route = item.pattern._route.replace("../", "")
     _urlpatterns.append(item)
 
 if len(settings.PRJS) > 0:
@@ -198,7 +207,11 @@ if len(settings.PRJS) > 0:
 
         test = True
         for item in _urlpatterns:
-            if item.pattern and hasattr(item.pattern, "_route") and item.pattern._route == prj + "/":
+            if (
+                item.pattern
+                and hasattr(item.pattern, "_route")
+                and item.pattern._route == prj + "/"
+            ):
                 test = False
                 break
         if test:
@@ -222,10 +235,16 @@ if len(settings.PRJS) > 0:
 else:
     test = True
     for item in _urlpatterns:
-        if item.pattern and hasattr(item.pattern, "_route") and item.pattern._route == "":
-            if len(item.url_patterns)<2:
+        if (
+            item.pattern
+            and hasattr(item.pattern, "_route")
+            and item.pattern._route == ""
+        ):
+            if len(item.url_patterns) < 2:
                 test = False
                 break
     if test:
-        u = path("", TemplateView.as_view(template_name="schapp/index.html"), name="start")
+        u = path(
+            "", TemplateView.as_view(template_name="schapp/index.html"), name="start"
+        )
         _urlpatterns.append(u)

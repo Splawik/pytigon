@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 """Module contains filteres which are automatically loaded"""
@@ -24,7 +24,8 @@ from django import template
 
 register = template.Library()
 
-@register.filter(name='translate')
+
+@register.filter(name="translate")
 def translate(s, lng):
     """Translate template name based on language.
 
@@ -33,9 +34,9 @@ def translate(s, lng):
         lng - two letters language code
     """
     if lng:
-        if lng=='en':
+        if lng == "en":
             return s
         else:
-            return s.replace('.html', "_"+lng+".html")
+            return s.replace(".html", "_" + lng + ".html")
     else:
         return s

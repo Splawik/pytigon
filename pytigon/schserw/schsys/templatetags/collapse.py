@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 from django import template
@@ -44,6 +44,7 @@ _collapse_str_schweb = """
         </CTRLCOLLAPSIBLE_PANEL>
 """
 
+
 class CollapseNode(Node):
     def __init__(self, nodelist, extra_context):
         self.nodelist = nodelist
@@ -51,11 +52,15 @@ class CollapseNode(Node):
 
     def render(self, context):
         data = self.nodelist.render(context)
-        var = { 'data': self.nodelist.render(context), 'id': self.extra_context['id'].resolve(context), 'title': self.extra_context['title'].resolve(context) }
-        if context['standard_web_browser']:
-            var['data'] = data
+        var = {
+            "data": self.nodelist.render(context),
+            "id": self.extra_context["id"].resolve(context),
+            "title": self.extra_context["title"].resolve(context),
+        }
+        if context["standard_web_browser"]:
+            var["data"] = data
             return _collapse_str.format(**var)
-        var['data'] = b64encode(data.encode('utf-8')).decode('utf-8')
+        var["data"] = b64encode(data.encode("utf-8")).decode("utf-8")
         return _collapse_str_schweb.format(**var)
 
 
@@ -65,9 +70,13 @@ def collapse(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
+        raise TemplateSyntaxError(
+            "%r expected at least one variable assignment" % bits[0]
+        )
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
-    nodelist = parser.parse(('endcollapse',))
+        raise TemplateSyntaxError(
+            "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+        )
+    nodelist = parser.parse(("endcollapse",))
     parser.delete_first_token()
     return CollapseNode(nodelist, extra_context=extra_context)

@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 from django import template
@@ -25,6 +25,7 @@ from django.template.base import Node
 
 
 register = template.Library()
+
 
 class HtmlWidgetNode(template.Node):
     def __init__(self, template_name, var, name, nodelist, extra_context=None):
@@ -38,30 +39,37 @@ class HtmlWidgetNode(template.Node):
         return "<HtmlWidgetNode>"
 
     def render(self, context):
-        values = dict([(key, val.resolve(context)) for key, val in self.extra_context.items()])
+        values = dict(
+            [(key, val.resolve(context)) for key, val in self.extra_context.items()]
+        )
 
         context.update(values)
 
         data = self.nodelist.render(context)
-        data = data.replace('[[', '{{').replace(']]', '}}').replace('[%', '{%').replace('%]', '%}')
-        id = context['id']
-        class_name = context['class']
+        data = (
+            data.replace("[[", "{{")
+            .replace("]]", "}}")
+            .replace("[%", "{%")
+            .replace("%]", "%}")
+        )
+        id = context["id"]
+        class_name = context["class"]
 
-        context['template_name'] = "widgets/html_widgets/" + class_name + ".html"
+        context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
         def_param = ""
-        if 'width' in context:
-            def_param = def_param + "width='%s' " % context['width']
+        if "width" in context:
+            def_param = def_param + "width='%s' " % context["width"]
             try:
-                context['width'] = int(context['width']) - 10
+                context["width"] = int(context["width"]) - 10
             except:
                 pass
-        if 'height' in context:
-            def_param = def_param + "height='%s' " % context['height']
+        if "height" in context:
+            def_param = def_param + "height='%s' " % context["height"]
             try:
-                context['height'] = int(context['height']) - 10
+                context["height"] = int(context["height"]) - 10
             except:
                 pass
-        context['def_param'] = def_param
+        context["def_param"] = def_param
 
         t = Template(data)
         tdata = t.render(context)
@@ -71,7 +79,7 @@ class HtmlWidgetNode(template.Node):
         context_dict = {}
         for c in context.dicts:
             context_dict.update(c)
-        context_dict['data'] = tdata
+        context_dict["data"] = tdata
 
         # tdata = t.render(context_dict)
 
@@ -82,17 +90,24 @@ class HtmlWidgetNode(template.Node):
 
         return mark_safe(output)
 
-@register.tag('widget')
+
+@register.tag("widget")
 def do_widget(parser, token):
     bits = token.split_contents()
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
-        raise TemplateSyntaxError("%r expected at least one variable assignment" % bits[0])
-    if not 'id' in extra_context or not 'class' in extra_context:
+        raise TemplateSyntaxError(
+            "%r expected at least one variable assignment" % bits[0]
+        )
+    if not "id" in extra_context or not "class" in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
-        raise TemplateSyntaxError("%r received an invalid token: %r" % (bits[0], remaining_bits[0]))
-    nodelist = parser.parse(('endwidget',))
+        raise TemplateSyntaxError(
+            "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+        )
+    nodelist = parser.parse(("endwidget",))
     parser.delete_first_token()
-    return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
+    return HtmlWidgetNode(
+        "widgets/widget.html", None, None, nodelist, extra_context=extra_context
+    )

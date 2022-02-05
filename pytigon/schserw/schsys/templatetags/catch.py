@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 import re
 
@@ -34,19 +34,18 @@ register = template.Library()
 
 
 class CatchNode(template.Node):
-
     def __init__(self, nodelist, var_name):
         self.nodelist = nodelist
         self.var_name = var_name
 
     def render(self, context):
         output = self.nodelist.render(context)
-        if 'VAR' in context:
-            context['VAR'][self.var_name] =  mark_safe(output)
+        if "VAR" in context:
+            context["VAR"][self.var_name] = mark_safe(output)
         else:
-            context['VAR'] = {self.var_name:  mark_safe(output)}
-        print(context['VAR'])
-        return ''
+            context["VAR"] = {self.var_name: mark_safe(output)}
+        print(context["VAR"])
+        return ""
 
 
 def do_catch(parser, token):
@@ -58,15 +57,18 @@ def do_catch(parser, token):
     try:
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
-        raise template.TemplateSyntaxError('%r tag requires arguments'\
-             % token.contents[0])
-    m = re.search(r'as (\w+)', arg)
+        raise template.TemplateSyntaxError(
+            "%r tag requires arguments" % token.contents[0]
+        )
+    m = re.search(r"as (\w+)", arg)
     if not m:
-        raise template.TemplateSyntaxError('%r tag should define as "%r as var_name"' % (tag_name, tag_name))
+        raise template.TemplateSyntaxError(
+            '%r tag should define as "%r as var_name"' % (tag_name, tag_name)
+        )
     var_name = m.groups()[0]
-    nodelist = parser.parse(('endcatch', ))
+    nodelist = parser.parse(("endcatch",))
     parser.delete_first_token()
     return CatchNode(nodelist, var_name)
 
 
-do_catch = register.tag('catch', do_catch)
+do_catch = register.tag("catch", do_catch)

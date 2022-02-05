@@ -1206,6 +1206,7 @@ class TemplateNameNode(Node):
     def render(self, context):
         return self.name
 
+
 @register.tag
 def show_template_name(parser, token):
-     return TemplateNameNode(parser.template_name)
+    return TemplateNameNode(parser.template_name)

@@ -490,6 +490,7 @@ def get_model_fields(value):
                 ret.append(f)
     return ret
 
+
 @register.filter(name="get_model_meta")
 def get_model_meta(value):
     """Returns model _meta"""

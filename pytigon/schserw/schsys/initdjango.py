@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 import django.db.models.fields
@@ -33,7 +33,7 @@ import shutil
 from pytigon_lib.schfs.vfstools import extractall
 import zipfile
 
-django.db.models.fields.prep_for_like_query = lambda x: str(x).replace('\\', '\\\\')
+django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
 
 BaseForm._old_html_output = BaseForm._html_output
 BaseForm._old_as_p = BaseForm.as_p
@@ -41,11 +41,19 @@ BaseForm._old_as_p = BaseForm.as_p
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
 
-#models.TreeModel = models.Model
+# models.TreeModel = models.Model
 
-def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
-    normal_row2 = normal_row.replace('<th>', "<th align='left'><em>").replace('</th>', '</em></th>')
-    return self._old_html_output(normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row)
+
+def _html_output(
+    self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row
+):
+    normal_row2 = normal_row.replace("<th>", "<th align='left'><em>").replace(
+        "</th>", "</em></th>"
+    )
+    return self._old_html_output(
+        normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row
+    )
+
 
 BaseForm._html_output = _html_output
 
@@ -53,13 +61,14 @@ BaseForm._html_output = _html_output
 def as_p(self):
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     return render_form(self)
-    #return self._html_output(
+    # return self._html_output(
     #    normal_row='<p%(html_class_attr)s>%(label)s %(field)s%(help_text)s</p>',
     #    error_row='%s',
     #    row_ender='</p>',
     #    help_text_html=' <span class="helptext">%s</span>',
     #    errors_on_separate_row=True,
-    #)
+    # )
+
 
 BaseForm.as_p = as_p
 
@@ -75,9 +84,11 @@ def widget_attrs(self, widget):
         else:
             max2 = self.max_length
     if self.max_length is not None and isinstance(widget, (TextInput, PasswordInput)):
-        return {'max_length': str(self.max_length), 'size': str(max2)}
+        return {"max_length": str(self.max_length), "size": str(max2)}
+
 
 django.forms.fields.CharField.widget_attrs = widget_attrs
+
 
 class FormProxy(object):
     def __init__(self, form):
@@ -85,7 +96,7 @@ class FormProxy(object):
 
     def __getitem__(self, fields):
         tmp_fields = self.form.fields
-        tabfields = fields.split('__')
+        tabfields = fields.split("__")
         new_fields = deepcopy(self.form.fields)
         for (name, field) in list(new_fields.items()):
             if not name in tabfields:
@@ -95,10 +106,11 @@ class FormProxy(object):
         self.form.fields = tmp_fields
         return ret
 
+
 def fields_as_table(self):
     return FormProxy(self)
 
+
 django.forms.models.ModelForm.fields_as_table = fields_as_table
 
-mimetypes.add_type('image/svg+xml', '.svg')
-
+mimetypes.add_type("image/svg+xml", ".svg")

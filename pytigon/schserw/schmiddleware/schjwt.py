@@ -10,23 +10,25 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2020 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.108"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2020 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.108"
 
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user_model
 from django.utils.functional import SimpleLazyObject
 from graphql_jwt.utils import get_http_authorization, get_payload
 
+
 def get_user(request, username):
     if (not hasattr(request, "_cached_user")) or request._cached_user.is_anonymous:
         users = get_user_model().objects.filter(username=username)
         request._cached_user = users[0] if len(users) > 0 else None
     return request._cached_user
+
 
 class JWTUserMiddleware(MiddlewareMixin):
     def process_request(self, request):

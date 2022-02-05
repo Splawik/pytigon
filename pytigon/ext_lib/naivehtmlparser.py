@@ -76,11 +76,11 @@ if __name__ == "__main__":
     # (e.g. you may use its limited support for XPath expressions)
 
     # get title
-    print(root.find('head/title').text)
+    print(root.find("head/title").text)
 
     # get all anchors
-    for a in root.findall('.//a'):
-        print(a.get('href'))
+    for a in root.findall(".//a"):
+        print(a.get("href"))
 
     # for more information, see:
     # http://docs.python.org/2/library/xml.etree.elementtree.html

@@ -60,6 +60,7 @@ class _Mutation:
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
 
+
 class PublicQuery(graphene.ObjectType, _Query):
     pass
 

@@ -6,13 +6,14 @@ from fs.path import abspath, dirname
 from fs.errors import ResourceNotFound as ResourceNotFoundError
 from fs.error_tools import unwrap_errors
 
+
 class FSStorage(Storage):
     def __init__(self, fs=None, base_url=None):
         if fs is None:
             fs = settings.DEFAULT_FILE_STORAGE_FS()
         if base_url is None:
             base_url = settings.MEDIA_URL
-        base_url = base_url.rstrip('/')
+        base_url = base_url.rstrip("/")
         self.fs = fs
         self.base_url = base_url
 
@@ -24,8 +25,8 @@ class FSStorage(Storage):
 
     def listdir(self, name):
         x = list(self.fs.scandir(name))
-        dirs = [ pos.name for pos in x if pos.isdir ]
-        files = [ pos.name for pos in x if not pos.isdir ]
+        dirs = [pos.name for pos in x if pos.isdir]
+        files = [pos.name for pos in x if not pos.isdir]
         return (dirs, files)
 
     def path(self, name):
@@ -61,18 +62,18 @@ class FSStorage(Storage):
                 self.fs.remove(name)
             except ResourceNotFoundError:
                 pass
-            
+
     def get_accessed_time(self, name):
-        info = self.fs.getinfo(name, namespaces=['details'])
+        info = self.fs.getinfo(name, namespaces=["details"])
         return info.accessed
-                
+
     def get_created_time(self, name):
-        info = self.fs.getinfo(name, namespaces=['details'])
+        info = self.fs.getinfo(name, namespaces=["details"])
         return info.created
-    
+
     def get_modified_time(self, name):
-        info = self.fs.getinfo(name, namespaces=['details'])
-        return info.modified 
+        info = self.fs.getinfo(name, namespaces=["details"])
+        return info.modified
 
     def generate_filename(self, filename):
         return "/media/" + filename

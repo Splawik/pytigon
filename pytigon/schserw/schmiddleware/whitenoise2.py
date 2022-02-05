@@ -19,11 +19,14 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                     prj_name = os.path.split(prj_path)[-1]
                     static_path = os.path.join(prj_path, "static", prj_name)
                     if prj_name not in maps:
-                        maps[prj_name] = [static_path, self.static_prefix + prj_name + "/"]
+                        maps[prj_name] = [
+                            static_path,
+                            self.static_prefix + prj_name + "/",
+                        ]
             fs = None
             if default_storage.fs:
                 for pos in default_storage.fs.mounts:
-                    if pos[0] == '/static/':
+                    if pos[0] == "/static/":
                         fs = pos[1]
                         break
             for key in maps:
@@ -35,11 +38,13 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
 
     def __call__(self, request):
         response = None
-        if '/static' in request.path:
+        if "/static" in request.path:
             response = self.process_request(request)
         if response is None:
-            if not request.path.endswith('.map'):
+            if not request.path.endswith(".map"):
                 response = self.get_response(request)
             else:
-                response = HttpResponseNotFound("File: " + request.path + " does'nt exists")
+                response = HttpResponseNotFound(
+                    "File: " + request.path + " does'nt exists"
+                )
         return response

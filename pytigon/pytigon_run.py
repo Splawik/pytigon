@@ -273,7 +273,9 @@ def run(param=None):
                 from pytigon.pytigon_request import init, request
 
                 conf = get_app_conf(os.path.join(paths["PRJ_PATH"], argv[1]))
-                index_path = os.path.join(paths["STATIC_PATH"], "pywebview", "index.html")
+                index_path = os.path.join(
+                    paths["STATIC_PATH"], "pywebview", "index.html"
+                )
                 try:
                     with open(index_path, "rt") as f:
                         index_str = f.read()
@@ -297,20 +299,20 @@ def run(param=None):
                 if conf:
                     window = webview.create_window(
                         conf["DEFAULT"]["PRJ_TITLE"],
-                        #url = "http://127.0.0.5/",
-                        html = index_str,
+                        # url = "http://127.0.0.5/",
+                        html=index_str,
                         js_api=api,
                         min_size=(1024, 768),
-                        #background_color='#0FF',
+                        # background_color='#0FF',
                     )
                 else:
                     window = webview.create_window(
-                       "Pytigon application",
-                       #url = "http://127.0.0.5/",
-                       html = index_str,
-                       js_api=api,
-                       min_size=(1024, 768),
-                       #background_color = '#0FF',
+                        "Pytigon application",
+                        # url = "http://127.0.0.5/",
+                        html=index_str,
+                        js_api=api,
+                        min_size=(1024, 768),
+                        # background_color = '#0FF',
                     )
 
                 def on_loaded():
@@ -326,7 +328,6 @@ def run(param=None):
                     # else:
                     #    run("http://127.0.0.2", app, "Pytigon application")
 
-
                     def _init():
                         init(app, "auto", "anawa", user_agent="webviewembeded")
 
@@ -339,6 +340,7 @@ def run(param=None):
                 webview.start(debug=True)
             else:
                 from pytigon_gui.pytigon import main
+
                 main()
 
         except SystemExit:

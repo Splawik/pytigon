@@ -10,17 +10,17 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 from os import environ
-environ['PYTIGON_APP_IMAGE'] = '1'
+
+environ["PYTIGON_APP_IMAGE"] = "1"
 from pytigon.pytigon_run import run
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
-
