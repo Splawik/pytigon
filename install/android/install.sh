@@ -28,7 +28,7 @@ cd pytigon
 export  DATA_PATH=$HOME/prj/pytigon-android/data
 rm -r $DATA_PATH
 cd pytigon
-../../venv/bin/python manage.py compile_templates
+../../venv/bin/python manage.py compiletemplates
 cp ./prj/install.ini $DATA_PATH 
 cd ..
 cd ..

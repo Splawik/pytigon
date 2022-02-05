@@ -1,6 +1,3 @@
-#!/usr/bin/python
-
-# -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django import forms
@@ -17,6 +14,8 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
+    dict_to_xlsx,
+    dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
@@ -1610,7 +1609,7 @@ def installer(request, pk):
     buf.append("COMPILE TEMPLETE FILES:")
 
     (code, output, err) = py_run(
-        [os.path.join(base_path, "manage.py"), "compile_templates"]
+        [os.path.join(base_path, "manage.py"), "compiletemplates"]
     )
 
     if output:
@@ -1845,7 +1844,7 @@ def translate_sync(request, pk):
             f.write(po_init2)
 
     (code, output, err) = py_run(
-        [os.path.join(app_path, "manage.py"), "compile_templates"]
+        [os.path.join(app_path, "manage.py"), "compiletemplates"]
     )
     locale_gen_internal(prj.id)
 

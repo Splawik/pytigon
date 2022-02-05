@@ -13,12 +13,16 @@
 {% block list_row_header %}
         <th>Name</th>
         <th>Module</th>
-        <th>Asynchronous</th>
+        <th>
+        Asynchronous
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.module|default_if_none:""}}</td>
-        <td align="center">{% if object.asynchronous %}X{% endif %}</td>
+        <td align="center">
+        {% if object.asynchronous %}X{% endif %}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}
@@ -32,7 +36,9 @@
         {% endrow_actions %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Table list</h2>
+    <h2>
+    Table list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% form %}

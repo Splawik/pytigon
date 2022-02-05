@@ -8,6 +8,7 @@
                 <script language="python">
             def init_form(self):
                 self.tabsort.grid.default_command = 'code'
+
 </script>
         {% endif %}
 {% endblock %}
@@ -23,7 +24,9 @@
                                 {% widget class='menu' id='new_view' title="&New view" %}
                                         {% for pos in object_list|module_obj:"View_CHOICES" %}
                                                 <li>
-                                                        <a href="{{table_path}}{{pos.0}}/add/">{{pos.1}}</a>
+                                                        <a href="{{table_path}}{{pos.0}}/add/">
+                                                        {{pos.1}}
+                                                        </a>
                                                 </li>
                                         {% endfor %}
                                 {% endwidget %}
@@ -36,14 +39,18 @@
         <th>View type</th>
         <th>Url</th>
         <th>Parameters</th>
-        <th>Asynchronous</th>
+        <th>
+        Asynchronous
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.get_view_type_display}}</td>
         <td>{{object.url|default_if_none:""}}</td>
         <td>{{object.param|default_if_none:""}}</td>
-        <td align="center">{% if object.asynchronous %}X{% endif %}</td>
+        <td align="center">
+        {% if object.asynchronous %}X{% endif %}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{ block.super }}

@@ -1,6 +1,4 @@
-^^^{# -*- coding: utf-8 -*- #}
-
-%extends 'template/base_base.html'|translate:lang
+^^^% extends 'template/base_base.html'|translate:lang
 {% load exfiltry %}{% load exsyntax %}
 
 % load exfiltry

@@ -697,6 +697,7 @@ def sch_standard(request):
         "env": Env(get_environ()),
         "pyodide": settings.PYODIDE,
         "user_agent": user_agent,
+        "errors": False,
     }
     if "client_param" in request.session:
         ret.update(request.session["client_param"])

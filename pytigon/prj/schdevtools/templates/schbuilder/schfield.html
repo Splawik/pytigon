@@ -8,6 +8,7 @@
             def Init(self):
                 self.retdate = None
                 self.param.EventObject=self
+
             def OnBeforeButtonClick(self):
                 print('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
                 self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
@@ -17,6 +18,7 @@
             def init_form(self):
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
                 pass
+
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -29,6 +31,7 @@
                         self.tabsort.grid.SetFocus()
                         self.GetParent().refresh_html()
                         self.tabsort.grid.goto_last_row()
+
 </script>
         {% endif %}
 {% endblock %}
@@ -83,7 +86,9 @@
         <th>Null</th>
         <th>Blank</th>
         <th>Editable</th>
-        <th>Unique</th>
+        <th>
+        Unique
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
@@ -93,7 +98,9 @@
         <td align="center">{% if object.null %}X{% endif %}</td>
         <td align="center">{% if object.blank %}X{% endif %}</td>
         <td align="center">{% if object.editable %}X{% endif %}</td>
-        <td align="center">{% if object.unique %}X{% endif %}</td>
+        <td align="center">
+        {% if object.unique %}X{% endif %}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}
@@ -112,7 +119,9 @@
         {% endrow_actions %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Table field list</h2>
+    <h2>
+    Table field list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% if object.is_rel or object.has_choices %}

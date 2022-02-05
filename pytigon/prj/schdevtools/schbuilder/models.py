@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django
 from django.db import models
 
@@ -94,21 +92,32 @@ formfield_default = {
     "required": True,
 }
 
+
 formfield_defaults = {
+    "BooleanField": {"initial": "False"},
     "CharField": {
         "param": "max_length=None, min_length=None",
     },
     "ChoiceField": {
         "param": "choices=models.[[choice_name]]",
     },
-    "TypedChoiceField": {
-        "param": "coerce=,empty_value=''",
+    "MultipleChoiceField": {
+        "param": "choices=models.[[choice_name]]",
     },
+    "TypedChoiceField": {
+        "param": "coerce=int,empty_value=''",
+    },
+    "TypedMultipleChoiceField": {
+        "param": "coerce=int,empty_value=''",
+    },
+    "DateField": {"param": "auto_now=False, auto_now_add=True"},
+    "DateTimeField": {"param": "auto_now=False, auto_now_add=True"},
+    "TimeField": {"param": "auto_now=False, auto_now_add=True"},
     "DecimalField": {
         "param": "max_value=None, min_value=None, max_digits=None, decimal_places=None",
     },
     "FilePathField": {
-        "param": "path=[[path]], match=None, recursive=False, allow_files=True, allow_folders=False",
+        "param": "path='[[path]]', match=None, recursive=False, allow_files=True, allow_folders=False",
     },
     "FloatField": {
         "param": "max_value=None, min_value=None",
@@ -128,14 +137,22 @@ formfield_defaults = {
     "RegexField": {
         "param": "regex='[[regex]]', max_length=None, min_length=None",
     },
-    "URLField": {
-        "param": "max_length=None, min_length=None",
-    },
+    "URLField": {},
     "ComboField": {
         "param": "fields=[[fields]]",
     },
+    "ImageField": {
+        "param": "upload_to=None",
+    },
+    "FileField": {
+        "param": "upload_to=None",
+    },
+    "GenericIPAddressField": {},
+    "RegexField": {"param": r"""regex='^\d{11}$', max_length=None, min_length=None"""},
+    "SlugField": {},
+    "UUIDField": {},
+    "UserField": {"param": "user_field=forms.CharField(max_length=100)"},
 }
-
 
 widgets = [
     "ok_cancel",
@@ -211,14 +228,14 @@ View_CHOICES = [
 ]
 
 Url_CHOICES = [
-    ("Default", "-"),
-    ("desktop", "desktop"),
-    ("panel", "panel"),
-    ("header", "header"),
-    ("footer", "footer"),
-    ("script", "script"),
-    ("pscript", "pscript"),
-    ("browser", "browser"),
+    ("-", "default"),
+    ("desktop", "desktop only"),
+    ("panel", "desktop panel"),
+    ("header", "desktop header"),
+    ("footer", "desktop footer"),
+    ("script", "javascript"),
+    ("pscript", "python script"),
+    ("browser", "browser only"),
     ("browser_panel", "prowser_panel"),
     ("browser_header", "browser_header"),
     ("browser_footer", "browser_footer"),
@@ -231,6 +248,8 @@ ViewRetType_CHOICES = [
     ("J", "Json"),
     ("X", "Xml"),
     ("U", "User defined"),
+    ("S", "Xlsx"),
+    ("t", "Txt"),
 ]
 
 HtmlGui_CHOICES = [
@@ -1246,7 +1265,9 @@ class SChView(models.Model):
             if param == "u":
                 defaults["param"] = "**argv"
                 defaults["url_params"] = "{}"
-                defaults["url"] = "fun/(?P<parm>\d+)/$"
+                defaults[
+                    "url"
+                ] = "fun/<str:str_param>/<slug:slug_param>/<int:int_param>/"
             return defaults
         else:
             return None
@@ -1752,8 +1773,6 @@ class SChAppMenu(models.Model):
 
     def get_url_type_ext(self):
         if self.url_type in [None, "-"]:
-            return "?schtml=desktop"
-        elif self.url_type == "browser":
             return ""
         else:
             return "?schtml=" + self.url_type
@@ -1866,9 +1885,10 @@ class SChFormField(models.Model):
     )
     required = models.BooleanField(
         "Required",
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         editable=True,
+        default=False,
     )
     label = models.CharField(
         "Label", null=False, blank=False, editable=True, max_length=64

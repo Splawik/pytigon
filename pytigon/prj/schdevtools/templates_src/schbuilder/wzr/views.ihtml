@@ -1,6 +1,4 @@
-^^^#!/usr/bin/python
-{% load exfiltry %}
-# -*- coding: utf-8 -*-
+^^^{% load exfiltry %}
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django import forms
@@ -11,7 +9,7 @@ from django.conf import settings
 from django.views.generic import TemplateView
 
 from pytigon_lib.schviews.form_fun import form_with_perms
-from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml
+from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml, dict_to_xlsx, dict_to_txt
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext import formfields as ext_form_fields
@@ -46,7 +44,9 @@ def view_{{form.name|lower}}(request, *argi, **argv):
 {{view.view_code_start|safe}}
 {% if view.ret_type == 'T' %}@dict_to_template('{{view.parent.name}}/v_{{view.name|lower}}.html'){% endif %}\
 {% if view.ret_type == 'O' %}@dict_to_odf('{{view.parent.name}}/v_{{view.name|lower}}.ods'){% endif %}\
+{% if view.ret_type == 'S' %}@dict_to_xlsx('{{view.parent.name}}/v_{{view.name|lower}}.xlsx'){% endif %}\
 {% if view.ret_type == 'P' %}@dict_to_pdf('{{view.parent.name}}/v_{{view.name|lower}}_pdf.html'){% endif %}\
+{% if view.ret_type == 't' %}@dict_to_txt('{{view.parent.name}}/v_{{view.name|lower}}_txt.html'){% endif %}\
 {% if view.ret_type == 'J' %}@dict_to_json{% endif %}\
 {% if view.ret_type == 'X' %}@dict_to_xml{% endif %}
 {% if view.asynchronous %}async {% endif %}def {{view.get_name}}(request{% if view.param %}, {{view.param}}{% endif %}):

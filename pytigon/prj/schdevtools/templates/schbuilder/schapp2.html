@@ -8,6 +8,8 @@
             self.path = "{{request.path}}"
             http = wx.GetApp().get_http(self)
             http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+
+
         def filter_url(self, type, url):
             if url and url[0:1]=='.':
                 return None
@@ -16,8 +18,10 @@
                     page = self.GetParent().GetParent().GetParent()
                     win = wx.GetApp().GetTopWindow()
                     win.toolbar_interface.remove_page(page.title)
+
                     http = wx.GetApp().get_http(self)
                     http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+
                     return True
                 else:
                     id = self.app_list.GetValue()
@@ -28,6 +32,8 @@
                         dlg.ShowModal()
                         dlg.Destroy()
                         return True
+
+
 </script>
 {% endblock %}
 {% block all %}
@@ -92,7 +98,8 @@
                                 <CTRL-NOBG_BUTTON_TXT NAME="consumers" label="Channel consumers" SRC="client://places/network-workgroup.png" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td cellpadding="0">
-                                <CTRL-NOBG_BUTTON_TXT NAME="templates" label="Templates" SRC="png://mimetypes/x-office-presentation.png" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                                <CTRL-NOBG_BUTTON_TXT NAME="templates" label="Templates" SRC="png://mimetypes/x-office-presentation.png" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/">
+                                </CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td width="20"></td>
                         <td cellpadding="0">

@@ -8,6 +8,7 @@
                 import os
                 paths = wx.StandardPaths.Get()
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+
 </script>
         {% endif %}
 {% endblock %}
@@ -26,12 +27,16 @@
 {% block list_row_header %}
         <th>Name</th>
         <th>Title</th>
-        <th>Version</th>
+        <th>
+        Version
+        </th>
 {% endblock %}
 {% block list_row %}
         {% td_editable 'name' 'text' %}
         <td>{{object.title}}</td>
-        <td>{{object.version|default_if_none:""}}</td>
+        <td>
+        {{object.version|default_if_none:""}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
@@ -56,6 +61,7 @@
         field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
         field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
         field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
+
 
         {% endrow_actions %}
 {% endblock %}

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import django
 from django.db import models
 
@@ -72,7 +70,10 @@ class ReportDef(BaseObject):
         return repdef_list
 
     def can_user_add(self, user):
-        return DocHead.can_add(self.doc_type, user)
+        if self.doc_type:
+            return DocHead.can_add(self.doc_type, user)
+        else:
+            return True
 
 
 admin.site.register(ReportDef)

@@ -1,6 +1,4 @@
-^^^#!/usr/bin/python
-{% load exfiltry %}
-# -*- coding: utf-8 -*-
+^^^{% load exfiltry %}
 import os
 import sys
 import datetime
