@@ -59,21 +59,9 @@ BaseForm._html_output = _html_output
 
 
 def as_p(self):
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     return render_form(self)
-    # return self._html_output(
-    #    normal_row='<p%(html_class_attr)s>%(label)s %(field)s%(help_text)s</p>',
-    #    error_row='%s',
-    #    row_ender='</p>',
-    #    help_text_html=' <span class="helptext">%s</span>',
-    #    errors_on_separate_row=True,
-    # )
-
 
 BaseForm.as_p = as_p
-
-print("X0:", BaseForm)
-
 
 def widget_attrs(self, widget):
     if self.max_length == None:

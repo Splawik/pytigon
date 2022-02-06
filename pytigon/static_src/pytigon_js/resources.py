@@ -52,6 +52,7 @@ EDIT_FOOTER = """
 """
 
 INFO_FOOTER = """
+<button type = "button" class ="btn btn-info copy_to_clipboard">Copy to clipboard</button>
 <button type = "button" class ="btn btn-secondary btn-close" data-dismiss='modal'>Close</button>
 """
 
@@ -127,7 +128,15 @@ INLINE_DELETE_BASE = """
 </div>
 """
 
-INLINE_EDIT = INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER).replace("data-dismiss='modal'", "")
-INLINE_INFO = INLINE_BASE.replace("{{modal_footer}}", INFO_FOOTER).replace("data-dismiss='modal'", "")
-INLINE_DELETE = INLINE_BASE.replace("{{modal_footer}}", DELETE_FOOTER).replace("data-dismiss='modal'", "")
-INLINE_ERROR = INLINE_BASE.replace("{{modal_footer}}", ERROR_FOOTER).replace("data-dismiss='modal'", "")
+INLINE_EDIT = INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER).replace(
+    "data-dismiss='modal'", ""
+)
+INLINE_INFO = INLINE_BASE.replace("{{modal_footer}}", INFO_FOOTER).replace(
+    "data-dismiss='modal'", ""
+)
+INLINE_DELETE = INLINE_BASE.replace("{{modal_footer}}", DELETE_FOOTER).replace(
+    "data-dismiss='modal'", ""
+)
+INLINE_ERROR = INLINE_BASE.replace("{{modal_footer}}", ERROR_FOOTER).replace(
+    "data-dismiss='modal'", ""
+)

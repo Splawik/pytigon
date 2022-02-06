@@ -7,7 +7,8 @@
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
-{% block scroll %}{% endblock %}
+{% block scroll %}
+{% endblock %}
 {% block list_content_actions %}
         {% new_row "New config" %}
 {% endblock %}
@@ -15,13 +16,17 @@
         <th>Wiki subject</th>
         <th>Group of rigths to view</th>
         <th>Group of rigths to edit</th>
-        <th>backup_copies</th>
+        <th>
+        backup_copies
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.subject}}</td>
         <td>{{group_of_rights_to_view}}</td>
         <td>{{group_of_rights_to_edit}}</td>
-        <td>{{object.backup_copies}}</td>
+        <td>
+        {{object.backup_copies}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

@@ -44,6 +44,7 @@ from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMu
 from django.utils.safestring import SafeText
 from django import forms
 
+
 register = template.Library()
 
 ## tools

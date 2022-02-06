@@ -7,7 +7,8 @@
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
-{% block scroll %}{% endblock %}
+{% block scroll %}
+{% endblock %}
 {% block list_content_actions %}
         {% new_row "New wiki class" %}
 {% endblock %}
@@ -15,13 +16,17 @@
         <th>Application</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Inline editing</th>
+        <th>
+        Inline editing
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.app}}</td>
         <td>{{object.name}}</td>
         <td>{{object.description}}</td>
-        <td>{{object.inline_editing}}</td>
+        <td>
+        {{object.inline_editing}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

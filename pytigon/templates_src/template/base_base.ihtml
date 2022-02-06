@@ -121,6 +121,11 @@
                                     tr
                                         td...{{ field.verbose_name }}
                                         td...{{ object|get_attr:field.name }}
+                                % if object|hasattr:"copy_to_clipboard":
+                                    tr
+                                        td colspan=2:
+                                            textarea class=copy_to_clipboard,,,style=position:absolute;left:-1000px;...{{object.copy_to_clipboard|json_dumps}}
+                                    
                         %% form_ok_cancel_info
                     % if standard_web_browser:
                         % if title:

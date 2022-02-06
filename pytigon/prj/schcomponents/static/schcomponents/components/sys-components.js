@@ -1,4 +1,4 @@
-var comp, init, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err;
+var comp, init, stub10_err, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err, stub9_context;
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {
@@ -101,3 +101,39 @@ try {
 } catch(err_0)  { stub8_err=err_0; }
 if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
 } else { stub7_context.__exit__(null, null, null); }
+stub9_context = (new DefineWebComponent("ptig-paste", false));
+comp = stub9_context.__enter__();
+try {
+    comp.options["template"] = '<a class=\"btn btn_size btn-outline-secondary\" title=\"Paste\" target=\"null\" data-region=\"table\" data-bind=\":onclick\">Paste</a>\n' +
+    '\n' +
+    '';
+    comp.options["attributes"] = ({href: null, onclick: null});
+    init = function flx_init (component) {
+        var _onclick, state;
+        state = ({});
+        _onclick = (function flx__onclick (event) {
+            var _send_text;
+            _send_text = (function flx__send_text (text) {
+                var _complete;
+                _complete = (function flx__complete () {
+                    refresh_ajax_frame(component, "table");
+                    return null;
+                }).bind(this);
+
+                ajax_post(component.getAttribute("href"), text, _complete, null, "application/json");
+                return null;
+            }).bind(this);
+
+            (navigator.clipboard.readText().then)(_send_text);
+            return null;
+        }).bind(this);
+
+        state["onclick"] = _onclick;
+        component.set_state(state);
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub10_err=err_0; }
+if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
+} else { stub9_context.__exit__(null, null, null); }

@@ -446,6 +446,21 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
                 "backdrop": False,
             }
         )
+    if "INFO" in template_name:
+        txt = dialog_slot.querySelector("textarea.copy_to_clipboard")
+        btn = dialog_slot.querySelector("button.copy_to_clipboard")
+        if btn:
+            if txt and txt.value:
+                btn.style.display = "block"
+
+                def _on_click():
+                    nonlocal txt
+                    txt.select()
+                    document.execCommand("copy")
+
+                btn.addEventListener("click", _on_click)
+            else:
+                btn.style.display = "none"
 
 
 def on_popup(target_element, data_element, new_url, param, event):
@@ -522,7 +537,7 @@ def refresh_frame(
         data_region2 = data_region
     else:
         data_region2 = target_element.getAttribute("data-region")
-    #if not data_region2:
+    # if not data_region2:
     #    data_region2 = data_region
     region = get_ajax_region(target_element, data_region2)
     if data_region2 != "error" and region.getAttribute("data-region") == "error":

@@ -702,13 +702,6 @@ def sch_standard(request):
     if "client_param" in request.session:
         ret.update(request.session["client_param"])
 
-    # ret['app_manager'] =  None
-    # ret['settings'] = None
-
-    # print("A1")
-    # request.session['standard_parameters'] = ret.copy()
-    # print("A2", request.session['standard_parameters'])
-
     ret["app_manager"] = AppManager(request)
     ret["settings"] = settings
 

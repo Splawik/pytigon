@@ -170,6 +170,15 @@
                                                                                 <td>{{ object|get_attr:field.name }}</td>
                                                                         </tr>
                                                                 {% endfor %}
+                                                                {% if object|hasattr:"copy_to_clipboard" %}
+                                                                        <tr>
+                                                                                <td colspan="2:">
+                                                                                        <textarea class="copy_to_clipboard" style="position:absolute;left:-1000px;">
+                                                                                        {{object.copy_to_clipboard|json_dumps}}
+                                                                                        </textarea>
+                                                                                </td>
+                                                                        </tr>
+                                                                {% endif %}
                                                         </table>
                                                 </div>
                                                 {% block form_ok_cancel_info %}{% endblock %}
@@ -211,7 +220,8 @@
                                                                         <br />
                                                                 </div>
                                                         {% endblock %}
-                                                        {% block form_ok_cancel_del %}{% endblock %}
+                                                        {% block form_ok_cancel_del %}
+                                                        {% endblock %}
                                                 </form>
                                         {% endblock %}
                                         {% if standard_web_browser %}
@@ -256,9 +266,11 @@
                                                 {% endblock %}
                                         </form>
                                         {% block row_edit_footer %}{% endblock %}
-                                        {% block form_ok_cancel %}{% endblock %}
+                                        {% block form_ok_cancel %}
+                                        {% endblock %}
                                 {% endblock %}
-                                {% block row_edit_end %}{% endblock %}
+                                {% block row_edit_end %}
+                                {% endblock %}
                                 {% if standard_web_browser %}
                                         {% if title %}
                                                 <set-field element="#ModalLabel" title="{{title}}">
@@ -538,13 +550,15 @@
                                                                                                         {% endblock %}
                                                                                                 </tr>
                                                                                         {% endblock %}
-                                                                                        {% block list_row2 %}{% endblock %}
+                                                                                        {% block list_row2 %}
+                                                                                        {% endblock %}
                                                                                 {% endfor %}
                                                                         {% endif %}
                                                                 </tbody>
                                                         {% endif %}
                                                 {% endblock %}
-                                                {% block list_table_footer %}{% endblock %}
+                                                {% block list_table_footer %}
+                                                {% endblock %}
                                         </table>
                                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
                                                 {% if table_type == 'scrolled' or not table_type %}
@@ -562,10 +576,13 @@
                                         </div>
                                 {% endif %}
                         {% endif %}
-                        {% block list_content_footer %}{% endblock %}
-                        {% block list_content_end %}{% endblock %}
+                        {% block list_content_footer %}
+                        {% endblock %}
+                        {% block list_content_end %}
+                        {% endblock %}
                 {% endblock %}
-                {% block list_page_footer %}{% endblock %}
+                {% block list_page_footer %}
+                {% endblock %}
                 {% block list_page_end %}
                         </div>
                 {% endblock %}

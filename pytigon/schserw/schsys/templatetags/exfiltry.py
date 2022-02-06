@@ -35,6 +35,7 @@ from pytigon_lib.schdjangoext.tools import make_href as mhref
 
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.wiki import wiki_from_str, make_href, wikify
+from pytigon_lib.schtools.schjson import json_dumps
 
 from bootstrap4.forms import render_form
 
@@ -191,7 +192,6 @@ def _call(obj, methodName):
     if hasattr(obj, methodName):
         method = getattr(obj, methodName)
         if hasattr(obj, "__callArg"):
-            print(obj.__callArg)
             ret = method(*obj.__callArg)
             del obj.__callArg
             return ret
@@ -855,3 +855,11 @@ def _import_var(obj):
     base_path, item = path.split(":")
     m = importlib.import_module(base_path)
     return getattr(m, item)
+
+
+@register.filter(name="json_dumps", is_safe=True)
+def _json_dumps(obj):
+    print("A1: ", obj)
+    ret = json_dumps(obj)
+    print("A2: ", ret)
+    return ret

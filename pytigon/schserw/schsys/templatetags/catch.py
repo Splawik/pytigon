@@ -44,7 +44,6 @@ class CatchNode(template.Node):
             context["VAR"][self.var_name] = mark_safe(output)
         else:
             context["VAR"] = {self.var_name: mark_safe(output)}
-        print(context["VAR"])
         return ""
 
 

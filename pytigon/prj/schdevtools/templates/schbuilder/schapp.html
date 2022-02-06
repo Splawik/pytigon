@@ -15,6 +15,7 @@
                 <script language="python">
             def init_form(self):
                 pass
+
             def filter_http_result(self, target, href, mp):
                 if 'app_down' in href or 'app_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -22,6 +23,7 @@
                             self.tabsort.grid.goto_next_row()
                         else:
                             self.tabsort.grid.goto_prev_row()
+
 </script>
         {% endif %}
 {% endblock %}
@@ -53,7 +55,8 @@
                                         </td>
                                 </tr>
                         </table>
-                        <hr></hr>
+                        <hr>
+                        </hr>
                 {% endif %}
             {% endif %}
 {% endblock %}
@@ -64,13 +67,17 @@
         <th>Name</th>
         <th>Module title</th>
         <th>Title</th>
-        <th>Permissions</th>
+        <th>
+        Permissions
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.module_title|default_if_none:""}}</td>
         <td>{{object.title|default_if_none:""}}</td>
-        <td align="center">{% if object.perms %}X{% endif %}</td>
+        <td align="center">
+        {% if object.perms %}X{% endif %}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
@@ -93,6 +100,7 @@
         field_edit/doc,Doc,[|client://apps/help-browser.png],_top2
         delete
 
+
         {% endrow_actions %}
         {% if not forloop.first %}
                 {% row_actions %}
@@ -106,7 +114,9 @@
         {% endif %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Applications list</h2>
+    <h2>
+    Applications list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% form %}

@@ -22,7 +22,8 @@
 
 %% list_content_actions
     % new_row "New report definition"
-
+    ptig-paste href=../table_action/
+    
 %% list_row_header
     th..._(name)
     th..._(description)

@@ -75,6 +75,56 @@ class ReportDef(BaseObject):
         else:
             return True
 
+    def copy_to_clipboard(self):
+        return {
+            "action": "paste_from_clipboard",
+            "table": "ReportDef",
+            "objects": [
+                {
+                    "app": self.app,
+                    "name": self.name,
+                    "description": self.description,
+                    "declaration": self.declaration,
+                    "template_src": self.template_src,
+                    "template": self.template,
+                    "to_html_rec": self.to_html_rec,
+                    "save_fun": self.save_fun,
+                    "load_fun": self.load_fun,
+                    "to_str_fun": self.to_str_fun,
+                    "action_template": self.action_template,
+                    "doc_type": self.doc_type,
+                },
+            ],
+        }
+
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        if (
+            "action" in data
+            and data["action"] == "paste_from_clipboard"
+            and "table" in data
+            and data["table"] == "ReportDef"
+        ):
+            object_list = data["objects"]
+            for obj_param in object_list:
+                obj = ReportDef()
+                obj.app = obj_param["app"]
+                obj.name = "COPY: " + obj_param["name"]
+                obj.description = obj_param["description"]
+                obj.declaration = obj_param["declaration"]
+                obj.template_src = obj_param["template_src"]
+                obj.template = obj_param["template"]
+                obj.to_html_rec = obj_param["to_html_rec"]
+                obj.save_fun = obj_param["save_fun"]
+                obj.load_fun = obj_param["load_fun"]
+                obj.to_str_fun = obj_param["to_str_fun"]
+                obj.action_template = obj_param["action_template"]
+                obj.doc_type = obj_param["doc_type"]
+                obj.save()
+            print("PASTE: ", data)
+            return True
+        return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
+
 
 admin.site.register(ReportDef)
 

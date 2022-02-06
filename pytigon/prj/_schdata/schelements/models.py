@@ -227,12 +227,10 @@ class Element(TreeModel):
         self.key_path = key_path
 
         if len(tab) > 0:
-            print("U1", tab)
             self.first_ancestor = tab[-1]
             super().save(*argi, **argv)
         else:
             super().save(*argi, **argv)
-            print("U2", self)
             self.first_ancestor = self
             super().save(*argi, **argv)
 
@@ -993,15 +991,11 @@ class DocHead(JSONModel):
         return None
 
     def get_undo_target(self):
-        print("F1")
         reg = self.doc_type_parent.parent
-        print("F2")
         statuses = reg.docregstatus_set.filter(name=self.status)
         if len(statuses) > 0:
             status = statuses[0]
-            print("F3")
             return status.get_undo_target()
-        print("F4")
         return "refresh_frame"
 
     def get_derived_object(self, param=None):
@@ -1054,7 +1048,6 @@ class DocHead(JSONModel):
 
         def append_reg_filter(reg):
             nonlocal q, profile
-            print(reg)
             q2 = Q(doc_type_parent__parent__name=reg.name)
             if reg.access_fun:
                 exec(reg.access_fun)
@@ -1062,7 +1055,6 @@ class DocHead(JSONModel):
                     q2 = locals()["q_for_list"](request, request.user, profile)
             if q2:
                 if q:
-                    print("Q2 ", q, q2)
                     q = q | q2
                 else:
                     q = q2
@@ -1240,10 +1232,6 @@ class DocItem(JSONModel):
                     x = x.get_parent()
                 names.append(view.template_name)
                 return names
-                # print(names)
-                # template = select_template(names)
-                # if template:
-                #    return template
 
         return None
 
@@ -1281,10 +1269,6 @@ class DocItem(JSONModel):
                 context["view"].template_name.replace(reg.app + "/", "schelements/")
             )
             return names
-            # print(names)
-            # template = select_template(names)
-            # if template:
-            #    return template
         return None
 
     def get_form_source(self):

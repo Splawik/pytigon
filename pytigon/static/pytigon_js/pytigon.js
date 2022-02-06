@@ -5,7 +5,7 @@ MODAL = "\n    <div class=\"dialog-data\"></div>\n";
 MODAL_BASE = "\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close\" data-dismiss='modal' aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame\" data-region='page' href='{href}'>\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n";
 MODAL_DELETE_BASE = "\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close\" data-dismiss='modal' aria-label=\"Close\">\n                <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n";
 EDIT_FOOTER = " \n<button type=\"button\" class=\"btn btn-secondary btn-close\" data-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" target=\"refresh_frame\">OK</button>\n";
-INFO_FOOTER = "\n<button type = \"button\" class =\"btn btn-secondary btn-close\" data-dismiss='modal'>Close</button>\n";
+INFO_FOOTER = "\n<button type = \"button\" class =\"btn btn-info copy_to_clipboard\">Copy to clipboard</button>\n<button type = \"button\" class =\"btn btn-secondary btn-close\" data-dismiss='modal'>Close</button>\n";
 DELETE_FOOTER = "\n<button type=\"button\" class=\"btn btn-secondary btn-close\" data-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" target=\"refresh_frame\">OK</button>\n";
 ERROR_FOOTER = "\n<button type=\"button\" class=\"btn btn-secondary btn-close\" data-dismiss='modal'>Close</button>\n";
 MODAL_EDIT = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", EDIT_FOOTER);
@@ -2269,7 +2269,7 @@ on_inline_error = function flx_on_inline_error (target_element, data_element, ne
 
 window.on_inline_error = on_inline_error;
 _on_popup = function flx__on_popup (target_element, data_element, url, param, event, template_name) {
-    var content, dialog, dialog_slot, on_hidden, region;
+    var _on_click, btn, content, dialog, dialog_slot, on_hidden, region, txt;
     if ((!_pyfunc_truthy(can_popup()))) {
         return _on_inline(target_element, data_element, url, param, event, template_name);
     }
@@ -2299,6 +2299,24 @@ _on_popup = function flx__on_popup (target_element, data_element, url, param, ev
         dialog.on("hidden.bs.modal", on_hidden);
         dialog.drags(({handle: ".modal-header"}));
         dialog.modal(({show: true, backdrop: false}));
+    }
+    if (_pyfunc_op_contains("INFO", template_name)) {
+        txt = dialog_slot.querySelector("textarea.copy_to_clipboard");
+        btn = dialog_slot.querySelector("button.copy_to_clipboard");
+        if (_pyfunc_truthy(btn)) {
+            if ((_pyfunc_truthy(txt) && _pyfunc_truthy(txt.value))) {
+                btn.style.display = "block";
+                _on_click = (function flx__on_click () {
+                    txt.select();
+                    document.execCommand("copy");
+                    return null;
+                }).bind(this);
+
+                btn.addEventListener("click", _on_click);
+            } else {
+                btn.style.display = "none";
+            }
+        }
     }
     return null;
 };
