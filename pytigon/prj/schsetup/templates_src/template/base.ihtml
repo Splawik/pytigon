@@ -29,8 +29,3 @@
         .var initial_state={};
         .GLOBAL_BUS.set_state(initial_state);
         .var component_init = [ "ptig-codeeditor.js", "ptig-xterm.js",  ];  
-
-%% extrahead
-    {{block.super}}
-    {% css_link 'explorer/explorer.css' %}
-

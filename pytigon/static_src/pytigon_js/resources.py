@@ -1,3 +1,7 @@
+_CANCEL = gettext("Cancel")
+_CLOSE = gettext("Close")
+_COPY_TO_CLIP = gettext("Copy to clipboard")
+
 MODAL = """
     <div class="dialog-data"></div>
 """
@@ -23,7 +27,9 @@ MODAL_BASE = """
         </div>
     </div>
 </div>
-"""
+""".replace(
+    "Close", _CLOSE
+)
 
 MODAL_DELETE_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
@@ -44,26 +50,38 @@ MODAL_DELETE_BASE = """
         </div>
     </div>
 </div>
-"""
+""".replace(
+    "Close", _CLOSE
+)
 
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-primary" target="refresh_frame">OK</button>
-"""
+""".replace(
+    "Cancel", _CANCEL
+)
 
 INFO_FOOTER = """
 <button type = "button" class ="btn btn-info copy_to_clipboard">Copy to clipboard</button>
 <button type = "button" class ="btn btn-secondary btn-close" data-dismiss='modal'>Close</button>
-"""
+""".replace(
+    "Copy to clipboard", _COPY_TO_CLIP
+).replace(
+    "Close", _CLOSE
+)
 
 DELETE_FOOTER = """
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-danger" target="refresh_frame">OK</button>
-"""
+""".replace(
+    "Cancel", _CANCEL
+)
 
 ERROR_FOOTER = """
 <button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Close</button>
-"""
+""".replace(
+    "Close", _CLOSE
+)
 
 MODAL_EDIT = MODAL_BASE.replace("{{modal_footer}}", EDIT_FOOTER)
 MODAL_INFO = MODAL_BASE.replace("{{modal_footer}}", INFO_FOOTER)
@@ -100,7 +118,9 @@ INLINE_BASE = """
         </div>
     </div>
 </div>
-"""
+""".replace(
+    "Close", _CLOSE
+)
 
 INLINE_DELETE_BASE = """
 <div style='position:relative'>
@@ -126,7 +146,9 @@ INLINE_DELETE_BASE = """
         </div>
     </div>
 </div>
-"""
+""".replace(
+    "Close", _CLOSE
+)
 
 INLINE_EDIT = INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER).replace(
     "data-dismiss='modal'", ""

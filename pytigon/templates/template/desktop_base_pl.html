@@ -20,6 +20,7 @@
                 {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
                 {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
                 {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
+                <script src="{% url 'javascript-catalog' %}"></script>
                 {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
                 {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
                 {% jscript_link 'django_select2/django_select2.js' %}
@@ -46,7 +47,8 @@
                 {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
                 {% block theme_js_scripts %}{% endblock %}
-                {% block ext_js_scripts %}{% endblock %}
+                {% block ext_js_scripts %}
+                {% endblock %}
         {% endcompress %}
         {% if pyodide %}
                   <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
@@ -91,7 +93,8 @@
         {% endif %}
 {% endblock %}
 {% block js_script_body %}
-        {% block jquery_ovr %}{% endblock %}
+        {% block jquery_ovr %}
+        {% endblock %}
 {% endblock %}
 {% block css_links %}
         {% compress css %}
@@ -140,8 +143,10 @@
 {% block css_end %}
         </style>
 {% endblock %}
-{% block login_header %}{% endblock %}
-{% block login_footer %}{% endblock %}
+{% block login_header %}
+{% endblock %}
+{% block login_footer %}
+{% endblock %}
 {% block menu_start %}
         <div class="desktop_content">
 {% endblock %}
@@ -241,7 +246,8 @@
                                                                                 <a class="nav-link" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>
                                                                         </li>
                                                                 {% endif %}
-                                                                {% block system_menu %}{% endblock %}
+                                                                {% block system_menu %}
+                                                                {% endblock %}
                                                         </ul>
                                                 </div>
                                         </nav>
@@ -312,9 +318,11 @@
                         {% endif %}
                 {% endif %}
         {% endblock %}
-        {% block form_bar %}{% endblock %}
+        {% block form_bar %}
+        {% endblock %}
 {% endblock %}
-{% block grid1 %}{% endblock %}
+{% block grid1 %}
+{% endblock %}
 {% block tabs %}
         {% if NO_TABS or application_type != 'modern' %}
                 {{block.super}}

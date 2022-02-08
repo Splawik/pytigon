@@ -68,8 +68,12 @@ _urlpatterns.extend(
     [
         path(
             "schsys/jsi18n/",
-            django.views.i18n.JavaScriptCatalog,
-            {"packages": ("django.conf",)},
+            django.views.i18n.JavaScriptCatalog.as_view(
+                packages=[
+                    "pytigon.schserw.schsys",
+                ]
+            ),
+            name="javascript-catalog",
         ),
         path("schsys/i18n/", include(django.conf.urls.i18n)),
         path("plugins/<path:template_name>", views.plugin_template),

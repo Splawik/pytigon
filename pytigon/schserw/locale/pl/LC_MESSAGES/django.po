@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-13 16:40+0200\n"
+"POT-Creation-Date: 2022-02-07 22:20+0100\n"
 "PO-Revision-Date: 2015-09-13 16:46+0100\n"
 "Last-Translator: Piotr Maliński <admin@rk.edu.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -22,595 +22,679 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: bootstrap_admin/templates/admin/404.html:4
-#: bootstrap_admin/templates/admin/404.html:8
-msgid "Page not found"
-msgstr "Strona nie znaleziona"
-
-#: bootstrap_admin/templates/admin/404.html:10
-msgid "We're sorry, but the requested page could not be found."
-msgstr "Niestety nie można znaleźć rządanej strony."
-
-#: bootstrap_admin/templates/admin/500.html:6
-#: bootstrap_admin/templates/admin/app_index.html:10
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:19
-#: bootstrap_admin/templates/admin/base.html:142
-#: bootstrap_admin/templates/admin/change_form.html:22
-#: bootstrap_admin/templates/admin/change_list.html:43
-#: bootstrap_admin/templates/admin/delete_confirmation.html:9
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:9
-#: bootstrap_admin/templates/admin/object_history.html:7
-#: bootstrap_admin/templates/registration/password_change_done.html:7
-#: bootstrap_admin/templates/registration/password_change_form.html:12
-#: bootstrap_admin/templates/registration/password_reset_complete.html:7
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:7
-#: bootstrap_admin/templates/registration/password_reset_done.html:7
-#: bootstrap_admin/templates/registration/password_reset_form.html:7
-msgid "Home"
-msgstr "Początek"
-
-#: bootstrap_admin/templates/admin/500.html:7
-msgid "Server error"
-msgstr "Błąd serwera"
-
-#: bootstrap_admin/templates/admin/500.html:11
-msgid "Server error (500)"
-msgstr "Bład serwera (500)"
-
-#: bootstrap_admin/templates/admin/500.html:14
-msgid "Server Error <em>(500)</em>"
-msgstr "Błąd Serwera <em>(500)</em>"
-
-#: bootstrap_admin/templates/admin/500.html:15
-msgid ""
-"There's been an error. It's been reported to the site administrators via "
-"email and should be fixed shortly. Thanks for your patience."
-msgstr ""
-"Wystąpił niespodziewany błąd. Raport został wysłany emailem administratorowi "
-"strony."
-
-#: bootstrap_admin/templates/admin/actions.html:7
-msgid "Run the selected action"
-msgstr "Wykonaj wybraną akcję"
-
-#: bootstrap_admin/templates/admin/actions.html:7
-msgid "Go"
-msgstr "Szukaj"
-
-#: bootstrap_admin/templates/admin/actions.html:20
-msgid "Click here to select the objects across all pages"
-msgstr "Kliknij tutaj aby zaznaczyć obiekt na wszystkich stronach"
-
-#: bootstrap_admin/templates/admin/actions.html:20
-#, python-format
-msgid "Select all %(total_count)s %(module_name)s"
-msgstr "Zaznacz wszystkie %(total_count)s %(module_name)s"
-
-#: bootstrap_admin/templates/admin/actions.html:22
-msgid "Clear selection"
-msgstr "Wyczyść zaznaczenie"
-
-#: bootstrap_admin/templates/admin/auth/user/add_form.html:7
-msgid ""
-"First, enter a username and password. Then, you'll be able to edit more user "
-"options."
-msgstr ""
-
-#: bootstrap_admin/templates/admin/auth/user/add_form.html:10
-msgid "Enter a username and password."
-msgstr ""
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:31
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:75
-#: bootstrap_admin/templates/admin/base.html:122
-msgid "Change password"
-msgstr "Zmiana hasła"
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:44
-#: bootstrap_admin/templates/admin/change_form.html:65
-#: bootstrap_admin/templates/admin/change_list.html:69
-#: bootstrap_admin/templates/admin/login.html:35
-#: bootstrap_admin/templates/registration/password_change_form.html:31
-msgid "Please correct the error below."
-msgstr "Proszę popraw poniższy błąd"
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:44
-#: bootstrap_admin/templates/admin/change_form.html:65
-#: bootstrap_admin/templates/registration/password_change_form.html:31
-msgid "Please correct the errors below."
-msgstr "Proszę popraw poniższy błąd"
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:50
-#, python-format
-msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:60
-#: translate.py:14
-msgid "Password"
-msgstr "Hasło:"
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:68
-#: bootstrap_admin/templates/registration/password_change_form.html:57
-msgid "Password (again)"
-msgstr "Hasło (powtórnie)"
-
-#: bootstrap_admin/templates/admin/auth/user/change_password.html:69
-msgid "Enter the same password as above, for verification."
-msgstr "Wpisz ponownie hasło w celu weryfikacji"
-
-#: bootstrap_admin/templates/admin/base.html:70
-#: bootstrap_admin/templates/admin/base.html:95
-#: bootstrap_admin/templates/admin/base.html:98
-#: bootstrap_admin/templates/admin/login.html:23
-#: bootstrap_admin/templates/admin/login.html:27
-msgid "Django administration"
-msgstr "Administracja Django"
-
-#: bootstrap_admin/templates/admin/base.html:117
-#: bootstrap_admin/templates/admin/base.html:131
-msgid "Documentation"
-msgstr "Dokumentacja"
-
-#: bootstrap_admin/templates/admin/base.html:126
-#: bootstrap_admin/templates/admin/base.html:133
-msgid "Log out"
-msgstr "Wyloguj się"
-
-#: bootstrap_admin/templates/admin/base.html:152
-#: bootstrap_admin/templates/admin/change_list.html:68 translate.py:7
-msgid "Close"
-msgstr "Zamknij"
-
-#: bootstrap_admin/templates/admin/base_site.html:3
-msgid "Django site admin"
-msgstr "Administracja stroną Django"
-
-#: bootstrap_admin/templates/admin/change_form.html:39
-#: bootstrap_admin/templates/admin/index.html:65
-msgid "Add"
-msgstr "Dodaj"
-
-#: bootstrap_admin/templates/admin/change_form.html:114
-#: bootstrap_admin/templates/admin/change_form.html:116
-#: bootstrap_admin/templates/admin/object_history.html:18
-msgid "History"
-msgstr "Historia"
-
-#: bootstrap_admin/templates/admin/change_form.html:121
-#: bootstrap_admin/templates/admin/change_form.html:123
-#: bootstrap_admin/templates/admin/edit_inline/stacked.html:20
-#: bootstrap_admin/templates/admin/edit_inline/tabular.html:35
-msgid "View on site"
-msgstr "Pokaż na stronie"
-
-#: bootstrap_admin/templates/admin/change_list.html:58
-msgid "Filter"
-msgstr "Filtr"
-
-#: bootstrap_admin/templates/admin/change_list.html:92
-#, python-format
-msgid "Add %(name)s"
-msgstr "Dodaj %(name)s"
-
-#: bootstrap_admin/templates/admin/change_list.html:154
-#: bootstrap_admin/templates/admin/submit_line.html:5
-#: bootstrap_admin/templates/admin/submit_line.html:7
-msgid "Save"
-msgstr "Zapisz"
-
-#: bootstrap_admin/templates/admin/change_list_results.html:13
-msgid "Remove from sorting"
-msgstr ""
-
-#: bootstrap_admin/templates/admin/change_list_results.html:16
-#, python-format
-msgid "Sorting priority: %(priority_number)s"
-msgstr "Priorytet sortowania: %(priority_number)s"
-
-#: bootstrap_admin/templates/admin/change_list_results.html:17
-msgid "Toggle sorting"
-msgstr "Przełącz sortowanie"
-
-#: bootstrap_admin/templates/admin/delete_confirmation.html:20
-#: bootstrap_admin/templates/admin/submit_line.html:34
-#: bootstrap_admin/templates/admin/submit_line.html:36
-#: schsys/templatetags/exsyntax.py:81 schsys/templatetags/exsyntax.py:82
-msgid "Delete"
-msgstr "Skasuj"
-
-#: bootstrap_admin/templates/admin/delete_confirmation.html:29
+#: ext_lib/pygettext.py:25
 #, python-format
 msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
-"related objects, but your account doesn't have permission to delete the "
-"following types of objects:"
+"pygettext -- Python equivalent of xgettext(1)\n"
+"\n"
+"Many systems (Solaris, Linux, Gnu) provide extensive tools that ease the\n"
+"internationalization of C programs. Most of these tools are independent of\n"
+"the programming language and can be used from within Python programs.\n"
+"Martin von Loewis' work[1] helps considerably in this regard.\n"
+"\n"
+"There's one problem though; xgettext is the program that scans source code\n"
+"looking for message strings, but it groks only C (or C++). Python\n"
+"introduces a few wrinkles, such as dual quoting characters, triple quoted\n"
+"strings, and raw strings. xgettext understands none of this.\n"
+"\n"
+"Enter pygettext, which uses Python's standard tokenize module to scan\n"
+"Python source code, generating .pot files identical to what GNU xgettext[2]\n"
+"generates for C and C++ code. From there, the standard GNU tools can be\n"
+"used.\n"
+"\n"
+"A word about marking Python strings as candidates for translation. GNU\n"
+"xgettext recognizes the following keywords: gettext, dgettext, dcgettext,\n"
+"and gettext_noop. But those can be a lot of text to include all over your\n"
+"code. C and C++ have a trick: they use the C preprocessor. Most\n"
+"internationalized C source includes a #define for gettext() to _() so that\n"
+"what has to be written in the source is much less. Thus these are both\n"
+"translatable strings:\n"
+"\n"
+"    gettext(\"Translatable String\")\n"
+"    _(\"Translatable String\")\n"
+"\n"
+"Python of course has no preprocessor so this doesn't work so well.  Thus,\n"
+"pygettext searches only for _() by default, but see the -k/--keyword flag\n"
+"below for how to augment this.\n"
+"\n"
+" [1] http://www.python.org/workshops/1997-10/proceedings/loewis.html\n"
+" [2] http://www.gnu.org/software/gettext/gettext.html\n"
+"\n"
+"NOTE: pygettext attempts to be option and feature compatible with GNU\n"
+"xgettext where ever possible. However some options are still missing or are\n"
+"not fully implemented. Also, xgettext's use of command line switches with\n"
+"option arguments is broken, and in these cases, pygettext just defines\n"
+"additional switches.\n"
+"\n"
+"Usage: pygettext [options] inputfile ...\n"
+"\n"
+"Options:\n"
+"\n"
+"    -a\n"
+"    --extract-all\n"
+"        Extract all strings.\n"
+"\n"
+"    -d name\n"
+"    --default-domain=name\n"
+"        Rename the default output file from messages.pot to name.pot.\n"
+"\n"
+"    -E\n"
+"    --escape\n"
+"        Replace non-ASCII characters with octal escape sequences.\n"
+"\n"
+"    -D\n"
+"    --docstrings\n"
+"        Extract module, class, method, and function docstrings.  These do\n"
+"        not need to be wrapped in _() markers, and in fact cannot be for\n"
+"        Python to consider them docstrings. (See also the -X option).\n"
+"\n"
+"    -h\n"
+"    --help\n"
+"        Print this help message and exit.\n"
+"\n"
+"    -k word\n"
+"    --keyword=word\n"
+"        Keywords to look for in addition to the default set, which are:\n"
+"        %(DEFAULTKEYWORDS)s\n"
+"\n"
+"        You can have multiple -k flags on the command line.\n"
+"\n"
+"    -K\n"
+"    --no-default-keywords\n"
+"        Disable the default set of keywords (see above).  Any keywords\n"
+"        explicitly added with the -k/--keyword option are still recognized.\n"
+"\n"
+"    --no-location\n"
+"        Do not write filename/lineno location comments.\n"
+"\n"
+"    -n\n"
+"    --add-location\n"
+"        Write filename/lineno location comments indicating where each\n"
+"        extracted string is found in the source.  These lines appear before\n"
+"        each msgid.  The style of comments is controlled by the -S/--style\n"
+"        option.  This is the default.\n"
+"\n"
+"    -o filename\n"
+"    --output=filename\n"
+"        Rename the default output file from messages.pot to filename.  If\n"
+"        filename is `-' then the output is sent to standard out.\n"
+"\n"
+"    -p dir\n"
+"    --output-dir=dir\n"
+"        Output files will be placed in directory dir.\n"
+"\n"
+"    -S stylename\n"
+"    --style stylename\n"
+"        Specify which style to use for location comments.  Two styles are\n"
+"        supported:\n"
+"\n"
+"        Solaris  # File: filename, line: line-number\n"
+"        GNU      #: filename:line\n"
+"\n"
+"        The style name is case insensitive.  GNU style is the default.\n"
+"\n"
+"    -v\n"
+"    --verbose\n"
+"        Print the names of the files being processed.\n"
+"\n"
+"    -V\n"
+"    --version\n"
+"        Print the version of pygettext and exit.\n"
+"\n"
+"    -w columns\n"
+"    --width=columns\n"
+"        Set width of output to columns.\n"
+"\n"
+"    -x filename\n"
+"    --exclude-file=filename\n"
+"        Specify a file that contains a list of strings that are not be\n"
+"        extracted from the input files.  Each string to be excluded must\n"
+"        appear on a line by itself in the file.\n"
+"\n"
+"    -X filename\n"
+"    --no-docstrings=filename\n"
+"        Specify a file that contains a list of files (one per line) that\n"
+"        should not have their docstrings extracted.  This is only useful in\n"
+"        conjunction with the -D option above.\n"
+"\n"
+"If `inputfile' is -, standard input is read.\n"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/delete_confirmation.html:43
+#: ext_lib/pygettext.py:182
 #, python-format
 msgid ""
-"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
-"following protected related objects:"
+"# SOME DESCRIPTIVE TITLE.\n"
+"# Copyright (C) YEAR ORGANIZATION\n"
+"# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.\n"
+"#\n"
+"msgid \"\"\n"
+"msgstr \"\"\n"
+"\"Project-Id-Version: PACKAGE VERSION\\n\"\n"
+"\"POT-Creation-Date: %(time)s\\n\"\n"
+"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
+"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
+"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
+"\"MIME-Version: 1.0\\n\"\n"
+"\"Content-Type: text/plain; charset=CHARSET\\n\"\n"
+"\"Content-Transfer-Encoding: ENCODING\\n\"\n"
+"\"Generated-By: pygettext.py %(version)s\\n\"\n"
+"\n"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/delete_confirmation.html:57
+#: ext_lib/pygettext.py:439
 #, python-format
-msgid ""
-"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
-"All of the following related items will be deleted:"
+msgid "*** %(file)s:%(lineno)s: Seen unexpected token \"%(token)s\""
 msgstr ""
 
-#: bootstrap_admin/templates/admin/delete_confirmation.html:65
-#: bootstrap_admin/templates/admin/delete_confirmation.html:67
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:68
-msgid "Yes, I'm sure"
-msgstr "Tak, usuń"
+#: ext_lib/pygettext.py:487
+#, fuzzy, python-format
+#| msgid "One or more %(fieldname)s in %(name)s:"
+msgid "# File: %(filename)s, line: %(lineno)d"
+msgstr "Jedno lub więcej %(fieldname)s w %(name)s:"
 
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:17
-msgid "Delete multiple objects"
-msgstr "Kasuj wiele obiektów"
-
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:26
+#: ext_lib/pygettext.py:494
 #, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would result in deleting related "
-"objects, but your account doesn't have permission to delete the following "
-"types of objects:"
+msgid " %(filename)s:%(lineno)d"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:40
+#: ext_lib/pygettext.py:585
 #, python-format
-msgid ""
-"Deleting the selected %(objects_name)s would require deleting the following "
-"protected related objects:"
+msgid "Invalid value for --style: %s"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/delete_selected_confirmation.html:54
+#: ext_lib/pygettext.py:593
 #, python-format
-msgid ""
-"Are you sure you want to delete the selected %(objects_name)s? All of the "
-"following objects and their related items will be deleted:"
+msgid "pygettext.py (xgettext for Python) %s"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/edit_inline/stacked.html:41
-#: bootstrap_admin/templates/admin/edit_inline/tabular.html:82
-msgid "Remove"
-msgstr "Usuń"
-
-#: bootstrap_admin/templates/admin/edit_inline/stacked.html:42
-#: bootstrap_admin/templates/admin/edit_inline/tabular.html:81
+#: ext_lib/pygettext.py:599
 #, python-format
-msgid "Add another %(verbose_name)s"
-msgstr "Dodaj inny %(verbose_name)s"
-
-#: bootstrap_admin/templates/admin/edit_inline/tabular.html:20
-msgid "Delete?"
-msgstr "Czy skasować?"
-
-#: bootstrap_admin/templates/admin/filter.html:2
-#, python-format
-msgid " By %(filter_title)s "
-msgstr "Według %(filter_title)s "
-
-#: bootstrap_admin/templates/admin/index.html:18
-#: bootstrap_admin/templates/admin/index.html:31
-msgid "Apps"
+msgid "--width argument must be an integer: %s"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/index.html:21
-#: bootstrap_admin/templates/admin/index.html:22
-#: bootstrap_admin/templates/admin/index.html:80
-msgid "Recent Actions"
-msgstr "Ostatnie akcje"
+#: ext_lib/pygettext.py:627
+#, python-format
+msgid "Can't read --exclude-file: %s"
+msgstr ""
 
-#: bootstrap_admin/templates/admin/index.html:37
-#: bootstrap_admin/templates/admin/index.html:67
-#: bootstrap_admin/templates/admin/search_form.html:11
-#: bootstrap_admin/templates/admin/search_form.html:13
-msgid "Search"
-msgstr "Szukaj"
+#: ext_lib/pygettext.py:648
+msgid "Reading standard input"
+msgstr ""
 
-#: bootstrap_admin/templates/admin/index.html:42
-#: bootstrap_admin/templates/admin/object_history.html:31 translate.py:5
+#: ext_lib/pygettext.py:653
+#, python-format
+msgid "Working on %s"
+msgstr ""
+
+#: ext_lib/pygettext.py:692
+#, python-format
+msgid "*** Seen unexpected token \"%(token)s\""
+msgstr ""
+
+#: ext_lib/pygettext.py:693
+msgid "morethanonestring"
+msgstr ""
+
+#: schserw/translate.py:1
+msgid "Field"
+msgstr "Pole"
+
+#: schserw/translate.py:2
+msgid "Value"
+msgstr "Wartość"
+
+#: schserw/translate.py:3
+msgid "Delete the item"
+msgstr "Skasować pozycję"
+
+#: schserw/translate.py:4
+msgid "Refresh"
+msgstr "Odśwież"
+
+#: schserw/translate.py:5
 msgid "Action"
 msgstr "Akcja"
 
-#: bootstrap_admin/templates/admin/index.html:52
-#: bootstrap_admin/templates/admin/index.html:58
-#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:6
-#, python-format
-msgid "Models in the %(name)s application"
-msgstr "Modele dostępne w aplikacji %(name)s."
+#: schserw/translate.py:6 static_src/pytigon_js/resources.py:1
+msgid "Cancel"
+msgstr "Anuluj"
 
-#: bootstrap_admin/templates/admin/index.html:66
-msgid "Change"
-msgstr "Zmień"
+#: schserw/translate.py:7 static_src/pytigon_js/resources.py:2
+msgid "Close"
+msgstr "Zamknij"
 
-#: bootstrap_admin/templates/admin/index.html:80
-msgid "My Actions"
-msgstr "Moje akcje"
+#: schserw/translate.py:8
+msgid "OK"
+msgstr "OK"
 
-#: bootstrap_admin/templates/admin/index.html:85
-msgid "None available"
-msgstr "Brak"
+#: schserw/translate.py:9
+msgid "Cancel2"
+msgstr "Anuluj"
 
-#: bootstrap_admin/templates/admin/index.html:111
-msgid "Unknown content"
-msgstr "Nieznana zawartość"
-
-#: bootstrap_admin/templates/admin/index.html:139
-#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:12
-#: bootstrap_admin/templates/bootstrap_admin/sidebar_menu.html:18
-msgid "You don't have permission to edit anything."
-msgstr "Nie masz uprawnień by edytować cokolwiek"
-
-#: bootstrap_admin/templates/admin/invalid_setup.html:5
-msgid ""
-"Something's wrong with your database installation. Make sure the appropriate "
-"database tables have been created, and make sure the database is readable by "
-"the appropriate user."
+#: schserw/translate.py:10
+msgid " Sławomir Chołaj!"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/login.html:76
-#: bootstrap_admin/templates/registration/password_reset_complete.html:23
-msgid "Log in"
-msgstr "Zaloguj się"
+#: schserw/translate.py:11
+msgid "(Refresh)"
+msgstr "(Odśwież)"
 
-#: bootstrap_admin/templates/admin/login.html:87
-msgid "Forgotten your password or username?"
-msgstr "Zapomniałeś hasło?"
-
-#: bootstrap_admin/templates/admin/object_history.html:29
-msgid "Date/time"
-msgstr "Data/czas"
-
-#: bootstrap_admin/templates/admin/object_history.html:30
-msgid "User"
-msgstr "Użytkownik"
-
-#: bootstrap_admin/templates/admin/object_history.html:45
-msgid ""
-"This object doesn't have a change history. It probably wasn't added via this "
-"admin site."
-msgstr ""
-"Ten obiekt nie ma historii zmian. Najprawdopodobniej wpis te nie został "
-"dodany poprzez panel admina"
-
-#: bootstrap_admin/templates/admin/pagination.html:19
-msgid "Show all"
-msgstr "Pokaż wszystko"
-
-#: bootstrap_admin/templates/admin/related_widget_wrapper.html:8
-#, python-format
-msgid "Change selected %(model)s"
-msgstr "Zmień wybrany %(model)s"
-
-#: bootstrap_admin/templates/admin/related_widget_wrapper.html:15
-#, python-format
-msgid "Add another %(model)s"
-msgstr "Dodaj inny %(model)s"
-
-#: bootstrap_admin/templates/admin/related_widget_wrapper.html:22
-#, python-format
-msgid "Delete selected %(model)s"
-msgstr "Skazuj zaznaczony %(model)s"
-
-#: bootstrap_admin/templates/admin/search_form.html:4
-#, python-format
-msgid "%(counter)s result"
-msgid_plural "%(counter)s results"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bootstrap_admin/templates/admin/search_form.html:4
-#, python-format
-msgid "%(full_result_count)s total"
+#: schserw/translate.py:12
+msgid "Login"
 msgstr ""
 
-#: bootstrap_admin/templates/admin/submit_line.html:12
-#: bootstrap_admin/templates/admin/submit_line.html:14
-msgid "Save as new"
-msgstr "Zapisz jako nowe"
+#: schserw/translate.py:13
+msgid "User name"
+msgstr "Nazwa użytkownika:"
 
-#: bootstrap_admin/templates/admin/submit_line.html:19
-#: bootstrap_admin/templates/admin/submit_line.html:21
-msgid "Save and add another"
-msgstr "Zapisz i dodaj nowe"
+#: schserw/translate.py:14
+msgid "Password"
+msgstr "Hasło:"
 
-#: bootstrap_admin/templates/admin/submit_line.html:26
-#: bootstrap_admin/templates/admin/submit_line.html:28
-msgid "Save and continue editing"
-msgstr "Zapisz i kontynuuj edycję"
+#: schserw/translate.py:15
+msgid "(Login)"
+msgstr ""
 
-#: bootstrap_admin/templates/registration/logged_out.html:18
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr "Dziękujemy za odwiedzenie serwisu."
+#: schserw/translate.py:16
+msgid "(Login)Y"
+msgstr ""
 
-#: bootstrap_admin/templates/registration/logged_out.html:20
-msgid "Log in again"
-msgstr "Zaloguj ponownie"
+#: schserw/translate.py:17
+msgid "Logout"
+msgstr ""
 
-#: bootstrap_admin/templates/registration/password_change_done.html:10
-#: bootstrap_admin/templates/registration/password_change_form.html:15
-msgid "Password change"
+#: schserw/translate.py:18
+msgid "Change password"
 msgstr "Zmiana hasła"
 
-#: bootstrap_admin/templates/registration/password_change_done.html:20
-msgid "Your password was changed."
-msgstr "Twoje hasło zostało zmienione"
+#: schserw/translate.py:19
+#, fuzzy
+#| msgid "Site administration"
+msgid "Administration"
+msgstr "Administracja stroną"
 
-#: bootstrap_admin/templates/registration/password_change_form.html:37
-msgid ""
-"Please enter your old password, for security's sake, and then enter your new "
-"password twice so we can verify you typed it in correctly."
-msgstr "Podaj swoje stare hasło i dwa razy nowe."
+#: schserw/translate.py:20
+#, fuzzy
+#| msgid "Site administration"
+msgid "Administraction"
+msgstr "Administracja stroną"
 
-#: bootstrap_admin/templates/registration/password_change_form.html:43
-msgid "Old password"
-msgstr "Stare hasło:"
+#: schserw/translate.py:21
+#: templates/account/password_reset_from_key_done.html:3
+#: templates/account/password_reset_from_key_done.html:5
+#: templates/account/password_reset_from_key_done_pl.html:3
+#: templates/account/password_reset_from_key_done_pl.html:5
+#, fuzzy
+#| msgid "Change password"
+msgid "Change Password"
+msgstr "Zmiana hasła"
 
-#: bootstrap_admin/templates/registration/password_change_form.html:50
-msgid "New password"
+#: schserw/translate.py:22
+#, fuzzy
+#| msgid "Password"
+msgid "Current Password"
+msgstr "Hasło:"
+
+#: schserw/translate.py:23
+#, fuzzy
+#| msgid "New password"
+msgid "New Password"
 msgstr "Nowe hasło:"
 
-#: bootstrap_admin/templates/registration/password_change_form.html:66
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:46
-msgid "Change my password"
-msgstr "Zmień hasło"
-
-#: bootstrap_admin/templates/registration/password_reset_complete.html:10
-#: bootstrap_admin/templates/registration/password_reset_done.html:10
-#: bootstrap_admin/templates/registration/password_reset_form.html:10
-msgid "Password reset"
-msgstr "Zresetuj hasło"
-
-#: bootstrap_admin/templates/registration/password_reset_complete.html:20
-msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
-
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:10
-msgid "Password reset confirmation"
-msgstr "Zresetuj hasło"
-
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:24
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr "Podaj swoje stare hasło i dwa razy nowe."
-
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:30
-msgid "New password:"
-msgstr "Nowe hasło:"
-
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:37
-msgid "Confirm password:"
+#: schserw/translate.py:24
+#, fuzzy
+#| msgid "Confirm password:"
+msgid "Confirm Password"
 msgstr "Potwierdź hasło:"
 
-#: bootstrap_admin/templates/registration/password_reset_confirm.html:55
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
+#: schserw/translate.py:25
+#, fuzzy
+#| msgid "new element"
+msgid "New element"
+msgstr "nowy element"
+
+#: schserw/translate.py:26
+msgid "Back"
 msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_done.html:19
-msgid ""
-"We've emailed you instructions for setting your password. You should be "
-"receiving them shortly."
-msgstr ""
-"Nowe hasło zostało wysłane na podany adres email. Powinieneś otrzymać je "
-"niebawem."
+#: schserw/translate.py:27
+#, fuzzy
+#| msgid "Important dates"
+msgid "Import data to table"
+msgstr "Ważne daty"
 
-#: bootstrap_admin/templates/registration/password_reset_done.html:21
-msgid ""
-"If you don't receive an email, please make sure you've entered the address "
-"you registered with, and check your spam folder."
+#: schserw/translate.py:28
+msgid "Get row"
 msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_email.html:2
-#, python-format
-msgid ""
-"You're receiving this email because you requested a password reset for your "
-"user account at %(site_name)s."
-msgstr ""
-"Otrzymałeś email gdyż zarządałeś zresetowania hasła dla twojego konta na "
-"stronie %(site_name)s."
-
-#: bootstrap_admin/templates/registration/password_reset_email.html:4
-msgid "Please go to the following page and choose a new password:"
+#: schserw/translate.py:29
+msgid "New row"
 msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_email.html:8
-msgid "Your username, in case you've forgotten:"
-msgstr "Twój login:"
+#: schserw/translate.py:30
+msgid "Object information"
+msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_email.html:10
-msgid "Thanks for using our site!"
-msgstr "Dziękujemy za używanie strony!"
+#: schserw/translate.py:31
+#, fuzzy
+#| msgid "Delete multiple objects"
+msgid "Delete object "
+msgstr "Kasuj wiele obiektów"
 
-#: bootstrap_admin/templates/registration/password_reset_email.html:12
-#, python-format
-msgid "The %(site_name)s team"
-msgstr "Zespół %(site_name)s"
+#: schserw/translate.py:32
+msgid "Error information"
+msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_form.html:23
+#: schserw/translate.py:33
+#, fuzzy
+#| msgid "Search"
+msgid "search"
+msgstr "Szukaj"
+
+#: schserw/translate.py:34
+#, fuzzy
+#| msgid "Search"
+msgid "Search results"
+msgstr "Szukaj"
+
+#: schserw/translate.py:35
+msgid "Search"
+msgstr "Szukaj"
+
+#: static_src/pytigon_js/resources.py:3
+msgid "Copy to clipboard"
+msgstr ""
+
+#: templates/account/password_reset.html:17
+#: templates/account/password_reset_pl.html:17
+#, fuzzy
+#| msgid ""
+#| "Forgotten your password? Enter your email address below, and we'll email "
+#| "instructions for setting a new one."
 msgid ""
-"Forgotten your password? Enter your email address below, and we'll email "
-"instructions for setting a new one."
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
 msgstr ""
 "Podaj swój adres email. Hasło zostanie zresetowane i wysłane na twój adres "
 "email."
 
-#: bootstrap_admin/templates/registration/password_reset_form.html:29
-msgid "Email address:"
-msgstr "Adres e-mail:"
+#: templates/account/password_reset.html:19
+#: templates/account/password_reset_pl.html:19
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
 
-#: bootstrap_admin/templates/registration/password_reset_form.html:38
-msgid "Reset my password"
-msgstr "Zresetuj moje hasło"
+#: templates/account/password_reset_done.html:4
+#: templates/account/password_reset_done.html:6
+#: templates/account/password_reset_done_pl.html:4
+#: templates/account/password_reset_done_pl.html:6
+#, fuzzy
+#| msgid "Password reset"
+msgid "Password Reset"
+msgstr "Zresetuj hasło"
 
-#: schsys/templatetags/exsyntax.py:79 schsys/templatetags/exsyntax.py:80
+#: templates/account/password_reset_done.html:10
+#: templates/account/password_reset_done_pl.html:10
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:24
+#: templates/account/password_reset_from_key_pl.html:24
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:6
+#: templates/account/password_reset_from_key_done_pl.html:6
+#, fuzzy
+#| msgid "Your password was changed."
+msgid "Your password is now changed."
+msgstr "Twoje hasło zostało zmienione"
+
+#: templates/admin/base_site.html:3 templates/admin/base_site_pl.html:3
+msgid "Django site admin"
+msgstr "Administracja stroną Django"
+
+#: templates/admin/base_site.html:6 templates/admin/base_site_pl.html:6
+msgid "Django administration"
+msgstr "Administracja Django"
+
+#~ msgid "Page not found"
+#~ msgstr "Strona nie znaleziona"
+
+#~ msgid "We're sorry, but the requested page could not be found."
+#~ msgstr "Niestety nie można znaleźć rządanej strony."
+
+#~ msgid "Home"
+#~ msgstr "Początek"
+
+#~ msgid "Server error"
+#~ msgstr "Błąd serwera"
+
+#~ msgid "Server error (500)"
+#~ msgstr "Bład serwera (500)"
+
+#~ msgid "Server Error <em>(500)</em>"
+#~ msgstr "Błąd Serwera <em>(500)</em>"
+
+#~ msgid ""
+#~ "There's been an error. It's been reported to the site administrators via "
+#~ "email and should be fixed shortly. Thanks for your patience."
+#~ msgstr ""
+#~ "Wystąpił niespodziewany błąd. Raport został wysłany emailem "
+#~ "administratorowi strony."
+
+#~ msgid "Run the selected action"
+#~ msgstr "Wykonaj wybraną akcję"
+
+#~ msgid "Go"
+#~ msgstr "Szukaj"
+
+#~ msgid "Click here to select the objects across all pages"
+#~ msgstr "Kliknij tutaj aby zaznaczyć obiekt na wszystkich stronach"
+
+#~ msgid "Select all %(total_count)s %(module_name)s"
+#~ msgstr "Zaznacz wszystkie %(total_count)s %(module_name)s"
+
+#~ msgid "Clear selection"
+#~ msgstr "Wyczyść zaznaczenie"
+
+#~ msgid "Please correct the error below."
+#~ msgstr "Proszę popraw poniższy błąd"
+
+#~ msgid "Please correct the errors below."
+#~ msgstr "Proszę popraw poniższy błąd"
+
+#~ msgid "Password (again)"
+#~ msgstr "Hasło (powtórnie)"
+
+#~ msgid "Enter the same password as above, for verification."
+#~ msgstr "Wpisz ponownie hasło w celu weryfikacji"
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentacja"
+
+#~ msgid "Log out"
+#~ msgstr "Wyloguj się"
+
+#~ msgid "Add"
+#~ msgstr "Dodaj"
+
+#~ msgid "History"
+#~ msgstr "Historia"
+
+#~ msgid "View on site"
+#~ msgstr "Pokaż na stronie"
+
+#~ msgid "Filter"
+#~ msgstr "Filtr"
+
+#~ msgid "Add %(name)s"
+#~ msgstr "Dodaj %(name)s"
+
+#~ msgid "Save"
+#~ msgstr "Zapisz"
+
+#~ msgid "Sorting priority: %(priority_number)s"
+#~ msgstr "Priorytet sortowania: %(priority_number)s"
+
+#~ msgid "Toggle sorting"
+#~ msgstr "Przełącz sortowanie"
+
+#~ msgid "Delete"
+#~ msgstr "Skasuj"
+
+#~ msgid "Yes, I'm sure"
+#~ msgstr "Tak, usuń"
+
+#~ msgid "Remove"
+#~ msgstr "Usuń"
+
+#~ msgid "Add another %(verbose_name)s"
+#~ msgstr "Dodaj inny %(verbose_name)s"
+
+#~ msgid "Delete?"
+#~ msgstr "Czy skasować?"
+
+#~ msgid " By %(filter_title)s "
+#~ msgstr "Według %(filter_title)s "
+
+#~ msgid "Recent Actions"
+#~ msgstr "Ostatnie akcje"
+
+#~ msgid "Models in the %(name)s application"
+#~ msgstr "Modele dostępne w aplikacji %(name)s."
+
+#~ msgid "Change"
+#~ msgstr "Zmień"
+
+#~ msgid "My Actions"
+#~ msgstr "Moje akcje"
+
+#~ msgid "None available"
+#~ msgstr "Brak"
+
+#~ msgid "Unknown content"
+#~ msgstr "Nieznana zawartość"
+
+#~ msgid "You don't have permission to edit anything."
+#~ msgstr "Nie masz uprawnień by edytować cokolwiek"
+
+#~ msgid "Log in"
+#~ msgstr "Zaloguj się"
+
+#~ msgid "Forgotten your password or username?"
+#~ msgstr "Zapomniałeś hasło?"
+
+#~ msgid "Date/time"
+#~ msgstr "Data/czas"
+
+#~ msgid "User"
+#~ msgstr "Użytkownik"
+
+#~ msgid ""
+#~ "This object doesn't have a change history. It probably wasn't added via "
+#~ "this admin site."
+#~ msgstr ""
+#~ "Ten obiekt nie ma historii zmian. Najprawdopodobniej wpis te nie został "
+#~ "dodany poprzez panel admina"
+
+#~ msgid "Show all"
+#~ msgstr "Pokaż wszystko"
+
+#~ msgid "Change selected %(model)s"
+#~ msgstr "Zmień wybrany %(model)s"
+
+#~ msgid "Add another %(model)s"
+#~ msgstr "Dodaj inny %(model)s"
+
+#~ msgid "Delete selected %(model)s"
+#~ msgstr "Skazuj zaznaczony %(model)s"
+
+#~ msgid "Save as new"
+#~ msgstr "Zapisz jako nowe"
+
+#~ msgid "Save and add another"
+#~ msgstr "Zapisz i dodaj nowe"
+
+#~ msgid "Save and continue editing"
+#~ msgstr "Zapisz i kontynuuj edycję"
+
+#~ msgid "Thanks for spending some quality time with the Web site today."
+#~ msgstr "Dziękujemy za odwiedzenie serwisu."
+
+#~ msgid "Log in again"
+#~ msgstr "Zaloguj ponownie"
+
+#~ msgid "Password change"
+#~ msgstr "Zmiana hasła"
+
+#~ msgid ""
+#~ "Please enter your old password, for security's sake, and then enter your "
+#~ "new password twice so we can verify you typed it in correctly."
+#~ msgstr "Podaj swoje stare hasło i dwa razy nowe."
+
+#~ msgid "Old password"
+#~ msgstr "Stare hasło:"
+
+#~ msgid "Change my password"
+#~ msgstr "Zmień hasło"
+
+#~ msgid "Password reset confirmation"
+#~ msgstr "Zresetuj hasło"
+
+#~ msgid ""
+#~ "Please enter your new password twice so we can verify you typed it in "
+#~ "correctly."
+#~ msgstr "Podaj swoje stare hasło i dwa razy nowe."
+
+#~ msgid "New password:"
+#~ msgstr "Nowe hasło:"
+
+#~ msgid ""
+#~ "We've emailed you instructions for setting your password. You should be "
+#~ "receiving them shortly."
+#~ msgstr ""
+#~ "Nowe hasło zostało wysłane na podany adres email. Powinieneś otrzymać je "
+#~ "niebawem."
+
+#~ msgid ""
+#~ "You're receiving this email because you requested a password reset for "
+#~ "your user account at %(site_name)s."
+#~ msgstr ""
+#~ "Otrzymałeś email gdyż zarządałeś zresetowania hasła dla twojego konta na "
+#~ "stronie %(site_name)s."
+
+#~ msgid "Your username, in case you've forgotten:"
+#~ msgstr "Twój login:"
+
+#~ msgid "Thanks for using our site!"
+#~ msgstr "Dziękujemy za używanie strony!"
+
+#~ msgid "The %(site_name)s team"
+#~ msgstr "Zespół %(site_name)s"
+
+#~ msgid "Email address:"
+#~ msgstr "Adres e-mail:"
+
+#~ msgid "Reset my password"
+#~ msgstr "Zresetuj moje hasło"
+
 msgid "Update"
 msgstr "Popraw"
 
-#: schsys/templatetags/exsyntax.py:83 schsys/templatetags/exsyntax.py:84
-msgid "Default"
-msgstr " "
+#~ msgid "Default"
+#~ msgstr " "
 
-#: schsys/templatetags/exsyntax.py:1144
-#, python-format
-msgid "%s tag requires a queryset"
-msgstr "%s tag wymaga queryset"
-
-#: translate.py:1
-msgid "Field"
-msgstr "Pole"
-
-#: translate.py:2
-msgid "Value"
-msgstr "Wartość"
-
-#: translate.py:3
-msgid "Delete the item"
-msgstr "Skasować pozycję"
-
-#: translate.py:4
-msgid "Refresh"
-msgstr "Odśwież"
-
-#: translate.py:6
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: translate.py:8
-msgid "OK"
-msgstr "OK"
-
-#: translate.py:9
-msgid "Cancel2"
-msgstr "Anuluj"
-
-#: translate.py:10
-msgid " Sławomir Chołaj!"
-msgstr ""
-
-#: translate.py:11
-msgid "(Refresh)"
-msgstr "(Odśwież)"
-
-#: translate.py:12
-msgid "Login"
-msgstr ""
-
-#: translate.py:13
-msgid "User name"
-msgstr "Nazwa użytkownika:"
+#~ msgid "%s tag requires a queryset"
+#~ msgstr "%s tag wymaga queryset"
 
 #~ msgid "update element"
 #~ msgstr "popraw element"
-
-#~ msgid "new element"
-#~ msgstr "nowy element"
 
 #, fuzzy
 #~| msgid "Delete the item"
@@ -903,9 +987,6 @@ msgstr "Nazwa użytkownika:"
 #~ msgid "Your e-mail address is not your username. Try '%s' instead."
 #~ msgstr "Twój adres e-mail to nie jest twój login. Spróbuj '%s'."
 
-#~ msgid "Site administration"
-#~ msgstr "Administracja stroną"
-
 #~ msgid "The %(name)s \"%(obj)s\" was added successfully."
 #~ msgstr "%(name)s \"%(obj)s\" dodany pomyślnie."
 
@@ -948,9 +1029,6 @@ msgstr "Nazwa użytkownika:"
 
 #~ msgid "One or more %(fieldname)s in %(name)s: %(obj)s"
 #~ msgstr "Jedno lub więcej %(fieldname)s w %(name)s: %(obj)s"
-
-#~ msgid "One or more %(fieldname)s in %(name)s:"
-#~ msgstr "Jedno lub więcej %(fieldname)s w %(name)s:"
 
 #~ msgid "The %(name)s \"%(obj)s\" was deleted successfully."
 #~ msgstr "%(name)s \"%(obj)s\" usunięty pomyślnie."
@@ -1198,9 +1276,6 @@ msgstr "Nazwa użytkownika:"
 
 #~ msgid "Permissions"
 #~ msgstr "Uprawnienia"
-
-#~ msgid "Important dates"
-#~ msgstr "Ważne daty"
 
 #~ msgid "Groups"
 #~ msgstr "Grupy"

@@ -81,7 +81,6 @@ for app in APPS:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
-for app in APPS_EXT:
 
 INSTALLED_APPS.append('explorer')
 
@@ -101,6 +100,7 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
+for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
@@ -229,7 +229,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.02.05 09:41:58"
+GEN_TIME = "2022.02.08 21:00:30"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

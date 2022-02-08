@@ -50,6 +50,7 @@ if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
 
 from pytigon_lib.schtools.install_init import init
+
 from pytigon_lib.schtools.main_paths import get_main_paths
 paths = get_main_paths()
 app_pack_folders = []
@@ -104,7 +105,6 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = { 'Default': 'default' } 
 EXPLORER_DEFAULT_CONNECTION = 'default'
-
 
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -182,7 +182,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.02.05 09:42:33"
+GEN_TIME = "2022.02.08 20:53:08"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
