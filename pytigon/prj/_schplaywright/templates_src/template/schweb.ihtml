@@ -1,0 +1,22 @@
+% extends 'template/schweb_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load static
+
+%% indexhead
+    table style=width: 100%;,,,border=1
+        % if user.is_authenticated
+            [ login | 0 ]
+        % else
+            [ login | 1 ]
+        [ autologin | 1 ]
+        [ csrf_token | {%csrf_token%} ]
+        [ riot_elements | ]
+        [ gui_style | modern(None) ]
+        [ hybrid | 0 ]
+        [ title  | Playwright integration ]
+        [ start_page | None ]
+        [ plugins | None ]
+
