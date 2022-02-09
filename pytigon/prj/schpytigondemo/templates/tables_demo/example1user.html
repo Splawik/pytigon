@@ -1,0 +1,37 @@
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New user" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>User name</th>
+        <th>
+        Email
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.username }}</td>
+        <td>
+        {{ object.email }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "username","email"
+        {% endform %}
+{% endblock %}
+

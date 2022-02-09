@@ -1,0 +1,36 @@
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {% block.super %}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New parameter"
+
+%% list_row_header
+    th..._(Parameter type)
+    th..._(Parameter subtype)
+    th..._(Key)
+    th..._(Value)
+    
+
+%% list_row
+    td...{% object.type %}
+    td...{% object.subtype %}
+    td...{% object.key %}
+    td...{% object.value %}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        "type","subtype","key","value"

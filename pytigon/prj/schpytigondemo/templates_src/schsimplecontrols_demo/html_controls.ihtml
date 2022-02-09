@@ -1,0 +1,58 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% scroll
+
+%% list_page_header
+    h3...Demo - html controls
+    
+%% list_page
+
+    % comment:
+        sch-d3 width=400px,,,height=200px
+
+        sch-handsontable width=800px,,,height=600px
+
+        sch-plotly width=800px,,,height=600px
+        sch-pivottable width=800px,,,height=600px
+        sch-video width=800px,,,height=600px,,,src=/static/SampleVideo_1080x720_2mb.mp4
+        
+        sch-vseditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
+    
+    % comment:
+        video-js width=800px,,,height=600px,,,src=/static/SampleVideo_1080x720_2mb.mp4
+        txtarea id=txt_test
+            .Hello world from txtarea!
+        txtarea_editor width=800px,,,height=600px,,,rel_id=txt_test
+
+        pivottable width=800px,,,height=600px
+        sch-xterm width=100%,,,height=100%,,,href={{websocket_base_path}}/schcommander/shell/
+
+        ptig-pivottable width=800px,,,height=600px
+        br
+
+    % comment:
+
+        ptig-codeeditor width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
+        br
+        ptig-wysiwygedit width=800px,,,height=600px,,,value=SGVsbG8gV29ybGQh
+        br
+        ptig-leaflet width=800px,,,height=600px,,,x=51.613007,,,y=21.491859
+            ptig-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
+            ptig-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2
+            ptig-maker x=51.813007,,,y=21.791859,,,txt=To jest test 3
+            ptig-maker x=51.913007,,,y=21.891859,,,txt=To jest test 4
+            ptig-maker x=51.013007,,,y=21.991859,,,txt=To jest test 5
+            ptig-maker x=51.113007,,,y=21.191859,,,txt=To jest test 6
+            ptig-maker x=51.213007,,,y=21.291859,,,txt=To jest test 7
+        br
+        ptig-spreadsheet width=800px,,,height=600px
+        br
+        ptig-d3 width=400px,,,height=200px
+        br
+        ptig-video width=800px,,,height=600px,,,src=/static/SampleVideo_1080x720_2mb.mp4
+

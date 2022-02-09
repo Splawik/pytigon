@@ -1,0 +1,42 @@
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "<<new_row_title>>"
+    % list_action "<<action>>" "<<action_description>>"
+
+%% list_row_header
+    th..._(Owner)
+    th..._(Config)
+    th..._(User type)
+    th..._(Allowed document registers)
+    th..._(Allowed document types)
+    th..._(Allowed accounts)
+    
+
+%% list_row
+    td...{{ object.owner }}
+    td...{{ object.config }}
+    td...{{ object.user_type }}
+    td...{{ object.doc_regs }}
+    td...{{ object.doc_types }}
+    td...{{ object.accounts }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .<<action_name>>,<<description>>
+
+%% row_edit
+    % form:
+        .owner,config,user_type,doc_regs,doc_types,accounts

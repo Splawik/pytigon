@@ -1,0 +1,452 @@
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}
+{% endblock %}
+{% block list_page_header %}
+        <h3>
+        Demo - standard controls
+        </h3>
+{% endblock %}
+{% block list_page %}
+        <table border="1" width="100%">
+                <tr>
+                        <th width="20%">Nazwa</th>
+                        <th width="40%">wx Widget</th>
+                        <th width="40%">html widget</th>
+                </tr>
+                <tr>
+                        <td>Link</td>
+                        <td><a href="http://www.onet.pl" TARGET="_top">ONET</a></td>
+                        <td><a href="http://www.onet.pl" TARGET="_top">ONET</a></td>
+                </tr>
+                <tr>
+                        <td>Bitmap button</td>
+                        <td><ctrl-button src="{{ STATIC_URL }}icons/calendar.png"></ctrl-button></td>
+                        <td>
+                                <a href="#">
+                                        <img src="{{ STATIC_URL }}icons/calendar.png">
+                                        </img>
+                                </a>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Button</td>
+                        <td><ctrl-button label="button"></ctrl-button></td>
+                        <td><button type="button">button</button></td>
+                </tr>
+                <tr>
+                        <td>Checkbox</td>
+                        <td><ctrl-checkbox label="checkbox" value="True"></ctrl-checkbox></td>
+                        <td>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                                        <label class="form-check-label" for="defaultCheck1">checkbox</label>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Check list box</td>
+                        <td>
+                                <ctrl-checklistbox>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-checklistbox>
+                        </td>
+                        <td>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                                        <label class="form-check-label" for="defaultCheck1">abc</label>
+                                </div>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" />
+                                        <label class="form-check-label" for="defaultCheck1">def</label>
+                                </div>
+                                <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck3" />
+                                        <label class="form-check-label" for="defaultCheck1">ghi</label>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Choice</td>
+                        <td>
+                                <ctrl-choice>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-choice>
+                        </td>
+                        <td>
+                                <select class="browser-default custom-select">
+                                        <option value="abc" selected>abc</option>
+                                        <option value="def">def</option>
+                                        <option value="ghi">ghi</option>
+                                </select>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Gauge</td>
+                        <td><ctrl-gauge value="50"></ctrl-gauge></td>
+                        <td>
+                                <div class="progress">
+                                        <div class="progress-bar" role="progressba" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>List box</td>
+                        <td>
+                                <ctrl-listbox width="100%-200" height="200px">
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-listbox>
+                        </td>
+                        <td>
+                                <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                                <a class="nav-link active" href="#">abc</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="#">def</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link" href="#">ghi</a>
+                                        </li>
+                                </ul>
+                        </td>
+                </tr>
+                <tr>
+                        <td>List</td>
+                        <td>
+                                {% if not standard_web_browser %}
+                                        <ctrl-list width="100%-200" height="200px">
+                                                <tr>
+                                                        <td>Name</td>
+                                                        <td>Address</td>
+                                                        <td>Age</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>Kowalski</td>
+                                                        <td>Warszawa</td>
+                                                        <td>35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>Nowak</td>
+                                                        <td>Kozienice</td>
+                                                        <td>84</td>
+                                                </tr>
+                                        </ctrl-list>
+                                {% endif %}
+                        </td>
+                        <td>
+                                <table class="table table-dark">
+                                        <thead>
+                                                <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Age</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td scope="row">Kowalski</td>
+                                                        <td scope="row">Warszawa</td>
+                                                        <td scope="row">35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Nowak</td>
+                                                        <td scope="row">Kozienice</td>
+                                                        <td scope="row">84</td>
+                                                </tr>
+                                        </tbody>
+                                </table>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Grid</td>
+                        <td>
+                                {% if not standard_web_browser %}
+                                        <ctrl-table width="100%-200" height="200px">
+                                                <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Age</th>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Kowalski</td>
+                                                        <td scope="row">Warszawa</td>
+                                                        <td scope="row">35</td>
+                                                </tr>
+                                                <tr>
+                                                        <td scope="row">Nowak</td>
+                                                        <td scope="row">Kozienice</td>
+                                                        <td scope="row">84</td>
+                                                </tr>
+                                        </ctrl-table>
+                                {% endif %}
+                        </td>
+                        <td>
+                                <table class="table">
+                                        <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Age</th>
+                                        </tr>
+                                        <tr>
+                                                <td scope="row">Kowalski</td>
+                                                <td scope="row">Warszawa</td>
+                                                <td scope="row">35</td>
+                                        </tr>
+                                        <tr>
+                                                <td scope="row">Nowak</td>
+                                                <td scope="row">Kozienice</td>
+                                                <td scope="row">
+                                                84
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Radio box</td>
+                        <td>
+                                <ctrl-radiobox>
+                                        <option>abc</option>
+                                        <option>def</option>
+                                        <option>ghi</option>
+                                </ctrl-radiobox>
+                        </td>
+                        <td>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r1" name="radioexample1" />
+                                        <label class="custom-control-label" for="r1">abc</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r2" name="radioexample1" />
+                                        <label class="custom-control-label" for="r2">def</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r3" name="radioexample1" />
+                                        <label class="custom-control-label" for="r3">ghi</label>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Radio button</td>
+                        <td><ctrl-radiobutton label="abc"></ctrl-radiobutton></td>
+                        <td>
+                                <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="r4"  name="radioexample2" />
+                                        <label class="custom-control-label" for="r4">abc</label>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Slider</td>
+                        <td><ctrl-slider></ctrl-slider></td>
+                        <td>
+                                <label for="range1">Example range</label>
+                                <input type="range" class="custom-range" id="range1" />
+                        </td>
+                </tr>
+                <tr>
+                        <td>Static text</td>
+                        <td><ctrl-statictext label="static text"></ctrl-statictext></td>
+                        <td><p>static text</p></td>
+                </tr>
+                <tr>
+                        <td>Text</td>
+                        <td><ctrl-text strvalue="hello world!"></ctrl-text></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_txt" class="col-form-label">Example text</label>
+                                        <input type="text" class="form-control" id="example_txt" value="Hello world!" />
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Color select</td>
+                        <td><ctrl-colourselect></ctrl-colourselect></td>
+                        <td>
+                                <input type="color" id="example_color" />
+                        </td>
+                </tr>
+                <tr>
+                        <td>Tree</td>
+                        <td><ctrl-tree width="400" height="200">
+                                <li>TEXT</li>
+                                <li>
+                                TEXT 2
+                                        <ul>
+                                                <li>TEXT 11</li>
+                                                <li>TEXT 22</li>
+                                        </ul>
+                                </li>
+                                <li>TEXT 3</li>
+                          </ctrl-tree></td>
+                        <td>
+                              <table class="tree">
+                                <tr class="treegrid-1">
+                                        <td>TEXT</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-2">
+                                        <td>TEXT 2</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-3 treegrid-parent-2">
+                                        <td>TEXT 11</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-4 treegrid-parent-2">
+                                        <td>TEXT 12</td>
+                                        <td>Additional info</td>
+                                </tr>
+                                <tr class="treegrid-5">
+                                        <td>TEXT 3</td>
+                                        <td>Additional info</td>
+                                </tr>
+                              </table>
+                        </td>
+                </tr>
+                <tr>
+                        <td>File browser button</td>
+                        <td><ctrl-filebrowsebutton></ctrl-filebrowsebutton></td>
+                        <td>
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="inputGroupFile01" />
+                                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                <p class="upload"></p>
+                                        </div>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Calendar</td>
+                        <td>
+                                <ctrl-calendar></ctrl-calendar>
+                        </td>
+                        <td>
+                                <ptig-calendar></ptig-calendar>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Date picker</td>
+                        <td><ctrl-datepicker></ctrl-datepicker></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_date" class="control-label float-left">Example date</label>
+                                        <div class="controls float-left datefield">
+                                                <div style="position: relative">
+                                                        <input type="text" class="form-control" id="example_date" />
+                                                        <i class="fa fa-calendar" style="position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;"></i>
+                                                </div>
+                                        </div>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Editable list box</td>
+                        <td><ctrl-editablelistbox width="400" height="300"></ctrl-editablelistbox></td>
+                        <td></td>
+                </tr>
+                <tr>
+                        <td>Mask text</td>
+                        <td><ctrl-masktext></ctrl-masktext></td>
+                        <td>
+                                <the-mask :mask="['(##) ####-####', '(##) #####-####']"></the-mask>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Number</td>
+                        <td><ctrl-num></ctrl-num></td>
+                        <td><input type="number" min="1" max="10" /></td>
+                </tr>
+                <tr>
+                        <td>Amount</td>
+                        <td><ctrl-amount></ctrl-amount></td>
+                        <td><vue-numeric currency="PLN" currency-symbol-position="suffix"></vue-numeric></td>
+                </tr>
+                <tr>
+                        <td>Time</td>
+                        <td><ctrl-time></ctrl-time></td>
+                        <td>
+                                <div class="form-group">
+                                        <label for="example_time" class="control-label float-left">Example time control</label>
+                                        <div class="controls float-left datetimefield">
+                                                <div style="position: relative">
+                                                        <input type="text" class="form-control" id="example_time" />
+                                                        <i class="fa fa-clock" style="position: absolute; right: 10px; top: calc(50% - 6px); pointer-events: none;">
+                                                        </i>
+                                                </div>
+                                        </div>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>Styled text</td>
+                        <td><ctrl-styledtext></ctrl-styledtext></td>
+                        <td></td>
+                </tr>
+                <tr>
+                        <td>Ticker</td>
+                        <td><ctrl-ticker strvalue="HELLO WORLD!"></ctrl-ticker></td>
+                        <td>
+                                <div class="ticker-wrap" width="400px" height="40px">
+                                        <div class="ticker">
+                                                <div class="ticker__item">Hello world!</div>
+                                                <div class="ticker__item">Hello from Pytigon!</div>
+                                        </div>
+                                </div>
+                        </td>
+                </tr>
+                <tr>
+                        <td>htmllistbox</td>
+                        <td>
+                                {% if not standard_web_browser %}
+                                        <ctrl-htmllistbox width="400">
+                                                <tr><td>[b]test1[/b]</td></tr>
+                                                <tr><td>[strong]test2[/strong]</td></tr>
+                                                <tr><td>[h1]test test test[/h1]</td></tr>
+                                        </ctrl-htmllistbox>
+                                {% endif %}
+                        </td>
+                        <td></td>
+                </tr>
+                <tr>
+                        <td>shell</td>
+                        <td>
+                                <ctrl-shell width="600" height="800"></ctrl-shell>
+                        </td>
+                        <td></td>
+                </tr>
+                <tr>
+                        <td>Tree list</td>
+                        <td>
+                                {% if not standard_web_browser %}
+                                        <ctrl-treelist label="Title||Description||Description 2" width="400" height="200">
+                                                <li>text 1||Description a1||Description b1</li>
+                                                <li>
+                                                text2 2||Description a2||Description b2
+                                                        <ul>
+                                                                <li>text 21||Description a21||Description b21</li>
+                                                                <li>text 22||Description a22||Description b22</li>
+                                                        </ul>
+                                                </li>
+                                                <li>text 3||Description a3||Description b3</li>
+                                        </ctrl-treelist>
+                                {% endif %}
+                        </td>
+                        <td>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

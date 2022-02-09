@@ -1,0 +1,16 @@
+{# -*- coding: utf-8 -*- #}
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-leaflet class=flexible_size,,,width=100%,,,x=51.613007,,,y=21.491859
+        ptig-maker x=51.613007,,,y=21.591859,,,txt=To jest test 1
+        ptig-maker x=51.713007,,,y=21.691859,,,txt=To jest test 2
+        ptig-maker x=51.813007,,,y=21.791859,,,txt=To jest test 3
+        ptig-maker x=51.913007,,,y=21.891859,,,txt=To jest test 4
+        ptig-maker x=51.013007,,,y=21.991859,,,txt=To jest test 5
+        ptig-maker x=51.113007,,,y=21.191859,,,txt=To jest test 6
+        ptig-maker x=51.213007,,,y=21.291859,,,txt=To jest test 7

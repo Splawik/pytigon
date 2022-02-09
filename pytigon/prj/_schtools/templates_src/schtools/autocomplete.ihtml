@@ -1,0 +1,34 @@
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {% block.super %}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "item"
+
+%% list_row_header
+    th..._(Type)
+    th..._(Label)
+    th..._(Value)
+    
+
+%% list_row
+    td...{% object.type %}
+    td...{% object.label %}
+    td...{% object.value %}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        "type","label","value"

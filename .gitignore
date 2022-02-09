@@ -5,8 +5,6 @@ pip-log.txt
 pip-delete-this-directory.txt
 launch.json
 extensions.json
-*global_db_settings.py
-settings_app_local.py
 
 .cache
 .idea/
@@ -24,6 +22,22 @@ migrations/
 *.so
 
 pytigon/prj/*
+pytigon/prj/*/prjlib/*
+!*pytigon/prj/_schall/
+!*pytigon/prj/_schdata/
+!*pytigon/prj/_schremote/
+!*pytigon/prj/_schserverless/
+!*pytigon/prj/_schtools/
+!*pytigon/prj/_schwebtrapper/
+!*pytigon/prj/_schwiki/
+!*pytigon/prj/schdevtools/
+!*pytigon/prj/schcomponents/
+!*pytigon/prj/scheditor/
+!*pytigon/prj/schodf/
+!*pytigon/prj/schportal/
+!*pytigon/prj/schpytigondemo/
+!*pytigon/prj/schsetup/
+!*pytigon/prj/_schplaywright/
 !*pytigon/prj/_schall/*
 !*pytigon/prj/_schdata/*
 !*pytigon/prj/_schremote/*
@@ -38,6 +52,11 @@ pytigon/prj/*
 !*pytigon/prj/schportal/*
 !*pytigon/prj/schpytigondemo/*
 !*pytigon/prj/schsetup/*
+!*pytigon/prj/_schplaywright/*
+
+global_db_settings.py
+settings_app_local.py
+
 
 pytigon/static/CACHE/*
 doc

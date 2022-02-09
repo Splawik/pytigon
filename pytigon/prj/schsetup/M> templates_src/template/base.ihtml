@@ -1,0 +1,5 @@
+
+%% extrahead
+    {{block.super}}
+    {% css_link 'explorer/explorer.css' %}
+

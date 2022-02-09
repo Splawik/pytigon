@@ -1,0 +1,17 @@
+{# -*- coding: utf-8 -*- #}
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-form src={{base_path}}schcomponents/form/
+        input name=f1,,,type=text
+        input name=f2,,,type=number
+        textarea name=f3
+        select name=f4
+            option value=x1...X1
+            option value=x2...X2
+            option value=x3...X3
+        h1 class=result
