@@ -10,6 +10,9 @@
         {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 {% endblock %}
 {% block js_scripts_base %}
+        {% if settings.USE_I18N %}
+                <script src="{% url 'javascript-catalog' %}"></script>
+        {% endif %}
         {% compress js %}
                 {{ block.super }}
                 {% jscript_link 'pytigon_js/py_runtime.js' %}
@@ -20,7 +23,6 @@
                 {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
                 {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
                 {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
-                <script src="{% url 'javascript-catalog' %}"></script>
                 {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
                 {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
                 {% jscript_link 'django_select2/django_select2.js' %}
