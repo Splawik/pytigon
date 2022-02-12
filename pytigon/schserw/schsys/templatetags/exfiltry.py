@@ -859,7 +859,5 @@ def _import_var(obj):
 
 @register.filter(name="json_dumps", is_safe=True)
 def _json_dumps(obj):
-    print("A1: ", obj)
     ret = json_dumps(obj)
-    print("A2: ", ret)
     return ret

@@ -476,7 +476,10 @@ else:
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 
 if PLATFORM_TYPE == "webserver":
-    COMPRESS_ENABLED = True
+    if env("COMPRESS_ENABLED") and not DEBUG:
+        COMPRESS_ENABLED = True
+    else:
+        COMPRESS_ENABLED = False
 else:
     COMPRESS_ENABLED = False
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
