@@ -7,11 +7,13 @@
         def init_form(self):
             self.stcwindow.Execute("from {{name}}.manage import *")
             self.insert_cmd.Bind(wx.EVT_BUTTON, self.OnInsertCmd)
+
         def OnInsertCmd(self, event):
             parm = self.cmd_list.GetValue()
             if parm:
                 cmd = "cmd('%s')" % parm
                 self.stcwindow.Execute(cmd)
+
 </script>
 {% endblock %}
 {% block all %}
@@ -31,7 +33,9 @@
                                                                 <option value="help">--help</option>
                                                                 <option value="syncdb">syncdb</option>
                                                                 <option value="migrate">migrate</option>
-                                                                <option value="createsuperuser">createsuperuser</option>
+                                                                <option value="createsuperuser">
+                                                                createsuperuser
+                                                                </option>
                                                         </select>
                                                 </td>
                                                 <td cellpadding="0" valign="top" width="36" height="36">

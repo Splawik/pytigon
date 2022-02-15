@@ -37,10 +37,12 @@
         {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
         {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
-        {% block ext_js_scripts %}{% endblock %}
+        {% block ext_js_scripts %}
+        {% endblock %}
         {% jscript_link 'sch/pytigon.js' %}
         {% jscript_link 'sch/inline_dialog.js' %}
-        {% block theme_js_scripts %}{% endblock %}
+        {% block theme_js_scripts %}
+        {% endblock %}
 {% endblock %}
 {% block jquery_init %}
         {% block js_app_init %}
@@ -81,7 +83,8 @@
         {% endif %}
 {% endblock %}
 {% block js_script_body %}
-        {% block jquery_ovr %}{% endblock %}
+        {% block jquery_ovr %}
+        {% endblock %}
 {% endblock %}
 {% block css_links %}
         {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
@@ -98,16 +101,26 @@
 {% block css_end %}
         </style>
 {% endblock %}
-{% block page_start %}{% endblock %}
-{% block body_start %}{% endblock %}
-{% block body_header %}{% endblock %}
-{% block nav %}{% endblock %}
-{% block login %}{% endblock %}
-{% block body_init %}{% endblock %}
-{% block panel %}{% endblock %}
-{% block messages %}{% endblock %}
-{% block navglobal %}{% endblock %}
-{% block sidebar %}{% endblock %}
+{% block page_start %}
+{% endblock %}
+{% block body_start %}
+{% endblock %}
+{% block body_header %}
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block body_init %}
+{% endblock %}
+{% block panel %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+{% block navglobal %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
 {% block tabs %}
         <head>
                 <meta charset="utf-8" />
@@ -121,7 +134,10 @@
                 </div>
         {% endwith %}
 {% endblock %}
-{% block html_widgets_init %}{% endblock %}
-{% block body_end %}{% endblock %}
-{% block page_end %}{% endblock %}
+{% block html_widgets_init %}
+{% endblock %}
+{% block body_end %}
+{% endblock %}
+{% block page_end %}
+{% endblock %}
 

@@ -1,7 +1,8 @@
 {% extends 'base0.html' %}
 {% load exfiltry %}
 {% load exsyntax %}
-{% block init %}{% endblock %}
+{% block init %}
+{% endblock %}
 {% block js_scripts %}
         {% block header_base %}{% endblock %}
         {% block extrahead %}
@@ -11,8 +12,10 @@
                 {% endblock %}
         {% endblock %}
 {% endblock %}
-{% block jquery_ready %}{% endblock %}
-{% block extrastyle %}{% endblock %}
+{% block jquery_ready %}
+{% endblock %}
+{% block extrastyle %}
+{% endblock %}
 {% block body %}
         {% with NO_CHECK_AUTH=True %}
                 {{ block.super }}

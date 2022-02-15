@@ -14,10 +14,14 @@
         <div class="control-sidebar-bg">
         </div>
 {% endblock %}
-{% block topmenu_start %}{% endblock %}
-{% block topmenu %}{% endblock %}
-{% block topmenu_end %}{% endblock %}
-{% block submenu_start %}{% endblock %}
+{% block topmenu_start %}
+{% endblock %}
+{% block topmenu %}
+{% endblock %}
+{% block topmenu_end %}
+{% endblock %}
+{% block submenu_start %}
+{% endblock %}
 {% block submenu %}
         {% ifchanged item_info.app_name %}
                 {% if not forloop.first %}
@@ -38,7 +42,7 @@
                 <ul class="treeview-menu sidebar-submenu">
         {% endifchanged %}
         <li>
-                <a href="{{base_path}}{{item_info.url}}" class="menu-href ladda-button" target="_parent" data-toggle="tooltip" title="{{item_info.description}}">
+                <a href="{{base_path}}{{item_info.url}}" class="menu-href ladda-button" target="_parent" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{item_info.description}}">
                         {% if item_info.icon %}
                                 {% if standard_web_browser %}
                                         {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
@@ -55,8 +59,10 @@
                 </ul></li>
         {% endif %}
 {% endblock %}
-{% block submenu_end %}{% endblock %}
-{% block menu_end %}{% endblock %}
+{% block submenu_end %}
+{% endblock %}
+{% block menu_end %}
+{% endblock %}
 {% block menu %}
         <button class="main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %}" role="button" title="Toggle navigation">
                 {% icon "fa-bars fa-lg" %}
@@ -143,7 +149,7 @@
                                         {% block drop_down_blocks %}{% endblock %}
                                         {% if user.is_authenticated %}
                                                 <li class="nav-item dropdown user user-menu">
-                                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">
                                                                 {% icon "fa-user fa-lg" %}
                                                                 <span class="hidden-sm-down">{{user.username}}</span>
                                                         </a>
@@ -182,20 +188,21 @@
                                                                         </table>
                                                                 </div>
                                                                 <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-                                                                        <button class="navbar-toggler" type=""button" data-toggle="collapse" data-target="#navbar_setup">
+                                                                        <button class="navbar-toggler" type=""button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar_setup">
                                                                                 <span class="navbar-toggler-icon"></span>
                                                                         </button>
                                                                         <div class="collapse navbar-collapse" id="navbar_setup">
                                                                                 <ul class="navbar-nav mr-auto">
                                                                                         <li class="nav-item active">
-                                                                                                <a class="nav-link" href="#" data-toggle="modal" data-target="#change_passwd">Change password</a>
+                                                                                                <a class="nav-link" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#change_passwd">Change password</a>
                                                                                         </li>
                                                                                         {% if user.is_superuser %}
                                                                                                 <li class="nav-item">
                                                                                                         <a class="nav-link" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>
                                                                                                 </li>
                                                                                         {% endif %}
-                                                                                        {% block system_menu %}{% endblock %}
+                                                                                        {% block system_menu %}
+                                                                                        {% endblock %}
                                                                                 </ul>
                                                                         </div>
                                                                 </nav>

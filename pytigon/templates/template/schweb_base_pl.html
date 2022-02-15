@@ -1,11 +1,14 @@
 {% extends "template/base.html"|translate:lang %}
 {% load exfiltry %}
 {% load exsyntax %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load widget_tweaks %}
-{% block login %}{% endblock %}
-{% block topmenu %}{% endblock %}
-{% block messages %}{% endblock %}
+{% block login %}
+{% endblock %}
+{% block topmenu %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
 {% block extrahead %}
         {% block scroll %}
                 {% block vscroll %}
@@ -59,7 +62,8 @@
         {% if form_edit %}
                 {% block pythoncode_for_edit %}{% endblock %}
           {% else %}
-                {% block pythoncode_for_table %}{% endblock %}
+                {% block pythoncode_for_table %}
+                {% endblock %}
         {% endif %}
 {% endblock %}
 {% block submenu %}
@@ -118,7 +122,8 @@
                         </tr>
                 {% endifchanged %}
                 {% if forloop.first %}
-                        {% block toolbars_start %}{% endblock %}
+                        {% block toolbars_start %}
+                        {% endblock %}
                 {% endif %}
                 <tr>
                         <td></td>
@@ -255,7 +260,9 @@
                 </tr>
         </table>
 {% endblock %}
-{% block list_content_height %}height="100%"{% endblock %}
+{% block list_content_height %}
+height="100%"
+{% endblock %}
 {% block grid1 %}
         <table width="100%">
                 <tr>

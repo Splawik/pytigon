@@ -17,7 +17,7 @@
         h4 style=white-space:nowrap;,,,class=txt3d wiki-title
             {{title|wiki_href|safe}}
             % if settings.DEBUG:
-                a data-toggle=collapse,,,href=#collapse_{{uuid}},,,role=button...>>
+                a data-toggle=collapse,,,data-bs-toggle=collapse,,,href=#collapse_{{uuid}},,,role=button...>>
         % if settings.DEBUG:
             div class=collapse,,,id=collapse_{{uuid}}
                 .model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}

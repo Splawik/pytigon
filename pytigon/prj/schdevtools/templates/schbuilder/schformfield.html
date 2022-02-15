@@ -8,6 +8,7 @@
             def Init(self):
                 self.retdate = None
                 self.param.EventObject=self
+
             def OnBeforeButtonClick(self):
                 self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
 </script>
@@ -15,6 +16,7 @@
                 <script language="python">
             def init_form(self):
                 self.add_field.Bind(wx.EVT_BUTTON, self.OnClick)
+
             def signal_from_child(self, child, signal):
                 if signal=='set_bitmap_list':
                     bitmaps = {
@@ -23,12 +25,15 @@
                         "field_duplicate":"client://actions/go-bottom.png"
                     }
                     child.set_bitmaps(bitmaps)
+
             def OnClick(self, event):
                 x = self.field_list.GetValue()
                 http = wx.GetApp().get_http(self.add_field)
                 adr = "{{request.path}}"+self.add_field.href+x+"/add/"
                 ret = http.get(self, str(adr))
                 self.new_child_page(ret.new_url)
+
+
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -47,6 +52,8 @@
                     return True
                 else:
                     return None
+
+
 </script>
         {% endif %}
 {% endblock %}
@@ -83,7 +90,9 @@
         <th>Parameters</th>
         <th>Initial</th>
         <th>Widget</th>
-        <th>Required</th>
+        <th>
+        Required
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
@@ -92,7 +101,9 @@
         <td>{{object.param|default_if_none:""}}</td>
         <td>{{object.initial|default_if_none:""}}</td>
         <td>{{object.widget|default_if_none:""}}</td>
-        <td align="center">{% if object.required %}X{% endif %}</td>
+        <td align="center">
+        {% if object.required %}X{% endif %}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}
@@ -111,7 +122,9 @@
         {% endrow_actions %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Table field list</h2>
+    <h2>
+    Table field list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% form %}

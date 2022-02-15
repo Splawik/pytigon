@@ -21,10 +21,17 @@
                 <body>
                 {% block content0 %}{% endblock %}
                 {% block all_content %}
-                        {% block content %}content{% endblock %}
+                        {% block content %}
+                        content
+                        {% endblock %}
                 {% endblock %}
-                {% block footer %}{% endblock %}
+                {% block footer %}
+                {% endblock %}
         {% endblock %}
-        {% block body_stop %}</body>{% endblock %}
-        {% block page_stop %}</html>{% endblock %}
+        {% block body_stop %}
+        </body>
+        {% endblock %}
+        {% block page_stop %}
+        </html>
+        {% endblock %}
 

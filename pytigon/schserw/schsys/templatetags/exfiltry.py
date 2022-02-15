@@ -37,7 +37,8 @@ from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.wiki import wiki_from_str, make_href, wikify
 from pytigon_lib.schtools.schjson import json_dumps
 
-from bootstrap4.forms import render_form
+
+from django_bootstrap5.forms import render_form
 
 register = template.Library()
 

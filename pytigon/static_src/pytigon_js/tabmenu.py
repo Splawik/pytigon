@@ -54,7 +54,7 @@ class TabMenu:
         if title_alt and title_alt != title:
             self.titles[title_alt] = menu_item
         menu_pos = vsprintf(
-            "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-outline-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
+            "<li id='li_%s' class ='nav-item'><a href='#%s' class='nav-link bg-info' data-toggle='tab' data-bs-toggle='tab' role='tab' title='%s'>%s &nbsp &nbsp</a> <button id = 'button_%s' class='close btn btn-outline-danger btn-xs' title='remove page' type='button'><span class='fa fa-times'></span></button></li>",
             [_id, _id, title, title, _id],
         )
 
@@ -67,7 +67,8 @@ class TabMenu:
         jQuery("#tabs2_content").append(
             sprintf(
                 "<div class='tab-pane container-fluid ajax-region ajax-frame ajax-link win-content content page' id='%s' data-region='page' href='%s'></div>",
-                _id, href
+                _id,
+                href,
             )
         )
 
@@ -148,7 +149,7 @@ class TabMenu:
                 href2 = correct_href(href)
 
                 jQuery("#body_desktop").hide()
-                #self.new_page(title, data_or_html.innerHTML, href2, title_alt)
+                # self.new_page(title, data_or_html.innerHTML, href2, title_alt)
                 self.new_page(title, data_or_html, href2, title_alt)
 
             jQuery(".auto-hide").trigger("click")

@@ -2,7 +2,7 @@
 
 % load exfiltry
 % load exsyntax
-% load bootstrap4
+% load django_bootstrap5
 
 %% all
     %with form_width=800 form_height=600 show_title_bar=1 title='Test'

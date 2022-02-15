@@ -1,4 +1,4 @@
-% load bootstrap4
+% load django_bootstrap5
 
 % if standard_web_browser:
     % for row in field_rows:

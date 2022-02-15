@@ -1,0 +1,5 @@
+<div style="position: relative;">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{%  endif %}{% include "django/forms/widgets/attrs.html" %} />
+    <i class='fa fa-calendar' onclick='return false;' style='position:absolute;right:10px;top:calc(50% - 6px);pointer-events:none;'></i>
+</div>
+

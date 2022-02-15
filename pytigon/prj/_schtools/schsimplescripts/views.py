@@ -40,7 +40,7 @@ SCRIPT_TEMPLATE = """
 
 {%% load exfiltry %%}
 {%% load exsyntax %%}
-{%% load bootstrap4 %%}
+{%% load django_bootstrap5 %%}
 
 """
 

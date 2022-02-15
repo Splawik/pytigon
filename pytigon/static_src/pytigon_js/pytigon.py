@@ -66,7 +66,7 @@ def app_init(
     window.LANG = lang
     window.GEN_TIME = gen_time
 
-    #if APPLICATION_TEMPLATE == "traditional":
+    # if APPLICATION_TEMPLATE == "traditional":
     #    document.addEventListener("DOMContentLoaded", dom_content_loaded)
 
     if offline_support:
@@ -111,6 +111,7 @@ def app_init(
     desktop = document.getElementById("body_desktop")
     if desktop:
         mount_html(desktop, None, None)
+
 
 window.app_init = app_init
 
@@ -184,16 +185,26 @@ def _on_error(request, settings):
                 jQuery("#dialog-data-error"),
                 settings.responseText.substring(start + 6, end - 1),
             )
-            jQuery("#dialog-form-error").modal()
+            if window.hasOwnProperty("bootstrap"):
+                d = bootstrap.Modal(document.getElementById("dialog-form-error"))
+                d.hide()
+            else:
+                jQuery("#dialog-form-error").modal()
         else:
             mount_html(jQuery("#dialog-data-error"), settings.responseText)
-            jQuery("#dialog-form-error").modal()
+            if window.hasOwnProperty("bootstrap"):
+                d = bootstrap.Modal(document.getElementById("dialog-form-error"))
+                d.hide()
+            else:
+                jQuery("#dialog-form-error").modal()
 
 
 def jquery_ready():
     pass
 
+
 window.jquery_ready = jquery_ready
+
 
 def _on_popstate(self, e):
     if e.state:

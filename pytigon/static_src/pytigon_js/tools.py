@@ -603,7 +603,11 @@ def remove_element(element):
             def _on_remove_aside(index, value):
                 dialog = value.firstElementChild
                 if dialog and dialog.hasAttribute("modal"):
-                    jQuery(dialog).modal("hide")
+                    if window.hasOwnProperty("bootstrap"):
+                        d = bootstrap.Modal(dialog)
+                        d.hide()
+                    else:
+                        jQuery(dialog).modal("hide")
                 else:
                     aside.remove()
 

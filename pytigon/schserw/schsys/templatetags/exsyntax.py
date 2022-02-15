@@ -371,7 +371,7 @@ def field(context, form_field, fieldformat=None):
             return {}
 
         if x[0] == "^":
-            form_group_class += " label-floating"
+            form_group_class += " form-floating"
             field_class += " col-12"
         elif x[0] == "-":
             form_group_class += " label-over-field"
@@ -488,8 +488,10 @@ class Form(Node):
                 else:
                     p = self.def_param
                 fields.append([field.name, p])
-
-        template_str = "{% load exsyntax %}<div class='row'>"
+        if self.def_param == "^/":
+            template_str = "{% load exsyntax %}<div class='d-inline-flex flex-wrap'>"
+        else:
+            template_str = "{% load exsyntax %}<div class='row'>"
         for field in fields:
             template_str += "{%% field '%s' '%s' %%}" % (field[0], field[1])
         template_str += "</div>"

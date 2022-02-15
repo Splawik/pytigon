@@ -9,8 +9,10 @@
                 bitmaps = {
                 }
                 child.set_bitmaps(bitmaps)
+
         def filter_url(self, target, href):
             return href
+
 </script>
 {% endblock %}
 {% block all %}
@@ -31,17 +33,21 @@
         </div>
 {% endblock %}
 {% block list_row_header %}
-        <th>Title</th>
+        <th>
+        Title
+        </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.to_str|safe }}</td>
+        <td>
+        {{object.to_str|safe }}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% if object.get_def.action_template %}
                 {% subtemplate object.get_def.get_action_template %}
           {% else %}
                 {% row_actions %}
-                        edit-inline,Update,,,,,../../../../../../schreports/table/CommonGroup/{id}/edit__group/
+                        edit-inline,Update,,,,,{{base_path}}schreports/table/CommonGroup/{id}/edit__group/
                         pdf
                         odf
                         field_edit/data,Data,data

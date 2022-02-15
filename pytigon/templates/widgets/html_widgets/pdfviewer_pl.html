@@ -1,7 +1,8 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block all %}
-        {% block js_standard %}{% endblock %}
+        {% block js_standard %}
+        {% endblock %}
         {% block widget_content %}
                 {% if standard_browser %}
                         <iframe src="/static/pdfjs/web/viewer.html?file={{file}}" width="{{width}}" height="{{height}}"></iframe>

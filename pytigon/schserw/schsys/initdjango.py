@@ -26,7 +26,7 @@ from copy import deepcopy
 from django.forms.forms import BaseForm
 
 
-from bootstrap4.forms import render_form
+from django_bootstrap5.forms import render_form
 
 import os
 import shutil

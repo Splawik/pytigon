@@ -8,6 +8,7 @@
                 <script language="python">
             def init_form(self):
                 self.tabsort.grid.default_command = 'code'
+
 </script>
         {% endif %}
 {% endblock %}
@@ -23,7 +24,9 @@
                                 {% widget class='menu' id='new_consumer' title="&New consumer" %}
                                         {% for pos in object_list|module_obj:"Consumer_CHOICES" %}
                                                 <li>
-                                                        <a href="{{table_path}}{{pos.0}}/add/">{{pos.1}}</a>
+                                                        <a href="{{table_path}}{{pos.0}}/add/">
+                                                        {{pos.1}}
+                                                        </a>
                                                 </li>
                                         {% endfor %}
                                 {% endwidget %}
@@ -34,12 +37,16 @@
 {% block list_row_header %}
         <th>Name</th>
         <th>Type</th>
-        <th>Url</th>
+        <th>
+        Url
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.get_consumer_type_display}}</td>
-        <td>{{object.url|default_if_none:""}}</td>
+        <td>
+        {{object.url|default_if_none:""}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{ block.super }}

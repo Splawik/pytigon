@@ -96,35 +96,34 @@ def mount_html(dest_elem, data_or_html, link=None):
 window.mount_html = mount_html
 
 
-def datetime_init(dest_elem):
-    format = {
-        "singleDatePicker": True,
-        "showDropdowns": True,
-        "buttonClasses": "btn",
-        "applyClass": "btn-success align-top",
-        "cancelClass": "btn-danger btn-sm align-top",
-        "timePicker24Hour": True,
-        "autoApply": True,
-        "locale": {
-            "format": "YYYY-MM-DD",
-            "separator": "-",
-            "applyLabel": "&nbsp; OK &nbsp;",
-            "cancelLabel": "<i class='fa fa-close'></i>",
-        },
-    }
+#def datetime_init(dest_elem):
+#    format = {
+#        "singleDatePicker": True,
+#        "showDropdowns": True,
+#        "buttonClasses": "btn",
+#        "applyClass": "btn-success align-top",
+#        "cancelClass": "btn-danger btn-sm align-top",
+#        "timePicker24Hour": True,
+#        "autoApply": True,
+#        "locale": {
+#            "format": "YYYY-MM-DD",
+#            "separator": "-",
+#            "applyLabel": "&nbsp; OK &nbsp;",
+#            "cancelLabel": "<i class='fa fa-close'></i>",
+#        },
+#    }
+#
+#    d = jQuery(dest_elem).find("div.group_datefield input")
+#    d.daterangepicker(format)
+#
+#    format["locale"]["format"] = "YYYY-MM-DD HH:mm"
+#    format["timePicker"] = True
+#    format["timePickerIncrement"] = 30
+#
+#    d = jQuery(dest_elem).find("div.group_datetimefield input")
+#    d.daterangepicker(format)
 
-    d = jQuery(dest_elem).find("div.form-group .datefield input")
-    d.daterangepicker(format)
-
-    format["locale"]["format"] = "YYYY-MM-DD HH:mm"
-    format["timePicker"] = True
-    format["timePickerIncrement"] = 30
-
-    d = jQuery(dest_elem).find("div.form-group .datetimefield input")
-    d.daterangepicker(format)
-
-
-register_mount_fun(datetime_init)
+#register_mount_fun(datetime_init)
 
 
 def selectpicker_init(dest_elem):

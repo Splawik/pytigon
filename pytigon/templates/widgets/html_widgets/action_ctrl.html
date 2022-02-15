@@ -5,7 +5,8 @@
         </input>
 {% endif %}
 {% block all %}
-        {% block js_standard %}{% endblock %}
+        {% block js_standard %}
+        {% endblock %}
         {% block widget_content %}
                 {% if standard_web_browser %}
                         <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}">
@@ -15,7 +16,8 @@
                         {{data}}
                 </div>
         {% endblock %}
-        {% block js %}{% endblock %}
+        {% block js %}
+        {% endblock %}
         {% block js2 %}
                 <script >
     var {{id}}_var = null;

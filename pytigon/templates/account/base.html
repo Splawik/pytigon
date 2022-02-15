@@ -1,6 +1,6 @@
 {% extends default_template %}
 {% load exfiltry %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load i18n %}
 {% load account %}
 {% load exsyntax %}
@@ -22,7 +22,8 @@
                         <div class="col"></div>
                 </div>
         </div>
-        {% block body_desktop_cd %}{% endblock %}
+        {% block body_desktop_cd %}
+        {% endblock %}
 {% endblock %}
 {% block nav %}{% endblock %}
 

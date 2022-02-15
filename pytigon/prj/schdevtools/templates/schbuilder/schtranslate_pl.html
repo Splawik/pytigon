@@ -6,6 +6,7 @@
         <script language="python">
         def filter_url(self, target, href):
             return href
+
 </script>
 {% endblock %}
 {% block all %}
@@ -13,19 +14,24 @@
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
-{% block scroll %}{% endblock %}
+{% block scroll %}
+{% endblock %}
 {% block list_content_actions %}
         {% new_row "New translation" %}
 {% endblock %}
 {% block list_row_header %}
         <th>Description</th>
         <th>Translation</th>
-        <th>Status</th>
+        <th>
+        Status
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.description}}</td>
         <td>{{object.translation}}</td>
-        <td>{{object.status}}</td>
+        <td>
+        {{object.status}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}

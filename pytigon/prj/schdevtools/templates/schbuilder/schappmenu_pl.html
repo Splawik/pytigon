@@ -9,6 +9,7 @@
                 import os
                 paths = wx.StandardPaths.Get()
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+
 </script>
         {% endif %}
 {% endblock %}
@@ -19,17 +20,22 @@
 {% endblock %}
 {% block list_content_actions %}
         {% new_row "New menu item" %}
-        <a href="{{request.path|replace:"/table/SChApp/|/table/SChApp_wiki/"}}/../../../-/add" class="button" name="New wiki item" label="New wiki item" title="New wiki item" target="_blank"></a>
+        <a href="{{request.path|replace:"/table/SChApp/|/table/SChApp_wiki/"}}/../../../-/add" class="button" name="New wiki item" label="New wiki item" title="New wiki item" target="_blank">
+        </a>
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
         <th>Url</th>
-        <th>Permission</th>
+        <th>
+        Permission
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>{{object.url|default_if_none:""}}</td>
-        <td>{{object.perms|default_if_none:""}}</td>
+        <td>
+        {{object.perms|default_if_none:""}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}
@@ -48,7 +54,9 @@
         {% endrow_actions %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Menu item list</h2>
+    <h2>
+    Menu item list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% form %}

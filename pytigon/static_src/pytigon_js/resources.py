@@ -12,7 +12,7 @@ MODAL_BASE = """
         <div class="modal-content ajax-region" data-region="error">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLabel">{title}</h5>
-                <button type="button" class="close" data-dismiss='modal' aria-label="Close">
+                <button type="button" class="close btn btn-light" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -36,7 +36,7 @@ MODAL_DELETE_BASE = """
     <div class="modal-dialog" role="document">
         <div class="modal-header">
             <h5 class="modal-title" id="ModalLabel">{title}</h5>
-            <button type="button" class="close" data-dismiss='modal' aria-label="Close">
+            <button type="button" class="close btn btn-light" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -55,7 +55,7 @@ MODAL_DELETE_BASE = """
 )
 
 EDIT_FOOTER = """ 
-<button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
+<button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-primary" target="refresh_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
@@ -63,7 +63,7 @@ EDIT_FOOTER = """
 
 INFO_FOOTER = """
 <button type = "button" class ="btn btn-info copy_to_clipboard">Copy to clipboard</button>
-<button type = "button" class ="btn btn-secondary btn-close" data-dismiss='modal'>Close</button>
+<button type = "button" class ="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>
 """.replace(
     "Copy to clipboard", _COPY_TO_CLIP
 ).replace(
@@ -71,14 +71,14 @@ INFO_FOOTER = """
 )
 
 DELETE_FOOTER = """
-<button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Cancel</button>
+<button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-danger" target="refresh_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
 )
 
 ERROR_FOOTER = """
-<button type="button" class="btn btn-secondary btn-close" data-dismiss='modal'>Close</button>
+<button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>
 """.replace(
     "Close", _CLOSE
 )
@@ -106,7 +106,7 @@ INLINE_BASE = """
                     <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> 
                         <span class='fa fa-window-maximize'></span> 
                     </button> 
-                    <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                    <button type='button' class='close btn-raised ptig-btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                 </div>
                 <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>
                     <div class='dialog-data ajax-frame' data-region='error'></div>
@@ -135,7 +135,7 @@ INLINE_DELETE_BASE = """
                 <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> 
                     <span class='fa fa-window-maximize'></span> 
                 </button> 
-                <button type='button' class='close btn-raised btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                <button type='button' class='close btn-raised ptig-btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
             </div>
             <div class='modal-body'>
                 <div class='dialog-data ajax-frame' data-region='error'></div>
@@ -150,15 +150,23 @@ INLINE_DELETE_BASE = """
     "Close", _CLOSE
 )
 
-INLINE_EDIT = INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER).replace(
-    "data-dismiss='modal'", ""
+INLINE_EDIT = (
+    INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER)
+    .replace("data-dismiss='modal'", "")
+    .replace("data-bs-dismiss='modal'", "")
 )
-INLINE_INFO = INLINE_BASE.replace("{{modal_footer}}", INFO_FOOTER).replace(
-    "data-dismiss='modal'", ""
+INLINE_INFO = (
+    INLINE_BASE.replace("{{modal_footer}}", INFO_FOOTER)
+    .replace("data-dismiss='modal'", "")
+    .replace("data-bs-dismiss='modal'", "")
 )
-INLINE_DELETE = INLINE_BASE.replace("{{modal_footer}}", DELETE_FOOTER).replace(
-    "data-dismiss='modal'", ""
+INLINE_DELETE = (
+    INLINE_BASE.replace("{{modal_footer}}", DELETE_FOOTER)
+    .replace("data-dismiss='modal'", "")
+    .replace("data-bs-dismiss='modal'", "")
 )
-INLINE_ERROR = INLINE_BASE.replace("{{modal_footer}}", ERROR_FOOTER).replace(
-    "data-dismiss='modal'", ""
+INLINE_ERROR = (
+    INLINE_BASE.replace("{{modal_footer}}", ERROR_FOOTER)
+    .replace("data-dismiss='modal'", "")
+    .replace("data-bs-dismiss='modal'", "")
 )

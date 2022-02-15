@@ -1,7 +1,8 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block all %}
-        {% block js_standard %}{% endblock %}
+        {% block js_standard %}
+        {% endblock %}
         {% block widget_content %}
                 {% if standard_web_browser %}
                         <div class="inline_frame ajax-region ajax-frame auto-frame ajax-link" href="{{href}}" width="100%" height="{{height}}"></div>
@@ -10,7 +11,9 @@
                         </CTRL-HTML>
                 {% endif %}
         {% endblock %}
-        {% block js %}{% endblock %}
-        {% block js2 %}{% endblock %}
+        {% block js %}
+        {% endblock %}
+        {% block js2 %}
+        {% endblock %}
 {% endblock %}
 

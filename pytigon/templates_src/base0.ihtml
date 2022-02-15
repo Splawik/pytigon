@@ -30,12 +30,6 @@
                     %% css
                     %% css_end
                         </style>
-                %if not 'no_scripts' in request.GET:
-                    % if not show_form:
-                        %%js_scripts
-                            %% js_scripts_base
-
-                    %% js_extrascipts
 
             % else
                 %% pythoncode
@@ -92,6 +86,13 @@
                         %% content
                     %% content_end
             %% tabs
+
+        %if not 'no_scripts' in request.GET:
+            % if not show_form:
+                %%js_scripts
+                    %% js_scripts_base
+
+            %% js_extrascipts
 
         %% html_widgets_init
 

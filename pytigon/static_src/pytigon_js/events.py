@@ -322,7 +322,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     dialog = dialog_slot.firstElementChild
 
     if dialog != None:
-        jQuery(dialog).on("click", "button.btn-close", on_hidden)
+        jQuery(dialog).on("click", "button.ptig-btn-close", on_hidden)
 
     plug = dialog.closest("aside.plug")
     if plug != None:
@@ -436,16 +436,25 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
         if obj:
             obj.remove()
 
-    dialog = jQuery(dialog_slot.firstElementChild)
-    if dialog:
-        dialog.on("hidden.bs.modal", on_hidden)
-        dialog.drags({"handle": ".modal-header"})
-        dialog.modal(
-            {
-                "show": True,
-                "backdrop": False,
-            }
+    if window.hasOwnProperty("bootstrap"):
+        dialog_slot.firstElementChild.addEventListener("hidden.bs.modal", on_hidden)
+        dialog = window.bootstrap.Modal(
+            dialog_slot.firstElementChild, {"backdrop": False}
         )
+        if dialog:
+            dialog.show()
+            jQuery(dialog_slot).drags({"handle": ".modal-header"})
+    else:
+        dialog = jQuery(dialog_slot.firstElementChild)
+        if dialog:
+            dialog.on("hidden.bs.modal", on_hidden)
+            dialog.drags({"handle": ".modal-header"})
+            dialog.modal(
+                {
+                    "show": True,
+                    "backdrop": False,
+                }
+            )
     if "INFO" in template_name:
         txt = dialog_slot.querySelector("textarea.copy_to_clipboard")
         btn = dialog_slot.querySelector("button.copy_to_clipboard")

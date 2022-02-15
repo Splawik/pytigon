@@ -1,5 +1,6 @@
 {% extends default_template2 %}
-{% block heading %}{% endblock %}
+{% block heading %}
+{% endblock %}
 {% block page_head %}
         <title>
                 {{title}}
@@ -12,8 +13,10 @@
         {% block submenu_start %}{% endblock %}
         {% block submenu_end %}{% endblock %}
 {% endblock %}
-{% block menu_end %}{% endblock %}
-{% block body_init %}{% endblock %}
+{% block menu_end %}
+{% endblock %}
+{% block body_init %}
+{% endblock %}
 {% block tabs %}
         {% with NO_TABS=True %}
                 {{block.super}}

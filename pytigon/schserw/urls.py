@@ -165,7 +165,7 @@ for app in settings.INSTALLED_APPS:
             or pos.startswith("registration")
             or pos.startswith("bootstrap_admin")
             or pos.startswith("channels")
-            or pos.startswith("bootstrap4")
+            or pos.startswith("django_bootstrap5")
         ):
             continue
 

@@ -35,7 +35,7 @@ def datetable_set_height(element):
 
     panel = elem.find(".fixed-table-toolbar")
     if not _is_visible(panel):
-        dy += panel.outerHeight() + 5 #height() #- 15
+        dy += panel.outerHeight() + 5  # height() #- 15
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
 
@@ -50,7 +50,9 @@ def datatable_refresh(element):
                 "refresh"
             )
 
+
 window.datatable_refresh = datatable_refresh
+
 
 def _rowStyle(value, row, index):
     x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information")
@@ -113,11 +115,17 @@ def datatable_ajax(params):
 def init_table(table, table_type):
     if table_type == "datatable":
         if table.hasClass("multiple-select"):
-            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true' data-visible='true'></th>")
+            jQuery(table).find("tr:first").find("th:first").before(
+                "<th data-field='state' data-checkbox='true' data-visible='true'></th>"
+            )
         else:
-            jQuery(table).find("tr:first").find('th:first').before("<th data-field='state' data-checkbox='true' data-visible='false'></th>")
+            jQuery(table).find("tr:first").find("th:first").before(
+                "<th data-field='state' data-checkbox='true' data-visible='false'></th>"
+            )
 
-        jQuery(table).find("tr:first").find('th:last').after("<th data-field='id' data-visible='false'>ID</th>")
+        jQuery(table).find("tr:first").find("th:last").after(
+            "<th data-field='id' data-visible='false'>ID</th>"
+        )
 
         def onLoadSuccess(data):
             nonlocal table
@@ -142,20 +150,20 @@ def init_table(table, table_type):
             nonlocal table
             base_elem = table[0].closest(".tabsort_panel")
             link = get_ajax_link(base_elem, "table")
-            if link and link.tagName.lower()=='form':
+            if link and link.tagName.lower() == "form":
                 p["form"] = jQuery(link).serialize()
             else:
                 link = get_ajax_link(base_elem, "page")
-                if link and link.tagName.lower()=='form':
+                if link and link.tagName.lower() == "form":
                     p["form"] = jQuery(link).serialize()
             return p
 
         icons = {
-            'fullscreen': 'fa-arrows-alt',
-            'refresh': 'fa-refresh',
-            'toggleOff': 'fa-toggle-off',
-            'toggleOn': 'fa-toggle-on',
-            'columns': 'fa-th-list',
+            "fullscreen": "fa-arrows-alt",
+            "refresh": "fa-refresh",
+            "toggleOff": "fa-toggle-off",
+            "toggleOn": "fa-toggle-on",
+            "columns": "fa-th-list",
         }
 
         if table.hasClass("table_get"):
@@ -179,7 +187,14 @@ def init_table(table, table_type):
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
                     "icons": icons,
-                    'buttonsOrder':  [ 'refresh', 'toggle', 'fullscreen', 'menu', 'select', 'columns']
+                    "buttonsOrder": [
+                        "refresh",
+                        "toggle",
+                        "fullscreen",
+                        "menu",
+                        "select",
+                        "columns",
+                    ],
                 }
             )
 
@@ -211,7 +226,8 @@ def init_table(table, table_type):
             def _handle_toolbar_expand(self, elem):
                 panel = table_panel.find(".fixed-table-toolbar")
                 panel2 = jQuery(".list_content_header_second_row")
-                if jQuery(this).hasClass("active"):
+                if not jQuery(this).hasClass("active"):
+                    # if panel[0].style.display == "none":
                     panel.show()
                     panel2.show()
                 else:
@@ -232,7 +248,10 @@ def init_table(table, table_type):
             datetable_set_height(table[0])
 
         table[0].process_resize = _process_resize
+
+
 window.init_table = init_table
+
 
 def table_loadeddata(event):
     if getattr(event, "data"):
@@ -242,7 +261,11 @@ def table_loadeddata(event):
                 "refresh"
             )
         elif dt == "$$RETURN_ERROR":
-            refresh_ajax_frame(event.srcElement if event.srcElement else event.data_source , "error", event.data)
+            refresh_ajax_frame(
+                event.srcElement if event.srcElement else event.data_source,
+                "error",
+                event.data,
+            )
         elif dt == "$$RETURN_HTML_ERROR":
             if isinstance(event.data, str):
                 txt = event.data
@@ -251,11 +274,11 @@ def table_loadeddata(event):
             options = {
                 "title": "Error!",
                 "html": txt,
-                'icon': 'error',
-                'buttonsStyling': False,
-                'showCancelButton': False,
-                'customClass': {
-                    'confirmButton': 'btn btn-primary btn-lg',
+                "icon": "error",
+                "buttonsStyling": False,
+                "showCancelButton": False,
+                "customClass": {
+                    "confirmButton": "btn btn-primary btn-lg",
                 },
             }
             Swal.fire(options)
@@ -265,7 +288,7 @@ def table_loadeddata(event):
                     _data = event.data
                 else:
                     _data = event.data.innerHTML
-                pk = int(_data.split('id:')[1].strip())
+                pk = int(_data.split("id:")[1].strip())
                 table = event.srcElement if event.srcElement else event.data_source
                 datatable = jQuery(table).find("table[name=tabsort].datatable")
                 link = get_ajax_link(table, "page")
@@ -280,23 +303,27 @@ def table_loadeddata(event):
                         url = link.getAttribute("src")
                 if url:
                     print(url)
-                    if '?' in url:
+                    if "?" in url:
                         url += "&json=1&pk=" + str(pk)
                     else:
                         url += "?&json=1&pk=" + str(pk)
-                    url = url.replace('/form/', '/json/')
+                    url = url.replace("/form/", "/json/")
+
                     def _update(data):
                         nonlocal datatable, dt
                         try:
                             d = JSON.parse(data)
                             if dt == "$$RETURN_NEW_ROW_OK":
-                                datatable.bootstrapTable('append', d['rows'][0])
-                                datatable.bootstrapTable('scrollTo', 'bottom')
+                                datatable.bootstrapTable("append", d["rows"][0])
+                                datatable.bootstrapTable("scrollTo", "bottom")
                             else:
-                                id2 = d['rows'][0]['id']
-                                row = datatable.bootstrapTable('getRowByUniqueId', id2)
+                                id2 = d["rows"][0]["id"]
+                                row = datatable.bootstrapTable("getRowByUniqueId", id2)
                                 if row:
-                                    datatable.bootstrapTable('updateByUniqueId', {'id': id2, 'row': d['rows'][0]})
+                                    datatable.bootstrapTable(
+                                        "updateByUniqueId",
+                                        {"id": id2, "row": d["rows"][0]},
+                                    )
                                 else:
                                     datatable.bootstrapTable("refresh")
                         except:
@@ -310,14 +337,16 @@ def table_loadeddata(event):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
                 "refresh"
             )
-        elif dt in (
-                "$$RETURN_OK",
-            ):
+        elif dt in ("$$RETURN_OK",):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
                 "refresh"
             )
         else:
-            refresh_ajax_frame(event.srcElement if event.srcElement else event.data_source, "page", event.data)
+            refresh_ajax_frame(
+                event.srcElement if event.srcElement else event.data_source,
+                "page",
+                event.data,
+            )
     else:
         jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
             "refresh"
@@ -330,29 +359,32 @@ window.table_loadeddata = table_loadeddata
 def loading_template(message):
     return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
 
+
 window.loading_template = loading_template
 
+
 def datatable_action(btn, action):
-    div = btn.closest('div.tableframe')
+    div = btn.closest("div.tableframe")
     datatable = div.querySelector("table[name=tabsort].datatable")
-    url = datatable.getAttribute('data-url')+"../table_action/"
+    url = datatable.getAttribute("data-url") + "../table_action/"
 
     pk_tab = []
-    tab = jQuery(datatable).bootstrapTable('getSelections')
+    tab = jQuery(datatable).bootstrapTable("getSelections")
     for item in tab:
         pk_tab.append(str(item.id))
     pk_list_str = ",".join(pk_tab)
 
     def _callback(data):
-        if 'RETURN_ACTION' in data:
-            if data['RETURN_ACTION'] == None:
+        if "RETURN_ACTION" in data:
+            if data["RETURN_ACTION"] == None:
                 return
         jQuery(datatable).bootstrapTable("refresh")
 
-    ajax_json(url + "?pks=" + pk_list_str, { 'action': action  }, _callback)
+    ajax_json(url + "?pks=" + pk_list_str, {"action": action}, _callback)
 
 
 window.datatable_action = datatable_action
+
 
 def on_check():
     datatable = this
@@ -361,62 +393,70 @@ def on_check():
     menu_btn = container.querySelector("button[name=menu]")
 
     for item in datatable.getHiddenColumns():
-        if item.field == 'state':
-            datatable.showColumn('state')
+        if item.field == "state":
+            datatable.showColumn("state")
             menu_btn.style.display = "block"
             if menu_btn.classList.contains("btn-secondary"):
-                div = container.closest('div.tableframe')
-                if div.hasAttribute('data-actions'):
-                    actions = div.getAttribute('data-actions').split(';')
+                div = container.closest("div.tableframe")
+                if div.hasAttribute("data-actions"):
+                    actions = div.getAttribute("data-actions").split(";")
                 else:
                     actions = []
 
                 dropdown = document.createElement("div")
                 dropdown.classList.add("dropleft")
 
-                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
+                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
                 html += "<div class='dropdown-menu'>"
                 for s in actions:
-                    if '/' in s:
-                        x = s.split('/')
+                    if "/" in s:
+                        x = s.split("/")
                     else:
                         x = (s, s)
-                    html += "<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '" + x[0].strip() +  "');\">" + x[1].strip() + "</button>"
-                    #html += "<a class ='dropdown-item' href=../action/?'" + x[0] + "' target='" + x[2] + "'>" + x[1] + "</a>"
+                    html += (
+                        "<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '"
+                        + x[0].strip()
+                        + "');\">"
+                        + x[1].strip()
+                        + "</button>"
+                    )
+                    # html += "<a class ='dropdown-item' href=../action/?'" + x[0] + "' target='" + x[2] + "'>" + x[1] + "</a>"
                 html += "</div>"
 
                 dropdown.innerHTML = html
                 menu_btn.replaceWith(dropdown)
             return
-    datatable.hideColumn('state')
+    datatable.hideColumn("state")
     menu_btn.style.display = "none"
 
-#def on_menu():
+
+# def on_menu():
 #    datatable = this
 #    alert(datatable)
+
 
 def datatable_buttons(obj):
     return {
         "select": {
-            'text': 'Select rows',
-            'icon': 'fa-check',
-            'event': {
-                'click': on_check,
+            "text": "Select rows",
+            "icon": "fa-check",
+            "event": {
+                "click": on_check,
             },
-            'attributes': {
-                'title': 'Add a new row to the table'
-            }
+            "attributes": {"title": "Add a new row to the table"},
         },
         "menu": {
-            'text': 'Menu',
-            'icon': 'fa-bars',
+            "text": "Menu",
+            "icon": "fa-bars",
             #'event': {
             #    'click': on_menu,
-            #},
-            'attributes': {
-                'title': 'Menu',
-                'style': "display: none;",
-            }
-        }
+            # },
+            "attributes": {
+                "title": "Menu",
+                "style": "display: none;",
+            },
+        },
     }
+
+
 window.datatable_buttons = datatable_buttons

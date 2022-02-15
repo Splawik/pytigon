@@ -8,6 +8,7 @@
                 from pytigon_lib.schtools.schjson import loads
                 app = wx.GetApp()
                 form = self
+
                 class callback:
                     def on_websocket_message(msg):
                         nonlocal form
@@ -16,12 +17,14 @@
                         form.msg.DocumentEnd()
                 self.callback = callback
                 app.create_websocket('{{app_path}}django_manage/channel/', callback)
+
                 def make_on_click(cmd):
                     def on_click(event):
                         nonlocal cmd
                         event.Skip()
                         self.cmd(cmd)
                     return on_click
+
                 self.makemigrations.Bind(wx.EVT_BUTTON, make_on_click("makemigrations --no-input --no-color"))
                 self.makeallmigrations.Bind(wx.EVT_BUTTON, make_on_click("makeallmigrations --no-input --no-color"))
                 self.migrate.Bind(wx.EVT_BUTTON, make_on_click("migrate --no-input --no-color"))
@@ -29,6 +32,7 @@
                 self.compilemessages.Bind(wx.EVT_BUTTON, make_on_click("compilemessages --no-color"))
                 self.qinfo.Bind(wx.EVT_BUTTON, make_on_click("qinfo --no-color"))
                 self.send_mail.Bind(wx.EVT_BUTTON, make_on_click("send_mail --no-color"))
+
             def cmd(self, cmd):
                 app = wx.GetApp()
                 async def start_webserver():
@@ -37,6 +41,7 @@
                         "{{app_path}}django_manage/channel/", {'id': '{{project.name}}', 'command': 'start',  'cmd': cmd }
                     )
                 app.StartCoroutine(start_webserver, app.GetTopWindow())
+
             def on_close(self):
                 app = wx.GetApp()
                 async def stop_webserver():
@@ -44,8 +49,10 @@
                     await app.websocket_send(
                         "{{app_path}}django_manage/channel/", {'id': '{{project.name}}', 'command': 'stop', }
                     )
+
                 app.StartCoroutine(stop_webserver, app.GetTopWindow())
                 app.remove_websoket_callback("{{app_path}}django_manage/channel/", self.callback)
+
 </script>
         {% endif %}
 {% endblock %}
@@ -76,7 +83,8 @@
                                 <CTRL-NOBG_BUTTON_TXT NAME="qinfo" label="Qinfo" SRC="png://apps/help-browser.png"></CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td cellpadding="0">
-                                <CTRL-NOBG_BUTTON_TXT NAME="send_mail" label="Send mails" SRC="png://actions/mail-reply-all.png"></CTRL-NOBG_BUTTON_TXT>
+                                <CTRL-NOBG_BUTTON_TXT NAME="send_mail" label="Send mails" SRC="png://actions/mail-reply-all.png">
+                                </CTRL-NOBG_BUTTON_TXT>
                         </td>
                 </tr>
         </table>

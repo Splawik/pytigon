@@ -47,6 +47,9 @@
 .pull-right {
   float: right; }
 
+.pseudotable {
+  position: relative; }
+
 /* Tab - close button on tab */
 #tabs2 {
   border-bottom: 0px; }
@@ -67,18 +70,20 @@
       right: 0px; }
       #tabs2 li button.close {
         position: absolute;
-        right: 2px;
-        top: 2px;
-        font-size: 18px;
+        right: 1px;
+        top: 1px;
         padding: 0px 3px;
         margin-top: 0px;
         margin-right: 0px;
-        box-shadow: none; }
+        box-shadow: none;
+        border: none;
+        color: black; }
     #tabs2 li.nav-item a.nav-link {
       padding: 6px 12px 10px 8px;
       text-transform: none;
       border-top-right-radius: 0.15rem;
-      border-top-left-radius: 0.15rem; }
+      border-top-left-radius: 0.15rem;
+      font-size: small; }
     #tabs2 li:nth-child(1n+6) {
       width: 25px;
       overflow: hidden; }
@@ -86,6 +91,9 @@
         color: rgba(0, 0, 0, 0); }
 
 /* bootstrap-table */
+.bootstrap-table {
+  font-size: small; }
+
 .tabsort_panel, .table_panel, .subform_content {
   width: 100%; }
   .tabsort_panel .table td, .table_panel .table td, .subform_content .table td {
@@ -144,6 +152,9 @@
     margin-left: 0.4rem;
     margin-right: 8px; }
 
+.tabsort_panel tbody .td_information > .btn, .tabsort_panel tbody .td_action > .btn {
+  padding: 0.25rem; }
+
 div.bootstrap-table div.columns.float-right {
   margin-right: 2px;
   margin-top: 5px !important; }
@@ -152,7 +163,8 @@ div.bootstrap-table div.fixed-table-toolbar div.columns button {
   width: 50px; }
 
 div.bootstrap-table div.search input {
-  height: 35px !important; }
+  height: 2.4rem;
+  margin-top: 0.4rem; }
 
 div.tableframe {
   position: relative; }
@@ -278,6 +290,25 @@ body:not(.modal-open) .dark_background {
   transform: none;
   top: -10p;
   margin-top: -2px; }
+
+.group_multiplechoicefield, .group_modelmultiplechoicefield, .group_typedmultiplechoicefield {
+  min-width: 10rem; }
+  .group_multiplechoicefield label.control-label, .group_modelmultiplechoicefield label.control-label, .group_typedmultiplechoicefield label.control-label {
+    padding-top: 0.4rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: x-small; }
+
+.group_typedchoicefield, .group_modelchoicefield, .group_choicefield {
+  min-width: 10rem; }
+
+div.d-inline-flex div.form-group {
+  align-self: end; }
+
+.group_filefield label.top_label {
+  position: absolute;
+  top: -14px;
+  left: 2px;
+  color: rgba(0, 0, 0, 0.5); }
 
 #dialog-form-modal .inline_dialog {
   width: 100% !important; }
@@ -469,6 +500,7 @@ div.login-container > .row {
   height: 30px;
   text-align: center;
   padding: 6px 0;
+  padding-top: 3px;
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px; }
@@ -559,9 +591,6 @@ label.upload {
 
 .label-floating .form-control:focus::-webkit-input-placeholder {
   transition: none; }
-
-.form-control {
-  padding: 0.5rem 0; }
 
 form.form-inline .label-floating label.control-label {
   position: absolute; }

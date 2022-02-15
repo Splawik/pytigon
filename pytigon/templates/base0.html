@@ -36,20 +36,14 @@
                                                 </style>
                                         {% endblock %}
                                 {% endif %}
-                                {% if not 'no_scripts' in request.GET %}
-                                        {% if not show_form %}
-                                                {% block js_scripts %}
-                                                        {% block js_scripts_base %}{% endblock %}
-                                                {% endblock %}
-                                        {% endif %}
-                                        {% block js_extrascipts %}{% endblock %}
-                                {% endif %}
                           {% else %}
                                 {% block pythoncode %}{% endblock %}
-                                {% block icss %}{% endblock %}
+                                {% block icss %}
+                                {% endblock %}
                         {% endif %}
                         {% block extrastyle %}{% endblock %}
-                        {% block extrahead %}{% endblock %}
+                        {% block extrahead %}
+                        {% endblock %}
                 </head>
         {% endblock %}
         {% block body_start %}
@@ -75,12 +69,16 @@
                                         {% for item_info in app_manager|args:prj|call:"get_app_items_width_perm" %}
                                                 {% block submenu %}{% endblock %}
                                         {% endfor %}
-                                        {% block submenu_end %}{% endblock %}
+                                        {% block submenu_end %}
+                                        {% endblock %}
                                 {% endblock %}
-                                {% block menu_end %}{% endblock %}
-                                {% block menu2 %}{% endblock %}
+                                {% block menu_end %}
+                                {% endblock %}
+                                {% block menu2 %}
+                                {% endblock %}
                         {% endblock %}
-                        {% block body_init %}{% endblock %}
+                        {% block body_init %}
+                        {% endblock %}
                         {% block messages %}
                                 {% if messages %}
                                         {% for message in messages %}
@@ -110,9 +108,21 @@
                                         {% block content_end %}{% endblock %}
                                 {% endif %}
                         {% endblock %}
-                        {% block tabs %}{% endblock %}
+                        {% block tabs %}
+                        {% endblock %}
                 {% endif %}
-                {% block html_widgets_init %}{% endblock %}
+                {% if not 'no_scripts' in request.GET %}
+                        {% if not show_form %}
+                                {% block js_scripts %}
+                                        {% block js_scripts_base %}
+                                        {% endblock %}
+                                {% endblock %}
+                        {% endif %}
+                        {% block js_extrascipts %}
+                        {% endblock %}
+                {% endif %}
+                {% block html_widgets_init %}
+                {% endblock %}
                 {% block body_footer %}{% endblock %}
         {% endblock %}
         {% if not 'no_scripts' in request.GET %}
@@ -129,13 +139,19 @@
                                                 {% block jquery_ready %}{% endblock %}
                                                 {% block jquery_ready_end %}{% endblock %}
                                         {% endblock %}
-                                        {% block js_script_body %}{% endblock %}
+                                        {% block js_script_body %}
+                                        {% endblock %}
                                 </script>
                         {% endblock %}
                 {% endif %}
-                {% block page_finish %}{% endblock %}
+                {% block page_finish %}
+                {% endblock %}
         {% endblock %}
-        {% block body_end %}</body>{% endblock %}
-        {% block page_end %}</html>{% endblock %}
+        {% block body_end %}
+        </body>
+        {% endblock %}
+        {% block page_end %}
+        </html>
+        {% endblock %}
 {% endblock %}
 

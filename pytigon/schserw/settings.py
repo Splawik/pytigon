@@ -201,7 +201,7 @@ INSTALLED_APPS = [
     "django.forms",
     "django_select2",
     "mailer",
-    "bootstrap4",
+    "django_bootstrap5",
     "corsheaders",
     "widget_tweaks",
     "pytigon.schserw.schsys",
@@ -443,7 +443,7 @@ ALLOWED_HOSTS = ["*"]
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
-BOOTSTRAP4 = {"use_custom_controls": False}
+BOOTSTRAP5 = {"use_custom_controls": False, "wrapper_class": ""}
 
 BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 BOOTSTRAP_BUTTON_SIZE_CLASS = ""

@@ -7,6 +7,7 @@
                 <script language="python">
             def init_form(self):
                 self.tabsort.grid.default_command = 'fields'
+
             def signal_from_child(self, child, signal):
                 if signal=='set_bitmap_list':
                     bitmaps = {
@@ -15,6 +16,8 @@
                         "doc":"client://apps/help-browser.png",
                     }
                     child.set_bitmaps(bitmaps)
+
+
 </script>
         {% endif %}
 {% endblock %}
@@ -28,11 +31,15 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
-        <th>Generic</th>
+        <th>
+        Generic
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>
-        <td>{{object.generic}}</td>
+        <td>
+        {{object.generic}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {% if not forloop.first %}
@@ -55,7 +62,9 @@
         {% endrow_actions %}
 {% endblock %}
 {% block table_header_edit %}
-    <h2>Table list</h2>
+    <h2>
+    Table list
+    </h2>
 {% endblock %}
 {% block row_edit %}
         {% form %}
@@ -70,13 +79,17 @@
                 {% if object.base_table == 'MPTTModel' %}
                         <option value="MPTTModel">MPTTModel,,,selected=selected</option>
                   {% else %}
-                        <option value="MPTTModel">MPTTModel</option>
+                        <option value="MPTTModel">
+                        MPTTModel
+                        </option>
                 {% endif %}
                 {% for model in object.get_models %}
                         {% if model == object.base_table %}
                                 <option value="{{model}}" selected="selected">{{model}}</option>
                           {% else %}
-                                <option value="{{model}}">{{model}}</option>
+                                <option value="{{model}}">
+                                {{model}}
+                                </option>
                         {% endif %}
                 {% endfor %}
         {% endform_item %}

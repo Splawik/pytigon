@@ -7,15 +7,20 @@
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
-{% block scroll %}{% endblock %}
+{% block scroll %}
+{% endblock %}
 {% block list_content_actions %}
         {% new_row "New url" %}
 {% endblock %}
 {% block list_row_header %}
-        <td>Url</td>
+        <td>
+        Url
+        </td>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.reg_expr}}</td>
+        <td>
+        {{object.reg_expr}}
+        </td>
 {% endblock %}
 {% block row_edit %}
         {% form %}

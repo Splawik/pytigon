@@ -9,6 +9,7 @@
             def init_form(self):
                 #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
                 pass
+
             def filter_http_result(self, target, href, mp):
                 if 'field_down' in href or 'field_up' in href:
                     if 'YES' in str(mp.get_body()[0]):
@@ -16,6 +17,7 @@
                             self.tabsort.grid.goto_next_row()
                         else:
                             self.tabsort.grid.goto_prev_row()
+
 </script>
         {% endif %}
 {% endblock %}
@@ -29,11 +31,15 @@
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>
-        <th>Value</th>
+        <th>
+        Value
+        </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.name|escape}}</td>
-        <td>{{object.value|escape}}</td>
+        <td>
+        {{object.value|escape}}
+        </td>
 {% endblock %}
 {% block list_row_actions %}
         {{block.super}}

@@ -34,13 +34,13 @@
                 {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
                 {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
                 {% block bootstrap_js %}
-                        {% jscript_link 'bootstrap/js/bootstrap.min.js' %}
+                        {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}
                 {% endblock %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js' %}
-                {% jscript_link 'bootstrap_plugins/bootstrap4-editable/js/bootstrap4-editable.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap5-editable/js/bootstrap-editable.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}
@@ -102,7 +102,7 @@
         {% compress css %}
                 {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
-                {% css_link 'bootstrap_plugins/bootstrap4-editable/css/bootstrap-editable.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}
                 {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
                 {% if user_agent == 'webviewembeded' %}
                         <style>
@@ -128,7 +128,9 @@
                 {{ form.media.css }}
                 {% block botstrap_css %}
                         {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
-                        {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
+                        {% comment %}
+                                {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
+                        {% endcomment %}
                 {% endblock %}
                 {% block theme_css_links %}
                         {% css_link 'themes/select2-material.css' %}
@@ -182,7 +184,7 @@
 {% endblock %}
 {% block topmenu %}
         <li class="nav-item topmenu">
-                <a class="nav-link first_pos {% if forloop.first %}active{% endif %}" data-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
+                <a class="nav-link first_pos {% if forloop.first %}active{% endif %}" data-toggle="tab" data-bs-toggle="tab" data-bs-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
                         {% if app_info.icon_exists %}
                                 {% icon app_info.get_icon|append_str:" tablet_meni_icon" width=22 %}
                         {% endif %}
@@ -196,7 +198,7 @@
                 {% block drop_down_blocks %}{% endblock %}
                 {% if user.is_authenticated %}
                         <li class="nav-item dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">
                                         {% icon "fa-user fa-lg" %}
                                         <span class="hidden-sm-down">{{user.username}}</span>
                                 </a>
@@ -235,13 +237,13 @@
                                                 </table>
                                         </div>
                                         <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-                                                <button class="navbar-toggler" type=""button" data-toggle="collapse" data-target="#navbar_setup">
+                                                <button class="navbar-toggler" type=""button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar_setup">
                                                         <span class="navbar-toggler-icon"></span>
                                                 </button>
                                                 <div class="collapse navbar-collapse" id="navbar_setup">
                                                         <ul class="navbar-nav mr-auto">
                                                                 <li class="nav-item active">
-                                                                        <a class="nav-link" href="#" data-toggle="modal" data-target="#change_passwd">Change password</a>
+                                                                        <a class="nav-link" href="#" data-toggle="modal" data-bs-toggle="collapse" data-target="#change_passwd">Change password</a>
                                                                 </li>
                                                                 {% if user.is_superuser %}
                                                                         <li class="nav-item">
@@ -408,7 +410,7 @@
                 {% if form.errors %}
                         <meta name="RETURN" content="$$RETURN_RELOAD" />
                         <div class="alert alert-danger alert-dismissable alert-link">
-                                <button class="close" type="button" data-dismiss="alert" aria-hidden="true"> &#215;</button>
+                                <button class="close" type="button" data-dismiss="alert" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
                                 <ul class="errorlist">
                                         {% if form.non_field_errors %}
                                                 <li>{{ form.non_field_errors }}</li>
