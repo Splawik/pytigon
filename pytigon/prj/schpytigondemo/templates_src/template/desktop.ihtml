@@ -2,13 +2,11 @@
 
 % load exsyntax
 
-%% botstrap_css2
-    % comment:
-        {% css_link 'bootstrap-5.0.2-dist/css/bootstrap.css' %}
+%% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 
-%% bootstrap_js2
-    {% jscript_link 'bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}
+%% bootstrap_js
+    {% jscript_link 'bootstrap/js/bootstrap.bundle.min.js' %}
 
 
 %% js_app_init__out

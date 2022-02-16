@@ -72,52 +72,56 @@ label.upload
     margin-right: 10px;
 
 
-.label-floating
-    .form-group
-        display: flex
-        height: 55px
-
-    .control-label
-        font-size: 14px
-        font-weight: 400
-        opacity: 0.4
-        pointer-events: none
-        transform: translate3d(0px, 22px, 0) scale(1)
-        transform-origin: left top
-        transition: 240ms
-        top: -14px
-        padding-left: 19px
-        z-index: 1
-
-    .control-label
-
-    &.focused .control-label
-        opacity: 1
-        transform: scale(0.75)
-
-    &.focused .form-control::-webkit-input-placeholder
-        color: #bbb
-
-    .form-control
-        align-self: flex-end
-
-    .form-control::-webkit-input-placeholder
-        color: transparent
-        transition: 240ms
-
-    .form-control:focus::-webkit-input-placeholder
-        transition: none
-
+//.label-floating
+//    .form-group
+//        display: flex
+//        height: 55px
+//
+//    .control-label
+//        font-size: 14px
+//        font-weight: 400
+//        opacity: 0.4
+//        pointer-events: none
+//        transform: translate3d(0px, 22px, 0) scale(1)
+//        transform-origin: left top
+//        transition: 240ms
+//        top: -14px
+//        padding-left: 19px
+//        z-index: 1
+//
+//    .control-label
+//
+//    &.focused .control-label
+//        opacity: 1
+//        transform: scale(0.75)
+//
+//    &.focused .form-control::-webkit-input-placeholder
+//        color: #bbb
+//
+//    .form-control
+//        align-self: flex-end
+//
+//    .form-control::-webkit-input-placeholder
+//        color: transparent
+//        transition: 240ms
+//
+//    .form-control:focus::-webkit-input-placeholder
+//        transition: none
+//
 //.form-control
 //    padding: 0.5rem 0;
-
-form.form-inline .label-floating label.control-label
-    position: absolute
+//
+//form.form-inline .label-floating label.control-label
+//    position: absolute
 
 
 .btn-file
     cursor: pointer
     cursor: hand
+
+button.btn-transparent:not(:hover), a.btn-transparent:not(:hover)
+    background: transparent !important
+
 
 div.calendar-table td.today:not(.active)
     background: #ffb

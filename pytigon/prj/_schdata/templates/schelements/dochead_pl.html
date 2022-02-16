@@ -1,0 +1,104 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes %}
+                {% for item in doctypes %}
+                        {% new_row "New document: "|append_str:item.name action="new_row/"|append_str:item.name %}
+                {% endfor %}
+        {% endwith %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Register</th>
+        <th>Target</th>
+        <th>Name</th>
+        <th>Number</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.doc_type_parent.name}}</td>
+        <td>{{object.org_chart_parent.name}}</td>
+        <td>{{object.name}}</td>
+        <td>{{object.number}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.date|isoformat}}</td>
+        <td>
+        {{object.status}}
+        </td>
+{% endblock %}
+{% block id_extra %}
+        {% row_actions %}
+                field_list/docitem_set,Document items,fa fa-lg fa-plus/fa fa-list-ol
+        {% endrow_actions %}
+        {{ block.super }}
+{% endblock %}
+{% block list_row_actions %}
+        {% if object.status == "" or object.status == 'draft' %}
+                {% row_actions %}
+                        edit-inline
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+        {% with object|args:request|call:"get_visible_statuses" as vs %}
+                {% if vs %}
+                        {% for row in vs %}
+                                {% if row.order > object.get_reg_status.order %}
+                                        {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
+                                {% endif %}
+                        {% endfor %}
+                {% endif %}
+        {% endwith %}
+        {% with object|args:request|call:"get_visible_statuses" as vs %}
+                {% if vs %}
+                        {% for row in vs %}
+                                {% if row.order < object.get_reg_status.order %}
+                                        {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                {% endif %}
+                        {% endfor %}
+                {% endif %}
+        {% endwith %}
+        {% comment %}
+                {% if object|args:request|call:"status_can_be_undo" %}
+                        {% action "decline_status"|append_str:"/"|append_str:object.status "Discard status: "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                {% endif %}
+        {% endcomment %}
+{% endblock %}
+{% block row_edit %}
+        {% block dochead_edit %}
+                {% form %}
+                {% endform %}
+        {% endblock %}
+        {% if object.id %}
+                {% block docitem_list %}
+                        {% frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px" %}
+                {% endblock %}
+          {% else %}
+                <button type="button" class="btn btn-warning" target="refresh_frame" rettype="RETURN_HTML_ERROR" data-region="subframe" get-param="redirect='1'" style="width:100%"> << Expand >> </button>
+        {% endif %}
+{% endblock %}
+

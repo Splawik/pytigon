@@ -1,0 +1,12 @@
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='llvm test' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block content %}
+        <h1>result: {{result}}</h1>
+{% endblock %}
+

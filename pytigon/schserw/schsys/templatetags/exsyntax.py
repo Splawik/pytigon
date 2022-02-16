@@ -345,7 +345,7 @@ def field(context, form_field, fieldformat=None):
     form_group_class = "form-group group_%s" % type(field.field).__name__.lower()
     form_group_size_class = " col-sm-12 col-md-12"
     field_class = "controls float-left %s" % type(field.field).__name__.lower()
-    placeholder = False
+    placeholder = ""
     show_label = True
 
     addon_after = ""
@@ -373,6 +373,8 @@ def field(context, form_field, fieldformat=None):
         if x[0] == "^":
             form_group_class += " form-floating"
             field_class += " col-12"
+            if not placeholder:
+                placeholder = field.label
         elif x[0] == "-":
             form_group_class += " label-over-field"
             field_class += " col-12"

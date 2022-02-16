@@ -1,0 +1,22 @@
+{% extends 'template/schweb_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block indexhead %}
+        <table style="width: 100%;" border="1">
+                {% if user.is_authenticated %}
+                        <tr><td> login </td><td> 0 </td></tr>
+                  {% else %}
+                        <tr><td> login </td><td> 1 </td></tr>
+                {% endif %}
+                <tr><td> autologin </td><td> 1 </td></tr>
+                <tr><td> csrf_token </td><td> {%csrf_token%} </td></tr>
+                <tr><td> riot_elements </td><td> </td></tr>
+                <tr><td> gui_style </td><td> modern(toolbar(file(exit),clipboard)) </td></tr>
+                <tr><td> hybrid </td><td> 0 </td></tr>
+                <tr><td> title  </td><td> Wiki </td></tr>
+                <tr><td> start_page </td><td> None </td></tr>
+                <tr><td> plugins </td><td> None </td></tr>
+        </table>
+{% endblock %}
+

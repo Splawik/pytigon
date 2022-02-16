@@ -6,10 +6,10 @@
         text-overflow: ellipsis
         overflow: hidden
 
-    .form-group:not(.label-floating)
-        > label
-            max-height: 43px
-            margin-top: 15px
+    //.form-group:not(.label-floating)
+    //    > label
+    //        max-height: 43px
+    //        margin-top: 15px
 
     .form-control
         margin-bottom: 5px
@@ -22,12 +22,13 @@ form
             //display: block
 
 .form-group
-    padding-left: 0px
-    padding-right: 0px
+    //padding-left: 0px
+    //padding-right: 0px
     //margin-top: -8px
     label
         font-style: italic
         font-size: 0.7rem
+        left: auto
         //line-height: normal
         //line-height: 1
         //padding-left: 15px
@@ -62,35 +63,35 @@ form
     width: 100%
 
 
-div.form-group.label-floating
-    margin-top: 0.5rem
-    position: relative
-    span.invalid-feedback
-        display: block
-        position: absolute
-        bottom: 6px
-        left: 30px
-        background: yellow
-        padding: 0px 10px
+// div.form-group.label-floating
+//    margin-top: 0.5rem
+//    position: relative
+//    span.invalid-feedback
+//        display: block
+//        position: absolute
+//        bottom: 6px
+//        left: 30px
+//        background: yellow
+//        padding: 0px 10px
+//
+//    label
+//        position: absolute
+//        left: 0px
+//
+//    label.form-check-label
+//        position: relative
+//
+//    div.checkbox
+//        label
+//            position: relative
+//            white-space: nowrap
 
-    label
-        position: absolute
-        left: 0px
 
-    label.form-check-label
-        position: relative
+//div.row > div > div.form-group > label.control-label
+//    margin-left: -15px
 
-    div.checkbox
-        label
-            position: relative
-            white-space: nowrap
-
-
-div.row > div > div.form-group > label.control-label
-    margin-left: -15px
-
-div.radio input
-    margin-top: 3px
+//div.radio input
+//    margin-top: 3px
 
 
 //.has-success input.form-control:not(:focus), .has-success textarea.form-control:not(:focus)
@@ -183,13 +184,9 @@ select.form-control
         height: 100%
 
 
-div.modal-header button.maximize, div.modal-header button.minimize 
+div.modal-header .maximize, div.modal-header .minimize  
     position: absolute
-    right: 45px
-    background: transparent
-    padding: 15px
-    margin-top: -15px
-
+    right: 50px
 
 div.v-autosize div.modal-body
     max-height: calc( 100vh - 10rem)

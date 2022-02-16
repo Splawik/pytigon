@@ -1,0 +1,18 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}
+{% endblock %}
+{% block list_page_header %}
+        <h3>
+        Plots
+        </h3>
+{% endblock %}
+{% block list_page %}
+        <sch-plotly width="800px" height="600px" plotly-name="test"></sch-plotly>
+        <p>
+                <sch-plotly-status></sch-plotly-status>
+        </p>
+{% endblock %}
+

@@ -24,7 +24,7 @@
                         <button class="btn {{btn_size}} btn-outline-primary" data-toggle="dropdown" data-bs-toggle="dropdown">
                                 {% icon "fa-bars fa-lg" %}
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-menu dropdown-menu-lg-end">
                                 {% for pos in actions2 %}
                                         <a test="True" href="{{pos.url|safe}}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}>
                                                 {{pos.title}}

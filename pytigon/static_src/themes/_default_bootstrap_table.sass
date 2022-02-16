@@ -1,7 +1,12 @@
 /* bootstrap-table */
 
-.bootstrap-table
+.bootstrap-table .columns
     font-size: small
+    button.btn:not(:hover)
+        background: transparent
+    a.btn:not(:hover)
+        background: transparent
+
 
 .tabsort_panel, .table_panel, .subform_content
     width: 100%
@@ -63,6 +68,13 @@
         .btn-danger
             color: #600040
 
+        a
+            font-size: small
+        
+        button
+            font-size: small
+
+
     div.td_action .btn:not(:hover) 
         background-color: transparent
 
@@ -74,6 +86,12 @@
         white-space:nowrap
         width: 100%
         height: 100%
+
+        a
+            font-size: small
+        
+        button
+            font-size: small
 
     tr:not(:hover) div.td_information * 
         opacity: 0.66

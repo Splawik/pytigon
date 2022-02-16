@@ -12,7 +12,7 @@
     % else:
         % if field.field.widget.input_type == 'select2':
             <div class="ajax-region get_row row {{form_group_size_class}}" data-region='get_row'>
-        % if field.field.widget.input_type == 'todo-remove-checkbox':            
+        % if field.field.widget.input_type == 'todo-remove-checkbox':      
             % bootstrap_field field layout='' form_group_class=form_group_class field_class=field_class placeholder=placeholder show_label=False addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
         % else:
             % if 'form-floating' in form_group_class:
@@ -22,7 +22,10 @@
                 % else:
                     % bootstrap_field field layout='floating' wrapper_class=form_group_class label_class=label_class horizontal_field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
             % else:
-                % bootstrap_field field layout='horizontal' wrapper_class=form_group_class label_class=label_class horizontal_field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
+                % if 'CheckInput' in field.field.widget|class_name:
+                    % bootstrap_field field layout='horizontal' wrapper_class=form_group_class label_class=label_class horizontal_field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
+                % else:
+                    % bootstrap_field field layout='horizontal' wrapper_class=form_group_class label_class=label_class horizontal_field_class=field_class placeholder=placeholder show_label=show_label addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success'
         % if field.field.widget.input_type == 'select2':
             </div>
 % else:

@@ -53,7 +53,14 @@ window.register_mount_fun = register_mount_fun
 def mount_html(dest_elem, data_or_html, link=None):
     global MOUNT_INIT_FUN
 
-    if getattr(dest_elem, "onloadeddata") and dest_elem.onloadeddata:
+    if not dest_elem:
+        return
+        
+    if (
+        hasattr(dest_elem, "onloadeddata")
+        and getattr(dest_elem, "onloadeddata")
+        and dest_elem.onloadeddata
+    ):
         evt = document.createEvent("HTMLEvents")
         evt.initEvent("loadeddata", False, True)
         evt.data = data_or_html
@@ -96,7 +103,7 @@ def mount_html(dest_elem, data_or_html, link=None):
 window.mount_html = mount_html
 
 
-#def datetime_init(dest_elem):
+# def datetime_init(dest_elem):
 #    format = {
 #        "singleDatePicker": True,
 #        "showDropdowns": True,
@@ -123,7 +130,7 @@ window.mount_html = mount_html
 #    d = jQuery(dest_elem).find("div.group_datetimefield input")
 #    d.daterangepicker(format)
 
-#register_mount_fun(datetime_init)
+# register_mount_fun(datetime_init)
 
 
 def selectpicker_init(dest_elem):
@@ -175,30 +182,30 @@ def moveelement_init(dest_elem):
 register_mount_fun(moveelement_init)
 
 
-def label_floating_init(dest_elem):
-    def _on_blur(self, e):
-        if self.tagName.lower() == "input":
-            if e["type"] == "focus" or self.value.length > 0:
-                test = True
-            else:
-                test = False
-        else:
-            test = True
-        jQuery(self).parents(".form-group").toggleClass("focused", test)
+#def label_floating_init(dest_elem):
+#    def _on_blur(self, e):
+#        if self.tagName.lower() == "input":
+#            if e["type"] == "focus" or self.value.length > 0:
+#                test = True
+#            else:
+#                test = False
+#        else:
+#            test = True
+#        jQuery(self).parents(".form-group").toggleClass("focused", test)
+#
+#    jQuery(dest_elem).find(".label-floating .form-control").on(
+#        "focus blur", _on_blur
+#    ).trigger("blur")
+#
+#    def _on_blur2(self, e):
+#        jQuery(self).parents(".form-group").toggleClass("focused", True)
+#
+#    jQuery(dest_elem).find(".label-floating .form-control-file").on(
+#        "focus blur", _on_blur2
+#    ).trigger("blur")
 
-    jQuery(dest_elem).find(".label-floating .form-control").on(
-        "focus blur", _on_blur
-    ).trigger("blur")
 
-    def _on_blur2(self, e):
-        jQuery(self).parents(".form-group").toggleClass("focused", True)
-
-    jQuery(dest_elem).find(".label-floating .form-control-file").on(
-        "focus blur", _on_blur2
-    ).trigger("blur")
-
-
-register_mount_fun(label_floating_init)
+#register_mount_fun(label_floating_init)
 
 
 def select2_init(dest_elem):

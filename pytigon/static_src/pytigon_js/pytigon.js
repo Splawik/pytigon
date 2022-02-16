@@ -5,8 +5,8 @@ _CANCEL = gettext("Cancel");
 _CLOSE = gettext("Close");
 _COPY_TO_CLIP = gettext("Copy to clipboard");
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
-MODAL_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn btn-light\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame\" data-region='page' href='{href}'>\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
-MODAL_DELETE_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn btn-light\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\">\n                <span aria-hidden=\"true\">&times;</span>\n            </button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
+MODAL_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame\" data-region='page' href='{href}'>\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
+MODAL_DELETE_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
 EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
 INFO_FOOTER = _pymeth_replace.call(((_pymeth_replace.call(("\n<button type = \"button\" class =\"btn btn-info copy_to_clipboard\">Copy to clipboard</button>\n<button type = \"button\" class =\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Copy to clipboard", _COPY_TO_CLIP))), "Close", _CLOSE);
 DELETE_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
@@ -16,8 +16,8 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = _pymeth_replace.call((("\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-outline-secondary minimize' onclick='inline_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-raised ptig-btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
-INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <button type='button' class='btn btn-outline-secondary minimize' onclick='inline_minimize(this)' style='diplay:none;'> \n                    <span class='fa fa-window-minimize'></span> \n                </button> \n                <button type='button' class='btn btn-outline-secondary maximize' onclick='inline_maximize(this);return false;'> \n                    <span class='fa fa-window-maximize'></span> \n                </button> \n                <button type='button' class='close btn-raised ptig-btn-close' aria-label='Close'><span aria-hidden='true'>&times;</span></button>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
+INLINE_BASE = _pymeth_replace.call((("\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='diplay:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn btn-danger btn-lg btn-transparent ptig-btn-close' aria-label='Close'>\n                        <span class='fa fa-times'></span>\n                    </button>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='diplay:none;'> \n                    <span class='fa fa-window-minimize'></span> \n                </button> \n                <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                    <span class='fa fa-window-maximize'></span> \n                </button> \n                <button type='button' class='close btn-close ptig-btn-close' aria-label='Close'></button>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
 INLINE_EDIT = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
@@ -1123,7 +1123,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, label_floating_init, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
+var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1180,7 +1180,10 @@ window.register_mount_fun = register_mount_fun;
 mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
     var _on_remove, evt, fun, stub3_seq, stub4_itr;
     link = (link === undefined) ? null: link;
-    if (_pyfunc_truthy((_pyfunc_truthy(_pyfunc_getattr(dest_elem, "onloadeddata"))) && _pyfunc_truthy(dest_elem.onloadeddata))) {
+    if ((!_pyfunc_truthy(dest_elem))) {
+        return null;
+    }
+    if ((_pyfunc_hasattr(dest_elem, "onloadeddata") && (_pyfunc_truthy(_pyfunc_getattr(dest_elem, "onloadeddata"))) && _pyfunc_truthy(dest_elem.onloadeddata))) {
         evt = document.createEvent("HTMLEvents");
         evt.initEvent("loadeddata", false, true);
         evt.data = data_or_html;
@@ -1279,34 +1282,6 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 };
 
 register_mount_fun(moveelement_init);
-label_floating_init = function flx_label_floating_init (dest_elem) {
-    var _on_blur, _on_blur2;
-    _on_blur = function (e) {
-        var test;
-        if ((_pyfunc_op_equals(_pymeth_lower.call(this.tagName), "input"))) {
-            if ((_pyfunc_op_equals(e["type"], "focus") || (this.value.length > 0))) {
-                test = true;
-            } else {
-                test = false;
-            }
-        } else {
-            test = true;
-        }
-        (((jQuery(this).parents)(".form-group")).toggleClass)("focused", test);
-        return null;
-    };
-
-    ((((_pymeth_find.call(jQuery(dest_elem), ".label-floating .form-control")).on)("focus blur", _on_blur)).trigger)("blur");
-    _on_blur2 = function (e) {
-        (((jQuery(this).parents)(".form-group")).toggleClass)("focused", true);
-        return null;
-    };
-
-    ((((_pymeth_find.call(jQuery(dest_elem), ".label-floating .form-control-file")).on)("focus blur", _on_blur2)).trigger)("blur");
-    return null;
-};
-
-register_mount_fun(label_floating_init);
 select2_init = function flx_select2_init (dest_elem) {
     var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub11_seq, stub12_itr;
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({width: "calc(100% - 48px)", minimumInputLength: 0}));
@@ -1601,7 +1576,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, moveelement_init, label_floating_init, select2_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, moveelement_init, select2_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;

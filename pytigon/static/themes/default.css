@@ -91,8 +91,12 @@
         color: rgba(0, 0, 0, 0); }
 
 /* bootstrap-table */
-.bootstrap-table {
+.bootstrap-table .columns {
   font-size: small; }
+  .bootstrap-table .columns button.btn:not(:hover) {
+    background: transparent; }
+  .bootstrap-table .columns a.btn:not(:hover) {
+    background: transparent; }
 
 .tabsort_panel, .table_panel, .subform_content {
   width: 100%; }
@@ -130,6 +134,10 @@
       color: #006040; }
     .tabsort_panel div.td_action .btn-danger, .table_panel div.td_action .btn-danger, .subform_content div.td_action .btn-danger {
       color: #600040; }
+    .tabsort_panel div.td_action a, .table_panel div.td_action a, .subform_content div.td_action a {
+      font-size: small; }
+    .tabsort_panel div.td_action button, .table_panel div.td_action button, .subform_content div.td_action button {
+      font-size: small; }
   .tabsort_panel div.td_action .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .subform_content div.td_action .btn:not(:hover) {
     background-color: transparent; }
   .tabsort_panel tr:not(:hover) div.td_action .btn, .table_panel tr:not(:hover) div.td_action .btn, .subform_content tr:not(:hover) div.td_action .btn {
@@ -138,6 +146,10 @@
   .tabsort_panel .td_information, .table_panel .td_information, .subform_content .td_information {
     width: 100%;
     height: 100%; }
+    .tabsort_panel .td_information a, .table_panel .td_information a, .subform_content .td_information a {
+      font-size: small; }
+    .tabsort_panel .td_information button, .table_panel .td_information button, .subform_content .td_information button {
+      font-size: small; }
   .tabsort_panel tr:not(:hover) div.td_information *, .table_panel tr:not(:hover) div.td_information *, .subform_content tr:not(:hover) div.td_information * {
     opacity: 0.66;
     filter: alpha(opacity=66); }
@@ -195,10 +207,6 @@ div.tableframe {
   text-overflow: ellipsis;
   overflow: hidden; }
 
-.modal-body .form-group:not(.label-floating) > label {
-  max-height: 43px;
-  margin-top: 15px; }
-
 .modal-body .form-control {
   margin-bottom: 5px; }
 
@@ -206,18 +214,18 @@ form .row .row {
   margin-right: 0px;
   margin-left: 0px; }
 
-.form-group {
-  padding-left: 0px;
-  padding-right: 0px; }
-  .form-group label {
-    font-style: italic;
-    font-size: 0.7rem; }
-  .form-group textarea {
-    line-height: 1.5;
-    height: 8rem; }
-  .form-group div.checkbox label, .form-group div.abc-checkbox label {
-    padding-right: 10px;
-    padding-top: 4px; }
+.form-group label {
+  font-style: italic;
+  font-size: 0.7rem;
+  left: auto; }
+
+.form-group textarea {
+  line-height: 1.5;
+  height: 8rem; }
+
+.form-group div.checkbox label, .form-group div.abc-checkbox label {
+  padding-right: 10px;
+  padding-top: 4px; }
 
 .bootstrap-datetimepicker-widget {
   width: auto !important;
@@ -236,31 +244,6 @@ form .row .row {
 
 .form-vertical .form-control {
   width: 100%; }
-
-div.form-group.label-floating {
-  margin-top: 0.5rem;
-  position: relative; }
-  div.form-group.label-floating span.invalid-feedback {
-    display: block;
-    position: absolute;
-    bottom: 6px;
-    left: 30px;
-    background: yellow;
-    padding: 0px 10px; }
-  div.form-group.label-floating label {
-    position: absolute;
-    left: 0px; }
-  div.form-group.label-floating label.form-check-label {
-    position: relative; }
-  div.form-group.label-floating div.checkbox label {
-    position: relative;
-    white-space: nowrap; }
-
-div.row > div > div.form-group > label.control-label {
-  margin-left: -15px; }
-
-div.radio input {
-  margin-top: 3px; }
 
 body:not(.modal-open) .dark_background {
   position: fixed;
@@ -334,12 +317,9 @@ select.form-control {
   .modal-fullscreen .modal-content {
     height: 100%; }
 
-div.modal-header button.maximize, div.modal-header button.minimize {
+div.modal-header .maximize, div.modal-header .minimize {
   position: absolute;
-  right: 45px;
-  background: transparent;
-  padding: 15px;
-  margin-top: -15px; }
+  right: 50px; }
 
 div.v-autosize div.modal-body {
   max-height: calc( 100vh - 10rem);
@@ -424,11 +404,6 @@ form.table_filter label:not(.form-check-label)::after {
 
 form.table_filter label.nocolon::after {
   content: "" !important; }
-
-.form-inline div.form-group.label-floating {
-  margin-top: 1rem; }
-  .form-inline div.form-group.label-floating label {
-    white-space: nowrap; }
 
 div.tab-content .modal-dialog-inline {
   position: relative;
@@ -559,45 +534,12 @@ label.upload {
 .checkboxinput {
   margin-right: 10px; }
 
-.label-floating .form-group {
-  display: flex;
-  height: 55px; }
-
-.label-floating .control-label {
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 0.4;
-  pointer-events: none;
-  transform: translate3d(0px, 22px, 0) scale(1);
-  transform-origin: left top;
-  transition: 240ms;
-  top: -14px;
-  padding-left: 19px;
-  z-index: 1; }
-
-.label-floating.focused .control-label {
-  opacity: 1;
-  transform: scale(0.75); }
-
-.label-floating.focused .form-control::-webkit-input-placeholder {
-  color: #bbb; }
-
-.label-floating .form-control {
-  align-self: flex-end; }
-
-.label-floating .form-control::-webkit-input-placeholder {
-  color: transparent;
-  transition: 240ms; }
-
-.label-floating .form-control:focus::-webkit-input-placeholder {
-  transition: none; }
-
-form.form-inline .label-floating label.control-label {
-  position: absolute; }
-
 .btn-file {
   cursor: pointer;
   cursor: hand; }
+
+button.btn-transparent:not(:hover), a.btn-transparent:not(:hover) {
+  background: transparent !important; }
 
 div.calendar-table td.today:not(.active) {
   background: #ffb; }
