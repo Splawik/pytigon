@@ -1,0 +1,40 @@
+{% extends 'template/base_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'system/require.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+        {% css_link 'schportal/css/portal.css' %}
+{% endblock %}
+{% block body_footer_scripts %}
+        {{block.super}}
+        {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schportal/components/timer_init.js' %}
+        {% component 'schcomponents/components/ptig-time.js' %}
+        {% component 'schcomponents/components/ptig-webrtc.js' %}
+        {% component '_schwiki/components/insert_object.js' %}
+        {% component 'schportal/components/teleconference.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+{% endblock %}
+{% block component_init %}
+                var initial_state = { username: "",theme: "",time_str: "" };
+                GLOBAL_BUS.set_state(initial_state);
+                var component_init = [ "ptig-plotly.js", "timer_init.js", "ptig-time.js", "ptig-webrtc.js", "insert_object.js", "teleconference.js", "ptig-d3.js", "ptig-codeeditor.js",  ];
+{% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+{% endblock %}
+{% block extrahead %}
+        {% if standard_web_browser %}
+                {% css_link 'themes/wiki.css' %}
+                {% css_link 'vanillajs_plugins/pygments/manni.css' %}
+                {% css_link '_schwiki/css/wiki_editor.css' %}
+        {% endif %}
+        {{ block.super }}
+{% endblock %}
+

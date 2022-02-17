@@ -358,7 +358,7 @@
         .data-click-to-select="true"
         .data-mobile-responsive="true"
     % else:
-        .class="tabsort table table-hover table-sm table-striped {%if get %}table_get{% endif %}"
+        .class="tabsort table table-hover table-sm table-striped table-bordered {%if get %}table_get{% endif %}"
 
 %% row_edit_header
     % if form:

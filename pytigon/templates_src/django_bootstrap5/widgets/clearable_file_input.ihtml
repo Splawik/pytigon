@@ -1,0 +1,15 @@
+% load exsyntax
+
+
+% if is_initial:
+    {{ initial_text }}:
+    a href={{ widget.value.url }}...{{ widget.value }}
+    % if not widget.required:
+        input type=checkbox,,,name={{ checkbox_name }},,,id={{ checkbox_id }}
+        label for={{ checkbox_id }}...{{ clear_checkbox_label }}
+    {{ input_text }}:
+label class=btn btn-primary btn-file nocolon upload
+    input style=display:none,,,onchange=img_field(this);,,,type={{ widget.type }},,,name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}
+    % if widget.value:
+        img class=img,,,src=data:image/jpeg;base64,{{widget.value}}
+    {% icon "fa-upload fa-lg" %}

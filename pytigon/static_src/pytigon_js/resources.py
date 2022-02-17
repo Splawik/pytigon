@@ -102,7 +102,7 @@ INLINE_BASE = """
                     <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
                         <span class='fa fa-window-maximize'></span> 
                     </button> 
-                    <button type='button' class='close btn btn-danger btn-lg btn-transparent ptig-btn-close' aria-label='Close'>
+                    <button type='button' class='close btn btn-light btn-lg btn-transparent shadow-none ptig-btn-close' aria-label='Close'>
                         <span class='fa fa-times'></span>
                     </button>
                 </div>
@@ -133,7 +133,7 @@ INLINE_DELETE_BASE = """
                 <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
                     <span class='fa fa-window-maximize'></span> 
                 </button> 
-                <button type='button' class='close btn-close ptig-btn-close' aria-label='Close'></button>
+                <button type='button' class='close btn-close btn-lg shadow-none ptig-btn-close' aria-label='Close'></button>
             </div>
             <div class='modal-body'>
                 <div class='dialog-data ajax-frame' data-region='error'></div>
