@@ -2135,7 +2135,7 @@ _get_scrolled_parent = function flx__get_scrolled_parent (node) {
 };
 
 _on_inline = function flx__on_inline (target_element, data_element, url, param, event, template_name) {
-    var bottom, child, content, dialog, dialog_slot, dialog_slot2, dy, height, inline_position, on_hidden, plug, rect1, rect2, scroll_frame, sy, top, top2, viewportOffset;
+    var _on_click, bottom, btn, child, content, dialog, dialog_slot, dialog_slot2, dy, height, inline_position, on_hidden, plug, rect1, rect2, scroll_frame, sy, top, top2, txt, viewportOffset;
     inline_position = target_element.getAttribute("data-inline-position");
     if ((_pyfunc_truthy(inline_position) && (_pyfunc_truthy(_pymeth_endswith.call(((_pymeth_split.call(inline_position, ":")[0])), "tr"))))) {
         dialog_slot = document.createElement("tr");
@@ -2204,8 +2204,26 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
                         scroll_frame.scrollTop = _pyfunc_op_add(_pyfunc_int(sy), (rect1.top - rect2.top));
                     }
                 } else {
-                    scroll_frame.scrollTop = _pyfunc_op_add(_pyfunc_int(sy), (y1 - y2));
+                    scroll_frame.scrollTop = _pyfunc_op_add(_pyfunc_int(sy), (rect1.top - rect2.top));
                 }
+            }
+        }
+    }
+    if (_pyfunc_op_contains("INFO", template_name)) {
+        txt = dialog_slot.querySelector("textarea.copy_to_clipboard");
+        btn = dialog_slot.querySelector("button.copy_to_clipboard");
+        if (_pyfunc_truthy(btn)) {
+            if ((_pyfunc_truthy(txt) && _pyfunc_truthy(txt.value))) {
+                btn.style.display = "block";
+                _on_click = (function flx__on_click () {
+                    txt.select();
+                    document.execCommand("copy");
+                    return null;
+                }).bind(this);
+
+                btn.addEventListener("click", _on_click);
+            } else {
+                btn.style.display = "none";
             }
         }
     }

@@ -117,13 +117,15 @@
     background-color: rgba(0, 0, 0, 0); }
   .tabsort_panel table.table-striped tbody tr:hover, .table_panel table.table-striped tbody tr:hover, .subform_content table.table-striped tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.05); }
-  .tabsort_panel .td_information .btn, .tabsort_panel .td_action .btn, .tabsort_panel .dropdown .btn, .tabsort_panel .columns .btn, .tabsort_panel .list_content_header .btn, .tabsort_panel th .btn, .table_panel .td_information .btn, .table_panel .td_action .btn, .table_panel .dropdown .btn, .table_panel .columns .btn, .table_panel .list_content_header .btn, .table_panel th .btn, .subform_content .td_information .btn, .subform_content .td_action .btn, .subform_content .dropdown .btn, .subform_content .columns .btn, .subform_content .list_content_header .btn, .subform_content th .btn {
+  .tabsort_panel .td_information .btn, .tabsort_panel .td_action .btn, .tabsort_panel .columns .btn, .table_panel .td_information .btn, .table_panel .td_action .btn, .table_panel .columns .btn, .subform_content .td_information .btn, .subform_content .td_action .btn, .subform_content .columns .btn {
     box-shadow: none !important;
     border: none !important;
     text-transform: none;
     padding: 0.5rem;
     color: black; }
-  .tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .tabsort_panel .list_content_header .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .table_panel .list_content_header .btn:not(:hover), .subform_content div.td_action .btn:not(:hover), .subform_content div.td_information .btn:not(:hover), .subform_content .list_content_header .btn:not(:hover) {
+  .tabsort_panel .dropdown .btn, .tabsort_panel .tree-id .btn, .table_panel .dropdown .btn, .table_panel .tree-id .btn, .subform_content .dropdown .btn, .subform_content .tree-id .btn {
+    font-size: small; }
+  .tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .subform_content div.td_action .btn:not(:hover), .subform_content div.td_information .btn:not(:hover) {
     background-color: transparent; }
   .tabsort_panel div.td_action, .table_panel div.td_action, .subform_content div.td_action {
     box-shadow: none;
@@ -614,6 +616,10 @@ div.subform_content tr:hover {
 
 .leftaligncheckbox .booleanfield {
   margin-left: 0 !important; }
+
+.form-group div.controls ul {
+  list-style-type: none;
+  padding-left: 0; }
 
 .txt3d {
   font-weight: 900;

@@ -862,3 +862,15 @@ def _import_var(obj):
 def _json_dumps(obj):
     ret = json_dumps(obj)
     return ret
+
+@register.filter(name="only_items_containing")
+def only_items_containing(select_field, mask):
+    """Remove frem select field items not in line with mask"""
+    if mask:
+        to_delete = []
+        for item in select_field.field.widget.choices:
+            if not mask in item[0]:
+                to_delete.append(item)
+        for item in to_delete:
+            select_field.field.widget.choices.remove(item)
+    return ""

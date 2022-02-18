@@ -1089,13 +1089,13 @@ class DocHead(JSONModel):
             else:
                 return True
 
-    def can_change(self):
+    def can_change(self, user):
         return self._check_perm(user, "change")
 
-    def can_delete(self):
+    def can_delete(self, user):
         return self._check_perm(user, "delete")
 
-    def can_view(self):
+    def can_view(self, user):
         return self._check_perm(user, "view")
 
     @staticmethod

@@ -162,12 +162,11 @@ def init_user_profiles():
             if created:
                 Profile.objects.create(user=instance)
 
-        @receiver(post_save, sender=get_user_model())
-        def save_user_profile(sender, instance, **kwargs):
             if hasattr(instance, "profile"):
                 instance.profile.save()
             else:
-                Profile.objects.create(user=instance)
+                if not created:
+                    Profile.objects.create(user=instance)
 
         class UserWithProfileInline(admin.StackedInline):
             model = Profile
@@ -176,6 +175,11 @@ def init_user_profiles():
 
         class UserAdmin(BaseUserAdmin):
             inlines = (UserWithProfileInline,)
+
+            def get_inline_instances(self, request, obj=None):
+                if not obj:
+                    return list()
+                return super(UserAdmin, self).get_inline_instances(request, obj)
 
         admin.site.unregister(get_user_model())
         admin.site.register(get_user_model(), UserAdmin)

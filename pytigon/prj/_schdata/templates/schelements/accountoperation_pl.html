@@ -1,0 +1,69 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New account operation" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Date</th>
+        <th>Description</th>
+        <th>Payment</th>
+        <th>Account state</th>
+        <th>Sign</th>
+        <th>
+        Amount
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.date}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.payment}}</td>
+        <td>{{object.account_state}}</td>
+        <td>{{object.sign}}</td>
+        <td>
+        {{object.amount}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                parent,description,payment,account_state
+        {% endform %}
+        {% comment %}
+                <div class="ajax-region" data-region="get_row">
+                        <div class="row">
+                                {% get_table_row form.account_state search_fields="parent__name__icontains" %}
+                        </div>
+                </div>
+        {% endcomment %}
+        {% form %}
+                sign,amount
+        {% endform %}
+{% endblock %}
+

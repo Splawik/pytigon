@@ -163,7 +163,7 @@
                                     div class=collapse navbar-collapse,,,id=navbar_setup
                                         ul class=navbar-nav mr-auto
                                             li class=nav-item active
-                                                a class=nav-link,,,href=#,,,data-toggle=modal,,,data-bs-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                                                a class=nav-link,,,href=#,,,data-toggle=modal,,,data-bs-toggle=modal,,,data-target=#change_passwd,,,data-bs-target=#change_passwd..._(Change password)
                                             % if user.is_superuser:
                                                 li class=nav-item
                                                     a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)

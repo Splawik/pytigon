@@ -280,7 +280,7 @@ def list_action(
             icon_name,
             target,
             "data-role='button'",
-            "btn btn-outline-secondary no_close no_cancel",
+            "btn btn-light shadow-none no_close no_cancel",
             url if url else "{tp}action/%s/" % action,
         )
     else:
@@ -291,7 +291,7 @@ def list_action(
             icon_name,
             target,
             "data-role='button'",
-            "btn btn-outline-secondary no_ok no_cancel",
+            "btn btn-light shadow-none no_ok no_cancel",
             url if url else "{tp}action/%s/" % action,
         )
     return ret

@@ -6,7 +6,7 @@
                 <a class="navbar-brand txt3d" href="#">
                 {{prj_title}}
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar-ex1-collapse" aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar-ex1-collapse" data-bs-target="#navbar-ex1-collapse" aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon">
                         </span>
                 </button>
@@ -51,7 +51,7 @@
                                         {% if not autologin %}
                                                 <a class="dropdown-item system_menu" href="={{base_path}}schsys/do_logout/?schtml=1" title="Logout" target="_top">Logout</a>
                                         {% endif %}
-                                        <a class="dropdown-item" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#change_passwd">Change password</a>
+                                        <a class="dropdown-item" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#change_passwd" data-bs-target="#change_passwd">Change password</a>
                                         {% if user.is_superuser %}
                                                 <a class="dropdown-item system_menu" href="{{base_path}}schsetup/?schtml=1" title="Setup" target="_top">Setup</a>
                                         {% endif %}

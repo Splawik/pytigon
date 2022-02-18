@@ -358,7 +358,22 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
                     else:
                         scroll_frame.scrollTop = int(sy) + (rect1.top - rect2.top)
                 else:
-                    scroll_frame.scrollTop = int(sy) + (y1 - y2)
+                    scroll_frame.scrollTop = int(sy) + (rect1.top - rect2.top)
+    if "INFO" in template_name:
+        txt = dialog_slot.querySelector("textarea.copy_to_clipboard")
+        btn = dialog_slot.querySelector("button.copy_to_clipboard")
+        if btn:
+            if txt and txt.value:
+                btn.style.display = "block"
+
+                def _on_click():
+                    nonlocal txt
+                    txt.select()
+                    document.execCommand("copy")
+
+                btn.addEventListener("click", _on_click)
+            else:
+                btn.style.display = "none"
 
 
 def on_inline(target_element, data_element, new_url, param, event):

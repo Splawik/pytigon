@@ -104,7 +104,7 @@ if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_er
 stub9_context = (new DefineWebComponent("ptig-paste", false));
 comp = stub9_context.__enter__();
 try {
-    comp.options["template"] = '<a class=\"btn btn_size btn-outline-secondary\" title=\"Paste\" target=\"null\" data-region=\"table\" data-bind=\":onclick\">Paste</a>\n' +
+    comp.options["template"] = '<a class=\"btn btn_size btn-light shadow-none\" title=\"Paste\" target=\"null\" data-region=\"table\" data-bind=\":onclick\">Paste</a>\n' +
     '\n' +
     '';
     comp.options["attributes"] = ({href: null, onclick: null});

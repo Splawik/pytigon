@@ -7,7 +7,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary win-header" id="topmenu">
         a class=navbar-brand txt3d,,,href=#...{{prj_title}}
 
-        button class=navbar-toggler,,,type=button,,,data-toggle=collapse,,,data-bs-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
+        button class=navbar-toggler,,,type=button,,,data-toggle=collapse,,,data-bs-toggle=collapse,,,data-target=#navbar-ex1-collapse,,,data-bs-target=#navbar-ex1-collapse,,,aria-controls=navbar-ex1-collapse,,,aria-expanded=false,,,aria-label=Toggle navigation
             span class=navbar-toggler-icon
 
         <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
@@ -46,7 +46,7 @@
                 div class=dropdown-menu dropdown-menu-lg-end,,,aria-labelledby=navbarDropdownMenuLink
                     %if not autologin:
                         a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout),,,target=_top..._(Logout)
-                    a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-bs-toggle=modal,,,data-target=#change_passwd..._(Change password)
+                    a class=dropdown-item,,,href=#,,,data-toggle=modal,,,data-bs-toggle=modal,,,data-target=#change_passwd,,,data-bs-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
                         a class=dropdown-item system_menu,,,href={{base_path}}schsetup/?schtml=1,,,title=_(Setup),,,target=_top..._(Setup)
                     %% system_menu
