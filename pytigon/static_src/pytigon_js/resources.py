@@ -96,15 +96,17 @@ INLINE_BASE = """
             <div class='modal-content'>
                 <div class='modal-header'>
                     <h4 class='modal-title'>{title}</h4>
-                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='diplay:none;'> 
-                        <span class='fa fa-window-minimize'></span> 
-                    </button> 
-                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
-                        <span class='fa fa-window-maximize'></span> 
-                    </button> 
-                    <button type='button' class='close btn btn-light btn-lg btn-transparent shadow-none ptig-btn-close' aria-label='Close'>
-                        <span class='fa fa-times'></span>
-                    </button>
+                    <div>
+                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> 
+                            <span class='fa fa-window-minimize'></span> 
+                        </button> 
+                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
+                            <span class='fa fa-window-maximize'></span> 
+                        </button> 
+                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>
+                            <span class='fa fa-times'></span>
+                        </button>
+                    </div>
                 </div>
                 <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>
                     <div class='dialog-data ajax-frame' data-region='error'></div>
@@ -127,13 +129,15 @@ INLINE_DELETE_BASE = """
         <div class='modal-content'>
             <div class='modal-header'>
                 <h4 class='modal-title'>{title}</h4>
-                <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='diplay:none;'> 
-                    <span class='fa fa-window-minimize'></span> 
-                </button> 
-                <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
-                    <span class='fa fa-window-maximize'></span> 
-                </button> 
-                <button type='button' class='close btn-close btn-lg shadow-none ptig-btn-close' aria-label='Close'></button>
+                <div>
+                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> 
+                        <span class='fa fa-window-minimize'></span> 
+                    </button> 
+                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> 
+                        <span class='fa fa-window-maximize'></span> 
+                    </button> 
+                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>
+                </div>
             </div>
             <div class='modal-body'>
                 <div class='dialog-data ajax-frame' data-region='error'></div>

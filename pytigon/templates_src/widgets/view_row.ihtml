@@ -3,7 +3,7 @@
 %% action_widget_content
     % with standard_web_browser=True:
         % if standard_web_browser:
-            a href={{action.url|safe}},,,class={% block action_class %}popup_info btn {{btn_size}} btn-outline-info{% endblock %}{{action.tag_class}},,,title={{title2}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
+            a href={{action.url|safe}},,,class={% block action_class %}popup_info btn {{btn_size}} btn-info shadow-none{% endblock %}{{action.tag_class}},,,title={{title2}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
                 % if browser_type == 'mobile':
                     % if not action.icon_name:
                         {{action.title}}

@@ -55,7 +55,7 @@ def mount_html(dest_elem, data_or_html, link=None):
 
     if not dest_elem:
         return
-        
+
     if (
         hasattr(dest_elem, "onloadeddata")
         and getattr(dest_elem, "onloadeddata")
@@ -182,7 +182,7 @@ def moveelement_init(dest_elem):
 register_mount_fun(moveelement_init)
 
 
-#def label_floating_init(dest_elem):
+# def label_floating_init(dest_elem):
 #    def _on_blur(self, e):
 #        if self.tagName.lower() == "input":
 #            if e["type"] == "focus" or self.value.length > 0:
@@ -205,15 +205,15 @@ register_mount_fun(moveelement_init)
 #    ).trigger("blur")
 
 
-#register_mount_fun(label_floating_init)
+# register_mount_fun(label_floating_init)
 
 
 def select2_init(dest_elem):
     jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"width": "calc(100% - 48px)", "minimumInputLength": 0}
+        {"width": "calc(100% - 48px)", "minimumInputLength": 0, "theme": "bootstrap-5"}
     )
     jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-        {"width": "calc(100%)", "minimumInputLength": 0}
+        {"width": "calc(100%)", "minimumInputLength": 0, "theme": "bootstrap-5"}
     )
 
     def set_select2_value(sel2, id, text):

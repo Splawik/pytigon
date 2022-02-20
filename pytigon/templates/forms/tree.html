@@ -99,7 +99,7 @@
                 {% if standard_web_browser %}
                         {% with gtree=get|get_or_tree %}
                                 {% if object|model_has_children %}
-                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn btn-outline-primary" name="+">
+                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn btn-light shadow-none" name="+">
                                                 {% icon "fa-plus fa-lg" %}
                                         </a>
                                   {% else %}
@@ -117,7 +117,7 @@
                   {% else %}
                         {% with gtree=get|get_or_tree %}
                                 {% if object|model_has_children %}
-                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn btn-outline-primary" name="+">
+                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn btn-light shadow-none" name="+">
                                                 +
                                         </a>
                                   {% else %}

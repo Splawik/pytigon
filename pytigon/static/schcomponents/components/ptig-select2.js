@@ -25,7 +25,7 @@ try {
         elem = document.createElement("div");
         elem.innerHTML = TEMPLATE;
         select = elem.querySelector("select");
-        options = ({});
+        options = ({theme: "bootstrap-5"});
         graphql = component.querySelector("graphql");
         if (_pyfunc_truthy(graphql)) {
             query = graphql.innerHTML;

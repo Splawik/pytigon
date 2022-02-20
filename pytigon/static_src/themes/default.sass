@@ -13,6 +13,12 @@
     //margin-left: -8px
 //    margin-left: 9px
 
+body 
+    background-color: var(--bs-body-bg)
+    height: 100vh
+    overflow-x: hidden
+    overflow-y: auto
+
 div.table 
     margin-bottom: 0rem
 
@@ -105,7 +111,7 @@ a, button
     margin-left: 0px !important
 
 
-div.modal-body label:not(.form-check-label)::after
+div.modal-body label:not(.form-check-label):not(.upload)::after
     content: ":"
 
 //.checkbox label::after, .abc-checkbox label::after

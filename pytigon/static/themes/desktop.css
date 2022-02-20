@@ -40,7 +40,7 @@
     background-color: #aaa !important;
     border-color: #ddd transparent; }
   #tabs li.nav-item:nth-child(1) a.active {
-    background-color: #3F51B5 !important; }
+    background-color: var(--bs-primary) !important; }
   #tabs li.nav-item:nth-child(2) a.active {
     background-color: #FF9800 !important; }
   #tabs li.nav-item:nth-child(3) a.active {
@@ -70,7 +70,7 @@
       border: none; }
 
 #menu div.tab-tab:nth-child(1) {
-  background-color: #3F51B5 !important; }
+  background-color: var(--bs-primary) !important; }
 
 #menu div.tab-tab:nth-child(2) {
   background-color: #FF9800 !important; }
@@ -103,7 +103,7 @@
     margin-left: 2px !important;
     margin-right: 2px !important; }
     #tabs2 > li > a {
-      background-color: rgba(250, 250, 250, 0.6) !important;
+      background-color: transparent !important;
       margin-bottom: 0px !important;
       text-overflow: ellipsis;
       max-width: 120px;
@@ -111,7 +111,6 @@
       font-size: small; }
 
 #tabs2_content {
-  background-color: #fff;
   padding-top: 10 px; }
 
 body {

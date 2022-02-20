@@ -219,7 +219,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.02.14 20:50:39"
+GEN_TIME = "2022.02.20 08:02:10"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -229,6 +229,9 @@ for key, value in os.environ.items():
             globals()[key2] = type(globals()[key2])(value)
         else:
             globals()[key2] = value
+
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+#BOOTSTRAP_TEMPLATE = "bootswatch/united"
 
 PWA_APP_NAME = 'SCDevTools'
 PWA_APP_DESCRIPTION = "Pytigon developer tools"
@@ -251,7 +254,7 @@ PWA_APP_ICONS = [
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': PWA_APP_ROOT_URL+'static/images/pytigon.png',
+            'src': PWA_APP_ROOT_URL+'static/images/pytigon.png',
         'sizes': '160x160'
     }
 ]

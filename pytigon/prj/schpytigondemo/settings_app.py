@@ -215,7 +215,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.02.16 21:25:57"
+GEN_TIME = "2022.02.19 20:10:01"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -225,6 +225,16 @@ for key, value in os.environ.items():
             globals()[key2] = type(globals()[key2])(value)
         else:
             globals()[key2] = value
+
+#BOOTSTRAP_TEMPLATE = "bootswatch/zephyr"
+#BOOTSTRAP_TEMPLATE = "bootswatch/minty"
+#BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
+#BOOTSTRAP_TEMPLATE = "bootswatch/pulse"
+#BOOTSTRAP_TEMPLATE = "bootswatch/journal"
+#BOOTSTRAP_TEMPLATE = "bootswatch/united"
+#BOOTSTRAP_TEMPLATE = "bootswatch/cosmo"
+#BOOTSTRAP_TEMPLATE = "bootswatch/litera"
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 
 XMLRPC_PORT = 7080
 #PYODIDE = True

@@ -17,7 +17,7 @@
 
     % if actions2:
         div class=btn-group dropdown
-            button class=btn {{btn_size}} btn-outline-primary,,,data-toggle=dropdown,,,data-bs-toggle=dropdown
+            button class=btn {{btn_size}} btn-light shadow-none,,,data-toggle=dropdown,,,data-bs-toggle=dropdown
                 {% icon "fa-bars fa-lg" %}
             div class=dropdown-menu dropdown-menu-lg-end
                 % for pos in actions2:

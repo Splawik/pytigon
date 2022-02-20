@@ -4,12 +4,6 @@ html {
   overflow-y: auto;
   height: 100vh; }
 
-body {
-  background-color: #fff !important;
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto; }
-
 section.content {
   background-color: #fff;
   margin: 0px;
@@ -21,7 +15,7 @@ div.content {
 /* application structure */
 #menu {
   position: fixed;
-  width: 296px;
+  width: 18rem;
   z-index: 999;
   background-color: #1e282c;
   height: 100vh;
@@ -35,7 +29,7 @@ img.tablet_menu_icon, a.menu-href svg {
   vertical-align: middle; }
 
 #panel {
-  margin-left: 296px; }
+  margin-left: 18rem; }
 
 #menu:not(.show) + #panel {
   margin-left: 0px; }
@@ -49,7 +43,7 @@ img.tablet_menu_icon, a.menu-href svg {
 
 .logo {
   background-color: rgba(0, 0, 0, 0.1) !important;
-  height: 50px;
+  height: 3.2rem;
   font-size: 22px;
   padding: 6px;
   text-decoration: none !important;
@@ -68,7 +62,7 @@ img.tablet_menu_icon, a.menu-href svg {
   margin-bottom: 0;
   margin-left: 0px;
   border: none;
-  min-height: 50px;
+  min-height: 3.2rem;
   border-radius: 0; }
 
 header.main-header nav.navbar div.navbar-collapse {
@@ -101,12 +95,13 @@ header.main-header nav.navbar {
   padding: 0px !important; }
 
 .sidebar-toggle {
-  padding: 15px 20px;
   position: absolute;
-  width: 50px;
+  width: 3.2rem;
+  height: 3.2rem;
   margin: 0px;
   top: 0px;
-  z-index: 9999;
+  left: 0px;
+  z-index: 1000;
   background: none;
   border: none; }
 
@@ -122,11 +117,8 @@ header.main-header nav.navbar {
   background-color: transparent !important;
   white-space: nowrap; }
 
-.main-header a.active {
-  background-color: #fff !important; }
-
 .main-header div.navbar-collapse ul.nav li.nav-item a {
-  height: 50px;
+  height: 3.2rem;
   padding: 15px 20px;
   display: block;
   text-decoration: none !important; }
@@ -166,6 +158,10 @@ ul.sidebar-menu ul.treeview-menu {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
+
+.sidebar-menu a.logo {
+  padding-left: 3.2rem;
+  padding-top: 0.6rem; }
 
 a.logo span {
   top: -3px;

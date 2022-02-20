@@ -2,13 +2,6 @@
 
 % load exsyntax
 
-%% botstrap_css
-    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
-
-%% bootstrap_js
-    {% jscript_link 'bootstrap/js/bootstrap.bundle.min.js' %}
-
-
 %% js_app_init__out
     ===>
         function base_fragment_init() {

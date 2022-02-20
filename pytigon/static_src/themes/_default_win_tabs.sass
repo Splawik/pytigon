@@ -7,7 +7,7 @@
         position: relative
 
         a     
-            color: #000 
+            //color: #000 
             border: medium none
             box-shadow: none !important
             margin-bottom: -3px !important
@@ -15,6 +15,12 @@
             overflow: hidden
             text-overflow: ellipsis
             max-width: 10rem
+            color: #000 !important;
+        
+            &.active
+                color: var(--bs-body-color) !important;
+                background-color: var(--bs-body-bg) !important;
+
 
         button 
             position: absolute
@@ -31,7 +37,7 @@
                 margin-right: 0px
                 box-shadow: none 
                 border: none
-                color: black
+                color: var(--bs-body-color) !important;
 
         &.nav-item a.nav-link 
             //padding: 8px
@@ -46,4 +52,5 @@
             width: 25px
             overflow: hidden
             a
-                color: rgba(0, 0, 0, 0)
+                //color: rgba(0, 0, 0, 0)
+                color: var(--bs-body-color) !important;

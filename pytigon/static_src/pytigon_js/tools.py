@@ -753,7 +753,7 @@ def inline_maximize(elem):
 
     b_min = dialog.querySelector('button.minimize')
     b_max = dialog.querySelector('button.maximize')
-    b_min.style.display = "block"
+    b_min.style.display = "inline-block"
     b_max.style.display = "none"
 
 window.inline_maximize = inline_maximize
@@ -766,7 +766,7 @@ def inline_minimize(elem):
     b_min = dialog.querySelector('button.minimize')
     b_max = dialog.querySelector('button.maximize')
     b_min.style.display = "none"
-    b_max.style.display = "block"
+    b_max.style.display = "inline-block"
 
 window.inline_minimize = inline_minimize
 

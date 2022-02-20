@@ -270,15 +270,17 @@
                                                         a href=../../odf/list/,,,class=dropdown-item,,,target=_blank...=> ods
                                                         a href=../../pdf/list/,,,class=dropdown-item,,,target=_blank...=> pdf
                                                         a href={{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/,,,class=dropdown-item,,,target=popup_edit,,,title=_(Import data to table)...<= ods,xlsx,txt,csv
-                                        %% list_content_actions
+                                    %% list_content_actions
                                 % if is_paginated and table_type != 'datatable':
                                     div class=td col-sm-4 col-xs-7 text-right,,,align=right
 
                 % if standard_web_browser:
-                    div class=new_row
                     % if table_type == 'datatable' and not get:
                         button type=button,,,class=btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %},,,data-toggle=button,,,data-bs-toggle=button
                             {% icon "fa-times fa-lg" %}
+                
+            % if standard_web_browser:
+                div class=new_row
 
             % if standard_web_browser and standard_web_browser != 6:
                 % if table_type == 'datatable':

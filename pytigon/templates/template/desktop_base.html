@@ -22,7 +22,6 @@
                 {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
                 {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
                 {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
-                {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
                 {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
                 {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
                 {% jscript_link 'django_select2/django_select2.js' %}
@@ -122,18 +121,28 @@
                 {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
                 {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
                 {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
-                        {% comment %}
-                                {% css_link 'themes/select2-bootstrap.css' %}
-                        {% endcomment %}
                 {{ form.media.css }}
                 {% block botstrap_css %}
-                        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
-                        {% comment %}
-                                {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
-                        {% endcomment %}
+                        {% if settings.BOOTSTRAP_TEMPLATE %}
+                                {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
+                          {% else %}
+                                {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}
+                        {% endif %}
+                        {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
+                        {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
                 {% endblock %}
                 {% block theme_css_links %}
-                        {% css_link 'themes/select2-material.css' %}
+                        {% if 'materia' in settings.BOOTSTRAP_TEMPLATE %}
+                                <style >
+    span.select2-selection{
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: unset !important
+    }
+
+</style>
+                        {% endif %}
                 {% endblock %}
                 {% block theme_css_links_spec %}
                         {% css_link 'themes/default.css' %}
@@ -285,14 +294,14 @@
                 {% endif %}
         {% endifchanged %}
         {% if item_info.url|is_menu_checked:request.get_full_path %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-warning {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
                         {% if item_info.icon %}
                                 {% icon item_info.icon|append_str:" fa-lg" %}
                         {% endif %}
                         {{item_info.description}}
                 </a>
           {% else %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-outline-secondary {{btn_size}} btn-raised menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-light shadow-none {{btn_size}} menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
                         {% if item_info.icon %}
                                 {% if standard_web_browser %}
                                         {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
@@ -333,7 +342,7 @@
           {% else %}
                 <div class="tabbable win-content">
                         <div id="tab_tabs2">
-                                <ul class="nav nav-tabs win-header append-left" id="tabs2"></ul>
+                                <ul class="nav nav-tabs win-header append-left mb-2" id="tabs2"></ul>
                                 <div class="tab-content" id="tabs2_content"></div>
                         </div>
                 </div>

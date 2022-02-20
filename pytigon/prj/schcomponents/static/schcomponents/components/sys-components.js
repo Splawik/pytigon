@@ -3,28 +3,29 @@ stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {
     init = function flx_init (component) {
-        var _on_resize, client_type, obj1, obj1_off, obj1_on, obj2, obj2_off, obj2_on, sidebar_menu;
+        var _on_resize, client_type, obj1, obj1_off, obj1_on, obj2, obj2_off, obj2_on, sidebar_menu, width;
         _on_resize = (function flx__on_resize () {
             window.process_resize(document.body);
             return null;
         }).bind(this);
 
         client_type = component.getAttribute("type");
+        width = component.getAttribute("width");
         sidebar_menu = component.querySelector(".sidebar-menu");
         if ((_pyfunc_truthy(client_type) && _pyfunc_op_equals(client_type, "smartfon"))) {
             jQuery.sidebarMenu(sidebar_menu);
-            obj1_off = ({width: "256px"});
+            obj1_off = ({width: width});
             obj1_on = ({width: "0px"});
-            obj2_off = _pyfunc_create_dict("margin-left", "256px", "margin-right", "-256px");
+            obj2_off = _pyfunc_create_dict("margin-left", width, "margin-right", ("-" + width));
             obj2_on = _pyfunc_create_dict("margin-left", "0px", "margin-right", "0px");
             obj1 = jQuery("#menu");
             obj2 = jQuery("#panel");
             animate_combo(jQuery(".sidebar-toggle"), obj1, obj2, obj1_off, obj1_on, obj2_off, obj2_on, "fast", _on_resize);
         } else {
             jQuery.sidebarMenu(sidebar_menu);
-            obj1_off = ({width: "256px"});
+            obj1_off = ({width: width});
             obj1_on = ({width: "0px"});
-            obj2_off = _pyfunc_create_dict("margin-left", "256px");
+            obj2_off = _pyfunc_create_dict("margin-left", width);
             obj2_on = _pyfunc_create_dict("margin-left", "0px");
             obj1 = jQuery("#menu");
             obj2 = jQuery("#panel");

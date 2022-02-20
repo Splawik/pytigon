@@ -11,8 +11,8 @@
     //        max-height: 43px
     //        margin-top: 15px
 
-    .form-control
-        margin-bottom: 5px
+    //.form-control
+    //    margin-bottom: 5px
 
 form
     .row
@@ -25,7 +25,7 @@ form
     //padding-left: 0px
     //padding-right: 0px
     //margin-top: -8px
-    label
+    label, form-label
         font-style: italic
         font-size: 0.7rem
         left: auto
@@ -41,6 +41,15 @@ form
         label
             padding-right: 10px
             padding-top: 4px
+
+
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield
+    label
+        z-index: 1;
+        opacity: .65;
+        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+
+
 
 .bootstrap-datetimepicker-widget 
     width: auto !important
@@ -183,10 +192,6 @@ select.form-control
     .modal-content
         height: 100%
 
-
-div.modal-header .maximize, div.modal-header .minimize  
-    position: absolute
-    right: 50px
 
 div.v-autosize div.modal-body
     max-height: calc( 100vh - 10rem)

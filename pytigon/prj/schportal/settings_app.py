@@ -134,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.02.14 21:16:53"
+GEN_TIME = "2022.02.20 08:00:12"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -143,6 +143,9 @@ for key, value in os.environ.items():
             globals()[key2] = type(globals()[key2])(value)
         else:
             globals()[key2] = value
+
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+
 SEARCH_PATH = "/schwiki/%s/search/"
 
 if 'EMAIL_HOST_USER' in os.environ:
@@ -153,8 +156,11 @@ if 'EMAIL_HOST_PASSWORD' in os.environ:
 INSTALLED_APPS.append('allauth.socialaccount.providers.google')
 INSTALLED_APPS.append('allauth.socialaccount.providers.facebook')
 INSTALLED_APPS.append('allauth.socialaccount.providers.github')
+INSTALLED_APPS.append('allauth.socialaccount.providers.microsoft')
 INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
 INSTALLED_APPS.append('allauth.socialaccount.providers.okta')
+INSTALLED_APPS.append('allauth.socialaccount.providers.openid')
+INSTALLED_APPS.append('allauth.socialaccount.providers.windowslive')
 
 
 #EMAIL_HOST = 'smtp.gmail.com'
