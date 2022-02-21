@@ -1085,7 +1085,9 @@ class DocHead(JSONModel):
         if reg.access_fun:
             exec(reg.access_fun)
             if "check_user_perm" in locals():
-                check = locals()["check_user_perm"](self, user, perm)
+                return locals()["check_user_perm"](
+                    self, user, perm, self.doc_type_parent.name
+                )
             else:
                 return True
 

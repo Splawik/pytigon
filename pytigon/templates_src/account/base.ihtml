@@ -20,5 +20,9 @@
                     %% content
             div class=col
     %% body_desktop_cd
-
+    
 %% nav
+
+%% body_footer_scripts
+    
+%% page_footer

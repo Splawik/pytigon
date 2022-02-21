@@ -193,9 +193,9 @@ def _call(obj, methodName):
     if hasattr(obj, methodName):
         method = getattr(obj, methodName)
         if hasattr(obj, "__callArg"):
-            ret = method(*obj.__callArg)
+            param = obj.__callArg
             del obj.__callArg
-            return ret
+            return method(*param)
         return method()
     return ""
 
@@ -862,6 +862,7 @@ def _import_var(obj):
 def _json_dumps(obj):
     ret = json_dumps(obj)
     return ret
+
 
 @register.filter(name="only_items_containing")
 def only_items_containing(select_field, mask):
