@@ -344,7 +344,7 @@ def field(context, form_field, fieldformat=None):
     offset = ""
     form_group_class = "form-group group_%s" % type(field.field).__name__.lower()
     form_group_size_class = " col-sm-12 col-md-12"
-    field_class = "controls float-left mb-2 %s" % type(field.field).__name__.lower()
+    field_class = "controls float-left %s" % type(field.field).__name__.lower()
     placeholder = ""
     show_label = True
 
@@ -1215,3 +1215,62 @@ class TemplateNameNode(Node):
 @register.tag
 def show_template_name(parser, token):
     return TemplateNameNode(parser.template_name)
+
+
+class TreeNode(Node):
+    def __init__(self, nodelist, param):
+        self.nodelist = nodelist
+        self.tree = param
+
+    def __repr__(self):
+        return "<%s>" % self.__class__.__name__
+
+    def render(self, context):
+        if "tree_template" in context:
+            nodelist = context["tree_template"]
+        else:
+            nodelist = self.nodelist
+
+        tree = self.tree.resolve(context)
+
+        if type(tree) == list:
+            with context.push(
+                {
+                    "tree_element": "element_list",
+                    "element_list": tree,
+                    "tree_template": nodelist,
+                }
+            ):
+                return nodelist.render(context)
+        elif type(tree) == dict:
+            with context.push(
+                {
+                    "tree_element": "element",
+                    "element": tree,
+                    "tree_template": nodelist,
+                }
+            ):
+                return nodelist.render(context)
+        else:
+            with context.push(
+                {
+                    "tree_element": "object",
+                    "object": tree,
+                    "tree_template": nodelist,
+                }
+            ):
+                return nodelist.render(context)
+
+
+@register.tag("tree")
+def do_tree(parser, token):
+    """
+    {% tree treelist %}
+        html
+    {% endtree %}
+
+    """
+    parm = token.split_contents()
+    nodelist = parser.parse(("endtree"))
+    parser.delete_first_token()
+    return TreeNode(nodelist, parser.compile_filter(parm[1]))

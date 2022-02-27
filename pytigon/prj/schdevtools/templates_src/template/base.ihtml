@@ -25,20 +25,20 @@
     {{block.super}}
     
     {% component 'schdevtools/components/test.js' %}
-    {% component 'schcomponents/components/ptig-d3.js' %}
     {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-    {% component 'schcomponents/components/ptig-pivottable.js' %}
-    {% component 'schcomponents/components/ptig-plotly.js' %}
     {% component 'schcomponents/components/ptig-codeeditor.js' %}
-    {% component 'schcomponents/components/ptig-video.js' %}
     {% component 'schcomponents/components/ptig-leaflet.js' %}
+    {% component 'schcomponents/components/ptig-video.js' %}
+    {% component 'schcomponents/components/ptig-pivottable.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
+    {% component 'schcomponents/components/ptig-plotly.js' %}
     
     
 
 %% component_init
         .var initial_state = { username: "",theme: "" };
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "test.js", "ptig-d3.js", "ptig-spreadsheet.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-codeeditor.js", "ptig-video.js", "ptig-leaflet.js",  ];  
+        .var component_init = [ "test.js", "ptig-spreadsheet.js", "ptig-codeeditor.js", "ptig-leaflet.js", "ptig-video.js", "ptig-pivottable.js", "ptig-d3.js", "ptig-plotly.js",  ];  
 
 %% js_app_init
     .let db_struct = [ ["devparam", {"keyPath": "key"}] ];

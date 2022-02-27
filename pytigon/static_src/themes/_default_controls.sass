@@ -226,3 +226,17 @@ div.subform_content tr:hover
 .form-group div.controls ul 
     list-style-type: none
     padding-left: 0
+
+
+a.collapsed > i.colapsed-plus
+    display: inline-block
+
+a.collapsed > i.colapsed-minus
+    display: none
+
+a:not([class*="collapsed"]) > i.colapsed-plus
+    display: none
+
+a:not([class*="collapsed"]) > i.colapsed-minus
+    display: inline-block
+

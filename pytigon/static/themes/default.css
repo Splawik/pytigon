@@ -331,36 +331,35 @@ div.dialog-form div.container-fluid {
   padding-left: 0;
   padding-right: 0; }
 
-a.foreignkey_button {
-  position: absolute;
-  right: -30px;
-  top: -10px; }
-
 div.is-invalid .invalid-feedback {
   display: block; }
 
 /* Inline form */
+.modal-dialog-inline > div > div > .modal-header {
+  padding-bottom: 0.2rem;
+  padding-top: 0.2rem; }
+
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
   margin-right: 15px; }
 
 .form-inline .form-group .select2field {
-  width: 10rem; }
+  min-width: 10rem; }
 
 .form-inline .form-group .select2 {
   min-width: 10rem; }
 
 .form-inline .form-group .choicefield {
-  width: 10rem; }
+  min-width: 10rem; }
 
 .form-inline .form-group .modelselect2field {
-  width: 10rem; }
+  min-width: 10rem; }
 
 .form-inline .form-group .abc-checkbox {
   padding-left: 17px; }
 
 .form-inline .form-group .datefield input {
-  width: 120px; }
+  min-width: 120px; }
 
 .form-inline .form-group select.form-control {
   padding-top: 2px;
@@ -626,6 +625,18 @@ div.subform_content tr:hover {
   list-style-type: none;
   padding-left: 0; }
 
+a.collapsed > i.colapsed-plus {
+  display: inline-block; }
+
+a.collapsed > i.colapsed-minus {
+  display: none; }
+
+a:not([class*="collapsed"]) > i.colapsed-plus {
+  display: none; }
+
+a:not([class*="collapsed"]) > i.colapsed-minus {
+  display: inline-block; }
+
 .txt3d {
   font-weight: 900;
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6), 4px 4px 5px rgba(0, 0, 0, 0.8); }
@@ -789,16 +800,6 @@ table.layout0 tr td {
   position: absolute;
   right: 5px;
   z-index: 100; }
-
-.wiki_collapse .wiki_view_actions a {
-  position: absolute;
-  top: -40px; }
-
-.wiki_collapse .wiki_view_actions a:nth-child(2) {
-  left: 35px; }
-
-.wiki_collapse .wiki_view_actions a:nth-child(3) {
-  left: 70px; }
 
 .modal-max {
   max-width: 100% !important; }

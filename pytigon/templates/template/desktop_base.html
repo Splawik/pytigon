@@ -193,7 +193,7 @@
 {% endblock %}
 {% block topmenu %}
         <li class="nav-item topmenu">
-                <a class="nav-link first_pos {% if forloop.first %}active{% endif %}" data-toggle="tab" data-bs-toggle="tab" data-bs-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
+                <a class="nav-link first_pos {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
                         {% if app_info.icon_exists %}
                                 {% icon app_info.get_icon|append_str:" tablet_meni_icon" width=22 %}
                         {% endif %}
@@ -207,7 +207,7 @@
                 {% block drop_down_blocks %}{% endblock %}
                 {% if user.is_authenticated %}
                         <li class="nav-item dropdown user user-menu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                         {% icon "fa-user fa-lg" %}
                                         <span class="hidden-sm-down">{{user.username}}</span>
                                 </a>
@@ -246,13 +246,13 @@
                                                 </table>
                                         </div>
                                         <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-                                                <button class="navbar-toggler" type=""button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar_setup">
+                                                <button class="navbar-toggler" type=""button" data-bs-toggle="collapse" data-bs-target="#navbar_setup">
                                                         <span class="navbar-toggler-icon"></span>
                                                 </button>
                                                 <div class="collapse navbar-collapse" id="navbar_setup">
                                                         <ul class="navbar-nav mr-auto">
                                                                 <li class="nav-item active">
-                                                                        <a class="nav-link" href="#" data-toggle="modal" data-bs-toggle="collapse" data-target="#change_passwd" data-bs-target="#change_passwd">Change password</a>
+                                                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
                                                                 </li>
                                                                 {% if user.is_superuser %}
                                                                         <li class="nav-item">
@@ -419,7 +419,7 @@
                 {% if form.errors %}
                         <meta name="RETURN" content="$$RETURN_RELOAD" />
                         <div class="alert alert-danger alert-dismissable alert-link">
-                                <button class="close" type="button" data-dismiss="alert" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
+                                <button class="close" type="button" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
                                 <ul class="errorlist">
                                         {% if form.non_field_errors %}
                                                 <li>{{ form.non_field_errors }}</li>

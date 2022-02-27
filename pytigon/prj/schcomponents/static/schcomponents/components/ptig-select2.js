@@ -1,7 +1,7 @@
 var BASE_PATH, TAG, TEMPLATE, comp, constructor, init, stub1_context, stub2_err;
 import {JSONPath} from '../../vanillajs_plugins/jsonpath_plus/index-es.min.js';;
 TAG = "ptig-select2";
-TEMPLATE = '        <div class=\"ajax-region\" style=\"position:relative;\" data-bind=\"style-padding-right:padding;style-width:width\" data-region=\"get_row\">\n' +
+TEMPLATE = '        <div class=\"ajax-region input-group flex-nowrap\" style=\"position:relative;\" data-bind=\"style-padding-right:padding;style-width:width\" data-region=\"get_row\">\n' +
     '                <select style=\"width:100%;\" data-bind=\":multiple\"></select>\n' +
     '                <a type=\"button\" target=\"popup_info\" name=\"get_tbl_value\" class=\"btn btn-secondary btn-flat foreignkey_button get_tbl_value\" data-inline-position=\"^div.ajax-region:append\" style=\"position:absolute;right:2px\" data-bind=\"style-visibility:visibility;:href\">\n' +
     '                        <span class=\"fa-table fa\"></span>\n' +

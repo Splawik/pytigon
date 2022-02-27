@@ -546,6 +546,8 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         data_element.querySelector("section.body-body"),
         False,
     )
+    window.init_start_wiki_page()
+    window.activate_menu()
 
 
 def refresh_frame(
@@ -622,6 +624,27 @@ def only_get(target_element, data_element, url, param, event):
     pass
 
 
+def on_message(target_element, data_element, new_url, param, event):
+    options = {
+        "icon": "success",
+        "title": "Information",
+        "text": "success",
+    }
+
+    if target_element.hasAttribute("data-icon"):
+        options["icon"] = target_element.getAttribute("data-icon")
+    if target_element.hasAttribute("data-title"):
+        options["title"] = target_element.getAttribute("data-title")
+    if target_element.hasAttribute("data-text"):
+        options["text"] = target_element.getAttribute("data-text")
+    if target_element.hasAttribute("data-footer"):
+        options["footer"] = target_element.getAttribute("data-footer")
+    if target_element.hasAttribute("data-timer"):
+        options["timer"] = target_element.getAttribute("data-timer")
+
+    Swal.fire(options)
+
+
 ## target:
 ## _blank: new browser window (pdf) - default action
 ## _parent: new app tab
@@ -662,6 +685,7 @@ EVENT_CLICK_TAB = [
     ("refresh_frame", "*", True, False, refresh_frame),
     ("refresh_page", "*", True, False, refresh_page),
     ("refresh_app", "*", False, False, refresh_app),
+    ("message", "*", False, False, on_message),
     ("null", "*", False, False, only_get),
 ]
 

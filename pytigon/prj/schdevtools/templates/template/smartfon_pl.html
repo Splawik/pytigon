@@ -9,7 +9,7 @@
 {% endblock %}
 {% block system_menu %}
         {% if env.PWA %}
-                <a class="dropdown-item system_menu" target="null" data-toggle="modal" data-target="#exampleModal" title="Notifications">
+                <a class="dropdown-item system_menu" target="null" data-bs-toggle="modal" data-bs-target="#exampleModal" title="Notifications">
                 Notifications
                 </a>
         {% endif %}
@@ -20,7 +20,7 @@
                         <div class="modal-content">
                                 <div class="modal-header">
                                         <h5 class="modal-title id=exampleModalLabel">Messaging</h5>
-                                        <button type="button" class="close" data-dismiss="modal">
+                                        <button type="button" class="close" data-bs-dismiss="modal">
                                                 <span>&times;</span>
                                         </button>
                                 </div>
@@ -28,7 +28,7 @@
                                         {% webpush_button with_class="btn btn-outline-info" %}
                                 </div>
                                 <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 </div>
                         </div>
                 </div>

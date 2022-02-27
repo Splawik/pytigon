@@ -1284,8 +1284,8 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 register_mount_fun(moveelement_init);
 select2_init = function flx_select2_init (dest_elem) {
     var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub11_seq, stub12_itr;
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({width: "calc(100% - 48px)", minimumInputLength: 0, theme: "bootstrap-5"}));
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({width: "calc(100%)", minimumInputLength: 0, theme: "bootstrap-5"}));
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0}));
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
         _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
         sel2.val(id.toString());
@@ -1825,7 +1825,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
 window.sync_and_run = sync_and_run;
 export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 
-var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
+var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
 EVENT_TAB = [];
 REGISTERED_EVENT_TYPES = [];
 _chcek_element = function flx__chcek_element (element, selector) {
@@ -2361,6 +2361,8 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     }
     window.MENU = null;
     mount_html(document.querySelector("section.body-body"), data_element.querySelector("section.body-body"), false);
+    window.init_start_wiki_page();
+    window.activate_menu();
     return null;
 };
 
@@ -2427,14 +2429,36 @@ only_get = function flx_only_get (target_element, data_element, url, param, even
     return null;
 };
 
-EVENT_CLICK_TAB = [["inline", "*", true, false, on_inline], ["inline_edit", "*", true, false, on_inline_edit_new], ["inline_info", "*", true, false, on_inline_info], ["inline_delete", "*", true, false, on_inline_delete], ["inline_error", "*", true, false, on_inline_error], ["popup", "*", true, false, on_popup], ["popup_edit", "*", true, false, on_popup_edit_new], ["popup_info", "*", true, false, on_popup_info], ["popup_delete", "*", true, false, on_popup_delete], ["popup_error", "*", true, false, on_popup_error], ["_top", "*", false, false, on_replace_app], ["_top2", "*", true, false, on_new_tab], ["_self", "*", true, false, refresh_page], ["_parent", "*", true, false, on_new_tab], ["refresh_frame", "*", true, false, refresh_frame], ["refresh_page", "*", true, false, refresh_page], ["refresh_app", "*", false, false, refresh_app], ["null", "*", false, false, only_get]];
+on_message = function flx_on_message (target_element, data_element, new_url, param, event) {
+    var options;
+    options = ({icon: "success", title: "Information", text: "success"});
+    if (_pyfunc_truthy(target_element.hasAttribute("data-icon"))) {
+        options["icon"] = target_element.getAttribute("data-icon");
+    }
+    if (_pyfunc_truthy(target_element.hasAttribute("data-title"))) {
+        options["title"] = target_element.getAttribute("data-title");
+    }
+    if (_pyfunc_truthy(target_element.hasAttribute("data-text"))) {
+        options["text"] = target_element.getAttribute("data-text");
+    }
+    if (_pyfunc_truthy(target_element.hasAttribute("data-footer"))) {
+        options["footer"] = target_element.getAttribute("data-footer");
+    }
+    if (_pyfunc_truthy(target_element.hasAttribute("data-timer"))) {
+        options["timer"] = target_element.getAttribute("data-timer");
+    }
+    Swal.fire(options);
+    return null;
+};
+
+EVENT_CLICK_TAB = [["inline", "*", true, false, on_inline], ["inline_edit", "*", true, false, on_inline_edit_new], ["inline_info", "*", true, false, on_inline_info], ["inline_delete", "*", true, false, on_inline_delete], ["inline_error", "*", true, false, on_inline_error], ["popup", "*", true, false, on_popup], ["popup_edit", "*", true, false, on_popup_edit_new], ["popup_info", "*", true, false, on_popup_info], ["popup_delete", "*", true, false, on_popup_delete], ["popup_error", "*", true, false, on_popup_error], ["_top", "*", false, false, on_replace_app], ["_top2", "*", true, false, on_new_tab], ["_self", "*", true, false, refresh_page], ["_parent", "*", true, false, on_new_tab], ["refresh_frame", "*", true, false, refresh_frame], ["refresh_page", "*", true, false, refresh_page], ["refresh_app", "*", false, false, refresh_app], ["message", "*", false, false, on_message], ["null", "*", false, false, only_get]];
 on_resize = function (event) {
     process_resize(document.body);
     return null;
 };
 
 window.addEventListener("resize", on_resize);
-export {on_global_event, register_global_event, process_href, on_click_default_action, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, refresh_frame, refresh_page, refresh_app, only_get, on_resize};
+export {on_global_event, register_global_event, process_href, on_click_default_action, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
 
 var install_service_worker, service_worker_and_indexedDB_test;
 install_service_worker = function flx_install_service_worker () {
@@ -3325,6 +3349,7 @@ activate_menu = function flx_activate_menu () {
     return null;
 };
 
+window.activate_menu = activate_menu;
 _on_error = function flx__on_error (request, settings) {
     var d, end, start;
     if (_pyfunc_truthy(window.WAIT_ICON)) {

@@ -117,7 +117,7 @@
                                                         </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                        <button href="#" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                                                        <button href="#" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                         <button type="submit" class="btn btn-primary">
                                                         OK
                                                         </button>
@@ -131,7 +131,7 @@
 {% block messages %}
         {% if messages %}
                 <div class="alert alert-danger" role="alert">
-                        <a href="#" class="close" data-dismiss="alert" data-bs-dismiss="alert"> &times;</a>
+                        <a href="#" class="close" data-bs-dismiss="alert"> &times;</a>
                         {% for message in messages %}
                                 {% if message|slice:"-1:" == '!' %}
                                                 <ul class="errorlist">
@@ -321,7 +321,7 @@
                                                                                         <h4 style="white-space:nowrap;" class="txt3d wiki-title">
                                                                                                 {{title|wiki_href|safe}}
                                                                                                 {% if settings.DEBUG %}
-                                                                                                        <a data-toggle="collapse" data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
+                                                                                                        <a data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
                                                                                                 {% endif %}
                                                                                         </h4>
                                                                                         {% if settings.DEBUG %}
@@ -379,7 +379,7 @@
                                                                                 {% if standard_web_browser and object_list %}
                                                                                         {% if table_type == 'datatable' %}
                                                                                                 <div class="dropdown">
-                                                                                                        <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
+                                                                                                        <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
                                                                                                                 {% icon "fa-bars fa-lg" %}
                                                                                                         </button>
                                                                                                         <div class="dropdown-menu">
@@ -403,7 +403,7 @@
                                 </div>
                                 {% if standard_web_browser %}
                                         {% if table_type == 'datatable' and not get %}
-                                                <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-toggle="button" data-bs-toggle="button">
+                                                <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-bs-toggle="button">
                                                         {% icon "fa-times fa-lg" %}
                                                 </button>
                                         {% endif %}

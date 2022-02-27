@@ -166,6 +166,9 @@ def activate_menu():
                                 jQuery(x).tab("show")
 
 
+window.activate_menu = activate_menu
+
+
 def _on_error(request, settings):
     if window.WAIT_ICON:
         window.WAIT_ICON.stop()

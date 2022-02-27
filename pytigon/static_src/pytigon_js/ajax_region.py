@@ -209,11 +209,18 @@ register_mount_fun(moveelement_init)
 
 
 def select2_init(dest_elem):
+    # jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
+    #    {"width": "calc(100% - 48px)", "minimumInputLength": 0, "theme": "bootstrap-5"}
+    # )
+    # jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
+    #    {"width": "calc(100%)", "minimumInputLength": 0, "theme": "bootstrap-5"}
+    # )
+
     jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"width": "calc(100% - 48px)", "minimumInputLength": 0, "theme": "bootstrap-5"}
+        {"minimumInputLength": 0}
     )
     jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-        {"width": "calc(100%)", "minimumInputLength": 0, "theme": "bootstrap-5"}
+        {"minimumInputLength": 0}
     )
 
     def set_select2_value(sel2, id, text):

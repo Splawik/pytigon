@@ -1,8 +1,0 @@
-% load exfiltry
-
-<div class="alert alert-danger alert-dismissable alert-link">
-    <button class="close" type="button" data-dismiss="alert" data-bs-dismiss="alert" aria-hidden="true">&#215;</button>
-    {% for error in errors %}
-        {{ error }}{{error|class_name}}{% if not forloop.last %}<br>{% endif %}
-    {% endfor %}
-</div>

@@ -44,7 +44,7 @@
         <ul class="treeview-menu sidebar-submenu">
 
     li
-        a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,target=_parent,,,data-toggle=tooltip,,,data-bs-toggle=tooltip,,,title={{item_info.description}}
+        a href={{base_path}}{{item_info.url}},,,class=menu-href ladda-button,,,target=_parent,,,data-bs-toggle=tooltip,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
                     {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
@@ -66,7 +66,7 @@
     button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
         {% icon "fa-bars fa-lg" %}
 
-    sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %},,,width={% block sidebarmenu_widt %}18rem{% endblock %}
+    sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %},,,width={% block sidebarmenu_width %}18rem{% endblock %}
         sys-perfectscrollbar
         aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
             section class=sidebar
@@ -130,7 +130,7 @@
                     %% drop_down_blocks
                     % if user.is_authenticated:
                         li class=nav-item dropdown user user-menu
-                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,data-bs-toggle=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-bs-toggle=dropdown
                                 {% icon "fa-user fa-lg" %}
                                 span class=hidden-sm-down...{{user.username}}
                             div class=dropdown-menu dropdown-menu-lg-end,,,style=width:470px
@@ -158,12 +158,12 @@
                                             td...{{user.date_joined|isoformat}}
 
                                 nav class=navbar navbar-expand-sm navbar-dark bg-primary
-                                    button class=navbar-toggler,,,type="button,,,data-toggle=collapse,,,data-bs-toggle=collapse,,,data-target=#navbar_setup
+                                    button class=navbar-toggler,,,type="button,,,data-bs-toggle=collapse,,,data-bs-target=#navbar_setup
                                         span class=navbar-toggler-icon
                                     div class=collapse navbar-collapse,,,id=navbar_setup
                                         ul class=navbar-nav mr-auto
                                             li class=nav-item active
-                                                a class=nav-link,,,href=#,,,data-toggle=modal,,,data-bs-toggle=modal,,,data-target=#change_passwd,,,data-bs-target=#change_passwd..._(Change password)
+                                                a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                                             % if user.is_superuser:
                                                 li class=nav-item
                                                     a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
