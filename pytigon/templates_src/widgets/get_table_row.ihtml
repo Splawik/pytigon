@@ -3,3 +3,5 @@
 
 % field field formformat
 
+a type=button,,,href={{href1}},,,class=btn btn_size btn-primary shadow-none foreignkey_button get_tbl_value,,,title=_(get row),,,target=popup_edit,,,data-role=button,,,data-inline-position="^div.ajax-region:append"
+    span class="fa fa-table

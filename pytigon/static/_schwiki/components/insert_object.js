@@ -1,12 +1,12 @@
 var TAG, TEMPLATE, comp, handle_click, init, stub3_context, stub4_err;
 TAG = "insert-object";
-TEMPLATE = '        <div name=\"insert_element\" class=\"col-5\">\n' +
+TEMPLATE = '        <div name=\"insert_element\">\n' +
     '                <slot></slot>\n' +
     '        </div>\n' +
     '\n' +
     '';
 handle_click = function flx_handle_click (app_path, object, context) {
-    var ed, edit_form, href, id, l, line, max, n, op, pos, range, repeat, stub1_seq, stub2_itr, tab, text, vc_component, x, xx;
+    var _on_get, ed, edit_form, href, id, l, line, max, n, op, pos, range, repeat, stub1_seq, stub2_itr, tab, text, vc_component, x, xx;
     vc_component = object.closest("ptig-codeeditor");
     ed = vc_component.editor;
     repeat = 2;
@@ -16,10 +16,15 @@ handle_click = function flx_handle_click (app_path, object, context) {
         tab = _pymeth_split.call(text, "\n");
         line = tab[pos.lineNumber - 1];
         if (_pymeth_startswith.call(line, "@")) {
-            if (_pyfunc_op_equals(context["edit_form"], "True")) {
+            if (_pyfunc_op_equals(context["edit_form"], true)) {
                 x = _pymeth_split.call(line, ":");
-                href = (((app_path + "/table/PageObjectsConf/action/edit_page_object/?name=") + (x[0].slice(1))) + "&page_id=") + _pyfunc_str(context["page_id"]);
-                window.on_popup_edit_new(href, object[0], null);
+                href = (((app_path + "table/PageObjectsConf/action/edit_page_object/?name=") + (x[0].slice(1))) + "&page_id=") + _pyfunc_str(context["page_id"]);
+                _on_get = (function flx__on_get (content) {
+                    window.on_popup_edit_new(object, window.get_elem_from_string(content), href);
+                    return null;
+                }).bind(this);
+
+                ajax_get(href, _on_get);
             }
             repeat = 0;
         } else {
@@ -50,7 +55,7 @@ handle_click = function flx_handle_click (app_path, object, context) {
             }
             range = new monaco.Range(pos.lineNumber, 1, pos.lineNumber, 1);
             id = ({major: 1, minor: 1});
-            if (_pyfunc_op_equals(context["edit_form"], "True")) {
+            if (_pyfunc_op_equals(context["edit_form"], true)) {
                 edit_form = "_" + (_pyfunc_str((max + 1)));
             } else {
                 edit_form = "";
@@ -76,17 +81,26 @@ comp = stub3_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var button, on_click;
+        var button, on_click, select, selection, x;
         button = component.querySelector("a.btn");
         button.style.height = "100%";
+        x = component.closest("form");
+        select = x.querySelector("select.django-select2");
+        selection = x.querySelector("div.group_choicefield");
+        selection.style.width = "25rem";
         on_click = (function flx_on_click () {
-            var on_get;
+            var on_get, pk;
             on_get = (function flx_on_get (content) {
                 handle_click(component.getAttribute("app_path"), button, content);
                 return null;
             }).bind(this);
 
-            ajax_json(window.process_href(button.href, window.jQuery(button)), ({}), on_get);
+            pk = select.options[select.selectedIndex].value;
+            if (_pyfunc_truthy(pk)) {
+                ajax_json(window.process_href(button.href, window.jQuery(button)), ({}), on_get);
+            } else {
+                handle_click(component.getAttribute("app_path"), button, ({edit_form: true, object_inline_editing: null, object_name: null, page_id: component.getAttribute("page_id"), pk: null, object_name: null}));
+            }
             return false;
         }).bind(this);
 

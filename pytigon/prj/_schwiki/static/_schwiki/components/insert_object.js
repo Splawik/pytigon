@@ -18,7 +18,7 @@ handle_click = function flx_handle_click (app_path, object, context) {
         if (_pymeth_startswith.call(line, "@")) {
             if (_pyfunc_op_equals(context["edit_form"], true)) {
                 x = _pymeth_split.call(line, ":");
-                href = (((app_path + "/table/PageObjectsConf/action/edit_page_object/?name=") + (x[0].slice(1))) + "&page_id=") + _pyfunc_str(context["page_id"]);
+                href = (((app_path + "table/PageObjectsConf/action/edit_page_object/?name=") + (x[0].slice(1))) + "&page_id=") + _pyfunc_str(context["page_id"]);
                 _on_get = (function flx__on_get (content) {
                     window.on_popup_edit_new(object, window.get_elem_from_string(content), href);
                     return null;
@@ -86,7 +86,7 @@ try {
         button.style.height = "100%";
         x = component.closest("form");
         select = x.querySelector("select.django-select2");
-        selection = x.querySelector("div.select2");
+        selection = x.querySelector("div.group_choicefield");
         selection.style.width = "25rem";
         on_click = (function flx_on_click () {
             var on_get, pk;

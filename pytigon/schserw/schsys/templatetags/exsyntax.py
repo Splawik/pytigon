@@ -43,7 +43,7 @@ from pytigon_lib.schdjangoext.tools import make_href as mhref
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
 from django.utils.safestring import SafeText
 from django import forms
-
+from django_select2 import forms as s2forms
 
 register = template.Library()
 
@@ -671,7 +671,7 @@ def get_table_row(
             "/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter)
         )
 
-    class _Form(forms.Form):
+    class _Form2(forms.Form):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields[_name] = forms.ChoiceField(
@@ -691,11 +691,26 @@ def get_table_row(
                 ),
             )
 
+    class _Form(forms.Form):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields[_name] = forms.ChoiceField(
+                widget=s2forms.ModelSelect2Widget(
+                    model=model,
+                    search_fields=[
+                        _search_fields,
+                    ],
+                    queryset=_queryset,
+                ),
+            )
+
     form = _Form(initial={_name: _initial})
     return {
         "form": form,
         "field": form[_name],
         "formformat": formformat,
+        "href1": href1,
+        "href2": href2,
     }
 
 

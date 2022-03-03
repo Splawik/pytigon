@@ -1,0 +1,10 @@
+{{start_div|safe}}
+[% if perms.wiki.add_page %]
+<a class="wiki-object-edit" href="[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1" target="popup_edit">
+        articles
+        <span class="fa fa-cog fa-2"></span>
+</a>
+[% endif %]
+{{content|safe}}
+{{end_div|safe}}
+

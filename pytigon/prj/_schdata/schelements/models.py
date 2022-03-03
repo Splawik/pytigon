@@ -346,15 +346,15 @@ class Element(TreeModel):
             ids.append(obj.id)
         return Q(id__in=ids)
 
-    def path(self):
-        p = self.parents()
-        n = ""
-        for parent in p:
-            if parent.code and parent.code != "":
-                n = "/" + przodek.code + n
-            else:
-                n = "/?" + n
-        return n + "/" + self.code
+    # def get_path(self):
+    #    p = self.parents()
+    #    n=""
+    #    for parent in p:
+    #        if parent.code and parent.code!="":
+    #            n = "/" + przodek.code + n
+    #        else:
+    #            n = "/?" + n
+    #    return n + "/" + self.code
 
     def href_path(self):
         p = self.parents()
