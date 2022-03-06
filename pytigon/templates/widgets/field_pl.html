@@ -11,7 +11,7 @@
                 {% endif %}
           {% else %}
                 {% if field.field.widget.input_type == 'select2' %}
-                        <div class="ajax-region get_row row {{form_group_size_class}}" data-region='get_row'>
+                        <div class="ajax-region zorro" data-region='get_row'>
                 {% endif %}
                 {% if field.field.widget.input_type == 'todo-remove-checkbox' %}
                         {% bootstrap_field field layout='' form_group_class=form_group_class field_class=field_class placeholder=placeholder show_label=False addon_after=addon_after addon_after_class=addon_after_class addon_before=addon_before addon_before_class=addon_before_class bound_css_class='field_success' %}

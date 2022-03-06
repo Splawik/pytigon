@@ -1180,7 +1180,7 @@ window.register_mount_fun = register_mount_fun;
 mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
     var _on_remove, evt, fun, stub3_seq, stub4_itr;
     link = (link === undefined) ? null: link;
-    if ((!_pyfunc_truthy(dest_elem))) {
+    if (_pyfunc_op_equals(dest_elem, null)) {
         return null;
     }
     if ((_pyfunc_hasattr(dest_elem, "onloadeddata") && (_pyfunc_truthy(_pyfunc_getattr(dest_elem, "onloadeddata"))) && _pyfunc_truthy(dest_elem.onloadeddata))) {
@@ -1365,7 +1365,7 @@ get_ajax_region = function flx_get_ajax_region (element, region_name) {
                 return ret;
             }
             ret = ret.parentElement;
-            if (_pyfunc_truthy(ret)) {
+            if ((!_pyfunc_op_equals(ret, null))) {
                 ret = ret.closest(".ajax-region");
             }
         }
@@ -1388,12 +1388,12 @@ get_ajax_link = function flx_get_ajax_link (element, region_name) {
         return element;
     }
     region = get_ajax_region(element, region_name);
-    if (_pyfunc_truthy(region)) {
+    if ((!_pyfunc_op_equals(region, null))) {
         if (_pyfunc_truthy(region.classList.contains("ajax-link"))) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             link = region.querySelector((".ajax-link[data-region='" + region_name) + "']");
-            if (_pyfunc_truthy(link)) {
+            if ((!_pyfunc_op_equals(link, null))) {
                 return link;
             }
         } else {
@@ -1413,12 +1413,12 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name) {
     var frame, region;
     region_name = (region_name === undefined) ? null: region_name;
     region = get_ajax_region(element, region_name);
-    if (_pyfunc_truthy(region)) {
+    if ((!_pyfunc_op_equals(region, null))) {
         if (((_pyfunc_truthy(region.classList.contains("ajax-frame"))) && ((((!_pyfunc_truthy(region_name))) || (_pyfunc_op_equals(region.getAttribute("data-region"), region_name)))))) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             frame = region.querySelector((".ajax-frame[data-region='" + region_name) + "']");
-            if (_pyfunc_truthy(frame)) {
+            if ((!_pyfunc_op_equals(frame, null))) {
                 return frame;
             }
         } else {
@@ -1465,7 +1465,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     data_if_none = (data_if_none === undefined) ? null: data_if_none;
     region = get_ajax_region(element, region_name);
     frame = get_ajax_frame(element, region_name);
-    if ((!_pyfunc_truthy(frame))) {
+    if (_pyfunc_op_equals(frame, null)) {
         return null;
     }
     link = get_ajax_link(element, region_name);

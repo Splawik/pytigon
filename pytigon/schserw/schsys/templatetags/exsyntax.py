@@ -331,7 +331,7 @@ def wiki_link(context, subject, wiki_description, attrs="", target="_self", url=
 
 
 @inclusion_tag("widgets/field.html")
-def field(context, form_field, fieldformat=None):
+def field(context, form_field, fieldformat=None, inline=False):
     if type(form_field) in (
         SafeText,
         str,
@@ -401,6 +401,9 @@ def field(context, form_field, fieldformat=None):
                 field_class += " col-sm-12 col-md-%d" % ((11 - y[0]) % 12 + 1)
                 offset = "offset-sm-0 offset-md-%d" % (y[0] % 12)
 
+        if not inline:
+            form_group_class += " mb-2"
+
         if x[1]:
             y = x[1].split(":")
             if len(y) == 3:
@@ -459,10 +462,14 @@ def field(context, form_field, fieldformat=None):
 
 
 class Form(Node):
-    def __init__(self, nodelist, def_param, param):
+    def __init__(self, nodelist, def_param, param, inline=False):
         self.nodelist = nodelist
         self.def_param = def_param
         self.param = []
+        if inline:
+            self.inline = 1
+        else:
+            self.inline = 0
         for pos in param:
             self.param.append(template.Variable(pos))
 
@@ -495,7 +502,11 @@ class Form(Node):
         else:
             template_str = "{% load exsyntax %}<div class='row'>"
         for field in fields:
-            template_str += "{%% field '%s' '%s' %%}" % (field[0], field[1])
+            template_str += "{%% field '%s' '%s' %d %%}" % (
+                field[0],
+                field[1],
+                self.inline,
+            )
         template_str += "</div>"
         t = Template(template_str)
         return t.render(context)
@@ -522,7 +533,7 @@ def inline_form(parser, token):
     parm = token.split_contents()
     nodelist = parser.parse(("endinline_form",))
     parser.delete_first_token()
-    return Form(nodelist, "^/", parm)
+    return Form(nodelist, "^/", parm, inline=True)
 
 
 @register.tag
@@ -671,26 +682,6 @@ def get_table_row(
             "/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter)
         )
 
-    class _Form2(forms.Form):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields[_name] = forms.ChoiceField(
-                label=_label,
-                widget=ModelSelect2WidgetExt(
-                    href1,
-                    href2,
-                    is_new_button,
-                    is_get_button,
-                    _label,
-                    model=model,
-                    # search_fields=[_search_fields, "description__icontains"],
-                    search_fields=[
-                        _search_fields,
-                    ],
-                    queryset=_queryset,
-                ),
-            )
-
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -701,6 +692,7 @@ def get_table_row(
                         _search_fields,
                     ],
                     queryset=_queryset,
+                    attrs={"href1": href1, "href2": href2},
                 ),
             )
 

@@ -81,13 +81,11 @@ comp = stub3_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var button, on_click, select, selection, x;
+        var button, on_click, select, x;
         button = component.querySelector("a.btn");
         button.style.height = "100%";
         x = component.closest("form");
         select = x.querySelector("select.django-select2");
-        selection = x.querySelector("div.group_choicefield");
-        selection.style.width = "25rem";
         on_click = (function flx_on_click () {
             var on_get, pk;
             on_get = (function flx_on_get (content) {

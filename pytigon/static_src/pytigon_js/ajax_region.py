@@ -53,7 +53,7 @@ window.register_mount_fun = register_mount_fun
 def mount_html(dest_elem, data_or_html, link=None):
     global MOUNT_INIT_FUN
 
-    if not dest_elem:
+    if dest_elem == None:
         return
 
     if (
@@ -290,7 +290,7 @@ def get_ajax_region(element, region_name=None):
                 if ret.getAttribute("data-region") == region_name:
                     return ret
                 ret = ret.parentElement
-                if ret:
+                if ret != None:
                     ret = ret.closest(".ajax-region")
             if region_name:
                 return get_ajax_region(element, None)
@@ -309,7 +309,7 @@ def get_ajax_link(element, region_name=None):
     ):
         return element
     region = get_ajax_region(element, region_name)
-    if region:
+    if region != None:
         if region.classList.contains("ajax-link"):
             return region
         else:
@@ -317,7 +317,7 @@ def get_ajax_link(element, region_name=None):
                 link = region.querySelector(
                     ".ajax-link[data-region='" + region_name + "']"
                 )
-                if link:
+                if link != None:
                     return link
             else:
                 return region.querySelector(".ajax-link")
@@ -332,7 +332,7 @@ window.get_ajax_link = get_ajax_link
 
 def get_ajax_frame(element, region_name=None):
     region = get_ajax_region(element, region_name)
-    if region:
+    if region != None:
         if region.classList.contains("ajax-frame") and (
             (not region_name) or region.getAttribute("data-region") == region_name
         ):
@@ -342,7 +342,7 @@ def get_ajax_frame(element, region_name=None):
                 frame = region.querySelector(
                     ".ajax-frame[data-region='" + region_name + "']"
                 )
-                if frame:
+                if frame != None:
                     return frame
             else:
                 return region.querySelector(".ajax-frame")
@@ -380,7 +380,7 @@ def refresh_ajax_frame(
 ):
     region = get_ajax_region(element, region_name)
     frame = get_ajax_frame(element, region_name)
-    if not frame:
+    if frame == None:
         return
     link = get_ajax_link(element, region_name)
 

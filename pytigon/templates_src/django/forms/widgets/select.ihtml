@@ -1,0 +1,17 @@
+div class=input-group get_row {{form_group_size_class}}
+    select name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %} 
+        % for group_name, group_choices, group_index in widget.optgroups: 
+            % if group_name: 
+                <optgroup label="{{ group_name }}">
+            % for option in group_choices: 
+                % include option.template_name with widget=option 
+            % if group_name: 
+                </optgroup>
+    % if 'href1' in widget.attrs:
+        div class=input-group-append
+            a href={{ widget.attrs.href1 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value,,,_(get row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append,,,style=height:100%;
+                span class=fa fa-table
+    % if 'href2' in widget.attrs:
+        div class=input-group-append
+            a href={{ widget.attrs.href2 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value,,,_(new row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append,,,style=height:100%;
+                span class=fa fa-plus
