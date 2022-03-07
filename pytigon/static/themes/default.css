@@ -427,6 +427,10 @@ div.modal-content.maximized {
   overflow-y: auto;
   overflow-x: hidden; }
 
+.inline-content {
+  margin-top: -4.5rem;
+  z-index: 1000; }
+
 /* login form */
 .login_background {
   /* IE10+ */

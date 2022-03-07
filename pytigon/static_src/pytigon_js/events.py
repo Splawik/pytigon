@@ -310,6 +310,9 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     super_insert(target_element, inline_position, dialog_slot)
     mount_html(dialog_slot, None)
 
+    if data_element.classList.contains("maximized"):
+        inline_maximize(data_element)
+
     def on_hidden(self, event):
         nonlocal target_element
         region = get_ajax_region(

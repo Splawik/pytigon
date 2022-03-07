@@ -21,6 +21,7 @@
 
 %% edit_area
     move-attr target-tag=div.modal-dialog,,,class=+modal-max
+    move-attr target-tag=div,,,class=maximized
     div class=refresh_after_close,,,style=width:calc( 100% + 0px );height:calc( 100vh + 0px );position:relative;
         ptig-codeeditor class=flexible2_size,,,value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}},,,width=100%,,,height=100%
             nav class=navbar navbar-dark bg-primary
