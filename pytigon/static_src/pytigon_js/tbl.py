@@ -219,7 +219,8 @@ def init_table(table, table_type):
 
         table.on("post-body.bs.table", init_bootstrap_table)
 
-        table_panel = jQuery(table).closest(".content")
+        # table_panel = jQuery(table).closest(".content")
+        table_panel = jQuery(table).closest("section.body-body")
         btn = table_panel.find(".tabsort-toolbar-expand")
         if btn:
 

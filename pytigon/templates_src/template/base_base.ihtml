@@ -65,28 +65,22 @@
                 div class=modal-content
                     div class=modal-header
                         h3..._(Change Password)
-                    form role=form,,,action={{base_path}}schsys/change_password/,,,method=post,,,name=change_password
+                    form class=form-floating,,,role=form,,,action={{base_path}}schsys/change_password/,,,method=post,,,name=change_password
                         div class=modal-body
                             {% csrf_token %}
 
                             p class=text-xl-center
                                 i class=fa fa-lock fa-5x
-
-                            label class=control-label,,,for=current_password..._(Current Password)
-                            div class=input-group
-                                 div class=input-group-prepend
-                                     span class=input-group-text fa fa-key
-                               input class=form-control,,,name=current_password,,,type=password,,,autocomplete=current-password
-                            label class=control-label,,,for=new_password..._(New Password)
-                            div class=input-group
-                                div class=input-group-prepend
-                                     span class=input-group-text fa fa-sign-in
-                                input class=form-control,,,name=new_password,,,type=password,,,autocomplete=new-password
-                            label class=control-label,,,for=confirm_password..._(Confirm Password)
-                            div class=form-group input-group
-                                div class=input-group-prepend
-                                     span class=input-group-text fa fa-sign-in
-                                input class=form-control,,,name=confirm_password,,,type=password,,,autocomplete=new-password
+                            
+                            div class=form-floating mb-3
+                                    input class=form-control,,,id=current_password,,,type=password,,,autocomplete=current-password,,,placeholder=x
+                                    label class=form-label,,,for=current_password..._(Current Password)
+                            div class=form-floating mb-3
+                                    input class=form-control,,,id=new_password,,,type=password,,,autocomplete=new-password,,,placeholder=x
+                                    label class=form-label,,,for=new_password..._(New Password)
+                            div class=form-floating mb-3
+                                    input class=form-control,,,id=confirm_password,,,type=password,,,autocomplete=new-password,,,placeholder=x
+                                    label class=form-label,,,for=confirm_password..._(Confirm Password)
                         div class=modal-footer
                             button href=#,,,class=btn btn-secondary,,,data-bs-dismiss=modal..._(Cancel)
                             button type=submit,,,class=btn btn-primary..._(OK)

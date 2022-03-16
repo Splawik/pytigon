@@ -1,7 +1,7 @@
-var BASE_PATH, TAG, TEMPLATE, comp, init, stub1_context, stub2_err;
+var BASE_PATH, TAG, TEMPLATE, comp, height, init, stub1_context, stub2_err, width;
 TAG = "ptig-codeeditor";
 TEMPLATE = '<style>\n' +
-    '        .button {\n' +
+    '        .codeeditor-button {\n' +
     '            background-color: #008CBA;\n' +
     '            border: none;\n' +
     '            color: white;\n' +
@@ -12,6 +12,7 @@ TEMPLATE = '<style>\n' +
     '            font-size: 16px;\n' +
     '            margin: 2px 0px;\n' +
     '            cursor: pointer;\n' +
+    '            height: 3rem;\n' +
     '        }\n' +
     '        .button:disabled { background-color: lightgray; }\n' +
     '        p.function_title {\n' +
@@ -23,23 +24,36 @@ TEMPLATE = '<style>\n' +
     '            font-weight: bold;\n' +
     '            margin-right: 0px;\n' +
     '        }\n' +
-    '        h2 { text-align: center; position: absolute; left: 0; right: 0; margin-left: 150px; margin-right: 150px; }\n' +
+    '        h2 { text-align: center; paddin:0; margin:0; }\n' +
+    '        .bar { height: 3rem; border-spacing: 0px; }\n' +
+    '        .vseditor { top: 3.5rem; left:0; right:0; bottom:0; }\n' +
+    '        button.codeeditor-button svg { width: 24px; height: 24px; }\n' +
+    '        .td_width { width: 6rem; }\n' +
     '</style>\n' +
-    '<div data-bind=\"style-width:width;style-height:height;\" style=\"position:relative;\">\n' +
+    '<div data-bind=\"style-width:width;style-height:height;\" style=\"position:relative;overflow: hidden;\">\n' +
     '        <slot>\n' +
-    '                <div width=\"100%\">\n' +
-    '                        <h2>\n' +
-    '                                <span class=\"navbar-text mr-auto\" data-bind=\"title\"></span>\n' +
-    '                        </h2>\n' +
-    '                        <form class=\"form-inline\">\n' +
-    '                                <button data-bind=\"disabled:!changed;onclick:on_save\" class=\"button btn btn-primary\" type=\"button\">\n' +
-    '                                        Save\n' +
-    '                                </button>\n' +
-    '                        </form>\n' +
-    '                </div>\n' +
+    '                <table class=\"bar\" width=\"100%\">\n' +
+    '                        <tr>\n' +
+    '                                <td class=\"td_width\">\n' +
+    '                                        <form class=\"form-inline\">\n' +
+    '                                                <button data-bind=\"disabled:!changed;onclick:on_save\" class=\"codeeditor-button btn btn-primary\" type=\"button\">\n' +
+    '                                                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-save\"><path d=\"M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z\"></path><polyline points=\"17 21 17 13 7 13 7 21\"></polyline><polyline points=\"7 3 7 8 15 8\"></polyline></svg>\n' +
+    '                                                </button>\n' +
+    '                                        </form>\n' +
+    '                                </td>\n' +
+    '                                <td>\n' +
+    '                                        <h2>\n' +
+    '                                                <span class=\"navbar-text mr-auto\" data-bind=\"title\"></span>\n' +
+    '                                        </h2>\n' +
+    '                                </td>\n' +
+    '                                <td class=\"td_width\">\n' +
+    '                                        &nbsp;\n' +
+    '                                </td>\n' +
+    '                        </tr>\n' +
+    '                </table>\n' +
     '        </slot>\n' +
     '        <p class=\"function_title\" data-bind=\"function-title;style-visibility:function_title_visibility\"></p>\n' +
-    '        <div class=\"vseditor\" name=\"vseditor\" style=\"position:absolute;width:100%;\" data-bind=\"style-top:top;style-bottom:bottom\"></div>\n' +
+    '        <div class=\"vseditor\" name=\"vseditor\" style=\"position:absolute;\" data-bind=\"style-top:top\"></div>\n' +
     '</div>\n' +
     '\n' +
     '';
@@ -48,11 +62,31 @@ stub1_context = (new DefineWebComponent(TAG, true, [], [BASE_PATH + "/editor/edi
 comp = stub1_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;
-    comp.options["attributes"] = _pyfunc_create_dict("function-title", null, "title", null);
+    width = function flx_width (component, old_value, new_value) {
+        var div;
+        if (_pyfunc_hasattr(component, "editor")) {
+            div = component.root.querySelector("div");
+            div.style.width = new_value;
+            component.editor.layout();
+        }
+        return null;
+    };
+
+    height = function flx_height (component, old_value, new_value) {
+        var div;
+        if (_pyfunc_hasattr(component, "editor")) {
+            div = component.root.querySelector("div");
+            div.style.height = new_value;
+            component.editor.layout();
+        }
+        return null;
+    };
+
+    comp.options["attributes"] = _pyfunc_create_dict("width", width, "height", height, "function-title", null, "title", null);
     init = function flx_init (component) {
         var _on_loadjs, function_title_visibility, on_save, state;
         _on_loadjs = (function flx__on_loadjs () {
-            var _changed, _process_resize, ed, state, top, value;
+            var _changed, ed, state, top, value;
             ed = component.root.querySelector("div.vseditor");
             if (_pyfunc_truthy(component.hasAttribute("value"))) {
                 value = decodeURIComponent(escape(atob(component.getAttribute("value"))));
@@ -74,18 +108,13 @@ try {
             if (_pyfunc_truthy(component.hasAttribute("height"))) {
                 state["height"] = component.getAttribute("height");
             }
+            if (_pyfunc_truthy(component.hasAttribute("offset"))) {
+                state["top"] = component.getAttribute("offset");
+            } else {
+                state["top"] = "3.5rem";
+            }
             component.set_state(state);
             component.editor.layout();
-            _process_resize = (function flx__process_resize (size_object) {
-                if ((!_pyfunc_truthy(component.hasAttribute("height")))) {
-                    component.set_state(({height: (((size_object["h"] - size_object["body_offset_y"]) - 7) - ed.offsetTop) + "px"}));
-                }
-                component.editor.layout();
-                return null;
-            }).bind(this);
-
-            component.process_resize = _process_resize;
-            window.process_resize(component);
             return null;
         }).bind(this);
 

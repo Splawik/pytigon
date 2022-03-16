@@ -6,4 +6,5 @@
 
 
 %% content
-    <ptig-calendar></ptig-calendar>
+    div class=flexible_size
+        ptig-calendar

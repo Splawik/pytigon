@@ -43,12 +43,15 @@ form
             padding-top: 4px
 
 
-.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield
+.form-group.form-floating
+    label, form-label
+        left: 0px
+
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_choicefield, .group_filepathfield, .group_typedchoicefield, .group_typedmultiplechoicefield, .group_select2field, .group_modelchoicefield, .group_modelselect2field, .group_multiplechoicefield
     label
         z-index: 1;
         opacity: .65;
         transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
-
 
 
 .bootstrap-datetimepicker-widget 
@@ -143,11 +146,7 @@ body:not(.modal-open) .dark_background
 .group_multiplechoicefield, .group_modelmultiplechoicefield, .group_typedmultiplechoicefield
     min-width: 10rem
     
-    label.control-label
-        padding-top: 0.4rem
-        color: rgba(0, 0, 0, 0.5)
-        font-size: x-small
-
+ 
 .group_typedchoicefield, .group_modelchoicefield, .group_choicefield
    min-width: 10rem
  
@@ -161,10 +160,8 @@ div.d-inline-flex div.form-group
         left: 2px
         color: rgba(0,0,0,0.5)
 
-
-
-#dialog-form-modal .inline_dialog
-    width: 100% !important
+//#dialog-form-modal .inline_dialog
+//    width: 100% !important
 
 
 div.form_delete, div.form_info
@@ -210,3 +207,22 @@ div.dialog-form div.container-fluid
 div.is-invalid .invalid-feedback
     display: block
     
+
+.group_multiplechoicefield.form-floating, .group_modelmultiplechoicefield.form-floating, .group_typedmultiplechoicefield.form-floating, .modelmultiplechoice_field.form-floating
+    label
+        height: auto
+        z-index: 5
+        background: white
+        width: 100%
+        padding-bottom: 0px
+        padding-top: 0px
+        margin-top: 0.6rem
+        //opacity: 0.9;        
+
+.group_modelmultiplechoicefield.form-floating
+    label
+        left: 0.2rem;
+        width: calc(100% - 1.2rem)
+    
+    select
+        margin-top: 0.4rem

@@ -65,6 +65,5 @@ pytigon_gui
 ext_lib_cli_lin/
 ext_prg/
 last_error.html
-python/
 static_src/sch/__javascript__/
 tools/pytigon.xml

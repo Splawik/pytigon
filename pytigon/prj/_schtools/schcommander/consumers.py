@@ -51,9 +51,12 @@ def read_and_forward_pty_output(consumer):
             if data_ready:
                 output = os.read(consumer.fd, max_read_bytes)
                 try:
-                    output = output.decode()
+                    output = output.decode(errors="replace")
                 except:
-                    pass
+                    print("---------------------------------------------")
+                    print(output)
+                    print("---------------------------------------------")
+                    output = ""
                 if output:
                     consumer.send(text_data=output)
     print("Shell closed")

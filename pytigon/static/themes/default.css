@@ -228,7 +228,10 @@ form .row .row {
   padding-right: 10px;
   padding-top: 4px; }
 
-.group_select2multiplefield label, .group_heavyselect2multiplefield label, .group_modelselect2multiplefield label {
+.form-group.form-floating label, .form-group.form-floating form-label {
+  left: 0px; }
+
+.group_select2multiplefield label, .group_heavyselect2multiplefield label, .group_modelselect2multiplefield label, .group_choicefield label, .group_filepathfield label, .group_typedchoicefield label, .group_typedmultiplechoicefield label, .group_select2field label, .group_modelchoicefield label, .group_modelselect2field label, .group_multiplechoicefield label {
   z-index: 1;
   opacity: .65;
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem); }
@@ -282,10 +285,6 @@ body:not(.modal-open) .dark_background {
 
 .group_multiplechoicefield, .group_modelmultiplechoicefield, .group_typedmultiplechoicefield {
   min-width: 10rem; }
-  .group_multiplechoicefield label.control-label, .group_modelmultiplechoicefield label.control-label, .group_typedmultiplechoicefield label.control-label {
-    padding-top: 0.4rem;
-    color: rgba(0, 0, 0, 0.5);
-    font-size: x-small; }
 
 .group_typedchoicefield, .group_modelchoicefield, .group_choicefield {
   min-width: 10rem; }
@@ -298,9 +297,6 @@ div.d-inline-flex div.form-group {
   top: -14px;
   left: 2px;
   color: rgba(0, 0, 0, 0.5); }
-
-#dialog-form-modal .inline_dialog {
-  width: 100% !important; }
 
 div.form_delete, div.form_info {
   max-height: 25rem;
@@ -333,6 +329,22 @@ div.dialog-form div.container-fluid {
 
 div.is-invalid .invalid-feedback {
   display: block; }
+
+.group_multiplechoicefield.form-floating label, .group_modelmultiplechoicefield.form-floating label, .group_typedmultiplechoicefield.form-floating label, .modelmultiplechoice_field.form-floating label {
+  height: auto;
+  z-index: 5;
+  background: white;
+  width: 100%;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin-top: 0.6rem; }
+
+.group_modelmultiplechoicefield.form-floating label {
+  left: 0.2rem;
+  width: calc(100% - 1.2rem); }
+
+.group_modelmultiplechoicefield.form-floating select {
+  margin-top: 0.4rem; }
 
 /* Inline form */
 .modal-dialog-inline > div > div > .modal-header {
@@ -484,7 +496,7 @@ div.login-container > .row {
   text-align: center;
   padding: 6px 0;
   padding-top: 3px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.428571429;
   border-radius: 15px; }
 
@@ -718,8 +730,8 @@ div.td_information {
 
 .tabsort-toolbar-expand {
   position: absolute;
-  top: 5px;
-  left: 5px;
+  top: 0px;
+  left: 0px;
   z-index: 999;
   transform: rotate(0deg);
   transition: .3s;
