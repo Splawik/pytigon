@@ -234,8 +234,9 @@
                             span class=navbar-toggler-icon
                         div class=collapse navbar-collapse,,,id=navbar_setup
                             ul class=navbar-nav mr-auto
-                                li class=nav-item active
-                                    a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
+                                % if request.user|user_can_change_password:
+                                    li class=nav-item active
+                                        a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                                 % if user.is_superuser:
                                     li class=nav-item
                                         a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)

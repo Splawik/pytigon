@@ -46,7 +46,8 @@
                 div class=dropdown-menu dropdown-menu-lg-end,,,aria-labelledby=navbarDropdownMenuLink
                     %if not autologin:
                         a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout),,,target=_top..._(Logout)
-                    a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
+                    % if request.user|user_can_change_password:
+                        a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
                         a class=dropdown-item system_menu,,,href={{base_path}}schsetup/?schtml=1,,,title=_(Setup),,,target=_top..._(Setup)
                     %% system_menu

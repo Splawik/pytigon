@@ -193,9 +193,11 @@
                                                                         </button>
                                                                         <div class="collapse navbar-collapse" id="navbar_setup">
                                                                                 <ul class="navbar-nav mr-auto">
-                                                                                        <li class="nav-item active">
-                                                                                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
-                                                                                        </li>
+                                                                                        {% if request.user|user_can_change_password %}
+                                                                                                <li class="nav-item active">
+                                                                                                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
+                                                                                                </li>
+                                                                                        {% endif %}
                                                                                         {% if user.is_superuser %}
                                                                                                 <li class="nav-item">
                                                                                                         <a class="nav-link" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>

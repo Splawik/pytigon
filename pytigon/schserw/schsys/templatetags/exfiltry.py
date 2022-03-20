@@ -875,3 +875,17 @@ def only_items_containing(select_field, mask):
         for item in to_delete:
             select_field.field.widget.choices.remove(item)
     return ""
+
+
+@register.filter(name="user_can_change_password")
+def user_can_change_password(user):
+    try:
+        from allauth.account.models import EmailAddress
+    except:
+        return True
+
+    object_list = EmailAddress.objects.filter(user=user)
+    if len(object_list) > 0:
+        return False
+    else:
+        return True
