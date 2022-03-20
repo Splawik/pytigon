@@ -11,3 +11,8 @@ gen = generic_table_start(urlpatterns, "tables_adv_demo", views)
 
 gen.standard("Album", _("Album"), _("Albums"))
 gen.standard("AlbumProxy", _("Album"), _("Albums"))
+gen.standard("UserGroup", _("User group"), _("User groups"))
+gen.standard("Track", _("Track"), _("Tracks"))
+
+gen.for_field("Album", "track_set", _("Track"), _("Tracks"))
+gen.for_field("tables_demo.Example4Parameter", "track_set", _("Track"), _("Tracks"))

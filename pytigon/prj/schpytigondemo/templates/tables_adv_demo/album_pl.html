@@ -2,7 +2,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block all %}
-        {% with table_type='scrolled' %}
+        {% with table_type='datatable' %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -10,53 +10,33 @@
 {% endblock %}
 {% block list_content_actions %}
         {% new_row "New album" %}
-        {% list_action "import" "Import albums" %}
-{% endblock %}
-{% block list_row_header_start %}
-        <th data-field="cid" data-sortable="true">
-                {% id_num 'Id' sorting=True %}
-        </th>
 {% endblock %}
 {% block list_row_header %}
+        <th>Release date</th>
+        <th>Artist</th>
+        <th>Description</th>
         <th>
-                {% sorted_column name='release_date' description='Release date' %}
-        </th>
-        <th>
-                {% sorted_column name='artist' description='Artist' %}
-        </th>
-        <th>
-                {% sorted_column name='description' description='Description' %}
-        </th>
-        <th>
-                {% sorted_column name='genre' description='Genre' %}
+        Genre
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{ object.release_date|isoformat }}</td>
+        <td>{{ object.release_date }}</td>
         <td>{{ object.artist }}</td>
         <td>{{ object.description }}</td>
         <td>
-        {{ object.get_genre_display }}
+        {{ object.genre }}
         </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
                 edit
                 delete
+                field_list/track_set,Tracks
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                release_date,artist,description
+                release_date,artist,description,genre
         {% endform %}
-        {% if add_param and add_param != '-' %}
-                {% form %}
-                        genre:!
-                {% endform %}
-          {% else %}
-                {% form %}
-                        genre
-                {% endform %}
-        {% endif %}
 {% endblock %}
 

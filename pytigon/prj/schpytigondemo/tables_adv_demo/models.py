@@ -29,6 +29,9 @@ from schelements.models import *
 from standard_components.models import *
 
 
+from tables_demo.models import *
+
+
 GenreChoices = [
     ("r", "Rock"),
     ("p", "Pop"),
@@ -110,3 +113,53 @@ class AlbumProxy(Album):
 
 
 admin.site.register(AlbumProxy)
+
+
+class UserGroup(models.Model):
+    class Meta:
+        verbose_name = _("User group")
+        verbose_name_plural = _("User groups")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "tables_adv_demo"
+
+        ordering = ["id"]
+
+
+admin.site.register(UserGroup)
+
+
+class Track(models.Model):
+    class Meta:
+        verbose_name = _("Track")
+        verbose_name_plural = _("Tracks")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "tables_adv_demo"
+
+        ordering = ["id"]
+
+    parent = ext_models.PtigForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        editable=True,
+        verbose_name="Parent",
+    )
+    name = models.CharField(
+        "Name", null=False, blank=False, editable=True, max_length=64
+    )
+    param = ext_models.PtigForeignKey(
+        Example4Parameter,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="Param",
+        search_fields=[
+            "key__icontains",
+        ],
+        can_add=False,
+    )
+
+
+admin.site.register(Track)

@@ -14,7 +14,7 @@ TEMPLATE = '<style>\n' +
     '            cursor: pointer;\n' +
     '            height: 3rem;\n' +
     '        }\n' +
-    '        .button:disabled { background-color: lightgray; }\n' +
+    '        button.codeeditor-button:disabled { background-color: lightgray; }\n' +
     '        p.function_title {\n' +
     '            background: darkslategray;\n' +
     '            color: gold;\n' +
@@ -26,7 +26,7 @@ TEMPLATE = '<style>\n' +
     '        }\n' +
     '        h2 { text-align: center; paddin:0; margin:0; }\n' +
     '        .bar { height: 3rem; border-spacing: 0px; }\n' +
-    '        .vseditor { top: 3.5rem; left:0; right:0; bottom:0; }\n' +
+    '        .vseditor { top: 3.5rem; left:0; right:0; bottom:0; border-width: 1px; border-style: dotted; }\n' +
     '        button.codeeditor-button svg { width: 24px; height: 24px; }\n' +
     '        .td_width { width: 6rem; }\n' +
     '</style>\n' +
@@ -86,14 +86,19 @@ try {
     init = function flx_init (component) {
         var _on_loadjs, function_title_visibility, on_save, state;
         _on_loadjs = (function flx__on_loadjs () {
-            var _changed, ed, state, top, value;
+            var _changed, ed, state, theme, top, value;
             ed = component.root.querySelector("div.vseditor");
             if (_pyfunc_truthy(component.hasAttribute("value"))) {
                 value = decodeURIComponent(escape(atob(component.getAttribute("value"))));
             } else {
                 value = "";
             }
-            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: "vs"}));
+            if (_pyfunc_truthy(component.hasAttribute("theme"))) {
+                theme = component.getAttribute("theme");
+            } else {
+                theme = "vs";
+            }
+            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme}));
             _changed = (function flx__changed (event) {
                 component.set_state(({changed: true}));
                 return null;

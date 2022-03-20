@@ -9,34 +9,31 @@
 {% block scroll %}
 {% endblock %}
 {% block list_content_actions %}
-        {% new_row "New album" %}
+        {% new_row "new track" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Release date</th>
-        <th>Artist</th>
-        <th>Description</th>
+        <th>Parent</th>
+        <th>Name</th>
         <th>
-        Genre
+        Param
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{ object.release_date }}</td>
-        <td>{{ object.artist }}</td>
-        <td>{{ object.description }}</td>
+        <td>{{ object.parent }}</td>
+        <td>{{ object.name }}</td>
         <td>
-        {{ object.genre }}
+        {{ object.param }}
         </td>
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
                 edit
                 delete
-                field_list/track_set,Tracks
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                release_date,artist,description,genre
+                parent,name,param
         {% endform %}
 {% endblock %}
 
