@@ -160,6 +160,17 @@ class Track(models.Model):
         ],
         can_add=False,
     )
+    params = ext_models.PtigManyToManyField(
+        Example4Parameter,
+        null=False,
+        blank=False,
+        editable=True,
+        verbose_name="Parameters",
+        search_fields=[
+            "key__icontains",
+        ],
+        related_name="track_parameters",
+    )
 
 
 admin.site.register(Track)

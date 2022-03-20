@@ -31,4 +31,4 @@
 
 %% row_edit
     % form:
-        .parent,name,param
+        .parent,name,param,params

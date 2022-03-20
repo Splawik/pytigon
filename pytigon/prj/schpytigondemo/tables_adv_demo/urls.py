@@ -16,3 +16,6 @@ gen.standard("Track", _("Track"), _("Tracks"))
 
 gen.for_field("Album", "track_set", _("Track"), _("Tracks"))
 gen.for_field("tables_demo.Example4Parameter", "track_set", _("Track"), _("Tracks"))
+gen.for_field(
+    "tables_demo.Example4Parameter", "track_parameters", _("Track"), _("Tracks")
+)
