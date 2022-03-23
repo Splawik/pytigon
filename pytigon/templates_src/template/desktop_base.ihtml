@@ -133,6 +133,7 @@
 
         {{ form.media.css }}
 
+        {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
         %% botstrap_css
             % if settings.BOOTSTRAP_TEMPLATE:
                 {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
@@ -140,7 +141,6 @@
                 {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}
 
             {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
-            {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
         
         %% theme_css_links
             % if 'materia' in settings.BOOTSTRAP_TEMPLATE:
