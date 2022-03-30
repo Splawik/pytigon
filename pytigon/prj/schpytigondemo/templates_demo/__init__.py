@@ -11,5 +11,12 @@ Urls = (
         None,
         """png://mimetypes/x-office-presentation.png""",
     ),
+    (
+        "excel/",
+        _("Excel template"),
+        None,
+        """png://mimetypes/x-office-spreadsheet.png""",
+    ),
+    ("odf/", _("odf template"), None, """png://mimetypes/x-office-spreadsheet.png"""),
 )
 UserParam = {}

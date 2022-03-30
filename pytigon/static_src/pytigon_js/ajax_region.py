@@ -419,7 +419,11 @@ def refresh_ajax_frame(
                 "$$RETURN_NEW_ROW_OK",
                 "$$RETURN_UPDATE_ROW_OK",
             ):
-                elem = region.closest(".plug").parentElement
+                plug = region.closest(".plug")
+                if plug:
+                    elem = region.closest(".plug").parentElement
+                else:
+                    elem = element
                 callback()
                 return refresh_ajax_frame(
                     elem, region_name, None, None, callback_on_error, data

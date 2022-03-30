@@ -1471,7 +1471,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     link = get_ajax_link(element, region_name);
     loading = new Loading(element);
     _callback = (function flx__callback (data) {
-        var dt, elem, options, txt;
+        var dt, elem, options, plug, txt;
         loading.stop();
         loading.remove();
         dt = data_type(data);
@@ -1487,7 +1487,12 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_RELOAD_PAGE"])) {
             return _refresh_page(region, data);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
-            elem = region.closest(".plug").parentElement;
+            plug = region.closest(".plug");
+            if (_pyfunc_truthy(plug)) {
+                elem = region.closest(".plug").parentElement;
+            } else {
+                elem = element;
+            }
             callback();
             return refresh_ajax_frame(elem, region_name, null, null, callback_on_error, data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {

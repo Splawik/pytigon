@@ -64,7 +64,14 @@ class ExprNode(template.Node):
                         context[self.var_name] = eval(self.expr_string, d)
                 return ""
             else:
-                val = eval(self.expr_string, d)
+                try:
+                    val = eval(self.expr_string, d)
+                except:
+                    print("ERROR:")
+                    print(self.expr_string)
+                    print(d)
+                    print("------------------------------")
+                    val = None
                 if val != None:
                     if self.safe:
                         ret = mark_safe2(str(val))

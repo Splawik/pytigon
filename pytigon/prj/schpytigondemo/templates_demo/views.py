@@ -28,3 +28,17 @@ from . import models
 import os
 import sys
 import datetime
+
+
+@dict_to_template("templates_demo/v_excel_report.html")
+def excel_report(request, **argv):
+
+    object_list = [("title1", 1), ("title2", 2)]
+    return {"doc_type": "xlsx", "object_list": object_list}
+
+
+@dict_to_template("templates_demo/v_odf_report.html")
+def odf_report(request, **argv):
+
+    object_list = [("title1", 1), ("title2", 2)]
+    return {"doc_type": "odf", "object_list": object_list}
