@@ -11,7 +11,7 @@ div class=form-group
         %% header
         
         % for object in reports:
-            div class={% block subreport_item_width %}col-1{% endblock %}
+            div class={% block subreport_item_width %}col-1{% endblock %},,,style=position:relative;display:inline-block;
                 %% rep_line
                 div class=fab,,,style=transform:scale(0.5); -webkit-transform:scale(0.5); -moz-transform:scale(0.5); -o-transform:scale(0.5); margin-left: -40px;
                     nav class=menu
