@@ -243,12 +243,12 @@ Url_CHOICES = [
 
 ViewRetType_CHOICES = [
     ("T", "Template"),
-    ("O", "Odf"),
+    ("O", "Odf format (default .ods)"),
     ("P", "Pdf"),
     ("J", "Json"),
     ("X", "Xml"),
     ("U", "User defined"),
-    ("S", "Xlsx"),
+    ("S", "OOXML (default .xlsx)"),
     ("t", "Txt"),
 ]
 

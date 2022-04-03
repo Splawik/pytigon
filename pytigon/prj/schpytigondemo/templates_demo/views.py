@@ -14,7 +14,7 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
-    dict_to_xlsx,
+    dict_to_ooxml,
     dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
@@ -34,11 +34,11 @@ import datetime
 def excel_report(request, **argv):
 
     object_list = [("title1", 1), ("title2", 2)]
-    return {"doc_type": "xlsx", "object_list": object_list}
+    return {"doc_type": "pptx", "object_list": object_list}
 
 
 @dict_to_template("templates_demo/v_odf_report.html")
 def odf_report(request, **argv):
 
     object_list = [("title1", 1), ("title2", 2)]
-    return {"doc_type": "odf", "object_list": object_list}
+    return {"doc_type": "odp", "object_list": object_list}

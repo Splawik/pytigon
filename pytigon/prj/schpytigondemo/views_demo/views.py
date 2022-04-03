@@ -14,7 +14,7 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
-    dict_to_xlsx,
+    dict_to_ooxml,
     dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
@@ -89,7 +89,7 @@ def xml_example(request, **argv):
     return Example1Computer.objects.all()
 
 
-@dict_to_xlsx("views_demo/v_xlsx_example.xlsx")
+@dict_to_ooxml("views_demo/v_xlsx_example.xlsx")
 def xlsx_example(request, **argv):
 
     return {"name": "xlsx test", "description": "Hello!"}

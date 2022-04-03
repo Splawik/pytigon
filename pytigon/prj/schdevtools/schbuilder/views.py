@@ -14,7 +14,7 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_pdf,
     dict_to_json,
     dict_to_xml,
-    dict_to_xlsx,
+    dict_to_ooxml,
     dict_to_txt,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
