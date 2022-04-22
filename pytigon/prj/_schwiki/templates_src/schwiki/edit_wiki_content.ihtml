@@ -26,18 +26,21 @@
         ptig-codeeditor class=flexible2_size,,,value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}},,,width=100%,,,height=100%,,,offset=6.1rem
             nav class=navbar navbar-dark bg-primary
                 div class=container-fluid
-                    form class=form-inline
-                        div class=d-inline-flex flex-wrap
-                            div class=form-group form-floating,,,style=width:6rem
+                        form class=form-inline
+                            div class=d-inline-flex flex-wrap
                                 button data-bind=disabled:!changed;onclick:on_save,,,class=btn btn-primary,,,type=button
                                     i class=fa fa-floppy-o
                                     .Save
-                            div class=form-group form-floating,,,style=width:40rem
-                                % get_table_row "wikiobj_id" "schwiki" "PageObjectsConf" "name__icontains" label="Type of wiki object" filter="1" is_get_button=True
-                            div class=form-group form-floating    
+                                .&nbsp; &nbsp;
                                 insert-object app_path={{app_path}},,,page_id={{object.id}}
-                                    % action "new_object" _("Modify or create a wiki object") url="{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}" target="run_script" 
-
+                                    button data-bind=onclick:on_properties,,,class=btn btn-info,,,type=button,,,name=properties
+                                        i class=fa fa-wpforms
+                                        .Properties
+                                    .&nbsp; &nbsp;
+                                    % for item in object.get_wiki_objects:
+                                        button data-bind=onclick:on_insert,,,class=btn btn-link text-white btn-sm,,,type=button,,,name={{item.name}},,,target={% if item.show_form %}popup_edit{% else %}null{% endif %}
+                                            i class={{item.icon}}
+                                            {{ item.name }}
     
 %% edit_area2
     move-attr target-tag=div.modal-dialog,,,class=+modal-max

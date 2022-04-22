@@ -40,6 +40,8 @@ from pytigon_lib.schtools.tools import bencode, bdecode, is_null
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
+from schwiki.applib import makdown_obj_simple, markdown_obj_subblocks
+
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
 

@@ -150,9 +150,10 @@ def new_rep(request, rep_type, doc_type_name):
         return HttpResponse("Error - document type: %s doesn't exists" % doc_type_name)
 
 
-def edit__rep(request, rep_id):
+def edit__rep(request, rep_id, rep=None):
 
-    rep = models.Report.objects.get(pk=rep_id)
+    if rep == None:
+        rep = models.Report.objects.get(pk=rep_id)
     rep_def = models.ReportDef.objects.get(name=rep.report_def_name)
 
     if rep_def.declaration:
@@ -169,10 +170,11 @@ def edit__rep(request, rep_id):
                     data = locals()["save"](form, rep)
                 else:
                     data = form.cleaned_data
-                rep.jsondata = data
-                rep.save()
-                url = make_path("ok")
-                return HttpResponseRedirect(url)
+                if data != None:
+                    rep.jsondata = data
+                    rep.save()
+                    url = make_path("ok")
+                    return HttpResponseRedirect(url)
 
     if not request.POST:
         data = rep.get_json_data()
@@ -198,9 +200,17 @@ def new_subrep(request, parent_rep_id, rep_type):
     rep.order = 0
     rep.report_def_name = rep_parent.report_def_name + "/" + rep_type
     rep.date = datetime.datetime.now()
-    rep.save()
-    url = make_href("/schreports/table/Report/%d/edit__rep/" % rep.id)
-    return HttpResponseRedirect(url)
+    return edit__rep(request, 0, rep)
+
+    # rep_parent = models.Report.objects.get(pk=parent_rep_id)
+    # rep = models.Report()
+    # rep.parent = rep_parent
+    # rep.order = 0
+    # rep.report_def_name = rep_parent.report_def_name + "/" + rep_type
+    # rep.date = datetime.datetime.now()
+    # rep.save()
+    # url = make_href("/schreports/table/Report/%d/edit__rep/" % rep.id)
+    # return HttpResponseRedirect(url)
 
 
 def edit_subrep(request, parent_rep_id, rep_type, view_type):

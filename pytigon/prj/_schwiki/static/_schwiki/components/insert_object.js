@@ -1,14 +1,49 @@
-var TAG, TEMPLATE, comp, handle_click, init, stub3_context, stub4_err;
+var TAG, TEMPLATE, comp, get_current_line, get_editor, get_editor_component, handle_click, init, is_special_line, set_current_line, stub3_context, stub4_err;
 TAG = "insert-object";
 TEMPLATE = '        <div name=\"insert_element\">\n' +
     '                <slot></slot>\n' +
     '        </div>\n' +
     '\n' +
     '';
+get_editor_component = function flx_get_editor_component (object) {
+    return object.closest("ptig-codeeditor");
+};
+
+get_editor = function flx_get_editor (object) {
+    var vc_component;
+    vc_component = get_editor_component(object);
+    return vc_component.editor;
+};
+
+get_current_line = function flx_get_current_line (editor) {
+    return (editor.getModel().getLineContent)(editor.getPosition().lineNumber);
+};
+
+set_current_line = function flx_set_current_line (editor, text) {
+    var current_line, id, line_number, op, range;
+    line_number = editor.getPosition().lineNumber;
+    current_line = get_current_line(editor);
+    range = new monaco.Range(line_number, 1, line_number, current_line.length + 1);
+    id = ({major: 1, minor: 1});
+    op = ({identifier: id, range: range, text: text, forceMoveMarkers: true});
+    editor.executeEdits("pytigon", [op]);
+    editor.setPosition(({lineNumber: line_number, column: 1}));
+    editor.focus();
+    return null;
+};
+
+is_special_line = function flx_is_special_line (line) {
+    if ((_pyfunc_op_equals((_pymeth_strip.call(line).slice(0,1)), "%"))) {
+        return true;
+    } else {
+        return false;
+    }
+    return null;
+};
+
 handle_click = function flx_handle_click (app_path, object, context) {
-    var _on_get, ed, edit_form, href, id, l, line, max, n, op, pos, range, repeat, stub1_seq, stub2_itr, tab, text, vc_component, x, xx;
-    vc_component = object.closest("ptig-codeeditor");
-    ed = vc_component.editor;
+    var _on_get, ed, edit_form, href, id, l, line, max, n, op, pos, range, repeat, stub1_seq, stub2_itr, tab, text, x, xx;
+    ed = get_editor();
     repeat = 2;
     while (repeat > 0) {
         pos = ed.getPosition();
@@ -81,28 +116,34 @@ comp = stub3_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var button, on_click, select, x;
-        button = component.querySelector("a.btn");
-        button.style.height = "100%";
-        x = component.closest("form");
-        select = x.querySelector("select.django-select2");
-        on_click = (function flx_on_click () {
-            var on_get, pk;
-            on_get = (function flx_on_get (content) {
-                handle_click(component.getAttribute("app_path"), button, content);
-                return null;
-            }).bind(this);
+        var on_insert, on_properties, state;
+        on_insert = (function flx_on_insert (event) {
+            var _complete, button_name, data, ed, ed_component, href, line, spec;
+            button_name = event.target.getAttribute("name");
+            ed_component = get_editor_component(event.target);
+            ed = ed_component.editor;
+            line = get_current_line(ed);
+            spec = is_special_line(line);
+            set_current_line(ed, "$$$");
+            if (_pyfunc_truthy(ed_component.hasAttribute("href"))) {
+                href = ed_component.getAttribute("href");
+                _complete = (function flx__complete (data_in) {
+                    alert(data_in);
+                    return null;
+                }).bind(this);
 
-            pk = select.options[select.selectedIndex].value;
-            if (_pyfunc_truthy(pk)) {
-                ajax_json(window.process_href(button.href, window.jQuery(button)), ({}), on_get);
-            } else {
-                handle_click(component.getAttribute("app_path"), button, ({edit_form: true, object_inline_editing: null, object_name: null, page_id: component.getAttribute("page_id"), pk: null, object_name: null}));
+                data = JSON.stringify(({line: line, status: "new_row"}));
+                ajax_post(href, data, _complete, null);
             }
-            return false;
+            return null;
         }).bind(this);
 
-        button.onclick = on_click;
+        on_properties = (function flx_on_properties (event) {
+            return null;
+        }).bind(this);
+
+        state = ({on_insert: on_insert, on_properties: on_properties});
+        component.set_state(state);
         return null;
     };
 
@@ -110,4 +151,4 @@ try {
 } catch(err_0)  { stub4_err=err_0; }
 if (stub4_err) { if (!stub3_context.__exit__(stub4_err.name || "error", stub4_err, null)) { throw stub4_err; }
 } else { stub3_context.__exit__(null, null, null); }
-export {handle_click};
+export {get_editor_component, get_editor, get_current_line, set_current_line, is_special_line, handle_click};

@@ -22,6 +22,11 @@ from pytigon_lib.schtools.tools import norm_indent
 from django.template.loader import select_template
 from datetime import datetime
 from collections import namedtuple
+from pytigon_lib.schindent.indent_markdown import (
+    IndentMarkdownProcessor,
+    REG_OBJ_RENDERER,
+)
+
 
 template_content = """
 {# -*- coding: utf-8 -*- #}
@@ -411,7 +416,9 @@ class Page(JSONModel):
         # if not self.id:
         super(Page, self).save(*args, **kwargs)
         if self.content_src:
-            content = html_from_wiki(self, self.content_src + "\n\n\n&nbsp;")
+            # content = html_from_wiki(self, self.content_src+"\n\n\n&nbsp;")
+            x = IndentMarkdownProcessor()
+            content = x.convert_to_html(self.content_src)
         else:
             content = ""
         self.content = content
@@ -459,6 +466,15 @@ class Page(JSONModel):
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def get_wiki_objects():
+        global REG_OBJ_RENDERER
+        print("REG:", REG_OBJ_RENDERER)
+        ret = []
+        for key, obj in REG_OBJ_RENDERER.items():
+            ret.append(obj.get_info())
+        return ret
 
 
 admin.site.register(Page)
