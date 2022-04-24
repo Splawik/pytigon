@@ -939,26 +939,30 @@ class DocHead(JSONModel):
 
     def get_visible_statuses(self, request=None):
         if self.id:
-            obj = DocHead.objects.get(pk=self.id)
+            obj = self
             reg = obj.doc_type_parent.parent
-            while reg:
-                statuses = reg.docregstatus_set.all().order_by("order")
-                if len(statuses) > 0:
-                    ret = []
-                    for status in statuses:
-                        if status.can_set_proc:
-                            data = content_to_function(
-                                status.can_set_proc, "request, doc_head"
-                            )(request, self)
-                            if data:
-                                ret.append(status)
-                        else:
-                            ret.append(status)
-
-                    return ret
-
-                reg = reg.get_parent()
-
+            parent_reg = reg
+            if hasattr(reg, "cached_statuses"):
+                statuses_to_cache = reg.cached_statuses
+            else:
+                statuses_to_cache = []
+                while reg:
+                    statuses = reg.docregstatus_set.all().order_by("order")
+                    if len(statuses) > 0:
+                        statuses_to_cache += list(statuses)
+                    reg = reg.get_parent()
+                setattr(parent_reg, "cached_statuses", statuses_to_cache)
+            ret = []
+            for status in statuses_to_cache:
+                if status.can_set_proc:
+                    data = content_to_function(
+                        status.can_set_proc, "request, doc_head"
+                    )(request, self)
+                    if data:
+                        ret.append(status)
+                else:
+                    ret.append(status)
+            return ret
         return []
 
     def status_can_be_undo(self, request=None):
@@ -985,9 +989,15 @@ class DocHead(JSONModel):
 
     def get_reg_status(self):
         reg = self.doc_type_parent.parent
-        statuses = reg.docregstatus_set.filter(name=self.status)
-        if len(statuses) > 0:
-            return statuses[0]
+        if hasattr(reg, "cached_statuses"):
+            statuses = reg.cached_statuses
+            for status in statuses:
+                if status.name == self.status:
+                    return status
+        else:
+            statuses = reg.docregstatus_set.filter(name=self.status)
+            if len(statuses) > 0:
+                return statuses[0]
         return None
 
     def get_undo_target(self):

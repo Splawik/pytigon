@@ -119,17 +119,17 @@ def view_row(
     ret = action_fun(
         context, "view_row", title, icon_name, target, attrs, tag_class, href
     )
-    if hasattr(object, "get_derived_object"):
-        object2 = object.get_derived_object()
-        if hasattr(object2, "str"):
-            ret["title2"] = str(object2)
-        else:
-            ret["title2"] = ("%s(id=" % type(object2).__name__) + str(title) + ")"
+    # if hasattr(object, "get_derived_object"):
+    #    object2 = object.get_derived_object()
+    #    if hasattr(object2, "str"):
+    #        ret["title2"] = str(object2)
+    #    else:
+    #        ret["title2"] = ("%s(id=" % type(object2).__name__) + str(title) + ")"
+    # else:
+    if hasattr(object, "str"):
+        ret["title2"] = str(object)
     else:
-        if hasattr(object, "str"):
-            ret["title2"] = str(object)
-        else:
-            ret["title2"] = ("%s(id=" % type(object).__name__) + str(title) + ")"
+        ret["title2"] = ("%s(id=" % type(object).__name__) + str(title) + ")"
     return ret
 
 

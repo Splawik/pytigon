@@ -10,7 +10,7 @@
         {% endwith %}
 {% endblock %}
 {% block form_action %}
-        {{request.get_full_path}}
+        {{base_path}}schwiki/edit_page_object_form/{{object_name}}/
 {% endblock %}
 {% block row_edit_form %}
         {% if form %}

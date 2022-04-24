@@ -27,6 +27,8 @@ def data_type(data_or_html):
                 return "$$RETURN_REFRESH_AUTO_FRAME"
             elif "$$RETURN_HTML_ERROR" in data_or_html:
                 return "$$RETURN_HTML_ERROR"
+            elif "$$RETURN_JSON" in data_or_html:
+                return "$$RETURN_JSON"
         else:
             meta_list = Array.prototype.slice.call(
                 data_or_html.querySelectorAll("meta")
@@ -460,6 +462,22 @@ def refresh_ajax_frame(
                     },
                 }
                 Swal.fire(options)
+            elif dt == "$$RETURN_JSON":
+                frame = get_ajax_frame(region, "json")
+                callback()
+                if frame:
+                    if (
+                        hasattr(frame, "onloadeddata")
+                        and getattr(frame, "onloadeddata")
+                        and frame.onloadeddata
+                    ):
+                        evt = document.createEvent("HTMLEvents")
+                        evt.initEvent("loadeddata", False, True)
+                        evt.data = data
+                        evt.data_source = link
+                        frame.dispatchEvent(evt)
+                        return
+                return
             else:
                 mount_html(frame, data, link)
 

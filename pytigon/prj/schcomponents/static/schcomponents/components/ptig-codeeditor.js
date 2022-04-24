@@ -98,7 +98,7 @@ try {
             } else {
                 theme = "vs";
             }
-            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme}));
+            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme, wordWrap: "off", wordWrapMinified: false}));
             _changed = (function flx__changed (event) {
                 component.set_state(({changed: true}));
                 return null;

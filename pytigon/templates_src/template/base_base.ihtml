@@ -162,7 +162,7 @@
                         <meta name="RETURN" content="$$RETURN_RELOAD" />
                         {{ form.errors }}
                 %% row_edit_all
-                    form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region=page
+                    form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region={% block dialog_form_region %}page{% endblock %}
                         % csrf_token
                         %% row_edit_form
                             table width=100%,,,style=table-layout:fixed;

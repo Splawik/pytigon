@@ -24,23 +24,23 @@
     move-attr target-tag=div,,,class=maximized
     div class=refresh_after_close,,,style=width:calc( 100% + 0px );height:calc( 100vh + 0px );position:relative;
         ptig-codeeditor class=flexible2_size,,,value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}},,,width=100%,,,height=100%,,,offset=6.1rem
-            nav class=navbar navbar-dark bg-primary
+            nav class=navbar navbar-dark,,,style=background-color:var(--bs-primary);
                 div class=container-fluid
-                        form class=form-inline
-                            div class=d-inline-flex flex-wrap
-                                button data-bind=disabled:!changed;onclick:on_save,,,class=btn btn-primary,,,type=button
-                                    i class=fa fa-floppy-o
-                                    .Save
+                    form class=form-inline
+                        div class=d-inline-flex flex-wrap
+                            button data-bind=disabled:!changed;onclick:on_save,,,class=btn btn-primary,,,type=button
+                                i class=fa fa-floppy-o
+                                .Save
+                            .&nbsp; &nbsp;
+                            insert-object app_path={{app_path}},,,page_id={{object.id}},,,href={{base_path}}schwiki/edit_page_object/,,,class=ajax-region ajax-link ajax-frame,,,data-region=json
+                                button data-bind=onclick:on_properties,,,class=btn btn-info,,,type=button,,,name=properties
+                                    i class=fa fa-wpforms
+                                    .Properties
                                 .&nbsp; &nbsp;
-                                insert-object app_path={{app_path}},,,page_id={{object.id}}
-                                    button data-bind=onclick:on_properties,,,class=btn btn-info,,,type=button,,,name=properties
-                                        i class=fa fa-wpforms
-                                        .Properties
-                                    .&nbsp; &nbsp;
-                                    % for item in object.get_wiki_objects:
-                                        button data-bind=onclick:on_insert,,,class=btn btn-link text-white btn-sm,,,type=button,,,name={{item.name}},,,target={% if item.show_form %}popup_edit{% else %}null{% endif %}
-                                            i class={{item.icon}}
-                                            {{ item.name }}
+                                % for item in object.get_wiki_objects:
+                                    button data-bind=onclick:on_insert,,,class=btn btn-link text-white btn-sm,,,type=button,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object
+                                        i class={{item.icon}}
+                                        {{ item.name }}
     
 %% edit_area2
     move-attr target-tag=div.modal-dialog,,,class=+modal-max

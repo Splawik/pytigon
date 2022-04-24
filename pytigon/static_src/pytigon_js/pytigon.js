@@ -1150,6 +1150,8 @@ data_type = function flx_data_type (data_or_html) {
                 return "$$RETURN_REFRESH_AUTO_FRAME";
             } else if (_pyfunc_op_contains("$$RETURN_HTML_ERROR", data_or_html)) {
                 return "$$RETURN_HTML_ERROR";
+            } else if (_pyfunc_op_contains("$$RETURN_JSON", data_or_html)) {
+                return "$$RETURN_JSON";
             }
         } else {
             meta_list = Array.prototype.slice.call(data_or_html.querySelectorAll("meta"));
@@ -1471,7 +1473,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     link = get_ajax_link(element, region_name);
     loading = new Loading(element);
     _callback = (function flx__callback (data) {
-        var dt, elem, options, plug, txt;
+        var dt, elem, evt, options, plug, txt;
         loading.stop();
         loading.remove();
         dt = data_type(data);
@@ -1518,6 +1520,20 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             }
             options = ({title: "Error!", html: txt, icon: "error", buttonsStyling: false, showCancelButton: false, customClass: ({confirmButton: "btn btn-primary btn-lg"})});
             Swal.fire(options);
+        } else if (_pyfunc_op_equals(dt, "$$RETURN_JSON")) {
+            frame = get_ajax_frame(region, "json");
+            callback();
+            if (_pyfunc_truthy(frame)) {
+                if ((_pyfunc_hasattr(frame, "onloadeddata") && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
+                    evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("loadeddata", false, true);
+                    evt.data = data;
+                    evt.data_source = link;
+                    frame.dispatchEvent(evt);
+                    return null;
+                }
+            }
+            return null;
         } else {
             mount_html(frame, data, link);
         }

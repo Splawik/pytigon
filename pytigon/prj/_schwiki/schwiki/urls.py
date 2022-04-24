@@ -18,9 +18,17 @@ urlpatterns = [
     gen_row_action(
         "PageObjectsConf", "insert_object_to_editor", views.insert_object_to_editor
     ),
-    gen_tab_action("PageObjectsConf", "edit_page_object", views.edit_page_object),
     gen_row_action("WikiConf", "publish", views.publish),
     re_path("(?P<q>.*)/search/$", views.search, {}, name="schwiki_search"),
+    path(
+        "edit_page_object/", views.edit_page_object, {}, name="schwiki_edit_page_object"
+    ),
+    path(
+        "edit_page_object_form/<slug:object_name>/",
+        views.edit_page_object_form,
+        {},
+        name="schwiki_edit_page_object_form",
+    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schwiki", views)

@@ -360,8 +360,11 @@ class ImgObjRenderer(BaseObjRenderer):
         context["elements"] = elements
         return context
 
-    def get_template_name(self):
+    def get_renderer_template_name(self):
         return "schwiki/img_wikiobj_view.html"
+
+    def get_edit_template_name(self):
+        return "schwiki/img_wikiobj_edit.html"
 
 
 register_obj_renderer("img", ImgObjRenderer)
@@ -387,7 +390,7 @@ class SvgObjRenderer(BaseObjRenderer):
     def get_edit_form(self):
         return SvgForm
 
-    def get_template_name(self):
+    def get_renderer_template_name(self):
         return "schwiki/svg_wikiobj_view.html"
 
 
@@ -448,7 +451,7 @@ class VideoObjRenderer(BaseObjRenderer):
             context.update({"sources": sources, "tracks": tracks})
         return context
 
-    def get_template_name(self):
+    def get_renderer_template_name(self):
         return "schwiki/video_wikiobj_view.html"
 
 
@@ -502,7 +505,7 @@ class GraphvizObjRenderer(BaseObjRenderer):
 
         return context
 
-    def get_template_name(self):
+    def get_renderer_template_name(self):
         return "schwiki/graphviz_wikiobj_view.html"
 
 
@@ -525,7 +528,7 @@ class PlotObjRenderer(BaseObjRenderer):
     def get_edit_form(self):
         return PLOT_OBJ_RENDERER_FORM
 
-    def get_template_name(self):
+    def get_renderer_template_name(self):
         return "schwiki/plot_wikiobj_view.html"
 
 

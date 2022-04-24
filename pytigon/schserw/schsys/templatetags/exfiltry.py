@@ -889,3 +889,12 @@ def user_can_change_password(user):
         return False
     else:
         return True
+
+
+@register.filter(name="prefetch_related")
+def prefetch_related(object_list, param):
+    l = object_list
+    for related in param.replace(",", ";").split(";"):
+        if related:
+            l = l.prefetch_related(related)
+    return l

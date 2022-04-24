@@ -32,6 +32,7 @@ import datetime
 from .models import Page
 from pytigon_lib.schdjangoext.fastform import form_from_str
 from django.template.loader import select_template
+from django.http import JsonResponse
 from pytigon_lib.schviews import make_path
 from pytigon_lib.schtools.schjson import json_loads, json_dumps
 
@@ -41,6 +42,8 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from schwiki.applib import makdown_obj_simple, markdown_obj_subblocks
+from pytigon_lib.schindent.indent_markdown import get_obj_renderer
+
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -227,84 +230,6 @@ def insert_object_to_editor(request, pk):
     }
 
 
-def edit_page_object(request):
-
-    name = request.GET.get("name", None)
-    if name:
-        name = name.replace("\r", "").strip()
-        name0 = name.split("_")[0]
-        object_list = models.PageObjectsConf.objects.filter(name=name0)
-        if len(object_list) > 0:
-            obj = object_list[0]
-            pk = request.GET.get("page_id", 0)
-            page = models.Page.objects.get(pk=pk)
-
-            if obj.edit_form:
-                form_class = form_from_str(obj.edit_form)
-            else:
-                form_class = None
-                form = None
-
-            context = {"conf": obj, "page": page, "request": request}
-
-            if request.POST or request.FILES:
-                if request.method == "POST":
-                    if form_class:
-                        form = form_class(request.POST, request.FILES)
-                        if form.is_valid():
-                            if obj.save_fun:
-                                try:
-                                    # context['old_data'] = page.get_json_data()[name]
-                                    context["old_data"] = page.jsondata[name]
-                                except:
-                                    pass
-                                exec(obj.save_fun)
-                                data = locals()["save"](form, context)
-                            else:
-                                data = form.cleaned_data
-                            # page._data = { name: data }
-                            # page._data['json_update'] = True
-                            page.jsondata = {name: data}
-                            page.operator = request.user.username
-                            page.update_time = datetime.datetime.now()
-                            page.save()
-                            url = make_path("ok")
-                            return HttpResponseRedirect(url)
-                    else:
-                        url = make_path("ok")
-                        return HttpResponseRedirect(url)
-
-            if not request.POST:
-                if form_class:
-                    data = page.get_json_data()
-
-                    if obj.load_fun:
-                        exec(obj.load_fun)
-                        data_form = locals()["load"](data, context)
-                    else:
-                        if data and name in data:
-                            data_form = data[name]
-                        else:
-                            data_form = {}
-                    form = form_class(initial=data_form)
-
-            template_name1 = (obj.app + "/" + obj.name).lower() + "_wikiobj_edit.html"
-            template_name2 = "schwiki/wikiobj_edit.html"
-
-            t = select_template(
-                [
-                    template_name1,
-                    template_name2,
-                ]
-            )
-            c = {"form": form, "object": obj, "page": page}
-
-            return HttpResponse(t.render(c, request))
-
-    url = make_path("ok")
-    return HttpResponseRedirect(url)
-
-
 @dict_to_template("schwiki/v_publish.html")
 def publish(request, pk):
 
@@ -345,3 +270,160 @@ def search(request, q):
     object_list = Page.objects.filter(content__iregex=search_txt)
 
     return {"object_list": object_list, "q": search_txt}
+
+
+def edit_page_object(request, **argv):
+
+    data = json_loads(request.body)
+    print("DATA:", data)
+    status = data["status"]
+    if status in ("new_object", "edit_object"):
+        if status == "new_object":
+            obj_name = data["object_name"]
+            param = None
+        else:
+            line = data["line"]
+            x = line.split("#", 1)
+            obj_name = x[0].strip()[1:].strip()
+            if obj_name.endswith(":"):
+                obj_name = obj_name[:-1]
+            if len(x) > 1:
+                s = x[1].strip()
+                if s and s[0] == "{":
+                    param = json_loads(s.replace("\\n", "\n"))
+                else:
+                    return {"param_line": s}
+            else:
+                param = None
+        obj_conf = get_obj_renderer(obj_name)
+        if obj_conf:
+            form_source = obj_conf.get_edit_form()
+            if form_source:
+                if type(form_source) == str:
+                    form_class = form_from_str(form_source)
+                else:
+                    form_class = form_source
+                form = obj_conf.form_from_dict(form_class, param)
+                template_name = obj_conf.get_edit_template_name()
+                t = select_template(
+                    [
+                        template_name,
+                    ]
+                )
+                c = {"form": form, "object_name": obj_name}
+                return HttpResponse(t.render(c, request))
+            else:
+                line = "% " + obj_name
+                return JsonResponse({"status": "return_line", "line": line})
+    return JsonResponse({"status": "object_name not found!", "status": status})
+
+    if False:
+        name = request.GET.get("name", None)
+        if name:
+            name = name.replace("\r", "").strip()
+            name0 = name.split("_")[0]
+            object_list = models.PageObjectsConf.objects.filter(name=name0)
+            if len(object_list) > 0:
+                obj = object_list[0]
+                pk = request.GET.get("page_id", 0)
+                page = models.Page.objects.get(pk=pk)
+
+                if obj.edit_form:
+                    form_class = form_from_str(obj.edit_form)
+                else:
+                    form_class = None
+                    form = None
+
+                context = {"conf": obj, "page": page, "request": request}
+
+                if request.POST or request.FILES:
+                    if request.method == "POST":
+                        if form_class:
+                            form = form_class(request.POST, request.FILES)
+                            if form.is_valid():
+                                if obj.save_fun:
+                                    try:
+                                        # context['old_data'] = page.get_json_data()[name]
+                                        context["old_data"] = page.jsondata[name]
+                                    except:
+                                        pass
+                                    exec(obj.save_fun)
+                                    data = locals()["save"](form, context)
+                                else:
+                                    data = form.cleaned_data
+                                # page._data = { name: data }
+                                # page._data['json_update'] = True
+                                page.jsondata = {name: data}
+                                page.operator = request.user.username
+                                page.update_time = datetime.datetime.now()
+                                page.save()
+                                url = make_path("ok")
+                                return HttpResponseRedirect(url)
+                        else:
+                            url = make_path("ok")
+                            return HttpResponseRedirect(url)
+
+                if not request.POST:
+                    if form_class:
+                        data = page.get_json_data()
+
+                        if obj.load_fun:
+                            exec(obj.load_fun)
+                            data_form = locals()["load"](data, context)
+                        else:
+                            if data and name in data:
+                                data_form = data[name]
+                            else:
+                                data_form = {}
+                        form = form_class(initial=data_form)
+
+                template_name1 = (
+                    obj.app + "/" + obj.name
+                ).lower() + "_wikiobj_edit.html"
+                template_name2 = "schwiki/wikiobj_edit.html"
+
+                t = select_template(
+                    [
+                        template_name1,
+                        template_name2,
+                    ]
+                )
+                c = {"form": form, "object": obj, "page": page}
+
+                return HttpResponse(t.render(c, request))
+
+        url = make_path("ok")
+        return HttpResponseRedirect(url)
+
+
+def edit_page_object_form(request, object_name):
+
+    obj_conf = get_obj_renderer(object_name)
+    if obj_conf:
+        form_source = obj_conf.get_edit_form()
+        if form_source:
+            if type(form_source) == str:
+                form_class = form_from_str(form_source)
+            else:
+                form_class = form_source
+            form = form_class(request.POST, request.FILES)
+            if form.is_valid():
+                param = obj_conf.convert_form_to_dict(form)
+                line = json_dumps(param).replace("\n", "\\n")
+                return JsonResponse(
+                    {"status": "return_line", "line": line, "RETURN": "$$RETURN_JSON"}
+                )
+            else:
+                t = select_template(
+                    [
+                        template_name1,
+                        template_name2,
+                    ]
+                )
+                c = {
+                    "form": form,
+                }
+                return HttpResponse(t.render(c, request))
+    return JsonResponse(
+        {"status": "object_name not found!", "object_name": object_name}
+    )
