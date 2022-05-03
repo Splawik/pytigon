@@ -131,20 +131,42 @@ try {
         var _init_OK, href, on_insert, on_properties, update_or_insert;
         href = component.getAttribute("href");
         _init_OK = (function flx__init_OK () {
-            var button_OK, modal_dialog;
+            var button_OK, change, ed_component, modal_dialog, on_ok, save;
+            ed_component = get_editor_component(component);
+            save = ed_component.state["save"];
+            change = ed_component.state["save"];
+            on_ok = (function flx_on_ok (event) {
+                var changed, div, on_saved;
+                div = component.closest(".modal-content");
+                div.style.opacity = "50%";
+                on_saved = (function flx_on_saved () {
+                    refresh_ajax_frame(div, "page", null, null, null);
+                    return null;
+                }).bind(this);
+
+                changed = ed_component.state["changed"];
+                if (_pyfunc_truthy(changed)) {
+                    save(on_saved);
+                } else {
+                    on_saved();
+                }
+                return null;
+            }).bind(this);
+
             modal_dialog = component.closest("div.modal-dialog");
             button_OK = modal_dialog.querySelector("div.modal-footer > button.btn-primary");
-            button_OK.setAttribute("target", "refresh_page");
+            button_OK.setAttribute("target", "none");
+            button_OK.onclick = on_ok;
             return null;
         }).bind(this);
 
         setTimeout(_init_OK, 1);
         update_or_insert = (function flx_update_or_insert (event, insert) {
             var _complete, button, data, ed, ed_component, inline, line, object_name, show_form, spec, status;
-            ed_component = get_editor_component(event.target);
+            button = event.currentTarget;
+            ed_component = get_editor_component(button);
             ed = ed_component.editor;
             if (_pyfunc_truthy(insert)) {
-                button = event.target;
                 object_name = button.getAttribute("name");
                 show_form = false;
                 if ((_pyfunc_op_equals(button.getAttribute("show_form"), "1"))) {
@@ -158,7 +180,6 @@ try {
                 line = null;
             } else {
                 line = get_current_line(ed);
-                button = null;
                 spec = is_special_line(line);
                 if (_pyfunc_truthy((_pyfunc_truthy(is_special_line(line))) && _pyfunc_op_contains("#", line))) {
                     object_name = _pymeth_strip.call(((_pymeth_strip.call(((_pymeth_split.call(line, "#")[0]))).slice(1))));
@@ -181,6 +202,7 @@ try {
                     var on_loadeddata;
                     on_loadeddata = (function flx_on_loadeddata (event) {
                         var x;
+                        console.log("on_loadeddata:" + " " + event.data);
                         x = JSON.parse(event.data);
                         if (_pyfunc_op_contains("line", x)) {
                             wiki_object_to_editor(ed, object_name, inline, x["line"]);
@@ -189,7 +211,7 @@ try {
                     }).bind(this);
 
                     _pyfunc_setattr(component, "onloadeddata", on_loadeddata);
-                    window.on_popup_edit_new(event.target, window.get_elem_from_string(content), href);
+                    window.on_popup_edit_new(button, window.get_elem_from_string(content), href);
                     return null;
                 }).bind(this);
 

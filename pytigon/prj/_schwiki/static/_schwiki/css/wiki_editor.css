@@ -40,9 +40,16 @@
     color: #000; }
   .wiki_container .wiki-object-edit {
     position: absolute;
-    right: 2px;
-    opacity: 0.1;
-    z-index: 1000; }
+    top: 2px;
+    left: 2px;
+    opacity: 0.2;
+    z-index: 1000;
+    background: aqua;
+    width: auto; }
+  .wiki_container .wiki-object-edit-right {
+    background: yellow !important;
+    right: 2px !important;
+    left: initial; }
   .wiki_container .wiki-object-edit:hover {
     opacity: 1; }
 

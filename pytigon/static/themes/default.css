@@ -677,6 +677,12 @@ div.highlight pre {
   font-size: 0.9rem; }
   .wiki-frame p {
     margin: 0 0 0.2rem; }
+  .wiki-frame table.codehilitetable .linenodiv {
+    padding: 0.5rem;
+    background: darkgray;
+    color: white; }
+  .wiki-frame table.codehilitetable .codehilite {
+    padding: 0.5rem; }
 
 body {
   background-color: var(--bs-body-bg);
@@ -822,6 +828,12 @@ table.layout0 tr td {
 
 .modal-max {
   max-width: 100% !important; }
+
+.maximized > .modal-body {
+  padding: 0; }
+
+.maximized > .modal-footer {
+  padding: 0.25rem; }
 
 .sublist-sm {
   max-width: 300px !important; }

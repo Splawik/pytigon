@@ -42,12 +42,7 @@ class ImgForm(forms.Form):
     component_view_type = forms.CharField(max_length=16)
     img_view_type = forms.CharField(max_length=16)
 
-    text = forms.CharField(label="Text", widget=forms.Textarea, required=False)
-    textright = forms.BooleanField(label="Text on the right", required=False)
-    textclass = forms.CharField(label="CSS class", required=False)
-    textstyle = forms.CharField(label="Style", required=False)
-
-    jpeg = forms.BooleanField(label="Jpeg:", required=False, initial=False)
+    jpeg = forms.BooleanField(label="Jpeg", required=False, initial=False)
     quality = forms.ChoiceField(
         label="Quality",
         required=False,
@@ -188,48 +183,20 @@ class ImgObjRenderer(BaseObjRenderer):
 
         ret["component_view_type"] = component_view_type
         ret["img_view_type"] = form.cleaned_data["img_view_type"]
-        ret["text"] = form.cleaned_data["text"]
-
+ 
         ret["jpeg"] = jpeg
         ret["quality"] = quality
-
-        ret["textright"] = form.cleaned_data["textright"]
-        ret["textclass"] = form.cleaned_data["textclass"]
-        ret["textstyle"] = form.cleaned_data["textstyle"]
         ret["json_update"] = True
 
         return ret
 
-    def gen_context(self, param, lines):
+    def gen_context(self, param, lines, output_format, parent_processor):
         context = {"param": param}
         cvt = param["component_view_type"]
-        is_txt = True if param["text"] else False
-        textright = param["textright"]
-        if is_txt and param["text"].replace("\n", "").replace("\r", "").strip() == "-":
-            txt_flow = True
-        else:
-            txt_flow = False
-
+        
         Element = collections.namedtuple("Element", "type data css_class style")
         elements = []
         img_css_class = ""
-        if is_txt:
-            if textright:
-                img_css_class = "img_float img_float_left"
-            else:
-                img_css_class = "img_float img_float_right"
-
-        def txt_process(end, css_class):
-            if (
-                is_txt
-                and not txt_flow
-                and ((end and textright) or (not end and not textright))
-            ):
-                css_class2 = param["textclass"] if param["textclass"] else css_class
-                i_markdown_processor = IndentMarkdownProcessor()
-                x = i_markdown_processor.convert_to_html(param["text"])
-                elm = Element("txt", x, css_class2, param["textstyle"])
-                elements.append(elm)
 
         def img_process(no, css_class):
             try:
@@ -248,40 +215,25 @@ class ImgObjRenderer(BaseObjRenderer):
                 pass
 
         if cvt == "1000":
-            if is_txt:
-                elements.append(Element("data", "<div class='div_float'>", "", ""))
-                txt_process(False, "txt_float")
             if not img_css_class:
                 img_css_class = "col col-12"
             img_process(1, img_css_class)
-            txt_process(True, "txt_float")
-            if is_txt:
-                elements.append(Element("data", "</div>", "", ""))
         elif cvt == "1200":
-            txt_process(False, "col col-4")
-            img_css_class = "col col-4" if is_txt else "col col-6"
+            img_css_class = "col col-6"
             img_process(1, img_css_class)
             img_process(2, img_css_class)
-            txt_process(True, "col col-4")
         elif cvt == "1230":
-            txt_process(False, "col col-3")
-            img_css_class = "col col-3" if is_txt else "col col-4"
+            img_css_class = "col col-4"
             img_process(1, img_css_class)
             img_process(2, img_css_class)
             img_process(3, img_css_class)
-            txt_process(True, "col col-3")
         elif cvt == "1234":
-            txt_process(False, "col col-4")
-            img_css_class = "col col-2" if is_txt else "col col-3"
+            img_css_class = "col col-3"
             img_process(1, img_css_class)
             img_process(2, img_css_class)
             img_process(3, img_css_class)
             img_process(3, img_css_class)
-            txt_process(True, "col col-4")
         elif cvt == "1213":
-            if is_txt:
-                elements.append(Element("data", "<div class='div_float'>", "", ""))
-                txt_process(False, "txt_float")
             if not img_css_class:
                 img_css_class = "col col-12"
             elements.append(Element("data", "<div class='%s'>" % img_css_class, "", ""))
@@ -300,13 +252,7 @@ class ImgObjRenderer(BaseObjRenderer):
             img_process(3, "")
             elements.append(Element("data", "</td></tr></table>", "", ""))
             elements.append(Element("data", "</div>", "", ""))
-            txt_process(True, "txt_float")
-            if is_txt:
-                elements.append(Element("data", "</div>", "", ""))
         elif cvt == "1232":
-            if is_txt:
-                elements.append(Element("data", "<div class='div_float'>", "", ""))
-                txt_process(False, "txt_float")
             if not img_css_class:
                 img_css_class = "col col-12"
             elements.append(Element("data", "<div class='%s'>" % img_css_class, "", ""))
@@ -327,13 +273,7 @@ class ImgObjRenderer(BaseObjRenderer):
             img_process(3, "")
             elements.append(Element("data", "</td></tr></table>", "", ""))
             elements.append(Element("data", "</div>", "", ""))
-            txt_process(True, "txt_float")
-            if is_txt:
-                elements.append(Element("data", "</div>", "", ""))
         elif cvt == "4321" or cvt == "1423":
-            if is_txt:
-                elements.append(Element("data", "<div class='div_float'>", "", ""))
-                txt_process(False, "txt_float")
             if not img_css_class:
                 img_css_class = "col col-12"
             elements.append(Element("data", "<div class='%s'>" % img_css_class, "", ""))
@@ -354,9 +294,6 @@ class ImgObjRenderer(BaseObjRenderer):
             img_process(4, "")
             elements.append(Element("data", "</td></tr></table>", "", ""))
             elements.append(Element("data", "</div>", "", ""))
-            txt_process(True, "txt_float")
-            if is_txt:
-                elements.append(Element("data", "</div>", "", ""))
         context["elements"] = elements
         return context
 
@@ -419,7 +356,7 @@ class VideoObjRenderer(BaseObjRenderer):
     def get_edit_form(self):
         return VideoForm
 
-    def gen_context(self, param, lines):
+    def gen_context(self, param, lines, output_format, parent_processor):
         context = {"param": param}
         if "src" in param:
             x = param["src"].split(";")
@@ -458,66 +395,11 @@ class VideoObjRenderer(BaseObjRenderer):
 register_obj_renderer("video", VideoObjRenderer)
 
 
-GRAPHVIZ_OBJ_RENDERER_FORM = """
-code//Code::_
-attr_class//Div class
-style//Div style
-svg_attr_class//SVG class
-svg_style//SVG style
-row?
-"""
-
-
-class GraphvizObjRenderer(BaseObjRenderer):
-    
-    @staticmethod
-    def get_info():
-        return { "name": "graphviz", "title": "Graphviz", "icon": "fa fa-sitemap", "show_form": True,}
-    
-    def get_edit_form(self):
-        return GRAPHVIZ_OBJ_RENDERER_FORM
-
-    def gen_context(self, param, lines):
-        import graphviz
-        import lxml.etree as et
-
-        context = {"param": param}
-        if "code" in param:
-            file_name = get_temp_filename()
-            src = graphviz.Source(param["code"])
-            file_name2 = src.render(file_name, view=False, format="svg")
-            x = ""
-            with open(file_name2, "rt") as f:
-                x = f.read()
-                tree = et.fromstring(x.encode("utf-8"))
-                tree.attrib.pop("width")
-                tree.attrib.pop("height")
-                if "svg_style" in param:
-                    tree.attrib["style"] = param["svg_style"]
-                if "svg_attr_class" in param:
-                    tree.attrib["class"] = param["svg_attr_class"]
-
-                x2 = et.tostring(tree, pretty_print=True).decode("utf-8")
-
-            context["param"]["svg_code"] = x2
-
-            os.remove(file_name2)
-
-        return context
-
-    def get_renderer_template_name(self):
-        return "schwiki/graphviz_wikiobj_view.html"
-
-
-register_obj_renderer("graphviz", GraphvizObjRenderer)
-
-
 PLOT_OBJ_RENDERER_FORM = """
 name//Plot name
 width
 height
 """
-
 
 class PlotObjRenderer(BaseObjRenderer):
 
@@ -541,8 +423,10 @@ class ReadMoreObjRenderer(BaseObjRenderer):
     def get_info():
         return { "name": "read_more", "title": "Read more", "icon": "fa fa-eye-slash", "show_form": False,}
     
-    def render(self, param, lines):
+    def render(self, param, lines, output_format, parent_processor):
         return "<div class='read_more'></div>"
 
 
 register_obj_renderer("read_more", ReadMoreObjRenderer)
+
+

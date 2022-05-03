@@ -11,7 +11,7 @@
         {{ block.super }}
 
 %% form_action
-    {{base_path}}schwiki/edit_page_object_form/{{object_name}}/
+    {% if on_page %}{{base_path}}schwiki/edit_object_on_page_form/{{page_id}}/{{line_number}}/{{object_name}}/{% else %}{{base_path}}schwiki/edit_page_object_form/{{object_name}}/{% endif %}
 
 %% row_edit_form
     % if form:

@@ -13,14 +13,12 @@
         <style >
         .img_form .img_form_images .group_booleanfield {
             position: relative;
-            margin-bottom: -30px;
         }
         .img_form .img_form_images .group_imagefield {
             margin-left: 80px;
         }
         .img_form .img_form_images .group_charfield {
             position: relative;
-            margin-top: -30px;
         }
         .img_form .img_form_images .img_block_title {
             position: relative;
@@ -263,14 +261,10 @@
                                 </div>
                 </div>
         </div>
-        {% form "^/12" %}
-                text
-        {% endform %}
-        {% form "/6" %}
-                textclass;textstyle
-        {% endform %}
-        {% form "/4" %}
-                quality;jpeg;textright
-        {% endform %}
+        <div class="row">
+                {% form "4/4" %}
+                        quality;jpeg
+                {% endform %}
+        </div>
 {% endblock %}
 

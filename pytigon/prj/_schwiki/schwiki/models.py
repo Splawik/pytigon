@@ -417,8 +417,16 @@ class Page(JSONModel):
         super(Page, self).save(*args, **kwargs)
         if self.content_src:
             # content = html_from_wiki(self, self.content_src+"\n\n\n&nbsp;")
-            x = IndentMarkdownProcessor()
-            content = x.convert_to_html(self.content_src)
+            x = IndentMarkdownProcessor(output_format="html")
+            conf = WikiConf.objects.filter(subject=self.subject).first()
+            header = ""
+            footer = ""
+            if conf:
+                if conf.page_header:
+                    header = conf.page_header + "\n"
+                if conf.page_footer:
+                    footer = conf.page_footer + "\n"
+            content = x.convert(header + self.content_src + footer)
         else:
             content = ""
         self.content = content
@@ -470,11 +478,21 @@ class Page(JSONModel):
     @staticmethod
     def get_wiki_objects():
         global REG_OBJ_RENDERER
-        print("REG:", REG_OBJ_RENDERER)
         ret = []
         for key, obj in REG_OBJ_RENDERER.items():
             ret.append(obj.get_info())
         return ret
+
+    def get_user_blocks(self):
+        conf = WikiConf.objects.filter(subject=self.subject).first()
+        if conf:
+            if conf.page_header:
+                tab = []
+                for line in conf.page_header.split("\n"):
+                    if line and line.startswith("%") and "name/" in line:
+                        tab.append(line.split("/", 1)[1].split(":")[0].strip())
+                return tab
+        return ""
 
 
 admin.site.register(Page)
@@ -526,6 +544,18 @@ class WikiConf(JSONModel):
     )
     css = models.TextField(
         "Css styles",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    page_header = models.TextField(
+        "Page header",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    page_footer = models.TextField(
+        "Page footer",
         null=True,
         blank=True,
         editable=False,

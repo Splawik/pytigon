@@ -15,9 +15,6 @@ urlpatterns = [
         views.edit_page,
         name="schwiki_edit_page",
     ),
-    gen_row_action(
-        "PageObjectsConf", "insert_object_to_editor", views.insert_object_to_editor
-    ),
     gen_row_action("WikiConf", "publish", views.publish),
     re_path("(?P<q>.*)/search/$", views.search, {}, name="schwiki_search"),
     path(
@@ -28,6 +25,18 @@ urlpatterns = [
         views.edit_page_object_form,
         {},
         name="schwiki_edit_page_object_form",
+    ),
+    path(
+        "edit_object_on_page/<int:page_id>/<int:line_number>/",
+        views.edit_object_on_page,
+        {},
+        name="schwiki_edit_object_on_page",
+    ),
+    path(
+        "edit_object_on_page_form/<int:page_id>/<int:line_number>/<slug:object_name>/",
+        views.edit_object_on_page_form,
+        {},
+        name="schwiki_edit_object_on_page_form",
     ),
 ]
 

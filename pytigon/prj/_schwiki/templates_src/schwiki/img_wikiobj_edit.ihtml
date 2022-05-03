@@ -16,14 +16,12 @@
     style ===>
         .img_form .img_form_images .group_booleanfield {
             position: relative;
-            margin-bottom: -30px;
         }
         .img_form .img_form_images .group_imagefield {
             margin-left: 80px;
         }
         .img_form .img_form_images .group_charfield {
             position: relative;
-            margin-top: -30px;
         }
         .img_form .img_form_images .img_block_title {
             position: relative;
@@ -191,10 +189,7 @@
                                 rect stroke=#000,,,height=80,,,width=80,,,y=15,,,x=1,,,stroke-width=1,,,fill=#007fff
                                 rect stroke=#000,,,height=10,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#000000
 
-        
-    % form "^/12":
-        .text
-    % form "/6":
-        .textclass;textstyle
-    % form "/4":
-        .quality;jpeg;textright
+    
+    div class=row    
+        % form "4/4":
+            .quality;jpeg

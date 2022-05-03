@@ -1,15 +1,8 @@
-% if param.row:
-    <div class="row">
+div style=position:relative;
+    [% if perms.wiki.add_page %]
+    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit
+        .Graphviz
+        span class=fa fa-cog fa-2
+    [% endif %]
 
-[% if perms.wiki.add_page %]
-a class=wiki-object-edit,,,href=[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
-    .graphviz code
-    span class=fa fa-image-o fa-2
-[% endif %]
-
-<div class="div_float{% if param.attr_class %} {{param.attr_class}}{% endif %}" {% if param.style %}style="{{param.style}}"{% endif %} >
     {{param.svg_code|safe}}
-</div>
-
-% if param.row:
-    </div>

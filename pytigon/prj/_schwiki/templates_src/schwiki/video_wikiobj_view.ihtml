@@ -1,7 +1,7 @@
-div class=row
+div class=row,,,style=position:relative;
     [% if perms.wiki.add_page %]
-    a class=wiki-object-edit,,,href=[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit
-        .video
+    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit
+        .Video
         span class=fa fa-cog fa-2
     [% endif %]
 

@@ -37,6 +37,8 @@
         .edit
         .field_edit/publish_fun,Publish function
         .field_edit/scss,SCSS
+        .field_edit/page_header,Page header
+        .field_edit/page_footer,Page footer
         .delete
 
 

@@ -54,7 +54,7 @@
 </style>
 <div class="row">
         [% if perms.wiki.add_page %]
-        <a class="wiki-object-edit" href="[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1" target="popup_edit">
+        <a class="wiki-object-edit wiki-object-edit-right" href="[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1" target="popup_edit">
                 img
                 <span class="fa fa-cog fa-2"></span>
         </a>
@@ -72,13 +72,7 @@
                                 {% endif %}
                         </div>
                   {% else %}
-                        {% if element.type == 'txt' %}
-                                <div class="{{element.css_class}} img_form_view_text" style="{{ element.style }}">
-                                        {{element.data|safe}}
-                                </div>
-                          {% else %}
-                                {{ element.data|safe }}
-                        {% endif %}
+                        {{ element.data|safe }}
                 {% endif %}
         {% endfor %}
 </div>
