@@ -52,5 +52,5 @@
 
 %% row_edit
     % form:
-        .subject,name,description,base_template,rights_group,menu
+        .subject,name,description,base_template,rights_group,prj_name,menu,menu_position,menu_icon,menu_icon_size
     input type=hidden,,,name=direct_save    

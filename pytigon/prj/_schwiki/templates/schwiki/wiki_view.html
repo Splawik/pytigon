@@ -76,15 +76,17 @@
         {% endif %}
 {% endblock %}
 {% block content_start %}
-        <div id="{{uuid}}" class="flexible_size content ajax-region ajax-frame wiki-frame" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" related-object='{{uuid}}'>
+        <div id="{{uuid}}" class="flexible_size content ajax-region ajax-frame wiki-frame" related-object='{{uuid}}'>
+                <div class="ajax-link" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" data-region="page">
 {% endblock %}
 {% block content_end %}
+                </div>
         </div>
 {% endblock %}
 {% block list_content_header %}
         {% if not standard_web_browser == 6 %}
                 {% if standard_web_browser and perms.schwiki.add_page %}
-                        <a data-bs-toggle="collapse" href="#{{uuid}}collapse" class="wiki_collapse_link">
+                        <a data-bs-toggle="collapse" href="#{{uuid}}collapse" class="wiki_collapse_link" accesskey="o">
                                 <span class="fa fa-arrows-v fa-fw"></span>
                         </a>
                         <div id="{{uuid}}collapse" class="panel-collapse collapse wiki_collapse">
@@ -112,7 +114,7 @@
                                         <td class="wiki_view_actions" style="position:absolute;top:0px;width:100%;border:0px;padding:0px;">
                                                 {% action "edit" "Edit page" url="{{base_path}}schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" tag_class="+btn-sm" %}
                                                 {% with ap="wiki" object_name="Page" id=object.id format='txt' %}
-                                                        {% action "any_field_edit-inline/content_src" "Edit page source" attrs="data-inline-position='^tr:after'" tag_class="+btn-sm" %}
+                                                        {% action "any_field_edit-inline/content_src" "Edit page source" attrs="data-inline-position='^tr:after' accesskey=' '" tag_class="+btn-sm" %}
                                                 {% endwith %}
                                         </td>
                                 </tr>

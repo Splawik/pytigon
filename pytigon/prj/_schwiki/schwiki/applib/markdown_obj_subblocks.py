@@ -59,7 +59,7 @@ class DivObjRenderer(BaseMarkdownObjRenderer):
 
     def render(self, param, lines, output_format, parent_processor):
         context = self.gen_context(param, lines, output_format, parent_processor)
-        out = "<div style='position:relativie;' " + context['param']['attributes'] + ">\n" + self.edit_on_page_link(parent_processor) + context['content'] + "\n</div>\n"
+        out = "<div style='position:relative;'>" + self.edit_on_page_link(parent_processor) + "</div><div " + context['param']['attributes'] + ">\n" + context['content'] + "</div>\n"
         return out
 
 register_obj_renderer("div", DivObjRenderer)

@@ -29,11 +29,11 @@
                         .Save
                 insert-object app_path={{app_path}},,,page_id={{object.id}},,,href={{base_path}}schwiki/edit_page_object/,,,class=ajax-region ajax-link ajax-frame,,,data-region=json
                     div class=btn-group me-2,,,role=group
-                        button data-bind=onclick:on_properties,,,class=btn text-white shadow-none border-0,,,type=button,,,name=properties
+                        button data-bind=onclick:on_properties,,,class=btn text-white shadow-none border-0,,,type=button,,,name=properties,,,,,,title=Properties
                             i class=fa fa-wpforms
                             .Properties
                     div class=btn-group,,,role=group                    
-                        % with "Multimedia:img,svg,video,graphviz,plot;Block:row,col,div,block,ihtml,html,ajax-frame;Other:table,csv" as segments:
+                        % with "Multimedia:img,svg,video,graphviz,plot;Block:row,col,div,block,ihtml,html,ajax-frame,super-block;Other:table,csv" as segments:
                             % for segment in segments|split
                                 % with segment|split:":" as part
                                     div class=dropdown
@@ -49,14 +49,14 @@
                                             % for item in object.get_wiki_objects:
                                                 % if item.name in part.1:
                                                     li
-                                                        a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object
+                                                        a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object,,,title=Edit: {{item.name}}
                                                             i class={{item.icon}}
                                                             {{ item.name }}
                                             % if part.0 == 'Other':
                                                 % for item in object.get_wiki_objects:
                                                     % if not item.name in segments:
                                                         li
-                                                            a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object
+                                                            a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object,,,title=Edit: {{item.name}}
                                                                 i class={{item.icon}}
                                                                 {{ item.name }}
                                                 

@@ -220,6 +220,12 @@ page_type_choices = [
     ("H", "Html"),
 ]
 
+menu_icon_size_choices = [
+    ("0", "small"),
+    ("1", "medium"),
+    ("2", "large"),
+]
+
 
 class PageObjectsConf(models.Model):
     class Meta:
@@ -332,7 +338,30 @@ class Page(JSONModel):
     rights_group = models.CharField(
         "Rights group", null=True, blank=True, editable=True, max_length=64
     )
-    menu = models.CharField("Menu", null=True, blank=True, editable=True, max_length=64)
+    prj_name = models.CharField(
+        "Project name", null=True, blank=True, editable=True, max_length=64
+    )
+    menu = models.CharField(
+        "Menu path", null=True, blank=True, editable=True, max_length=64
+    )
+    menu_position = models.IntegerField(
+        "Menu position",
+        null=True,
+        blank=True,
+        editable=True,
+    )
+    menu_icon = models.CharField(
+        "Icon in menu", null=True, blank=True, editable=True, max_length=256
+    )
+    menu_icon_size = models.CharField(
+        "Icon size",
+        null=False,
+        blank=False,
+        editable=True,
+        default="1",
+        choices=menu_icon_size_choices,
+        max_length=1,
+    )
     operator = models.CharField(
         "Operator", null=True, blank=True, editable=False, max_length=64
     )
@@ -360,6 +389,7 @@ class Page(JSONModel):
 
     def save_from_request(self, request, view_type, param):
         if "direct_save" in request.POST:
+            self.operator = request.user.username
             super(Page, self).save()
         else:
             conf_list = WikiConf.objects.filter(subject=self.subject)
@@ -385,7 +415,6 @@ class Page(JSONModel):
                     obj_to_save.jsondata = self.jsondata
                     obj_to_save.published = False
                     obj_to_save.latest = True
-                    obj_to_save.operator = request.user.username
                     obj_to_save.update_time = datetime.now()
                     obj_to_save.save()
                     pages = Page.objects.filter(
@@ -417,19 +446,24 @@ class Page(JSONModel):
         super(Page, self).save(*args, **kwargs)
         if self.content_src:
             # content = html_from_wiki(self, self.content_src+"\n\n\n&nbsp;")
-            x = IndentMarkdownProcessor(output_format="html")
             conf = WikiConf.objects.filter(subject=self.subject).first()
             header = ""
             footer = ""
+            line_number = 0
             if conf:
                 if conf.page_header:
                     header = conf.page_header + "\n"
+                    line_number -= len(conf.page_header.split("\n"))
                 if conf.page_footer:
                     footer = conf.page_footer + "\n"
+
+            x = IndentMarkdownProcessor(output_format="html", line_number=line_number)
             content = x.convert(header + self.content_src + footer)
         else:
             content = ""
         self.content = content
+
+        print("A1", self.operator)
 
         super(Page, self).save(*args, **kwargs)
 
