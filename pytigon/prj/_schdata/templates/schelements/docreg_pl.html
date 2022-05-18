@@ -43,7 +43,9 @@
                 field_list/doctype_set,Types of documents,doctype_set
                 field_list/docregstatus_set,Types of document statuses,docregstatus_set
                 field_edit/head_form,Head form,head_form
+                field_edit/head_template,Head template,head_template
                 field_edit/item_form,Item form,item_form
+                field_edit/item_template,Item template,item_template
                 field_edit/save_head_fun,Save head function,save_head_fun
                 field_edit/save_item_fun,Save item function,save_item_fun
                 field_edit/access_fun,Acces functions,access_fun
@@ -52,7 +54,7 @@
 {% endblock %}
 {% block row_edit %}
         {% form %}
-                app,name,group,description
+                app,name,group,head_table,item_table,description
         {% endform %}
 {% endblock %}
 

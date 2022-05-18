@@ -92,7 +92,7 @@
         % if perms.schwiki.add_page:
             table width=100%
                 tr
-                    td class=wiki_view_actions,,,style=position:absolute;top:0px;width:100%;border:0px;padding:0px;
+                    td class=wiki_view_actions,,,style=position:absolute;top:0px;width:100%;border:0px;padding:0px;text-align:right;padding-right:2rem;
                         % action "edit" _("Edit page") url="{{base_path}}schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" tag_class="+btn-sm"
                         
                         % with ap="wiki" object_name="Page" id=object.id format='txt': 

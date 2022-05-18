@@ -150,6 +150,7 @@ TEMPLATES = [
             ],
             "loaders": [
                 "pytigon_lib.schdjangoext.python_style_template_loader.Loader",
+                "pytigon_lib.schdjangoext.python_style_template_loader.DBLoader",
                 # "pytigon_lib.schdjangoext.python_style_template_loader.FSLoader",
                 "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader",

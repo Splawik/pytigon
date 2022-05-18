@@ -1147,6 +1147,8 @@ class SChField(models.Model):
             ret += "help_text=%s," % self.help_text
         if self.choices:
             ret += "choices=%s," % self.choices
+        if self.db_index:
+            ret += "db_index=True,"
         if self.param and len(self.param) > 0:
             ret += self.param
             # .replace(':','=')

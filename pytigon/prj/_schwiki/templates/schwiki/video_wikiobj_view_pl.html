@@ -1,0 +1,27 @@
+<div class="row" style="position:relative;">
+        [% if perms.wiki.add_page %]
+        <a class="wiki-object-edit wiki-object-edit-right" href="[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1" target="popup_edit" title="Video properties">
+                Video
+                <span class="fa fa-cog fa-2"></span>
+        </a>
+        [% endif %]
+        <div class="div_float">
+                <video {% if param.controls %}controls {% endif %}
+                 style="width:{% if param.videosize %}{{param.videosize}}{% else %}100%{% endif %};{% if param.textright %}float:left;{% else %}float:right;{% endif %}"
+                 class="{% if param.videoclass %}{{param.videoclass}}{% else %}video_float {% if param.textright %}video_float_left{% else %}video_float_right{% endif %}{% endif %}"
+                 {% if param.poster %}poster="[{base_path}]site_media/{{param.poster}}"{% endif %} >
+                {% for pos in sources %}
+                        <source src="[{base_path}]site_media/{{pos.0}}" type="{{pos.1|safe}}"></source>
+                {% endfor %}
+                {% for pos in tracks %}
+                        <track src="[{base_path}]site_media/{{pos.0}}" label="{{pos.1}}" srclang="{{pos.2}}" kind="{{pos.4}}"  {% if pos.3 %}default {% endif %}></track>
+                {% endfor %}
+                </video>
+                {% if param.text %}
+                        <div {% if textclass %}class="{{param.textclass}}" {% else %}class="text_float" {% endif %}style="{{param.textstyle}}">
+                                {{param.text|safe}}
+                        </div>
+                {% endif %}
+        </div>
+</div>
+

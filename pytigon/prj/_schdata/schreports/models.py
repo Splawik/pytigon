@@ -155,6 +155,7 @@ class Report(JSONModel):
         blank=True,
         editable=False,
         verbose_name="Parent document",
+        db_index=True,
     )
     order = models.IntegerField(
         "Order number",
@@ -314,13 +315,13 @@ class CommonGroup(JSONModel):
         "Tag name", null=True, blank=True, editable=True, max_length=64
     )
     key1 = models.CharField(
-        "Key 1", null=True, blank=True, editable=True, max_length=64
+        "Key 1", null=True, blank=True, editable=True, db_index=True, max_length=64
     )
     key2 = models.CharField(
-        "Key 2", null=True, blank=True, editable=True, max_length=64
+        "Key 2", null=True, blank=True, editable=True, db_index=True, max_length=64
     )
     key3 = models.CharField(
-        "Key 3", null=True, blank=True, editable=True, max_length=64
+        "Key 3", null=True, blank=True, editable=True, db_index=True, max_length=64
     )
 
     def code(self):

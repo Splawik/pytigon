@@ -4,5 +4,12 @@ ModuleTitle = _("elements")
 Title = _("Elements")
 Perms = False
 Index = "None"
-Urls = ()
+Urls = (
+    (
+        "../schelements/table/DocHead/demo/form/docheadlist/?schtml=desktop",
+        _("Demo documents"),
+        None,
+        """png://actions/bookmark-new.png""",
+    ),
+)
 UserParam = {}

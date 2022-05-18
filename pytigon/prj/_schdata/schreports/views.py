@@ -96,7 +96,7 @@ PFORM = form_with_perms("schreports")
 class _FilterFormReport(forms.Form):
     date_from = forms.DateField(
         label=_("Data od"),
-        required=None,
+        required=False,
         initial=year_ago,
     )
     date_to = forms.DateField(
