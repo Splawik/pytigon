@@ -569,9 +569,6 @@ class DocReg(models.Model):
     description = models.CharField(
         "Description", null=False, blank=False, editable=True, max_length=64
     )
-    head_table = models.CharField(
-        "Table for head", null=True, blank=True, editable=True, max_length=64
-    )
     head_form = models.TextField(
         "Head form",
         null=True,
@@ -583,9 +580,6 @@ class DocReg(models.Model):
         null=True,
         blank=True,
         editable=False,
-    )
-    item_table = models.CharField(
-        "Table for item", null=True, blank=True, editable=True, max_length=64
     )
     item_form = models.TextField(
         "Item form",
@@ -1107,7 +1101,6 @@ class DocHead(JSONModel):
                 return ContentType.objects.get(
                     model=t.lower() + "dochead"
                 ).model_class()()
-
             else:
                 t = self.doc_type_parent.parent.name
                 name = t.lower() + "dochead"
