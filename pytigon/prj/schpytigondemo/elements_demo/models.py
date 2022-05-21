@@ -28,6 +28,8 @@ from schelements.models import *
 
 from standard_components.models import *
 
+from schprofile.models import *
+
 
 from schelements import models as schelements_models
 from schprofile import models as schprofile_models
@@ -180,8 +182,11 @@ class DemoDocHead(DocHead):
         blank=True,
         editable=True,
     )
-    date_to = models.CharField(
-        "Date to", null=True, blank=True, editable=True, max_length=64
+    date_to = models.DateField(
+        "Date to",
+        null=True,
+        blank=True,
+        editable=True,
     )
 
 

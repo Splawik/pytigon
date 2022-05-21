@@ -1,8 +1,9 @@
-{# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "form.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
+% load contenttypes
+
 
 %% pythoncode
     script language=python
@@ -22,7 +23,13 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "_(New document item)"
+    % with parent.doc_type_parent.parent.name|lower as reg_name:
+        % with reg_name|append_str:"docitem" as doc_name:
+            % if doc_name|table_exists:
+                % with "new_row/"|append_str:reg_name as action:
+                    % new_row "_(New document item)" action=action 
+            % else
+                % new_row "_(New document item)" 
 
 %% list_row_header
     th..._(order)
@@ -49,5 +56,4 @@
 
 %% row_edit
     % form:
-        .description,amount
 

@@ -28,6 +28,8 @@ from schelements.models import *
 
 from standard_components.models import *
 
+from schprofile.models import *
+
 
 from tables_demo.models import *
 

@@ -28,6 +28,8 @@ from schelements.models import *
 
 from standard_components.models import *
 
+from schprofile.models import *
+
 
 test_choice = [
     ("1", "Test 1"),
