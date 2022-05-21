@@ -48,5 +48,5 @@
 
 %% row_edit
     % form:
-        .app,name,group,head_table,item_table,description
+        .app,name,group,description
 

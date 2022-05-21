@@ -115,6 +115,9 @@ try {
         }).bind(this);
 
         options = ({events: get_events, headerToolbar: ({left: "dayGridMonth,timeGridWeek,timeGridDay custom1", center: "title", right: "today prevYear,prev,next,nextYear"}), customButtons: ({custom1: ({text: "Tryb kasowania", click: click1})}), height: "100%", locale: "pl", dayMaxEvents: true, editable: true, selectable: true, eventClick: event_click, select: select, eventChange: event_change, navLinks: true, slotDuration: "00:05:00"});
+        if (_pyfunc_truthy(component.hasAttribute("duration"))) {
+            options["slotDuration"] = component.getAttribute("duration");
+        }
         calendar = new FullCalendar.Calendar(div, options);
         calendar.render();
         on_loaded_data = (function flx_on_loaded_data (event) {

@@ -353,6 +353,18 @@ def isoformat(value):
         return ""
 
 
+@register.filter(name="sysisoformat")
+def sysisoformat(value):
+    if value:
+        try:
+            iso = value.isoformat()[:19].replace(" ", "T")
+            return iso
+        except:
+            return value.replace(" ", "T")
+    else:
+        return ""
+
+
 @register.filter(name="isoformat_short")
 def isoformat_short(value):
     if value:

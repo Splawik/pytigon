@@ -450,7 +450,7 @@ class Env:
 
 
 def sch_standard(request):
-    """Content processor function
+    """Context processor function
 
     Args:
         requst - django reuqest
@@ -704,5 +704,8 @@ def sch_standard(request):
 
     ret["app_manager"] = AppManager(request)
     ret["settings"] = settings
+
+    if settings.DEBUG:
+        ret["context"] = ret
 
     return ret

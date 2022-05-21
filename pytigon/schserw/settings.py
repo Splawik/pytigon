@@ -36,6 +36,7 @@ if not prj_name:
     prj_name = "_schall"
 
 GEN_TIME = "0000.00.00 00:00:00"
+USE_TZ = True
 
 if (
     sys.argv

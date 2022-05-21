@@ -623,6 +623,7 @@ class DocReg(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        self.update_time = datetime.datetime.now()
         super().save(*args, **kwargs)
 
     def get_parent(self):
