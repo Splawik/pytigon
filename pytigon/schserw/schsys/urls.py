@@ -48,13 +48,14 @@ def sch_login(request, *argi, **argv):
     if is_in_dicts("next", (request.POST, request.GET)):
         path = get_from_dicts("next", (request.POST, request.GET))
     if not path:
-        path = settings.URL_ROOT_FOLDER + "/"
+        path = settings.URL_ROOT_FOLDER + settings.URL_ROOT_PREFIX
     if is_in_dicts("next_after_error", (request.POST, request.GET)):
         path_after_error = get_from_dicts(
             "next_after_error", (request.POST, request.GET)
         )
     if not path_after_error:
         path_after_error = path
+
 
     if is_in_dicts("username", (request.POST, request.GET)):
         username = get_from_dicts("username", (request.POST, request.GET))

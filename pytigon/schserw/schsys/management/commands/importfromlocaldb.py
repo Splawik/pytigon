@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from pytigon_lib.schtools.install import export_to_local_db
+from pytigon_lib.schtools.install import import_from_local_db
 
 
 class Command(BaseCommand):
@@ -17,4 +17,4 @@ class Command(BaseCommand):
         else:
             withoutapp = None
 
-        export_to_local_db(withoutapp)
+        import_from_local_db(withoutapp)
