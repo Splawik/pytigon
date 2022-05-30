@@ -23,7 +23,7 @@ INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(I
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, super_insert, super_query_selector;
 LOADED_FILES = ({});
 Loading = function () {
     _pyfunc_op_instantiate(this, arguments);
@@ -128,9 +128,53 @@ download_binary_file = function flx_download_binary_file (buf, content_dispositi
     return null;
 };
 
+frontend_view = function flx_frontend_view (url, complete, param) {
+    var _callback, param2, url2, x;
+    param = (param === undefined) ? null: param;
+    url2 = _pymeth_replace.call(url, ".view", ".js");
+    param2 = param;
+    if ((!_pyfunc_truthy(param))) {
+        if (_pyfunc_op_contains("?", url)) {
+            param2 = window.getParamsFromUrl(url);
+        }
+    }
+    _callback = (function flx__callback (module) {
+        var _callback2;
+        _callback2 = (function flx__callback2 (context) {
+            var _callback3, template;
+            if ((((_pyfunc_op_equals(jQuery.type(context), "object"))) && _pyfunc_truthy(context["template"]))) {
+                _callback3 = (function flx__callback3 (template_str) {
+                    var res;
+                    res = window.nunjucks.renderString(template_str, context);
+                    complete(res);
+                    return null;
+                }).bind(this);
+
+                template = context["template"];
+                if (_pyfunc_op_equals(template, ".")) {
+                    template = _pymeth_replace.call(url, ".view", ".html");
+                }
+                ajax_get(template, _callback3);
+            } else {
+                complete(context);
+            }
+            return null;
+        }).bind(this);
+
+        module["request"](param2, _callback2);
+        return null;
+    }).bind(this);
+
+    x = window.dynamic_import(url2, _callback);
+    return null;
+};
+
 ajax_get = function flx_ajax_get (url, complete, process_req) {
     var _onload, process_blob, req;
     process_req = (process_req === undefined) ? null: process_req;
+    if (_pyfunc_op_contains(".view", url)) {
+        return frontend_view(url, complete, null);
+    }
     req = new XMLHttpRequest();
     if (_pyfunc_truthy(process_req)) {
         process_req(req);
@@ -188,6 +232,9 @@ window.ajax_get = ajax_get;
 _req_post = function flx__req_post (req, url, data, complete, content_type) {
     var _onload, process_blob;
     content_type = (content_type === undefined) ? null: content_type;
+    if (_pyfunc_op_contains(".view", url)) {
+        return frontend_view(url, complete, data);
+    }
     process_blob = false;
     try {
         req.responseType = "blob";
@@ -865,7 +912,7 @@ inline_minimize = function flx_inline_minimize (elem) {
 };
 
 window.inline_minimize = inline_minimize;
-export {Loading, save_as, download_binary_file, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize};
+export {Loading, save_as, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {

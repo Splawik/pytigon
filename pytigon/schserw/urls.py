@@ -67,7 +67,7 @@ else:
 _urlpatterns.extend(
     [
         path(
-            "schsys/jsi18n/",
+            "schsys/jsi18n.js",
             django.views.i18n.JavaScriptCatalog.as_view(
                 packages=[
                     "pytigon.schserw.schsys",

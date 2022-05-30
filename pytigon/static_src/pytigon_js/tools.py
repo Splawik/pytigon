@@ -83,7 +83,41 @@ def download_binary_file(buf, content_disposition):
     save_as(buf, file_name)
 
 
+def frontend_view(url, complete, param=None):
+    url2 = url.replace(".view", ".js")
+
+    param2 = param
+    if not param:
+        if "?" in url:
+            param2 = window.getParamsFromUrl(url)
+
+    def _callback(module):
+        nonlocal url, complete, param2
+
+        def _callback2(context):
+            if jQuery.type(context) == "object" and context["template"]:
+
+                def _callback3(template_str):
+                    nonlocal context
+                    res = window.nunjucks.renderString(template_str, context)
+                    complete(res)
+
+                template = context["template"]
+                if template == ".":
+                    template = url.replace(".view", ".html")
+                ajax_get(template, _callback3)
+            else:
+                complete(context)
+
+        module["request"](param2, _callback2)
+
+    x = window.dynamic_import(url2, _callback)
+
+
 def ajax_get(url, complete, process_req=None):
+    if ".view" in url:
+        return frontend_view(url, complete, None)
+
     req = XMLHttpRequest()
 
     if process_req:
@@ -137,6 +171,9 @@ window.ajax_get = ajax_get
 
 
 def _req_post(req, url, data, complete, content_type=None):
+    if ".view" in url:
+        return frontend_view(url, complete, data)
+
     process_blob = False
     try:
         req.responseType = "blob"
@@ -179,8 +216,8 @@ def _req_post(req, url, data, complete, content_type=None):
 
     req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
     if content_type:
-        if content_type != 'pass':
-            req.setRequestHeader('Content-Type', content_type)
+        if content_type != "pass":
+            req.setRequestHeader("Content-Type", content_type)
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
     # if data.length:
@@ -213,8 +250,6 @@ def ajax_json(url, data, complete, process_req=None):
     ajax_post(url, data2, _complete, None, "application/json")
 
 
-
-
 window.ajax_json = ajax_json
 
 
@@ -227,12 +262,12 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
         process_req(req)
 
     if form.find("[type='file']").length > 0:
-        _form.setAttribute( "enctype", "multipart/form-data" )
+        _form.setAttribute("enctype", "multipart/form-data")
         data = FormData(_form)
         if data_filter:
             data = data_filter(data)
 
-        #content_type = "multipart/form-data; boundary=..."
+        # content_type = "multipart/form-data; boundary=..."
         content_type = "pass"
 
         if not form.find("#progress").length == 1:
@@ -249,7 +284,7 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
         req.upload.addEventListener("progress", _progressHandlingFunction, False)
 
         for pair in data.entries():
-            print(pair[0] + ': ' + pair[1])
+            print(pair[0] + ": " + pair[1])
 
     else:
         data = form.serialize()
@@ -259,14 +294,20 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
     if url:
         _req_post(req, url, data, complete, content_type)
     else:
-        _req_post(req, correct_href(form.attr("action"), (_form[0],)), data, complete, content_type)
+        _req_post(
+            req,
+            correct_href(form.attr("action"), (_form[0],)),
+            data,
+            complete,
+            content_type,
+        )
 
-    #if (
+    # if (
     #    _form[0].hasAttribute("data-region")
     #    and _form[0].getAttribute("data-region") == "table"
-    #):
+    # ):
     #    _req_post(req, corect_href(form.attr("action"), True), data, complete, content_type)
-    #else:
+    # else:
     #    _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
 
 
@@ -497,9 +538,9 @@ TEMPLATES = {
 def get_template(template_name, param):
     global TEMPLATES
     if template_name in TEMPLATES:
-        ret = TEMPLATES[template_name].replace('{title}', param['title'])
-        if 'href' in param:
-            ret = ret.replace('{href}', param['href'])
+        ret = TEMPLATES[template_name].replace("{title}", param["title"])
+        if "href" in param:
+            ret = ret.replace("{href}", param["href"])
         return ret
     return None
 
@@ -680,7 +721,10 @@ def get_table_type(elem):
         if ret:
             return ret
     return ""
+
+
 window.get_table_type = get_table_type
+
 
 def can_popup():
     if jQuery(".modal-open").length > 0:
@@ -696,11 +740,15 @@ def correct_href(href, elements=None):
     only_table = False
     if elements != None:
         for element in elements:
-            if element != None and element.hasAttribute("data-region") and element.getAttribute("data-region").lower() == "table":
-                only_table=True
+            if (
+                element != None
+                and element.hasAttribute("data-region")
+                and element.getAttribute("data-region").lower() == "table"
+            ):
+                only_table = True
 
     if only_table:
-        if not 'only_table' in href:
+        if not "only_table" in href:
             if "?" in href:
                 href += "&only_table=1"
             else:
@@ -709,11 +757,15 @@ def correct_href(href, elements=None):
         only_content = True
         if elements != None:
             for element in elements:
-                if element != None and element.hasAttribute("target") and element.getAttribute("target").lower() in ("_top", "_blank"):
+                if (
+                    element != None
+                    and element.hasAttribute("target")
+                    and element.getAttribute("target").lower() in ("_top", "_blank")
+                ):
                     only_content = False
 
         if only_content:
-            if not 'only_content' in href:
+            if not "only_content" in href:
                 if "?" in href:
                     href += "&only_content=1"
                 else:
@@ -721,13 +773,18 @@ def correct_href(href, elements=None):
 
     if elements != None:
         for element in elements:
-            if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
+            if (
+                element
+                and element.hasAttribute("get-param")
+                and element.getAttribute("get-param")
+            ):
                 if not element.getAttribute("get-param") in href:
-                    if '?' in href:
-                        href += '&' + element.getAttribute("get-param")
+                    if "?" in href:
+                        href += "&" + element.getAttribute("get-param")
                     else:
-                        href += '?' + element.getAttribute("get-param")
+                        href += "?" + element.getAttribute("get-param")
     return href
+
 
 def remove_page_from_href(href):
     x = href.split("?")
@@ -746,27 +803,30 @@ def remove_page_from_href(href):
                 return href
     return href
 
+
 def inline_maximize(elem):
-    dialog = elem.closest('div.modal-content')
+    dialog = elem.closest("div.modal-content")
     if not dialog.classList.contains("maximized"):
         dialog.classList.add("maximized")
 
-    b_min = dialog.querySelector('button.minimize')
-    b_max = dialog.querySelector('button.maximize')
+    b_min = dialog.querySelector("button.minimize")
+    b_max = dialog.querySelector("button.maximize")
     b_min.style.display = "inline-block"
     b_max.style.display = "none"
 
+
 window.inline_maximize = inline_maximize
 
+
 def inline_minimize(elem):
-    dialog = elem.closest('div.modal-content')
+    dialog = elem.closest("div.modal-content")
     if dialog.classList.contains("maximized"):
         dialog.classList.remove("maximized")
 
-    b_min = dialog.querySelector('button.minimize')
-    b_max = dialog.querySelector('button.maximize')
+    b_min = dialog.querySelector("button.minimize")
+    b_max = dialog.querySelector("button.maximize")
     b_min.style.display = "none"
     b_max.style.display = "inline-block"
 
-window.inline_minimize = inline_minimize
 
+window.inline_minimize = inline_minimize

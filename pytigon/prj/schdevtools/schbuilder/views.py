@@ -389,6 +389,7 @@ def make_messages(src_path, path, name, outpath=None, ext_locales=[]):
             #    ext_filename = os.path.join(ftmp, name+'.po')
             #    if os.path.exists(ext_filename):
             #        ext_po = polib.pofile(ext_filename)
+            #        ext_po = polib.pofile(ext_filename)
             #        po.merge(ext_po)
 
             po.save(filename)
@@ -922,6 +923,45 @@ def build_prj(pk):
                 content = ihtml_to_html(None, file_obj.content)
                 f = open_and_create_dir(file_name, "wb")
                 f.write(content.encode("utf-8"))
+                f.close()
+                file_name = None
+            elif file_obj.file_type == "T":
+                template_name = file_obj.name
+                file_name = (
+                    base_path
+                    + "/static/"
+                    + app.name
+                    + "/views/"
+                    + template_name
+                    + ".html"
+                )
+                content = ihtml_to_html(None, file_obj.content)
+                f = open_and_create_dir(file_name, "wb")
+                f.write(content.encode("utf-8"))
+                f.close()
+                file_name = None
+            elif file_obj.file_type == "j":
+                template_name = file_obj.name
+                file_name = (
+                    base_path
+                    + "/static/"
+                    + app.name
+                    + "/views/"
+                    + template_name
+                    + ".js"
+                )
+                try:
+                    codejs = pytigon_lib.schindent.indent_style.py_to_js(
+                        file_obj.content, None
+                    )
+                    codejs = codejs.replace(
+                        "./org.transcrypt.__runtime__.js",
+                        "../../pytigon_js/org.transcrypt.__runtime__.js",
+                    ).replace("__globals__,", "")
+                except:
+                    codejs = ""
+                f = open_and_create_dir(file_name, "wb")
+                f.write(codejs.encode("utf-8"))
                 f.close()
                 file_name = None
             elif file_obj.file_type in ("l", "x", "C"):

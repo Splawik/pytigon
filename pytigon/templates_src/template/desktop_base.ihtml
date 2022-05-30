@@ -22,6 +22,7 @@
         {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
         {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
         {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+        {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
     
         {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
 

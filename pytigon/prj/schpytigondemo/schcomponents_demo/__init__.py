@@ -94,5 +94,11 @@ Urls = (
         None,
         """png://categories/preferences-desktop.png""",
     ),
+    (
+        "../static/schcomponents_demo/views/sample.view",
+        _("Frontent view and template"),
+        None,
+        """png://actions/edit-clear.png""",
+    ),
 )
 UserParam = {}

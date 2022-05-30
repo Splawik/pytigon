@@ -27,5 +27,11 @@
             home();
         };
 
+
+{% endblock %}
+{% block ext_js_scripts %}
+        {{ block.super }}
+        {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
+        {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
 {% endblock %}
 

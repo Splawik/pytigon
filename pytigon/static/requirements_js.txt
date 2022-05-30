@@ -17,6 +17,11 @@ vanillajs_plugins/lz-string: https://github.com/pieroxy/lz-string
 vanillajs_plugins/input-masking: https://github.com/estelle/input-masking
 vanillajs_plugins/icheck-material-1.0.1: https://github.com/bantikyan/icheck-material
 
+vanillajs_plugins/nunjucks: https://mozilla.github.io/nunjucks/api.html
+vanillajs_plugins/graphql: https://github.com/f/graphql.js
+vanillajs_plugins/pouchdb: https://pouchdb.com
+
+
 
 jquery: https://github.com/jquery/jquery
 

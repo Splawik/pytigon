@@ -290,6 +290,8 @@ FileType_CHOICES = [
     ("C", "Library c code"),
     ("x", "Library cython code"),
     ("s", "GraphQL schema"),
+    ("j", "Frontend view"),
+    ("T", "Frontend template"),
 ]
 
 Consumer_CHOICES = [
