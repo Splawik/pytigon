@@ -133,10 +133,10 @@ frontend_view = function flx_frontend_view (url, complete, param) {
     param = (param === undefined) ? null: param;
     url2 = _pymeth_replace.call(url, ".view", ".js");
     param2 = param;
-    if ((!_pyfunc_truthy(param))) {
-        if (_pyfunc_op_contains("?", url)) {
-            param2 = window.getParamsFromUrl(url);
-        }
+    if (_pyfunc_truthy(param)) {
+        param2 = window.getParamsFromEncodedParams(param);
+    } else if (_pyfunc_op_contains("?", url)) {
+        param2 = window.getParamsFromUrl(url);
     }
     _callback = (function flx__callback (module) {
         var _callback2;
@@ -495,7 +495,11 @@ window.load_many_js = load_many_js;
 history_push_state = function flx_history_push_state (title, url, data) {
     var data2, url2;
     data = (data === undefined) ? null: data;
-    url2 = _pymeth_split.call(url, "?")[0];
+    if ((((!_pyfunc_truthy(url))) || _pyfunc_op_equals(url, "/"))) {
+        url2 = url;
+    } else {
+        url2 = "?subpath=" + ((new URL(url, "http://127.0.0.1")).pathname);
+    }
     if (_pyfunc_truthy(data)) {
         data2 = [LZString.compress(data[0]), data[1]];
     } else {
@@ -3310,7 +3314,7 @@ dom_content_loaded = function flx_dom_content_loaded () {
 };
 
 app_init = function flx_app_init (prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time, callback) {
-    var _init_start_wiki_page, _on_sync, desktop;
+    var _init_start_wiki_page, _on_sync, desktop, href, obj, objects, stub1_seq, stub2_itr;
     callback = (callback === undefined) ? null: callback;
     moment.locale(lang);
     window.ACTIVE_PAGE = null;
@@ -3366,17 +3370,31 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     }
     jQuery.fn.editable.defaults.mode = "inline";
     jQuery.fn.combodate.defaults["maxYear"] = 2025;
-    activate_menu();
     desktop = document.getElementById("body_desktop");
     if (_pyfunc_truthy(desktop)) {
         mount_html(desktop, null, null);
+    }
+    if (_pyfunc_truthy(window.location.search)) {
+        href = _pymeth_split.call(window.location.search, "=")[1];
+        objects = Array.prototype.slice.call(document.querySelectorAll("a"));
+        stub1_seq = objects;
+        if ((typeof stub1_seq === "object") && (!Array.isArray(stub1_seq))) { stub1_seq = Object.keys(stub1_seq);}
+        for (stub2_itr = 0; stub2_itr < stub1_seq.length; stub2_itr += 1) {
+            obj = stub1_seq[stub2_itr];
+            if ((_pyfunc_truthy(obj.href) && (_pyfunc_truthy(obj.classList.contains("menu-href"))))) {
+                if (_pyfunc_op_contains(href, obj.href)) {
+                    obj.click();
+                    break;
+                }
+            }
+        }
     }
     return null;
 };
 
 window.app_init = app_init;
 activate_menu = function flx_activate_menu () {
-    var a, a_tab, div, event, href, id_elem, li, menu, pathname, pathname2, stub1_seq, stub2_itr, x;
+    var a, a_tab, div, event, href, id_elem, li, menu, pathname, pathname2, stub3_seq, stub4_itr, x;
     pathname = window.location.pathname;
     if (_pymeth_startswith.call(pathname, window.BASE_PATH)) {
         pathname2 = pathname.slice(window.BASE_PATH.length);
@@ -3386,10 +3404,10 @@ activate_menu = function flx_activate_menu () {
     if (_pyfunc_truthy(pathname2)) {
         menu = document.querySelector("sys-sidebarmenu");
         a_tab = Array.prototype.slice.call(document.querySelectorAll("a.menu-href"));
-        stub1_seq = a_tab;
-        if ((typeof stub1_seq === "object") && (!Array.isArray(stub1_seq))) { stub1_seq = Object.keys(stub1_seq);}
-        for (stub2_itr = 0; stub2_itr < stub1_seq.length; stub2_itr += 1) {
-            a = stub1_seq[stub2_itr];
+        stub3_seq = a_tab;
+        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+            a = stub3_seq[stub4_itr];
             if (_pyfunc_truthy(a.hasAttribute("href"))) {
                 href = _pymeth_split.call(a.getAttribute("href"), "?")[0];
                 if ((_pymeth_startswith.call(href, ("/" + pathname2)))) {

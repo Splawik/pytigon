@@ -596,3 +596,34 @@ function getParamsFromUrl(url) {
     return obj;
   }
 }
+
+function getParamsFromEncodedParams(encoded_params) {
+  let eachParamsArr = encoded_params.split('&');
+  let obj = {};
+  if (eachParamsArr && eachParamsArr.length) {
+    eachParamsArr.map(param => {
+      let keyValuePair = param.split('=')
+      let key = keyValuePair[0];
+      let value = keyValuePair[1];
+      obj[key] = value;
+    })
+  }
+  return obj;
+}
+
+function get_graphql() {
+  token = localStorage.getItem('api_token')
+  if (token) {
+    return graphql(window.COMPONENT_INIT.graphql_pub, {
+      headers: {
+        authorization: "JWT " + token
+      }
+    })
+  } else {
+    return null;
+  }
+}
+
+function get_public_graphql() {
+  return graphql(window.COMPONENT_INIT.graphql_pub)
+}

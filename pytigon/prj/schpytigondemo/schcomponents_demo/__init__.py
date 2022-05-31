@@ -100,5 +100,17 @@ Urls = (
         None,
         """png://actions/edit-clear.png""",
     ),
+    (
+        "../static/schcomponents_demo/views/login_form.view",
+        _("Graphql login"),
+        None,
+        """png://apps/preferences-desktop-theme.png""",
+    ),
+    (
+        "../static/schcomponents_demo/views/users.view",
+        _("users"),
+        None,
+        """png://apps/system-users.png""",
+    ),
 )
 UserParam = {}

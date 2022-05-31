@@ -107,10 +107,30 @@ def app_init(
     jQuery.fn.editable.defaults.mode = "inline"
     jQuery.fn.combodate.defaults["maxYear"] = 2025
 
-    activate_menu()
+    # activate_menu()
     desktop = document.getElementById("body_desktop")
     if desktop:
         mount_html(desktop, None, None)
+
+    if window.location.search:
+        href = window.location.search.split("=")[1]
+        objects = Array.prototype.slice.call(document.querySelectorAll("a"))
+        for obj in objects:
+            if obj.href and obj.classList.contains("menu-href"):
+                if href in obj.href:
+                    obj.click()
+                    break
+
+        # try:
+        #    href = window.location.search.split("=")[1]
+        #
+        #    def _callback(data):
+        #        return get_menu().on_menu_href(None, data, "", "", None)
+        #
+        #    ajax_get(href, _callback)
+
+        # except:
+        #    pass
 
 
 window.app_init = app_init

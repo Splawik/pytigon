@@ -87,7 +87,9 @@ def frontend_view(url, complete, param=None):
     url2 = url.replace(".view", ".js")
 
     param2 = param
-    if not param:
+    if param:
+        param2 = window.getParamsFromEncodedParams(param)
+    else:
         if "?" in url:
             param2 = window.getParamsFromUrl(url)
 
@@ -432,7 +434,11 @@ window.load_many_js = load_many_js
 
 
 def history_push_state(title, url, data=None):
-    url2 = url.split("?")[0]
+    if not url or url == "/":
+        url2 = url
+    else:
+        url2 = "?subpath=" + URL(url, "http://127.0.0.1").pathname
+        # url2 = "?subpath=" + url.split("?")[0]
     if data:
         data2 = [LZString.compress(data[0]), data[1]]
     else:

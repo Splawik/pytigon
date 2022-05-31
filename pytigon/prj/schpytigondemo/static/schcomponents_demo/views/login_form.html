@@ -1,0 +1,50 @@
+{% if auth %}
+        <h1>
+        You are already authorized
+        </h1>
+{% endif %}
+<div class="container login-container">
+        <div class="row align-items-center">
+                <div class="col"></div>
+                <div class="col-lg-6 col-xl-5">
+                        <div class="card card-inverse login-card">
+                                {% block login_card %}
+                                        <div class="card-header">
+                                                {{prj_title|upper}}
+                                        </div>
+                                        <div class="card-block">
+                                                <br />
+                                                <p id="login_txt1">Sign in:</p>
+                                                <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
+                                                <br />
+                                                <form class="login-form" action="/static/schcomponents_demo/views/login.view" method="post" name="signin" target="refresh_page">
+                                                        <div class="form-group">
+                                                                <label class="control-label" for="username_ ">User name</label>
+                                                                <div class="input-group">
+                                                                        <div class="input-group-addon fa fa-user"></div>
+                                                                        <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" autocomplete="username" />
+                                                                </div>
+                                                        </div>
+                                                        <div class="form-group mb-3">
+                                                                <label class="control-label" for="password_">Password</label>
+                                                                <div class="input-group">
+                                                                        <div class="input-group-addon fa fa-key"></div>
+                                                                        <input class="form-control" type="password" size="25" maxlength="30" id="password_" name="password" value="" autocomplete="current-password" />
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                                <div class="col"></div>
+                                                                <div class="col div_content_center">
+                                                                        <button type="submit" class="btn btn-primary btn-lg ">OK</button>
+                                                                </div>
+                                                                <div class="col"></div>
+                                                        </div>
+                                                </form>
+                                        </div>
+                                {% endblock %}
+                        </div>
+                </div>
+                <div class="col"></div>
+        </div>
+</div>
+
