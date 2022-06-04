@@ -89,9 +89,10 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 BASE_URL = "http://127.0.0.1:81"
 
 URL_ROOT_FOLDER = ""
-STATIC_URL = "/static/"
-MEDIA_URL = "/site_media/"
-MEDIA_URL_PROTECTED = "/protected_site_media/"
+STATIC_URL = "static/"
+MEDIA_URL = "site_media/"
+MEDIA_URL_PROTECTED = "protected_site_media/"
+
 
 APPEND_SLASH = False
 
@@ -263,9 +264,12 @@ else:
 
 if PLATFORM_TYPE != "webserver":
     MIDDLEWARE.insert(
-        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
+        #        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
+        0,
+        "whitenoise.middleware.WhiteNoiseMiddleware",
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
+
 INSTALLED_APPS.append("django.contrib.staticfiles")
 
 if (
@@ -480,6 +484,7 @@ else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
+STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
 
 if env("COMPRESS_ENABLED"):
     COMPRESS_ENABLED = True
@@ -497,6 +502,7 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
     STATIC_FS.add_fs("static_main", OSFS(settings.STATIC_ROOT))
+    STATIC_FS.add_fs("static_prj", OSFS(os.path.join(PRJ_PATH, prj_name, "static")))
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS(settings.DATA_PATH))
@@ -614,7 +620,7 @@ else:
         "orm": "default",
     }
 
-try:
-    from pytigon.schserw import *
-except:
-    pass
+# try:
+#    from pytigon.schserw import *
+# except:
+#    pass

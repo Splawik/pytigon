@@ -131,7 +131,7 @@ download_binary_file = function flx_download_binary_file (buf, content_dispositi
 frontend_view = function flx_frontend_view (url, complete, param) {
     var _callback, param2, url2, x;
     param = (param === undefined) ? null: param;
-    url2 = _pymeth_replace.call(url, ".view", ".js");
+    url2 = _pymeth_replace.call(url, ".fview", ".js");
     param2 = param;
     if (_pyfunc_truthy(param)) {
         param2 = window.getParamsFromEncodedParams(param);
@@ -139,7 +139,7 @@ frontend_view = function flx_frontend_view (url, complete, param) {
         param2 = window.getParamsFromUrl(url);
     }
     _callback = (function flx__callback (module) {
-        var _callback2;
+        var _callback2, r;
         _callback2 = (function flx__callback2 (context) {
             var _callback3, template;
             if ((((_pyfunc_op_equals(jQuery.type(context), "object"))) && _pyfunc_truthy(context["template"]))) {
@@ -152,7 +152,7 @@ frontend_view = function flx_frontend_view (url, complete, param) {
 
                 template = context["template"];
                 if (_pyfunc_op_equals(template, ".")) {
-                    template = _pymeth_replace.call(url, ".view", ".html");
+                    template = _pymeth_replace.call(url, ".fview", ".html");
                 }
                 ajax_get(template, _callback3);
             } else {
@@ -161,18 +161,27 @@ frontend_view = function flx_frontend_view (url, complete, param) {
             return null;
         }).bind(this);
 
-        module["request"](param2, _callback2);
+        if (((_pyfunc_truthy(window.hasOwnProperty("cordova"))) || _pyfunc_op_equals(location.protocol, "file:"))) {
+            r = eval(_pymeth_replace.call(module, "export", ""));
+            r(param2, _callback2);
+        } else {
+            module["request"](param2, _callback2);
+        }
         return null;
     }).bind(this);
 
-    x = window.dynamic_import(url2, _callback);
+    if (((_pyfunc_truthy(window.hasOwnProperty("cordova"))) || _pyfunc_op_equals(location.protocol, "file:"))) {
+        ajax_get(url2, _callback);
+    } else {
+        x = window.dynamic_import(url2, _callback);
+    }
     return null;
 };
 
 ajax_get = function flx_ajax_get (url, complete, process_req) {
     var _onload, process_blob, req;
     process_req = (process_req === undefined) ? null: process_req;
-    if (_pyfunc_op_contains(".view", url)) {
+    if (_pyfunc_op_contains(".fview", url)) {
         return frontend_view(url, complete, null);
     }
     req = new XMLHttpRequest();
@@ -232,7 +241,7 @@ window.ajax_get = ajax_get;
 _req_post = function flx__req_post (req, url, data, complete, content_type) {
     var _onload, process_blob;
     content_type = (content_type === undefined) ? null: content_type;
-    if (_pyfunc_op_contains(".view", url)) {
+    if (_pyfunc_op_contains(".fview", url)) {
         return frontend_view(url, complete, data);
     }
     process_blob = false;
@@ -498,7 +507,7 @@ history_push_state = function flx_history_push_state (title, url, data) {
     if ((((!_pyfunc_truthy(url))) || _pyfunc_op_equals(url, "/"))) {
         url2 = url;
     } else {
-        url2 = "?subpath=" + ((new URL(url, "http://127.0.0.1")).pathname);
+        url2 = "?subpage=" + ((new URL(url, "http://127.0.0.1")).pathname);
     }
     if (_pyfunc_truthy(data)) {
         data2 = [LZString.compress(data[0]), data[1]];
@@ -1231,7 +1240,7 @@ register_mount_fun = function flx_register_mount_fun (fun) {
 
 window.register_mount_fun = register_mount_fun;
 mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
-    var _on_remove, evt, fun, stub3_seq, stub4_itr;
+    var _on_remove, evt, fun, stub3_seq, stub4_itr, x;
     link = (link === undefined) ? null: link;
     if (_pyfunc_op_equals(dest_elem, null)) {
         return null;
@@ -1251,6 +1260,11 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         }).bind(this);
 
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
+        if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
+            x = document.createElement("div");
+            x.innerHTML = data_or_html;
+            data_or_html = x.firstChild;
+        }
         if ((dest_elem.childNodes.length > 0)) {
             morphdom(dest_elem.childNodes[0], data_or_html);
             while (dest_elem.childNodes.length > 1) {
@@ -3374,7 +3388,7 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     if (_pyfunc_truthy(desktop)) {
         mount_html(desktop, null, null);
     }
-    if (_pyfunc_truthy(window.location.search)) {
+    if ((_pyfunc_truthy(window.location.search) && _pyfunc_op_contains("subpage", window.location.search))) {
         href = _pymeth_split.call(window.location.search, "=")[1];
         objects = Array.prototype.slice.call(document.querySelectorAll("a"));
         stub1_seq = objects;

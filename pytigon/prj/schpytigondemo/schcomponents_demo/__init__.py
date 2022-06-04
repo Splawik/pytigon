@@ -95,19 +95,19 @@ Urls = (
         """png://categories/preferences-desktop.png""",
     ),
     (
-        "../static/schcomponents_demo/views/sample.view",
+        "../static/schcomponents_demo/views/sample.fview",
         _("Frontent view and template"),
         None,
         """png://actions/edit-clear.png""",
     ),
     (
-        "../static/schcomponents_demo/views/login_form.view",
+        "../static/schcomponents_demo/views/login_form.fview",
         _("Graphql login"),
         None,
         """png://apps/preferences-desktop-theme.png""",
     ),
     (
-        "../static/schcomponents_demo/views/users.view",
+        "../static/schcomponents_demo/views/users.fview",
         _("users"),
         None,
         """png://apps/system-users.png""",

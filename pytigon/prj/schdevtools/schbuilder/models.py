@@ -763,6 +763,15 @@ class SChApp(JSONModel):
         for form in self.schform_set.all():
             if not form.name.startswith("_"):
                 ret.append("form/" + form.name + "/")
+
+        for form in self.schform_set.all():
+            if not form.name.startswith("_"):
+                ret.append("form/" + form.name + "/")
+
+        for f in self.schfiles_set.all():
+            if f.file_type == "j":
+                ret.append("../static/" + self.name + "/views/" + f.name + ".fview")
+
         return ret
 
     def model_code_start(self):

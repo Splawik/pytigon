@@ -1,8 +1,7 @@
-% load exfiltry
 % load static
 
-% if href|has_ext:".vue":
-    script type=text/javascript ===>
-    .
+% if content:
+    script type=module
+        {{ content|safe }}
 % else:
     script type=module,,,src={% static href %}

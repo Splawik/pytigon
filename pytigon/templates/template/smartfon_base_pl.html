@@ -48,11 +48,13 @@
                                         System
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
-                                        {% if not autologin %}
-                                                <a class="dropdown-item system_menu" href="={{base_path}}schsys/do_logout/?schtml=1" title="Logout" target="_top">Logout</a>
-                                        {% endif %}
-                                        {% if request.user|user_can_change_password %}
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
+                                        {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                                                {% if not autologin %}
+                                                        <a class="dropdown-item system_menu" href="={{base_path}}schsys/do_logout/?schtml=1" title="Logout" target="_top">Logout</a>
+                                                {% endif %}
+                                                {% if request.user|user_can_change_password %}
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
+                                                {% endif %}
                                         {% endif %}
                                         {% if user.is_superuser %}
                                                 <a class="dropdown-item system_menu" href="{{base_path}}schsetup/?schtml=1" title="Setup" target="_top">Setup</a>
@@ -62,12 +64,14 @@
                         </li>
                 </ul>
           {% else %}
-                <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="{{base_path}}schsys/login/?schtml=1" title="Login">
-                                {% icon "fa-sing-in fa-lg" %}
-                                Login
-                        </a>
-                </li>
+                {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                        <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="{{base_path}}schsys/login/?schtml=1" title="Login">
+                                        {% icon "fa-sing-in fa-lg" %}
+                                        Login
+                                </a>
+                        </li>
+                {% endif %}
                 </ul>
         {% endif %}
         </div></nav>

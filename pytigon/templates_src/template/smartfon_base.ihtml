@@ -44,18 +44,20 @@
                     .System
 
                 div class=dropdown-menu dropdown-menu-lg-end,,,aria-labelledby=navbarDropdownMenuLink
-                    %if not autologin:
-                        a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout),,,target=_top..._(Logout)
-                    % if request.user|user_can_change_password:
-                        a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
+                    % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
+                        %if not autologin:
+                            a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/?schtml=1,,,title=_(Logout),,,target=_top..._(Logout)
+                        % if request.user|user_can_change_password:
+                            a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
                         a class=dropdown-item system_menu,,,href={{base_path}}schsetup/?schtml=1,,,title=_(Setup),,,target=_top..._(Setup)
                     %% system_menu
     % else:
-        li class=nav-item dropdown
-            a class=nav-link dropdown-toggle,,,href={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
-                {% icon "fa-sing-in fa-lg" %}
-                ._(Login)
+        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
+            li class=nav-item dropdown
+                a class=nav-link dropdown-toggle,,,href={{base_path}}schsys/login/?schtml=1,,,title=_(Login)
+                    {% icon "fa-sing-in fa-lg" %}
+                    ._(Login)
         </ul>
 
     </div></nav>

@@ -59,7 +59,7 @@
 
 
 %% change_password
-    % if standard_web_browser:
+    % if standard_web_browser and settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
         div class=modal fade,,,id=change_passwd,,,role=dialog
             div class=modal-dialog
                 div class=modal-content

@@ -90,6 +90,11 @@ def mount_html(dest_elem, data_or_html, link=None):
         #    else:
         #        dest_elem.appendChild(data_or_html)
 
+        if jQuery.type(data_or_html) == "string":
+            x = document.createElement("div")
+            x.innerHTML = data_or_html
+            data_or_html = x.firstChild
+
         if dest_elem.childNodes.length > 0:
             morphdom(dest_elem.childNodes[0], data_or_html)
             while dest_elem.childNodes.length > 1:

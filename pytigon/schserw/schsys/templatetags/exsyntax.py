@@ -805,12 +805,28 @@ def jscript(context, href):
 
 @inclusion_tag("widgets/component.html")
 def component(context, href):
-    return standard_dict(
-        context,
-        {
-            "href": href,
-        },
-    )
+    if "user_agent" in context and context["user_agent"] == "webviewembeded":
+        content_path = os.path.join(settings.STATIC_ROOT, href)
+        content = ""
+        try:
+            with open(content_path, "rt") as f:
+                content = (
+                    f.read()
+                    .replace("<script", "<_script_")
+                    .replace("</script>", "</_script_>")
+                )
+        except:
+            print("file: ", href, "does'nt exists")
+        return {"href": mark_safe(href), "content": mark_safe(content)}
+    else:
+        return {"href": mark_safe(href), "content": None}
+
+    # return standard_dict(
+    #    context,
+    #    {
+    #        "href": href,
+    #    },
+    # )
 
 
 # other tags

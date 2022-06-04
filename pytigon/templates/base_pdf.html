@@ -156,10 +156,24 @@
                                 {% endblock %}
                         </page>
                 {% endblock %}
+        <page>
+                      <header height="50">
+                                <table width="100%" class="tab_header">
+                                        <tr>
+                                                <td width="25%"></td>
+                                        </tr>
+                                </table>
+                        <footer height="30">
+                                <p width="100%" align="center">
+                                Strona <calc>body.page</calc>
+                                </p>
+                        </footer>
+                      </header>
                 {% block header %}{% endblock %}
                 {% block content %}{% endblock %}
                 {% block footer %}
                 {% endblock %}
+        </page>
 {% endblock %}
 {% block body_stop %}
 </body>

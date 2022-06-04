@@ -11,11 +11,17 @@ class FSStorage(Storage):
     def __init__(self, fs=None, base_url=None):
         if fs is None:
             fs = settings.DEFAULT_FILE_STORAGE_FS()
-        if base_url is None:
-            base_url = settings.MEDIA_URL
-        base_url = base_url.rstrip("/")
+        # print("U1: ", base_url, settings.MEDIA_URL)
+        # if base_url is None:
+        #    base_url = settings.MEDIA_URL
+        # base_url = base_url.rstrip("/")
+        # base_url = ""
         self.fs = fs
-        self.base_url = base_url
+        if base_url:
+            self.base_url = base_url
+        else:
+            self.base_url = ""
+        # print("BASE:", self.base_url)
 
     def exists(self, name):
         return self.fs.isfile(name) or self.fs.isdir(name)
@@ -74,6 +80,27 @@ class FSStorage(Storage):
     def get_modified_time(self, name):
         info = self.fs.getinfo(name, namespaces=["details"])
         return info.modified
+
+    def generate_filename(self, filename):
+        return "/" + filename
+
+
+class StaticFSStorage(FSStorage):
+    def __init__(self, fs=None, base_url=None):
+        super().__init__(fs, "/static")
+
+    def generate_filename(self, filename):
+        return "/static/" + filename
+
+    def url(self, *argi, **argv):
+        ret = super().url(*argi, **argv)
+        print(ret)
+        return ret
+
+
+class MediaFSStorage(FSStorage):
+    def __init__(self, fs=None, base_url=None):
+        super().__init__(fs, "/media")
 
     def generate_filename(self, filename):
         return "/media/" + filename

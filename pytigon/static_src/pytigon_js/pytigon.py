@@ -112,7 +112,7 @@ def app_init(
     if desktop:
         mount_html(desktop, None, None)
 
-    if window.location.search:
+    if window.location.search and "subpage" in window.location.search:
         href = window.location.search.split("=")[1]
         objects = Array.prototype.slice.call(document.querySelectorAll("a"))
         for obj in objects:
@@ -120,17 +120,6 @@ def app_init(
                 if href in obj.href:
                     obj.click()
                     break
-
-        # try:
-        #    href = window.location.search.split("=")[1]
-        #
-        #    def _callback(data):
-        #        return get_menu().on_menu_href(None, data, "", "", None)
-        #
-        #    ajax_get(href, _callback)
-
-        # except:
-        #    pass
 
 
 window.app_init = app_init

@@ -84,7 +84,7 @@ def download_binary_file(buf, content_disposition):
 
 
 def frontend_view(url, complete, param=None):
-    url2 = url.replace(".view", ".js")
+    url2 = url.replace(".fview", ".js")
 
     param2 = param
     if param:
@@ -106,18 +106,25 @@ def frontend_view(url, complete, param=None):
 
                 template = context["template"]
                 if template == ".":
-                    template = url.replace(".view", ".html")
+                    template = url.replace(".fview", ".html")
                 ajax_get(template, _callback3)
             else:
                 complete(context)
 
-        module["request"](param2, _callback2)
+        if window.hasOwnProperty("cordova") or location.protocol == "file:":
+            r = eval(module.replace("export", ""))
+            r(param2, _callback2)
+        else:
+            module["request"](param2, _callback2)
 
-    x = window.dynamic_import(url2, _callback)
+    if window.hasOwnProperty("cordova") or location.protocol == "file:":
+        ajax_get(url2, _callback)
+    else:
+        x = window.dynamic_import(url2, _callback)
 
 
 def ajax_get(url, complete, process_req=None):
-    if ".view" in url:
+    if ".fview" in url:
         return frontend_view(url, complete, None)
 
     req = XMLHttpRequest()
@@ -173,7 +180,7 @@ window.ajax_get = ajax_get
 
 
 def _req_post(req, url, data, complete, content_type=None):
-    if ".view" in url:
+    if ".fview" in url:
         return frontend_view(url, complete, data)
 
     process_blob = False
@@ -437,8 +444,7 @@ def history_push_state(title, url, data=None):
     if not url or url == "/":
         url2 = url
     else:
-        url2 = "?subpath=" + URL(url, "http://127.0.0.1").pathname
-        # url2 = "?subpath=" + url.split("?")[0]
+        url2 = "?subpage=" + URL(url, "http://127.0.0.1").pathname
     if data:
         data2 = [LZString.compress(data[0]), data[1]]
     else:
