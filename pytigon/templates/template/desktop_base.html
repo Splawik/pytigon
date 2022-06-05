@@ -11,7 +11,11 @@
 {% endblock %}
 {% block js_scripts_base %}
         {% if settings.USE_I18N %}
-                <script src="{% url 'javascript-catalog' %}"></script>
+                {% if user_agent == 'webviewembeded' %}
+                        {% jscript_link 'system/jsi18n.js' %}
+                  {% else %}
+                        <script src="{% url 'javascript-catalog' %}"></script>
+                {% endif %}
         {% endif %}
         {% compress js %}
                 {{ block.super }}

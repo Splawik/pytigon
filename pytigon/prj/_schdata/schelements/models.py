@@ -348,16 +348,6 @@ class Element(TreeModel):
             ids.append(obj.id)
         return Q(id__in=ids)
 
-    # def get_path(self):
-    #    p = self.parents()
-    #    n=""
-    #    for parent in p:
-    #        if parent.code and parent.code!="":
-    #            n = "/" + przodek.code + n
-    #        else:
-    #            n = "/?" + n
-    #    return n + "/" + self.code
-
     def href_path(self):
         p = self.parents()
         n = ""
@@ -404,26 +394,8 @@ class Element(TreeModel):
             id = -1
         return "/schsys/treedialog/schelements/Element/%s/" % id
 
-    # def redirect_href(self, view, request):
-    #    t = None
-    #    if type(self)==Element:
-    #        if 'add_param' in view.kwargs:
-    #            t = view.kwargs['add_param']
-    #        else:
-    #            t = self.type
-    #    if t:
-    #        if hasattr(self, "get_structure"):
-    #            s = self.get_structure()
-    #            if t in s:
-    #                redirect = s[t]['app'] + "/table/" + s[t]['table']
-    #                return request.path.replace('schelements/table/Element',redirect)
-    #    return None
-
     def get_derived_object(self, param=None):
         t = None
-        if hasattr(self, "get_structure"):
-            s = self.get_structure()
-
         if type(self) == Element:
             if hasattr(self, "get_structure"):
                 s = self.get_structure()
@@ -436,7 +408,6 @@ class Element(TreeModel):
                         obj2 = copy.copy(self)
                         obj2.__class__ = model
                         return obj2
-                        # return ContentType.objects.get(app_label=s[t]['app'], model=s[t]['table']).model_class()()
                 else:
                     t = self.type
                     if t in s:
@@ -459,9 +430,6 @@ class Element(TreeModel):
                         s[t]["app"].lower() + "/" + s[t]["table"].lower() + ".html",
                     ]
                     return names
-                    # template = select_template(names)
-                    # if template:
-                    #    return template
         return None
 
     @staticmethod

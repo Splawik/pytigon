@@ -45,9 +45,9 @@ if not LOCAL_ROOT_PATH in sys.path:
 if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
     URL_ROOT_FOLDER = "_schdata"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
-    STATIC_URL = "/" + URL_ROOT_FOLDER + "/static/"
-    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
-    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
+    STATIC_URL = URL_ROOT_FOLDER + "/static/"
+    MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
+    MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
 from pytigon_lib.schtools.install_init import init
 
@@ -126,7 +126,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.05.21 14:11:56"
+GEN_TIME = "2022.06.05 16:47:52"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

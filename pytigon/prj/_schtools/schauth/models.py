@@ -27,7 +27,13 @@ class UrlWithAuth(models.Model):
         "User name", null=False, blank=False, editable=True, max_length=64
     )
     key = models.CharField(
-        "Key", null=False, blank=False, editable=True, unique=True, max_length=255
+        "Key",
+        null=False,
+        blank=False,
+        editable=True,
+        unique=True,
+        db_index=True,
+        max_length=255,
     )
     redirect_to = models.CharField(
         "Redirect to", null=True, blank=True, editable=True, max_length=255
