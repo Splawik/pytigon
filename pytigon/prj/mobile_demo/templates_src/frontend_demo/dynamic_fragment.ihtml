@@ -1,0 +1,7 @@
+h1...Standard backend page
+
+.Hello world
+
+h2...Dynamic content
+
+div class=ajax-region ajax-frame auto-frame ajax-link,,,href=/static/frontend_demo/views/todo_demo2.fview,,,target=refresh_frame

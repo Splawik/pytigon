@@ -36,6 +36,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/schodf/
 !*pytigon/prj/schportal/
 !*pytigon/prj/schpytigondemo/
+!*pytigon/prj/mobile_demo/
 !*pytigon/prj/schsetup/
 !*pytigon/prj/_schplaywright/
 !*pytigon/prj/_schall/*
