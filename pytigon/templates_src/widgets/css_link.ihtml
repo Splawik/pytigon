@@ -3,4 +3,4 @@
     style type=text/css
         {{ content|safe }}
 % else:
-    link rel=stylesheet,,,type=text/css,,,href={% get_static_prefix %}{{href}}
+    link rel=stylesheet,,,type=text/css,,,href={% static href %}

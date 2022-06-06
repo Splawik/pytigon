@@ -42,7 +42,7 @@ class FSStorage(Storage):
 
     def url(self, name):
         with unwrap_errors(name):
-            ret = self.base_url + abspath(name)
+            ret = self.base_url + abspath(name)[1:]
         return ret
 
     def _open(self, name, mode):
@@ -81,10 +81,10 @@ class FSStorage(Storage):
 
 class StaticFSStorage(FSStorage):
     def __init__(self, fs=None, base_url=None):
-        super().__init__(fs, "/static")
+        super().__init__(fs, settings.STATIC_URL)
 
-    def generate_filename(self, filename):
-        return "/static/" + filename
+    # def generate_filename(self, filename):
+    #    return "/static/" + filename
 
     def url(self, *argi, **argv):
         ret = super().url(*argi, **argv)
@@ -93,7 +93,7 @@ class StaticFSStorage(FSStorage):
 
 class MediaFSStorage(FSStorage):
     def __init__(self, fs=None, base_url=None):
-        super().__init__(fs, "/media")
+        super().__init__(fs, settings.MEDIA_URL)
 
     def generate_filename(self, filename):
         return "/media/" + filename

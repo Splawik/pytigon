@@ -4,6 +4,6 @@
                 {{ content|safe }}
         </style>
   {% else %}
-        <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}{{href}}"></link>
+        <link rel="stylesheet" type="text/css" href="{% static href %}"></link>
 {% endif %}
 

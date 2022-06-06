@@ -89,6 +89,7 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 BASE_URL = "http://127.0.0.1:81"
 
 URL_ROOT_FOLDER = ""
+URL_ROOT_PREFIX = "/"
 STATIC_URL = "static/"
 MEDIA_URL = "site_media/"
 MEDIA_URL_PROTECTED = "protected_site_media/"
