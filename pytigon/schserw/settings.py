@@ -503,7 +503,9 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
     STATIC_FS.add_fs("static_main", OSFS(settings.STATIC_ROOT))
-    STATIC_FS.add_fs("static_prj", OSFS(os.path.join(PRJ_PATH, prj_name, "static")))
+    p = os.path.join(PRJ_PATH, prj_name, "static")
+    if os.path.exists(p):
+        STATIC_FS.add_fs("static_prj", OSFS(p))
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS(settings.DATA_PATH))
