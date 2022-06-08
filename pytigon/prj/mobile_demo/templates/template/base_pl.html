@@ -1,0 +1,21 @@
+{% extends 'template/base_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% block js_extrascipts %}
+        {{block.super}}
+        {% jscript_link 'system/require.js' %}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+{% endblock %}
+{% block body_footer_scripts %}
+        {{block.super}}
+        {% component 'schcomponents/components/ptig-svg.js' %}
+{% endblock %}
+{% block component_init %}
+                var initial_state={};
+                GLOBAL_BUS.set_state(initial_state);
+                var component_init = [ "ptig-svg.js",  ];
+{% endblock %}
+
