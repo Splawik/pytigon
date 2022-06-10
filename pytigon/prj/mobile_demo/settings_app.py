@@ -53,7 +53,7 @@ from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-START_PAGE = "None"
+START_PAGE = "static/frontend_demo/views/todo_demo.fview"
 SHOW_LOGIN_WIN = False
 PACKS = []
 
@@ -126,7 +126,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.06.06 20:37:35"
+GEN_TIME = "2022.06.09 17:53:24"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

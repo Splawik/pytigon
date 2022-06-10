@@ -497,6 +497,15 @@ COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 STATIC_FS = None
 
 
+def STATIC_FILE_STORAGE_FS():
+    static_fs = MultiFS()
+    static_fs.add_fs("static_main", OSFS(settings.STATIC_ROOT), write=True)
+    p = os.path.join(PRJ_PATH, prj_name, "static")
+    if os.path.exists(p):
+        static_fs.add_fs("static_prj", OSFS(p))
+    return static_fs
+
+
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS
     _m = MountFS()

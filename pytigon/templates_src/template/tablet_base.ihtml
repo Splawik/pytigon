@@ -63,8 +63,6 @@
 %% menu_end
 
 %% menu
-    button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
-        {% icon "fa-bars fa-lg" %}
 
     sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %},,,width={% block sidebarmenu_width %}18rem{% endblock %}
         sys-perfectscrollbar
@@ -104,6 +102,9 @@
                 img src={% get_static_prefix %}images/reload/reload.gif,,,id=loading-indicator,,,style=display:none
             % else:
                 i class=fa fa-spinner fa-pulse fa-3x fa-fw text-secondary,,,id=loading-indicator,,,style=display:none
+
+            button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
+                {% icon "fa-bars fa-lg" %}
 
             % comment:
                 img src={% get_static_prefix %}images/reload/reload.svg,,,id=loading-indicator

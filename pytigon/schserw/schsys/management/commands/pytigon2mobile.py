@@ -191,3 +191,13 @@ class Command(BaseCommand):
                 parse_url(BASE_URL, s)
             except:
                 pass
+
+        with open(os.path.join(output_path, "index.html"), "rt") as f:
+            buf = f.read()
+        with open(os.path.join(output_path, "index.html"), "wt") as f:
+            f.write(
+                buf.replace(
+                    '<script src="schsys/jsi18n.js"></script>',
+                    '<script src="cordova.js"></script><script src="schsys/jsi18n.js"></script>',
+                )
+            )

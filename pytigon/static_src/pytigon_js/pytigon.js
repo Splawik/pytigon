@@ -3328,7 +3328,7 @@ dom_content_loaded = function flx_dom_content_loaded () {
 };
 
 app_init = function flx_app_init (prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time, callback) {
-    var _init_start_wiki_page, _on_sync, desktop, href, obj, objects, stub1_seq, stub2_itr;
+    var _init_start_page, _on_sync, desktop, href, obj, objects, stub1_seq, stub2_itr;
     callback = (callback === undefined) ? null: callback;
     moment.locale(lang);
     window.ACTIVE_PAGE = null;
@@ -3364,21 +3364,26 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     }).bind(this);
 
     sync_and_run("sys", _on_sync);
-    _init_start_wiki_page = (function flx__init_start_wiki_page () {
-        var _on_load;
-        if ((_pyfunc_truthy(start_page) && ((!_pyfunc_op_equals(start_page, "None"))) && _pyfunc_op_equals(window.location.pathname, base_path))) {
+    _init_start_page = (function flx__init_start_page () {
+        var _on_load, p;
+        if ((_pyfunc_truthy(start_page) && ((!_pyfunc_op_equals(start_page, "None"))) && ((_pyfunc_op_equals(window.location.pathname, base_path) || _pymeth_endswith.call(window.location.pathname, "index.html"))))) {
             _on_load = (function flx__on_load (responseText, status, response) {
-                console.log("_init_strart_wiki_page::_on_load");
+                console.log("_init_strart_page::_on_load");
                 return null;
             }).bind(this);
 
-            ajax_load(document.querySelector("#body_desktop"), _pyfunc_op_add(base_path, start_page) + "?only_content&schtml=1", _on_load);
+            if (_pyfunc_truthy(_pymeth_endswith.call(window.location.pathname, "index.html"))) {
+                p = start_page + "?only_content&schtml=1";
+            } else {
+                p = _pyfunc_op_add(base_path, start_page) + "?only_content&schtml=1";
+            }
+            ajax_load(document.querySelector("#body_desktop"), p, _on_load);
         }
         return null;
     }).bind(this);
 
-    window.init_start_wiki_page = _init_start_wiki_page;
-    _init_start_wiki_page();
+    window.init_start_page = _init_start_page;
+    _init_start_page();
     if (_pyfunc_hasattr(window, "init_callback")) {
         window.init_callback();
     }

@@ -79,27 +79,28 @@ def app_init(
 
     sync_and_run("sys", _on_sync)
 
-    def _init_start_wiki_page():
+    def _init_start_page():
         if (
             start_page
             and start_page != "None"
-            and window.location.pathname == base_path
+            and (
+                window.location.pathname == base_path
+                or window.location.pathname.endswith("index.html")
+            )
         ):
 
             def _on_load(responseText, status, response):
-                print("_init_strart_wiki_page::_on_load")
-                # pass
+                print("_init_strart_page::_on_load")
 
-            ajax_load(
-                # jQuery("#wiki_start"),
-                # jQuery("#body_desktop"),
-                document.querySelector("#body_desktop"),
-                base_path + start_page + "?only_content&schtml=1",
-                _on_load,
-            )
+            if window.location.pathname.endswith("index.html"):
+                p = start_page + "?only_content&schtml=1"
+            else:
+                p = base_path + start_page + "?only_content&schtml=1"
 
-    window.init_start_wiki_page = _init_start_wiki_page
-    _init_start_wiki_page()
+            ajax_load(document.querySelector("#body_desktop"), p, _on_load)
+
+    window.init_start_page = _init_start_page
+    _init_start_page()
 
     if hasattr(window, "init_callback"):
         window.init_callback()

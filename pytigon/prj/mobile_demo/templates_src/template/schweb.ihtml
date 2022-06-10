@@ -17,6 +17,6 @@
         [ gui_style | modern(None) ]
         [ hybrid | 0 ]
         [ title  | Mobile demo ]
-        [ start_page | None ]
+        [ start_page | static/frontend_demo/views/todo_demo.fview ]
         [ plugins | None ]
 

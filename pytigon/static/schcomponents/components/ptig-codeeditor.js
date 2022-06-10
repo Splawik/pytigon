@@ -84,7 +84,7 @@ try {
 
     comp.options["attributes"] = _pyfunc_create_dict("width", width, "height", height, "function-title", null, "title", null);
     init = function flx_init (component) {
-        var _on_loadjs, function_title_visibility, on_save, state;
+        var _on_loadjs, function_title_visibility, on_save, save, state;
         _on_loadjs = (function flx__on_loadjs () {
             var _changed, ed, state, theme, top, value;
             ed = component.root.querySelector("div.vseditor");
@@ -98,7 +98,7 @@ try {
             } else {
                 theme = "vs";
             }
-            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme}));
+            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme, wordWrap: "off", wordWrapMinified: false}));
             _changed = (function flx__changed (event) {
                 component.set_state(({changed: true}));
                 return null;
@@ -125,18 +125,24 @@ try {
 
         require.config(({paths: ({vs: BASE_PATH})}));
         require(["vs/editor/editor.main"], _on_loadjs);
-        on_save = (function flx_on_save (event) {
-            var _on_ajax, ajax_options, href;
+        save = (function flx_save (callback) {
+            var ajax_options, href;
             if (_pyfunc_truthy(component.hasAttribute("href"))) {
                 href = component.getAttribute("href");
                 ajax_options = ({method: "POST", url: href, dataType: "html", data: ({data: component.editor.getValue()})});
-                _on_ajax = (function flx__on_ajax () {
-                    component.set_state(({changed: false}));
-                    return null;
-                }).bind(this);
-
-                (jQuery.ajax(ajax_options).done)(_on_ajax);
+                (jQuery.ajax(ajax_options).done)(callback);
             }
+            return null;
+        }).bind(this);
+
+        on_save = (function flx_on_save (event) {
+            var _on_ajax;
+            _on_ajax = (function flx__on_ajax () {
+                component.set_state(({changed: false}));
+                return null;
+            }).bind(this);
+
+            save(_on_ajax);
             return null;
         }).bind(this);
 
@@ -145,7 +151,7 @@ try {
         } else {
             function_title_visibility = "hidden";
         }
-        state = ({on_save: on_save, changed: false, function_title_visibility: function_title_visibility});
+        state = ({on_save: on_save, save: save, changed: false, function_title_visibility: function_title_visibility});
         component.set_state(state);
         return null;
     };

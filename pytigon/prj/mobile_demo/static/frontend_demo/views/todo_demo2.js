@@ -10,6 +10,7 @@ request = function flx_request (param, complete) {
     db = new PouchDB("todo");
     if (_pyfunc_truthy(param["task"])) {
         db.put(({_id: ((new Date()).toJSON)(), description: param["task"]}));
+        navigator.vibrate(1000);
     }
     callback = (function flx_callback (table) {
         var context;

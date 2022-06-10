@@ -1,4 +1,4 @@
-var comp, init, stub10_err, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err, stub9_context;
+var comp, init, stub10_err, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub7_context, stub8_err, stub9_context, test;
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {
@@ -148,3 +148,8 @@ try {
 } catch(err_0)  { stub10_err=err_0; }
 if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
 } else { stub9_context.__exit__(null, null, null); }
+test = function flx_test (x) {
+    return x;
+};
+
+export {test};
