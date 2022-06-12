@@ -2450,7 +2450,7 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     }
     window.MENU = null;
     mount_html(document.querySelector("section.body-body"), data_element.querySelector("section.body-body"), false);
-    window.init_start_wiki_page();
+    window.init_start_page();
     window.activate_menu();
     return null;
 };
@@ -2759,7 +2759,7 @@ TabMenu.prototype.remove_page = function (id) {
             history_push_state("", window.BASE_PATH);
         }
         if ((_pyfunc_op_equals(((_pymeth_find.call(jQuery("#body_desktop"), ".content")).length), 0))) {
-            window.init_start_wiki_page();
+            window.init_start_page();
         }
         (jQuery("#body_desktop").show)();
     }

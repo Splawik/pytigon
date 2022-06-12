@@ -461,7 +461,6 @@ div.modal-content.maximized {
   /* W3C Markup */
   background-image: radial-gradient(ellipse farthest-side at left top, #CCCCCC 0%, #224466 100%);
   min-height: 100vh !important;
-  overflow-y: scroll;
   position: absolute;
   top: 0px;
   bottom: 0px;

@@ -1,4 +1,4 @@
-% extends "tables_adv/album.html"
+% extends "tables_adv_demo/album.html"
 
 % load exfiltry
 % load exsyntax

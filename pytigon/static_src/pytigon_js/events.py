@@ -549,7 +549,7 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         data_element.querySelector("section.body-body"),
         False,
     )
-    window.init_start_wiki_page()
+    window.init_start_page()
     window.activate_menu()
 
 

@@ -132,7 +132,7 @@ class TabMenu:
             if window.PUSH_STATE:
                 history_push_state("", window.BASE_PATH)
             if jQuery("#body_desktop").find(".content").length == 0:
-                window.init_start_wiki_page()
+                window.init_start_page()
             jQuery("#body_desktop").show()
 
     #'standard' 'simple', 'traditional', 'mobile', 'tablet', 'hybrid'
