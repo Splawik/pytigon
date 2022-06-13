@@ -123,6 +123,7 @@
                     % if settings.SEARCH_PATH:
                         li id=search,,,class=nav-item search
                             form action={{base_path}}schsys/search/,,,title=_(Search results),,,target=_parent
+                                {% csrf_token %}
                                 div class=input-group
                                     input class=form-control,,,placeholder=_(Search),,,name=q
                                     div class=input-group-addon

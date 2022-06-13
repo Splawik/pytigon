@@ -251,6 +251,7 @@
 
                             % else:
                                 form method=post,,,action={{request.path}},,,role=form,,,class=ajax-link table_filter form-inline,,,target=refresh_frame,,,data-region=table
+                                    {% csrf_token %}
                         %%list_content_header_third_row
                             div class=tr row list_content_header list_content_header_third_row
                                 div class={% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
