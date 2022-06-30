@@ -221,12 +221,12 @@ def init_table(table, table_type):
 
         # table_panel = jQuery(table).closest(".content")
         table_panel = jQuery(table).closest("section.body-body")
-        btn = table_panel.find(".tabsort-toolbar-expand")
+        btn = table_panel.find(".tabsort-toolbar-expand").first()
         if btn:
 
             def _handle_toolbar_expand(self, elem):
-                panel = table_panel.find(".fixed-table-toolbar")
-                panel2 = jQuery(".list_content_header_second_row")
+                panel = table_panel.find(".fixed-table-toolbar").first()
+                panel2 = table_panel.find(".list_content_header_second_row").first()
                 if not jQuery(this).hasClass("active"):
                     # if panel[0].style.display == "none":
                     panel.show()
@@ -236,7 +236,7 @@ def init_table(table, table_type):
                     panel2.hide()
                 process_resize(document.body)
 
-            table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand)
+            btn.on("click", _handle_toolbar_expand)
             if btn.hasClass("active"):
                 panel = table_panel.find(".fixed-table-toolbar")
                 panel2 = jQuery(".list_content_header_second_row")
@@ -407,7 +407,7 @@ def on_check():
                 dropdown = document.createElement("div")
                 dropdown.classList.add("dropleft")
 
-                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
+                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-bs-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
                 html += "<div class='dropdown-menu'>"
                 for s in actions:
                     if "/" in s:

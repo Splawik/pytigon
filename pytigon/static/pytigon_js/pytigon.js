@@ -3006,12 +3006,12 @@ init_table = function flx_init_table (table, table_type) {
 
         table.on("post-body.bs.table", init_bootstrap_table);
         table_panel = (jQuery(table).closest)("section.body-body");
-        btn = _pymeth_find.call(table_panel, ".tabsort-toolbar-expand");
+        btn = (_pymeth_find.call(table_panel, ".tabsort-toolbar-expand").first)();
         if (_pyfunc_truthy(btn)) {
             _handle_toolbar_expand = function (elem) {
                 var panel, panel2;
-                panel = _pymeth_find.call(table_panel, ".fixed-table-toolbar");
-                panel2 = jQuery(".list_content_header_second_row");
+                panel = (_pymeth_find.call(table_panel, ".fixed-table-toolbar").first)();
+                panel2 = (_pymeth_find.call(table_panel, ".list_content_header_second_row").first)();
                 if ((!_pyfunc_truthy((jQuery(this).hasClass)("active")))) {
                     panel.show();
                     panel2.show();
@@ -3023,7 +3023,7 @@ init_table = function flx_init_table (table, table_type) {
                 return null;
             };
 
-            table_panel.on("click", ".tabsort-toolbar-expand", _handle_toolbar_expand);
+            btn.on("click", _handle_toolbar_expand);
             if (_pyfunc_truthy(btn.hasClass("active"))) {
                 panel = _pymeth_find.call(table_panel, ".fixed-table-toolbar");
                 panel2 = jQuery(".list_content_header_second_row");
@@ -3187,7 +3187,7 @@ on_check = function flx_on_check () {
                 }
                 dropdown = document.createElement("div");
                 dropdown.classList.add("dropleft");
-                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>";
+                html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-bs-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>";
                 html += "<div class='dropdown-menu'>";
                 stub5_seq = actions;
                 if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}

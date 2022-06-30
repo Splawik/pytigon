@@ -1,0 +1,20 @@
+/*:root {
+    --sidebar-background-level1: #222d32;
+    --sidebar-background-level2: #2c3b41;
+    --sidebar-background-active-level1: #1e282c;
+    --sidebar-color-level1: #b8c7ce;
+    --sidebar-color-level2: #8aa4af;
+    --sidebar-color-active-level1: #fff;
+    --sidebar-color-active-level2: #fff;
+}
+*/
+
+:root {
+    --sidebar-background-level1: rgb( var(--bs-primary-rgb) , 0.9 );
+    --sidebar-background-active-level1: rgba( 255, 255, 255, 0.02);
+    --sidebar-color-level1: rgb( var(--bs-light-rgb) );
+    --sidebar-background-level2: rgba( 0,0,0, 0.1);
+    --sidebar-color-level2: rgb( var(--bs-light-rgb) );
+    --sidebar-color-active-level1: rgb( var(--bs-white-rgb) );
+    --sidebar-color-active-level2: rgb( var(--bs-white-rgb) );
+}

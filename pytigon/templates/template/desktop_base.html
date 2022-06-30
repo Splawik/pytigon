@@ -104,6 +104,7 @@
 {% endblock %}
 {% block css_links %}
         {% compress css %}
+                {% css_link 'themes/variables.css' %}
                 {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}

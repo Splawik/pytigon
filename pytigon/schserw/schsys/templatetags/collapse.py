@@ -29,7 +29,7 @@ register = template.Library()
 
 _collapse_str = """
         <div class="alert alert-warning" role="alert">
-            <a class="collapsed" data-toggle="collapse" href="#{id}/" aria-expanded="false">
+            <a class="collapsed" data-bs-toggle="collapse" href="#{id}/" aria-expanded="false">
                 {title}
             </a>
         </div>

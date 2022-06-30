@@ -63,7 +63,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 10rem;
-      color: #000 !important; }
+      color: var(--bs-dark) !important; }
       #tabs2 li a.active {
         color: var(--bs-body-color) !important;
         background-color: var(--bs-body-bg) !important; }
@@ -128,6 +128,8 @@
     color: var(--bs-body-color); }
   .tabsort_panel .dropdown .btn, .tabsort_panel .tree-id .btn, .table_panel .dropdown .btn, .table_panel .tree-id .btn, .subform_content .dropdown .btn, .subform_content .tree-id .btn {
     font-size: small; }
+  .tabsort_panel .dropdown .btn.dropdown-toggle, .table_panel .dropdown .btn.dropdown-toggle, .subform_content .dropdown .btn.dropdown-toggle {
+    font-size: initial; }
   .tabsort_panel div.td_action .btn:not(:hover), .tabsort_panel div.td_information .btn:not(:hover), .table_panel div.td_action .btn:not(:hover), .table_panel div.td_information .btn:not(:hover), .subform_content div.td_action .btn:not(:hover), .subform_content div.td_information .btn:not(:hover) {
     background-color: transparent; }
   .tabsort_panel div.td_action, .table_panel div.td_action, .subform_content div.td_action {
