@@ -77,7 +77,7 @@ def test_mobile(request):
 def test_tablet(request):
     if "HTTP_USER_AGENT" in request.META and request.META["HTTP_USER_AGENT"]:
         s = request.META["HTTP_USER_AGENT"].lower()
-        if "tablet" in s:
+        if "xtablet" in s:
             return True
     return False
 

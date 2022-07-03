@@ -31,8 +31,8 @@
                         <li class="treeview active">
                 {% endif %}
                 <a href="#">
-                        {% if item_info.user_param.icon %}
-                                {% icon item_info.user_param.icon|append_str:" fa-lg" %}
+                        {% if item_info.icon %}
+                                {% icon item_info.icon|append_str:" fa-lg" %}
                           {% else %}
                                 {% icon "fa-link fa-lg" %}
                         {% endif %}
@@ -64,10 +64,10 @@
 {% block menu_end %}
 {% endblock %}
 {% block menu %}
-        <sys-sidebarmenu type="{% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}" width="{% block sidebarmenu_width %}18rem{% endblock %}">
+        <sys-sidebarmenu type="{% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}">
                 <sys-perfectscrollbar></sys-perfectscrollbar>
                 <aside class="main-sidebar collapse show" id="menu" role="dialog">
-                        <section class="sidebar">
+                        <div sidebar-menu>
                                 <ul class="sidebar-menu">
                                         <li class="bg-primary">
                                                 <a href="{{base_path}}" class="logo txt3d text-white" style="white-space:nowrap;" target="_top">
@@ -84,7 +84,7 @@
                                         </li>
                                         {{block.super}}
                                 </ul>
-                        </section>
+                        </div>
                 </aside>
         </sys-sidebarmenu>
 {% endblock %}

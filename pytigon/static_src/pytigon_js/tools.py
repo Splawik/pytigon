@@ -489,12 +489,42 @@ def animate_combo(
     def _animate():
         if button.hasClass("on"):
             button.removeClass("on")
-            obj1.animate(obj1_style_off, speed)
-            obj2.animate(obj2_style_off, speed, "swing", end2)
+
+            if speed:
+                obj1.animate(obj1_style_off, speed)
+            else:
+                obj1.css(obj1_style_off)
+
+            obj1.removeClass("off")
+            obj1.addClass("on")
+
+            if speed:
+                obj2.animate(obj2_style_off, speed, "linear", end2)
+            else:
+                obj2.css(obj2_style_off)
+                end2()
+
+            obj2.removeClass("on")
+            obj2.addClass("off")
         else:
             button.addClass("on")
-            obj1.animate(obj1_style_on, speed)
-            obj2.animate(obj2_style_on, speed, "swing", end2)
+
+            if speed:
+                obj1.animate(obj1_style_on, speed)
+            else:
+                obj1.css(obj1_style_on)
+
+            obj1.removeClass("on")
+            obj1.addClass("off")
+
+            if speed:
+                obj2.animate(obj2_style_on, speed, "linear", end2)
+            else:
+                obj2.css(obj2_style_on)
+                end2()
+
+            obj2.removeClass("off")
+            obj2.addClass("on")
 
     button.click(_animate)
 

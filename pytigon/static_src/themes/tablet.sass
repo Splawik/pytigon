@@ -22,10 +22,14 @@ div.content
 
 
 /* application structure */
+
+sys-sidebarmenu
+    background-color: black
+
 #menu
     //overflow-y: hidden
     position: fixed
-    width: 18rem
+    width: var( --sidebar-width )
     z-index: 999
     background-color: var(--sidebar-background-level1)
     //min-height: 100%
@@ -40,7 +44,15 @@ img.tablet_menu_icon, a.menu-href svg
     vertical-align: middle
 
 #panel 
-    margin-left: 18rem
+    margin-left: var( --sidebar-width )
+    transition: margin-left 0.2s
+
+
+#panel.off 
+    margin-left: var( --sidebar-width )
+
+#panel.on 
+    margin-left: var( --sidebar-width-min )
 
 
 #menu:not(.show) + #panel 
@@ -88,16 +100,16 @@ header.main-header nav.navbar div.navbar-collapse
     right: 0px
     top: 0px
     width: auto
-    height: 100%   
+    min-height: 100%   
     font-size: 15px
 
 
 header.main-header nav.navbar div.navbar-collapse > ul 
-    height: 100%
+    min-height: 100%
 
 
 header.main-header nav.navbar div.navbar-collapse > ul > li 
-    height: 100%
+    min-height: 100%
 
 
 header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-toggle:hover  
@@ -126,7 +138,7 @@ header.main-header nav.navbar
     margin: 0px
     top: 0px
     left: 0px
-    z-index: 1000
+    //z-index: 1000
     background: none
     border: none
 
@@ -173,8 +185,7 @@ header.main-header nav.navbar
 
 section.sidebar
     font-size: 14px
-    background: black
-    height: 100%
+    min-height: 100%
 
 
 ul.sidebar-menu ul.treeview-menu 
@@ -242,3 +253,24 @@ a.logo
         top: -3px
         position: relative
         left: 5px
+
+
+
+aside.main-sidebar
+    transition: width 0.2s
+
+aside.main-sidebar.off:not(:hover)
+    width: var( --sidebar-width-min ) !important
+    .logo
+        visibility: hidden
+    li
+        span
+            display: none
+        ul
+            display: none !important
+        i.pull-right
+            display: none
+
+
+aside.main-sidebar.off:hover
+    width: var( --sidebar-off-width-hover ) !important
