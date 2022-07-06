@@ -22,14 +22,13 @@
                                     br
                                     p id=login_txt1..._(Sign in):
                                     p id=login_txt2,,,class=d-none..._(Wrong login or password, try again):
-                                    br
                                     form class=login-form,,,action={{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{base_path}}?no_scripts=1&next_after_error={{base_path}}{% else %}{{base_path}}?no_scripts=1{% endif %},,,method=post,,,name=signin,,,target=_top
-                                        div class=form-group
+                                        div class=form-group mb-3
                                             label class=control-label,,,for=username_ ..._(User name)
-                                            div class=input-group
+                                            div class=input-group mb-3
                                                 div class=input-group-addon fa fa-user
                                                 input class=form-control,,,type=text,,,size=25,,,maxlength=30,,,id=username_,,,name=username,,,value=,,,autocomplete=username
-                                        div class=form-group mb-3
+                                        div class=form-group mb-5
                                             label class=control-label,,,for=password_..._(Password)
                                             div class=input-group
                                                 div class=input-group-addon fa fa-key

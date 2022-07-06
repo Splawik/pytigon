@@ -122,6 +122,13 @@ if env("GRAPHQL"):
 else:
     GRAPHQL = False
 
+
+if env("REST"):
+    REST = True
+else:
+    REST = False
+
+
 ROOT_URLCONF = "pytigon.schserw.urls"
 
 STATICFILES_FINDERS = [
@@ -212,9 +219,29 @@ INSTALLED_APPS = [
 ]
 
 if GRAPHQL:
-    AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
     INSTALLED_APPS.append("graphene_django")
-    MIDDLEWARE.append("pytigon.schserw.schmiddleware.schjwt.JWTUserMiddleware")
+    INSTALLED_APPS.append("oauth2_provider")
+
+if REST:
+    INSTALLED_APPS.append("rest_framework")
+    if not "oauth2_provider" in INSTALLED_APPS:
+        INSTALLED_APPS.append("oauth2_provider")
+    INSTALLED_APPS.append("oauth2_provider")
+
+    REST_FRAMEWORK = {
+        "DEFAULT_AUTHENTICATION_CLASSES": [
+            "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+        ]
+    }
+
+OAUTH2_PROVIDER = {
+    #'SCOPES': {
+    #    'read': 'Read scope',
+    #    'write': 'Write scope',
+    # },
+    "PKCE_REQUIRED": False,
+}
+
 
 try:
     import mptt
@@ -591,13 +618,6 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 GRAPHENE = {
     "SCHEMA": "pytigon.schserw.schsys.schema.schema",
-    "MIDDLEWARE": ["graphql_jwt.middleware.JSONWebTokenMiddleware"],
-}
-
-GRAPHQL_JWT = {
-    "JWT_VERIFY_EXPIRATION": False,
-    # "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=5),
-    # "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
 
 GRAPHENE_PUBLIC = False

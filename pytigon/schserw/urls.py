@@ -47,7 +47,8 @@ logger = logging.getLogger(__name__)
 
 if settings.GRAPHQL:
     from graphene_django.views import GraphQLView
-    from pytigon.schserw.schsys.schema import public_schema
+    from pytigon_lib.schdjangoext.oauth_for_graphql import OAuth2ProtectedGraph
+    from pytigon.schserw.schsys.schema import schema, public_schema
 
     PytigonGraphQLViewPublic = GraphQLView
 
@@ -93,7 +94,10 @@ if settings.ALLAUTH:
 if settings.GRAPHQL:
     _urlpatterns.extend(
         [
-            path("graphql/", csrf_exempt(PytigonGraphQLView.as_view(graphiql=True))),
+            path(
+                "graphql/",
+                csrf_exempt(OAuth2ProtectedGraph.as_view(graphiql=True, schema=schema)),
+            ),
             path(
                 "graphql_public/",
                 csrf_exempt(
@@ -102,6 +106,21 @@ if settings.GRAPHQL:
                     )
                 ),
             ),
+        ]
+    )
+
+if settings.REST:
+    _urlpatterns.extend(
+        [
+            path("api-auth/", include("rest_framework.urls")),
+        ]
+    )
+
+if settings.GRAPHQL or settings.REST:
+    
+    _urlpatterns.extend(
+        [
+            path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
         ]
     )
 
