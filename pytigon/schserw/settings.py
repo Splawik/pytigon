@@ -226,7 +226,6 @@ if REST:
     INSTALLED_APPS.append("rest_framework")
     if not "oauth2_provider" in INSTALLED_APPS:
         INSTALLED_APPS.append("oauth2_provider")
-    INSTALLED_APPS.append("oauth2_provider")
 
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
