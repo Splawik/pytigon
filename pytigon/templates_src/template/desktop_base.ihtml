@@ -158,6 +158,9 @@
                         border-left: none !important
                         border-right: none !important
                         border-radius: unset !important
+                    :root:
+                        --bs-primary-rgb: 30,120,180
+
 
         %% theme_css_links_spec
             {% css_link 'themes/default.css' %}
