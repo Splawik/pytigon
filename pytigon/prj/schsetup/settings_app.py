@@ -181,46 +181,6 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
 ]
 
 
@@ -229,7 +189,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.06.05 16:47:40"
+GEN_TIME = "2022.07.10 13:02:49"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

@@ -32,6 +32,10 @@
 
 
 {% endblock %}
+{% block extrahead %}
+        {{block.super}}
+        {% css_link 'explorer/explorer.css' %}
+{% endblock %}
 {% block ext_js_scripts %}
         {{ block.super }}
         {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}

@@ -18,13 +18,16 @@ APPS = [
     "log_demo",
     "desktop_demo",
     "_schwiki.schwiki",
-    "_schtools.schtasks",
+    "_schtools.schsimplescripts",
+    "_schtools.schlog",
+    "schtasks",
     "_schtools.schcommander",
     "_schtools.schtools",
     "_schdata.schreports",
     "_schdata.schelements",
     "schcomponents.standard_components",
     "_schdata.schprofile",
+    "schsetup.schadmin",
 ]
 APPS_EXT = []
 PUBLIC = True

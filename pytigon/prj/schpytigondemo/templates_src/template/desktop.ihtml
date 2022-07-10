@@ -32,6 +32,10 @@
             home();            
         };
 
+%% extrahead
+    {{block.super}}
+    {% css_link 'explorer/explorer.css' %}
+
 %% ext_js_scripts
     {{ block.super }}
     {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}

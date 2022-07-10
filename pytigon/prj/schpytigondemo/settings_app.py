@@ -81,6 +81,26 @@ for app in APPS:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
+
+INSTALLED_APPS.append('explorer')
+
+if platform_name()!='Android':
+    INSTALLED_APPS.append('easy_thumbnails')
+    INSTALLED_APPS.append('filer')
+
+    THUMBNAIL_PROCESSORS = (
+        'easy_thumbnails.processors.colorspace',
+        'easy_thumbnails.processors.autocrop',
+        #'easy_thumbnails.processors.scale_and_crop',
+        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        'easy_thumbnails.processors.filters',
+    )
+
+FILER_DEBUG = True
+
+EXPLORER_CONNECTIONS = { 'Default': 'default' } 
+EXPLORER_DEFAULT_CONNECTION = 'default'
+
 for app in APPS_EXT:
     INSTALLED_APPS.append(app)
 
@@ -127,46 +147,6 @@ CHANNELS_URL_TAB += [
         "schsimplecontrols_demo.consumers.teleconference",
     ),
     (URL_ROOT_PREFIX + "channels_demo/clock/channel/", "channels_demo.consumers.clock"),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
     (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
@@ -215,7 +195,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.07.03 10:01:50"
+GEN_TIME = "2022.07.10 13:03:06"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -236,9 +216,9 @@ for key, value in os.environ.items():
 #BOOTSTRAP_TEMPLATE = "bootswatch/default"
 #BOOTSTRAP_TEMPLATE = "bootswatch/sandstone"
 
-BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
+#BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
 #BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
-#BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 
 
 XMLRPC_PORT = 7080
