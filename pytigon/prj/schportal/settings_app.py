@@ -134,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.06.24 09:50:44"
+GEN_TIME = "2022.07.10 14:12:41"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -169,3 +169,23 @@ INSTALLED_APPS.append('allauth.socialaccount.providers.windowslive')
 #EMAIL_IMAP_HOST = 'imap.gmail.com'
 #EMAIL_IMAP_INBOX = 'inbox'
 #EMAIL_IMAP_OUTBOX = 'outbox'
+
+
+INSTALLED_APPS.append('explorer')
+
+if platform_name()!='Android':
+    INSTALLED_APPS.append('easy_thumbnails')
+    INSTALLED_APPS.append('filer')
+
+    THUMBNAIL_PROCESSORS = (
+        'easy_thumbnails.processors.colorspace',
+        'easy_thumbnails.processors.autocrop',
+        #'easy_thumbnails.processors.scale_and_crop',
+        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        'easy_thumbnails.processors.filters',
+    )
+
+FILER_DEBUG = True
+
+EXPLORER_CONNECTIONS = { 'Default': 'default' } 
+EXPLORER_DEFAULT_CONNECTION = 'default'

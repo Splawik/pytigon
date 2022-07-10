@@ -23,3 +23,5 @@ from schreports.models import *
 from standard_components.models import *
 
 from schelements.models import *
+
+from schadmin.models import *
