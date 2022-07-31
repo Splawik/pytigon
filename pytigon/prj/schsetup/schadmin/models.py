@@ -15,3 +15,28 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 from schcommander.models import *
+
+
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+
+class SChSetup(models.Model):
+    class Meta:
+        verbose_name = _("SChSetup")
+        verbose_name_plural = _("SChSetups")
+        default_permissions = ("can_administer", "add", "change", "delete", "list")
+        app_label = "schadmin"
+
+    # name = models.CharField(
+    #    "Name", null=False, blank=False, editable=True, max_length=255
+    # )
+
+
+# content_type = ContentType.objects.get_for_model(SChSetup)
+
+# permission = Permission.objects.create(
+#    codename='can_administer',
+#    name='Can administer',
+#    content_type = content_type
+# )
