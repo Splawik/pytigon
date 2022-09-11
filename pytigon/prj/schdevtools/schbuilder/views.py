@@ -314,14 +314,6 @@ def copy_files_and_dirs(src, dst):
         raise shutil.Error(errors)
 
 
-def run_python_shell_task2(request):
-    from pytigon_lib.schtasks.base_task import get_process_manager
-
-    id = get_process_manager().put(request, "python-shell", "python3", "-i")
-    new_url = make_href("../../schsys/thread/%d/edit/" % id)
-    return HttpResponseRedirect(new_url)
-
-
 def run_python_shell_task_base(request, base_path, prj_name):
     from pytigon_lib.schtasks.base_task import get_process_manager
 
