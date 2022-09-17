@@ -16,6 +16,8 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from schcommander.models import *
 
+from schtools.models import *
+
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
