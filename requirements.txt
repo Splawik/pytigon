@@ -2,7 +2,6 @@ pytigon-lib
 asgiref
 markdown
 polib
-pyexcel_odsr
 pyquery
 whitenoise
 diskcache
@@ -10,10 +9,8 @@ pscript
 dj-database-url
 dj-email-url
 django-bootstrap5
-django-bulk_update
 django-cors-headers
 django-mailer
 django_select2
 django-widget-tweaks
 django-q
-dulwich
