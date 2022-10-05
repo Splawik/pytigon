@@ -51,9 +51,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub2_err=err_0; }
-if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
-} else { stub1_context.__exit__(null, null, null); }
+} catch(err_0)  { stub2_err=err_0;
+} finally {
+    if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+    } else { stub1_context.__exit__(null, null, null); }
+}
 stub3_context = (new DefineWebComponent("sys-button", false));
 comp = stub3_context.__enter__();
 try {
@@ -99,9 +101,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub4_err=err_0; }
-if (stub4_err) { if (!stub3_context.__exit__(stub4_err.name || "error", stub4_err, null)) { throw stub4_err; }
-} else { stub3_context.__exit__(null, null, null); }
+} catch(err_0)  { stub4_err=err_0;
+} finally {
+    if (stub4_err) { if (!stub3_context.__exit__(stub4_err.name || "error", stub4_err, null)) { throw stub4_err; }
+    } else { stub3_context.__exit__(null, null, null); }
+}
 stub7_context = (new DefineWebComponent("sys-perfectscrollbar", false));
 comp = stub7_context.__enter__();
 try {
@@ -118,9 +122,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub8_err=err_0; }
-if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
-} else { stub7_context.__exit__(null, null, null); }
+} catch(err_0)  { stub8_err=err_0;
+} finally {
+    if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
+    } else { stub7_context.__exit__(null, null, null); }
+}
 stub9_context = (new DefineWebComponent("sys-datatable", false));
 comp = stub9_context.__enter__();
 try {
@@ -141,9 +147,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub10_err=err_0; }
-if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
-} else { stub9_context.__exit__(null, null, null); }
+} catch(err_0)  { stub10_err=err_0;
+} finally {
+    if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
+    } else { stub9_context.__exit__(null, null, null); }
+}
 stub11_context = (new DefineWebComponent("move-attr", false));
 comp = stub11_context.__enter__();
 try {
@@ -167,9 +175,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub12_err=err_0; }
-if (stub12_err) { if (!stub11_context.__exit__(stub12_err.name || "error", stub12_err, null)) { throw stub12_err; }
-} else { stub11_context.__exit__(null, null, null); }
+} catch(err_0)  { stub12_err=err_0;
+} finally {
+    if (stub12_err) { if (!stub11_context.__exit__(stub12_err.name || "error", stub12_err, null)) { throw stub12_err; }
+    } else { stub11_context.__exit__(null, null, null); }
+}
 stub13_context = (new DefineWebComponent("ptig-paste", false));
 comp = stub13_context.__enter__();
 try {
@@ -203,9 +213,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub14_err=err_0; }
-if (stub14_err) { if (!stub13_context.__exit__(stub14_err.name || "error", stub14_err, null)) { throw stub14_err; }
-} else { stub13_context.__exit__(null, null, null); }
+} catch(err_0)  { stub14_err=err_0;
+} finally {
+    if (stub14_err) { if (!stub13_context.__exit__(stub14_err.name || "error", stub14_err, null)) { throw stub14_err; }
+    } else { stub13_context.__exit__(null, null, null); }
+}
 test = function flx_test (x) {
     return x;
 };

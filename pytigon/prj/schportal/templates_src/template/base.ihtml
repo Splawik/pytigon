@@ -21,12 +21,12 @@
 %% body_footer_scripts
     {{block.super}}
     
-    {% component 'schcomponents/components/ptig-d3.js' %}
     {% component 'schportal/components/teleconference.js' %}
+    {% component 'schcomponents/components/ptig-webrtc.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-d3.js' %}
     {% component '_schwiki/components/insert_object.js' %}
     {% component 'schportal/components/timer_init.js' %}
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
-    {% component 'schcomponents/components/ptig-webrtc.js' %}
     {% component 'schcomponents/components/ptig-plotly.js' %}
     {% component 'schcomponents/components/ptig-time.js' %}
     
@@ -35,7 +35,7 @@
 %% component_init
         .var initial_state = { username: "",theme: "",time_str: "" };
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "ptig-d3.js", "teleconference.js", "insert_object.js", "timer_init.js", "ptig-codeeditor.js", "ptig-webrtc.js", "ptig-plotly.js", "ptig-time.js",  ];  
+        .var component_init = [ "teleconference.js", "ptig-webrtc.js", "ptig-codeeditor.js", "ptig-d3.js", "insert_object.js", "timer_init.js", "ptig-plotly.js", "ptig-time.js",  ];  
 %% botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 

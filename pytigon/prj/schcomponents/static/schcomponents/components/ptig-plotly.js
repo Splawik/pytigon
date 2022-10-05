@@ -214,7 +214,9 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub6_err=err_0; }
-if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
-} else { stub5_context.__exit__(null, null, null); }
+} catch(err_0)  { stub6_err=err_0;
+} finally {
+    if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
+    } else { stub5_context.__exit__(null, null, null); }
+}
 export {from_dict, transform_event_data, process_response_data};

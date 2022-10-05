@@ -29,11 +29,11 @@ from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
 from pytigon_lib.schtools.env import get_environ
 import os
 
-env = get_environ()
-prj_name = get_prj_name()
+ENV = get_environ()
+BASE_PRJ_NAME = get_prj_name()
 
-if not prj_name:
-    prj_name = "_schall"
+if not BASE_PRJ_NAME:
+    BASE_PRJ_NAME = "_schall"
 
 GEN_TIME = "0000.00.00 00:00:00"
 USE_TZ = True
@@ -44,7 +44,7 @@ if (
         (sys.argv[0].endswith("manage.py") and "runserver" in sys.argv)
         or "--debug" in sys.argv
     )
-) or env("PYTIGON_DEBUG"):
+) or ENV("PYTIGON_DEBUG"):
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
@@ -99,31 +99,31 @@ APPEND_SLASH = False
 
 from pytigon_lib.schtools.platform_info import platform_name
 
-MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, prj_name), "media")
+MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, BASE_PRJ_NAME), "media")
 MEDIA_ROOT_PROTECTED = os.path.join(
-    os.path.join(DATA_PATH, prj_name), "protected_media"
+    os.path.join(DATA_PATH, BASE_PRJ_NAME), "protected_media"
 )
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = ENV("SECRET_KEY")
 if not SECRET_KEY:
-    if (not PRODUCTION_VERSION) or DEBUG or env("EMBEDED_DJANGO_SERVER"):
+    if (not PRODUCTION_VERSION) or DEBUG or ENV("EMBEDED_DJANGO_SERVER"):
         SECRET_KEY = "anawa"
     else:
         SECRET_KEY = "".join(
             random.choice(string.ascii_uppercase + string.digits) for _ in range(32)
         )
 
-if env("GRAPHQL"):
+if ENV("GRAPHQL"):
     GRAPHQL = True
 else:
     GRAPHQL = False
 
 
-if env("REST"):
+if ENV("REST"):
     REST = True
 else:
     REST = False
@@ -174,7 +174,7 @@ TEMPLATES = [
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-if env("EMBEDED_DJANGO_SERVER"):
+if ENV("EMBEDED_DJANGO_SERVER"):
     MIDDLEWARE = [
         "django.middleware.common.CommonMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -275,7 +275,7 @@ try:
 except:
     INSTALLED_APPS.append("_schserverless.schnocompress")
 
-if env("PWA"):
+if ENV("PWA"):
     INSTALLED_APPS.append("pwa")
     INSTALLED_APPS.append("webpush")
 
@@ -300,7 +300,7 @@ if PLATFORM_TYPE != "webserver":
 INSTALLED_APPS.append("django.contrib.staticfiles")
 
 if (
-    not env("PYTIGON_WITHOUT_CHANNELS")
+    not ENV("PYTIGON_WITHOUT_CHANNELS")
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
@@ -397,7 +397,7 @@ if PRODUCTION_VERSION:
         },
     }
 
-    if env("LOGS_TO_DOCKER"):
+    if ENV("LOGS_TO_DOCKER"):
         LOGGING["handlers"] = {
             "logfile": {
                 "level": level,
@@ -410,7 +410,7 @@ if PRODUCTION_VERSION:
                 "formatter": "standard",
             },
         }
-    elif env("PYTIGON_TASK"):
+    elif ENV("PYTIGON_TASK"):
         LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"][
             "filename"
         ].replace(".log", "-task.log")
@@ -492,9 +492,9 @@ SELECT2_THEME = "bootstrap-5"
 ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
-    if env("CHANNELS_REDIS"):
+    if ENV("CHANNELS_REDIS"):
         CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
-            env("CHANNELS_REDIS").split(":") + ["6379"]
+            ENV("CHANNELS_REDIS").split(":") + ["6379"]
         )[:2]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
@@ -513,7 +513,7 @@ else:
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
 
-if env("COMPRESS_ENABLED"):
+if ENV("COMPRESS_ENABLED"):
     COMPRESS_ENABLED = True
 else:
     COMPRESS_ENABLED = False
@@ -526,7 +526,7 @@ STATIC_FS = None
 def STATIC_FILE_STORAGE_FS():
     static_fs = MultiFS()
     static_fs.add_fs("static_main", OSFS(settings.STATIC_ROOT), write=True)
-    p = os.path.join(PRJ_PATH, prj_name, "static")
+    p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
         static_fs.add_fs("static_prj", OSFS(p))
     return static_fs
@@ -538,7 +538,7 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount("pytigon", OSFS(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
     STATIC_FS.add_fs("static_main", OSFS(settings.STATIC_ROOT))
-    p = os.path.join(PRJ_PATH, prj_name, "static")
+    p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
         STATIC_FS.add_fs("static_prj", OSFS(p))
     _m.mount("static", STATIC_FS)
@@ -589,7 +589,7 @@ if platform_name() == "Android":
     CORS_ORIGIN_ALLOW_ALL = True
 
 try:
-    CACHES = {"default": env.cache()}
+    CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except:
     CACHES = {
@@ -597,7 +597,7 @@ except:
             "BACKEND": "diskcache.DjangoCache",
             "LOCATION": TEMP_PATH,
             "TIMEOUT": 3000,
-            "OPTIONS": {"size_limit": 2 ** 30},  # 1 gigabyte
+            "OPTIONS": {"size_limit": 2**30},  # 1 gigabyte
         },
     }
 
@@ -630,7 +630,7 @@ try:
 except:
     pass
 
-if env("EMBEDED_DJANGO_SERVER"):
+if ENV("EMBEDED_DJANGO_SERVER"):
     Q_CLUSTER = {
         "name": "DjangORM",
         "workers": 1,

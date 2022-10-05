@@ -238,7 +238,9 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub5_err=err_0; }
-if (stub5_err) { if (!stub4_context.__exit__(stub5_err.name || "error", stub5_err, null)) { throw stub5_err; }
-} else { stub4_context.__exit__(null, null, null); }
+} catch(err_0)  { stub5_err=err_0;
+} finally {
+    if (stub5_err) { if (!stub4_context.__exit__(stub5_err.name || "error", stub5_err, null)) { throw stub5_err; }
+    } else { stub4_context.__exit__(null, null, null); }
+}
 export {trim_line, join_parameters, get_editor_component, get_editor, is_special_line, get_current_line, set_current_line, wiki_object_to_editor};
