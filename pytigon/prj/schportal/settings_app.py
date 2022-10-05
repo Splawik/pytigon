@@ -42,7 +42,7 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
-if ENV("PUBLISH_IN_SUBFOLDER") and PRODUCTION_VERSION and not MAIN_PRJ:
+if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     URL_ROOT_FOLDER = "schportal"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
@@ -134,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.10.05 09:00:56"
+GEN_TIME = "2022.10.05 13:50:38"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
