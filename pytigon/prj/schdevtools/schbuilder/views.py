@@ -1662,9 +1662,8 @@ def installer(request, pk):
             buf.append(pos)
 
     exclude = [".*\.pyc", ".*__pycache__.*"]
-    zip = ZipWriter(
-        os.path.join(zip_path, name + ".ptig"), base_path, exclude=exclude, sha256=True
-    )
+    ptig_name = os.path.join(zip_path, name + ".ptig")
+    zip = ZipWriter(ptig_name, base_path, exclude=exclude, sha256=True)
     zip.to_zip(base_path, name + "/")
     path_to_meta = name + "-" + prj.version + ".dist-info/"
     zip.writestr(path_to_meta + "top_level.txt", (name + "\n").encode("utf-8"))
@@ -1717,6 +1716,16 @@ def installer(request, pk):
     zip.writestr(path_to_meta + "RECORD", record_str.encode("utf-8"))
 
     zip.close()
+
+    with open(ptig_name, "rb+") as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write(b"#!/usr/bin/env ptig\n")
+        f.write(content)
+    try:
+        os.chmod(ptig_name, 0o755)
+    except:
+        pass
 
     buf.append("Instaler file saved to: " + os.path.join(zip_path, name + ".ptig"))
 
