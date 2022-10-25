@@ -20,7 +20,6 @@ APPS = [
     "_schwiki.schwiki",
     "_schtools.schsimplescripts",
     "_schtools.schlog",
-    "schtasks",
     "_schtools.schcommander",
     "_schtools.schtools",
     "_schdata.schreports",

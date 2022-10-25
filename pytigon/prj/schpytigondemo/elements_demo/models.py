@@ -20,8 +20,6 @@ from schsimplescripts.models import *
 
 from schlog.models import *
 
-from schtasks.models import *
-
 from schcommander.models import *
 
 from schtools.models import *
