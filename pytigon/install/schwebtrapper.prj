@@ -1,0 +1,349 @@
+[
+    {
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": "def crawl_tree(tree) :\n  if type(tree.tag) is str :\n    handle_starttag(tree.tag, tree.attrib)\n    if tree.text :\n      handle_data(tree.text)\n    for node in tree :\n      crawl_tree(node)\n    handle_endtag(tree.tag)\n  if tree.tail :\n    handle_data(tree.tail)\n    ",
+        "encoded_zip": null,
+        "ext_apps": "_schwiki.schwiki,_schtools.schtasks",
+        "git_repository": "https://git.pytigon.cloud/pytigon/schwebtrapper.git",
+        "gui_elements": "toolbar(browse)",
+        "gui_type": "tree",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "schwebtrapper",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "title": "Web trapper",
+        "user_app_template": "###> templates_src/template/schweb.ihtml\n\n%% toolbars_start\n    tr\n        td\n        td\n        td...Google\n        td...1\n        td...client://apps/utilities-terminal.png\n        td...html\n        td...Google,http://www.google.com?schtml=browser_panel\n",
+        "user_param": "",
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "Tools",
+                "name": "schbrowser",
+                "perms": false,
+                "tasks_code": "from pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nfrom pytigon_lib.schhtml.parser import Parser\nimport re\nfrom pytigon_lib.schtools.schjson import json_dumps\nimport urllib.parse\nimport httpx\n",
+                "title": "Browser",
+                "urls_code": null,
+                "user_param": null,
+                "view_code": "import json\nfrom django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest\nfrom .models import history\nfrom pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nimport re\nfrom pytigon_lib.schtasks.task import get_process_manager\nfrom pytigon_lib.schhttptools import httpclient\n"
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "bookmarks",
+                        "ordering": "['id']",
+                        "proxy_model": null,
+                        "table_code": null,
+                        "url_params": "",
+                        "verbose_name": "Bookmarks",
+                        "verbose_name_plural": "Bookmarks"
+                    },
+                    [
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Parent",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "parent",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "'self'",
+                            "type": "PtigHiddenForeignKey",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Name",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "name",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "url",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "url",
+                            "null": true,
+                            "param": "max_length=256",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "history",
+                        "ordering": "['id']",
+                        "proxy_model": null,
+                        "table_code": null,
+                        "url_params": "",
+                        "verbose_name": "History",
+                        "verbose_name_plural": "History"
+                    },
+                    [
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Date",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "date",
+                            "null": true,
+                            "param": "auto_now=True",
+                            "rel_to": "",
+                            "type": "DateTimeField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "url",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "url",
+                            "null": false,
+                            "param": "max_length=256",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "search",
+                    "param": "",
+                    "ret_type": "U",
+                    "url": "search/",
+                    "url_params": "",
+                    "view_code": "q = request.GET.get('term', request.POST.get('term', None))\nif not q:\n    return HttpResponse(content_type='text/plain')\n\nlimit = request.GET.get('limit', request.POST.get('limit', 15))\n\ntry:\n    limit = int(limit)\nexcept ValueError:\n    return HttpResponseBadRequest()\n\nif q!=\" \":\n    tab = history.objects.filter(url__istartswith=q)[:limit]\nelse:\n    tab = history.objects.all()[:limit]\nout_tab = []\nfor pos in tab:\n    out_tab.append( { 'id': pos.id, 'label': pos.url, 'value': pos.url} )\n\njson_data = json.dumps(out_tab)\nreturn HttpResponse(json_data, content_type=\"application/x-javascript\")\n",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "bookmarks",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n\n% extends \"forms/tree.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def init_form(self):\n            import schbrowser.models\n            self.cut_id = None\n            self.bookmarks = schbrowser.models.bookmarks\n            \n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"go\": \"client://actions/go-jump.png\",\n                    \"clear\": \"wx.ART_DELETE\",\n                    \"cut\": \"wx.ART_CUT\",\n                    \"paste\": \"wx.ART_PASTE\"\n                }\n                child.set_bitmaps(bitmaps)\n                \n        def filter_url(self, target, href):\n            if '/go' in href:\n                okno = wx.GetApp().GetTopWindow().new_main_page(\"^standard/webview/widget_web.html\", target)\n                okno.body.WEB.go(target)\n                return True\n            elif '/cut' in href:\n                self.cut_id = int(target)\n                return True\n            elif '/paste' in href:\n                if self.cut_id and self.cut_id>0:\n                    b = self.bookmarks.objects.get(id=self.cut_id)\n                    parent_pk = int(target)\n                    if parent_pk > 0:\n                        b.parent = self.bookmarks.objects.get(id=parent_pk)\n                    else:\n                        b.parent = None\n                    b.save()\n                return True                \n            else:\n                return None\n\n\n%% form_header2\n    td\n        % list_action \"paste\" \"Paste\" None parent_pk\n        \n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n \n%% table_header\n    [ + | ID | Name | Url | Action ]\n\n\n%% table_content_obj\n        td:::a href={{object.id}}/info?height=250&width=300,,,title=Informacje szczeg\u00f3\u0142owe,,,class=thickbox...{{object.id}}\n        td...{{object.name}}\n        td...{{object.url}}\n\n%% table_content_action            \n    % row_actions:\n        .edit\n        .delete\n        .go,Go,None,object.url\n        .cut,Cut,None,object.id\n    \n\n%% row_edit\n    % form:\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "history",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def init_form(self):\n            import schbrowser.models\n            self.cut_id = None\n            self.history = schbrowser.models.history\n\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"go\": \"client://actions/go-jump.png\",\n                    \"clear\": \"wx.ART_DELETE\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            if '/go' in href:\n                okno = wx.GetApp().GetTopWindow().new_main_page(\"^standard/webview/widget_web.html\", target)\n                okno.body.WEB.go(target)\n                return True\n            elif '/clear' in href:\n                self.history.objects.all().delete()\n                return True\n            return None\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% form_header\n    p\n        % list_action \"clear\" \"Clear\"\n\n%% list_row_header\n    td...Date\n    td...Url\n\n%% list_row\n    td:::a href={{object.id}}/info?width=800&height=600,,,title=History,,,class=thickbox...{{object.id}}\n    td...{{object.date|isoformat}}\n    td...{{object.url}}\n\n%% list_row_actions\n    % row_actions:\n        .go,Go,None,object.url\n        .delete\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormMultiDownload",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n\n% extends \"tasks/v_edit_task.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% pythoncode\n    % if object:\n        {{ block.super }}\n\n%% all\n    %with show_title_bar=1 title='Download' form_edit=False:\n        {{ block.super }}\n\n%% form_content\n    table class=filter_form_frame,,,width=100%\n        div class=inline-form-body\n            {{ form.non_field_errors }}\n            % form:\n        div class=inline-form-body\n            div class=form-group\n                div class=controls\n                div class=controls\n                    input type=submit,,,value=Od\u015bwie\u017c,,,class=btn btn-info,,,target=_self,,,height=44\n\n%% list_content_body\n    % if object_list:\n        textarea\n            {% for pos in object_list %}{{pos}}\n            {% endfor %}\n\n%% task_title\n\n%% task_status\n\n%% wx_task_progress\n\n%% wx_task_input\n\n\n\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "client://actions/bookmark-new.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Bookmarks",
+                    "perms": "",
+                    "url": "table/bookmarks/0/form/tree",
+                    "url_type": "desktop"
+                },
+                {
+                    "icon": "client://emblems/emblem-photos.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "History",
+                    "perms": "",
+                    "url": "table/history/-/form/list",
+                    "url_type": "desktop"
+                },
+                {
+                    "icon": "client://status/folder-open.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Download",
+                    "perms": "",
+                    "url": "form/MultiDownload/",
+                    "url_type": "desktop"
+                }
+            ],
+            [
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "",
+                        "name": "MultiDownload",
+                        "process_code": "parm = {}\nparm[\"base_address\"] = self.cleaned_data['base_address']\nparm[\"source_page\"] = self.cleaned_data['source_page']\nparm[\"subpage_href\"] = self.cleaned_data['subpage_href']\nparm[\"download_mask\"] = self.cleaned_data['download_mask']\nparm[\"levels\"] = self.cleaned_data['levels']\nparm[\"test_only\"]  = self.cleaned_data['test_only']\n\nif not 'http' in parm[\"base_address\"]:\n    parm[\"base_address\"] = 'http://'+parm[\"base_address\"]\n\nif not parm[\"source_page\"]:\n    parm[\"source_page\"] = '/'\n\ntask_manager = get_process_manager()\n_id = task_manager.put(request, \"Scan html pages\", \"@schbrowser:scan_html\", user_parm = parm)\n        \n#l = task_manager.list_threads(all=True)\nobject = task_manager.process_list[_id]\n#object = None\n#for pos in l:    \n#    if pos.id == _id:\n#        object = pos\n#        break\nreturn { \"object\": object }\n"
+                    },
+                    [
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "'http://learningenglish.voanews.com'",
+                            "label": "Base address",
+                            "name": "base_address",
+                            "param": "max_length=None, min_length=None",
+                            "required": true,
+                            "type": "CharField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "'/archive/learningenglish-programs-radio-in-the-news/latest/1577/1577.html'",
+                            "label": "Source page",
+                            "name": "source_page",
+                            "param": "max_length=None, min_length=None",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "'/archive/learningenglish-programs-radio-in-the-news/.*;@/content/.*'",
+                            "label": "Next page mask",
+                            "name": "subpage_href",
+                            "param": "max_length=None, min_length=None",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "'.*hq\\.mp3.*'",
+                            "label": "Download href mask",
+                            "name": "download_mask",
+                            "param": "max_length=None, min_length=None",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "'10'",
+                            "label": "Levels",
+                            "name": "levels",
+                            "param": "max_value=None, min_value=None",
+                            "required": true,
+                            "type": "IntegerField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "True",
+                            "label": "Test only",
+                            "name": "test_only",
+                            "param": "",
+                            "required": false,
+                            "type": "BooleanField",
+                            "widget": ""
+                        }
+                    ]
+                ]
+            ],
+            [
+                {
+                    "code": "base_address, url = kwargs['user_parm']\npath = urllib.parse.urljoin(base_address, url)\nif cproxy:\n    cproxy.log(url)\nr = httpx.get(path)\nfile_name = url.split('?')[0].split('/')[-1]\nwith open(\"/tmp/\"+file_name, \"wb\") as f:\n    f.write(r.content)\nif cproxy:\n    cproxy.log(\"finish\")\n",
+                    "doc": "",
+                    "name": "download_task",
+                    "perms": null,
+                    "publish": null,
+                    "publish_group": null
+                },
+                {
+                    "code": "parm = kwargs['user_parm']\nbase_address = parm['base_address']\nsource_page = parm['source_page']\nsubpage_href = parm['subpage_href']\ndownload_mask = parm['download_mask']\nlevels = parm['levels']\ntest_only = parm['test_only']\n\ndef msg(s):\n    cproxy.log(s)\n\ndef process_url(url):\n    cproxy.add_task('system', 'Download', \"@schbrowser:download_task\", user_parm = [base_address, url])\n    msg(\"download: \"+ url)\n\nhttp = httpclient.HttpClient(\"\")\n\ndef _process(href, href_list=[], download_list=[], history_list=[]):\n    class _DownloadHTMLParser(Parser):\n        def __init__(self, href_list=[], download_list=[], history_list = []):\n            self.href_list = href_list\n            self.download_list = download_list\n            self.history_list = history_list\n            super().__init__()\n            \n        def handle_starttag(self, tag, attrs):\n            dattrs = dict(attrs)\n            if 'href' in dattrs:\n                if subpage_href:\n                    for pos in subpage_href.split(';'):\n                        if pos.startswith('@'):\n                            pos=pos[1:]\n                            end = True\n                        else:\n                            end = False\n                        matchObj = re.match( pos, dattrs['href'], re.M|re.I)\n                        if matchObj:\n                            if not dattrs['href'] in self.history_list:\n                                if end:\n                                    self.href_list.append('@'+dattrs['href'])\n                                    self.history_list.append(dattrs['href'])\n                                else:\n                                    self.href_list.append(dattrs['href'])\n                                    self.history_list.append(dattrs['href'])\n                            return\n                for pos in download_mask.split(';'):\n                    matchObj = re.match( pos, dattrs['href'], re.M|re.I)\n                    if matchObj:\n                        href=dattrs['href'].split('?')[0]\n                        if not href in self.download_list:\n                            self.download_list.append(href)\n                            process_url(href)\n    try:\n        txt = cproxy.input_queue.get_nowait()\n        if txt == \"^C\":\n            return \n    except Empty:\n        pass\n\n    path = urllib.parse.urljoin(base_address, href)\n    r = httpx.get(path)    \n    p = r.text\n    parser = _DownloadHTMLParser(href_list, download_list, history_list)\n    msg(\"SCAN: \" + path)\n    parser.feed(p)\n    return (parser.href_list, parser.download_list, parser.history_list)\n\nhref_list, download_list, history_list  = _process(source_page)\nmsg(\"INFO:\" + source_page)\nx = 0\nwhile x < levels:\n    href_list2 = []\n    for pos in href_list:\n        if pos.startswith('@'):\n            _process(pos[1:], [], download_list, history_list)\n        else:\n            _process(pos, href_list2, download_list, history_list)\n    href_list = href_list2\n    x += 1\nmsg(\"INFO:END!\")\n\n",
+                    "doc": "",
+                    "name": "scan_html",
+                    "perms": null,
+                    "publish": null,
+                    "publish_group": null
+                }
+            ],
+            [],
+            []
+        ]
+    ],
+    []
+]

@@ -1,0 +1,1613 @@
+[
+    {
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schtools.git",
+        "gui_elements": "toolbar(file(exit),clipboard)",
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "_schtools",
+        "plugins": null,
+        "public": true,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "title": "Pytigon tools",
+        "user_app_template": "###> schsimplescripts/__init__.py\n\nfrom django.utils.translation import gettext_lazy as _\n\ndef AdditionalUrls(app_pack, lang):\n    from .models import Scripts\n    ret = []\n    ret_buf = []\n    for object in Scripts.objects.all():\n        if object.menu:\n            elements = object.menu.split(',')\n\n            menu_path=elements[0].split('/')            \n            app_pack_name = menu_path[0]\n            if app_pack and app_pack_name and app_pack != app_pack_name:\n                continue\n            module_title = \"\"\n            app_name = \"\"\n            if len(menu_path)>1:\n                module_title = menu_path[1]\n            if len(menu_path)>2:\n                app_name = menu_path[2]\n            if len(elements)>1:\n                if elements[1]:\n                    icon = elements[1]\n                else:\n                    icon = 'client://apps/utilities-terminal.png'                    \n            else:\n                icon = 'client://apps/utilities-terminal.png'                    \n            if len(elements)>2:\n                lp = elements[2]\n            else:\n                lp = '00'\n            if len(elements)>3:\n                if elements[3] and lang != elements[3]:\n                    continue\n                    \n            ret_buf.append((lp, (\"schsimplescripts/run/\"+object.name+\"/?schtml=1\", object.title, object.rights_group, icon, module_title, _(module_title), app_name, _(app_name))))\n\n    if ret_buf:        \n        buf = sorted(ret_buf, key=lambda pos: pos[0])  \n        for pos in buf:\n            ret.append(pos[1])\n        return ret\n    else:\n        return []\n            ",
+        "user_param": "",
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "import select\nimport time\nfrom threading import Thread\nimport subprocess\nimport struct\nimport getpass\n\ntry:\n    import pty\n    import fcntl\n    import termios\nexcept:\n    pass\n\nfrom django.conf import settings\n\nfrom pytigon_lib.schtools.tools import get_executable\n\ndef read_and_forward_pty_output(consumer):\n    max_read_bytes = 1024 * 20\n    while not consumer.exit:\n        time.sleep(0.01)\n        if consumer.fd:\n            timeout_sec = 1\n            (data_ready, _, _) = select.select([consumer.fd, ], [], [], timeout_sec)\n            if data_ready:\n                output = os.read(consumer.fd, max_read_bytes)\n                try:\n                    output = output.decode(errors='replace')\n                except:\n                    print(\"---------------------------------------------\")\n                    print(output)\n                    print(\"---------------------------------------------\")\n                    output = \"\"\n                if output:\n                    consumer.send(text_data=output)                \n    print(\"Shell closed\")\n",
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "Tools",
+                "name": "schcommander",
+                "perms": false,
+                "tasks_code": "from pytigon_lib.schtasks.publish import publish\nfrom pytigon_lib.schfs.tasks import filesystemcmd\n",
+                "title": "File manager",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": "from pytigon_lib.schtable.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page\nfrom schtools.models import Parameter\nimport django.contrib.auth\n"
+            },
+            [],
+            [
+                [
+                    {
+                        "name": "file_manager_sort_choices",
+                        "verbose_name": "file_manager_sort_choices"
+                    },
+                    [
+                        {
+                            "name": "N",
+                            "value": "Name"
+                        },
+                        {
+                            "name": "S",
+                            "value": "Size"
+                        },
+                        {
+                            "name": "T",
+                            "value": "Time"
+                        }
+                    ]
+                ]
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "grid",
+                    "param": "folder, value",
+                    "ret_type": "U",
+                    "url": "grid/(?P<folder>.*)/(?P<value>[\\w=]*)/$",
+                    "url_params": "{}",
+                    "view_code": "return vfstable_view(request, folder, value)",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "open",
+                    "param": "file_name",
+                    "ret_type": "U",
+                    "url": "open/(?P<file_name>.*)/$",
+                    "url_params": "{}",
+                    "view_code": "return vfsopen(request, file_name)",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "save",
+                    "param": "file_name",
+                    "ret_type": "U",
+                    "url": "save/(?P<file_name>.*)/$",
+                    "url_params": "{}",
+                    "view_code": "return vfssave(request, file_name)",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "open_page",
+                    "param": "file_name, page",
+                    "ret_type": "U",
+                    "url": "open_page/(?P<file_name>.*)/(?P<page>\\d+)/$",
+                    "url_params": "{}",
+                    "view_code": "return vfsopen_page(request, file_name, page)",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormFileManager",
+                    "tags_mount": null,
+                    "template_code": "% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        from pytigon_lib.schtools.schhtmlgen import Html as Hgen\n        from PIL import Image\n        from pytigon_lib.schtools.tools import extend_fun_to, bencode, bdecode\n        from pytigon_gui.guilib.image import bitmap_from_href\n        from wx.lib import platebtn\n        from pytigon_lib.schtools import schjson\n\n        def init_form(self):\n            self.panels_dir=[]\n            self.panels_state=[]\n            self.tab  = 0\n            self.tab2 = 1\n            for pos in range(0,2):\n                self.panels_dir.append([pos+1, 0, \"/\", False])\n                self.panels_state.append(None)\n\n            self.panels_to_refresh=[]\n            \n            self.aTable = [\n                    (0, wx.WXK_F1,  self.on_help),\n                    (0, wx.WXK_F2,  self.on_rename),\n                    (0, wx.WXK_F3,  self.on_view),\n                    (0, wx.WXK_F4,  self.on_edit),\n                    (0, wx.WXK_F5,  self.on_copy),\n                    (0, wx.WXK_F6,  self.on_move),\n                    (0, wx.WXK_F7,  self.on_mkdir),\n                    (0, wx.WXK_F8,  self.on_delete),\n                    (0, wx.WXK_F9,  self.on_setup),\n                    (0, wx.WXK_F10, self.on_user_menu),\n                    (0, wx.WXK_F11, self.on_newfile),\n                    (0, wx.WXK_TAB, self.on_tab),\n                    (0, wx.WXK_BACK, self.on_back),\n                    (0, wx.WXK_HOME, lambda event: self.CMD.goto_first_row()),\n                    (0, wx.WXK_END, lambda event: self.CMD.goto_last_row())\n                     ]\n            self.set_acc_key_tab(self, self.aTable)\n\n            self.map_commands = {\n                \"HELP\": self.on_help,\n                \"RENAME\": self.on_rename,\n                \"VIEW\": self.on_view,\n                \"EDIT\": self.on_edit,\n                \"COPY\": self.on_copy,\n                \"MOVE\": self.on_move,\n                \"MKDIR\": self.on_mkdir,\n                \"DELETE\": self.on_delete,\n                \"SETUP\": self.on_setup,\n                \"NEWFILE\": self.on_newfile,\n            }\n\n            self.CMD.GetTable().can_append=False\n            self.CMD.Bind(wx.EVT_CHAR, self.on_char)\n            self.CMD.DisableCellEditControl()\n            self.CMD.GetTable().proxy.set_address(\"../../\"+bencode(self.panels_dir[0][2])+\"/_/\")\n            self.CMD.GetTable().refresh(0)\n\n            self.PANELS.body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)\n\n            self.refresh_html()\n            Image.init()\n            self.edit_img_win = None\n            wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)\n            self.PANELS.body.filter_url = self.filter_url\n            self.child_win = None\n            \n            self.search_win = None\n            self.search_win_starting = False\n            self.search_buffor = []\n            \n            self.waiting_proc = []\n\n            self._make_process_info_button()\n\n            self.GetParent().register_signal(self, \"child_closed_with_ok\")\n            self.GetParent().register_signal(self, \"child_canceled\")\n            self.tasks = []\n            self.msg.SetItemCount(len(self.msg.choices))\n\n        def filter_child_url(self, child, url):\n            try:\n                cmd = url.split('/form/')[-1].split(\"/\")[0].upper()\n            except:\n                pass\n            if cmd in ('COPY', 'MOVE', 'MKDIR', 'RENAME', 'NEWFILE'):\n                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]), bencode(child.dest.GetValue())), 1)\n            elif cmd in ('DELETE',):\n                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]),), 1)\n            else:\n                return\n\n            def _exit():\n                self.any_parent_command('on_child_form_cancel')\n                self.child_win = None\n\n            wx.CallAfter(_exit)\n\n            if ret and 'process_id' in ret:\n                commander_form = self\n                def _refresh_panels():\n                    nonlocal commander_form, cmd\n                    if cmd in (\"MOVE\", \"DELETE\"):\n                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])\n                    if cmd in (\"MOVE\", \"COPY\"):\n                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab2][2])\n                    commander_form._refresh_panels()\n                self.connect_to_task(ret['process_id'], refresh_callback=_refresh_panels)\n            else:\n                self.panels_to_refresh.append(self.panels_dir[self.tab][2])\n                wx.CallAfter(self._refresh_panels)\n\n            return ret\n\n        def connect_to_task(self, process_id, refresh_callback=None):\n            form = self\n            app = wx.GetApp()\n            self.pbutton.Enable()\n            class callback:\n                def on_websocket_message(msg):\n                    nonlocal form\n                    msg2 = schjson.loads(msg)\n                    print(msg2)\n                    if msg2['status'] == 'event':\n                        form.msg.append_html(msg2['data'])\n                        form.msg.SetItemCount(len(self.msg.choices))\n                        form.msg.scroll_to_line(1000000)\n                    elif msg2['status'] == 'stop':\n                        self.CMD.GetTable().clear_state()\n                        if refresh_callback:\n                            refresh_callback()\n                        form.pbutton.Disable()\n                        form.msg.append_html(\"stop\")\n                        form.msg.SetItemCount(len(self.msg.choices))\n                        form.msg.scroll_to_line(1000000)\n            url = '{{base_path}}schtasks/show_task_events/channel/'\n            self.create_websocket(url, callback)\n            self.websocket_send(url, {'id': process_id, })\n\n        def child_closed_with_ok(self, win):\n            self._refresh_panels()\n            self.child_win = None\n\n        def child_canceled(self, win):\n            self.child_win = None\n            self.search_win = None\n            self.search_win_starting = None\n            self.search_buffor = []\n            print(\"child_canceled\", win, type(win))\n\n        def _make_process_info_button(self):\n            page = self.page.GetParent()\n            notebook = page.GetParent()\n            id = notebook.GetPageIndex(page)\n\n            b = bitmap_from_href(\"client://actions/media-record.png\", 0)\n            image = wx.ImageFromBitmap(b)\n            image = image.Scale(16, 12, wx.IMAGE_QUALITY_HIGH)\n            bmp = wx.BitmapFromImage(image)\n\n            self.pbutton = platebtn.PlateButton(notebook, wx.ID_ANY, \"\", bmp, style=platebtn.PB_STYLE_NOBG|platebtn.PB_STYLE_SQUARE)\n            self.pbutton.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)\n            self.pbutton.Disable()\n\n            notebook.AddControlToPage(id, self.pbutton)\n            self.pbutton.Bind(wx.EVT_BUTTON, self.on_pbutton)\n\n        def on_pbutton(self, event):\n            wx.GetApp().GetTopWindow().new_main_page(\"{{base_path}}tasks/form/TaskListForm/?schtml=1\", \"Task list\")\n\n        def _transform_item(self, item):\n            from pytigon_lib.schfs.vfstools import norm_path\n            item2 = norm_path(item)\n            if len(item2)>32:\n                x = item2[-28:]\n                id = x.find('/')\n                if id>0:\n                    item2 = '...'+x[id+1:]\n                else:\n                    item2 = '...'+item[-27:]\n            return item2\n\n        def on_panels_set_focus(self, evt):\n            print(\"ON_SET_FOCUS\")\n            self.CMD.SetFocus()\n\n        def show_item(self, nr, item):\n            strong = False\n            if nr == self.tab:\n                color = wx.GetApp().COLOUR_HIGHLIGHT\n                strong = True\n            elif nr == self.tab2:\n                strong = True\n                color = wx.GetApp().COLOUR_BACKGROUND\n            else:\n                color = wx.GetApp().COLOUR_BACKGROUND\n\n            p = Hgen(\"p\")\n            p.setattr(\"bgcolor='%s' width='100%%' border='0'\" % color)\n\n            item2 = self._transform_item(item)\n\n            a = p.append(\"a\", \"href='%s'\" % str(nr))\n            if len(item2)>32:\n                font = a.append(\"small\", \"\")\n            else:\n                font = a\n            if strong:\n                txt = font.append(\"strong\")\n                txt.value  = str(nr+1) + \". \" + item2\n            else:\n                font.value = str(nr+1) + \". \" + item2\n            return p\n\n        def refresh_html(self):\n            html = Hgen(\"html\", \"\")\n            body = html.append(\"body\", \"width = '100%%' bgcolor='%s'\" % wx.GetApp().COLOUR_BACKGROUND)\n            for i in range(2):\n                body.append( self.show_item(i, self.panels_dir[i][2]) )\n            self.PANELS.set_page(html.dump())\n\n        def filter_url(self, target, href):\n            if href in self.map_commands:\n                self.map_commands[href](None)\n                return True\n            else:\n                id = int(href)\n                if id != self.tab:\n                    self.tab2 = self.tab\n                    self.tab = id\n                    self.change_panel()\n                return True\n\n        def change_panel(self):\n            self.panels_state[self.tab2]=self.CMD.get_table_and_state()\n            if self.panels_state[self.tab]==None:\n                self.CMD.duplicate_table_and_state()\n                self.CMD.GetTable().proxy.set_address(\"../../\"+bencode(self.panels_dir[self.tab][2])+\"/_/\")\n                self.panels_state[self.tab]=self.CMD.get_table_and_state()\n                self.CMD.GetTable().refresh(0)\n            else:\n                self.CMD.set_table_and_state(self.panels_state[self.tab])\n                if self.panels_dir[self.tab][3]:\n                    self.panels_dir[self.tab][3]=False\n                    self.CMD.GetTable().refresh(0)\n            self.refresh_html()\n\n        def on_search(self, key):\n            if (not self.search_win) or self.search_win_starting:\n                self.search_buffor.append(key)\n                if not self.search_win_starting:\n                    self.search_win_starting = True\n                    def _callback(win):\n                        nonlocal self\n                        self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.aTable[:-4])\n                        if hasattr(self.CMD, 'grid_aTable'):\n                            self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.CMD.grid_aTable)\n                        for pos in self.search_buffor:\n                            win.start_key(pos)\n                        self.search_buffor = []\n                    \n                    win = self.new_child_page(\"^standard/tablefilter/tablefilter.html\", title=\"Filter\", callback = _callback)\n                    self.search_win = win.body\n                    self.search_win_starting = False\n            else:\n                self.search_win.start_key(key)\n\n        def on_char(self, evt):\n            if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('2'):\n                i = evt.KeyCode - ord('1')\n                if evt.ControlDown():\n                    if i != self.tab2:\n                        self.tab2 = i\n                        self.refresh_html()\n                else:\n                    if i != self.tab:\n                        self.tab2 = self.tab\n                        self.tab = i\n                        self.change_panel()\n            elif chr(evt.KeyCode).isascii() or chr(evt.KeyCode).isdigit():\n                wx.CallAfter(self.on_search, evt.KeyCode)\n            else:\n                evt.Skip()\n\n        def _refresh_panels(self):\n            for panel in self.panels_dir:\n                if panel[2] in self.panels_to_refresh:\n                    panel[3]=True\n                    if self.tab+1 == panel[0]:\n                        self.CMD.GetTable().refresh(0)\n                        self.refresh_html()\n            self.panels_to_refresh=[]\n\n        def on_back(self, url):\n            if self.CMD.GetTable().key:\n                self.CMD.GetTable().filter(\"\")\n            else:\n                try:\n                    row = self.CMD.GetTable().get_rec(0)\n                    print(\"ROW: \", row)\n                    if row[1][0]=='..':\n                        self.CMD.goto_first_row()\n                        self.CMD.action(\"edit\")\n                except:\n                    pass\n\n        def table_url(self, url):\n            self.panels_dir[self.tab][2] = bdecode(url.split('/')[-3])\n            self.CMD.GetTable().clear_state()\n            self.CMD.GetTable().filter(\"\")\n            self.CMD.SetGridCursor(0, 0)\n            self.CMD.MakeCellVisible(0, 0)\n            self.refresh_html()\n\n        def table_command(self, url):\n            self.on_edit(None)\n\n        def on_help(self, event):\n            pass\n\n        def on_view(self, evt):\n            pass\n\n        def get_name_and_ext(self, row=None):\n            if row==None:\n                row = self.CMD.GetGridCursorRow()\n            rec = self.CMD.GetTable().get_rec(row)\n            file_name = rec[0] #.decode('utf-8')\n            href = self.CMD.GetTable().proxy.tabaddress+\"/../../../../open/\"+file_name+\"/\"\n            href2 = self.CMD.GetTable().proxy.tabaddress+\"/../../../../save/\"+file_name+\"/\"\n            try:\n                name = bdecode(file_name).split('/')[-1]\n            except:\n                name = bdecode(rec[0]).split('/')[-1]\n            ext = name.split(\".\")\n            if len(ext)>1:\n                return (file_name, name, ext[-1])\n            else:\n                return (file_name, name, \"\")\n\n        def is_image(self, row=None):\n            id,name,ext = self.get_name_and_ext(row)\n            if '.'+ext.lower() in Image.EXTENSION:\n                return True\n            else:\n                return False\n\n        def exec_editor(self, row):\n            id, name, ext = self.get_name_and_ext(row)\n            href = self.CMD.GetTable().proxy.tabaddress+\"/../../../../open/\"+id+\"/\"\n            href2 = self.CMD.GetTable().proxy.tabaddress+\"/../../../../save/\"+id+\"/\"\n            if '.'+ext.lower() in Image.EXTENSION: # ('jpg', 'jpeg', 'gif', 'png', 'bmp'):\n                if self.edit_img_win:\n                    okno = self.edit_img_win\n                    okno.change_notebook_page_title(name)\n                else:\n                    okno = self.new_main_page(\"^standard/image_viewer/viewer.html\", name, None)\n                    self.edit_img_win=okno\n            else:\n                if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'ihtml', 'html'):\n                    okno = self.new_main_page(\"^standard/editor/editor.html\", name, None)\n                else:\n                    if ext.lower() in ('svg',):\n                        #href = self.CMD.GetTable().proxy.tabaddress+\"/../../../../open_page/\"+id+\"/\"\n                        okno = self.new_main_page(\"^standard/svgctrl/viewer.html\", name, None)\n                    else:\n                        href = self.CMD.GetTable().proxy.tabaddress+\"/../../../../open_page/\"+id+\"/\"\n                        okno = self.new_main_page(\"^standard/hexview/viewer.html\", name, None)\n            ed = okno.body.EDITOR\n            ed.load_from_url(href, ext)\n            if hasattr(ed, 'GotoPos'):\n                ed.GotoPos(0)\n            if hasattr(ed, 'set_save_path'):\n                okno.body.EDITOR.set_save_path(href2)\n\n        def on_edit(self, evt):\n            row = self.CMD.GetGridCursorRow()\n            return self.exec_editor(row)\n\n        def _on_base(self, event, command):\n            self.child_win = self.new_child_page(\"{{base_path}}schcommander/form/%s/\" % command, parameters={'dir': self.panels_dir[self.tab2][2], })\n\n        def on_rename(self, event):\n            self._on_base(event, \"Rename\")\n\n        def on_copy(self, event):\n            self._on_base(event, \"Copy\")\n\n        def on_move(self, event):\n            self._on_base(event, \"Move\")\n\n        def on_newfile(self, event):\n            self._on_base(event, \"NewFile\")\n\n        def on_mkdir(self, event):\n            self._on_base(event, \"MkDir\")\n\n        def on_delete(self, event):\n            self._on_base(event, \"Delete\")\n\n        def on_setup(self, event):\n            win = self.new_child_page(\"{{base_path}}schcommander/form/Setup/\", parameters={'dir': \";\".join([ pos[2] for pos in self.panels_dir]), })\n    \n        def on_user_menu(self, event):\n            pass\n\n        def on_tab(self, evt):\n            i = self.tab2\n            self.tab2 = self.tab\n            self.tab =i\n            self.change_panel()\n\n        def on_select_cell(self, evt):\n            row = evt.GetRow()\n            if self.edit_img_win and self.is_image(row):\n                self.exec_editor(row)\n            evt.Skip()\n\n\n%% form_title\n    .Commander\n\n%% content\n    table width=100%\n        tr\n            td\n                CTRL-HTML name=PANELS,,,width=100%,,,height=42\n        tr\n            td\n                % widget id='commander_new' class='menu' title='New' style='xtoolbar':\n                    li:::a class=btn btn-primary btn-sm,,,href=NEWFILE..._(New file)\n                    li:::a class=btn btn-primary btn-sm,,,href=MKDIR..._(New directory)\n\n                % widget id='commander_operations' class='menu' title='Operations' style='xtoolbar':\n                    li:::a class=btn btn-primary btn-sm,,,href=VIEW..._(View)\n                    li:::a class=btn btn-primary btn-sm,,,href=EDIT..._(Edit)\n                    li:::a class=btn btn-primary btn-sm,,,href=RENAME..._(Rename)\n                    li:::a class=btn btn-primary btn-sm,,,href=COPY..._(Copy)\n                    li:::a class=btn btn-primary btn-sm,,,href=MOVE..._(Move)\n                    li:::a class=btn btn-primary btn-sm,,,href=DELETE..._(Delete)\n\n                % widget id='commander_other' class='menu' title='Other' style='xtoolbar':\n                    li:::a class=btn btn-primary btn-sm,,,href=SETUP..._(Setup)\n                    li:::a class=btn btn-primary btn-sm,,,href=HELP..._(Help)\n        tr\n            td\n                CTRL-GRID name=CMD,,,width=100%,,,height=100%-130,,,READONLY=1,,,src={{base_path}}schcommander/grid/_/_/,,,keymap=standard\n\n        tr\n            td\n                ctrl-htmllistbox name=msg,,,width=100%-20,,,height=45\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormMove",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n%% all\n    % with show_title_bar=1 title='Move' vform=True\n        {{ block.super }}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormMkDir",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n%% all\n    % with show_title_bar=1 title='Make directory' vform=True\n        {{ block.super }}\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormSetup",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=44\n\n\n%% all\n    %with show_title_bar=1 title='Setup' vform=True\n        {{ block.super }}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormCopy",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n\n%% all\n    % with show_title_bar=1 title='Copy' vform=True\n        {{ block.super }}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormNewFile",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n%% all\n    % with show_title_bar=1 title='New file' vform=True\n        {{ block.super }}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormRename",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n\n%% all\n    % with show_title_bar=1 title='Rename' vform=True\n        {{ block.super }}\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormDelete",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% extrahead\n    % if OK:\n        meta name=target,,,content=_parent_refr\n\n%% form_content_schbutton\n    input type=submit,,,value=OK,,,class=btn btn-info,,,target=_self,,,height=64\n\n%% all\n    % with show_title_bar=1 title='Delete'\n        {{ block.super }}\n\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [],
+            [
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "FileManager",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "",
+                            "label": "Folder",
+                            "name": "folder",
+                            "param": "",
+                            "required": true,
+                            "type": "CharField",
+                            "widget": ""
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "",
+                            "label": "Sort",
+                            "name": "sort",
+                            "param": "choices=models.file_manager_sort_choices",
+                            "required": true,
+                            "type": "ChoiceField",
+                            "widget": ""
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "Move",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Destination",
+                            "name": "dest",
+                            "param": "choices=[]",
+                            "required": false,
+                            "type": "ChoiceField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "Copy",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Destination",
+                            "name": "dest",
+                            "param": "choices=[]",
+                            "required": false,
+                            "type": "ChoiceField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "MkDir",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Folder name",
+                            "name": "dest",
+                            "param": "widget=forms.TextInput({\"width\": 280,})",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "Rename",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Name",
+                            "name": "dest",
+                            "param": "max_length=None, min_length=None, widget=forms.TextInput({\"width\": 280,})",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "NewFile",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Name",
+                            "name": "dest",
+                            "param": "max_length=None, min_length=None, widget=forms.TextInput({\"width\": 280,})",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "Delete",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": "True",
+                            "label": "Recycle bin",
+                            "name": "dest",
+                            "param": null,
+                            "required": false,
+                            "type": "BooleanField",
+                            "widget": null
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": "schcommander",
+                        "name": "Setup",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Path 1",
+                            "name": "path1",
+                            "param": "max_length=None, min_length=None, widget=forms.TextInput({\"width\": 280,})",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": null
+                        },
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "Path 2",
+                            "name": "path2",
+                            "param": "max_length=None, min_length=None, widget=forms.TextInput({\"width\": 280,})",
+                            "required": false,
+                            "type": "CharField",
+                            "widget": null
+                        },
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "",
+                            "label": "Default for all users",
+                            "name": "glob",
+                            "param": "",
+                            "required": false,
+                            "type": "BooleanField",
+                            "widget": ""
+                        }
+                    ]
+                ]
+            ],
+            [
+                {
+                    "code": "return filesystemcmd(cproxy, **kwargs)",
+                    "doc": null,
+                    "name": "vfs_action",
+                    "perms": null,
+                    "publish": true,
+                    "publish_group": "vfs_action"
+                }
+            ],
+            [
+                {
+                    "consumer_code": "def set_winsize(self, fd, row, col, xpix=0, ypix=0):\n    winsize = struct.pack(\"HHHH\", row, col, xpix, ypix)\n    fcntl.ioctl(self.fd, termios.TIOCSWINSZ, winsize)\n\ndef receive(self, text_data=None, bytes_data=None):\n    if text_data:\n        x = json.loads(text_data)\n        if 'input' in x:\n            if self.fd:\n                os.write(self.fd, x['input'].encode('utf-8'))\n        if 'resize' in x:\n            size = x['resize']\n            if self.fd:\n                self.set_winsize(self.fd, size['rows'], size['cols'])\n        if 'ping' in x:\n            self.send(text_data=\"pong\")\n\n\ndef connect(self):\n    print('Connecting.......')\n    self.exit = False\n    self.fd = None\n    self.child_pid = None\n    self.accept()\n    (child_pid, fd) = pty.fork()\n    if child_pid == 0:\n        env2 = os.environ.copy()\n        env2['TERM'] = 'xterm'\n        if settings.PLATFORM_TYPE == \"webserver\" and getpass.getuser()=='www-data':\n            env2['HOME'] = '/home/www-data'        \n        subprocess.run([get_executable(),\"-m\", \"xonsh\"], env = env2)\n    else:\n        self.fd = fd\n        self.child_pid = child_pid\n        self.thread = Thread(target=read_and_forward_pty_output, args=(self,))\n        self.thread.start()\n        \n\ndef disconnect(self, close_code):\n    print('Disconnect.......')\n    self.exit = True\n    os.write(self.fd, b\"exit\\n\")\n    ",
+                    "consumer_type": "WebsocketConsumer",
+                    "doc": null,
+                    "name": "ShellConsumer",
+                    "url": "shell"
+                }
+            ],
+            []
+        ],
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": "import datetime\nfrom pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\nfrom schsimplescripts.script_tools import decode_script\n",
+                "module_title": "main tools",
+                "name": "schsimplescripts",
+                "perms": true,
+                "tasks_code": "",
+                "title": "Simple scripts",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": "from django.http import Http404\nfrom pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\nfrom pytigon_lib.schdjangoext.fastform import form_from_str\nfrom schsimplescripts.script_tools import decode_script\nfrom django.core.exceptions import PermissionDenied\n\nSCRIPT_TEMPLATE = \"\"\"\n{%% extends 'schsimplescripts/script_form.html' %%}\n\n{%% load exfiltry %%}\n{%% load exsyntax %%}\n{%% load django_bootstrap5 %%}\n\n\"\"\"\n\nSCRIPT_TEMPLATE1 = SCRIPT_TEMPLATE + \"\"\"\n%s\n\"\"\"\n\nSCRIPT_TEMPLATE2 = SCRIPT_TEMPLATE + \"\"\"\n{%% block content %%}\n<div class=\"ajax-frame\"></div>\n<div class=\"ajax-region\">\n%s\n<div class=\"ajax-frame\"></div> \n</div>\n\n{%% endblock %%}\n\"\"\"\n"
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "Scripts",
+                        "ordering": "['id']",
+                        "proxy_model": null,
+                        "table_code": "def save(self, *args, **kwargs):\n    code = self.code\n    if code:\n        x = decode_script(self.name, code)\n        if x:\n            self._form = x[0]\n            self._view = x[1]\n            self._template = x[2]\n        else:\n            code = \"\"\n        \n    if not code:\n        self._form = \"\"\n        self._view = \"\"\n        self._template = \"\"\n    \n    super(Scripts, self).save(*args, **kwargs) \n",
+                        "url_params": "",
+                        "verbose_name": "Scripts",
+                        "verbose_name_plural": "Scripts"
+                    },
+                    [
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Name",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "name",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Title",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "title",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Code",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "code",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Category",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "category",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Rights group",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "rights_group",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Menu",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "menu",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Doc",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "doc",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "_form",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "_form",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "_view",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "_view",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "_template",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "_template",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "run",
+                    "param": "pk",
+                    "ret_type": "U",
+                    "url": "Scripts",
+                    "url_params": "",
+                    "view_code": "\nscript = models.Scripts.objects.get(pk=pk)\nform = None\nif script:\n    if script.rights_group: \n        test = False\n        if request.user:\n            if request.user.is_superuser:\n                test = True\n            else:\n                if '.' in script.rights_group:\n                    if request.user.has_perm(script.rights_group):\n                        test = True\n                else:\n                    if user.groups.filter(name=script.rights_group).exists():\n                        test = True\n        if not test:\n            raise PermissionDenied()\n     \n    exec(script._view)\n    v = locals().get(\"view\", None)\n    form = None\n    ret = {} \n    show_result = False\n    if script._form:\n        form_class=form_from_str(script._form)    \n        if form_class:\n            if request.method == 'POST':\n                form=form_class(request.POST)\n                if form.is_valid():\n                    ret = v(request, form.cleaned_data)\n                    show_result = True\n                else:\n                    ret = v(request, None)\n                    show_result = False\n            else:\n                form = form_class()\n                ret = v(request, None)\n                show_result = False\n        else:\n            ret = v(request, None)\n            show_result = True\n    else:\n        ret = v(request, None)\n        show_result = True\n        \n    if type(ret) == dict and script._template:        \n        ret['form'] = form\n        ret['SHOW_RESULT'] = show_result\n        x = script._template.strip()\n        if x.startswith('{% block') or x.startswith('%%'):\n            template_script = SCRIPT_TEMPLATE1 % script._template\n        else:\n            template_script = SCRIPT_TEMPLATE2 % script._template\n        template = Template(template_script)\n        context = RequestContext(request, ret)\n        ret_str = template.render(context)\n        return HttpResponse(ret_str)\n    elif type(ret) == dict:\n        ret['form'] = form\n        return render_to_response('schsimplescripts/script_form.html', ret, request=request)\n    elif type(ret) == str:\n        return run_script_by_name(request, ret)\n    else:\n        return ret\n\nraise Http404(\"Script does not exist\")\n",
+                    "view_type": "r"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "run_script_by_name",
+                    "param": "script_name",
+                    "ret_type": "U",
+                    "url": "run/(?P<script_name>\\w+)/$",
+                    "url_params": "{}",
+                    "view_code": "script = models.Scripts.objects.get(name=script_name)\nif script:\n    p = reverse(\"row_action_scripts_run\", kwargs={ 'pk': int(script.id)} )\n    if 'only_content' in request.GET:\n        return HttpResponseRedirect(p+\"?childwin=1&only_content=1\")\n    else:\n        return HttpResponseRedirect(p+\"?childwin=1\")\nelse:\n    raise Http404(\"Script does not exist\")\n",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Scripts",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"code\": \"wx.ART_NORMAL_FILE\",\n                    \"doc\": \"client://apps/help-browser.png\",\n                    \"run\": \"wx.ART_GO_DIR_UP\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New script\"\n\n%% list_row_header\n    th...category\n    th...name\n    th...title\n\n%% list_row\n    td...{{object.category}}\n    td...{{object.name}}\n    td...{{object.title}}\n\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/code,Code,code\n        .field_edit/doc,Doc,doc\n        .delete        \n    % row_actions:        \n        .run,Run script,fa fa-play,_parent\n\n\n%% row_edit\n    % form:\n        \"name\", \"title\", \"category\", \"menu\", \"rights_group\"\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": false,
+                    "name": "script_form",
+                    "tags_mount": null,
+                    "template_code": "% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n% load django_bootstrap5\n\n%% all\n    %with form_width=800 form_height=600 show_title_bar=1 title='Test'\n        {{ block.super }}\n\n%% body_desktop\n    div class=ajax-region\n        {{ block.super }}\n\n%% content_start\n    % if form and not SHOW_RESULT:\n        form method=post,,,action={{request.path}},,,role=form,,,class=TableFiltr form-inline,,,enctype={% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %},,,target=refresh_frame,,,class=ajax-link\n            % csrf_token\n            % bootstrap_form form\n            input type=submit,,,value=Run,,,class=btn btn-info ladda-button,,,data-style=slide-left\n",
+                    "url": "",
+                    "url_parm": ""
+                }
+            ],
+            [
+                {
+                    "icon": "client://apps/utilities-terminal.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Scripts",
+                    "perms": "simplescript.change_scripts",
+                    "url": "table/Scripts/-/form/list/",
+                    "url_type": "desktop"
+                }
+            ],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\n\ndef _transform_template(txt):\n    return ihtml_to_html(None, txt)\n    \ndef decode_script(name, code):    \n    elements = code.split('===')\n    if len(elements)>=3:\n        _form = elements[0]\n        _view = elements[1]\n        _template = _transform_template(elements[2])\n    elif len(elements)>=2:\n        if elements[0].strip().startswith('def '):\n            _form = None\n            _view = elements[0]\n            _template = elements[1]\n        else:\n            _form = elements[0]\n            _view = elements[1]\n            _template = None\n    else:\n        _form = None\n        _view = code\n        _template = None\n    return [ _form, _view, _template ]\n",
+                    "file_type": "c",
+                    "name": "script_tools.py"
+                }
+            ]
+        ],
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "Tools",
+                "name": "schtools",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Tools",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": "import time\nfrom pytigon_lib.schdjangoext.tools import import_model\nfrom pyexcel_odsr import get_data\nfrom pytigon_lib.schtools.schjson import json_dumps, json_loads\nfrom pytigon_lib.schfs.vfstools import get_temp_filename\nimport openpyxl\nimport csv\n"
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "Parameter",
+                        "ordering": "['id']",
+                        "proxy_model": "",
+                        "table_code": null,
+                        "url_params": "",
+                        "verbose_name": "Parameter",
+                        "verbose_name_plural": "Parameter"
+                    },
+                    [
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Parameter type",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "type",
+                            "null": true,
+                            "param": "max_length=16",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Parameter subtype",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "subtype",
+                            "null": true,
+                            "param": "max_length=16",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Key",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "key",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Value",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "value",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ],
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": false,
+                        "metaclass_code": null,
+                        "name": "Autocomplete",
+                        "ordering": "['id']",
+                        "proxy_model": "",
+                        "table_code": null,
+                        "url_params": "",
+                        "verbose_name": "Autocomplete",
+                        "verbose_name_plural": "Autocomplete"
+                    },
+                    [
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Type",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "type",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Label",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "label",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Value",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "value",
+                            "null": false,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "autocomplete_search",
+                    "param": "type",
+                    "ret_type": "U",
+                    "url": "search/(?P<type>.+)/",
+                    "url_params": "{}",
+                    "view_code": "q = request.GET.get('query', request.POST.get('query', None))\nif not q:\n    return HttpResponse(content_type='text/plain')\nlimit = request.GET.get('limit', request.POST.get('limit', 15))\ntry:\n    limit = int(limit)\nexcept ValueError:\n    return HttpResponseBadRequest()\nif q != ' ':\n    tab = Autocomplete.objects.filter(type=typ, label__istartswith=q)[:limit]\nelse:\n    tab = Autocomplete.objects.filter(type=typ)[:limit]\nout_tab = []\nfor pos in tab:\n    out_tab.append({'id': pos.id, 'label': pos.label, 'name': pos.label, 'value': pos.value})\njson_data = json.dumps(out_tab)\nreturn HttpResponse(json_data, content_type='application/x-javascript')\n",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "set_user_param",
+                    "param": "**argv",
+                    "ret_type": "U",
+                    "url": "set_user_param/",
+                    "url_params": "{}",
+                    "view_code": "key = request.POST.get('param', None)\nvalue = request.POST.get('value', None)\nuser =  request.user.username\n\np = models.Parameter.objects.filter(type='sys_user', subtype=user, key=key)\nif len(p)>0:\n    obj = p[0]\nelse:\n    obj = models.Parameter()\n    obj.type = 'sys_user'\n    obj.subtype = user\n    obj.key = key\n\nobj.value = value\nobj.save()\n\nreturn HttpResponse(\"OK\")\n",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "get_user_param",
+                    "param": "**argv",
+                    "ret_type": "U",
+                    "url": "get_user_param/",
+                    "url_params": "{}",
+                    "view_code": "key = request.POST.get('param', None)\nuser =  request.user.username\n\np = models.Parameter.objects.filter(type='sys_user', subtype=user, key=key)\nif len(p)>0:\n    obj = p[0]\n    return HttpResponse(obj.value)\nelse:\n    return HttpResponse(\"\")\n",
+                    "view_type": "u"
+                },
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "import_table",
+                    "param": "app, table",
+                    "ret_type": "T",
+                    "url": "(?P<app>[\\w=_,;-]*)/(?P<table>[\\w=_,;-]*)/import_table/$",
+                    "url_params": "{}",
+                    "view_code": "if request.FILES:\n    if 'import_file' in request.FILES:\n        data = request.FILES['import_file']        \n        name = data.name\n        ext = name.split('.')[-1].lower()\n        model = import_model(app, table)\n        \n        table = []\n        \n        if ext in ('xlsx', 'xls', 'ods'):\n            if ext == 'ods':\n                d = get_data(data)\n                #print(\"F0\", d)\n                #buf = json_dumps(d)\n                for key in d:                    \n                    table = d[key]\n                    break\n            else:\n                first_line = True\n                width = 0\n                \n                file_name = get_temp_filename(\"temp.xlsx\")\n                f = open(file_name, 'wb')\n                f.write(data.read())\n                f.close()\n                \n                workbook = openpyxl.load_workbook(filename=file_name, read_only=True)\n                worksheets = workbook.get_sheet_names()\n                worksheet = workbook.get_sheet_by_name(worksheets[0])            \n                \n                for row in list(worksheet.rows):\n                    if first_line:\n                        first_line = False\n                        buf = []\n                        i = 0;\n                        for pos in row:\n                            value = pos.value\n                            if value:\n                                buf.append(value)\n                            else:\n                                break\n                            i += 1\n                        if len(buf)>0:\n                            count = len(buf)\n                            table.append(buf)\n                        else:\n                            break\n                    else:\n                        if row[0].value:\n                            buf = []\n                            i = 0\n                            for pos in row:\n                                if i >= count:\n                                    break\n                                buf.append(pos.value)\n                                i += 1\n                            table.append(buf)\n                        else:\n                            break\n                os.remove(file_name)            \n        elif ext in ('txt', 'csv'):\n            first_line = True\n            sep_list = ['\\t', ';', ',', '|', ]\n            sep = None            \n            \n            txt = data.read().decode('utf-8').replace('\\r','').split('\\n')\n            for line in txt:\n                for pos in sep_list:\n                    if pos in line:\n                        sep = pos\n                        break\n                break\n                \n            if sep:\n                csv_reader = csv.reader(txt, delimiter=sep)\n                for row in csv_reader:\n                    table.append(row)\n                              \n        if table and len(table)>1:\n            header = list([pos.strip() for pos in table[0] if pos])\n            tree = False\n            tmp = []\n            for pos in header:\n                if not pos in tmp:\n                    tmp.append(pos)\n                else:\n                    tree = True\n                    id1 = tmp.index(pos)\n                    id2 = len(tmp)\n                    break            \n            \n            for row in table[1:]:\n                if len(row) == len(header):\n                    x = model() \n                    parent = None                       \n                    for index, (attr_name, value) in enumerate(zip(header,row)):\n                        if tree:\n                            if index == id1:\n                                if row[id2]:\n                                    objs = model.objects.filter(**{ attr_name: value })\n                                    if len(objs)==1:\n                                        parent = objs[0]\n                                else:\n                                    setattr(x, attr_name, value)\n                            elif index == id2:\n                                if row[id2]:\n                                    setattr(x, attr_name, value)\n                                    if parent:\n                                        setattr(x, 'parent', parent)\n                            else:\n                                setattr(x, attr_name, value)                                \n                        else:\n                            setattr(x, attr_name, value)\n                    x.save()\n                                \n        return { 'redirect': '/schsys/ok/' }    \n    else:\n        form = ImportTableForm(request.POST, request.FILES)\nelse:\n    form = ImportTableForm()\n\nreturn { 'form': form }",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormImportTableForm",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title='Table import form'\n        {{ block.super }}\n\n\n%% user_header\n    th...x1\n\n\n%% user_row\n    tr\n        td... {{object}}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "v_import_table",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title='Import form'\n        {{ block.super }}\n\n\n%%list_content_header_first_row\n\n%% form_content_button\n\n\n%% user_header\n    th...x\n\n\n%% user_row\n    tr\n        td... {{object}}\n\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Parameter",
+                    "tags_mount": null,
+                    "template_code": "% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    % with table_type='datatable':\n        {% block.super %}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New parameter\"\n\n%% list_row_header\n    th..._(Parameter type)\n    th..._(Parameter subtype)\n    th..._(Key)\n    th..._(Value)\n    \n\n%% list_row\n    td...{% object.type %}\n    td...{% object.subtype %}\n    td...{% object.key %}\n    td...{% object.value %}\n    \n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% row_edit\n    % form:\n        \"type\",\"subtype\",\"key\",\"value\"\n",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Autocomplete",
+                    "tags_mount": null,
+                    "template_code": "% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    % with table_type='datatable':\n        {% block.super %}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"item\"\n\n%% list_row_header\n    th..._(Type)\n    th..._(Label)\n    th..._(Value)\n    \n\n%% list_row\n    td...{% object.type %}\n    td...{% object.label %}\n    td...{% object.value %}\n    \n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% row_edit\n    % form:\n        \"type\",\"label\",\"value\"\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [],
+            [
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "module": null,
+                        "name": "ImportTableForm",
+                        "process_code": ""
+                    },
+                    [
+                        {
+                            "error_messages": null,
+                            "help_text": null,
+                            "initial": null,
+                            "label": "File to import",
+                            "name": "import_file",
+                            "param": null,
+                            "required": true,
+                            "type": "FileField",
+                            "widget": null
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [],
+            []
+        ],
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": "from django.core.mail import send_mail\nfrom datetime import datetime \nfrom django.conf import settings\nfrom os.path import join\n    \ndef upload_path_fun(obj, filename):\n    return \"attachements/\" + obj.application+\"_\"+obj.table+\"_\"+str(obj.parent_id)+\"_\"+obj.group+\"_\"+filename\n   ",
+                "module_title": "attachements",
+                "name": "schattachements",
+                "perms": true,
+                "tasks_code": "",
+                "title": "Attachements",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": "from wsgiref.util import FileWrapper\nimport mimetypes\n"
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "Attachements",
+                        "ordering": "['id']",
+                        "proxy_model": "",
+                        "table_code": "@classmethod\ndef filter(cls, value):\n    if value:\n        app, tbl, id,grp = value.split('__')\n        return cls.objects.filter(application=app, table=tbl, parent_id=id, group=grp)\n    else:\n        return cls.objects.all()\n\ndef init_new(self, request, view, value=None):\n    if value:\n        app, tbl, id, grp = value.split('__')\n        return { 'application': app, 'table': tbl, 'parent_id': id, 'group': grp }\n    else:\n        return { 'application': 'default', 'table': 'default', 'parent_id': 0, 'group': 'default' }\n\n\ndef save(self, *args, **kwargs):\n    self.ext = self.file.url.split('.')[-1].upper()\n    if not self.name:\n        self.name = str(self.file)\n    super(Attachements, self).save(*args, **kwargs)\n",
+                        "url_params": "",
+                        "verbose_name": "Attachements",
+                        "verbose_name_plural": "Attachements"
+                    },
+                    [
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Name",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "name",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Extension",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "ext",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Application",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "application",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "'default'",
+                            "description": "Table",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "table",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "'default'",
+                            "description": "Group",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "group",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Parent id",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "parent_id",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "IntegerField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "thumbnail",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "thumb",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "datetime.now",
+                            "description": "Upload date",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "upload_date",
+                            "null": false,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "DateTimeField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Select file",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "file",
+                            "null": false,
+                            "param": "upload_to=upload_path_fun",
+                            "rel_to": "",
+                            "type": "FileField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "download",
+                    "param": "pk",
+                    "ret_type": "U",
+                    "url": "Attachements",
+                    "url_params": "",
+                    "view_code": "obj=models.Attachements.objects.get(id=pk)\nwrapper      = FileWrapper(open(obj.file.path, \"rb\")) \ncontent_type = mimetypes.guess_type(obj.file.path)[0] \nresponse     = HttpResponse(wrapper,content_type=content_type)  \nresponse['Content-Length']      = os.path.getsize(obj.file.path)    \nresponse['Content-Disposition'] = \"attachment; filename=%s\" %  obj.file.name\nreturn response\n",
+                    "view_type": "r"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Attachements",
+                    "tags_mount": null,
+                    "template_code": "\n\n{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"download\": \"client://status/mail-attachment.png\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% enctype\n    .multipart/form-data\n\n%% list_content_actions    \n    % new_row _(\"New attachement\") action=\"new_row/{{filter}}\"\n\n%% list_row_header\n    th...Name\n    th...ext\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.ext}}\n\n\n%% list_row_actions\n    % row_actions:\n        .download,_(Download),,_blank\n    % row_actions:\n        .edit\n        .delete\n\n\n%% row_edit\n    % form:\n\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "client://status/mail-attachment.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Attachements",
+                    "perms": "wiki.change_attachements",
+                    "url": "table/Attachements/-/form/list/",
+                    "url_type": "desktop"
+                }
+            ],
+            [],
+            [],
+            [],
+            []
+        ],
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": "from datetime import datetime ",
+                "module_title": "log",
+                "name": "schlog",
+                "perms": true,
+                "tasks_code": "",
+                "title": "Log",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "Log",
+                        "ordering": "['id']",
+                        "proxy_model": "",
+                        "table_code": "@classmethod\ndef filter(cls, value):\n    if value:\n        app, tbl, id,grp = value.split('__')\n        return cls.objects.filter(application=app, table=tbl, parent_id=id, group=grp)\n    else:\n        return cls.objects.all()\n",
+                        "url_params": "",
+                        "verbose_name": "Log",
+                        "verbose_name_plural": "Logi"
+                    },
+                    [
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Application",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "application",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": false,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "'default'",
+                            "description": "Table",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "table",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "'default'",
+                            "description": "Group",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "group",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Parent id",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "parent_id",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "IntegerField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "datetime.now",
+                            "description": "Date",
+                            "editable": false,
+                            "help_text": "",
+                            "name": "date",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "DateTimeField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": null,
+                            "db_index": false,
+                            "default": null,
+                            "description": "Description",
+                            "editable": false,
+                            "help_text": null,
+                            "name": "description",
+                            "null": true,
+                            "param": "max_length=256",
+                            "rel_to": null,
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": null
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Operator",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "operator",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        },
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Operator id",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "operator_id",
+                            "null": true,
+                            "param": "",
+                            "rel_to": "",
+                            "type": "IntegerField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "log",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% pythoncode\n    script language=python\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600:\n        {{ block.super }}\n\n%% scroll\n\n%% list_row_header\n    th...Data\n    th...Opis\n    th...Operator\n\n%% list_row_header_end\n\n%% list_row\n    td...{{object.date|isoformat}}\n    td...{{object.description}}\n    td...{{object.operator}}\n\n%% list_row_end",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Log",
+                    "tags_mount": null,
+                    "template_code": "% extends \"form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    % with table_type='datatable':\n        {% block.super %}\n\n%% scroll\n\n%% list_row_header\n    th..._(Application)\n    th..._(Table)\n    th..._(Group)\n    th..._(Parent id)\n    th..._(Date)\n    th..._(Description)\n    th..._(Operator)\n    th..._(Operator id)\n    \n\n%% list_row\n    td...{% object.application %}\n    td...{% object.table %}\n    td...{% object.group %}\n    td...{% object.parent_id %}\n    td...{% object.date %}\n    td...{% object.description %}\n    td...{% object.operator %}\n    td...{% object.operator_id %}\n    \n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% row_edit\n    % form:\n        \"application\",\"table\",\"group\",\"parent_id\",\"date\",\"description\",\"operator\",\"operator_id\"\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "from django.db import models\nfrom schlog.models import Log\n\ndef log_to_db(function, obj, description, group=None, request=None, user = None, autosave=True):    \n    obj = Log()\n    log.description = description\n    log.group = group\n    \n    m = function.__module__\n    x = m.split('.')\n    log.app = x[0]\n    \n    if obj and issubclass(obj, models.Model):\n        log.table = type(obj).__name__\n        log.parent_id = obj.pk\n        \n    if user:\n        log.operator = user.username\n        log.operator_id = user.pk\n    elif request and request.user:\n        log.operator = request.user.username\n        log.operator_id = request.user.pk\n    \n    if autosave:\n        log.save()\n        \n    return log\n",
+                    "file_type": "l",
+                    "name": "log.py"
+                }
+            ]
+        ],
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "Authorization",
+                "name": "schauth",
+                "perms": true,
+                "tasks_code": "",
+                "title": "Authorization",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": "from django.urls import reverse\nfrom django.contrib.auth import login\nfrom django.contrib.auth import get_user_model\n\n$$$\n\nauth.csrf_exempt = True\n"
+            },
+            [
+                [
+                    {
+                        "base_table": null,
+                        "doc": null,
+                        "generic": true,
+                        "metaclass_code": null,
+                        "name": "UrlWithAuth",
+                        "ordering": "['id']",
+                        "proxy_model": null,
+                        "table_code": null,
+                        "url_params": null,
+                        "verbose_name": "Url with authorization",
+                        "verbose_name_plural": "Urls with authorization"
+                    },
+                    [
+                        {
+                            "blank": false,
+                            "choices": null,
+                            "db_index": false,
+                            "default": null,
+                            "description": "User name",
+                            "editable": true,
+                            "help_text": null,
+                            "name": "username",
+                            "null": false,
+                            "param": "max_length=64",
+                            "rel_to": null,
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": null
+                        },
+                        {
+                            "blank": false,
+                            "choices": null,
+                            "db_index": true,
+                            "default": null,
+                            "description": "Key",
+                            "editable": true,
+                            "help_text": null,
+                            "name": "key",
+                            "null": false,
+                            "param": "max_length=255",
+                            "rel_to": null,
+                            "type": "CharField",
+                            "unique": true,
+                            "url_params": null
+                        },
+                        {
+                            "blank": true,
+                            "choices": null,
+                            "db_index": false,
+                            "default": null,
+                            "description": "Redirect to",
+                            "editable": true,
+                            "help_text": null,
+                            "name": "redirect_to",
+                            "null": true,
+                            "param": "max_length=255",
+                            "rel_to": null,
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": null
+                        },
+                        {
+                            "blank": true,
+                            "choices": null,
+                            "db_index": false,
+                            "default": null,
+                            "description": "Post data",
+                            "editable": false,
+                            "help_text": null,
+                            "name": "post_data",
+                            "null": true,
+                            "param": null,
+                            "rel_to": null,
+                            "type": "TextField",
+                            "unique": false,
+                            "url_params": null
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "auth",
+                    "param": "key, path",
+                    "ret_type": "U",
+                    "url": "auth/(?P<key>[\\w-]+)/(?P<path>.*)$",
+                    "url_params": "{}",
+                    "view_code": "if key==\"POST\":\n    key = request.POST.get(\"key\", \"\")\nobjects = models.UrlWithAuth.objects.filter(key=key)\nif len(objects) == 1:\n    username = objects[0].username\n    users = get_user_model().objects.filter(username=username)\n    if len(users)==1:\n        login(request, users[0])\n        if path:\n            new_url = make_href(path)\n        else:\n            new_url = make_href(objects[0].redirect_to)\n            if not new_url.startswith('/'):\n                new_url = '/' + new_url\nelse:\n    new_url = make_href('/')\n\np = request.get_full_path()\nif '?' in p:\n    x = p.split('?', 1)\n    if x[1]:\n        new_url += '?' + x[1]\n\nreturn HttpResponseRedirect(new_url)",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "UrlWithAuth",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n%extends \"form.html\"\n\n%load exfiltry\n%load exsyntax\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New key\"\n\n%% list_row_header\n    th...User name\n    th...Redirect to\n\n%% list_row\n    td...{{object.username}}\n    td...{{object.redirect_to}}\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% row_edit\n    % form:\n",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "png://apps/system-users.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Urls with auth",
+                    "perms": null,
+                    "url": "table/UrlWithAuth/-/form/list/",
+                    "url_type": "desktop"
+                }
+            ],
+            [],
+            [],
+            [],
+            []
+        ],
+        [
+            {
+                "consumer_code": "from pytigon_lib.schtasks.publish import CommunicationByCacheReceiver",
+                "doc": null,
+                "icon": "None",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "Tasks",
+                "name": "schtasks",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Tasks",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "consumer_code": "async def connect(self):\n    self.exit = False\n    await self.accept()\n    self.receiver = None\n    self.finish = False\n    self.commands = []\n\nasync def receive_json(self, content):\n    if \"ping\" in content:\n        await self.send_json({\"status\": \"pong\"})\n    if \"id\" in content:\n        id = content[\"id\"]\n        self.receiver = CommunicationByCacheReceiver(id, self)\n        while not self.finish:\n            if self.receiver:\n                self.commands = []\n                self.receiver.process()\n                for command in self.commands:\n                    await self.send_json(command)\n            await asyncio.sleep(1)\n        await self.close()\n\nasync def disconnect(self, close_code):\n    pass\n    \ndef handle_start(self):\n    self.commands.append({\"status\": \"start\"})\n\ndef handle_event(self, value):\n    self.commands.append({\"status\": \"event\", \"data\": value})\n\ndef handle_end(self):\n    self.commands.append({\"status\": \"stop\"})\n    self.finish = True\n",
+                    "consumer_type": "AsyncJsonWebsocketConsumer",
+                    "doc": null,
+                    "name": "TaskEventsConsumer",
+                    "url": "show_task_events"
+                }
+            ],
+            []
+        ]
+    ],
+    []
+]

@@ -38,7 +38,7 @@ class Command(BaseCommand):
         for prj_name in prjs_to_export:
             if not prj_name:
                 continue
-            prjs = list(SChAppSet.objects.filter(name = prj_name))
+            prjs = list(SChAppSet.objects.filter(name = prj_name, main_view=True))
             if len(prjs)>0:
                 prj = prjs[-1]        
                 x = prj_export(None, prj.pk)
