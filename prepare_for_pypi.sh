@@ -3,6 +3,9 @@ mkdir /tmp/pytigon
 cd pytigon
 #python ptig.py manage_schdevtools prepare_installer_files 
 export DATA_PATH=/tmp/pytigon
+python ptig.py manage__schdata makeallmigrations
+python ptig.py manage__schtools makeallmigrations
+python ptig.py manage__schwiki makeallmigrations
 python ptig.py manage_schdevtools makeallmigrations
 python ptig.py manage_schdevtools migrate
 python ptig.py manage_schdevtools createautouser
