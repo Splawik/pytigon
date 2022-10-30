@@ -51,7 +51,7 @@
                 "title": "Browser",
                 "urls_code": null,
                 "user_param": null,
-                "view_code": "import json\nfrom django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest\nfrom .models import history\nfrom pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nimport re\nfrom pytigon_lib.schtasks.task import get_process_manager\nfrom pytigon_lib.schhttptools import httpclient\n"
+                "view_code": "import json\nfrom django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest\nfrom .models import history\nfrom pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nimport re\nfrom pytigon_lib.schhttptools import httpclient\nfrom django_q.tasks import async_task, result"
             },
             [
                 [
@@ -251,7 +251,7 @@
                         "end_code": "",
                         "module": "",
                         "name": "MultiDownload",
-                        "process_code": "parm = {}\nparm[\"base_address\"] = self.cleaned_data['base_address']\nparm[\"source_page\"] = self.cleaned_data['source_page']\nparm[\"subpage_href\"] = self.cleaned_data['subpage_href']\nparm[\"download_mask\"] = self.cleaned_data['download_mask']\nparm[\"levels\"] = self.cleaned_data['levels']\nparm[\"test_only\"]  = self.cleaned_data['test_only']\n\nif not 'http' in parm[\"base_address\"]:\n    parm[\"base_address\"] = 'http://'+parm[\"base_address\"]\n\nif not parm[\"source_page\"]:\n    parm[\"source_page\"] = '/'\n\ntask_manager = get_process_manager()\n_id = task_manager.put(request, \"Scan html pages\", \"@schbrowser:scan_html\", user_parm = parm)\n        \n#l = task_manager.list_threads(all=True)\nobject = task_manager.process_list[_id]\n#object = None\n#for pos in l:    \n#    if pos.id == _id:\n#        object = pos\n#        break\nreturn { \"object\": object }\n"
+                        "process_code": "parm = {}\nparm[\"base_address\"] = self.cleaned_data['base_address']\nparm[\"source_page\"] = self.cleaned_data['source_page']\nparm[\"subpage_href\"] = self.cleaned_data['subpage_href']\nparm[\"download_mask\"] = self.cleaned_data['download_mask']\nparm[\"levels\"] = self.cleaned_data['levels']\nparm[\"test_only\"]  = self.cleaned_data['test_only']\n\nif not 'http' in parm[\"base_address\"]:\n    parm[\"base_address\"] = 'http://'+parm[\"base_address\"]\n\nif not parm[\"source_page\"]:\n    parm[\"source_page\"] = '/'\n\ntask_manager = get_process_manager()\n_id = task_manager.put(request, \"Scan html pages\", \"@schbrowser:scan_html\", user_parm = parm)\n_id = async_task(\"schbrowser.tasks.scan_html\", user_param = param)        \n#l = task_manager.list_threads(all=True)\nobject = task_manager.process_list[_id]\n#object = None\n#for pos in l:    \n#    if pos.id == _id:\n#        object = pos\n#        break\nreturn { \"ret\": task_id }\n#return { \"object\": object }\n"
                     },
                     [
                         {
