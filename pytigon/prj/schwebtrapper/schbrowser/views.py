@@ -35,9 +35,8 @@ from .models import history
 from pytigon_lib.schhttptools import httpclient
 from html.parser import HTMLParser
 import re
-from pytigon_lib.schtasks.task import get_process_manager
 from pytigon_lib.schhttptools import httpclient
-
+from django_q.tasks import async_task, result
 
 PFORM = form_with_perms("schbrowser")
 
@@ -100,7 +99,7 @@ class MultiDownload(forms.Form):
         _id = task_manager.put(
             request, "Scan html pages", "@schbrowser:scan_html", user_parm=parm
         )
-
+        _id = async_task("schbrowser.tasks.scan_html", user_param=param)
         # l = task_manager.list_threads(all=True)
         object = task_manager.process_list[_id]
         # object = None
@@ -108,7 +107,8 @@ class MultiDownload(forms.Form):
         #    if pos.id == _id:
         #        object = pos
         #        break
-        return {"object": object}
+        return {"ret": task_id}
+        # return { "object": object }
 
 
 def view_multidownload(request, *argi, **argv):

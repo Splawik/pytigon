@@ -1,0 +1,17 @@
+{% extends 'template/base_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% block js_extrascipts %}
+        {{block.super}}
+{% endblock %}
+{% block extrastyle %}
+        {{block.super}}
+{% endblock %}
+{% block body_footer_scripts %}
+        {{block.super}}
+{% endblock %}
+{% block component_init %}
+          var component_init = [];
+{% endblock %}
+

@@ -1,0 +1,58 @@
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_title %}
+        Edition: {{object.name}}
+{% endblock %}
+{% block title %}
+        FORM:{{object.name}}
+{% endblock %}
+{% block edit_area_sch %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                <big><strong><i>
+                                        {% if field_name == 'process_code' %}
+                                                def process(self, request, queryset=None):
+                                        {% endif %}
+                                        {% if field_name == 'end_class_code' %}
+                                                class {{object.name}}(forms.Form):
+                                                <br/>
+                                                <table>
+                                                        <tr>
+                                                                <td width="50px"></td>
+                                                                <td> ...</td>
+                                                        </tr>
+                                                </table>
+                                        {% endif %}
+                                        {% if field_name == 'end_code' %}
+                                                class {{object.name}}(forms.Form):
+                                                <br/>
+                                                <table>
+                                                        <tr>
+                                                                <td width="50px"></td>
+                                                                <td> ...</td>
+                                                        </tr>
+                                                </table>
+                                                <br/>
+                                                < ---
+                                        {% endif %}
+                                    </i></strong></big>
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <CTRL-STYLEDTEXT NAME="EDITOR" WIDTH="100%" height="calc(100% - top {% if field_name == 'end_code' %}- 110{% else %}{% if field_name == 'end_class_code' %}-80{% else %}- 50{% endif %}{% endif %})" MINHEIGHT="300" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                                        <DATA>
+                                        {{txt|bencode}}
+                                        </DATA>
+                                </CTRL-STYLEDTEXT>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block edit_area %}
+        def process(self, request, queryset=None):
+        <code_editor id="ace_editor" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></code_editor>
+{% endblock %}
+
