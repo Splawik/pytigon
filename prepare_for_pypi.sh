@@ -1,7 +1,7 @@
 rm -rf /tmp/pytigon
 mkdir /tmp/pytigon
 cd pytigon
-python ptig.py manage_schdevtools prepare_installer_files 
+#python ptig.py manage_schdevtools prepare_installer_files 
 export DATA_PATH=/tmp/pytigon
 python ptig.py manage_schdevtools migrate
 python ptig.py manage_schdevtools createautouser
@@ -16,7 +16,6 @@ python ptig.py manage_scheditor migrate
 python ptig.py manage_scheditor createautouser
 python ptig.py manage_schportal migrate
 python ptig.py manage_schportal createautouser
-#python ptig.py schdevtools
 echo -n "[DEFAULT]
 GEN_TIME='" > /tmp/pytigon/install.ini
 echo -n $(date +"%Y-%m-%d %H:%M:%S") >> /tmp/pytigon/install.ini
