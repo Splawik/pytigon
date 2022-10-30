@@ -1,0 +1,29 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with form_width=800 form_height=600 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New url" %}
+{% endblock %}
+{% block list_row_header %}
+        <td>
+        Url
+        </td>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{object.reg_expr}}
+        </td>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

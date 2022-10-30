@@ -1,0 +1,33 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Install application' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_content_button %}
+        <button type="submit" value="Install" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Install">
+                <span class="fa fa-refresh">
+                </span>
+        </button>
+{% endblock %}
+{% block form_content_schbutton %}
+        <input type="submit" value="Install" class="btn btn-info" target="_self" widt="200" height="44">
+        </input>
+{% endblock %}
+{% block user_header %}
+        <th>Message</th>
+        <th>
+        action
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td> {{object}}</td>
+                <th>
+                </th>
+        </tr>
+{% endblock %}
+
