@@ -76,7 +76,7 @@ def run(param=None):
     os.environ["PYTIGON_ROOT_PATH"] = base_path
 
     if len(argv) > 1 and argv[1].startswith("manage"):
-        if "_" in argv[1]:
+        if argv[1].startswith("manage_"):
             x = argv[1].split("_", 1)
             app = x[1]
             from pytigon_lib.schtools.main_paths import get_main_paths
@@ -132,117 +132,146 @@ def run(param=None):
         path3 = os.path.join(PRJ_PATH, app)
         subprocess.run([get_executable()] + [os.path.join(path3, script)] + argv[2:])
 
-    elif len(argv) > 1 and argv[1].startswith("runserver"):
-        if "_" in argv[1]:
-            x = argv[1].split("_", 1)
-            app = x[1]
-
-            from pytigon_lib.schtools.main_paths import get_main_paths
-
-            paths = get_main_paths(app)
-            PRJ_PATH = paths["PRJ_PATH"]
-            DATA_PATH = paths["DATA_PATH"]
-
-            ret = schserw_init_prj_path(paths, app, param)
-
-            if ret:
-                app = ret[0]
-                PRJ_PATH = ret[1]
-
-            if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
-                from pytigon_lib.schtools.install_init import init
-
-                init(
-                    app,
-                    paths["ROOT_PATH"],
-                    DATA_PATH,
-                    PRJ_PATH,
-                    paths["STATIC_PATH"],
-                    [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
-                )
-
-            path3 = os.path.join(PRJ_PATH, app)
-            os.chdir(path3)
-            options = []
-            if not "-b" in argv[2:]:
-                address = "0.0.0.0"
-                options = ["-b", "0.0.0.0"]
-            else:
-                id = argv[2:].index("-b")
-                if id >= 0:
-                    address = argv[2:][id + 1]
-            options.append("asgi:application")
-            tmp = sys.argv
-            sys.argv = [""] + argv[2:] + options
-
-            if platform_name() == "Android":
-                from daphne.cli import CommandLineInterface
-
-                CommandLineInterface.entrypoint()
-            else:
-                try:
-                    from hypercorn.__main__ import main
-                except:
-                    from daphne.cli import CommandLineInterface
-
-                    CommandLineInterface.entrypoint()
-                    return
-
-                if "--with-gui" in argv:
-                    sys.argv.remove("--with-gui")
-
-                    # from pytigon.schserw import settings as schserw_settings
-                    # if ret:
-                    #    argv[1] = ret[0]
-                    #    schserw_settings.PRJ_PATH = ret[1]
-
-                    p = Process(target=main, args=(sys.argv[1:],))
-                    p.start()
-
-                    from pytigon_lib.schbrowser.schcef import run
-
-                    conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
-                    if conf:
-                        title = conf["DEFAULT"]["PRJ_TITLE"]
-                        run(
-                            "http://"
-                            + address.replace("0.0.0.0", "127.0.0.1")
-                            + "/"
-                            + app
-                            + "/",
-                            app,
-                            title,
-                        )
-                    else:
-                        run(
-                            "http://"
-                            + address.replace("0.0.0.0", "127.0.0.1")
-                            + "/"
-                            + app
-                            + "/",
-                            app,
-                            "Pytigon application",
-                        )
-
-                    p.kill()
-                else:
-                    main()
-            sys.argv = tmp
-            os.chdir(base_path)
-
-    elif len(argv) > 1 and (
-        argv[1].endswith(".py") or argv[1][-4:-1] == ".py" or argv[1] == "-m"
-    ):
-        app = argv[1]
+    elif len(argv) > 1 and argv[1].startswith("runserver_"):
+        x = argv[1].split("_", 1)
+        app = x[1]
 
         from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths(app)
+        PRJ_PATH = paths["PRJ_PATH"]
+        DATA_PATH = paths["DATA_PATH"]
+
+        ret = schserw_init_prj_path(paths, app, param)
+
+        if ret:
+            app = ret[0]
+            PRJ_PATH = ret[1]
+
+        if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
+            from pytigon_lib.schtools.install_init import init
+
+            init(
+                app,
+                paths["ROOT_PATH"],
+                DATA_PATH,
+                PRJ_PATH,
+                paths["STATIC_PATH"],
+                [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
+            )
+
+        path3 = os.path.join(PRJ_PATH, app)
+        os.chdir(path3)
+        options = []
+        if not "-b" in argv[2:]:
+            address = "0.0.0.0"
+            options = ["-b", "0.0.0.0"]
+        else:
+            id = argv[2:].index("-b")
+            if id >= 0:
+                address = argv[2:][id + 1]
+        options.append("asgi:application")
+        tmp = sys.argv
+        sys.argv = [""] + argv[2:] + options
+
+        from daphne.cli import CommandLineInterface
+
+        CommandLineInterface.entrypoint()
+
+        if "--with-gui" in argv:
+            sys.argv.remove("--with-gui")
+
+            p = Process(target=main, args=(sys.argv[1:],))
+            p.start()
+
+            from pytigon_lib.schbrowser.schcef import run
+
+            conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
+            if conf:
+                title = conf["DEFAULT"]["PRJ_TITLE"]
+                run(
+                    "http://"
+                    + address.replace("0.0.0.0", "127.0.0.1")
+                    + "/"
+                    + app
+                    + "/",
+                    app,
+                    title,
+                )
+            else:
+                run(
+                    "http://"
+                    + address.replace("0.0.0.0", "127.0.0.1")
+                    + "/"
+                    + app
+                    + "/",
+                    app,
+                    "Pytigon application",
+                )
+
+            p.kill()
+        else:
+            main()
+        sys.argv = tmp
+        os.chdir(base_path)
+
+    elif len(argv) > 1 and argv[1].startswith("python_"):
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        app = argv[1].split("_", 1)[1]
 
         paths = get_main_paths(app)
         ret = schserw_init_prj_path(paths, app, param)
         if ret:
             argv[1] = ret[0]
 
-        subprocess.run([get_executable()] + argv[1:])
+        subprocess.run([get_executable()] + argv[2:])
+
+    elif len(argv) > 1 and argv[1].startswith("pip_"):
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        app = argv[1].split("_", 1)[1]
+
+        paths = get_main_paths(app)
+        lib_path = os.path.join(paths["PRJ_PATH"], app, "prjlib")
+        ret = schserw_init_prj_path(paths, app, param)
+        if ret:
+            argv[1] = ret[0]
+
+        if "install" in argv:
+            subprocess.run(
+                [get_executable(), "-m", "pip", "install"]
+                + argv[2:]
+                + ["--target", lib_path]
+            )
+        else:
+            subprocess.run([get_executable(), "-m", "pip"] + argv[2:])
+
+    elif len(argv) > 1 and argv[1] == "python":
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths()
+        ret = schserw_init_prj_path(paths, None, param)
+        if ret:
+            argv[1] = ret[0]
+
+        subprocess.run([get_executable()] + argv[2:])
+    elif len(argv) > 1 and (
+        argv[1].endswith(".py")
+        or argv[1][-4:-1] == ".py"
+        or argv[1] == "-m"
+        or argv[1].startswith("$")
+    ):
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths()
+        ret = schserw_init_prj_path(paths, None, param)
+        if ret:
+            argv[1] = ret[0]
+        if argv[1].startswith("$"):
+            subprocess.run([get_executable(), "-m", argv[1][1:]] + argv[2:])
+        else:
+            subprocess.run([get_executable()] + argv[1:])
     else:
         help = False
         if len(argv) > 1 and argv[1] == "--help":

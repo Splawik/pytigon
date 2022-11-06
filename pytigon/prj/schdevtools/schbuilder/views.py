@@ -403,6 +403,10 @@ def locale_gen_internal(pk):
 
     base_path = settings.PRJ_PATH
     app_path = os.path.join(base_path, prj.name)
+    if not os.path.exists(app_path):
+        base_path = settings.PRJ_PATH_ALT
+        app_path = os.path.join(base_path, prj.name)
+
     locale_path = os.path.join(app_path, "locale")
 
     ext_apps = []
