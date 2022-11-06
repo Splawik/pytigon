@@ -162,56 +162,71 @@ def run(param=None):
 
         path3 = os.path.join(PRJ_PATH, app)
         os.chdir(path3)
+
+        wsgi = False
+
+        if "--noasgi" in argv:
+            sys.argv.remove("--noasgi")
+            wsgi = True
+
         options = []
-        if not "-b" in argv[2:]:
-            address = "0.0.0.0"
-            options = ["-b", "0.0.0.0"]
+        listen = None
+        port = "8000"
+        for item in argv[2:]:
+            if item.startswith("--listen="):
+                listen = item.split("=")[1]
+                if ":" in listen:
+                    address, port = listen.split(":")
+                else:
+                    address = listen
+                    port = "8000"
+                sys.argv.remove(item)
+                break
+        if listen:
+            if wsgi:
+                options = ["--listen", listen]
+            else:
+                options = ["-b", "0.0.0.0", "-p", port]
         else:
-            id = argv[2:].index("-b")
-            if id >= 0:
-                address = argv[2:][id + 1]
-        options.append("asgi:application")
+            address = "0.0.0.0"
+            if wsgi:
+                options = ["--listen", "0.0.0.0:8000"]
+            else:
+                options = ["-b", "0.0.0.0", "-p", port]
+
+        if wsgi:
+            options.append("wsgi:application")
+            wsgi = True
+        else:
+            options.append("asgi:application")
+
         tmp = sys.argv
-        sys.argv = [""] + argv[2:] + options
-
-        from daphne.cli import CommandLineInterface
-
-        CommandLineInterface.entrypoint()
 
         if "--with-gui" in argv:
             sys.argv.remove("--with-gui")
+            sys.argv.append("--embededserver")
+            sys.argv.append("--server_only")
+            sys.argv.append("--listen=%s:%s" % (address, str(port)))
+            params = ""
+            if wsgi:
+                params += "wsgi"
+                sys.argv.append("--extra=%s" % params)
+            sys.argv[1] = app
+            from pytigon_gui.pytigon import main
 
-            p = Process(target=main, args=(sys.argv[1:],))
-            p.start()
-
-            from pytigon_lib.schbrowser.schcef import run
-
-            conf = get_app_conf(os.path.join(PRJ_PATH, argv[1]))
-            if conf:
-                title = conf["DEFAULT"]["PRJ_TITLE"]
-                run(
-                    "http://"
-                    + address.replace("0.0.0.0", "127.0.0.1")
-                    + "/"
-                    + app
-                    + "/",
-                    app,
-                    title,
-                )
-            else:
-                run(
-                    "http://"
-                    + address.replace("0.0.0.0", "127.0.0.1")
-                    + "/"
-                    + app
-                    + "/",
-                    app,
-                    "Pytigon application",
-                )
-
-            p.kill()
-        else:
             main()
+        else:
+            sys.argv = [""] + argv[2:] + options
+            print("Web server: ", sys.argv[1:])
+            if wsgi:
+                from waitress.runner import run
+
+                run()
+            else:
+                from daphne.cli import CommandLineInterface
+
+                CommandLineInterface.entrypoint()
+
         sys.argv = tmp
         os.chdir(base_path)
 
