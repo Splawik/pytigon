@@ -186,14 +186,26 @@ def run(param=None):
             if wsgi:
                 options = ["--listen", listen]
             else:
-                options = ["-b", "0.0.0.0", "-p", port]
+                if not ("-p" in sys.argv or "--port" in sys.argv):
+                    options += ("-p", port)
+                if not ("-b" in sys.argv or "--bind" in sys.argv):
+                    options += [
+                        "-b",
+                        address,
+                    ]
         else:
             address = "0.0.0.0"
             if wsgi:
-                options = ["--listen", "0.0.0.0:8000"]
+                if not ("--port" in sys.argv or "--host" in sys.argv):
+                    options += ["--listen", "0.0.0.0:8000"]
             else:
-                options = ["-b", "0.0.0.0", "-p", port]
-
+                if not ("-p" in sys.argv or "--port" in sys.argv):
+                    options += ("-p", port)
+                if not ("-b" in sys.argv or "--bind" in sys.argv):
+                    options += [
+                        "-b",
+                        "0.0.0.0",
+                    ]
         if wsgi:
             options.append("wsgi:application")
             wsgi = True
