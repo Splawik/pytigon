@@ -401,10 +401,10 @@ def make_messages(src_path, path, name, outpath=None, ext_locales=[]):
 def locale_gen_internal(pk):
     prj = models.SChAppSet.objects.get(id=pk)
 
-    base_path = settings.PRJ_PATH
+    base_path = settings.PRJ_PATH_ALT
     app_path = os.path.join(base_path, prj.name)
     if not os.path.exists(app_path):
-        base_path = settings.PRJ_PATH_ALT
+        base_path = settings.PRJ_PATH
         app_path = os.path.join(base_path, prj.name)
 
     locale_path = os.path.join(app_path, "locale")
@@ -1870,9 +1870,12 @@ def translate_sync(request, pk):
     locale_obj = models.SChLocale.objects.get(id=pk)
     prj = locale_obj.parent
 
-    base_path = settings.PRJ_PATH
-
+    base_path = settings.PRJ_PATH_ALT
     app_path = os.path.join(base_path, prj.name)
+    if not os.path.exists(app_path):
+        base_path = settings.PRJ_PATH
+        app_path = os.path.join(base_path, prj.name)
+
     locale_path = os.path.join(app_path, "locale")
     lang_path = os.path.join(locale_path, locale_obj.name)
     msg_path = os.path.join(lang_path, "LC_MESSAGES")

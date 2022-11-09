@@ -372,7 +372,7 @@ def run(param=None):
                     )
 
                 def on_loaded():
-                    webview.windows[0].loaded -= on_loaded
+                    webview.windows[0].events.loaded -= on_loaded
 
                     # from pytigon_lib.schbrowser.schcef import run
                     # if conf:
@@ -392,7 +392,7 @@ def run(param=None):
                     start_content = start_request.str()
                     webview.windows[0].load_html(start_content, "http://127.0.0.5/")
 
-                window.loaded += on_loaded
+                window.events.loaded += on_loaded
                 webview.start(debug=True)
             else:
                 from pytigon_gui.pytigon import main
