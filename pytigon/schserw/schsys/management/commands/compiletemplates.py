@@ -23,7 +23,9 @@ class Command(BaseCommand):
         if settings.PRJ_NAME == "_schall":
             base_path = settings.ROOT_PATH
         else:
-            base_path = os.path.join(settings.PRJ_PATH_ALT, settings.PRJ_NAME)
+            base_path = os.path.join(settings.PRJ_PATH, settings.PRJ_NAME)
+            if not os.path.exists(base_path):
+                base_path = os.path.join(settings.PRJ_PATH_ALT, settings.PRJ_NAME)
         print(settings.PRJ_PATH, settings.PRJ_NAME)
         l = len(base_path)
         itemplate_path = os.path.join(base_path, "templates_src")

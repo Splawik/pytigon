@@ -273,3 +273,5 @@ WEBPUSH_SETTINGS = {
     "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud"
 }
 
+
+LANGUAGES = [["en", "English"], ["pl", "Polish"], ['fr', "france"]]
