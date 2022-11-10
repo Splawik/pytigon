@@ -116,7 +116,7 @@ else:
         db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES["default"]
         DATABASES = {
-            "default": env.db(),
+            "default": ENV.db(),
         }
         DATABASES["local"] = db_local
 
@@ -219,7 +219,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.11.09 14:51:22"
+GEN_TIME = "2022.11.10 10:27:03"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():

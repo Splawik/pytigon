@@ -42,12 +42,12 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
-if PRODUCTION_VERSION and PLATFORM_TYPE == "webserver" and not MAIN_PRJ:
+if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     URL_ROOT_FOLDER = "_schplaywright"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
-    STATIC_URL = "/" + URL_ROOT_FOLDER + "/static/"
-    MEDIA_URL = "/" + URL_ROOT_FOLDER + "/site_media/"
-    MEDIA_URL_PROTECTED = "/" + URL_ROOT_FOLDER + "/site_media_protected/"
+    STATIC_URL = URL_ROOT_FOLDER + "/static/"
+    MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
+    MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
 from pytigon_lib.schtools.install_init import init
 
@@ -116,7 +116,7 @@ else:
         db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES["default"]
         DATABASES = {
-            "default": env.db(),
+            "default": ENV.db(),
         }
         DATABASES["local"] = db_local
 
@@ -126,7 +126,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.04.04 18:37:53"
+GEN_TIME = "2022.11.10 10:30:21"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

@@ -20,15 +20,15 @@
 %% body_footer_scripts
     {{block.super}}
     
-    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     {% component 'schcomponents/components/ptig-xterm.js' %}
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
     
     
 
 %% component_init
         .var initial_state={};
         .GLOBAL_BUS.set_state(initial_state);
-        .var component_init = [ "ptig-codeeditor.js", "ptig-xterm.js",  ];  
+        .var component_init = [ "ptig-xterm.js", "ptig-codeeditor.js",  ];  
 
 %% extrahead
     {{block.super}}

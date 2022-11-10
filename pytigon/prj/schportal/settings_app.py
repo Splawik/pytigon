@@ -116,7 +116,7 @@ else:
         db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES["default"]
         DATABASES = {
-            "default": env.db(),
+            "default": ENV.db(),
         }
         DATABASES["local"] = db_local
 
@@ -134,7 +134,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.10.05 13:50:38"
+GEN_TIME = "2022.11.10 10:29:56"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
