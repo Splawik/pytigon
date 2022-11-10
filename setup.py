@@ -13,6 +13,7 @@ def package_files(directory, ext=None):
 
 extra_files = package_files("pytigon/static")
 extra_files += package_files("pytigon/templates")
+extra_files += package_files("pytigon/templates_src")
 extra_files += package_files("pytigon/ext_prg")
 extra_files += package_files("pytigon/appdata")
 extra_files += package_files("pytigon/install")
