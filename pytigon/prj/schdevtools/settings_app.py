@@ -219,7 +219,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.11.10 10:27:03"
+GEN_TIME = "2022.11.10 17:54:31"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
@@ -273,5 +273,3 @@ WEBPUSH_SETTINGS = {
     "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud"
 }
 
-
-LANGUAGES = [["en", "English"], ["pl", "Polish"], ['fr', "france"]]
