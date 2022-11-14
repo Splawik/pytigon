@@ -24,6 +24,7 @@ class Command(BaseCommand):
             template_paths = [
                 os.path.join(settings.ROOT_PATH, "templates_src"),
                 os.path.join(settings.ROOT_PATH, "appdata", "plugins_src"),
+                os.path.join(settings.DATA_PATH, "appdata", "plugins_src"),
             ]
         else:
             template_paths = [

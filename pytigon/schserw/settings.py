@@ -296,6 +296,7 @@ if PLATFORM_TYPE != "webserver":
         "whitenoise.middleware.WhiteNoiseMiddleware",
     )
     INSTALLED_APPS.append("whitenoise.runserver_nostatic")
+    WHITENOISE_USE_FINDERS = True
 
 INSTALLED_APPS.append("django.contrib.staticfiles")
 
