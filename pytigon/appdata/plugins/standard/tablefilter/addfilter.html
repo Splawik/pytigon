@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "plugin_form.html" %}
 {% block pythoncode %}
         <script language="python">
@@ -9,6 +8,7 @@
             self.select = True
             grid = self.get_parent_form().last_control_with_focus.GetParent()
             grid.GetTable().filter_by(1)
+
         def on_add_filter(self, event):
             grid = self.get_parent_form().last_control_with_focus.GetParent()
             value = self.ADDFILTER.GetValue()
@@ -18,21 +18,24 @@
                 mask = '-'+value
             grid.GetTable().append_sel_mask(mask)
             self.on_exit(event)
+
         def on_exit(self, event):
             self.any_parent_command('Cancel', True)
+
         def StyleSubtract(self):
             self.TITLE.SetLabel('Deselect: ')
             self.select = False
+
 </script>
 {% endblock %}
 {% block content %}
         <table width="100%" height="100%">
                 <tr>
-                        <td><CTRL-STATICTEXT NAME="TITLE" LABEL="   Select:"></CTRL-STATICTEXT></td>
-                        <td><CTRL-TEXT NAME="ADDFILTER" STYLE="wx.TE_PROCESS_ENTER" WIDTH="300"></CTRL-TEXT></td>
-                        <td><CTRL-BITMAPBUTTON NAME="ADD" SRC="wx.ART_TICK_MARK"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-STATICTEXT name="TITLE" label="Select:"></CTRL-STATICTEXT></td>
+                        <td><CTRL-TEXT name="ADDFILTER" width="300" process_enter="1"></CTRL-TEXT></td>
+                        <td><CTRL-BITMAPBUTTON name="ADD" src="wx.ART_TICK_MARK"></CTRL-BITMAPBUTTON></td>
                         <td width="99%"></td>
-                        <td><CTRL-BITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON name="EXIT" src="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
                 </tr>
         </table>
 {% endblock %}

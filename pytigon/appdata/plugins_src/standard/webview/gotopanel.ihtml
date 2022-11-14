@@ -1,5 +1,3 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "plugin_form.html"
 
 %% pythoncode
@@ -37,7 +35,7 @@
 %% content
     table width=100%,,,height=100%
         tr
-            td:::CTRL-STATICTEXT LABEL=Address:
-            td:::CTRL-TEXT NAME=GOHREF,,,width=100%-200
-            td:::CTRL-BITMAPBUTTON NAME=GO,,,SRC=client://actions/go-jump.png
-            td:::CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+            td:::CTRL-STATICTEXT label=Address:
+            td:::CTRL-TEXT name=GOHREF,,,process_enter=1,,,width=100%-200
+            td:::CTRL-BITMAPBUTTON name=GO,,,src=client://actions/go-jump.png
+            td:::CTRL-BITMAPBUTTON name=EXIT,,,src=wx.ART_CROSS_MARK

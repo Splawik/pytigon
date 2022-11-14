@@ -11,18 +11,22 @@
             self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
             self.WEB.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
             wx.GetApp().GetTopWindow().desktop.Bind(aui.EVT_AUINOTEBOOK_BG_RIGHT_UP, self.on_new_page)
+
         def OnKeyDown(self, event):
             key = event.GetKeyCode()
             if key in (ord('G'), ord('L')) and event.ControlDown():
                 self.new_child_page("^standard/webview/gotopanel.html", title="Go")
                 return
             event.Skip()
+
         def on_new_page(self, event):
             from pytigon_gui.guilib.events import ID_WEB_NEW_WINDOW
             wx.PostEvent(wx.GetApp().GetTopWindow(), wx.CommandEvent(wx.EVT_MENU.typeId, winid=ID_WEB_NEW_WINDOW))
+
 </script>
 {% endblock %}
-{% block form_bar %}{% endblock %}
+{% block form_bar %}
+{% endblock %}
 {% block extrahead %}
         <meta name="NO_VSCROLLBAR" content="True" />
 {% endblock %}
@@ -37,7 +41,8 @@
                 <tr><td> hybrid </td><td> 1 </td></tr>
                 <tr><td> csrf_token </td><td> {{csrf_token}} </td></tr>
         </table>
-        <meta name="NO_VSCROLLBAR" content="True" />
+        <meta name="NO_VSCROLLBAR" content="True">
+        </meta>
 {% endblock %}
 {% block content %}
         <CTRL-HTML2 NAME="WEB" WIDTH="100%" HEIGHT="100%"></CTRL-HTML2>

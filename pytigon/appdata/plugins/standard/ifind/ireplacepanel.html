@@ -1,7 +1,7 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "standard/ifind/ifindpanel.html" %}
 {% block extrahead %}
-        <meta name="vertical_position" content="bottom" />
+        <meta name="vertical_position" content="bottom">
+        </meta>
 {% endblock %}
 {% block pythoncode %}
         <script language="python">
@@ -13,16 +13,21 @@
             self.EXIT.Bind(wx.EVT_BUTTON, self.OnExit)
             self.REPLACE.Bind(wx.EVT_BUTTON, self.OnReplace)
             self.REPLACE_ALL.Bind(wx.EVT_BUTTON, self.OnReplaceAll)
+
             self.search_txt = ""
             self.SEARCH.SetFocus()
+
         def SearchText(self, regex=False, back=False, corectSelection=False):
             editor = self.get_parent_form().EDITOR
             text   = self.search_txt
+
             flags = wx.stc.STC_FIND_MATCHCASE
             if regex:
                 flags = flags | wx.stc.STC_FIND_REGEXP
+
             if not back and corectSelection:
                 editor.SetSelectionStart(editor.GetSelectionEnd())
+
             editor.SearchAnchor()
             if not back:
                 # Search forward
@@ -42,47 +47,58 @@
                     res = editor.SearchPrev(flags, text)
             editor.EnsureCaretVisible()
             return res
+
+
         def OnDoSearch(self, event):
             self.SearchText(corectSelection=True)
+
         def OnNext(self, event):
             self.SearchText(corectSelection=True)
+
         def OnPrev(self, event):
             self.SearchText(back=True)
+
         def Search(self):
             self.SearchText()
+
         def OnKeyUp(self, event):
             value = self.SEARCH.GetValue()
             if value!=self.search_txt:
                 self.search_txt=value
                 self.SearchText()
             event.Skip()
+
         def OnExit(self, event):
             self.any_parent_command('Cancel', True)
+
         def OnReplace(self, event):
             editor = self.GetParentPanel()['EDITOR']
             editor.ReplaceSelection(self.REPLACE_TXT.GetValue())
+
         def OnReplaceAll(self, event):
             editor = self.get_parent_form().EDITOR
             self.search_txt=self.SEARCH.GetValue()
             while(self.SearchText()>0):
                 editor.ReplaceSelection(self.REPLACE_TXT.GetValue())
+
+
 </script>
 {% endblock %}
 {% block content %}
         <table width="100%" height="100%">
                 <tr>
-                        <td><CTRL-TEXT NAME="SEARCH"></CTRL-TEXT></td>
-                        <td><CTRL-BITMAPBUTTON NAME="PREV" SRC="wx.ART_GO_UP"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-TEXT name="SEARCH" process_enter="1"></CTRL-TEXT></td>
+                        <td><CTRL-BITMAPBUTTON name="PREV" src="wx.ART_GO_UP"></CTRL-BITMAPBUTTON></td>
                         <td><CTRL-CHECKBOX label="Whole Word"></CTRL-CHECKBOX></td>
-                        <td><CTRL-BUTTON label="Replace" NAME="REPLACE"></CTRL-BUTTON></td>
+                        <td><CTRL-BUTTON label="Replace" name="REPLACE"></CTRL-BUTTON></td>
                         <td width="99%"></td>
-                        <td><CTRL-BITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON name="EXIT" src="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
                 </tr>
                 <tr>
-                        <td><CTRL-TEXT NAME="REPLACE_TXT" WIDTH="200"></CTRL-TEXT></td>
-                        <td><CTRL-BITMAPBUTTON NAME="NEXT" SRC="wx.ART_GO_DOWN"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-TEXT name="REPLACE_TXT" process_enter="1" width="200"></CTRL-TEXT></td>
+                        <td><CTRL-BITMAPBUTTON name="NEXT" src="wx.ART_GO_DOWN"></CTRL-BITMAPBUTTON></td>
                         <td><CTRL-CHECKBOX label="Regular Expression"></CTRL-CHECKBOX></td>
-                        <td><CTRL-BUTTON label="Replace all" NAME="REPLACE_ALL"></CTRL-BUTTON></td>
+                        <td><CTRL-BUTTON label="Replace all" name="REPLACE_ALL"></CTRL-BUTTON></td>
                         <td width="99%"></td>
                         <td></td>
                 </tr>

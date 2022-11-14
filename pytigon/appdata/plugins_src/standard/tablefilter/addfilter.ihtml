@@ -1,5 +1,3 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "plugin_form.html"
 
 %% pythoncode
@@ -32,8 +30,8 @@
 %% content
     table width=100%,,,height=100%
         tr
-            td:::CTRL-STATICTEXT NAME=TITLE,,,LABEL=   Select:
-            td:::CTRL-TEXT NAME=ADDFILTER,,,STYLE=wx.TE_PROCESS_ENTER,,,WIDTH=300
-            td:::CTRL-BITMAPBUTTON NAME=ADD,,,SRC=wx.ART_TICK_MARK
+            td:::CTRL-STATICTEXT name=TITLE,,,label=Select:
+            td:::CTRL-TEXT name=ADDFILTER,,,width=300,,,process_enter=1
+            td:::CTRL-BITMAPBUTTON name=ADD,,,src=wx.ART_TICK_MARK
             td width=99%
-            td:::CTRL-BITMAPBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
+            td:::CTRL-BITMAPBUTTON name=EXIT,,,src=wx.ART_CROSS_MARK

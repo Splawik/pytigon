@@ -1,7 +1,8 @@
 {# -*- coding: utf-8 -*- #}
 {% extends "plugin_form.html" %}
 {% block extrahead %}
-        <meta name="vertical_position" content="bottom" />
+        <meta name="vertical_position" content="bottom">
+        </meta>
 {% endblock %}
 {% block pythoncode %}
         <script language="python">
@@ -12,13 +13,16 @@
             self.set_acc_key_tab(self.GOLINE, a_table)
             self.GOLINE.SetMax(999999)
             self.GOLINE.SetValue('')
+
         def on_go_to(self, event):
             editor = self.get_parent_form().EDITOR
             value = self.GOLINE.GetValue()
             editor.GotoLine(int(value)-1)
             self.on_exit(event)
+
         def on_exit(self, event):
             self.any_parent_command('on_child_form_cancel')
+
 </script>
 {% endblock %}
 {% block content %}

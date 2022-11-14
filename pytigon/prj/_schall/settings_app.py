@@ -126,7 +126,9 @@ for app in APPS:
                 sys.path.append(p2)
 
     if not app in [x if type(x) == str else x.label for x in INSTALLED_APPS]:
-        INSTALLED_APPS.append(get_app_config(app))
+        a = get_app_config(app)
+        if not app in INSTALLED_APPS:
+            INSTALLED_APPS.append(get_app_config(app))
         aa = app.split(".")
         for root_path in [PRJ_PATH, PRJ_PATH_ALT]:
             base_path = os.path.join(root_path, aa[0])
@@ -138,7 +140,8 @@ for app in APPS:
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
 for app in APPS_EXT:
-    INSTALLED_APPS.append(app)
+    if not app in INSTALLED_APPS:
+        INSTALLED_APPS.append(app)
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
@@ -182,7 +185,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.11.10 10:29:38"
+GEN_TIME = "2022.11.14 19:03:03"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

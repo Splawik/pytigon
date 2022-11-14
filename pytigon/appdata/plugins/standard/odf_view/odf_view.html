@@ -5,12 +5,14 @@
         def init_form(self):
             import os
             self.os = os
+
         def signal_from_child(self, child, signal):
             if signal=='set_bitmap_list':
                 bitmaps = {
                     "move":"client://actions/go-up.png",
                 }
                 child.set_bitmaps(bitmaps)
+
         def filter_url(self, type, url):
             if '|edit' in url:
                 try:
@@ -23,16 +25,17 @@
             if '|delete' in url:
                 return True
             return None
+
 </script>
 {% endblock %}
 {% block content %}
         <table width="100%">
                 <tr>
-                        <td><CTRLSTATICTEXT LABEL="downloaded files:"></CTRLSTATICTEXT></td>
-                        <td><CTRLBITMAPBUTTON NAME="deleteall" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
-                        <td><CTRLBITMAPBUTTON NAME="goto" SRC="wx.ART_TICK_MARK"></CTRLBITMAPBUTTON></td>
+                        <td><CTRL-STATICTEXT LABEL="downloaded files:"></CTRL-STATICTEXT></td>
+                        <td><CTRL-BITMAPBUTTON NAME="deleteall" SRC="wx.ART_TICK_MARK"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON NAME="goto" SRC="wx.ART_TICK_MARK"></CTRL-BITMAPBUTTON></td>
                         <td width="99%"></td>
-                        <td><CTRLBITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRLBITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
                 </tr>
         </table>
         <table name="tabsort" class="tabsort">
@@ -50,7 +53,9 @@
                                 <td>
                                         <a href="{{df.0}}|move" name="move" title="move">move</a>
                                         <a href="{{df.0}}|edit" name="edit" title="update">update</a>
-                                        <a href="{{df.0}}|delete" name="delete" title="delete">delete</a>
+                                        <a href="{{df.0}}|delete" name="delete" title="delete">
+                                        delete
+                                        </a>
                                 </td>
                         </tr>
                 {% endfor %}

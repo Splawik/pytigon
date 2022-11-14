@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "plugin_form.html" %}
 {% block pythoncode %}
         <script language="python">
@@ -11,31 +10,36 @@
             #self.get_parent_form().WEB.Show(False)
             #self.get_parent_form().WEB.Show(True)
             self.GOHREF.SetFocus()
+
         def go(self):
             web = self.get_parent_form().WEB
             value = self.GOHREF.GetValue()
             web.go(value)
             web.clear_history()
             self.any_parent_command('on_child_form_cancel')
+
         def OnGoTo(self, event):
             self.go()
+
         def OnKeyDown(self, event):
             key = event.GetKeyCode()
             if key==wx.WXK_RETURN:
                 self.go()
             else:
                 event.Skip()
+
         def OnExit(self, event):
             self.any_parent_command('on_child_form_cancel')
+
 </script>
 {% endblock %}
 {% block content %}
         <table width="100%" height="100%">
                 <tr>
-                        <td><CTRL-STATICTEXT LABEL="Address:"></CTRL-STATICTEXT></td>
-                        <td><CTRL-TEXT NAME="GOHREF" width="100%-200"></CTRL-TEXT></td>
-                        <td><CTRL-BITMAPBUTTON NAME="GO" SRC="client://actions/go-jump.png"></CTRL-BITMAPBUTTON></td>
-                        <td><CTRL-BITMAPBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-STATICTEXT label="Address:"></CTRL-STATICTEXT></td>
+                        <td><CTRL-TEXT name="GOHREF" process_enter="1" width="100%-200"></CTRL-TEXT></td>
+                        <td><CTRL-BITMAPBUTTON name="GO" src="client://actions/go-jump.png"></CTRL-BITMAPBUTTON></td>
+                        <td><CTRL-BITMAPBUTTON name="EXIT" src="wx.ART_CROSS_MARK"></CTRL-BITMAPBUTTON></td>
                 </tr>
         </table>
 {% endblock %}

@@ -1,5 +1,3 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "form.html"
 
 % load exfiltry
@@ -108,6 +106,6 @@
     table width=100%,,,height=100%
         tr
             td cellpadding=0,,,width=36,,,height=36
-                CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                CTRL-NOBG_BUTTON width=36,,,height=36,,,name=EXIT,,,src=client://emblems/emblem-unreadable.png
             td width=100%-40
-                CTRL-TEXT NAME=SEARCH,,,WIDTH=300
+                CTRL-TEXT name=SEARCH,,,width=300,,,process_enter=1
