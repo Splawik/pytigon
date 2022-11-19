@@ -1,11 +1,11 @@
 %extends 'template/tablet_base.html'
 
-%load webpush_notifications
+% load pwa_webpush
 
 %% extrahead
     %if standard_web_browser and env.PWA:
-        % include "schsys/webpush_notifications.html"
-        % include "schsys/pwa.html"
+        % progressive_web_app_meta
+        % webpush_header
     {{ block.super }}
 
 %% system_menu
@@ -22,6 +22,6 @@
                     button type=button,,,class=close,,,data-bs-dismiss=modal
                         span...&times;
                 div class=modal-body
-                    % webpush_button with_class="btn btn-outline-info"
+                    % webpush_button
                 div class=modal-footer
                     button type=button,,,class=btn btn-secondary,,,data-bs-dismiss=modal...Close

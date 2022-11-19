@@ -117,18 +117,17 @@ if settings.REST:
     )
 
 if settings.GRAPHQL or settings.REST:
-    
+
     _urlpatterns.extend(
         [
-            path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+            path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
         ]
     )
 
 if settings.PWA:
     _urlpatterns.extend(
         [
-            path("", include("pwa.urls")),
-            path("webpush/", include("webpush.urls")),
+            path(r"", include("pwa_webpush.urls")),
         ]
     )
 

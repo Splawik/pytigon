@@ -324,7 +324,7 @@ def run(param=None):
             #    argv[1] = ret[0]
             #    schserw_settings.PRJ_PATH = ret[1]
 
-            if "-xb" in sys.argv or "--xembeded-browser" in sys.argv:
+            if "--pywebview" in sys.argv:
                 import webview
                 from pytigon.pytigon_request import init, request
 

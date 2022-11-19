@@ -276,14 +276,13 @@ except:
     INSTALLED_APPS.append("_schserverless.schnocompress")
 
 if ENV("PWA"):
-    INSTALLED_APPS.append("pwa")
-    INSTALLED_APPS.append("webpush")
+    INSTALLED_APPS.append("pwa_webpush")
 
     if DEBUG:
         WEBPUSH_SETTINGS = {
             "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
             "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
-            "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud",
+            "VAPID_ADMIN_EMAIL": "auto@pytigon.eu",
         }
     PWA = True
 else:
