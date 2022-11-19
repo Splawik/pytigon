@@ -287,9 +287,8 @@ FileType_CHOICES = [
     ("p", "Plugin code"),
     ("i", "Plugin template"),
     ("l", "Library code"),
-    ("C", "Library c code"),
-    ("x", "Library cython code"),
     ("s", "GraphQL schema"),
+    ("r", "Rest api"),
     ("j", "Frontend view"),
     ("T", "Frontend template"),
 ]

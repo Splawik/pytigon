@@ -110,11 +110,62 @@ if settings.GRAPHQL:
     )
 
 if settings.REST:
+    from drf_yasg import openapi
+    from drf_yasg.views import get_schema_view
+    from rest_framework import permissions
+
+    schema_view = get_schema_view(
+        openapi.Info(
+            title="Rest api",
+            default_version="v1",
+            description="Rest api for pytigon application",
+            contact=openapi.Contact(email="admi@epytigon.eu"),
+        ),
+        public=True,
+        permission_classes=(permissions.AllowAny,),
+    )
+
     _urlpatterns.extend(
         [
             path("api-auth/", include("rest_framework.urls")),
+            path(
+                "api/",
+                schema_view.with_ui("swagger", cache_timeout=0),
+                name="schema-swagger-ui",
+            ),
         ]
     )
+
+    for app in settings.INSTALLED_APPS:
+        if isinstance(app, AppConfigMod):
+            pos = app.name
+        else:
+            pos = app
+            if (
+                pos.startswith("django")
+                or pos.startswith("debug")
+                or pos.startswith("registration")
+                or pos.startswith("bootstrap_admin")
+                or pos.startswith("channels")
+                or pos.startswith("django_bootstrap5")
+            ):
+                continue
+        module_name = "%s.rest_api" % str(pos)
+        try:
+            m = importlib.import_module(module_name)
+            if hasattr(m, "urlpatterns"):
+                _urlpatterns.extend(
+                    [
+                        path(
+                            "api/%s/" % pos,
+                            include("%s.rest_api" % pos),
+                            name="api_%s" % pos,
+                        ),
+                    ]
+                )
+        except ModuleNotFoundError:
+            pass
+
 
 if settings.GRAPHQL or settings.REST:
 

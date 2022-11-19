@@ -847,12 +847,7 @@ def build_prj(pk):
             app.name + "/__init__.py",
             {"appmenus": appmenus, "app": app, "user_param": user_param},
         )
-        template_to_file(
-            base_path,
-            "schema",
-            app.name + "/schema.py",
-            {"appmenus": appmenus, "app": app, "user_param": user_param},
-        )
+        # template_to_file(base_path, "schema", app.name+"/schema.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
 
         for file_obj in app.schfiles_set.all():
             if file_obj.file_type == "f":
@@ -982,6 +977,8 @@ def build_prj(pk):
                     file_name += ".c"
             elif file_obj.file_type == "s":
                 file_name = base_path + "/" + app.name + "/schema.py"
+            elif file_obj.file_type == "r":
+                file_name = base_path + "/" + app.name + "/rest_api.py"
             else:
                 file_name = None
 
