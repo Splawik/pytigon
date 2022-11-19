@@ -2,7 +2,6 @@ from graphene_django import DjangoObjectType
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import graphene
-import graphql_jwt
 import importlib
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -57,8 +56,7 @@ class _Query:
 
 
 class _Mutation:
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-    verify_token = graphql_jwt.Verify.Field()
+    pass
 
 
 class PublicQuery(graphene.ObjectType, _Query):
@@ -101,8 +99,7 @@ class Query(graphene.ObjectType, _Query):
 
 
 class Mutation(graphene.ObjectType, _Mutation):
-    refresh_token = graphql_jwt.Refresh.Field()
-    update_user = UserMutation.Field()
+    pass
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

@@ -27,20 +27,56 @@ function pyodide_url(url) {
   return false;
 }
 
+var CALLBACK_ID = 0
+var CALLBACK_HANDLER = {}
+
+function callback_from_python(id, data) {
+  CALLBACK_HANDLER[id](atob(data));
+  delete CALLBACK_HANDLER[id];
+}
+
+function wx_get(url, params) {
+  return new Promise( function(resolve, reject) {
+    function callback(data) {
+      resolve(data);
+    }  
+    CALLBACK_HANDLER[CALLBACK_ID] = callback;
+    var message
+    if (params != null && params != "")
+      message =  JSON.stringify({"action": "post", "callback_id": CALLBACK_ID, "url": url, "params": params});
+    else {
+      message =  JSON.stringify({"action": "get", "callback_id": CALLBACK_ID, "url": url});
+    }
+    CALLBACK_ID += 1;
+    wx_msg.postMessage(message);    
+  });
+}
+
+
 function pywebview_url(url) {
-  if (window.hasOwnProperty('pywebview')) {
+  if (window.hasOwnProperty('pywebview') || window.hasOwnProperty('wx_msg')) {
     return true;
   }
   return false;
 }
 
 async function pywebview_get_response(url, params) {
-  if (params != null && params != "") {
-    ret = await window.pywebview.api.get(url, params);
+  console.log("A1");
+  if (window.hasOwnProperty('wx_msg')) {
+    console.log("A2");
+    ret = await wx_get(url, params);
+    console.log("A3");
+    console.log(ret);
     return ret;
-  } else {
-    ret = await window.pywebview.api.get(url, null);
-    return ret;
+  }
+  else {
+    if (params != null && params != "") {
+      ret = await window.pywebview.api.get(url, params);
+      return ret;
+    } else {
+      ret = await window.pywebview.api.get(url, null);
+      return ret;
+    }
   }
 }
 
