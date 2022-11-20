@@ -36,6 +36,7 @@ import pytigon
 from django.conf import settings
 import django.db.models.fields as fields
 import django.db.models.fields.related as related
+from django.template.loader import render_to_string
 from django.forms import fields as form_fields
 from django.forms import models as form_model_fields
 from pytigon_lib.schdjangoext import formfields as ext_form_fields
@@ -2063,6 +2064,13 @@ class SChFiles(models.Model):
         blank=True,
         editable=False,
     )
+
+    def save(self, *argi, **argv):
+        if self.file_type == "r" and not self.content:
+            self.content = render_to_string("schbuilder/wzr/rest_api.html", {})
+        elif self.file_type == "s" and not self.content:
+            self.content = render_to_string("schbuilder/wzr/graphql_api.html", {})
+        super().save(*argi, **argv)
 
 
 admin.site.register(SChFiles)
