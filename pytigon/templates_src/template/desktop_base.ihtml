@@ -124,7 +124,7 @@
             style===>
                 @font-face {
                     font-family: 'ForkAwesome';
-                    src: url(data:font/truetype;charset=utf-8;base64, {% to_b64 'fonts/fork-awesome/fonts/forkawesome-webfont.ttf' %}) format('truetype');
+                    src: url(data:font/truetype;charset=utf-8;base64,{% to_b64 'fonts/fork-awesome/fonts/forkawesome-webfont.woff2' %}) format('woff2');
                     font-weight: normal;
                     font-style: normal;
                 }
