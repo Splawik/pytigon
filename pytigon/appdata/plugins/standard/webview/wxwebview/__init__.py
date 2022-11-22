@@ -27,6 +27,7 @@ import json
 import wx.html2
 
 from pytigon.pytigon_request import init, request
+from django.conf import settings
 
 
 def init_plugin_web_view(
@@ -180,7 +181,14 @@ def init_plugin_web_view(
 
         def load_str(self, data, base=None):
             self.LoadURL("about:blank")
-            self.SetPage(data, "http://127.0.0.5")
+            if wx.Platform == "__WXMSW__":
+                path = os.path.join(settings.TEMP_PATH, "index.html")
+                with open(path, "wt") as f:
+                    f.write(data)
+                url = "file:///" + path.replace("\\", "/")
+                self.LoadURL(url)
+            else:
+                self.SetPage(data, "http://127.0.0.5")
 
         def on_back(self, event):
             self.GoBack()
