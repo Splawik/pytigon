@@ -735,7 +735,7 @@ def module_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt") as f:
+            with open(content_path, "rt", encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -754,7 +754,7 @@ def jscript_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt") as f:
+            with open(content_path, "rt", encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -773,7 +773,7 @@ def css_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt") as f:
+            with open(content_path, "rt", encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -798,7 +798,7 @@ def link(context, href, rel, typ):
 def jscript(context, href):
     content_path = os.path.join(settings.STATIC_ROOT, href)
     content = ""
-    with open(content_path, "rt") as f:
+    with open(content_path, "rt", encoding="utf-8") as f:
         content = f.read()
     return {"content": mark_safe(content)}
 
@@ -809,7 +809,7 @@ def component(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt") as f:
+            with open(content_path, "rt", encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")

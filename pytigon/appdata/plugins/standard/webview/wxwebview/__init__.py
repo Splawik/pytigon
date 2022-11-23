@@ -183,7 +183,7 @@ def init_plugin_web_view(
             self.LoadURL("about:blank")
             if wx.Platform == "__WXMSW__":
                 path = os.path.join(settings.TEMP_PATH, "index.html")
-                with open(path, "wt") as f:
+                with open(path, "wt", encoding="utf-8") as f:
                     f.write(data)
                 url = "file:///" + path.replace("\\", "/")
                 self.LoadURL(url)
