@@ -38,23 +38,20 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
 
     pytigon_gui.guictrl.ctrl.COMPONENT = Component
 
-    # try:
+    from .wxwebview import init_plugin_web_view
+
+    return init_plugin_web_view(
+        app,
+        mainframe,
+        desktop,
+        mgr,
+        menubar,
+        toolbar,
+        accel,
+        BaseWebBrowser,
+    )
+
     #    from .cef import init_plugin_cef
-    #
     #    return init_plugin_cef(
     #        app, mainframe, desktop, mgr, menubar, toolbar, accel, BaseWebBrowser
     #    )
-    # except:
-    if True:
-        from .wxwebview import init_plugin_web_view
-
-        return init_plugin_web_view(
-            app,
-            mainframe,
-            desktop,
-            mgr,
-            menubar,
-            toolbar,
-            accel,
-            BaseWebBrowser,
-        )
