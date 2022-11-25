@@ -31,6 +31,14 @@ environ["START_PATH"] = os.path.abspath(os.getcwd())
 environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
 
+if "--dev" in sys.argv or "ptig.py" in sys.argv:
+    if "--dev" in sys.argv:
+        sys.argv.remove("--dev")
+    environ["PYTIGON_PRJ_PATH"] = os.path.join(environ["START_PATH"], "prj")
+    if not os.path.exists(environ["PYTIGON_PRJ_PATH"]):
+        environ["PYTIGON_PRJ_PATH"] = environ["START_PATH"]
+
+
 def schserw_init_prj_path(paths, app, param=None):
     if app:
         prj_path = paths["PRJ_PATH"]
@@ -108,20 +116,30 @@ def run(param=None):
         else:
             subprocess.run([get_executable(), "manage.py"] + argv[2:])
     elif len(argv) > 1 and argv[1].startswith("run_"):
+        file_name = None
         x = argv[1].split("_", 1)
-        if "/" in x[1]:
-            x2 = x[1].split("/", 1)
+        if "." in x[1]:
+            x2 = x[1].split(".", 1)
             app = x2[0]
             script = x2[1]
+            module_name = x[1]
         else:
             app = x[1]
-            script = "run.py"
+            if len(argv) > 2:
+                file_name = argv[2]
+                if not (file_name.startswith("/") or ":" in file_name[:2]):
+                    file_name = os.path.join(environ["START_PATH"], file_name)
+                script = file_name.replace("\\", "/").split("/")[-1].split(".")[0]
+            else:
+                module_name = x[1] + ".run"
+                script = "run"
 
         from pytigon_lib.schtools.main_paths import get_main_paths
 
         paths = get_main_paths(app)
 
         PRJ_PATH = paths["PRJ_PATH"]
+        DATA_PATH = paths["DATA_PATH"]
 
         ret = schserw_init_prj_path(paths, app, param)
 
@@ -129,8 +147,37 @@ def run(param=None):
             app = ret[0]
             PRJ_PATH = ret[1]
 
-        path3 = os.path.join(PRJ_PATH, app)
-        subprocess.run([get_executable()] + [os.path.join(path3, script)] + argv[2:])
+        if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
+            from pytigon_lib.schtools.install_init import init
+
+            init(
+                app,
+                paths["ROOT_PATH"],
+                DATA_PATH,
+                PRJ_PATH,
+                paths["STATIC_PATH"],
+                [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
+            )
+
+        prj_path = os.path.join(PRJ_PATH, app)
+        if not prj_path in sys.path:
+            sys.path.append(prj_path)
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+
+        if file_name:
+            import importlib.util
+
+            spec = importlib.util.spec_from_file_location(script, file_name)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+        else:
+            module = __import__(script)
+
+        if hasattr(module, "main"):
+            import django
+
+            django.setup()
+            getattr(module, "main")()
 
     elif len(argv) > 1 and argv[1].startswith("runserver_"):
         x = argv[1].split("_", 1)
