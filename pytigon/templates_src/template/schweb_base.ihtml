@@ -177,7 +177,6 @@
                             span class=form_title
                                 %%form_bar_title
                                     {{title|wiki_href|safe}}
-                hr
 
                 CTRL-COLLAPSIBLE_PANEL label=errors,,,width=100%,,,collapse_height=70
                     % if form.non_field_errors:
