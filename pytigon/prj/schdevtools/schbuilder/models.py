@@ -278,6 +278,7 @@ Static_CHOICES = [
     ("I", "sass to css (included in desktop.html)"),
     ("U", "custom file (embeded translation for .pyj, .webc, .sass)"),
     ("G", "component globals"),
+    ("O", "Other project file"),
 ]
 
 FileType_CHOICES = [

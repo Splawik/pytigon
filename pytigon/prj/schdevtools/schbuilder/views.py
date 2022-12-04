@@ -1124,6 +1124,11 @@ def build_prj(pk):
             f.close()
         if static_file.type == "G":
             initial_state += txt
+        if typ == "O":
+            p = os.path.join(base_path, static_file.name)
+            with open(p, "wt", encoding="utf-8") as f:
+                f.write(txt)
+
     component_elements = []
 
     if prj.custom_tags:

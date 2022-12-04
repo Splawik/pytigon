@@ -42,7 +42,7 @@
         delete
         field_list/schapp_set,Applications,icon_name=client://apps/preferences-system-windows.png, target='_parent'
         field_edit/user_app_template,Application template,client://mimetypes/text-x-script.png,_parent
-        field_list/schstatic_set,Static files,[|client://apps/system-file-manager.png],_parent
+        field_list/schstatic_set,Static and other files,[|client://apps/system-file-manager.png],_parent
         run,Run,[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
