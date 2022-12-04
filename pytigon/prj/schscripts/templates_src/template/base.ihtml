@@ -1,0 +1,24 @@
+% extends 'template/base_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load django_bootstrap5
+    
+%% js_extrascipts
+    {{block.super}}
+    
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    
+
+%% body_footer_scripts
+    {{block.super}}
+    
+
+%% component_init
+     .var component_init = []; 

@@ -39,6 +39,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/mobile_demo/
 !*pytigon/prj/schsetup/
 !*pytigon/prj/_schplaywright/
+!*pytigon/prj/schscripts/
 !*pytigon/prj/_schall/*
 !*pytigon/prj/_schdata/*
 !*pytigon/prj/_schremote/*
@@ -55,6 +56,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/mobile_demo/*
 !*pytigon/prj/schsetup/*
 !*pytigon/prj/_schplaywright/*
+!*pytigon/prj/schscripts/*
 
 global_db_settings.py
 settings_app_local.py
