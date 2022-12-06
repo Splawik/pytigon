@@ -251,6 +251,7 @@ ViewRetType_CHOICES = [
     ("U", "User defined"),
     ("S", "OOXML (default .xlsx)"),
     ("t", "Txt"),
+    ("H", "Html to docx template (.hdoc)"),
 ]
 
 HtmlGui_CHOICES = [

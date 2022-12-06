@@ -16,6 +16,7 @@ from pytigon_lib.schviews.viewtools import (
     dict_to_xml,
     dict_to_ooxml,
     dict_to_txt,
+    dict_to_hdoc,
 )
 from pytigon_lib.schviews.viewtools import render_to_response
 from pytigon_lib.schdjangoext.tools import make_href
@@ -105,3 +106,9 @@ def txt_example(request, **argv):
 def template_example(request, **argv):
 
     return {"name": "template test", "description": "Hello!"}
+
+
+@dict_to_hdoc("views_demo/v_hdoc_example_hdoc.html")
+def hdoc_example(request, **argv):
+
+    return {"name": "txt test", "description": "Hello!"}

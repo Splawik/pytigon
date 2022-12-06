@@ -53,5 +53,11 @@ Urls = (
         None,
         """png://mimetypes/video-x-generic.png""",
     ),
+    (
+        "hdoc_example",
+        _("hdoc example"),
+        None,
+        """png://actions/format-justify-center.png""",
+    ),
 )
 UserParam = {}
