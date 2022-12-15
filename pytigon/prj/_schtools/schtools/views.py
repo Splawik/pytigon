@@ -31,7 +31,7 @@ import datetime
 
 import time
 from pytigon_lib.schdjangoext.tools import import_model
-from pyexcel_odsr import get_data
+from pyexcel_ods3 import get_data
 from pytigon_lib.schtools.schjson import json_dumps, json_loads
 from pytigon_lib.schfs.vfstools import get_temp_filename
 import openpyxl
