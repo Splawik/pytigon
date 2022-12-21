@@ -1,0 +1,51 @@
+[
+    {
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": null,
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "schscripts",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "title": "Pytigon additiona scripts",
+        "user_app_template": null,
+        "user_param": "",
+        "version": "latest"
+    },
+    [],
+    [
+        {
+            "code": "import sys\nimport os\n\nfrom pytigon_lib.schindent.indent_style import ihtml_to_html_base\n\ncwd = os.getcwd()\nfile_name = sys.argv[-1]\nprint(sys.argv)\nif file_name.endswith(\".ihtml\"):\n    if file_name.startswith(\"//\") or \":\" in file_name:\n        file_name2 = file_name2\n    else:\n        file_name2 = os.path.join(cwd, file_name)\n    file_name3 = file_name2.replace(\".ihtml\", \".html\")\n    with open(file_name2, \"rt\", encoding=\"utf-8\") as f:\n        buf = f.read()\n        print(buf)\n        buf = ihtml_to_html_base(None, input_str=buf)\n        with open(file_name3, \"wt\", encoding=\"utf-8\") as f2:\n            f2.write(buf)\n",
+            "doc": null,
+            "name": "ihtml2html.py",
+            "type": "O"
+        },
+        {
+            "code": "import sys\nimport os\nimport io\n\nfrom pytigon_lib.schhtml.pdfdc import PdfDc\nfrom pytigon_lib.schhtml.htmlviewer import HtmlViewerParser\nfrom pytigon_lib.schindent.indent_style import ihtml_to_html_base\nfrom django.core.files.storage import default_storage\n\nBASE_PATH = os.path.abspath(os.getcwd())\n\ndefault_storage.fs.mount(\"cwd\", BASE_PATH)\n\nihtml_file_path = os.path.join(\"/cwd\", sys.argv[-1])\n\nf = default_storage.open(ihtml_file_path)\nihtml_str = f.read().decode(\"utf-8\")\nf.close()\nbuf = ihtml_to_html_base(None, input_str=ihtml_str)\noutput_stream = io.BytesIO()\ndc = PdfDc(\n    calc_only=False,\n    output_name=os.path.join(\n        BASE_PATH,\n        \"test\",\n        ihtml_file_path.replace(\".ihtml\", \".pdf\"),\n    ),\n    output_stream=output_stream,\n)\ndc.set_paging(True)\np = HtmlViewerParser(dc=dc, calc_only=False)\np.feed(buf)\np.close()\ndc.end_page()\n\nf = default_storage.open(ihtml_file_path.replace(\".ihtml\", \".pdf\"), \"wb\")\nf.write(output_stream.getvalue())\nf.close()\n",
+            "doc": null,
+            "name": "ihtml2pdf.py",
+            "type": "O"
+        }
+    ]
+]
