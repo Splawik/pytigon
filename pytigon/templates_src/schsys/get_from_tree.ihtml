@@ -53,4 +53,4 @@
 
 
 %% content
-    CTRL-HTML name=treewin,,,src=/{{app}}/table/{{tab}}/{{parent_pk}}/form/_tree?schtml=1,,,width=100%,,,height=100%
+    CTRL-HTML name=treewin,,,src=/{{app}}/table/{{tab}}/{{parent_pk}}/form/_tree,,,width=100%,,,height=100%

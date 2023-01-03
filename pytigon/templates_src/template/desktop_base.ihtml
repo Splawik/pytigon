@@ -250,16 +250,16 @@
                                         a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                                 % if user.is_superuser:
                                     li class=nav-item
-                                        a class=nav-link,,,href={{base_path}}schsetup/?schtml=1,,,target=_top,,,title=_(Setup)..._(Setup)
+                                        a class=nav-link,,,href={{base_path}}schsetup/,,,target=_top,,,title=_(Setup)..._(Setup)
                                 %% system_menu
 
             %if not autologin:
                 li class=nav-item dropdown user user-menu
-                    a class=system_menu,,,href={{base_path}}schsys/do_logout/?schtml=1,,,target=_top,,,title=_(Logout)
+                    a class=system_menu,,,href={{base_path}}schsys/do_logout/,,,target=_top,,,title=_(Logout)
                         {% icon "fa-power-off fa-lg" %}
         % else:
             li class=nav-item dropdown user user-menu
-                a class=system_menu,,,href={{base_path}}schsys/login/?schtml=1,,,target=_top,,,title=_(Login)
+                a class=system_menu,,,href={{base_path}}schsys/login/,,,target=_top,,,title=_(Login)
                     {% icon "fa-sign-in fa-lg" %}
 
     <perfectscrollbar />

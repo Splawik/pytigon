@@ -1790,7 +1790,7 @@ class SChAppMenu(models.Model):
         if self.url_type in [None, "-"]:
             return ""
         else:
-            return "?schtml=" + self.url_type
+            return "?view_in=" + self.url_type
 
     def clean_url(self):
         return self.url.replace("$", "")

@@ -39,5 +39,5 @@
 %% form_bar
 
 %% content
-    CTRL-HTML name=tabwin,,,src=/{{app}}/table/{{tab}}/_list?schtml=1,,,width=100%,,,height=100%
+    CTRL-HTML name=tabwin,,,src=/{{app}}/table/{{tab}}/_list,,,width=100%,,,height=100%
 

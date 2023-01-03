@@ -6,7 +6,7 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/Attachements/-/form/list/?schtml=desktop",
+        "table/Attachements/-/form/list/?view_in=desktop",
         _("Attachements"),
         "wiki.change_attachements",
         """client://status/mail-attachment.png""",

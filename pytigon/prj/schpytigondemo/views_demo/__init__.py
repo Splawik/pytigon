@@ -6,49 +6,49 @@ Perms = False
 Index = "None"
 Urls = (
     (
-        "template_example?schtml=desktop",
+        "template_example?view_in=desktop",
         _("template example"),
         None,
         """png://mimetypes/x-office-presentation-template.png""",
     ),
     (
-        "odf_example?schtml=desktop",
+        "odf_example?view_in=desktop",
         _("odf example"),
         None,
         """png://mimetypes/x-office-spreadsheet-template.png""",
     ),
     (
-        "pdf_example?schtml=desktop",
+        "pdf_example?view_in=desktop",
         _("pdf example"),
         None,
         """png://actions/format-justify-fill.png""",
     ),
     (
-        "json?schtml=desktop",
+        "json?view_in=desktop",
         _("json example"),
         None,
         """png://actions/format-justify-right.png""",
     ),
     (
-        "xml_example?schtml=desktop",
+        "xml_example?view_in=desktop",
         _("xml example"),
         None,
         """png://actions/contact-new.png""",
     ),
     (
-        "xlsx_example?schtml=desktop",
+        "xlsx_example?view_in=desktop",
         _("xlsx example"),
         None,
         """png://mimetypes/x-office-spreadsheet-template.png""",
     ),
     (
-        "txt_example?schtml=desktop",
+        "txt_example?view_in=desktop",
         _("txt example"),
         None,
         """png://actions/format-justify-fill.png""",
     ),
     (
-        "test_llvm?schtml=desktop",
+        "test_llvm?view_in=desktop",
         _("llvm_test"),
         None,
         """png://mimetypes/video-x-generic.png""",

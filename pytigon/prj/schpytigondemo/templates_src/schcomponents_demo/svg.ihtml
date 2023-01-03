@@ -96,7 +96,7 @@
                y="23.247936" 
                data-bind=":onclick" 
                target="_top"
-               href="/schcomponents/spreadsheet?schtml=desktop"
+               href="/schcomponents/spreadsheet?view_in=desktop"
             />
             
             <ellipse

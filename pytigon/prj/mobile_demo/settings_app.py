@@ -42,7 +42,7 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
-if ENV("PUBLISH_IN_SUBFOLDER") and PRODUCTION_VERSION and not MAIN_PRJ:
+if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     URL_ROOT_FOLDER = "mobile_demo"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
@@ -70,7 +70,9 @@ for app in APPS:
                 sys.path.append(p2)
 
     if not app in [x if type(x) == str else x.label for x in INSTALLED_APPS]:
-        INSTALLED_APPS.append(get_app_config(app))
+        a = get_app_config(app)
+        if not app in INSTALLED_APPS:
+            INSTALLED_APPS.append(get_app_config(app))
         aa = app.split(".")
         for root_path in [PRJ_PATH, PRJ_PATH_ALT]:
             base_path = os.path.join(root_path, aa[0])
@@ -82,7 +84,8 @@ for app in APPS:
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
 for app in APPS_EXT:
-    INSTALLED_APPS.append(app)
+    if not app in INSTALLED_APPS:
+        INSTALLED_APPS.append(app)
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]["DIRS"].insert(
@@ -116,7 +119,7 @@ else:
         db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES["default"]
         DATABASES = {
-            "default": env.db(),
+            "default": ENV.db(),
         }
         DATABASES["local"] = db_local
 
@@ -126,7 +129,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2022.10.05 08:08:37"
+GEN_TIME = "2022.12.30 17:26:27"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

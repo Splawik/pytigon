@@ -201,7 +201,7 @@
                                                                                         {% endif %}
                                                                                         {% if user.is_superuser %}
                                                                                                 <li class="nav-item">
-                                                                                                        <a class="nav-link" href="{{base_path}}schsetup/?schtml=1" target="_top" title="Setup">Setup</a>
+                                                                                                        <a class="nav-link" href="{{base_path}}schsetup/" target="_top" title="Setup">Setup</a>
                                                                                                 </li>
                                                                                         {% endif %}
                                                                                         {% block system_menu %}
@@ -213,14 +213,14 @@
                                                 </li>
                                                 {% if not autologin %}
                                                         <li class="nav-item dropdown user user-menu">
-                                                                <a class="system_menu" href="{{base_path}}schsys/do_logout/?schtml=1" target="_top" title="Logout">
+                                                                <a class="system_menu" href="{{base_path}}schsys/do_logout/" target="_top" title="Logout">
                                                                         {% icon "fa-power-off fa-lg" %}
                                                                 </a>
                                                         </li>
                                                 {% endif %}
                                           {% else %}
                                                 <li class="nav-item dropdown user user-menu">
-                                                        <a class="system_menu" href="{{base_path}}schsys/login/?schtml=1" target="_top" title="Login">
+                                                        <a class="system_menu" href="{{base_path}}schsys/login/" target="_top" title="Login">
                                                                 {% icon "fa-sign-in fa-lg" %}
                                                         </a>
                                                 </li>

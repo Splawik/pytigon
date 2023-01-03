@@ -6,11 +6,11 @@ Perms = False
 Index = "None"
 Urls = (
     (
-        "action_ctrl?schtml=shtml",
+        "action_ctrl?view_in=shtml",
         _("Action control"),
         None,
         """client://actions/media-playback-start.png""",
     ),
-    ("plots?schtml=desktop", _("Plots"), None, """fa://rocket.png"""),
+    ("plots?view_in=desktop", _("Plots"), None, """fa://rocket.png"""),
 )
 UserParam = {}

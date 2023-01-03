@@ -352,7 +352,8 @@ var _pymeth_count = function (x, start, stop) { // nargs: 1 2 3
 };
 var _pymeth_endswith = function (x) { // nargs: 1
     if (this.constructor !== String) return this.endswith.apply(this, arguments);
-    return this.lastIndexOf(x) == this.length - x.length;
+    var last_index = this.lastIndexOf(x);
+    return last_index == this.length - x.length && last_index >= 0;
 };
 var _pymeth_expandtabs = function (tabsize) { // nargs: 0 1
     if (this.constructor !== String) return this.expandtabs.apply(this, arguments);

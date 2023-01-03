@@ -6,7 +6,7 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/Scripts/-/form/list/?schtml=desktop",
+        "table/Scripts/-/form/list/?view_in=desktop",
         _("Scripts"),
         "simplescript.change_scripts",
         """client://apps/utilities-terminal.png""",
@@ -49,7 +49,7 @@ def AdditionalUrls(app_pack, lang):
                 if elements[3] and lang != elements[3]:
                     continue
                     
-            ret_buf.append((lp, ("schsimplescripts/run/"+object.name+"/?schtml=1", object.title, object.rights_group, icon, module_title, _(module_title), app_name, _(app_name))))
+            ret_buf.append((lp, ("schsimplescripts/run/"+object.name+"/", object.title, object.rights_group, icon, module_title, _(module_title), app_name, _(app_name))))
 
     if ret_buf:        
         buf = sorted(ret_buf, key=lambda pos: pos[0])  

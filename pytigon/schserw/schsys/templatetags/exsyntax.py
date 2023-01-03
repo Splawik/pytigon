@@ -664,23 +664,18 @@ def get_table_row(
     if TreeModel in model.__bases__:
         if filter:
             href1 = make_href(
-                "/%s/table/%s/%s/0/form/gettree/?schtml=1"
-                % (_app_name, _table_name, filter)
+                "/%s/table/%s/%s/0/form/gettree/" % (_app_name, _table_name, filter)
             )
-            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+            href2 = make_href("/%s/table/%s/-/add/" % (_app_name, _table_name))
         else:
-            href1 = make_href(
-                "/%s/table/%s/0/form/gettree/?schtml=1" % (_app_name, _table_name)
-            )
-            href2 = make_href("/%s/table/%s/-/add/?schtml=1" % (_app_name, _table_name))
+            href1 = make_href("/%s/table/%s/0/form/gettree/" % (_app_name, _table_name))
+            href2 = make_href("/%s/table/%s/-/add/" % (_app_name, _table_name))
     else:
         _filter = filter if filter else "-"
         href1 = make_href(
-            "/%s/table/%s/%s/form/get/?schtml=1" % (_app_name, _table_name, _filter)
+            "/%s/table/%s/%s/form/get/" % (_app_name, _table_name, _filter)
         )
-        href2 = make_href(
-            "/%s/table/%s/%s/add/?schtml=1" % (_app_name, _table_name, _filter)
-        )
+        href2 = make_href("/%s/table/%s/%s/add/" % (_app_name, _table_name, _filter))
 
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -1017,8 +1012,9 @@ class HtmlWidgetNode(template.Node):
 
         data = self.nodelist.render(context)
         data = (
-            data.replace("[[", "{{")
-            .replace("]]", "}}")
+            data.replace("[%]", "%")
+            .replace("[{", "{{")
+            .replace("}]", "}}")
             .replace("[%", "{%")
             .replace("%]", "%}")
         )

@@ -6,31 +6,31 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "terminal?schtml=desktop",
+        "terminal?view_in=desktop",
         _("Terminal"),
         "schadmin.can_administer",
         """png://apps/utilities-terminal.png""",
     ),
     (
-        "administration?schtml=desktop",
+        "administration?view_in=desktop",
         _("Administration"),
         "schadmin.can_administer",
         """png://apps/utilities-system-monitor.png""",
     ),
     (
-        "filemanager?schtml=desktop",
+        "filemanager?view_in=desktop",
         _("File manager"),
         "schadmin.can_administer",
         """png://apps/system-file-manager.png""",
     ),
     (
-        "sqlexplore?schtml=desktop",
+        "sqlexplore?view_in=desktop",
         _("SQL explorer"),
         "schadmin.can_administer",
         """png://mimetypes/x-office-spreadsheet.png""",
     ),
     (
-        "graphql?schtml=desktop",
+        "graphql?view_in=desktop",
         _("GraphQL"),
         "schadmin.can_administer",
         """fa://building.png""",

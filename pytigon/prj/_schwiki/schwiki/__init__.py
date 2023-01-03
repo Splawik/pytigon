@@ -5,15 +5,15 @@ Title = _("Wiki")
 Perms = True
 Index = "None"
 Urls = (
-    ("table/Page/-/form/list/?schtml=desktop", _("Wiki"), "wiki.change_page", """"""),
+    ("table/Page/-/form/list/?view_in=desktop", _("Wiki"), "wiki.change_page", """"""),
     (
-        "table/PageObjectsConf/-/form/list/?schtml=desktop",
+        "table/PageObjectsConf/-/form/list/?view_in=desktop",
         _("Page objects conf."),
         None,
         """client://actions/document-properties.png""",
     ),
     (
-        "table/WikiConf/-/form/list/?schtml=desktop",
+        "table/WikiConf/-/form/list/?view_in=desktop",
         _("Publish options"),
         None,
         """png://categories/applications-system.png""",
@@ -45,7 +45,7 @@ def AdditionalUrls(prj_name, lang):
                 lp = "%02d" % object.menu_position
             else:
                 lp = '00'
-            ret_buf.append((lp, ("schwiki/"+object.subject+"/"+object.name+"/view/?schtml=1", object.description, object.rights_group, icon, module_title, _(module_title), app_name, _(app_name))))
+            ret_buf.append((lp, ("schwiki/"+object.subject+"/"+object.name+"/view/", object.description, object.rights_group, icon, module_title, _(module_title), app_name, _(app_name))))
     if ret_buf:        
         buf = sorted(ret_buf, key=lambda pos: pos[0])  
         for pos in buf:

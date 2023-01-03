@@ -1,9 +1,9 @@
 {% extends 'template/smartfon_base.html' %}
-{% load webpush_notifications %}
+{% load pwa_webpush %}
 {% block extrahead %}
         {% if standard_web_browser and env.PWA %}
-                {% include "schsys/webpush_notifications.html" %}
-                {% include "schsys/pwa.html" %}
+                {% progressive_web_app_meta %}
+                {% webpush_header %}
         {% endif %}
         {{ block.super }}
 {% endblock %}
@@ -25,7 +25,10 @@
                                         </button>
                                 </div>
                                 <div class="modal-body">
-                                        {% webpush_button with_class="btn btn-outline-info" %}
+                                        {% webpush_button %}
+                                        {% comment %}
+                                                <with_class="btn btn-outline-info"></with_class="btn>
+                                        {% endcomment %}
                                 </div>
                                 <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

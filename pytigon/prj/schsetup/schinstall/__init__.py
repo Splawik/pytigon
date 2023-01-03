@@ -6,7 +6,7 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "form/upload_ptig/?schtml=desktop",
+        "form/upload_ptig/?view_in=desktop",
         _("Install pytigon application (*.ptig)"),
         None,
         """fa://rocket.png""",

@@ -47,8 +47,9 @@ class HtmlWidgetNode(template.Node):
 
         data = self.nodelist.render(context)
         data = (
-            data.replace("[[", "{{")
-            .replace("]]", "}}")
+            data.replace("[%]", "%")
+            .replace("[{", "{{")
+            .replace("}]", "}}")
             .replace("[%", "{%")
             .replace("%]", "%}")
         )

@@ -6,7 +6,7 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/UrlWithAuth/-/form/list/?schtml=desktop",
+        "table/UrlWithAuth/-/form/list/?view_in=desktop",
         _("Urls with auth"),
         None,
         """png://apps/system-users.png""",

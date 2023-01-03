@@ -3399,9 +3399,9 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
             }).bind(this);
 
             if (_pyfunc_truthy(_pymeth_endswith.call(window.location.pathname, "index.html"))) {
-                p = start_page + "?only_content&schtml=1";
+                p = start_page + "?only_content";
             } else {
-                p = _pyfunc_op_add(base_path, start_page) + "?only_content&schtml=1";
+                p = _pyfunc_op_add(base_path, start_page) + "?only_content";
             }
             ajax_load(document.querySelector("#body_desktop"), p, _on_load);
         }

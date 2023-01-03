@@ -4,7 +4,7 @@
     % if standard_web_browser
         a href={{url}},,,class=popup btn btn-secondary,,,name={{name}},,,title={{title}},,,target={{target}},,,data-role=button,,,data-inline=true,,,{% block data_icon %}data-icon=plus{% endblock %}
             %% description
-                {% icon "fa-plus fa-lg" %}{%% if description %}{{description}}{% endif %}
+                {% icon "fa-plus fa-lg" %}{% if description %}{{description}}{% endif %}
     % else
         % if name:
             CTRL-BUTTON name={{name}},,,label={{title}},,,href={{url}}

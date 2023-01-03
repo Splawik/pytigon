@@ -9,7 +9,11 @@ from pytigon_lib.schhtml.xlsxdc import XlsxDc
 from pytigon_lib.schhtml.htmlviewer import HtmlViewerParser
 from pytigon_lib.schindent.indent_style import ihtml_to_html_base
 from pytigon_lib.schindent.indent_markdown import markdown_to_html
-from pytigon_lib.schindent.indent_markdown import imd2html
+
+from pytigon_lib.schindent.indent_markdown import (
+    IndentMarkdownProcessor,
+    REG_OBJ_RENDERER,
+)
 
 BASE_PATH = os.getcwd()
 
@@ -64,7 +68,7 @@ def main():
         dc = XlsxDc(output_name=output_filename)
     else:
         dc = None
-
+    
     if ".ihtml" in input_filename and ".html" in output_filename:
         with open(input_filename, "rt", encoding="utf-8") as f:
             buf = f.read()
@@ -72,7 +76,7 @@ def main():
             with open(output_filename, "wt", encoding="utf-8") as f2:
                 f2.write(buf)
         return
-
+        
     p = HtmlViewerParser(dc=dc, calc_only=False, init_css_str=init_css_str, css_type=1)
 
     with open(input_filename, "rt", encoding="utf-8") as f:
@@ -82,9 +86,8 @@ def main():
         elif ".md" in input_filename:
             buf = markdown_to_html(buf)
         elif ".imd" in input_filename:
-            buf = imd2html(buf)
-            # x = IndentMarkdownProcessor(output_format="html")
-            # buf = x.convert(buf)
+            x = IndentMarkdownProcessor(output_format="html")
+            buf = x.convert(buf)
         buf = "<html><body class='wiki'>" + buf + "</body></html>"
         with open(output_filename, "wt") as f2:
             f2.write(buf)

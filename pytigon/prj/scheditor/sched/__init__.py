@@ -4,5 +4,5 @@ ModuleTitle = _("Editor")
 Title = _("Editor")
 Perms = False
 Index = ""
-Urls = (("save/?schtml=pscript", _("save"), None, """fa://paperclip.png"""),)
+Urls = (("save/?view_in=pscript", _("save"), None, """fa://paperclip.png"""),)
 UserParam = {}
