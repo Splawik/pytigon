@@ -1,0 +1,13 @@
+.tabsort
+    width:100%
+
+.tabsort table-bordered
+    width:100%
+
+span.form_title a
+    font-size:150%
+    font-weight:bold
+
+span.form_title
+    font-size:150%
+    font-weight:bold

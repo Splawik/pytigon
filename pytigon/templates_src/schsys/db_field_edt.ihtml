@@ -149,7 +149,10 @@ end_code
                     span class=form_title
                         %%form_title
                             .Edycja: {{title}}
-        hr
+        % if standard_web_browser:
+            hr
+        % else
+            p
         %% edit_area_sch
             table width=800
                 tr

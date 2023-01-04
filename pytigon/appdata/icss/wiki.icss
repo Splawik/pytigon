@@ -1,0 +1,433 @@
+body
+    font-family:sans-serif
+    font-size:120%
+    padding:5
+
+p
+    cellpadding:2
+    border:0
+    width:100%
+
+b
+    font-weight:bold
+i
+    font-style: italic
+s
+    color:#a0a0a0 
+sub
+    font-size: 60%
+    margin: -3 0 3 0
+sup
+    font-size: 60%
+    margin: 3 0 -3 0
+
+h1
+    font-size:300%
+    font-weight:bold
+    cellpadding:12 2 12 2
+    border-bottom:1
+    width:100%
+
+h2
+    font-size:240%
+    font-weight: bold
+    cellpadding:10 2 10 2
+    width:100%
+
+h3
+    font-size:190%
+    font-weight: bold
+    cellpadding:8 2 8 2
+    width:100%
+
+h4
+    font-size:150%
+    font-weight: bold
+    cellpadding:6 2 6 2
+    width:100%
+
+h5
+    font-size:120%
+    font-weight: bold
+    cellpadding:4 2 4 2
+    width:100%
+
+h6
+    font-size:100%
+    font-weight: bold
+    cellpadding:2 2 2 2
+    width:100%
+
+small
+    font-size:80%
+
+big
+    font-size:150%
+
+tt 
+    font-family: monospace
+
+pre
+    font-family: monospace
+    white-space: pre
+
+a
+    color:#0000ff
+    text-decoration: underline
+    width:100%
+
+b a
+    color:#00ffff
+
+ul
+    border:0
+    margin:0
+    padding:0
+    width:100%
+
+ol
+    border:0
+    margin:0
+    padding:0
+    width:100%
+
+li
+    cellpadding:5
+    width:95%-60
+
+ul li
+    font-style: italic
+
+hr
+    width:100%
+    margin: 1 0 6 0
+    border: 1
+
+table.tabdel
+    border:1
+    width:100%
+
+table.tabdel tr th
+    bgcolor:#ccc
+    border:1
+    padding:5
+    cellpadding:5
+
+table.tabdel tr td
+    bgcolor:#eee
+    border:1
+    padding:5
+    cellpadding:5
+
+.helptext
+    font-size:120%
+    font-style:italic
+
+#id_permissions
+    padding:0 0 6 0
+
+td:hover.test
+    bgcolor: #ff0000
+
+table
+    border:0
+    vertical-align:top
+    cellpadding:3
+
+td table
+    cellpadding: 1
+
+th
+    font-weight:bold
+
+td
+    vertical-align:top
+
+table.grid
+    border:0
+    vertical-align:top
+    cellpadding:0
+    cellspacing:0
+    width:100%
+
+table.grid tr td
+    vertical-align:top
+
+body.wiki
+    padding: 25
+
+body.wiki table
+    border:1
+    vertical-align:top
+    cellpadding:3
+    border-color: #aaa
+    margin:5 0
+
+body.wiki table tr td, body.wiki table tr th 
+    border-color: #f0f0f0
+
+body.wiki table thead tr td, body.wiki table thead tr th 
+    border-color: #f0f0f0
+
+body.wiki table tbody tr td, body.wiki table tbody tr th 
+    border-color: #f0f0f0
+
+code
+    color:#a07000
+    white-space: pre
+    font-family: monospace
+
+div.codehilite
+    white-space: pre
+
+img
+    width:100%
+
+div.codehilite .hll 
+    background: #f8f8f8; 
+
+div.codehilite 
+    padding: 5 10
+    background-color: #ffffcc 
+
+div.codehilite .c 
+    color: #3D7B7B 
+    font-style: italic 
+
+div.codehilite pre code span.err 
+    border: 1px solid #FF0000
+
+div.codehilite pre code span.k 
+    color: #008000 
+    font-weight: bold
+
+div.codehilite pre code span.o 
+    color: #666666  
+
+div.codehilite pre code span.ch 
+    color: #3D7B7B
+    font-style: italic  
+
+div.codehilite pre code span.cm 
+    color: #3D7B7B
+    font-style: italic  
+
+div.codehilite pre code span.cp 
+    color: #9C6500  
+
+div.codehilite pre code span.cpf 
+    color: #3D7B7B
+    font-style: italic  
+
+div.codehilite pre code span.c1 
+    color: #3D7B7B
+    font-style: italic  
+
+div.codehilite pre code span.cs 
+    color: #3D7B7B
+    font-style: italic  
+
+div.codehilite pre code span.gd 
+    color: #A00000  
+
+div.codehilite pre code span.ge 
+    font-style: italic  
+
+div.codehilite pre code span.gr 
+    color: #E40000  
+
+div.codehilite pre code span.gh 
+    color: #000080
+    font-weight: bold  
+
+div.codehilite pre code span.gi 
+    color: #008400  
+
+div.codehilite pre code span.go 
+    color: #717171  
+
+div.codehilite pre code span.gp 
+    color: #000080
+    font-weight: bold  
+
+div.codehilite pre code span.gs 
+    font-weight: bold  
+
+div.codehilite pre code span.gu 
+    color: #800080
+    font-weight: bold  
+
+div.codehilite pre code span.gt 
+    color: #0044DD  
+
+div.codehilite pre code span.kc 
+    color: #008000
+    font-weight: bold  
+
+div.codehilite pre code span.kd 
+    color: #008000
+    font-weight: bold  
+
+div.codehilite pre code span.kn 
+    color: #008000
+    font-weight: bold  
+
+div.codehilite pre code span.kp 
+    color: #008000  
+
+div.codehilite pre code span.kr 
+    color: #008000
+    font-weight: bold  
+
+div.codehilite pre code span.kt 
+    color: #B00040  
+
+div.codehilite pre code span.m 
+    color: #666666  
+
+div.codehilite pre code span.s 
+    color: #BA2121  
+
+div.codehilite pre code span.na 
+    color: #687822  
+
+div.codehilite pre code span.nb 
+    color: #008000  
+
+div.codehilite pre code span.nc 
+    color: #0000FF
+    font-weight: bold  
+
+div.codehilite pre code span.no 
+    color: #880000  
+
+div.codehilite pre code span.nd 
+    color: #AA22FF  
+
+div.codehilite pre code span.ni 
+    color: #717171
+    font-weight: bold  
+
+div.codehilite pre code span.ne 
+    color: #CB3F38
+    font-weight: bold  
+
+div.codehilite pre code span.nf 
+    color: #0000FF  
+
+div.codehilite pre code span.nl 
+    color: #767600  
+
+div.codehilite pre code span.nn 
+    color: #0000FF
+    font-weight: bold  
+
+div.codehilite pre code span.nt 
+    color: #008000
+    font-weight: bold  
+
+div.codehilite pre code span.nv 
+    color: #19177C  
+
+div.codehilite pre code span.ow 
+    color: #AA22FF
+    font-weight: bold  
+
+div.codehilite pre code span.w 
+    color: #bbbbbb  
+
+div.codehilite pre code span.mb 
+    color: #666666  
+
+div.codehilite pre code span.mf 
+    color: #666666  
+
+div.codehilite pre code span.mh 
+    color: #666666  
+
+div.codehilite pre code span.mi 
+    color: #666666  
+
+div.codehilite pre code span.mo 
+    color: #666666  
+
+div.codehilite pre code span.sa 
+    color: #BA2121  
+
+div.codehilite pre code span.sb 
+    color: #BA2121  
+
+div.codehilite pre code span.sc 
+    color: #BA2121  
+
+div.codehilite pre code span.dl 
+    color: #BA2121  
+
+div.codehilite pre code span.sd 
+    color: #BA2121
+    font-style: italic  
+
+div.codehilite pre code span.s2 
+    color: #BA2121  
+
+div.codehilite pre code span.se 
+    color: #AA5D1F
+    font-weight: bold  
+
+div.codehilite pre code span.sh 
+    color: #BA2121  
+
+div.codehilite pre code span.si 
+    color: #A45A77
+    font-weight: bold  
+
+div.codehilite pre code span.sx 
+    color: #008000  
+
+div.codehilite pre code span.sr 
+    color: #A45A77  
+
+div.codehilite pre code span.s1 
+    color: #BA2121  
+
+div.codehilite pre code span.ss 
+    color: #19177C  
+
+div.codehilite pre code span.bp 
+    color: #008000  
+
+div.codehilite pre code span.fm 
+    color: #0000FF  
+
+div.codehilite pre code span.vc 
+    color: #19177C  
+
+div.codehilite pre code span.vg 
+    color: #19177C  
+
+div.codehilite pre code span.vi 
+    color: #19177C  
+
+div.codehilite pre code span.vm 
+    color: #19177C  
+
+div.codehilite pre code span.il 
+    color: #666666  
+
+body.wiki p
+    text-align: justify
+    line-spacing: 2
+    not-leave-single-char: 1
+    padding: 1 0
+
+body.wiki ul li, body.wiki ol li
+    line-spacing: 2
+    not-leave-single-char: 1
+
+blockquote
+    border-left: 3
+    margin:  0 0 0 3
+    padding: 2 0 2 5
+    border-color: #aaf
+    width:100%
+    
