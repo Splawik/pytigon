@@ -30,7 +30,14 @@ import os
 import sys
 import datetime
 
-from pytigon_lib.schtable.vfstable import vfstable_view, vfsopen, vfssave, vfsopen_page
+from pytigon_lib.schtable.vfstable import (
+    vfstable_view,
+    vfsopen,
+    vfssave,
+    vfsview,
+    vfsopen_page,
+    vfsconvert,
+)
 from schtools.models import Parameter
 import django.contrib.auth
 
@@ -183,3 +190,45 @@ def save(request, file_name):
 def open_page(request, file_name, page):
 
     return vfsopen_page(request, file_name, page)
+
+
+def view(request, file_name):
+
+    return HttpResponse(vfsview(request, file_name))
+
+
+def convert_html(request, file_name):
+
+    headers = {
+        "Content-Type": "text/html",
+        "Content-Disposition": 'attachment; filename="file.html"',
+    }
+
+    return HttpResponse(vfsconvert(request, file_name, "html"), headers=headers)
+
+
+def convert_pdf(request, file_name):
+
+    headers = {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": 'attachment; filename="file.pdf"',
+    }
+    return HttpResponse(vfsconvert(request, file_name, "pdf"), headers=headers)
+
+
+def convert_docx(request, file_name):
+
+    headers = {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "Content-Disposition": 'attachment; filename="file.docx"',
+    }
+    return HttpResponse(vfsconvert(request, file_name, "docx"), headers=headers)
+
+
+def convert_xlsx(request, file_name):
+
+    headers = {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": 'attachment; filename="file.xlsx"',
+    }
+    return HttpResponse(vfsconvert(request, file_name, "xlsx"), headers=headers)

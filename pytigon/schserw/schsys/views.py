@@ -348,6 +348,8 @@ def plugin_template(request, template_name):
 
         APP = wx.GetApp()
     c = {"app": APP}
+    for key, value in request.POST.items():
+        c[key] = value
     return render_to_response(template_name, context=c, request=request)
 
 

@@ -11,4 +11,21 @@
     .Page source
 
 %% body
-    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,SRC=py,,,keymap=standard
+    % if href_view or href_html or href_pdf or href_docx or href_xlsx:
+        table width=100%,,,cellpadding=0
+            tr
+                td
+                    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=calc(100% - 34),,,HEIGHT=100%,,,SRC=py,,,keymap=standard
+                td width=34
+                    % if href_view:
+                        a class=button,,,href={{href_view}},,,src=png://apps/internet-web-browser.png,,,btn-class=NOBG_BUTTON...view
+                    % if href_html:
+                        a class=button,,,href={{href_html}},,,src=png://mimetypes/text-html.png,,,btn-class=NOBG_BUTTON...export to html
+                    % if href_pdf:
+                        a class=button,,,href={{href_pdf}},,,src=png://actions/document-print-preview.png,,,btn-class=NOBG_BUTTON...export to pdf
+                    % if href_docx:
+                        a class=button,,,href={{href_docx}},,,src=png://mimetypes/x-office-document.png,,,btn-class=NOBG_BUTTON...export to docx
+                    % if href_xlsx:
+                        a class=button,,,href={{href_xlsx}},,,src=png://mimetypes/x-office-spreadsheet.png,,,btn-class=NOBG_BUTTON...export to xlsx
+    % else
+        CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,SRC=py,,,keymap=standard

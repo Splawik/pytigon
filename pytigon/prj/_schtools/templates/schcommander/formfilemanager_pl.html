@@ -138,7 +138,6 @@
                 def on_websocket_message(msg):
                     nonlocal form
                     msg2 = schjson.loads(msg)
-                    print(msg2)
                     if msg2['status'] == 'event':
                         form.msg.append_html(msg2['data'])
                         form.msg.SetItemCount(len(self.msg.choices))
@@ -240,11 +239,8 @@
             self.PANELS.set_page(HGEN_1.gen(argv))
 
         def filter_url(self, target, href):
-            print("A1")
             if href in self.map_commands:
-                print("A2")
                 self.map_commands[href](None)
-                print("A3")
                 return True
             else:
                 id = int(href)
@@ -320,7 +316,6 @@
             else:
                 try:
                     row = self.CMD.GetTable().get_rec(0)
-                    print("ROW: ", row)
                     if row[1][0]=='..':
                         self.CMD.goto_first_row()
                         self.CMD.action("edit")
@@ -379,7 +374,24 @@
                     self.edit_img_win=okno
             else:
                 if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'ihtml', 'html', 'imd', 'md', 'css', 'icss'):
-                    okno = self.new_main_page("^standard/editor/editor.html", name, view_in="desktop")
+
+                    href_view = self.CMD.GetTable().proxy.tabaddress+"/../../../../view/"+id+"/"
+                    href_html = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_html/"+id+"/"
+                    href_pdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_pdf/"+id+"/"
+                    href_docx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_docx/"+id+"/"
+                    href_xlsx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_xlsx/"+id+"/"
+
+                    p = {}
+                    if ext.lower() in ('ihtml', 'html', 'imd', 'md'):
+                        p['href_view'] = href_view
+
+                        p['href_pdf'] = href_pdf
+                        p['href_docx'] = href_docx
+                        p['href_xlsx'] = href_xlsx
+                        if ext.lower() != 'html':
+                            p['href_html'] = href_html
+
+                    okno = self.new_main_page("^standard/editor/editor.html", name, parameters=p, view_in="desktop")
                 elif ext.lower() in ('svg',):
                     okno = self.new_main_page("^standard/svgctrl/viewer.html", name, view_in="desktop")
                 else:
@@ -391,6 +403,8 @@
                 ed.GotoPos(0)
             if hasattr(ed, 'set_save_path'):
                 okno.body.EDITOR.set_save_path(href2)
+            if hasattr(ed, 'set_view_path'):
+                okno.body.EDITOR.set_view_path(href_view)
 
         def on_edit(self, evt):
             row = self.CMD.GetGridCursorRow()
