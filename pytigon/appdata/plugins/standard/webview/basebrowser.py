@@ -287,16 +287,16 @@ class BaseWebBrowser(object):
             find = True
         if not find:
             url = href
-            if url[-4:].lower() == ".pdf":
-                self.pdf = url
-                x = "/" if wx.Platform == "__WXMSW__" else ""
-                return self.go(
-                    "file://"
-                    + x
-                    + os.path.join(
-                        wx.GetApp().root_path, "static/pdfjs/web/viewer.html"
-                    ).replace("\\", "/")
-                )
+            #if url[-4:].lower() == ".pdf":
+            #    self.pdf = url
+            #    x = "/" if wx.Platform == "__WXMSW__" else ""
+            #    return self.go(
+            #        "file://"
+            #        + x
+            #        + os.path.join(
+            #            wx.GetApp().root_path, "static/pdfjs/web/viewer.html"
+            #        ).replace("\\", "/")
+            #    )
             if "://" in url:
                 if "127.0.0.2" in url:
                     s = self._local_request(url + "&only_content=1")

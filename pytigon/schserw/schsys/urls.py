@@ -56,7 +56,6 @@ def sch_login(request, *argi, **argv):
     if not path_after_error:
         path_after_error = path
 
-
     if is_in_dicts("username", (request.POST, request.GET)):
         username = get_from_dicts("username", (request.POST, request.GET))
         if is_in_dicts("password", (request.POST, request.GET)):

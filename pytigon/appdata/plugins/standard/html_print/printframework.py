@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 import os
@@ -25,23 +25,22 @@ import wx
 from pytigon_lib.schhtml.wxdc import DcDc
 from pytigon_lib.schhtml.cairodc import CairoDc
 from pytigon_lib.schhtml.htmlviewer import HtmlViewerParser
-from pytigon_lib.schhtml.cairodc import CairoDc
 
 
 class HtmlCanvas(object):
-
     def __init__(self, zip_name):
-        self.zip_name = zip_name    
+        self.zip_name = zip_name
         self.scale = 1.0
         self.dc_zip = DcDc(calc_only=False, scale=self.scale)
         self.dc_zip.load(self.zip_name)
+        self.dc_zip.base_font_size = self.dc_zip.base_font_size * 0.9
         self.page_no = 1
-        
+
         self.width = self.dc_zip.width * self.scale
         self.height = self.dc_zip.height * self.scale
-        
+
         self.page_count = self.dc_zip.get_page_count()
-        self.state = self.dc_zip.state() 
+        self.state = self.dc_zip.state()
 
     def set_page(self, page_no):
         self.page_no = page_no
@@ -62,7 +61,12 @@ class HtmlCanvas(object):
         self.dc_zip.dc = dc_buf
 
     def save(self, file_name):
-        dc = CairoDc(calc_only=False, width=self.width/self.scale, height=self.height/self.scale, output_name=file_name)
+        dc = CairoDc(
+            calc_only=False,
+            width=self.width / self.scale,
+            height=self.height / self.scale,
+            output_name=file_name,
+        )
         dc.load(self.zip_name)
         count = dc.get_page_count()
         for i in range(0, count):
@@ -109,7 +113,7 @@ class MyPrintout(wx.Printout):
 
 class HtmlPreviewCanvas(wx.PreviewCanvas):
     def __init__(self, parent, **argv):
-        self.canvas = HtmlCanvas(parent.Parametry)
+        self.canvas = HtmlCanvas(parent.parameters)
         self.printData = wx.PrintData()
         self.printData.SetPaperId(wx.PAPER_A4)
         self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
@@ -119,18 +123,24 @@ class HtmlPreviewCanvas(wx.PreviewCanvas):
         printout = MyPrintout(self.canvas)
         printout2 = MyPrintout(self.canvas)
         self.preview = wx.PrintPreview(printout, printout2, data)
-        if 'name' in argv:
-            name = argv['name']
+        if "name" in argv:
+            name = argv["name"]
         else:
-            name = 'htmlpreview'
+            name = "htmlpreview"
         wx.PreviewCanvas.__init__(self, self.preview, parent, name=name)
 
         self.preview.SetCanvas(self)
         self.preview.SetZoom(100)
 
     def save(self):
-        dlg = wx.FileDialog(self, message="Save file as ...", defaultDir=os.getcwd(), 
-            defaultFile="", wildcard="Pdf document (*.pdf)|*.pdf", style=wx.SAVE)
+        dlg = wx.FileDialog(
+            self,
+            message="Save file as ...",
+            defaultDir=os.getcwd(),
+            defaultFile="",
+            wildcard="Pdf document (*.pdf)|*.pdf",
+            style=wx.SAVE,
+        )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.canvas.save(path)
@@ -142,7 +152,23 @@ class HtmlPreviewCanvas(wx.PreviewCanvas):
         printout = MyPrintout(self.canvas)
 
         if not printer.Print(self, printout, True):
-            wx.MessageBox("There was a problem printing.\nPerhaps your current printer is not set correctly?", "Printing", wx.OK)
+            wx.MessageBox(
+                "There was a problem printing.\nPerhaps your current printer is not set correctly?",
+                "Printing",
+                wx.OK,
+            )
         else:
-            self.printData = wx.PrintData( printer.GetPrintDialogData().GetPrintData() )
+            self.printData = wx.PrintData(printer.GetPrintDialogData().GetPrintData())
         printout.Destroy()
+
+
+def get_printout(spdf_filename):
+    canvas = HtmlCanvas(spdf_filename)
+
+    # self.printData = wx.PrintData()
+    # self.printData.SetPaperId(wx.PAPER_A4)
+    # self.printData.SetPrintMode(wx.PRINT_MODE_PRINTER)
+    # self.printData.SetOrientation(wx.PORTRAIT)
+    # data = wx.PrintDialogData(self.printData)
+    printout = MyPrintout(canvas)
+    return printout

@@ -96,4 +96,4 @@
                             CTRL-BUTTON src=wx.ART_GO_DOWN,,,name=btn_down
 
             td
-                CTRL-HTMLPRINT id=htmlprint,,,width=100%-55,,,height=100%
+                CTRL-HTMLPRINT name=htmlprint,,,width=calc(100% - 55),,,height=100%

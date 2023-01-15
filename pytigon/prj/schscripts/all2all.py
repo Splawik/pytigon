@@ -6,6 +6,7 @@ from pytigon_lib.schhtml.pdfdc import PdfDc
 from pytigon_lib.schhtml.cairodc import CairoDc
 from pytigon_lib.schhtml.docxdc import DocxDc
 from pytigon_lib.schhtml.xlsxdc import XlsxDc
+from pytigon_lib.schhtml.basedc import BaseDc
 from pytigon_lib.schhtml.htmlviewer import HtmlViewerParser
 from pytigon_lib.schindent.indent_style import ihtml_to_html_base
 from pytigon_lib.schindent.indent_markdown import markdown_to_html
@@ -27,7 +28,7 @@ def main():
         "filename", help="filename to convert (*.html, *.ihtml, *.md, *.imd)"
     )
     parser.add_argument(
-        "-o", "--output", help="output filename (*.pdf, *.docx, *.xlsx, *.svg)"
+        "-o", "--output", help="output filename (*.pdf, *.spdf, *.docx, *.xlsx, *.svg)"
     )
     parser.add_argument("-i", "--icss", help="input icss filename (*.icss)")
 
@@ -59,6 +60,30 @@ def main():
     if ".pdf" in output_filename:
         dc = PdfDc(output_name=output_filename)
         dc.set_paging(True)
+    elif ".spdf" in output_filename:
+
+        def notify_callback(event_name, data):
+            if event_name == "end":
+                dc = data["dc"]
+                if dc.output_name:
+                    dc.save(dc.output_name)
+                else:
+                    result_buf = NamedTemporaryFile(delete=False)
+                    spdf_name = result_buf.name
+                    result_buf.close()
+
+                    dc.save(spdf_name)
+                    with open(spdf_name, "rb") as f:
+                        dc.ouput_stream.write(f.read())
+
+        dc = PdfDc(
+            output_name=output_filename,
+            calc_only=True,
+            width=width,
+            height=height,
+            notify_callback=notify_callback,
+        )
+        dc.set_paging(True)
     elif ".docx" in output_filename:
         dc = DocxDc(
             output_name=output_filename,
@@ -68,7 +93,7 @@ def main():
         dc = XlsxDc(output_name=output_filename)
     else:
         dc = None
-    
+
     if ".ihtml" in input_filename and ".html" in output_filename:
         with open(input_filename, "rt", encoding="utf-8") as f:
             buf = f.read()
@@ -76,7 +101,7 @@ def main():
             with open(output_filename, "wt", encoding="utf-8") as f2:
                 f2.write(buf)
         return
-        
+
     p = HtmlViewerParser(dc=dc, calc_only=False, init_css_str=init_css_str, css_type=1)
 
     with open(input_filename, "rt", encoding="utf-8") as f:
@@ -91,6 +116,15 @@ def main():
         buf = "<html><body class='wiki'>" + buf + "</body></html>"
         with open(output_filename, "wt") as f2:
             f2.write(buf)
+
+        if ".pdf" in output_filename:
+
+            def notify_callback(event_name, data):
+                if event_name == "end":
+                    dc = data["dc"]
+                    dc.surf.pdf.set_subject(buf)
+
+            dc.notify_callback = notify_callback
         p.feed(buf)
 
     p.close()

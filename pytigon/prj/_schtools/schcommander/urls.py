@@ -44,6 +44,12 @@ urlpatterns = [
         {},
         name="schcommander_convert_xlsx",
     ),
+    re_path(
+        "convert_spdf/(?P<file_name>.*)/$",
+        views.convert_spdf,
+        {},
+        name="schcommander_convert_spdf",
+    ),
     path("form/FileManager/", views.view_filemanager, {}),
     path("form/Move/", views.view_move, {}),
     path("form/Copy/", views.view_copy, {}),

@@ -18,7 +18,7 @@
         [ hybrid | 0 ]
         [ title  | Editor ]
         [ start_page | None ]
-        [ plugins | standard/keymap;sched/editor_proxy;standard/image_viewer;standard/shell ]
+        [ plugins | standard/keymap;sched/editor_proxy;standard/image_viewer;standard/shell;standard/html_print ]
 
 %% toolbars_start
     tr

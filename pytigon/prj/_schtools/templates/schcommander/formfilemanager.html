@@ -365,7 +365,7 @@
             id, name, ext = self.get_name_and_ext(row)
             href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
             href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+id+"/"
-            if '.'+ext.lower() in Image.EXTENSION: # ('jpg', 'jpeg', 'gif', 'png', 'bmp'):
+            if '.'+ext.lower() in Image.EXTENSION and ext.lower() != "pdf": # ('jpg', 'jpeg', 'gif', 'png', 'bmp'):
                 if self.edit_img_win:
                     okno = self.edit_img_win
                     okno.change_notebook_page_title(name)
@@ -394,17 +394,36 @@
                     okno = self.new_main_page("^standard/editor/editor.html", name, parameters=p, view_in="desktop")
                 elif ext.lower() in ('svg',):
                     okno = self.new_main_page("^standard/svgctrl/viewer.html", name, view_in="desktop")
+                elif ext.lower() in ('pdf',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_page(href)
+                    return
+                    #okno = self.new_main_page(href, name, view_in="desktop")
+                elif ext.lower() in ('spdf',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_page(href)
+                    return
+                    #okno = self.new_main_page(href, name, view_in="desktop")
+                elif ext.lower() in ('docx', 'xlsx',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_document(href)
+                    return
                 else:
-                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
-                    okno = self.new_main_page("^standard/hexview/viewer.html", name, view_in="desktop")
-            ed = okno.body.EDITOR
-            ed.load_from_url(href, ext)
-            if hasattr(ed, 'GotoPos'):
-                ed.GotoPos(0)
-            if hasattr(ed, 'set_save_path'):
-                okno.body.EDITOR.set_save_path(href2)
-            if hasattr(ed, 'set_view_path'):
-                okno.body.EDITOR.set_view_path(href_view)
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_page(href)
+                    return
+                    #href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
+                    #okno = self.new_main_page("^standard/hexview/viewer.html", name, view_in="desktop")
+
+            if hasattr(okno.body, "EDITOR"):
+                ed = okno.body.EDITOR
+                ed.load_from_url(href, ext)
+                if hasattr(ed, 'GotoPos'):
+                    ed.GotoPos(0)
+                if hasattr(ed, 'set_save_path'):
+                    okno.body.EDITOR.set_save_path(href2)
+                if hasattr(ed, 'set_view_path'):
+                    okno.body.EDITOR.set_view_path(href_view)
 
         def on_edit(self, evt):
             row = self.CMD.GetGridCursorRow()
