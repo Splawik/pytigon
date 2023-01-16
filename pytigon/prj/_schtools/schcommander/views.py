@@ -232,3 +232,12 @@ def convert_xlsx(request, file_name):
         "Content-Disposition": 'attachment; filename="file.xlsx"',
     }
     return HttpResponse(vfsconvert(request, file_name, "xlsx"), headers=headers)
+
+
+def convert_spdf(request, file_name):
+
+    headers = {
+        "Content-Type": "application/spdf",
+        "Content-Disposition": 'attachment; filename="file.spdf"',
+    }
+    return HttpResponse(vfsconvert(request, file_name, "spdf"), headers=headers)
