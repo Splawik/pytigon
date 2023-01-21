@@ -82,6 +82,7 @@ def main():
             width=width,
             height=height,
             notify_callback=notify_callback,
+            record=True,
         )
         dc.set_paging(True)
     elif ".docx" in output_filename:

@@ -33,7 +33,8 @@ class HtmlCanvas(object):
         self.scale = 1.0
         self.dc_zip = DcDc(calc_only=False, scale=self.scale)
         self.dc_zip.load(self.zip_name)
-        self.dc_zip.base_font_size = self.dc_zip.base_font_size * 0.9
+        # self.dc_zip.base_font_size = self.dc_zip.base_font_size * 0.9
+        self.dc_zip.base_font_size = self.dc_zip.base_font_size
         self.page_no = 1
 
         self.width = self.dc_zip.width * self.scale
