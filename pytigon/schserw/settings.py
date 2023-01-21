@@ -550,6 +550,7 @@ def DEFAULT_FILE_STORAGE_FS():
         pass
     try:
         _m.mount("media", OSFS(settings.MEDIA_ROOT))
+        _m.mount("site_media", OSFS(settings.MEDIA_ROOT))
     except:
         pass
     try:
