@@ -1,5 +1,3 @@
-{# -*- coding: utf-8 -*- #}
-
 % extends "plugin_form.html"
 
 %% pythoncode
@@ -21,8 +19,10 @@
                         a class=button,,,href={{href_view}},,,src=png://apps/internet-web-browser.png,,,btn-class=NOBG_BUTTON...view
                     % if href_html:
                         a class=button,,,href={{href_html}},,,src=png://mimetypes/text-html.png,,,btn-class=NOBG_BUTTON...export to html
+                    % if href_spdf:
+                        a class=button,,,href={{href_spdf}},,,src=png://actions/document-print-preview.png,,,btn-class=NOBG_BUTTON...print
                     % if href_pdf:
-                        a class=button,,,href={{href_pdf}},,,src=png://actions/document-print-preview.png,,,btn-class=NOBG_BUTTON...export to pdf
+                        a class=button,,,href={{href_pdf}},,,src=png://actions/document-open.png,,,btn-class=NOBG_BUTTON...export to pdf
                     % if href_docx:
                         a class=button,,,href={{href_docx}},,,src=png://mimetypes/x-office-document.png,,,btn-class=NOBG_BUTTON...export to docx
                     % if href_xlsx:

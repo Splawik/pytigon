@@ -266,7 +266,8 @@
 
         def on_search(self, key):
             if (not self.search_win) or self.search_win_starting:
-                self.search_buffor.append(key)
+                if key:
+                    self.search_buffor.append(key)
                 if not self.search_win_starting:
                     self.search_win_starting = True
                     def _callback(win):
@@ -282,7 +283,12 @@
                     self.search_win = win.body
                     self.search_win_starting = False
             else:
-                self.search_win.start_key(key)
+                if key:
+                    self.search_buffor.append(key)
+                for pos in self.search_buffor:
+                    win.start_key(pos)
+                self.search_buffor = []
+                # self.search_win.start_key(key)
 
         def on_char(self, evt):
             if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('2'):
@@ -297,7 +303,8 @@
                         self.tab = i
                         self.change_panel()
             elif chr(evt.KeyCode).isascii() or chr(evt.KeyCode).isdigit():
-                wx.CallAfter(self.on_search, evt.KeyCode)
+                self.search_buffor.append(evt.KeyCode)
+                wx.CallAfter(self.on_search, None)
             else:
                 evt.Skip()
 
@@ -365,7 +372,7 @@
             id, name, ext = self.get_name_and_ext(row)
             href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
             href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+id+"/"
-            if '.'+ext.lower() in Image.EXTENSION and ext.lower() != "pdf": # ('jpg', 'jpeg', 'gif', 'png', 'bmp'):
+            if ('.'+ext.lower() in Image.EXTENSION or ext.lower() == 'svg') and ext.lower() != "pdf":
                 if self.edit_img_win:
                     okno = self.edit_img_win
                     okno.change_notebook_page_title(name)
@@ -373,11 +380,13 @@
                     okno = self.new_main_page("^standard/image_viewer/viewer.html", name, view_in="desktop")
                     self.edit_img_win=okno
             else:
-                if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'ihtml', 'html', 'imd', 'md', 'css', 'icss'):
+                if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'js', 'ihtml', 'html', 'imd', 'md', 'css', 'icss'):
 
                     href_view = self.CMD.GetTable().proxy.tabaddress+"/../../../../view/"+id+"/"
                     href_html = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_html/"+id+"/"
+                    # href_pdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_spdf/"+id+"/?print=1"
                     href_pdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_pdf/"+id+"/"
+                    href_spdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_spdf/"+id+"/"
                     href_docx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_docx/"+id+"/"
                     href_xlsx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_xlsx/"+id+"/"
 
@@ -386,14 +395,13 @@
                         p['href_view'] = href_view
 
                         p['href_pdf'] = href_pdf
+                        p['href_spdf'] = href_spdf
                         p['href_docx'] = href_docx
                         p['href_xlsx'] = href_xlsx
                         if ext.lower() != 'html':
                             p['href_html'] = href_html
 
                     okno = self.new_main_page("^standard/editor/editor.html", name, parameters=p, view_in="desktop")
-                elif ext.lower() in ('svg',):
-                    okno = self.new_main_page("^standard/svgctrl/viewer.html", name, view_in="desktop")
                 elif ext.lower() in ('pdf',):
                     href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
                     wx.GetApp().GetTopWindow().open_page(href)
@@ -406,14 +414,16 @@
                     #okno = self.new_main_page(href, name, view_in="desktop")
                 elif ext.lower() in ('docx', 'xlsx',):
                     href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
-                    wx.GetApp().GetTopWindow().open_document(href)
+                    http = wx.GetApp().get_http_for_adr(href)
+                    response = http.get(self, href)
+                    wx.GetApp().GetTopWindow().show_document(response, name)
                     return
                 else:
                     href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
-                    wx.GetApp().GetTopWindow().open_page(href)
+                    http = wx.GetApp().get_http_for_adr(href)
+                    response = http.get(self, href)
+                    wx.GetApp().GetTopWindow().download_data(response, name)
                     return
-                    #href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open_page/"+id+"/"
-                    #okno = self.new_main_page("^standard/hexview/viewer.html", name, view_in="desktop")
 
             if hasattr(okno.body, "EDITOR"):
                 ed = okno.body.EDITOR

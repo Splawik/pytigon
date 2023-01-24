@@ -1,4 +1,5 @@
-{# -*- coding: utf-8 -*- #}
+<href_pdf{# -*- coding: utf-8 -*- #}>
+</href_pdf{#>
 {% extends "plugin_form.html" %}
 {% block pythoncode %}
         <script language="python">
@@ -24,8 +25,11 @@
                                         {% if href_html %}
                                                 <a class="button" href="{{href_html}}" src="png://mimetypes/text-html.png" btn-class="NOBG_BUTTON">export to html</a>
                                         {% endif %}
+                                        {% if href_spdf %}
+                                                <a class="button" href="{{href_spdf}}" src="png://actions/document-print-preview.png" btn-class="NOBG_BUTTON">print</a>
+                                        {% endif %}
                                         {% if href_pdf %}
-                                                <a class="button" href="{{href_pdf}}" src="png://actions/document-print-preview.png" btn-class="NOBG_BUTTON">export to pdf</a>
+                                                <a class="button" href="{{href_pdf}}" src="png://actions/document-open.png" btn-class="NOBG_BUTTON">export to pdf</a>
                                         {% endif %}
                                         {% if href_docx %}
                                                 <a class="button" href="{{href_docx}}" src="png://mimetypes/x-office-document.png" btn-class="NOBG_BUTTON">export to docx</a>

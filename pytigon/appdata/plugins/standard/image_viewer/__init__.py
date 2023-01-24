@@ -10,21 +10,30 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 import wx
 from io import BytesIO
 from PIL import Image
 from pytigon_gui.guilib.image import pil_to_image
 from pytigon_gui.guictrl.basectrl import SchBaseCtrl
+from pytigon_lib.schtools.images import svg_to_png, spec_resize
 
 
-def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
+def init_plugin(
+    app,
+    mainframe,
+    desktop,
+    mgr,
+    menubar,
+    toolbar,
+    accel,
+):
     import pytigon_gui.guictrl.ctrl
 
     class Imageviewer(wx.ScrolledWindow, SchBaseCtrl):
@@ -38,7 +47,10 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
             mainframe.bind_to_toolbar(self.on_copy, id=wx.ID_COPY)
             mainframe.bind_to_toolbar(self.on_cut, id=wx.ID_CUT)
             mainframe.bind_to_toolbar(self.on_paste, id=wx.ID_PASTE)
-            a_table = [(0, wx.WXK_F2, self.on_save), (wx.ACCEL_CTRL, ord('S'), self.on_save)]
+            a_table = [
+                (0, wx.WXK_F2, self.on_save),
+                (wx.ACCEL_CTRL, ord("S"), self.on_save),
+            ]
             self.set_acc_key_tab(a_table)
             self.resize_to_win = True
             self.Bind(wx.EVT_SIZE, self.on_size)
@@ -48,7 +60,9 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
             if self.pil:
                 size = self.GetParent().GetSize()
                 resized = False
-                if self.resize_to_win and (self.pil.size[0] > size[0] or self.pil.size[1] > size[1]):
+                if self.resize_to_win and (
+                    self.pil.size[0] > size[0] or self.pil.size[1] > size[1]
+                ):
                     delta1 = (self.pil.size[0] * 1.0) / size[0]
                     delta2 = (self.pil.size[1] * 1.0) / size[1]
                     delta = delta1 if delta1 > delta2 else delta2
@@ -81,11 +95,20 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
             http = wx.GetApp().http
             response = http.get(self, url)
             txt = response.ptr()
-            io = BytesIO(txt)
+            size = self.GetParent().GetSize()
+
+            if ext == "svg":
+                img2 = svg_to_png(txt, size[0], size[1], "simple_min")
+                io = BytesIO(img2)
+            else:
+                io = BytesIO(txt)
+
             self.pil = Image.open(io)
             size = self.GetParent().GetSize()
             resized = False
-            if self.resize_to_win and (self.pil.size[0] > size[0] or self.pil.size[1] > size[1]):
+            if self.resize_to_win and (
+                self.pil.size[0] > size[0] or self.pil.size[1] > size[1]
+            ):
                 delta1 = (self.pil.size[0] * 1.0) / size[0]
                 delta2 = (self.pil.size[1] * 1.0) / size[1]
                 delta = delta1 if delta1 > delta2 else delta2
@@ -104,7 +127,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
         def on_save(self, event):
             http = wx.GetApp().get_http(self)
             if self.href:
-                http.post(self, self.href, {'data': self.GetText()})
+                http.post(self, self.href, {"data": self.GetText()})
 
         def on_copy(self, event):
             self.Copy()
@@ -116,5 +139,3 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel,):
             self.Paste()
 
     pytigon_gui.guictrl.ctrl.IMAGEVIEWER = Imageviewer
-
-

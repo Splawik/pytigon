@@ -18,7 +18,7 @@
         [ hybrid | 0 ]
         [ title  | Developer tools ]
         [ start_page | None ]
-        [ plugins | standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell ]
+        [ plugins | standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell;standard/html_print ]
 
 
 %% toolbars_start

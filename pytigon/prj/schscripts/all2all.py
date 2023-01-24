@@ -57,9 +57,16 @@ def main():
 
     (width, height) = (595, 842)
 
-    if ".pdf" in output_filename:
-        dc = PdfDc(output_name=output_filename)
+    if ".pdf" in output_filename or ".xpdf" in output_filename:
+        if ".xpdf" in output_filename:
+            dc = PdfDc(
+                output_name=output_filename.replace(".xpdf", ".pdf"),
+            )
+        else:
+            dc = PdfDc(output_name=output_filename)
+
         dc.set_paging(True)
+
     elif ".spdf" in output_filename:
 
         def notify_callback(event_name, data):
@@ -111,14 +118,13 @@ def main():
             buf = ihtml_to_html_base(None, input_str=buf)
         elif ".md" in input_filename:
             buf = markdown_to_html(buf)
+            buf = "<html><body class='wiki'>" + buf + "</body></html>"
         elif ".imd" in input_filename:
             x = IndentMarkdownProcessor(output_format="html")
             buf = x.convert(buf)
-        buf = "<html><body class='wiki'>" + buf + "</body></html>"
-        with open(output_filename, "wt") as f2:
-            f2.write(buf)
+            buf = "<html><body class='wiki'>" + buf + "</body></html>"
 
-        if ".pdf" in output_filename:
+        if ".xpdf" in output_filename:
 
             def notify_callback(event_name, data):
                 if event_name == "end":
@@ -129,4 +135,3 @@ def main():
         p.feed(buf)
 
     p.close()
-    dc.end_page()
