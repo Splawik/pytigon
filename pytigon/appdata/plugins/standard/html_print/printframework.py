@@ -25,6 +25,7 @@ import wx
 from pytigon_lib.schhtml.wxdc import DcDc
 from pytigon_lib.schhtml.cairodc import CairoDc
 from pytigon_lib.schhtml.htmlviewer import HtmlViewerParser
+from pytigon_lib.schfs.vfstools import convert_file
 
 
 class HtmlCanvas(object):
@@ -62,19 +63,16 @@ class HtmlCanvas(object):
         self.dc_zip.dc = dc_buf
 
     def save(self, file_name):
-        dc = CairoDc(
-            calc_only=False,
-            width=self.width / self.scale,
-            height=self.height / self.scale,
-            output_name=file_name,
+        output_stream = open(file_name, "wb")
+        convert_file(
+            self.zip_name,
+            output_stream,
+            input_format="spdf",
+            output_format="pdf",
+            for_vfs_input=False,
+            for_vfs_output=False,
         )
-        dc.load(self.zip_name)
-        count = dc.get_page_count()
-        for i in range(0, count):
-            if i > 0:
-                dc.start_page()
-            dc.play(i)
-        dc.close()
+        output_stream.close()
 
 
 class MyPrintout(wx.Printout):
@@ -140,7 +138,7 @@ class HtmlPreviewCanvas(wx.PreviewCanvas):
             defaultDir=os.getcwd(),
             defaultFile="",
             wildcard="Pdf document (*.pdf)|*.pdf",
-            style=wx.SAVE,
+            style=wx.FD_SAVE,
         )
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
