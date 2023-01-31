@@ -28,9 +28,6 @@ extra_files.append("pytigon.ico")
 extra_files.append("ptig")
 extra_files.append("../requirements.txt")
 
-for pos in extra_files:
-    print("File: ", pos)
-
 with open("requirements.txt") as f:
     tmp = f.read().strip().split("\n")
     install_requires = [pos for pos in tmp if "://" not in pos]
@@ -45,7 +42,6 @@ setup(
     license="LGPLv3",
     packages=find_packages(exclude=["pytigon_gui*", "pytigon_lib*"]),
     package_data={"": extra_files},
-    scripts=["pytigon/ptig"],
     install_requires=install_requires,
     dependency_links=dependency_links,
     classifiers=[
@@ -67,4 +63,9 @@ setup(
     ],
     python_requires=">=3",
     zip_safe=False,
+    entry_points={
+        "console_scripts": [
+            "ptig=pytigon.pytigon_run:run",
+        ]
+    },
 )
