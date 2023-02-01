@@ -75,8 +75,9 @@ def run(param=None):
     else:
         argv = sys.argv
 
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(base_path)
+    base_path = os.path.abspath(os.getcwd())
+    # base_path = os.path.dirname(os.path.abspath(__file__))
+    # os.chdir(base_path)
 
     ext_lib_path = os.path.join(base_path, "ext_lib")
     if not ext_lib_path in sys.path:
