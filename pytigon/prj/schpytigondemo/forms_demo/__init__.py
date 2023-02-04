@@ -29,5 +29,11 @@ Urls = (
         None,
         """png://actions/format-justify-fill.png""",
     ),
+    (
+        "form/form_test4/",
+        _("Form combo select"),
+        None,
+        """png://actions/media-seek-forward.png""",
+    ),
 )
 UserParam = {}

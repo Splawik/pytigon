@@ -283,6 +283,71 @@ def select2_init(dest_elem):
 register_mount_fun(select2_init)
 
 
+def select_combo_init(dest_elem):
+    select_ctrl_list = Array.prototype.slice.call(
+        dest_elem.querySelectorAll(".select_combo")
+    )
+
+    def on_change_element(element):
+        region = element.closest(".ajax-region")
+        if region != None:
+            next_elements = document.getElementsByName(
+                element.getAttribute("data-rel-name")
+            )
+            if next_elements.length > 0:
+                next_element = next_elements[0]
+
+                if next_element.hasAttribute("src"):
+                    src = next_element.getAttribute("src")
+                    if element.value:
+                        src = process_href(src, jQuery(element))
+
+                        def _onload(responseText):
+                            nonlocal next_element, src
+                            if (
+                                hasattr(next_element, "onloadeddata")
+                                and getattr(next_element, "onloadeddata")
+                                and next_element.onloadeddata
+                            ):
+                                evt = document.createEvent("HTMLEvents")
+                                evt.initEvent("loadeddata", False, True)
+                                evt.data = responseText
+                                evt.data_source = src
+                                next_element.dispatchEvent(evt)
+                            else:
+                                next_element.innerHTML = responseText
+                                on_change_element(next_element)
+
+                        ajax_get(src, _onload)
+                    else:
+                        if (
+                            hasattr(next_element, "onloadeddata")
+                            and getattr(next_element, "onloadeddata")
+                            and next_element.onloadeddata
+                        ):
+                            evt = document.createEvent("HTMLEvents")
+                            evt.initEvent("loadeddata", False, True)
+                            evt.data = ""
+                            evt.data_source = src
+                            next_element.dispatchEvent(evt)
+                        else:
+                            next_element.innerHTML = (
+                                "<option disabled selected value></option>"
+                            )
+                            on_change_element(next_element)
+
+    def on_change(event):
+        element = event.target
+        return on_change_element(element)
+
+    for elem in select_ctrl_list:
+        if elem.hasAttribute("data-rel-name"):
+            elem.addEventListener("change", on_change)
+
+
+register_mount_fun(select_combo_init)
+
+
 def datatable_init(dest_elem):
     # datatable_onresize()
     table_type = get_table_type(jQuery(dest_elem))

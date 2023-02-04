@@ -277,6 +277,28 @@ def view_form_test3(request, *argi, **argv):
     return PFORM(request, form_test3, "forms_demo/formform_test3.html", {})
 
 
+class form_test4(forms.Form):
+    test = forms.CharField(
+        label=_("test"), required=True, max_length=None, min_length=None
+    )
+    test2 = forms.ChoiceField(
+        label=_("Test2"), required=True, choices=models.test_choice
+    )
+
+    def process(self, request, queryset=None):
+
+        object_list = [
+            [1, 2, 3, 4, 5, 6, 7, 8],
+            [1, 2, 3, 4, 5, 6, 7, 8],
+        ]
+
+        return {"object_list": object_list}
+
+
+def view_form_test4(request, *argi, **argv):
+    return PFORM(request, form_test4, "forms_demo/formform_test4.html", {})
+
+
 @dict_to_json
 def select2query(request, **argv):
 
@@ -285,3 +307,17 @@ def select2query(request, **argv):
     numbers2 = [item for item in enumerate(numbers) if term in item[1]]
     results = [{"id": item[0], "text": item[1]} for item in numbers2]
     return {"err": None, "results": results}
+
+
+@dict_to_template("forms_demo/v_list2.html")
+def list2(request, **argv):
+
+    prev_value = request.GET.get("q")
+    return {"prev_value": prev_value}
+
+
+@dict_to_template("forms_demo/v_list3.html")
+def list3(request, **argv):
+
+    prev_value = request.GET.get("q")
+    return {"prev_value": prev_value}

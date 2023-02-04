@@ -41,7 +41,7 @@ from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 from pytigon_lib.schdjangoext.tools import make_href as mhref
 
 from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
-from django.utils.safestring import SafeText
+from django.utils.safestring import SafeText, SafeString
 from django import forms
 from django_select2 import forms as s2forms
 
@@ -474,22 +474,42 @@ class Form(Node):
             self.param.append(template.Variable(pos))
 
     def render(self, context):
-        output = (
-            self.nodelist.render(context).strip().replace('"', "'").replace(";", "','")
-        )
+        output = self.nodelist.render(context).strip()
+
         form = context["form"]
         fields = []
         if output:
-            for f in output.split(","):
-                x = f.split(":", 1)
-                name = x[0].replace("'", "").strip()
-                if len(x) > 1:
-                    p = x[1]
-                elif len(self.param) > 1:
-                    p = self.param[1].resolve(context)
+            if "((" in output:
+                output_tab = []
+                x = output.split("((")
+                if x[0]:
+                    value = x[0].strip().replace('"', "'").replace(";", "','")
+                    if value:
+                        output_tab.append(value)
+                for item in x[1:]:
+                    y = item.split("))")
+                    output_tab.append("@" + y[0])
+                    if len(y) > 1 and y[1]:
+                        value = y[1].strip().replace('"', "'").replace(";", "','")
+                        if value:
+                            output_tab.append(value)
+            else:
+                output_tab = (output.replace('"', "'").replace(";", "','"),)
+
+            for item in output_tab:
+                if item.startswith("@"):
+                    fields.append(item[1:])
                 else:
-                    p = self.def_param
-                fields.append([name, p])
+                    for f in item.split(","):
+                        x = f.split(":", 1)
+                        name = x[0].replace("'", "").strip()
+                        if len(x) > 1:
+                            p = x[1]
+                        elif len(self.param) > 1:
+                            p = self.param[1].resolve(context)
+                        else:
+                            p = self.def_param
+                        fields.append([name, p])
         else:
             for field in form:
                 if len(self.param) > 1:
@@ -502,11 +522,14 @@ class Form(Node):
         else:
             template_str = "{% load exsyntax %}<div class='row'>"
         for field in fields:
-            template_str += "{%% field '%s' '%s' %d %%}" % (
-                field[0],
-                field[1],
-                self.inline,
-            )
+            if type(field) == str:
+                template_str += field
+            else:
+                template_str += "{%% field '%s' '%s' %d %%}" % (
+                    field[0],
+                    field[1],
+                    self.inline,
+                )
         template_str += "</div>"
         t = Template(template_str)
         return t.render(context)
@@ -956,6 +979,74 @@ def sorted_column(context, name, description):
     ret["column_name"] = name
     ret["column_description"] = description
     return ret
+
+
+class ComboSelect(Node):
+    def __init__(self, nodelist, field_or_field_name, param):
+        self.nodelist = nodelist
+        self.field_or_field_name = field_or_field_name
+        self.param = param
+
+    def render(self, context):
+        output = self.nodelist.render(context).strip()
+        field_or_field_name = template.Variable(self.field_or_field_name).resolve(
+            context
+        )
+        label = ""
+        if type(field_or_field_name) in (str, SafeString):
+            name = field_or_field_name
+        else:
+            name = field_or_field_name.name
+            label = field_or_field_name.label
+
+        values = dict([(key, val.resolve(context)) for key, val in self.param.items()])
+        if "label" in values:
+            label = values["label"]
+        else:
+            if not label:
+                label = name
+        if "data_rel_name" in values:
+            data_rel_name = values["data_rel_name"]
+        else:
+            data_rel_name = ""
+        if "src" in values:
+            src = values["src"]
+        else:
+            src = ""
+
+        template_str = """
+            {%% load exsyntax %%}
+            <div class="form-group group_choicefield form-floating">
+                <div class="input-group get_row">
+                    <select class="select_combo form-select" name="%s" data-rel-name="%s" src="%s">
+                            <option disabled selected value />
+                            %s 
+                    </select>
+                </div>
+                <label class="form-label control-label float-left">
+                    %s
+                </label>
+            </div>
+        """ % (
+            name,
+            data_rel_name,
+            src,
+            output,
+            label,
+        )
+        t = Template(template_str)
+        return t.render(context)
+
+
+@register.tag
+def comboselect(parser, token):
+    bits = token.split_contents()
+    remaining_bits = bits[2:]
+    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    parm = token.split_contents()
+    nodelist = parser.parse(("endcomboselect"))
+    parser.delete_first_token()
+    return ComboSelect(nodelist, bits[1], extra_context)
 
 
 # @inclusion_tag('widgets/paginator.html')

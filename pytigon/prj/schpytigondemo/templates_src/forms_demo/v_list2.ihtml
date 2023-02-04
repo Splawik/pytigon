@@ -1,0 +1,13 @@
+option disabled,,,selected,,,value
+% if prev_value == 'a1':
+    option value=aa1...L2_A1
+    option value=aa2...L2_A2
+    option value=aa3...L2_A3
+% if prev_value == 'a2':
+    option value=bb1...L2_B1
+    option value=bb2...L2_B2
+    option value=bb3...L2_B3
+% if prev_value == 'a3':
+    option value=cc1...L2_C1
+    option value=cc2...L2_C2
+    option value=cc3...L2_C3

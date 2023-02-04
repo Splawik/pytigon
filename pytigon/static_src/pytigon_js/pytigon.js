@@ -1209,7 +1209,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, selectpicker_init;
+var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1433,6 +1433,70 @@ select2_init = function flx_select2_init (dest_elem) {
 };
 
 register_mount_fun(select2_init);
+select_combo_init = function flx_select_combo_init (dest_elem) {
+    var elem, on_change, on_change_element, select_ctrl_list, stub13_seq, stub14_itr;
+    select_ctrl_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".select_combo"));
+    on_change_element = (function flx_on_change_element (element) {
+        var _onload, evt, next_element, next_elements, region, src;
+        region = element.closest(".ajax-region");
+        if ((!_pyfunc_op_equals(region, null))) {
+            next_elements = document.getElementsByName(element.getAttribute("data-rel-name"));
+            if ((next_elements.length > 0)) {
+                next_element = next_elements[0];
+                if (_pyfunc_truthy(next_element.hasAttribute("src"))) {
+                    src = next_element.getAttribute("src");
+                    if (_pyfunc_truthy(element.value)) {
+                        src = process_href(src, jQuery(element));
+                        _onload = (function flx__onload (responseText) {
+                            var evt;
+                            if ((_pyfunc_hasattr(next_element, "onloadeddata") && (_pyfunc_truthy(_pyfunc_getattr(next_element, "onloadeddata"))) && _pyfunc_truthy(next_element.onloadeddata))) {
+                                evt = document.createEvent("HTMLEvents");
+                                evt.initEvent("loadeddata", false, true);
+                                evt.data = responseText;
+                                evt.data_source = src;
+                                next_element.dispatchEvent(evt);
+                            } else {
+                                next_element.innerHTML = responseText;
+                                on_change_element(next_element);
+                            }
+                            return null;
+                        }).bind(this);
+
+                        ajax_get(src, _onload);
+                    } else if ((_pyfunc_hasattr(next_element, "onloadeddata") && (_pyfunc_truthy(_pyfunc_getattr(next_element, "onloadeddata"))) && _pyfunc_truthy(next_element.onloadeddata))) {
+                        evt = document.createEvent("HTMLEvents");
+                        evt.initEvent("loadeddata", false, true);
+                        evt.data = "";
+                        evt.data_source = src;
+                        next_element.dispatchEvent(evt);
+                    } else {
+                        next_element.innerHTML = "<option disabled selected value></option>";
+                        on_change_element(next_element);
+                    }
+                }
+            }
+        }
+        return null;
+    }).bind(this);
+
+    on_change = (function flx_on_change (event) {
+        var element;
+        element = event.target;
+        return on_change_element(element);
+    }).bind(this);
+
+    stub13_seq = select_ctrl_list;
+    if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
+    for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
+        elem = stub13_seq[stub14_itr];
+        if (_pyfunc_truthy(elem.hasAttribute("data-rel-name"))) {
+            elem.addEventListener("change", on_change);
+        }
+    }
+    return null;
+};
+
+register_mount_fun(select_combo_init);
 datatable_init = function flx_datatable_init (dest_elem) {
     var table_type, tbl;
     table_type = get_table_type(jQuery(dest_elem));
@@ -1688,7 +1752,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, moveelement_init, select2_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, moveelement_init, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;
