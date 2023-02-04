@@ -82,7 +82,7 @@ def run(param=None):
     ext_lib_path = os.path.join(base_path, "ext_lib")
     if not ext_lib_path in sys.path:
         sys.path.append(ext_lib_path)
-    os.environ["PYTIGON_ROOT_PATH"] = base_path
+    os.environ["PYTIGON_ROOT_PATH"] = os.path.dirname(os.path.abspath(__file__))
 
     if len(argv) > 1 and argv[1].startswith("manage"):
         if argv[1].startswith("manage_"):
