@@ -1,0 +1,44 @@
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % list_action "regen" "Regenerate workflow"
+
+%% list_row_header
+    th..._(Workflow type)
+    th..._(Creation date)
+    th..._(Acceptance date)
+    th..._(Email)
+    th..._(Title)
+    th..._(Item type)
+    th..._(Status)
+    
+
+%% list_row
+    td...{{ object.workflow_type }}
+    td...{{ object.creation_date }}
+    td...{{ object.acceptance_date }}
+    td...{{ object.user_email }}
+    td...{{ object.title }}
+    td...{{ object.item_type }}
+    td...{{ object.status }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .accept,Accept
+        .reject,Reject
+
+%% row_edit
+    % form:
+        .workflow_type,user_email,title,item_type,status

@@ -19,6 +19,8 @@ from datetime import datetime
 from django.conf import settings
 from os.path import join
 
+from filer.fields.file import FilerFileField
+
 
 def upload_path_fun(obj, filename):
     return (
@@ -83,6 +85,12 @@ class Attachements(models.Model):
     )
     file = models.FileField(
         "Select file", null=False, blank=False, editable=True, upload_to=upload_path_fun
+    )
+    file = FilerFileField(
+        null=True, blank=True, editable=True, on_delete=models.CASCADE
+    )
+    description = models.CharField(
+        "Description", null=True, blank=True, editable=True, max_length=128
     )
 
     @classmethod

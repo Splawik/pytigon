@@ -6,6 +6,7 @@ APPS = [
     "schlog",
     "schauth",
     "schtasks",
+    "schworkflow",
 ]
 APPS_EXT = []
 PUBLIC = True
