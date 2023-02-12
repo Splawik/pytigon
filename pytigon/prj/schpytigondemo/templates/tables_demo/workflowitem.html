@@ -1,0 +1,7 @@
+{% extends "schworkflow/workflowitem.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block list_content_actions %}
+        {% list_action "regen" "Regenerate workflow2" %}
+{% endblock %}
+

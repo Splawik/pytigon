@@ -14,6 +14,9 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+from schelements.models import *
+
+
 from datetime import datetime
 
 

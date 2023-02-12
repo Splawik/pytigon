@@ -105,6 +105,7 @@ MEDIA_ROOT_PROTECTED = os.path.join(
 )
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
+DOC_PATH = os.path.join(MEDIA_ROOT, "doc")
 
 ADMIN_MEDIA_PREFIX = "/media/"
 
@@ -553,7 +554,9 @@ def DEFAULT_FILE_STORAGE_FS():
         _m.mount("site_media", OSFS(settings.MEDIA_ROOT))
     except:
         pass
+ 
     try:
+        _m.mount("doc", OSFS(settings.DOC_PATH))
         _m.mount("upload", OSFS(settings.UPLOAD_PATH))
         _m.mount(
             "filer_public", OSFS(os.path.join(settings.UPLOAD_PATH, "filer_public"))

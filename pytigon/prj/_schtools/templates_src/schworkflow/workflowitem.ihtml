@@ -24,8 +24,8 @@
 
 %% list_row
     td...{{ object.workflow_type }}
-    td...{{ object.creation_date }}
-    td...{{ object.acceptance_date }}
+    td...{{ object.creation_date|isoformat }}
+    td...{{ object.acceptance_date|isoformat }}
     td...{{ object.user_email }}
     td...{{ object.title }}
     td...{{ object.item_type }}
@@ -36,8 +36,8 @@
     % row_actions:
         .edit
         .delete
-        .accept,Accept
-        .reject,Reject
+        .accept,Accept,,refresh_frame
+        .reject,Reject,,refresh_frame
 
 %% row_edit
     % form:

@@ -1,0 +1,8 @@
+{% extends "schattachements/attachements.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block id_extra %}
+        {% row_related_list "schworkflow/WorkflowItem" title="Workflow" filter="schattachements__Attachement__{{object.id}}__default" icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'"  version=version %}
+        {{ block.super }}
+{% endblock %}
+

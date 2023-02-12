@@ -14,6 +14,9 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+from schelements.models import *
+
+
 from django.core.mail import send_mail
 from datetime import datetime
 from django.conf import settings
@@ -24,7 +27,7 @@ from filer.fields.file import FilerFileField
 
 def upload_path_fun(obj, filename):
     return (
-        "attachements/"
+        "doc/attachements/"
         + obj.application
         + "_"
         + obj.table
@@ -37,9 +40,9 @@ def upload_path_fun(obj, filename):
     )
 
 
-class Attachements(models.Model):
+class Attachement(JSONModel):
     class Meta:
-        verbose_name = _("Attachements")
+        verbose_name = _("Attachement")
         verbose_name_plural = _("Attachements")
         default_permissions = ("add", "change", "delete", "list")
         app_label = "schattachements"
@@ -86,8 +89,13 @@ class Attachements(models.Model):
     file = models.FileField(
         "Select file", null=False, blank=False, editable=True, upload_to=upload_path_fun
     )
-    file = FilerFileField(
-        null=True, blank=True, editable=True, on_delete=models.CASCADE
+    folder = ext_models.PtigForeignKey(
+        Element,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="Folder",
     )
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=128
@@ -119,7 +127,7 @@ class Attachements(models.Model):
         self.ext = self.file.url.split(".")[-1].upper()
         if not self.name:
             self.name = str(self.file)
-        super(Attachements, self).save(*args, **kwargs)
+        super(Attachement, self).save(*args, **kwargs)
 
 
-admin.site.register(Attachements)
+admin.site.register(Attachement)

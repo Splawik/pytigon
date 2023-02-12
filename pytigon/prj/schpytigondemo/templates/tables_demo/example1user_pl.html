@@ -17,6 +17,10 @@
         Email
         </th>
 {% endblock %}
+{% block id_extra %}
+        {% row_related_list "schattachements/Attachement" title="Attachements" filter="tables_demo__Example1Use__{{object.id}}__default" icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="tables_demo__" %}
+        {{ block.super }}
+{% endblock %}
 {% block list_row %}
         <td>{{ object.username }}</td>
         <td>

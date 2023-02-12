@@ -29,3 +29,17 @@ from . import models
 import os
 import sys
 import datetime
+
+
+def accept(request, pk):
+
+    obj = models.WorkflowItem.objects.get(pk=pk)
+    obj.accept_workflow_item()
+    return actions.refresh(request)
+
+
+def reject(request, pk):
+
+    obj = models.WorkflowItem.objects.get(pk=pk)
+    obj.reject_workflow_item()
+    return actions.refresh(request)

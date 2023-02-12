@@ -26,6 +26,8 @@ from schtasks.models import *
 
 from schsimplescripts.models import *
 
+from schelements.models import *
+
 
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip

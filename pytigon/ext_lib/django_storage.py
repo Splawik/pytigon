@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.core.files.storage import Storage
 from django.core.files import File
@@ -16,6 +18,33 @@ class FSStorage(Storage):
             self.base_url = base_url
         else:
             self.base_url = ""
+
+    def save(self, name, content, max_length=None):
+        if name is None:
+            name = content.name
+
+        if not hasattr(content, "chunks"):
+            content = File(content, name)
+        name = self.get_available_name(name, max_length=max_length)
+        name = self._save(name, content)
+        return name
+
+    def validate_file_name(name, allow_relative_path=True):
+        return True
+
+    def get_available_name(self, name, max_length=None):
+        name = str(name).replace("\\", "/")
+        dir_name, file_name = os.path.split(name)
+        file_root, file_ext = os.path.splitext(file_name)
+        while self.exists(name) or (max_length and len(name) > max_length):
+            name = dir_name + "/" + self.get_alternative_name(file_root, file_ext)
+            if max_length is None:
+                continue
+            truncation = len(name) - max_length
+            if truncation > 0:
+                file_root = file_root[:-truncation]
+                name = dir_name + "/" + self.get_alternative_name(file_root, file_ext)
+        return name
 
     def exists(self, name):
         return self.fs.isfile(name) or self.fs.isdir(name)

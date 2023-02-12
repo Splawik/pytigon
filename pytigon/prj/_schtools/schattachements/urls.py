@@ -11,4 +11,8 @@ urlpatterns = [
 gen = generic_table_start(urlpatterns, "schattachements", views)
 
 
-gen.standard("Attachements", _("Attachements"), _("Attachements"))
+gen.standard("Attachement", _("Attachement"), _("Attachements"))
+
+gen.for_field(
+    "schelements.Element", "attachement_set", _("Attachement"), _("Attachements")
+)

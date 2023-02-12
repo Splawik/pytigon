@@ -230,6 +230,7 @@ def row_related_list(
     url="",
     action="field_list",
     app=None,
+    version="",
 ):
     if app:
         table = table_name
@@ -238,13 +239,15 @@ def row_related_list(
     if url:
         url2 = url
     else:
+        if version:
+            version = "__" + version
         if filter:
-            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form/sublist/"
+            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/"
         else:
             url2 = (
-                "{bp}" + f"{app}/table/{table}/{context['object'].id}/-/form/sublist/"
+                "{bp}"
+                + f"{app}/table/{table}/{context['object'].id}/-/form{version}/sublist/"
             )
-
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     return ret
 

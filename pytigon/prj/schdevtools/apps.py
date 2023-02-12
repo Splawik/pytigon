@@ -6,6 +6,7 @@ APPS = [
     "_schtools.schtools",
     "_schtools.schtasks",
     "_schtools.schsimplescripts",
+    "_schdata.schelements",
 ]
 APPS_EXT = []
 PUBLIC = True

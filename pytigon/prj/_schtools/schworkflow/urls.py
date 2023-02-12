@@ -4,7 +4,10 @@ from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_ac
 from django.views.generic import TemplateView
 from . import views
 
-urlpatterns = []
+urlpatterns = [
+    gen_row_action("WorkflowItem", "accept", views.accept),
+    gen_row_action("WorkflowItem", "reject", views.reject),
+]
 
 gen = generic_table_start(urlpatterns, "schworkflow", views)
 

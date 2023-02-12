@@ -91,6 +91,7 @@ element_type_choice = [
     ("C-DIC", "Config/Dictionary"),
     ("C-OTH", "Config/Other"),
     ("C-ALI", "Config/Alias"),
+    ("C-FLD", "Config/Folder"),
 ]
 
 doctype_status = [

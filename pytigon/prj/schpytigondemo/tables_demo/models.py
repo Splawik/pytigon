@@ -24,6 +24,10 @@ from schcommander.models import *
 
 from schtools.models import *
 
+from schattachements.models import *
+
+from schworkflow.models import *
+
 from schreports.models import *
 
 from schelements.models import *
@@ -33,6 +37,31 @@ from standard_components.models import *
 from schprofile.models import *
 
 from schadmin.models import *
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+@receiver(post_save, sender=Attachement)
+def attachement_created(sender, instance, created, **kwargs):
+    if created:
+        WorkflowType.new_workflow_item("demo", instance)
+        if False:
+            wtype = WorkflowType.objects.filter(name="demo").first()
+            if wtype:
+                print("wtype: ", wtype)
+                obj = WorkflowItem()
+                obj.parent_id = sender.pk
+                obj.workflow_type = wtype
+                obj.application = "tables_demo"
+                obj.table = "Example1User"
+                obj.group = "default"
+                obj.user_email = "slawomir.cholaj@gmail.com"
+                obj.title = "Simple authorization"
+                obj.item_type = "email"
+                obj.save()
+            print("attachement_created: ", instance, created, kwargs)
 
 
 tag_CHOICE = [

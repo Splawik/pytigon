@@ -36,7 +36,7 @@ import mimetypes
 
 def download(request, pk):
 
-    obj = models.Attachements.objects.get(id=pk)
+    obj = models.Attachement.objects.get(id=pk)
     wrapper = FileWrapper(open(obj.file.path, "rb"))
     content_type = mimetypes.guess_type(obj.file.path)[0]
     response = HttpResponse(wrapper, content_type=content_type)

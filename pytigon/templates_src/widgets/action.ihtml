@@ -3,7 +3,7 @@
 
 %% action_widget_content
     % if standard_web_browser:
-        a href={{action.url|safe}},,,class={% block action_class %}{% endblock %}{{action.tag_class}},,,title={{action.title}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
+        a href={{action.url|safe}}{% if version %}?version={{version}}{% endif %},,,class={% block action_class %}{% endblock %}{{action.tag_class}},,,title={{action.title}},,,target={{action.target}},,,name={{action.name}},,,{{action.attrs|safe}}
             % if browser_type == 'mobile':
                 % if not action.icon_name:
                     {{action.title}}
@@ -16,10 +16,10 @@
                     {{action.title}}
 
     % else:
-        CTRL-BUTTON name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{action.url}}
+        CTRL-BUTTON name={{action.name}},,,label={{action.title}},,,title={{action.title}},,,href={{action.url}}{% if version %}?version={{version}}{% endif %}
         % comment:
             % if action.icon_name:
-                a href={{path}}{{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}},,,src={{action.icon_name}}
+                a href={{path}}{{action.url|safe}}{% if version %}?version={{version}}{% endif %},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}},,,src={{action.icon_name}}
             % else:
-                a href={{path}}{{action.url|safe}},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}}
+                a href={{path}}{{action.url|safe}}{% if version %}?version={{version}}{% endif %},,,class={{action.tag_class}},,,id={{action.name}},,,name={{action.name}},,,title={{action.title}},,,target={{action.target}},,,{{action.attrs|safe}}
                     {{action.title}}

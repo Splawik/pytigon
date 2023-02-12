@@ -24,6 +24,10 @@ from schcommander.models import *
 
 from schtools.models import *
 
+from schattachements.models import *
+
+from schworkflow.models import *
+
 from schreports.models import *
 
 from schelements.models import *

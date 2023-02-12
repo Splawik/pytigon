@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -34,6 +33,9 @@
         <th>
         ext
         </th>
+{% endblock %}
+{% block id_extra %}
+        {{ block.super }}
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>

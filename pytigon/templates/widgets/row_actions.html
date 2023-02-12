@@ -2,7 +2,7 @@
 {% load exsyntax %}
 {% if standard_web_browser %}
         {% for pos in actions %}
-                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs|safe}}>
+                <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs|safe}}>
                         {% if browser_type == 'mobile' %}
                                 {% if not pos.icon_name %}
                                         {{pos.title}}
@@ -26,7 +26,7 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg-end">
                                 {% for pos in actions2 %}
-                                        <a test="True" href="{{pos.url|safe}}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}>
+                                        <a test="True" href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" title="{{pos.title}}" target="{{pos.target}}" name="{{pos.name}}" {{pos.attrs_in_menu|append_class_to_attrs:"dropdown-item"|safe}}>
                                                 {{pos.title}}
                                         </a>
                                 {% endfor %}
@@ -37,9 +37,9 @@
         {% if False %}
                 {% for pos in actions|add:actions2 %}
                         {% if pos.icon_name %}
-                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
+                                <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
                           {% else %}
-                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
+                                <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="xxx{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
                                 </a>
                         {% endif %}
                 {% endfor %}
@@ -47,14 +47,14 @@
         {% for pos in actions|add:actions2 %}
                 {% if pos.icon_name %}
                         {% if 'fa-caret-down' in pos.icon_name %}
-                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
+                                <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}>
                                         +
                                 </a>
                           {% else %}
-                                <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
+                                <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}} src="{{pos.icon_name}}"></a>
                         {% endif %}
                   {% else %}
-                        <a href="{{pos.url|safe}}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}></a>
+                        <a href="{{pos.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{{pos.tag_class}}" id="{{pos.name}}" name="{{pos.name}}" title="{{pos.title}}" target="{{pos.target}}" {{pos.attrs|safe}}></a>
                 {% endif %}
         {% endfor %}
 {% endif %}
