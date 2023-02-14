@@ -1374,7 +1374,7 @@ def build_prj(pk):
     else:
         object_list.append((datetime.datetime.now(), "ERRORS:", ""))
 
-    (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path)
+    (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
     if output_tab:
         for pos in output_tab:
             if pos:
