@@ -41,7 +41,8 @@ workflow_item_status_choices = [
     ("0", "active"),
     ("1", "accepted"),
     ("2", "rejected"),
-    ("9", "in line"),
+    ("8", "next"),
+    ("9", "cancelled"),
 ]
 
 
@@ -199,6 +200,20 @@ class WorkflowItem(JSONModel):
         db_index=True,
         max_length=64,
     )
+    level = models.IntegerField(
+        "Level",
+        null=True,
+        blank=True,
+        editable=True,
+        default=0,
+    )
+    user_email = models.EmailField(
+        "User s email",
+        null=True,
+        blank=True,
+        editable=True,
+        db_index=True,
+    )
     creation_date = models.DateTimeField(
         "Creation date", null=False, blank=False, editable=True, auto_now=True
     )
@@ -207,13 +222,6 @@ class WorkflowItem(JSONModel):
         null=True,
         blank=True,
         editable=True,
-    )
-    user_email = models.EmailField(
-        "User s email",
-        null=True,
-        blank=True,
-        editable=True,
-        db_index=True,
     )
     title = models.CharField(
         "Title", null=True, blank=True, editable=False, db_index=True, max_length=128
@@ -226,6 +234,7 @@ class WorkflowItem(JSONModel):
         null=True,
         blank=True,
         editable=True,
+        default="0",
         choices=workflow_item_status_choices,
         max_length=1,
     )

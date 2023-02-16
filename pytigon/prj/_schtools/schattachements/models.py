@@ -86,6 +86,13 @@ class Attachement(JSONModel):
         editable=False,
         default=datetime.now,
     )
+    modify_date = models.DateTimeField(
+        "Modify date",
+        null=True,
+        blank=True,
+        editable=False,
+        default=datetime.now,
+    )
     file = models.FileField(
         "Select file", null=False, blank=False, editable=True, upload_to=upload_path_fun
     )
