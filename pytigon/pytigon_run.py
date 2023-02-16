@@ -331,6 +331,15 @@ def run(param=None):
             argv[1] = ret[0]
 
         subprocess.run([get_executable()] + argv[2:])
+    elif len(argv) > 1 and argv[1] == "zig":
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths()
+        ret = schserw_init_prj_path(paths, None, param)
+        if ret:
+            argv[1] = ret[0]
+
+        subprocess.run([get_executable(), "-m", "ziglang"] + argv[2:])
     elif len(argv) > 1 and (
         argv[1].endswith(".py")
         or argv[1][-4:-1] == ".py"
