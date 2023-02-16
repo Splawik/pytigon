@@ -1,0 +1,23 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Interfaces' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block user_header %}
+        <th>Title</th>
+        <th>
+        result
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td> {{object.0}}</td>
+                <td align="right">
+                 {{object.1}}
+                </td>
+        </tr>
+{% endblock %}
+

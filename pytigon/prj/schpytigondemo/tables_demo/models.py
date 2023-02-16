@@ -47,21 +47,6 @@ from django.dispatch import receiver
 def attachement_created(sender, instance, created, **kwargs):
     if created:
         WorkflowType.new_workflow_item("demo", instance)
-        if False:
-            wtype = WorkflowType.objects.filter(name="demo").first()
-            if wtype:
-                print("wtype: ", wtype)
-                obj = WorkflowItem()
-                obj.parent_id = sender.pk
-                obj.workflow_type = wtype
-                obj.application = "tables_demo"
-                obj.table = "Example1User"
-                obj.group = "default"
-                obj.user_email = "slawomir.cholaj@gmail.com"
-                obj.title = "Simple authorization"
-                obj.item_type = "email"
-                obj.save()
-            print("attachement_created: ", instance, created, kwargs)
 
 
 tag_CHOICE = [

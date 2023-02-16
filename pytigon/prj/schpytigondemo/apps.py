@@ -17,6 +17,7 @@ APPS = [
     "attachements_demo",
     "log_demo",
     "desktop_demo",
+    "interfaces",
     "_schwiki.schwiki",
     "_schtools.schsimplescripts",
     "_schtools.schlog",

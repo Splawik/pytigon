@@ -15,19 +15,19 @@
 {% endblock %}
 {% block body_footer_scripts %}
         {{block.super}}
-        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
-        {% component 'schcomponents/components/ptig-pivottable.js' %}
-        {% component 'schcomponents/components/ptig-d3.js' %}
         {% component 'schcomponents/components/ptig-leaflet.js' %}
+        {% component 'schcomponents/components/ptig-d3.js' %}
+        {% component 'schcomponents/components/ptig-pivottable.js' %}
         {% component 'schcomponents/components/ptig-video.js' %}
         {% component 'schdevtools/components/test.js' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component 'schcomponents/components/ptig-spreadsheet.js' %}
         {% component 'schcomponents/components/ptig-plotly.js' %}
+        {% component 'schcomponents/components/ptig-codeeditor.js' %}
 {% endblock %}
 {% block component_init %}
                 var initial_state = { username: "",theme: "" };
                 GLOBAL_BUS.set_state(initial_state);
-                var component_init = [ "ptig-spreadsheet.js", "ptig-pivottable.js", "ptig-d3.js", "ptig-leaflet.js", "ptig-video.js", "test.js", "ptig-codeeditor.js", "ptig-plotly.js",  ];
+                var component_init = [ "ptig-leaflet.js", "ptig-d3.js", "ptig-pivottable.js", "ptig-video.js", "test.js", "ptig-spreadsheet.js", "ptig-plotly.js", "ptig-codeeditor.js",  ];
 {% endblock %}
 {% block js_app_init %}
         let db_struct = [ ["devparam", {"keyPath": "key"}] ];

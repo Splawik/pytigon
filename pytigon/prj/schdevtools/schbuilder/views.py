@@ -851,6 +851,7 @@ def build_prj(pk):
         # template_to_file(base_path, "schema", app.name+"/schema.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
 
         for file_obj in app.schfiles_set.all():
+            print("A0:", file_obj.file_type)
             if file_obj.file_type == "f":
                 file_name = (
                     base_path
@@ -870,6 +871,10 @@ def build_prj(pk):
                     + ".py"
                 )
             elif file_obj.file_type == "c":
+                init_file = os.path.join(base_path, app.name, "applib", "__init__.py")
+                if not os.path.exists(init_file):
+                    f = open_and_create_dir(init_file, "wb")
+                    f.close()
                 file_name = base_path + "/" + app.name + "/" + file_obj.name
             elif file_obj.file_type == "m":
                 f = open_and_create_dir(
@@ -964,18 +969,14 @@ def build_prj(pk):
                 f.write(codejs.encode("utf-8"))
                 f.close()
                 file_name = None
-            elif file_obj.file_type in ("l", "x", "C"):
-                f = open_and_create_dir(
-                    os.path.join(base_path, app.name, "applib", "__init__.py"), "wb"
-                )
-                f.close()
+            elif file_obj.file_type == "l":
+                init_file = os.path.join(base_path, app.name, "applib", "__init__.py")
+                if not os.path.exists(init_file):
+                    f = open_and_create_dir(init_file, "wb")
+                    f.close()
                 file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
-                if file_obj.file_type == "l":
+                if not file_name.endswith(".py"):
                     file_name += ".py"
-                elif file_obj.file_type == "x":
-                    file_name += ".pyx"
-                else:
-                    file_name += ".c"
             elif file_obj.file_type == "s":
                 file_name = base_path + "/" + app.name + "/schema.py"
             elif file_obj.file_type == "r":
