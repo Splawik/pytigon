@@ -851,7 +851,6 @@ def build_prj(pk):
         # template_to_file(base_path, "schema", app.name+"/schema.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
 
         for file_obj in app.schfiles_set.all():
-            print("A0:", file_obj.file_type)
             if file_obj.file_type == "f":
                 file_name = (
                     base_path
