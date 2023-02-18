@@ -10,12 +10,12 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-#Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
+# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
+# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
+# license: "LGPL 3.0"
+# version: "0.1a"
 
 
 import platform
@@ -24,15 +24,16 @@ from django.core.files.storage import default_storage
 import wx
 
 from cefpython3 import cefpython as cef
-from pytigon_lib.schbrowser.schcef import initialize, shutdown, create_browser
+from schcef import initialize, shutdown, create_browser
 
 CEF_INITIATED = False
 TIMER = None
 
-class KeyEvent():
+
+class KeyEvent:
     def __init__(self, event):
         self.event = event
-        m = event['modifiers']
+        m = event["modifiers"]
         if m & 2:
             self.shift_down = True
         else:
@@ -46,7 +47,7 @@ class KeyEvent():
         else:
             self.alt_down = False
 
-        self.KeyCode = event['windows_key_code']
+        self.KeyCode = event["windows_key_code"]
 
     def AltDown(self):
         return self.alt_down
@@ -68,6 +69,7 @@ def cef_close(frame):
             TIMER.Stop()
             TIMER = None
 
+
 def cef_init():
     global CEF_INITIATED, TIMER
     if not CEF_INITIATED:
@@ -86,7 +88,7 @@ def cef_init():
 
         settings = {
             "debug": False,
-            "log_severity": cef.LOGSEVERITY_DISABLE, #cef.LOGSEVERITY_INFO,
+            "log_severity": cef.LOGSEVERITY_DISABLE,  # cef.LOGSEVERITY_INFO,
             "locales_dir_path": cef.GetModuleDirectory() + "/locales",
             "resources_dir_path": cef.GetModuleDirectory(),
             "browser_subprocess_path": cef.GetModuleDirectory() + "/subprocess",
@@ -103,9 +105,9 @@ def cef_init():
             "ignore_certificate_errors": True,
         }
         switches = {
-            #"disable-gpu": "1",
+            # "disable-gpu": "1",
             "no-proxy-server": "1",
-            'disable-web-security': "1"
+            "disable-web-security": "1",
         }
 
         cef.Initialize(settings, switches=switches)
@@ -136,7 +138,7 @@ class WebRequestClient:
 
     def OnDownloadData(self, web_request, data):
         if type(data) == str:
-            self._data += data.encode('utf-8')
+            self._data += data.encode("utf-8")
         else:
             self._data += data
 
@@ -149,11 +151,13 @@ class WebRequestClient:
             web_request.GetRequestStatus(),
             web_request.GetRequestError(),
             web_request.GetResponse(),
-            self._data)
+            self._data,
+        )
 
         if self._data:
             self._dataLength = len(self._data)
         self._resourceHandler._responseHeadersReadyCallback.Continue()
+
 
 class ResourceHandler:
     _resourceHandlerId = None
@@ -168,12 +172,15 @@ class ResourceHandler:
 
     def ProcessRequest(self, request, callback):
         url = request.GetUrl()
-        if '127.0.0.2' in url:
-            request.SetUrl(url.replace('http:', 'memory:'))
+        if "127.0.0.2" in url:
+            request.SetUrl(url.replace("http:", "memory:"))
         self._responseHeadersReadyCallback = callback
         self._webRequestClient = WebRequestClient()
         self._webRequestClient._resourceHandler = self
-        request.SetFlags(cef.Request.Flags["AllowCachedCredentials"] | cef.Request.Flags["AllowCookies"])
+        request.SetFlags(
+            cef.Request.Flags["AllowCachedCredentials"]
+            | cef.Request.Flags["AllowCookies"]
+        )
         self._webRequest = cef.WebRequest.Create(request, self._webRequestClient)
         return True
 
@@ -190,7 +197,9 @@ class ResourceHandler:
 
     def ReadResponse(self, data_out, bytes_to_read, bytes_read_out, callback):
         if self._offsetRead < self._webRequestClient._dataLength:
-            dataChunk = self._webRequestClient._data[self._offsetRead:(self._offsetRead + bytes_to_read)]
+            dataChunk = self._webRequestClient._data[
+                self._offsetRead : (self._offsetRead + bytes_to_read)
+            ]
             self._offsetRead += len(dataChunk)
             data_out[0] = dataChunk
             bytes_read_out[0] = len(dataChunk)
@@ -207,6 +216,7 @@ class ResourceHandler:
     def Cancel(self):
         pass
 
+
 class ClientHandler:
     mainBrowser = None
 
@@ -217,7 +227,9 @@ class ClientHandler:
         self.htmlwin = htmlwin
 
     def GetResourceHandler(self, browser, frame, request):
-        if request.GetUrl().startswith("http://127.0.0.2/") or request.GetUrl().startswith("memory://127.0.0.2/"):
+        if request.GetUrl().startswith(
+            "http://127.0.0.2/"
+        ) or request.GetUrl().startswith("memory://127.0.0.2/"):
             resHandler = ResourceHandler()
             resHandler._clientHandler = self
             resHandler._browser = browser
@@ -228,19 +240,25 @@ class ClientHandler:
         else:
             return None
 
-    def _OnResourceResponse(self, browser, frame, request, requestStatus, requestError, response, data):
-        if request.GetUrl().startswith("http://127.0.0.2/") or request.GetUrl().startswith("memory://127.0.0.2/"):
+    def _OnResourceResponse(
+        self, browser, frame, request, requestStatus, requestError, response, data
+    ):
+        if request.GetUrl().startswith(
+            "http://127.0.0.2/"
+        ) or request.GetUrl().startswith("memory://127.0.0.2/"):
             uri = request.GetUrl()
             print("R: ", uri)
-            data, file_name = self.htmlwin._get_http_file(uri.replace('memory:', 'http:'))
+            data, file_name = self.htmlwin._get_http_file(
+                uri.replace("memory:", "http:")
+            )
             if file_name:
                 print("RESOURCE: ", file_name)
                 with default_storage.open(file_name, "rb") as f:
-                #with open(file_name, "rb") as f:
+                    # with open(file_name, "rb") as f:
                     data = f.read()
 
         if type(data) == str:
-            return data.encode('utf-8')
+            return data.encode("utf-8")
         else:
             return data
 
@@ -253,30 +271,37 @@ class ClientHandler:
         if resHandler._resourceHandlerId in self._resourceHandlers:
             del self._resourceHandlers[resHandler._resourceHandlerId]
         else:
-            print("_ReleaseStrongReference() FAILED: resource handler " \
-                  "not found, id = %s" % (resHandler._resourceHandlerId))
+            print(
+                "_ReleaseStrongReference() FAILED: resource handler "
+                "not found, id = %s" % (resHandler._resourceHandlerId)
+            )
 
     def OnAddressChange(self, browser, frame, url):
         event = wx.CommandEvent()
         event.SetString(url)
-        if self.htmlwin: self.htmlwin.on_address_changed(event)
+        if self.htmlwin:
+            self.htmlwin.on_address_changed(event)
 
     def OnStatusMessage(self, browser, value):
         event = wx.CommandEvent()
         event.SetString(value)
-        if self.htmlwin: self.htmlwin.on_status_message(event)
+        if self.htmlwin:
+            self.htmlwin.on_status_message(event)
 
     def OnTitleChange(self, browser, title):
         event = wx.CommandEvent()
         event.SetString(title)
-        if self.htmlwin and not self.htmlwin.component: self.htmlwin.on_title_changed(event)
+        if self.htmlwin and not self.htmlwin.component:
+            self.htmlwin.on_title_changed(event)
 
     def OnLoadStart(self, browser, frame):
-        #if self.htmlwin: self.htmlwin.loading += 1
+        # if self.htmlwin: self.htmlwin.loading += 1
         event = wx.CommandEvent()
         event.SetString(frame.GetUrl())
-        if self.htmlwin: self.htmlwin.on_load_start(event)
-        if self.htmlwin: self.htmlwin.progress_changed(0)
+        if self.htmlwin:
+            self.htmlwin.on_load_start(event)
+        if self.htmlwin:
+            self.htmlwin.progress_changed(0)
 
     def OnLoadEnd(self, browser, frame, http_code):
         if frame == browser.GetMainFrame():
@@ -285,7 +310,7 @@ class ClientHandler:
             if self.htmlwin:
                 self.htmlwin.on_load_end(event)
                 self.htmlwin.progress_changed(100)
-        #if self.htmlwin: self.htmlwin.loading -= 1
+        # if self.htmlwin: self.htmlwin.loading -= 1
 
     def OnLoadError(self, browser, frame, error_code, error_text_out, failed_url):
         event = wx.CommandEvent()
@@ -294,14 +319,15 @@ class ClientHandler:
         if self.htmlwin:
             self.htmlwin.on_load_error(event)
             self.htmlwin.progress_changed(100)
-        #if self.htmlwin: self.htmlwin.loading -= 1
+        # if self.htmlwin: self.htmlwin.loading -= 1
 
     def OnTooltip(self, browser, text):
         event = wx.CommandEvent()
         event.SetString(text[0])
-        if self.htmlwin: self.htmlwin.on_status_message(event)
+        if self.htmlwin:
+            self.htmlwin.on_status_message(event)
 
-    #def OnBeforeBrowse(self, browser, frame, request, is_redirect):
+    # def OnBeforeBrowse(self, browser, frame, request, is_redirect):
     #    if wx.GetKeyState(wx.WXK_CONTROL):
     #        if self.htmlwin: self.htmlwin.new_win(request.GetUrl())
     #        return True
@@ -311,11 +337,11 @@ class ClientHandler:
     def OnBeforeResourceLoad(self, browser, frame, request):
         return False
 
-    #def OnConsoleMessage(self, browser, message, line, **_):
+    # def OnConsoleMessage(self, browser, message, line, **_):
 
     def OnConsoleMessage(self, browser, level, message, source, line):
         print("M:", message, source, line, level)
-        #return True
+        # return True
         return False
 
     def OnLoadingStateChange(self, browser, is_loading, **_):
@@ -328,7 +354,7 @@ class ClientHandler:
 
     def _OnPageComplete(self, browser):
         if self.htmlwin.hidden:
-            self.htmlwin.hidden=False
+            self.htmlwin.hidden = False
             if self.htmlwin.size:
                 self.htmlwin.SetSize(*self.htmlwin.size[0], **self.htmlwin.size[1])
 
@@ -339,13 +365,13 @@ class KeyboardHandler(object):
 
     def OnKeyEvent(self, browser, event, event_handle):
 
-        m = event['modifiers']
-        t = event['type']
-        if t==0 and m>2:
+        m = event["modifiers"]
+        t = event["type"]
+        if t == 0 and m > 2:
             ev = KeyEvent(event)
             p = self.parent
-            while(p):
-                if hasattr(p, 'on_acc_key_down'):
+            while p:
+                if hasattr(p, "on_acc_key_down"):
                     p.on_acc_key_down(ev)
                 p = p.GetParent()
 
@@ -369,11 +395,13 @@ class FocusHandler(object):
 
 class CEFControl(wx.Control):
     def __init__(self, parent, url="", size=(-1, -1), *args, **kwargs):
-        kwargs['style'] = wx.WANTS_CHARS | wx.NO_BORDER
-        #wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
-        #print("X1:", self.component)
+        kwargs["style"] = wx.WANTS_CHARS | wx.NO_BORDER
+        # wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
+        # print("X1:", self.component)
         if self.component:
-            wx.Control.__init__(self, parent, id=wx.ID_ANY, size=(1,1), *args, **kwargs)
+            wx.Control.__init__(
+                self, parent, id=wx.ID_ANY, size=(1, 1), *args, **kwargs
+            )
             self.hidden = True
         else:
             wx.Control.__init__(self, parent, id=wx.ID_ANY, size=size, *args, **kwargs)
@@ -383,7 +411,7 @@ class CEFControl(wx.Control):
 
         self.size = None
         self.browser = None
-        #if self.hide:
+        # if self.hide:
         #    self.Hide()
 
         cef_init()
@@ -425,15 +453,16 @@ class CEFControl(wx.Control):
         else:
             window_info.SetAsChild(self.Handle, [0, 0, width, height])
             print("embed_browser", width, height)
-        self.browser = cef.CreateBrowserSync(window_info, url = self.url)
+        self.browser = cef.CreateBrowserSync(window_info, url=self.url)
         self.browser.SetClientHandler(FocusHandler(self))
         self.browser.SetClientHandler(KeyboardHandler(self))
 
         this = self
+
         def wx_fun(value):
             print("Value sent from Javascript: ", value)
             print(type(self))
-            #self.Show()
+            # self.Show()
 
         bindings = cef.JavascriptBindings()
         bindings.SetFunction("wx_fun", wx_fun)
@@ -449,7 +478,7 @@ class CEFControl(wx.Control):
             cm = cef.CookieManager.GetGlobalManager()
             for name, value in cookies.items():
                 cookie = cef.Cookie()
-                cookie.Set({'name': name, 'value': value })
+                cookie.Set({"name": name, "value": value})
                 cm.SetCookie(url, cookie)
 
         if self.browser:
