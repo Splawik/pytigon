@@ -1,0 +1,54 @@
+{# -*- coding: utf-8 -*- #}
+%extends "form.html"
+
+%load exfiltry
+%load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "code": "wx.ART_NORMAL_FILE",
+                    "doc": "client://apps/help-browser.png",
+                    "run": "wx.ART_GO_DIR_UP",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=800 form_height=600
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New script"
+
+%% list_row_header
+    th...category
+    th...name
+    th...title
+
+%% list_row
+    td...{{object.category}}
+    td...{{object.name}}
+    td...{{object.title}}
+
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/code,Code,code
+        .field_edit/doc,Doc,doc
+        .delete        
+    % row_actions:        
+        .run,Run script,fa fa-play,_parent
+
+
+%% row_edit
+    % form:
+        "name", "title", "category", "menu", "rights_group"
+

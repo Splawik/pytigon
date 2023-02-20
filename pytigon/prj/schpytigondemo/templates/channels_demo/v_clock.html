@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "forms/user_tab.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -8,6 +7,8 @@
         {% endwith %}
 {% endblock %}
 {% block content %}
-        <ptig-clock-channel websocket_href="{{base_path}}channels_demo/clock/channel/"></ptig-clock-channel>
+        {% comment %}
+                <ptig-clock-channel websocket_href="{{base_path}}channels_demo/clock/channel/"></ptig-clock-channel>
+        {% endcomment %}
 {% endblock %}
 

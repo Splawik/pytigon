@@ -8,7 +8,7 @@ Urls = (
     (
         "table/Attachements/-/form/list/?view_in=desktop",
         _("Attachements"),
-        "wiki.change_attachements",
+        "schattachements.admin_attachement",
         """client://status/mail-attachment.png""",
     ),
 )

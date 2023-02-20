@@ -8,13 +8,13 @@ Urls = (
     (
         "table/WorkflowType/-/form/list/",
         _("Workflow types"),
-        None,
+        "schworkflow.admin_workflowtype",
         """png://categories/applications-system.png""",
     ),
     (
         "table/WorkflowItem/-/form/list/",
         _("Workflow items"),
-        None,
+        "schworkflow.admin_workflowitem",
         """png://apps/system-users.png""",
     ),
 )

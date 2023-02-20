@@ -6,9 +6,9 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/Scripts/-/form/list/?view_in=desktop",
+        "table/Script/-/form/list/?view_in=desktop",
         _("Scripts"),
-        "simplescript.change_scripts",
+        "simplescripts.admin_script",
         """client://apps/utilities-terminal.png""",
     ),
 )
@@ -17,10 +17,10 @@ UserParam = {}
 from django.utils.translation import gettext_lazy as _
 
 def AdditionalUrls(app_pack, lang):
-    from .models import Scripts
+    from .models import Script
     ret = []
     ret_buf = []
-    for object in Scripts.objects.all():
+    for object in Script.objects.all():
         if object.menu:
             elements = object.menu.split(',')
 

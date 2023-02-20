@@ -69,7 +69,7 @@ SCRIPT_TEMPLATE2 = (
 
 def run(request, pk):
 
-    script = models.Scripts.objects.get(pk=pk)
+    script = models.Script.objects.get(pk=pk)
     form = None
     if script:
         if script.rights_group:
@@ -141,7 +141,7 @@ def run(request, pk):
 
 def run_script_by_name(request, script_name):
 
-    script = models.Scripts.objects.get(name=script_name)
+    script = models.Script.objects.get(name=script_name)
     if script:
         p = reverse("row_action_scripts_run", kwargs={"pk": int(script.id)})
         if "only_content" in request.GET:

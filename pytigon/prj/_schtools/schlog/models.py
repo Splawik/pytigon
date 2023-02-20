@@ -29,6 +29,10 @@ class Log(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_log", "Can administer logs"),
+        ]
+
     application = models.CharField(
         "Application", null=False, blank=False, editable=False, max_length=64
     )

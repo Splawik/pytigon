@@ -4,7 +4,6 @@ APPS = [
     "schtools",
     "schattachements",
     "schlog",
-    "schauth",
     "schtasks",
     "schworkflow",
     "_schdata.schelements",

@@ -109,6 +109,10 @@ class Element(TreeModel):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_element", "Can administer elements"),
+        ]
+
     parent = ext_models.PtigTreeForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -521,6 +525,10 @@ class DocReg(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_docreg", "Can administer document registers"),
+        ]
+
     app = models.CharField(
         "Application",
         null=False,
@@ -622,6 +630,10 @@ class DocType(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_doctype", "Can administer document types"),
+        ]
+
     parent = ext_models.PtigHiddenForeignKey(
         DocReg,
         on_delete=models.CASCADE,
@@ -712,6 +724,10 @@ class DocHead(JSONModel):
         app_label = "schelements"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_dochead", "Can administer document headers"),
+        ]
 
     parents = models.ManyToManyField(
         "self",
@@ -1184,6 +1200,10 @@ class DocItem(JSONModel):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_docitem", "Can administer document items"),
+        ]
+
     parent = ext_models.PtigHiddenForeignKey(
         DocHead,
         on_delete=models.CASCADE,
@@ -1547,6 +1567,10 @@ class DocRegStatus(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_docregstatus", "Can administer document register statuses"),
+        ]
+
     parent = ext_models.PtigHiddenForeignKey(
         DocReg,
         on_delete=models.CASCADE,
@@ -1646,6 +1670,10 @@ class DocHeadStatus(JSONModel):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_docheadstatus", "Can administer document header statuses"),
+        ]
+
     parent = ext_models.PtigHiddenForeignKey(
         DocHead,
         on_delete=models.CASCADE,
@@ -1687,6 +1715,10 @@ class Account(TreeModel):
         app_label = "schelements"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_account", "Can administer accounts"),
+        ]
 
     parent = ext_models.PtigTreeForeignKey(
         "self",
@@ -1789,6 +1821,10 @@ class AccountState(models.Model):
         app_label = "schelements"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_accountstatus", "Can administer account statuses"),
+        ]
 
     parent = models.ForeignKey(
         Account,
@@ -2075,6 +2111,10 @@ class AccountOperation(models.Model):
         app_label = "schelements"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_accountoperation", "Can administer account operations"),
+        ]
 
     parent = ext_models.PtigHiddenForeignKey(
         DocItem,

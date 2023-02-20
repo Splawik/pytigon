@@ -22,14 +22,18 @@ from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from schsimplescripts.script_tools import decode_script
 
 
-class Scripts(models.Model):
+class Script(models.Model):
     class Meta:
-        verbose_name = _("Scripts")
+        verbose_name = _("Script")
         verbose_name_plural = _("Scripts")
         default_permissions = ("add", "change", "delete", "list")
         app_label = "schsimplescripts"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_script", "Can administer scripts"),
+        ]
 
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=64
@@ -91,7 +95,7 @@ class Scripts(models.Model):
             self._view = ""
             self._template = ""
 
-        super(Scripts, self).save(*args, **kwargs)
+        super(Script, self).save(*args, **kwargs)
 
 
-admin.site.register(Scripts)
+admin.site.register(Script)

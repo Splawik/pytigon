@@ -8,31 +8,31 @@ Urls = (
     (
         "table/ReportDef/-/form/list/?view_in=desktop",
         _("Report definition"),
-        "schreports.view_reportdef",
+        "schreports.admin_repdef",
         """client://actions/document-properties.png""",
     ),
     (
         "table/Report/main_reports/form/list/?view_in=desktop",
         _("Reports"),
-        "schreports.view_report",
+        "schreports.admin_report",
         """client://actions/format-justify-fill.png""",
     ),
     (
         "table/Plot/-/form/list/?view_in=desktop",
         _("Plots"),
-        "schreports.view_plot",
+        "schreports.admin_plot",
         """fa://pencil-square.png""",
     ),
     (
         "table/CommonGroupDef/-/form/list/?view_in=desktop",
         _("Common group definitons"),
-        "schreports.view_commongroupdef",
+        "schreports.admin_commongroupdef",
         """png://apps/system-file-manager.png""",
     ),
     (
         "table/CommonGroup/0/form/tree/?view_in=desktop",
         _("Common groups"),
-        "schreports.view_commongroup",
+        "schreports.admin_commongroup",
         """png://apps/system-file-manager.png""",
     ),
 )

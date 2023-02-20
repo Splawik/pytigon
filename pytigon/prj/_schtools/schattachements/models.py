@@ -49,6 +49,10 @@ class Attachement(JSONModel):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_attachement", "Can administer attachments"),
+        ]
+
     name = models.CharField("Name", null=True, blank=True, editable=True, max_length=64)
     ext = models.CharField(
         "Extension", null=True, blank=True, editable=False, max_length=64

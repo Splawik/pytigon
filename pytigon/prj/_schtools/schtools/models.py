@@ -26,6 +26,10 @@ class Parameter(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_parameter", "Can administer parameters"),
+        ]
+
     type = models.CharField(
         "Parameter type", null=True, blank=True, editable=True, max_length=16
     )

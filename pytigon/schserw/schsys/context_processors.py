@@ -660,18 +660,16 @@ def sch_standard(request):
 
     ret = {
         "standard_web_browser": standard,
-        #'app_manager': AppManager(request),
         "form_edit": form_edit,
         "form_add": form_add,
         "form_delete": form_delete,
-        "form_ext": form_ext,
+        # "form_ext": form_ext,
         "form_list": list_view,
         "readonly": readonly,
         "ro": ro,
         "form_info": form_info,
         "form_grid": form_grid,
         "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
-        #'URL_BASE': url_base,
         "base_path": url_base + "/",
         "app_path": app_path,
         "URL_APP_BASE": url_app_base,
@@ -687,8 +685,6 @@ def sch_standard(request):
         "get": get,
         "uuid": "x" + str(uuid.uuid4()),
         "lang": request.LANGUAGE_CODE[:2].lower(),
-        #'DEBUG': settings.DEBUG,
-        "autologin": request.session.get("autologin", False),
         "prj": prj,
         "offline_support": settings.OFFLINE_SUPPORT,
         "gen_time": gmt_str,
@@ -698,6 +694,8 @@ def sch_standard(request):
         "pyodide": settings.PYODIDE,
         "user_agent": user_agent,
         "errors": False,
+        "app_manager": AppManager(request),
+        "settings": settings,
     }
     if "client_param" in request.session:
         ret.update(request.session["client_param"])

@@ -69,6 +69,10 @@ class Profile(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_profile", "Can administer profiles"),
+        ]
+
     owner = ext_models.PtigForeignKey(
         Element,
         on_delete=models.CASCADE,

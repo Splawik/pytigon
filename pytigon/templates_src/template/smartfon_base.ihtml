@@ -45,7 +45,7 @@
 
                 div class=dropdown-menu dropdown-menu-lg-end,,,aria-labelledby=navbarDropdownMenuLink
                     % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
-                        %if not autologin:
+                        %if user and user.get_username != 'auto':
                             a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/,,,title=_(Logout),,,target=_top..._(Logout)
                         % if request.user|user_can_change_password:
                             a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)

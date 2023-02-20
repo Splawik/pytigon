@@ -231,17 +231,17 @@ if REST:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-            'rest_framework.authentication.BasicAuthentication',
-            'rest_framework.authentication.SessionAuthentication',        
+            "rest_framework.authentication.BasicAuthentication",
+            "rest_framework.authentication.SessionAuthentication",
         ]
     }
 
 
 if GRAPHQL or REST:
     AUTHENTICATION_BACKENDS.append(
-        'oauth2_provider.backends.OAuth2Backend',
+        "oauth2_provider.backends.OAuth2Backend",
     )
-    MIDDLEWARE.append('oauth2_provider.middleware.OAuth2TokenMiddleware')
+    MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
 OAUTH2_PROVIDER = {
     #'SCOPES': {
@@ -563,7 +563,7 @@ def DEFAULT_FILE_STORAGE_FS():
         _m.mount("site_media", OSFS(settings.MEDIA_ROOT))
     except:
         pass
- 
+
     try:
         _m.mount("doc", OSFS(settings.DOC_PATH))
         _m.mount("upload", OSFS(settings.UPLOAD_PATH))

@@ -172,7 +172,7 @@
                                             %% system_menu
 
 
-                        %if not autologin:
+                        %if user and user.get_username != 'auto':
                             li class=nav-item dropdown user user-menu
                                 a class=system_menu,,,href={{base_path}}schsys/do_logout/,,,target=_top,,,title=_(Logout)
                                     {% icon "fa-power-off fa-lg" %}

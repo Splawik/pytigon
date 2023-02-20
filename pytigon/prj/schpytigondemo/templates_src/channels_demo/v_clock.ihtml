@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/user_tab.html"
 
 % load exfiltry
@@ -11,4 +10,5 @@
 
 
 %% content
-    ptig-clock-channel websocket_href={{base_path}}channels_demo/clock/channel/
+    % comment:
+        ptig-clock-channel websocket_href={{base_path}}channels_demo/clock/channel/

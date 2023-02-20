@@ -55,6 +55,10 @@ class WorkflowType(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_workflowtype", "Can administer workflow types"),
+        ]
+
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=64
     )
@@ -158,6 +162,10 @@ class WorkflowItem(JSONModel):
         app_label = "schworkflow"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_workflowitem", "Can administer workflow items"),
+        ]
 
     parent_id = models.IntegerField(
         "Parent id",

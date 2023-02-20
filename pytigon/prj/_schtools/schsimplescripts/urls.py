@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    gen_row_action("Scripts", "run", views.run),
+    gen_row_action("Script", "run", views.run),
     re_path(
         "run/(?P<script_name>\w+)/$",
         views.run_script_by_name,
@@ -17,4 +17,4 @@ urlpatterns = [
 gen = generic_table_start(urlpatterns, "schsimplescripts", views)
 
 
-gen.standard("Scripts", _("Scripts"), _("Scripts"))
+gen.standard("Script", _("Script"), _("Scripts"))

@@ -63,8 +63,6 @@ def sch_login(request, *argi, **argv):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                if username == "auto":
-                    request.session["autologin"] = True
                 parm = request.POST.get("client_param", "")
                 if parm != "":
                     request.session["client_param"] = dict(

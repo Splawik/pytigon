@@ -54,6 +54,10 @@ class ReportDef(BaseObject):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_repdef", "Can administer report definitions"),
+        ]
+
     doc_type = models.CharField(
         "Associated document type", null=True, blank=True, editable=True, max_length=16
     )
@@ -139,6 +143,10 @@ class Report(JSONModel):
         ordering = ["id"]
 
         ordering = ["parent_id", "order", "id"]
+
+        permissions = [
+            ("admin_report", "Can administer reports"),
+        ]
 
     parent = ext_models.PtigForeignKey(
         "self",
@@ -246,6 +254,10 @@ class CommonGroupDef(BaseObject):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_commongroupdef", "Can administer common group definitions"),
+        ]
+
     on_new_elem_event = models.TextField(
         "On new elemetn event",
         null=True,
@@ -280,6 +292,10 @@ class CommonGroup(JSONModel):
         app_label = "schreports"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_commongroup", "Can administer common groups"),
+        ]
 
     parent = ext_models.PtigTreeForeignKey(
         "self",
@@ -375,6 +391,10 @@ class Plot(models.Model):
         app_label = "schreports"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_plot", "Can administer plots"),
+        ]
 
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=64
