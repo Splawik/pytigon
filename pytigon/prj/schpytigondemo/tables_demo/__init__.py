@@ -53,5 +53,11 @@ Urls = (
         None,
         """png://actions/format-justify-fill.png""",
     ),
+    (
+        "../schworkflow/table/WorkflowItem//tables_demo__Example1User__0__-current_user_and_active/form__tables_demo__myacceptations/sublist/?version=tables_demo__myacceptations",
+        _("My acceptations"),
+        None,
+        """png://actions/document-save-as.png""",
+    ),
 )
 UserParam = {}

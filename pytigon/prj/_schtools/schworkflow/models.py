@@ -17,6 +17,9 @@ from pytigon_lib.schhtml.htmltools import superstrip
 from schelements.models import *
 
 
+from pytigon_lib.schtools.tools import get_request
+
+
 def new_workflow_item(type_name, params):
     pass
 
@@ -246,6 +249,54 @@ class WorkflowItem(JSONModel):
         choices=workflow_item_status_choices,
         max_length=1,
     )
+
+    @classmethod
+    def filter(cls, value):
+        if value:
+            app, tbl, id, grp = value.split("__")
+            if grp and grp.startswith("-"):
+
+                def get_user_email():
+                    r = get_request()
+                    if r:
+                        if r.user:
+                            if r.user.email:
+                                return r.user.email
+                    return ""
+
+                objects = cls.objects
+                if grp[1:] == "current_user":
+                    email = get_user_email()
+                    objects = objects.filter(user_email=email)
+                elif grp[1:] == "current_user_and_active":
+                    email = get_user_email()
+                    objects = objects.filter(user_email=email, status="0")
+                elif grp[1:] == "current_user_active_and_next":
+                    email = get_user_email()
+                    objects = objects.filter(user_email=email, status_in=("0", "8"))
+                elif grp[1:] == "active":
+                    objects = objects.filter(status="0")
+                elif grp[1:] == "active_and_next":
+                    objects = objects.filter(status_in=("0", "8"))
+                return objects
+            else:
+                return cls.objects.filter(
+                    application=app, table=tbl, parent_id=id, group=grp
+                )
+        else:
+            return cls.objects.all()
+
+    def init_new(self, request, view, value=None):
+        if value:
+            app, tbl, id, grp = value.split("__")
+            return {"application": app, "table": tbl, "parent_id": id, "group": grp}
+        else:
+            return {
+                "application": "default",
+                "table": "default",
+                "parent_id": 0,
+                "group": "default",
+            }
 
     def accept_workflow_item(self):
         return WorkflowType.accept_workflow_item(self)
