@@ -1,0 +1,88 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}
+{% endblock %}
+{% block list_page_header %}
+        <h3>
+        Demo - extended controls
+        </h3>
+{% endblock %}
+{% block list_page %}
+        <table width="100%">
+                <tr>
+                        <th width="150 "> Tytuł</th>
+                        <th > Kontrolka</th>
+                </tr>
+                <tr>
+                        <th>
+                                Select:
+                        </th>
+                        <td>
+                                <CTRLSELECT>
+                                        <tdata>
+                                                <tr>
+                                                        <td > Pos1</td>
+                                                </tr>
+                                                <tr>
+                                                        <td > Pos2</td>
+                                                </tr>
+                                                <tr>
+                                                        <td > Pos3</td>
+                                                </tr>
+                                        </tdata>
+                                </CTRLSELECT>
+                        </td>
+                </tr>
+                <tr>
+                        <th>Bitmap combo box:</th>
+                        <td>
+                                <CTRLBITMAPCOMBOBOX></CTRLBITMAPCOMBOBOX>
+                        </td>
+                </tr>
+                <tr>
+                        <th>Error list:</th>
+                        <td>
+                                <CTRLERRORLIST>
+                                        <li>pos1</li>
+                                        <li>pos2</li>
+                                </CTRLERRORLIST>
+                        </td>
+                </tr>
+                <tr>
+                        <th>Notebook</th>
+                        <td>
+                                <CTRLNOTEBOOK width="100%-150" height="300">
+                                        <tdata>
+                                                <tr>
+                                                        <td>page 1</td>
+                                                        <td>/schwiki/simplecontrols/userwiki/view/</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>page 2</td>
+                                                        <td>/schwiki/simplecontrols/HelloWorld1/view/</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>page 3</td>
+                                                        <td>/schwiki/simplecontrols/ToJestHelp/view/</td>
+                                                </tr>
+                                        </tdata>
+                                </CTRLNOTEBOOK>
+                        </td>
+                </tr>
+                <tr>
+                        <th>Web 1</th>
+                        <td>
+                                <CTRLHTML src="/schwiki/simplecontrols/userwiki/view/" width="100%-150" height="300"></CTRLHTML>
+                        </td>
+                </tr>
+                <tr>
+                        <th>Web 2</th>
+                        <td>
+                                <CTRLHTML2 href="http://www.onet.pl" width="100%-150" height="300"></CTRLHTML2>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

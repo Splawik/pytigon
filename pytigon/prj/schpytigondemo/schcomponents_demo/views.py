@@ -40,4 +40,7 @@ def form(request, **argv):
     print("-------------------------------------------------------")
     print(json_data)
     print("-------------------------------------------------------")
-    return {".result": "Hello world!<br/>" + str(json_data)}
+    return {
+        ".result": "Hello world!<br/>" + str(json_data),
+        "input.r1__value": json_data["f1"],
+    }

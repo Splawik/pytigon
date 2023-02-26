@@ -9,10 +9,9 @@ try {
     comp.options["attributes"] = ({width: null, height: null});
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var child, data, div, stub3_seq, stub4_itr;
-        div = component.root.querySelector("div");
+        var child, data, stub3_seq, stub4_itr;
         data = "";
-        stub3_seq = component.children;
+        stub3_seq = Array.prototype.slice.call(component.children);
         if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
         for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
             child = stub3_seq[stub4_itr];

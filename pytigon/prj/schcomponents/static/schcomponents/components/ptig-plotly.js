@@ -117,13 +117,17 @@ try {
 
     comp.options["global_state_actions"] = ({plotly: on_plotly});
     init = function flx_init (component) {
-        var config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, plotly_name, url;
+        var config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, parent, plotly_name, run_script, scr, url;
         div = component.root.querySelector("div");
         component.div = div;
-        plotly_name = component.getAttribute("plotly-name");
-        url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
-        if (_pyfunc_truthy(component.hasAttribute("param"))) {
-            url = _pyfunc_op_add(url, "?param=" + component.getAttribute(param));
+        if (_pyfunc_truthy(component.hasAttribute("plotly-name"))) {
+            plotly_name = component.getAttribute("plotly-name");
+            url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
+            if (_pyfunc_truthy(component.hasAttribute("param"))) {
+                url = _pyfunc_op_add(url, "?param=" + component.getAttribute(param));
+            }
+        } else {
+            url = null;
         }
         data = null;
         layout = null;
@@ -207,9 +211,22 @@ try {
             return null;
         }).bind(this);
 
-        ajax_json(url, ({name: plotly_name, action: "get_data"}), on_data_loaded);
-        ajax_json(url, ({name: plotly_name, action: "get_layout"}), on_layout_loaded);
-        ajax_json(url, ({name: plotly_name, action: "get_config"}), on_config_loaded);
+        if (_pyfunc_truthy(url)) {
+            ajax_json(url, ({name: plotly_name, action: "get_data"}), on_data_loaded);
+            ajax_json(url, ({name: plotly_name, action: "get_layout"}), on_layout_loaded);
+            ajax_json(url, ({name: plotly_name, action: "get_config"}), on_config_loaded);
+        } else {
+            parent = component.parentElement;
+            div = component.children[0].children[0];
+            scr = component.children[0].children[1];
+            parent.append(div);
+            run_script = (function flx_run_script () {
+                eval(scr.innerHTML);
+                return null;
+            }).bind(this);
+
+            setTimeout(run_script, 100);
+        }
         return null;
     };
 

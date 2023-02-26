@@ -1,6 +1,5 @@
 APPS = [
-    "schsimplecontrols_demo",
-    "schadvcontrols_demo",
+    "schcontrols_demo",
     "schcomponents_demo",
     "tables_demo",
     "tables_adv_demo",

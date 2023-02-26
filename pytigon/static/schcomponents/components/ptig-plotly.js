@@ -117,13 +117,17 @@ try {
 
     comp.options["global_state_actions"] = ({plotly: on_plotly});
     init = function flx_init (component) {
-        var config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, plotly_name, url;
+        var config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, parent, plotly_name, scr, url;
         div = component.root.querySelector("div");
         component.div = div;
-        plotly_name = component.getAttribute("plotly-name");
-        url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
-        if (_pyfunc_truthy(component.hasAttribute("param"))) {
-            url = _pyfunc_op_add(url, "?param=" + component.getAttribute(param));
+        if (_pyfunc_truthy(component.hasAttribute("plotly-name"))) {
+            plotly_name = component.getAttribute("plotly-name");
+            url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
+            if (_pyfunc_truthy(component.hasAttribute("param"))) {
+                url = _pyfunc_op_add(url, "?param=" + component.getAttribute(param));
+            }
+        } else {
+            url = null;
         }
         data = null;
         layout = null;
@@ -207,14 +211,24 @@ try {
             return null;
         }).bind(this);
 
-        ajax_json(url, ({name: plotly_name, action: "get_data"}), on_data_loaded);
-        ajax_json(url, ({name: plotly_name, action: "get_layout"}), on_layout_loaded);
-        ajax_json(url, ({name: plotly_name, action: "get_config"}), on_config_loaded);
+        if (_pyfunc_truthy(url)) {
+            ajax_json(url, ({name: plotly_name, action: "get_data"}), on_data_loaded);
+            ajax_json(url, ({name: plotly_name, action: "get_layout"}), on_layout_loaded);
+            ajax_json(url, ({name: plotly_name, action: "get_config"}), on_config_loaded);
+        } else {
+            parent = component.parentElement;
+            div = component.children[0].children[0];
+            scr = component.children[0].children[1];
+            parent.append(div);
+            eval(scr.innerHTML);
+        }
         return null;
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub6_err=err_0; }
-if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
-} else { stub5_context.__exit__(null, null, null); }
+} catch(err_0)  { stub6_err=err_0;
+} finally {
+    if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
+    } else { stub5_context.__exit__(null, null, null); }
+}
 export {from_dict, transform_event_data, process_response_data};

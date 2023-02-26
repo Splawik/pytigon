@@ -112,3 +112,36 @@ def template_example(request, **argv):
 def hdoc_example(request, **argv):
 
     return {"name": "txt test", "description": "Hello!"}
+
+
+@dict_to_template("views_demo/v_plotly_example.html")
+def plotly_example(request, **argv):
+
+    import plotly.graph_objects as go
+    import numpy as np
+    from io import StringIO
+
+    np.random.seed(1)
+
+    N = 100
+    x = np.random.rand(N)
+    y = np.random.rand(N)
+    colors = np.random.rand(N)
+    sz = np.random.rand(N) * 30
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=x,
+            y=y,
+            mode="markers",
+            marker=go.scatter.Marker(
+                size=sz, color=colors, opacity=0.6, colorscale="Viridis"
+            ),
+        )
+    )
+    # fig.write_image("fig1.svg")
+    # fig.write_image("fig1.svg")
+    buf = StringIO()
+    fig.write_html(buf, include_plotlyjs=False, full_html=False)
+    return {"plotly_content": buf.getvalue()}

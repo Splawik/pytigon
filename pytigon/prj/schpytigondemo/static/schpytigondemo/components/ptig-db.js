@@ -1,27 +1,38 @@
 var BASE_PATH, TAG, comp, init, stub1_context, stub2_err;
 TAG = "ptig-db";
 BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/dexie/dexie.min.js"]));
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/pouchdb/pouchdb-7.3.0.min.js"]));
 comp = stub1_context.__enter__();
 try {
     comp.options["template"] = "";
     init = function flx_init (component) {
-        var db, fun, obj, p;
-        db = new Dexie("TestDatabase");
-        (db.version(1).stores)(({friends: "++id, name, age"}));
-        fun = (function flx_fun (friends) {
-            console.log(friends);
-            return null;
-        }).bind(this);
-
-        (((((db.friends.where("age").above)(15)).toArray)()).then)(fun);
+        var db, obj, on_created, on_error, on_list, options;
+        db = new PouchDB("TestUsersDB");
         obj = ({name: "Kinga", age: 18, street: "East 13:th Street"});
-        p = (function flx_p (result) {
+        on_created = (function flx_on_created (result) {
             console.log(result);
             return null;
         }).bind(this);
 
-        (db.friends.add(obj).then)(p);
+        on_error = (function flx_on_error (err) {
+            console.log(error);
+            return null;
+        }).bind(this);
+
+        (((db.bulkDocs([obj]).then)(on_created)).catch)(on_error);
+        options = ({include_docs: true, attachments: false});
+        on_list = (function flx_on_list (result) {
+            var doc, stub3_seq, stub4_itr;
+            stub3_seq = result.rows;
+            if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+            for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+                doc = stub3_seq[stub4_itr];
+                console.log(doc);
+            }
+            return null;
+        }).bind(this);
+
+        (((db.allDocs(options).then)(on_list)).catch)(on_error);
         return null;
     };
 

@@ -14,7 +14,11 @@ try {
                     if (_pyfunc_op_contains("__", key)) {
                         x = _pymeth_split.call(key, "__");
                         obj = component.root.querySelector(x[0]);
-                        (obj[x[1]])(data[key]);
+                        if (_pyfunc_op_equals(x[1], "value")) {
+                            obj.value = data[key];
+                        } else {
+                            (obj[x[1]])(data[key]);
+                        }
                     } else {
                         obj = component.root.querySelector(key);
                         obj.innerHTML = data[key];

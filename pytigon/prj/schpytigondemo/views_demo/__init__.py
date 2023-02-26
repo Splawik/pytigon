@@ -59,5 +59,6 @@ Urls = (
         None,
         """png://actions/format-justify-center.png""",
     ),
+    ("plotly", _("plotly example"), None, """png://actions/edit-clear.png"""),
 )
 UserParam = {}

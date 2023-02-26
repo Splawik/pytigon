@@ -146,8 +146,8 @@ else:
 
 CHANNELS_URL_TAB += [
     (
-        URL_ROOT_PREFIX + "schsimplecontrols_demo/teleconference/channel/",
-        "schsimplecontrols_demo.consumers.teleconference",
+        URL_ROOT_PREFIX + "schcontrols_demo/teleconference/channel/",
+        "schcontrols_demo.consumers.teleconference",
     ),
     (URL_ROOT_PREFIX + "channels_demo/clock/channel/", "channels_demo.consumers.clock"),
     (
@@ -202,7 +202,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.02.22 20:04:42"
+GEN_TIME = "2023.02.26 16:11:21"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
