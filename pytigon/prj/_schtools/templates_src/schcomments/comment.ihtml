@@ -1,0 +1,35 @@
+% extends "form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions    
+    % new_row _("New comment") action="new_row/{{filter}}"
+
+%% list_row_header
+    th..._(Comment)
+    th..._(Sender)
+    th..._(Recipient)
+    th..._(Recipient)
+    th..._(Time}
+
+%% list_row
+    td...{{ object.comment }}
+    td...{{ object.sender }}
+    td...{{ object.recipient }}
+    td...{{ object.recipients }}
+    td...{{ object.time }}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:

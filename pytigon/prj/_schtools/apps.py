@@ -6,6 +6,7 @@ APPS = [
     "schlog",
     "schtasks",
     "schworkflow",
+    "schcomments",
     "_schdata.schelements",
 ]
 APPS_EXT = []
