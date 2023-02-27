@@ -13,7 +13,6 @@ APPS = [
     "reports_demo",
     "commander_demo",
     "simplescripts_demo",
-    "attachements_demo",
     "log_demo",
     "desktop_demo",
     "interfaces",

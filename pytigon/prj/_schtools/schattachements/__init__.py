@@ -6,7 +6,7 @@ Perms = True
 Index = "None"
 Urls = (
     (
-        "table/Attachements/-/form/list/?view_in=desktop",
+        "table/Attachement/-/form/list/?view_in=desktop",
         _("Attachements"),
         "schattachements.admin_attachement",
         """client://status/mail-attachment.png""",
