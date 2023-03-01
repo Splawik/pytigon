@@ -268,6 +268,12 @@ def to_int(value):
     return ret
 
 
+@register.filter(name="num2str")
+def num2str(value):
+    buf = str(value)
+    return buf.replace(",", ".").replace(" ", "")
+
+
 @register.filter(name="format")
 def format(value, id):
     return value % id

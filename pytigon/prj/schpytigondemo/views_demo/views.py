@@ -93,7 +93,7 @@ def xml_example(request, **argv):
 @dict_to_ooxml("views_demo/v_xlsx_example.xlsx")
 def xlsx_example(request, **argv):
 
-    return {"name": "xlsx test", "description": "Hello!"}
+    return {"name": "xlsx test", "description": "Hello!", "x": "1,4"}
 
 
 @dict_to_txt("views_demo/v_txt_example_txt.html")
