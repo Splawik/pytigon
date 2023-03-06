@@ -205,12 +205,16 @@ def publish(request, pk):
     conf = models.WikiConf.objects.get(pk=pk)
     object_list = []
 
-    pages = models.Page.objects.filter(
+    pages1 = models.Page.objects.filter(
         subject=conf.subject,
         latest=True,
         published=False,
         operator=request.user.username,
     )
+    pages2 = models.Page.objects.filter(
+        subject=conf.subject, latest=True, published=False, operator__isnull=True
+    )
+    pages = list(pages1) + list(pages2)
     if len(pages) > 0:
         for page in pages:
             page.published = True
@@ -222,11 +226,14 @@ def publish(request, pk):
             else:
                 object_list.append([page, ""])
 
-    pages = models.Page.objects.filter(
+    pages1 = models.Page.objects.filter(
         subject=conf.subject,
         latest=False,
         published=True,
         operator=request.user.username,
+    ).update(published=False)
+    pages2 = models.Page.objects.filter(
+        subject=conf.subject, latest=False, published=True, operator__isnull=True
     ).update(published=False)
 
     return {"OK": True, "object_list": object_list}

@@ -2239,5 +2239,11 @@ def prj_import2(request):
 @dict_to_template("schbuilder/v_run.html")
 def run(request, pk):
 
+    x = 1.5
+    t = Template("X {{ x }}")
+    c = Context({"x": x})
+    z = t.render(c)
+    print(z)
+
     prj = models.SChAppSet.objects.get(pk=pk)
     return {"project": prj}

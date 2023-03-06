@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from urllib.parse import urlparse
 
 PRJ_TITLE = "Pytigon demo"
@@ -202,14 +203,22 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.01 08:57:18"
+GEN_TIME = "2023.03.06 21:39:46"
 OFFLINE_SUPPORT = True
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
         key2 = key[8:]
-        if key2 in globals():
-            globals()[key2] = type(globals()[key2])(value)
+        if value.startswith("[") or value.startswith("{") or value.startswith(":"):
+            try:
+                globals()[key2] = json.loads(
+                    value[1 if value.startswith(":") else 0 :]
+                    .replace("'", '"')
+                    .replace("[|]", "!")
+                    .replace('["]', '\\"')
+                )
+            except:
+                print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
 

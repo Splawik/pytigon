@@ -63,7 +63,7 @@ class WorkflowType(models.Model):
         ]
 
     name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=64
+        "Name", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     script_for_new_item = models.TextField(
         "Script for new workflow item",
@@ -184,6 +184,7 @@ class WorkflowItem(JSONModel):
         blank=False,
         editable=True,
         verbose_name="Workflow type",
+        db_index=True,
     )
     application = models.CharField(
         "Application",

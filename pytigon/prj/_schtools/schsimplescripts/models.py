@@ -36,7 +36,7 @@ class Script(models.Model):
         ]
 
     name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=64
+        "Name", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     title = models.CharField(
         "Title", null=True, blank=True, editable=True, max_length=64
@@ -48,7 +48,7 @@ class Script(models.Model):
         editable=False,
     )
     category = models.CharField(
-        "Category", null=True, blank=True, editable=True, max_length=64
+        "Category", null=True, blank=True, editable=True, db_index=True, max_length=64
     )
     rights_group = models.CharField(
         "Rights group", null=True, blank=True, editable=True, max_length=64

@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from urllib.parse import urlparse
 
 PRJ_TITLE = "Editor"
@@ -171,6 +172,14 @@ CHANNELS_URL_TAB += [
         "schcommander.consumers.ShellConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
@@ -218,12 +227,20 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.01.15 11:43:10"
+GEN_TIME = "2023.03.06 21:39:34"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
         key2 = key[8:]
-        if key2 in globals():
-            globals()[key2] = type(globals()[key2])(value)
+        if value.startswith("[") or value.startswith("{") or value.startswith(":"):
+            try:
+                globals()[key2] = json.loads(
+                    value[1 if value.startswith(":") else 0 :]
+                    .replace("'", '"')
+                    .replace("[|]", "!")
+                    .replace('["]', '\\"')
+                )
+            except:
+                print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value

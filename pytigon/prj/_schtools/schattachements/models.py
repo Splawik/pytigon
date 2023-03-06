@@ -53,12 +53,19 @@ class Attachement(JSONModel):
             ("admin_attachement", "Can administer attachments"),
         ]
 
-    name = models.CharField("Name", null=True, blank=True, editable=True, max_length=64)
+    name = models.CharField(
+        "Name", null=True, blank=True, editable=True, max_length=256
+    )
     ext = models.CharField(
         "Extension", null=True, blank=True, editable=False, max_length=64
     )
     application = models.CharField(
-        "Application", null=False, blank=False, editable=False, max_length=64
+        "Application",
+        null=False,
+        blank=False,
+        editable=False,
+        db_index=True,
+        max_length=64,
     )
     table = models.CharField(
         "Table",
@@ -66,16 +73,24 @@ class Attachement(JSONModel):
         blank=False,
         editable=False,
         default="default",
+        db_index=True,
         max_length=64,
     )
     group = models.CharField(
-        "Group", null=True, blank=True, editable=False, default="default", max_length=64
+        "Group",
+        null=True,
+        blank=True,
+        editable=False,
+        default="default",
+        db_index=True,
+        max_length=64,
     )
     parent_id = models.IntegerField(
         "Parent id",
         null=True,
         blank=True,
         editable=False,
+        db_index=True,
     )
     thumb = models.TextField(
         "thumbnail",
@@ -107,9 +122,10 @@ class Attachement(JSONModel):
         blank=True,
         editable=True,
         verbose_name="Folder",
+        db_index=True,
     )
     description = models.CharField(
-        "Description", null=True, blank=True, editable=True, max_length=128
+        "Description", null=True, blank=True, editable=True, max_length=256
     )
 
     @classmethod

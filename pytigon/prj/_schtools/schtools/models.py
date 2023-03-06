@@ -31,12 +31,24 @@ class Parameter(models.Model):
         ]
 
     type = models.CharField(
-        "Parameter type", null=True, blank=True, editable=True, max_length=16
+        "Parameter type",
+        null=True,
+        blank=True,
+        editable=True,
+        db_index=True,
+        max_length=16,
     )
     subtype = models.CharField(
-        "Parameter subtype", null=True, blank=True, editable=True, max_length=16
+        "Parameter subtype",
+        null=True,
+        blank=True,
+        editable=True,
+        db_index=True,
+        max_length=16,
     )
-    key = models.CharField("Key", null=False, blank=False, editable=True, max_length=64)
+    key = models.CharField(
+        "Key", null=False, blank=False, editable=True, db_index=True, max_length=64
+    )
     value = models.CharField(
         "Value", null=False, blank=False, editable=True, max_length=64
     )
@@ -55,10 +67,10 @@ class Autocomplete(models.Model):
         ordering = ["id"]
 
     type = models.CharField(
-        "Type", null=False, blank=False, editable=True, max_length=64
+        "Type", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     label = models.CharField(
-        "Label", null=False, blank=False, editable=True, max_length=64
+        "Label", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     value = models.TextField(
         "Value",

@@ -28,192 +28,6 @@ from pytigon_lib.schindent.indent_markdown import (
 )
 
 
-template_content = """
-{# -*- coding: utf-8 -*- #}
-{%% load exfiltry %%}
-{%% load exsyntax %%}
-%s
-"""
-
-
-def _get_wiki_object(page, buf, name, paragraf):
-    name0 = name.split("_")[0]
-    conf = None
-    x = PageObjectsConf.objects.filter(name=name0)
-    if len(x) > 0:
-        conf = x[0]
-        d = page.get_json_data()
-        if d and name in d:
-            c = d[name]
-        else:
-            c = {}
-
-        inline_content = norm_indent(buf)
-        if conf.inline_wiki:
-            inline_content = html_from_wiki(page, inline_content)
-
-        context = {
-            "param": c,
-            "inline_content": inline_content,
-            "object": conf,
-            "page": page,
-            "paragraf": paragraf,
-            "name": name,
-        }
-        if conf.view_dict:
-            exec(conf.view_dict)
-            context = locals()["get_view_dict"](context)
-
-        template_name1 = (conf.app + "/" + conf.name).lower() + "_wikiobj_view.html"
-        template_name2 = "schwiki/wikiobj_view.html"
-
-        t = select_template(
-            [
-                template_name1,
-                template_name2,
-            ]
-        )
-
-        return (
-            t.render(context)
-            .replace("[{", "{{")
-            .replace("}]", "}}")
-            .replace("[%", "{%")
-            .replace("%]", "%}")
-        )
-    else:
-        return ""
-
-
-def _get_markdown_object(buf):
-    return markdown.markdown(
-        "\n".join(buf),
-        extensions=[
-            "abbr",
-            "attr_list",
-            "def_list",
-            "fenced_code",
-            "footnotes",
-            "md_in_html",
-            "tables",
-            "admonition",
-            "codehilite",
-        ],
-    )
-
-
-def html_from_wiki(page, wiki_str):
-    document = []
-    paragraf = []
-    buf = []
-    in_wiki_object = False
-    name = ""
-
-    paragraf_prefix = None
-    paragraf_suffix = None
-    section_close_elements = []
-    document_close_elements = []
-
-    def write_papragraf():
-        nonlocal in_wiki_object, buf, paragraf_prefix, paragraf_suffix, document, paragraf, page
-
-        if in_wiki_object:
-            x = _get_wiki_object(page, buf, name, [paragraf_prefix, paragraf_suffix])
-            document.append(x)
-            buf = []
-        else:
-            if buf:
-                paragraf.append((buf, True))
-                buf = []
-
-            if paragraf:
-                if paragraf_prefix:
-                    x = paragraf_prefix
-                else:
-                    x = ""
-                for pos in paragraf:
-                    if pos[1]:
-                        x += _get_markdown_object(pos[0])
-                    else:
-                        x += pos[0]
-
-                if paragraf_suffix:
-                    x += paragraf_suffix
-
-                document.append(x)
-
-                paragraf = []
-
-    def write_section():
-        nonlocal section_close_elements, document
-        if section_close_elements:
-            document.append("".join(list(reversed(section_close_elements))))
-        section_close_elements = []
-
-    def write_document():
-        nonlocal document_close_elements, document
-        if document_close_elements:
-            document.append("".join(list(reversed(document_close_elements))))
-        document_close_elements = []
-
-    lines = wiki_str.replace("\r", "").split("\n")
-    for line in lines:
-        if in_wiki_object:
-            if line.startswith(" ") or line.startswith("\t") or not line:
-                buf.append(line)
-                continue
-            else:
-                x = _get_wiki_object(
-                    page, buf, name, [paragraf_prefix, paragraf_suffix]
-                )
-
-                if x.startswith("@@@"):
-                    if "|||" in x:
-                        y = x[3:].split("|||")
-                        paragraf_prefix = y[0]
-                        paragraf_suffix = y[1]
-                    else:
-                        paragraf_prefix = x[3:]
-                        paragraf_suffix = ""
-                else:
-                    if "|||" in x:
-                        if "||||" in x:
-                            y = x.split("||||")
-                            paragraf.append((y[0], False))
-                            document_close_elements.append(y[1])
-                        else:
-                            y = x.split("|||")
-                            paragraf.append((y[0], False))
-                            section_close_elements.append(y[1])
-                    else:
-                        paragraf.append((x, False))
-
-                buf = []
-                in_wiki_object = False
-
-        if line.startswith("@"):
-            if buf:
-                # x = _get_markdown_object(buf)
-                paragraf.append((buf, True))
-            buf = []
-            in_wiki_object = True
-            name = line.split(":")[0][1:].strip()
-        elif line.startswith("...") or line.startswith("+++"):
-            write_papragraf()
-            if line.startswith("+++"):
-                write_section()
-                paragraf_prefix = ""
-                paragraf_suffix = ""
-        else:
-            buf.append(line)
-
-    write_papragraf()
-    write_section()
-    write_document()
-
-    return "\n".join(document)
-
-
 page_type_choices = [
     ("W", "Wiki"),
     ("I", "Indent html"),
@@ -227,81 +41,6 @@ menu_icon_size_choices = [
 ]
 
 
-class PageObjectsConf(models.Model):
-    class Meta:
-        verbose_name = _("Page objects configurations")
-        verbose_name_plural = _("Page objects configurations")
-        default_permissions = ("add", "change", "delete", "list")
-        app_label = "schwiki"
-
-        ordering = ["id"]
-
-    app = models.CharField(
-        "Application", null=False, blank=False, editable=True, max_length=32
-    )
-    name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=64
-    )
-    description = models.CharField(
-        "Description", null=True, blank=True, editable=True, max_length=128
-    )
-    inline_editing = models.BooleanField(
-        "Inline editing",
-        null=True,
-        blank=False,
-        editable=True,
-        default=False,
-    )
-    inline_wiki = models.BooleanField(
-        "Inline wiki",
-        null=True,
-        blank=False,
-        editable=True,
-        default=False,
-    )
-    edit_form = models.TextField(
-        "Edit form",
-        null=True,
-        blank=True,
-        editable=False,
-    )
-    load_fun = models.TextField(
-        "Load function",
-        null=True,
-        blank=True,
-        editable=False,
-    )
-    save_fun = models.TextField(
-        "Save function",
-        null=True,
-        blank=True,
-        editable=False,
-    )
-    view_dict = models.TextField(
-        "Get view dict function",
-        null=True,
-        blank=True,
-        editable=False,
-    )
-    doc = models.TextField(
-        "Documentaction",
-        null=True,
-        blank=True,
-        editable=False,
-    )
-
-    filter_fields = {
-        "app": ["exact", "icontains", "istartswith"],
-        "name": ["exact", "icontains", "istartswith"],
-    }
-
-    def __str__(self):
-        return self.name
-
-
-admin.site.register(PageObjectsConf)
-
-
 class Page(JSONModel):
     class Meta:
         verbose_name = _("Page")
@@ -312,13 +51,13 @@ class Page(JSONModel):
         ordering = ["id"]
 
     subject = models.CharField(
-        "Subject", null=False, blank=False, editable=True, max_length=64
+        "Subject", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=64
+        "Name", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
     description = models.CharField(
-        "Description", null=True, blank=True, editable=True, max_length=64
+        "Description", null=True, blank=True, editable=True, max_length=256
     )
     content_src = models.TextField(
         "Content source",
@@ -366,11 +105,7 @@ class Page(JSONModel):
         "Operator", null=True, blank=True, editable=False, max_length=64
     )
     update_time = models.DateTimeField(
-        "Update time",
-        null=False,
-        blank=False,
-        editable=False,
-        default=datetime.now,
+        "Update time", null=False, blank=False, editable=False, auto_now=True
     )
     published = models.BooleanField(
         "Published",
@@ -378,6 +113,7 @@ class Page(JSONModel):
         blank=False,
         editable=False,
         default=False,
+        db_index=True,
     )
     latest = models.BooleanField(
         "Latest",
@@ -462,9 +198,6 @@ class Page(JSONModel):
         else:
             content = ""
         self.content = content
-
-        print("A1", self.operator)
-
         super(Page, self).save(*args, **kwargs)
 
     def template_for_object(self, view, context, doc_type):
@@ -593,6 +326,9 @@ class WikiConf(JSONModel):
         null=True,
         blank=True,
         editable=False,
+    )
+    git_repository = models.CharField(
+        "Git repository", null=True, blank=True, editable=True, max_length=256
     )
 
     def get_css(self):

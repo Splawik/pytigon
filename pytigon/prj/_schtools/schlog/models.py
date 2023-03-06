@@ -34,7 +34,12 @@ class Log(models.Model):
         ]
 
     application = models.CharField(
-        "Application", null=False, blank=False, editable=False, max_length=64
+        "Application",
+        null=False,
+        blank=False,
+        editable=False,
+        db_index=True,
+        max_length=64,
     )
     table = models.CharField(
         "Table",
@@ -42,16 +47,24 @@ class Log(models.Model):
         blank=False,
         editable=False,
         default="default",
+        db_index=True,
         max_length=64,
     )
     group = models.CharField(
-        "Group", null=True, blank=True, editable=False, default="default", max_length=64
+        "Group",
+        null=True,
+        blank=True,
+        editable=False,
+        default="default",
+        db_index=True,
+        max_length=64,
     )
     parent_id = models.IntegerField(
         "Parent id",
         null=True,
         blank=True,
         editable=False,
+        db_index=True,
     )
     date = models.DateTimeField(
         "Date",

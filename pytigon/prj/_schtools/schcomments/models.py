@@ -32,13 +32,18 @@ class Comment(JSONModel):
         ordering = ["id"]
 
     application = models.CharField(
-        "Application", null=True, blank=True, editable=False, max_length=64
+        "Application",
+        null=True,
+        blank=True,
+        editable=False,
+        db_index=True,
+        max_length=64,
     )
     table = models.CharField(
-        "Table", null=True, blank=True, editable=False, max_length=64
+        "Table", null=True, blank=True, editable=False, db_index=True, max_length=64
     )
     group = models.CharField(
-        "Group", null=True, blank=True, editable=False, max_length=64
+        "Group", null=True, blank=True, editable=False, db_index=True, max_length=64
     )
     parent_id = models.IntegerField(
         "Parent id",

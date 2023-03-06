@@ -43,10 +43,5 @@ urlpatterns = [
 gen = generic_table_start(urlpatterns, "schwiki", views)
 
 
-gen.standard(
-    "PageObjectsConf",
-    _("Page objects configurations"),
-    _("Page objects configurations"),
-)
 gen.standard("Page", _("Page"), _("Page"))
 gen.standard("WikiConf", _("Wiki config"), _("Wiki config"))

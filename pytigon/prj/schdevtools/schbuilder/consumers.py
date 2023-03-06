@@ -24,9 +24,7 @@ class Clock(AsyncJsonWebsocketConsumer):
     COUNT = 1
 
     async def connect(self):
-        print("CONNECT")
         await self.accept()
-        await self.receive_json("")
 
     async def receive_json(self, content):
         print("RECEIVED: ", content)

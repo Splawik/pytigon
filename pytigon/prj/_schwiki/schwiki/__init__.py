@@ -7,12 +7,6 @@ Index = "None"
 Urls = (
     ("table/Page/-/form/list/?view_in=desktop", _("Wiki"), "wiki.change_page", """"""),
     (
-        "table/PageObjectsConf/-/form/list/?view_in=desktop",
-        _("Page objects conf."),
-        None,
-        """client://actions/document-properties.png""",
-    ),
-    (
         "table/WikiConf/-/form/list/?view_in=desktop",
         _("Publish options"),
         None,
