@@ -212,4 +212,4 @@ class WikiGit():
         with open(os.path.join(self.git_subject_path, "conf.json"), "wt") as f:
             f.write(json.dumps(conf))
 
-        #self._push()
+        self._push()
