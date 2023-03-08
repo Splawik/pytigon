@@ -14,4 +14,3 @@ django-mailer
 django_select2
 django-widget-tweaks
 django-q
-django-environ
