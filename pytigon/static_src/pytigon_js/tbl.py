@@ -72,6 +72,8 @@ def prepare_datatable(table):
         td.attr("colspan", l)
 
     table.find("div.second_row").each(_local_fun)
+    if table[0].hasAttribute("data-autoselect"):
+        table[0].closest(".bootstrap-table").querySelector("[name='select']").click()
 
 
 def prepare0(table):

@@ -1314,7 +1314,7 @@ def icon(context, class_str, width=None, height=None):
     elif "fa-" in class_str:
         return mark_safe("<i class='fa %s'></i>" % class_str)
     else:
-        return mark_safe("<i class='fa fa-circle-o fa-lg'></i>")
+        return mark_safe("<i class='fa fa-arrow-circle-right fa-lg'></i>")
 
 
 class TemplateNameNode(Node):

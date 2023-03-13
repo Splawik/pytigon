@@ -1,0 +1,270 @@
+{% extends "schwiki/wikiobj_edit.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with title="Images" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block dialog_type %}
+        modal-lg
+{% endblock %}
+{% block row_edit %}
+        <style >
+        .img_form .img_form_images .group_booleanfield {
+            position: relative;
+        }
+        .img_form .img_form_images .group_imagefield {
+            margin-left: 80px;
+        }
+        .img_form .img_form_images .group_charfield {
+            position: relative;
+        }
+        .img_form .img_form_images .img_block_title {
+            position: relative;
+        }
+        .img_form .img_form_images .img_block_title {
+            font-size: 16px;
+            background: #888;
+            color: #fff;
+            padding: 0px 3px;
+        }
+        .img_form .img_form_layout label {
+            padding: 5px;
+        }
+        .img_form .img_form_layout label::after {
+            content: "";
+        }
+        .img_form .img_form_view_text {
+            padding: 0px 0.7rem
+        }
+
+</style>
+        <div class="img_form">
+                <div class="row">
+                        <div class="container col-12 col-sm-6 img_form_images">
+                                <span class="img_block_title">1.</span>
+                                {% form "/12" %}
+                                        crop1;img1;desc1
+                                {% endform %}
+                                {% form "/6" %}
+                                        img1class;img1style
+                                {% endform %}
+                        </div>
+                        <div class="container col-12 col-sm-6 img_form_images">
+                                <span class="img_block_title">2.</span>
+                                {% form "/12" %}
+                                        crop2;img2;desc2
+                                {% endform %}
+                                {% form "/6" %}
+                                        img2class;img2style
+                                {% endform %}
+                        </div>
+                        <div class="container col-12 col-sm-6 img_form_images">
+                                <span class="img_block_title">3.</span>
+                                {% form "/12" %}
+                                        crop3;img3;desc3
+                                {% endform %}
+                                {% form "/6" %}
+                                        img3class;img3style
+                                {% endform %}
+                        </div>
+                        <div class="container col-12 col-sm-6 img_form_images">
+                                <span class="img_block_title">4.</span>
+                                {% form "/12" %}
+                                        crop4;img4;desc4
+                                {% endform %}
+                                {% form "/6" %}
+                                        img4class;img4style
+                                {% endform %}
+                        </div>
+                </div>
+                <label>Component layout</label>
+                <div class="row img_form_layout">
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1000" {%if form.component_view_type.value == '1000' or not form.component_view_type.value %}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1200" {%if form.component_view_type.value == '1200'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="40" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="40" y="1" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1230" {%if form.component_view_type.value == '1230'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="27" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="27" y="1" x="28" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="27" y="1" x="57" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1234" {%if form.component_view_type.value == '1234'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="20" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="20" y="1" x="21" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="20" y="1" x="43" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="20" y="1" x="63" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1213" {%if form.component_view_type.value == '1213'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="40" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="1" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="41" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1232" {%if form.component_view_type.value == '1232'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="40" width="40" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="41" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="80" width="40" y="1" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="4321" {%if form.component_view_type.value == '4321'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="40" width="40" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="1" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="41" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="40" width="40" y="41" x="41" stroke-width="1" fill="#007fff"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="component_view_type" value="1423" {%if form.component_view_type.value == '1423'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="25" width="25" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="25" width="25" y="1" x="51" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="25" width="25" y="31" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="25" width="25" y="51" x="31" stroke-width="1" fill="#007fff">
+                                                                </rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                </div>
+                <label>Image style</label>
+                <div class="row img_form_layout">
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o1" {%if form.img_view_type.value == 'o1' or not form.img_view_type.value %}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="60" y="65" x="11" stroke-width="1" fill="#7f0000"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o2" {%if form.img_view_type.value == 'o2'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="60" y="35" x="11" stroke-width="1" fill="#7f0000"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o3" {%if form.img_view_type.value == 'o3'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="60" y="6" x="11" stroke-width="1" fill="#7f0000"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o4" {%if form.img_view_type.value == 'o4'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="80" y="85" x="1" stroke-width="1" fill="#ffefef"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o5" {%if form.img_view_type.value == 'o5'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="15" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="80" y="1" x="1" stroke-width="1" fill="#ffefef"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o6" {%if form.img_view_type.value == 'o6'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="1" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="80" y="85" x="1" stroke-width="1" fill="#000000"></rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                                <div class="col">
+                                        <label>
+                                                <input type="radio" name="img_view_type" value="o7" {%if form.img_view_type.value == 'o7'%}checked{%endif%} />
+                                                <svg width="41" height="52" viewBox="0 0 82 103" xmlns="http://www.w3.org/2000/svg">
+                                                        <g>
+                                                                <rect stroke="#000" height="80" width="80" y="15" x="1" stroke-width="1" fill="#007fff"></rect>
+                                                                <rect stroke="#000" height="10" width="80" y="1" x="1" stroke-width="1" fill="#000000">
+                                                                </rect>
+                                                        </g>
+                                                </svg>
+                                        </label>
+                                </div>
+                </div>
+        </div>
+        <div class="row">
+                {% form "4/4" %}
+                        quality;jpeg
+                {% endform %}
+        </div>
+{% endblock %}
+

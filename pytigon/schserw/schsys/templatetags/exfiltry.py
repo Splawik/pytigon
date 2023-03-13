@@ -123,11 +123,25 @@ def truncate(value, arg):
         return retstr
 
 
+@register.filter(name="first_elem")
+def first_elem(value, sep="/"):
+    """split value and return first element"""
+    return value.split(sep)[0]
+
+
 @register.filter(name="last_elem")
 def last_elem(value, sep="/"):
     """split value and return last element"""
     return value.split(sep)[-1]
 
+@register.filter(name="penultimate_elem")
+def penultimate_elem(value, sep="/"):
+    """split value and return penultimate element"""
+    x = value.split(sep)
+    if len(x) > 1:
+        return x[-2]
+    else:
+        return ""
 
 @register.filter(name="first_section")
 def first_section(html):

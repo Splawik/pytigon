@@ -13,7 +13,7 @@
         {% endif %}
 {% endblock %}
 {% block all %}
-        {% with edit_vscroll=True table_type='datatable' %}
+        {% with edit_vscroll=True table_type='datatable' table_subtype='autoselect' %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}

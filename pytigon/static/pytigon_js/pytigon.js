@@ -2968,6 +2968,9 @@ prepare_datatable = function flx_prepare_datatable (table) {
     }).bind(this);
 
     (_pymeth_find.call(table, "div.second_row").each)(_local_fun);
+    if (_pyfunc_truthy((table[0].hasAttribute)("data-autoselect"))) {
+        (((((table[0].closest)(".bootstrap-table")).querySelector)("[name='select']")).click)();
+    }
     return null;
 };
 

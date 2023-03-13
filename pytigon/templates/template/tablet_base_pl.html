@@ -31,10 +31,10 @@
                         <li class="treeview active">
                 {% endif %}
                 <a href="#">
-                        {% if item_info.icon %}
-                                {% icon item_info.icon|append_str:" fa-lg" %}
+                        {% if item_info.icon|penultimate_elem:"<=" %}
+                                {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
                           {% else %}
-                                {% icon "fa-link fa-lg" %}
+                                {% icon "fa-arrow-circle-right fa-lg" %}
                         {% endif %}
                         <span>{{item_info.app_title}}</span>
                         {% icon "fa-angle-left fa-lg pull-right" %}
@@ -43,14 +43,14 @@
         {% endifchanged %}
         <li>
                 <a href="{{base_path}}{{item_info.url}}" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
-                        {% if item_info.icon %}
+                        {% if item_info.icon|last_elem:"<=" %}
                                 {% if standard_web_browser %}
-                                        {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                        {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
                                   {% else %}
                                         {{item_info.icon}}
                                 {% endif %}
                           {% else %}
-                                {% icon "bi-record" width=22 %}
+                                {% icon "arrow-circle-right" width=22 %}
                         {% endif %}
                         {{item_info.description}}
                 </a>

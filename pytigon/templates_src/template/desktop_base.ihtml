@@ -358,6 +358,7 @@
         .data-page-size="64"
         .data-page-list="[64]"
         .data-search="true"
+        .data-multiple-select-row="true"
         .data-sortable="{% if sort %}true{% else %}false{% endif %}"
         .data-toolbar="#{{uuid}}_toolbar"
         .data-locale="pl-PL"
@@ -373,11 +374,12 @@
         .data-loading-template="loading_template"
         .data-buttons-align="right"
         .data-buttons="datatable_buttons"
-        {% if not not_multiple_select %}data-click-to-select="false"{% else %}data-click-to-select="true"{% endif %}
-        .data-click-to-select="true"
+        {% if not_multiple_select %}data-click-to-select="false"{% else %}data-click-to-select="true"{% endif %}
         .data-mobile-responsive="true"
+        {% if table_subtype and table_subtype == 'autoselect' %}data-autoselect="true"{% endif %}
     % else:
         .class="tabsort table table-hover table-sm table-striped table-bordered {%if get %}table_get{% endif %}"
+        {% if table_subtype and table_subtype == 'autoselect' %}data-autoselect="true"{% endif %}
 
 %% row_edit_header
     % if form:

@@ -8,3 +8,6 @@
   position: absolute;
   font-size: 80%;
   left: -10px !important; }
+
+.logo span.logo-lg {
+  font-size: 120%; }

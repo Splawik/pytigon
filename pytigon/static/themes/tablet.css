@@ -153,6 +153,9 @@ ul.sidebar-menu ul.treeview-menu {
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a {
   border-left-color: #FDFD8C !important; }
 
+.sidebar-menu > li > a > .fa-lg {
+  width: 24px !important; }
+
 .tabsort-toolbar-expand2 {
   top: -40px !important;
   left: 50px !important; }
@@ -168,6 +171,8 @@ ul.sidebar-menu ul.treeview-menu {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
+  .sidebar-menu ul.sidebar-submenu li a > span > .fa {
+    width: 20px; }
 
 .sidebar-menu a.logo {
   padding-left: 3.2rem;
