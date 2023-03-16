@@ -171,6 +171,8 @@ def init_table(table, table_type):
 
                         x.querySelector(".table-row-active")
 
+
+
         def queryParams(p):
             nonlocal table
             base_elem = table[0].closest(".tabsort_panel")
@@ -191,12 +193,18 @@ def init_table(table, table_type):
             "columns": "fa-th-list",
         }
 
+        def onRefresh(params):
+            nonlocal table    
+            if table[0].hasAttribute("data-autoselect"):
+                table[0].closest(".bootstrap-table").querySelector("[name='select']").click()
+
         if table.hasClass("table_get"):
             table.bootstrapTable(
                 {
                     "onLoadSuccess": onLoadSuccess,
                     "onPostHeader": onPostHeader,
                     "onCheck": onCheck,
+                    "onRefresh": onRefresh,
                     "height": 350,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
@@ -210,6 +218,7 @@ def init_table(table, table_type):
                     "onLoadSuccess": onLoadSuccess,
                     "onPostHeader": onPostHeader,
                     "onCheck": onCheck,
+                    "onRefresh": onRefresh,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,

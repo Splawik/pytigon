@@ -3057,7 +3057,7 @@ datatable_ajax = function flx_datatable_ajax (params) {
 };
 
 init_table = function flx_init_table (table, table_type) {
-    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onCheck, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
+    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onCheck, onLoadSuccess, onPostHeader, onRefresh, panel, panel2, queryParams, table_panel;
     if (_pyfunc_op_equals(table_type, "datatable")) {
         if (_pyfunc_truthy(table.hasClass("multiple-select"))) {
             ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true' data-visible='true'></th>");
@@ -3122,10 +3122,17 @@ init_table = function flx_init_table (table, table_type) {
         }).bind(this);
 
         icons = ({fullscreen: "fa-arrows-alt", refresh: "fa-refresh", toggleOff: "fa-toggle-off", toggleOn: "fa-toggle-on", columns: "fa-th-list"});
+        onRefresh = (function flx_onRefresh (params) {
+            if (_pyfunc_truthy((table[0].hasAttribute)("data-autoselect"))) {
+                (((((table[0].closest)(".bootstrap-table")).querySelector)("[name='select']")).click)();
+            }
+            return null;
+        }).bind(this);
+
         if (_pyfunc_truthy(table.hasClass("table_get"))) {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, onRefresh: onRefresh, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
         } else {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons, buttonsOrder: ["refresh", "toggle", "fullscreen", "menu", "select", "columns"]}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, onRefresh: onRefresh, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons, buttonsOrder: ["refresh", "toggle", "fullscreen", "menu", "select", "columns"]}));
         }
         init_bootstrap_table = function (e, data) {
             var on_hidden_editable;
