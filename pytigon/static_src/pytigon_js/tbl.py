@@ -30,6 +30,15 @@ def datetable_set_height(element):
 
     dy = dy_win - table_offset
 
+    if elem[0].hasAttribute("table-details-height"):
+        dydy = (
+            int(elem[0].getAttribute("table-details-height").replace("%", "").replace("vh", ""))
+            * dy_win
+            / 100
+        )
+
+    dy -= dydy
+
     if dy < 200:
         dy = 200
 
@@ -148,6 +157,20 @@ def init_table(table, table_type):
             prepare0(table)
             return False
 
+        def onCheck(row, elem):
+            if elem.length > 0:
+                x = elem[0].closest(".ajax-region[data-region='page'")
+                if x:
+                    x2 = x.querySelector("input[name='table_row_pk']")
+                    if x2:
+                        x2.value = row.id
+                        row_active_divs = Array.prototype.slice.call(x.querySelectorAll(".table-row-active"))
+                        for elem in row_active_divs:
+                            if elem.classList.contains("show"):
+                                refresh_ajax_frame(elem)
+
+                        x.querySelector(".table-row-active")
+
         def queryParams(p):
             nonlocal table
             base_elem = table[0].closest(".tabsort_panel")
@@ -173,6 +196,7 @@ def init_table(table, table_type):
                 {
                     "onLoadSuccess": onLoadSuccess,
                     "onPostHeader": onPostHeader,
+                    "onCheck": onCheck,
                     "height": 350,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
@@ -185,6 +209,7 @@ def init_table(table, table_type):
                 {
                     "onLoadSuccess": onLoadSuccess,
                     "onPostHeader": onPostHeader,
+                    "onCheck": onCheck,
                     "rowStyle": _rowStyle,
                     "queryParams": queryParams,
                     "ajax": datatable_ajax,
@@ -389,7 +414,7 @@ def datatable_action(btn, action):
 window.datatable_action = datatable_action
 
 
-def on_check():
+def on_check_toggle_visibility():
     datatable = this
 
     container = getattr(datatable, "$container")[0]
@@ -444,7 +469,7 @@ def datatable_buttons(obj):
             "text": "Select rows",
             "icon": "fa-check",
             "event": {
-                "click": on_check,
+                "click": on_check_toggle_visibility,
             },
             "attributes": {"title": "Add a new row to the table"},
         },

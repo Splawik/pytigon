@@ -42,6 +42,54 @@
     % if form.errors or errors:
         {{block.super}}
         
+
+%% list_page_start
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_header
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_content_header_first_row
+    % if content_limited_to and content_limited_to == 'min':
+        div style=height:5px;
+    % else:
+        {{ block.super }}
+
+%% list_content_header_second_row
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_content_header_third_row
+    % with btn_size='btn-sm':
+        {{ block.super }}
+        
+%% list_content_footer
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_content_end
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_footer
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_end
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+
+
 %% body_desktop
     % with ONLY_CONTENT=True:
         {{ block.super }}

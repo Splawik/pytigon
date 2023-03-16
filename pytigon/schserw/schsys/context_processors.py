@@ -658,6 +658,11 @@ def sch_standard(request):
     else:
         user_agent = ""
 
+    if "only_content" in request.GET and request.GET["only_content"]:
+        content_limited_to = request.GET["only_content"]
+    else:
+        content_limited_to = ""
+
     ret = {
         "standard_web_browser": standard,
         "form_edit": form_edit,
@@ -667,6 +672,7 @@ def sch_standard(request):
         "form_list": list_view,
         "readonly": readonly,
         "ro": ro,
+        "content_limited_to": content_limited_to,
         "form_info": form_info,
         "form_grid": form_grid,
         "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,

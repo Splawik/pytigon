@@ -12,7 +12,7 @@
                 self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
 
 %% all
-    %with edit_vscroll=True table_type='datatable' table_subtype='autoselect'
+    %with edit_vscroll=True table_type='datatable'
         {{ block.super }}
 
 %% list_content_actions

@@ -320,7 +320,9 @@
                     % else:
                         {% paginator %}
 
-                div class=tabsort_panel
+                div class=tabsort_panel,,,table-details-height={% if table_details_height %}{{ table_details_height }}{% endif %}
+                    % if table_subtype and table_subtype == 'table_with_details':
+                        input type=hidden,,,name=table_row_pk,,,value=[[ERROR]]
                     % if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6:
                         % if table_type == 'datatable':
                             <div class="ajax-frame ajax-link ajax-region" data-region="table" onloadeddata="table_loadeddata(event);">

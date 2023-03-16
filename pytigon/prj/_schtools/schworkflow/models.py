@@ -268,13 +268,15 @@ class WorkflowItem(JSONModel):
                 objects = cls.objects
                 if grp[1:] == "current_user":
                     email = get_user_email()
-                    objects = objects.filter(user_email=email)
+                    objects = objects.filter(user_email__iexact=email)
                 elif grp[1:] == "current_user_and_active":
                     email = get_user_email()
-                    objects = objects.filter(user_email=email, status="0")
+                    objects = objects.filter(user_email__iexact=email, status="0")
                 elif grp[1:] == "current_user_active_and_next":
                     email = get_user_email()
-                    objects = objects.filter(user_email=email, status_in=("0", "8"))
+                    objects = objects.filter(
+                        user_email__iexact=email, status_in=("0", "8")
+                    )
                 elif grp[1:] == "active":
                     objects = objects.filter(status="0")
                 elif grp[1:] == "active_and_next":

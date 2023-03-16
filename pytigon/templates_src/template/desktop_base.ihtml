@@ -376,10 +376,10 @@
         .data-buttons="datatable_buttons"
         {% if not_multiple_select %}data-click-to-select="false"{% else %}data-click-to-select="true"{% endif %}
         .data-mobile-responsive="true"
-        {% if table_subtype and table_subtype == 'autoselect' %}data-autoselect="true"{% endif %}
+        {% if table_subtype and table_subtype == 'table_with_details' %}data-autoselect="true"{% endif %}
     % else:
         .class="tabsort table table-hover table-sm table-striped table-bordered {%if get %}table_get{% endif %}"
-        {% if table_subtype and table_subtype == 'autoselect' %}data-autoselect="true"{% endif %}
+        {% if table_subtype and table_subtype == 'table_with_details' %}data-autoselect="true"{% endif %}
 
 %% row_edit_header
     % if form:

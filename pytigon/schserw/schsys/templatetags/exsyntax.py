@@ -1387,3 +1387,38 @@ def do_tree(parser, token):
     nodelist = parser.parse(("endtree"))
     parser.delete_first_token()
     return TreeNode(nodelist, parser.compile_filter(parm[1]))
+
+
+class RowDetailsNode(Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        output = self.nodelist.render(context).replace("\n", ";")
+        title_url_tab = []
+        test = False
+        for item in output.split(";"):
+            item = item.strip()
+            if ":" in item:
+                title, url = item.split(":", 1)
+                if title.startswith("*") and not test:
+                    title_url_tab.append([title[1:], url, True])
+                    test = True
+                else:
+                    title_url_tab.append([title, url, False])
+        if not test and len(title_url_tab) > 0:
+            title_url_tab[0][2] = True
+
+        t = get_template("widgets/row_details.html")
+
+        d = {}
+        d.update(context.flatten())
+        d["title_url_tab"] = title_url_tab
+        return t.render(d, request=d["request"])
+
+
+@register.tag
+def row_details(parser, token):
+    nodelist = parser.parse(("endrow_details",))
+    parser.delete_first_token()
+    return RowDetailsNode(nodelist)

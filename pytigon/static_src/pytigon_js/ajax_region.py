@@ -167,6 +167,25 @@ def auto_frame_init(dest_elem):
 register_mount_fun(auto_frame_init)
 
 
+def _on_shown_bs_tab(event):
+    if event.target.hasAttribute("data-bs-target"):
+        target = event.target.getAttribute("data-bs-target")
+        div = event.target.closest("div.auto-refresh")
+        frame = div.querySelector(target)
+        refresh_ajax_frame(frame)
+
+
+def auto_refresh_tab(dest_elem):
+    item_list = Array.prototype.slice.call(
+        dest_elem.querySelectorAll("div.auto-refresh button")
+    )
+    for elem in item_list:
+        elem.addEventListener("shown.bs.tab", _on_shown_bs_tab)
+
+
+register_mount_fun(auto_refresh_tab)
+
+
 def moveelement_init(dest_elem):
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"))
     if objs:
@@ -586,6 +605,11 @@ def refresh_ajax_frame(
 
     if url:
         url = correct_href(url, (element, link))
+        url = process_href(url, jQuery(link.parentElement))
+        if "[[" in url and "]]" in url:
+            _callback(data_if_none)
+            return
+
         loading.create()
         loading.start()
 

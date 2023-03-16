@@ -25,3 +25,5 @@ from standard_components.models import *
 from schelements.models import *
 
 from schadmin.models import *
+
+from schattachements.models import *

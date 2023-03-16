@@ -1,0 +1,21 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% if standard_web_browser %}
+        <div class="auto-refresh" style="height:{{table_details_height}}" style="display:flex;flex-direction:column;justify-content:space-between;">
+                <nav>
+                        <div class="nav nav-tabs" role="tablist">
+                                {% for item in title_url_tab %}
+                                        <button class="nav-link {% if item.2 %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#nav-{{item.0}}{{forloop.counter}}" type="button" role="tab">{{item.0}}</button>
+                                {% endfor %}
+                        </div>
+                </nav>
+                <div class="tab-content auto-refresh" id="nav-tabContent" style="flex-grow:1">
+                        {% for item in title_url_tab %}
+                                <div href="{{item.1}}?view_in=desktop&only_content=min" class="{% if item.2 %}active show{% endif %} tab-pane table-row-active ajax-frame ajax-link ajax-region fade" id="nav-{{item.0}}{{forloop.counter}}" role="tabpanel" tabindex="0">
+                                        &nbsp;
+                                </div>
+                        {% endfor %}
+                </div>
+        </div>
+{% endif %}
+

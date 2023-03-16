@@ -1209,7 +1209,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _refresh_page, ajax_load, auto_frame_init, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
+var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1331,14 +1331,38 @@ auto_frame_init = function flx_auto_frame_init (dest_elem) {
 };
 
 register_mount_fun(auto_frame_init);
+_on_shown_bs_tab = function flx__on_shown_bs_tab (event) {
+    var div, frame, target;
+    if (_pyfunc_truthy(event.target.hasAttribute("data-bs-target"))) {
+        target = event.target.getAttribute("data-bs-target");
+        div = event.target.closest("div.auto-refresh");
+        frame = div.querySelector(target);
+        refresh_ajax_frame(frame);
+    }
+    return null;
+};
+
+auto_refresh_tab = function flx_auto_refresh_tab (dest_elem) {
+    var elem, item_list, stub7_seq, stub8_itr;
+    item_list = Array.prototype.slice.call(dest_elem.querySelectorAll("div.auto-refresh button"));
+    stub7_seq = item_list;
+    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+        elem = stub7_seq[stub8_itr];
+        elem.addEventListener("shown.bs.tab", _on_shown_bs_tab);
+    }
+    return null;
+};
+
+register_mount_fun(auto_refresh_tab);
 moveelement_init = function flx_moveelement_init (dest_elem) {
-    var _on_remove, data_position, elem2, obj, objs, parent, stub10_itr, stub9_seq;
+    var _on_remove, data_position, elem2, obj, objs, parent, stub11_seq, stub12_itr;
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"));
     if (_pyfunc_truthy(objs)) {
-        stub9_seq = objs;
-        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
-        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
-            obj = stub9_seq[stub10_itr];
+        stub11_seq = objs;
+        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
+        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+            obj = stub11_seq[stub12_itr];
             if (_pyfunc_truthy(obj.hasAttribute("data-position"))) {
                 _pymeth_remove.call(obj.classList, "move-element");
                 data_position = obj.getAttribute("data-position");
@@ -1349,11 +1373,11 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
                 }
                 if (_pyfunc_truthy(_pymeth_endswith.call(data_position, ":class"))) {
                     _on_remove = (function flx__on_remove () {
-                        var c, stub7_seq, stub8_itr;
-                        stub7_seq = Array.prototype.slice.call(obj.classList);
-                        if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-                        for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-                            c = stub7_seq[stub8_itr];
+                        var c, stub10_itr, stub9_seq;
+                        stub9_seq = Array.prototype.slice.call(obj.classList);
+                        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
+                        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
+                            c = stub9_seq[stub10_itr];
                             _pymeth_remove.call(elem2.classList, c);
                         }
                         return null;
@@ -1376,7 +1400,7 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 
 register_mount_fun(moveelement_init);
 select2_init = function flx_select2_init (dest_elem) {
-    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub11_seq, stub12_itr;
+    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub13_seq, stub14_itr;
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0}));
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
@@ -1388,10 +1412,10 @@ select2_init = function flx_select2_init (dest_elem) {
 
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"));
     if (_pyfunc_truthy(controls)) {
-        stub11_seq = controls;
-        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
-        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
-            control = stub11_seq[stub12_itr];
+        stub13_seq = controls;
+        if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
+        for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
+            control = stub13_seq[stub14_itr];
             _onloadeddata = function (event) {
                 var id, src_elem, text;
                 if (_pyfunc_hasattr(event, "data_source")) {
@@ -1434,7 +1458,7 @@ select2_init = function flx_select2_init (dest_elem) {
 
 register_mount_fun(select2_init);
 select_combo_init = function flx_select_combo_init (dest_elem) {
-    var elem, on_change, on_change_element, select_ctrl_list, stub13_seq, stub14_itr;
+    var elem, on_change, on_change_element, select_ctrl_list, stub15_seq, stub16_itr;
     select_ctrl_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".select_combo"));
     on_change_element = (function flx_on_change_element (element) {
         var _onload, evt, next_element, next_elements, region, src;
@@ -1485,10 +1509,10 @@ select_combo_init = function flx_select_combo_init (dest_elem) {
         return on_change_element(element);
     }).bind(this);
 
-    stub13_seq = select_ctrl_list;
-    if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
-    for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
-        elem = stub13_seq[stub14_itr];
+    stub15_seq = select_ctrl_list;
+    if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
+    for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
+        elem = stub15_seq[stub16_itr];
         if (_pyfunc_truthy(elem.hasAttribute("data-rel-name"))) {
             elem.addEventListener("change", on_change);
         }
@@ -1720,6 +1744,11 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     }
     if (_pyfunc_truthy(url)) {
         url = correct_href(url, [element, link]);
+        url = process_href(url, jQuery(link.parentElement));
+        if ((_pyfunc_op_contains("[[", url) && _pyfunc_op_contains("]]", url))) {
+            _callback(data_if_none);
+            return null;
+        }
         loading.create();
         loading.start();
         if (_pyfunc_truthy(post)) {
@@ -1752,7 +1781,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, moveelement_init, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;
@@ -2894,7 +2923,7 @@ get_menu = function flx_get_menu () {
 
 export {Page, TabMenuItem, TabMenu, get_menu};
 
-var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, on_check, prepare0, prepare_datatable, table_loadeddata;
+var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, on_check_toggle_visibility, prepare0, prepare_datatable, table_loadeddata;
 _is_visible = function flx__is_visible (element) {
     var test;
     test = jQuery(element).is(":visible");
@@ -2907,7 +2936,7 @@ _is_visible = function flx__is_visible (element) {
 };
 
 datetable_set_height = function flx_datetable_set_height (element) {
-    var dy, dy_win, elem, panel, table_offset;
+    var dy, dy_win, dydy, elem, panel, table_offset;
     if (_pyfunc_truthy((jQuery(element).hasClass)("table_get"))) {
         return null;
     }
@@ -2918,6 +2947,10 @@ datetable_set_height = function flx_datetable_set_height (element) {
     table_offset = elem.offset().top;
     dy_win = (jQuery(window).height)();
     dy = dy_win - table_offset;
+    if (_pyfunc_truthy((elem[0].hasAttribute)("table-details-height"))) {
+        dydy = (_pyfunc_op_mult((_pyfunc_int((_pymeth_replace.call(((_pymeth_replace.call((((elem[0].getAttribute)("table-details-height"))), "%", ""))), "vh", "")))), dy_win)) / 100;
+    }
+    dy -= dydy;
     if ((dy < 200)) {
         dy = 200;
     }
@@ -3024,7 +3057,7 @@ datatable_ajax = function flx_datatable_ajax (params) {
 };
 
 init_table = function flx_init_table (table, table_type) {
-    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
+    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onCheck, onLoadSuccess, onPostHeader, panel, panel2, queryParams, table_panel;
     if (_pyfunc_op_equals(table_type, "datatable")) {
         if (_pyfunc_truthy(table.hasClass("multiple-select"))) {
             ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true' data-visible='true'></th>");
@@ -3049,6 +3082,30 @@ init_table = function flx_init_table (table, table_type) {
             return false;
         }).bind(this);
 
+        onCheck = (function flx_onCheck (row, elem) {
+            var row_active_divs, stub3_seq, stub4_itr, x, x2;
+            if ((elem.length > 0)) {
+                x = (elem[0].closest)(".ajax-region[data-region='page'");
+                if (_pyfunc_truthy(x)) {
+                    x2 = x.querySelector("input[name='table_row_pk']");
+                    if (_pyfunc_truthy(x2)) {
+                        x2.value = row.id;
+                        row_active_divs = Array.prototype.slice.call(x.querySelectorAll(".table-row-active"));
+                        stub3_seq = row_active_divs;
+                        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+                        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+                            elem = stub3_seq[stub4_itr];
+                            if (_pyfunc_truthy(elem.classList.contains("show"))) {
+                                refresh_ajax_frame(elem);
+                            }
+                        }
+                        x.querySelector(".table-row-active");
+                    }
+                }
+            }
+            return null;
+        }).bind(this);
+
         queryParams = (function flx_queryParams (p) {
             var base_elem, link;
             base_elem = (table[0].closest)(".tabsort_panel");
@@ -3066,9 +3123,9 @@ init_table = function flx_init_table (table, table_type) {
 
         icons = ({fullscreen: "fa-arrows-alt", refresh: "fa-refresh", toggleOff: "fa-toggle-off", toggleOn: "fa-toggle-on", columns: "fa-th-list"});
         if (_pyfunc_truthy(table.hasClass("table_get"))) {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, height: 350, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons}));
         } else {
-            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons, buttonsOrder: ["refresh", "toggle", "fullscreen", "menu", "select", "columns"]}));
+            table.bootstrapTable(({onLoadSuccess: onLoadSuccess, onPostHeader: onPostHeader, onCheck: onCheck, rowStyle: _rowStyle, queryParams: queryParams, ajax: datatable_ajax, icons: icons, buttonsOrder: ["refresh", "toggle", "fullscreen", "menu", "select", "columns"]}));
         }
         init_bootstrap_table = function (e, data) {
             var on_hidden_editable;
@@ -3231,16 +3288,16 @@ loading_template = function flx_loading_template (message) {
 
 window.loading_template = loading_template;
 datatable_action = function flx_datatable_action (btn, action) {
-    var _callback, datatable, div, item, pk_list_str, pk_tab, stub3_seq, stub4_itr, tab, url;
+    var _callback, datatable, div, item, pk_list_str, pk_tab, stub5_seq, stub6_itr, tab, url;
     div = btn.closest("div.tableframe");
     datatable = div.querySelector("table[name=tabsort].datatable");
     url = datatable.getAttribute("data-url") + "../table_action/";
     pk_tab = [];
     tab = (jQuery(datatable).bootstrapTable)("getSelections");
-    stub3_seq = tab;
-    if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
-    for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
-        item = stub3_seq[stub4_itr];
+    stub5_seq = tab;
+    if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
+    for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+        item = stub5_seq[stub6_itr];
         _pymeth_append.call(pk_tab, _pyfunc_str(item.id));
     }
     pk_list_str = _pymeth_join.call(",", pk_tab);
@@ -3259,15 +3316,15 @@ datatable_action = function flx_datatable_action (btn, action) {
 };
 
 window.datatable_action = datatable_action;
-on_check = function flx_on_check () {
-    var actions, container, datatable, div, dropdown, html, item, menu_btn, s, stub5_seq, stub6_itr, stub7_seq, stub8_itr, x;
+on_check_toggle_visibility = function flx_on_check_toggle_visibility () {
+    var actions, container, datatable, div, dropdown, html, item, menu_btn, s, stub10_itr, stub7_seq, stub8_itr, stub9_seq, x;
     datatable = this;
     container = _pyfunc_getattr(datatable, "$container")[0];
     menu_btn = container.querySelector("button[name=menu]");
-    stub7_seq = datatable.getHiddenColumns();
-    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-        item = stub7_seq[stub8_itr];
+    stub9_seq = datatable.getHiddenColumns();
+    if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
+    for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
+        item = stub9_seq[stub10_itr];
         if (_pyfunc_op_equals(item.field, "state")) {
             datatable.showColumn("state");
             menu_btn.style.display = "block";
@@ -3282,10 +3339,10 @@ on_check = function flx_on_check () {
                 dropdown.classList.add("dropleft");
                 html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-bs-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>";
                 html += "<div class='dropdown-menu'>";
-                stub5_seq = actions;
-                if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
-                for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
-                    s = stub5_seq[stub6_itr];
+                stub7_seq = actions;
+                if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+                for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+                    s = stub7_seq[stub8_itr];
                     if (_pyfunc_op_contains("/", s)) {
                         x = _pymeth_split.call(s, "/");
                     } else {
@@ -3306,11 +3363,11 @@ on_check = function flx_on_check () {
 };
 
 datatable_buttons = function flx_datatable_buttons (obj) {
-    return ({select: ({text: "Select rows", icon: "fa-check", event: ({click: on_check}), attributes: ({title: "Add a new row to the table"})}), menu: ({text: "Menu", icon: "fa-bars", attributes: ({title: "Menu", style: "display: none;"})})});
+    return ({select: ({text: "Select rows", icon: "fa-check", event: ({click: on_check_toggle_visibility}), attributes: ({title: "Add a new row to the table"})}), menu: ({text: "Menu", icon: "fa-bars", attributes: ({title: "Menu", style: "display: none;"})})});
 };
 
 window.datatable_buttons = datatable_buttons;
-export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check, datatable_buttons};
+export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check_toggle_visibility, datatable_buttons};
 
 var humanFileSize, img_field;
 humanFileSize = function flx_humanFileSize (bytes, si) {
