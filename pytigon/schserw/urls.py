@@ -113,6 +113,9 @@ if settings.REST:
     from drf_yasg import openapi
     from drf_yasg.views import get_schema_view
     from rest_framework import permissions
+    from rest_framework.decorators import api_view
+    from rest_framework.response import Response
+    from rest_framework import status
 
     schema_view = get_schema_view(
         openapi.Info(
@@ -135,6 +138,19 @@ if settings.REST:
             ),
         ]
     )
+
+    @api_view(
+        [
+            "GET",
+        ]
+    )
+    def rest_hello(request):
+        if request.method == "GET":
+            print(dir(request))
+            return Response({"message": "Hello %s, %s" % (request.user, request.auth)})
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    _urlpatterns.append(path("rest_hello", rest_hello))
 
     for app in settings.INSTALLED_APPS:
         if isinstance(app, AppConfigMod):

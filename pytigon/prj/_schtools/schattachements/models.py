@@ -14,15 +14,13 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schelements.models import *
-
-
 from django.core.mail import send_mail
 from datetime import datetime
 from django.conf import settings
 from os.path import join
 
 from filer.fields.file import FilerFileField
+from schelements.models import Element
 
 
 def upload_path_fun(obj, filename):

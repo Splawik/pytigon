@@ -231,9 +231,10 @@ if REST:
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-            "rest_framework.authentication.BasicAuthentication",
-            "rest_framework.authentication.SessionAuthentication",
-        ]
+           #"rest_framework.authentication.BasicAuthentication",
+           # "rest_framework.authentication.SessionAuthentication",
+        ],
+        'DEFAULT_PERMISSION_CLASSES': ( 'rest_framework.permissions.IsAuthenticated', )
     }
 
 
@@ -243,13 +244,14 @@ if GRAPHQL or REST:
     )
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
-OAUTH2_PROVIDER = {
-    #'SCOPES': {
-    #    'read': 'Read scope',
-    #    'write': 'Write scope',
-    # },
-    "PKCE_REQUIRED": False,
-}
+    OAUTH2_PROVIDER = {
+        "SCOPES": {
+            "read": "Read scope",
+            "write": "Write scope",
+            "groups": "Access to your groups",
+        },
+        "PKCE_REQUIRED": False,
+    }
 
 
 try:
@@ -533,7 +535,7 @@ COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 STATIC_FS = None
 
 
-def STATIC_FILE_STORAGE_FS():   
+def STATIC_FILE_STORAGE_FS():
     static_fs = MultiFS()
     static_fs.add_fs("static_main", OSFS(settings.STATIC_ROOT), write=True)
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")

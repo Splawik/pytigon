@@ -12,6 +12,3 @@ from django.contrib import admin
 import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
-
-
-from schelements.models import *

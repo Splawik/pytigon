@@ -7,7 +7,6 @@ APPS = [
     "schtasks",
     "schworkflow",
     "schcomments",
-    "_schdata.schelements",
 ]
 APPS_EXT = []
 PUBLIC = True

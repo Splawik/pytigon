@@ -52,7 +52,6 @@
     % if content_limited_to and content_limited_to == 'min':
     % else:
         {{ block.super }}
-
 %% list_content_header_first_row
     % if content_limited_to and content_limited_to == 'min':
         div style=height:5px;
@@ -64,10 +63,16 @@
     % else:
         {{ block.super }}
 
+%% list_content_header_fourth_row
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+
 %% list_content_header_third_row
     % with btn_size='btn-sm':
         {{ block.super }}
-        
+
 %% list_content_footer
     % if content_limited_to and content_limited_to == 'min':
     % else:

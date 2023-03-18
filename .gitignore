@@ -1,7 +1,7 @@
 __pycache__/
 *.py[cod]
 
-pip-log.txt
+pip-log.txt`
 pip-delete-this-directory.txt
 launch.json
 extensions.json
@@ -33,6 +33,9 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schtools/
 !*pytigon/prj/_schwebtrapper/
 !*pytigon/prj/_schwiki/
+!*pytigon/prj/_schsetup/
+!*pytigon/prj/_schplaywright/
+!*pytigon/prj/_schot/
 !*pytigon/prj/schdevtools/
 !*pytigon/prj/schcomponents/
 !*pytigon/prj/scheditor/
@@ -40,8 +43,6 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/schportal/
 !*pytigon/prj/schpytigondemo/
 !*pytigon/prj/mobile_demo/
-!*pytigon/prj/schsetup/
-!*pytigon/prj/_schplaywright/
 !*pytigon/prj/schscripts/
 !*pytigon/prj/_schall/*
 !*pytigon/prj/_schdata/*
@@ -50,6 +51,9 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schtools/*
 !*pytigon/prj/_schwebtrapper/*
 !*pytigon/prj/_schwiki/*
+!*pytigon/prj/_schsetup/*
+!*pytigon/prj/_schplaywright/*
+!*pytigon/prj/_schot/*
 !*pytigon/prj/schdevtools/*
 !*pytigon/prj/schcomponents/*
 !*pytigon/prj/scheditor/*
@@ -57,8 +61,6 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/schportal/*
 !*pytigon/prj/schpytigondemo/*
 !*pytigon/prj/mobile_demo/*
-!*pytigon/prj/schsetup/*
-!*pytigon/prj/_schplaywright/*
 !*pytigon/prj/schscripts/*
 
 global_db_settings.py

@@ -154,6 +154,18 @@ def default_template(b_type):
     return "template/%s.html" % b_type
 
 
+def has_user_perm(user, perm):
+    if "|" in perm:
+        arg, fun_path = perm.split("|", 1)
+        module_path, fun_name = fun_path.rsplit(".", 1)
+        module = __import__(module_path, fromlist=[None])
+        fun = getattr(module, fun_name)
+        return fun(user, arg)
+
+    else:
+        return user.has_perm(perm)
+
+
 class AppInfo:
     def __init__(
         self,
@@ -413,7 +425,7 @@ class AppManager:
                 continue
             if not item.app_perms or self.request.user.has_module_perms(item.app_name):
                 if item.right:
-                    if self.request.user.has_perm(item.right):
+                    if has_user_perm(self.request.user, item.right):
                         ret.append(item)
                 else:
                     ret.append(item)
@@ -425,7 +437,7 @@ class AppManager:
                     == 0
                 ):
                     if item.right:
-                        if self.request.user.has_perm(item.right):
+                        if has_user_perm(self.request.user, item.right):
                             ret.append(item)
                     else:
                         ret.append(item)

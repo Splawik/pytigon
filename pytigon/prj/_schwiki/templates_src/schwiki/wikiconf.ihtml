@@ -12,7 +12,7 @@
 %% scroll
 
 
-%% list_content_actions
+%% list_content_actions 
     % new_row "New config"
 
 %% list_row_header
@@ -41,27 +41,12 @@
         .delete
 
 
-%% content
-    {{ block.super }}
-    
+%% list_page_footer
     % row_details:
-        *Attachements:/schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
-        .Attachements2:/schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
+        *Attachements:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
+        .Attachements2:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
         
-    % comment:
-        div class=auto-refresh,,,style=height:{{table_details_height}},,,style=display:flex;flex-direction:column;justify-content:space-between;
-            nav
-                div class=nav nav-tabs,,,role=tablist
-                    button class=nav-link active,,,id=nav-home-tab,,,data-bs-toggle=tab,,,data-bs-target=#nav-home,,,type=button,,,role=tab...Home
-                    button class=nav-link,,,id=nav-profile-tab,,,data-bs-toggle=tab,,,data-bs-target=#nav-profile,,,type=button,,,role=tab...Profile
-                    button class=nav-link,,,id=nav-contact-tab,,,data-bs-toggle=tab,,,data-bs-target=#nav-contact,,,type=button,,,role=tab...Contact
-                    button class=nav-link,,,id=nav-disabled-tab,,,data-bs-toggle=tab,,,data-bs-target=#nav-disabled,,,type=button,,,role=tab,,,disabled...Disabled
-            div class=tab-content auto-refresh,,,id=nav-tabContent,,,style=flex-grow:1
-                div href=/schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/?view_in=desktop&only_content=min,,,class=tab-pane table-row-active ajax-frame ajax-link ajax-region fade show active,,,id=nav-home,,,role=tabpanel,,,tabindex=0
-                div href=/?subpage=/schwiki/table/Page/-/form/list/,,,class=tab-pane table-row-active ajax-frame ajax-link ajax-region fade,,,id=nav-profile,,,role=tabpanel,,,tabindex=0... asdf sad f;kasldf jas;dlf jsad;lkf jasd;lfk jasd;flk ajsdf;l jasdf;lk asdf;lkasdf asdlfk jsad;f ksad;fl jasd;flkjasd;fl kjsdaf
-                div href=/?subpage=/schwiki/table/Page/-/form/list/,,,class=tab-pane table-row-active ajax-frame ajax-link ajax-region fade,,,id=nav-contact,,,role=tabpanel,,,tabindex=0...sdfklas ;df jas;dfkjasdf; kasldf sa;dlkf sad;lkf jas;df lsad;lfk jasd;flkj as;dlkgjadsl;hgasdl;fjds lkfjasd;lfkgdhsa;g
-                div href=/?subpage=/schwiki/table/Page/-/form/list/,,,class=tab-pane table-row-active ajax-frame ajax-link ajax-region fade,,,id=nav-disabled,,,role=tabpanel,,,tabindex=0...dsfalks;dfja sl;gjasdlf gasd;lkfj sld;kjga ;sldfjas;dl gjdaslfkgjas;lkdfjas;ldfjdskljsad;lkghasd;lkg;fjasfdlsad klfdsa;f
-
+        
 %% row_edit
     % form:
         .subject,group_of_rights_to_view,group_of_rights_to_edit,backup_copies,git_repository
