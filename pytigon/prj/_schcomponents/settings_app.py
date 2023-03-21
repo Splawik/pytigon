@@ -4,7 +4,7 @@ import json
 from urllib.parse import urlparse
 
 PRJ_TITLE = "Standar components"
-PRJ_NAME = "schcomponents"
+PRJ_NAME = "_schcomponents"
 THEMES = ["auto", "auto", "auto"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +44,7 @@ if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
 if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
-    URL_ROOT_FOLDER = "schcomponents"
+    URL_ROOT_FOLDER = "_schcomponents"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
@@ -130,7 +130,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.06 21:38:59"
+GEN_TIME = "2023.03.21 15:16:26"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

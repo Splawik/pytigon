@@ -27,6 +27,7 @@ migrations/
 pytigon/prj/*
 pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schall/
+!*pytigon/prj/_schcomponents/
 !*pytigon/prj/_schdata/
 !*pytigon/prj/_schremote/
 !*pytigon/prj/_schserverless/
@@ -38,7 +39,6 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schot/
 !*pytigon/prj/schdevtools/
 !*pytigon/prj/schmanage/
-!*pytigon/prj/schcomponents/
 !*pytigon/prj/scheditor/
 !*pytigon/prj/schodf/
 !*pytigon/prj/schportal/
@@ -49,6 +49,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schdata/*
 !*pytigon/prj/_schremote/*
 !*pytigon/prj/_schserverless/*
+!*pytigon/prj/_schcomponents/*
 !*pytigon/prj/_schtools/*
 !*pytigon/prj/_schwebtrapper/*
 !*pytigon/prj/_schwiki/*
@@ -57,7 +58,6 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schot/*
 !*pytigon/prj/schdevtools/*
 !*pytigon/prj/schmanage/*
-!*pytigon/prj/schcomponents/*
 !*pytigon/prj/scheditor/*
 !*pytigon/prj/schodf/*
 !*pytigon/prj/schportal/*
