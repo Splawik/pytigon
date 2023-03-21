@@ -3,9 +3,9 @@ APPS = [
     "_schtools.schtools",
     "_schwiki.schwiki",
     "_schdata.schreports",
-    "schcomponents.standard_components",
+    "_schcomponents.standard_components",
     "_schdata.schelements",
-    "schsetup.schadmin",
+    "_schsetup.schadmin",
     "_schtools.schattachements",
 ]
 APPS_EXT = []

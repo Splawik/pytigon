@@ -1,7 +1,7 @@
 APPS = [
     "schbuilder",
     "_schtools.schauth",
-    "schcomponents.standard_components",
+    "_schcomponents.standard_components",
     "_schtools.schcommander",
     "_schtools.schtools",
     "_schtools.schtasks",

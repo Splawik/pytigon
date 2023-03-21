@@ -3,8 +3,8 @@ import sys
 import json
 from urllib.parse import urlparse
 
-PRJ_TITLE = "Pytigon web client"
-PRJ_NAME = "_schremote"
+PRJ_TITLE = "Manage projects and applications"
+PRJ_NAME = "schmanage"
 THEMES = ["tablet_modern", "tablet_modern", "auto"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +44,7 @@ if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
 if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
-    URL_ROOT_FOLDER = "_schremote"
+    URL_ROOT_FOLDER = "schmanage"
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
@@ -55,7 +55,7 @@ from pytigon_lib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
 START_PAGE = "None"
-SHOW_LOGIN_WIN = False
+SHOW_LOGIN_WIN = True
 PACKS = []
 
 for app in APPS:
@@ -83,6 +83,25 @@ for app in APPS:
                     if not base_path in sys.path:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
+
+
+INSTALLED_APPS.append('explorer')
+EXPLORER_CONNECTIONS = { 'Default': 'default' } 
+EXPLORER_DEFAULT_CONNECTION = 'default'
+
+if platform_name()!='Android':
+    INSTALLED_APPS.append('easy_thumbnails')
+    INSTALLED_APPS.append('filer')
+
+    THUMBNAIL_PROCESSORS = (
+        'easy_thumbnails.processors.colorspace',
+        'easy_thumbnails.processors.autocrop',
+        #'easy_thumbnails.processors.scale_and_crop',
+        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        'easy_thumbnails.processors.filters',
+    )
+
+FILER_DEBUG = True
 
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
@@ -170,50 +189,6 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
-        "schtasks.consumers.TaskEventsConsumer",
-    ),
 ]
 
 
@@ -222,7 +197,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:16:48"
+GEN_TIME = "2023.03.21 15:16:22"
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

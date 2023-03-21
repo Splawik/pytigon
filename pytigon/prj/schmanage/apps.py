@@ -1,5 +1,5 @@
 APPS = [
-    "schadmin",
+    "schinstall",
     "_schtools.schcommander",
 ]
 APPS_EXT = []

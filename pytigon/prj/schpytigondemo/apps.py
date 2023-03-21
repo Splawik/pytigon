@@ -22,10 +22,10 @@ APPS = [
     "_schtools.schcommander",
     "_schtools.schtools",
     "_schtools.schattachements",
-    "schworkflow",
+    "_schtools.schworkflow",
     "_schdata.schreports",
     "_schdata.schelements",
-    "schcomponents.standard_components",
+    "_schcomponents.standard_components",
     "_schdata.schprofile",
     "_schsetup.schadmin",
 ]

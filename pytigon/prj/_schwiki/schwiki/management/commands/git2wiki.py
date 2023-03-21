@@ -30,8 +30,8 @@ class Command(BaseCommand):
         else:
             subjects_to_pull = []
             
-        for wikiconf in WikiConf.objects.all():    
-            if (not subjects_to_pull) or wikiconf.subject in subjects_to_pull:            
+        for wikiconf in WikiConf.objects.all():
+            if wikiconf.git_repository and ((not subjects_to_pull) or wikiconf.subject in subjects_to_pull):            
                 print("Import subject: ", wikiconf.subject)
                 gitobj = WikiGit(wikiconf)
                 gitobj.wiki_pull(options['erase_previous_data'])

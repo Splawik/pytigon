@@ -1,0 +1,36 @@
+% extends 'template/base_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load django_bootstrap5
+    
+%% js_extrascipts
+    {{block.super}}
+    
+    
+    {% jscript_link 'system/require.js' %}
+    
+
+%% extrastyle
+    {{block.super}}
+    
+    
+
+%% body_footer_scripts
+    {{block.super}}
+    
+    {% component 'schcomponents/components/ptig-codeeditor.js' %}
+    {% component 'schcomponents/components/ptig-xterm.js' %}
+    
+    
+
+%% component_init
+        .var initial_state={};
+        .GLOBAL_BUS.set_state(initial_state);
+        .var component_init = [ "ptig-codeeditor.js", "ptig-xterm.js",  ];  
+
+%% extrahead
+    {{block.super}}
+    {% css_link 'explorer/explorer.css' %}
+

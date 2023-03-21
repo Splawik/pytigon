@@ -13,7 +13,7 @@ from pytigon_lib.schtools.wiki import wiki_from_str
 class WikiGit():
     def __init__(self, wikiconf_item):
         self.git_repository = wikiconf_item.git_repository
-        if '=>' in self.git_repository:
+        if self.git_repository and '=>' in self.git_repository:
             x = self.git_repository.split('=>')
             self.git_repository=x[0]
             self.module = x[1]

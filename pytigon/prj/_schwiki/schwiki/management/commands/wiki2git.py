@@ -26,7 +26,7 @@ class Command(BaseCommand):
             subjects_to_push = []
         
         for wikiconf in WikiConf.objects.all():    
-            if (not subjects_to_push) or wikiconf.subject in subjects_to_push:
+            if wikiconf.git_repository and ((not subjects_to_push) or wikiconf.subject in subjects_to_push):
                 print("Export subject: ", wikiconf.subject)
                 gitobj = WikiGit(wikiconf)
                 gitobj.wiki_push()
