@@ -1,0 +1,490 @@
+{% extends 'base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% load compress %}
+{% block head_start %}
+        <script language="javascript">
+                window.BASE_PATH = '{{base_path}}';
+        </script>
+        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
+{% endblock %}
+{% block js_scripts_base %}
+        {% if settings.USE_I18N %}
+                {% if user_agent == 'webviewembeded' %}
+                        {% jscript_link 'system/jsi18n.js' %}
+                  {% else %}
+                        <script src="{% url 'javascript-catalog' %}"></script>
+                {% endif %}
+        {% endif %}
+        {% compress js %}
+                {{ block.super }}
+                {% jscript_link 'pytigon_js/py_runtime.js' %}
+                {% jscript_link 'system/morphdom-umd.min.js' %}
+                {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
+                {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+                {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
+                {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
+                {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+                {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
+                {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+                {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
+                {% jscript_link 'django_select2/django_select2.js' %}
+                {% jscript_link 'jquery_plugins/form/jquery.form.js' %}
+                {% jscript_link 'jquery_plugins/csrf/csrf.js' %}
+                {% jscript_link 'jquery_plugins/unique-element-id/jquery.unique-element-id.js' %}
+                {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}
+                {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
+                {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
+                {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
+                {% block bootstrap_js %}
+                        {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}
+                {% endblock %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap5-editable/js/bootstrap-editable.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
+                {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
+                {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
+                {% block theme_js_scripts %}{% endblock %}
+                {% block ext_js_scripts %}
+                {% endblock %}
+        {% endcompress %}
+        {% if pyodide %}
+                  <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+        {% endif %}
+        {% module_link 'pytigon_js/pytigon.js' %}
+{% endblock %}
+{% block jquery_init %}
+      {% block js_app_init %}
+                function base_fragment_init() {}
+        {% block component_init %}
+                var component_init = null
+        {% endblock %}
+        app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' );
+      {% endblock %}
+{% endblock %}
+{% block jquery_ready_start %}
+        jQuery(document).ready(function() {
+{% endblock %}
+{% block jquery_ready %}
+        jquery_ready();
+        base_fragment_init();
+{% endblock %}
+{% block jquery_ready_end %}
+    });
+{% endblock %}
+{% block js_scripts %}
+        {% if form_edit or form_delete or form_info %}
+                {% if form_ext %}
+                        {{ block.super }}
+                {% endif %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js_extrascipts_init %}
+        {% if form_edit or form_delete or form_info %}
+                {% if form_ext %}
+                        {{ block.super }}
+                {% endif %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js_script_body %}
+        {% block jquery_ovr %}
+        {% endblock %}
+{% endblock %}
+{% block css_links %}
+        {% css_link 'themes/variables.css' %}
+        {% css_link 'themes/variables_'|append_str:client_type|append_str:'.css' %}
+        {% compress css %}
+                {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}
+                {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
+                {% if user_agent == 'webviewembeded' %}
+                        <style>
+                @font-face {
+                    font-family: 'ForkAwesome';
+                    src: url(data:font/truetype;charset=utf-8;base64,{% to_b64 'fonts/fork-awesome/fonts/forkawesome-webfont.woff2' %}) format('woff2');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+
+</style>
+                {% endif %}
+                {% css_link 'jquery_plugins/daterangepicker/daterangepicker.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
+                {% css_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2-bootstrap-4.min.css' %}
+                {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
+                {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
+                {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
+                {{ form.media.css }}
+                {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
+                {% block botstrap_css %}
+                        {% if settings.BOOTSTRAP_TEMPLATE %}
+                                {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
+                          {% else %}
+                                {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}
+                        {% endif %}
+                        {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
+                {% endblock %}
+                {% block theme_css_links %}
+                        {% if 'materia' in settings.BOOTSTRAP_TEMPLATE %}
+                                <style >
+    span.select2-selection{
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: unset !important
+    }
+    :root{
+        --bs-primary-rgb: 30,120,180
+    }
+
+</style>
+                        {% endif %}
+                {% endblock %}
+                {% block theme_css_links_spec %}
+                        {% css_link 'themes/default.css' %}
+                        {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
+                {% endblock %}
+        {% endcompress %}
+{% endblock %}
+{% block css_start %}
+        <style type="text/css">
+{% endblock %}
+{% block css_end %}
+        </style>
+{% endblock %}
+{% block login_header %}
+{% endblock %}
+{% block login_footer %}
+{% endblock %}
+{% block menu_start %}
+        <div class="desktop_content">
+{% endblock %}
+{% block topmenu_start %}
+        {% comment %}
+                <ul class="nav nav-tabs desktop-logo" role="tablist">
+                        {% if request.get_host != '127.0.0.2' %}
+                          {% else %}
+                                <li>
+                                        <div style="width:5px; height:10px;"></div>
+                                </li>
+                        {% endif %}
+                </ul>
+        {% endcomment %}
+        <div id="logo_place">
+                <a href="{{base_path}}" class="logo" style="white-space:nowrap;text-align: center;" target="_top">
+                        {% block logo %}
+                                <span class="logo-lg">
+                                        {% if prj_title|length > 20 %}
+                                                <small>{{prj_title}}</small>
+                                          {% else %}
+                                                <strong>
+                                                        {{prj_title}}
+                                                </strong>
+                                        {% endif %}
+                                </span>
+                        {% endblock %}
+                </a>
+        </div>
+        <ul class="nav nav-tabs win-header" id='tabs' role='tablist'>
+{% endblock %}
+{% block topmenu %}
+        <li class="nav-item topmenu">
+                <a class="nav-link first_pos {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-toggle="tab" id="a_{{app_info.app_name}}" href="#{{app_info.app_name}}" target="_parent">
+                        {% if app_info.icon_exists %}
+                                {% icon app_info.get_icon|append_str:" tablet_meni_icon" width=22 %}
+                        {% endif %}
+                        {{app_info.app_title}}
+                </a>
+        </li>
+{% endblock %}
+{% block topmenu_end %}
+        </ul>
+        <ul class="nav drop_down_blocks">
+                {% block drop_down_blocks %}{% endblock %}
+                {% if user.is_authenticated %}
+                        <li class="nav-item dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        {% icon "fa-user fa-lg" %}
+                                        <span class="hidden-sm-down">{{user.username}}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg-end" style="width:470px">
+                                        <div class="dropdown-block">
+                                                <p class="text-xl-center">
+                                                        <i class="fa fa-info-circle fa-5x"></i>
+                                                </p>
+                                                <table class="table table-hover">
+                                                        <tr>
+                                                                <th>username:</th>
+                                                                <td>{{user.username}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th>first name:</th>
+                                                                <td>{{user.first_name}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th>last name:</th>
+                                                                <td>{{user.last_name}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th>email:</th>
+                                                                <td>{{user.email}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th>last login:</th>
+                                                                <td>{{user.last_login|isoformat}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                                <th>date joined:</th>
+                                                                <td>
+                                                                {{user.date_joined|isoformat}}
+                                                                </td>
+                                                        </tr>
+                                                </table>
+                                        </div>
+                                        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+                                                <button class="navbar-toggler" type=""button" data-bs-toggle="collapse" data-bs-target="#navbar_setup">
+                                                        <span class="navbar-toggler-icon"></span>
+                                                </button>
+                                                <div class="collapse navbar-collapse" id="navbar_setup">
+                                                        <ul class="navbar-nav mr-auto">
+                                                                {% if request.user|user_can_change_password %}
+                                                                        <li class="nav-item active">
+                                                                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
+                                                                        </li>
+                                                                {% endif %}
+                                                                {% if user.is_superuser %}
+                                                                        <li class="nav-item">
+                                                                                <a class="nav-link" href="{{base_path}}schsetup/" target="_top" title="Setup">Setup</a>
+                                                                        </li>
+                                                                {% endif %}
+                                                                {% block system_menu %}
+                                                                {% endblock %}
+                                                        </ul>
+                                                </div>
+                                        </nav>
+                                </div>
+                        </li>
+                        {% if user and user.get_username != 'auto' %}
+                                <li class="nav-item dropdown user user-menu">
+                                        <a class="system_menu" href="{{base_path}}schsys/do_logout/" target="_top" title="Logout">
+                                                {% icon "fa-power-off fa-lg" %}
+                                        </a>
+                                </li>
+                        {% endif %}
+                  {% else %}
+                        <li class="nav-item dropdown user user-menu">
+                                <a class="system_menu" href="{{base_path}}schsys/login/" target="_top" title="Login">
+                                        {% icon "fa-sign-in fa-lg" %}
+                                </a>
+                        </li>
+                {% endif %}
+        </ul>
+        <perfectscrollbar />
+        <div id="menu" class="tab-content menu-content win-header">
+{% endblock %}
+{% block submenu %}
+        {% ifchanged item_info.app_name %}
+                {% if not forloop.first %}
+                        </div>
+                        <div id="{{item_info.app_name}}" class="tab-pane tab-tab" role="tabpanel">
+                  {% else %}
+                        <div id="{{item_info.app_name}}" class="tab-pane tab-tab active" role="tabpanel">
+                {% endif %}
+        {% endifchanged %}
+        {% if item_info.url|is_menu_checked:request.get_full_path %}
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
+                        {% if item_info.icon %}
+                                {% icon item_info.icon|append_str:" fa-lg" %}
+                        {% endif %}
+                        {{item_info.description}}
+                </a>
+          {% else %}
+                <a href="{{base_path}}{{item_info.url}}" class="btn btn-light shadow-none {{btn_size}} menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
+                        {% if item_info.icon %}
+                                {% if standard_web_browser %}
+                                        {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                  {% else %}
+                                        {{item_info.icon}}
+                                {% endif %}
+                          {% else %}
+                                {% icon "bi-record" width=22 %}
+                        {% endif %}
+                        {{item_info.description}}
+                </a>
+        {% endif %}
+        {% if forloop.last %}
+                </div>
+        {% endif %}
+{% endblock %}
+{% block menu_end %}
+        </div>
+{% endblock %}
+{% block body_start %}
+        {% block body_start_0 %}
+                {% if not show_form %}
+                        {% if standard_web_browser %}
+                                <body>
+                          {% else %}
+                                <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
+                        {% endif %}
+                {% endif %}
+        {% endblock %}
+        {% block form_bar %}
+        {% endblock %}
+{% endblock %}
+{% block grid1 %}
+{% endblock %}
+{% block tabs %}
+        {% if NO_TABS or application_type != 'modern' %}
+                {{block.super}}
+          {% else %}
+                <div class="tabbable win-content">
+                        <div id="tab_tabs2">
+                                <ul class="nav nav-tabs win-header append-left mb-2" id="tabs2"></ul>
+                                <div class="tab-content" id="tabs2_content"></div>
+                        </div>
+                </div>
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+{% block body_desktop %}
+        {% if ONLY_CONTENT and not form.errors %}
+                {{block.super}}
+          {% else %}
+                <div id="body_desktop" class="container-fluid tab-pane ajax-region ajax-frame win-content page" data-region="page">
+                        {{block.super}}
+                </div>
+        {% endif %}
+{% endblock %}
+{% block body_end %}
+        {% if standard_web_browser %}
+                {{ form.media.js }}
+        {% endif %}
+        {% if not show_form %}
+                </div>
+                </body>
+        {% endif %}
+{% endblock %}
+{% block body_init %}
+        {% block loading-indicator: %}
+                        {% if ie %}
+                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
+                          {% else %}
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw text-warning" id="loading-indicator" style="display:none">
+                                </i>
+                        {% endif %}
+        {% endblock %}
+{% endblock %}
+{% block body_footer %}
+        {{block.super}}
+        {% module_link 'schcomponents/components/sys-components.js' %}
+{% endblock %}
+{% block tabsort_parameters %}
+        {% if table_type == 'datatable' %}
+                class="tabsort {%if not not_multiple_select %}{% else %}multiple-select {% endif %}flexible_size table datatable table-hover table-striped table-sm table-condensed {%if get %}table_get{% endif %}"
+                data-method="get"
+                data-url="{{table_path_and_filter}}{% if 'form' in target %}{{target|replace:'form|json'}}{% else %}json{% endif %}/{% if get %}{{get}}/{% else %}{{vtype}}/{% endif %}"
+                data-side-pagination="server"
+                data-pagination="true"
+                data-page-size="64"
+                data-page-list="[64]"
+                data-search="true"
+                data-multiple-select-row="true"
+                data-sortable="{% if sort %}true{% else %}false{% endif %}"
+                data-toolbar="#{{uuid}}_toolbar"
+                data-locale="pl-PL"
+                data-show-columns="true"
+                data-icons-prefix="fa"
+                data-icons="icons"
+                data-id-field="id"
+                data-unique-id="id"
+                data-show-button-icons="true"
+                data-show-refresh="true"
+                data-show-fullscreen="true"
+                data-show-toggle="true"
+                data-loading-template="loading_template"
+                data-buttons-align="right"
+                data-buttons="datatable_buttons"
+                {% if not_multiple_select %}data-click-to-select="false"{% else %}data-click-to-select="true"{% endif %}
+                data-mobile-responsive="true"
+                {% if table_subtype and table_subtype == 'table_with_details' %}data-autoselect="true"{% endif %}
+          {% else %}
+                class="tabsort table table-hover table-sm table-striped table-bordered {%if get %}table_get{% endif %}"
+                {% if table_subtype and table_subtype == 'table_with_details' %}data-autoselect="true"{% endif %}
+        {% endif %}
+{% endblock %}
+{% block row_edit_header %}
+        {% if form %}
+                {{form.errors}}
+                {% if form.errors %}
+                        <meta name="RETURN" content="$$RETURN_RELOAD" />
+                        <div class="alert alert-danger alert-dismissable alert-link">
+                                <button class="close" type="button" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
+                                <ul class="errorlist">
+                                        {% if form.non_field_errors %}
+                                                <li>{{ form.non_field_errors }}</li>
+                                        {% endif %}
+                                        {% for field in form %}
+                                                {% if field.errors %}
+                                                        <li>
+                                                                {{ field.label }}
+                                                                <ul class="errorlist">
+                                                                        {% for error in field.errors %}
+                                                                                <li>{{ error }}</li>
+                                                                        {% endfor %}
+                                                                </ul>
+                                                        </li>
+                                                {% endif %}
+                                        {% endfor %}
+                                </ul>
+                                {% comment %}
+                                        {% for error in form.errors %}
+                                                {{ error }} {{error.code}}, {{ error.message }} {% if not forloop.last %}<br>{% endif %}
+                                        {% endfor %}
+                                {% endcomment %}
+                        </div>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block row_edit_form %}
+        {% if form %}
+                {% if field %}
+                        {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                  {% else %}
+                        {% block row_edit %}
+                                {% form %}
+                                {% endform %}
+                        {% endblock %}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block page_start %}
+        {% if not show_form %}
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+{% block page_head %}
+        {% if not show_form %}
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+{% block page_end %}
+        {% if not show_form %}
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+

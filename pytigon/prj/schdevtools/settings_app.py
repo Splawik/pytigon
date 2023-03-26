@@ -50,6 +50,51 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+# BOOTSTRAP_TEMPLATE = "bootswatch/united"
+
+PWA_APP_NAME = "SCDevTools"
+PWA_APP_DESCRIPTION = "Pytigon developer tools"
+PWA_APP_THEME_COLOR = "#0A0302"
+PWA_APP_BACKGROUND_COLOR = "#ffffff"
+PWA_APP_DISPLAY = "standalone"
+PWA_APP_SCOPE = "/" + URL_ROOT_PREFIX
+PWA_APP_ORIENTATION = "any"
+PWA_APP_START_URL = "/" + URL_ROOT_PREFIX
+PWA_APP_STATUS_BAR_COLOR = "default"
+PWA_APP_DIR = "ltr"
+PWA_APP_LANG = "pl-PL"
+PWA_APP_ROOT_URL = "/" + URL_ROOT_PREFIX
+
+PWA_APP_ICONS = [
+    {"src": PWA_APP_ROOT_URL + "static/images/pytigon.png", "sizes": "160x160"}
+]
+PWA_APP_ICONS_APPLE = [
+    {"src": PWA_APP_ROOT_URL + "static/images/pytigon.png", "sizes": "160x160"}
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        "src": PWA_APP_ROOT_URL + "static/images/pytigon.png",
+        "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)",
+    }
+]
+
+PWA_SERVICE_WORKER_PATH = os.path.join(_lp, "static", PRJ_NAME, "sw.js")
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
+    "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
+    "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud",
+}
+
+
+GUI_COMMAND_LINE = "--no_splash --websocket_id=/schbuilder/clock/channel/"
+NUMBER_OF_WORKERS = 1
+NO_ASGI = True
+INSTALLED_APPS.append("explorer")
+
+EXPLORER_CONNECTIONS = {"Default": "default"}
+EXPLORER_DEFAULT_CONNECTION = "default"
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -231,8 +276,9 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:16:15"
+GEN_TIME = "2023.03.26 09:25:28"
 OFFLINE_SUPPORT = True
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -249,47 +295,3 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
-
-BOOTSTRAP_TEMPLATE = "bootswatch/materia"
-#BOOTSTRAP_TEMPLATE = "bootswatch/united"
-
-PWA_APP_NAME = 'SCDevTools'
-PWA_APP_DESCRIPTION = "Pytigon developer tools"
-PWA_APP_THEME_COLOR = '#0A0302'
-PWA_APP_BACKGROUND_COLOR = '#ffffff'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = "/"+URL_ROOT_PREFIX
-PWA_APP_ORIENTATION = 'any'
-PWA_APP_START_URL = "/"+URL_ROOT_PREFIX
-PWA_APP_STATUS_BAR_COLOR = 'default'
-PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'pl-PL'
-PWA_APP_ROOT_URL = "/"+URL_ROOT_PREFIX
-
-PWA_APP_ICONS = [
-    {
-        'src': PWA_APP_ROOT_URL+'static/images/pytigon.png',
-        'sizes': '160x160'
-    }
-]
-PWA_APP_ICONS_APPLE = [
-    {
-            'src': PWA_APP_ROOT_URL+'static/images/pytigon.png',
-        'sizes': '160x160'
-    }
-]
-PWA_APP_SPLASH_SCREEN = [
-    {
-        'src': PWA_APP_ROOT_URL+'static/images/pytigon.png',
-        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-    }
-]
-
-PWA_SERVICE_WORKER_PATH = os.path.join(_lp, "static", PRJ_NAME, "sw.js")
-
-WEBPUSH_SETTINGS = {
-    "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
-    "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
-    "VAPID_ADMIN_EMAIL": "auto@pytigon.cloud"
-}
-

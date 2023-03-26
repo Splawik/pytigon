@@ -1,8 +1,8 @@
 {# -*- coding: utf-8 -*- #}
-%extends "schsys/db_field_edt.html"
+% extends "schsys/db_field_edt.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncodeinit
     ===>
@@ -563,7 +563,7 @@
                                         li...user.is_authenticated
                                 li...code blocks
                                     ul
-                                        li...% extends "form.html"
+                                        li...% extends "forms/form.html"
                                         li...% extends "forms/tree.html"
                                         li...% load exfiltry
                                         li...% load exsyntax

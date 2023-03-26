@@ -3,7 +3,7 @@
         {% if standard_web_browser %}
                 <a href="{{url}}" class="popup btn btn-secondary" name="{{name}}" title="{{title}}" target="{{target}}" data-role="button" data-inline="true" {% block data_icon %}data-icon="plus{% endblock %}">
                         {% block description %}
-                                {% icon "fa-plus fa-lg" %}{%% if description %}{{description}}{% endif %}
+                                {% icon "fa-plus fa-lg" %}{% if description %}{{description}}{% endif %}
                         {% endblock %}
                 </a>
           {% else %}

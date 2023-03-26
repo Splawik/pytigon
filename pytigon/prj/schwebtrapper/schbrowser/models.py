@@ -18,6 +18,8 @@ from schwiki.models import *
 
 from schtasks.models import *
 
+from schelements.models import *
+
 
 class bookmarks(models.Model):
     class Meta:

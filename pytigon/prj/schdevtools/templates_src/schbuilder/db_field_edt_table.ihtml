@@ -1,7 +1,7 @@
-%extends "schsys/db_field_edt.html"
+% extends "schsys/db_field_edt.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 
 %% pythoncodeinit

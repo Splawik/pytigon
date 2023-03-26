@@ -1,0 +1,25 @@
+{% extends 'theme_base.html'|translate:lang %}
+{% block js_app_init %}
+        let db_struct = [ ["devparam", {"keyPath": "key"}] ];
+        init_db(db_struct);
+        const devtools_sync = function(run_after) {
+            console.log("SYNC!");
+            run_after("OK");
+        }
+        let sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
+        init_sync(sync_struct);
+        //.function bootstrap_init(elem) {
+        //.    elem.bootstrapMaterialDesign();
+        //.};
+        //.register_fragment_init_fun(bootstrap_init);
+        {{ block.super }}
+{% endblock %}
+{% block logo %}
+        <span class="logo-lg">
+                <img src="{{base_path}}static/favicon.ico" style="height:100%;"></img>
+                <span class="txt3d text-white" style="font-size:1rem;">
+                        Pytigon - dev tools
+                </span>
+        </span>
+{% endblock %}
+

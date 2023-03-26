@@ -1,10 +1,10 @@
-% extends "form.html"
+% extends "forms/form.html"
 
 % load exfiltry
 % load exsyntax
 
 %% all
-    % with table_type='datatable':
+    % with table_type='datatable' table_subtype='table_with_details' table_details_height="33vh":
         {{ block.super }}
 
 %% scroll
@@ -37,6 +37,12 @@
         .edit
         .delete
     % row_related_list "tables/Example3Tag" title="Tags" filter="tables__computer__{id}" icon_name="png://emblems/emblem-symbolic-link.png"
+
+
+%% list_page_footer
+    % row_details:
+        *Tags:tables_demo/table/Example1Computer/[[table_row_pk]]/example2peripheral_set/-/form/sublist/?x1=example2peripheral_set
+
 
 %% row_edit
     % form:

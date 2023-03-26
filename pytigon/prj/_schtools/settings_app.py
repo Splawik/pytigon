@@ -50,6 +50,7 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -142,7 +143,8 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:16:39"
+GEN_TIME = "2023.03.26 09:18:40"
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

@@ -1,0 +1,41 @@
+% extends default_template
+
+
+% load exfiltry
+% load exsyntax
+% load django_bootstrap5
+
+% if standard_web_browser:
+    %% indexhead
+        table style=width: 100%;,,,border=1
+            % if user.is_authenticated
+                [ login | 0 ]
+            % else
+                [ login | 1 ]
+            [ autologin | 1 ]
+            [ csrf_token | {%csrf_token%} ]
+            [ gui_style | modern(None) ]
+            [ hybrid | 0 ]
+            [ title  | Additional tools for serverless mode ]
+            [ start_page | None ]
+            [ plugins | None ]
+% else:    
+    %% js_extrascipts
+        {{block.super}}
+        
+        
+        
+
+    %% extrastyle
+        {{block.super}}
+        
+        
+
+    %% body_footer_scripts
+        {{block.super}}
+        
+
+    %% component_init
+         .var component_init = []; 
+
+

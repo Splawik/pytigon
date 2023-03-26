@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 
-% extends "plugin_form.html"
+% extends "forms/plugin_form.html"
 
 %% pythoncode
     script language=python

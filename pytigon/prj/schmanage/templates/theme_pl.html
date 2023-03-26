@@ -1,0 +1,7 @@
+{% extends 'theme_base.html'|translate:lang %}
+{% load exsyntax %}
+{% block extrahead %}
+        {{block.super}}
+        {% css_link 'explorer/explorer.css' %}
+{% endblock %}
+

@@ -2,8 +2,8 @@
 
 % extends "forms/tree.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncode
     script language=python

@@ -83,8 +83,8 @@ def sch_login(request, *argi, **argv):
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
     path("<int:id>/<str:title>/new_row_ok/", views.ret_ok, name="new_row_ok"),
-    path("login/", TemplateView.as_view(template_name="schapp/login.html")),
-    path("do_login/", sch_login),  # , { 'template_name': 'schapp/index.html'}),
+    path("login/", TemplateView.as_view(template_name="schsys/app/login.html")),
+    path("do_login/", sch_login),
     path(
         "do_logout/",
         django.contrib.auth.views.LogoutView.as_view(next_page=make_href("/")),

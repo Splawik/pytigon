@@ -1,0 +1,334 @@
+{% extends 'base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+{% block login %}
+{% endblock %}
+{% block topmenu %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+{% block extrahead %}
+        {% block scroll %}
+                {% block vscroll %}
+                        {% if form_edit %}
+                                {% if edit_scroll or edit_vscroll %}
+                                  {% else %}
+                                        <meta name="NO_VSCROLLBAR" content="True" />
+                                {% endif %}
+                          {% else %}
+                                <meta name="NO_VSCROLLBAR" content="True" />
+                        {% endif %}
+                {% endblock %}
+                {% block hscroll %}
+                        {% if form_edit %}
+                                {% if edit_scroll or edit_hscroll %}
+                                  {% else %}
+                                        <meta name="NO_HSCROLLBAR" content="True" />
+                                {% endif %}
+                          {% else %}
+                                <meta name="NO_HSCROLLBAR" content="True">
+                                </meta>
+                        {% endif %}
+                {% endblock %}
+        {% endblock %}
+        {% if 'start'|reverse == request.path or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/" %}
+                {% block indexhead %}
+                        <table style="width: 100%;" border="1">
+                                <tr>
+                                        <td>login</td>
+                                        <td>{% if user.is_authenticated %}0{% else %}1{% endif %}</td>
+                                </tr>
+                                <tr>
+                                        <td>gui_style</td>
+                                        <td>3</td>
+                                </tr>
+                                <tr>
+                                        <td>hybrid</td>
+                                        <td>1</td>
+                                </tr>
+                                <tr>
+                                        <td>csrf_token</td>
+                                        <td>
+                                        {{csrf_token}}
+                                        </td>
+                                </tr>
+                        </table>
+                {% endblock %}
+        {% endif %}
+{% endblock %}
+{% block pythoncode %}
+        {% if form_edit %}
+                {% block pythoncode_for_edit %}{% endblock %}
+          {% else %}
+                {% block pythoncode_for_table %}
+                {% endblock %}
+        {% endif %}
+{% endblock %}
+{% block submenu %}
+        {% if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/" %}
+                {% if forloop.first %}
+                        <h1>Aplikacja:</h1>
+                        <h2>SCHWeb</h2>
+                        <h3>
+                                <span style="font-weight: bold;">
+                                Zawartość pola komenda - zawartość pola dane
+                                </span>
+                        </h3>
+                        html - adres strony<br />
+                        txt - nazwa pliku<br />
+                        grid - adres tabeli<br />
+                        python - kod w pythonie<br />
+                        sys - nazwa przedefiniowanego zdarzenia<br />
+                        <br>
+                        </br>
+                        <h1>Menu bar or toolbar:</h1>
+                        <table style="width: 100%;" border="1">
+                        <tr>
+                                <th>Menu - poziom 1</th>
+                                <th>Menu - poziom 2</th>
+                                <th>Menu - poziom 3</th>
+                                <th>Typ</th>
+                                <th>Ikona</th>
+                                <th>Command</th>
+                                <th>
+                                Dana
+                                </th>
+                        </tr>
+                {% endif %}
+                {% ifchanged item_info.module_title %}
+                        <tr>
+                                <td>{{item_info.module_title}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                        </tr>
+                {% endifchanged %}
+                {% ifchanged item_info.app_name %}
+                        <tr>
+                                <td></td>
+                                <td>{{item_info.app_title}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                        </tr>
+                {% endifchanged %}
+                {% if forloop.first %}
+                        {% block toolbars_start %}
+                        {% endblock %}
+                {% endif %}
+                <tr>
+                        <td></td>
+                        <td></td>
+                        <td>{{item_info.description}}</td>
+                        <td>1</td>
+                        <td>{{item_info.icon}}</td>
+                        <td>html</td>
+                        <td>
+                        {{item_info.description}},{{base_path}}{{item_info.url}}
+                        </td>
+                </tr>
+                {% if forloop.last %}
+                        {% block toolbars_end %}
+                                <tr>
+                                        <td>Help</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                </tr>
+                                <tr>
+                                        <td></td>
+                                        <td>Help</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                </tr>
+                                <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>About program</td>
+                                        <td>2</td>
+                                        <td>wx.ART_HELP</td>
+                                        <td>html</td>
+                                        <td>?: SChSkr,/schwiki/help/pytigon/view/</td>
+                                </tr>
+                        {% endblock %}
+                        </table>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block menu2 %}
+        {% if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/" %}
+                <h1>Toolbar 1</h1>
+                Typ:<br />
+                        0 - przycisk<br />
+                        1 - checktool<br />
+                        2 - radiotool<br />
+                        3 - control, w polu opis długi - kod w pythonie dla obiektu "control"<br />
+                <br />
+                <table style="width: 100%;" border="1">
+                        <tr>
+                                <th>name</th>
+                                <th>description</th>
+                                <th>description long</th>
+                                <th>type</th>
+                                <th>icon</th>
+                                <th>command</th>
+                                <th>data</th>
+                        </tr>
+                </table>
+                <br>
+                </br>
+        {% endif %}
+{% endblock %}
+{% block body_start %}
+        {% block body_start_0 %}
+                {% if form_width and form_height %}
+                        <body bgcolor="#{{color_body_1_5}}" width="{{form_width}}" height="{{form_height}}" style="background:#{{color_body_1_5}};">
+                  {% else %}
+                        <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}};">
+                {% endif %}
+        {% endblock %}
+        {% block form_bar %}
+                {% if form_edit or form_delete or form_info or show_title_bar %}
+                        {% if not standard_web_browser %}
+                                <table width="100%" class="form_bar">
+                                        <tr>
+                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                        <CTRL-CLOSEBUTTON width="36" height="36" name="exit" SRC="&emblems/emblem-unreadable.png" label="Close"></CTRL-CLOSEBUTTON>
+                                                </td>
+                                                <td width="5"></td>
+                                                <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                                        <span class="form_title">
+                                                                {% block form_bar_title %}
+                                                                        {{title|wiki_href|safe}}
+                                                                {% endblock %}
+                                                        </span>
+                                                </td>
+                                        </tr>
+                                </table>
+                                <CTRL-COLLAPSIBLE_PANEL label="errors" width="100%" collapse_height="70">
+                                        {% if form.non_field_errors %}
+                                                <data>
+                                                        {{form.non_field_errors|to_str|bencode}}
+                                                </data>
+                                        {% endif %}
+                                </CTRL-COLLAPSIBLE_PANEL>
+                        {% endif %}
+                {% endif %}
+        {% endblock %}
+{% endblock %}
+{% block form_ok_cancel %}
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <tr>
+                        <td align="center">
+                                {% ok_cancel %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block form_ok_cancel_del %}
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <tr>
+                        <td align="center">
+                                {% ok_cancel %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block form_ok_cancel_info %}
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <tr>
+                        <td align="center">
+                                <CTRL-BUTTON id="wx.ID_CANCEL" TARGET="_parent" />
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_content_height %}
+height="100%"
+{% endblock %}
+{% block grid1 %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                <CTRL-GRID width="100%" height="100%" src="{{request.path}}grid//" />
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_content_header %}
+        <p>
+                {% block list_content_actions %}{% endblock %}
+                <br />
+                {% block list_filter_form %}
+                        <form method="post" action="{{request.path}}" class="table_filter">
+                                {% csrf_token %}
+                                {% block form_filter %}
+                                        {% if form %}
+                                                {% block form_content %}
+                                                        <table class="filter_form_frame" width="100%" bgcolor="#fff"><tr>
+                                                                <td>
+                                                                        {% for field in form %}
+                                                                                {% with field_class=field.field|class_name %}
+                                                                                        {% with schattr="schtype:"|append_str:field_class %}
+                                                                                                <table>
+                                                                                                        {% if vform %}
+                                                                                                                <tr>
+                                                                                                                        <td cellpadding="8">
+                                                                                                                                {{ field.errors }}
+                                                                                                                                {{ field.label}}:
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                        <td>
+                                                                                                                                {{ field|attr:schattr }}
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                          {% else %}
+                                                                                                                <tr>
+                                                                                                                        <td cellpadding="8">
+                                                                                                                                {{ field.label}}:
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                                {{ field|attr:schattr }}
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                                {{ field.errors }}
+                                                                                                                        </td>
+                                                                                                                </tr>
+                                                                                                        {% endif %}
+                                                                                                </table>
+                                                                                        {% endwith %}
+                                                                                {% endwith %}
+                                                                        {% endfor %}
+                                                                </td>
+                                                                <td align="right" cellpadding="3">
+                                                                        {% block form_content_schbutton %}
+                                                                                <input type="submit" value="Refresh" class="btn btn-info" target="_self" height="44">
+                                                                                </input>
+                                                                        {% endblock %}
+                                                                </td>
+                                                          </tr></table>
+                                                {% endblock %}
+                                        {% endif %}
+                                {% endblock %}
+                        </form>
+                {% endblock %}
+        </p>
+{% endblock %}
+{% block tabsort_parameters %}class=tabsort{% endblock %}
+

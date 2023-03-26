@@ -1,6 +1,1 @@
-% extends default_template
-
-%% content
-
-
-
+%extends 'base_base.html'|translate:lang

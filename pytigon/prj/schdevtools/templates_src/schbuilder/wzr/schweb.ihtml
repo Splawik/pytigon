@@ -1,4 +1,4 @@
-^^^% extends 'template/schweb_base.html'|translate:lang
+^^^% extends 'theme/schweb_base.html'|translate:lang
 {% load exfiltry %}{% load exsyntax %}
 
 % load exfiltry
@@ -13,10 +13,8 @@
             [ login | 1 ]
         [ autologin | 1 ]
         [ csrf_token | {% spec '[' %}csrf_token{% spec ']' %} ]
-        [ riot_elements | {% for pos in riot_elements%}{{pos}};{% endfor %}]
         [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
         [ hybrid | {%if prj.is_hybrid %}1{%else%}0{%endif%} ]
         [ title  | {{prj.title}} ]
         [ start_page | {{prj.start_page}} ]
         [ plugins | {{prj.plugins}} ]
-

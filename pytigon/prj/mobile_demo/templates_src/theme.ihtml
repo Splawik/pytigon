@@ -1,0 +1,89 @@
+% extends 'theme_base.html'|translate:lang
+
+% load exfiltry
+% load exsyntax
+% load static
+% load compress
+
+%% component_init
+    .var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }
+
+%% js_scripts_base
+    % if settings.USE_I18N:
+        <script src="{% url 'javascript-catalog' %}"></script>
+    % compress js:
+        {% jscript_link 'pytigon_js/py_runtime.js' %}
+        {% jscript_link 'system/morphdom-umd.min.js' %}
+        {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
+        {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+        {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
+        {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
+        {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+        {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
+    
+        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+
+        {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
+        {% jscript_link 'django_select2/django_select2.js' %}
+        {% jscript_link 'jquery_plugins/form/jquery.form.js' %}
+        {% jscript_link 'jquery_plugins/csrf/csrf.js' %}
+        {% jscript_link 'jquery_plugins/unique-element-id/jquery.unique-element-id.js' %}
+        {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}
+        {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
+        {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
+
+
+        %% bootstrap_js
+            {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}
+
+        {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap5-editable/js/bootstrap-editable.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
+        {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
+
+        %% theme_js_scripts
+        {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
+        {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}
+
+    {% module_link 'pytigon_js/pytigon.js' %}
+
+%% css_links
+    % compress css:
+        {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}
+
+        {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
+
+        {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2-bootstrap-4.min.css' %}
+
+        {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
+        {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
+        {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
+
+        {{ form.media.css }}
+
+        {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
+        %% botstrap_css
+            % if settings.BOOTSTRAP_TEMPLATE:
+                {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
+            % else:
+                {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}
+
+            {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
+        
+        %% theme_css_links
+            % if 'materia' in settings.BOOTSTRAP_TEMPLATE:
+                style {:}
+                    span.select2-selection:
+                        border-top: none !important
+                        border-left: none !important
+                        border-right: none !important
+                        border-radius: unset !important
+
+        %% theme_css_links_spec
+            {% css_link 'themes/default.css' %}
+            {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}

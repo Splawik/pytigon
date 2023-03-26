@@ -50,6 +50,70 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+SECRET_KEY = "asdfasdfas"
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+
+GRAPHQL = False
+REST = True
+
+INSTALLED_APPS.append("explorer")
+EXPLORER_CONNECTIONS = {"Default": "default"}
+EXPLORER_DEFAULT_CONNECTION = "default"
+
+"oauth2_provider.contrib.rest_framework.TokenHasReadWriteScope"
+# , TokenHasScope
+REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] = [
+    "oauth2_provider.contrib.rest_framework.TokenHasReadWriteScope",
+]
+
+print(REST_FRAMEWORK)
+
+# if platform_name()!='Android':
+# INSTALLED_APPS.append('easy_thumbnails')
+# INSTALLED_APPS.append('filer')
+
+# THUMBNAIL_PROCESSORS = (
+#    'easy_thumbnails.processors.colorspace',
+#    'easy_thumbnails.processors.autocrop',
+#    #'easy_thumbnails.processors.scale_and_crop',
+#    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+#    'easy_thumbnails.processors.filters',
+# )
+
+# FILER_DEBUG = True
+
+
+# INSTALLED_APPS.append('django_oauth2_provider')
+# INSTALLED_APPS.append('allauth.socialaccount.providers.okta')
+# INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
+
+# INSTALLED_APPS.append("oauth2_provider")
+# INSTALLED_APPS.append("rest_framework")
+
+# SOCIALACCOUNT_PROVIDERS = {
+#    'okta': {
+#        'OKTA_BASE_URL': 'example.okta.com',
+#    },
+#   'microsoft': {
+#       'tenant': 'organizations',
+#    },
+#    'django': {
+#    }
+# }
+
+# OAUTH2_SERVER_BASEURL = 'http://auth:8000'
+# OAUTH2_SERVER_AUTHURL = 'https://auth.crhbp.pl'
+
+# AUTHENTICATION_BACKENDS = (
+#    'django.contrib.auth.backends.ModelBackend',
+#    #'allauth.account.auth_backends.AuthenticationBackend',
+# )
+
+# REST_FRAMEWORK = {
+#   'DEFAULT_AUTHENTICATION_CLASSES': [
+#       'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+#    ]
+# }
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -178,7 +242,8 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:18:00"
+GEN_TIME = "2023.03.26 10:22:21"
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -195,67 +260,3 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
-SECRET_KEY='asdfasdfas'
-BOOTSTRAP_TEMPLATE='bootswatch/materia'
-
-GRAPHQL = False
-REST = True
-
-INSTALLED_APPS.append('explorer')
-EXPLORER_CONNECTIONS = { 'Default': 'default' } 
-EXPLORER_DEFAULT_CONNECTION = 'default'
-
-"oauth2_provider.contrib.rest_framework.TokenHasReadWriteScope"
-#, TokenHasScope
-REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ["oauth2_provider.contrib.rest_framework.TokenHasReadWriteScope",]
-
-print(REST_FRAMEWORK)
-
-#if platform_name()!='Android':
-    #INSTALLED_APPS.append('easy_thumbnails')
-    #INSTALLED_APPS.append('filer')
-
-    #THUMBNAIL_PROCESSORS = (
-    #    'easy_thumbnails.processors.colorspace',
-    #    'easy_thumbnails.processors.autocrop',
-    #    #'easy_thumbnails.processors.scale_and_crop',
-    #    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    #    'easy_thumbnails.processors.filters',
-    #)
-
-#FILER_DEBUG = True
-
-
-
-#INSTALLED_APPS.append('django_oauth2_provider')
-#INSTALLED_APPS.append('allauth.socialaccount.providers.okta')
-#INSTALLED_APPS.append('allauth.socialaccount.providers.azure')
-
-# INSTALLED_APPS.append("oauth2_provider")
-#INSTALLED_APPS.append("rest_framework")
-
-#SOCIALACCOUNT_PROVIDERS = {
-#    'okta': {
-#        'OKTA_BASE_URL': 'example.okta.com',
-#    },
-#   'microsoft': {
-#       'tenant': 'organizations',
-#    },
-#    'django': {
-#    }
-#}
-
-#OAUTH2_SERVER_BASEURL = 'http://auth:8000'
-#OAUTH2_SERVER_AUTHURL = 'https://auth.crhbp.pl'
-
-#AUTHENTICATION_BACKENDS = (
-#    'django.contrib.auth.backends.ModelBackend',
-#    #'allauth.account.auth_backends.AuthenticationBackend',
-#)
-
-#REST_FRAMEWORK = {
- #   'DEFAULT_AUTHENTICATION_CLASSES': [
- #       'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-#    ]
-#}
-

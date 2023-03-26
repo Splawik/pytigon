@@ -1,6 +1,6 @@
 {# -*- coding: utf-8 -*- #}
 % extends "schelements/dochead.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 

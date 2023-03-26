@@ -306,7 +306,7 @@ if len(settings.PRJS) > 0:
         if test:
             u = path(
                 prj + "/",
-                TemplateView.as_view(template_name="schapp/index.html"),
+                TemplateView.as_view(template_name="schsys/app/index.html"),
                 {"start_page": True},
                 name="start" + prj,
             )
@@ -316,7 +316,7 @@ if len(settings.PRJS) > 0:
 
     u = path(
         "",
-        TemplateView.as_view(template_name="schapp/index_all.html"),
+        TemplateView.as_view(template_name="schsys/app/index_all.html"),
         {"prjs": prjs},
         name="start",
     )
@@ -334,6 +334,8 @@ else:
                 break
     if test:
         u = path(
-            "", TemplateView.as_view(template_name="schapp/index.html"), name="start"
+            "",
+            TemplateView.as_view(template_name="schsys/app/index.html"),
+            name="start",
         )
         _urlpatterns.append(u)

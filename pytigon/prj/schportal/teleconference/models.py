@@ -27,3 +27,5 @@ from schelements.models import *
 from schadmin.models import *
 
 from schattachements.models import *
+
+from schcommander.models import *

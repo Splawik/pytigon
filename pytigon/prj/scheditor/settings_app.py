@@ -50,10 +50,28 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+INSTALLED_APPS.append("easy_thumbnails")
 
-from fs.osfs import OSFS
-from django.core.files.storage import default_storage
-default_storage.fs.mount('os', OSFS("/"))
+OLD_DEFAULT_FILE_STORAGE_FS = DEFAULT_FILE_STORAGE_FS
+
+
+def DEFAULT_FILE_STORAGE_FS():
+    ret = OLD_DEFAULT_FILE_STORAGE_FS()
+    ret.mount("os", OSFS("/"))
+    return ret
+
+
+
+#OLD_DEFAULT_FILE_STORAGE_FS = DEFAULT_FILE_STORAGE_FS
+#
+#def DEFAULT_FILE_STORAGE_FS():
+#    ret = OLD_DEFAULT_FILE_STORAGE_FS()
+#    ret.mount('os', OSFS("/"))
+#    return ret
+    
+#from fs.osfs import OSFS
+#from django.core.files.storage import default_storage
+#default_storage.fs.mount('os', OSFS("/"))
 
 from pytigon_lib.schtools.install_init import init
 
@@ -227,7 +245,8 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:16:56"
+GEN_TIME = "2023.03.26 09:18:57"
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

@@ -1,9 +1,9 @@
 {# -*- coding: utf-8 -*- #}
-%extends "form.html"
+% extends "forms/form.html"
 
-%load exfiltry
-%load exsyntax
-%load django_bootstrap5
+% load exfiltry
+% load exsyntax
+% load django_bootstrap5
 
 
 %% all

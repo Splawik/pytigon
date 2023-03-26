@@ -14,8 +14,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schauth.models import *
-
 from standard_components.models import *
 
 from schcommander.models import *
@@ -27,6 +25,8 @@ from schtasks.models import *
 from schsimplescripts.models import *
 
 from schelements.models import *
+
+from schadmin.models import *
 
 
 import os.path
@@ -280,7 +280,6 @@ Static_CHOICES = [
     ("R", "component (included in desktop.html)"),
     ("I", "sass to css (included in desktop.html)"),
     ("U", "custom file (embeded translation for .pyj, .webc, .sass)"),
-    ("G", "component globals"),
     ("O", "Other project file"),
 ]
 
@@ -306,6 +305,15 @@ Consumer_CHOICES = [
     ("AsyncHttpConsumer", "AsyncHttpConsumer"),
     ("AsyncConsumer", "AsyncConsumer"),
     ("SyncConsumer", "SyncConsumer"),
+]
+
+GuiElements_CHOICES = [
+    ("toolbar(file(open,exit),clipboard)", "toolbar(file(open,exit),clipboard)"),
+    (
+        "toolbar(file(open,save,save_as,exit),clipboard)",
+        "toolbar(file(open,save,save_as,exit),clipboard)",
+    ),
+    ("toolbar(browse)", "toolbar(browse)"),
 ]
 
 
@@ -349,7 +357,12 @@ class SChAppSet(JSONModel):
         max_length=32,
     )
     gui_elements = models.CharField(
-        "Gui elements", null=True, blank=True, editable=True, max_length=1024
+        "Gui elements",
+        null=True,
+        blank=True,
+        editable=True,
+        choices=GuiElements_CHOICES,
+        max_length=1024,
     )
     login_required = models.BooleanField(
         "Login required",
@@ -376,7 +389,7 @@ class SChAppSet(JSONModel):
         "Start page", null=True, blank=True, editable=True, max_length=255
     )
     user_app_template = models.TextField(
-        "User application template",
+        "Patches",
         null=True,
         blank=True,
         editable=False,
@@ -420,8 +433,8 @@ class SChAppSet(JSONModel):
         choices=HtmlGui_CHOICES,
         max_length=32,
     )
-    user_param = models.TextField(
-        "User parameter",
+    additional_settings = models.TextField(
+        "Additional settings",
         null=True,
         blank=True,
         editable=True,
@@ -485,6 +498,43 @@ class SChAppSet(JSONModel):
     )
     autor_www = models.CharField(
         "Autor www page", null=True, blank=True, editable=True, max_length=256
+    )
+    components_initial_state = models.CharField(
+        "The initial state of the components",
+        null=True,
+        blank=True,
+        editable=True,
+        max_length=1024,
+    )
+    template_desktop = models.TextField(
+        "Template for desktop",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    template_smartfon = models.TextField(
+        "Template for smartfon",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    template_tablet = models.TextField(
+        "Template for tablet",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    template_schweb = models.TextField(
+        "Template for schweb (native app)",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    template_theme = models.TextField(
+        "Base template",
+        null=True,
+        blank=True,
+        editable=False,
     )
 
     filter_fields = {

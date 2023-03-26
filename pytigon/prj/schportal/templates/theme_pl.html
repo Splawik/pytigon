@@ -1,0 +1,16 @@
+{% extends 'theme_base.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+{% endblock %}
+{% block extrahead %}
+        {% if standard_web_browser %}
+                {% css_link 'themes/wiki.css' %}
+                {% css_link 'vanillajs_plugins/pygments/manni.css' %}
+                {% css_link '_schwiki/css/wiki_editor.css' %}
+                {% css_link 'explorer/explorer.css' %}
+        {% endif %}
+        {{ block.super }}
+{% endblock %}
+

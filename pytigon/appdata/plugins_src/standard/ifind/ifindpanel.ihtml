@@ -1,4 +1,4 @@
-% extends "plugin_form.html"
+% extends "forms/plugin_form.html"
 
 %% extrahead
     meta name=vertical_position,,,content=bottom

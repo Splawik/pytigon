@@ -1,0 +1,118 @@
+% extends default_template2
+
+%% page_start
+
+%% page_head
+    % if not standard_web_browser:
+        {{block.super}}
+
+%% nav
+
+%% login
+
+%% body_start
+    % if not standard_web_browser:
+        {{block.super}}
+
+%% body_init
+
+%% panel
+
+%% messages
+
+%% navglobal
+
+%% sidebar
+
+%% tabs
+    head
+        meta charset=utf-8
+        title
+            {{title}}
+
+        %if form:
+            %if form.errors or errors:
+                meta name=target,,,content=_self
+                meta name=RETURN,,,content=$$RETURN_RELOAD_PAGE
+
+    % with NO_TABS=True:
+        {{block.super}}
+
+%% content_start
+    % if form.errors or errors:
+        {{block.super}}
+
+%% content_end
+    % if form.errors or errors:
+        {{block.super}}
+        
+
+%% list_page_start
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_header
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+%% list_content_header_first_row
+    % if content_limited_to and content_limited_to == 'min':
+        div style=height:5px;
+    % else:
+        {{ block.super }}
+
+%% list_content_header_second_row
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_content_header_fourth_row
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+
+%% list_content_header_third_row
+    % with btn_size='btn-sm':
+        {{ block.super }}
+
+%% list_content_footer
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_content_end
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_footer
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+%% list_page_end
+    % if content_limited_to and content_limited_to == 'min':
+    % else:
+        {{ block.super }}
+
+
+
+%% body_desktop
+    % with ONLY_CONTENT=True:
+        {{ block.super }}
+
+%% html_widgets_init
+
+%% body_footer
+
+%% page_footer
+
+%% body_footer_scripts
+
+%% body_end
+
+%% page_end
+
+%% js_all_scripts

@@ -1,0 +1,29 @@
+% extends 'theme/desktop_base.html'
+
+% load pwa_webpush
+
+%% extrahead
+    %if standard_web_browser and env.PWA:
+        % progressive_web_app_meta
+        % webpush_header
+    {{ block.super }}
+
+%% system_menu
+    % if env.PWA:
+        li class=nav-item
+            a class=nav-link,,,target=null,,,data-bs-toggle=modal,,,data-bs-target=#exampleModal,,,title=_(Notifications)..._(Notifications)
+
+%% drop_down_blocks
+    div class=modal fade,,,id=exampleModal,,,tabindex=-1
+        div class=modal-dialog
+            div class=modal-content
+                div class=modal-header
+                    h5 class=modal-title id=exampleModalLabel...Messaging
+                    button type=button,,,class=close,,,data-bs-dismiss=modal
+                        span...&times;
+                div class=modal-body
+                    % webpush_button 
+                    % comment:
+                        with_class="btn btn-outline-info"
+                div class=modal-footer
+                    button type=button,,,class=btn btn-secondary,,,data-bs-dismiss=modal...Close

@@ -151,7 +151,11 @@ def browser_type(request):
 
 
 def default_template(b_type):
-    return "template/%s.html" % b_type
+    return "%s.html" % b_type
+
+
+def default_template2(b_type):
+    return "theme/%s.html" % b_type
 
 
 def has_user_perm(user, perm):
@@ -634,18 +638,18 @@ def sch_standard(request):
 
     if standard == 2:
         d_template = default_template("hybrid")
-        d_template2 = default_template(b_type)
+        d_template2 = default_template2(b_type)
     elif standard == 5:
         d_template = default_template("only_content")
-        d_template2 = default_template(b_type)
+        d_template2 = default_template2(b_type)
     elif standard == 6:
         d_template = default_template("only_table")
-        d_template2 = default_template(b_type)
+        d_template2 = default_template2(b_type)
     elif standard == 9:
         d_template = default_template("to_print")
-        d_template2 = default_template(b_type)
+        d_template2 = default_template2(b_type)
     else:
-        d_template = default_template(b_type)
+        d_template = default_template2(b_type)
         d_template2 = d_template
 
     if lng and lng != "en":

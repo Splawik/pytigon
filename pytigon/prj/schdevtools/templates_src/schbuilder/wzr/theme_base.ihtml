@@ -1,0 +1,51 @@
+^^^% extends default_template
+{% load exfiltry %}{% load exsyntax %}
+
+% load exfiltry
+% load exsyntax
+% load django_bootstrap5
+
+% if standard_web_browser:
+    %% indexhead
+        table style=width: 100%;,,,border=1
+            % if user.is_authenticated
+                [ login | 0 ]
+            % else
+                [ login | 1 ]
+            [ autologin | 1 ]
+            [ csrf_token | {% spec '[' %}csrf_token{% spec ']' %} ]
+            [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
+            [ hybrid | {%if prj.is_hybrid %}1{%else%}0{%endif%} ]
+            [ title  | {{prj.title}} ]
+            [ start_page | {{prj.start_page}} ]
+            [ plugins | {{prj.plugins}} ]
+% else:    
+    %% js_extrascipts
+        {% spec '{' %}block.super{% spec '}' %}
+        {% for js_static in js_static_files %}{% spec '[' %} module_link '{{prj.name}}/js/{{js_static.name}}.js' {% spec ']' %}
+        {% endfor %}
+        {% for prj_tab in static_for_ext_apps %}{% for js_static2 in prj_tab.1 %}{% spec '[' %} module_link '{{prj_tab.0}}/js/{{js_static2.name}}.js' {% spec ']' %}
+        {% endfor %}{% endfor %}
+        {% if component_elements %}{% spec "[" %} jscript_link 'system/require.js' {% spec "]" %}
+        {% endif %}
+
+    %% extrastyle
+        {% spec '{' %}block.super{% spec '}' %}
+        {% for css_static in css_static_files %}{% spec '[' %} css_link '{{prj.name}}/css/{{css_static.name}}.css' {% spec ']' %}
+        {% endfor %}
+        {% for prj_tab in static_for_ext_apps %}{% for css_static2 in prj_tab.2 %}{% spec '[' %} css_link '{{prj_tab.0}}/css/{{css_static2.name}}.css' {% spec ']' %}
+        {% endfor %}{% endfor %}
+
+    %% body_footer_scripts
+        {% spec '{' %}block.super{% spec '}' %}
+        {% if component_elements %}
+        {% for component_elem in component_elements %}{% spec "[" %} component '{{component_elem}}' {% spec ']' %}
+        {% endfor %}
+        {% endif %}
+
+    %% component_init
+        {% if component_elements %}{% if initial_state %}    .var initial_state = { {{initial_state|one_line_code|safe}} };{% else %}    .var initial_state={};{% endif %}
+            .GLOBAL_BUS.set_state(initial_state);
+            .var component_init = [ {% for pos in component_elements %}"{{pos|last_elem:'/'}}", {% endfor %} ];  {% else %} .var component_init = []; {% endif %}
+
+

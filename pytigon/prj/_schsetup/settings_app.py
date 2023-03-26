@@ -50,6 +50,23 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+INSTALLED_APPS.append("explorer")
+EXPLORER_CONNECTIONS = {"Default": "default"}
+EXPLORER_DEFAULT_CONNECTION = "default"
+
+if platform_name() != "Android":
+    INSTALLED_APPS.append("easy_thumbnails")
+    INSTALLED_APPS.append("filer")
+
+    THUMBNAIL_PROCESSORS = (
+        "easy_thumbnails.processors.colorspace",
+        "easy_thumbnails.processors.autocrop",
+        #'easy_thumbnails.processors.scale_and_crop',
+        "filer.thumbnail_processors.scale_and_crop_with_subject_location",
+        "easy_thumbnails.processors.filters",
+    )
+
+FILER_DEBUG = True
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -83,25 +100,6 @@ for app in APPS:
                     if not base_path in sys.path:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
-
-
-INSTALLED_APPS.append('explorer')
-EXPLORER_CONNECTIONS = { 'Default': 'default' } 
-EXPLORER_DEFAULT_CONNECTION = 'default'
-
-if platform_name()!='Android':
-    INSTALLED_APPS.append('easy_thumbnails')
-    INSTALLED_APPS.append('filer')
-
-    THUMBNAIL_PROCESSORS = (
-        'easy_thumbnails.processors.colorspace',
-        'easy_thumbnails.processors.autocrop',
-        #'easy_thumbnails.processors.scale_and_crop',
-        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-        'easy_thumbnails.processors.filters',
-    )
-
-FILER_DEBUG = True
 
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
@@ -197,7 +195,8 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:18:19"
+GEN_TIME = "2023.03.26 09:20:02"
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):

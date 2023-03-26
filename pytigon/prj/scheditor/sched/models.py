@@ -21,3 +21,5 @@ from schcommander.models import *
 from schtasks.models import *
 
 from schtools.models import *
+
+from schelements.models import *

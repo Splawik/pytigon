@@ -684,9 +684,9 @@ def build_prj(pk):
 
     # os.makedirs(base_path, exist_ok=True)
     # os.makedirs(base_path+"/templates", exist_ok=True)
-    os.makedirs(base_path + "/templates/template", exist_ok=True)
+    os.makedirs(base_path + "/templates/theme", exist_ok=True)
     # os.makedirs(base_path+"/templates_src", exist_ok=True)
-    os.makedirs(base_path + "/templates_src/template", exist_ok=True)
+    os.makedirs(base_path + "/templates_src/theme", exist_ok=True)
     # os.makedirs(base_path+"/apache", exist_ok=True)
 
     apps = prj.schapp_set.all()
@@ -1010,7 +1010,6 @@ def build_prj(pk):
     static_components = os.path.join(static_root, "components")
 
     offline_support = False
-    initial_state = ""
 
     for static_file in static_files:
         txt = static_file.code
@@ -1123,8 +1122,8 @@ def build_prj(pk):
             f = open_and_create_dir(dest_path, "wb")
             f.write(txt2.encode("utf-8"))
             f.close()
-        if static_file.type == "G":
-            initial_state += txt
+        # if static_file.type=='G':
+        #    initial_state += txt
         if typ == "O":
             p = os.path.join(base_path, static_file.name)
             with open(p, "wt", encoding="utf-8") as f:
@@ -1195,27 +1194,36 @@ def build_prj(pk):
 
     template_to_file(
         base_path,
-        "base",
-        "templates_src/template/base.ihtml",
+        "theme_base",
+        "templates_src/theme_base.ihtml",
         {
             "prj": prj,
             "js_static_files": set(js_static_files),
             "css_static_files": set(css_static_files),
             "static_for_ext_apps": static_for_ext_apps,
             "component_elements": set(component_elements),
-            "initial_state": initial_state,
+            "initial_state": prj.components_initial_state,
         },
     )
+    for field, file_path in (
+        (prj.template_desktop, "theme/desktop.ihtml"),
+        (prj.template_smartfon, "theme/smartfon.ihtml"),
+        (prj.template_tablet, "theme/tablet.ihtml"),
+        (prj.template_schweb, "theme/schweb.ihtml"),
+        (prj.template_theme, "theme.ihtml"),
+    ):
+        if field:
+            _file_name = os.path.join(
+                base_path, "templates_src", *(file_path.split("/"))
+            )
+            # os.makedirs(os.path.join(os.path.join(base_path, "templates_src", "theme")), exist_ok=True)
+            with open(_file_name, "wt") as f:
+                f.write(field)
 
-    # print(component_elements)
-    # template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'prj': prj, 'component_elements': component_elements })
+    ##print(component_elements)
+    ##template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'prj': prj, 'component_elements': component_elements })
 
-    template_to_file(
-        base_path,
-        "schweb",
-        "templates_src/template/schweb.ihtml",
-        {"prj": prj, "component_elements": component_elements},
-    )
+    # template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'prj': prj, 'component_elements': component_elements })
 
     consumers_tab = []
     for _app in apps:

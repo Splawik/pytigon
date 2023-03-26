@@ -1,3 +1,4 @@
+{% load exfiltry %}
 import os
 import sys
 import json
@@ -46,6 +47,7 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER+'/site_media/'
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER+'/site_media_protected/'
 
+{{prj.additional_settings|first_section|safe}}
 from pytigon_lib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
@@ -126,6 +128,7 @@ except:
 GEN_TIME = '{{gmtime}}'
 {% if offline_support %}OFFLINE_SUPPORT = True
 {% endif %}
+
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
         key2 = key[8:]
@@ -141,3 +144,5 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
+
+{{prj.additional_settings|second_section|safe}}

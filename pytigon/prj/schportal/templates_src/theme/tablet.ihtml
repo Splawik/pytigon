@@ -1,0 +1,5 @@
+% extends 'theme/tablet_base.html'
+
+%% logo
+    img src={{base_path}}static/favicon.ico
+    {{block.super}}

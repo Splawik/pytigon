@@ -1,4 +1,4 @@
-{% extends "form.html" %}
+{% extends "forms/form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
 {% block pythoncode %}
@@ -48,8 +48,12 @@
         |
         delete
         field_list/schapp_set,Applications,icon_name=client://apps/preferences-system-windows.png, target='_parent'
-        field_edit/user_app_template,Application template,client://mimetypes/text-x-script.png,_parent
         field_list/schstatic_set,Static and other files,[|client://apps/system-file-manager.png],_parent
+        field_edit/template_desktop,Desktop template(Templates),client://mimetypes/text-x-script.png,_parent
+        field_edit/template_smartfon,Smartfon template(Templates),client://mimetypes/text-x-script.png,_parent
+        field_edit/template_tablet,Tablet template(Templates),client://mimetypes/text-x-script.png,_parent
+        field_edit/template_schweb,SChWeb template(Templates),client://mimetypes/text-x-script.png,_parent
+        field_edit/template_theme,Theme template(Templates),client://mimetypes/text-x-script.png,_parent
         run,Run,[|client://actions/media-playback-start.png]
         prj_export,Export(Distribute),[|client://actions/document-save-as.png]
         installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
@@ -60,7 +64,9 @@
         manage,Manage(Other options),[|client://categories/preferences-system.png]
         field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
         field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
+        field_edit/user_app_template,Patches,client://actions/edit-find-replace.png,_parent
         field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
+
 
 
         {% endrow_actions %}
@@ -83,15 +89,15 @@
         {% endform %}
         {% if standard_web_browser %}
                 {% form "^/12" %}
-                        custom_tags,user_param
+                        custom_tags,components_initial_state
                 {% endform %}
           {% else %}
                 {% form_item custom_tags %}
                         {{form.custom_tags|textfiel_row_col:"4x100"}}
                 {% endform_item %}
-                {% form_item user_param %}
-                        {{form.user_param|textfiel_row_col:"4x100"}}
-                {% endform_item %}
+              {% form_item components_initial_state %}
+                        {{form.components_initial_state|textfiel_row_col:"4x100"}}
+              {% endform_item %}
         {% endif %}
         {% if standard_web_browser %}
                 {% form "^/6" %}
@@ -110,6 +116,9 @@
         {% endif %}
         {% form "^/12" %}
                 git_repository,autor_name,autor_email,autor_www
+        {% endform %}
+        {% form "^/12" %}
+                additional_settings
         {% endform %}
 {% endblock %}
 

@@ -1,6 +1,0 @@
-% extends "template/only_content.html"
-
-%% body
-    % with show_form=True
-        {{ block.super }}
-        

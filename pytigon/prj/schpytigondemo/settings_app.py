@@ -50,6 +50,42 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+# BOOTSTRAP_TEMPLATE = "bootswatch/zephyr"
+# BOOTSTRAP_TEMPLATE = "bootswatch/minty"
+# BOOTSTRAP_TEMPLATE = "bootswatch/pulse"
+# BOOTSTRAP_TEMPLATE = "bootswatch/journal"
+# BOOTSTRAP_TEMPLATE = "bootswatch/united"
+# BOOTSTRAP_TEMPLATE = "bootswatch/cosmo"
+# BOOTSTRAP_TEMPLATE = "bootswatch/litera"
+# BOOTSTRAP_TEMPLATE = "bootswatch/default"
+# BOOTSTRAP_TEMPLATE = "bootswatch/sandstone"
+
+# BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
+# BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
+BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+
+XMLRPC_PORT = 7080
+# PYODIDE = True
+# PYODIDE = False
+
+INSTALLED_APPS.append("explorer")
+
+if platform_name() != "Android":
+    INSTALLED_APPS.append("easy_thumbnails")
+    INSTALLED_APPS.append("filer")
+
+    THUMBNAIL_PROCESSORS = (
+        "easy_thumbnails.processors.colorspace",
+        "easy_thumbnails.processors.autocrop",
+        #'easy_thumbnails.processors.scale_and_crop',
+        "filer.thumbnail_processors.scale_and_crop_with_subject_location",
+        "easy_thumbnails.processors.filters",
+    )
+
+FILER_DEBUG = True
+
+EXPLORER_CONNECTIONS = {"Default": "default"}
+EXPLORER_DEFAULT_CONNECTION = "default"
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -83,26 +119,6 @@ for app in APPS:
                     if not base_path in sys.path:
                         sys.path.append(base_path)
                     LOCALE_PATHS.append(os.path.join(base_path, "locale"))
-
-
-INSTALLED_APPS.append('explorer')
-
-if platform_name()!='Android':
-    INSTALLED_APPS.append('easy_thumbnails')
-    INSTALLED_APPS.append('filer')
-
-    THUMBNAIL_PROCESSORS = (
-        'easy_thumbnails.processors.colorspace',
-        'easy_thumbnails.processors.autocrop',
-        #'easy_thumbnails.processors.scale_and_crop',
-        'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-        'easy_thumbnails.processors.filters',
-    )
-
-FILER_DEBUG = True
-
-EXPLORER_CONNECTIONS = { 'Default': 'default' } 
-EXPLORER_DEFAULT_CONNECTION = 'default'
 
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
@@ -203,8 +219,9 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.21 15:17:09"
+GEN_TIME = "2023.03.26 09:31:55"
 OFFLINE_SUPPORT = True
+
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_"):
@@ -221,22 +238,3 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
-
-#BOOTSTRAP_TEMPLATE = "bootswatch/zephyr"
-#BOOTSTRAP_TEMPLATE = "bootswatch/minty"
-#BOOTSTRAP_TEMPLATE = "bootswatch/pulse"
-#BOOTSTRAP_TEMPLATE = "bootswatch/journal"
-#BOOTSTRAP_TEMPLATE = "bootswatch/united"
-#BOOTSTRAP_TEMPLATE = "bootswatch/cosmo"
-#BOOTSTRAP_TEMPLATE = "bootswatch/litera"
-#BOOTSTRAP_TEMPLATE = "bootswatch/default"
-#BOOTSTRAP_TEMPLATE = "bootswatch/sandstone"
-
-#BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
-#BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
-BOOTSTRAP_TEMPLATE = "bootswatch/materia"
-
-
-XMLRPC_PORT = 7080
-#PYODIDE = True
-#PYODIDE = False

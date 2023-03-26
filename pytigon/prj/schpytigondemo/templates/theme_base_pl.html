@@ -1,0 +1,88 @@
+{% extends default_template %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% if standard_web_browser %}
+        {% block indexhead %}
+                <table style="width: 100%;" border="1">
+                        {% if user.is_authenticated %}
+                                <tr><td> login </td><td> 0 </td></tr>
+                          {% else %}
+                                <tr><td> login </td><td> 1 </td></tr>
+                        {% endif %}
+                        <tr><td> autologin </td><td> 1 </td></tr>
+                        <tr><td> csrf_token </td><td> {%csrf_token%} </td></tr>
+                        <tr><td> gui_style </td><td> modern(None) </td></tr>
+                        <tr><td> hybrid </td><td> 0 </td></tr>
+                        <tr><td> title  </td><td> Pytigon demo </td></tr>
+                        <tr><td> start_page </td><td> None </td></tr>
+                        <tr><td> plugins </td><td> standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell; </td></tr>
+                </table>
+        {% endblock %}
+  {% else %}
+        {% block js_extrascipts %}
+                {{block.super}}
+                {% jscript_link 'system/require.js' %}
+        {% endblock %}
+        {% block extrastyle %}
+                {{block.super}}
+        {% endblock %}
+        {% block body_footer_scripts %}
+                {{block.super}}
+                {% component 'schcomponents/components/ptig-pivottable.js' %}
+                {% component 'schcomponents/components/ptig-task.js' %}
+                {% component '_schcomponents/components/ptig-time.js' %}
+                {% component 'schpytigondemo/components/ptig-db2.js' %}
+                {% component '_schcomponents/components/ptig-scroll-action.js' %}
+                {% component '_schcomponents/components/ptig-form.js' %}
+                {% component 'schcomponents/components/ptig-xterm.js' %}
+                {% component 'schcomponents/components/ptig-mask.js' %}
+                {% component 'schcomponents/components/ptig-codemirror.js' %}
+                {% component 'schcomponents/components/ptig-d3.js' %}
+                {% component '_schcomponents/components/ptig-spreadsheet.js' %}
+                {% component 'schcomponents/components/ptig-spreadsheet.js' %}
+                {% component 'schcomponents/components/ptig-select2.js' %}
+                {% component 'schcomponents/components/ptig-webrtc.js' %}
+                {% component '_schcomponents/components/ptig-select2.js' %}
+                {% component 'schcomponents/components/ptig-margin-left.js' %}
+                {% component 'schpytigondemo/components/test.js' %}
+                {% component '_schcomponents/components/ptig-frame.js' %}
+                {% component '_schcomponents/components/ptig-calendar.js' %}
+                {% component '_schcomponents/components/ptig-plotly.js' %}
+                {% component '_schcomponents/components/ptig-margin-left.js' %}
+                {% component 'schcomponents/components/ptig-video.js' %}
+                {% component '_schcomponents/components/ptig-xterm.js' %}
+                {% component '_schcomponents/components/ptig-task.js' %}
+                {% component '_schcomponents/components/ptig-svg.js' %}
+                {% component 'schcomponents/components/ptig-scroll-action.js' %}
+                {% component '_schcomponents/components/ptig-video.js' %}
+                {% component '_schcomponents/components/ptig-d3.js' %}
+                {% component 'schcomponents/components/ptig-wysiwygedit.js' %}
+                {% component '_schcomponents/components/ptig-codeeditor.js' %}
+                {% component '_schcomponents/components/ptig-codemirror.js' %}
+                {% component 'schcomponents/components/ptig-leaflet.js' %}
+                {% component '_schcomponents/components/ptig-tree.js' %}
+                {% component 'schcomponents/components/ptig-calendar.js' %}
+                {% component '_schcomponents/components/sys-components.js' %}
+                {% component 'schcomponents/components/ptig-time.js' %}
+                {% component '_schcomponents/components/ptig-mask.js' %}
+                {% component '_schcomponents/components/ptig-pivottable.js' %}
+                {% component 'schcomponents/components/ptig-plotly.js' %}
+                {% component 'schpytigondemo/components/ptig-db.js' %}
+                {% component '_schcomponents/components/ptig-script.js' %}
+                {% component 'schcomponents/components/ptig-codeeditor.js' %}
+                {% component 'schcomponents/components/ptig-form.js' %}
+                {% component '_schwiki/components/insert_object.js' %}
+                {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
+                {% component '_schcomponents/components/ptig-leaflet.js' %}
+                {% component 'schcomponents/components/ptig-svg.js' %}
+                {% component '_schcomponents/components/ptig-webrtc.js' %}
+                {% component 'schpytigondemo/components/clock-channel.js' %}
+        {% endblock %}
+        {% block component_init %}
+                        var initial_state={};
+                        GLOBAL_BUS.set_state(initial_state);
+                        var component_init = [ "ptig-pivottable.js", "ptig-task.js", "ptig-time.js", "ptig-db2.js", "ptig-scroll-action.js", "ptig-form.js", "ptig-xterm.js", "ptig-mask.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-spreadsheet.js", "ptig-spreadsheet.js", "ptig-select2.js", "ptig-webrtc.js", "ptig-select2.js", "ptig-margin-left.js", "test.js", "ptig-frame.js", "ptig-calendar.js", "ptig-plotly.js", "ptig-margin-left.js", "ptig-video.js", "ptig-xterm.js", "ptig-task.js", "ptig-svg.js", "ptig-scroll-action.js", "ptig-video.js", "ptig-d3.js", "ptig-wysiwygedit.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-leaflet.js", "ptig-tree.js", "ptig-calendar.js", "sys-components.js", "ptig-time.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-db.js", "ptig-script.js", "ptig-codeeditor.js", "ptig-form.js", "insert_object.js", "ptig-wysiwygedit.js", "ptig-leaflet.js", "ptig-svg.js", "ptig-webrtc.js", "clock-channel.js",  ];
+        {% endblock %}
+{% endif %}
+

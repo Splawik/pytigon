@@ -1,8 +1,8 @@
 {# -*- coding: utf-8 -*- #}
-%extends "schbuilder/schappmenu.html"
+% extends "schbuilder/schappmenu.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %% pythoncode
     script language=python

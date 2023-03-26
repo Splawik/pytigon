@@ -1,4 +1,4 @@
-% extends "base_pdf.html"
+% extends "base_pdf.html"|translate:lang
 
 % load exfiltry
 % load exsyntax

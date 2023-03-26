@@ -1,9 +1,9 @@
 {# -*- coding: utf-8 -*- #}
 
-%extends "schsys/db_field_edt.html"
+% extends "schsys/db_field_edt.html"
 
-%load exfiltry
-%load exsyntax
+% load exfiltry
+% load exsyntax
 
 %%form_title
     .Edition: {{ object.url }} [{{title}}/{{object.get_name}}]

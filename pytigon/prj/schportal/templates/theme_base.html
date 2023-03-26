@@ -1,0 +1,73 @@
+{% extends default_template %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% if standard_web_browser %}
+        {% block indexhead %}
+                <table style="width: 100%;" border="1">
+                        {% if user.is_authenticated %}
+                                <tr><td> login </td><td> 0 </td></tr>
+                          {% else %}
+                                <tr><td> login </td><td> 1 </td></tr>
+                        {% endif %}
+                        <tr><td> autologin </td><td> 1 </td></tr>
+                        <tr><td> csrf_token </td><td> {%csrf_token%} </td></tr>
+                        <tr><td> gui_style </td><td> tree(None) </td></tr>
+                        <tr><td> hybrid </td><td> 0 </td></tr>
+                        <tr><td> title  </td><td> Pytigon portal </td></tr>
+                        <tr><td> start_page </td><td> schwiki/portal/Start/view/ </td></tr>
+                        <tr><td> plugins </td><td> None </td></tr>
+                </table>
+        {% endblock %}
+  {% else %}
+        {% block js_extrascipts %}
+                {{block.super}}
+                {% jscript_link 'system/require.js' %}
+        {% endblock %}
+        {% block extrastyle %}
+                {{block.super}}
+                {% css_link 'schportal/css/portal.css' %}
+        {% endblock %}
+        {% block body_footer_scripts %}
+                {{block.super}}
+                {% component '_schcomponents/components/ptig-leaflet.js' %}
+                {% component '_schcomponents/components/ptig-webrtc.js' %}
+                {% component '_schcomponents/components/ptig-mask.js' %}
+                {% component '_schcomponents/components/ptig-time.js' %}
+                {% component '_schcomponents/components/ptig-select2.js' %}
+                {% component '_schcomponents/components/ptig-frame.js' %}
+                {% component 'schcomponents/components/ptig-time.js' %}
+                {% component '_schcomponents/components/ptig-pivottable.js' %}
+                {% component '_schcomponents/components/ptig-svg.js' %}
+                {% component '_schcomponents/components/ptig-task.js' %}
+                {% component '_schcomponents/components/ptig-video.js' %}
+                {% component 'schportal/components/timer_init.js' %}
+                {% component '_schcomponents/components/ptig-form.js' %}
+                {% component '_schcomponents/components/sys-components.js' %}
+                {% component '_schcomponents/components/ptig-codeeditor.js' %}
+                {% component '_schcomponents/components/ptig-tree.js' %}
+                {% component 'schcomponents/components/ptig-plotly.js' %}
+                {% component '_schcomponents/components/ptig-d3.js' %}
+                {% component '_schcomponents/components/ptig-script.js' %}
+                {% component '_schcomponents/components/ptig-margin-left.js' %}
+                {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
+                {% component '_schcomponents/components/ptig-xterm.js' %}
+                {% component '_schcomponents/components/ptig-codemirror.js' %}
+                {% component 'schcomponents/components/ptig-webrtc.js' %}
+                {% component 'schcomponents/components/ptig-codeeditor.js' %}
+                {% component 'schcomponents/components/ptig-d3.js' %}
+                {% component '_schcomponents/components/ptig-calendar.js' %}
+                {% component '_schcomponents/components/ptig-spreadsheet.js' %}
+                {% component 'schcomponents/components/ptig-xterm.js' %}
+                {% component '_schcomponents/components/ptig-plotly.js' %}
+                {% component '_schwiki/components/insert_object.js' %}
+                {% component 'schportal/components/teleconference.js' %}
+                {% component '_schcomponents/components/ptig-scroll-action.js' %}
+        {% endblock %}
+        {% block component_init %}
+                        var initial_state = { { username: "", theme: "", time_str: "" } };
+                        GLOBAL_BUS.set_state(initial_state);
+                        var component_init = [ "ptig-leaflet.js", "ptig-webrtc.js", "ptig-mask.js", "ptig-time.js", "ptig-select2.js", "ptig-frame.js", "ptig-time.js", "ptig-pivottable.js", "ptig-svg.js", "ptig-task.js", "ptig-video.js", "timer_init.js", "ptig-form.js", "sys-components.js", "ptig-codeeditor.js", "ptig-tree.js", "ptig-plotly.js", "ptig-d3.js", "ptig-script.js", "ptig-margin-left.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "ptig-codemirror.js", "ptig-webrtc.js", "ptig-codeeditor.js", "ptig-d3.js", "ptig-calendar.js", "ptig-spreadsheet.js", "ptig-xterm.js", "ptig-plotly.js", "insert_object.js", "teleconference.js", "ptig-scroll-action.js",  ];
+        {% endblock %}
+{% endif %}
+
