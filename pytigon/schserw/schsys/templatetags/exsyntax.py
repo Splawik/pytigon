@@ -45,6 +45,9 @@ from django.utils.safestring import SafeText, SafeString
 from django import forms
 from django_select2 import forms as s2forms
 
+from pyquery import PyQuery as pq
+
+
 register = template.Library()
 
 ## tools
@@ -1422,3 +1425,72 @@ def row_details(parser, token):
     nodelist = parser.parse(("endrow_details",))
     parser.delete_first_token()
     return RowDetailsNode(nodelist)
+
+
+class ModifyNode(Node):
+    def __init__(self, nodelist, arg):
+        self.nodelist = nodelist
+        self.arg = arg
+        print("=================================")
+        for key, value in self.arg.items():
+            print(key, str(value))
+        print("=================================")
+
+    def render(self, context):
+        data = self.nodelist.render(context)
+        d = pq(data)
+        for key, v in self.arg.items():
+            value = str(v)[1:-1]
+            if key == "addclass":
+                for item in value.split(";"):
+                    if item:
+                        x = item.split("=", 1)
+                        p = d(x[0])
+                        p.addClass(x[1])
+            elif key == "removeclass":
+                for item in value.split(";"):
+                    if item:
+                        x = item.split("=", 1)
+                        p = d(x[0])
+                        p.removeClass(x[1])
+            elif key == "setattr":
+                for item in value.split(";"):
+                    if item:
+                        x = item.split("=", 1)
+                        xx = x[0].split(":", 1)
+                        p = d(xx[0])
+                        p.attr(xx[1], x[1])
+            elif key == "remove":
+                for item in value.split(";"):
+                    if item:
+                        d.remove(item)
+
+        txt = d.html()
+
+        for key, v in self.arg.items():
+            value = str(v)[1:-1]
+            if key == "replace":
+                for item in value.split(";"):
+                    if item:
+                        x = split("/", 1)
+                        txt = txt.replace(x[0], x[1])
+
+        return d.html()
+
+
+@register.tag
+def modify(parser, token):
+    bits = token.split_contents()
+    remaining_bits = bits[1:]
+    arg = token_kwargs(remaining_bits, parser, support_legacy=True)
+    if not arg:
+        raise TemplateSyntaxError(
+            "%r expected at least one variable assignment" % bits[0]
+        )
+    if remaining_bits:
+        raise TemplateSyntaxError(
+            "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+        )
+    nodelist = parser.parse(("endmodify",))
+    parser.delete_first_token()
+    return ModifyNode(nodelist, arg=arg)

@@ -274,7 +274,7 @@ def to_int(value):
 
 
 @register.filter(name="to_float")
-def to_int(value):
+def to_float(value):
     try:
         ret = float(value)
     except:

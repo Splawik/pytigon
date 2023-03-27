@@ -93,8 +93,8 @@
                 CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
         % form "^/12":
             .icon_size
-    %form "^/12":
+    % form "^/12":
         .git_repository,autor_name,autor_email,autor_www
-    %form "^/12":
-        .additional_settings
-    
+    % modify setattr="textarea:cols=120;textarea:rows=15":
+        % form "^/12":
+            .additional_settings

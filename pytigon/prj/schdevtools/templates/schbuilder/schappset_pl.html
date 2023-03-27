@@ -117,8 +117,10 @@
         {% form "^/12" %}
                 git_repository,autor_name,autor_email,autor_www
         {% endform %}
-        {% form "^/12" %}
-                additional_settings
-        {% endform %}
+        {% modify setattr="textarea:cols=120;textarea:rows=15" %}
+                {% form "^/12" %}
+                        additional_settings
+                {% endform %}
+        {% endmodify %}
 {% endblock %}
 
