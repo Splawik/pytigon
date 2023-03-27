@@ -1,0 +1,781 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncodeinit %}
+        
+        def init_form(self):
+            self.save_btn.Disable()
+            self.modified = False
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(1000)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            self.EDITOR.SetSavePoint()
+            self._insert_txt.Bind(wx.EVT_BUTTON, self.on_insert_click)
+            self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
+            atab=self.get_acc_tab()
+            atab.append((0, wx.WXK_INSERT, self.on_panel_focus))
+            atab.append((wx.ACCEL_ALT, ord('I'), self.on_panel_focus))
+
+            self.set_acc_key_tab(self,atab)
+
+            self._panel.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.on_insert_click)
+            self._insert_icon.Bind(wx.EVT_BUTTON, self.on_insert_image_click)
+            self.EDITOR.SetCurrentPos(0)
+            self.EDITOR.SetSelection(0,0)
+            wx.CallAfter(self.EDITOR.SetFocus)
+
+            class ChoiceDialog(wx.Dialog):
+                def __init__(self, parent, title, choices):
+                    wx.Dialog.__init__(self)
+                    self.SetExtraStyle(wx.DIALOG_EX_CONTEXTHELP)
+                    self.Create(parent, -1, title, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.DEFAULT_DIALOG_STYLE, name='dialog')
+                    self.choices = []
+                    p = wx.Panel(self, -1, style = wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
+
+                    self.sizer1 = wx.GridBagSizer(vgap=5, hgap=5)
+
+                    row = 0;
+                    for obj in choices:
+                        self.sizer1.Add( wx.StaticText(p, -1, obj['title']), (row, 0), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
+                        if len(obj['values'])>0 and type(obj['values'][0]) in (str, bytes):
+                            choice = wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
+                        elif len(obj['values'])>0:
+                            choice = wx.adv.BitmapComboBox(p, -1, size=(600, -1))
+                            for c in obj['values']:
+                                if type(c) == str:
+                                    choice.Append(c)
+                                elif type(c) == bytes:
+                                    choice.Append(c.decode('utf-8'))
+                                else:
+                                    choice.Append(c[0], c[1])
+                        else:
+                            choice = wx.TextCtrl(p, -1, size=(600, -1))
+
+                        #wx.Choice(p, -1, size=(600, -1), choices = obj['values'])
+                        self.choices.append(choice)
+                        self.sizer1.Add(choice, (row, 1), (1,1), wx.ALIGN_LEFT | wx.ALL, 5)
+                        row+=1;
+
+                    self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+                    cancel = wx.Button(p, wx.ID_CANCEL, "Cancel")
+                    ok = wx.Button(p, wx.ID_OK, "OK")
+                    self.sizer2.Add( cancel, 1, wx.EXPAND|wx.ALL, 5)
+                    self.sizer2.Add( ok, 1, wx.EXPAND|wx.ALL, 5)
+                    ok.SetDefault()
+                    #self.Bind(wx.EVT_BUTTON, self.on_ok, ok)
+
+                    box = wx.BoxSizer(wx.VERTICAL)
+                    box.Add(self.sizer1, 0, wx.EXPAND)
+                    box.Add(self.sizer2, 0, wx.EXPAND | wx.ALL, 5)
+
+                    p.SetSizerAndFit(box)
+                    self.SetClientSize(p.GetSize())
+
+                def on_ok(self, event):
+                    print(event)
+
+            self.dialog = ChoiceDialog
+
+            from schbuilder.autocomplete import ACTIONS
+            self.actions = ACTIONS
+            from django.template import Template, Context
+            self.template_class = Template
+            self.context_class = Context
+            #from pytigon_lib.schhttptools.httpclient import HttpClient
+            #self.http_client_class = HttpClient
+            # aTable = [
+            #   (wx.ACCEL_ALT, ord('I'), self.on_panel_focus),
+            #   (wx.ACCEL_ALT, ord(';'), self.on_),
+            #   ]
+            # self.set_acc_key_tab(aTable)
+            self.EDITOR.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
+
+        def on_key_pressed(self, event):
+            if not event.AltDown() and not event.ControlDown() and ((event.KeyCode in ( ord('.'), ord(' ') ) and not event.ShiftDown()) or ((event.KeyCode in ( ord('\\'),)) and  event.ShiftDown())):
+                def _fun():
+                    ret_str = self.on_dialog("default")
+                    if ret_str:
+                        self.insert_txt(ret_str)
+                wx.CallAfter(_fun)
+                event.Skip()
+            event.Skip()
+
+        def on_panel_focus(self, event):
+            self._panel.SetFocus()
+
+        def on_insert_image_click(self, event):
+            self.insert_txt(self._icon.GetValue())
+
+        def on_dialog(self, key):
+            dialog_title = "Chose items"
+            parameters = []
+            template_str = ""
+            return_str = ""
+
+            if key == 'default':
+                line, pos = self.EDITOR.GetCurLine()
+                s = line[:pos].strip()
+                if s.endswith('%%'):
+                    key = "blocks"
+                elif s.endswith('%'):
+                    key = "tags"
+                elif s.endswith('|'):
+                    key = 'filters'
+                elif s.endswith('{{'):
+                    key = 'vars'
+                elif s.endswith('object.'):
+                    key = "object fields and methods"
+                elif s.endswith('form.'):
+                    key = "object fields and methods"
+                elif s.endswith('object_list.'):
+                    key = "object fields and methods"
+                else:
+                    return
+
+            if key in self.actions or ( '((' in key and '))' in key ):
+                if key in self.actions:
+                    key2 = key
+                else:
+                    key2 = key.split('((')[1].split('))')[0].replace(' ', '_')
+                obj = self.actions[key2]
+                if 'title' in obj:
+                    dialog_title = obj['title']
+                if 'choices' in obj:
+                    parameters = obj['choices']
+                    for obj2 in parameters:
+                        if "source_of_values" in obj2:
+                            client = wx.GetApp().get_http(self)
+                            response = client.get(self,"{{base_path}}schbuilder/autocomplete/{{object.id}}/%s/" % obj2['source_of_values'])
+                            obj3 = response.json()
+                            if len(obj3['choices'])>0:
+                                obj2['values'] = obj3['choices'][0]['values']
+                if 'template' in obj:
+                    template_str = obj['template']
+            elif key in ('object fields', 'object methods', 'object fields and methods', 'blocks', 'vars',) or key.endswith('filters') or key.endswith('tags'):
+                client = wx.GetApp().get_http(self)
+                response = client.get(self,"{{base_path}}schbuilder/autocomplete/{{object.id}}/%s/" % key.replace(' ', '_'))
+                obj = response.json()
+                if 'title' in obj:
+                    dialog_title = obj['title']
+                if 'choices' in obj:
+                    parameters = obj['choices']
+                if 'template' in obj:
+                    template_str = obj['template']
+            else:
+                return key
+
+            if parameters and template_str:
+                if dialog_title or len(parameters)>1:
+                    dlg = self.dialog(self, dialog_title, parameters)
+                    dlg.CenterOnScreen()
+                    val = dlg.ShowModal()
+                    if val == wx.ID_OK:
+                        choice = []
+                        for ctrl in dlg.choices:
+                            if type(ctrl) == wx.TextCtrl:
+                                choice.append(ctrl.GetValue())
+                            else:
+                                choice.append(ctrl.GetStringSelection())
+                        t = self.template_class(template_str)
+                        c = self.context_class({"choice": choice})
+                        ret = t.render(c)
+                        return ret
+                    else:
+                        return None
+                else:
+                    kw = parameters[0]['values']
+                    kw.sort()
+                    self.EDITOR.SetFocus()
+                    self.EDITOR.AutoCompSetIgnoreCase(True)
+                    self.EDITOR.AutoCompShow(0, (" ").join(kw))
+            elif template_str:
+                t = self.template_class(template_str)
+                c = self.context_class({})
+                ret = t.render(c)
+                return ret
+
+            return return_str
+
+        def on_insert_click(self, event):
+            item = self._panel.GetSelection()
+            if item.IsOk():
+                key = self._panel.GetItemText(item)
+                ret_str = self.on_dialog(key)
+                if ret_str:
+                    self.insert_txt(ret_str)
+
+        def on_auto_comp_cmd(self, edt_ctrl, pos):
+            ret_str = self.on_dialog("default")
+            if ret_str:
+                self.insert_txt(ret_str)
+
+        def insert_txt(self, txt):
+            pos = self.EDITOR.GetCurrentPos()
+            self.EDITOR.InsertText(pos, txt)
+            pos+=len(txt)
+            self.EDITOR.SetCurrentPos(pos)
+            self.EDITOR.SetFocus()
+
+
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=1200 title=tab|add:"."|add:verbose_field_name %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block title %}
+        TEM:{{object.name}}
+{% endblock %}
+{% block body %}
+        {% if standard_web_browser %}
+                {{ block.super }}
+          {% else %}
+                <table width="100%" class="form_bar">
+                        <tr>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRL-CLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRL-CLOSEBUTTON>
+                                </td>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRL-NOBG_BUTTON width="36" height="36" name="save_btn" SRC="client://actions/document-save.png"></CTRL-NOBG_BUTTON>
+                                </td>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRL-NOBG_BUTTON width="36" height="36" name="_insert_txt" label="insert" SRC="client://actions/list-add.png"></CTRL-NOBG_BUTTON>
+                                </td>
+                                <td cellpadding="0" valign="top" width="250" height="36">
+                                        <CTRL-BITMAPCOMBOBOX width="250" name="_icon" onload="self.init_default_icons=True"></CTRL-BITMAPCOMBOBOX>
+                                </td>
+                                <td cellpadding="0" valign="top" width="36" height="36">
+                                        <CTRL-NOBG_BUTTON width="36" height="36" name="_insert_icon" label="icon" SRC="client://actions/list-add.png"></CTRL-NOBG_BUTTON>
+                                </td>
+                                <td width="5"></td>
+                                <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                        <span class="form_title">
+                                                {% block form_title %}
+                                                        Edycja: {{object.name}} [{{title}}]
+                                                {% endblock %}
+                                        </span>
+                                </td>
+                        </tr>
+                </table>
+                <hr></hr>
+                <table width="100%">
+                        <tr>
+                                <td width="350">
+                                        <ctrl-tree name="_panel" width="350" height="calc(100% - top - 30)">
+                                                {% if object.get_rel_table %}
+                                                        <li>
+                                                        {{object}}
+                                                                <ul>
+                                                                        <li>
+                                                                        object fields
+                                                                                <ul>
+                                                                                        {% for pos in object.get_all_table_fields %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                                <li>form.fields_as_table.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        object related fields
+                                                                                <ul>
+                                                                                        {% for pos in object.get_table_rel_fields %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        object methods
+                                                                                <ul>
+                                                                                        {% for pos in object.get_table_methods %}
+                                                                                                <li>
+                                                                                                {{pos}}
+                                                                                                        <ul>
+                                                                                                                <li>{{pos}}</li>
+                                                                                                                <li>object.{{pos}}</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                        {% endfor %}
+                                                                                </ul>
+                                                                        </li>
+                                                                </ul>
+                                                        </li>
+                                                {% endif %}
+                                                <li>
+                                                filters
+                                                        <ul>
+                                                                <li>django filters</li>
+                                                                <li>pytigon filters</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                tags
+                                                        <ul>
+                                                                <li>django tags</li>
+                                                                <li>pytigon tags</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                special template statements
+                                                        <ul>
+                                                                <li>{{ "^"|add:"^^"}}</li>
+                                                                <li>{{ "="|add:"==>"}}</li>
+                                                                <li>{{ ">"|add:">>"}}</li>
+                                                                <li>{{ "<"|add:"<<"}}</li>
+                                                                <li>{{ "{"|add:":}"}}</li>
+                                                                <li>script language=python                                ...
+</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                targets
+                                                        <ul>
+                                                                <li>_blank</li>
+                                                                <li>_parent</li>
+                                                                <li>_top</li>
+                                                                <li>_self</li>
+                                                                <li>popup</li>
+                                                                <li>popup_edit</li>
+                                                                <li>popup_info</li>
+                                                                <li>popup_delete</li>
+                                                                <li>inline_edit</li>
+                                                                <li>inline_info</li>
+                                                                <li>inline_delete</li>
+                                                                <li>inline</li>
+                                                                <li>none</li>
+                                                                <li>refresh_obj</li>
+                                                                <li>refresh_page</li>
+                                                                <li>refresh_app</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                template blocks
+                                                        <ul>
+                                                                <li>
+                                                                %% all
+                                                                        <ul>
+                                                                                <li>%% page_start</li>
+                                                                                <li>
+                                                                                %% page_head
+                                                                                        <ul>
+                                                                                                <li>%% cache</li>
+                                                                                                <li>%% head_start</li>
+                                                                                                <li>%% title</li>
+                                                                                                <li>%% css_links</li>
+                                                                                                <li>%% css_start</li>
+                                                                                                <li>%% css</li>
+                                                                                                <li>%% css_end</li>
+                                                                                                <li>
+                                                                                                %% js_scripts
+                                                                                                        <ul>
+                                                                                                                <li>%% js_scripts_base</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% js_extrascripts</li>
+                                                                                                <li>%% python_code</li>
+                                                                                                <li>%% icss</li>
+                                                                                                <li>%% extra_style</li>
+                                                                                                <li>%% extra_head</li>
+                                                                                        </ul>
+                                                                                </li>
+                                                                                <li>%% body_start</li>
+                                                                                <li>%% body_header</li>
+                                                                                <li>
+                                                                                %% body
+                                                                                        <ul>
+                                                                                                <li>%% dialog_start</li>
+                                                                                                <li>%% form_info</li>
+                                                                                                <li>%% form_ok_cancel_info</li>
+                                                                                                <li>
+                                                                                                %% form_delete
+                                                                                                        <ul>
+                                                                                                                <li>%% form_delete_content</li>
+                                                                                                                <li>%% form_delete_object</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% form_ok_cancel_del</li>
+                                                                                                <li>%% row_edit_start</li>
+                                                                                                <li>%% row_edit_header</li>
+                                                                                                <li>
+                                                                                                %% row_edit_all
+                                                                                                        <ul>
+                                                                                                                <li>%% row_edit_form</li>
+                                                                                                                <li>%% row_edit_footer</li>
+                                                                                                                <li>%% form_ok_cancel</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% row_edit_end</li>
+                                                                                                <li>%% dialog_end</li>
+                                                                                                <li>%% login_header</li>
+                                                                                                <li>%% login</li>
+                                                                                                <li>%% login_footer</li>
+                                                                                                <li>
+                                                                                                %% nav
+                                                                                                        <ul>
+                                                                                                                <li>%% change_password</li>
+                                                                                                                <li>%% menu_start</li>
+                                                                                                                <li>
+                                                                                                                %% menu
+                                                                                                                        <ul>
+                                                                                                                                <li>%% topmenu_start</li>
+                                                                                                                                <li>%% topmenu</li>
+                                                                                                                                <li>%% topmenu_end</li>
+                                                                                                                                <li>%% submenu_start</li>
+                                                                                                                                <li>%% submenu</li>
+                                                                                                                                <li>%% submenu_end</li>
+                                                                                                                        </ul>
+                                                                                                                </li>
+                                                                                                                <li>%% menu_end</li>
+                                                                                                                <li>%% menu2</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% body_init</li>
+                                                                                                <li>%% messages</li>
+                                                                                                <li>
+                                                                                                %% body_desktop
+                                                                                                        <ul>
+                                                                                                                <li>%% panel</li>
+                                                                                                                <li>%% navglobal</li>
+                                                                                                                <li>%% sidebar</li>
+                                                                                                                <li>%% content_start</li>
+                                                                                                                <li>
+                                                                                                                %% all_content
+                                                                                                                        <ul>
+                                                                                                                                <li>
+                                                                                                                                %% content
+                                                                                                                                        <ul>
+                                                                                                                                                <li>%% list_page_start</li>
+                                                                                                                                                <li>%% list_page_header</li>
+                                                                                                                                                <li>
+                                                                                                                                                %% list_page
+                                                                                                                                                        <ul>
+                                                                                                                                                                <li>%% list_content_start</li>
+                                                                                                                                                                <li>
+                                                                                                                                                                %% list_content_header
+                                                                                                                                                                        <ul>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                %% list_content_header_first_row
+                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                <li>%% list_content_title</li>
+                                                                                                                                                                                        </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                %% list_content_header_second_row
+                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                <li>
+                                                                                                                                                                                                %% list_filter_form
+                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                <li>
+                                                                                                                                                                                                                %% form_filter
+                                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                                <li>
+                                                                                                                                                                                                                                %% form_content
+                                                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                                                <li>%% form_table_filter</li>
+                                                                                                                                                                                                                                                <li>%% form_content_button</li>
+                                                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                                                </li>
+                                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                                </li>
+                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                </li>
+                                                                                                                                                                                        </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                %% list_content_header_third_row
+                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                <li>%% list_content_actions</li>
+                                                                                                                                                                                        </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                        </ul>
+                                                                                                                                                                </li>
+                                                                                                                                                                <li>
+                                                                                                                                                                %% list_content_body
+                                                                                                                                                                        <ul>
+                                                                                                                                                                                <li>%% list_content_paginator</li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                %% list_full_row_header
+                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                <li>%% list_row_header_start</li>
+                                                                                                                                                                                                <li>%% list_row_header</li>
+                                                                                                                                                                                                <li>%% list_row_header_end</li>
+                                                                                                                                                                                        </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                %% list_table
+                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                <li>
+                                                                                                                                                                                                %% list_full_row
+                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                <li>
+                                                                                                                                                                                                                %% list_row_start
+                                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                                <li>%% id_extra</li>
+                                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                                </li>
+                                                                                                                                                                                                                <li>%% list_row</li>
+                                                                                                                                                                                                                <li>
+                                                                                                                                                                                                                %% list_row_end
+                                                                                                                                                                                                                        <ul>
+                                                                                                                                                                                                                                <li>%% list_row_actions</li>
+                                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                                </li>
+                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                </li>
+                                                                                                                                                                                                <li>%% list_row2</li>
+                                                                                                                                                                                        </ul>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li>%% list_table_footer</li>
+                                                                                                                                                                        </ul>
+                                                                                                                                                                </li>
+                                                                                                                                                                <li>%% list_content_footer</li>
+                                                                                                                                                                <li>%% list_content_end</li>
+                                                                                                                                                        </ul>
+                                                                                                                                                </li>
+                                                                                                                                                <li>%% list_page_footer</li>
+                                                                                                                                                <li>%% list_page_end</li>
+                                                                                                                                        </ul>
+                                                                                                                                </li>
+                                                                                                                        </ul>
+                                                                                                                </li>
+                                                                                                                <li>%% content_end</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% tabs</li>
+                                                                                                <li>%% html_widgets_init</li>
+                                                                                                <li>%% body_footer</li>
+                                                                                        </ul>
+                                                                                </li>
+                                                                                <li>%% body_footer_scripts</li>
+                                                                                <li>
+                                                                                %% page_footer
+                                                                                        <ul>
+                                                                                                <li>
+                                                                                                %% js_extrascipts_init
+                                                                                                        <ul>
+                                                                                                                <li>%% jquery_init</li>
+                                                                                                                <li>%% jquery_init_once</li>
+                                                                                                                <li>
+                                                                                                                %% jquery_ready_all
+                                                                                                                        <ul>
+                                                                                                                                <li>%% jquery_ready_start</li>
+                                                                                                                                <li>%% jquery_ready</li>
+                                                                                                                                <li>%% jquery_ready_end</li>
+                                                                                                                        </ul>
+                                                                                                                </li>
+                                                                                                                <li>%% js_script_body</li>
+                                                                                                        </ul>
+                                                                                                </li>
+                                                                                                <li>%% page_finish</li>
+                                                                                        </ul>
+                                                                                </li>
+                                                                                <li>%% body_end</li>
+                                                                                <li>%% page_end</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>{% spec '{' %} block.super {% spec '}' %}</li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                vars
+                                                        <ul>
+                                                                <li>request</li>
+                                                                <li>user</li>
+                                                                <li>perms</li>
+                                                                <li>
+                                                                paths
+                                                                        <ul>
+                                                                                <li>base_path</li>
+                                                                                <li>app_path</li>
+                                                                                <li>URL_ROOT_FOLDER</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                project
+                                                                        <ul>
+                                                                                <li>prj_name</li>
+                                                                                <li>prj_title</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                form info
+                                                                        <ul>
+                                                                                <li>form_add</li>
+                                                                                <li>form_delete</li>
+                                                                                <li>form_edit</li>
+                                                                                <li>form_ext</li>
+                                                                                <li>form_grid</li>
+                                                                                <li>form_info</li>
+                                                                                <li>form_list</li>
+                                                                                <li>show_form</li>
+                                                                                <li>show_title_bar</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                colors
+                                                                        <ul>
+                                                                                <li>color_background</li>
+                                                                                <li>color_background_0_5</li>
+                                                                                <li>color_background_0_8</li>
+                                                                                <li>color_background_0_9</li>
+                                                                                <li>color_background_1_1</li>
+                                                                                <li>color_background_1_2</li>
+                                                                                <li>color_background_1_5</li>
+                                                                                <li>color_body</li>
+                                                                                <li>color_body_0_2</li>
+                                                                                <li>color_body_0_5</li>
+                                                                                <li>color_body_0_7</li>
+                                                                                <li>color_body_0_9</li>
+                                                                                <li>color_body_1_1</li>
+                                                                                <li>color_body_1_3</li>
+                                                                                <li>color_body_1_5</li>
+                                                                                <li>color_body_1_8</li>
+                                                                                <li>color_higlight</li>
+                                                                                <li>color_info</li>
+                                                                                <li>color_shadow</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                system
+                                                                        <ul>
+                                                                                <li>csrf_token</li>
+                                                                                <li>user_agent</li>
+                                                                                <li>uuid</li>
+                                                                                <li>app_manager</li>
+                                                                                <li>gen_time</li>
+                                                                                <li>settings</li>
+                                                                                <li>env</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                lang
+                                                                        <ul>
+                                                                                <li>LANGUAGE_CODE</li>
+                                                                                <li>lang</li>
+                                                                                <li>LANGUAGES</li>
+                                                                                <li>LANGUAGE_BIDI</li>
+                                                                                <li>TIME_ZONE</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                info
+                                                                        <ul>
+                                                                                <li>debug</li>
+                                                                                <li>standard_web_browser</li>
+                                                                                <li>browser_type</li>
+                                                                                <li>client_type</li>
+                                                                                <li>application_type</li>
+                                                                                <li>autologin</li>
+                                                                                <li>offline_support</li>
+                                                                                <li>pyodide</li>
+                                                                                <li>default_template</li>
+                                                                                <li>default_template2</li>
+                                                                                <li>readonly</li>
+                                                                                <li>get</li>
+                                                                        </ul>
+                                                                </li>
+                                                        </ul>
+                                                </li>
+                                                <li>
+                                                wizards
+                                                        <ul>
+                                                                <li>
+                                                                form
+                                                                        <ul>
+                                                                                <li>simple ((form))</li>
+                                                                                <li>((two columns form))</li>
+                                                                                <li>((three columns form))</li>
+                                                                                <li>((advanced form))</li>
+                                                                                <li>((field))</li>
+                                                                                <li>((form field))</li>
+                                                                                <li>((hidden field))</li>
+                                                                        </ul>
+                                                                </li>
+                                                                {% if object.get_rel_table %}
+                                                                        <li>
+                                                                        row actions
+                                                                                <ul>
+                                                                                        <li>
+                                                                                        % row_actions
+                                                                                                <ul>
+                                                                                                        <li>edit</li>
+                                                                                                        <li>delete</li>
+                                                                                                        <li>pdf</li>
+                                                                                                        <li>show related table based on field ((field_list))</li>
+                                                                                                        <li>show editor for field ((field_edit))</li>
+                                                                                                        <li>other ((action))</li>
+                                                                                                </ul>
+                                                                                        </li>
+                                                                                        <li>((row_related_list))</li>
+                                                                                        <li>((view_row))</li>
+                                                                                </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                        table actions
+                                                                                <ul>
+                                                                                        <li>((new_row))</li>
+                                                                                        <li>((list_action))</li>
+                                                                                </ul>
+                                                                        </li>
+                                                                {% endif %}
+                                                                <li>
+                                                                permisions
+                                                                        <ul>
+                                                                                <li>check ((permision))</li>
+                                                                                <li>is user in group ((user_in_group))</li>
+                                                                                <li>user.is_authenticated</li>
+                                                                        </ul>
+                                                                </li>
+                                                                <li>
+                                                                code blocks
+                                                                        <ul>
+                                                                                <li>% extends "forms/form.html"</li>
+                                                                                <li>% extends "forms/tree.html"</li>
+                                                                                <li>% load exfiltry</li>
+                                                                                <li>% load exsyntax</li>
+                                                                                <li>block ((all))</li>
+                                                                                <li>block ((id_extra))</li>
+                                                                                <li>block ((list_row_attr))</li>
+                                                                                <li>block ((dialog_type))</li>
+                                                                                <li>block ((scroll))</li>
+                                                                                <li>block ((pythoncode)/)</li>
+                                                                                <li>snippet ((move rows))</li>
+                                                                        </ul>
+                                                                </li>
+                                                        </ul>
+                                                </li>
+                                        </ctrl-tree>
+                                </td>
+                                <td>
+                                        <CTRL-STYLEDTEXT NAME="EDITOR" width="100%-345" HEIGHT="calc(100% - top - 30)" MINHEIGHT="400" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                                                <DATA>
+                                                {{txt|bencode}}
+                                                </DATA>
+                                        </CTRL-STYLEDTEXT>
+                                </td>
+                        </tr>
+                </table>
+        {% endif %}
+{% endblock %}
+{% block content %}
+        {% if standard_web_browser %}
+                {% block edit_area %}
+                        <code_editor id="ace_editor" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></code_editor>
+                {% endblock %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+

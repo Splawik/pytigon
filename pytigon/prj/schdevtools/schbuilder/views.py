@@ -1179,13 +1179,12 @@ def build_prj(pk):
                 static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
 
                 if prj2.custom_tags:
-                    component_elements += [
-                        pos
-                        for pos in prj2.custom_tags.replace("\n", ";")
-                        .replace("\r", "")
-                        .split(";")
-                        if pos and "." in pos
-                    ]
+
+                    for pos in (
+                        prj2.custom_tags.replace("\n", ";").replace("\r", "").split(";")
+                    ):
+                        if pos and "." in pos and not pos in component_elements:
+                            component_elements.append(pos)
                 component_elements += [
                     prj2.name + "/components/" + pos.name + ".js"
                     for pos in static_files2

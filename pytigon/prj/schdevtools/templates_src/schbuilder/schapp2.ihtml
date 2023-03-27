@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -47,7 +46,7 @@
     p height=5px
     table class=toolbar
         tr
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT name=close_btn,,,label=Close,,,SRC=client://emblems/emblem-unreadable.png,,,href=close
             td width=160
                 table width=160
@@ -64,30 +63,36 @@
                                         option value={{item.id}}
                                             {{item.name}}
             td width=20
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=tabele,,,label=_(Table),,,SRC=client://mimetypes/x-office-spreadsheet.png,,,href={{app_path}}table/SChApp/{id}/schtable_set/-/form/list/
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=choices,,,label=_(Choices),,,SRC=client://categories/applications-games.png,,,href={{app_path}}table/SChApp/{id}/schchoice_set/-/form/list/
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=views,,,label=_(Views),,,SRC=client://mimetypes/text-x-generic-template.png,,,href={{app_path}}table/SChApp/{id}/schview_set/-/form/list/
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=forms,,,label=_(Forms),,,SRC=client://mimetypes/x-office-document.png,,,href={{app_path}}table/SChApp/{id}/schform_set/-/form/list/
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=menu,,,label=_(Menu),,,SRC=client://actions/tab-new.png,,,href={{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/
-            td cellpadding=0
-                CTRL-NOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=client://apps/utilities-terminal.png,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/
-            td cellpadding=0
-                CTRL-NOBG_BUTTON_TXT NAME=consumers,,,label=_(Channel consumers),,,SRC=client://places/network-workgroup.png,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/
-            td cellpadding=0
+            td cellpadding=0,,,width=60
                 CTRL-NOBG_BUTTON_TXT NAME=templates,,,label=_(Templates),,,SRC=png://mimetypes/x-office-presentation.png,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/
-
-            td width=20
-            td cellpadding=0
-                % widget class='menu' id='user_action' title='Other options' style='toolbar': 
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/..._(Other files)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(Model extensions)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(View extensions)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(Url extensions)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(Task extensions)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(Channel consumer extensions)
-                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/..._(Doc)
+            td width=40
+            td cellpadding=0,,,width=80
+                CTRL-NOBG_BUTTON_TXT NAME=other_files,,,label=_(Application files),,,SRC=png://places/folder.png,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/
+            td cellpadding=0,,,width=80
+                % widget class='menu' id='user_action' title='Other properties' style='toolbar': 
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/..._(Tasks)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/..._(Channel consumers)
+                    li:::a class=btn btn-primary btn-sm,,,href=-...------------------------------------
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(Model base file)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(View base file)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(Url base file)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(Task base file)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(Channel consumer base file)
+                    li:::a class=btn btn-primary btn-sm,,,href=-...------------------------------------
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/icon_code/py/editor/?x1=icon_code..._(Icon code)
+                
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=doc,,,label=_(Doc),,,SRC=png://apps/help-browser.png,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/
+            td width=40
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=gen,,,label=_(Build),,,SRC=png://categories/applications-multimedia.png,,,href={{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/

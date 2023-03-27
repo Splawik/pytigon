@@ -1,0 +1,24 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% block all %}
+        {% with form_width=800 form_height=600 show_title_bar=1 title='Test' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_desktop %}
+        <div class="ajax-region">
+                {{ block.super }}
+        </div>
+{% endblock %}
+{% block content_start %}
+        {% if form and not SHOW_RESULT %}
+                <form method="post" action="{{request.path}}" role="form" class="TableFiltr form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="refresh_frame" class="ajax-link">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input type="submit" value="Run" class="btn btn-info ladda-button" data-style="slide-left" />
+                </form>
+        {% endif %}
+{% endblock %}
+

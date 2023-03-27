@@ -1,4 +1,4 @@
-%extends 'theme/smartfon_base.html'
+% extends 'theme/smartfon_base.html'
 
 % load pwa_webpush
 

@@ -345,7 +345,7 @@
 
 %% body_footer
     {{block.super}}
-    {% module_link 'schcomponents/components/sys-components.js' %}
+    {% module_link '_schcomponents/components/sys-components.js' %}
 
 
 %% tabsort_parameters

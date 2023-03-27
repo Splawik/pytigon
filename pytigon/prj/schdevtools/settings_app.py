@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 PRJ_TITLE = "Developer tools"
 PRJ_NAME = "schdevtools"
-THEMES = ["tablet_modern", "tablet_standard", "smartfon_standard"]
+THEMES = ["tablet_modern", "desktop_modern", "smartfon_standard"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
 
@@ -276,7 +276,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.26 09:25:28"
+GEN_TIME = "2023.03.27 17:38:20"
 OFFLINE_SUPPORT = True
 
 
