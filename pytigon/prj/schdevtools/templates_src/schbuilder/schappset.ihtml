@@ -74,14 +74,15 @@
     %form "^/2":
         .desktop_gui_type,tablet_gui_type,smartfon_gui_type,public,main
 
-    % if standard_web_browser:
-        %form "^/12":
-            .custom_tags,components_initial_state
-    % else:    
-        % form_item custom_tags:
-            {{form.custom_tags|textfiel_row_col:"4x100"}}
-       % form_item components_initial_state:
-            {{form.components_initial_state|textfiel_row_col:"4x100"}}
+    %form "^/12":
+        .custom_tags,components_initial_state
+    
+    % comment:
+        % else:    
+            % form_item custom_tags:
+                {{form.custom_tags|textfiel_row_col:"4x100"}}
+        % form_item components_initial_state:
+                {{form.components_initial_state|textfiel_row_col:"4x100"}}
 
     % if standard_web_browser:
         %form "^/6":
@@ -95,6 +96,9 @@
             .icon_size
     % form "^/12":
         .git_repository,autor_name,autor_email,autor_www
-    % modify setattr="textarea:cols=120;textarea:rows=15":
-        % form "^/12":
-            .additional_settings
+
+    % form "^/12":
+        .additional_settings
+
+    % comment:
+        % modify setattr="textarea:cols=120;textarea:rows=15":

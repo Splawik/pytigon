@@ -634,6 +634,20 @@ class SChAppSet(JSONModel):
         else:
             return SChAppSet.objects.all()
 
+    def get_form_class(self, view, request, create):
+        base_form = view.get_form_class()
+
+        class form_class(base_form):
+            class Meta(base_form.Meta):
+                widgets = {
+                    "custom_tags": form_fields.Textarea(attrs={"cols": 80, "rows": 20}),
+                    "additional_settings": form_fields.Textarea(
+                        attrs={"cols": 80, "rows": 20}
+                    ),
+                }
+
+        return form_class
+
 
 admin.site.register(SChAppSet)
 

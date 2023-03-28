@@ -11,3 +11,6 @@ span.form_title a
 span.form_title
     font-size:150%
     font-weight:bold
+
+ctrl-text, ctrl-select, ctrl-textarea, ctrl-bitmapcombobox
+    width:66%
