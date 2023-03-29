@@ -3,7 +3,12 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
-  position: relative; }
+  position: relative;
+  height: 100%; }
+
+div.content-wrapper {
+  width: 100%;
+  height: 100%; }
 
 .app_chose_title {
   color: gold !important;
@@ -43,6 +48,10 @@
 
 .dashboard #content {
   padding: 0px 10px; }
+
+div.table-and-details {
+  width: 100%;
+  height: 100%; }
 
 .pull-right {
   float: right; }
@@ -740,8 +749,8 @@ div.td_information {
 
 .tabsort-toolbar-expand {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 3px;
+  left: 3px;
   transform: rotate(0deg);
   transition: .3s;
   background: #fc0 !important;
@@ -752,7 +761,10 @@ div.td_information {
   transition: .3s !important; }
 
 .tab-pane {
-  position: relative; }
+  position: relative;
+  height: 100%; }
+  .tab-pane > .ajax-item {
+    height: 100%; }
 
 .tab-pane.container-fluid {
   padding-right: 5px !important;

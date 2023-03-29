@@ -1,0 +1,39 @@
+{% extends "forms/tree.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='simple' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions_new_row %}
+        {% new_row "New group" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Main parameter</th>
+        <th>
+        Parameters
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.main_parameter.key }}</td>
+        <td>
+                {% for parameter in object.parameters.all %}
+                        ({{ parameter.key}})
+                {% endfor %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                parent:!,main_parameter,second_parameter,parameters
+        {% endform %}
+{% endblock %}
+

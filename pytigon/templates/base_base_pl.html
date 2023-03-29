@@ -139,143 +139,147 @@
         {% endif %}
 {% endblock %}
 {% block body %}
-        <section class="body-body">
-                {% if not form_ext and show_form %}
-                        {% block dialog_start %}{% endblock %}
-                        {% if form_delete or form_info %}
-                                {% if standard_web_browser %}
-                                        <div id="Dialog">
-                                {% endif %}
-                                {% if form_info %}
-                                        {% block form_info %}
-                                                <div class="form_info">
-                                                        <table name="tabsort" class="listctrl table table-bordered" width="100%">
+        {% block body_body_start %}
+                <section class="body-body d-flex flex-row">
+        {% endblock %}
+        {% if not form_ext and show_form %}
+                {% block dialog_start %}{% endblock %}
+                {% if form_delete or form_info %}
+                        {% if standard_web_browser %}
+                                <div id="Dialog">
+                        {% endif %}
+                        {% if form_info %}
+                                {% block form_info %}
+                                        <div class="form_info">
+                                                <table name="tabsort" class="listctrl table table-bordered" width="100%">
+                                                        <tr>
+                                                                <th>Field</th>
+                                                                <th>Value</th>
+                                                        </tr>
+                                                        {% for field in object|get_model_fields %}
                                                                 <tr>
-                                                                        <th>Field</th>
-                                                                        <th>Value</th>
+                                                                        <td>{{ field.verbose_name }}</td>
+                                                                        <td>{{ object|get_attr:field.name }}</td>
                                                                 </tr>
-                                                                {% for field in object|get_model_fields %}
-                                                                        <tr>
-                                                                                <td>{{ field.verbose_name }}</td>
-                                                                                <td>{{ object|get_attr:field.name }}</td>
-                                                                        </tr>
-                                                                {% endfor %}
-                                                                {% if object|hasattr:"copy_to_clipboard" %}
-                                                                        <tr>
-                                                                                <td colspan="2:">
-                                                                                        <textarea class="copy_to_clipboard" style="position:absolute;left:-1000px;">
-                                                                                        {{object.copy_to_clipboard|json_dumps}}
-                                                                                        </textarea>
-                                                                                </td>
-                                                                        </tr>
-                                                                {% endif %}
-                                                        </table>
-                                                </div>
-                                                {% block form_ok_cancel_info %}{% endblock %}
-                                        {% endblock %}
-                                        {% if standard_web_browser %}
-                                                {% if title %}
-                                                        {% if settings.DEBUG %}
-                                                                <set-field element="#ModalLabelInfo" title="{{title}}:[xxx{{object_list.model|class_name}}]"></set-field>
-                                                          {% else %}
-                                                                <set-field element="#ModalLabelInfo" title="{{title}}"></set-field>
+                                                        {% endfor %}
+                                                        {% if object|hasattr:"copy_to_clipboard" %}
+                                                                <tr>
+                                                                        <td colspan="2:">
+                                                                                <textarea class="copy_to_clipboard" style="position:absolute;left:-1000px;">
+                                                                                {{object.copy_to_clipboard|json_dumps}}
+                                                                                </textarea>
+                                                                        </td>
+                                                                </tr>
                                                         {% endif %}
-                                                {% endif %}
-                                        {% endif %}
-                                  {% else %}
-                                        {% block form_delete %}
-                                                <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" class="ajax-link" id="DialogFormDelete" name="DialogFormDelete">
-                                                        {% csrf_token %}
-                                                        {% block form_delete_content %}
-                                                                <h4>Delete the item?</h4>
-                                                                <div class="form_delete">
-                                                                        {% block form_delete_object %}
-                                                                                <table class="table table-stripe ui-responsive" data-role="table">
-                                                                                        <thead>
-                                                                                                <tr>
-                                                                                                        <th>Field</th>
-                                                                                                        <th>Value</th>
-                                                                                                </tr>
-                                                                                        </thead>
-                                                                                        <tbody>
-                                                                                                {% for field in object|get_model_fields %}
-                                                                                                        <tr>
-                                                                                                                <td>{{ field.verbose_name }}:</td>
-                                                                                                                <td>{{ object|get_attr:field.name|truncatechars:1024 }}</td>
-                                                                                                        </tr>
-                                                                                                {% endfor %}
-                                                                                        </tbody>
-                                                                                </table>
-                                                                        {% endblock %}
-                                                                        <br />
-                                                                </div>
-                                                        {% endblock %}
-                                                        {% block form_ok_cancel_del %}
-                                                        {% endblock %}
-                                                </form>
-                                        {% endblock %}
-                                        {% if standard_web_browser %}
-                                                <set-field element="#ModalLabelDelete" title="{{title}}">
-                                                </set-field>
-                                        {% endif %}
-                                {% endif %}
-                                {% if standard_web_browser %}
+                                                </table>
                                         </div>
-                                {% endif %}
-                          {% else %}
-                                {% block row_edit_start %}
-                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
-                                                <div class="move-element {% block dialog_type %}modal-lg v-autosize{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
-                                        {% endif %}
-                                {% endblock %}
-                                {% block row_edit_header %}
-                                        {% if form %}
-                                                <meta name="RETURN" content="$$RETURN_RELOAD" />
-                                                {{ form.errors }}
-                                        {% endif %}
-                                {% endblock %}
-                                {% block row_edit_all %}
-                                        <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="{% block dialog_form_region %}page{% endblock %}">
-                                                {% csrf_token %}
-                                                {% block row_edit_form %}
-                                                        <table width="100%" style="table-layout:fixed;">
-                                                                {% if form %}
-                                                                        {% if field %}
-                                                                                <tr>
-                                                                                        <td>
-                                                                                                {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
-                                                                                        </td>
-                                                                                </tr>
-                                                                          {% else %}
-                                                                                {% block row_edit %}
-                                                                                        {{form.as_table}}
-                                                                                {% endblock %}
-                                                                        {% endif %}
-                                                                {% endif %}
-                                                        </table>
-                                                {% endblock %}
-                                        </form>
-                                        {% block row_edit_footer %}{% endblock %}
-                                        {% block form_ok_cancel %}
-                                        {% endblock %}
-                                {% endblock %}
-                                {% block row_edit_end %}
+                                        {% block form_ok_cancel_info %}{% endblock %}
                                 {% endblock %}
                                 {% if standard_web_browser %}
                                         {% if title %}
-                                                <set-field element="#ModalLabel" title="{{title}}">
-                                                </set-field>
+                                                {% if settings.DEBUG %}
+                                                        <set-field element="#ModalLabelInfo" title="{{title}}:[xxx{{object_list.model|class_name}}]"></set-field>
+                                                  {% else %}
+                                                        <set-field element="#ModalLabelInfo" title="{{title}}"></set-field>
+                                                {% endif %}
                                         {% endif %}
                                 {% endif %}
-                        {% endif %}
-                        {% block dialog_end %}{% endblock %}
-                  {% else %}
-                        {% if form_grid %}
                           {% else %}
-                                {{ block.super }}
+                                {% block form_delete %}
+                                        <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" class="ajax-link" id="DialogFormDelete" name="DialogFormDelete">
+                                                {% csrf_token %}
+                                                {% block form_delete_content %}
+                                                        <h4>Delete the item?</h4>
+                                                        <div class="form_delete">
+                                                                {% block form_delete_object %}
+                                                                        <table class="table table-stripe ui-responsive" data-role="table">
+                                                                                <thead>
+                                                                                        <tr>
+                                                                                                <th>Field</th>
+                                                                                                <th>Value</th>
+                                                                                        </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                        {% for field in object|get_model_fields %}
+                                                                                                <tr>
+                                                                                                        <td>{{ field.verbose_name }}:</td>
+                                                                                                        <td>{{ object|get_attr:field.name|truncatechars:1024 }}</td>
+                                                                                                </tr>
+                                                                                        {% endfor %}
+                                                                                </tbody>
+                                                                        </table>
+                                                                {% endblock %}
+                                                                <br />
+                                                        </div>
+                                                {% endblock %}
+                                                {% block form_ok_cancel_del %}
+                                                {% endblock %}
+                                        </form>
+                                {% endblock %}
+                                {% if standard_web_browser %}
+                                        <set-field element="#ModalLabelDelete" title="{{title}}">
+                                        </set-field>
+                                {% endif %}
+                        {% endif %}
+                        {% if standard_web_browser %}
+                                </div>
+                        {% endif %}
+                  {% else %}
+                        {% block row_edit_start %}
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                        <div class="move-element {% block dialog_type %}modal-lg v-autosize{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
+                                {% endif %}
+                        {% endblock %}
+                        {% block row_edit_header %}
+                                {% if form %}
+                                        <meta name="RETURN" content="$$RETURN_RELOAD" />
+                                        {{ form.errors }}
+                                {% endif %}
+                        {% endblock %}
+                        {% block row_edit_all %}
+                                <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="{% block dialog_form_region %}page{% endblock %}">
+                                        {% csrf_token %}
+                                        {% block row_edit_form %}
+                                                <table width="100%" style="table-layout:fixed;">
+                                                        {% if form %}
+                                                                {% if field %}
+                                                                        <tr>
+                                                                                <td>
+                                                                                        {{form|get_value:field|field_as_widget:"width:100%,height:calc(99.9% - 20)" }}
+                                                                                </td>
+                                                                        </tr>
+                                                                  {% else %}
+                                                                        {% block row_edit %}
+                                                                                {{form.as_table}}
+                                                                        {% endblock %}
+                                                                {% endif %}
+                                                        {% endif %}
+                                                </table>
+                                        {% endblock %}
+                                </form>
+                                {% block row_edit_footer %}{% endblock %}
+                                {% block form_ok_cancel %}
+                                {% endblock %}
+                        {% endblock %}
+                        {% block row_edit_end %}
+                        {% endblock %}
+                        {% if standard_web_browser %}
+                                {% if title %}
+                                        <set-field element="#ModalLabel" title="{{title}}">
+                                        </set-field>
+                                {% endif %}
                         {% endif %}
                 {% endif %}
-        </section>
+                {% block dialog_end %}{% endblock %}
+          {% else %}
+                {% if form_grid %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+        {% block body_body_end %}
+                </section>
+        {% endblock %}
 {% endblock %}
 {% block content_start2 %}
         <div class="content ajax-region ajax-frame" data-region="page" href="{{request.path}}">
@@ -291,7 +295,7 @@
         {% endif %}
         {% if not form_delete %}
                 {% block list_page_start %}
-                        <div class="ajax-region" data-region="table">
+                        <div class="ajax-region table-and-details d-flex flex-column" data-region="table">
                 {% endblock %}
                 {% block list_page_header %}
                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
@@ -301,97 +305,95 @@
                 {% block list_page %}
                         {% block list_content_start %}{% endblock %}
                         {% block list_content_header %}
-                                <div>
-                                        <div class="pseudotable container-fluid col-12">
-                                                {% block list_content_header_first_row %}
-                                                        {% if not get %}
-                                                                <div class="tr row list_content_header list_content_header_first_row">
-                                                                        <div class="td col-sm-12 hidden-sm-down text-center">
-                                                                                {% block list_content_title %}
-                                                                                        <h4 style="white-space:nowrap;" class="txt3d wiki-title">
-                                                                                                {{title|wiki_href|safe}}
-                                                                                                {% if settings.DEBUG %}
-                                                                                                        <a data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
-                                                                                                {% endif %}
-                                                                                        </h4>
+                                <div class="pseudotable container-fluid col-12">
+                                        {% block list_content_header_first_row %}
+                                                {% if not get %}
+                                                        <div class="tr row list_content_header list_content_header_first_row">
+                                                                <div class="td col-sm-12 hidden-sm-down text-center">
+                                                                        {% block list_content_title %}
+                                                                                <h4 style="white-space:nowrap;" class="txt3d wiki-title">
+                                                                                        {{title|wiki_href|safe}}
                                                                                         {% if settings.DEBUG %}
-                                                                                                <div class="collapse" id="collapse_{{uuid}}">
-                                                                                                        model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
-                                                                                                </div>
+                                                                                                <a data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
                                                                                         {% endif %}
-                                                                                {% endblock %}
-                                                                        </div>
-                                                                </div>
-                                                        {% endif %}
-                                                {% endblock %}
-                                                {% block list_content_header_second_row %}
-                                                        {% if form %}
-                                                                <div class="tr row list_content_header list_content_header_second_row">
-                                                                        <div class="td col-md-12 col-sm-12" colspan="3">
-                                                                                {% block list_filter_form %}
-                                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
-                                                                                                {% csrf_token %}
-                                                                                                {% block form_filter %}
-                                                                                                        {% if form %}
-                                                                                                                {% block form_content %}
-                                                                                                                        {{ form.non_field_errors }}
-                                                                                                                        {% block form_table_filter %}
-                                                                                                                                {% inline_form %}
-                                                                                                                                {% endinline_form %}
-                                                                                                                        {% endblock %}
-                                                                                                                        {% block form_content_button %}
-                                                                                                                                {% if table_type != 'datatable' %}
-                                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
-                                                                                                                                                {% icon "fa-refresh fa-lg" %}
-                                                                                                                                        </button>
-                                                                                                                                {% endif %}
-                                                                                                                        {% endblock %}
-                                                                                                                {% endblock %}
-                                                                                                        {% endif %}
-                                                                                                {% endblock %}
-                                                                                        </form>
-                                                                                        {% if table_type == 'datatable' %}
-                                                                                                <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
-                                                                                                        {% icon "fa-refresh fa-lg" %}
-                                                                                                </button>
-                                                                                        {% endif %}
-                                                                                {% endblock %}
-                                                                        </div>
-                                                                </div>
-                                                          {% else %}
-                                                                <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame" data-region="table">
-                                                                        {% csrf_token %}
-                                                                </form>
-                                                        {% endif %}
-                                                {% endblock %}
-                                                {% block list_content_header_third_row %}
-                                                        <div class="tr row list_content_header list_content_header_third_row">
-                                                                <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
-                                                                        <div class="dropdown">
-                                                                                {% if standard_web_browser and object_list %}
-                                                                                        {% if table_type == 'datatable' %}
-                                                                                                <div class="dropdown">
-                                                                                                        <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
-                                                                                                                {% icon "fa-bars fa-lg" %}
-                                                                                                        </button>
-                                                                                                        <div class="dropdown-menu">
-                                                                                                                <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
-                                                                                                                <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
-                                                                                                                <a href="{{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        {% endif %}
+                                                                                </h4>
+                                                                                {% if settings.DEBUG %}
+                                                                                        <div class="collapse" id="collapse_{{uuid}}">
+                                                                                                model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
+                                                                                        </div>
                                                                                 {% endif %}
-                                                                        </div>
-                                                                        {% block list_content_actions %}{% endblock %}
+                                                                        {% endblock %}
                                                                 </div>
-                                                                {% if is_paginated and table_type != 'datatable' %}
-                                                                        <div class="td col-sm-4 col-xs-7 text-right" align="right">
-                                                                        </div>
-                                                                {% endif %}
                                                         </div>
-                                                {% endblock %}
-                                        </div>
+                                                {% endif %}
+                                        {% endblock %}
+                                        {% block list_content_header_second_row %}
+                                                {% if form %}
+                                                        <div class="tr row list_content_header list_content_header_second_row">
+                                                                <div class="td col-md-12 col-sm-12" colspan="3">
+                                                                        {% block list_filter_form %}
+                                                                                <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
+                                                                                        {% csrf_token %}
+                                                                                        {% block form_filter %}
+                                                                                                {% if form %}
+                                                                                                        {% block form_content %}
+                                                                                                                {{ form.non_field_errors }}
+                                                                                                                {% block form_table_filter %}
+                                                                                                                        {% inline_form %}
+                                                                                                                        {% endinline_form %}
+                                                                                                                {% endblock %}
+                                                                                                                {% block form_content_button %}
+                                                                                                                        {% if table_type != 'datatable' %}
+                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
+                                                                                                                                        {% icon "fa-refresh fa-lg" %}
+                                                                                                                                </button>
+                                                                                                                        {% endif %}
+                                                                                                                {% endblock %}
+                                                                                                        {% endblock %}
+                                                                                                {% endif %}
+                                                                                        {% endblock %}
+                                                                                </form>
+                                                                                {% if table_type == 'datatable' %}
+                                                                                        <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
+                                                                                                {% icon "fa-refresh fa-lg" %}
+                                                                                        </button>
+                                                                                {% endif %}
+                                                                        {% endblock %}
+                                                                </div>
+                                                        </div>
+                                                  {% else %}
+                                                        <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame" data-region="table">
+                                                                {% csrf_token %}
+                                                        </form>
+                                                {% endif %}
+                                        {% endblock %}
+                                        {% block list_content_header_third_row %}
+                                                <div class="tr row list_content_header list_content_header_third_row">
+                                                        <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
+                                                                <div class="dropdown">
+                                                                        {% if standard_web_browser and object_list %}
+                                                                                {% if table_type == 'datatable' %}
+                                                                                        <div class="dropdown">
+                                                                                                <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
+                                                                                                        {% icon "fa-bars fa-lg" %}
+                                                                                                </button>
+                                                                                                <div class="dropdown-menu">
+                                                                                                        <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
+                                                                                                        <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
+                                                                                                        <a href="{{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                {% endif %}
+                                                                        {% endif %}
+                                                                </div>
+                                                                {% block list_content_actions %}{% endblock %}
+                                                        </div>
+                                                        {% if is_paginated and table_type != 'datatable' %}
+                                                                <div class="td col-sm-4 col-xs-7 text-right" align="right">
+                                                                </div>
+                                                        {% endif %}
+                                                </div>
+                                        {% endblock %}
                                 </div>
                                 {% block list_content_header_fourth_row %}
                                         {% if standard_web_browser %}
@@ -409,13 +411,13 @@
                         {% endif %}
                         {% if standard_web_browser and standard_web_browser != 6 %}
                                 {% if table_type == 'datatable' %}
-                                        <div class="tableframe" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
+                                        <div class="tableframe flex-grow-1" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
                                   {% else %}
-                                        <div class="tableframe ajax-frame" data-region="table">
+                                        <div class="tableframe ajax-frame flex-grow-1" data-region="table">
                                 {% endif %}
                           {% else %}
                                 {% if form.errors or errors %}
-                                        <div class="tableframe ajax-frame" data-region="table">
+                                        <div class="tableframe ajax-frame flex-grow-1" data-region="table">
                                 {% endif %}
                         {% endif %}
                         {% block list_content_body %}
@@ -473,7 +475,7 @@
                                                 {% paginator %}
                                         {% endif %}
                                 {% endblock %}
-                                <div class="tabsort_panel" table-details-height="{% if table_details_height %}{{ table_details_height }}{% endif %}">
+                                <div class="tabsort_panel" table-details="{% if table_details_height %}0{% endif %}">
                                         {% if table_subtype and table_subtype == 'table_with_details' %}
                                                 <input type="hidden" name="table_row_pk" value="[[ERROR]]" />
                                         {% endif %}

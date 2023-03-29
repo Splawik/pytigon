@@ -16,7 +16,7 @@ def _is_visible(element):
         return False
 
 
-def datetable_set_height(element):
+def old_datetable_set_height(element):
 
     if jQuery(element).hasClass("table_get"):
         return
@@ -30,9 +30,15 @@ def datetable_set_height(element):
 
     dy = dy_win - table_offset
 
-    if elem[0].hasAttribute("table-details-height"):
+    if (
+        elem[0].hasAttribute("table-details")
+        and elem[0].getAttribute("table-details") == "1"
+    ):
+        details = super_query_selector(elem[0], "^.table-and-details/.row-details")
+        details_height = details.clientHeight
         dydy = (
-            int(elem[0].getAttribute("table-details-height").replace("%", "").replace("vh", ""))
+            # int(elem[0].getAttribute("table-details-height").replace("%", "").replace("vh", ""))
+            details_height
             * dy_win
             / 100
         )
@@ -47,6 +53,28 @@ def datetable_set_height(element):
         dy += panel.outerHeight() + 5  # height() #- 15
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
+
+
+def datetable_set_height(element):
+
+    if jQuery(element).hasClass("table_get"):
+        return
+    if not _is_visible(element):
+        return
+
+    elem = jQuery(element).closest(".tabsort_panel")
+
+    # table_offset = elem.offset().top
+    dy = elem.parent().height()
+
+    if dy < 200:
+        dy = 200
+
+    panel = elem.find(".fixed-table-toolbar")
+    if not _is_visible(panel):
+        dy += panel.outerHeight() + 5  # height() #- 15
+
+    jQuery(element).bootstrapTable("resetView", {"height": dy - 25})
 
 
 def datatable_refresh(element):
@@ -64,7 +92,7 @@ window.datatable_refresh = datatable_refresh
 
 
 def _rowStyle(value, row, index):
-    x = jQuery("<div>" + value["cid"] + "</div>").find("div.td_information")
+    x = jQuery("<div class='cid'>" + value["cid"] + "</div>").find("div.td_information")
     if x.length > 0:
         c = x.attr("class").replace("td_information", "").replace(" ", "")
         if c.length > 0:
@@ -164,14 +192,14 @@ def init_table(table, table_type):
                     x2 = x.querySelector("input[name='table_row_pk']")
                     if x2:
                         x2.value = row.id
-                        row_active_divs = Array.prototype.slice.call(x.querySelectorAll(".table-row-active"))
+                        row_active_divs = Array.prototype.slice.call(
+                            x.querySelectorAll(".table-row-active")
+                        )
                         for elem in row_active_divs:
                             if elem.classList.contains("show"):
                                 refresh_ajax_frame(elem)
 
                         x.querySelector(".table-row-active")
-
-
 
         def queryParams(p):
             nonlocal table
@@ -194,9 +222,11 @@ def init_table(table, table_type):
         }
 
         def onRefresh(params):
-            nonlocal table    
+            nonlocal table
             if table[0].hasAttribute("data-autoselect"):
-                table[0].closest(".bootstrap-table").querySelector("[name='select']").click()
+                table[0].closest(".bootstrap-table").querySelector(
+                    "[name='select']"
+                ).click()
 
         if table.hasClass("table_get"):
             table.bootstrapTable(

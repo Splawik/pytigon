@@ -64,29 +64,31 @@
 {% block menu_end %}
 {% endblock %}
 {% block menu %}
-        <sys-sidebarmenu type="{% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}">
-                <sys-perfectscrollbar></sys-perfectscrollbar>
-                <aside class="main-sidebar collapse show" id="menu" role="dialog">
-                        <div sidebar-menu>
-                                <ul class="sidebar-menu">
-                                        <li class="bg-primary">
-                                                <a href="{{base_path}}" class="logo txt3d text-white" style="white-space:nowrap;" target="_top">
-                                                        {% block logo %}
-                                                                <span class="logo-lg">
-                                                                        {% if prj_title|length > 20 %}
-                                                                                <small>{{prj_title}}</small>
-                                                                          {% else %}
-                                                                                {{prj_title}}
-                                                                        {% endif %}
-                                                                </span>
-                                                        {% endblock %}
-                                                </a>
-                                        </li>
-                                        {{block.super}}
-                                </ul>
-                        </div>
-                </aside>
-        </sys-sidebarmenu>
+        <div class="sidebarmenu">
+                <sys-sidebarmenu type="{% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}">
+                        <sys-perfectscrollbar></sys-perfectscrollbar>
+                        <aside class="main-sidebar collapse show" id="menu" role="dialog">
+                                <div sidebar-menu>
+                                        <ul class="sidebar-menu">
+                                                <li class="bg-primary">
+                                                        <a href="{{base_path}}" class="logo txt3d text-white" style="white-space:nowrap;" target="_top">
+                                                                {% block logo %}
+                                                                        <span class="logo-lg">
+                                                                                {% if prj_title|length > 20 %}
+                                                                                        <small>{{prj_title}}</small>
+                                                                                  {% else %}
+                                                                                        {{prj_title}}
+                                                                                {% endif %}
+                                                                        </span>
+                                                                {% endblock %}
+                                                        </a>
+                                                </li>
+                                                {{block.super}}
+                                        </ul>
+                                </div>
+                        </aside>
+                </sys-sidebarmenu>
+        </div>
 {% endblock %}
 {% block body_start %}
         {% if form_ext or not show_form %}
@@ -105,7 +107,7 @@
         {{block.super}}
 {% endblock %}
 {% block body_init %}
-        <section id="panel">
+        <section id="panel" class="d-flex flex-column flex-grow-1">
         <header class="main-header win-header bg-primary">
                 <nav class="navbar navbar-toggleable-md bg-primary">
                         {% if ie %}
@@ -235,14 +237,12 @@
         {% if application_type != 'modern' %}
                 {{block.super}}
           {% else %}
-                <div>
-                        {% if not NO_TABS and application_type == 'modern' %}
-                                <div class="tab-content win-content" id="tabs2_content"></div>
-                        {% endif %}
-                        {% with NO_TABS=True %}
-                                {{block.super}}
-                        {% endwith %}
-                </div>
+                {% if not NO_TABS and application_type == 'modern' %}
+                        <div class="tab-content win-content flex-grow-1" id="tabs2_content"></div>
+                {% endif %}
+                {% with NO_TABS=True %}
+                        {{block.super}}
+                {% endwith %}
         {% endif %}
 {% endblock %}
 {% block body_footer %}

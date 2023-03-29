@@ -1,0 +1,50 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New album" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>release_date</th>
+        <th>artist</th>
+        <th>description</th>
+        <th>
+        genre
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.release_date|isoformat }}</td>
+        <td>{{ object.artist }}</td>
+        {% td_editable 'description' 'text' %}
+        <td>
+        {{ object.get_genre_display }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                release_date,artist,description
+        {% endform %}
+        {% if add_param and add_param != '-' %}
+                {% form %}
+                        genre:!
+                {% endform %}
+          {% else %}
+                {% form %}
+                        genre
+                {% endform %}
+        {% endif %}
+{% endblock %}
+

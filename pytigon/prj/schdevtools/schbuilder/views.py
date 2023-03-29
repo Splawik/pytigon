@@ -1126,6 +1126,8 @@ def build_prj(pk):
         #    initial_state += txt
         if typ == "O":
             p = os.path.join(base_path, static_file.name)
+            dname = os.path.dirname(p)
+            os.makedirs(dname, exist_ok=True)
             with open(p, "wt", encoding="utf-8") as f:
                 f.write(txt)
 

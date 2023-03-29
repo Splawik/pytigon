@@ -457,12 +457,16 @@ window.history_push_state = history_push_state
 
 def get_elem_from_string(html, selectors=None):
     temp = document.createElement("div")
+    temp.classList.add("ajax-item")
     temp.innerHTML = html
     if selectors:
         element = temp.querySelector(selectors)
         return element
     else:
-        return temp
+        if temp.childNodes.length == 1:
+            return temp.childNodes[0]
+        else:
+            return temp
 
 
 window.get_elem_from_string = get_elem_from_string

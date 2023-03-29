@@ -1,0 +1,16 @@
+{% extends "tables_adv_demo/album.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block list_row_header %}
+        <th>Release date</th>
+        <th>Artist</th>
+        <th>
+        Description
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.release_date|isoformat }}</td>
+        <td>{{ object.artist }}</td>
+        <td>{{ object.description }}</td>
+{% endblock %}
+

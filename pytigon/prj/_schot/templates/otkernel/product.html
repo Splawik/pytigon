@@ -1,0 +1,42 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "new product" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>External id</th>
+        <th>Name</th>
+        <th>Conversion factor</th>
+        <th>
+        Active
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.external_id }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.conversion_factor }}</td>
+        <td>
+        {{ object.active }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+                field_list/inventory_set,Inventory
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                external_id,name,conversion_factor,active
+        {% endform %}
+{% endblock %}
+

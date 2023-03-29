@@ -63,20 +63,21 @@
 %% menu_end
 
 %% menu
-    sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}
-        sys-perfectscrollbar
-        aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
-            div sidebar-menu
-                ul class=sidebar-menu
-                    li class=bg-primary
-                        a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;,,,target=_top
-                            %% logo
-                                span class=logo-lg
-                                    % if prj_title|length > 20:
-                                        small...{{prj_title}}
-                                    % else:
-                                        {{prj_title}}
-                    {{block.super}}
+    div class=sidebarmenu 
+        sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}
+            sys-perfectscrollbar
+            aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
+                div sidebar-menu
+                    ul class=sidebar-menu
+                        li class=bg-primary
+                            a href={{base_path}},,,class=logo txt3d text-white,,,style=white-space:nowrap;,,,target=_top
+                                %% logo
+                                    span class=logo-lg
+                                        % if prj_title|length > 20:
+                                            small...{{prj_title}}
+                                        % else:
+                                            {{prj_title}}
+                        {{block.super}}
 
 %% body_start
     % if form_ext or not show_form:
@@ -93,7 +94,7 @@
 
 
 %% body_init
-    <section id="panel">
+    <section id="panel" class="d-flex flex-column flex-grow-1">
     header class=main-header win-header bg-primary
 
         nav class=navbar navbar-toggleable-md bg-primary
@@ -186,11 +187,10 @@
     % if application_type != 'modern':
         {{block.super}}
     % else:
-        div
-            % if not NO_TABS and application_type == 'modern':
-                div class=tab-content win-content,,,id=tabs2_content
-            % with NO_TABS=True:
-                {{block.super}}
+        % if not NO_TABS and application_type == 'modern':
+            div class=tab-content win-content flex-grow-1,,,id=tabs2_content
+        % with NO_TABS=True:
+            {{block.super}}
 
 %% body_footer
     {{block.super}}

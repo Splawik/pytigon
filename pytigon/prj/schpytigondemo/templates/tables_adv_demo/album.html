@@ -1,0 +1,47 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New album" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Release date</th>
+        <th>Artist</th>
+        <th>Description</th>
+        <th>
+        Genre
+        </th>
+{% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% row_actions %}
+                field_list/track_set,Tracks
+        {% endrow_actions %}
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.release_date }}</td>
+        <td>{{ object.artist }}</td>
+        <td>{{ object.description }}</td>
+        <td>
+        {{ object.genre }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                release_date,artist,description,genre
+        {% endform %}
+{% endblock %}
+

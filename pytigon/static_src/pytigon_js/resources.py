@@ -96,7 +96,7 @@ INLINE_BASE = """
             <div class='modal-content'>
                 <div class='modal-header'>
                     <h4 class='modal-title'>{title}</h4>
-                    <div>
+                    <div class='dialog-buttons>
                         <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> 
                             <span class='fa fa-window-minimize'></span> 
                         </button> 

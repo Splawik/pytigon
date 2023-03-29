@@ -14,6 +14,8 @@
     % if not standard_web_browser:
         {{block.super}}
 
+%% body_body_start
+
 %% body_init
 
 %% panel
@@ -110,6 +112,8 @@
 %% page_footer
 
 %% body_footer_scripts
+
+%% body_body_end
 
 %% body_end
 

@@ -1,4 +1,4 @@
-var comp, init, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub1_context, stub2_err, stub3_context, stub4_err, stub7_context, stub8_err, stub9_context, test;
+var comp, drag_element, init, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub15_context, stub16_err, stub1_context, stub2_err, stub3_context, stub4_err, stub7_context, stub8_err, stub9_context, test;
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {
@@ -51,9 +51,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub2_err=err_0; }
-if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
-} else { stub1_context.__exit__(null, null, null); }
+} catch(err_0)  { stub2_err=err_0;
+} finally {
+    if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+    } else { stub1_context.__exit__(null, null, null); }
+}
 stub3_context = (new DefineWebComponent("sys-button", false));
 comp = stub3_context.__enter__();
 try {
@@ -99,9 +101,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub4_err=err_0; }
-if (stub4_err) { if (!stub3_context.__exit__(stub4_err.name || "error", stub4_err, null)) { throw stub4_err; }
-} else { stub3_context.__exit__(null, null, null); }
+} catch(err_0)  { stub4_err=err_0;
+} finally {
+    if (stub4_err) { if (!stub3_context.__exit__(stub4_err.name || "error", stub4_err, null)) { throw stub4_err; }
+    } else { stub3_context.__exit__(null, null, null); }
+}
 stub7_context = (new DefineWebComponent("sys-perfectscrollbar", false));
 comp = stub7_context.__enter__();
 try {
@@ -118,9 +122,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub8_err=err_0; }
-if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
-} else { stub7_context.__exit__(null, null, null); }
+} catch(err_0)  { stub8_err=err_0;
+} finally {
+    if (stub8_err) { if (!stub7_context.__exit__(stub8_err.name || "error", stub8_err, null)) { throw stub8_err; }
+    } else { stub7_context.__exit__(null, null, null); }
+}
 stub9_context = (new DefineWebComponent("sys-datatable", false));
 comp = stub9_context.__enter__();
 try {
@@ -141,9 +147,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub10_err=err_0; }
-if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
-} else { stub9_context.__exit__(null, null, null); }
+} catch(err_0)  { stub10_err=err_0;
+} finally {
+    if (stub10_err) { if (!stub9_context.__exit__(stub10_err.name || "error", stub10_err, null)) { throw stub10_err; }
+    } else { stub9_context.__exit__(null, null, null); }
+}
 stub11_context = (new DefineWebComponent("move-attr", false));
 comp = stub11_context.__enter__();
 try {
@@ -167,9 +175,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub12_err=err_0; }
-if (stub12_err) { if (!stub11_context.__exit__(stub12_err.name || "error", stub12_err, null)) { throw stub12_err; }
-} else { stub11_context.__exit__(null, null, null); }
+} catch(err_0)  { stub12_err=err_0;
+} finally {
+    if (stub12_err) { if (!stub11_context.__exit__(stub12_err.name || "error", stub12_err, null)) { throw stub12_err; }
+    } else { stub11_context.__exit__(null, null, null); }
+}
 stub13_context = (new DefineWebComponent("ptig-paste", false));
 comp = stub13_context.__enter__();
 try {
@@ -203,9 +213,75 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub14_err=err_0; }
-if (stub14_err) { if (!stub13_context.__exit__(stub14_err.name || "error", stub14_err, null)) { throw stub14_err; }
-} else { stub13_context.__exit__(null, null, null); }
+} catch(err_0)  { stub14_err=err_0;
+} finally {
+    if (stub14_err) { if (!stub13_context.__exit__(stub14_err.name || "error", stub14_err, null)) { throw stub14_err; }
+    } else { stub13_context.__exit__(null, null, null); }
+}
+stub15_context = (new DefineWebComponent("ptig-sliderline", false));
+comp = stub15_context.__enter__();
+try {
+    comp.options["template"] = '<div style=\"width:100%;height:7px;cursor:move;background-color:#fb0;\"></div>\n' +
+    '\n' +
+    '';
+    drag_element = function flx_drag_element (elmnt, related_element, multiplier, vertical) {
+        var close_drag_element, drag_mouse_down, element_drag, height, width, x, y;
+        multiplier = (multiplier === undefined) ? 1: multiplier;
+        vertical = (vertical === undefined) ? true: vertical;
+        x = 0;
+        y = 0;
+        width = 0;
+        height = 0;
+        drag_mouse_down = (function flx_drag_mouse_down (e) {
+            e = (_pyfunc_truthy(e))? (e) : (window.event);
+            e.preventDefault();
+            x = e.screenX;
+            y = e.screenY;
+            document.onmouseup = close_drag_element;
+            document.onmousemove = element_drag;
+            return null;
+        }).bind(this);
+
+        element_drag = (function flx_element_drag (e) {
+            e = (_pyfunc_truthy(e))? (e) : (window.event);
+            e.preventDefault();
+            width = x - e.screenX;
+            height = y - e.screenY;
+            x = e.screenX;
+            y = e.screenY;
+            if (_pyfunc_truthy(vertical)) {
+                related_element.style.height = (_pyfunc_str((_pyfunc_op_add(related_element.clientHeight, _pyfunc_op_mult(height, multiplier))))) + "px";
+            } else {
+                related_element.style.width = (_pyfunc_str((_pyfunc_op_add(related_element.clientWidth, _pyfunc_op_mult(width, multiplier))))) + "px";
+            }
+            window.process_resize(document.body);
+            return null;
+        }).bind(this);
+
+        close_drag_element = (function flx_close_drag_element () {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            return null;
+        }).bind(this);
+
+        elmnt.onmousedown = drag_mouse_down;
+        return null;
+    };
+
+    init = function flx_init (component) {
+        var div, elem;
+        div = component.root.querySelector("div");
+        elem = window.super_query_selector(div, component.getAttribute("rel"));
+        drag_element(div, elem, 1);
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub16_err=err_0;
+} finally {
+    if (stub16_err) { if (!stub15_context.__exit__(stub16_err.name || "error", stub16_err, null)) { throw stub16_err; }
+    } else { stub15_context.__exit__(null, null, null); }
+}
 test = function flx_test (x) {
     return x;
 };

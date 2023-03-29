@@ -16,7 +16,7 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = _pymeth_replace.call((("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+INLINE_BASE = _pymeth_replace.call((("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
 INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <div>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>\n                </div>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
 INLINE_EDIT = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
@@ -523,10 +523,13 @@ get_elem_from_string = function flx_get_elem_from_string (html, selectors) {
     var element, temp;
     selectors = (selectors === undefined) ? null: selectors;
     temp = document.createElement("div");
+    temp.classList.add("ajax-item");
     temp.innerHTML = html;
     if (_pyfunc_truthy(selectors)) {
         element = temp.querySelector(selectors);
         return element;
+    } else if ((temp.childNodes.length == 1)) {
+        return temp.childNodes[0];
     } else {
         return temp;
     }
@@ -2350,6 +2353,7 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
         dialog_slot2 = child;
     } else {
         dialog_slot = document.createElement("div");
+        dialog_slot.addClass("dialog-slot");
         dialog_slot.classList.add("col-12");
         dialog_slot2 = dialog_slot;
     }
@@ -2923,7 +2927,7 @@ get_menu = function flx_get_menu () {
 
 export {Page, TabMenuItem, TabMenu, get_menu};
 
-var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, on_check_toggle_visibility, prepare0, prepare_datatable, table_loadeddata;
+var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, old_datetable_set_height, on_check_toggle_visibility, prepare0, prepare_datatable, table_loadeddata;
 _is_visible = function flx__is_visible (element) {
     var test;
     test = jQuery(element).is(":visible");
@@ -2935,8 +2939,8 @@ _is_visible = function flx__is_visible (element) {
     return null;
 };
 
-datetable_set_height = function flx_datetable_set_height (element) {
-    var dy, dy_win, dydy, elem, panel, table_offset;
+old_datetable_set_height = function flx_old_datetable_set_height (element) {
+    var details, details_height, dy, dy_win, dydy, elem, panel, table_offset;
     if (_pyfunc_truthy((jQuery(element).hasClass)("table_get"))) {
         return null;
     }
@@ -2947,8 +2951,10 @@ datetable_set_height = function flx_datetable_set_height (element) {
     table_offset = elem.offset().top;
     dy_win = (jQuery(window).height)();
     dy = dy_win - table_offset;
-    if (_pyfunc_truthy((elem[0].hasAttribute)("table-details-height"))) {
-        dydy = (_pyfunc_op_mult((_pyfunc_int((_pymeth_replace.call(((_pymeth_replace.call((((elem[0].getAttribute)("table-details-height"))), "%", ""))), "vh", "")))), dy_win)) / 100;
+    if (((_pyfunc_truthy((elem[0].hasAttribute)("table-details"))) && ((_pyfunc_op_equals(((elem[0].getAttribute)("table-details")), "1"))))) {
+        details = super_query_selector(elem[0], "^.table-and-details/.row-details");
+        details_height = details.clientHeight;
+        dydy = _pyfunc_op_mult(details_height, dy_win) / 100;
     }
     dy -= dydy;
     if ((dy < 200)) {
@@ -2959,6 +2965,27 @@ datetable_set_height = function flx_datetable_set_height (element) {
         dy = _pyfunc_op_add(dy, panel.outerHeight() + 5);
     }
     (jQuery(element).bootstrapTable)("resetView", ({height: dy - 5}));
+    return null;
+};
+
+datetable_set_height = function flx_datetable_set_height (element) {
+    var dy, elem, panel;
+    if (_pyfunc_truthy((jQuery(element).hasClass)("table_get"))) {
+        return null;
+    }
+    if ((!_pyfunc_truthy(_is_visible(element)))) {
+        return null;
+    }
+    elem = (jQuery(element).closest)(".tabsort_panel");
+    dy = (elem.parent().height)();
+    if ((dy < 200)) {
+        dy = 200;
+    }
+    panel = _pymeth_find.call(elem, ".fixed-table-toolbar");
+    if ((!_pyfunc_truthy(_is_visible(panel)))) {
+        dy = _pyfunc_op_add(dy, panel.outerHeight() + 5);
+    }
+    (jQuery(element).bootstrapTable)("resetView", ({height: dy - 25}));
     return null;
 };
 
@@ -2978,7 +3005,7 @@ datatable_refresh = function flx_datatable_refresh (element) {
 window.datatable_refresh = datatable_refresh;
 _rowStyle = function flx__rowStyle (value, row, index) {
     var c, x;
-    x = _pymeth_find.call(((jQuery(("<div>" + value["cid"]) + "</div>"))), "div.td_information");
+    x = _pymeth_find.call(((jQuery(("<div class='cid'>" + value["cid"]) + "</div>"))), "div.td_information");
     if ((x.length > 0)) {
         c = _pymeth_replace.call(((_pymeth_replace.call(x.attr("class"), "td_information", ""))), " ", "");
         if ((c.length > 0)) {
@@ -3374,7 +3401,7 @@ datatable_buttons = function flx_datatable_buttons (obj) {
 };
 
 window.datatable_buttons = datatable_buttons;
-export {datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check_toggle_visibility, datatable_buttons};
+export {old_datetable_set_height, datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check_toggle_visibility, datatable_buttons};
 
 var humanFileSize, img_field;
 humanFileSize = function flx_humanFileSize (bytes, si) {

@@ -1,4 +1,4 @@
-% extends 'template/only_content.html'
+% extends 'only_content.html'
 % load exfiltry
 % load exsyntax
 

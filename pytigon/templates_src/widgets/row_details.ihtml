@@ -2,7 +2,8 @@
 % load exsyntax
 
 % if standard_web_browser:
-    div class=auto-refresh,,,style=height:{{table_details_height}},,,style=display:flex;flex-direction:column;justify-content:space-between;
+    ptig-sliderline rel=^.table-and-details/.row-details
+    div class=auto-refresh row-details,,,style=height:{{table_details_height}},,,style=display:flex;flex-direction:column;justify-content:space-between;
         nav
             div class=nav nav-tabs,,,role=tablist
                 % for item in title_url_tab:

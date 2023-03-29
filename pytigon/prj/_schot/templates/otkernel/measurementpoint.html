@@ -1,0 +1,57 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="33vh" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New measurement point" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Company</th>
+        <th>Facility</th>
+        <th>Name</th>
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.company }}</td>
+        <td>{{ object.facility }}</td>
+        <td>{{ object.name }}</td>
+        <td>
+                MP state:  <i>{{ object.measurementpointstate.jsondata }}</i><br />
+                MP control queue status: <i>{{ object.mpointcontrolqueuestatus.jsondata }}</i><br />
+                MP input queue status: <i>{{ object.mpointinputqueuestatus.jsondata }}</i><br />
+                MP output queue status: <i>{{ object.mpointoutputqueuestatus.jsondata }}</i>
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+                field_edit/input_proc,Edit input procedure
+                field_edit/control_proc,Edit control procedure
+                field_edit/com_proc,Edit communication procedure
+                field_edit/state_proc,Edit state procedure
+        {% endrow_actions %}
+{% endblock %}
+{% block list_page_footer %}
+        {% row_details %}
+                *Input queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointinputqueue_set/-/form/sublist/?x1=mpointinputqueue_set
+                Output queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointoutputqueue_set/-/form/sublist/?x1=mpointoutputqueue_set
+                Control queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointcontrolqueue_set/-/form/sublist/?x1=mpointcontrolqueue_set
+                Logs:otkernel/table/MeasurementPoint/[[table_row_pk]]/log_set/-/form/sublist/?x1=log_set
+                Extended logs:otkernel/table/MeasurementPoint/[[table_row_pk]]/extendedlog_set/-/form/sublist/?x1=extendedlog_set
+        {% endrow_details %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                company,facility,name
+        {% endform %}
+{% endblock %}
+

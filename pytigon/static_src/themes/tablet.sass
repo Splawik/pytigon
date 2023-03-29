@@ -28,7 +28,7 @@ sys-sidebarmenu
 
 #menu
     //overflow-y: hidden
-    position: fixed
+    //position: fixed
     width: var( --sidebar-width )
     z-index: 999
     background-color: var(--sidebar-background-level1)
@@ -44,15 +44,15 @@ img.tablet_menu_icon, a.menu-href svg
     vertical-align: middle
 
 #panel 
-    margin-left: var( --sidebar-width )
+    //margin-left: var( --sidebar-width )
     transition: margin-left 0.2s
 
 
-#panel.off 
-    margin-left: var( --sidebar-width )
+//#panel.off 
+    //margin-left: var( --sidebar-width )
 
-#panel.on 
-    margin-left: var( --sidebar-width-min )
+//#panel.on 
+    //margin-left: var( --sidebar-width-min )
 
 
 #menu:not(.show) + #panel 
@@ -263,6 +263,9 @@ a.logo
 
 aside.main-sidebar
     transition: width 0.2s
+    height: 100%
+    position: relative
+
 
 aside.main-sidebar.off:not(:hover)
     width: var( --sidebar-width-min ) !important
