@@ -77,41 +77,18 @@ def mount_html(dest_elem, data_or_html, link=None):
 
         jQuery.each(jQuery(dest_elem).find(".call_on_remove"), _on_remove)
 
-        # if isinstance(data_or_html, str):
-        #    #dest_elem.innerHTML = data_or_html
-        #    if dest_elem.childNodes.length > 0:
-        #        morphdom(dest_elem, data_or_html)
-        # else:
-        #    if dest_elem.childNodes.length>0:
-        #        #dest_elem.replaceChild(data_or_html, dest_elem.childNodes[0])
-        #        morphdom(dest_elem.childNodes[0], data_or_html)
-        #        while dest_elem.childNodes.length>1:
-        #            dest_elem.removeChild(dest_elem.childNodes[1])
-        #    else:
-        #        dest_elem.appendChild(data_or_html)
-
-        # if jQuery.type(data_or_html) == "string":
-        #    x = document.createElement("div")
-        #    x.innerHTML = data_or_html
-        #    data_or_html = x.firstChild
-
-        # if dest_elem.childNodes.length > 0:
-        #    morphdom(dest_elem.childNodes[0], data_or_html)
-        #    while dest_elem.childNodes.length > 1:
-        #        dest_elem.removeChild(dest_elem.childNodes[1])
-        # else:
-        #    dest_elem.appendChild(data_or_html)
-
         if dest_elem.childNodes.length > 0:
-            morphdom(dest_elem.childNodes[0], data_or_html)
-            while dest_elem.childNodes.length > 1:
-                dest_elem.removeChild(dest_elem.childNodes[1])
+            elem2 = dest_elem.cloneNode()
+            if jQuery.type(data_or_html) == "string":
+                elem2.innerHTML = data_or_html
+            else:
+                elem2.appendChild(data_or_html)
+            morphdom(dest_elem, elem2)
         else:
             if jQuery.type(data_or_html) == "string":
-                x = document.createElement("div")
-                x.innerHTML = data_or_html
-                data_or_html = x.firstChild
-            dest_elem.appendChild(data_or_html)
+                dest_elem.innerHTML = data_or_html
+            else:
+                dest_elem.appendChild(data_or_html)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:

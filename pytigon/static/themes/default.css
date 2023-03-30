@@ -783,7 +783,10 @@ a, button {
   outline: 0 !important; }
 
 .tabsort_panel {
-  margin-top: 5px !important; }
+  margin-top: 5px !important;
+  position: absolute;
+  top: 3px;
+  bottom: 3px; }
 
 .form2columns label {
   margin-bottom: 0px; }
@@ -903,3 +906,6 @@ table.layout0 tr td {
     transform:rotate(0deg) { } }
   to {
     transform:rotate(360deg) { } } }
+
+.v-row-details {
+  padding: 10px; }

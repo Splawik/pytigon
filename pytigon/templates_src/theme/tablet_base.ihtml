@@ -93,6 +93,9 @@
     {{block.super}}
 
 
+%% body_body_start
+    <section class="body-body d-flex flex-row">
+
 %% body_init
     <section id="panel" class="d-flex flex-column flex-grow-1">
     header class=main-header win-header bg-primary

@@ -51,6 +51,7 @@
 
 %% list_page_start
     % if content_limited_to and content_limited_to == 'min':
+        <div class="d-flex flex-column" style="height:100%">
     % else:
         {{ block.super }}
 
@@ -96,6 +97,7 @@
 
 %% list_page_end
     % if content_limited_to and content_limited_to == 'min':
+        </div>
     % else:
         {{ block.super }}
 

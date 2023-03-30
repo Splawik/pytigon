@@ -74,7 +74,7 @@ def datetable_set_height(element):
     if not _is_visible(panel):
         dy += panel.outerHeight() + 5  # height() #- 15
 
-    jQuery(element).bootstrapTable("resetView", {"height": dy - 25})
+    jQuery(element).bootstrapTable("resetView", {"height": dy - 10})
 
 
 def datatable_refresh(element):

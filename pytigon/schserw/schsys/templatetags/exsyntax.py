@@ -1393,8 +1393,9 @@ def do_tree(parser, token):
 
 
 class RowDetailsNode(Node):
-    def __init__(self, nodelist):
+    def __init__(self, nodelist, vertical=False):
         self.nodelist = nodelist
+        self.vertical = vertical
 
     def render(self, context):
         output = self.nodelist.render(context).replace("\n", ";")
@@ -1417,6 +1418,10 @@ class RowDetailsNode(Node):
         d = {}
         d.update(context.flatten())
         d["title_url_tab"] = title_url_tab
+        if self.vertical:
+            d["vertical"] = True
+        else:
+            d["vertical"] = False
         return t.render(d, request=d["request"])
 
 
@@ -1424,7 +1429,14 @@ class RowDetailsNode(Node):
 def row_details(parser, token):
     nodelist = parser.parse(("endrow_details",))
     parser.delete_first_token()
-    return RowDetailsNode(nodelist)
+    return RowDetailsNode(nodelist, False)
+
+
+@register.tag
+def v_row_details(parser, token):
+    nodelist = parser.parse(("endv_row_details",))
+    parser.delete_first_token()
+    return RowDetailsNode(nodelist, True)
 
 
 class ModifyNode(Node):

@@ -227,7 +227,7 @@ try {
     drag_element = function flx_drag_element (elmnt, related_element, multiplier, vertical) {
         var close_drag_element, drag_mouse_down, element_drag, height, width, x, y;
         multiplier = (multiplier === undefined) ? 1: multiplier;
-        vertical = (vertical === undefined) ? true: vertical;
+        vertical = (vertical === undefined) ? false: vertical;
         x = 0;
         y = 0;
         width = 0;
@@ -250,9 +250,9 @@ try {
             x = e.screenX;
             y = e.screenY;
             if (_pyfunc_truthy(vertical)) {
-                related_element.style.height = (_pyfunc_str((_pyfunc_op_add(related_element.clientHeight, _pyfunc_op_mult(height, multiplier))))) + "px";
-            } else {
                 related_element.style.width = (_pyfunc_str((_pyfunc_op_add(related_element.clientWidth, _pyfunc_op_mult(width, multiplier))))) + "px";
+            } else {
+                related_element.style.height = (_pyfunc_str((_pyfunc_op_add(related_element.clientHeight, _pyfunc_op_mult(height, multiplier))))) + "px";
             }
             window.process_resize(document.body);
             return null;
@@ -269,10 +269,17 @@ try {
     };
 
     init = function flx_init (component) {
-        var div, elem;
+        var div, elem, stub17_;
         div = component.root.querySelector("div");
         elem = window.super_query_selector(div, component.getAttribute("rel"));
-        drag_element(div, elem, 1);
+        if (((_pyfunc_truthy(component.hasAttribute("vertical"))) && ((_pyfunc_op_equals(component.getAttribute("vertical"), "1"))))) {
+            stub17_ = [div.style.height, div.style.width];
+            div.style.width = stub17_[0];div.style.height = stub17_[1];
+            div.style.backgroundColor = "#eee";
+            drag_element(div, elem, 1, true);
+        } else {
+            drag_element(div, elem, 1, false);
+        }
         return null;
     };
 

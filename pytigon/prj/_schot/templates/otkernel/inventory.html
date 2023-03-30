@@ -1,0 +1,43 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Product</th>
+        <th>Location</th>
+        <th>Amount</th>
+        <th>RFID</th>
+        <th>Feature</th>
+        <th>
+        Last operation
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.product }}</td>
+        <td>{{ object.location }}</td>
+        <td>{{ object.amount }}</td>
+        <td>{{ object.rfid }}</td>
+        <td>{{ object.feature }}</td>
+        <td>
+        {{ object.last_operation }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                product,location,amount,rfid,feature,last_operation
+        {% endform %}
+{% endblock %}
+

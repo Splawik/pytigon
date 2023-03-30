@@ -546,7 +546,7 @@ def on_replace_app(target_element, data_element, new_url, param, event):
 
     window.MENU = None
     mount_html(
-        document.querySelector("section.body-body"),
+        document.querySelector("div.content-wrapper"),
         data_element.querySelector("section.body-body"),
         False,
     )

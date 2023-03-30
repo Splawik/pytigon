@@ -37,6 +37,11 @@
         .field_edit/com_proc,Edit communication procedure
         .field_edit/state_proc,Edit state procedure
 
+%% list_page_sidebar    
+    % v_row_details:
+        *Input queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointinputqueue_set/-/form/sublist/?x1=mpointinputqueue_set
+        .Output queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointoutputqueue_set/-/form/sublist/?x1=mpointoutputqueue_set
+
 %% list_page_footer
     % row_details:
         *Input queue:otkernel/table/MeasurementPoint/[[table_row_pk]]/mpointinputqueue_set/-/form/sublist/?x1=mpointinputqueue_set

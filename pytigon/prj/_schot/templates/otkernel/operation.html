@@ -1,0 +1,38 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New operation" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Previous operation</th>
+        <th>Time</th>
+        <th>
+        data
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.previous_operation }}</td>
+        <td>{{ object.time }}</td>
+        <td>
+        {{ object.jsondata }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                field_list/inventory_set,Inventory
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                previous_operation
+        {% endform %}
+{% endblock %}
+

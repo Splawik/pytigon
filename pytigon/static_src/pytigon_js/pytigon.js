@@ -1269,7 +1269,7 @@ register_mount_fun = function flx_register_mount_fun (fun) {
 
 window.register_mount_fun = register_mount_fun;
 mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
-    var _on_remove, evt, fun, stub3_seq, stub4_itr, x;
+    var _on_remove, elem2, evt, fun, stub3_seq, stub4_itr;
     link = (link === undefined) ? null: link;
     if (_pyfunc_op_equals(dest_elem, null)) {
         return null;
@@ -1290,16 +1290,16 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
 
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
         if ((dest_elem.childNodes.length > 0)) {
-            morphdom(dest_elem.childNodes[0], data_or_html);
-            while (dest_elem.childNodes.length > 1) {
-                dest_elem.removeChild(dest_elem.childNodes[1]);
-            }
-        } else {
+            elem2 = dest_elem.cloneNode();
             if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
-                x = document.createElement("div");
-                x.innerHTML = data_or_html;
-                data_or_html = x.firstChild;
+                elem2.innerHTML = data_or_html;
+            } else {
+                elem2.appendChild(data_or_html);
             }
+            morphdom(dest_elem, elem2);
+        } else if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
+            dest_elem.innerHTML = data_or_html;
+        } else {
             dest_elem.appendChild(data_or_html);
         }
     }
@@ -2572,7 +2572,7 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
         window.location.pathname = window.BASE_PATH;
     }
     window.MENU = null;
-    mount_html(document.querySelector("section.body-body"), data_element.querySelector("section.body-body"), false);
+    mount_html(document.querySelector("div.content-wrapper"), data_element.querySelector("section.body-body"), false);
     window.init_start_page();
     window.activate_menu();
     return null;
@@ -2985,7 +2985,7 @@ datetable_set_height = function flx_datetable_set_height (element) {
     if ((!_pyfunc_truthy(_is_visible(panel)))) {
         dy = _pyfunc_op_add(dy, panel.outerHeight() + 5);
     }
-    (jQuery(element).bootstrapTable)("resetView", ({height: dy - 25}));
+    (jQuery(element).bootstrapTable)("resetView", ({height: dy - 10}));
     return null;
 };
 

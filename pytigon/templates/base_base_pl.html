@@ -140,7 +140,7 @@
 {% endblock %}
 {% block body %}
         {% block body_body_start %}
-                <section class="body-body d-flex flex-row">
+                <section class="body-body d-flex flex-column">
         {% endblock %}
         {% if not form_ext and show_form %}
                 {% block dialog_start %}{% endblock %}
@@ -369,7 +369,7 @@
                                         {% endblock %}
                                         {% block list_content_header_third_row %}
                                                 <div class="tr row list_content_header list_content_header_third_row">
-                                                        <div class="{% if table_type == 'datatable'%}tabsort_panel{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
+                                                        <div class="{% if table_type == 'datatable'%}tabsort_header{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
                                                                 <div class="dropdown">
                                                                         {% if standard_web_browser and object_list %}
                                                                                 {% if table_type == 'datatable' %}
@@ -411,13 +411,13 @@
                         {% endif %}
                         {% if standard_web_browser and standard_web_browser != 6 %}
                                 {% if table_type == 'datatable' %}
-                                        <div class="tableframe flex-grow-1" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
+                                        <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
                                   {% else %}
-                                        <div class="tableframe ajax-frame flex-grow-1" data-region="table">
+                                        <div class="tableframe ajax-frame flex-grow-1 d-flex flex-row" data-region="table">
                                 {% endif %}
                           {% else %}
                                 {% if form.errors or errors %}
-                                        <div class="tableframe ajax-frame flex-grow-1" data-region="table">
+                                        <div class="tableframe ajax-frame flex-grow-1 d-flex flex-row" data-region="table">
                                 {% endif %}
                         {% endif %}
                         {% block list_content_body %}
@@ -475,93 +475,95 @@
                                                 {% paginator %}
                                         {% endif %}
                                 {% endblock %}
-                                <div class="tabsort_panel" table-details="{% if table_details_height %}0{% endif %}">
-                                        {% if table_subtype and table_subtype == 'table_with_details' %}
-                                                <input type="hidden" name="table_row_pk" value="[[ERROR]]" />
-                                        {% endif %}
-                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
-                                                {% if table_type == 'datatable' %}
-                                                        <div class="ajax-frame ajax-link ajax-region" data-region="table" onloadeddata="table_loadeddata(event);">
-                                                  {% else %}
-                                                        {% if table_type == 'scrolled' or not table_type %}
-                                                                <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                <div class="flex-grow-1" style="position:relative;">
+                                        <div class="tabsort_panel flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
+                                                {% if table_subtype and table_subtype == 'table_with_details' %}
+                                                        <input type="hidden" name="table_row_pk" value="[[ERROR]]" />
+                                                {% endif %}
+                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
+                                                        {% if table_type == 'datatable' %}
+                                                                <div class="ajax-frame ajax-link ajax-region" data-region="table" onloadeddata="table_loadeddata(event);">
                                                           {% else %}
-                                                                <div class="tbl_scroll ajax-link" data-region="table" href="{{request.path}}">
+                                                                {% if table_type == 'scrolled' or not table_type %}
+                                                                        <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y: auto;" href="{{request.path}}">
+                                                                  {% else %}
+                                                                        <div class="tbl_scroll ajax-link" data-region="table" href="{{request.path}}">
+                                                                {% endif %}
                                                         {% endif %}
                                                 {% endif %}
-                                        {% endif %}
-                                        <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_parameters %}{% endblock %}>
-                                                {% block list_full_row_header %}
-                                                        <thead>
-                                                                <tr>
-                                                                        {% block list_row_header_start %}
-                                                                                {% if not no_id %}
-                                                                                        <th data-field="cid" data-sortable="true">
-                                                                                                {% id_num 'Id' %}
+                                                <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_parameters %}{% endblock %}>
+                                                        {% block list_full_row_header %}
+                                                                <thead>
+                                                                        <tr>
+                                                                                {% block list_row_header_start %}
+                                                                                        {% if not no_id %}
+                                                                                                <th data-field="cid" data-sortable="true">
+                                                                                                        {% id_num 'Id' %}
+                                                                                                </th>
+                                                                                        {% endif %}
+                                                                                {% endblock %}
+                                                                                {% block list_row_header %}{% endblock %}
+                                                                                {% block list_row_header_end %}
+                                                                                        <th data-field="caction">
+                                                                                                Action
                                                                                         </th>
-                                                                                {% endif %}
-                                                                        {% endblock %}
-                                                                        {% block list_row_header %}{% endblock %}
-                                                                        {% block list_row_header_end %}
-                                                                                <th data-field="caction">
-                                                                                        Action
-                                                                                </th>
-                                                                        {% endblock %}
-                                                                </tr>
-                                                        </thead>
-                                                {% endblock %}
-                                                {% block list_table %}
-                                                        {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
-                                                                <tbody>
-                                                                        {% if object_list %}
-                                                                                {% for object in object_list %}
-                                                                                        {% block list_full_row %}
-                                                                                                <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
-                                                                                                        {% block list_row_start %}
-                                                                                                                {% if not no_id %}
+                                                                                {% endblock %}
+                                                                        </tr>
+                                                                </thead>
+                                                        {% endblock %}
+                                                        {% block list_table %}
+                                                                {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
+                                                                        <tbody>
+                                                                                {% if object_list %}
+                                                                                        {% for object in object_list %}
+                                                                                                {% block list_full_row %}
+                                                                                                        <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
+                                                                                                                {% block list_row_start %}
+                                                                                                                        {% if not no_id %}
+                                                                                                                                <td>
+                                                                                                                                        <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                                                                                                {% block id_extra %}
+                                                                                                                                                        {% if get %}
+                                                                                                                                                                {% get_row object object.id %}
+                                                                                                                                                          {% else %}
+                                                                                                                                                                {% view_row object object.id %}
+                                                                                                                                                        {% endif %}
+                                                                                                                                                {% endblock %}
+                                                                                                                                        </div>
+                                                                                                                                </td>
+                                                                                                                        {% endif %}
+                                                                                                                {% endblock %}
+                                                                                                                {% block list_row %}
+                                                                                                                        <td>{{object}}</td>
+                                                                                                                {% endblock %}
+                                                                                                                {% block list_row_end %}
                                                                                                                         <td>
-                                                                                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                                                                                        {% block id_extra %}
-                                                                                                                                                {% if get %}
-                                                                                                                                                        {% get_row object object.id %}
+                                                                                                                                <div class="td_action" style="white-space:nowrap">
+                                                                                                                                        {% block list_row_actions %}
+                                                                                                                                                {% if readonly %}
+                                                                                                                                                        <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
                                                                                                                                                   {% else %}
-                                                                                                                                                        {% view_row object object.id %}
+                                                                                                                                                        {% row_actions %}
+                                                                                                                                                        edit;delete
+                                                                                                                                                        {% endrow_actions %}
                                                                                                                                                 {% endif %}
                                                                                                                                         {% endblock %}
                                                                                                                                 </div>
                                                                                                                         </td>
-                                                                                                                {% endif %}
-                                                                                                        {% endblock %}
-                                                                                                        {% block list_row %}
-                                                                                                                <td>{{object}}</td>
-                                                                                                        {% endblock %}
-                                                                                                        {% block list_row_end %}
-                                                                                                                <td>
-                                                                                                                        <div class="td_action" style="white-space:nowrap">
-                                                                                                                                {% block list_row_actions %}
-                                                                                                                                        {% if readonly %}
-                                                                                                                                                <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
-                                                                                                                                          {% else %}
-                                                                                                                                                {% row_actions %}
-                                                                                                                                                edit;delete
-                                                                                                                                                {% endrow_actions %}
-                                                                                                                                        {% endif %}
-                                                                                                                                {% endblock %}
-                                                                                                                        </div>
-                                                                                                                </td>
-                                                                                                        {% endblock %}
-                                                                                                </tr>
-                                                                                        {% endblock %}
-                                                                                        {% block list_row2 %}
-                                                                                        {% endblock %}
-                                                                                {% endfor %}
-                                                                        {% endif %}
-                                                                </tbody>
-                                                        {% endif %}
-                                                {% endblock %}
+                                                                                                                {% endblock %}
+                                                                                                        </tr>
+                                                                                                {% endblock %}
+                                                                                                {% block list_row2 %}
+                                                                                                {% endblock %}
+                                                                                        {% endfor %}
+                                                                                {% endif %}
+                                                                        </tbody>
+                                                                {% endif %}
+                                                        {% endblock %}
+                                                </table>
                                                 {% block list_table_footer %}
                                                 {% endblock %}
-                                        </table>
+                                        </div>
                                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
                                                 {% if table_type == 'scrolled' or not table_type %}
                                                         </div>
@@ -570,6 +572,7 @@
                                                 {% endif %}
                                         {% endif %}
                                 </div>
+                                {% block list_page_sidebar %}{% endblock %}
                         {% endblock %}
                         {% if standard_web_browser and standard_web_browser != 6 %}
                                 </div>
