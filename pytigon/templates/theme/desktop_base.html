@@ -171,7 +171,7 @@
 {% block login_footer %}
 {% endblock %}
 {% block menu_start %}
-        <div class="desktop_content">
+        <div class="desktop_content flex-grow-1 d-flex flex-column">
 {% endblock %}
 {% block topmenu_start %}
         {% comment %}
@@ -293,7 +293,7 @@
                         </li>
                 {% endif %}
         </ul>
-        <perfectscrollbar />
+        <perfectscrollbar></perfectscrollbar>
         <div id="menu" class="tab-content menu-content win-header">
 {% endblock %}
 {% block submenu %}
@@ -341,6 +341,7 @@
                           {% else %}
                                 <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
                         {% endif %}
+                        <div class="content-wrapper" style=background-color:#fff;>
                 {% endif %}
         {% endblock %}
         {% block form_bar %}
@@ -352,10 +353,10 @@
         {% if NO_TABS or application_type != 'modern' %}
                 {{block.super}}
           {% else %}
-                <div class="tabbable win-content">
-                        <div id="tab_tabs2">
+                <div class="tabbable win-content flex-grow-1">
+                        <div id="tab_tabs2 d-flex flex-column" style="height:100%">
                                 <ul class="nav nav-tabs win-header append-left mb-2" id="tabs2"></ul>
-                                <div class="tab-content" id="tabs2_content"></div>
+                                <div class="tab-content flex-grow-1" id="tabs2_content" style="height:100%"></div>
                         </div>
                 </div>
                 {{block.super}}
@@ -375,6 +376,7 @@
                 {{ form.media.js }}
         {% endif %}
         {% if not show_form %}
+                </div>
                 </div>
                 </body>
         {% endif %}

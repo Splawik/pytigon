@@ -61,7 +61,6 @@
         {{ block.super }}
 %% list_content_header_first_row
     % if content_limited_to and content_limited_to == 'min':
-        div style=height:5px;
     % else:
         {{ block.super }}
 

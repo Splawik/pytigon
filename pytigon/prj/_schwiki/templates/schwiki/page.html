@@ -1,0 +1,65 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load django_bootstrap5 %}
+{% block all %}
+        {% with table_type='datatable' show_title_bar=0 title="Wiki pages" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New wiki page" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Subject</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Menu</th>
+        <th>Operator</th>
+        <th>Modify time</th>
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.subject}}</td>
+        <td>{{object.name}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.menu}}</td>
+        <td>{{object.operator}}</td>
+        <td>{{object.update_time|isoformat}}</td>
+        <td>
+                {% if object.published %}
+                        <span class="fa fa-users"></span>
+                        {% if object.latest %}
+                                <span class="fa fa-check-square-o"></span>
+                        {% endif %}
+                  {% else %}
+                        {% if object.latest  %}
+                                <span class="fa fa-calendar-plus-o"></span>
+                          {% else %}
+                                <span class="fa fa-low-vision">
+                                </span>
+                        {% endif %}
+                {% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Wiki pages
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                subject,name,description,base_template,rights_group,prj_name,menu,menu_position,menu_icon,menu_icon_size
+        {% endform %}
+        <input type="hidden" name="direct_save" />
+{% endblock %}
+

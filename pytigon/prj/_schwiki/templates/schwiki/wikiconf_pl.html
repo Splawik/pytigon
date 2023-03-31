@@ -1,0 +1,54 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="33vh" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New config" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Wiki subject</th>
+        <th>Group of rigths to view</th>
+        <th>Group of rigths to edit</th>
+        <th>
+        backup_copies
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.subject}}</td>
+        <td>{{group_of_rights_to_view}}</td>
+        <td>{{group_of_rights_to_edit}}</td>
+        <td>
+        {{object.backup_copies}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                publish,Publish,[fa fa-users]
+        {% endrow_actions %}
+        {% row_actions %}
+                edit
+                field_edit/publish_fun,Publish function
+                field_edit/scss,SCSS
+                field_edit/page_header,Page header
+                field_edit/page_footer,Page footer
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block list_page_footer %}
+        {% row_details %}
+                *Attachements:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
+                Attachements2:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/
+        {% endrow_details %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                subject,group_of_rights_to_view,group_of_rights_to_edit,backup_copies,git_repository
+        {% endform %}
+{% endblock %}
+

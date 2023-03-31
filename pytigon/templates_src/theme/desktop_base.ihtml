@@ -178,7 +178,7 @@
 %% login_footer
 
 %% menu_start
-    <div class="desktop_content">
+    <div class="desktop_content flex-grow-1 d-flex flex-column">
 
 %% topmenu_start
     % comment:
@@ -262,7 +262,7 @@
                 a class=system_menu,,,href={{base_path}}schsys/login/,,,target=_top,,,title=_(Login)
                     {% icon "fa-sign-in fa-lg" %}
 
-    <perfectscrollbar />
+    <perfectscrollbar></perfectscrollbar>
     <div id="menu" class="tab-content menu-content win-header">
 
 %% submenu
@@ -305,6 +305,7 @@
                 <body>
             % else:
                 <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
+            <div class="content-wrapper" style=background-color:#fff;>
     %% form_bar
 
 
@@ -315,10 +316,10 @@
     % if NO_TABS or application_type != 'modern':
         {{block.super}}
     % else
-        div class=tabbable win-content
-            div id=tab_tabs2
+        div class=tabbable win-content flex-grow-1
+            div id=tab_tabs2 d-flex flex-column,,,style=height:100%
                 ul class=nav nav-tabs win-header append-left mb-2,,,id=tabs2
-                div class=tab-content,,,id=tabs2_content
+                div class=tab-content flex-grow-1,,,id=tabs2_content,,,style=height:100%
         {{block.super}}
 
 %% body_desktop
@@ -332,6 +333,7 @@
     % if standard_web_browser:
         {{ form.media.js }}
     % if not show_form:
+        </div>
         </div>
         </body>
 

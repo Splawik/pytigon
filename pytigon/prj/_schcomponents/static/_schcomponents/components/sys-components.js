@@ -221,7 +221,7 @@ try {
 stub15_context = (new DefineWebComponent("ptig-sliderline", false));
 comp = stub15_context.__enter__();
 try {
-    comp.options["template"] = '<div style=\"width:100%;height:7px;cursor:move;background-color:#fb0;\"></div>\n' +
+    comp.options["template"] = '<div class=\"slider-line\" style=\"width:100%;height:7px;cursor:move;\"></div>\n' +
     '\n' +
     '';
     drag_element = function flx_drag_element (elmnt, related_element, multiplier, vertical) {
@@ -275,7 +275,8 @@ try {
         if (((_pyfunc_truthy(component.hasAttribute("vertical"))) && ((_pyfunc_op_equals(component.getAttribute("vertical"), "1"))))) {
             stub17_ = [div.style.height, div.style.width];
             div.style.width = stub17_[0];div.style.height = stub17_[1];
-            div.style.backgroundColor = "#eee";
+            _pymeth_remove.call(div.classList, "slider-line");
+            div.classList.add("v-slider-line");
             drag_element(div, elem, 1, true);
         } else {
             drag_element(div, elem, 1, false);

@@ -749,7 +749,7 @@ div.td_information {
 
 .tabsort-toolbar-expand {
   position: absolute;
-  top: 3px;
+  top: 4px;
   left: 3px;
   transform: rotate(0deg);
   transition: .3s;
@@ -783,10 +783,10 @@ a, button {
   outline: 0 !important; }
 
 .tabsort_panel {
-  margin-top: 5px !important;
-  position: absolute;
-  top: 3px;
-  bottom: 3px; }
+  position: absolute; }
+
+.modal-body .tabsort_panel {
+  position: relative; }
 
 .form2columns label {
   margin-bottom: 0px; }
@@ -909,3 +909,9 @@ table.layout0 tr td {
 
 .v-row-details {
   padding: 10px; }
+
+.slider-line {
+  background-color: #fb0; }
+
+.v-slider-line {
+  background-color: #eee; }
