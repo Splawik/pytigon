@@ -3,7 +3,7 @@ import sys
 import json
 from urllib.parse import urlparse
 
-PRJ_TITLE = "Manage projects and applications"
+PRJ_TITLE = "Manage projects"
 PRJ_NAME = "schmanage"
 THEMES = ["tablet_modern", "tablet_modern", "auto"]
 
@@ -179,7 +179,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.26 09:17:58"
+GEN_TIME = "2023.03.31 18:59:24"
 
 
 for key, value in os.environ.items():

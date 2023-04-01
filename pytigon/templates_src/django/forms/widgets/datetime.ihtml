@@ -1,2 +1,5 @@
-{% load exfiltry %}
-<input type="datetime-local" name="{{ widget.name }}" {% if widget.value != None %} value="{{ widget.value|sysisoformat }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
+% load exfiltry
+% load l10n
+
+% localize off:
+    <input type="datetime-local" name="{{ widget.name }}" {% if widget.value != None %} value="{{ widget.value|sysisoformat }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>

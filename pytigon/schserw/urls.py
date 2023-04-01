@@ -285,10 +285,6 @@ for item in _urlpatterns:
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
 
-for item in tmp:
-    item.pattern._route = item.pattern._route.replace("../", "")
-    _urlpatterns.append(item)
-
 if len(settings.PRJS) > 0:
     for prj in settings.PRJS:
         if prj.startswith("_"):
@@ -339,3 +335,13 @@ else:
             name="start",
         )
         _urlpatterns.append(u)
+
+for item in tmp:
+    item.pattern._route = item.pattern._route.replace("../", "")
+
+    for item2 in _urlpatterns:
+        if hasattr(item2.pattern, "_route") and item2.pattern._route == "":
+            _urlpatterns.remove(item2)
+            break
+
+    _urlpatterns.append(item)

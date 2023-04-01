@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>Wczytywanie dokumentu odf</h1>
+        <form action="./" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                        {{form}}
+                </table>
+                <input type="submit" value="Wczytaj dokument" />
+        </form>
+        <br />
+        <h2>Składnia znaczników w pliku odf:</h2>
+        <br />
+        Pierwszy znak w komórce arkusza:<br>
+            * - wynik w postaci tekstowej<br>
+            : - wynik jako liczba<br>
+            @ - wynik jako formuła<br>
+        Pierwszy znak w notatce:<br>
+            !   - przeniesienie wyrażenia do poziomu aktualnej komórki <br>
+                  element przed komórką oddzielony od elementu za komórką znakiem @<br>
+                  !{% for i in lista %}@{%endfor%}<br>
+           !!   - przeniesienie wyrażenia do poziomu aktualnego wiersza <br>
+         ! !!   - przeniesienie wyrażenia do poziomu aktualnego arkusza<br>
+            <br>
+        W dowolnym miejscu składnia zgodna z django:<br>
+            {&#123;zmienna&#125;], &#123;% blok %&#125; itp. <br>
+        Dodatkowo wyrażenie: _start_ zamieniane jest na: {&#123;<br>
+                             _end_ zamieniane jest na: &#125;}<br>
+                            <br>
+        <br>
+{% endblock %}
+

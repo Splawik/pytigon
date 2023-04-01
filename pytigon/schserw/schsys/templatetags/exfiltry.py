@@ -134,6 +134,7 @@ def last_elem(value, sep="/"):
     """split value and return last element"""
     return value.split(sep)[-1]
 
+
 @register.filter(name="penultimate_elem")
 def penultimate_elem(value, sep="/"):
     """split value and return penultimate element"""
@@ -142,6 +143,7 @@ def penultimate_elem(value, sep="/"):
         return x[-2]
     else:
         return ""
+
 
 @register.filter(name="first_section")
 def first_section(html):
@@ -377,7 +379,18 @@ def isoformat(value):
 def sysisoformat(value):
     if value:
         try:
-            iso = value.isoformat()[:19].replace(" ", "T")
+            if type(value) == str:
+                x = value[:10].replace("-", " ").replace(".", " ").split(" ")
+                if len(x[0]) == 4:
+                    x2 = value[:10]
+                elif len(x[2]) == 4:
+                    x2 = x[2] + "-" + x[1] + "-" + x[0]
+                else:
+                    x2 = value[:10]
+                iso = x2 + value[10:].replace(" ", "T")
+            else:
+                value2 = value
+                iso = value2.isoformat()[:19].replace(" ", "T")
             return iso
         except:
             return value.replace(" ", "T")

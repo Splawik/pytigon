@@ -1,0 +1,195 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with form_info=False show_form=False form_width=470 form_height=665 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block jquery_ovr2 %}
+        var options = {
+            success: RefreshWin2
+        }
+        function RefreshWin2(responseText, statusText) {
+            location.href = "{{base_path}}schwiki/{{subject}}/{{page_name}}/view/"
+        }
+{% endblock %}
+{% block pythoncode %}
+        <script language="python">
+
+        def init_form(self):
+            self.GetParent().register_signal(self, "refresh_controls")
+
+        def refresh_controls(self):
+            print("refresh_controls")
+            self.GetParent().refresh_html()
+            print("refresh_controls_2")
+
+</script>
+        {% if standard_web_browser %}
+                <link rel="Stylesheet" type="text/css" href="^auto/schwiki/css/wiki.css">
+                </link>
+        {% endif %}
+{% endblock %}
+{% block table_title %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block _nav %}
+{% endblock %}
+{% block form_rect %}
+        width: 600, height: 890
+{% endblock %}
+{% block form_bar %}
+        {% if not standard_web_browser %}
+                {% if perms.schwiki.add_page %}
+                        <table width="100%" class="form_bar">
+                                <tr>
+                                        {% if False %}
+                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                        <CTRLCLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRLCLOSEBUTTON>
+                                                </td>
+                                        {% endif %}
+                                        {% if content %}
+                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                        <CTRLNOBG_BUTTON width="36" height="36" href="/schwiki/{{subject}}/{{page_name}}/edit/" label="edytuj stronę" SRC="client://apps/accessories-text-editor.png"></CTRLNOBG_BUTTON>
+                                                </td>
+                                          {% else %}
+                                                <td cellpadding="0" align="right" valign="top" width="110" height="36">
+                                                        <CTRLNOBG_BUTTON width="36" height="36" href="/schwiki/{{subject}}/{{page_name}}/edit/" label="edytuj stronę jako wiki" SRC="client://apps/accessories-character-map.png"></CTRLNOBG_BUTTON>
+                                                        <CTRLNOBG_BUTTON width="36" height="36" href="/schwiki/{{subject}}/{{page_name}}/edit/" label="edytuj stronę jako ihtml" SRC="client://actions/format-indent-more.png"></CTRLNOBG_BUTTON>
+                                                        <CTRLNOBG_BUTTON width="36" height="36" href="/schwiki/{{subject}}/{{page_name}}/edit/" label="edytuj stronę jako html" SRC="client://apps/accessories-text-editor.png"></CTRLNOBG_BUTTON>
+                                                </td>
+                                        {% endif %}
+                                        <td width="5"></td>
+                                        <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                                <span class="form_title">
+                                                        {% block form_title %}
+                                                                {{title|wiki_href|safe}}
+                                                        {% endblock %}
+                                                </span>
+                                        </td>
+                                </tr>
+                        </table>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block content_start %}
+        <div id="{{uuid}}" class="flexible_size content ajax-region ajax-frame wiki-frame" related-object='{{uuid}}'>
+                <div class="ajax-link" href="{{ request.get_full_path|append_get_param:'only_content=1' }}" data-region="page">
+{% endblock %}
+{% block content_end %}
+                </div>
+        </div>
+{% endblock %}
+{% block list_content_header %}
+        {% if not standard_web_browser == 6 %}
+                {% if standard_web_browser and perms.schwiki.add_page %}
+                        <a data-bs-toggle="collapse" href="#{{uuid}}collapse" class="wiki_collapse_link" accesskey="o">
+                                <span class="fa fa-arrows-v fa-fw"></span>
+                        </a>
+                        <div id="{{uuid}}collapse" class="panel-collapse collapse wiki_collapse">
+                                {{ block.super }}
+                        </div>
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_title %}
+        {% if not standard_web_browser == 6 %}
+                {% if perms.schwiki.add_page %}
+                        <h4 style="white-space:nowrap;">
+                        {{subject}}: {{description}}
+                        </h4>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_actions %}
+        {% if not standard_web_browser == 6 %}
+                {% if perms.schwiki.add_page %}
+                        <table width="100%">
+                                <tr>
+                                        <td class="wiki_view_actions" style="position:absolute;top:0px;width:100%;border:0px;padding:0px;text-align:right;padding-right:2rem;">
+                                                {% action "edit" "Edit page" url="{{base_path}}schwiki/"|append_str:subject|append_str:"/"|append_str:page_name|append_str:"/edit/" tag_class="+btn-sm" %}
+                                                {% with ap="wiki" object_name="Page" id=object.id format='txt' %}
+                                                        {% action "any_field_edit-inline/content_src" "Edit page source" attrs="data-inline-position='^tr:after' accesskey=' '" tag_class="+btn-sm" %}
+                                                {% endwith %}
+                                        </td>
+                                </tr>
+                        </table>
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block form %}
+        {% if perms.schwiki.add_page %}
+                {{ block.super }}
+          {% else %}
+                {% markdown2html content "" subject %}
+        {% endif %}
+{% endblock %}
+{% block list_content_body %}
+        {% if not standard_web_browser == 6 and wiki_path_desc %}
+                {% if standard_web_browser %}
+                        <ol class="breadcrumb wiki-breadcrumb">
+                                {% for wiki_elem in wiki_path_desc %}
+                                        {% if wiki_elem|lower == description|lower %}
+                                                <li class="breadcrumb-item active">
+                                                        {{ wiki_elem }}
+                                                </li>
+                                          {% else %}
+                                                <li class="breadcrumb-item">
+                                                        {% markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
+                                                </li>
+                                        {% endif %}
+                                {% endfor %}
+                                {% if wiki_path_desc and not description|lower in wiki_path_desc %}
+                                        <li class="breadcrumb-item active">
+                                                {{ description }}
+                                        </li>
+                                {% endif %}
+                        </ol>
+                  {% else %}
+                        <table width="100%">
+                                <tr bgcolor="#{{color_background_0_9}}">
+                                        <td></td>
+                                </tr>
+                                <tr>
+                                        <td bgcolor="#{{color_background_0_9}}">
+                                                {% for wiki_elem in wiki_path_desc %}
+                                                        {% if wiki_elem|lower == description|lower %}
+                                                                {{ wiki_elem }}
+                                                          {% else %}
+                                                                {% markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject %}
+                                                                /
+                                                        {% endif %}
+                                                {% endfor %}
+                                        </td>
+                                </tr>
+                                <tr><td></td></tr>
+                        </table>
+                        <br>
+                        </br>
+                {% endif %}
+        {% endif %}
+        <div class="panel-body container-fluid wiki_container wiki_{{page_name|lower}} wiki_{{conf.subject|lower}}">
+                {% if content %}
+                        {% if wiki_path %}
+                                {% markdown2html content wiki_path subject %}
+                          {% else %}
+                                {% markdown2html content "" subject %}
+                        {% endif %}
+                  {% else %}
+                        This page do not exists yet!
+                {% endif %}
+                {% if conf %}
+                        {% if conf.css %}
+                                <style>
+                                        {{conf.css}}
+                                </style>
+                        {% endif %}
+                {% endif %}
+        </div>
+{% endblock %}
+

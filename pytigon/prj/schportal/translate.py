@@ -1,0 +1,5 @@
+_("Edit page")
+_("Edit page source")
+_("This page do not exists yet!")
+_("New attachement")
+_("Download")

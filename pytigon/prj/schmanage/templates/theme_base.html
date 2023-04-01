@@ -14,7 +14,7 @@
                         <tr><td> csrf_token </td><td> {%csrf_token%} </td></tr>
                         <tr><td> gui_style </td><td> modern(None) </td></tr>
                         <tr><td> hybrid </td><td> 0 </td></tr>
-                        <tr><td> title  </td><td> Manage projects and applications </td></tr>
+                        <tr><td> title  </td><td> Manage projects </td></tr>
                         <tr><td> start_page </td><td> None </td></tr>
                         <tr><td> plugins </td><td> None </td></tr>
                 </table>
@@ -29,8 +29,8 @@
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
-                {% component 'schcomponents/components/ptig-xterm.js' %}
-                {% component 'schcomponents/components/ptig-codeeditor.js' %}
+                {% component '_schcomponents/components/ptig-xterm.js' %}
+                {% component '_schcomponents/components/ptig-codeeditor.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state={};

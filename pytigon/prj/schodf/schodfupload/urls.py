@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path("odf_upload/$", views.odf_upload, {}, name="schodfupload_odf_upload"),
+    path("odf_upload/", views.odf_upload, {}, name="schodfupload_odf_upload"),
     path("form/OdfUploadForm/", views.view_odfuploadform, {}),
 ]
 

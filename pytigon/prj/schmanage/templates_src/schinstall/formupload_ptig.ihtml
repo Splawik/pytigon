@@ -36,9 +36,10 @@
             % inline_form:
                 .accept_license
     % else:
-        input type=hidden,,,name=status,,,id=id_status,,,value=
-        % inline_form:
-            .ptig
+        div class=m-3
+            input type=hidden,,,name=status,,,id=id_status,,,value=
+            % inline_form:
+                .ptig
 
 %% form_content_button
     button type=submit,,,value=_(Next),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Next)

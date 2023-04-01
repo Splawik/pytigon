@@ -16,7 +16,7 @@
             [ csrf_token | {%csrf_token%} ]
             [ gui_style | modern(None) ]
             [ hybrid | 0 ]
-            [ title  | Manage projects and applications ]
+            [ title  | Manage projects ]
             [ start_page | None ]
             [ plugins | None ]
 % else:    
@@ -35,8 +35,8 @@
     %% body_footer_scripts
         {{block.super}}
         
-        {% component 'schcomponents/components/ptig-xterm.js' %}
-        {% component 'schcomponents/components/ptig-codeeditor.js' %}
+        {% component '_schcomponents/components/ptig-xterm.js' %}
+        {% component '_schcomponents/components/ptig-codeeditor.js' %}
         
         
 

@@ -1,0 +1,140 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_edit %}
+                <script language="python">
+            def Init(self):
+                self.retdate = None
+                self.param.EventObject=self
+
+            def OnBeforeButtonClick(self):
+                self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
+</script>
+          {% else %}
+                <script language="python">
+            def init_form(self):
+                self.add_field.Bind(wx.EVT_BUTTON, self.OnClick)
+
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "field_up":"client://actions/go-up.png",
+                        "field_down":"client://actions/go-down.png",
+                        "field_duplicate":"client://actions/go-bottom.png"
+                    }
+                    child.set_bitmaps(bitmaps)
+
+            def OnClick(self, event):
+                x = self.field_list.GetValue()
+                http = wx.GetApp().get_http(self.add_field)
+                adr = "{{request.path}}"+self.add_field.href+x+"/add/"
+                ret = http.get(self, str(adr))
+                self.new_child_page(ret.new_url)
+
+
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+                    return True
+                elif 'field_duplicate' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        self.tabsort.grid.goto_last_row()
+                    return True
+                else:
+                    return None
+
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=1 title="Fields" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_header %}
+        <table>
+                <tr>
+                        <th>
+                                <label for="id_field_list">Select field type:</label>
+                        </th>
+                        <td width="210">
+                                <select name="field_list" id="id_field_list" width="200">
+                                        {% for item in object_list.model|choices_from_field:"type" %}
+                                                <option value="{{item.0}}">
+                                                        {{item.0}}
+                                                </option>
+                                        {% endfor %}
+                                </select>
+                        </td>
+                        <td align="left">
+                                {% action "add_field" "New field" url="../../../" %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Label</th>
+        <th>Type</th>
+        <th>Parameters</th>
+        <th>Initial</th>
+        <th>Widget</th>
+        <th>
+        Required
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.label}}</td>
+        <td>{{object.type}}</td>
+        <td>{{object.param|default_if_none:""}}</td>
+        <td>{{object.initial|default_if_none:""}}</td>
+        <td>{{object.widget|default_if_none:""}}</td>
+        <td align="center">
+        {% if object.required %}X{% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {{block.super}}
+        {% if not forloop.first %}
+                {% row_actions %}
+                field_up,Move up,[|client://actions/go-up.png]
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down,[|client://actions/go-down.png]
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+        field_duplicat,Duplicate,[|client://actions/go-bottom.png]
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Table field list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "name", "required", "label", "initial", "widget", "help_text", "error_messages", "param"
+        {% endform %}
+        <tr>
+                <td></td>
+                <td>
+                        {{form.type.as_hidden}}
+                </td>
+        </tr>
+{% endblock %}
+

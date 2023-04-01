@@ -113,6 +113,9 @@
 #tabs2_content {
   padding-top: 10 px; }
 
+#body_desktop {
+  height: calc(100% - 10px) important; }
+
 body {
   overflow-x: hidden;
   overflow-y: auto;
