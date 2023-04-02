@@ -50,7 +50,7 @@
                         % if request.user|user_can_change_password:
                             a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
-                        a class=dropdown-item system_menu,,,href={{base_path}}schsetup/,,,title=_(Setup),,,target=_top..._(Setup)
+                        a class=dropdown-item system_menu,,,href={{base_path}}schmanage/,,,title=_(Manage),,,target=_top..._(Manage)
                     %% system_menu
     % else:
         % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:

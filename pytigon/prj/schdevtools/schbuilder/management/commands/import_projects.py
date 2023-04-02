@@ -13,8 +13,8 @@ from schbuilder.models import SChAppSet
 
 PRJS_TO_IMPORT =  [
     'schdevtools', #prepare with initial data
-    'schsetup', 'schportal', 'schpytigondemo', 'schwebtrapper', 'scheditor', #prepare db but without initial data
-    'schcomponents', 'scheditor', '_schdata', '_schremote', '_schtools', '_schwiki', '_schserverless', #without db
+    'schmanage', 'schscripts', '_schsetup', '_schot', 'schportal', 'schpytigondemo', 'schwebtrapper', 'scheditor', #prepare db but without initial data
+    '_schcomponents', 'scheditor', '_schdata', '_schremote', '_schtools', '_schwiki', '_schserverless', #without db
 ]    
 
 
