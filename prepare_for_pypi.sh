@@ -13,9 +13,9 @@ python ptig.py manage_schdevtools import_projects
 python ptig.py manage_schpytigondemo makeallmigrations
 python ptig.py manage_schpytigondemo migrate
 python ptig.py manage_schpytigondemo createautouser
-python ptig.py manage_schsetup makeallmigrations
-python ptig.py manage_schsetup migrate
-python ptig.py manage_schsetup createautouser
+python ptig.py manage_schmanage makeallmigrations
+python ptig.py manage_schmanage migrate
+python ptig.py manage_schmanage createautouser
 python ptig.py manage_schwebtrapper makeallmigrations
 python ptig.py manage_schwebtrapper migrate
 python ptig.py manage_schwebtrapper createautouser
