@@ -1,6 +1,5 @@
-_("Company")
-_("Facility")
-_("Name")
+_("Measurement point")
+_("Data")
 _("Status")
 _("MP state:  <i>{{ object.measurementpointstate.jsondata }}</i><br />")
 _("MP control queue status: <i>{{ object.mpointcontrolqueuestatus.jsondata }}</i><br />")
