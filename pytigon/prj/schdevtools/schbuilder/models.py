@@ -28,7 +28,7 @@ from schelements.models import *
 
 from schadmin.models import *
 
-# from schwiki.models import *
+from schwiki.models import *
 
 
 import os.path

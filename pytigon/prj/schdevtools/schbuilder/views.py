@@ -1181,7 +1181,6 @@ def build_prj(pk):
                 static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
 
                 if prj2.custom_tags:
-
                     for pos in (
                         prj2.custom_tags.replace("\n", ";").replace("\r", "").split(";")
                     ):
@@ -1801,7 +1800,7 @@ def update(request):
         "schdevtools",
         "schsetup",
         "schcomponents",
-#        "_schwiki",
+        "_schwiki",
         "_schdata",
         "_schtools",
         "_schall",

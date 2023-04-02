@@ -7,7 +7,7 @@ APPS = [
     "_schtools.schsimplescripts",
     "_schdata.schelements",
     "_schsetup.schadmin",
-    #    "_schwiki.schwiki",
+    "_schwiki.schwiki",
 ]
 APPS_EXT = []
 PUBLIC = True

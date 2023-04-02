@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 PRJ_TITLE = "Developer tools"
 PRJ_NAME = "schdevtools"
-THEMES = ["tablet_modern", "desktop_modern", "smartfon_standard"]
+THEMES = ["tablet_modern", "tablet_standard", "smartfon_standard"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
 
@@ -91,10 +91,23 @@ WEBPUSH_SETTINGS = {
 GUI_COMMAND_LINE = "--no_splash --websocket_id=/schbuilder/clock/channel/"
 NUMBER_OF_WORKERS = 1
 NO_ASGI = True
+
 INSTALLED_APPS.append("explorer")
 
 EXPLORER_CONNECTIONS = {"Default": "default"}
 EXPLORER_DEFAULT_CONNECTION = "default"
+
+
+if platform_name() != "Android":
+    INSTALLED_APPS.append("easy_thumbnails")
+
+    THUMBNAIL_PROCESSORS = (
+        "easy_thumbnails.processors.colorspace",
+        "easy_thumbnails.processors.autocrop",
+        #'easy_thumbnails.processors.scale_and_crop',
+        #'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+        "easy_thumbnails.processors.filters",
+    )
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -276,7 +289,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.04.02 09:49:40"
+GEN_TIME = "2023.04.02 14:06:06"
 OFFLINE_SUPPORT = True
 
 
@@ -295,4 +308,3 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
-
