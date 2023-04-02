@@ -1,0 +1,15 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='task_test' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block content %}
+        <ptig-task websocket_href="/schtasks/show_task_events/channel/" task_id="{{id}}">
+                <div class="data"></div>
+        </ptig-task>
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "new item" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <th>
+        {{object.name}}
+        </th>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                
+        {% endform %}
+{% endblock %}
+

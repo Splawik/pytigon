@@ -40,6 +40,7 @@ from schadmin.models import *
 
 
 from tables_demo.models import *
+from django.forms import fields as form_fields
 
 
 GenreChoices = [
@@ -72,7 +73,7 @@ class Album(models.Model):
         "Artist", null=True, blank=True, editable=True, max_length=64
     )
     description = models.CharField(
-        "Description", null=False, blank=False, editable=True, max_length=128
+        "Description", null=False, blank=False, editable=True, max_length=256
     )
     genre = models.CharField(
         "Genre",
@@ -105,6 +106,17 @@ class Album(models.Model):
             else:
                 queryset = queryset.order_by("-" + sort)
         return queryset
+
+    def get_form_class(self, view, request, create):
+        base_form = view.get_form_class()
+
+        class form_class(base_form):
+            class Meta(base_form.Meta):
+                widgets = {
+                    "description": form_fields.Textarea(attrs={"cols": 80, "rows": 3}),
+                }
+
+        return form_class
 
 
 admin.site.register(Album)

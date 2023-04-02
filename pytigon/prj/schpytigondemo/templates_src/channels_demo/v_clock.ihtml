@@ -11,3 +11,4 @@
 
 %% content
     ptig-clock-channel websocket_href={{base_path}}channels_demo/clock/channel/
+    .See channel events in developer tools in console. You should run web server with asgi support!

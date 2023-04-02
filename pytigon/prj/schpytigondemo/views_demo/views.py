@@ -145,3 +145,40 @@ def plotly_example(request, **argv):
     buf = StringIO()
     fig.write_html(buf, include_plotlyjs=False, full_html=False)
     return {"plotly_content": buf.getvalue()}
+
+
+@dict_to_template("views_demo/v_seaborn_example.html")
+def seaborn_example(request, **argv):
+
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import io
+
+    df = pd.DataFrame(
+        {
+            "Date": [
+                "2022-01-01",
+                "2022-02-01",
+                "2022-03-01",
+                "2022-04-01",
+                "2022-05-01",
+                "2022-06-01",
+            ],
+            "Attendance": [88, 78, 90, 68, 84, 75],
+        }
+    )
+    df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
+
+    ax = sns.barplot(x="Date", y="Attendance", data=df)
+    ax.figure.set_size_inches(7, 8)
+    xticks = ax.get_xticks()
+    ax.set_xticklabels(
+        [pd.to_datetime(tm, unit="ms").strftime("%Y-%m-%d") for tm in xticks],
+        rotation=45,
+    )
+    # plt.xticks(rotation=20)
+
+    imgdata = io.StringIO()
+    ax.get_figure().savefig(imgdata, format="svg")
+    return {"img_svg": imgdata.getvalue()}

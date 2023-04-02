@@ -1,0 +1,39 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "new track" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Parent</th>
+        <th>Name</th>
+        <th>
+        Param
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.parent }}</td>
+        <td>{{ object.name }}</td>
+        <td>
+        {{ object.param }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                parent,name,param,params
+        {% endform %}
+{% endblock %}
+

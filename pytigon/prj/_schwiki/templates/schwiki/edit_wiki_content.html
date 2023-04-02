@@ -1,0 +1,111 @@
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        {% if standard_web_browser %}
+                {% with title=page.name %}
+                        {{ block.super }}
+                {% endwith %}
+          {% else %}
+                <div class="container wiki_editor" style="width:calc( 100vw - 370px );">
+                        {% get_table_row "wikiobj_id" "wiki" "PageObjectsConf" "name__icontains" label="Type of wiki object" filter="1" is_get_button=False %}
+                        {% action "new_object" "Modify or create a wiki object" url="{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}" target="run_script" %}
+                        {% with title=page.name %}
+                                {{ block.super }}
+                        {% endwith %}
+                </div>
+        {% endif %}
+{% endblock %}
+{% block edit_area %}
+        <move-attr target-tag="div.modal-dialog" class="+modal-max"></move-attr>
+        <move-attr target-tag="div" class="maximized"></move-attr>
+        <div class="refresh_after_close" style="width:calc( 100% - 20px );height:calc( 100vh - 7.8rem );position:relative;">
+                <ptig-codeeditor class="flexible2_size" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}" width="100%" height="100%" offset="3.rem">
+                        <div class="btn-toolbar" role="toolbar" style="background-color:var(--bs-primary);">
+                                <div class="btn-group me-2" role="group">
+                                        <button data-bind="disabled:!changed;onclick:on_save" class="btn btn-danger shadow-none border-1" type="button">
+                                                <i class="fa fa-floppy-o"></i>
+                                                Save
+                                        </button>
+                                </div>
+                                <insert-object app_path="{{app_path}}" page_id="{{object.id}}" href="{{base_path}}schwiki/edit_page_object/" class="ajax-region ajax-link ajax-frame" data-region="json">
+                                        <div class="btn-group me-2" role="group">
+                                                <button data-bind="onclick:on_properties" class="btn text-white shadow-none border-0" type="button" name="properties"  title="Properties">
+                                                        <i class="fa fa-wpforms"></i>
+                                                        Properties
+                                                </button>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                                {% with "Multimedia:img,svg,video,graphviz,plot;Block:row,col,div,block,ihtml,html,ajax-frame,super-block;Other:table,csv" as segments %}
+                                                        {% for segment in segments|split %}
+                                                                {% with segment|split:":" as part %}
+                                                                        <div class="dropdown">
+                                                                                <button class="btn dropdown-toggle text-white shadow-none border-0" data-bs-toggle="dropdown" style="font-size:1rem;">
+                                                                                        {% if part.0 == 'Multimedia' %}
+                                                                                                <i class="fa fa-camera"></i>
+                                                                                        {% endif %}
+                                                                                        {% if part.0 == 'Block' %}
+                                                                                                <i class="fa fa-angle-double-right"></i>
+                                                                                        {% endif %}
+                                                                                        {% if part.0 == 'Other' %}
+                                                                                                <i class="fa fa-ellipsis-v"></i>
+                                                                                        {% endif %}
+                                                                                        {{ part.0 }}
+                                                                                </button>
+                                                                                <ul class="dropdown-menu">
+                                                                                        {% for item in object.get_wiki_objects %}
+                                                                                                {% if item.name in part.1 %}
+                                                                                                        <li>
+                                                                                                                <a class="dropdown-item" data-bind="onclick:on_insert" name="{{item.name}}" show_form="{% if item.show_form %}1{% else %}0{% endif %}" inline="{% if item.inline_content %}1{% else %}0{% endif %}" data-region="insert_object" title="Edit: {{item.name}}">
+                                                                                                                        <i class="{{item.icon}}"></i>
+                                                                                                                        {{ item.name }}
+                                                                                                                </a>
+                                                                                                        </li>
+                                                                                                {% endif %}
+                                                                                        {% endfor %}
+                                                                                        {% if part.0 == 'Other' %}
+                                                                                                {% for item in object.get_wiki_objects %}
+                                                                                                        {% if not item.name in segments %}
+                                                                                                                <li>
+                                                                                                                        <a class="dropdown-item" data-bind="onclick:on_insert" name="{{item.name}}" show_form="{% if item.show_form %}1{% else %}0{% endif %}" inline="{% if item.inline_content %}1{% else %}0{% endif %}" data-region="insert_object" title="Edit: {{item.name}}">
+                                                                                                                                <i class="{{item.icon}}"></i>
+                                                                                                                                {{ item.name }}
+                                                                                                                        </a>
+                                                                                                                </li>
+                                                                                                        {% endif %}
+                                                                                                {% endfor %}
+                                                                                        {% endif %}
+                                                                                </ul>
+                                                                        </div>
+                                                                {% endwith %}
+                                                        {% endfor %}
+                                                {% endwith %}
+                                                {% with object.get_user_blocks as actions %}
+                                                        {% if actions %}
+                                                                <div class="dropdown">
+                                                                        <button class="btn dropdown-toggle text-white shadow-none border-0" data-bs-toggle="dropdown" style="font-size:1rem;">
+                                                                                <i class="fa fa-camera"></i>
+                                                                                User defined blocks
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                                {% for item_name in actions %}
+                                                                                        <li>
+                                                                                                <a class="dropdown-item" data-bind="onclick:on_insert" name="{{item_name}}" show_form="0" inline="1" data-region="insert_object">
+                                                                                                        {{ item_name }}
+                                                                                                </a>
+                                                                                        </li>
+                                                                                {% endfor %}
+                                                                        </ul>
+                                                                </div>
+                                                        {% endif %}
+                                                {% endwith %}
+                                        </div>
+                                </insert-object>
+                        </div>
+                </ptig-codeeditor>
+        </div>
+{% endblock %}
+{% block dialog_type %}
+        modal-lg
+{% endblock %}
+

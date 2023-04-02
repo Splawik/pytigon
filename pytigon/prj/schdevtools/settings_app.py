@@ -276,7 +276,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.03.29 15:01:18"
+GEN_TIME = "2023.04.02 09:49:40"
 OFFLINE_SUPPORT = True
 
 
@@ -295,3 +295,4 @@ for key, value in os.environ.items():
                 print("invalid json syntax for environment variable: %s", key)
         else:
             globals()[key2] = value
+

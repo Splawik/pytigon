@@ -1801,7 +1801,7 @@ def update(request):
         "schdevtools",
         "schsetup",
         "schcomponents",
-        "_schwiki",
+#        "_schwiki",
         "_schdata",
         "_schtools",
         "_schall",

@@ -28,6 +28,8 @@ from schelements.models import *
 
 from schadmin.models import *
 
+# from schwiki.models import *
+
 
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip

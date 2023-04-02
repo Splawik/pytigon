@@ -60,5 +60,11 @@ Urls = (
         """png://actions/format-justify-center.png""",
     ),
     ("plotly", _("plotly example"), None, """png://actions/edit-clear.png"""),
+    (
+        "seaborn",
+        _("seaborn example"),
+        None,
+        """png://mimetypes/x-office-spreadsheet-template.png""",
+    ),
 )
 UserParam = {}

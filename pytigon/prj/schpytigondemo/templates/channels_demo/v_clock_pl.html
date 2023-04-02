@@ -1,0 +1,13 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='clock-channel-example' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block content %}
+        <ptig-clock-channel websocket_href="{{base_path}}channels_demo/clock/channel/"></ptig-clock-channel>
+        See channel events in developer tools in console. You should run web server with asgi support!
+{% endblock %}
+

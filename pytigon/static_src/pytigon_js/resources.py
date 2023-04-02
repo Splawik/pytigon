@@ -89,11 +89,11 @@ INLINE = """
 """
 
 INLINE_BASE = """
-<div style='position:absolute;z-index:1001;'>
+<div style='position:absolute;z-index:1001;right:1rem;left:1rem;'>
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class="modal-content ajax-region inline-content" data-region="error">
-            <div class='modal-content'>
+            <div class='modal-content' style='min-height: 50vh;'>
                 <div class='modal-header'>
                     <h4 class='modal-title'>{title}</h4>
                     <div class='dialog-buttons>
@@ -108,8 +108,8 @@ INLINE_BASE = """
                         </button>
                     </div>
                 </div>
-                <div class='modal-body ajax-region ajax-frame' data-region='page' href='{href}'>
-                    <div class='dialog-data ajax-frame' data-region='error'></div>
+                <div class='modal-body ajax-region ajax-frame d-flex flex-comumn' data-region='page' href='{href}'>
+                    <div class='dialog-data ajax-frame flex-grow-1' data-region='error'></div>
                 </div>
                 <div class='modal-footer'>
                     {{modal_footer}}

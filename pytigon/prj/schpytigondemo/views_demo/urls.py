@@ -20,6 +20,7 @@ urlpatterns = [
     ),
     path("hdoc_example", views.hdoc_example, {}, name="views_demo_hdoc_example"),
     path("plotly", views.plotly_example, {}, name="views_demo_plotly_example"),
+    path("seaborn", views.seaborn_example, {}, name="views_demo_seaborn_example"),
 ]
 
 gen = generic_table_start(urlpatterns, "views_demo", views)
