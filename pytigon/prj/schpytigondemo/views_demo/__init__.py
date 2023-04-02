@@ -64,7 +64,7 @@ Urls = (
         "seaborn",
         _("seaborn example"),
         None,
-        """png://mimetypes/x-office-spreadsheet-template.png""",
+        """png://mimetypes/x-office-presentation-template.png""",
     ),
 )
 UserParam = {}
