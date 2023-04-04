@@ -1,0 +1,10 @@
+<div style="position:relative;">
+        [% if perms.wiki.add_page %]
+        <a class="wiki-object-edit wiki-object-edit-right" href="[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1" target="popup_edit" title="Graphviz properties">
+                Graphviz
+                <span class="fa fa-cog fa-2"></span>
+        </a>
+        [% endif %]
+        {{param.svg_code|safe}}
+</div>
+

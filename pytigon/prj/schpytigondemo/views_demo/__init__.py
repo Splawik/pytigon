@@ -61,8 +61,8 @@ Urls = (
     ),
     ("plotly", _("plotly example"), None, """png://actions/edit-clear.png"""),
     (
-        "seaborn",
-        _("seaborn example"),
+        "matplotlib",
+        _("matplotlib example"),
         None,
         """png://mimetypes/x-office-presentation-template.png""",
     ),

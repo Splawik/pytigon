@@ -147,8 +147,8 @@ def plotly_example(request, **argv):
     return {"plotly_content": buf.getvalue()}
 
 
-@dict_to_template("views_demo/v_seaborn_example.html")
-def seaborn_example(request, **argv):
+@dict_to_template("views_demo/v_matplotlib_example.html")
+def matplotlib_example(request, **argv):
 
     import pandas as pd
     import matplotlib.pyplot as plt

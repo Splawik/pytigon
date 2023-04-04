@@ -295,7 +295,7 @@
         {% endif %}
         {% if not form_delete %}
                 {% block list_page_start %}
-                        <div class="ajax-region table-and-details d-flex flex-column" data-region="table">
+                        <div class="ajax-region {% if vtype == 'tree'%}ajax-frame{% endif %} table-and-details d-flex flex-column" data-region="table" >
                 {% endblock %}
                 {% block list_page_header %}
                         {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}

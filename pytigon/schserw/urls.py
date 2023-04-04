@@ -337,11 +337,10 @@ else:
         _urlpatterns.append(u)
 
 for item in tmp:
+    if item.pattern._route == "../":
+        for item2 in _urlpatterns:
+            if hasattr(item2.pattern, "_route") and item2.pattern._route == "":
+                _urlpatterns.remove(item2)
+                break
     item.pattern._route = item.pattern._route.replace("../", "")
-
-    for item2 in _urlpatterns:
-        if hasattr(item2.pattern, "_route") and item2.pattern._route == "":
-            _urlpatterns.remove(item2)
-            break
-
     _urlpatterns.append(item)

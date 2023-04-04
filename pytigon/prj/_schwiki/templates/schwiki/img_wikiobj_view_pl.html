@@ -1,0 +1,79 @@
+<style >
+    .img_form_view {
+        padding: 1px;
+        position: relative;
+    }
+
+    .i4321 td.t1 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+
+    .i4321 td.t2 div {
+        position: relative;
+        left: -40px;
+        top: 30px;
+        box-shadow: 5px 5px 10px;
+    }
+
+    .i4321 td.t3 div {
+        position: relative;
+        top: -50px;
+        left: 20px;
+        transform: rotate(-20deg);
+        box-shadow: 5px 5px 10px;
+    }
+
+    .i4321 td.t4 div {
+        position: relative;
+        box-shadow: 5px 5px 10px;
+    }
+
+    .o1 {
+        position: absolute;
+        bottom: 3px;
+        left: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.3);
+        color: #ccc;
+        padding: 0px 5px;
+    }
+
+    .img_form_view:hover span {
+        color: #fff;
+    }
+
+    .img_form_view span a {
+        color: #ccc;
+    }
+
+    .img_form_view:hover span a {
+        color: #fff;
+    }
+
+</style>
+<div class="row">
+        [% if perms.wiki.add_page %]
+        <a class="wiki-object-edit wiki-object-edit-right" href="[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1" target="popup_edit" title="Img properties">
+                img
+                <span class="fa fa-cog fa-2"></span>
+        </a>
+        [% endif %]
+        {% for element in elements %}
+                {% if element.type == 'img' %}
+                        <div class="{{element.css_class}} img_form_view">
+                                {% if param.jpeg %}
+                                        <img src="data:image/jpeg;base64,{{ element.data.0 }}" style="width:100%"></img>
+                                  {% else %}
+                                        <img src="data:image/png;base64,{{ element.data.0 }}" style="width:100%"></img>
+                                {% endif %}
+                                {% if element.data.1 %}
+                                        <span class="{{param.img_view_type}}">{{element.data.1}}</span>
+                                {% endif %}
+                        </div>
+                  {% else %}
+                        {{ element.data|safe }}
+                {% endif %}
+        {% endfor %}
+</div>
+
