@@ -1198,10 +1198,10 @@ def build_prj(pk):
         "templates_src/theme_base.ihtml",
         {
             "prj": prj,
-            "js_static_files": set(js_static_files),
-            "css_static_files": set(css_static_files),
+            "js_static_files": sorted(set(js_static_files)),
+            "css_static_files": sorted(set(css_static_files)),
             "static_for_ext_apps": static_for_ext_apps,
-            "component_elements": set(component_elements),
+            "component_elements": sorted(set(component_elements)),
             "initial_state": prj.components_initial_state,
         },
     )

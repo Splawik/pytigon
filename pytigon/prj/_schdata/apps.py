@@ -2,6 +2,7 @@ APPS = [
     "schelements",
     "schreports",
     "schprofile",
+    "schstruct",
     "_schtools.schtools",
 ]
 APPS_EXT = []

@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-ModuleTitle = _("Profile")
+ModuleTitle = _("Data structures")
 Title = _("Profile")
 Perms = True
 Index = "None"

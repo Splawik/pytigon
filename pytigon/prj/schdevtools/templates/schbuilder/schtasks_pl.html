@@ -1,0 +1,100 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def init_form(self):
+                self.tabsort.grid.default_command = 'fields'
+
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "task_code":"client://mimetypes/text-x-generic-template.png",
+                        "tasks":"client://actions/format-indent-more.png",
+                        "doc":"client://apps/help-browser.png",
+                    }
+                    child.set_bitmaps(bitmaps)
+
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=0 title="Tasks" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New task" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>
+        Generic
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>
+        {{object.generic}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                 field_up,Move up
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+                edit
+                field_edit/table_code,Code,code
+                field_list/schfield_set,Fields,fields
+                field_edit/doc,Documentation,doc
+                template_edit,Template
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Table list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'parent', 'name'
+        {% endform %}
+        {% form_item base_table.select %}
+                {% if not object.base_table or object.base_table == "" %}
+                        <option selected="selected" value="">---------</option>
+                  {% else %}
+                        <option value="">---------</option>
+                {% endif %}
+                {% if object.base_table == 'MPTTModel' %}
+                        <option value="MPTTModel">MPTTModel,,,selected=selected</option>
+                  {% else %}
+                        <option value="MPTTModel">
+                        MPTTModel
+                        </option>
+                {% endif %}
+                {% for model in object.get_models %}
+                        {% if model == object.base_table %}
+                                <option value="{{model}}" selected="selected">{{model}}</option>
+                          {% else %}
+                                <option value="{{model}}">
+                                {{model}}
+                                </option>
+                        {% endif %}
+                {% endfor %}
+        {% endform_item %}
+        {% form %}
+                'verbose_name', 'verbose_name_plural', 'generic'
+        {% endform %}
+{% endblock %}
+

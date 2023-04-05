@@ -1505,6 +1505,9 @@ class SChStatic(models.Model):
     def __str__(self):
         return self.get_type_display() + "/" + self.name
 
+    def __lt__(self, other):
+        return (self.name < other.name) and (self.name < other.name)
+
 
 admin.site.register(SChStatic)
 

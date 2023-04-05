@@ -1,0 +1,10 @@
+{% extends "schelements/dochead.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block dochead_edit %}
+        {% form %}
+                description
+        {% endform %}
+        {% get_table_row "account_id" "schelements" "Account" "name__icontains" filter="1" %}
+{% endblock %}
+
