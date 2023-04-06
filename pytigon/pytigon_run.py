@@ -322,6 +322,47 @@ def run(param=None):
         else:
             subprocess.run([get_executable(), "-m", "pip"] + argv[2:])
 
+    elif len(argv) > 1 and argv[1].startswith("init_"):
+        x = argv[1].split("_", 1)
+        if "." in x[1]:
+            x2 = x[1].split(".", 1)
+            app = x2[0]
+        else:
+            app = x[1]
+
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths(app)
+
+        PRJ_PATH = paths["PRJ_PATH"]
+        DATA_PATH = paths["DATA_PATH"]
+
+        ret = schserw_init_prj_path(paths, app, param)
+
+        if ret:
+            app = ret[0]
+            PRJ_PATH = ret[1]
+
+        if not os.path.exists(PRJ_PATH) or not os.path.exists(DATA_PATH):
+            from pytigon_lib.schtools.install_init import init
+
+            init(
+                app,
+                paths["ROOT_PATH"],
+                DATA_PATH,
+                PRJ_PATH,
+                paths["STATIC_PATH"],
+                [paths["MEDIA_PATH"], paths["UPLOAD_PATH"]],
+            )
+
+        prj_path = os.path.join(PRJ_PATH, app)
+        if not prj_path in sys.path:
+            sys.path.append(prj_path)
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+
+        import django
+        django.setup()
+
     elif len(argv) > 1 and argv[1] == "python":
         from pytigon_lib.schtools.main_paths import get_main_paths
 

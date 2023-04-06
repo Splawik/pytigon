@@ -27,5 +27,8 @@ try:
 except:
     from pytigon.pytigon_run import run
 
+def init(prj_name):
+    run(["ptig", "init_%s" % prj_name])
+
 if __name__ == "__main__":
     run()
