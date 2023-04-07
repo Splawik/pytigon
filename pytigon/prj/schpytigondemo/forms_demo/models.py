@@ -38,6 +38,8 @@ from schprofile.models import *
 
 from schadmin.models import *
 
+from schtasks.models import *
+
 
 test_choice = [
     ("1", "Test 1"),

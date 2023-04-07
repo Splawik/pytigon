@@ -28,6 +28,7 @@ APPS = [
     "_schcomponents.standard_components",
     "_schdata.schprofile",
     "_schsetup.schadmin",
+    "_schtools.schtasks",
 ]
 APPS_EXT = []
 PUBLIC = True

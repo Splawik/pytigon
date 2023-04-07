@@ -359,8 +359,9 @@ def run(param=None):
         if not prj_path in sys.path:
             sys.path.append(prj_path)
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
-
+        os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "1"
         import django
+
         django.setup()
 
     elif len(argv) > 1 and argv[1] == "python":

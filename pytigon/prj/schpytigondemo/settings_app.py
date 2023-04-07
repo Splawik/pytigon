@@ -211,6 +211,50 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
 ]
 
 
@@ -219,7 +263,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.04.05 19:15:28"
+GEN_TIME = "2023.04.07 18:46:50"
 OFFLINE_SUPPORT = True
 
 

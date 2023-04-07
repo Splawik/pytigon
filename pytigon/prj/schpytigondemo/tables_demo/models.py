@@ -38,6 +38,8 @@ from schprofile.models import *
 
 from schadmin.models import *
 
+from schtasks.models import *
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver

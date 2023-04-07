@@ -38,6 +38,8 @@ from schprofile.models import *
 
 from schadmin.models import *
 
+from schtasks.models import *
+
 
 from schelements import models as schelements_models
 from schprofile import models as schprofile_models

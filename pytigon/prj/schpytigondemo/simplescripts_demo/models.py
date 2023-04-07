@@ -37,3 +37,5 @@ from standard_components.models import *
 from schprofile.models import *
 
 from schadmin.models import *
+
+from schtasks.models import *

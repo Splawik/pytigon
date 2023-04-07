@@ -38,6 +38,8 @@ from schprofile.models import *
 
 from schadmin.models import *
 
+from schtasks.models import *
+
 
 from tables_demo.models import *
 from django.forms import fields as form_fields

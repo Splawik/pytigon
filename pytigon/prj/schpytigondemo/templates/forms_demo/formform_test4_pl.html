@@ -1,7 +1,7 @@
 {% extends "forms/form.html" %}
 {% load exsyntax %}
 {% block content %}
-        <form method="post" action="." class="ajax-link form-inline">
+        <form method="post" action="{{base_path}}forms_demo/form/form_test4/?only_content=1" class="ajax-link form-inline">
                 {% csrf_token %}
                 {% inline_form %}
                         test
