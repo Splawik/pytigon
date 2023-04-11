@@ -48,12 +48,6 @@ Urls = (
         """png://actions/format-justify-fill.png""",
     ),
     (
-        "test_llvm?view_in=desktop",
-        _("llvm_test"),
-        None,
-        """png://mimetypes/video-x-generic.png""",
-    ),
-    (
         "hdoc_example",
         _("hdoc example"),
         None,

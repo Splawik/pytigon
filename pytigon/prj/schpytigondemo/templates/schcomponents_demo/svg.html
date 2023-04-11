@@ -1,0 +1,133 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        <ptig-svg width="25%">
+            
+        <svg
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
+           xmlns:cc="http://creativecommons.org/ns#"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:svg="http://www.w3.org/2000/svg"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+           xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+           width="100%"
+           viewBox="0 0 210 297"
+           version="1.1"
+           id="svg8"
+           inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+           sodipodi:docname="aaa.svg">
+          <style>
+            {% svg_standard_style %}
+            @keyframes moving {
+                from { x:35; }
+                to { x:50; }
+            }
+            #path4520:hover {
+                fill:#f00 !important;
+                stroke: orange !important;
+                stroke-width: 1 !important;
+                rx: 22px !important;
+                ry: 22px !important;
+                cursor: pointer;
+            }
+            #rect4518:hover {
+                fill:#ffee00 !important;
+                stroke: orange !important;
+                stroke-width: 1 !important;
+                width: 40px !important;
+                height: 38px !important;
+                cursor: pointer;
+                animation-name: moving;
+                animation-duration: 1s;
+                x:50;
+            }
+          </style>
+          <defs
+             id="defs2" />
+          <sodipodi:namedview
+             id="base"
+             pagecolor="#ffffff"
+             bordercolor="#666666"
+             borderopacity="1.0"
+             inkscape:pageopacity="0.0"
+             inkscape:pageshadow="2"
+             inkscape:zoom="1.01"
+             inkscape:cx="98.818177"
+             inkscape:cy="897.33208"
+             inkscape:document-units="mm"
+             inkscape:current-layer="layer1"
+             showgrid="false"
+             inkscape:window-width="1880"
+             inkscape:window-height="1054"
+             inkscape:window-x="40"
+             inkscape:window-y="0"
+             inkscape:window-maximized="1" />
+          <metadata
+             id="metadata5">
+            <rdf:RDF>
+              <cc:Work
+                 rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                <dc:title></dc:title>
+              </cc:Work>
+            </rdf:RDF>
+          </metadata>
+          <g
+             inkscape:label="Layer 1"
+             inkscape:groupmode="layer"
+             id="layer1"
+             class="popover__wrapper"
+          >
+            <rect
+               style="opacity:0.47000002;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-width:0.31211713;stroke-opacity:1"
+               id="rect4518"
+               width="35.627064"
+               height="33.007423"
+               x="26.196369"
+               y="23.247936"
+               data-bind=":onclick"
+               target="_top"
+               href="/schcomponents/spreadsheet?view_in=desktop"
+            />
+
+            <ellipse
+                           style="opacity:0.47000002;fill:#c83737;fill-opacity:1;stroke:none;stroke-width:0.25522161;stroke-opacity:1"
+                           id="path4520"
+                           cx="63.526196"
+                           cy="58.35107"
+                           rx="18.730404"
+                           ry="18.599422"
+                           data-bind=":onclick"
+                           target="_blank"
+                           href="https://www.onet.pl"
+                           class="popover__source"
+            />
+            <text
+                   xml:space="preserve"
+                   style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+                   x="35.529758"
+                   y="145.80952"
+                   id="text5094"
+                   class="popover__message"
+                >
+                <tspan
+                     sodipodi:role="line"
+                     id="tspan5092"
+                     x="35.529758"
+                     y="145.80952"
+                     style="stroke-width:0.26458332px">
+                     HELLO
+                </tspan>
+            </text>
+
+          </g>
+        </svg>
+
+        </ptig-svg>
+{% endblock %}
+

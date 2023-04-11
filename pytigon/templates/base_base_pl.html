@@ -344,7 +344,7 @@
                                                                                                                 {% endblock %}
                                                                                                                 {% block form_content_button %}
                                                                                                                         {% if table_type != 'datatable' %}
-                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
+                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
                                                                                                                                         {% icon "fa-refresh fa-lg" %}
                                                                                                                                 </button>
                                                                                                                         {% endif %}
@@ -354,7 +354,7 @@
                                                                                         {% endblock %}
                                                                                 </form>
                                                                                 {% if table_type == 'datatable' %}
-                                                                                        <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
+                                                                                        <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors or always_refresh_whole_page%}page{% else %}table{% endif %}">
                                                                                                 {% icon "fa-refresh fa-lg" %}
                                                                                         </button>
                                                                                 {% endif %}

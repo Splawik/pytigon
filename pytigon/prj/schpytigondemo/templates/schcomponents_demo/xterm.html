@@ -1,0 +1,8 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        <ptig-xterm class="flexible_size" width="100%" href="{{base_path}}schcommander/shell/channel/"></ptig-xterm>
+{% endblock %}
+

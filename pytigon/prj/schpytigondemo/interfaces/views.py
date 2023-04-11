@@ -31,6 +31,32 @@ import sys
 import datetime
 
 
+def make_csum_fun():
+    from pytigon_lib.schtools.llvm_exec import compile_str_to_module, get_function
+    from ctypes import CFUNCTYPE, c_int
+
+    fun_str = """
+    define dso_local i32 @cadd(i32 %0, i32 %1) #0 {
+      %3 = alloca i32, align 4
+      %4 = alloca i32, align 4
+      store i32 %0, i32* %3, align 4
+      store i32 %1, i32* %4, align 4
+      %5 = load i32, i32* %3, align 4
+      %6 = load i32, i32* %4, align 4
+      %7 = add nsw i32 %5, %6
+      ret i32 %7
+    }
+    """
+
+    compile_str_to_module(fun_str)
+    func_ptr = get_function("cadd")
+    cfunc = CFUNCTYPE(c_int, c_int, c_int)(func_ptr)
+    return cfunc
+
+
+csum = make_csum_fun()
+
+
 @dict_to_template("interfaces/v_test_interfaces.html")
 def test_interfaces(request, **argv):
 
@@ -72,11 +98,15 @@ def test_interfaces(request, **argv):
         sum = instance.exports.add
         result4 = sum(2, 2)
 
+    title5 = "llvm test"
+    result5 = csum(1, 3)
+
     return {
         "object_list": (
             (title1, result1),
             (title2, result2),
             (title3, result3),
             (title4, result4),
+            (title5, result5),
         )
     }

@@ -561,7 +561,7 @@ class SChAppSet(JSONModel):
             #                ret.append(name)
             #    return ret
             # else:
-            l = self.ext_apps.split(",")
+            l = self.ext_apps.replace("\n", ",").replace(";", ",").split(",")
         else:
             return ret
         for a in l:
@@ -576,7 +576,7 @@ class SChAppSet(JSONModel):
         else:
             ret = []
         if self.ext_apps:
-            l = self.ext_apps.split(",")
+            l = self.ext_apps.replace("\n", ",").replace(";", ",").split(",")
         else:
             return ret
         for a in l:
@@ -590,7 +590,7 @@ class SChAppSet(JSONModel):
     def get_ext_apps_without_pack(self):
         ret = []
         if self.ext_apps:
-            l = self.ext_apps.split(",")
+            l = self.ext_apps.replace("\n", ",").replace(";", ",").split(",")
             for a in l:
                 if a != "" and not a.startswith("@"):
                     if "." in a:
@@ -602,7 +602,7 @@ class SChAppSet(JSONModel):
     def get_ext_modules(self):
         ret = []
         if self.ext_apps:
-            l = self.ext_apps.split(",")
+            l = self.ext_apps.replace("\n", ",").replace(";", ",").split(",")
             for a in l:
                 if not a.startswith("@"):
                     elms = a.split(".")
@@ -642,7 +642,8 @@ class SChAppSet(JSONModel):
         class form_class(base_form):
             class Meta(base_form.Meta):
                 widgets = {
-                    "custom_tags": form_fields.Textarea(attrs={"cols": 80, "rows": 20}),
+                    "ext_apps": form_fields.Textarea(attrs={"cols": 80, "rows": 10}),
+                    "custom_tags": form_fields.Textarea(attrs={"cols": 80, "rows": 10}),
                     "additional_settings": form_fields.Textarea(
                         attrs={"cols": 80, "rows": 20}
                     ),
@@ -1679,7 +1680,7 @@ class SChTemplate(models.Model):
             buf.append(pos)
         ext_apps = app_set.ext_apps
         if ext_apps:
-            app_list = ext_apps.replace(";", ",").split(",")
+            app_list = ext_apps.replace("\n", ",").replace(";", ",").split(",")
             for pos in app_list:
                 if "." in pos:
                     app_set_str, app_str = pos.split(".")

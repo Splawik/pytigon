@@ -33,39 +33,6 @@ import datetime
 from tables_demo.models import Example1Computer
 
 
-def make_csum_fun():
-    from pytigon_lib.schtools.llvm_exec import compile_str_to_module, get_function
-    from ctypes import CFUNCTYPE, c_int
-
-    fun_str = """
-    define dso_local i32 @cadd(i32 %0, i32 %1) #0 {
-      %3 = alloca i32, align 4
-      %4 = alloca i32, align 4
-      store i32 %0, i32* %3, align 4
-      store i32 %1, i32* %4, align 4
-      %5 = load i32, i32* %3, align 4
-      %6 = load i32, i32* %4, align 4
-      %7 = add nsw i32 %5, %6
-      ret i32 %7
-    }
-    """
-
-    compile_str_to_module(fun_str)
-    func_ptr = get_function("cadd")
-    cfunc = CFUNCTYPE(c_int, c_int, c_int)(func_ptr)
-    return cfunc
-
-
-csum = make_csum_fun()
-
-
-@dict_to_template("views_demo/v_test_llvm.html")
-def test_llvm(request, **argv):
-
-    ret = csum(2, 3)
-    return {"result": ret}
-
-
 @dict_to_odf("views_demo/v_odf_example.ods")
 def odf_example(request, **argv):
 
@@ -155,6 +122,7 @@ def matplotlib_example(request, **argv):
     import seaborn as sns
     import io
 
+    # image 1
     df = pd.DataFrame(
         {
             "Date": [
@@ -181,4 +149,31 @@ def matplotlib_example(request, **argv):
 
     imgdata = io.StringIO()
     ax.get_figure().savefig(imgdata, format="svg")
-    return {"img_svg": imgdata.getvalue()}
+    img1 = imgdata.getvalue()
+
+    # image 2
+
+    df = pd.DataFrame(
+        {
+            "Dates": [
+                "2021-06-10",
+                "2021-06-11",
+                "2021-06-12",
+                "2021-06-13",
+                "2021-06-14",
+                "2021-06-15",
+            ],
+            "Female": [200, 350, 150, 600, 500, 350],
+            "Male": [450, 400, 800, 250, 500, 900],
+        }
+    )
+
+    ax = df.plot(x="Dates", y=["Female", "Male"], kind="bar")
+
+    ax.get_figure().set_size_inches(14, 12)
+
+    imgdata2 = io.StringIO()
+    ax.get_figure().savefig(imgdata2, format="svg")
+    img2 = imgdata2.getvalue()
+
+    return {"img1_svg": img1, "img2_svg": img2}

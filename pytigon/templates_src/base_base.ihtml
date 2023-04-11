@@ -247,10 +247,10 @@
                                                             % inline_form:
                                                         %% form_content_button
                                                             % if table_type != 'datatable':
-                                                                button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,target={% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %},,,data-region={% if form.errors or errors %}page{% else %}table{% endif %}
+                                                                button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,target={% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %},,,data-region={% if form.errors or errors %}page{% else %}table{% endif %}
                                                                     {% icon "fa-refresh fa-lg" %}
                                         % if table_type == 'datatable':
-                                            button value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,onclick=datatable_refresh(this);,,,data-region={% if form.errors or errors %}page{% else %}table{% endif %}
+                                            button value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,onclick=datatable_refresh(this);,,,data-region={% if form.errors or errors or always_refresh_whole_page%}page{% else %}table{% endif %}
                                                 {% icon "fa-refresh fa-lg" %}
 
                         % else:

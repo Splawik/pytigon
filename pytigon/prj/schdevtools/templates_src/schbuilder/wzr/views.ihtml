@@ -21,6 +21,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 {% if app.view_code %}{{app.view_code|first_section|safe}} {% endif %}
 

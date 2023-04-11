@@ -5,7 +5,6 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path("test_llvm", views.test_llvm, {}, name="views_demo_test_llvm"),
     path("odf_example", views.odf_example, {}, name="views_demo_odf_example"),
     path("pdf_example", views.pdf_example, {}, name="views_demo_pdf_example"),
     path("json", views.json_example, {}, name="views_demo_json_example"),

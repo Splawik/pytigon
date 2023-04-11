@@ -308,7 +308,7 @@ def run(param=None):
         app = argv[1].split("_", 1)[1]
 
         paths = get_main_paths(app)
-        lib_path = os.path.join(paths["PRJ_PATH"], app, "prjlib")
+        lib_path = os.path.join(paths["DATA_PATH"], app, "prjlib")
         ret = schserw_init_prj_path(paths, app, param)
         if ret:
             argv[1] = ret[0]

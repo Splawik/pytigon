@@ -413,7 +413,7 @@ def locale_gen_internal(pk):
     ext_apps = []
     ext_locales = []
     if prj.ext_apps:
-        for pos in prj.ext_apps.split(","):
+        for pos in prj.ext_apps.replace("\n", ",").replace(";", ",").split(","):
             pos2 = pos.split(".")[0]
             if pos2 and not pos2 in ext_apps:
                 ext_apps.append(pos2)
@@ -1345,42 +1345,32 @@ def build_prj(pk):
         with zipfile.ZipFile(bstream, "r") as izip:
             izip.extractall(base_path)
 
-    success = True
+    # success = True
 
-    if platform_name() != "Android" and prj.install_file:
-        init_str = "[DEFAULT]\n" + prj.install_file
-        config = configparser.ConfigParser(allow_no_value=True)
-        config.read_string(init_str)
-        pip_str = config["DEFAULT"]["pip"]
-        if pip_str:
-            prjlib_path = os.path.join(base_path, "prjlib")
-            if not os.path.exists(prjlib_path):
-                os.mkdir(prjlib_path)
-            packages = [x.strip() for x in pip_str.split(" ") if x]
-            exit_code, output_tab, err_tab = py_run(
-                [
-                    "-m",
-                    "pip",
-                    "--disable-pip-version-check",
-                    "install",
-                    f"--target={prjlib_path}",
-                    "--upgrade",
-                ]
-                + packages
-            )
-            if output_tab:
-                for pos in output_tab:
-                    if pos:
-                        object_list.append((datetime.datetime.now(), "pip info", pos))
-            if err_tab:
-                for pos in err_tab:
-                    if pos:
-                        object_list.append((datetime.datetime.now(), "pip error", pos))
-                        success = False
-    if success:
-        object_list.append((datetime.datetime.now(), "SUCCESS:", ""))
-    else:
-        object_list.append((datetime.datetime.now(), "ERRORS:", ""))
+    # if platform_name()!='Android' and prj.install_file:
+    #    init_str = "[DEFAULT]\n"+prj.install_file
+    #    config = configparser.ConfigParser(allow_no_value=True)
+    #    config.read_string(init_str)
+    #    pip_str = config['DEFAULT']['pip']
+    #    if pip_str:
+    #        prjlib_path  = os.path.join(base_path, "prjlib")
+    #        if not os.path.exists(prjlib_path):
+    #            os.mkdir(prjlib_path)
+    #        packages = [ x.strip() for x in pip_str.split(' ') if x ]
+    #        exit_code, output_tab, err_tab = py_run(['-m', 'pip', "--disable-pip-version-check", 'install', f'--target={prjlib_path}', '--upgrade', ] + packages)
+    #        if output_tab:
+    #            for pos in output_tab:
+    #                if pos:
+    #                    object_list.append((datetime.datetime.now(), "pip info", pos))
+    #        if err_tab:
+    #            for pos in err_tab:
+    #                if pos:
+    #                    object_list.append((datetime.datetime.now(), "pip error", pos))
+    #                    success = False
+    # if success:
+    #    object_list.append((datetime.datetime.now(), 'SUCCESS:', ""))
+    # else:
+    #    object_list.append((datetime.datetime.now(), 'ERRORS:', ""))
 
     (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
     if output_tab:

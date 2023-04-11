@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+.ipynb_checkpoints/
 
 pip-log.txt`
 pip-delete-this-directory.txt
@@ -23,6 +24,8 @@ migrations/
 *.so.*
 *.o
 *zig-cache*
+*.ipynb
+
 
 pytigon/prj/*
 pytigon/prj/*/prjlib/*
