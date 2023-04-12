@@ -106,7 +106,8 @@ div.table-and-details {
         color: var(--bs-body-color) !important; }
 
 #body_desktop {
-  height: calc(100% - 10px) !important; }
+  height: calc(100% - 10px) !important;
+  overflow-y: auto; }
 
 /* bootstrap-table */
 .bootstrap-table .columns {
@@ -703,9 +704,6 @@ div.highlight pre {
   .wiki-frame table.codehilitetable .codehilite {
     padding: 0.5rem; }
 
-.dialog-data {
-  overflow: auto; }
-
 body {
   background-color: var(--bs-body-bg);
   height: 100vh;
@@ -774,7 +772,7 @@ div.td_information {
 
 .tab-pane {
   position: relative;
-  height: 100%; }
+  height: calc(100% - 5px); }
   .tab-pane > .ajax-item {
     height: 100%; }
     .tab-pane > .ajax-item > .ajax-region {

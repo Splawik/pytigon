@@ -233,7 +233,6 @@ try {
         width = 0;
         height = 0;
         drag_mouse_down = (function flx_drag_mouse_down (e) {
-            var x, y;
             e = (_pyfunc_truthy(e))? (e) : (window.event);
             e.preventDefault();
             x = e.screenX;
@@ -244,7 +243,6 @@ try {
         }).bind(this);
 
         element_drag = (function flx_element_drag (e) {
-            var height, width, x, y;
             e = (_pyfunc_truthy(e))? (e) : (window.event);
             e.preventDefault();
             width = x - e.screenX;
