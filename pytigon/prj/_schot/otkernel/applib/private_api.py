@@ -53,7 +53,7 @@ def pop_output(mp_id):
     if object_list.count() > 0:
         obj = object_list[0]
         obj.delete()
-        return { 'data': obj.json_data }
+        return obj.json_data
     else:
         return None
     
