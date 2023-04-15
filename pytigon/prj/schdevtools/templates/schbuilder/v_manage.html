@@ -51,7 +51,7 @@
                     )
 
                 app.StartCoroutine(stop_webserver, app.GetTopWindow())
-                app.remove_websoket_callback("{{app_path}}django_manage/channel/", self.callback)
+                app.remove_websocket_callback("{{app_path}}django_manage/channel/", self.callback)
 
 </script>
         {% endif %}
@@ -88,6 +88,6 @@
                         </td>
                 </tr>
         </table>
-        <ctrl-styledtext name="msg" width="100%-20" height="100%-120"></ctrl-styledtext>
+        <ctrl-styledtext name="msg" width="100%" height="100%"></ctrl-styledtext>
 {% endblock %}
 

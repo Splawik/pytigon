@@ -58,7 +58,7 @@ def pop_output_item(mp_id):
     if object_list.count() > 0:
         obj = object_list[0]        
         obj.delete()
-        return obj.json_data
+        return obj.json_data if obj.json_data else {}
     else:
         return None
     
@@ -66,7 +66,7 @@ def get_first_output_item(mp_id):
     object_list = MPointOutputQueue.objects.filter(mp_id=mp_id).order_by("id")
     if object_list.count() > 0:
         obj = object_list[0]        
-        return obj.json_data
+        return obj.json_data if obj.json_data else {}
     else:
         return None
     

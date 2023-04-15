@@ -36,7 +36,19 @@
         {% endwith %}
 {% endblock %}
 {% block list_content_actions %}
-        {% new_row "New table" %}
+        <table>
+                <tr>
+                        <td>
+                                {% new_row "New table" %}
+                        </td>
+                        <td>
+                                {% action "header" title="Model - header" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=header" %}
+                        </td>
+                        <td>
+                                {% action "footer" title="Model - footer" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=footer" %}
+                        </td>
+                </tr>
+        </table>
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>

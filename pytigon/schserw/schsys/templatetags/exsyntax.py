@@ -1506,3 +1506,8 @@ def modify(parser, token):
     nodelist = parser.parse(("endmodify",))
     parser.delete_first_token()
     return ModifyNode(nodelist, arg=arg)
+
+
+@register.simple_tag(takes_context=True)
+def show_context(context):
+    return str(context)

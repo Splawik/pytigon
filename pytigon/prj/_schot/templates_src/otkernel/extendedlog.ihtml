@@ -3,22 +3,33 @@
 % load exfiltry
 % load exsyntax
 
+
 %% all
     % with table_type='datatable':
         {{ block.super }}
 
+
 %% scroll
+
 
 %% list_content_actions
 
+
+%% list_row_header_end
+    th data-field=caction,,,data-visible=false
+        ._(Action)
+
+
 %% list_row_header
-    th..._(Measurement point)
+    % if vtype != "sublist":
+        th..._(Measurement point)
     th..._(Time)
     th..._(Attribute)
     
 
 %% list_row
-    td...{{ object.mp.id }}: {{ object.mp.name }}
+    % if vtype != "sublist":
+        td...{{ object.mp.id }}: {{ object.mp.name }}
     td...{{ object.time }}
     td...{{ object.attr }}
     
@@ -27,6 +38,7 @@
     % row_actions:
         .edit
         .delete
+
 
 %% row_edit
     % form:

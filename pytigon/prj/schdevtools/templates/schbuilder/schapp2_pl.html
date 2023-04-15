@@ -91,33 +91,36 @@
                                 <CTRL-NOBG_BUTTON_TXT NAME="menu" label="Menu" SRC="client://actions/tab-new.png" href="{{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
                         <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="tasks" label="Tasks" SRC="png://status/image-loading.png" href="{{app_path}}table/SChApp/{id}/schtask_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
                                 <CTRL-NOBG_BUTTON_TXT NAME="templates" label="Templates" SRC="png://mimetypes/x-office-presentation.png" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
-                        <td width="40"></td>
+                        <td width="20"></td>
                         <td cellpadding="0" width="80">
                                 <CTRL-NOBG_BUTTON_TXT NAME="other_files" label="Application files" SRC="png://places/folder.png" href="{{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
                         </td>
+                        <td width="20"></td>
                         <td cellpadding="0" width="80">
                                 {% widget class='menu' id='user_action' title='Other properties' style='toolbar' %}
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schtask_set/-/form/list/">Tasks</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/">Channel consumers</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="-">------------------------------------</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/model_code/form/editor/">Model base file</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">View base file</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">Url base file</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">Task base file</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">Channel consumer base file</a></li>
-                                        <li><a class="btn btn-primary btn-sm" href="-">------------------------------------</a></li>
                                         <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/icon_code/py/editor/?x1=icon_code">Icon code</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/doc/form/editor/">Doc</a></li>
                                 {% endwidget %}
                         </td>
+                        <td width="30"></td>
                         <td cellpadding="0" width="60">
-                                <CTRL-NOBG_BUTTON_TXT NAME="doc" label="Doc" SRC="png://apps/help-browser.png" href="{{app_path}}table/SChApp/{id}/doc/form/editor/"></CTRL-NOBG_BUTTON_TXT>
+                                <CTRL-NOBG_BUTTON_TXT NAME="gen" label="Build" SRC="png://categories/applications-multimedia.png" href="{{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/">
+                                </CTRL-NOBG_BUTTON_TXT>
                         </td>
-                        <td width="40"></td>
-                        <td cellpadding="0" width="60">
-                                <CTRL-NOBG_BUTTON_TXT NAME="gen" label="Build" SRC="png://categories/applications-multimedia.png" href="{{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/"></CTRL-NOBG_BUTTON_TXT>
-                        </td>
+                        {% comment %}
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/model_code/form/editor/">Model base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">View base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">Url base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">Task base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">Channel consumer base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="-">------------------------------------</a></li>
+                        {% endcomment %}
                 </tr>
         </table>
 {% endblock %}

@@ -10,15 +10,24 @@
 {% endblock %}
 {% block list_content_actions %}
 {% endblock %}
+{% block list_row_header_end %}
+        <th data-field="caction" data-visible="false">
+                Action
+        </th>
+{% endblock %}
 {% block list_row_header %}
-        <th>Measurement point</th>
+        {% if vtype != "sublist" %}
+                <th>Measurement point</th>
+        {% endif %}
         <th>Time</th>
         <th>
         Attribute
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{ object.mp.id }}: {{ object.mp.name }}</td>
+        {% if vtype != "sublist" %}
+                <td>{{ object.mp.id }}: {{ object.mp.name }}</td>
+        {% endif %}
         <td>{{ object.time }}</td>
         <td>
         {{ object.attr }}

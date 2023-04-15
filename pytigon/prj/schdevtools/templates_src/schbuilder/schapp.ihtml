@@ -70,25 +70,16 @@
         field_list/schtable_set,Tables,[|client://mimetypes/x-office-spreadsheet.png],_top2
         field_list/schchoice_set,Choices,[|client://categories/applications-games.png],_top2
         field_list/schview_set,Views,[|client://mimetypes/text-x-generic-template.png],_top2
-
         field_list/schform_set,Forms,[|client://mimetypes/x-office-document.png],_top2
         field_list/schappmenu_set,Menu,[|client://actions/tab-new.png],_top2
+        field_list/schtask_set,Tasks,[|png://status/image-loading.png],_top2
+        field_list/schtemplate_set,Templates,[|client://mimetypes/x-office-presentation.png],_top2        
+        field_list/schfiles_set,Application files,[|png://places/folder.png],_top2
         
-        field_list/schtemplate_set,Templates,[|client://mimetypes/x-office-presentation.png],_top2
-        field_list/schfiles_set,Application files,files,_top2
-        
-        field_list/schtask_set,Tasks(Other properties),[|png://actions/go-jump.png],_top2
-        field_list/schchannelconsumer_set,Consumers(Other properties),[|png://actions/go-jump.png],_top2
-
-        field_edit/model_code,Model base file(Other properties),[|client://mimetypes/package-x-generic.png],_top2
-        field_edit/view_code,View base file(Other properties),[|client://batch/code.png],_top2
-        field_edit/urls_code,Url base file(Other properties),[|client://actions/format-indent-less.png],_top2
-        field_edit/tasks_code,Task base file(Other properties),[|client://apps/utilities-terminal.png],_top2
-        field_edit/consumer_code,Channel consumer base file(Other properties),[|client://places/network-workgroup.png],_top2
-        
+        field_list/schchannelconsumer_set,Consumers(Other properties),[|png://actions/go-jump.png],_top2        
         field_edit/icon_code,Icon code(Other properties),[|client://categories/applications-graphics.png],_top2                
+        field_edit/doc,Doc(Other properties),[|client://apps/help-browser.png],_top2
         
-        field_edit/doc,Doc,[|client://apps/help-browser.png],_top2
         delete
 
     {% if not forloop.first %}

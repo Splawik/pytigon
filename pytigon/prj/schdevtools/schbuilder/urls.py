@@ -156,6 +156,7 @@ gen.for_field(
 )
 # gen.standard('SChAppMenu', u'SChAppMenu', prefix="wiki")
 
+
 gen.standard("SChAppSet", _("Application package"), _("Application packages"))
 gen.standard("SChApp", _("SChApp"), _("SChApp"))
 gen.standard("SChChoice", _("SChChoice"), _("SChChoice"))

@@ -10,22 +10,28 @@
 {% endblock %}
 {% block list_content_actions %}
 {% endblock %}
+{% block list_row_header_end %}
+        <th data-field="caction" data-visible="false">
+                Action
+        </th>
+{% endblock %}
 {% block list_row_header %}
-        <th>Measurement point</th>
+        {% if vtype != "sublist" %}
+                <th>Measurement point</th>
+        {% endif %}
         <th>
         Data
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{ object.mp }}</td>
+        {% if vtype != "sublist" %}
+                <td>{{ object.mp }}</td>
+        {% endif %}
         <td>
         {{ object.jsondata }}
         </td>
 {% endblock %}
 {% block list_row_actions %}
-        {% row_actions %}
-                delete
-        {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
         {% form %}

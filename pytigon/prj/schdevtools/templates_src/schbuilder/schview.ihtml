@@ -18,13 +18,23 @@
         {{ block.super }}
 
 %% list_content_header
-    table width=100%
+    table
         tr
             td
                 % widget class='menu' id='new_view' title=_("&New view"):
                     % for pos in object_list|module_obj:"View_CHOICES"
                         li
                             a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
+            td
+                % action "header" title="view - header" url="{{app_path}}table/SChApp/{parent.id}/view_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="view - footer" url="{{app_path}}table/SChApp/{parent.id}/view_code/form/editor/?fragment=footer"
+            td
+                % action "header2" title="urls - header" url="{{app_path}}table/SChApp/{parent.id}/urls_code/form/editor/?fragment=header"
+            td
+                % action "footer2" title="urls - footer" url="{{app_path}}table/SChApp/{parent.id}/urls_code/form/editor/?fragment=footer"
+
+
         
 %% list_row_header
     th..._(Name)

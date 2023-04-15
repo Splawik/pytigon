@@ -9,21 +9,23 @@
 
 %% scroll
 
-%% list_content_actions
+%% list_row_header_end
+    th data-field=caction,,,data-visible=false
+        ._(Action)
 
 %% list_row_header
-    th..._(Measurement point)
+    % if vtype != "sublist":
+        th..._(Measurement point)
     th...data
     
 
 %% list_row
-    td...{{ object.mp }}
+    % if vtype != "sublist":
+        td...{{ object.mp }}
     td...{{ object.jsondata }}
     
-
 %% list_row_actions
-    % row_actions:
-        .delete
+    
 
 %% row_edit
     % form:

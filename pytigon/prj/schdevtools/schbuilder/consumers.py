@@ -17,6 +17,8 @@ from channels.generic.http import AsyncHttpConsumer
 
 import asyncio
 import psutil
+from os import environ
+from django.conf import settings
 
 
 class Clock(AsyncJsonWebsocketConsumer):
@@ -48,6 +50,8 @@ class WebServer(AsyncJsonWebsocketConsumer):
         await self.accept()
 
     async def subprocess(self, prj):
+        environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
+
         proc = await asyncio.create_subprocess_exec(
             sys.executable,
             "-m",
@@ -85,14 +89,16 @@ class WebServer(AsyncJsonWebsocketConsumer):
                 print("Finished")
 
             tsk.add_done_callback(finish)
-        else:
+        elif command == "stop":
             if self.PROC:
                 parent = psutil.Process(self.PROC.pid)
                 for child in parent.children(recursive=True):
                     child.kill()
-                parent.kill()
+                # parent.kill()
                 await self.PROC.wait()
                 self.PROC = None
+        else:
+            pass
 
     async def disconnect(self, close_code):
         print("Websocket closed", close_code)
@@ -106,6 +112,8 @@ class DjangoManage(AsyncJsonWebsocketConsumer):
         await self.accept()
 
     async def subprocess(self, prj, cmd):
+        environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
+
         proc = await asyncio.create_subprocess_exec(
             sys.executable,
             "-m",
@@ -138,15 +146,17 @@ class DjangoManage(AsyncJsonWebsocketConsumer):
                 print("Finished")
 
             tsk.add_done_callback(finish)
-        else:
+        elif command == "start":
             if self.PROCS:
                 for proc in self.PROCS:
                     parent = psutil.Process(proc.pid)
                     for child in parent.children(recursive=True):
                         child.kill()
-                    parent.kill()
+                    # parent.kill()
                     await proc.wait()
                 self.PROCS = []
+        else:
+            pass
 
     async def disconnect(self, close_code):
         print("Websocket closed", close_code)

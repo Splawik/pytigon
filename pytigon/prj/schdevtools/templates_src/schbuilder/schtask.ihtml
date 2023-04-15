@@ -17,7 +17,14 @@
         {{ block.super }}
 
 %% list_content_actions
-    % new_row _("New task")
+    table
+        tr
+            td
+                % new_row _("New task")
+            td 
+                % action "header" title="tasks - header" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="tasks - footer" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=footer"
         
 %% list_row_header
     th..._(Name)
