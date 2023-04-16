@@ -131,6 +131,7 @@ urlpatterns = [
         views.change_pos,
         {"app": "schbuilder", "tab": "SChApp", "forward": True, "field": "parent"},
     ),
+    gen_row_action("SChAppSet", "run2", views.run2),
     path(
         "devtools", TemplateView.as_view(template_name="schbuilder/devtools.html"), {}
     ),

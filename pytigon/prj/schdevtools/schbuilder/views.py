@@ -46,6 +46,10 @@ import time
 import configparser
 import hashlib
 
+from os import environ
+import subprocess
+
+
 from django.db import transaction
 from django.urls import reverse
 
@@ -2246,3 +2250,11 @@ def run(request, pk):
 
     prj = models.SChAppSet.objects.get(pk=pk)
     return {"project": prj}
+
+
+def run2(request, pk):
+
+    prj = models.SChAppSet.objects.get(pk=pk)
+    environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
+    subprocess.run([sys.executable, "-m", "pytigon.ptig", prj.name], shell=False)
+    return HttpResponse("")
