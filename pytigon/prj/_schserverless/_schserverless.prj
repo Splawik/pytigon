@@ -1,0 +1,85 @@
+[
+    {
+        "additional_settings": "",
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": "https://git.pytigon.eu/pytigon/_schserverless.git",
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "_schserverless",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": null,
+        "title": "Additional tools for serverless mode",
+        "user_app_template": null,
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": "None",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "schnocompress",
+                "name": "schnocompress",
+                "perms": false,
+                "tasks_code": "",
+                "title": "No compress",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass TransparentNode(Node):\n    def __init__(self, nodelist):\n        self.nodelist = nodelist\n\n    def render(self, context):\n        return self.nodelist.render(context).strip()\n\n@register.tag\ndef compress(parser, token):\n    nodelist = parser.parse(('endcompress',))\n    parser.delete_first_token()\n    return TransparentNode(nodelist)\n",
+                    "file_type": "t",
+                    "name": "compress"
+                },
+                {
+                    "content": "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass NoneNode(Node):\n    def __init__(self):\n        pass\n\n    def render(self, context):\n        return \"\"\n\n@register.tag\ndef provider_login_url(parser, token):\n    return NoneNode()\n",
+                    "file_type": "t",
+                    "name": "socialaccount"
+                }
+            ]
+        ]
+    ],
+    []
+]

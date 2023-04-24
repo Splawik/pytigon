@@ -1,0 +1,12 @@
+<div class="row" style="position:relative;">
+        [% if perms.wiki.add_page %]
+        <a class="wiki-object-edit wiki-object-edit-right" href="[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1" target="popup_edit" title="Plot properties">
+                Plot
+                <span class="fa fa-cog fa-2"></span>
+        </a>
+        [% endif %]
+        <div class="div_float">
+                <ptig-plotly {% if param.width %}width="{{param.width}}"{% endif %} {% if param.height %}height="{{param.height}}"{% endif %} plotly-name="{{param.name}}" />
+        </div>
+</div>
+

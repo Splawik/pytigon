@@ -171,6 +171,10 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
 ]
 
 
@@ -179,7 +183,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.04.05 19:15:35"
+GEN_TIME = "2023.04.23 18:40:09"
 
 
 for key, value in os.environ.items():

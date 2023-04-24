@@ -1,0 +1,28 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with edit_vscroll=True table_type='datatable'
+        {{ block.super }}
+
+%% list_content_actions
+    % new_row _("New locale")
+
+%% list_row_header
+    th..._(Name)
+
+
+%% list_row
+    td...{{object.name}}
+
+
+%% list_row_actions
+    % row_actions: ===>
+        edit
+        |
+        field_list/schtranslate_set,Locale,locale
+        translate_sync,_("Sync translate messages"),[|client://actions/view-refresh.png]
+

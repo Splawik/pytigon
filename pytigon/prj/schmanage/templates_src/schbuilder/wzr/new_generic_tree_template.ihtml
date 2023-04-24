@@ -1,0 +1,46 @@
+% extends "forms/tree.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "<<name1>>": "<<image_path1>>",
+                    "<<name2>>": "<<image_path2>>",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+
+%% all
+    %with form_width=800 form_height=600  scroll_table=True title="<<form_title>>" no_id=True
+        {{ block.super }}
+
+%% list_row_header
+    th...+ 
+    th...<<col_name_1>>
+    th...<<col_name_2>>
+
+%% list_tree_row
+        td
+            img src={{ STATIC_URL }}icons/struct/elm_{{object.type}}.png
+        td...{{object.<<field_name>>}}
+        td...{{object.<<field_name>>}}
+
+
+%% row_edit
+    % if form_add
+        % form:
+            .Hidden('parent', '{{ object.parent.id }}' ),
+            "<<field_1>>", "<<field_2>>"
+    % else
+        % form:
+            "parent",
+            .Hidden('<<field_1', '{{ object.<<field_1>> }}')
+            "<<field_2>>"
+

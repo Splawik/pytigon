@@ -1,0 +1,43 @@
+from django.urls import path
+from django.db.models import Model
+
+from rest_framework import serializers, generics
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from pytigon_lib.schdjangoext.rest_tools import create_api_for_models
+
+from . import models
+
+#class ExampleSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = models.Example
+#        fields = "__all__"
+#        read_only_fields = (
+#            "id",
+#        )
+
+#class ExampleListCreate(generics.ListCreateAPIView):
+#    queryset = Example.objects.all()
+#    serializer_class = ExampleSerializer
+##    permission_classes = [IsAdminUser]
+    
+#class ExampleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+#    queryset = Example.objects.all()
+#    serializer_class = ExampleSerializer
+##    permission_classes = [IsAdminUser]
+
+#@api_view(['GET','POST'])
+#def hello_world(request):
+#    if request.method == 'POST':
+#        return Response({"message": "Got some data!", "data": request.data})
+#    return Response({"message": "Hello, world!"})
+
+#urlpatterns = [
+#    path("hello", hello_world, name="hello"),
+#    path("examples", ExampleListCreate.as_view(), name="example"),
+#    path("examples/<int:pk>", ExampleUserRetrieveUpdateDestroy.as_view(), name="example_details"),
+#]
+
+urlpatterns = []
+create_api_for_models(models, urlpatterns,include=[], exclude=[])

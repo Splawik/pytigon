@@ -1,0 +1,41 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        <ptig-time>
+                <table border="1">
+                        <tr>
+                                <td>time</td>
+                                <td>
+                                        <div data-bind="time"></div>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>date</td>
+                                <td>
+                                        <div data-bind="date"></div>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>datetime</td>
+                                <td>
+                                        <div data-bind="datetime"></div>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>time_short</td>
+                                <td>
+                                        <div data-bind="time_short"></div>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>datetimeshort</td>
+                                <td>
+                                        <div data-bind="datetimeshort"></div>
+                                </td>
+                        </tr>
+                </table>
+        </ptig-time>
+{% endblock %}
+

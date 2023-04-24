@@ -1,0 +1,50 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=960 form_height=1200 show_title_bar=0 title="Templates" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New template" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Url</th>
+        <th>Url paramaters</th>
+        <th>
+        Direct to template
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.url|default_if_none:""}}</td>
+        <td>{{object.url_parm|default_if_none:""}}</td>
+        <td align="center">
+        {% if object.direct_to_template %}X{% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                field_edit/template_code,Code,[|client://mimetypes/x-office-presentation.png],_parent
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "name", "direct_to_template", "url", "url_parm", "tags_mount"
+        {% endform %}
+{% endblock %}
+

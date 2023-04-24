@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "forms/tree.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -47,7 +46,7 @@
                 {% subtemplate object.get_def.get_action_template %}
           {% else %}
                 {% row_actions %}
-                        edit-inline,Update,,,,,{{base_path}}schreports/table/CommonGroup/{id}/edit__group/
+                        edit-inline,Update,,,,,{{base_path}}schstruct/table/CommonGroup/{id}/edit__group/
                         pdf
                         odf
                         field_edit/data,Data,data

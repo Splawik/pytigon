@@ -1,0 +1,10 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}
+{% endblock %}
+{% block list_page %}
+        <iframe class="flexible_size" width="100%" frameBorder="0" src="{{base_path}}graphql/"></iframe>
+{% endblock %}
+

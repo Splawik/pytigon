@@ -1,0 +1,5 @@
+^^^APPS=[{% for app in app_names %}'{{app}}',{% endfor %}{% for app in prj.get_ext_pytigon_apps%}'{{app|safe }}',{% endfor %}]
+^^^APPS_EXT=[{% for app in prj.get_ext_apps%}'{{app|safe }}',{% endfor %}]
+PUBLIC = {% if prj.public %}True{% else %}False{% endif %}
+MAIN_PRJ = {% if prj.main %}True{% else %}False{% endif %}
+{{ prj.user_param|safe }}

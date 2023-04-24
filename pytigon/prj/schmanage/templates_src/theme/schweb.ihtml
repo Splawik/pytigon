@@ -1,0 +1,11 @@
+% extends 'theme/schweb_base.html'|translate:lang
+
+%% toolbars_start
+    tr
+        td
+        td
+        td...Python shell
+        td...1
+        td...client://apps/utilities-terminal.png
+        td...html
+        td...Terminal,^standard/shell/shell.html?view_in=panel

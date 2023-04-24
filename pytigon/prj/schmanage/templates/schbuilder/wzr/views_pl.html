@@ -1,0 +1,56 @@
+{% load exfiltry %}
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django import forms
+from django.template.loader import render_to_string
+from django.template import Context, Template
+from django.template import RequestContext
+from django.conf import settings
+from django.views.generic import TemplateView
+
+from pytigon_lib.schviews.form_fun import form_with_perms
+from pytigon_lib.schviews.viewtools import dict_to_template, dict_to_odf, dict_to_pdf, dict_to_json, dict_to_xml, dict_to_ooxml, dict_to_txt, dict_to_hdoc
+from pytigon_lib.schviews.viewtools import render_to_response
+from pytigon_lib.schdjangoext.tools import make_href
+from pytigon_lib.schdjangoext import formfields as ext_form_fields
+from pytigon_lib.schviews import actions
+
+from django.utils.translation import gettext_lazy as _
+
+from . import models
+import os
+import sys
+import datetime
+from django.utils import timezone
+
+{% if app.view_code %}{{app.view_code|first_section|safe}} {% endif %}
+
+{% if forms %}PFORM = form_with_perms('{{app.name}}') {% endif %}
+
+{% for form in forms %}
+class {{form.name}}(forms.Form):
+    {% for field in form.schformfield_set.all %}{{field.as_declaration|safe}}
+    {% endfor %}
+    {% if form.process_code %}{% if form.asynchronous %}async {% endif %}def process(self, request, queryset=None):
+    {% for line in form.process_code.splitlines %}
+        {{line|safe}}{% endfor %}{% endif %}
+    {% if form.end_class_code and form.end_class_code != '' %}{% for line in form.end_class_code.splitlines %}
+    {{ line|safe }}{% endfor %}{% endif %}
+{% if form.end_code and form.end_code != '' %}{{form.end_code|safe}}{% endif %}
+def view_{{form.name|lower}}(request, *argi, **argv):
+    return PFORM(request, {{form.name}}, '{{form.parent.name}}/form{{form.name|lower}}.html', {})
+
+{% endfor %}
+{% for view in views %}{% if view.view_code and view.view_code != '' %}
+{{view.view_code_start|safe}}
+{% if view.ret_type == 'T' %}@dict_to_template('{{view.parent.name}}/v_{{view.name|lower}}.html'){% endif %}{% if view.ret_type == 'O' %}@dict_to_odf('{{view.parent.name}}/v_{{view.name|lower}}.ods'){% endif %}{% if view.ret_type == 'S' %}@dict_to_ooxml('{{view.parent.name}}/v_{{view.name|lower}}.xlsx'){% endif %}{% if view.ret_type == 'P' %}@dict_to_pdf('{{view.parent.name}}/v_{{view.name|lower}}_pdf.html'){% endif %}{% if view.ret_type == 't' %}@dict_to_txt('{{view.parent.name}}/v_{{view.name|lower}}_txt.html'){% endif %}{% if view.ret_type == 'H' %}@dict_to_hdoc('{{view.parent.name}}/v_{{view.name|lower}}_hdoc.html'){% endif %}{% if view.ret_type == 'J' %}@dict_to_json{% endif %}{% if view.ret_type == 'X' %}@dict_to_xml{% endif %}
+{% if view.asynchronous %}async {% endif %}def {{view.get_name}}(request{% if view.param %}, {{view.param}}{% endif %}):
+    {% if view.doc %}"""{% for line in view.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    {% for line in view.view_code.splitlines %}{{line|safe}}
+    {% endfor %}
+{{view.view_code_end}}
+{% endif %}{% endfor %}
+
+{% if app.view_code %}{{app.view_code|second_section|safe}} {% endif %}

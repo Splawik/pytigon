@@ -29,6 +29,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 from tables_demo.models import Example1Computer
 
@@ -114,66 +115,27 @@ def plotly_example(request, **argv):
     return {"plotly_content": buf.getvalue()}
 
 
-@dict_to_template("views_demo/v_matplotlib_example.html")
-def matplotlib_example(request, **argv):
+@dict_to_template("views_demo/v_plotly_export_example.html")
+def plotly_export_example(request, **argv):
 
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    import io
+    from io import BytesIO
+    import plotly.express as px
 
-    # image 1
-    df = pd.DataFrame(
-        {
-            "Date": [
-                "2022-01-01",
-                "2022-02-01",
-                "2022-03-01",
-                "2022-04-01",
-                "2022-05-01",
-                "2022-06-01",
-            ],
-            "Attendance": [88, 78, 90, 68, 84, 75],
-        }
-    )
-    df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
+    df = px.data.iris()
+    fig = px.scatter(df, x="sepal_width", y="sepal_length", color="species")
 
-    ax = sns.barplot(x="Date", y="Attendance", data=df)
-    ax.figure.set_size_inches(7, 8)
-    xticks = ax.get_xticks()
-    ax.set_xticklabels(
-        [pd.to_datetime(tm, unit="ms").strftime("%Y-%m-%d") for tm in xticks],
-        rotation=45,
-    )
-    # plt.xticks(rotation=20)
+    x1 = BytesIO()
+    fig.write_image(x1, format="svg")
 
-    imgdata = io.StringIO()
-    ax.get_figure().savefig(imgdata, format="svg")
-    img1 = imgdata.getvalue()
-
-    # image 2
-
-    df = pd.DataFrame(
-        {
-            "Dates": [
-                "2021-06-10",
-                "2021-06-11",
-                "2021-06-12",
-                "2021-06-13",
-                "2021-06-14",
-                "2021-06-15",
-            ],
-            "Female": [200, 350, 150, 600, 500, 350],
-            "Male": [450, 400, 800, 250, 500, 900],
-        }
+    df = px.data.gapminder().query("year == 2007").query("continent == 'Europe'")
+    df.loc[
+        df["pop"] < 2.0e6, "country"
+    ] = "Other countries"  # Represent only large countries
+    fig = px.pie(
+        df, values="pop", names="country", title="Population of European continent"
     )
 
-    ax = df.plot(x="Dates", y=["Female", "Male"], kind="bar")
+    x2 = BytesIO()
+    fig.write_image(x2, format="svg")
 
-    ax.get_figure().set_size_inches(14, 12)
-
-    imgdata2 = io.StringIO()
-    ax.get_figure().savefig(imgdata2, format="svg")
-    img2 = imgdata2.getvalue()
-
-    return {"img1_svg": img1, "img2_svg": img2}
+    return {"img1_svg": x1.getvalue(), "img2_svg": x2.getvalue()}

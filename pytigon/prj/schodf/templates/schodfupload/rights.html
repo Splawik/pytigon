@@ -1,0 +1,69 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "<<name1>>": "<<image_path1>>",
+                    "<<name2>>": "<<image_path2>>",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=<<dx>> form_height=<<dy>> %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block form_header %}
+        <p>
+                {% new_row "<<new_row_title>>" %}
+                {% action_table "<<action>>" "<<action_title>>" %}
+        </p>
+{% endblock %}
+{% block table_header %}
+    <tr>
+        <td>ID</td>
+        <td><<col_name>></td>
+        <td>
+        Action
+        </td>
+    </tr>
+{% endblock %}
+{% block table_content %}
+        <tr>
+                <td><a href="{{object.id}}/info?width=<<info_dy>>&height=<<info_dx>>" title="<<info_title>>" class="thickbox">{{object.id}}</a></td>
+                <td>{{object.<<object_name>>}}</td>
+                <td>
+                        {% list_field "<<child_name>>_set" "<<child_id>>" "<<child_title>>" %}
+                        {% edit_field "<<field_name>>" "<<field_id>>" "<<field_title>>" %}
+                        {% action_row "<<name1>>" "<<action_title_1>>" %}
+                        {% action_row "<<name2>>" "<<action_title_2>>" %}
+                        {% edit_row "update" %}
+                        {% delete_row "delete" %}
+                </td>
+        </tr>
+{% endblock %}
+{% block table_footer %}
+    <tr>
+        <td>-</td>
+        <td>-</td>
+        <td>
+                {% new_row "<<new_row_title>>" %}
+</td>
+    </tr>
+{% endblock %}
+{% block table_row_edit %}
+        {{form.as_table}}
+        {{form.fields_as_table.<<field1>>__<<field2>>__<<field3>>}}
+{% endblock %}
+

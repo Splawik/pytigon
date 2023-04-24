@@ -29,6 +29,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 
 def make_csum_fun():

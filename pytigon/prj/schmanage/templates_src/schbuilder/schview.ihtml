@@ -1,0 +1,90 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+% load builder_filters
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+
+%% all
+    %with form_width=960 form_height=1200 show_title_bar=0 title=_("Views") vform=True
+        {{ block.super }}
+
+%% list_content_header
+    table
+        tr
+            td
+                % widget class='menu' id='new_view' title=_("&New view"):
+                    % for pos in object_list|module_obj:"View_CHOICES"
+                        li
+                            a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
+            td
+                % action "header" title="view - header" url="{{app_path}}table/SChApp/{parent.id}/view_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="view - footer" url="{{app_path}}table/SChApp/{parent.id}/view_code/form/editor/?fragment=footer"
+            td
+                % action "header2" title="urls - header" url="{{app_path}}table/SChApp/{parent.id}/urls_code/form/editor/?fragment=header"
+            td
+                % action "footer2" title="urls - footer" url="{{app_path}}table/SChApp/{parent.id}/urls_code/form/editor/?fragment=footer"
+
+
+        
+%% list_row_header
+    th..._(Name)
+    th..._(View type)
+    th..._(Url)
+    th..._(Parameters)
+    th..._(Asynchronous)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.get_view_type_display}}
+    td...{{object.url|default_if_none:""}}
+    td...{{object.param|default_if_none:""}}
+    td align=center...{% if object.asynchronous %}X{% endif %}
+    
+%% list_row_actions
+    {{ block.super }}
+    % if object.ret_type == 'T':
+        % row_actions:
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+            .template_edit3,Template,[|client://mimetypes/x-office-presentation.png]
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+    % else:
+        % row_actions:
+            .field_edit/view_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+            .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+    % row_actions:...field_edit/extra_code,Extra code,[|client://actions/format-justify-center.png],_parent
+
+    
+%% row_edit
+    {{ form.view_type.as_hidden }}
+    strong 
+        {{object.get_view_type_display}}
+                
+    % form:
+        "ret_type", "parent", "name", "url_params", "asynchronous"
+    
+    % if object.view_type == 'u'
+        % form:
+            "param", "url"
+    % else
+        {{form.param.as_hidden}}        
+        % form_item url:
+            select name=url,,,id=id_url,,,class=select form-control
+                %if not object.url or object.url == ""
+                    option selected=selected,,,value=...---------
+                %else
+                    option value=...---------
+                %for model in object.get_models
+                    %if model == object.url
+                        option value={{model}},,,selected=selected...{{model}}
+                    %else
+                        option value={{model}}...{{model}}

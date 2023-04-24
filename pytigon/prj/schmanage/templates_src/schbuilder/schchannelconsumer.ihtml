@@ -1,0 +1,55 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+% load builder_filters
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+
+%% all
+    %with form_width=960 form_height=1200 show_title_bar=0 title=_("Consumers") vform=True
+        {{ block.super }}
+
+%% list_content_header
+    table
+        tr
+            td
+                % widget class='menu' id='new_consumer' title=_("&New consumer"):
+                    % for pos in object_list|module_obj:"Consumer_CHOICES"
+                        li
+                            a href={{table_path}}{{pos.0}}/add/...{{pos.1}}
+            td
+                % action "header" title="consumers - header" url="{{app_path}}table/SChApp/{parent.id}/consumer_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="consumers - footer" url="{{app_path}}table/SChApp/{parent.id}/consumer_code/form/editor/?fragment=footer"
+
+%% list_row_header
+    th..._(Name)
+    th..._(Type)
+    th..._(Url)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.get_consumer_type_display}}
+    td...{{object.url|default_if_none:""}}
+    
+%% list_row_actions
+    {{ block.super }}
+    % row_actions:
+        .field_edit/consumer_code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+        .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+    
+%% row_edit
+    {{ form.consumer_type.as_hidden }}
+    strong 
+        {{object.get_consumer_type_display}}
+                
+    % form:
+        "parent", "name", "url"

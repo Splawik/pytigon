@@ -1,0 +1,104 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'fields'
+                
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+                    return True
+                elif 'field_duplicate' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        self.tabsort.grid.goto_last_row()
+                    return True
+                else:
+                    return None
+   
+%% all
+    %with form_width=720 form_height=480 show_title_bar=0 title=_("Tables") vform=True
+        {{ block.super }}
+
+
+%% list_content_actions
+    table
+        tr
+            td
+                % new_row _("New table")
+            td
+                % action "header" title="Model - header" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="Model - footer" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=footer"
+
+%% list_row_header
+    th..._(Name)
+    th..._(Base table)
+    th..._(Proxy)
+    th..._(Generic)
+    th..._(Verbose name)
+
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.base_table|default_if_none:""}}
+    td align=center...{% if 'proxy' in object.metaclass_code %}X{% endif %}
+    td align=center...{% if object.generic %}X{% endif %}
+    td...{{object.verbose_name|default_if_none:""}}
+
+%% list_row_actions
+    {% if not forloop.first %}
+        % row_actions:... field_up,Move up,[|client://actions/go-up.png]
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
+    {% endif %}
+
+    % row_actions:
+        .edit
+        .field_edit/table_code,Code,[fa fa-code fa-2|client://mimetypes/text-x-generic-template.png]
+        .field_edit/metaclass_code,Meta class,[|client://actions/document-properties.png]
+        .field_list/schfield_set,Fields,[|client://actions/format-indent-more.png]
+        .field_edit/doc,Documentation,[|client://apps/help-browser.png]
+        .template_edit,Template
+        .delete
+
+%% table_header_edit
+  h2..._(Table list)
+
+%% row_edit
+    % form:
+        'parent', 'name'
+    
+    % form_item base_table.select:
+        %if not object.base_table or object.base_table == ""
+            option selected=selected,,,value=...---------
+        %else
+            option value=...---------
+        %if object.base_table == 'JSONModel'
+            option value=JSONModel,,,selected=selected...JSONModel
+        %else
+            option value=JSONModel...JSONModel                    
+            
+        %for model in object.get_models
+            %if model == object.base_table
+                option value={{model}},,,selected=selected...{{model}}
+            %else
+                option value={{model}}...{{model}}
+            
+    % form:
+        'verbose_name', 'verbose_name_plural', 'proxy_model', 'ordering', 'generic'

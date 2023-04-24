@@ -1,0 +1,22 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Generate locale files' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block user_header %}
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td>
+                 {{object.0}}
+                </td>
+        </tr>
+{% endblock %}
+

@@ -1,0 +1,78 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    % if not form_list:
+        script language=python
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+
+%% all
+    %with form_width=720 form_height=480 show_title_bar=0 title=_("Menu") vform=True
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row _("New menu item")
+    a href={{request.path|replace:"/table/SChApp/|/table/SChApp_wiki/"}}/../../../-/add,,,class=button,,,name=New wiki item,,,label=_(New wiki item),,,title=_(New wiki item),,,target=_blank
+
+
+%% list_row_header
+    th..._(Name)
+    th..._(Url)
+    th..._(Permission)
+
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.url|default_if_none:""}}
+    td...{{object.perms|default_if_none:""}}
+
+%% list_row_actions
+    {{block.super}}
+    {% if not forloop.first %}
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png]
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png]
+    {% endif %}
+    % row_actions:...field_edit/icon_code,Icon code,[|client://categories/applications-graphics.png],_parent
+
+
+%% table_header_edit
+  h2..._(Menu item list)
+
+
+%% row_edit
+    % form:
+        'name', 'perms'
+    %% url_select
+        input type=hidden,,,name=parent,,,value={{object.parent.id}},,,id=id_parent
+        % if not standard_web_browser:
+            % form_item url:
+                CTRL-CHOICE name=url,,,value='{{object.url}}'
+                    tdata
+                        %for url in object.get_urls
+                            tr:::td...{{url}}
+        % else:
+            % form_item url:
+                select name=url2,,,id=id_url2,,,class=select form-control
+                    %if not object.url or object.url == ""
+                        option selected=selected,,,value=...---------
+                    %else
+                        option value=...---------
+                        option value={{object.url}},,,selected=selected...{{object.url}}
+                    %for url in object.get_urls
+                        %if not url == object.url
+                            option value={{url}}...{{url}}
+    % form:
+        'url_type'
+    % form_item icon:
+        CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon|none_to_empty}},,,valuetype=str,,,onload=self.init_default_icons=True
+    % form:
+        'icon_size'

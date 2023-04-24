@@ -1,0 +1,39 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New raw material" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>External id</th>
+        <th>Name</th>
+        <th>
+        Active
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.external_id }}</td>
+        <td>{{ object.name }}</td>
+        <td>
+        {{ object.active }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                external_id,name,active
+        {% endform %}
+{% endblock %}
+

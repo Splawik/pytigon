@@ -1,0 +1,41 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New tag" action="new_row/{{filter}}" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Tag</th>
+        <th>Description</th>
+        <th>Application</th>
+        <th>
+        Table
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.get_tag_display }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.app }}</td>
+        <td>
+        {{ object.table }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                tag,description
+        {% endform %}
+{% endblock %}
+

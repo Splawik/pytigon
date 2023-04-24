@@ -1,5 +1,6 @@
 import django
 from django.db import models
+from django.utils import timezone
 
 from pytigon_lib.schdjangoext.fields import *
 from pytigon_lib.schdjangoext.models import *

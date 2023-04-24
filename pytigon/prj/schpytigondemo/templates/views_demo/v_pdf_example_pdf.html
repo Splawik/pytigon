@@ -1,0 +1,12 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "base_pdf.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load expr %}
+{% block content %}
+        <p align="center">TEST</p>
+        <p>
+                {{name}}: {{description}}
+        </p>
+{% endblock %}
+

@@ -1,0 +1,10 @@
+^^^
+http = wx.GetApp().get_http(self)
+http.post(self, "/tools/get_user_param/", parm={ 'param': 'appset_up' })
+path = http.str()
+
+if path:
+    def _after(address):
+        wx.GetApp().GetTopWindow().new_main_page(address, panel="toolbar_Aplikacje__Lista_aplikacji")
+    wx.CallLater(100, _after, path)
+

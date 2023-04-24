@@ -1,0 +1,26 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block scroll %}
+{% endblock %}
+{% block all %}
+        {% with show_form=True form_edit=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_action %}
+        {% if on_page %}{{base_path}}schwiki/edit_object_on_page_form/{{page_id}}/{{line_number}}/{{object_name}}/{% else %}{{base_path}}schwiki/edit_page_object_form/{{object_name}}/{% endif %}
+{% endblock %}
+{% block row_edit_form %}
+        {% if form %}
+                {{ block.super }}
+          {% else %}
+                This object doesn't need additional parameters
+        {% endif %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

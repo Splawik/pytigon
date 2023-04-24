@@ -1,0 +1,63 @@
+[
+    {
+        "additional_settings": "",
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": "_schwiki.schwiki",
+        "git_repository": "https://git.pytigon.eu/pytigon/schscripts.git",
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "schscripts",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": null,
+        "title": "Pytigon additiona scripts",
+        "user_app_template": null,
+        "version": "latest"
+    },
+    [],
+    [
+        {
+            "code": "import sys\nimport os\n\nfrom pytigon_lib.schindent.indent_style import ihtml_to_html_base\n\ncwd = os.getcwd()\nfile_name = sys.argv[-1]\nprint(sys.argv)\nif file_name.endswith(\".ihtml\"):\n    if file_name.startswith(\"//\") or \":\" in file_name:\n        file_name2 = file_name2\n    else:\n        file_name2 = os.path.join(cwd, file_name)\n    file_name3 = file_name2.replace(\".ihtml\", \".html\")\n    with open(file_name2, \"rt\", encoding=\"utf-8\") as f:\n        buf = f.read()\n        print(buf)\n        buf = ihtml_to_html_base(None, input_str=buf)\n        with open(file_name3, \"wt\", encoding=\"utf-8\") as f2:\n            f2.write(buf)\n",
+            "doc": null,
+            "name": "ihtml2html.py",
+            "type": "O"
+        },
+        {
+            "code": "import sys\nimport os\nimport io\n\nfrom pytigon_lib.schhtml.pdfdc import PdfDc\nfrom pytigon_lib.schhtml.htmlviewer import HtmlViewerParser\nfrom pytigon_lib.schindent.indent_style import ihtml_to_html_base\nfrom django.core.files.storage import default_storage\n\nBASE_PATH = os.path.abspath(os.getcwd())\n\ndefault_storage.fs.mount(\"cwd\", BASE_PATH)\n\nihtml_file_path = os.path.join(\"/cwd\", sys.argv[-1])\n\nf = default_storage.open(ihtml_file_path)\nihtml_str = f.read().decode(\"utf-8\")\nf.close()\nbuf = ihtml_to_html_base(None, input_str=ihtml_str)\noutput_stream = io.BytesIO()\ndc = PdfDc(\n    calc_only=False,\n    output_name=os.path.join(\n        BASE_PATH,\n        \"test\",\n        ihtml_file_path.replace(\".ihtml\", \".pdf\"),\n    ),\n    output_stream=output_stream,\n)\ndc.set_paging(True)\np = HtmlViewerParser(dc=dc, calc_only=False)\np.feed(buf)\np.close()\ndc.end_page()\n\nf = default_storage.open(ihtml_file_path.replace(\".ihtml\", \".pdf\"), \"wb\")\nf.write(output_stream.getvalue())\nf.close()\n",
+            "doc": null,
+            "name": "ihtml2pdf.py",
+            "type": "O"
+        },
+        {
+            "code": "import sys\nimport os\nimport argparse\n\nfrom pytigon_lib.schhtml.pdfdc import PdfDc\nfrom pytigon_lib.schhtml.cairodc import CairoDc\nfrom pytigon_lib.schhtml.docxdc import DocxDc\nfrom pytigon_lib.schhtml.xlsxdc import XlsxDc\nfrom pytigon_lib.schhtml.basedc import BaseDc\nfrom pytigon_lib.schhtml.htmlviewer import HtmlViewerParser\nfrom pytigon_lib.schindent.indent_style import ihtml_to_html_base\nfrom pytigon_lib.schindent.indent_markdown import markdown_to_html\n\nfrom pytigon_lib.schindent.indent_markdown import (\n    IndentMarkdownProcessor,\n    REG_OBJ_RENDERER,\n)\n\nBASE_PATH = os.getcwd()\n\n\ndef main():\n    import schwiki.applib.makdown_obj_simple\n    import schwiki.applib.markdown_obj_subblocks\n\n    parser = argparse.ArgumentParser(description=\"Converter\")\n    parser.add_argument(\n        \"filename\", help=\"filename to convert (*.html, *.ihtml, *.md, *.imd)\"\n    )\n    parser.add_argument(\n        \"-o\", \"--output\", help=\"output filename (*.pdf, *.spdf, *.docx, *.xlsx, *.svg)\"\n    )\n    parser.add_argument(\"-i\", \"--icss\", help=\"input icss filename (*.icss)\")\n\n    args = parser.parse_args(sys.argv[2:])\n\n    if args.icss:\n        if args.icss.startswith(\"/\") or args.icss[1] == \":\":\n            icss_filename = args.icss\n        else:\n            icss_filename = os.path.join(BASE_PATH, args.icss)\n\n        with open(os.path.join(BASE_PATH, args.icss), \"r\") as f:\n            init_css_str = f.read()\n    else:\n        init_css_str = \"@wiki.icss\"\n\n    if args.filename.startswith(\"/\") or args.filename[1] == \":\":\n        input_filename = args.filename\n    else:\n        input_filename = os.path.join(BASE_PATH, args.filename)\n\n    if args.output.startswith(\"/\") or args.output[1] == \":\":\n        output_filename = args.output\n    else:\n        output_filename = os.path.join(BASE_PATH, args.output)\n\n    (width, height) = (595, 842)\n\n    if \".pdf\" in output_filename or \".xpdf\" in output_filename:\n        if \".xpdf\" in output_filename:\n            dc = PdfDc(\n                output_name=output_filename.replace(\".xpdf\", \".pdf\"),\n            )\n        else:\n            dc = PdfDc(output_name=output_filename)\n\n        dc.set_paging(True)\n\n    elif \".spdf\" in output_filename:\n\n        def notify_callback(event_name, data):\n            if event_name == \"end\":\n                dc = data[\"dc\"]\n                if dc.output_name:\n                    dc.save(dc.output_name)\n                else:\n                    result_buf = NamedTemporaryFile(delete=False)\n                    spdf_name = result_buf.name\n                    result_buf.close()\n\n                    dc.save(spdf_name)\n                    with open(spdf_name, \"rb\") as f:\n                        dc.ouput_stream.write(f.read())\n\n        dc = PdfDc(\n            output_name=output_filename,\n            calc_only=True,\n            width=width,\n            height=height,\n            notify_callback=notify_callback,\n            record=True,\n        )\n        dc.set_paging(True)\n    elif \".docx\" in output_filename:\n        dc = DocxDc(\n            output_name=output_filename,\n            # docx_template_path=os.path.join(BASE_PATH, \"default.docx\"),\n        )\n    elif \".xlsx\" in output_filename:\n        dc = XlsxDc(output_name=output_filename)\n    else:\n        dc = None\n\n    if \".ihtml\" in input_filename and \".html\" in output_filename:\n        with open(input_filename, \"rt\", encoding=\"utf-8\") as f:\n            buf = f.read()\n            buf = ihtml_to_html_base(None, input_str=buf)\n            with open(output_filename, \"wt\", encoding=\"utf-8\") as f2:\n                f2.write(buf)\n        return\n\n    p = HtmlViewerParser(dc=dc, calc_only=False, init_css_str=init_css_str, css_type=1)\n\n    with open(input_filename, \"rt\", encoding=\"utf-8\") as f:\n        buf = f.read()\n        if \".ihtml\" in input_filename:\n            buf = ihtml_to_html_base(None, input_str=buf)\n        elif \".md\" in input_filename:\n            buf = markdown_to_html(buf)\n            buf = \"<html><body class='wiki'>\" + buf + \"</body></html>\"\n        elif \".imd\" in input_filename:\n            x = IndentMarkdownProcessor(output_format=\"html\")\n            buf = x.convert(buf)\n            buf = \"<html><body class='wiki'>\" + buf + \"</body></html>\"\n\n        if \".xpdf\" in output_filename:\n\n            def notify_callback(event_name, data):\n                if event_name == \"end\":\n                    dc = data[\"dc\"]\n                    dc.surf.pdf.set_subject(buf)\n\n            dc.notify_callback = notify_callback\n        p.feed(buf)\n\n    p.close()\n",
+            "doc": null,
+            "name": "all2all.py",
+            "type": "O"
+        }
+    ]
+]

@@ -1,0 +1,44 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        <p>pattern mask</p>
+        <p>
+                <ptig-imask mask="+{7}(000)000-00-00">
+                        <input class="form-control" type="text" name="test1" />
+                </ptig-imask>
+        </p>
+        <p>
+        Number
+                <ptig-imask mask="number" scale="3" thousands-separator>
+                        <input class="form-control" type="text" name="test2" />
+                </ptig-imask>
+        </p>
+        <p>
+        Monay
+                <ptig-imask mask="monay">
+                        <input class="form-control" type="text" name="test3" />
+                </ptig-imask>
+        </p>
+        <p>
+        Range
+                <ptig-imask mask="range" from="0" to="99" max-length="2">
+                        <input class="form-control" type="text" name="test3" />
+                </ptig-imask>
+        </p>
+        <p>
+        Date
+                <ptig-imask mask="date">
+                        <input class="form-control" type="text" name="test5" />
+                </ptig-imask>
+        </p>
+        <p>
+        Enum
+                <ptig-imask mask="enum" enum="pl;fr;en;gb;us">
+                        <input class="form-control" type="text" name="test6">
+                        </input>
+                </ptig-imask>
+        </p>
+{% endblock %}
+

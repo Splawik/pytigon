@@ -1,0 +1,13 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Make installer' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_content_schbutton %}
+        <input type="submit" value="Run" class="btn btn-info" target="_self" widt="200" height="44" />
+{% endblock %}
+

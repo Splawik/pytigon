@@ -14,7 +14,7 @@
                 [ login | 1 ]
             [ autologin | 1 ]
             [ csrf_token | {%csrf_token%} ]
-            [ gui_style | modern(toolbar(file(exit),clipboard) ]
+            [ gui_style | modern(None) ]
             [ hybrid | 0 ]
             [ title  | Odf ]
             [ start_page | schodfupload/odf_upload/ ]

@@ -1,0 +1,128 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def init_form(self):
+                self.tabsort.grid.default_command = 'fields'
+
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+                    return True
+                elif 'field_duplicate' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        self.tabsort.grid.goto_last_row()
+                    return True
+                else:
+                    return None
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=0 title="Tables" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        <table>
+                <tr>
+                        <td>
+                                {% new_row "New table" %}
+                        </td>
+                        <td>
+                                {% action "header" title="Model - header" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=header" %}
+                        </td>
+                        <td>
+                                {% action "footer" title="Model - footer" url="{{app_path}}table/SChApp/{parent.id}/model_code/form/editor/?fragment=footer" %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Base table</th>
+        <th>Proxy</th>
+        <th>Generic</th>
+        <th>
+        Verbose name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.base_table|default_if_none:""}}</td>
+        <td align="center">{% if 'proxy' in object.metaclass_code %}X{% endif %}</td>
+        <td align="center">{% if object.generic %}X{% endif %}</td>
+        <td>
+        {{object.verbose_name|default_if_none:""}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                 field_up,Move up,[|client://actions/go-up.png]
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down,[|client://actions/go-down.png]
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+                edit
+                field_edit/table_code,Code,[fa fa-code fa-2|client://mimetypes/text-x-generic-template.png]
+                field_edit/metaclass_code,Meta class,[|client://actions/document-properties.png]
+                field_list/schfield_set,Fields,[|client://actions/format-indent-more.png]
+                field_edit/doc,Documentation,[|client://apps/help-browser.png]
+                template_edit,Template
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Table list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'parent', 'name'
+        {% endform %}
+        {% form_item base_table.select %}
+                {% if not object.base_table or object.base_table == "" %}
+                        <option selected="selected" value="">---------</option>
+                  {% else %}
+                        <option value="">---------</option>
+                {% endif %}
+                {% if object.base_table == 'JSONModel' %}
+                        <option value="JSONModel" selected="selected">JSONModel</option>
+                  {% else %}
+                        <option value="JSONModel">
+                        JSONModel
+                        </option>
+                {% endif %}
+                {% for model in object.get_models %}
+                        {% if model == object.base_table %}
+                                <option value="{{model}}" selected="selected">{{model}}</option>
+                          {% else %}
+                                <option value="{{model}}">
+                                {{model}}
+                                </option>
+                        {% endif %}
+                {% endfor %}
+        {% endform_item %}
+        {% form %}
+                'verbose_name', 'verbose_name_plural', 'proxy_model', 'ordering', 'generic'
+        {% endform %}
+{% endblock %}
+

@@ -1,0 +1,80 @@
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    % if not form_list:
+        script language=python
+            def init_form(self):
+                from pytigon_lib.schtools.schjson import loads
+                app = wx.GetApp()
+                form = self
+                
+                class callback:
+                    def on_websocket_message(msg):
+                        nonlocal form
+                        msg2 = loads(msg)
+                        form.msg.AppendText(msg2['txt'])
+                        form.msg.DocumentEnd()
+                self.callback = callback
+                app.create_websocket('{{app_path}}django_manage/channel/', callback)
+
+                def make_on_click(cmd):
+                    def on_click(event):
+                        nonlocal cmd
+                        event.Skip()
+                        self.cmd(cmd)
+                    return on_click
+                
+                self.makemigrations.Bind(wx.EVT_BUTTON, make_on_click("makemigrations --no-input --no-color"))
+                self.makeallmigrations.Bind(wx.EVT_BUTTON, make_on_click("makeallmigrations --no-input --no-color"))
+                self.migrate.Bind(wx.EVT_BUTTON, make_on_click("migrate --no-input --no-color"))
+                self.createautouser.Bind(wx.EVT_BUTTON, make_on_click("createautouser --no-color"))
+                self.compilemessages.Bind(wx.EVT_BUTTON, make_on_click("compilemessages --no-color"))
+                self.qinfo.Bind(wx.EVT_BUTTON, make_on_click("qinfo --no-color"))
+                self.send_mail.Bind(wx.EVT_BUTTON, make_on_click("send_mail --no-color"))
+                             
+            def cmd(self, cmd):
+                app = wx.GetApp()
+                async def start_webserver():
+                    nonlocal app
+                    await app.websocket_send(
+                        "{{app_path}}django_manage/channel/", {'id': '{{project.name}}', 'command': 'start',  'cmd': cmd }
+                    )                
+                app.StartCoroutine(start_webserver, app.GetTopWindow())
+
+            def on_close(self):
+                app = wx.GetApp()
+                async def stop_webserver():
+                    nonlocal app
+                    await app.websocket_send(
+                        "{{app_path}}django_manage/channel/", {'id': '{{project.name}}', 'command': 'stop', }
+                    )                
+
+                app.StartCoroutine(stop_webserver, app.GetTopWindow())
+                app.remove_websocket_callback("{{app_path}}django_manage/channel/", self.callback)
+
+%% all
+    % with show_title_bar=1 title='Manage '|append_str:project.name
+        {{ block.super }}
+
+%% content
+    table class=toolbar
+        tr
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=makemigrations,,,label=_(Make migrations),,,SRC=png://status/dialog-information.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=makeallmigrations,,,label=_(Make all migrations),,,SRC=png://status/software-update-available.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=migrate,,,label=_(Migrate),,,SRC=png://actions/go-next.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=createautouser,,,label=_(Create auto user),,,SRC=png://apps/system-users.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=compilemessages,,,label=_(Compile messages),,,SRC=png://mimetypes/video-x-generic.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=qinfo,,,label=_(Qinfo),,,SRC=png://apps/help-browser.png
+            td cellpadding=0
+                CTRL-NOBG_BUTTON_TXT NAME=send_mail,,,label=_(Send mails),,,SRC=png://actions/mail-reply-all.png
+
+    ctrl-styledtext name=msg,,,width=100%,,,height=100%

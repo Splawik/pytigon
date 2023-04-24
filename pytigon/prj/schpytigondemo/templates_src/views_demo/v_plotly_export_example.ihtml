@@ -1,0 +1,14 @@
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with show_title_bar=1 title='Matplotlib example'
+        {{ block.super }}
+
+%% content
+    div width=25%
+        {{ img1_svg|safe }}
+    div width=25%
+        {{ img2_svg|safe }}

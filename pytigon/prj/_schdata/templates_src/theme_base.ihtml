@@ -14,7 +14,7 @@
                 [ login | 1 ]
             [ autologin | 1 ]
             [ csrf_token | {%csrf_token%} ]
-            [ gui_style | modern(toolbar(file(open,exit),clipboard) ]
+            [ gui_style | modern(None) ]
             [ hybrid | 0 ]
             [ title  | Data structures ]
             [ start_page | _schdata ]

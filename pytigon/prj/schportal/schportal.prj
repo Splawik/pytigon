@@ -1,0 +1,101 @@
+[
+    {
+        "additional_settings": "BOOTSTRAP_TEMPLATE = \"bootswatch/materia\"\n\nSEARCH_PATH = \"/schwiki/%s/search/\"\n\nif 'EMAIL_HOST_USER' in os.environ:\n    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']\nif 'EMAIL_HOST_PASSWORD' in os.environ:\n    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']\n\nINSTALLED_APPS.append('allauth.socialaccount.providers.google')\nINSTALLED_APPS.append('allauth.socialaccount.providers.facebook')\nINSTALLED_APPS.append('allauth.socialaccount.providers.github')\nINSTALLED_APPS.append('allauth.socialaccount.providers.microsoft')\nINSTALLED_APPS.append('allauth.socialaccount.providers.azure')\nINSTALLED_APPS.append('allauth.socialaccount.providers.okta')\nINSTALLED_APPS.append('allauth.socialaccount.providers.openid')\nINSTALLED_APPS.append('allauth.socialaccount.providers.windowslive')\n\n\n#EMAIL_HOST = 'smtp.gmail.com'\n#EMAIL_PORT = 587\n#EMAIL_USE_TLS = True\n#EMAIL_IMAP_HOST = 'imap.gmail.com'\n#EMAIL_IMAP_INBOX = 'inbox'\n#EMAIL_IMAP_OUTBOX = 'outbox'\n\n\nINSTALLED_APPS.append('explorer')\n\nif platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n    INSTALLED_APPS.append('filer')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": "username: \"\", theme: \"\", time_str: \"\"",
+        "custom_tags": "_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-time.js\n_schwiki/components/insert_object.js\n_schcomponents/components/ptig-webrtc.js\nschportal/components/teleconference.js",
+        "desktop_gui_type": "tablet_modern",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": "_schtools.schtools,_schwiki.schwiki,_schdata.schreports,_schcomponents.standard_components,_schdata.schelements,_schsetup.schadmin,_schtools.schattachements,_schtools.schcommander",
+        "git_repository": "https://git.pytigon.eu/pytigon/schportal.git",
+        "gui_elements": null,
+        "gui_type": "tree",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": "",
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": true,
+        "main_view": true,
+        "name": "schportal",
+        "plugins": null,
+        "public": true,
+        "readme_file": null,
+        "smartfon_gui_type": "smartfon_standard",
+        "start_page": "schwiki/portal/Start/view/",
+        "tablet_gui_type": "tablet_modern",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": "% extends 'theme/tablet_base.html'\n\n%% logo\n    img src={{base_path}}static/favicon.ico\n    {{block.super}}\n",
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% extrahead\n    %if standard_web_browser:\n        {% css_link 'themes/wiki.css' %}\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n        {% css_link '_schwiki/css/wiki_editor.css' %}\n        {% css_link 'explorer/explorer.css' %}\n    {{ block.super }}\n",
+        "title": "Pytigon portal",
+        "user_app_template": "",
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_title": "teleconference",
+                "name": "teleconference",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Teleconference",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "consumer_code": "def __init__(self, *args, **kwargs):\n    super().__init__(*args, **kwargs)\n    self.host = True\n    self.base_room_group_name = \"default\"\n    \n\nasync def init_consumer(self, conf):\n    if 'room' in conf:\n        self.base_room_group_name = conf['room']\n\n    if 'host' in conf and conf['host']:\n        self.host = True\n        self.room_group_name = self.base_room_group_name+\"_host\"\n        self.room_other_group_name = self.base_room_group_name\n    else:\n        self.host = False\n        self.room_group_name = self.base_room_group_name\n        self.room_other_group_name = self.base_room_group_name + \"_host\"\n\n    await self.channel_layer.group_add(self.room_group_name, self.channel_name)\n\n    await self.send_json({\"status\": \"initiated\"})\n   \nasync def connect(self):\n    await self.accept()\n    await self.send_json({\"status\": \"connected\"})\n\nasync def disconnect(self, close_code):\n    await self.channel_layer.group_send(\n        self.room_other_group_name, {\"type\": \"chat_destroy\", \"message\": { 'destroy': True, } }\n    )\n    await self.channel_layer.group_discard(self.room_group_name, self.channel_name)\n    print(\"DDDDDDDDDDDDDDDDDIIIIIIIIIIIISSSSSSSSSSCONNECT\")\n\nasync def receive_json(self, content):\n    print(\"receive_json: \", content)\n    if \"init_consumer\" in content:\n        await self.init_consumer(content)\n    elif 'ping' in content:\n        pass\n    else:\n        await self.channel_layer.group_send(\n            self.room_other_group_name, {\"type\": \"chat_message\", \"message\": content}\n        )\n\nasync def chat_message(self, event):\n    message = event[\"message\"]\n    await self.send_json(message)\n\nasync def chat_destroy(self, event):\n    print(\"DEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESTROY\")\n    message = event[\"message\"]\n    await self.send_json(message)\n",
+                    "consumer_type": "AsyncJsonWebsocketConsumer",
+                    "doc": null,
+                    "name": "teleconference",
+                    "url": "teleconference"
+                }
+            ],
+            []
+        ]
+    ],
+    [
+        {
+            "code": ".logo \n    img \n        margin-top: -6px\n        position: absolute\n        right: 5px\n\n    span \n        top: 11px\n        position: absolute\n        font-size: 80%\n        left: -10px !important\n        \n    span.logo-lg\n        font-size: 120%\n",
+            "doc": null,
+            "name": "portal",
+            "type": "I"
+        },
+        {
+            "code": "TAG = 'tele-room'\n\nTEMPLATE = \"\"\"\ndiv class=container\n    div class=row\n        div class=col-md-12 my-3\n            h2...Room\n    div class=row\n        div class=col-md-12\n            div class=f\n                ptig-webrtc ref=webrtc,,,width=100%,,,data-bind=:roomId;:src;:host\n\"\"\"\n\nwith DefineWebComponent(TAG, True) as comp:\n    comp.options[\"attributes\"] = {\"roomId\": None, \"host\": None,}        \n    comp.options['template'] = TEMPLATE\n    \n    def init(component):        \n        component.set_state({'src': window.BASE_PATH+\"teleconference/teleconference/channel/\"})\n    comp.options['init'] = init\n",
+            "doc": null,
+            "name": "teleconference",
+            "type": "R"
+        },
+        {
+            "code": "def _on_time():\n    nonlocal GLOBAL_BUS \n    d = Date()\n    GLOBAL_BUS.emit(\"time_str\", d.toISOString().replace('T', ' ')[:19])\n    \nGLOBAL_TIMER = setInterval(_on_time, 1000)\n\n",
+            "doc": null,
+            "name": "timer_init",
+            "type": "R"
+        }
+    ]
+]

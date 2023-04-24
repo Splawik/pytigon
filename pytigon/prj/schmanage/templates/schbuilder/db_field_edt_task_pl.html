@@ -1,0 +1,20 @@
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_title %}
+        Edition: {{object.name}} [{{title}}]
+{% endblock %}
+{% block title %}
+        V:{{object.name}}
+{% endblock %}
+{% block edit_area_sc %}
+        <table width="100%">
+                <tr>
+                        <td></td>
+                </tr>
+        </table>
+        <CTRL-STYLEDTEXT NAME="EDITOR" WIDTH="100%" HEIGHT="100%" MINHEIGHT="400" MINWIDTH="800" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                <DATA>{{txt|bencode}}</DATA>
+        </CTRL-STYLEDTEXT>
+{% endblock %}
+

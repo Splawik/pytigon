@@ -1,0 +1,31 @@
+{% load exfiltry %}
+import os
+import sys
+import datetime
+import json
+import asyncio
+
+from channels.consumer import AsyncConsumer, SyncConsumer
+
+from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer,     JsonWebsocketConsumer, AsyncJsonWebsocketConsumer
+
+from channels.generic.http import AsyncHttpConsumer
+
+{% if app.consumer_code %}{{app.consumer_code|first_section|safe}} {% endif %}
+
+{% for consumer in consumers %}{% if consumer.consumer_code and consumer.consumer_code != '' %}
+{% if consumer.consumer_type == 'WebsocketConsumer' %}class {{consumer.name}}(WebsocketConsumer):
+{% endif %}{% if consumer.consumer_type == 'AsyncWebsocketConsumer' %}class {{consumer.name}}(AsyncWebsocketConsumer):
+{% endif %}{% if consumer.consumer_type == 'JsonWebsocketConsumer' %}class {{consumer.name}}(JsonWebsocketConsumer):
+{% endif %}{% if consumer.consumer_type == 'AsyncJsonWebsocketConsumer' %}class {{consumer.name}}(AsyncJsonWebsocketConsumer):
+{% endif %}{% if consumer.consumer_type == 'AsyncHttpConsumer' %}class {{consumer.name}}(AsyncHttpConsumer):
+{% endif %}{% if consumer.consumer_type == 'AsyncConsumer' %}class {{consumer.name}}(AsyncConsumer):
+{% endif %}{% if consumer.consumer_type == 'SyncConsumer' %}class {{consumer.name}}(SyncConsumer):
+{% endif %}{% if view.doc %}"""{% for line in view.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    {% for line in consumer.consumer_code.splitlines %}{{line|safe}}
+    {% endfor %}
+{% endif %}{% endfor %}
+
+{% if app.consumer_code %}{{app.consumer_code|second_section|safe}} {% endif %}

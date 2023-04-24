@@ -1,0 +1,46 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New file" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>File type</th>
+        <th>
+        Name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.get_file_type_display}}</td>
+        <td>
+        {{object.name}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                field_edit/content,Content,content
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "file_type", "name"
+        {% endform %}
+{% endblock %}
+

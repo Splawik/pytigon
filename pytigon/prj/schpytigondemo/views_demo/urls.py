@@ -20,7 +20,10 @@ urlpatterns = [
     path("hdoc_example", views.hdoc_example, {}, name="views_demo_hdoc_example"),
     path("plotly", views.plotly_example, {}, name="views_demo_plotly_example"),
     path(
-        "matplotlib", views.matplotlib_example, {}, name="views_demo_matplotlib_example"
+        "plotly_export",
+        views.plotly_export_example,
+        {},
+        name="views_demo_plotly_export_example",
     ),
 ]
 

@@ -29,6 +29,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 from pytigon_lib.schtable.vfstable import (
     vfstable_view,

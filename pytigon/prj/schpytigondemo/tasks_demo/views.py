@@ -29,6 +29,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 from django_q.tasks import async_task, result
 import time

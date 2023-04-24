@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Found pages' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block user_header %}
+        <th>Subject</th>
+        <th>
+        Description
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td> {{object.subject}}</td>
+                <td>
+                        <a href="{{base_path}}schwiki/{{object.subject}}/{{object.name}}/view/?only_content=1&desc={{object.description}}" target="_parent">
+                                {% if object.description %}
+                                        {{object.description}}
+                                  {% else %}
+                                        {{object.name}}
+                                {% endif %}
+                        </a>
+                </td>
+        </tr>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+^^^{% load exfiltry %}
+import django
+from django.db import models
+from django.utils import timezone
+
+from pytigon_lib.schdjangoext.fields import *
+from pytigon_lib.schdjangoext.models import *
+import pytigon_lib.schdjangoext.fields as ext_models
+from pytigon_lib.schtools import schjson
+
+from django.utils.translation import gettext_lazy as _
+from django.contrib import admin
+
+import os, os.path
+import sys
+from pytigon_lib.schhtml.htmltools import superstrip
+
+{% for app_item in prj.get_ext_apps_without_pack %}
+from {{app_item}}.models import *
+{% endfor %}
+
+
+{{app.model_code|first_section|safe}}
+
+{% if choices %}
+{% for choice in choices %}
+{{choice.name}} = [
+    {% for item in choice.schchoiceitem_set.all %}("{{item.name|safe}}","{{item.value|safe}}"),
+    {% endfor %}
+    ]
+{% endfor %}
+{% endif %}
+
+{% for table in tables %}
+class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%if table.proxy_model %}{{table.proxy_model}}{% else %} models.Model{% endif %}{%endif%}):
+    {% if table.doc %}"""{% for line in table.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    class Meta:
+        verbose_name = _("{{table.verbose_name|safe}}")
+        verbose_name_plural = _("{{table.verbose_name_plural|safe}}")
+        default_permissions = ('add', 'change', 'delete', 'list')
+        app_label = '{{app.name}}'
+
+
+        {% if table.ordering != '-' %}{% if table.ordering %}ordering = {{table.ordering|safe}}{% else %}ordering = ['id']{% endif %}{% endif %}
+        {% if table.metaclass_code %}
+        {% for line in table.metaclass_code.splitlines %}{{line|safe}}
+        {% endfor %}
+        {% endif %}
+        {% if table.proxy_model %}proxy=True{% endif %}
+    {% if not table.proxy_model %}{% if table.tree_tab == 1 %}
+    {% if not table.fields_have_parent %}parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children'){% endif %}
+    {% endif %}
+
+    {% for field in table.schfield_set.all %}{{field.as_declaration|safe}}
+    {% endfor %}
+
+    {% for line in table.table_code.splitlines %}{{line|safe}}
+    {% endfor %}{% endif %}
+{% if not 'abstract' in table.metaclass_code %}admin.site.register({{table.name}}){% endif %}
+
+{% endfor %}
+
+{{app.model_code|second_section|safe}}
+

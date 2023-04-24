@@ -1,0 +1,50 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if not form_list %}
+                <script language="python">
+            def init_form(self):
+                from pytigon_lib.schtools.schjson import loads
+                app = wx.GetApp()
+                form = self
+
+                class callback:
+                    def on_websocket_message(msg):
+                        nonlocal form
+                        msg2 = loads(msg)
+                        form.msg.AppendText(msg2['txt'])
+                        form.msg.DocumentEnd()
+                self.callback = callback
+                app.create_websocket('{{app_path}}webserver/channel/', callback)
+
+                async def start_webserver():
+                    nonlocal app
+                    await app.websocket_send(
+                        "{{app_path}}webserver/channel/", {'id': '{{project.name}}', 'command': 'start', }
+                    )
+                app.StartCoroutine(start_webserver, app.GetTopWindow())
+
+            def on_close(self):
+                app = wx.GetApp()
+                async def stop_webserver():
+                    nonlocal app
+                    await app.websocket_send(
+                        "{{app_path}}webserver/channel/", {'id': '{{project.name}}', 'command': 'stop', }
+                    )
+
+                app.StartCoroutine(stop_webserver, app.GetTopWindow())
+                app.remove_websocket_callback("{{app_path}}webserver/channel/", self.callback)
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with show_title_bar=1 title='Web server' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block content %}
+        <ctrl-styledtext name="msg" width="100%" height="100%"></ctrl-styledtext>
+{% endblock %}
+

@@ -36,30 +36,12 @@
     %% body_footer_scripts
         {{block.super}}
         
-        {% component '_schcomponents/components/ptig-calendar.js' %}
         {% component '_schcomponents/components/ptig-codeeditor.js' %}
-        {% component '_schcomponents/components/ptig-codemirror.js' %}
         {% component '_schcomponents/components/ptig-d3.js' %}
-        {% component '_schcomponents/components/ptig-form.js' %}
-        {% component '_schcomponents/components/ptig-frame.js' %}
-        {% component '_schcomponents/components/ptig-leaflet.js' %}
-        {% component '_schcomponents/components/ptig-margin-left.js' %}
-        {% component '_schcomponents/components/ptig-mask.js' %}
-        {% component '_schcomponents/components/ptig-pivottable.js' %}
         {% component '_schcomponents/components/ptig-plotly.js' %}
-        {% component '_schcomponents/components/ptig-script.js' %}
-        {% component '_schcomponents/components/ptig-scroll-action.js' %}
-        {% component '_schcomponents/components/ptig-select2.js' %}
-        {% component '_schcomponents/components/ptig-spreadsheet.js' %}
-        {% component '_schcomponents/components/ptig-svg.js' %}
-        {% component '_schcomponents/components/ptig-task.js' %}
         {% component '_schcomponents/components/ptig-time.js' %}
-        {% component '_schcomponents/components/ptig-tree.js' %}
-        {% component '_schcomponents/components/ptig-video.js' %}
         {% component '_schcomponents/components/ptig-webrtc.js' %}
-        {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
         {% component '_schcomponents/components/ptig-xterm.js' %}
-        {% component '_schcomponents/components/sys-components.js' %}
         {% component '_schwiki/components/insert_object.js' %}
         {% component 'schportal/components/teleconference.js' %}
         {% component 'schportal/components/timer_init.js' %}
@@ -69,6 +51,6 @@
     %% component_init
             .var initial_state = { username: "", theme: "", time_str: "" };
             .GLOBAL_BUS.set_state(initial_state);
-            .var component_init = [ "ptig-calendar.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-form.js", "ptig-frame.js", "ptig-leaflet.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-script.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-tree.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "sys-components.js", "insert_object.js", "teleconference.js", "timer_init.js",  ];  
+            .var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-plotly.js", "ptig-time.js", "ptig-webrtc.js", "ptig-xterm.js", "insert_object.js", "teleconference.js", "timer_init.js",  ];  
 
 

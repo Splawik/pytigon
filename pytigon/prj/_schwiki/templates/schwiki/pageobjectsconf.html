@@ -1,0 +1,46 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New wiki class" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Application</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>
+        Inline editing
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.app}}</td>
+        <td>{{object.name}}</td>
+        <td>{{object.description}}</td>
+        <td>
+        {{object.inline_editing}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                field_edit/edit_form,Edit form
+                field_edit/load_fun,Load function
+                field_edit/save_fun,Save function
+                field_edit/view_dict,View dict
+                field_edit/doc,Documentaction
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

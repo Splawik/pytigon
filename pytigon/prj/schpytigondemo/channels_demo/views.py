@@ -29,6 +29,7 @@ from . import models
 import os
 import sys
 import datetime
+from django.utils import timezone
 
 
 @dict_to_template("channels_demo/v_clock.html")

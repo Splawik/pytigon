@@ -1,0 +1,138 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_add or form_edit %}
+                <script language="python">
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                print(dir(self))
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+</script>
+          {% else %}
+                <script language="python">
+            def init_form(self):
+                pass
+
+            def filter_http_result(self, target, href, mp):
+                if 'app_down' in href or 'app_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        if 'app_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=620 form_height=380 show_title_bar=1 title="Applications" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_bar2 %}
+            {% if form_edit or form_delete or form_info or show_title_bar %}
+                {% if not standard_web_browser %}
+                        <table width="100%" class="form_bar">
+                                <tr>
+                                        <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                <CTRL-CLOSEBUTTON width="36" height="36" NAME="EXIT" SRC="client://emblems/emblem-unreadable.png"></CTRL-CLOSEBUTTON>
+                                        </td>
+                                        {% if not form_edit and not form_delete and not form_info %}
+                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
+                                                        <CTRL-NOBG_BUTTON width="36" height="36" NAME="UP" label="Open in toolbar" SRC="client://actions/go-top.png" href="{{request.path|replace:"/table/SChAppSet/|/table/SChAppSet_up/"}}" target="_top2_toolbar_Aplikacje__Lista_aplikacji"></CTRL-NOBG_BUTTON>
+                                                </td>
+                                        {% endif %}
+                                        <td width="5"></td>
+                                        <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                                <span class="form_title">
+                                                        {% block form_title %}
+                                                                {{title|wiki_href|safe}}
+                                                        {% endblock %}
+                                                </span>
+                                        </td>
+                                </tr>
+                        </table>
+                        <hr>
+                        </hr>
+                {% endif %}
+            {% endif %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New application" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Module title</th>
+        <th>Title</th>
+        <th>
+        Permissions
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.module_title|default_if_none:""}}</td>
+        <td>{{object.title|default_if_none:""}}</td>
+        <td align="center">
+        {% if object.perms %}X{% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+        
+        edit,
+        field_list/schtable_set,Tables,[|client://mimetypes/x-office-spreadsheet.png],_top2
+        field_list/schchoice_set,Choices,[|client://categories/applications-games.png],_top2
+        field_list/schview_set,Views,[|client://mimetypes/text-x-generic-template.png],_top2
+        field_list/schform_set,Forms,[|client://mimetypes/x-office-document.png],_top2
+        field_list/schappmenu_set,Menu,[|client://actions/tab-new.png],_top2
+        field_list/schtask_set,Tasks,[|png://status/image-loading.png],_top2
+        field_list/schtemplate_set,Templates,[|client://mimetypes/x-office-presentation.png],_top2
+        field_list/schfiles_set,Application files,[|png://places/folder.png],_top2
+
+        field_list/schchannelconsumer_set,Consumers(Other properties),[|png://actions/go-jump.png],_top2
+        field_edit/icon_code,Icon code(Other properties),[|client://categories/applications-graphics.png],_top2
+        field_edit/doc,Doc(Other properties),[|client://apps/help-browser.png],_top2
+
+        delete
+
+
+        {% endrow_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                app_up,Move up,[|client://actions/go-up.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                app_down,Move down,[|client://actions/go-down.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Applications list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
+        {% endform %}
+        {% if standard_web_browser %}
+                {% form "^/6" %}
+                        icon,icon_size
+                {% endform %}
+          {% else %}
+                <tr>
+                        <td>Icon</td>
+                        <td>
+                                <CTRL-BITMAPCOMBOBOX class="ctrlbitmapcombobox form-control" width="250" name="icon" value="{{object.icon}}" valuetype="str" onload="self.init_default_icons=True"></CTRL-BITMAPCOMBOBOX>
+                        </td>
+                </tr>
+                {% form "^/12" %}
+                        icon_size
+                {% endform %}
+        {% endif %}
+{% endblock %}
+

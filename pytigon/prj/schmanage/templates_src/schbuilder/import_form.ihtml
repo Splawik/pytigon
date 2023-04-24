@@ -1,0 +1,16 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with form_width=720 form_height=480 show_title_bar=1 title=_("Import project") 
+        {{ block.super }}
+
+%% form_action
+    . ../
+
+%% row_edit_form
+    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=calc(100%-top-button_size_dy),,,MINHEIGHT=400
+        DATA
