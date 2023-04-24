@@ -4,19 +4,20 @@ from django.db import transaction
 
 @transaction.atomic
 def move_control_to_state(control_mp_id, state_mp_id, description, json_data):
+    state = None
     object_list = MPointControlQueue.objects.select_for_update().filter(mp_id=control_mp_id).order_by("id")
     for obj in object_list:
         if obj.title == title and obj.json_data == json_data:
             state = mp_state(state_mp_id, description, json_data)
             obj.delete()
-    return True
+    return state
 
 def append_to_input(mp_id, json_data):
     obj = MPointInputQueue()
     obj.mp_id = mp_id
     obj.json_data = json_data
     obj.save()
-    return True
+    return obj
         
 def append_to_control(mp_id, description, json_data):
     obj = MPointControlQueue()
@@ -24,14 +25,14 @@ def append_to_control(mp_id, description, json_data):
     obj.description = description
     obj.json_data = json_data
     obj.save()
-    return True
+    return obj
 
 def append_to_output(mp_id, json_data):
     obj = MPointOutputQueue()
     obj.mp_id = mp_id
     obj.json_data = json_data
     obj.save()
-    return True
+    return obj
 
 @transaction.atomic
 def pop_input(mp_id):
@@ -39,7 +40,7 @@ def pop_input(mp_id):
     if object_list.count() > 0:
         obj = object_list[0]
         obj.delete()
-        return { 'data': obj.json_data }
+        return obj.json_data if obj.json_data else {}
     else:
         return None
     
