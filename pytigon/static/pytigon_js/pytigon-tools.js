@@ -499,6 +499,9 @@ function define_custom_element(tag, shadow, options) {
       if ("global_state_actions" in options) {
         this.global_state_actions = options["global_state_actions"];
       } else this.global_state_actions = {};
+      if ("event_handler" in options) {
+        this.event_handler = options["event_handler"];
+      } else this.event_handler = {};
       if ("constructor" in options) options["constructor"](this);
       if (shadow) {
         const shadowRoot = this.attachShadow({
@@ -545,6 +548,15 @@ function define_custom_element(tag, shadow, options) {
             component.global_state_actions[key](component, state[key]);
           }
         });
+      }
+    }
+
+    handle_event(name, value) {
+      if (this.event_handler) {
+        let component = this;
+        if (name in this.event_handler) {
+          this.event_handler[name](component, value)
+        }
       }
     }
 

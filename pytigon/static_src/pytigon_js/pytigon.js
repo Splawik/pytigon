@@ -1172,12 +1172,27 @@ GlobalBus.prototype.set_state = function (state) {
     return null;
 };
 
-GlobalBus.prototype.emit = function (name, value) {
+GlobalBus.prototype.send_event = function (name, value) {
     var component, stub12_seq, stub13_itr;
     stub12_seq = this.components;
     if ((typeof stub12_seq === "object") && (!Array.isArray(stub12_seq))) { stub12_seq = Object.keys(stub12_seq);}
     for (stub13_itr = 0; stub13_itr < stub12_seq.length; stub13_itr += 1) {
         component = stub12_seq[stub13_itr];
+        if (_pyfunc_truthy(component)) {
+            if (_pyfunc_hasattr(component, "handle_event")) {
+                component.handle_event(name, value);
+            }
+        }
+    }
+    return null;
+};
+
+GlobalBus.prototype.emit = function (name, value) {
+    var component, stub14_seq, stub15_itr;
+    stub14_seq = this.components;
+    if ((typeof stub14_seq === "object") && (!Array.isArray(stub14_seq))) { stub14_seq = Object.keys(stub14_seq);}
+    for (stub15_itr = 0; stub15_itr < stub14_seq.length; stub15_itr += 1) {
+        component = stub14_seq[stub15_itr];
         if (_pyfunc_truthy(component)) {
             if (_pyfunc_hasattr(component, "set_external_state")) {
                 component.set_external_state(_pyfunc_create_dict(name, value));
@@ -1188,14 +1203,16 @@ GlobalBus.prototype.emit = function (name, value) {
 };
 
 GlobalBus.prototype.register = function (component) {
-    var key, stub14_seq, value;
+    var key, stub16_seq, value;
     if ((!_pyfunc_op_contains(component, this.components))) {
         _pymeth_append.call(this.components, component);
-        stub14_seq = this.state;
-        for (key in stub14_seq) {
-            if (!stub14_seq.hasOwnProperty(key)){ continue; }
-            value = stub14_seq[key];
-            this.emit(key, value);
+        if (_pyfunc_hasattr(component, "set_external_state")) {
+            stub16_seq = this.state;
+            for (key in stub16_seq) {
+                if (!stub16_seq.hasOwnProperty(key)){ continue; }
+                value = stub16_seq[key];
+                component.set_external_state(_pyfunc_create_dict(key, value));
+            }
         }
     }
     return null;
@@ -1335,23 +1352,34 @@ auto_frame_init = function flx_auto_frame_init (dest_elem) {
 
 register_mount_fun(auto_frame_init);
 _on_shown_bs_tab = function flx__on_shown_bs_tab (event) {
-    var div, frame, target;
+    var auto_refresh_target, div, frame, item, item_list, stub7_seq, stub8_itr, target;
     if (_pyfunc_truthy(event.target.hasAttribute("data-bs-target"))) {
         target = event.target.getAttribute("data-bs-target");
         div = event.target.closest("div.auto-refresh");
         frame = div.querySelector(target);
-        refresh_ajax_frame(frame);
+        if (_pyfunc_truthy(frame.hasAttribute("auto-refresh-target"))) {
+            auto_refresh_target = frame.getAttribute("auto-refresh-target");
+            item_list = Array.prototype.slice.call(frame.querySelectorAll(auto_refresh_target));
+            stub7_seq = item_list;
+            if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+            for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+                item = stub7_seq[stub8_itr];
+                window.refresh_ajax_frame(item);
+            }
+        } else {
+            refresh_ajax_frame(frame);
+        }
     }
     return null;
 };
 
 auto_refresh_tab = function flx_auto_refresh_tab (dest_elem) {
-    var elem, item_list, stub7_seq, stub8_itr;
+    var elem, item_list, stub10_itr, stub9_seq;
     item_list = Array.prototype.slice.call(dest_elem.querySelectorAll("div.auto-refresh button"));
-    stub7_seq = item_list;
-    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-        elem = stub7_seq[stub8_itr];
+    stub9_seq = item_list;
+    if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
+    for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
+        elem = stub9_seq[stub10_itr];
         elem.addEventListener("shown.bs.tab", _on_shown_bs_tab);
     }
     return null;
@@ -1359,13 +1387,13 @@ auto_refresh_tab = function flx_auto_refresh_tab (dest_elem) {
 
 register_mount_fun(auto_refresh_tab);
 moveelement_init = function flx_moveelement_init (dest_elem) {
-    var _on_remove, data_position, elem2, obj, objs, parent, stub11_seq, stub12_itr;
+    var _on_remove, data_position, elem2, obj, objs, parent, stub13_seq, stub14_itr;
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"));
     if (_pyfunc_truthy(objs)) {
-        stub11_seq = objs;
-        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
-        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
-            obj = stub11_seq[stub12_itr];
+        stub13_seq = objs;
+        if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
+        for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
+            obj = stub13_seq[stub14_itr];
             if (_pyfunc_truthy(obj.hasAttribute("data-position"))) {
                 _pymeth_remove.call(obj.classList, "move-element");
                 data_position = obj.getAttribute("data-position");
@@ -1376,11 +1404,11 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
                 }
                 if (_pyfunc_truthy(_pymeth_endswith.call(data_position, ":class"))) {
                     _on_remove = (function flx__on_remove () {
-                        var c, stub10_itr, stub9_seq;
-                        stub9_seq = Array.prototype.slice.call(obj.classList);
-                        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
-                        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
-                            c = stub9_seq[stub10_itr];
+                        var c, stub11_seq, stub12_itr;
+                        stub11_seq = Array.prototype.slice.call(obj.classList);
+                        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
+                        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+                            c = stub11_seq[stub12_itr];
                             _pymeth_remove.call(elem2.classList, c);
                         }
                         return null;
@@ -1403,7 +1431,7 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 
 register_mount_fun(moveelement_init);
 select2_init = function flx_select2_init (dest_elem) {
-    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub13_seq, stub14_itr;
+    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub15_seq, stub16_itr;
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0}));
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
@@ -1415,10 +1443,10 @@ select2_init = function flx_select2_init (dest_elem) {
 
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"));
     if (_pyfunc_truthy(controls)) {
-        stub13_seq = controls;
-        if ((typeof stub13_seq === "object") && (!Array.isArray(stub13_seq))) { stub13_seq = Object.keys(stub13_seq);}
-        for (stub14_itr = 0; stub14_itr < stub13_seq.length; stub14_itr += 1) {
-            control = stub13_seq[stub14_itr];
+        stub15_seq = controls;
+        if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
+        for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
+            control = stub15_seq[stub16_itr];
             _onloadeddata = function (event) {
                 var id, src_elem, text;
                 if (_pyfunc_hasattr(event, "data_source")) {
@@ -1461,7 +1489,7 @@ select2_init = function flx_select2_init (dest_elem) {
 
 register_mount_fun(select2_init);
 select_combo_init = function flx_select_combo_init (dest_elem) {
-    var elem, on_change, on_change_element, select_ctrl_list, stub15_seq, stub16_itr;
+    var elem, on_change, on_change_element, select_ctrl_list, stub17_seq, stub18_itr;
     select_ctrl_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".select_combo"));
     on_change_element = (function flx_on_change_element (element) {
         var _onload, evt, next_element, next_elements, region, src;
@@ -1512,10 +1540,10 @@ select_combo_init = function flx_select_combo_init (dest_elem) {
         return on_change_element(element);
     }).bind(this);
 
-    stub15_seq = select_ctrl_list;
-    if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
-    for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
-        elem = stub15_seq[stub16_itr];
+    stub17_seq = select_ctrl_list;
+    if ((typeof stub17_seq === "object") && (!Array.isArray(stub17_seq))) { stub17_seq = Object.keys(stub17_seq);}
+    for (stub18_itr = 0; stub18_itr < stub17_seq.length; stub18_itr += 1) {
+        elem = stub17_seq[stub18_itr];
         if (_pyfunc_truthy(elem.hasAttribute("data-rel-name"))) {
             elem.addEventListener("change", on_change);
         }

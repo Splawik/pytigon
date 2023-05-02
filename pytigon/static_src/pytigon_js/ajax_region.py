@@ -149,7 +149,15 @@ def _on_shown_bs_tab(event):
         target = event.target.getAttribute("data-bs-target")
         div = event.target.closest("div.auto-refresh")
         frame = div.querySelector(target)
-        refresh_ajax_frame(frame)
+        if frame.hasAttribute("auto-refresh-target"):
+            auto_refresh_target = frame.getAttribute("auto-refresh-target")
+            item_list = Array.prototype.slice.call(
+                frame.querySelectorAll(auto_refresh_target)
+            )
+            for item in item_list:
+                window.refresh_ajax_frame(item)
+        else:
+            refresh_ajax_frame(frame)
 
 
 def auto_refresh_tab(dest_elem):

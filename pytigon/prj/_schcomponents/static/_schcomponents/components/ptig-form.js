@@ -4,13 +4,13 @@ stub1_context = (new DefineWebComponent(TAG, false));
 comp = stub1_context.__enter__();
 try {
     init = function flx_init (component) {
-        var _onchange, event, inp, name, selector, stub10_itr, stub3_seq, stub4_itr, stub5_seq, stub6_itr, stub7_seq, stub8_itr, stub9_seq, tab_inp;
+        var _onchange, event, inp, name, selector, stub10_seq, stub11_itr, stub4_seq, stub5_itr, stub6_seq, stub7_itr, stub8_seq, stub9_itr, tab_inp;
         _onchange = function (new_value) {
             var data, on_complete, on_field;
             on_complete = (function flx_on_complete (data) {
                 var on_data;
                 on_data = (function flx_on_data (key) {
-                    var obj, x;
+                    var key2, obj, stub3_seq, value2, x;
                     if (_pyfunc_op_contains("__", key)) {
                         x = _pymeth_split.call(key, "__");
                         obj = component.root.querySelector(x[0]);
@@ -19,6 +19,18 @@ try {
                         } else {
                             (obj[x[1]])(data[key]);
                         }
+                    } else if (_pyfunc_op_equals(key, "refresh_ajax_frame")) {
+                        refresh_ajax_frame(component, data[key]);
+                    } else if (_pyfunc_op_equals(key, "set_state")) {
+                        GLOBAL_BUS.set_state(data[key]);
+                    } else if (_pyfunc_op_equals(key, "send_event")) {
+                        stub3_seq = data[key];
+                        for (key2 in stub3_seq) {
+                            if (!stub3_seq.hasOwnProperty(key2)){ continue; }
+                            value2 = stub3_seq[key2];
+                            GLOBAL_BUS.send_event(key2, value2);
+                        }
+                    } else if (_pyfunc_op_equals(key, "none")) {
                     } else {
                         obj = component.root.querySelector(key);
                         obj.innerHTML = data[key];
@@ -43,29 +55,29 @@ try {
 
         component.fields = ({});
         component.figures = ({});
-        stub5_seq = ["input", "select", "textarea"];
-        if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
-        for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
-            selector = stub5_seq[stub6_itr];
+        stub6_seq = ["input", "select", "textarea"];
+        if ((typeof stub6_seq === "object") && (!Array.isArray(stub6_seq))) { stub6_seq = Object.keys(stub6_seq);}
+        for (stub7_itr = 0; stub7_itr < stub6_seq.length; stub7_itr += 1) {
+            selector = stub6_seq[stub7_itr];
             tab_inp = Array.prototype.slice.call(component.root.querySelectorAll(selector));
-            stub3_seq = tab_inp;
-            if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
-            for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
-                inp = stub3_seq[stub4_itr];
+            stub4_seq = tab_inp;
+            if ((typeof stub4_seq === "object") && (!Array.isArray(stub4_seq))) { stub4_seq = Object.keys(stub4_seq);}
+            for (stub5_itr = 0; stub5_itr < stub4_seq.length; stub5_itr += 1) {
+                inp = stub4_seq[stub5_itr];
                 inp.addEventListener("change", _onchange);
                 name = inp.getAttribute("name");
                 component.fields[name] = inp;
             }
         }
         tab_inp = Array.prototype.slice.call(component.root.querySelectorAll(".plotly"));
-        stub9_seq = tab_inp;
-        if ((typeof stub9_seq === "object") && (!Array.isArray(stub9_seq))) { stub9_seq = Object.keys(stub9_seq);}
-        for (stub10_itr = 0; stub10_itr < stub9_seq.length; stub10_itr += 1) {
-            inp = stub9_seq[stub10_itr];
-            stub7_seq = ["click", "hover", "unhover", "relayout", "selected", "legendclick"];
-            if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
-            for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
-                event = stub7_seq[stub8_itr];
+        stub10_seq = tab_inp;
+        if ((typeof stub10_seq === "object") && (!Array.isArray(stub10_seq))) { stub10_seq = Object.keys(stub10_seq);}
+        for (stub11_itr = 0; stub11_itr < stub10_seq.length; stub11_itr += 1) {
+            inp = stub10_seq[stub11_itr];
+            stub8_seq = ["click", "hover", "unhover", "relayout", "selected", "legendclick"];
+            if ((typeof stub8_seq === "object") && (!Array.isArray(stub8_seq))) { stub8_seq = Object.keys(stub8_seq);}
+            for (stub9_itr = 0; stub9_itr < stub8_seq.length; stub9_itr += 1) {
+                event = stub8_seq[stub9_itr];
                 inp.on("plotly_" + event_name, _onchange);
                 name = inp.getAttribute("name");
                 component.figures[name] = inp;

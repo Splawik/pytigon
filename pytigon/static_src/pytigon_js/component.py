@@ -156,6 +156,12 @@ class GlobalBus:
                     self.state[key] = value
                     self.emit(key, value)
 
+    def send_event(self, name, value):
+        for component in self.components:
+            if component:
+                if hasattr(component, "handle_event"):
+                    component.handle_event(name, value)
+
     def emit(self, name, value):
         for component in self.components:
             if component:
@@ -165,8 +171,9 @@ class GlobalBus:
     def register(self, component):
         if not component in self.components:
             self.components.append(component)
-            for key, value in self.state.items():
-                self.emit(key, value)
+            if hasattr(component, "set_external_state"):
+                for key, value in self.state.items():
+                    component.set_external_state({key: value})
 
     def unregister(self, component):
         if component in self.components:

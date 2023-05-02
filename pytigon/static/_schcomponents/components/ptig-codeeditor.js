@@ -157,6 +157,8 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub2_err=err_0; }
-if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
-} else { stub1_context.__exit__(null, null, null); }
+} catch(err_0)  { stub2_err=err_0;
+} finally {
+    if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+    } else { stub1_context.__exit__(null, null, null); }
+}

@@ -117,7 +117,7 @@ try {
 
     comp.options["global_state_actions"] = ({plotly: on_plotly});
     init = function flx_init (component) {
-        var config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, parent, plotly_name, run_script, scr, url;
+        var _onloadeddata, config, data, div, events, layout, on_config_loaded, on_data_loaded, on_layout_loaded, on_loaded, parent, plotly_name, run_script, src, url;
         div = component.root.querySelector("div");
         component.div = div;
         if (_pyfunc_truthy(component.hasAttribute("plotly-name"))) {
@@ -218,14 +218,29 @@ try {
         } else {
             parent = component.parentElement;
             div = component.children[0].children[0];
-            scr = component.children[0].children[1];
+            src = component.children[0].children[1];
             parent.append(div);
             run_script = (function flx_run_script () {
-                eval(scr.innerHTML);
+                if (_pyfunc_truthy(document.getElementById(div.id))) {
+                    eval(src.innerHTML);
+                } else {
+                    setTimeout(run_script, 100);
+                }
                 return null;
             }).bind(this);
 
             setTimeout(run_script, 100);
+            _onloadeddata = function (event) {
+                var src, tmp;
+                tmp = document.createElement("div");
+                tmp.innerHTML = event.data;
+                src = tmp.querySelector("script");
+                eval(src.innerHTML);
+                console.log("BZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+                return null;
+            };
+
+            component.onloadeddata = _onloadeddata;
         }
         return null;
     };

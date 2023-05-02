@@ -73,9 +73,11 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub2_err=err_0; }
-if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
-} else { stub1_context.__exit__(null, null, null); }
+} catch(err_0)  { stub2_err=err_0;
+} finally {
+    if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
+    } else { stub1_context.__exit__(null, null, null); }
+}
 stub5_context = (new DefineWebComponent("ptig-maker", false));
 comp = stub5_context.__enter__();
 try {
@@ -86,6 +88,8 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub6_err=err_0; }
-if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
-} else { stub5_context.__exit__(null, null, null); }
+} catch(err_0)  { stub6_err=err_0;
+} finally {
+    if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }
+    } else { stub5_context.__exit__(null, null, null); }
+}
