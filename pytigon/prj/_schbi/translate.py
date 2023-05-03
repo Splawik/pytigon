@@ -1,0 +1,7 @@
+_("Parent")
+_("Name")
+_("Title")
+_("Form")
+_("View")
+_("Template")
+_("Refresh data")

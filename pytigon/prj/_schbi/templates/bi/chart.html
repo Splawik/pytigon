@@ -1,0 +1,59 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New chart" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Parent</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Form</th>
+        <th>View</th>
+        <th>
+        Template
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.parent.name }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.title }}</td>
+        <td>
+                {% if object.form %}
+                        <i class="fa fa-check"></i>
+                {% endif %}
+        </td>
+        <td>
+                {% if object.view %}
+                        <i class="fa fa-check"></i>
+                {% endif %}
+        </td>
+        <td>
+                {% if object.template %}
+                        <i class="fa fa-check">
+                        </i>
+                {% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                field_edit/form,form
+                field_edit/view,view
+                field_edit/template,template
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                parent:!,name,title
+        {% endform %}
+{% endblock %}
+

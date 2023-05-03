@@ -1,0 +1,69 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="50vh" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New page" %}
+{% endblock %}
+{% block id_extra %}
+        {% row_actions %}
+                field_list/chart_set,Charts
+        {% endrow_actions %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Parent</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Form</th>
+        <th>View</th>
+        <th>
+        Template
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.parent.name }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.title }}</td>
+        <td>
+                {% if object.form %}
+                        <i class="fa fa-check"></i>
+                {% endif %}
+        </td>
+        <td>
+                {% if object.view %}
+                        <i class="fa fa-check"></i>
+                {% endif %}
+        </td>
+        <td>
+                {% if object.template %}
+                        <i class="fa fa-check">
+                        </i>
+                {% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                field_edit/form,form
+                field_edit/view,view
+                field_edit/template,template
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block list_page_footer %}
+        {% row_details %}
+                *Charts:bi/table/Page/[[table_row_pk]]/chart_set/-/form/sublist/?x1=chart_set
+        {% endrow_details %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                parent:!,name,title
+        {% endform %}
+{% endblock %}
+

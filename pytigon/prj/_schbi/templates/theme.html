@@ -1,0 +1,12 @@
+{% extends 'theme_base.html'|translate:lang %}
+{% load exsyntax %}
+{% block extrahead %}
+        {{block.super}}
+        {% css_link 'vanillajs_plugins/plotly/plotly.css' %}
+{% endblock %}
+{% block ext_js_scripts %}
+        {{ block.super }}
+        {% jscript_link 'vanillajs_plugins/d3/d3.v3.min.js' %}
+        {% jscript_link 'vanillajs_plugins/plotly/plotly.min.js' %}
+{% endblock %}
+

@@ -40,6 +40,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schsetup/
 !*pytigon/prj/_schplaywright/
 !*pytigon/prj/_schot/
+!*pytigon/prj/_schbi/
 !*pytigon/prj/schdevtools/
 !*pytigon/prj/schmanage/
 !*pytigon/prj/scheditor/
@@ -59,6 +60,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schsetup/*
 !*pytigon/prj/_schplaywright/*
 !*pytigon/prj/_schot/*
+!*pytigon/prj/_schbi/*
 !*pytigon/prj/schdevtools/*
 !*pytigon/prj/schmanage/*
 !*pytigon/prj/scheditor/*
