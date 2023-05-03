@@ -4,6 +4,9 @@
         {{block.super}}
         {% css_link 'vanillajs_plugins/plotly/plotly.css' %}
 {% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+{% endblock %}
 {% block ext_js_scripts %}
         {{ block.super }}
         {% jscript_link 'vanillajs_plugins/d3/d3.v3.min.js' %}
