@@ -113,10 +113,6 @@ SECRET_KEY = ENV("SECRET_KEY")
 if not SECRET_KEY:
     if (not PRODUCTION_VERSION) or DEBUG or ENV("EMBEDED_DJANGO_SERVER"):
         SECRET_KEY = "anawa"
-    else:
-        SECRET_KEY = "".join(
-            random.choice(string.ascii_uppercase + string.digits) for _ in range(32)
-        )
 
 if ENV("GRAPHQL"):
     GRAPHQL = True

@@ -35,6 +35,7 @@ if "--dev" in sys.argv or "ptig.py" in sys.argv:
     if "--dev" in sys.argv:
         sys.argv.remove("--dev")
     environ["PYTIGON_PRJ_PATH"] = os.path.join(environ["START_PATH"], "prj")
+    environ["PYTIGON_DEBUG"] = "1"
     if not os.path.exists(environ["PYTIGON_PRJ_PATH"]):
         environ["PYTIGON_PRJ_PATH"] = environ["START_PATH"]
 
