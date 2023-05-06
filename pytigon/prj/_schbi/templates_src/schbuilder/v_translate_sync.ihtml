@@ -1,0 +1,22 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Translaction results'
+        {{ block.super }}
+
+
+%% user_header
+    th...Updated
+    th...Inserted
+
+
+%% user_row
+    tr
+        td align=right... {{object.0}}
+        td align=right... {{object.1}}
+

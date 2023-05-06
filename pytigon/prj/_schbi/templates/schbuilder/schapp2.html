@@ -1,0 +1,127 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.path = "{{request.path}}"
+            http = wx.GetApp().get_http(self)
+            http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+
+
+        def filter_url(self, type, url):
+            if url and url[0:1]=='.':
+                return None
+            else:
+                if url=='close':
+                    page = self.GetParent().GetParent().GetParent()
+                    win = wx.GetApp().GetTopWindow()
+                    win.toolbar_interface.remove_page(page.title)
+
+                    http = wx.GetApp().get_http(self)
+                    http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+
+                    return True
+                else:
+                    id = self.app_list.GetValue()
+                    if id:
+                        return url.replace('{id}', id)
+                    else:
+                        dlg = wx.MessageDialog(self, 'Select application!', 'A Message Box', wx.OK | wx.ICON_INFORMATION )
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                        return True
+
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=320 form_height=50 show_title_bar=1 title="Applications" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_start %}
+        <body class="toolbar">
+{% endblock %}
+{% block body %}
+        <p height="5px"></p>
+        <table class="toolbar">
+                <tr>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT name="close_btn" label="Close" SRC="client://emblems/emblem-unreadable.png" href="close"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td width="160">
+                                <table width="160">
+                                        <tr>
+                                                <td>Wybierz aplikację:</td>
+                                        </tr>
+                                        <tr>
+                                                <td>
+                                                        <select name="app_list" id="id_app_list" width="150">
+                                                                {% for item in object_list %}
+                                                                        {% if forloop.first %}
+                                                                                <option value="{{item.id}}" selected="selected">
+                                                                                        {{item.name}}
+                                                                                </option>
+                                                                          {% else %}
+                                                                                <option value="{{item.id}}">
+                                                                                        {{item.name}}
+                                                                                </option>
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                        </select>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                        <td width="20"></td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="tabele" label="Table" SRC="client://mimetypes/x-office-spreadsheet.png" href="{{app_path}}table/SChApp/{id}/schtable_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="choices" label="Choices" SRC="client://categories/applications-games.png" href="{{app_path}}table/SChApp/{id}/schchoice_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="views" label="Views" SRC="client://mimetypes/text-x-generic-template.png" href="{{app_path}}table/SChApp/{id}/schview_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="forms" label="Forms" SRC="client://mimetypes/x-office-document.png" href="{{app_path}}table/SChApp/{id}/schform_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="menu" label="Menu" SRC="client://actions/tab-new.png" href="{{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="tasks" label="Tasks" SRC="png://status/image-loading.png" href="{{app_path}}table/SChApp/{id}/schtask_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="templates" label="Templates" SRC="png://mimetypes/x-office-presentation.png" href="{{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td width="20"></td>
+                        <td cellpadding="0" width="80">
+                                <CTRL-NOBG_BUTTON_TXT NAME="other_files" label="Application files" SRC="png://places/folder.png" href="{{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/"></CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        <td width="20"></td>
+                        <td cellpadding="0" width="80">
+                                {% widget class='menu' id='user_action' title='Other properties' style='toolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/">Channel consumers</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/icon_code/py/editor/?x1=icon_code">Icon code</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/doc/form/editor/">Doc</a></li>
+                                {% endwidget %}
+                        </td>
+                        <td width="30"></td>
+                        <td cellpadding="0" width="60">
+                                <CTRL-NOBG_BUTTON_TXT NAME="gen" label="Build" SRC="png://categories/applications-multimedia.png" href="{{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/">
+                                </CTRL-NOBG_BUTTON_TXT>
+                        </td>
+                        {% comment %}
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/model_code/form/editor/">Model base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/view_code/form/editor/">View base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/urls_code/form/editor/">Url base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/tasks_code/form/editor/">Task base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="{{app_path}}table/SChApp/{id}/consumer_code/form/editor/">Channel consumer base file</a></li>
+                                <li><a class="btn btn-primary btn-sm" href="-">------------------------------------</a></li>
+                        {% endcomment %}
+                </tr>
+        </table>
+{% endblock %}
+

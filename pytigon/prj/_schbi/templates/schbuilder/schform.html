@@ -1,0 +1,48 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=0 title="Forms" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New form" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Module</th>
+        <th>
+        Asynchronous
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.module|default_if_none:""}}</td>
+        <td align="center">
+        {% if object.asynchronous %}X{% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {{block.super}}
+        {% row_actions %}
+                field_list/schformfield_set,Fields,[|client://actions/format-indent-more.png]
+                field_edit/process_code,Process code,[|client://mimetypes/text-x-generic-template.png]
+                field_edit/end_class_code,End class code,[|client://actions/go-first.png]
+                field_edit/end_code,End code,[|client://actions/go-bottom.png]
+                field_edit/doc,Doc,[|client://apps/help-browser.png]
+                template_edit2,Template,[|client://mimetypes/x-office-presentation.png]
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Table list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                        "parent", "name", "module"
+        {% endform %}
+{% endblock %}
+

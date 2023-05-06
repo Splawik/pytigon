@@ -1,0 +1,100 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            self.path = "{{request.path}}"
+            http = wx.GetApp().get_http(self)
+            http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': self.path })
+
+
+        def filter_url(self, type, url):
+            if url and url[0:1]=='.':
+                return None
+            else:
+                if url=='close':
+                    page = self.GetParent().GetParent().GetParent()
+                    win = wx.GetApp().GetTopWindow()
+                    win.toolbar_interface.remove_page(page.title)
+
+                    http = wx.GetApp().get_http(self)
+                    http.post(self, "{{base_path}}schtools/set_user_param/", parm={ 'param': 'appset_up', 'value': "" })
+
+                    return True
+                else:
+                    id = self.app_list.GetValue()
+                    if id:
+                        return url.replace('{id}', id)
+                    else:
+                        dlg = wx.MessageDialog(self, _('Select application!'), _('A Message Box'), wx.OK | wx.ICON_INFORMATION )
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                        return True
+
+
+%% all
+    %with form_width=320 form_height=50 show_title_bar=1 title=_("Applications")
+        {{ block.super }}
+
+%% body_start
+    <body class="toolbar">
+
+%% body
+    p height=5px
+    table class=toolbar
+        tr
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT name=close_btn,,,label=Close,,,SRC=client://emblems/emblem-unreadable.png,,,href=close
+            td width=160
+                table width=160
+                    tr
+                        td...Wybierz aplikację:
+                    tr
+                        td
+                            select name=app_list,,,id=id_app_list,,,width=150
+                                %for item in object_list
+                                    %if forloop.first
+                                        option value={{item.id}},,,selected=selected
+                                            {{item.name}}
+                                    %else
+                                        option value={{item.id}}
+                                            {{item.name}}
+            td width=20
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=tabele,,,label=_(Table),,,SRC=client://mimetypes/x-office-spreadsheet.png,,,href={{app_path}}table/SChApp/{id}/schtable_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=choices,,,label=_(Choices),,,SRC=client://categories/applications-games.png,,,href={{app_path}}table/SChApp/{id}/schchoice_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=views,,,label=_(Views),,,SRC=client://mimetypes/text-x-generic-template.png,,,href={{app_path}}table/SChApp/{id}/schview_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=forms,,,label=_(Forms),,,SRC=client://mimetypes/x-office-document.png,,,href={{app_path}}table/SChApp/{id}/schform_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=menu,,,label=_(Menu),,,SRC=client://actions/tab-new.png,,,href={{app_path}}table/SChApp/{id}/schappmenu_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=tasks,,,label=_(Tasks),,,SRC=png://status/image-loading.png,,,href={{app_path}}table/SChApp/{id}/schtask_set/-/form/list/
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=templates,,,label=_(Templates),,,SRC=png://mimetypes/x-office-presentation.png,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/
+            td width=20
+            td cellpadding=0,,,width=80
+                CTRL-NOBG_BUTTON_TXT NAME=other_files,,,label=_(Application files),,,SRC=png://places/folder.png,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/
+            td width=20
+            td cellpadding=0,,,width=80
+                % widget class='menu' id='user_action' title='Other properties' style='toolbar': 
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/schchannelconsumer_set/-/form/list/..._(Channel consumers)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/icon_code/py/editor/?x1=icon_code..._(Icon code)
+                    li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/doc/form/editor/..._(Doc)
+                
+            td width=30
+            td cellpadding=0,,,width=60
+                CTRL-NOBG_BUTTON_TXT NAME=gen,,,label=_(Build),,,SRC=png://categories/applications-multimedia.png,,,href={{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/
+
+            % comment:
+                li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(Model base file)
+                li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/view_code/form/editor/..._(View base file)
+                li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/urls_code/form/editor/..._(Url base file)
+                li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/tasks_code/form/editor/..._(Task base file)
+                li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/consumer_code/form/editor/..._(Channel consumer base file)
+                li:::a class=btn btn-primary btn-sm,,,href=-...------------------------------------

@@ -1,0 +1,52 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    % if form_edit:
+    % else:
+        script language=python
+            def init_form(self):
+                #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
+                pass
+                
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+
+%% all
+    %with form_width=720 form_height=480 show_title_bar=1 title=_("Choices")
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row _("New item")
+
+
+%% list_row_header
+    th..._(Name)
+    th..._(Value)
+
+
+%% list_row
+    td...{{object.name|escape}}
+    td...{{object.value|escape}}
+
+%% list_row_actions
+    {{block.super}}
+    {% if not forloop.first %}
+        % row_actions:...field_up,Move up,[|client://actions/go-up.png],refresh_page
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...field_down,Move down,[|client://actions/go-down.png],refresh_page
+    {% endif %}
+    
+
+%% table_header_edit
+  h2..._(Table field list)

@@ -249,10 +249,12 @@ form .row .row {
 .form-group.form-floating label, .form-group.form-floating form-label {
   left: 0px; }
 
-.group_select2multiplefield label, .group_heavyselect2multiplefield label, .group_modelselect2multiplefield label, .group_choicefield label, .group_filepathfield label, .group_typedchoicefield label, .group_typedmultiplechoicefield label, .group_select2field label, .group_modelchoicefield label, .group_modelselect2field label, .group_multiplechoicefield label {
-  z-index: 1;
-  opacity: .65;
-  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem); }
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_choicefield, .group_filepathfield, .group_typedchoicefield, .group_typedmultiplechoicefield, .group_select2field, .group_modelchoicefield, .group_modelselect2field, .group_multiplechoicefield {
+  margin-top: 0.5rem; }
+  .group_select2multiplefield label, .group_heavyselect2multiplefield label, .group_modelselect2multiplefield label, .group_choicefield label, .group_filepathfield label, .group_typedchoicefield label, .group_typedmultiplechoicefield label, .group_select2field label, .group_modelchoicefield label, .group_modelselect2field label, .group_multiplechoicefield label {
+    z-index: 1;
+    opacity: .65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem); }
 
 span.select2-selection {
   padding-left: 0px !important; }
@@ -351,14 +353,12 @@ div.dialog-form div.container-fluid {
 div.is-invalid .invalid-feedback {
   display: block; }
 
-.group_multiplechoicefield.form-floating label, .group_modelmultiplechoicefield.form-floating label, .group_typedmultiplechoicefield.form-floating label, .modelmultiplechoice_field.form-floating label {
+.group_multiplechoicefield.form-floating label, .group_modelmultiplechoicefield.form-floating label, .group_typedmultiplechoicefield.form-floating label, .modelmultiplechoice_field.form-floating label, .group_choicefield.form-floating label {
   height: auto;
   z-index: 5;
   background: white;
-  width: 100%;
   padding-bottom: 0px;
-  padding-top: 0px;
-  margin-top: 0.6rem; }
+  padding-top: 0px; }
 
 .group_modelmultiplechoicefield.form-floating label {
   left: 0.2rem;

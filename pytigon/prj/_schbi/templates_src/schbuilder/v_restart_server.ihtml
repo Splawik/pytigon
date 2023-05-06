@@ -1,0 +1,18 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with show_title_bar=1 title='Restart server'
+        {{ block.super }}
+
+%% content
+    % if success:
+        h1..._(Success)
+        div class=alert alert-primary,,,role=alert
+            ._(A restart signal has been sent, depending on the configuration, the restart may take from a few seconds to several hours).
+    % else:
+        h1..._(Warning)
+        div class=alert alert-primary,,,role=alert
+            ._(It is not possible to send a signal for restart)

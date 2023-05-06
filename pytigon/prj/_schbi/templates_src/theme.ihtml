@@ -7,7 +7,7 @@
     {% css_link 'vanillajs_plugins/plotly/plotly.css' %}
 
 
-%% botstrap_css
+%% x__botstrap_css
     {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
 
 %% ext_js_scripts

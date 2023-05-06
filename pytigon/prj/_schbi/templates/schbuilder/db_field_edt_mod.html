@@ -1,0 +1,35 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "schsys/db_field_edt.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_title %}
+        Edition: {{ object.url }} [{{title}}/{{object.get_name}}]
+{% endblock %}
+{% block title %}
+        V:{{object.get_name}}
+{% endblock %}
+{% block edit_area_sch %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                <big><strong><i>
+                                        def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
+                                    </i></strong></big>
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <CTRL-STYLEDTEXT NAME="EDITOR" WIDTH="100%" height="calc(100% - top - 50)" MINHEIGHT="300" SRC="{{ext}}" HREF="{{base_path}}{{save_path}}">
+                                        <DATA>
+                                        {{txt|bencode}}
+                                        </DATA>
+                                </CTRL-STYLEDTEXT>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block edit_area %}
+        def {{object.get_name}}(request{% if object.param %}, {{object.param|safe}}{% endif %}):
+        <code_editor id="ace_editor" value="{{txt|bencode}}" href="{{base_path}}{{save_path}}" title="{{title}}"></code_editor>
+{% endblock %}
+

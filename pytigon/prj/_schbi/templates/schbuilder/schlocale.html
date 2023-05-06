@@ -1,0 +1,34 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with edit_vscroll=True table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New locale" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{object.name}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+        
+        edit
+        |
+        field_list/schtranslate_set,Locale,locale
+        translate_sync,"Sync translate messages",[|client://actions/view-refresh.png]
+
+
+        {% endrow_actions %}
+{% endblock %}
+

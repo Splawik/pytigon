@@ -1,0 +1,42 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def init_form(self):
+            self.stcwindow.Execute("from {{name}}.manage import *")
+            self.insert_cmd.Bind(wx.EVT_BUTTON, self.OnInsertCmd)
+
+        def OnInsertCmd(self, event):
+            parm = self.cmd_list.GetValue()
+            if parm:
+                cmd = "cmd('%s')" % parm
+                self.stcwindow.Execute(cmd)
+
+%% all
+    %with form_width=800 form_height=400 show_title_bar=1 title=_("Manage")
+        {{ block.super }}
+
+%% body
+    table width=100%
+        tr
+            td width=100%
+                table width=160
+                    tr
+                        td..._(Choice action):
+                        td
+                            select name=cmd_list,,,id=id_cmd_list,,,width=250
+                                option value=help...--help
+                                option value=syncdb...syncdb
+                                option value=migrate...migrate
+                                option value=createsuperuser...createsuperuser
+
+                        td cellpadding=0,,,valign=top,,,width=36,,,height=36
+                            CTRL-NOBG_BUTTON width=36,,,height=36,,,name=insert_cmd,,,label=cmd,,,SRC=client://actions/list-add.png
+    table width=100%
+        tr
+            td cellpadding=0
+                CTRL-SHELL width=100%,,,height=100%

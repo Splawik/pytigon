@@ -1,0 +1,735 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-10-29 15:16+CEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:3
+msgid "main tools"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:4
+msgid "Pytigon builder"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:10
+msgid "Projects"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:16
+msgid "Archived projects"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:22
+msgid "Make installer"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/__init__.py:28
+msgid "Install app"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:310
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:159
+msgid "Application package"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:311
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:159
+msgid "Application packages"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:589
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:590
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:160
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:177
+msgid "SChApp"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:808
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:809
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:161
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:178
+msgid "SChChoice"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:839
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:840
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:162
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:179
+msgid "SChChoiceItem"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:870
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:871
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:163
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:180
+msgid "SChTable"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:964
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:965
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:164
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:181
+msgid "SChField"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1200
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1201
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:165
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:182
+msgid "SChView"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1396
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:166
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:183
+msgid "Static file"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1397
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:166
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:183
+msgid "Static files"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1444
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1445
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:167
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:184
+msgid "SChTemplate"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1708
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1709
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:168
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:185
+msgid "SChAppMenu"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1805
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1806
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:169
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:186
+msgid "Form"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1873
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1874
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:170
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:187
+msgid "Form field"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1981
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:1982
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:171
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:188
+msgid "SChTask"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2035
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2036
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:172
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:189
+msgid "SChFiles"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2074
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:173
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:190
+msgid "Locale"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2075
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:173
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:190
+msgid "Locales"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2099
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2100
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:174
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:191
+msgid "Translate"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2130
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:175
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:193
+msgid "Channel consumer"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/models.py:2131
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:175
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/urls.py:193
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:20
+msgid "Channel consumers"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/views.py:1389
+msgid "Application package name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/views.py:1404
+msgid "Install file (*.ptig)"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/views.py:1444
+msgid "Path to git repository"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/schbuilder/views.py:1967
+msgid "No installer file to download"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:1
+msgid "Download installer"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:2
+msgid "New project"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:3
+msgid "Import"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:4
+msgid "Import from git"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:5
+msgid "Restart server"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:6
+msgid "Update system projects from git"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:7
+msgid "Name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:8
+msgid "Title"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:9
+msgid "Version"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:10
+msgid "Icon"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:11
+msgid "Select application!"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:12
+msgid "A Message Box"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:13
+msgid "Applications"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:14
+msgid "Table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:15
+msgid "Choices"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:16
+msgid "Views"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:17
+msgid "Forms"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:18
+msgid "Menu"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:19
+msgid "Tasks"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:21
+msgid "Templates"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:22
+msgid "Other files"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:23
+msgid "Model extensions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:24
+msgid "View extensions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:25
+msgid "Url extensions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:26
+msgid "Task extensions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:27
+msgid "Channel consumer extensions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:28
+msgid "Doc"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:29
+msgid "&New view"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:30
+msgid "View type"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:31
+msgid "Url"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:32
+msgid "Parameters"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:33
+msgid "Asynchronous"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:34
+msgid "New form"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:35
+msgid "Module"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:36
+msgid "Table list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:37
+msgid "lp = os.path.dirname(os.path.abspath(__file__))"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:38
+msgid "rp = os.environ['PYTIGON_ROOT_PATH']"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:39
+msgid "Tables"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:40
+msgid "New table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:41
+msgid "Base table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:42
+msgid "Proxy"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:43
+msgid "Generic"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:44
+msgid "Verbose name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:45
+msgid "Fields"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:46
+msgid "Description"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:47
+msgid "Type"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:48
+msgid "Connected to"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:49
+msgid "Null"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:50
+msgid "Blank"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:51
+msgid "Editable"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:52
+msgid "Unique"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:53
+msgid "Table field list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:54
+msgid "New template"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:55
+msgid "Url paramaters"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:56
+msgid "Direct to template"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:57
+msgid "Open in toolbar"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:58
+msgid "New application"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:59
+msgid "Module title"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:60
+msgid "Permissions"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:61
+msgid "Applications list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:62
+msgid "Sign in"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:63
+msgid "Wrong login or password, try again"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:64
+msgid "User name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:65
+msgid "Password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:66
+msgid "or sign in with"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:67
+msgid "I forgot my password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:68
+msgid "Register"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:69
+msgid "Change Password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:70
+msgid "Current Password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:71
+msgid "New Password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:72
+msgid "Confirm Password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:73
+msgid "Cancel"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:74
+msgid "OK"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:75
+msgid "Field"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:76
+msgid "Value"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:77
+msgid "Delete the item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:78
+msgid "Refresh"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:79
+msgid "Import data to table"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:80
+msgid "Action"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:81
+msgid "New choice"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:82
+msgid "Choice list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:83
+msgid "File type"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:84
+msgid "Install"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:85
+msgid "Notifications"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:86
+msgid "Subject"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:87
+msgid "Wiki name"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:88
+msgid "Manage"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:89
+msgid "Choice action"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:90
+msgid "Run"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:91
+msgid "New item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:92
+msgid "Translation"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:93
+msgid "Status"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:94
+msgid "New field"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:95
+msgid "Label"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:96
+msgid "Initial"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:97
+msgid "Widget"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:98
+msgid "Required"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:99
+msgid "Import project"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:100
+msgid "New menu item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:101
+msgid "New wiki item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:102
+msgid "Permission"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:103
+msgid "Menu item list"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:104
+msgid "Success"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:105
+msgid "A restart signal has been sent, depending on the configuration, the restart may take from a few seconds to several hours"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:106
+msgid "Warning"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:107
+msgid "It is not possible to send a signal for restart"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:108
+msgid "New url"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:109
+msgid "New locale"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:110
+msgid "Sync translate messages"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:111
+msgid "New task"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:112
+msgid "Publish"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:113
+msgid "Published group"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:114
+msgid "Consumers"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:115
+msgid "&New consumer"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:116
+msgid "Make migrations"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:117
+msgid "Make all migrations"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:118
+msgid "Migrate"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:119
+msgid "Create auto user"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:120
+msgid "Compile messages"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:121
+msgid "Qinfo"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:122
+msgid "Send mails"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:123
+msgid "{{field.description}}"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:124
+msgid "Logout"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:125
+msgid "Change password"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:126
+msgid "Setup"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:127
+msgid "Login"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:128
+msgid "New file"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:129
+msgid "New directory"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:130
+msgid "View"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:131
+msgid "Edit"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:132
+msgid "Rename"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:133
+msgid "Copy"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:134
+msgid "Move"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:135
+msgid "Delete"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/schdevtools/translate.py:136
+msgid "Help"
+msgstr ""
+

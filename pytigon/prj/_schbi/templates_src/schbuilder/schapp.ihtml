@@ -1,0 +1,110 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    % if form_add or form_edit:
+        script language=python
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                print(dir(self))
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+    % else:
+        script language=python
+            def init_form(self):
+                pass
+                
+            def filter_http_result(self, target, href, mp):
+                if 'app_down' in href or 'app_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        if 'app_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+ 
+%% all
+    %with form_width=620 form_height=380 show_title_bar=1 title=_("Applications")
+        {{ block.super }}
+
+
+%% form_bar2
+      % if form_edit or form_delete or form_info or show_title_bar
+        % if not standard_web_browser
+
+            table width=100%,,,class=form_bar
+                tr
+                    td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                        CTRL-CLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png
+                    % if not form_edit and not form_delete and not form_info
+                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36
+                            CTRL-NOBG_BUTTON width=36,,,height=36,,,NAME=UP,,,label=_(Open in toolbar),,,SRC=client://actions/go-top.png,,,href={{request.path|replace:"/table/SChAppSet/|/table/SChAppSet_up/"}},,,target=_top2_toolbar_Aplikacje__Lista_aplikacji
+                    td width=5
+                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
+                        span class=form_title
+                            %%form_title
+                                {{title|wiki_href|safe}}
+            hr
+
+
+%% list_content_actions
+    % new_row _("New application")
+
+
+%% list_row_header
+    th..._(Name)
+    th..._(Module title)
+    th..._(Title)
+    th..._(Permissions)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.module_title|default_if_none:""}}
+    td...{{object.title|default_if_none:""}}
+    td align=center...{% if object.perms %}X{% endif %}
+
+%% list_row_actions
+    % row_actions: ===>
+        edit,
+        field_list/schtable_set,Tables,[|client://mimetypes/x-office-spreadsheet.png],_top2
+        field_list/schchoice_set,Choices,[|client://categories/applications-games.png],_top2
+        field_list/schview_set,Views,[|client://mimetypes/text-x-generic-template.png],_top2
+        field_list/schform_set,Forms,[|client://mimetypes/x-office-document.png],_top2
+        field_list/schappmenu_set,Menu,[|client://actions/tab-new.png],_top2
+        field_list/schtask_set,Tasks,[|png://status/image-loading.png],_top2
+        field_list/schtemplate_set,Templates,[|client://mimetypes/x-office-presentation.png],_top2        
+        field_list/schfiles_set,Application files,[|png://places/folder.png],_top2
+        
+        field_list/schchannelconsumer_set,Consumers(Other properties),[|png://actions/go-jump.png],_top2        
+        field_edit/icon_code,Icon code(Other properties),[|client://categories/applications-graphics.png],_top2                
+        field_edit/doc,Doc(Other properties),[|client://apps/help-browser.png],_top2
+        
+        delete
+
+    {% if not forloop.first %}
+        % row_actions:...app_up,Move up,[|client://actions/go-up.png],refresh_page
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...app_down,Move down,[|client://actions/go-down.png],refresh_page
+    {% endif %}
+
+
+%% table_header_edit
+  h2..._(Applications list)
+
+
+%% row_edit
+    % form:
+        'parent', 'name', 'module_title', 'title', 'perms', 'index', 'user_param'
+    % if standard_web_browser:
+        %form "^/6":
+            .icon,icon_size
+    % else:
+        tr 
+            td..._(Icon)
+            td
+                CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
+        % form "^/12":
+            .icon_size
+        

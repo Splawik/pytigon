@@ -1,0 +1,22 @@
+^^^{% load exfiltry %}
+from django.urls import path, re_path, include, reverse
+from django.utils.translation import gettext_lazy as _
+from pytigon_lib.schviews import generic_table_start, gen_tab_action, gen_row_action
+from django.views.generic import TemplateView
+from . import views
+
+urlpatterns = [
+    {% for view in views %}{{view.get_url|safe}},
+    {% endfor %}{% for template in templates %}{% if template.direct_to_template %} {{template.get_url|safe}}, {% endif %}
+    {% endfor %}
+    {% for form in forms %}{% if not form.name|is_private %}
+    path('form/{{form.name}}/', views.view_{{form.name|lower}}, {}),{% endif %}{% endfor %}
+]
+
+gen = generic_table_start(urlpatterns, '{{app.name}}', views)
+{% if app.urls_code %}{{app.urls_code|safe}}{% endif %}
+{% for table in tables %}{% if table.generic %}
+gen.standard('{{table.name}}', _('{{table.verbose_name}}'), _('{{table.verbose_name_plural}}')){% endif %}{% endfor %}
+{% for gfield in gfields %}{% if gfield.rel_to == "'self'" %}
+{% else %}
+gen.for_field('{{gfield.get_rel_to|safe}}', '{{gfield.get_relate_set_name|safe}}', _('{{gfield.parent.verbose_name}}'), _('{{gfield.parent.verbose_name_plural}}')){% endif %}{% endfor %}

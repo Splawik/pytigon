@@ -1,0 +1,101 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    % if not form_list:
+        script language=python
+            def init_form(self):
+                import os
+                paths = wx.StandardPaths.Get()
+                self.icon.init_extern_icons(os.path.join(paths.GetDocumentsDir(), "schbuilder/{{object.parent.parent.name}}/static/"), "http://www.onet.pl/")
+
+%% all
+    %with edit_vscroll=True table_type='datatable'
+        {{ block.super }}
+
+%% list_content_actions
+    % new_row _("New project")
+    % list_action "prj_import/edit" _("Import")
+    % list_action "prj_import2" _("Import from git")
+    % list_action "restart_server" _("Restart server") target="_parent" active=False
+    % list_action "update" _("Update system projects from git")
+
+%% list_row_header
+    th..._(Name)
+    th..._(Title)
+    th..._(Version)
+
+%% list_row
+    % td_editable 'name' 'text'
+    td...{{object.title}}
+    td...{{object.version|default_if_none:""}}
+
+%% list_row_actions
+    % row_actions: ===>
+        UP,Open in toolbar,[|wx.ART_GO_TO_PARENT],_top2_toolbar_Aplikacje__Lista_aplikacji,+src='client://actions/go-top.png',,{{app_path}}table/SChAppSet_up/{id}/schapp_set/-/form/list/?childwin=1
+        edit
+        |
+        delete
+        field_list/schapp_set,Applications,icon_name=client://apps/preferences-system-windows.png, target='_parent'
+        field_list/schstatic_set,Static and other files,[|client://apps/system-file-manager.png],_parent
+        field_edit/template_desktop,Desktop template(Templates),png://mimetypes/x-office-presentation.png,_parent
+        field_edit/template_smartfon,Smartfon template(Templates),png://mimetypes/x-office-presentation.png,_parent
+        field_edit/template_tablet,Tablet template(Templates),png://mimetypes/x-office-presentation.png,_parent
+        field_edit/template_schweb,SChWeb template(Templates),png://mimetypes/x-office-presentation.png,_parent
+        field_edit/template_theme,Theme template(Templates),png://mimetypes/x-office-presentation.png,_parent        
+        prj_export,Export(Distribute),[|client://actions/document-save-as.png]
+        installer,Make installer(Distribute),[|client://apps/internet-web-browser.png]
+        field_edit/readme_file,README.md(Distribute),[|fa://navicon.png],_parent
+        field_edit/license_file,LICENSE(Distribute),license_txt,_parent
+        field_edit/install_file,install.ini(Distribute),install_ini,_parent
+        field_edit/encoded_zip,encoded zip file(Distribute),encoded_zip,_parent
+        manage,Manage(Other options),[|client://categories/preferences-system.png]
+        field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
+        field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
+        field_edit/user_app_template,Patches,client://actions/edit-find-replace.png,_parent
+        field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
+        gen,Build,[|client://categories/applications-multimedia.png]
+        gen_milestone,Build milestone version,[|png://actions/media-record.png]
+        run,Run webserver,[|client://devices/network-wireless.png]
+        run2,Run,[|client://actions/media-playback-start.png]
+      
+
+%% dialog_type
+    .modal-lg
+
+%% row_edit
+    %form "^/6":
+        .name,title,version,main_view
+    %form "^/12":
+        .ext_apps,plugins
+    %form "^/6":
+        .gui_type,gui_elements,login_required,start_page
+    %form "^/2":
+        .desktop_gui_type,tablet_gui_type,smartfon_gui_type,public,main
+
+    % if standard_web_browser:
+        %form "^/12":
+            .custom_tags,components_initial_state
+    % else:    
+        % form_item custom_tags:
+            {{form.custom_tags|textfiel_row_col:"4x100"}}
+       % form_item components_initial_state:
+            {{form.components_initial_state|textfiel_row_col:"4x100"}}
+
+    % if standard_web_browser:
+        %form "^/6":
+            .icon,icon_size
+    % else:
+        tr 
+            td..._(Icon)
+            td
+                CTRL-BITMAPCOMBOBOX class=ctrlbitmapcombobox form-control,,,width=250,,,name=icon,,,value={{object.icon}},,,valuetype=str,,,onload=self.init_default_icons=True
+        % form "^/12":
+            .icon_size
+    % form "^/12":
+        .git_repository,autor_name,autor_email,autor_www
+    % modify setattr="textarea:cols=120;textarea:rows=15":
+        % form "^/12":
+            .additional_settings

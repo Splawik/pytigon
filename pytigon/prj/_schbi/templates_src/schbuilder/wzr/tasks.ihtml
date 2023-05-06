@@ -1,0 +1,25 @@
+^^^{% load exfiltry %}
+
+from django.utils.translation import gettext_lazy as _
+
+import os
+import sys
+import datetime
+import time
+from queue import Empty
+from pytigon_lib.schtasks.publish import publish
+
+
+{% if app.tasks_code %}{{app.tasks_code|first_section|safe}} {% endif %}
+
+{% for task in tasks %}
+{% if task.publish %}@publish({% if task.publish_group %}"{{ task.publish_group }}"{% endif %})
+{% endif %}def {{task.name}}(cproxy=None, **kwargs):
+    {% if task.doc %}"""{% for line in task.doc.splitlines %}
+    {{line|safe}}{% endfor %}
+    """{% endif %}
+    {% for line in task.code.splitlines %}{{line|safe}}
+    {% endfor %}
+{% endfor %}
+
+{% if app.tasks_code %}{{app.tasks_code|second_section|safe}} {% endif %}

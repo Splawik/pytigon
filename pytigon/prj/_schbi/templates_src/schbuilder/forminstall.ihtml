@@ -1,0 +1,27 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Install application'
+        {{ block.super }}
+
+%% form_content_button
+    button type=submit,,,value=_(Install),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Install)
+        span class=fa fa-refresh
+
+%% form_content_schbutton
+    input type=submit,,,value=_(Install),,,class=btn btn-info,,,target=_self,,,widt=200,,,height=44
+    
+%% user_header
+    th...Message
+    th...action
+
+%% user_row
+    tr
+        td... {{object}}
+        th
+

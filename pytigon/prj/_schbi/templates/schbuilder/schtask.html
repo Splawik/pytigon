@@ -1,0 +1,62 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_list %}
+                <script language="python">
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=960 form_height=1200 show_title_bar=0 title="Tasks" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        <table>
+                <tr>
+                        <td>
+                                {% new_row "New task" %}
+                        </td>
+                        <td>
+                                {% action "header" title="tasks - header" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=header" %}
+                        </td>
+                        <td>
+                                {% action "footer" title="tasks - footer" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=footer" %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Permission</th>
+        <th>Publish</th>
+        <th>
+        Published group
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.perms|default_if_none:""}}</td>
+        <td align="center">{% if object.publish %}X{% endif %}</td>
+        <td>
+        {{object.publish_group|default_if_none:""}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {{ block.super }}
+        {% row_actions %}
+                field_edit/code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+                field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "name", "perms", "publish", "publish_group"
+        {% endform %}
+{% endblock %}
+

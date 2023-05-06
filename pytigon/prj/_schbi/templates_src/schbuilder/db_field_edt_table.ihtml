@@ -1,0 +1,94 @@
+% extends "schsys/db_field_edt.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% pythoncodeinit
+    ===>
+        def init_form(self):
+            self.save_btn.Disable()
+            self.modified = False
+            self.tuser = wx.Timer(self)
+            self.tuser.Start(1000)
+            self.Bind(wx.EVT_TIMER, self.on_timer_user, self.tuser)
+            self.EDITOR.SetSavePoint()
+            self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
+            atab=self.get_acc_tab()
+            atab.append((0, wx.WXK_INSERT, self.on_panel_focus))
+            atab.append((wx.ACCEL_ALT, ord('I'), self.on_panel_focus))
+            
+            self.set_acc_key_tab(self,atab)
+            
+            self._panel.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.on_insert_click)
+            self.EDITOR.SetCurrentPos(0)
+            self.EDITOR.SetSelection(0,0)
+            wx.CallAfter(self.EDITOR.SetFocus)
+
+            from schbuilder.autocomplete import TABLE_SNIPPETS 
+            self.actions = TABLE_SNIPPETS
+
+        def on_panel_focus(self, event):
+            self._panel.SetFocus()
+
+        def on_insert_click(self, event):
+            item = self._panel.GetSelection()
+            if item.IsOk():
+                key = self._panel.GetItemText(item)
+                if key in self.actions:
+                    self.insert_txt(self.actions[key])
+
+        def insert_txt(self, txt):
+            pos = self.EDITOR.GetCurrentPos()
+            self.EDITOR.InsertText(pos, txt)
+            pos+=len(txt)
+            self.EDITOR.SetCurrentPos(pos)
+            self.EDITOR.SetFocus()
+
+%%form_title
+    .Edition: {{ object.name }}
+
+%% title
+    .TAB:{{object.name}}
+
+%% edit_area_sch
+    table width=100%
+        tr
+            td width=350
+                ctrl-tree name=_panel,,,width=350,,,height=calc(100% - top - 30)
+                    li...functions for the JSONModel
+                        ul
+                            li...get_form_source
+                            li...set_field_value
+                    li...relationships between tables
+                        ul
+                            li...init_new
+                    li...templates
+                        ul
+                            li...template_for_object
+                            li...template_for_list
+                    li...actions
+                        ul
+                            li...table_action
+                            li...row_action
+                    li...permissions
+                        ul
+                            li...filter_by_permissions
+                    li...forms
+                        ul
+                            li...get_form_class
+                            li...is_form_valid
+                            li...post_form
+                    li...other functions
+                        ul
+                            li...save_from_request
+                            li...get_derived_object
+                            li...filter
+                            li...sort
+                            li...redirect_href
+            td
+                CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,height=calc(100% - top - 50),,,MINHEIGHT=300,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                    DATA...{{txt|bencode}}
+
+%% edit_area
+    code_editor id=ace_editor,,,value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}}
