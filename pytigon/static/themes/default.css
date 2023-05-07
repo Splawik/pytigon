@@ -441,9 +441,6 @@ form.table_filter label:not(.form-check-label):not(.upload)::after {
 form.table_filter label.nocolon::after {
   content: "" !important; }
 
-div.tab-content {
-  overflow-y: auto; }
-
 div.tab-content .modal-dialog-inline {
   position: relative;
   left: 0px;

@@ -39,6 +39,7 @@
         {% component '_schcomponents/components/ptig-codeeditor.js' %}
         {% component '_schcomponents/components/ptig-codemirror.js' %}
         {% component '_schcomponents/components/ptig-d3.js' %}
+        {% component '_schcomponents/components/ptig-event-calendar.js' %}
         {% component '_schcomponents/components/ptig-form.js' %}
         {% component '_schcomponents/components/ptig-leaflet.js' %}
         {% component '_schcomponents/components/ptig-margin-left.js' %}
@@ -66,6 +67,6 @@
     %% component_init
             .var initial_state={};
             .GLOBAL_BUS.set_state(initial_state);
-            .var component_init = [ "ptig-calendar.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-form.js", "ptig-leaflet.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "insert_object.js", "clock-channel.js", "ptig-db.js", "ptig-db2.js", "test.js",  ];  
+            .var component_init = [ "ptig-calendar.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-event-calendar.js", "ptig-form.js", "ptig-leaflet.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "insert_object.js", "clock-channel.js", "ptig-db.js", "ptig-db2.js", "test.js",  ];  
 
 

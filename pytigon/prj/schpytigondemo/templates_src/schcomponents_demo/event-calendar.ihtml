@@ -6,4 +6,4 @@
 
 %% content
     div class=flexible_size
-        ptig-calendar
+        ptig-event-calendar

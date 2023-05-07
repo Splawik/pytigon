@@ -117,5 +117,11 @@ Urls = (
         None,
         """png://apps/system-users.png""",
     ),
+    (
+        "event-calendar",
+        _("Event calendar"),
+        None,
+        """png://mimetypes/x-office-calendar.png""",
+    ),
 )
 UserParam = {}
