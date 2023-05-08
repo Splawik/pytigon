@@ -10,7 +10,7 @@
         "desktop_gui_type": "tablet_modern",
         "doc": null,
         "encoded_zip": null,
-        "ext_apps": "_schtools.schcommander,_schdata.schelements",
+        "ext_apps": "_schtools.schcommander\n_schdata.schelements",
         "git_repository": "https://git.pytigon.eu/pytigon/schmanage.git",
         "gui_elements": null,
         "gui_type": "modern",
