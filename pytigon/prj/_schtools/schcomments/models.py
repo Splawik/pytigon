@@ -81,7 +81,7 @@ class Comment(JSONModel):
         blank=True,
         editable=True,
         verbose_name="Sender",
-        related_name=comment_sender_set,
+        related_name="comment_sender_set",
     )
     recipient = models.ForeignKey(
         UserProxy,
@@ -90,7 +90,7 @@ class Comment(JSONModel):
         blank=True,
         editable=True,
         verbose_name="Recipient",
-        related_name=comment_recipient_set,
+        related_name="comment_recipient_set",
     )
     recipients = models.CharField(
         "Recipients", null=True, blank=True, editable=True, max_length=256
