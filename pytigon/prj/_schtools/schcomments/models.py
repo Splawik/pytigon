@@ -23,6 +23,21 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+class UserProxy(User):
+    class Meta:
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schcomments"
+
+        ordering = ["id"]
+
+        proxy = True
+
+
+admin.site.register(UserProxy)
+
+
 class Comment(JSONModel):
     class Meta:
         verbose_name = _("Comment")
@@ -106,18 +121,3 @@ class Comment(JSONModel):
 
 
 admin.site.register(Comment)
-
-
-class UserProxy(User):
-    class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
-        default_permissions = ("add", "change", "delete", "list")
-        app_label = "schcomments"
-
-        ordering = ["id"]
-
-        proxy = True
-
-
-admin.site.register(UserProxy)
