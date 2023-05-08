@@ -15,6 +15,9 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+from schelements.models import *
+
+
 file_manager_sort_choices = [
     ("N", "Name"),
     ("S", "Size"),

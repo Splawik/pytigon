@@ -15,6 +15,9 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+from schelements.models import *
+
+
 from pytigon_lib.schtools.tools import get_request
 
 
