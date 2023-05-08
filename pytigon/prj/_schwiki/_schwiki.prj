@@ -1,6 +1,6 @@
 [
     {
-        "additional_settings": "",
+        "additional_settings": "if platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )",
         "app_main": null,
         "autor_email": null,
         "autor_name": null,

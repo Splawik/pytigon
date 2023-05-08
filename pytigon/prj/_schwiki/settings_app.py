@@ -50,7 +50,16 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 
+if platform_name() != "Android":
+    INSTALLED_APPS.append("easy_thumbnails")
 
+    THUMBNAIL_PROCESSORS = (
+        "easy_thumbnails.processors.colorspace",
+        "easy_thumbnails.processors.autocrop",
+        #'easy_thumbnails.processors.scale_and_crop',
+        "filer.thumbnail_processors.scale_and_crop_with_subject_location",
+        "easy_thumbnails.processors.filters",
+    )
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -131,7 +140,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.05.08 19:13:05"
+GEN_TIME = "2023.05.08 19:21:04"
 
 
 for key, value in os.environ.items():
