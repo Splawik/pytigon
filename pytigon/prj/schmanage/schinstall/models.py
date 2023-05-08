@@ -17,6 +17,8 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from schcommander.models import *
 
+from schelements.models import *
+
 
 def get_projects():
     pass
