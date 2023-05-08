@@ -17,6 +17,8 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from schattachements.models import *
 
+from schelements.models import *
+
 
 from django.template import RequestContext, Context, Template
 import markdown

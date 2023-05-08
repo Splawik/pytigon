@@ -10,7 +10,7 @@
         "desktop_gui_type": "auto",
         "doc": null,
         "encoded_zip": null,
-        "ext_apps": null,
+        "ext_apps": "_schdata.schelements",
         "git_repository": "https://git.pytigon.eu/pytigon/_schtools.git",
         "gui_elements": null,
         "gui_type": "modern",
@@ -2056,6 +2056,22 @@
             [
                 [
                     {
+                        "base_table": null,
+                        "doc": null,
+                        "generic": false,
+                        "metaclass_code": null,
+                        "name": "UserProxy",
+                        "ordering": "['id']",
+                        "proxy_model": "User",
+                        "table_code": null,
+                        "url_params": null,
+                        "verbose_name": "User",
+                        "verbose_name_plural": "Users"
+                    },
+                    []
+                ],
+                [
+                    {
                         "base_table": "JSONModel",
                         "doc": null,
                         "generic": true,
@@ -2159,7 +2175,7 @@
                             "help_text": null,
                             "name": "sender",
                             "null": true,
-                            "param": null,
+                            "param": "related_name=comment_sender_set",
                             "rel_to": "UserProxy",
                             "type": "ForeignKey",
                             "unique": false,
@@ -2175,7 +2191,7 @@
                             "help_text": null,
                             "name": "recipient",
                             "null": true,
-                            "param": null,
+                            "param": "related_name=comment_recipient_set",
                             "rel_to": "UserProxy",
                             "type": "ForeignKey",
                             "unique": false,
@@ -2214,22 +2230,6 @@
                             "url_params": null
                         }
                     ]
-                ],
-                [
-                    {
-                        "base_table": null,
-                        "doc": null,
-                        "generic": false,
-                        "metaclass_code": null,
-                        "name": "UserProxy",
-                        "ordering": "['id']",
-                        "proxy_model": "User",
-                        "table_code": null,
-                        "url_params": null,
-                        "verbose_name": "User",
-                        "verbose_name_plural": "Users"
-                    },
-                    []
                 ]
             ],
             [],

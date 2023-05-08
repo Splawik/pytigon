@@ -10,7 +10,7 @@
         "desktop_gui_type": "auto",
         "doc": null,
         "encoded_zip": null,
-        "ext_apps": "_schtools.schattachements",
+        "ext_apps": "_schtools.schattachements,_schdata.schelements",
         "git_repository": "https://git.pytigon.eu/pytigon/_schwiki.git",
         "gui_elements": null,
         "gui_type": "modern",
